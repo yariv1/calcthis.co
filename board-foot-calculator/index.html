@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Board Foot Calculator — Instant BF &amp; Lumber Cost</title>
+<meta name="description" content="Free board foot calculator. Enter thickness, width, and length to get board feet and cost instantly. Supports 4/4 quarter sizes, metric, and a running cut-list tally.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FBF8F3;
+    --card:#FFFFFF;
+    --ink:#241A11;
+    --ink-soft:#5B4C3B;
+    --muted:#8A7A66;
+    --line:#E7DECF;
+    --amber:#B5761F;
+    --amber-deep:#8F5C13;
+    --spruce:#37503F;
+    --spruce-soft:#5A7361;
+    --shadow:0 1px 2px rgba(36,26,17,.04),0 8px 28px rgba(36,26,17,.06);
+    --radius:14px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    font-family:'Inter',system-ui,sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+    line-height:1.55;
+    font-feature-settings:"tnum" 0;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+
+  /* header */
+  header{padding:22px 0 6px}
+  .brand{display:flex;align-items:center;gap:10px;font-family:'Fraunces',serif;font-weight:600;font-size:19px;letter-spacing:-.01em}
+  .brand svg{flex:none}
+  .brand span b{color:var(--amber)}
+
+  /* hero */
+  .hero{padding:26px 0 22px}
+  .eyebrow{font-size:12.5px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--amber-deep)}
+  h1{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(30px,5vw,46px);line-height:1.04;letter-spacing:-.02em;margin:8px 0 10px}
+  .hero p{max-width:56ch;color:var(--ink-soft);font-size:16.5px}
+
+  /* main grid */
+  .grid{display:grid;grid-template-columns:1.15fr .95fr;gap:20px;align-items:start;margin-top:6px}
+  @media(max-width:820px){.grid{grid-template-columns:1fr}}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+  .card-pad{padding:22px}
+
+  /* unit toggle */
+  .seg{display:inline-flex;background:#F2EBDF;border:1px solid var(--line);border-radius:10px;padding:3px}
+  .seg button{font:inherit;font-size:13px;font-weight:600;color:var(--ink-soft);background:none;border:0;border-radius:7px;padding:6px 14px;cursor:pointer;transition:.15s}
+  .seg button.on{background:var(--card);color:var(--ink);box-shadow:0 1px 2px rgba(36,26,17,.08)}
+  .row-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:10px}
+  .row-top h2{font-family:'Fraunces',serif;font-size:18px;font-weight:600}
+
+  label.fld{display:block;margin-bottom:15px}
+  .fld .lab{display:flex;justify-content:space-between;align-items:baseline;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
+  .fld .lab .unit{font-weight:500;color:var(--muted);font-size:12px}
+  .inp{position:relative}
+  .inp input{
+    width:100%;font:inherit;font-size:16px;font-weight:500;color:var(--ink);
+    background:#FCFAF6;border:1.5px solid var(--line);border-radius:10px;
+    padding:11px 44px 11px 13px;transition:.15s;font-variant-numeric:tabular-nums;
+  }
+  .inp input:focus{outline:none;border-color:var(--amber);background:#fff;box-shadow:0 0 0 3px rgba(181,118,31,.13)}
+  .inp .suf{position:absolute;right:13px;top:50%;transform:translateY(-50%);font-size:13px;color:var(--muted);font-weight:600;pointer-events:none}
+
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+  /* length unit toggle lives inside the input, so labels stay equal height */
+  #length{padding-right:72px}
+  .inp .len-toggle{position:absolute;right:6px;top:50%;transform:translateY(-50%);padding:2px;margin:0}
+  .inp .len-toggle button{padding:5px 9px;font-size:12px}
+
+  /* quarter chips */
+  .chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+  .chips button{font:inherit;font-size:12.5px;font-weight:600;color:var(--ink-soft);background:#F5EFE4;border:1px solid var(--line);border-radius:20px;padding:5px 11px;cursor:pointer;transition:.12s}
+  .chips button:hover{border-color:var(--amber);color:var(--amber-deep)}
+  .chips button.on{background:var(--amber);border-color:var(--amber);color:#fff}
+
+  .len-toggle{display:inline-flex;gap:2px;background:#F2EBDF;border:1px solid var(--line);border-radius:7px;padding:2px}
+  .len-toggle button{font:inherit;font-size:11.5px;font-weight:600;color:var(--muted);background:none;border:0;border-radius:5px;padding:3px 9px;cursor:pointer}
+  .len-toggle button.on{background:#fff;color:var(--ink);box-shadow:0 1px 1px rgba(0,0,0,.06)}
+
+  /* result card */
+  .result{position:relative}
+  .res-lab{font-size:12.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--spruce-soft)}
+  .res-big{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(46px,9vw,68px);line-height:1;letter-spacing:-.02em;color:var(--ink);font-variant-numeric:tabular-nums;margin:4px 0 2px}
+  .res-unit{font-family:'Fraunces',serif;font-size:20px;color:var(--amber);font-weight:500}
+  .res-hint{font-size:13px;color:var(--amber-deep);font-weight:500;margin-top:9px;text-align:center}
+  .res-hint::before{content:"↑ "}
+  .res-cost{margin-top:14px;padding-top:14px;border-top:1px dashed var(--line);display:flex;justify-content:space-between;align-items:baseline}
+  .res-cost .k{font-size:13.5px;color:var(--ink-soft);font-weight:500}
+  .res-cost .v{font-family:'Fraunces',serif;font-size:26px;font-weight:600;font-variant-numeric:tabular-nums}
+  .res-cost.hide{display:none}
+
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;font:inherit;font-size:14px;font-weight:600;cursor:pointer;border-radius:10px;padding:11px 16px;border:1.5px solid var(--ink);background:var(--ink);color:#fff;transition:.15s;width:100%}
+  .btn:hover{background:#000}
+  .btn-ghost{background:none;color:var(--ink);border-color:var(--line)}
+  .btn-ghost:hover{background:#F5EFE4;border-color:var(--amber)}
+  .add-wrap{margin-top:16px}
+  .add-row{display:flex;gap:14px;align-items:center}
+  .add-row .btn{flex:1;width:auto}
+  .linkbtn{font:inherit;font-size:13px;font-weight:600;color:var(--muted);background:none;border:0;cursor:pointer;text-decoration:underline;text-underline-offset:2px;white-space:nowrap;flex:none;padding:4px}
+  .linkbtn:hover{color:var(--amber-deep)}
+  .add-note{font-size:12.5px;color:var(--muted);text-align:center;margin-top:10px;line-height:1.45}
+
+  /* tally */
+  .tally{margin-top:0}
+  .tally-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px}
+  .tally-head h3{font-family:'Fraunces',serif;font-size:22px;font-weight:700;letter-spacing:-.01em}
+  .tally-head button{font:inherit;font-size:12.5px;font-weight:600;color:var(--muted);background:none;border:0;cursor:pointer;text-decoration:underline;text-underline-offset:2px}
+  .tally-head button:hover{color:var(--amber-deep)}
+  .tally-empty{font-size:13.5px;color:var(--muted);padding:14px;text-align:center;background:#FCFAF6;border:1px dashed var(--line);border-radius:10px}
+  .trow{display:grid;grid-template-columns:1fr 62px 78px 22px;gap:10px;align-items:center;padding:9px 2px;border-bottom:1px solid var(--line);font-size:13.5px}
+  .trow:last-child{border-bottom:none}
+  .trow .desc{color:var(--ink-soft);font-variant-numeric:tabular-nums;min-width:0}
+  .trow .bf{font-weight:600;font-variant-numeric:tabular-nums;text-align:right}
+  .trow .rc{font-weight:600;font-variant-numeric:tabular-nums;text-align:left;border-left:1px solid #CBBBA0;padding-left:10px;color:var(--spruce)}
+  .trow .rc.na{color:var(--muted);font-weight:500}
+  .trow .x{background:none;border:0;color:var(--muted);cursor:pointer;font-size:16px;line-height:1;padding:2px 4px;border-radius:5px}
+  .trow .x:hover{color:#b23;background:#f7e9e9}
+  .tally-total{display:grid;grid-template-columns:1fr auto;gap:6px;margin-top:12px;padding-top:12px;border-top:2px solid var(--ink)}
+  .tally-total .tl{font-weight:600;font-size:14px}
+  .tally-total .tv{font-weight:700;font-variant-numeric:tabular-nums;text-align:right}
+  .tally-total .sub{color:var(--muted);font-weight:500;font-size:13px}
+
+  /* waste factor row + button */
+  .trow .bf.na{color:var(--muted);font-weight:500}
+  .wrow{background:#FCF7EE;border-top:1px solid var(--line);border-bottom:none}
+  .wdesc{display:flex;align-items:center;gap:7px;min-width:0}
+  .wtag{font-size:12px;font-weight:600;color:var(--amber-deep);flex:none}
+  .win{flex:1;min-width:36px;width:100%;font:inherit;font-size:13px;font-weight:600;color:var(--ink);background:#fff;border:1.5px solid var(--line);border-radius:8px;padding:5px 9px;font-variant-numeric:tabular-nums}
+  .win:focus{outline:none;border-color:var(--amber);background:#fff;box-shadow:0 0 0 3px rgba(181,118,31,.13)}
+  .win::placeholder{color:var(--muted);font-weight:500}
+  .wsuf{font-size:13px;font-weight:600;color:var(--ink-soft);flex:none}
+  .add-waste-btn{display:none;width:100%;margin-top:12px;font:inherit;font-size:13px;font-weight:600;color:var(--amber-deep);background:#FCF7EE;border:1.5px dashed var(--line);border-radius:10px;padding:9px;cursor:pointer;transition:.15s}
+  .add-waste-btn:hover{border-color:var(--amber);background:#F8EDD9}
+
+  /* content */
+  .content{margin:44px 0 20px;max-width:none}
+  .content .grid2{display:grid;grid-template-columns:1fr 1fr;gap:32px}
+  @media(max-width:820px){.content .grid2{grid-template-columns:1fr;gap:0}}
+  .content h2{font-family:'Fraunces',serif;font-size:24px;font-weight:600;letter-spacing:-.01em;margin:26px 0 10px}
+  .content h3{font-family:'Fraunces',serif;font-size:17px;font-weight:600;margin:20px 0 6px}
+  .content p{color:var(--ink-soft);margin-bottom:12px;font-size:15.5px}
+  .content ul{color:var(--ink-soft);margin:0 0 12px 20px;font-size:15.5px}
+  .content li{margin-bottom:5px}
+  .formula{background:var(--spruce);color:#EAF0EC;border-radius:12px;padding:20px 22px;font-family:'Fraunces',serif;font-size:clamp(18px,3.5vw,23px);text-align:center;margin:8px 0 6px;letter-spacing:.01em}
+  .formula small{display:block;font-family:'Inter';font-size:13px;color:#B4C6BB;letter-spacing:.04em;margin-top:8px;font-weight:500}
+  .faq{border-top:1px solid var(--line);padding:16px 0}
+  .faq summary{font-family:'Fraunces',serif;font-size:16.5px;font-weight:600;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center}
+  .faq summary::-webkit-details-marker{display:none}
+  .faq summary::after{content:"+";color:var(--amber);font-size:22px;font-weight:400}
+  .faq[open] summary::after{content:"–"}
+  .faq p{margin-top:10px}
+
+  footer{border-top:1px solid var(--line);margin-top:30px;padding:22px 0 40px;color:var(--muted);font-size:13px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+  footer a{color:var(--ink-soft);text-decoration:none}
+
+  /* mobile sticky TOTAL bar — the running summary of the whole cut list */
+  .mbar{display:none}
+  @media(max-width:820px){
+    body{padding-bottom:88px}
+    .tally-total{display:none!important}   /* the total lives in the sticky bar on mobile */
+    .mbar{
+      display:flex;flex-direction:column;gap:3px;
+      position:fixed;left:0;right:0;bottom:0;z-index:50;
+      background:var(--card);border-top:1px solid var(--line);
+      box-shadow:0 -4px 22px rgba(36,26,17,.12);
+      padding:11px 18px calc(12px + env(safe-area-inset-bottom));
+    }
+    .mbar-lab{font-family:'Fraunces',serif;font-size:15px;font-weight:700;color:var(--ink);letter-spacing:-.01em}
+    .mbar-vals{display:flex;align-items:center;gap:12px;font-size:15px;color:var(--ink);font-weight:600}
+    .mbar-seg{color:var(--ink)}
+    .mbar-vals b{font-family:'Fraunces',serif;font-weight:700;font-size:24px;line-height:1;color:var(--amber);font-variant-numeric:tabular-nums;margin-right:4px}
+    .mbar-cost b{color:var(--ink)}
+    .mbar-eq{color:var(--amber);font-weight:700;font-size:18px;margin-right:2px}
+    .mbar-div{width:1px;min-width:1px;height:24px;background:#CBBBA0;align-self:center}
+    .mbar-cost{display:inline-flex;align-items:center}
+    .mbar-cost.hide{display:none}
+    /* bigger touch targets */
+    .chips button{padding:10px 16px;font-size:14px}
+    .len-toggle button{padding:7px 13px;font-size:13px}
+    .seg button{padding:10px 17px;font-size:14px}
+    .trow .x{font-size:20px;padding:7px 10px}
+    .trow{grid-template-columns:1fr 60px 58px 20px;gap:7px;font-size:13px}
+    .trow .rc{padding-left:8px}
+    h1{font-size:33px}
+  }
+  @media(max-width:430px){ .two{grid-template-columns:1fr} }
+
+  @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Board Foot Calculator",
+      "url": "https://calcthis.co/board-foot-calculator",
+      "description": "Free board foot calculator with a running cut-list tally, 4/4 quarter sizes, metric support, a waste factor, and lumber cost estimation.",
+      "applicationCategory": "UtilityApplication",
+      "operatingSystem": "Any (web browser)",
+      "browserRequirements": "Requires JavaScript",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "featureList": [
+        "Board feet from thickness, width and length",
+        "Running cut-list tally for whole projects",
+        "Per-item and mixed lumber pricing",
+        "Waste factor buffer on the total",
+        "4/4 quarter-size thickness chips",
+        "Inches and metric units"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is a board foot the same as a linear foot?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. A linear foot measures length only. A board foot measures volume — it accounts for thickness and width too, which is why two boards of the same length can have very different board footage." }
+        },
+        {
+          "@type": "Question",
+          "name": "Do I use rough or finished dimensions?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Use the rough (nominal) dimensions the lumber is sold and priced at. A board planed down to 3/4 inch is still billed as 4/4 (1 inch) stock." }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I price a whole project?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Enter each board and press Add to tally. The running total sums board feet and cost across your entire cut list, so you can price a full build at once." }
+        },
+        {
+          "@type": "Question",
+          "name": "How much waste should I add?",
+          "acceptedAnswer": { "@type": "Answer", "text": "A common rule of thumb: add about 10-15% for clean, straight cuts in select lumber, 15-20% for a typical project, and 25-30% for rough-sawn stock or intricate work with lots of offcuts. Use the Add waste calc option in the cut-list tally to add your percentage — it buffers your total board feet and cost so you order enough the first time." }
+        },
+        {
+          "@type": "Question",
+          "name": "Does this work in metric?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Switch to Metric to enter centimetres and metres — the result is still shown in board feet, since that is how lumber is priced." }
+        }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="brand">
+      <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
+        <rect x="1.5" y="1.5" width="23" height="23" rx="6" stroke="#B5761F" stroke-width="1.5"/>
+        <path d="M6 9h14M6 13h14M6 17h14" stroke="#37503F" stroke-width="1.5" stroke-linecap="round"/>
+        <circle cx="13" cy="13" r="1.6" fill="#B5761F"/>
+      </svg>
+      <span>Board<b>Foot</b></span>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="eyebrow">Lumber math, done instantly</div>
+    <h1>Board Foot Calculator</h1>
+    <p>Enter a board's thickness, width, and length to get its board feet — and the cost — the moment you type. Build a full cut list with the running tally below.</p>
+  </section>
+
+  <div class="grid">
+
+    <!-- INPUT -->
+    <div class="card">
+      <div class="card-pad">
+        <div class="row-top">
+          <h2>Board dimensions</h2>
+          <div class="seg" id="unitSeg">
+            <button class="on" data-sys="in">Inches</button>
+            <button data-sys="cm">Metric</button>
+          </div>
+        </div>
+
+        <label class="fld">
+          <span class="lab">Quantity</span>
+          <div class="inp"><input id="qty" type="number" inputmode="numeric" value="1" min="1" step="1"></div>
+        </label>
+
+        <label class="fld">
+          <span class="lab">Thickness <span class="unit" data-unit>in</span></span>
+          <div class="inp"><input id="thick" type="text" inputmode="decimal" placeholder="e.g. 4/4 or 1"><span class="suf" data-unit>in</span></div>
+          <div class="chips" id="chips">
+            <button data-q="1">4/4</button>
+            <button data-q="1.25">5/4</button>
+            <button data-q="1.5">6/4</button>
+            <button data-q="2">8/4</button>
+            <button data-q="2.5">10/4</button>
+            <button data-q="3">12/4</button>
+            <button data-q="4">16/4</button>
+          </div>
+        </label>
+
+        <div class="two">
+          <label class="fld">
+            <span class="lab">Width <span class="unit" data-unit>in</span></span>
+            <div class="inp"><input id="width" type="number" inputmode="decimal" placeholder="0"><span class="suf" data-unit>in</span></div>
+          </label>
+          <label class="fld">
+            <span class="lab">Length</span>
+            <div class="inp">
+              <input id="length" type="number" inputmode="decimal" placeholder="0">
+              <span class="len-toggle" id="lenSeg">
+                <button class="on" data-len="ft">ft</button>
+                <button data-len="in">in</button>
+              </span>
+            </div>
+          </label>
+        </div>
+
+        <label class="fld" style="margin-bottom:0">
+          <span class="lab">Price per board foot <span class="unit">optional</span></span>
+          <div class="inp"><input id="price" type="number" inputmode="decimal" placeholder="0.00" step="0.01"><span class="suf">$/bf</span></div>
+        </label>
+
+        <div class="add-wrap">
+          <div class="add-row">
+            <button class="btn" id="addBtn">+ Add to tally</button>
+            <button class="linkbtn" id="clearFieldsBtn">Clear fields</button>
+          </div>
+          <div class="res-hint" id="hint">Enter thickness, width and length</div>
+          <div class="add-note" id="addNote">Tap again to add the same board, or clear the fields for a different one.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT: cut list only -->
+    <div class="card result">
+      <div class="card-pad">
+        <div class="tally">
+          <div class="tally-head">
+            <h3>Cut list tally</h3>
+            <button id="clearBtn" style="display:none">Clear all</button>
+          </div>
+          <div id="tallyBody">
+            <div class="tally-empty">No boards yet. Fill in a board and tap &ldquo;Add to tally&rdquo; to start your list.</div>
+          </div>
+          <div class="trow wrow" id="wasteRow" style="display:none">
+            <span class="desc wdesc">
+              <span class="wtag">Waste</span>
+              <input id="wastePct" class="win" type="text" inputmode="decimal" placeholder="recommended 15" autocomplete="off">
+              <span class="wsuf">%</span>
+            </span>
+            <span class="bf na" id="wasteBf">—</span>
+            <span class="rc na" id="wasteRc">—</span>
+            <button class="x wx" id="wasteRemove" type="button" aria-label="Remove waste">×</button>
+          </div>
+          <div class="tally-total" id="tallyTotal" style="display:none">
+            <span class="tl">Total <span class="sub" id="tallyCount"></span></span>
+            <span class="tv"><span id="totalBf">0</span> bd ft</span>
+            <span class="tl sub" id="totalCostRow" style="display:none">Total cost</span>
+            <span class="tv" id="totalCost" style="display:none"></span>
+          </div>
+          <button class="add-waste-btn" id="addWasteBtn" type="button">+ Add waste calc</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- mobile sticky TOTAL bar (summary of the whole list) -->
+  <div class="mbar" id="mbar">
+    <span class="mbar-lab">Total</span>
+    <div class="mbar-vals">
+      <span class="mbar-seg"><b id="mItems">0</b> <span id="mItemsLbl">items</span></span>
+      <span class="mbar-div"></span>
+      <span class="mbar-seg"><b id="mTotalBf">0</b> bd ft</span>
+      <span class="mbar-cost hide" id="mCostWrap"><span class="mbar-eq">=</span> <b id="mTotalCost"></b></span>
+    </div>
+  </div>
+
+  <!-- CONTENT / SEO -->
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>What is a board foot?</h2>
+        <p>A board foot is the standard unit for buying and pricing hardwood lumber in the US and Canada. One board foot is the volume of a piece one inch thick, twelve inches wide, and twelve inches long — <strong>144 cubic inches</strong> of wood.</p>
+        <p>Because rough hardwood is sold by the board foot rather than by the piece, knowing the board footage of a board tells you what it should cost. It's abbreviated <em>bd ft</em>, <em>BF</em>, or <em>FBM</em>.</p>
+
+        <h2>How to calculate board feet</h2>
+        <p>Multiply the three dimensions in inches and divide by 144:</p>
+        <div class="formula">
+          (T × W × L) ÷ 144
+          <small>THICKNESS × WIDTH × LENGTH, IN INCHES</small>
+        </div>
+        <p>If the length is in feet, use <strong>(T × W × L) ÷ 12</strong> instead. For more than one identical board, multiply the result by the quantity. The calculator above handles all of this — including feet-to-inches — automatically.</p>
+      </div>
+
+      <div>
+        <h2>Quarter (4/4) thickness</h2>
+        <p>Hardwood is usually called out in quarter-inches of rough thickness. Tap a chip above or type the fraction — the math is the same either way:</p>
+        <ul>
+          <li><strong>4/4</strong> = 1 inch</li>
+          <li><strong>5/4</strong> = 1¼ inch</li>
+          <li><strong>6/4</strong> = 1½ inch</li>
+          <li><strong>8/4</strong> = 2 inch</li>
+          <li><strong>12/4</strong> = 3 inch</li>
+        </ul>
+        <p>Always calculate on the <strong>rough</strong> dimensions you're billed for — not the smaller finished size after planing.</p>
+
+        <h2>Worked example</h2>
+        <p>A single 8/4 board, 6 inches wide and 8 feet long:</p>
+        <p style="color:var(--ink);font-weight:500">2 × 6 × 96 ÷ 144 = <strong>8 board feet</strong>. At $6/bf, that's $48.</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>Is a board foot the same as a linear foot?</summary><p>No. A linear foot measures length only. A board foot measures volume — it accounts for thickness and width too, which is why two boards of the same length can have very different board footage.</p></details>
+    <details class="faq"><summary>Do I use rough or finished dimensions?</summary><p>Use the rough (nominal) dimensions the lumber is sold and priced at. A board planed down to ¾ inch is still billed as 4/4 (1 inch) stock.</p></details>
+    <details class="faq"><summary>How do I price a whole project?</summary><p>Enter each board and press "Add to tally." The running total sums board feet and cost across your entire cut list, so you can price a full build at once.</p></details>
+    <details class="faq"><summary>How much waste should I add?</summary><p>A common rule of thumb: add about <strong>10–15%</strong> for clean, straight cuts in select lumber, <strong>15–20%</strong> for a typical project, and <strong>25–30%</strong> for rough-sawn stock or intricate work with lots of offcuts. Tap <strong>&ldquo;+ Add waste calc&rdquo;</strong> in the cut-list tally to add your percentage — it buffers your total board feet and cost so you order enough the first time.</p></details>
+    <details class="faq"><summary>Does this work in metric?</summary><p>Yes. Switch to "Metric" to enter centimetres and metres — the result is still shown in board feet, since that's how lumber is priced.</p></details>
+  </section>
+
+  <footer>
+    <span>Board foot = 144 cubic inches. Free, no sign-up.</span>
+    <span><a href="#">How it works</a></span>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  var sys='in', lenUnit='ft';
+  var $=function(id){return document.getElementById(id)};
+  var qty=$('qty'),thick=$('thick'),width=$('width'),length=$('length'),price=$('price');
+  var tally=[];
+  var waste={active:false,pct:''};   // order-level buffer, kept out of the tally array
+
+  // parse "4/4", "1 1/2", "1.5"
+  function parseNum(v){
+    if(v==null) return NaN;
+    v=(''+v).trim();
+    if(!v) return NaN;
+    var mixed=v.match(/^(\d+)\s+(\d+)\s*\/\s*(\d+)$/); // 1 1/2
+    if(mixed) return +mixed[1]+(+mixed[2])/(+mixed[3]);
+    var frac=v.match(/^(\d+)\s*\/\s*(\d+)$/); // 4/4
+    if(frac) return (+frac[1])/(+frac[2]);
+    var n=parseFloat(v);
+    return isNaN(n)?NaN:n;
+  }
+
+  function toInches(val,isLength){
+    if(isNaN(val)) return NaN;
+    if(sys==='cm'){ return (isLength && lenUnit==='m') ? val*100/2.54 : val/2.54; }
+    return (isLength && lenUnit==='ft') ? val*12 : val;
+  }
+
+  function currentBF(){
+    var q=parseNum(qty.value)||1;
+    var t=toInches(parseNum(thick.value),false);
+    var w=toInches(parseNum(width.value),false);
+    var l=toInches(parseNum(length.value),true);
+    if(isNaN(t)||isNaN(w)||isNaN(l)||t<=0||w<=0||l<=0) return null;
+    return (t*w*l/144)*q;
+  }
+
+  function fmt(n){
+    if(n>=100) return n.toFixed(1);
+    var r=Math.round(n*1000)/1000;
+    return (''+r).replace(/\.?0+$/,'')||'0';
+  }
+  function money(n){return '$'+n.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}
+
+  function listMissing(){
+    var m=[];
+    var t=toInches(parseNum(thick.value),false);
+    var w=toInches(parseNum(width.value),false);
+    var l=toInches(parseNum(length.value),true);
+    if(isNaN(t)||t<=0) m.push('thickness');
+    if(isNaN(w)||w<=0) m.push('width');
+    if(isNaN(l)||l<=0) m.push('length');
+    if(!m.length) return 'all dimensions';
+    if(m.length===1) return m[0];
+    return m.slice(0,-1).join(', ')+' and '+m[m.length-1];
+  }
+
+  function render(){
+    var bf=currentBF();
+    var complete = bf!=null;
+    var b=$('addBtn');
+    b.disabled=!complete;
+    b.style.opacity=complete?'1':'.5';
+    b.style.cursor=complete?'pointer':'not-allowed';
+    if(complete){ $('hint').style.display='none'; $('addNote').style.display='block'; }
+    else { $('hint').style.display='block'; $('hint').textContent='Enter '+listMissing(); $('addNote').style.display='none'; }
+  }
+
+  function boardLabel(){
+    var q=parseNum(qty.value)||1;
+    var u=sys==='cm'?'cm':'in';
+    var lu=sys==='cm'?(lenUnit==='m'?'m':'cm'):(lenUnit==='ft'?'ft':'in');
+    var t=thick.value.trim()||'?', w=width.value.trim()||'?', l=length.value.trim()||'?';
+    return q+' × '+t+'×'+w+u+' × '+l+lu;
+  }
+
+  function renderTally(){
+    var body=$('tallyBody'), tot=$('tallyTotal');
+    var curRate=parseNum(price.value);
+    var liveRate=(!isNaN(curRate)&&curRate>0)?curRate:null;
+    var boardBf=0, boardCost=0, hasCost=false;
+    tally.forEach(function(r){
+      boardBf+=r.bf;
+      var rate = r.locked ? r.rate : liveRate;
+      if(rate!=null){ boardCost+=r.bf*rate; hasCost=true; }
+    });
+
+    // waste = "buy X% more of the same" — scales the board totals, so mixed rates just work
+    var wpct = waste.active ? parseNum(waste.pct) : NaN;
+    var hasWpct = waste.active && !isNaN(wpct) && wpct>0;
+    var wasteBf = hasWpct ? boardBf*wpct/100 : 0;
+    var wasteCost = (hasWpct && hasCost) ? boardCost*wpct/100 : 0;
+
+    var totalBf = boardBf + wasteBf;      // grand total includes waste
+    var totalCost = boardCost + wasteCost;
+
+    // mobile sticky total bar (includes waste)
+    $('mItems').textContent=tally.length;                 // item count = boards only
+    $('mItemsLbl').textContent = tally.length===1 ? 'item' : 'items';
+    $('mTotalBf').textContent=fmt(totalBf);
+    if(hasCost){ $('mCostWrap').classList.remove('hide'); $('mTotalCost').textContent=money(totalCost); }
+    else { $('mCostWrap').classList.add('hide'); }
+
+    if(!tally.length){
+      body.innerHTML='<div class="tally-empty">No boards yet. Fill in a board and tap &ldquo;Add to tally&rdquo; to start your list.</div>';
+      tot.style.display='none'; $('clearBtn').style.display='none';
+      // no boards → no waste to buffer
+      waste.active=false; waste.pct=''; $('wastePct').value='';
+      $('wasteRow').style.display='none'; $('addWasteBtn').style.display='none';
+      return;
+    }
+    $('clearBtn').style.display='inline';
+    var html='';
+    tally.forEach(function(r,i){
+      var rate = r.locked ? r.rate : liveRate;
+      var rc = (rate!=null) ? '<span class="rc">'+money(r.bf*rate)+'</span>'
+                            : '<span class="rc na">—</span>';
+      html+='<div class="trow"><span class="desc">'+r.label+'</span><span class="bf">'+fmt(r.bf)+' bf</span>'+rc+'<button class="x" data-i="'+i+'" aria-label="Remove">×</button></div>';
+    });
+    body.innerHTML=html;
+
+    // waste row is a PERSISTENT element (never rebuilt) so its input keeps focus while typing
+    if(waste.active){
+      $('wasteRow').style.display='grid';
+      $('addWasteBtn').style.display='none';
+      var wbf=$('wasteBf');
+      if(hasWpct){ wbf.className='bf'; wbf.textContent=fmt(wasteBf)+' bf'; }
+      else { wbf.className='bf na'; wbf.textContent='—'; }
+      var wrc=$('wasteRc');
+      if(hasWpct && hasCost){ wrc.className='rc'; wrc.textContent=money(wasteCost); }
+      else { wrc.className='rc na'; wrc.textContent='—'; }
+    } else {
+      $('wasteRow').style.display='none';
+      $('addWasteBtn').style.display='block';
+    }
+
+    tot.style.display='grid';
+    $('tallyCount').textContent='· '+tally.length+' item'+(tally.length>1?'s':'');
+    $('totalBf').textContent=fmt(totalBf);
+    if(hasCost){
+      $('totalCostRow').style.display='block';
+      $('totalCost').style.display='block';
+      $('totalCost').textContent=money(totalCost);
+    } else {
+      $('totalCostRow').style.display='none';
+      $('totalCost').style.display='none';
+    }
+  }
+
+  // events
+  [qty,thick,width,length,price].forEach(function(el){el.addEventListener('input',render)});
+  price.addEventListener('input',renderTally);  // one live rate for the whole list
+
+  $('unitSeg').addEventListener('click',function(e){
+    var b=e.target.closest('button'); if(!b)return;
+    if(b.dataset.sys===sys) return; // already on this system, do nothing
+    sys=b.dataset.sys;
+    // a value typed in one system is meaningless in the other — start fresh
+    thick.value=''; width.value=''; length.value='';
+    [].forEach.call($('chips').children,function(c){c.classList.remove('on')});
+    [].forEach.call(this.children,function(c){c.classList.toggle('on',c===b)});
+    // update unit labels
+    var u=sys==='cm'?'cm':'in';
+    [].forEach.call(document.querySelectorAll('[data-unit]'),function(el){el.textContent=u});
+    // length toggle options
+    if(sys==='cm'){ lenSegBtns[0].textContent='m'; lenSegBtns[0].dataset.len='m'; lenSegBtns[1].textContent='cm'; lenSegBtns[1].dataset.len='cm'; lenUnit=lenSegBtns[0].classList.contains('on')?'m':'cm'; }
+    else { lenSegBtns[0].textContent='ft'; lenSegBtns[0].dataset.len='ft'; lenSegBtns[1].textContent='in'; lenSegBtns[1].dataset.len='in'; lenUnit=lenSegBtns[0].classList.contains('on')?'ft':'in'; }
+    $('chips').style.display = sys==='cm'?'none':'flex';
+    thick.placeholder = sys==='cm' ? 'e.g. 2.5' : 'e.g. 4/4 or 1';
+    render();
+  });
+
+  var lenSegBtns=$('lenSeg').querySelectorAll('button');
+  $('lenSeg').addEventListener('click',function(e){
+    var b=e.target.closest('button'); if(!b)return;
+    lenUnit=b.dataset.len;
+    [].forEach.call(this.children,function(c){c.classList.toggle('on',c===b)});
+    render();
+  });
+
+  $('chips').addEventListener('click',function(e){
+    var b=e.target.closest('button'); if(!b)return;
+    thick.value=b.textContent;
+    [].forEach.call(this.children,function(c){c.classList.toggle('on',c===b)});
+    render();
+  });
+  thick.addEventListener('input',function(){
+    [].forEach.call($('chips').children,function(c){c.classList.remove('on')});
+  });
+
+  function addBoard(){
+    var bf=currentBF(); if(bf==null)return;
+    tally.push({label:boardLabel(), bf:bf, locked:false, rate:null});
+    renderTally();
+  }
+  $('addBtn').addEventListener('click',addBoard);
+  $('clearFieldsBtn').addEventListener('click',function(){
+    var r=parseNum(price.value);
+    var lockRate=(!isNaN(r)&&r>0)?r:null;
+    tally.forEach(function(it){ if(!it.locked){ it.locked=true; it.rate=lockRate; } });
+    qty.value='1'; thick.value=''; width.value=''; length.value=''; price.value='';
+    [].forEach.call($('chips').children,function(c){c.classList.remove('on')});
+    render(); renderTally(); thick.focus();
+  });
+  $('tallyBody').addEventListener('click',function(e){
+    var x=e.target.closest('.x'); if(!x)return;
+    tally.splice(+x.dataset.i,1); renderTally();
+  });
+  $('clearBtn').addEventListener('click',function(){tally=[];renderTally()});
+
+  // waste factor
+  $('addWasteBtn').addEventListener('click',function(){
+    if(!tally.length) return;
+    waste.active=true; waste.pct=''; $('wastePct').value='';
+    renderTally();
+    $('wastePct').focus();
+  });
+  $('wastePct').addEventListener('input',function(){
+    waste.pct=this.value; renderTally();   // input persists, so focus is kept
+  });
+  $('wasteRemove').addEventListener('click',function(){
+    waste.active=false; waste.pct=''; $('wastePct').value='';
+    renderTally();   // button reappears (boards still present)
+  });
+
+  render();
+  renderTally();
+})();
+</script>
+</body>
+</html>
