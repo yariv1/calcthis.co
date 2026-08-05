@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gravel Calculator — How Much Gravel Do I Need? (Tons &amp; Yards)</title>
+<link rel="canonical" href="https://calcthis.co/gravel-calculator/">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<meta name="theme-color" content="#B5761F">
+<meta name="description" content="Free gravel calculator. Enter your area and depth to get how much gravel you need in tons, cubic yards, or bags — plus cost. Add multiple areas for a whole project. Rectangle or circle, US or metric.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FBF8F3;
+    --card:#FFFFFF;
+    --ink:#241A11;
+    --ink-soft:#5B4C3B;
+    --muted:#8A7A66;
+    --line:#E7DECF;
+    --amber:#B5761F;
+    --amber-deep:#8F5C13;
+    --spruce:#37503F;
+    --spruce-soft:#5A7361;
+    --shadow:0 1px 2px rgba(36,26,17,.04),0 8px 28px rgba(36,26,17,.06);
+    --radius:14px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    font-family:'Inter',system-ui,sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+    line-height:1.55;
+    font-feature-settings:"tnum" 0;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+
+  /* shared site header */
+  header{position:relative;padding:20px 0 6px;display:flex;align-items:center;gap:13px}
+  .menu-btn{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border:0;background:none;cursor:pointer;color:var(--amber-deep);border-radius:8px;padding:0;transition:.15s}
+  .menu-btn:hover{background:#F5EFE4}
+  .menu-btn svg{display:block}
+  .menu-btn .ic-close{display:none}
+  .menu-btn.open .ic-open{display:none}
+  .menu-btn.open .ic-close{display:block}
+  .brand{display:flex;align-items:center;gap:10px;font-family:'Fraunces',serif;font-weight:600;font-size:19px;letter-spacing:-.01em;text-decoration:none;color:var(--ink)}
+  .brand img{display:block;width:24px;height:24px;flex:none}
+  .brand span b{color:var(--amber)}
+  .menu{position:absolute;top:calc(100% + 6px);left:0;z-index:60;min-width:250px;background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:7px}
+  .menu[hidden]{display:none}
+  .menu a{display:block;font-family:'Fraunces',serif;font-size:16px;font-weight:500;color:var(--ink-soft);text-decoration:none;padding:9px 13px;border-radius:8px;transition:.12s}
+  .menu a:hover{background:#F5EFE4;color:var(--ink)}
+  .menu a.current{background:#F3EADA;color:var(--ink);font-weight:600}
+
+  /* hero */
+  .hero{padding:26px 0 22px}
+  .eyebrow{font-size:12.5px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--amber-deep)}
+  h1{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(30px,5vw,46px);line-height:1.04;letter-spacing:-.02em;margin:8px 0 10px}
+  .hero p{max-width:56ch;color:var(--ink-soft);font-size:16.5px}
+
+  /* main grid */
+  .grid{display:grid;grid-template-columns:1.05fr 1fr;gap:20px;align-items:start;margin-top:6px}
+  @media(max-width:820px){.grid{grid-template-columns:1fr}}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+  .card-pad{padding:22px}
+
+  /* segmented toggles */
+  .seg{display:inline-flex;background:#F2EBDF;border:1px solid var(--line);border-radius:10px;padding:3px}
+  .seg button{font:inherit;font-size:13px;font-weight:600;color:var(--ink-soft);background:none;border:0;border-radius:7px;padding:6px 14px;cursor:pointer;transition:.15s}
+  .seg button.on{background:var(--card);color:var(--ink);box-shadow:0 1px 2px rgba(36,26,17,.08)}
+  .seg.disabled{opacity:.55}
+  .seg.disabled button{cursor:not-allowed}
+  .row-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:10px}
+  .row-top h2{font-family:'Fraunces',serif;font-size:18px;font-weight:600}
+
+  label.fld{display:block;margin-bottom:15px}
+  .fld .lab{display:flex;justify-content:space-between;align-items:baseline;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
+  .fld .lab .unit{font-weight:500;color:var(--muted);font-size:12px}
+  .inp{position:relative}
+  .inp input{
+    width:100%;font:inherit;font-size:16px;font-weight:500;color:var(--ink);
+    background:#FCFAF6;border:1.5px solid var(--line);border-radius:10px;
+    padding:11px 44px 11px 13px;transition:.15s;font-variant-numeric:tabular-nums;
+  }
+  .inp input:focus{outline:none;border-color:var(--amber);background:#fff;box-shadow:0 0 0 3px rgba(181,118,31,.13)}
+  .inp .suf{position:absolute;right:13px;top:50%;transform:translateY(-50%);font-size:13px;color:var(--muted);font-weight:600;pointer-events:none}
+
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+
+  /* select */
+  .sel{position:relative}
+  .sel select{
+    width:100%;font:inherit;font-size:16px;font-weight:500;color:var(--ink);
+    background:#FCFAF6;border:1.5px solid var(--line);border-radius:10px;
+    padding:11px 40px 11px 13px;transition:.15s;appearance:none;-webkit-appearance:none;-moz-appearance:none;cursor:pointer;
+  }
+  .sel select:focus{outline:none;border-color:var(--amber);background:#fff;box-shadow:0 0 0 3px rgba(181,118,31,.13)}
+  .sel::after{content:"▾";position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none;font-size:12px}
+
+  /* depth quick chips */
+  .chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+  .chips button{font:inherit;font-size:12.5px;font-weight:600;color:var(--ink-soft);background:#F5EFE4;border:1px solid var(--line);border-radius:20px;padding:5px 11px;cursor:pointer;transition:.12s}
+  .chips button:hover{border-color:var(--amber);color:var(--amber-deep)}
+  .chips button.on{background:var(--amber);border-color:var(--amber);color:#fff}
+
+  /* mode toggle full-width segmented */
+  .modeseg{display:grid;grid-template-columns:1fr 1fr 1fr;background:#F2EBDF;border:1px solid var(--line);border-radius:10px;padding:3px;gap:2px}
+  .modeseg button{font:inherit;font-size:13px;font-weight:600;color:var(--ink-soft);background:none;border:0;border-radius:7px;padding:8px 6px;cursor:pointer;transition:.15s}
+  .modeseg button.on{background:var(--card);color:var(--ink);box-shadow:0 1px 2px rgba(36,26,17,.08)}
+
+  /* result hero */
+  .res-lab{font-size:12.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--spruce-soft)}
+  .res-big{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(46px,9vw,64px);line-height:1;letter-spacing:-.02em;color:var(--ink);font-variant-numeric:tabular-nums;margin:6px 0 2px}
+  .res-unit{font-family:'Fraunces',serif;font-size:22px;color:var(--amber);font-weight:500}
+  .res-sub{font-size:14px;color:var(--ink-soft);font-weight:500;margin-top:2px;font-variant-numeric:tabular-nums}
+  .res-cost{margin-top:14px;padding-top:14px;border-top:1px dashed var(--line);display:flex;justify-content:space-between;align-items:baseline}
+  .res-cost .k{font-size:13.5px;color:var(--ink-soft);font-weight:500}
+  .res-cost .v{font-family:'Fraunces',serif;font-size:26px;font-weight:600;font-variant-numeric:tabular-nums}
+  .res-cost.hide{display:none}
+  .res-tip{font-size:12.5px;color:var(--muted);margin-top:12px;line-height:1.45}
+  .res-tip.hide{display:none}
+
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;font:inherit;font-size:14px;font-weight:600;cursor:pointer;border-radius:10px;padding:12px 16px;border:1.5px solid var(--ink);background:var(--ink);color:#fff;transition:.15s;width:100%}
+  .btn:hover{background:#000}
+  .add-wrap{margin-top:18px}
+  .add-row{display:flex;gap:14px;align-items:center}
+  .add-row .btn{flex:1;width:auto}
+  .linkbtn{font:inherit;font-size:13px;font-weight:600;color:var(--muted);background:none;border:0;cursor:pointer;text-decoration:underline;text-underline-offset:2px;white-space:nowrap;flex:none;padding:4px}
+  .linkbtn:hover{color:var(--amber-deep)}
+  .add-note{font-size:12.5px;color:var(--muted);text-align:center;margin-top:10px;line-height:1.45}
+  .res-hint{font-size:13px;color:var(--amber-deep);font-weight:500;margin-top:10px;text-align:center}
+  .res-hint::before{content:"↑ "}
+
+  /* project separator */
+  .proj-sep{border-top:1px solid var(--line);margin:20px 0 16px}
+
+  /* tally */
+  .tally-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px}
+  .tally-head h3{font-family:'Fraunces',serif;font-size:20px;font-weight:700;letter-spacing:-.01em}
+  .tally-head button{font:inherit;font-size:12.5px;font-weight:600;color:var(--muted);background:none;border:0;cursor:pointer;text-decoration:underline;text-underline-offset:2px}
+  .tally-head button:hover{color:var(--amber-deep)}
+  .tally-empty{font-size:13.5px;color:var(--muted);padding:14px;text-align:center;background:#FCFAF6;border:1px dashed var(--line);border-radius:10px;line-height:1.45}
+  .trow{display:grid;grid-template-columns:1fr 74px 70px 22px;gap:10px;align-items:center;padding:9px 2px;border-bottom:1px solid var(--line);font-size:13.5px}
+  .trow:last-child{border-bottom:none}
+  .trow .desc{color:var(--ink-soft);font-variant-numeric:tabular-nums;min-width:0}
+  .trow .qt{font-weight:600;font-variant-numeric:tabular-nums;text-align:right}
+  .trow .qt.na{color:var(--muted);font-weight:500}
+  .trow .rc{font-weight:600;font-variant-numeric:tabular-nums;text-align:left;border-left:1px solid #CBBBA0;padding-left:10px;color:var(--spruce)}
+  .trow .rc.na{color:var(--muted);font-weight:500}
+  .trow .x{background:none;border:0;color:var(--muted);cursor:pointer;font-size:16px;line-height:1;padding:2px 4px;border-radius:5px}
+  .trow .x:hover{color:#b23;background:#f7e9e9}
+  .tally-total{display:grid;grid-template-columns:1fr auto;gap:6px;margin-top:12px;padding-top:12px;border-top:2px solid var(--ink)}
+  .tally-total .tl{font-weight:600;font-size:14px}
+  .tally-total .tv{font-weight:700;font-variant-numeric:tabular-nums;text-align:right}
+  .tally-total .sub{color:var(--muted);font-weight:500;font-size:13px}
+
+  /* waste row + button */
+  .wrow{background:#FCF7EE;border-top:1px solid var(--line);border-bottom:none}
+  .wdesc{display:flex;align-items:center;gap:7px;min-width:0}
+  .wtag{font-size:12px;font-weight:600;color:var(--amber-deep);flex:none}
+  .win{flex:1;min-width:36px;width:100%;font:inherit;font-size:13px;font-weight:600;color:var(--ink);background:#fff;border:1.5px solid var(--line);border-radius:8px;padding:5px 9px;font-variant-numeric:tabular-nums}
+  .win:focus{outline:none;border-color:var(--amber);background:#fff;box-shadow:0 0 0 3px rgba(181,118,31,.13)}
+  .win::placeholder{color:var(--muted);font-weight:500}
+  .wsuf{font-size:13px;font-weight:600;color:var(--ink-soft);flex:none}
+  .add-waste-btn{display:none;width:100%;margin-top:12px;font:inherit;font-size:13px;font-weight:600;color:var(--amber-deep);background:#FCF7EE;border:1.5px dashed var(--line);border-radius:10px;padding:9px;cursor:pointer;transition:.15s}
+  .add-waste-btn:hover{border-color:var(--amber);background:#F8EDD9}
+
+  /* content */
+  .content{margin:44px 0 20px;max-width:none}
+  .content .grid2{display:grid;grid-template-columns:1fr 1fr;gap:32px}
+  @media(max-width:820px){.content .grid2{grid-template-columns:1fr;gap:0}}
+  .content h2{font-family:'Fraunces',serif;font-size:24px;font-weight:600;letter-spacing:-.01em;margin:26px 0 10px}
+  .content h3{font-family:'Fraunces',serif;font-size:17px;font-weight:600;margin:20px 0 6px}
+  .content p{color:var(--ink-soft);margin-bottom:12px;font-size:15.5px}
+  .content ul{color:var(--ink-soft);margin:0 0 12px 20px;font-size:15.5px}
+  .content li{margin-bottom:5px}
+  .formula{background:var(--spruce);color:#EAF0EC;border-radius:12px;padding:20px 22px;font-family:'Fraunces',serif;font-size:clamp(17px,3.3vw,22px);text-align:center;margin:8px 0 6px;letter-spacing:.01em}
+  .formula small{display:block;font-family:'Inter';font-size:13px;color:#B4C6BB;letter-spacing:.04em;margin-top:8px;font-weight:500}
+  .dtable{width:100%;border-collapse:collapse;margin:6px 0 14px;font-size:14.5px}
+  .dtable th,.dtable td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);color:var(--ink-soft)}
+  .dtable th{font-weight:600;color:var(--ink);font-size:13px}
+  .dtable td:last-child,.dtable th:last-child{text-align:right;font-variant-numeric:tabular-nums}
+  .faq{border-top:1px solid var(--line);padding:16px 0}
+  .faq summary{font-family:'Fraunces',serif;font-size:16.5px;font-weight:600;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center}
+  .faq summary::-webkit-details-marker{display:none}
+  .faq summary::after{content:"+";color:var(--amber);font-size:22px;font-weight:400}
+  .faq[open] summary::after{content:"–"}
+  .faq p{margin-top:10px}
+
+  footer{border-top:1px solid var(--line);margin-top:30px;padding:22px 0 40px;color:var(--muted);font-size:13px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+  footer a{color:var(--ink-soft);text-decoration:none}
+
+  /* mobile sticky bar */
+  .mbar{display:none}
+  @media(max-width:820px){
+    body{padding-bottom:88px}
+    .tally-total{display:none!important}
+    .mbar{
+      display:flex;flex-direction:column;gap:3px;
+      position:fixed;left:0;right:0;bottom:0;z-index:50;
+      background:var(--card);border-top:1px solid var(--line);
+      box-shadow:0 -4px 22px rgba(36,26,17,.12);
+      padding:11px 18px calc(12px + env(safe-area-inset-bottom));
+    }
+    .mbar-lab{font-family:'Fraunces',serif;font-size:15px;font-weight:700;color:var(--ink);letter-spacing:-.01em}
+    .mbar-vals{display:flex;align-items:center;gap:12px;font-size:15px;color:var(--ink);font-weight:600}
+    .mbar-vals b{font-family:'Fraunces',serif;font-weight:700;font-size:24px;line-height:1;color:var(--amber);font-variant-numeric:tabular-nums;margin-right:4px}
+    .mbar-eq{color:var(--amber);font-weight:700;font-size:18px;margin-right:2px}
+    .mbar-div{width:1px;min-width:1px;height:24px;background:#CBBBA0;align-self:center}
+    .mbar-cost{display:inline-flex;align-items:center}
+    .mbar-cost b{color:var(--ink)}
+    .mbar-cost.hide{display:none}
+    .mbar-sub{color:var(--ink)}
+    .chips button{padding:10px 16px;font-size:14px}
+    .seg button{padding:10px 17px;font-size:14px}
+    .modeseg button{padding:11px 6px;font-size:14px}
+    .trow .x{font-size:20px;padding:7px 10px}
+    .trow{grid-template-columns:1fr 68px 60px 20px;gap:7px;font-size:13px}
+    .trow .rc{padding-left:8px}
+    h1{font-size:33px}
+  }
+  @media(max-width:430px){ .two{grid-template-columns:1fr} }
+  @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Gravel Calculator",
+      "url": "https://calcthis.co/gravel-calculator/",
+      "description": "Free gravel calculator. Enter your area and depth to get how much gravel you need in tons, cubic yards, or bags, plus estimated cost. Add multiple areas to total a whole project, with a waste buffer.",
+      "applicationCategory": "UtilityApplication",
+      "operatingSystem": "Any (web browser)",
+      "browserRequirements": "Requires JavaScript",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "featureList": [
+        "Gravel amount in tons, cubic yards, or bags",
+        "Rectangle and circle areas",
+        "Material presets with typical densities",
+        "Running project total across multiple areas",
+        "Waste factor buffer on the total",
+        "US and metric units",
+        "Instant cost estimate"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How much gravel do I need?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Multiply your area by the depth to get a volume, then convert to cubic yards or tons. For a rectangle, area is length times width; for a circle it is pi times the radius squared. Multiply by depth in feet, divide by 27 for cubic yards, then multiply by the material density for tons. The calculator above does all of this instantly as you type." }
+        },
+        {
+          "@type": "Question",
+          "name": "How many tons are in a cubic yard of gravel?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Most gravel weighs about 1.4 to 1.6 tons per cubic yard. Pea gravel and river rock are near the lighter end, crushed stone toward the heavier end. Density varies with moisture and stone type, so use your supplier's figure when they give one. Pick a material above and the calculator applies a typical density automatically." }
+        },
+        {
+          "@type": "Question",
+          "name": "How deep should the gravel be?",
+          "acceptedAnswer": { "@type": "Answer", "text": "For paths and decorative ground cover, 2 to 3 inches is typical. For garden beds and general coverage, aim for about 4 inches. For a driveway, 4 to 6 inches is common, often over a compacted base. Tap a depth chip in the calculator to use one of these common depths." }
+        },
+        {
+          "@type": "Question",
+          "name": "Should I order extra gravel for waste?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Gravel settles and compacts, and some is lost to uneven ground and spillage, so ordering about 10 percent extra is a good rule of thumb. Use the Add waste calc option in the project total to add a percentage buffer to your order." }
+        },
+        {
+          "@type": "Question",
+          "name": "Does this gravel calculator work in metric?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Switch to Metric to enter your area in metres and depth in centimetres. The result is shown in cubic metres and tonnes, or bags, so you can order in whichever unit your supplier uses." }
+        }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <a href="/board-foot-calculator/">Board Foot Calculator</a>
+      <a href="/gravel-calculator/" class="current">Gravel Calculator</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div class="eyebrow">Landscaping math, done instantly</div>
+    <h1>Gravel Calculator</h1>
+    <p>Enter the size of your area and how deep you want the gravel — get the amount in tons, cubic yards, or bags, plus the cost, the moment you type. Covering more than one area? Add each to the running project total below.</p>
+  </section>
+
+  <div class="grid">
+
+    <!-- INPUT -->
+    <div class="card">
+      <div class="card-pad">
+        <div class="row-top">
+          <h2>Your area</h2>
+          <div class="seg" id="unitSeg">
+            <button class="on" data-sys="us">US</button>
+            <button data-sys="metric">Metric</button>
+          </div>
+        </div>
+
+        <label class="fld">
+          <span class="lab">Shape</span>
+          <div class="seg" id="shapeSeg" style="display:flex;width:100%">
+            <button class="on" data-shape="rect" style="flex:1">Rectangle</button>
+            <button data-shape="circle" style="flex:1">Circle</button>
+          </div>
+        </label>
+
+        <!-- rectangle fields -->
+        <div id="rectFields">
+          <div class="two">
+            <label class="fld">
+              <span class="lab">Length <span class="unit" data-dim>ft</span></span>
+              <div class="inp"><input id="len" type="number" inputmode="decimal" placeholder="0"><span class="suf" data-dim>ft</span></div>
+            </label>
+            <label class="fld">
+              <span class="lab">Width <span class="unit" data-dim>ft</span></span>
+              <div class="inp"><input id="wid" type="number" inputmode="decimal" placeholder="0"><span class="suf" data-dim>ft</span></div>
+            </label>
+          </div>
+        </div>
+
+        <!-- circle fields -->
+        <div id="circleFields" style="display:none">
+          <label class="fld">
+            <span class="lab">Diameter <span class="unit" data-dim>ft</span></span>
+            <div class="inp"><input id="dia" type="number" inputmode="decimal" placeholder="0"><span class="suf" data-dim>ft</span></div>
+          </label>
+        </div>
+
+        <label class="fld">
+          <span class="lab">Depth <span class="unit" data-depth>in</span></span>
+          <div class="inp"><input id="depth" type="number" inputmode="decimal" placeholder="e.g. 3"><span class="suf" data-depth>in</span></div>
+          <div class="chips" id="depthChips">
+            <button data-d="2">2&quot;</button>
+            <button data-d="3">3&quot;</button>
+            <button data-d="4">4&quot;</button>
+            <button data-d="6">6&quot;</button>
+          </div>
+        </label>
+
+        <label class="fld">
+          <span class="lab">Material</span>
+          <div class="sel">
+            <select id="matSel">
+              <option value="gravel">Gravel (¾″)</option>
+              <option value="pea">Pea gravel</option>
+              <option value="crushed">Crushed stone</option>
+              <option value="river">River rock</option>
+              <option value="sand">Sand</option>
+              <option value="topsoil">Topsoil</option>
+              <option value="custom">Custom density…</option>
+            </select>
+          </div>
+          <div class="inp" id="customWrap" style="display:none;margin-top:9px">
+            <input id="customDens" type="number" inputmode="decimal" placeholder="e.g. 1.5">
+            <span class="suf" id="customSuf">t/yd³</span>
+          </div>
+        </label>
+
+        <label class="fld">
+          <span class="lab">Sold by</span>
+          <div class="modeseg" id="modeSeg">
+            <button class="on" data-mode="ton">Ton</button>
+            <button data-mode="yd3">Cubic yard</button>
+            <button data-mode="bag">Bag</button>
+          </div>
+        </label>
+
+        <div class="two" id="priceBagRow">
+          <label class="fld" style="margin-bottom:0">
+            <span class="lab"><span id="priceLab">Price per ton</span> <span class="unit">optional</span></span>
+            <div class="inp"><input id="price" type="number" inputmode="decimal" placeholder="0.00" step="0.01"><span class="suf" id="priceSuf">$/ton</span></div>
+          </label>
+          <label class="fld" id="bagWrap" style="margin-bottom:0;display:none">
+            <span class="lab">Bag size <span class="unit" data-bagu>ft³</span></span>
+            <div class="inp"><input id="bagSize" type="number" inputmode="decimal" placeholder="0.5" step="0.05"><span class="suf" data-bagu>ft³</span></div>
+          </label>
+        </div>
+
+        <div class="add-wrap">
+          <div class="add-row">
+            <button class="btn" id="addBtn">+ Add area to project</button>
+            <button class="linkbtn" id="clearFieldsBtn">Clear fields</button>
+          </div>
+          <div class="res-hint" id="hint">Enter your length, width and depth</div>
+          <div class="add-note" id="addNote">Covering several spots? Add each area to total the whole job.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT + PROJECT -->
+    <div class="card">
+      <div class="card-pad">
+        <!-- live single-area answer -->
+        <div class="res-lab" id="resLab">This area needs</div>
+        <div class="res-big"><span id="resQty">—</span> <span class="res-unit" id="resUnit">tons</span></div>
+        <div class="res-sub" id="resSub">Enter dimensions to see the amount.</div>
+        <div class="res-cost hide" id="resCostWrap"><span class="k">Estimated cost</span><span class="v" id="resCost"></span></div>
+        <div class="res-tip" id="resTip">Tip: order about 10% extra for settling and spillage.</div>
+
+        <div class="proj-sep"></div>
+
+        <!-- project total (multi-area) -->
+        <div class="tally-head">
+          <h3>Project total</h3>
+          <button id="clearBtn" style="display:none">Clear all</button>
+        </div>
+        <div id="tallyBody">
+          <div class="tally-empty">Covering more than one area? Add each above and they'll total here.</div>
+        </div>
+        <div class="trow wrow" id="wasteRow" style="display:none">
+          <span class="desc wdesc">
+            <span class="wtag">Waste</span>
+            <input id="wastePct" class="win" type="text" inputmode="decimal" placeholder="recommended 10" autocomplete="off">
+            <span class="wsuf">%</span>
+          </span>
+          <span class="qt na" id="wasteQty">—</span>
+          <span class="rc na" id="wasteRc">—</span>
+          <button class="x wx" id="wasteRemove" type="button" aria-label="Remove waste">×</button>
+        </div>
+        <div class="tally-total" id="projTotal" style="display:none">
+          <span class="tl">Total <span class="sub" id="projCount"></span></span>
+          <span class="tv"><span id="totalQty">0</span> <span id="totalUnit">tons</span></span>
+          <span class="tl sub" id="totalCostRow" style="display:none">Estimated cost</span>
+          <span class="tv" id="totalCost" style="display:none"></span>
+        </div>
+        <button class="add-waste-btn" id="addWasteBtn" type="button">+ Add waste calc</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- mobile sticky bar -->
+  <div class="mbar" id="mbar">
+    <span class="mbar-lab" id="mLab">This area</span>
+    <div class="mbar-vals">
+      <span class="mbar-seg"><b id="mQty">0</b> <span id="mUnit">tons</span></span>
+      <span class="mbar-cost hide" id="mCostWrap"><span class="mbar-eq">=</span> <b id="mCost"></b></span>
+    </div>
+  </div>
+
+  <!-- CONTENT / SEO -->
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How much gravel do I need?</h2>
+        <p>Working out how much gravel to buy comes down to one thing: the <strong>volume</strong> of the space you're filling. Measure the area, choose a depth, multiply them together, then convert that volume into the unit your supplier sells by — cubic yards, tons, or bags.</p>
+        <div class="formula">
+          Area × Depth ÷ 27 = Cubic yards
+          <small>DEPTH IN FEET · ÷27 CONVERTS CUBIC FEET TO CUBIC YARDS</small>
+        </div>
+        <p>To get the <strong>weight in tons</strong>, multiply the cubic yards by the gravel's density — most gravel is about 1.4–1.6 tons per cubic yard. The calculator above does all of this the instant you type, in whichever units and shape you pick.</p>
+
+        <h2>Rectangle or circle</h2>
+        <p>For a rectangular area — a driveway, patio, or path — the area is simply length × width. For a round area like a fire-pit border or circular bed, it's π × radius². Pick the shape at the top of the calculator and the right measurement boxes appear.</p>
+
+        <h2>Worked example</h2>
+        <p>A rectangular path 20 ft long and 3 ft wide, filled 3 inches deep with gravel:</p>
+        <p style="color:var(--ink);font-weight:500">20 × 3 × 0.25 ÷ 27 = <strong>0.56 cubic yards</strong>, or about <strong>0.8 tons</strong>. Add ~10% for settling and you'd order a bit under a ton.</p>
+      </div>
+
+      <div>
+        <h2>How deep should gravel be?</h2>
+        <ul>
+          <li><strong>2–3 inches</strong> — paths and decorative ground cover</li>
+          <li><strong>4 inches</strong> — garden beds and general coverage</li>
+          <li><strong>4–6 inches</strong> — driveways, usually over a compacted base</li>
+        </ul>
+        <p>Tap a depth chip in the calculator to drop in one of these common depths without typing.</p>
+
+        <h2>Typical gravel densities</h2>
+        <p>Weight depends on the material. These are the typical figures the calculator uses; your supplier's number may differ with moisture and stone type — pick <em>Custom density</em> to enter your own.</p>
+        <table class="dtable">
+          <thead><tr><th>Material</th><th>Tons / yd³</th></tr></thead>
+          <tbody>
+            <tr><td>Gravel (¾″)</td><td>1.5</td></tr>
+            <tr><td>Pea gravel</td><td>1.4</td></tr>
+            <tr><td>Crushed stone</td><td>1.6</td></tr>
+            <tr><td>River rock</td><td>1.4</td></tr>
+            <tr><td>Sand</td><td>1.4</td></tr>
+            <tr><td>Topsoil</td><td>1.1</td></tr>
+          </tbody>
+        </table>
+        <p>Buying bagged gravel instead? Switch <strong>Sold by</strong> to <em>Bag</em> and set your bag size — the calculator rounds up to whole bags.</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>How much gravel do I need?</summary><p>Multiply your area by the depth to get a volume, then convert to cubic yards or tons. For a rectangle, area is length × width; for a circle it's π × radius². Multiply by depth in feet, divide by 27 for cubic yards, then multiply by the material density for tons. The calculator above does all of this instantly as you type.</p></details>
+    <details class="faq"><summary>How many tons are in a cubic yard of gravel?</summary><p>Most gravel weighs about <strong>1.4 to 1.6 tons</strong> per cubic yard. Pea gravel and river rock sit near the lighter end, crushed stone toward the heavier end. Density varies with moisture and stone type, so use your supplier's figure when they give one — or pick a material above and the calculator applies a typical density automatically.</p></details>
+    <details class="faq"><summary>How deep should the gravel be?</summary><p>For paths and decorative ground cover, <strong>2–3 inches</strong> is typical. For garden beds and general coverage, aim for about <strong>4 inches</strong>. For a driveway, <strong>4–6 inches</strong> is common, often over a compacted base. Tap a depth chip in the calculator to use one of these.</p></details>
+    <details class="faq"><summary>Should I order extra gravel for waste?</summary><p>Yes. Gravel settles and compacts, and some is lost to uneven ground and spillage, so ordering about <strong>10% extra</strong> is a good rule of thumb. Tap <strong>&ldquo;+ Add waste calc&rdquo;</strong> in the project total to add a percentage buffer to your order.</p></details>
+    <details class="faq"><summary>Does this gravel calculator work in metric?</summary><p>Yes. Switch to "Metric" to enter your area in metres and depth in centimetres. The result is shown in cubic metres and tonnes, or bags, so you can order in whichever unit your supplier uses.</p></details>
+  </section>
+
+  <footer>
+    <span>Estimates only — confirm density &amp; coverage with your supplier. Free, no sign-up.</span>
+    <span><a href="#">How it works</a></span>
+  </footer>
+
+</div>
+
+<!-- mobile sticky bar sub-line uses mUnit as words; hero cost uses money -->
+<script>
+(function(){
+  var btn=document.getElementById('menuBtn'), menu=document.getElementById('siteMenu');
+  if(!btn||!menu) return;
+  function open(){menu.hidden=false;btn.classList.add('open');btn.setAttribute('aria-expanded','true');btn.setAttribute('aria-label','Close menu');}
+  function close(){menu.hidden=true;btn.classList.remove('open');btn.setAttribute('aria-expanded','false');btn.setAttribute('aria-label','Open menu');}
+  btn.addEventListener('click',function(e){e.stopPropagation();menu.hidden?open():close();});
+  document.addEventListener('click',function(e){if(!menu.hidden&&!menu.contains(e.target)&&!btn.contains(e.target))close();});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!menu.hidden)close();});
+})();
+</script>
+<script>
+(function(){
+  var sys='us', shape='rect', mode='ton', matKey='gravel';
+  var $=function(id){return document.getElementById(id)};
+  var len=$('len'), wid=$('wid'), dia=$('dia'), depth=$('depth'),
+      price=$('price'), bagSize=$('bagSize'), customDens=$('customDens'), matSel=$('matSel');
+  var tally=[];                     // each: {label, volYd3, volM3, tons, tonnes}
+  var waste={active:false,pct:''};  // project-level buffer
+  var customDensUS=null;            // stored internally as tons/yd³
+
+  // constants
+  var M3_PER_YD3=0.764554858;
+  var DENS_US_TO_METRIC=1.186552;   // tons/yd³ -> tonnes/m³
+  var MAT={gravel:1.5, pea:1.4, crushed:1.6, river:1.4, sand:1.4, topsoil:1.1};
+
+  function parseNum(v){
+    if(v==null) return NaN;
+    v=(''+v).trim();
+    if(!v) return NaN;
+    var n=parseFloat(v);
+    return isNaN(n)?NaN:n;
+  }
+  function fmt(n){
+    if(n==null||isNaN(n)) return '—';
+    if(n>=100) return n.toFixed(1);
+    var r=Math.round(n*100)/100;
+    return (''+r).replace(/\.?0+$/,'')||'0';
+  }
+  function money(n){return '$'+n.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}
+
+  function densityUS(){
+    if(matKey==='custom') return customDensUS;   // may be null
+    return MAT[matKey];
+  }
+  function bagVol(){ // in current system's volume unit for area volume (ft³ for US, m³ for metric)
+    if(sys==='us'){ var b=parseNum(bagSize.value); return (isNaN(b)||b<=0)?0.5:b; }        // ft³
+    var l=parseNum(bagSize.value); return ((isNaN(l)||l<=0)?25:l)/1000;                     // litres -> m³
+  }
+
+  // current area volume in current system's cubic unit (ft³ US, m³ metric)
+  function areaVol(){
+    var d;
+    if(sys==='us'){ var din=parseNum(depth.value); if(isNaN(din)||din<=0) return NaN; d=din/12; }
+    else { var dcm=parseNum(depth.value); if(isNaN(dcm)||dcm<=0) return NaN; d=dcm/100; }
+    if(shape==='rect'){
+      var L=parseNum(len.value), W=parseNum(wid.value);
+      if(isNaN(L)||isNaN(W)||L<=0||W<=0) return NaN;
+      return L*W*d;
+    } else {
+      var D=parseNum(dia.value); if(isNaN(D)||D<=0) return NaN;
+      var r=D/2; return Math.PI*r*r*d;
+    }
+  }
+
+  // canonical volumes/weights for the current area (null if dims incomplete)
+  function currentArea(){
+    var v=areaVol(); if(isNaN(v)) return null;
+    var volYd3, volM3;
+    if(sys==='us'){ volYd3=v/27; volM3=volYd3*M3_PER_YD3; }
+    else { volM3=v; volYd3=v/M3_PER_YD3; }
+    var d=densityUS();
+    var tons  = (d==null)? null : volYd3*d;
+    var tonnes= (d==null)? null : volM3*(d*DENS_US_TO_METRIC);
+    return {volYd3:volYd3, volM3:volM3, tons:tons, tonnes:tonnes};
+  }
+
+  // completeness: dims+depth valid, and (mode!=='ton' OR density known)
+  function areaComplete(){
+    if(currentArea()==null) return false;
+    if(mode==='ton' && densityUS()==null) return false;
+    return true;
+  }
+  function listMissing(){
+    var m=[];
+    var din=parseNum(depth.value);
+    if(shape==='rect'){
+      if(isNaN(parseNum(len.value))||parseNum(len.value)<=0) m.push('length');
+      if(isNaN(parseNum(wid.value))||parseNum(wid.value)<=0) m.push('width');
+    } else {
+      if(isNaN(parseNum(dia.value))||parseNum(dia.value)<=0) m.push('diameter');
+    }
+    if(isNaN(din)||din<=0) m.push('depth');
+    if(mode==='ton' && densityUS()==null) m.push('material density');
+    if(!m.length) return 'the details';
+    if(m.length===1) return m[0];
+    return m.slice(0,-1).join(', ')+' and '+m[m.length-1];
+  }
+
+  // unit label helpers
+  function qtyUnit(){
+    if(mode==='bag') return 'bags';
+    if(mode==='ton') return sys==='us'?'tons':'tonnes';
+    return sys==='us'?'cu yd':'m³';
+  }
+  function volUnit(){ return sys==='us'?'cu yd':'m³'; }
+  function weightUnit(){ return sys==='us'?'tons':'tonnes'; }
+
+  // given canonical volumes {volYd3,volM3,tons,tonnes} and waste %, return the "sold by" quantity + a sub figure
+  // returns {qty, qtyNull, subTxt}  (qty already includes waste; bags are ceil'd)
+  function soldQty(v, wp){
+    var mlt = (wp&&wp>0)? (1+wp/100) : 1;
+    if(mode==='bag'){
+      var vol = (sys==='us'? v.volYd3*27 : v.volM3) * mlt;   // ft³ or m³
+      var bags = Math.ceil(vol / bagVol());
+      return {qty:bags, qtyNull:false, subTxt:'= '+fmt((sys==='us'?v.volYd3:v.volM3)*mlt)+' '+volUnit()};
+    }
+    if(mode==='ton'){
+      var w=(sys==='us'?v.tons:v.tonnes);
+      if(w==null) return {qty:null, qtyNull:true, subTxt:'= '+fmt((sys==='us'?v.volYd3:v.volM3)*mlt)+' '+volUnit()};
+      return {qty:w*mlt, qtyNull:false, subTxt:'= '+fmt((sys==='us'?v.volYd3:v.volM3)*mlt)+' '+volUnit()};
+    }
+    // yd3 / m3
+    var vol2=(sys==='us'?v.volYd3:v.volM3)*mlt;
+    var w2=(sys==='us'?v.tons:v.tonnes);
+    var sub = (w2==null)? '' : '= '+fmt(w2*mlt)+' '+weightUnit();
+    return {qty:vol2, qtyNull:false, subTxt:sub};
+  }
+
+  function priceVal(){ var p=parseNum(price.value); return (!isNaN(p)&&p>0)?p:null; }
+
+  // cost for a sold-quantity (qty already in mode unit incl waste). For bag, qty is bags.
+  function costFor(sq){
+    var p=priceVal(); if(p==null||sq.qty==null) return null;
+    return sq.qty*p;
+  }
+
+  // per-item quantity in the current sold-by unit (bags rounded up per area)
+  function itemQty(r){
+    if(mode==='bag'){ var vol=(sys==='us'? r.volYd3*27 : r.volM3); return Math.ceil(vol/bagVol()); }
+    if(mode==='ton'){ return sys==='us'? r.tons : r.tonnes; }   // may be null if density unknown
+    return sys==='us'? r.volYd3 : r.volM3;
+  }
+  // per-item cost uses the rate LOCKED onto the item when it was added — NOT the live price field
+  function itemCost(r){
+    if(r.rate==null) return null;
+    var q=itemQty(r); if(q==null) return null;
+    return q*r.rate;
+  }
+  // project base totals (before waste): summed quantity + summed cost of the locked items
+  function projTotals(){
+    var qty=0, qtyNull=false, cost=0, hasCost=false;
+    tally.forEach(function(r){
+      var q=itemQty(r);
+      if(q==null){ qtyNull=true; } else { qty+=q; }
+      var c=itemCost(r);
+      if(c!=null){ cost+=c; hasCost=true; }
+    });
+    return {qty:qty, qtyNull:qtyNull, cost:cost, hasCost:hasCost};
+  }
+  // (toggles stay enabled; changing unit/sold-by re-derives quantities from stored volumes)
+
+  function areaLabel(){
+    var du=sys==='us'?'ft':'m';
+    var pu=sys==='us'?'in':'cm';
+    var dp=depth.value.trim()||'?';
+    if(shape==='rect'){
+      var L=len.value.trim()||'?', W=wid.value.trim()||'?';
+      return L+'×'+W+du+' · '+dp+pu;
+    }
+    var D=dia.value.trim()||'?';
+    return 'Ø'+D+du+' · '+dp+pu;
+  }
+
+  // ---------- live area (single) ----------
+  function renderArea(){
+    var v=currentArea();
+    var b=$('addBtn'), complete=areaComplete();
+    b.disabled=!complete;
+    b.style.opacity=complete?'1':'.5';
+    b.style.cursor=complete?'pointer':'not-allowed';
+    $('hint').style.display=complete?'none':'block';
+    $('addNote').style.display=complete?'block':'none';
+    if(!complete) $('hint').textContent='Enter '+listMissing();
+
+    $('resUnit').textContent=qtyUnit();
+    $('resCostWrap').classList.remove('hide');   // always reserve the row — no layout jump
+    $('resTip').classList.remove('hide');
+    if(v==null || (mode==='ton'&&densityUS()==null)){
+      $('resQty').textContent='—';
+      $('resSub').textContent = (v!=null ? (soldQty(v,0).subTxt||'Enter dimensions to see the amount.') : 'Enter dimensions to see the amount.');
+      $('resCost').textContent='—';
+      return;
+    }
+    var sq=soldQty(v,0);
+    $('resQty').textContent = sq.qtyNull?'—':fmt(sq.qty);
+    $('resSub').textContent = sq.subTxt || '';
+    var c=costFor(sq);
+    $('resCost').textContent = (c!=null)? money(c) : '—';
+  }
+
+  // ---------- project tally ----------
+  function rowQtyText(r){
+    var q=itemQty(r);
+    if(q==null) return {txt:'—',na:true};
+    return {txt:fmt(q)+' '+qtyUnit(), na:false};
+  }
+  function rowCost(r){
+    var c=itemCost(r);   // uses this item's LOCKED rate
+    return (c==null)?{txt:'—',na:true}:{txt:money(c),na:false};
+  }
+
+  function renderTally(){
+    var body=$('tallyBody'), tot=$('projTotal');
+    var base=projTotals();
+    var wp = waste.active ? parseNum(waste.pct) : NaN;
+    var hasWp = waste.active && !isNaN(wp) && wp>0;
+    var mlt = hasWp ? wp/100 : 0;
+
+    // waste buffer: proportional to the base totals (bags rounded up), kept out of the item array
+    var wasteQty = (mode==='bag') ? Math.ceil(base.qty*mlt) : base.qty*mlt;
+    var wasteCost = base.hasCost ? base.cost*mlt : 0;
+    var totalQty = base.qty + wasteQty;
+    var totalCost = base.cost + wasteCost;
+
+    updateMbar(base, totalQty, totalCost);
+
+    if(!tally.length){
+      body.innerHTML='<div class="tally-empty">Covering more than one area? Add each above and they\u2019ll total here.</div>';
+      tot.style.display='none'; $('clearBtn').style.display='none';
+      waste.active=false; waste.pct=''; $('wastePct').value='';
+      $('wasteRow').style.display='none'; $('addWasteBtn').style.display='none';
+      return;
+    }
+    $('clearBtn').style.display='inline';
+
+    var html='';
+    tally.forEach(function(r,i){
+      var q=rowQtyText(r), c=rowCost(r);
+      html+='<div class="trow"><span class="desc">'+r.label+'</span>'
+          +'<span class="qt'+(q.na?' na':'')+'">'+q.txt+'</span>'
+          +'<span class="rc'+(c.na?' na':'')+'">'+c.txt+'</span>'
+          +'<button class="x" data-i="'+i+'" aria-label="Remove">×</button></div>';
+    });
+    body.innerHTML=html;
+
+    // waste row (persistent input — never rebuilt, so it keeps focus while typing)
+    if(waste.active){
+      $('wasteRow').style.display='grid';
+      $('addWasteBtn').style.display='none';
+      var wq=$('wasteQty'), wr=$('wasteRc');
+      if(hasWp){
+        wq.className='qt'; wq.textContent='+'+fmt(wasteQty)+' '+qtyUnit();
+        if(base.hasCost){ wr.className='rc'; wr.textContent='+'+money(wasteCost); }
+        else { wr.className='rc na'; wr.textContent='—'; }
+      } else {
+        wq.className='qt na'; wq.textContent='—';
+        wr.className='rc na'; wr.textContent='—';
+      }
+    } else {
+      $('wasteRow').style.display='none';
+      $('addWasteBtn').style.display='block';
+    }
+
+    tot.style.display='grid';
+    $('projCount').textContent='· '+tally.length+(tally.length>1?' areas':' area');
+    $('totalUnit').textContent=qtyUnit();
+    $('totalQty').textContent= base.qtyNull?'—':fmt(totalQty);
+    if(base.hasCost){
+      $('totalCostRow').style.display='block';
+      $('totalCost').style.display='block';
+      $('totalCost').textContent=money(totalCost);
+    } else {
+      $('totalCostRow').style.display='none';
+      $('totalCost').style.display='none';
+    }
+  }
+
+  function updateMbar(base, totalQty, totalCost){
+    if(tally.length){
+      $('mLab').textContent='Project total';
+      $('mUnit').textContent=qtyUnit();
+      $('mQty').textContent= base.qtyNull?'—':fmt(totalQty);
+      if(base.hasCost){ $('mCostWrap').classList.remove('hide'); $('mCost').textContent=money(totalCost); }
+      else { $('mCostWrap').classList.add('hide'); }
+      return;
+    }
+    // no areas → mirror the live single area (live price = preview of the area you're entering)
+    $('mLab').textContent='This area';
+    $('mUnit').textContent=qtyUnit();
+    var v=currentArea();
+    if(v==null || (mode==='ton'&&densityUS()==null)){
+      $('mQty').textContent='—'; $('mCostWrap').classList.add('hide'); return;
+    }
+    var sq=soldQty(v,0);
+    $('mQty').textContent= sq.qtyNull?'—':fmt(sq.qty);
+    var c=costFor(sq);
+    if(c!=null){ $('mCostWrap').classList.remove('hide'); $('mCost').textContent=money(c); }
+    else { $('mCostWrap').classList.add('hide'); }
+  }
+
+  function renderAll(){ renderArea(); renderTally(); }
+
+  // ---------- events ----------
+  [len,wid,dia,depth,price,bagSize].forEach(function(el){el.addEventListener('input',renderAll)});
+
+  // depth chip may be cleared on manual depth typing
+  depth.addEventListener('input',function(){
+    [].forEach.call($('depthChips').children,function(c){c.classList.remove('on')});
+  });
+  $('depthChips').addEventListener('click',function(e){
+    var b=e.target.closest('button'); if(!b)return;
+    depth.value=b.dataset.d;
+    [].forEach.call(this.children,function(c){c.classList.toggle('on',c===b)});
+    renderAll();
+  });
+
+  // shape toggle
+  $('shapeSeg').addEventListener('click',function(e){
+    var b=e.target.closest('button'); if(!b)return;
+    if(b.dataset.shape===shape) return;
+    shape=b.dataset.shape;
+    [].forEach.call(this.children,function(c){c.classList.toggle('on',c===b)});
+    $('rectFields').style.display = shape==='rect'?'block':'none';
+    $('circleFields').style.display = shape==='circle'?'block':'none';
+    renderAll();
+  });
+
+  // unit system toggle
+  $('unitSeg').addEventListener('click',function(e){
+    var b=e.target.closest('button'); if(!b)return;
+    if(b.dataset.sys===sys) return;
+    sys=b.dataset.sys;
+    [].forEach.call(this.children,function(c){c.classList.toggle('on',c===b)});
+    // dimension & price units differ across systems → clear inputs; drop any locked rates
+    if(tally.length){ tally.forEach(function(it){ it.rate=null; }); }
+    len.value='';wid.value='';dia.value='';depth.value='';price.value='';bagSize.value='';
+    if(matKey==='custom'){ customDens.value=''; customDensUS=null; }
+    [].forEach.call($('depthChips').children,function(c){c.classList.remove('on')});
+    // labels
+    var du=sys==='us'?'ft':'m', pu=sys==='us'?'in':'cm', bu=sys==='us'?'ft³':'L';
+    [].forEach.call(document.querySelectorAll('[data-dim]'),function(el){el.textContent=du});
+    [].forEach.call(document.querySelectorAll('[data-depth]'),function(el){el.textContent=pu});
+    [].forEach.call(document.querySelectorAll('[data-bagu]'),function(el){el.textContent=bu});
+    // depth chips
+    var chipVals = sys==='us'?['2','3','4','6']:['5','8','10','15'];
+    var chipTxt  = sys==='us'?['2"','3"','4"','6"']:['5 cm','8 cm','10 cm','15 cm'];
+    [].forEach.call($('depthChips').children,function(c,i){ c.dataset.d=chipVals[i]; c.textContent=chipTxt[i]; });
+    depth.placeholder = sys==='us'?'e.g. 3':'e.g. 8';
+    bagSize.placeholder = sys==='us'?'0.5':'25';
+    customDens.placeholder = sys==='us'?'e.g. 1.5':'e.g. 1.8';
+    $('customSuf').textContent = sys==='us'?'t/yd³':'t/m³';
+    updateModeLabels();
+    renderAll();
+  });
+
+  // material select
+  matSel.addEventListener('change',function(){
+    matKey=this.value;
+    $('customWrap').style.display = matKey==='custom'?'block':'none';
+    if(matKey!=='custom'){ customDensUS=null; }
+    renderAll();
+  });
+  customDens.addEventListener('input',function(){
+    var v=parseNum(this.value);
+    if(isNaN(v)||v<=0){ customDensUS=null; }
+    else { customDensUS = sys==='us'? v : v/DENS_US_TO_METRIC; }
+    renderAll();
+  });
+
+  // sold-by mode
+  function updateModeLabels(){
+    var unitWord = mode==='ton'?(sys==='us'?'ton':'tonne'):(mode==='yd3'?(sys==='us'?'cubic yard':'m³'):'bag');
+    var sufWord  = mode==='ton'?(sys==='us'?'$/ton':'$/tonne'):(mode==='yd3'?(sys==='us'?'$/yd³':'$/m³'):'$/bag');
+    $('priceLab').textContent='Price per '+unitWord;
+    $('priceSuf').textContent=sufWord;
+    $('bagWrap').style.display = mode==='bag'?'block':'none';
+  }
+  $('modeSeg').addEventListener('click',function(e){
+    var b=e.target.closest('button'); if(!b)return;
+    if(b.dataset.mode===mode) return;
+    mode=b.dataset.mode;
+    [].forEach.call(this.children,function(c){c.classList.toggle('on',c===b)});
+    price.value='';   // price unit changed → clear stale price
+    if(tally.length){ tally.forEach(function(it){ it.rate=null; }); }  // locked rates were per old unit
+    updateModeLabels();
+    renderAll();
+  });
+
+  // add / clear / remove
+  $('addBtn').addEventListener('click',function(){
+    if(!areaComplete()) return;
+    var v=currentArea(); if(v==null) return;
+    // LOCK the current price onto this area now; editing the price later won't touch it
+    tally.push({label:areaLabel(), volYd3:v.volYd3, volM3:v.volM3, tons:v.tons, tonnes:v.tonnes, rate:priceVal()});
+    // fully clear the form for the next area (price included); material/shape/mode/unit stay
+    len.value='';wid.value='';dia.value='';depth.value='';price.value='';
+    [].forEach.call($('depthChips').children,function(c){c.classList.remove('on')});
+    renderAll();
+    (shape==='rect'?len:dia).focus();
+  });
+  $('clearFieldsBtn').addEventListener('click',function(){
+    len.value='';wid.value='';dia.value='';depth.value='';price.value='';
+    [].forEach.call($('depthChips').children,function(c){c.classList.remove('on')});
+    renderAll();
+    (shape==='rect'?len:dia).focus();
+  });
+  $('tallyBody').addEventListener('click',function(e){
+    var x=e.target.closest('.x'); if(!x)return;
+    tally.splice(+x.dataset.i,1); renderTally();
+  });
+  $('clearBtn').addEventListener('click',function(){tally=[];renderTally()});
+
+  // waste
+  $('addWasteBtn').addEventListener('click',function(){
+    if(!tally.length) return;
+    waste.active=true; waste.pct=''; $('wastePct').value='';
+    renderTally(); $('wastePct').focus();
+  });
+  $('wastePct').addEventListener('input',function(){ waste.pct=this.value; renderTally(); });
+  $('wasteRemove').addEventListener('click',function(){
+    waste.active=false; waste.pct=''; $('wastePct').value=''; renderTally();
+  });
+
+  updateModeLabels();
+  renderAll();
+})();
+</script>
+</body>
+</html>

@@ -12,6 +12,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Board Foot Calculator — Instant BF &amp; Lumber Cost</title>
+<link rel="canonical" href="https://calcthis.co/board-foot-calculator/">
 <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
 <meta name="theme-color" content="#B5761F">
 <meta name="description" content="Free board foot calculator. Enter thickness, width, and length to get board feet and cost instantly. Supports 4/4 quarter sizes, metric, and a running cut-list tally.">
@@ -45,11 +46,22 @@
   }
   .wrap{max-width:1040px;margin:0 auto;padding:0 20px}
 
-  /* header */
-  header{padding:22px 0 6px}
-  .brand{display:flex;align-items:center;gap:10px;font-family:'Fraunces',serif;font-weight:600;font-size:19px;letter-spacing:-.01em}
-  .brand svg{flex:none}
+  /* shared site header */
+  header{position:relative;padding:20px 0 6px;display:flex;align-items:center;gap:13px}
+  .menu-btn{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border:0;background:none;cursor:pointer;color:var(--amber-deep);border-radius:8px;padding:0;transition:.15s}
+  .menu-btn:hover{background:#F5EFE4}
+  .menu-btn svg{display:block}
+  .menu-btn .ic-close{display:none}
+  .menu-btn.open .ic-open{display:none}
+  .menu-btn.open .ic-close{display:block}
+  .brand{display:flex;align-items:center;gap:10px;font-family:'Fraunces',serif;font-weight:600;font-size:19px;letter-spacing:-.01em;text-decoration:none;color:var(--ink)}
+  .brand img{display:block;width:24px;height:24px;flex:none}
   .brand span b{color:var(--amber)}
+  .menu{position:absolute;top:calc(100% + 6px);left:0;z-index:60;min-width:250px;background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:7px}
+  .menu[hidden]{display:none}
+  .menu a{display:block;font-family:'Fraunces',serif;font-size:16px;font-weight:500;color:var(--ink-soft);text-decoration:none;padding:9px 13px;border-radius:8px;transition:.12s}
+  .menu a:hover{background:#F5EFE4;color:var(--ink)}
+  .menu a.current{background:#F3EADA;color:var(--ink);font-weight:600}
 
   /* hero */
   .hero{padding:26px 0 22px}
@@ -216,7 +228,7 @@
     {
       "@type": "WebApplication",
       "name": "Board Foot Calculator",
-      "url": "https://calcthis.co/board-foot-calculator",
+      "url": "https://calcthis.co/board-foot-calculator/",
       "description": "Free board foot calculator with a running cut-list tally, 4/4 quarter sizes, metric support, a waste factor, and lumber cost estimation.",
       "applicationCategory": "UtilityApplication",
       "operatingSystem": "Any (web browser)",
@@ -269,14 +281,18 @@
 <div class="wrap">
 
   <header>
-    <div class="brand">
-      <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
-        <rect x="1.5" y="1.5" width="23" height="23" rx="6" stroke="#B5761F" stroke-width="1.5"/>
-        <path d="M6 9h14M6 13h14M6 17h14" stroke="#37503F" stroke-width="1.5" stroke-linecap="round"/>
-        <circle cx="13" cy="13" r="1.6" fill="#B5761F"/>
-      </svg>
-      <span>Board<b>Foot</b></span>
-    </div>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <a href="/board-foot-calculator/" class="current">Board Foot Calculator</a>
+      <a href="/gravel-calculator/">Gravel Calculator</a>
+    </nav>
   </header>
 
   <section class="hero">
@@ -445,6 +461,17 @@
 
 </div>
 
+<script>
+(function(){
+  var btn=document.getElementById('menuBtn'), menu=document.getElementById('siteMenu');
+  if(!btn||!menu) return;
+  function open(){menu.hidden=false;btn.classList.add('open');btn.setAttribute('aria-expanded','true');btn.setAttribute('aria-label','Close menu');}
+  function close(){menu.hidden=true;btn.classList.remove('open');btn.setAttribute('aria-expanded','false');btn.setAttribute('aria-label','Open menu');}
+  btn.addEventListener('click',function(e){e.stopPropagation();menu.hidden?open():close();});
+  document.addEventListener('click',function(e){if(!menu.hidden&&!menu.contains(e.target)&&!btn.contains(e.target))close();});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!menu.hidden)close();});
+})();
+</script>
 <script>
 (function(){
   var sys='in', lenUnit='ft';
