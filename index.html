@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CalcThis — Fast, Purpose-Built Calculators</title>
+<link rel="canonical" href="https://calcthis.co/">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<meta name="theme-color" content="#B5761F">
+<meta name="description" content="CalcThis is a growing hub of fast, single-purpose calculators built to do one job well — board foot, gravel, and mulch, with more on the way. Free, instant, no sign-up.">
+<meta property="og:title" content="CalcThis — Fast, Purpose-Built Calculators">
+<meta property="og:description" content="A growing hub of fast, single-purpose calculators. Board foot, gravel, mulch — free, instant, no sign-up.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://calcthis.co/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "name": "CalcThis",
+      "url": "https://calcthis.co/",
+      "description": "A growing hub of fast, single-purpose calculators built to do one job well."
+    },
+    {
+      "@type": "CollectionPage",
+      "name": "CalcThis Calculators",
+      "url": "https://calcthis.co/",
+      "hasPart": [
+        { "@type": "WebApplication", "name": "Board Foot Calculator", "url": "https://calcthis.co/board-foot-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
+        { "@type": "WebApplication", "name": "Gravel Calculator", "url": "https://calcthis.co/gravel-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
+        { "@type": "WebApplication", "name": "Mulch Calculator", "url": "https://calcthis.co/mulch-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } }
+      ]
+    }
+  ]
+}
+</script>
+<style>
+  :root{
+    --paper:#FBF8F3;
+    --card:#FFFFFF;
+    --ink:#241A11;
+    --ink-soft:#5B4C3B;
+    --muted:#8A7A66;
+    --line:#E7DECF;
+    --amber:#B5761F;
+    --amber-deep:#8F5C13;
+    --spruce:#37503F;
+    --spruce-soft:#5A7361;
+    --shadow:0 1px 2px rgba(36,26,17,.04),0 8px 28px rgba(36,26,17,.06);
+    --radius:14px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    font-family:'Inter',system-ui,sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+    line-height:1.55;
+    font-feature-settings:"tnum" 0;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+
+  /* shared site header */
+  header{position:relative;padding:20px 0 6px;display:flex;align-items:center;gap:13px}
+  .menu-btn{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border:0;background:none;cursor:pointer;color:var(--amber-deep);border-radius:8px;padding:0;transition:.15s}
+  .menu-btn:hover{background:#F5EFE4}
+  .menu-btn svg{display:block}
+  .menu-btn .ic-close{display:none}
+  .menu-btn.open .ic-open{display:none}
+  .menu-btn.open .ic-close{display:block}
+  .brand{display:flex;align-items:center;gap:10px;font-family:'Fraunces',serif;font-weight:600;font-size:19px;letter-spacing:-.01em;text-decoration:none;color:var(--ink)}
+  .brand img{display:block;width:24px;height:24px;flex:none}
+  .brand span b{color:var(--amber)}
+  .menu{position:absolute;top:calc(100% + 6px);left:0;z-index:60;min-width:250px;background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:7px}
+  .menu[hidden]{display:none}
+  .menu a{display:block;font-family:'Fraunces',serif;font-size:16px;font-weight:500;color:var(--ink-soft);text-decoration:none;padding:9px 13px;border-radius:8px;transition:.12s}
+  .menu a:hover{background:#F5EFE4;color:var(--ink)}
+  .menu a.current{background:#F3EADA;color:var(--ink);font-weight:600}
+
+  /* hero */
+  .hero{padding:34px 0 10px;max-width:60ch}
+  .eyebrow{font-size:12.5px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--amber-deep)}
+  h1{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(32px,5.2vw,50px);line-height:1.03;letter-spacing:-.02em;margin:9px 0 12px}
+  h1 b{color:var(--amber);font-weight:600}
+  .hero p{color:var(--ink-soft);font-size:17px}
+  .pills{display:flex;flex-wrap:wrap;gap:9px;margin-top:16px}
+  .pill{font-size:13px;font-weight:600;color:var(--spruce);background:#EDF2ED;border:1px solid #DCE6DC;border-radius:20px;padding:5px 12px}
+  .pill.amber{color:var(--amber-deep);background:#F6EEDF;border-color:#EADFC8}
+
+  /* section heading */
+  .sec-h{font-family:'Fraunces',serif;font-weight:600;font-size:15px;letter-spacing:.02em;color:var(--ink-soft);text-transform:uppercase;margin:34px 0 14px;display:flex;align-items:center;gap:10px}
+  .sec-h::after{content:"";flex:1;height:1px;background:var(--line)}
+
+  /* card grid */
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  @media(max-width:820px){.cards{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:520px){.cards{grid-template-columns:1fr}}
+  .calc{display:flex;flex-direction:column;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px 20px;text-decoration:none;color:inherit;transition:transform .14s ease,box-shadow .14s ease,border-color .14s ease}
+  .calc:hover{transform:translateY(-3px);box-shadow:0 2px 4px rgba(36,26,17,.05),0 16px 40px rgba(36,26,17,.10);border-color:#DFD2BC}
+  .calc .ico{width:52px;height:52px;border-radius:13px;display:flex;align-items:center;justify-content:center;background:linear-gradient(150deg,#F7EEDD,#F1E4CB);border:1px solid #EADFC8}
+  .calc .ico svg{display:block}
+  .calc h3{font-family:'Fraunces',serif;font-weight:600;font-size:20px;letter-spacing:-.01em}
+  .calc p{color:var(--ink-soft);font-size:14px;line-height:1.5}
+  .calc .go{margin-top:auto;font-size:13.5px;font-weight:600;color:var(--amber-deep);display:inline-flex;align-items:center;gap:6px}
+  .calc .go svg{transition:transform .14s ease}
+  .calc:hover .go svg{transform:translateX(3px)}
+  .soon{opacity:.72;cursor:default;pointer-events:none}
+  .soon .ico{background:#F4EFE6;border-color:var(--line)}
+  .soon .badge{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);border:1px dashed var(--line);border-radius:20px;padding:3px 9px;align-self:flex-start;margin-top:auto}
+
+  /* SEO intro / prose */
+  .prose{margin:40px 0 8px;max-width:72ch}
+  .prose h2{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(22px,3.4vw,28px);letter-spacing:-.01em;margin:0 0 12px}
+  .prose h3{font-family:'Fraunces',serif;font-weight:600;font-size:18px;margin:26px 0 8px}
+  .prose p{color:var(--ink-soft);font-size:16px;margin:0 0 13px}
+  .prose strong{color:var(--ink);font-weight:600}
+
+  footer{border-top:1px solid var(--line);margin-top:36px;padding:22px 0 44px;color:var(--muted);font-size:13px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+  footer a{color:var(--ink-soft);text-decoration:none}
+  footer nav a{margin-left:16px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <a href="/" class="current">Home</a>
+      <a href="/board-foot-calculator/">Board Foot Calculator</a>
+      <a href="/gravel-calculator/">Gravel Calculator</a>
+      <a href="/mulch-calculator/">Mulch Calculator</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div class="eyebrow">Purpose-built calculators</div>
+    <h1>The right calculator, <b>done instantly</b></h1>
+    <p>CalcThis is a growing hub of fast, single-purpose calculators — each built to do one job better than a bloated all-in-one tool. No clutter, no sign-up, answers the moment you type.</p>
+    <div class="pills">
+      <span class="pill amber">Instant — no sign-up</span>
+      <span class="pill">Works on any device</span>
+      <span class="pill">Free forever</span>
+    </div>
+  </section>
+
+  <div class="sec-h">Calculators</div>
+  <div class="cards">
+
+    <a class="calc" href="/board-foot-calculator/">
+      <span class="ico" aria-hidden="true">
+        <svg width="30" height="30" viewBox="0 0 32 32" fill="none">
+          <path d="M4 11.5 20 6l8 3.2L12 15z" fill="#E7CF9E" stroke="#8F5C13" stroke-width="1.4" stroke-linejoin="round"/>
+          <path d="M4 11.5V21l16 5v-11z" fill="#C9922F" stroke="#8F5C13" stroke-width="1.4" stroke-linejoin="round"/>
+          <path d="M20 15v11l8-3.2V9.2z" fill="#B5761F" stroke="#8F5C13" stroke-width="1.4" stroke-linejoin="round"/>
+          <path d="M7.5 13.2v9.3M11 14.4v9.3" stroke="#8F5C13" stroke-width="1" stroke-linecap="round" opacity=".55"/>
+        </svg>
+      </span>
+      <h3>Board Foot</h3>
+      <p>Board feet and lumber cost from thickness, width and length — with a full cut-list tally and waste factor.</p>
+      <span class="go">Open calculator
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+    </a>
+
+    <a class="calc" href="/gravel-calculator/">
+      <span class="ico" aria-hidden="true">
+        <svg width="30" height="30" viewBox="0 0 32 32" fill="none">
+          <path d="M3 24h26" stroke="#8F5C13" stroke-width="1.4" stroke-linecap="round"/>
+          <circle cx="10" cy="19.5" r="4.3" fill="#B5761F" stroke="#8F5C13" stroke-width="1.3"/>
+          <circle cx="20.5" cy="20" r="5" fill="#C9922F" stroke="#8F5C13" stroke-width="1.3"/>
+          <circle cx="15.5" cy="12.5" r="3.4" fill="#E7CF9E" stroke="#8F5C13" stroke-width="1.3"/>
+          <circle cx="24.5" cy="13.5" r="2.6" fill="#D8AE63" stroke="#8F5C13" stroke-width="1.2"/>
+        </svg>
+      </span>
+      <h3>Gravel</h3>
+      <p>How much gravel you need in tons, cubic yards or bags — for multiple areas, with material presets and cost.</p>
+      <span class="go">Open calculator
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+    </a>
+
+    <a class="calc" href="/mulch-calculator/">
+      <span class="ico" aria-hidden="true">
+        <svg width="30" height="30" viewBox="0 0 32 32" fill="none">
+          <path d="M3 23c3-6 7-9 13-9s10 3 13 9z" fill="#8B5E2A" stroke="#5B4C3B" stroke-width="1.4" stroke-linejoin="round"/>
+          <path d="M3 23h26" stroke="#5B4C3B" stroke-width="1.4" stroke-linecap="round"/>
+          <path d="M16 14V7M16 9l3-2.5M16 9l-3-2.5" stroke="#37503F" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M22 15c1.5-1 3-1 4.2-.4M10 15c-1.5-1-3-1-4.2-.4" stroke="#5A7361" stroke-width="1.3" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <h3>Mulch</h3>
+      <p>How much mulch for your beds in cubic yards or bags — rectangles and tree rings, multiple beds, cost and waste.</p>
+      <span class="go">Open calculator
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+    </a>
+
+    <div class="calc soon" aria-hidden="true">
+      <span class="ico">
+        <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><path d="M16 5v22M5 16h22" stroke="#8A7A66" stroke-width="1.6" stroke-linecap="round"/><circle cx="16" cy="16" r="12" stroke="#8A7A66" stroke-width="1.4" opacity=".5"/></svg>
+      </span>
+      <h3>More soon</h3>
+      <p>New single-purpose calculators are on the way — each built to beat the all-in-one tools at one job.</p>
+      <span class="badge">Coming soon</span>
+    </div>
+
+  </div>
+
+  <section class="prose">
+    <h2>Calculators that do one thing well</h2>
+    <p>Most calculator sites are enormous libraries where every tool is a compromise — a generic form bolted onto a shared template. <strong>CalcThis takes the opposite approach.</strong> Each calculator here is designed around a single real-world task, so the inputs match how you actually measure, the results come out in the units your supplier sells by, and the whole thing works the instant you type — no compute button, no account, no clutter.</p>
+    <p>Today the hub covers three of the most-searched estimating jobs in construction and landscaping: figuring out <strong>board feet</strong> and lumber cost for a cut list, working out how much <strong>gravel</strong> a driveway or path needs in tons or bags, and estimating <strong>mulch</strong> for garden beds by the cubic yard or bag. Every one includes a running project total so you can add several boards, areas or beds and price the whole job at once — plus a waste factor so you order enough the first time.</p>
+
+    <h3>Why single-purpose beats all-in-one</h3>
+    <p>A dedicated tool can make choices a general calculator can't: sensible defaults, the exact depth options people really use, unit handling that matches the trade, and a layout tuned for one job on a phone at the lumber yard or garden centre. That focus is the whole point — <strong>fast, accurate, and purpose-built</strong>, one calculator at a time.</p>
+
+    <h3>Free, instant, no sign-up</h3>
+    <p>Every calculator on CalcThis is free to use, needs no account, and runs entirely in your browser. Pick the one you need above and get your answer in seconds.</p>
+  </section>
+
+  <footer>
+    <span>© <span id="yr">2026</span> CalcThis — estimates only; confirm details with your supplier.</span>
+    <nav>
+      <a href="/board-foot-calculator/">Board Foot</a>
+      <a href="/gravel-calculator/">Gravel</a>
+      <a href="/mulch-calculator/">Mulch</a>
+    </nav>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  var btn=document.getElementById('menuBtn'), menu=document.getElementById('siteMenu');
+  if(!btn||!menu) return;
+  function open(){menu.hidden=false;btn.classList.add('open');btn.setAttribute('aria-expanded','true');btn.setAttribute('aria-label','Close menu');}
+  function close(){menu.hidden=true;btn.classList.remove('open');btn.setAttribute('aria-expanded','false');btn.setAttribute('aria-label','Open menu');}
+  btn.addEventListener('click',function(e){e.stopPropagation();menu.hidden?open():close();});
+  document.addEventListener('click',function(e){if(!menu.hidden&&!menu.contains(e.target)&&!btn.contains(e.target))close();});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!menu.hidden)close();});
+  var y=document.getElementById('yr'); if(y) y.textContent=new Date().getFullYear();
+})();
+</script>
+</body>
+</html>
