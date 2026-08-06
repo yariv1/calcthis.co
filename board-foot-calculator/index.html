@@ -292,6 +292,7 @@
     <nav class="menu" id="siteMenu" hidden>
       <a href="/board-foot-calculator/" class="current">Board Foot Calculator</a>
       <a href="/gravel-calculator/">Gravel Calculator</a>
+      <a href="/mulch-calculator/">Mulch Calculator</a>
     </nav>
   </header>
 
@@ -511,7 +512,7 @@
   function fmt(n){
     if(n>=100) return n.toFixed(1);
     var r=Math.round(n*1000)/1000;
-    return (''+r).replace(/\.?0+$/,'')||'0';
+    var s=''+r; if(s.indexOf('.')>=0) s=s.replace(/\.?0+$/,''); return s||'0';
   }
   function money(n){return '$'+n.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}
 

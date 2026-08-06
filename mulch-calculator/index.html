@@ -11,11 +11,11 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gravel Calculator — How Much Gravel Do I Need? (Tons &amp; Yards)</title>
-<link rel="canonical" href="https://calcthis.co/gravel-calculator/">
+<title>Mulch Calculator — How Much Mulch Do I Need? (Yards &amp; Bags)</title>
+<link rel="canonical" href="https://calcthis.co/mulch-calculator/">
 <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
 <meta name="theme-color" content="#B5761F">
-<meta name="description" content="Free gravel calculator. Enter your area and depth to get how much gravel you need in tons, cubic yards, or bags — plus cost. Add multiple areas for a whole project. Rectangle or circle, US or metric.">
+<meta name="description" content="Free mulch calculator. Enter your bed size and depth to get how much mulch you need in cubic yards or bags — plus cost. Add multiple beds for a whole project. Rectangle or circle, US or metric.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -241,18 +241,17 @@
   "@graph": [
     {
       "@type": "WebApplication",
-      "name": "Gravel Calculator",
-      "url": "https://calcthis.co/gravel-calculator/",
-      "description": "Free gravel calculator. Enter your area and depth to get how much gravel you need in tons, cubic yards, or bags, plus estimated cost. Add multiple areas to total a whole project, with a waste buffer.",
+      "name": "Mulch Calculator",
+      "url": "https://calcthis.co/mulch-calculator/",
+      "description": "Free mulch calculator. Enter your bed size and depth to get how much mulch you need in cubic yards or bags, plus estimated cost. Add multiple beds to total a whole project, with a waste buffer.",
       "applicationCategory": "UtilityApplication",
       "operatingSystem": "Any (web browser)",
       "browserRequirements": "Requires JavaScript",
       "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
       "featureList": [
-        "Gravel amount in tons, cubic yards, or bags",
-        "Rectangle and circle areas",
-        "Material presets with typical densities",
-        "Running project total across multiple areas",
+        "Mulch amount in cubic yards or bags",
+        "Rectangle and circle beds",
+        "Running project total across multiple beds",
         "Waste factor buffer on the total",
         "US and metric units",
         "Instant cost estimate"
@@ -263,28 +262,28 @@
       "mainEntity": [
         {
           "@type": "Question",
-          "name": "How much gravel do I need?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Multiply your area by the depth to get a volume, then convert to cubic yards or tons. For a rectangle, area is length times width; for a circle it is pi times the radius squared. Multiply by depth in feet, divide by 27 for cubic yards, then multiply by the material density for tons. The calculator above does all of this instantly as you type." }
+          "name": "How much mulch do I need?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Multiply your bed area by the depth to get a volume, then convert to cubic yards or bags. For a rectangle, area is length times width; for a circle it is pi times the radius squared. Multiply by depth in feet and divide by 27 to get cubic yards. The calculator above does all of this instantly as you type." }
         },
         {
           "@type": "Question",
-          "name": "How many tons are in a cubic yard of gravel?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Most gravel weighs about 1.4 to 1.6 tons per cubic yard. Pea gravel and river rock are near the lighter end, crushed stone toward the heavier end. Density varies with moisture and stone type, so use your supplier's figure when they give one. Pick a material above and the calculator applies a typical density automatically." }
+          "name": "How many bags of mulch are in a cubic yard?",
+          "acceptedAnswer": { "@type": "Answer", "text": "A cubic yard is 27 cubic feet. Bagged mulch is most often sold in 2 cubic foot bags, so one cubic yard equals about 13.5 of those bags. If your bags are a different size, set the bag size in the calculator and it rounds up to whole bags for you." }
         },
         {
           "@type": "Question",
-          "name": "How deep should the gravel be?",
-          "acceptedAnswer": { "@type": "Answer", "text": "For paths and decorative ground cover, 2 to 3 inches is typical. For garden beds and general coverage, aim for about 4 inches. For a driveway, 4 to 6 inches is common, often over a compacted base. Tap a depth chip in the calculator to use one of these common depths." }
+          "name": "How deep should mulch be?",
+          "acceptedAnswer": { "@type": "Answer", "text": "For most beds, 2 to 3 inches is ideal. Use about 3 to 4 inches to suppress weeds more strongly, and as little as 1 inch when simply top-dressing an existing layer. Keep mulch a few inches clear of trunks and stems. Tap a depth chip in the calculator to use one of these common depths." }
         },
         {
           "@type": "Question",
-          "name": "Should I order extra gravel for waste?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Gravel settles and compacts, and some is lost to uneven ground and spillage, so ordering about 10 percent extra is a good rule of thumb. Use the Add waste calc option in the project total to add a percentage buffer to your order." }
+          "name": "Should I order extra mulch for waste?",
+          "acceptedAnswer": { "@type": "Answer", "text": "A little. Mulch settles and beds are rarely perfectly even, so adding about 10 percent is a sensible buffer. Use the Add waste calc option in the project total to add a percentage to your order." }
         },
         {
           "@type": "Question",
-          "name": "Does this gravel calculator work in metric?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Switch to Metric to enter your area in metres and depth in centimetres. The result is shown in cubic metres and tonnes, or bags, so you can order in whichever unit your supplier uses." }
+          "name": "Does this mulch calculator work in metric?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Switch to Metric to enter your bed in metres and depth in centimetres. The result is shown in cubic metres or bags, so you can order in whichever unit your supplier uses." }
         }
       ]
     }
@@ -306,15 +305,15 @@
     </a>
     <nav class="menu" id="siteMenu" hidden>
       <a href="/board-foot-calculator/">Board Foot Calculator</a>
-      <a href="/gravel-calculator/" class="current">Gravel Calculator</a>
-      <a href="/mulch-calculator/">Mulch Calculator</a>
+      <a href="/gravel-calculator/">Gravel Calculator</a>
+      <a href="/mulch-calculator/" class="current">Mulch Calculator</a>
     </nav>
   </header>
 
   <section class="hero">
     <div class="eyebrow">Landscaping math, done instantly</div>
-    <h1>Gravel Calculator</h1>
-    <p>Enter the size of your area and how deep you want the gravel — get the amount in tons, cubic yards, or bags, plus the cost, the moment you type. Covering more than one area? Add each to the running project total below.</p>
+    <h1>Mulch Calculator</h1>
+    <p>Enter the size of your bed and how deep you want the mulch — get the amount in cubic yards or bags, plus the cost, the moment you type. Mulching more than one bed? Add each to the running project total below.</p>
   </section>
 
   <div class="grid">
@@ -323,7 +322,7 @@
     <div class="card">
       <div class="card-pad">
         <div class="row-top">
-          <h2>Your area</h2>
+          <h2>Your bed</h2>
           <div class="seg" id="unitSeg">
             <button class="on" data-sys="us">US</button>
             <button data-sys="metric">Metric</button>
@@ -364,59 +363,39 @@
           <span class="lab">Depth <span class="unit" data-depth>in</span></span>
           <div class="inp"><input id="depth" type="number" inputmode="decimal" placeholder="e.g. 3"><span class="suf" data-depth>in</span></div>
           <div class="chips" id="depthChips">
+            <button data-d="1">1&quot;</button>
             <button data-d="2">2&quot;</button>
             <button data-d="3">3&quot;</button>
             <button data-d="4">4&quot;</button>
-            <button data-d="6">6&quot;</button>
-          </div>
-        </label>
-
-        <label class="fld">
-          <span class="lab">Material</span>
-          <div class="sel">
-            <select id="matSel">
-              <option value="gravel">Gravel (¾″)</option>
-              <option value="pea">Pea gravel</option>
-              <option value="crushed">Crushed stone</option>
-              <option value="river">River rock</option>
-              <option value="sand">Sand</option>
-              <option value="topsoil">Topsoil</option>
-              <option value="custom">Custom density…</option>
-            </select>
-          </div>
-          <div class="inp" id="customWrap" style="display:none;margin-top:9px">
-            <input id="customDens" type="number" inputmode="decimal" placeholder="e.g. 1.5">
-            <span class="suf" id="customSuf">t/yd³</span>
           </div>
         </label>
 
         <label class="fld">
           <span class="lab">Sold by</span>
-          <div class="modeseg" id="modeSeg">
-            <button class="on" data-mode="ton">Ton</button>
-            <button data-mode="yd3">Cubic yard</button>
+          <div class="modeseg" id="modeSeg" style="grid-template-columns:1fr 1fr">
+            <button class="on" data-mode="yd3">Cubic yard</button>
             <button data-mode="bag">Bag</button>
           </div>
         </label>
 
         <div class="two" id="priceBagRow">
           <label class="fld" style="margin-bottom:0">
-            <span class="lab"><span id="priceLab">Price per ton</span> <span class="unit">optional</span></span>
-            <div class="inp"><input id="price" type="number" inputmode="decimal" placeholder="0.00" step="0.01"><span class="suf" id="priceSuf">$/ton</span></div>
+            <span class="lab"><span id="priceLab">Price per cubic yard</span> <span class="unit">optional</span></span>
+            <div class="inp"><input id="price" type="number" inputmode="decimal" placeholder="0.00" step="0.01"><span class="suf" id="priceSuf">$/yd³</span></div>
           </label>
           <label class="fld" id="bagWrap" style="margin-bottom:0;display:none">
             <span class="lab">Bag size <span class="unit" data-bagu>ft³</span></span>
-            <div class="inp"><input id="bagSize" type="number" inputmode="decimal" placeholder="0.5" step="0.05"><span class="suf" data-bagu>ft³</span></div>
+            <div class="inp"><input id="bagSize" type="number" inputmode="decimal" placeholder="2" step="0.5"><span class="suf" data-bagu>ft³</span></div>
           </label>
         </div>
 
         <div class="add-wrap">
           <div class="add-row">
-            <button class="btn" id="addBtn">+ Add area to project</button>
+            <button class="btn" id="addBtn">+ Add bed to project</button>
             <button class="linkbtn" id="clearFieldsBtn">Clear fields</button>
           </div>
           <div class="res-hint" id="hint">Enter your length, width and depth</div>
-          <div class="add-note" id="addNote">Covering several spots? Add each area to total the whole job.</div>
+          <div class="add-note" id="addNote">Mulching several beds? Add each to total the whole job.</div>
         </div>
       </div>
     </div>
@@ -425,11 +404,11 @@
     <div class="card">
       <div class="card-pad">
         <!-- live single-area answer -->
-        <div class="res-lab" id="resLab">This area needs</div>
-        <div class="res-big"><span id="resQty">—</span> <span class="res-unit" id="resUnit">tons</span></div>
+        <div class="res-lab" id="resLab">This bed needs</div>
+        <div class="res-big"><span id="resQty">—</span> <span class="res-unit" id="resUnit">cu yd</span></div>
         <div class="res-sub" id="resSub">Enter dimensions to see the amount.</div>
         <div class="res-cost hide" id="resCostWrap"><span class="k">Estimated cost</span><span class="v" id="resCost"></span></div>
-        <div class="res-tip" id="resTip">Tip: order about 10% extra for settling and spillage.</div>
+        <div class="res-tip" id="resTip">Tip: add about 10% for settling and uneven beds.</div>
 
         <div class="proj-sep"></div>
 
@@ -439,7 +418,7 @@
           <button id="clearBtn" style="display:none">Clear all</button>
         </div>
         <div id="tallyBody">
-          <div class="tally-empty">Covering more than one area? Add each above and they'll total here.</div>
+          <div class="tally-empty">Mulching more than one bed? Add each above and they'll total here.</div>
         </div>
         <div class="trow wrow" id="wasteRow" style="display:none">
           <span class="desc wdesc">
@@ -453,7 +432,7 @@
         </div>
         <div class="tally-total" id="projTotal" style="display:none">
           <span class="tl">Total <span class="sub" id="projCount"></span></span>
-          <span class="tv"><span id="totalQty">0</span> <span id="totalUnit">tons</span></span>
+          <span class="tv"><span id="totalQty">0</span> <span id="totalUnit">cu yd</span></span>
           <span class="tl sub" id="totalCostRow" style="display:none">Estimated cost</span>
           <span class="tv" id="totalCost" style="display:none"></span>
         </div>
@@ -467,7 +446,7 @@
   <div class="mbar" id="mbar">
     <span class="mbar-lab" id="mLab">This area</span>
     <div class="mbar-vals">
-      <span class="mbar-seg" id="mSeg"><b id="mQty">0</b> <span id="mUnit">tons</span></span>
+      <span class="mbar-seg" id="mSeg"><b id="mQty">0</b> <span id="mUnit">cu yd</span></span>
       <span class="mbar-cost hide" id="mCostWrap"><span class="mbar-eq">=</span> <b id="mCost"></b></span>
     </div>
   </div>
@@ -476,54 +455,52 @@
   <section class="content">
     <div class="grid2">
       <div>
-        <h2>How much gravel do I need?</h2>
-        <p>Working out how much gravel to buy comes down to one thing: the <strong>volume</strong> of the space you're filling. Measure the area, choose a depth, multiply them together, then convert that volume into the unit your supplier sells by — cubic yards, tons, or bags.</p>
+        <h2>How much mulch do I need?</h2>
+        <p>Working out how much mulch to buy comes down to one thing: the <strong>volume</strong> of the bed you're covering. Measure the bed, choose a depth, multiply them together, then convert that volume into the unit your supplier sells by — cubic yards for bulk, or bags.</p>
         <div class="formula">
           Area × Depth ÷ 27 = Cubic yards
           <small>DEPTH IN FEET · ÷27 CONVERTS CUBIC FEET TO CUBIC YARDS</small>
         </div>
-        <p>To get the <strong>weight in tons</strong>, multiply the cubic yards by the gravel's density — most gravel is about 1.4–1.6 tons per cubic yard. The calculator above does all of this the instant you type, in whichever units and shape you pick.</p>
+        <p>Buying <strong>bagged mulch</strong>? Most bags hold 2 cubic feet, so one cubic yard is about <strong>13.5 bags</strong>. The calculator above does all of this the instant you type — switch <em>Sold by</em> to <em>Bag</em> and it rounds up to whole bags.</p>
 
         <h2>Rectangle or circle</h2>
-        <p>For a rectangular area — a driveway, patio, or path — the area is simply length × width. For a round area like a fire-pit border or circular bed, it's π × radius². Pick the shape at the top of the calculator and the right measurement boxes appear.</p>
+        <p>For a rectangular bed — along a fence, path, or foundation — the area is simply length × width. For a round bed like a tree ring or island, it's π × radius². Pick the shape at the top of the calculator and the right measurement boxes appear.</p>
 
         <h2>Worked example</h2>
-        <p>A rectangular path 20 ft long and 3 ft wide, filled 3 inches deep with gravel:</p>
-        <p style="color:var(--ink);font-weight:500">20 × 3 × 0.25 ÷ 27 = <strong>0.56 cubic yards</strong>, or about <strong>0.8 tons</strong>. Add ~10% for settling and you'd order a bit under a ton.</p>
+        <p>A rectangular bed 20 ft long and 4 ft wide, covered 3 inches deep:</p>
+        <p style="color:var(--ink);font-weight:500">20 × 4 × 0.25 ÷ 27 = <strong>0.74 cubic yards</strong>, or about <strong>10 bags</strong> of 2 cu ft each. Add ~10% for settling and round up when ordering.</p>
       </div>
 
       <div>
-        <h2>How deep should gravel be?</h2>
+        <h2>How deep should mulch be?</h2>
         <ul>
-          <li><strong>2–3 inches</strong> — paths and decorative ground cover</li>
-          <li><strong>4 inches</strong> — garden beds and general coverage</li>
-          <li><strong>4–6 inches</strong> — driveways, usually over a compacted base</li>
+          <li><strong>1 inch</strong> — top-dressing an existing mulch layer</li>
+          <li><strong>2–3 inches</strong> — the sweet spot for most beds</li>
+          <li><strong>3–4 inches</strong> — stronger weed suppression and moisture retention</li>
         </ul>
-        <p>Tap a depth chip in the calculator to drop in one of these common depths without typing.</p>
+        <p>Keep mulch a few inches clear of trunks and stems — piling it against them (a "mulch volcano") traps moisture and invites rot. Tap a depth chip in the calculator to drop in a common depth without typing.</p>
 
-        <h2>Typical gravel densities</h2>
-        <p>Weight depends on the material. These are the typical figures the calculator uses; your supplier's number may differ with moisture and stone type — pick <em>Custom density</em> to enter your own.</p>
+        <h2>Coverage per cubic yard</h2>
+        <p>One cubic yard of mulch spreads across a surprising amount of ground — how far depends entirely on depth:</p>
         <table class="dtable">
-          <thead><tr><th>Material</th><th>Tons / yd³</th></tr></thead>
+          <thead><tr><th>Depth</th><th>Coverage / yd³</th></tr></thead>
           <tbody>
-            <tr><td>Gravel (¾″)</td><td>1.5</td></tr>
-            <tr><td>Pea gravel</td><td>1.4</td></tr>
-            <tr><td>Crushed stone</td><td>1.6</td></tr>
-            <tr><td>River rock</td><td>1.4</td></tr>
-            <tr><td>Sand</td><td>1.4</td></tr>
-            <tr><td>Topsoil</td><td>1.1</td></tr>
+            <tr><td>1 inch</td><td>324 sq ft</td></tr>
+            <tr><td>2 inches</td><td>162 sq ft</td></tr>
+            <tr><td>3 inches</td><td>108 sq ft</td></tr>
+            <tr><td>4 inches</td><td>81 sq ft</td></tr>
           </tbody>
         </table>
-        <p>Buying bagged gravel instead? Switch <strong>Sold by</strong> to <em>Bag</em> and set your bag size — the calculator rounds up to whole bags.</p>
+        <p>Prefer bags? At 2 cubic feet each, one bag covers about <strong>8 sq ft</strong> at 3 inches deep. Switch <strong>Sold by</strong> to <em>Bag</em> and set your bag size — the calculator rounds up to whole bags.</p>
       </div>
     </div>
 
     <h2 style="margin-top:36px">Common questions</h2>
-    <details class="faq"><summary>How much gravel do I need?</summary><p>Multiply your area by the depth to get a volume, then convert to cubic yards or tons. For a rectangle, area is length × width; for a circle it's π × radius². Multiply by depth in feet, divide by 27 for cubic yards, then multiply by the material density for tons. The calculator above does all of this instantly as you type.</p></details>
-    <details class="faq"><summary>How many tons are in a cubic yard of gravel?</summary><p>Most gravel weighs about <strong>1.4 to 1.6 tons</strong> per cubic yard. Pea gravel and river rock sit near the lighter end, crushed stone toward the heavier end. Density varies with moisture and stone type, so use your supplier's figure when they give one — or pick a material above and the calculator applies a typical density automatically.</p></details>
-    <details class="faq"><summary>How deep should the gravel be?</summary><p>For paths and decorative ground cover, <strong>2–3 inches</strong> is typical. For garden beds and general coverage, aim for about <strong>4 inches</strong>. For a driveway, <strong>4–6 inches</strong> is common, often over a compacted base. Tap a depth chip in the calculator to use one of these.</p></details>
-    <details class="faq"><summary>Should I order extra gravel for waste?</summary><p>Yes. Gravel settles and compacts, and some is lost to uneven ground and spillage, so ordering about <strong>10% extra</strong> is a good rule of thumb. Tap <strong>&ldquo;+ Add waste calc&rdquo;</strong> in the project total to add a percentage buffer to your order.</p></details>
-    <details class="faq"><summary>Does this gravel calculator work in metric?</summary><p>Yes. Switch to "Metric" to enter your area in metres and depth in centimetres. The result is shown in cubic metres and tonnes, or bags, so you can order in whichever unit your supplier uses.</p></details>
+    <details class="faq"><summary>How much mulch do I need?</summary><p>Multiply your bed area by the depth to get a volume, then convert to cubic yards or bags. For a rectangle, area is length × width; for a circle it's π × radius². Multiply by depth in feet and divide by 27 to get cubic yards. The calculator above does all of this instantly as you type.</p></details>
+    <details class="faq"><summary>How many bags of mulch are in a cubic yard?</summary><p>A cubic yard is 27 cubic feet. Bagged mulch is most often sold in <strong>2 cubic foot bags</strong>, so one cubic yard equals about <strong>13.5</strong> of those bags. If your bags are a different size, set the bag size in the calculator and it rounds up to whole bags for you.</p></details>
+    <details class="faq"><summary>How deep should mulch be?</summary><p>For most beds, <strong>2–3 inches</strong> is ideal. Use about <strong>3–4 inches</strong> to suppress weeds more strongly, and as little as <strong>1 inch</strong> when simply top-dressing an existing layer. Keep mulch a few inches clear of trunks and stems. Tap a depth chip in the calculator to use one of these.</p></details>
+    <details class="faq"><summary>Should I order extra mulch for waste?</summary><p>A little. Mulch settles and beds are rarely perfectly even, so adding about <strong>10%</strong> is a sensible buffer. Tap <strong>&ldquo;+ Add waste calc&rdquo;</strong> in the project total to add a percentage to your order.</p></details>
+    <details class="faq"><summary>Does this mulch calculator work in metric?</summary><p>Yes. Switch to "Metric" to enter your bed in metres and depth in centimetres. The result is shown in cubic metres or bags, so you can order in whichever unit your supplier uses.</p></details>
   </section>
 
   <footer>
@@ -547,18 +524,15 @@
 </script>
 <script>
 (function(){
-  var sys='us', shape='rect', mode='ton', matKey='gravel';
+  var sys='us', shape='rect', mode='yd3';
   var $=function(id){return document.getElementById(id)};
   var len=$('len'), wid=$('wid'), dia=$('dia'), depth=$('depth'),
-      price=$('price'), bagSize=$('bagSize'), customDens=$('customDens'), matSel=$('matSel');
-  var tally=[];                     // each: {label, volYd3, volM3, tons, tonnes}
+      price=$('price'), bagSize=$('bagSize');
+  var tally=[];                     // each: {label, volYd3, volM3, rate}
   var waste={active:false,pct:''};  // project-level buffer
-  var customDensUS=null;            // stored internally as tons/yd³
 
   // constants
   var M3_PER_YD3=0.764554858;
-  var DENS_US_TO_METRIC=1.186552;   // tons/yd³ -> tonnes/m³
-  var MAT={gravel:1.5, pea:1.4, crushed:1.6, river:1.4, sand:1.4, topsoil:1.1};
 
   function parseNum(v){
     if(v==null) return NaN;
@@ -575,13 +549,9 @@
   }
   function money(n){return '$'+n.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}
 
-  function densityUS(){
-    if(matKey==='custom') return customDensUS;   // may be null
-    return MAT[matKey];
-  }
-  function bagVol(){ // in current system's volume unit for area volume (ft³ for US, m³ for metric)
-    if(sys==='us'){ var b=parseNum(bagSize.value); return (isNaN(b)||b<=0)?0.5:b; }        // ft³
-    var l=parseNum(bagSize.value); return ((isNaN(l)||l<=0)?25:l)/1000;                     // litres -> m³
+  function bagVol(){ // volume of one bag, in the current system's cubic unit for area volume (ft³ US, m³ metric)
+    if(sys==='us'){ var b=parseNum(bagSize.value); return (isNaN(b)||b<=0)?2:b; }            // ft³ (2 cu ft default)
+    var l=parseNum(bagSize.value); return ((isNaN(l)||l<=0)?50:l)/1000;                       // litres -> m³ (50 L default)
   }
 
   // current area volume in current system's cubic unit (ft³ US, m³ metric)
@@ -599,24 +569,17 @@
     }
   }
 
-  // canonical volumes/weights for the current area (null if dims incomplete)
+  // canonical volumes for the current bed (null if dims incomplete)
   function currentArea(){
     var v=areaVol(); if(isNaN(v)) return null;
     var volYd3, volM3;
     if(sys==='us'){ volYd3=v/27; volM3=volYd3*M3_PER_YD3; }
     else { volM3=v; volYd3=v/M3_PER_YD3; }
-    var d=densityUS();
-    var tons  = (d==null)? null : volYd3*d;
-    var tonnes= (d==null)? null : volM3*(d*DENS_US_TO_METRIC);
-    return {volYd3:volYd3, volM3:volM3, tons:tons, tonnes:tonnes};
+    return {volYd3:volYd3, volM3:volM3};
   }
 
-  // completeness: dims+depth valid, and (mode!=='ton' OR density known)
-  function areaComplete(){
-    if(currentArea()==null) return false;
-    if(mode==='ton' && densityUS()==null) return false;
-    return true;
-  }
+  // completeness: dims + depth valid
+  function areaComplete(){ return currentArea()!=null; }
   function listMissing(){
     var m=[];
     var din=parseNum(depth.value);
@@ -627,7 +590,6 @@
       if(isNaN(parseNum(dia.value))||parseNum(dia.value)<=0) m.push('diameter');
     }
     if(isNaN(din)||din<=0) m.push('depth');
-    if(mode==='ton' && densityUS()==null) m.push('material density');
     if(!m.length) return 'the details';
     if(m.length===1) return m[0];
     return m.slice(0,-1).join(', ')+' and '+m[m.length-1];
@@ -636,13 +598,11 @@
   // unit label helpers
   function qtyUnit(){
     if(mode==='bag') return 'bags';
-    if(mode==='ton') return sys==='us'?'tons':'tonnes';
     return sys==='us'?'cu yd':'m³';
   }
   function volUnit(){ return sys==='us'?'cu yd':'m³'; }
-  function weightUnit(){ return sys==='us'?'tons':'tonnes'; }
 
-  // given canonical volumes {volYd3,volM3,tons,tonnes} and waste %, return the "sold by" quantity + a sub figure
+  // given canonical volumes {volYd3,volM3} and waste %, return the "sold by" quantity + a sub figure
   // returns {qty, qtyNull, subTxt}  (qty already includes waste; bags are ceil'd)
   function soldQty(v, wp){
     var mlt = (wp&&wp>0)? (1+wp/100) : 1;
@@ -651,15 +611,10 @@
       var bags = Math.ceil(vol / bagVol());
       return {qty:bags, qtyNull:false, subTxt:'= '+fmt((sys==='us'?v.volYd3:v.volM3)*mlt)+' '+volUnit()};
     }
-    if(mode==='ton'){
-      var w=(sys==='us'?v.tons:v.tonnes);
-      if(w==null) return {qty:null, qtyNull:true, subTxt:'= '+fmt((sys==='us'?v.volYd3:v.volM3)*mlt)+' '+volUnit()};
-      return {qty:w*mlt, qtyNull:false, subTxt:'= '+fmt((sys==='us'?v.volYd3:v.volM3)*mlt)+' '+volUnit()};
-    }
     // yd3 / m3
     var vol2=(sys==='us'?v.volYd3:v.volM3)*mlt;
-    var w2=(sys==='us'?v.tons:v.tonnes);
-    var sub = (w2==null)? '' : '= '+fmt(w2*mlt)+' '+weightUnit();
+    var ft3=(sys==='us'? v.volYd3*27*mlt : null);
+    var sub = (sys==='us')? '= '+fmt(ft3)+' cu ft' : '';
     return {qty:vol2, qtyNull:false, subTxt:sub};
   }
 
@@ -667,19 +622,12 @@
 
   // one bag's volume expressed in cubic yards (for converting bag price <-> $/yd³)
   function bagVolYd3(){ return sys==='us'? bagVol()/27 : bagVol()/M3_PER_YD3; }
-  // tons per yd³ for the CURRENT material/system (null if density unknown). US canonical unit is tons/yd³.
-  function tonsPerYd3(){ var d=densityUS(); return d==null?null:d; }   // densityUS is already tons/yd³
 
-  // convert the LIVE price (current mode + system) into a canonical $ per yd³, stored on lock.
-  // returns null if no price, or if ton-priced with unknown density.
+  // convert the LIVE price (in the current mode + system) into a canonical $ per yd³, stored on lock
   function liveRateYd3(){
     var p=priceVal(); if(p==null) return null;
-    if(mode==='bag') return p / bagVolYd3();                 // $/bag -> $/yd³
-    if(mode==='ton'){
-      var d=densityUS(); if(d==null) return null;            // $/ton -> $/yd³ via tons per yd³
-      return sys==='us' ? p*d : p*(d*DENS_US_TO_METRIC)*M3_PER_YD3;   // $/tonne -> $/yd³
-    }
-    return sys==='us' ? p : p*M3_PER_YD3;                    // $/yd³, or ($/m³ -> $/yd³)
+    if(mode==='bag') return p / bagVolYd3();          // $/bag -> $/yd³
+    return sys==='us' ? p : p*M3_PER_YD3;             // $/yd³, or ($/m³ -> $/yd³)
   }
 
   // cost for a sold-quantity (qty already in mode unit incl waste). For bag, qty is bags.
@@ -691,14 +639,13 @@
   // per-item quantity in THAT ROW's own sold-by unit (frozen at add time)
   function itemQty(r){
     if(r.mode==='bag'){ return Math.ceil(r.volYd3 / r.bagVolYd3); }
-    if(r.mode==='ton'){ return sys==='us'? r.tons : r.tonnes; }
     return sys==='us'? r.volYd3 : r.volM3;
   }
   // per-item cost uses the row's LOCKED canonical rate ($/yd³) and its own frozen unit
   function itemCost(r){
-    if(r.rate==null) return null;                    // canonical $/yd³
-    if(r.mode==='bag'){ return itemQty(r) * (r.rate * r.bagVolYd3); }
-    return r.volYd3 * r.rate;                         // ton & yd³/m³: physical, system-independent
+    if(r.rate==null) return null;                      // canonical $/yd³
+    if(r.mode==='bag'){ return itemQty(r) * (r.rate * r.bagVolYd3); }   // $/yd³ × yd³/bag × bags
+    return r.volYd3 * r.rate;                           // cu yd / m³: physical, system-independent
   }
 
   function areaLabel(){
@@ -727,9 +674,9 @@
     $('resUnit').textContent=qtyUnit();
     $('resCostWrap').classList.remove('hide');   // always reserve the row — no layout jump
     $('resTip').classList.remove('hide');
-    if(v==null || (mode==='ton'&&densityUS()==null)){
+    if(v==null){
       $('resQty').textContent='—';
-      $('resSub').textContent = (v!=null ? (soldQty(v,0).subTxt||'Enter dimensions to see the amount.') : 'Enter dimensions to see the amount.');
+      $('resSub').textContent='Enter dimensions to see the amount.';
       $('resCost').textContent='—';
       return;
     }
@@ -741,38 +688,35 @@
   }
 
   // ---------- project tally (each row keeps the unit it was added in) ----------
+  function itemUnit(r){ return r.mode==='bag' ? null : (sys==='us'?'cu yd':'m³'); } // null => bags (handled w/ plural)
   function bagWord(n){ return n===1?'bag':'bags'; }
-  function volUnitNow(){ return sys==='us'?'cu yd':'m³'; }
-  function tonWord(){ return sys==='us'?'tons':'tonnes'; }
 
   function rowQtyText(r){
     var q=itemQty(r);
     if(q==null) return {txt:'—',na:true};
     if(r.mode==='bag') return {txt:fmt(q)+' '+bagWord(q), na:false};
-    if(r.mode==='ton') return {txt:fmt(q)+' '+tonWord(), na:false};
-    return {txt:fmt(q)+' '+volUnitNow(), na:false};
+    return {txt:fmt(q)+' '+itemUnit(r), na:false};
   }
   function rowCost(r){
-    var c=itemCost(r);
+    var c=itemCost(r);   // uses this item's LOCKED canonical rate
     return (c==null)?{txt:'—',na:true}:{txt:money(c),na:false};
   }
 
-  // sum quantities into per-unit groups: bags, cu yd/m³, tons/tonnes
+  // sum quantities into per-unit groups (bags separate from cu yd / m³)
   function groupTotals(){
-    var g={bagQ:0,bagHas:false,volQ:0,volHas:false,tonQ:0,tonHas:false,tonNull:false,cost:0,hasCost:false};
+    var bagQ=0, bagHas=false, volQ=0, volHas=false, cost=0, hasCost=false;
     tally.forEach(function(r){
-      if(r.mode==='bag'){ g.bagQ+=itemQty(r); g.bagHas=true; }
-      else if(r.mode==='ton'){ var t=itemQty(r); if(t==null){g.tonNull=true;} else {g.tonQ+=t;} g.tonHas=true; }
-      else { g.volQ+=itemQty(r); g.volHas=true; }
-      var c=itemCost(r); if(c!=null){ g.cost+=c; g.hasCost=true; }
+      if(r.mode==='bag'){ bagQ+=itemQty(r); bagHas=true; }
+      else { volQ+=itemQty(r); volHas=true; }
+      var c=itemCost(r); if(c!=null){ cost+=c; hasCost=true; }
     });
-    return g;
+    return {bagQ:bagQ,bagHas:bagHas,volQ:volQ,volHas:volHas,cost:cost,hasCost:hasCost};
   }
-  function amountParts(bagQ,volQ,tonQ,g){
+  // build the amount pieces (already incl. any waste); returns array of {num,unit}
+  function amountParts(bagQ,volQ,g){
     var p=[];
-    if(g.tonHas) p.push({num:tonQ, unit:tonWord()});
-    if(g.volHas) p.push({num:volQ, unit:volUnitNow()});
     if(g.bagHas) p.push({num:bagQ, unit:bagWord(bagQ)});
+    if(g.volHas) p.push({num:volQ, unit:(sys==='us'?'cu yd':'m³')});
     return p;
   }
   function partsStr(parts,plus){
@@ -786,13 +730,13 @@
     var hasWp = waste.active && !isNaN(wp) && wp>0;
     var mlt = hasWp ? wp/100 : 0;
 
+    // waste buffer per unit group (bags rounded up), proportional to base
     var wBag = g.bagHas ? Math.ceil(g.bagQ*mlt) : 0;
     var wVol = g.volHas ? g.volQ*mlt : 0;
-    var wTon = g.tonHas ? g.tonQ*mlt : 0;
     var wCost = g.hasCost ? g.cost*mlt : 0;
-    var tBag=g.bagQ+wBag, tVol=g.volQ+wVol, tTon=g.tonQ+wTon, tCost=g.cost+wCost;
+    var tBag = g.bagQ + wBag, tVol = g.volQ + wVol, tCost = g.cost + wCost;
 
-    updateMbar(g, tBag, tVol, tTon, tCost);
+    updateMbar(g, tBag, tVol, tCost);
 
     if(!tally.length){
       body.innerHTML='<div class="tally-empty">Covering more than one area? Add each above and they\u2019ll total here.</div>';
@@ -813,15 +757,15 @@
     });
     body.innerHTML=html;
 
+    // waste row (persistent input — never rebuilt, so it keeps focus while typing)
     if(waste.active){
       $('wasteRow').style.display='grid';
       $('addWasteBtn').style.display='none';
       var wq=$('wasteQty'), wr=$('wasteRc');
       if(hasWp){
         var wparts=[];
-        if(g.tonHas && wTon>0) wparts.push({num:wTon,unit:tonWord()});
-        if(g.volHas && wVol>0) wparts.push({num:wVol,unit:volUnitNow()});
         if(g.bagHas && wBag>0) wparts.push({num:wBag,unit:bagWord(wBag)});
+        if(g.volHas && wVol>0) wparts.push({num:wVol,unit:(sys==='us'?'cu yd':'m³')});
         wq.className='qt'; wq.textContent = wparts.length? partsStr(wparts,true) : '—';
         if(g.hasCost){ wr.className='rc'; wr.textContent='+'+money(wCost); }
         else { wr.className='rc na'; wr.textContent='—'; }
@@ -837,7 +781,7 @@
     tot.style.display='grid';
     $('projCount').textContent='';
     $('totalUnit').textContent='';
-    $('totalQty').textContent = partsStr(amountParts(tBag,tVol,tTon,g),false);
+    $('totalQty').textContent = partsStr(amountParts(tBag,tVol,g),false);
     if(g.hasCost){
       $('totalCostRow').style.display='block';
       $('totalCost').style.display='block';
@@ -851,18 +795,18 @@
   function segHTML(parts){
     return parts.map(function(p){return '<b>'+fmt(p.num)+'</b> '+p.unit;}).join(' + ');
   }
-  function updateMbar(g, tBag, tVol, tTon, tCost){
+  function updateMbar(g, tBag, tVol, tCost){
     if(tally.length){
       $('mLab').textContent='Project total';
-      $('mSeg').innerHTML = segHTML(amountParts(tBag,tVol,tTon,g));
+      $('mSeg').innerHTML = segHTML(amountParts(tBag,tVol,g));
       if(g.hasCost){ $('mCostWrap').classList.remove('hide'); $('mCost').textContent=money(tCost); }
       else { $('mCostWrap').classList.add('hide'); }
       return;
     }
     // no areas → mirror the live single area in the currently-selected unit
-    $('mLab').textContent='This area';
+    $('mLab').textContent='This bed';
     var v=currentArea();
-    if(v==null || (mode==='ton'&&densityUS()==null)){
+    if(v==null){
       $('mSeg').innerHTML='<b>—</b> '+qtyUnit(); $('mCostWrap').classList.add('hide'); return;
     }
     var sq=soldQty(v,0);
@@ -906,9 +850,8 @@
     sys=b.dataset.sys;
     [].forEach.call(this.children,function(c){c.classList.toggle('on',c===b)});
     // dimension & price units differ across systems → clear the live inputs.
-    // Locked areas keep their canonical $/yd³ rate, so their cost re-expresses correctly.
+    // Locked beds keep their canonical $/yd³ rate, so their cost re-expresses correctly.
     len.value='';wid.value='';dia.value='';depth.value='';price.value='';bagSize.value='';
-    if(matKey==='custom'){ customDens.value=''; customDensUS=null; }
     [].forEach.call($('depthChips').children,function(c){c.classList.remove('on')});
     // labels
     var du=sys==='us'?'ft':'m', pu=sys==='us'?'in':'cm', bu=sys==='us'?'ft³':'L';
@@ -916,35 +859,19 @@
     [].forEach.call(document.querySelectorAll('[data-depth]'),function(el){el.textContent=pu});
     [].forEach.call(document.querySelectorAll('[data-bagu]'),function(el){el.textContent=bu});
     // depth chips
-    var chipVals = sys==='us'?['2','3','4','6']:['5','8','10','15'];
-    var chipTxt  = sys==='us'?['2"','3"','4"','6"']:['5 cm','8 cm','10 cm','15 cm'];
+    var chipVals = sys==='us'?['1','2','3','4']:['3','5','8','10'];
+    var chipTxt  = sys==='us'?['1"','2"','3"','4"']:['3 cm','5 cm','8 cm','10 cm'];
     [].forEach.call($('depthChips').children,function(c,i){ c.dataset.d=chipVals[i]; c.textContent=chipTxt[i]; });
     depth.placeholder = sys==='us'?'e.g. 3':'e.g. 8';
-    bagSize.placeholder = sys==='us'?'0.5':'25';
-    customDens.placeholder = sys==='us'?'e.g. 1.5':'e.g. 1.8';
-    $('customSuf').textContent = sys==='us'?'t/yd³':'t/m³';
+    bagSize.placeholder = sys==='us'?'2':'50';
     updateModeLabels();
-    renderAll();
-  });
-
-  // material select
-  matSel.addEventListener('change',function(){
-    matKey=this.value;
-    $('customWrap').style.display = matKey==='custom'?'block':'none';
-    if(matKey!=='custom'){ customDensUS=null; }
-    renderAll();
-  });
-  customDens.addEventListener('input',function(){
-    var v=parseNum(this.value);
-    if(isNaN(v)||v<=0){ customDensUS=null; }
-    else { customDensUS = sys==='us'? v : v/DENS_US_TO_METRIC; }
     renderAll();
   });
 
   // sold-by mode
   function updateModeLabels(){
-    var unitWord = mode==='ton'?(sys==='us'?'ton':'tonne'):(mode==='yd3'?(sys==='us'?'cubic yard':'m³'):'bag');
-    var sufWord  = mode==='ton'?(sys==='us'?'$/ton':'$/tonne'):(mode==='yd3'?(sys==='us'?'$/yd³':'$/m³'):'$/bag');
+    var unitWord = mode==='bag' ? 'bag' : (sys==='us'?'cubic yard':'m³');
+    var sufWord  = mode==='bag' ? '$/bag' : (sys==='us'?'$/yd³':'$/m³');
     $('priceLab').textContent='Price per '+unitWord;
     $('priceSuf').textContent=sufWord;
     $('bagWrap').style.display = mode==='bag'?'block':'none';
@@ -954,7 +881,7 @@
     if(b.dataset.mode===mode) return;
     mode=b.dataset.mode;
     [].forEach.call(this.children,function(c){c.classList.toggle('on',c===b)});
-    price.value='';   // live price is per-unit — user re-enters in the new unit. Locked areas keep their canonical rate.
+    price.value='';   // live price is per-unit — user re-enters in the new unit. Locked beds keep their canonical rate.
     updateModeLabels();
     renderAll();
   });
@@ -964,9 +891,9 @@
     if(!areaComplete()) return;
     var v=currentArea(); if(v==null) return;
     // LOCK price ($/yd³ canonical) AND this row's own sold-by unit + bag size, frozen at add time
-    tally.push({label:areaLabel(), volYd3:v.volYd3, volM3:v.volM3, tons:v.tons, tonnes:v.tonnes,
+    tally.push({label:areaLabel(), volYd3:v.volYd3, volM3:v.volM3,
                 mode:mode, bagVolYd3:bagVolYd3(), rate:liveRateYd3()});
-    // clear the form for the next area; sold-by/material/shape/system stay as the current selection
+    // clear the form for the next bed; sold-by/shape/system stay as the current selection
     len.value='';wid.value='';dia.value='';depth.value='';price.value='';bagSize.value='';
     [].forEach.call($('depthChips').children,function(c){c.classList.remove('on')});
     renderAll();
