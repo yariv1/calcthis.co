@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Concrete Bag Calculator — How Many Bags of Concrete in a Yard</title>
+<link rel="canonical" href="https://calcthis.co/concrete-calculator/">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<meta name="theme-color" content="#B5761F">
+<meta name="description" content="Free concrete calculator. Enter your slab size and thickness to get how many 40, 60, or 80 lb bags you need — plus cubic yards, weight, and cost. Add multiple slabs for a whole project. Rectangle or circle, US or metric.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css?v=2">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Concrete Calculator",
+      "url": "https://calcthis.co/concrete-calculator/",
+      "description": "Free concrete calculator. Enter your slab size and thickness to get how many 40, 60, or 80 lb bags of concrete you need, plus cubic yards, weight, and estimated cost. Add multiple slabs or footings to total a whole project, with a waste buffer.",
+      "applicationCategory": "UtilityApplication",
+      "operatingSystem": "Any (web browser)",
+      "browserRequirements": "Requires JavaScript",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "featureList": [
+        "Bag count for 40, 60, and 80 lb concrete mix",
+        "Volume in cubic yards and cubic feet",
+        "Rectangle and circle slabs",
+        "Running project total across multiple slabs and footings",
+        "Waste factor buffer on the total",
+        "US and metric units",
+        "Instant cost estimate"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How many bags of concrete are in a cubic yard?",
+          "acceptedAnswer": { "@type": "Answer", "text": "A cubic yard is 27 cubic feet. An 80 lb bag of concrete mix yields about 0.60 cubic feet, so you need 45 bags to make a yard. A 60 lb bag yields about 0.45 cubic feet, which is 60 bags per yard, and a 40 lb bag yields about 0.30 cubic feet, which is 90 bags per yard. For anything approaching a full yard, ready-mix delivery is usually cheaper and faster than mixing bags by hand." }
+        },
+        {
+          "@type": "Question",
+          "name": "How many bags of concrete do I need for a 4x8 slab?",
+          "acceptedAnswer": { "@type": "Answer", "text": "For a 4 ft by 8 ft slab poured 4 inches thick you need about 0.4 cubic yards of concrete, which is roughly 18 bags of 80 lb mix, 24 bags of 60 lb, or 36 bags of 40 lb. Add about 10 percent extra for waste and uneven ground. Enter your own dimensions above to get exact bag counts." }
+        },
+        {
+          "@type": "Question",
+          "name": "How much does one cubic yard of concrete cover at 4 inches?",
+          "acceptedAnswer": { "@type": "Answer", "text": "One cubic yard placed 4 inches thick covers about 81 square feet, roughly a 9 ft by 9 ft slab. At 6 inches thick a yard covers about 54 square feet. Divide your slab's square footage by these figures for a quick yardage estimate, or use the calculator for an exact number." }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I calculate concrete for a slab?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Multiply length by width by thickness to get the volume, keeping thickness in feet, so 4 inches is 0.33 ft. That gives cubic feet; divide by 27 to get cubic yards. To get bags, divide the cubic feet by the bag's yield: 0.60 for 80 lb, 0.45 for 60 lb, 0.30 for 40 lb. The calculator above does all of this instantly as you type." }
+        },
+        {
+          "@type": "Question",
+          "name": "Should I order extra concrete for waste?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Spillage, uneven subgrade, and over-excavation mean a little extra is wise, so ordering about 10 percent more is a common rule of thumb. Concrete also sets fast and cannot be topped up mid-pour, so it is better to have slightly too much. Use the Add waste calc option in the project total to add a percentage buffer." }
+        },
+        {
+          "@type": "Question",
+          "name": "Does this concrete calculator work in metric?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Switch to Metric to enter your slab in metres and thickness in centimetres. The result is shown in cubic metres, with bag counts and cost, so you can plan in whichever units you prefer." }
+        }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body class="p-concrete">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <a href="/">Home</a>
+      <a href="/board-foot-calculator/">Board Foot Calculator</a>
+      <a href="/gravel-calculator/">Gravel Calculator</a>
+      <a href="/mulch-calculator/">Mulch Calculator</a>
+      <a href="/concrete-calculator/" class="current">Concrete Calculator</a>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">Concrete math, done instantly</div>
+    <h1>How Many Bags of Concrete Do You Need?</h1>
+    <p>Enter your slab's size and thickness — get the number of 40, 60, or 80 lb bags (or cubic yards), plus weight and cost, the moment you type. Pouring more than one slab or footing? Add each to the running project total below.</p>
+  </section>
+
+  <div class="grid">
+
+    <!-- INPUT -->
+    <div class="card">
+      <div class="card-pad">
+        <div class="row-top">
+          <h2>Your area</h2>
+          <div class="seg" id="unitSeg">
+            <button class="on" data-sys="us">US</button>
+            <button data-sys="metric">Metric</button>
+          </div>
+        </div>
+
+        <label class="fld">
+          <span class="lab">Shape</span>
+          <div class="seg" id="shapeSeg" style="display:flex;width:100%">
+            <button class="on" data-shape="rect" style="flex:1">Rectangle</button>
+            <button data-shape="circle" style="flex:1">Circle</button>
+          </div>
+        </label>
+
+        <!-- rectangle fields -->
+        <div id="rectFields">
+          <div class="two">
+            <label class="fld">
+              <span class="lab">Length <span class="unit" data-dim>ft</span></span>
+              <div class="inp"><input id="len" type="number" inputmode="decimal" placeholder="0"><span class="suf" data-dim>ft</span></div>
+            </label>
+            <label class="fld">
+              <span class="lab">Width <span class="unit" data-dim>ft</span></span>
+              <div class="inp"><input id="wid" type="number" inputmode="decimal" placeholder="0"><span class="suf" data-dim>ft</span></div>
+            </label>
+          </div>
+        </div>
+
+        <!-- circle fields -->
+        <div id="circleFields" style="display:none">
+          <label class="fld">
+            <span class="lab">Diameter <span class="unit" data-dim>ft</span></span>
+            <div class="inp"><input id="dia" type="number" inputmode="decimal" placeholder="0"><span class="suf" data-dim>ft</span></div>
+          </label>
+        </div>
+
+        <label class="fld">
+          <span class="lab">Thickness <span class="unit" data-depth>in</span></span>
+          <div class="inp"><input id="depth" type="number" inputmode="decimal" placeholder="e.g. 4"><span class="suf" data-depth>in</span></div>
+          <div class="chips" id="depthChips">
+            <button data-d="4">4&quot;</button>
+            <button data-d="5">5&quot;</button>
+            <button data-d="6">6&quot;</button>
+            <button data-d="8">8&quot;</button>
+          </div>
+        </label>
+
+        <label class="fld">
+          <span class="lab">Sold by</span>
+          <div class="modeseg" id="modeSeg" style="grid-template-columns:1fr 1fr">
+            <button class="on" data-mode="bag">Bag</button>
+            <button data-mode="yd3">Cubic yard</button>
+          </div>
+        </label>
+
+        <label class="fld" id="bagSizeWrap">
+          <span class="lab">Bag size <span class="unit" id="bagYieldNote"></span></span>
+          <div class="chips" id="bagChips">
+            <button data-w="40">40 lb</button>
+            <button data-w="50">50 lb</button>
+            <button data-w="60">60 lb</button>
+            <button class="on" data-w="80">80 lb</button>
+            <button data-custom="1">Custom</button>
+          </div>
+          <div class="inp" id="customBagWrap" style="display:none;margin-top:9px">
+            <input id="customBag" type="number" inputmode="decimal" placeholder="e.g. 55" step="1">
+            <span class="suf" id="customBagSuf">lb</span>
+          </div>
+        </label>
+
+        <label class="fld" style="margin-bottom:0">
+          <span class="lab"><span id="priceLab">Price per bag</span> <span class="unit">optional</span></span>
+          <div class="inp"><input id="price" type="number" inputmode="decimal" placeholder="0.00" step="0.01"><span class="suf" id="priceSuf">$/bag</span></div>
+        </label>
+
+        <div class="add-wrap">
+          <div class="add-row">
+            <button class="btn" id="addBtn">+ Add area to project</button>
+            <button class="linkbtn" id="clearFieldsBtn">Clear fields</button>
+          </div>
+          <div class="res-hint" id="hint">Enter your length, width and depth</div>
+          <div class="add-note" id="addNote">Covering several spots? Add each area to total the whole job.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT + PROJECT -->
+    <div class="card">
+      <div class="card-pad">
+        <!-- live single-area answer -->
+        <div class="res-lab" id="resLab">This area needs</div>
+        <div class="res-big"><span id="resQty">—</span> <span class="res-unit" id="resUnit">bags</span></div>
+        <div class="res-sub" id="resSub">Enter dimensions to see the amount.</div>
+        <div class="res-cost hide" id="resCostWrap"><span class="k">Estimated cost</span><span class="v" id="resCost"></span></div>
+        <div class="res-tip" id="resTip">Tip: order about 10% extra — concrete sets fast and can’t be topped up mid-pour.</div>
+
+        <div class="proj-sep"></div>
+
+        <!-- project total (multi-area) -->
+        <div class="tally-head">
+          <h3>Project total</h3>
+          <button id="clearBtn" style="display:none">Clear all</button>
+        </div>
+        <div id="tallyBody">
+          <div class="tally-empty">Covering more than one area? Add each above and they'll total here.</div>
+        </div>
+        <div class="trow wrow" id="wasteRow" style="display:none">
+          <span class="desc wdesc">
+            <span class="wtag">Waste</span>
+            <input id="wastePct" class="win" type="text" inputmode="decimal" placeholder="recommended 10" autocomplete="off">
+            <span class="wsuf">%</span>
+          </span>
+          <span class="qt na" id="wasteQty">—</span>
+          <span class="rc na" id="wasteRc">—</span>
+          <button class="x wx" id="wasteRemove" type="button" aria-label="Remove waste">×</button>
+        </div>
+        <div class="tally-total" id="projTotal" style="display:none">
+          <span class="tl">Total <span class="sub" id="projCount"></span></span>
+          <span class="tv"><span id="totalQty">0</span> <span id="totalUnit">bags</span></span>
+          <span class="tl sub" id="totalCostRow" style="display:none">Estimated cost</span>
+          <span class="tv" id="totalCost" style="display:none"></span>
+        </div>
+        <button class="add-waste-btn" id="addWasteBtn" type="button">+ Add waste calc</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- mobile sticky bar -->
+  <div class="mbar" id="mbar">
+    <span class="mbar-lab" id="mLab">This area</span>
+    <div class="mbar-vals">
+      <span class="mbar-seg" id="mSeg"><b id="mQty">0</b> <span id="mUnit">bags</span></span>
+      <span class="mbar-cost hide" id="mCostWrap"><span class="mbar-eq">=</span> <b id="mCost"></b></span>
+    </div>
+  </div>
+
+  <!-- CONTENT / SEO -->
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How many bags of concrete do I need?</h2>
+        <p>It comes down to one thing: the <strong>volume</strong> of your slab. Measure the length and width, choose a thickness, multiply them together, then convert that volume into cubic yards or into a number of bags. A cubic yard is 27 cubic feet, so a bag's <em>yield</em> tells you how many bags fill a yard.</p>
+        <div class="formula">
+          Length × Width × Thickness ÷ 27 = Cubic yards
+          <small>THICKNESS IN FEET · ÷27 CONVERTS CUBIC FEET TO CUBIC YARDS</small>
+        </div>
+        <p>To get <strong>bags</strong>, divide the volume in cubic feet by the bag's yield — about 0.60 ft³ for an 80 lb bag, 0.45 for 60 lb, 0.375 for 50 lb, 0.30 for 40 lb. Pick a bag size in the calculator, tap <em>Custom</em> for any other size, or switch to Metric for kg bags — it does the rest the instant you type.</p>
+
+        <h2>Rectangle or circle</h2>
+        <p>For a rectangular slab — a patio, driveway, or walkway — the area is simply length × width. For a round pad or a tube footing, it's π × radius². Pick the shape at the top of the calculator and the right measurement boxes appear.</p>
+
+        <h2>Worked example</h2>
+        <p>A 4 ft × 8 ft slab poured 4 inches thick:</p>
+        <p style="color:var(--ink);font-weight:500">32 sq ft × 0.33 ft = 10.7 cu ft = <strong>0.4 cubic yards</strong> — about <strong>18 × 80 lb bags</strong> (or 24 × 60 lb, 36 × 40 lb). Add ~10% for waste and round up.</p>
+      </div>
+
+      <div>
+        <h2>How thick should a concrete slab be?</h2>
+        <ul>
+          <li><strong>4 inches</strong> — patios, walkways, and shed or garden slabs</li>
+          <li><strong>5–6 inches</strong> — driveways and garage floors</li>
+          <li><strong>6–8 inches</strong> — heavy loads, footings, and RV or truck parking</li>
+        </ul>
+        <p>Tap a thickness chip in the calculator to drop in one of these common depths without typing.</p>
+
+        <h2>Bags per cubic yard</h2>
+        <p>One cubic yard is 27 cubic feet. Divide 27 by a bag's yield to get how many bags make a yard. These are the standard yields the calculator uses (Quikrete / Sakrete figures):</p>
+        <table class="dtable">
+          <thead><tr><th>Bag size</th><th>Yield (ft³)</th><th>Bags / yd³</th></tr></thead>
+          <tbody>
+            <tr><td>40 lb</td><td>0.30</td><td>90</td></tr>
+            <tr><td>50 lb</td><td>0.375</td><td>72</td></tr>
+            <tr><td>60 lb</td><td>0.45</td><td>60</td></tr>
+            <tr><td>80 lb</td><td>0.60</td><td>45</td></tr>
+          </tbody>
+        </table>
+        <p>Yields are for standard mixes; fast-setting, high-strength, and fibre-reinforced blends can run 10–15% lower, so check your bag's printed yield. Buying in kg? Switch to <strong>Metric</strong> for 20, 25, 30, and 40 kg bags. Mixing 45+ bags by hand is a big job — for anything near a full yard, ready-mix delivery is usually cheaper; switch <strong>Sold by</strong> to <em>Cubic yard</em> to plan that.</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>How many bags of concrete are in a cubic yard?</summary><p>A cubic yard is 27 cubic feet. An <strong>80 lb</strong> bag of concrete mix yields about 0.60 cubic feet, so you need <strong>45 bags</strong> to make a yard. A <strong>60 lb</strong> bag yields about 0.45 cubic feet, which is <strong>60 bags</strong> per yard, and a <strong>40 lb</strong> bag yields about 0.30 cubic feet, which is <strong>90 bags</strong> per yard. For anything approaching a full yard, ready-mix delivery is usually cheaper and faster than mixing bags by hand.</p></details>
+    <details class="faq"><summary>How many bags of concrete do I need for a 4×8 slab?</summary><p>For a 4 ft by 8 ft slab poured 4 inches thick you need about <strong>0.4 cubic yards</strong> of concrete, which is roughly <strong>18 bags of 80 lb</strong> mix, 24 bags of 60 lb, or 36 bags of 40 lb. Add about 10 percent extra for waste and uneven ground. Enter your own dimensions above to get exact bag counts.</p></details>
+    <details class="faq"><summary>How much does one cubic yard of concrete cover at 4 inches?</summary><p>One cubic yard placed 4 inches thick covers about <strong>81 square feet</strong>, roughly a 9 ft by 9 ft slab. At 6 inches thick a yard covers about 54 square feet. Divide your slab's square footage by these figures for a quick yardage estimate, or use the calculator for an exact number.</p></details>
+    <details class="faq"><summary>How do I calculate concrete for a slab?</summary><p>Multiply length by width by thickness to get the volume, keeping thickness in feet, so 4 inches is 0.33 ft. That gives cubic feet; divide by 27 to get cubic yards. To get bags, divide the cubic feet by the bag's yield: 0.60 for 80 lb, 0.45 for 60 lb, 0.30 for 40 lb. The calculator above does all of this instantly as you type.</p></details>
+    <details class="faq"><summary>Should I order extra concrete for waste?</summary><p>Yes. Spillage, uneven subgrade, and over-excavation mean a little extra is wise, so ordering about <strong>10% more</strong> is a common rule of thumb. Concrete also sets fast and can't be topped up mid-pour, so it's better to have slightly too much. Tap <strong>&ldquo;+ Add waste calc&rdquo;</strong> in the project total to add a percentage buffer.</p></details>
+    <details class="faq"><summary>Does this concrete calculator work in metric?</summary><p>Yes. Switch to "Metric" to enter your slab in metres and thickness in centimetres. The result is shown in cubic metres, with bag counts and cost, so you can plan in whichever units you prefer.</p></details>
+  </section>
+
+  <footer>
+    <span>Estimates only — confirm yields &amp; coverage with your supplier. Free, no sign-up.</span>
+    <span><a href="#">How it works</a></span>
+  </footer>
+
+</div>
+
+<!-- mobile sticky bar sub-line uses mUnit as words; hero cost uses money -->
+<script src="/assets/app.js?v=2"></script>
+<script>
+(function(){
+  var sys='us', shape='rect', mode='bag';
+  var $=function(id){return document.getElementById(id)};
+  var len=$('len'), wid=$('wid'), dia=$('dia'), depth=$('depth'), price=$('price'), customBag=$('customBag');
+  var tally=[];                     // each: {label, volYd3, volM3, volFt3, mode, wLb, yieldFt3, rate}
+  var waste={active:false,pct:''};
+
+  // constants
+  var M3_PER_YD3=0.764554858;
+  var FT3_PER_M3=35.3146667;
+  var LB_PER_KG=2.2046226218;
+  var MIX_LB_PER_FT3=133.3333;       // dry premix mass per ft3 of set concrete (80lb->0.60, 60->0.45, 50->0.375, 40->0.30)
+  var PLACED_LB_PER_FT3=150;         // placed (wet) normal-weight concrete
+
+  function parseNum(v){
+    if(v==null) return NaN;
+    v=(''+v).trim();
+    if(!v) return NaN;
+    var n=parseFloat(v);
+    return isNaN(n)?NaN:n;
+  }
+  function fmt(n){
+    if(n==null||isNaN(n)) return '—';
+    if(n>=100) return n.toFixed(1).replace(/\.0$/,'');
+    var r=Math.round(n*100)/100;
+    var s=''+r; if(s.indexOf('.')>=0) s=s.replace(/\.?0+$/,''); return s||'0';
+  }
+  function intFmt(n){ return Math.round(n).toLocaleString(); }
+  function money(n){return '$'+n.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}
+
+  // ----- bag helpers (live selection) -----
+  function activeBagChip(){ return $('bagChips').querySelector('button.on'); }
+  function isCustomActive(){ var c=activeBagChip(); return !!(c && c.dataset.custom); }
+  // current bag weight in lb (canonical), or null if custom & invalid
+  function bagLiveLb(){
+    var c=activeBagChip(); if(!c) return null;
+    if(c.dataset.custom){
+      var v=parseNum(customBag.value); if(isNaN(v)||v<=0) return null;
+      return sys==='us'? v : v*LB_PER_KG;
+    }
+    var w=+c.dataset.w;
+    return sys==='us'? w : w*LB_PER_KG;
+  }
+  function bagLiveYieldFt3(){ var lb=bagLiveLb(); return lb==null?null:lb/MIX_LB_PER_FT3; }
+  function bagVolYd3Live(){ var y=bagLiveYieldFt3(); return y==null?null:y/27; }
+  function sizeLabelFromLb(lb){
+    if(lb==null) return '';
+    return sys==='us'? Math.round(lb)+' lb' : Math.round(lb/LB_PER_KG)+' kg';
+  }
+
+  // current area volume in current system's cubic unit (ft3 US, m3 metric)
+  function areaVol(){
+    var d;
+    if(sys==='us'){ var din=parseNum(depth.value); if(isNaN(din)||din<=0) return NaN; d=din/12; }
+    else { var dcm=parseNum(depth.value); if(isNaN(dcm)||dcm<=0) return NaN; d=dcm/100; }
+    if(shape==='rect'){
+      var L=parseNum(len.value), W=parseNum(wid.value);
+      if(isNaN(L)||isNaN(W)||L<=0||W<=0) return NaN;
+      return L*W*d;
+    } else {
+      var D=parseNum(dia.value); if(isNaN(D)||D<=0) return NaN;
+      var r=D/2; return Math.PI*r*r*d;
+    }
+  }
+  function currentArea(){
+    var v=areaVol(); if(isNaN(v)) return null;
+    var volYd3, volM3;
+    if(sys==='us'){ volYd3=v/27; volM3=volYd3*M3_PER_YD3; }
+    else { volM3=v; volYd3=v/M3_PER_YD3; }
+    return {volYd3:volYd3, volM3:volM3, volFt3:volYd3*27};
+  }
+
+  function areaComplete(){
+    if(currentArea()==null) return false;
+    if(mode==='bag' && bagLiveYieldFt3()==null) return false;
+    return true;
+  }
+  function listMissing(){
+    var m=[];
+    var din=parseNum(depth.value);
+    if(shape==='rect'){
+      if(isNaN(parseNum(len.value))||parseNum(len.value)<=0) m.push('length');
+      if(isNaN(parseNum(wid.value))||parseNum(wid.value)<=0) m.push('width');
+    } else {
+      if(isNaN(parseNum(dia.value))||parseNum(dia.value)<=0) m.push('diameter');
+    }
+    if(isNaN(din)||din<=0) m.push('thickness');
+    if(mode==='bag' && bagLiveYieldFt3()==null) m.push('bag weight');
+    if(!m.length) return 'the details';
+    if(m.length===1) return m[0];
+    return m.slice(0,-1).join(', ')+' and '+m[m.length-1];
+  }
+
+  function volUnitNow(){ return sys==='us'?'cu yd':'m³'; }
+  function qtyUnit(){
+    if(mode!=='bag') return volUnitNow();
+    var sl=sizeLabelFromLb(bagLiveLb());
+    return sl? 'bags ('+sl+')' : 'bags';
+  }
+  function haulWeightStr(bags, lb){
+    var totLb=bags*lb;
+    if(sys==='us') return intFmt(totLb)+' lb of bags';
+    return intFmt(totLb/LB_PER_KG)+' kg of bags';
+  }
+  function placedWeightStr(volYd3){
+    var lb=volYd3*27*PLACED_LB_PER_FT3;
+    if(sys==='us') return '~'+fmt(lb/2000)+' tons';
+    return '~'+fmt(lb/LB_PER_KG/1000)+' t';
+  }
+
+  // live single-area sold quantity + sub (only called when complete)
+  function soldQty(v, wp){
+    var mlt = (wp&&wp>0)? (1+wp/100) : 1;
+    var volYd3=v.volYd3*mlt, volM3=v.volM3*mlt, volFt3=v.volFt3*mlt;
+    if(mode==='bag'){
+      var lb=bagLiveLb(), y=bagLiveYieldFt3();
+      var bags=Math.ceil(volFt3 / y);
+      var sub='= '+fmt(sys==='us'?volYd3:volM3)+' '+volUnitNow()+' · '+haulWeightStr(bags,lb);
+      return {qty:bags, subTxt:sub};
+    }
+    var qty=(sys==='us'?volYd3:volM3);
+    var sub = sys==='us' ? '= '+fmt(volFt3)+' cu ft · '+placedWeightStr(volYd3)
+                         : '= '+placedWeightStr(volYd3)+' placed';
+    return {qty:qty, subTxt:sub};
+  }
+
+  function priceVal(){ var p=parseNum(price.value); return (!isNaN(p)&&p>0)?p:null; }
+  function liveRateYd3(){
+    var p=priceVal(); if(p==null) return null;
+    if(mode==='bag'){ var bv=bagVolYd3Live(); return bv==null?null:p/bv; }  // $/bag -> $/yd3
+    return sys==='us' ? p : p*M3_PER_YD3;                                    // $/yd3, or $/m3 -> $/yd3
+  }
+  function costFor(sq){
+    var p=priceVal(); if(p==null||sq.qty==null) return null;
+    return sq.qty*p;
+  }
+
+  // per-row (bag rows use their OWN frozen yield/size — never recomputed by the live selector)
+  function itemQty(r){
+    if(r.mode==='bag'){ return Math.ceil(r.volFt3 / r.yieldFt3); }
+    return sys==='us'? r.volYd3 : r.volM3;
+  }
+  function itemCost(r){
+    if(r.rate==null) return null;
+    if(r.mode==='bag'){ return itemQty(r) * (r.rate * (r.yieldFt3/27)); }
+    return r.volYd3 * r.rate;
+  }
+
+  function areaLabel(){
+    var du=sys==='us'?'ft':'m', pu=sys==='us'?'in':'cm';
+    var dp=depth.value.trim()||'?';
+    if(shape==='rect'){
+      var L=len.value.trim()||'?', W=wid.value.trim()||'?';
+      return L+'×'+W+du+' · '+dp+pu;
+    }
+    return 'Ø'+(dia.value.trim()||'?')+du+' · '+dp+pu;
+  }
+
+  // ---------- live area ----------
+  function renderArea(){
+    var v=currentArea();
+    var b=$('addBtn'), complete=areaComplete();
+    b.disabled=!complete;
+    b.style.opacity=complete?'1':'.5';
+    b.style.cursor=complete?'pointer':'not-allowed';
+    $('hint').style.display=complete?'none':'block';
+    $('addNote').style.display=complete?'block':'none';
+    if(!complete) $('hint').textContent='Enter '+listMissing();
+
+    // show the live per-bag yield next to the Bag size label
+    (function(){var el=$('bagYieldNote'); if(!el) return;
+      if(mode!=='bag'){ el.textContent=''; return; }
+      var y=bagLiveYieldFt3();
+      if(y==null){ el.textContent=''; return; }
+      el.textContent = sys==='us' ? '≈ '+fmt(y)+' ft³/bag' : '≈ '+fmt(y*28.3168)+' L/bag';
+    })();
+    $('resUnit').textContent=qtyUnit();
+    $('resCostWrap').classList.remove('hide');
+    $('resTip').classList.remove('hide');
+    if(!complete){
+      $('resQty').textContent='—';
+      $('resSub').textContent='Enter dimensions to see the amount.';
+      $('resCost').textContent='—';
+      return;
+    }
+    var sq=soldQty(v,0);
+    $('resQty').textContent=fmt(sq.qty);
+    $('resSub').textContent=sq.subTxt||'';
+    var c=costFor(sq);
+    $('resCost').textContent=(c!=null)?money(c):'—';
+  }
+
+  // ---------- project tally ----------
+  function bagWord(n){ return n===1?'bag':'bags'; }
+  function rowQtyText(r){
+    var q=itemQty(r);
+    if(q==null) return {txt:'—',na:true};
+    if(r.mode==='bag') return {txt:fmt(q)+' '+bagWord(q), na:false};
+    return {txt:fmt(q)+' '+volUnitNow(), na:false};
+  }
+  function rowCost(r){ var c=itemCost(r); return (c==null)?{txt:'—',na:true}:{txt:money(c),na:false}; }
+
+  // groups: one volume group + a bag group per distinct frozen size (keyed by rounded lb)
+  function groupTotals(){
+    var g={volQ:0,volHas:false,cost:0,hasCost:false,bags:{},order:[]};
+    tally.forEach(function(r){
+      if(r.mode==='bag'){
+        var key=Math.round(r.wLb*100)/100;
+        if(!g.bags[key]){ g.bags[key]={wLb:r.wLb,count:0}; g.order.push(key); }
+        g.bags[key].count+=itemQty(r);
+      } else { g.volQ+=itemQty(r); g.volHas=true; }
+      var c=itemCost(r); if(c!=null){ g.cost+=c; g.hasCost=true; }
+    });
+    g.order.sort(function(a,b){return b-a;});           // heaviest bag first
+    return g;
+  }
+  // build display parts with optional waste multiplier applied
+  function buildParts(g, mlt){
+    var p=[];
+    if(g.volHas){ var vq=g.volQ*(1+mlt); p.push({num:vq, unit:volUnitNow()}); }
+    g.order.forEach(function(k){
+      var grp=g.bags[k];
+      var cnt=grp.count + (mlt>0?Math.ceil(grp.count*mlt):0);
+      p.push({num:cnt, unit:'bags ('+sizeLabelFromLb(grp.wLb)+')'});
+    });
+    return p;
+  }
+  function wasteParts(g, mlt){
+    var p=[];
+    if(g.volHas && g.volQ*mlt>0) p.push({num:g.volQ*mlt, unit:volUnitNow()});
+    g.order.forEach(function(k){
+      var w=Math.ceil(g.bags[k].count*mlt);
+      if(w>0) p.push({num:w, unit:bagWord(w)});
+    });
+    return p;
+  }
+  function partsStr(parts,plus){
+    return parts.map(function(p){return (plus?'+':'')+fmt(p.num)+' '+p.unit;}).join(plus?'  ':' + ');
+  }
+  function segHTML(parts){
+    return parts.map(function(p){return '<b>'+fmt(p.num)+'</b> '+p.unit;}).join(' + ');
+  }
+
+  function renderTally(){
+    var body=$('tallyBody'), tot=$('projTotal');
+    var g=groupTotals();
+    var wp = waste.active ? parseNum(waste.pct) : NaN;
+    var hasWp = waste.active && !isNaN(wp) && wp>0;
+    var mlt = hasWp ? wp/100 : 0;
+    var tCost=g.cost*(1+mlt);
+
+    updateMbar(g, mlt, tCost);
+
+    if(!tally.length){
+      body.innerHTML='<div class="tally-empty">Pouring more than one slab or footing? Add each above and they\u2019ll total here.</div>';
+      tot.style.display='none'; $('clearBtn').style.display='none';
+      waste.active=false; waste.pct=''; $('wastePct').value='';
+      $('wasteRow').style.display='none'; $('addWasteBtn').style.display='none';
+      return;
+    }
+    $('clearBtn').style.display='inline';
+
+    var html='';
+    tally.forEach(function(r,i){
+      var q=rowQtyText(r), c=rowCost(r);
+      html+='<div class="trow"><span class="desc">'+r.label+'</span>'
+          +'<span class="qt'+(q.na?' na':'')+'">'+q.txt+'</span>'
+          +'<span class="rc'+(c.na?' na':'')+'">'+c.txt+'</span>'
+          +'<button class="x" data-i="'+i+'" aria-label="Remove">×</button></div>';
+    });
+    body.innerHTML=html;
+
+    if(waste.active){
+      $('wasteRow').style.display='grid';
+      $('addWasteBtn').style.display='none';
+      var wq=$('wasteQty'), wr=$('wasteRc');
+      if(hasWp){
+        var wparts=wasteParts(g,mlt);
+        wq.className='qt'; wq.textContent = wparts.length? partsStr(wparts,true) : '—';
+        if(g.hasCost){ wr.className='rc'; wr.textContent='+'+money(g.cost*mlt); }
+        else { wr.className='rc na'; wr.textContent='—'; }
+      } else {
+        wq.className='qt na'; wq.textContent='—';
+        wr.className='rc na'; wr.textContent='—';
+      }
+    } else {
+      $('wasteRow').style.display='none';
+      $('addWasteBtn').style.display='block';
+    }
+
+    tot.style.display='grid';
+    $('projCount').textContent='';
+    $('totalUnit').textContent='';
+    $('totalQty').textContent = partsStr(buildParts(g,mlt),false);
+    if(g.hasCost){
+      $('totalCostRow').style.display='block';
+      $('totalCost').style.display='block';
+      $('totalCost').textContent=money(tCost);
+    } else {
+      $('totalCostRow').style.display='none';
+      $('totalCost').style.display='none';
+    }
+  }
+
+  function updateMbar(g, mlt, tCost){
+    if(tally.length){
+      $('mLab').textContent='Project total';
+      $('mSeg').innerHTML = segHTML(buildParts(g,mlt));
+      if(g.hasCost){ $('mCostWrap').classList.remove('hide'); $('mCost').textContent=money(tCost); }
+      else { $('mCostWrap').classList.add('hide'); }
+      return;
+    }
+    $('mLab').textContent='This slab';
+    if(!areaComplete()){
+      $('mSeg').innerHTML='<b>—</b> '+qtyUnit(); $('mCostWrap').classList.add('hide'); return;
+    }
+    var sq=soldQty(currentArea(),0);
+    $('mSeg').innerHTML='<b>'+fmt(sq.qty)+'</b> '+qtyUnit();
+    var c=costFor(sq);
+    if(c!=null){ $('mCostWrap').classList.remove('hide'); $('mCost').textContent=money(c); }
+    else { $('mCostWrap').classList.add('hide'); }
+  }
+
+  function renderAll(){ renderArea(); renderTally(); }
+
+  // ---------- events ----------
+  [len,wid,dia,depth,price,customBag].forEach(function(el){el.addEventListener('input',renderAll)});
+
+  depth.addEventListener('input',function(){
+    [].forEach.call($('depthChips').children,function(c){c.classList.remove('on')});
+  });
+  $('depthChips').addEventListener('click',function(e){
+    var b=e.target.closest('button'); if(!b)return;
+    depth.value=b.dataset.d;
+    [].forEach.call(this.children,function(c){c.classList.toggle('on',c===b)});
+    renderAll();
+  });
+
+  // bag size chips (live selection only; existing rows keep their frozen size)
+  $('bagChips').addEventListener('click',function(e){
+    var b=e.target.closest('button'); if(!b)return;
+    [].forEach.call(this.children,function(c){c.classList.toggle('on',c===b)});
+    $('customBagWrap').style.display = b.dataset.custom ? 'block' : 'none';
+    if(b.dataset.custom){ customBag.focus(); }
+    renderAll();
+  });
+
+  // shape toggle
+  $('shapeSeg').addEventListener('click',function(e){
+    var b=e.target.closest('button'); if(!b)return;
+    if(b.dataset.shape===shape) return;
+    shape=b.dataset.shape;
+    [].forEach.call(this.children,function(c){c.classList.toggle('on',c===b)});
+    $('rectFields').style.display = shape==='rect'?'block':'none';
+    $('circleFields').style.display = shape==='circle'?'block':'none';
+    renderAll();
+  });
+
+  // unit system toggle
+  $('unitSeg').addEventListener('click',function(e){
+    var b=e.target.closest('button'); if(!b)return;
+    if(b.dataset.sys===sys) return;
+    sys=b.dataset.sys;
+    [].forEach.call(this.children,function(c){c.classList.toggle('on',c===b)});
+    len.value='';wid.value='';dia.value='';depth.value='';price.value='';customBag.value='';
+    [].forEach.call($('depthChips').children,function(c){c.classList.remove('on')});
+    var du=sys==='us'?'ft':'m', pu=sys==='us'?'in':'cm';
+    [].forEach.call(document.querySelectorAll('[data-dim]'),function(el){el.textContent=du});
+    [].forEach.call(document.querySelectorAll('[data-depth]'),function(el){el.textContent=pu});
+    var chipVals = sys==='us'?['4','5','6','8']:['10','13','15','20'];
+    var chipTxt  = sys==='us'?['4"','5"','6"','8"']:['10 cm','13 cm','15 cm','20 cm'];
+    [].forEach.call($('depthChips').children,function(c,i){ c.dataset.d=chipVals[i]; c.textContent=chipTxt[i]; });
+    depth.placeholder = sys==='us'?'e.g. 4':'e.g. 10';
+    // bag chips relabel: US 40/50/60/80 lb ; metric 20/25/30/40 kg
+    var bagVals = sys==='us'?['40','50','60','80']:['20','25','30','40'];
+    var bagDefault = sys==='us'?'80':'20';
+    var presets=[].filter.call($('bagChips').children,function(c){return !c.dataset.custom;});
+    presets.forEach(function(c,i){ c.dataset.w=bagVals[i]; c.textContent=bagVals[i]+(sys==='us'?' lb':' kg'); });
+    // reset selection to default preset, close custom
+    [].forEach.call($('bagChips').children,function(c){c.classList.remove('on')});
+    presets.forEach(function(c){ if(c.dataset.w===bagDefault) c.classList.add('on'); });
+    $('customBagWrap').style.display='none';
+    $('customBagSuf').textContent = sys==='us'?'lb':'kg';
+    customBag.placeholder = sys==='us'?'e.g. 55':'e.g. 35';
+    updateModeLabels();
+    renderAll();
+  });
+
+  // sold-by mode
+  function updateModeLabels(){
+    if(mode==='bag'){
+      $('priceLab').textContent='Price per bag';
+      $('priceSuf').textContent='$/bag';
+      $('bagSizeWrap').style.display='block';
+    } else {
+      $('priceLab').textContent = sys==='us'?'Price per cubic yard':'Price per m³';
+      $('priceSuf').textContent = sys==='us'?'$/yd³':'$/m³';
+      $('bagSizeWrap').style.display='none';
+    }
+  }
+  $('modeSeg').addEventListener('click',function(e){
+    var b=e.target.closest('button'); if(!b)return;
+    if(b.dataset.mode===mode) return;
+    mode=b.dataset.mode;
+    [].forEach.call(this.children,function(c){c.classList.toggle('on',c===b)});
+    price.value='';
+    updateModeLabels();
+    renderAll();
+  });
+
+  // add / clear / remove
+  $('addBtn').addEventListener('click',function(){
+    if(!areaComplete()) return;
+    var v=currentArea(); if(v==null) return;
+    var lbl=areaLabel();
+    var wLb=null, y=null;
+    if(mode==='bag'){ wLb=bagLiveLb(); y=bagLiveYieldFt3(); lbl+=' · '+sizeLabelFromLb(wLb); }
+    tally.push({label:lbl, volYd3:v.volYd3, volM3:v.volM3, volFt3:v.volFt3,
+                mode:mode, wLb:wLb, yieldFt3:y, rate:liveRateYd3()});
+    len.value='';wid.value='';dia.value='';depth.value='';price.value='';
+    [].forEach.call($('depthChips').children,function(c){c.classList.remove('on')});
+    renderAll();
+    (shape==='rect'?len:dia).focus();
+  });
+  $('clearFieldsBtn').addEventListener('click',function(){
+    len.value='';wid.value='';dia.value='';depth.value='';price.value='';
+    [].forEach.call($('depthChips').children,function(c){c.classList.remove('on')});
+    renderAll();
+    (shape==='rect'?len:dia).focus();
+  });
+  $('tallyBody').addEventListener('click',function(e){
+    var x=e.target.closest('.x'); if(!x)return;
+    tally.splice(+x.dataset.i,1); renderTally();
+  });
+  $('clearBtn').addEventListener('click',function(){tally=[];renderTally()});
+
+  // waste
+  $('addWasteBtn').addEventListener('click',function(){
+    if(!tally.length) return;
+    waste.active=true; waste.pct=''; $('wastePct').value='';
+    renderTally(); $('wastePct').focus();
+  });
+  $('wastePct').addEventListener('input',function(){ waste.pct=this.value; renderTally(); });
+  $('wasteRemove').addEventListener('click',function(){
+    waste.active=false; waste.pct=''; $('wastePct').value=''; renderTally();
+  });
+
+  updateModeLabels();
+  renderAll();
+})();
+</script>
+</body>
+</html>

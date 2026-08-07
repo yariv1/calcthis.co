@@ -40,102 +40,19 @@
       "hasPart": [
         { "@type": "WebApplication", "name": "Board Foot Calculator", "url": "https://calcthis.co/board-foot-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Gravel Calculator", "url": "https://calcthis.co/gravel-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
-        { "@type": "WebApplication", "name": "Mulch Calculator", "url": "https://calcthis.co/mulch-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } }
+        { "@type": "WebApplication", "name": "Mulch Calculator", "url": "https://calcthis.co/mulch-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
+        { "@type": "WebApplication", "name": "Concrete Calculator", "url": "https://calcthis.co/concrete-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } }
       ]
     }
   ]
 }
 </script>
-<style>
-  :root{
-    --paper:#FBF8F3;
-    --card:#FFFFFF;
-    --ink:#241A11;
-    --ink-soft:#5B4C3B;
-    --muted:#8A7A66;
-    --line:#E7DECF;
-    --amber:#B5761F;
-    --amber-deep:#8F5C13;
-    --spruce:#37503F;
-    --spruce-soft:#5A7361;
-    --shadow:0 1px 2px rgba(36,26,17,.04),0 8px 28px rgba(36,26,17,.06);
-    --radius:14px;
-  }
-  *{box-sizing:border-box;margin:0;padding:0}
-  html{-webkit-text-size-adjust:100%}
-  body{
-    font-family:'Inter',system-ui,sans-serif;
-    background:var(--paper);
-    color:var(--ink);
-    line-height:1.55;
-    font-feature-settings:"tnum" 0;
-    -webkit-font-smoothing:antialiased;
-  }
-  .wrap{max-width:1040px;margin:0 auto;padding:0 20px}
-
-  /* shared site header */
-  header{position:relative;padding:20px 0 6px;display:flex;align-items:center;gap:13px}
-  .menu-btn{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border:0;background:none;cursor:pointer;color:var(--amber-deep);border-radius:8px;padding:0;transition:.15s}
-  .menu-btn:hover{background:#F5EFE4}
-  .menu-btn svg{display:block}
-  .menu-btn .ic-close{display:none}
-  .menu-btn.open .ic-open{display:none}
-  .menu-btn.open .ic-close{display:block}
-  .brand{display:flex;align-items:center;gap:10px;font-family:'Fraunces',serif;font-weight:600;font-size:19px;letter-spacing:-.01em;text-decoration:none;color:var(--ink)}
-  .brand img{display:block;width:24px;height:24px;flex:none}
-  .brand span b{color:var(--amber)}
-  .menu{position:absolute;top:calc(100% + 6px);left:0;z-index:60;min-width:250px;background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:7px}
-  .menu[hidden]{display:none}
-  .menu a{display:block;font-family:'Fraunces',serif;font-size:16px;font-weight:500;color:var(--ink-soft);text-decoration:none;padding:9px 13px;border-radius:8px;transition:.12s}
-  .menu a:hover{background:#F5EFE4;color:var(--ink)}
-  .menu a.current{background:#F3EADA;color:var(--ink);font-weight:600}
-
-  /* hero */
-  .hero{padding:34px 0 10px;max-width:60ch}
-  .eyebrow{font-size:12.5px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--amber-deep)}
-  h1{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(32px,5.2vw,50px);line-height:1.03;letter-spacing:-.02em;margin:9px 0 12px}
-  h1 b{color:var(--amber);font-weight:600}
-  .hero p{color:var(--ink-soft);font-size:17px}
-  .pills{display:flex;flex-wrap:wrap;gap:9px;margin-top:16px}
-  .pill{font-size:13px;font-weight:600;color:var(--spruce);background:#EDF2ED;border:1px solid #DCE6DC;border-radius:20px;padding:5px 12px}
-  .pill.amber{color:var(--amber-deep);background:#F6EEDF;border-color:#EADFC8}
-
-  /* section heading */
-  .sec-h{font-family:'Fraunces',serif;font-weight:600;font-size:15px;letter-spacing:.02em;color:var(--ink-soft);text-transform:uppercase;margin:34px 0 14px;display:flex;align-items:center;gap:10px}
-  .sec-h::after{content:"";flex:1;height:1px;background:var(--line)}
-
-  /* card grid */
-  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-  @media(max-width:820px){.cards{grid-template-columns:repeat(2,1fr)}}
-  @media(max-width:520px){.cards{grid-template-columns:1fr}}
-  .calc{display:flex;flex-direction:column;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px 20px;text-decoration:none;color:inherit;transition:transform .14s ease,box-shadow .14s ease,border-color .14s ease}
-  .calc:hover{transform:translateY(-3px);box-shadow:0 2px 4px rgba(36,26,17,.05),0 16px 40px rgba(36,26,17,.10);border-color:#DFD2BC}
-  .calc .ico{width:52px;height:52px;border-radius:13px;display:flex;align-items:center;justify-content:center;background:linear-gradient(150deg,#F7EEDD,#F1E4CB);border:1px solid #EADFC8}
-  .calc .ico svg{display:block}
-  .calc h3{font-family:'Fraunces',serif;font-weight:600;font-size:20px;letter-spacing:-.01em}
-  .calc p{color:var(--ink-soft);font-size:14px;line-height:1.5}
-  .calc .go{margin-top:auto;font-size:13.5px;font-weight:600;color:var(--amber-deep);display:inline-flex;align-items:center;gap:6px}
-  .calc .go svg{transition:transform .14s ease}
-  .calc:hover .go svg{transform:translateX(3px)}
-  .soon{opacity:.72;cursor:default;pointer-events:none}
-  .soon .ico{background:#F4EFE6;border-color:var(--line)}
-  .soon .badge{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);border:1px dashed var(--line);border-radius:20px;padding:3px 9px;align-self:flex-start;margin-top:auto}
-
-  /* SEO intro / prose */
-  .prose{margin:40px 0 8px;max-width:72ch}
-  .prose h2{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(22px,3.4vw,28px);letter-spacing:-.01em;margin:0 0 12px}
-  .prose h3{font-family:'Fraunces',serif;font-weight:600;font-size:18px;margin:26px 0 8px}
-  .prose p{color:var(--ink-soft);font-size:16px;margin:0 0 13px}
-  .prose strong{color:var(--ink);font-weight:600}
-
-  footer{border-top:1px solid var(--line);margin-top:36px;padding:22px 0 44px;color:var(--muted);font-size:13px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
-  footer a{color:var(--ink-soft);text-decoration:none}
-  footer nav a{margin-left:16px}
-</style>
+<link rel="stylesheet" href="/assets/style.css?v=2">
 </head>
-<body>
+<body class="p-home">
 <div class="wrap">
 
+<!--HEADER:START-->
   <header>
     <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
       <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
@@ -150,8 +67,10 @@
       <a href="/board-foot-calculator/">Board Foot Calculator</a>
       <a href="/gravel-calculator/">Gravel Calculator</a>
       <a href="/mulch-calculator/">Mulch Calculator</a>
+      <a href="/concrete-calculator/">Concrete Calculator</a>
     </nav>
   </header>
+  <!--HEADER:END-->
 
   <section class="hero">
     <div class="eyebrow">Purpose-built calculators</div>
@@ -216,6 +135,22 @@
       </span>
     </a>
 
+    <a class="calc" href="/concrete-calculator/">
+      <span class="ico" aria-hidden="true">
+        <svg width="30" height="30" viewBox="0 0 32 32" fill="none">
+          <rect x="4.5" y="13" width="23" height="12" rx="2" fill="#BDB6A8" stroke="#5B4C3B" stroke-width="1.4"/>
+          <path d="M4.5 18.5h23" stroke="#5B4C3B" stroke-width="1.2" opacity=".55"/>
+          <path d="M11 13l2-5.5h6l2 5.5" fill="#C9884A" stroke="#5B4C3B" stroke-width="1.4" stroke-linejoin="round"/>
+          <path d="M13.5 7.5h5" stroke="#37503F" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <h3>Concrete</h3>
+      <p>How many bags of concrete you need for a slab or footing — plus cubic yards, weight and cost. Add multiple pours, US or metric.</p>
+      <span class="go">Open calculator
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+    </a>
+
     <div class="calc soon" aria-hidden="true">
       <span class="ico">
         <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><path d="M16 5v22M5 16h22" stroke="#8A7A66" stroke-width="1.6" stroke-linecap="round"/><circle cx="16" cy="16" r="12" stroke="#8A7A66" stroke-width="1.4" opacity=".5"/></svg>
@@ -230,7 +165,7 @@
   <section class="prose">
     <h2>Calculators that do one thing well</h2>
     <p>Most calculator sites are enormous libraries where every tool is a compromise — a generic form bolted onto a shared template. <strong>CalcThis takes the opposite approach.</strong> Each calculator here is designed around a single real-world task, so the inputs match how you actually measure, the results come out in the units your supplier sells by, and the whole thing works the instant you type — no compute button, no account, no clutter.</p>
-    <p>Today the hub covers three of the most-searched estimating jobs in construction and landscaping: figuring out <strong>board feet</strong> and lumber cost for a cut list, working out how much <strong>gravel</strong> a driveway or path needs in tons or bags, and estimating <strong>mulch</strong> for garden beds by the cubic yard or bag. Every one includes a running project total so you can add several boards, areas or beds and price the whole job at once — plus a waste factor so you order enough the first time.</p>
+    <p>Today the hub covers four of the most-searched estimating jobs in construction and landscaping: figuring out <strong>board feet</strong> and lumber cost for a cut list, working out how much <strong>gravel</strong> a driveway or path needs in tons or bags, and estimating <strong>mulch</strong> for garden beds by the cubic yard or bag, and working out how many <strong>bags of concrete</strong> a slab or footing takes. Every one includes a running project total so you can add several boards, areas or beds and price the whole job at once — plus a waste factor so you order enough the first time.</p>
 
     <h3>Why single-purpose beats all-in-one</h3>
     <p>A dedicated tool can make choices a general calculator can't: sensible defaults, the exact depth options people really use, unit handling that matches the trade, and a layout tuned for one job on a phone at the lumber yard or garden centre. That focus is the whole point — <strong>fast, accurate, and purpose-built</strong>, one calculator at a time.</p>
@@ -245,22 +180,12 @@
       <a href="/board-foot-calculator/">Board Foot</a>
       <a href="/gravel-calculator/">Gravel</a>
       <a href="/mulch-calculator/">Mulch</a>
+      <a href="/concrete-calculator/">Concrete</a>
     </nav>
   </footer>
 
 </div>
 
-<script>
-(function(){
-  var btn=document.getElementById('menuBtn'), menu=document.getElementById('siteMenu');
-  if(!btn||!menu) return;
-  function open(){menu.hidden=false;btn.classList.add('open');btn.setAttribute('aria-expanded','true');btn.setAttribute('aria-label','Close menu');}
-  function close(){menu.hidden=true;btn.classList.remove('open');btn.setAttribute('aria-expanded','false');btn.setAttribute('aria-label','Open menu');}
-  btn.addEventListener('click',function(e){e.stopPropagation();menu.hidden?open():close();});
-  document.addEventListener('click',function(e){if(!menu.hidden&&!menu.contains(e.target)&&!btn.contains(e.target))close();});
-  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!menu.hidden)close();});
-  var y=document.getElementById('yr'); if(y) y.textContent=new Date().getFullYear();
-})();
-</script>
+<script src="/assets/app.js?v=2"></script>
 </body>
 </html>
