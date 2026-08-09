@@ -40,6 +40,7 @@
       "hasPart": [
         { "@type": "WebApplication", "name": "Board Foot Calculator", "url": "https://calcthis.co/board-foot-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Gravel Calculator", "url": "https://calcthis.co/gravel-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
+        { "@type": "WebApplication", "name": "Sand Calculator", "url": "https://calcthis.co/sand-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Mulch Calculator", "url": "https://calcthis.co/mulch-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Concrete Calculator", "url": "https://calcthis.co/concrete-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } }
       ]
@@ -47,7 +48,7 @@
   ]
 }
 </script>
-<link rel="stylesheet" href="/assets/style.css?v=2">
+<link rel="stylesheet" href="/assets/style.css?v=3">
 </head>
 <body class="p-home">
 <div class="wrap">
@@ -66,6 +67,7 @@
       <a href="/" class="current">Home</a>
       <a href="/board-foot-calculator/">Board Foot Calculator</a>
       <a href="/gravel-calculator/">Gravel Calculator</a>
+      <a href="/sand-calculator/">Sand Calculator</a>
       <a href="/mulch-calculator/">Mulch Calculator</a>
       <a href="/concrete-calculator/">Concrete Calculator</a>
     </nav>
@@ -119,6 +121,24 @@
       </span>
     </a>
 
+    <a class="calc" href="/sand-calculator/">
+      <span class="ico" aria-hidden="true">
+        <svg width="30" height="30" viewBox="0 0 32 32" fill="none">
+          <path d="M4 24c2.6-7.5 5.6-11 12-11s9.4 3.5 12 11z" fill="#E7CF9E" stroke="#8F5C13" stroke-width="1.4" stroke-linejoin="round"/>
+          <path d="M3 24h26" stroke="#8F5C13" stroke-width="1.4" stroke-linecap="round"/>
+          <path d="M9.5 20.5c2-1.4 3.8-1.4 5 0 1.3-1.6 3.2-1.6 5.2-.3" stroke="#C9922F" stroke-width="1.1" stroke-linecap="round" fill="none" opacity=".8"/>
+          <circle cx="12" cy="18.6" r=".95" fill="#B5761F"/>
+          <circle cx="16" cy="16.6" r=".95" fill="#B5761F"/>
+          <circle cx="20" cy="18.9" r=".95" fill="#B5761F"/>
+        </svg>
+      </span>
+      <h3>Sand</h3>
+      <p>How much sand you need in tons, cubic yards or bags — paver bedding, leveling and fill, for multiple areas with cost and waste.</p>
+      <span class="go">Open calculator
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+    </a>
+
     <a class="calc" href="/mulch-calculator/">
       <span class="ico" aria-hidden="true">
         <svg width="30" height="30" viewBox="0 0 32 32" fill="none">
@@ -165,7 +185,7 @@
   <section class="prose">
     <h2>Calculators that do one thing well</h2>
     <p>Most calculator sites are enormous libraries where every tool is a compromise — a generic form bolted onto a shared template. <strong>CalcThis takes the opposite approach.</strong> Each calculator here is designed around a single real-world task, so the inputs match how you actually measure, the results come out in the units your supplier sells by, and the whole thing works the instant you type — no compute button, no account, no clutter.</p>
-    <p>Today the hub covers four of the most-searched estimating jobs in construction and landscaping: figuring out <strong>board feet</strong> and lumber cost for a cut list, working out how much <strong>gravel</strong> a driveway or path needs in tons or bags, and estimating <strong>mulch</strong> for garden beds by the cubic yard or bag, and working out how many <strong>bags of concrete</strong> a slab or footing takes. Every one includes a running project total so you can add several boards, areas or beds and price the whole job at once — plus a waste factor so you order enough the first time.</p>
+    <p>Today the hub covers five of the most-searched estimating jobs in construction and landscaping: figuring out <strong>board feet</strong> and lumber cost for a cut list, working out how much <strong>gravel</strong> a driveway or path needs in tons or bags, how much <strong>sand</strong> a paver base or leveling job takes, estimating <strong>mulch</strong> for garden beds by the cubic yard or bag, and working out how many <strong>bags of concrete</strong> a slab or footing takes. Every one includes a running project total so you can add several boards, areas or beds and price the whole job at once — plus a waste factor so you order enough the first time.</p>
 
     <h3>Why single-purpose beats all-in-one</h3>
     <p>A dedicated tool can make choices a general calculator can't: sensible defaults, the exact depth options people really use, unit handling that matches the trade, and a layout tuned for one job on a phone at the lumber yard or garden centre. That focus is the whole point — <strong>fast, accurate, and purpose-built</strong>, one calculator at a time.</p>
@@ -179,6 +199,7 @@
     <nav>
       <a href="/board-foot-calculator/">Board Foot</a>
       <a href="/gravel-calculator/">Gravel</a>
+      <a href="/sand-calculator/">Sand</a>
       <a href="/mulch-calculator/">Mulch</a>
       <a href="/concrete-calculator/">Concrete</a>
     </nav>
@@ -186,6 +207,6 @@
 
 </div>
 
-<script src="/assets/app.js?v=2"></script>
+<script src="/assets/app.js?v=3"></script>
 </body>
 </html>

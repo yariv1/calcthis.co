@@ -11,11 +11,11 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gravel Calculator — How Much Gravel Do I Need? (Tons &amp; Yards)</title>
-<link rel="canonical" href="https://calcthis.co/gravel-calculator/">
+<title>Sand Calculator — How Much Sand Do I Need? (Tons, Yards &amp; Bags)</title>
+<link rel="canonical" href="https://calcthis.co/sand-calculator/">
 <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
 <meta name="theme-color" content="#B5761F">
-<meta name="description" content="Free gravel calculator. Enter your area and depth to get how much gravel you need in tons, cubic yards, or bags — plus cost. Add multiple areas for a whole project. Rectangle or circle, US or metric.">
+<meta name="description" content="Free sand calculator. Enter your area and depth to get how much sand you need in tons, cubic yards, or bags — plus cost. Paver bedding, leveling, play, and fill sand. Add multiple areas for a whole project. US or metric.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -26,17 +26,17 @@
   "@graph": [
     {
       "@type": "WebApplication",
-      "name": "Gravel Calculator",
-      "url": "https://calcthis.co/gravel-calculator/",
-      "description": "Free gravel calculator. Enter your area and depth to get how much gravel you need in tons, cubic yards, or bags, plus estimated cost. Add multiple areas to total a whole project, with a waste buffer.",
+      "name": "Sand Calculator",
+      "url": "https://calcthis.co/sand-calculator/",
+      "description": "Free sand calculator. Enter your area and depth to get how much sand you need in tons, cubic yards, or bags, plus estimated cost. Covers paver bedding, leveling, play, and fill sand. Add multiple areas to total a whole project, with a waste buffer.",
       "applicationCategory": "UtilityApplication",
       "operatingSystem": "Any (web browser)",
       "browserRequirements": "Requires JavaScript",
       "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
       "featureList": [
-        "Gravel amount in tons, cubic yards, or bags",
+        "Sand amount in tons, cubic yards, or bags",
+        "Paver bedding, leveling, play, and fill sand presets",
         "Rectangle and circle areas",
-        "Material presets with typical densities",
         "Running project total across multiple areas",
         "Waste factor buffer on the total",
         "US and metric units",
@@ -48,27 +48,27 @@
       "mainEntity": [
         {
           "@type": "Question",
-          "name": "How much gravel do I need?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Multiply your area by the depth to get a volume, then convert to cubic yards or tons. For a rectangle, area is length times width; for a circle it is pi times the radius squared. Multiply by depth in feet, divide by 27 for cubic yards, then multiply by the material density for tons. The calculator above does all of this instantly as you type." }
+          "name": "How much sand do I need?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Multiply your area by the depth to get a volume, then convert to cubic yards or tons. For a rectangle, area is length times width; for a circle it is pi times the radius squared. Multiply by depth in feet, divide by 27 for cubic yards, then multiply by the sand density for tons. The calculator above does all of this instantly as you type." }
         },
         {
           "@type": "Question",
-          "name": "How many tons are in a cubic yard of gravel?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Most gravel weighs about 1.4 to 1.6 tons per cubic yard. Pea gravel and river rock are near the lighter end, crushed stone toward the heavier end. Density varies with moisture and stone type, so use your supplier's figure when they give one. Pick a material above and the calculator applies a typical density automatically." }
+          "name": "How much sand do I need for a paver patio?",
+          "acceptedAnswer": { "@type": "Answer", "text": "For the bedding layer under pavers, use about a 1-inch layer of paver or leveling sand. Enter your patio's length and width, set the depth to 1 inch, and pick Paver / leveling sand. Note that the bedding sand sits on top of a compacted gravel base — calculate that base separately with a gravel calculator." }
         },
         {
           "@type": "Question",
-          "name": "How deep should the gravel be?",
-          "acceptedAnswer": { "@type": "Answer", "text": "For paths and decorative ground cover, 2 to 3 inches is typical. For garden beds and general coverage, aim for about 4 inches. For a driveway, 4 to 6 inches is common, often over a compacted base. Tap a depth chip in the calculator to use one of these common depths." }
+          "name": "How many tons are in a cubic yard of sand?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Dry sand weighs roughly 1.3 to 1.5 tons per cubic yard. Fine play sand sits near the lighter end, coarse concrete or sharp sand toward the heavier end, and damp sand weighs more than dry. Density varies with moisture and grain size, so use your supplier's figure when they give one. Pick a sand type above and the calculator applies a typical density automatically." }
         },
         {
           "@type": "Question",
-          "name": "Should I order extra gravel for waste?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Gravel settles and compacts, and some is lost to uneven ground and spillage, so ordering about 10 percent extra is a good rule of thumb. Use the Add waste calc option in the project total to add a percentage buffer to your order." }
+          "name": "How deep should paver bedding sand be?",
+          "acceptedAnswer": { "@type": "Answer", "text": "The screeded bedding sand layer under pavers should be about 1 inch. Going much deeper lets pavers shift and settle unevenly. The strength comes from the compacted gravel base below the sand, not from a thick sand layer. Tap the 1-inch depth chip in the calculator to use this depth." }
         },
         {
           "@type": "Question",
-          "name": "Does this gravel calculator work in metric?",
+          "name": "Does this sand calculator work in metric?",
           "acceptedAnswer": { "@type": "Answer", "text": "Yes. Switch to Metric to enter your area in metres and depth in centimetres. The result is shown in cubic metres and tonnes, or bags, so you can order in whichever unit your supplier uses." }
         }
       ]
@@ -77,7 +77,7 @@
 }
 </script>
 </head>
-<body class="p-gravel">
+<body class="p-sand">
 <div class="wrap">
 
 <!--HEADER:START-->
@@ -93,8 +93,8 @@
     <nav class="menu" id="siteMenu" hidden>
       <a href="/">Home</a>
       <a href="/board-foot-calculator/">Board Foot Calculator</a>
-      <a href="/gravel-calculator/" class="current">Gravel Calculator</a>
-      <a href="/sand-calculator/">Sand Calculator</a>
+      <a href="/gravel-calculator/">Gravel Calculator</a>
+      <a href="/sand-calculator/" class="current">Sand Calculator</a>
       <a href="/mulch-calculator/">Mulch Calculator</a>
       <a href="/concrete-calculator/">Concrete Calculator</a>
     </nav>
@@ -102,9 +102,9 @@
   <!--HEADER:END-->
 
   <section class="hero">
-    <div class="eyebrow">Landscaping math, done instantly</div>
-    <h1>Gravel Calculator</h1>
-    <p>Enter the size of your area and how deep you want the gravel — get the amount in tons, cubic yards, or bags, plus the cost, the moment you type. Covering more than one area? Add each to the running project total below.</p>
+    <div class="eyebrow">Material math, done instantly</div>
+    <h1>Sand Calculator</h1>
+    <p>Enter the size of your area and how deep you need the sand — get the amount in tons, cubic yards, or bags, plus the cost, the moment you type. Laying a paver base, leveling, or filling more than one spot? Add each area to the running project total below.</p>
   </section>
 
   <div class="grid">
@@ -152,30 +152,30 @@
 
         <label class="fld">
           <span class="lab">Depth <span class="unit" data-depth>in</span></span>
-          <div class="inp"><input id="depth" type="number" inputmode="decimal" placeholder="e.g. 3"><span class="suf" data-depth>in</span></div>
+          <div class="inp"><input id="depth" type="number" inputmode="decimal" placeholder="e.g. 2"><span class="suf" data-depth>in</span></div>
           <div class="chips" id="depthChips">
+            <button data-d="1">1&quot;</button>
             <button data-d="2">2&quot;</button>
             <button data-d="3">3&quot;</button>
-            <button data-d="4">4&quot;</button>
             <button data-d="6">6&quot;</button>
           </div>
         </label>
 
         <label class="fld">
-          <span class="lab">Material</span>
+          <span class="lab">Sand type</span>
           <div class="sel">
             <select id="matSel">
-              <option value="gravel">Gravel (¾″)</option>
-              <option value="pea">Pea gravel</option>
-              <option value="crushed">Crushed stone</option>
-              <option value="river">River rock</option>
-              <option value="sand">Sand</option>
-              <option value="topsoil">Topsoil</option>
+              <option value="allpurpose">All-purpose sand</option>
+              <option value="paver">Paver / leveling sand</option>
+              <option value="concrete">Concrete / sharp sand</option>
+              <option value="masonry">Masonry sand</option>
+              <option value="fill">Fill sand</option>
+              <option value="play">Play sand</option>
               <option value="custom">Custom density…</option>
             </select>
           </div>
           <div class="inp" id="customWrap" style="display:none;margin-top:9px">
-            <input id="customDens" type="number" inputmode="decimal" placeholder="e.g. 1.5">
+            <input id="customDens" type="number" inputmode="decimal" placeholder="e.g. 1.35">
             <span class="suf" id="customSuf">t/yd³</span>
           </div>
         </label>
@@ -219,7 +219,7 @@
         <div class="res-big"><span id="resQty">—</span> <span class="res-unit" id="resUnit">tons</span></div>
         <div class="res-sub" id="resSub">Enter dimensions to see the amount.</div>
         <div class="res-cost hide" id="resCostWrap"><span class="k">Estimated cost</span><span class="v" id="resCost"></span></div>
-        <div class="res-tip" id="resTip">Tip: order about 10% extra for settling and spillage.</div>
+        <div class="res-tip" id="resTip">Tip: order about 10% extra for compaction and spillage.</div>
 
         <div class="proj-sep"></div>
 
@@ -266,54 +266,54 @@
   <section class="content">
     <div class="grid2">
       <div>
-        <h2>How much gravel do I need?</h2>
-        <p>Working out how much gravel to buy comes down to one thing: the <strong>volume</strong> of the space you're filling. Measure the area, choose a depth, multiply them together, then convert that volume into the unit your supplier sells by — cubic yards, tons, or bags.</p>
+        <h2>How much sand do I need?</h2>
+        <p>Working out how much sand to buy comes down to one thing: the <strong>volume</strong> of the space you're filling. Measure the area, choose a depth, multiply them together, then convert that volume into the unit your supplier sells by — cubic yards, tons, or bags.</p>
         <div class="formula">
           Area × Depth ÷ 27 = Cubic yards
           <small>DEPTH IN FEET · ÷27 CONVERTS CUBIC FEET TO CUBIC YARDS</small>
         </div>
-        <p>To get the <strong>weight in tons</strong>, multiply the cubic yards by the gravel's density — most gravel is about 1.4–1.6 tons per cubic yard. The calculator above does all of this the instant you type, in whichever units and shape you pick.</p>
+        <p>To get the <strong>weight in tons</strong>, multiply the cubic yards by the sand's density — dry sand is about 1.3–1.5 tons per cubic yard. The calculator above does all of this the instant you type, in whichever units and shape you pick.</p>
 
-        <h2>Rectangle or circle</h2>
-        <p>For a rectangular area — a driveway, patio, or path — the area is simply length × width. For a round area like a fire-pit border or circular bed, it's π × radius². Pick the shape at the top of the calculator and the right measurement boxes appear.</p>
+        <h2>How much sand for a paver base?</h2>
+        <p>A paver patio uses a thin <strong>bedding layer of sand</strong> — about <strong>1 inch</strong> of paver or leveling sand, screeded flat, for the pavers to sit on. Set the depth to 1 inch and pick <em>Paver / leveling sand</em>. Remember the sand sits on top of a compacted gravel base that carries the load — size that base separately with the <a href="/gravel-calculator/">gravel calculator</a>.</p>
 
         <h2>Worked example</h2>
-        <p>A rectangular path 20 ft long and 3 ft wide, filled 3 inches deep with gravel:</p>
-        <p style="color:var(--ink);font-weight:500">20 × 3 × 0.25 ÷ 27 = <strong>0.56 cubic yards</strong>, or about <strong>0.8 tons</strong>. Add ~10% for settling and you'd order a bit under a ton.</p>
+        <p>A paver patio 12 ft long and 10 ft wide, with a 1-inch bedding sand layer:</p>
+        <p style="color:var(--ink);font-weight:500">12 × 10 × 0.0833 ÷ 27 = <strong>0.37 cubic yards</strong>, or about <strong>0.5 tons</strong>. Add ~10% for compaction and you'd order about half a ton.</p>
       </div>
 
       <div>
-        <h2>How deep should gravel be?</h2>
+        <h2>What depth of sand?</h2>
         <ul>
-          <li><strong>2–3 inches</strong> — paths and decorative ground cover</li>
-          <li><strong>4 inches</strong> — garden beds and general coverage</li>
-          <li><strong>4–6 inches</strong> — driveways, usually over a compacted base</li>
+          <li><strong>1 inch</strong> — bedding layer under pavers (screeded flat)</li>
+          <li><strong>2 inches</strong> — leveling under above-ground pools and slabs</li>
+          <li><strong>3–6 inches</strong> — general fill and sandbox base</li>
         </ul>
         <p>Tap a depth chip in the calculator to drop in one of these common depths without typing.</p>
 
-        <h2>Typical gravel densities</h2>
-        <p>Weight depends on the material. These are the typical figures the calculator uses; your supplier's number may differ with moisture and stone type — pick <em>Custom density</em> to enter your own.</p>
+        <h2>Typical sand densities</h2>
+        <p>Weight depends on the sand type and how damp it is. These are the typical dry figures the calculator uses; your supplier's number may differ with moisture and grain size — pick <em>Custom density</em> to enter your own.</p>
         <table class="dtable">
-          <thead><tr><th>Material</th><th>Tons / yd³</th></tr></thead>
+          <thead><tr><th>Sand type</th><th>Tons / yd³</th></tr></thead>
           <tbody>
-            <tr><td>Gravel (¾″)</td><td>1.5</td></tr>
-            <tr><td>Pea gravel</td><td>1.4</td></tr>
-            <tr><td>Crushed stone</td><td>1.6</td></tr>
-            <tr><td>River rock</td><td>1.4</td></tr>
-            <tr><td>Sand</td><td>1.4</td></tr>
-            <tr><td>Topsoil</td><td>1.1</td></tr>
+            <tr><td>All-purpose sand</td><td>1.35</td></tr>
+            <tr><td>Paver / leveling sand</td><td>1.4</td></tr>
+            <tr><td>Concrete / sharp sand</td><td>1.5</td></tr>
+            <tr><td>Masonry sand</td><td>1.3</td></tr>
+            <tr><td>Fill sand</td><td>1.45</td></tr>
+            <tr><td>Play sand</td><td>1.25</td></tr>
           </tbody>
         </table>
-        <p>Buying bagged gravel instead? Switch <strong>Sold by</strong> to <em>Bag</em> and set your bag size — the calculator rounds up to whole bags.</p>
+        <p>Buying bagged play or paver sand instead? Switch <strong>Sold by</strong> to <em>Bag</em> and set your bag size — the calculator rounds up to whole bags. Note that <em>polymeric</em> joint sand is sold by coverage per bag, not by volume, so it isn't covered here.</p>
       </div>
     </div>
 
     <h2 style="margin-top:36px">Common questions</h2>
-    <details class="faq"><summary>How much gravel do I need?</summary><p>Multiply your area by the depth to get a volume, then convert to cubic yards or tons. For a rectangle, area is length × width; for a circle it's π × radius². Multiply by depth in feet, divide by 27 for cubic yards, then multiply by the material density for tons. The calculator above does all of this instantly as you type.</p></details>
-    <details class="faq"><summary>How many tons are in a cubic yard of gravel?</summary><p>Most gravel weighs about <strong>1.4 to 1.6 tons</strong> per cubic yard. Pea gravel and river rock sit near the lighter end, crushed stone toward the heavier end. Density varies with moisture and stone type, so use your supplier's figure when they give one — or pick a material above and the calculator applies a typical density automatically.</p></details>
-    <details class="faq"><summary>How deep should the gravel be?</summary><p>For paths and decorative ground cover, <strong>2–3 inches</strong> is typical. For garden beds and general coverage, aim for about <strong>4 inches</strong>. For a driveway, <strong>4–6 inches</strong> is common, often over a compacted base. Tap a depth chip in the calculator to use one of these.</p></details>
-    <details class="faq"><summary>Should I order extra gravel for waste?</summary><p>Yes. Gravel settles and compacts, and some is lost to uneven ground and spillage, so ordering about <strong>10% extra</strong> is a good rule of thumb. Tap <strong>&ldquo;+ Add waste calc&rdquo;</strong> in the project total to add a percentage buffer to your order.</p></details>
-    <details class="faq"><summary>Does this gravel calculator work in metric?</summary><p>Yes. Switch to "Metric" to enter your area in metres and depth in centimetres. The result is shown in cubic metres and tonnes, or bags, so you can order in whichever unit your supplier uses.</p></details>
+    <details class="faq"><summary>How much sand do I need?</summary><p>Multiply your area by the depth to get a volume, then convert to cubic yards or tons. For a rectangle, area is length × width; for a circle it's π × radius². Multiply by depth in feet, divide by 27 for cubic yards, then multiply by the sand density for tons. The calculator above does all of this instantly as you type.</p></details>
+    <details class="faq"><summary>How much sand do I need for a paver patio?</summary><p>For the bedding layer under pavers, use about a <strong>1-inch</strong> layer of paver or leveling sand. Enter your patio's length and width, set the depth to 1 inch, and pick <em>Paver / leveling sand</em>. The bedding sand sits on top of a compacted gravel base — calculate that base separately with the <a href="/gravel-calculator/">gravel calculator</a>.</p></details>
+    <details class="faq"><summary>How many tons are in a cubic yard of sand?</summary><p>Dry sand weighs roughly <strong>1.3 to 1.5 tons</strong> per cubic yard. Fine play sand sits near the lighter end, coarse concrete or sharp sand toward the heavier end, and damp sand weighs more than dry. Density varies with moisture and grain size, so use your supplier's figure when they give one — or pick a sand type above and the calculator applies a typical density automatically.</p></details>
+    <details class="faq"><summary>How deep should paver bedding sand be?</summary><p>The screeded bedding sand layer under pavers should be about <strong>1 inch</strong>. Going much deeper lets pavers shift and settle unevenly — the strength comes from the compacted gravel base below the sand, not a thick sand layer. Tap the 1-inch depth chip in the calculator to use this depth.</p></details>
+    <details class="faq"><summary>Does this sand calculator work in metric?</summary><p>Yes. Switch to "Metric" to enter your area in metres and depth in centimetres. The result is shown in cubic metres and tonnes, or bags, so you can order in whichever unit your supplier uses.</p></details>
   </section>
 
   <footer>
@@ -327,18 +327,18 @@
 <script src="/assets/app.js?v=3"></script>
 <script>
 (function(){
-  var sys='us', shape='rect', mode='ton', matKey='gravel';
+  var sys='us', shape='rect', mode='ton', matKey='allpurpose';
   var $=function(id){return document.getElementById(id)};
   var len=$('len'), wid=$('wid'), dia=$('dia'), depth=$('depth'),
       price=$('price'), bagSize=$('bagSize'), customDens=$('customDens'), matSel=$('matSel');
-  var tally=[];                     // each: {label, volYd3, volM3, tons, tonnes}
+  var tally=[];                     // each: {label, volYd3, volM3, tons, tonnes, mode, bagVolYd3, rate}
   var waste={active:false,pct:''};  // project-level buffer
   var customDensUS=null;            // stored internally as tons/yd³
 
   // constants
   var M3_PER_YD3=0.764554858;
   var DENS_US_TO_METRIC=1.186552;   // tons/yd³ -> tonnes/m³
-  var MAT={gravel:1.5, pea:1.4, crushed:1.6, river:1.4, sand:1.4, topsoil:1.1};
+  var MAT={allpurpose:1.35, paver:1.4, concrete:1.5, masonry:1.3, fill:1.45, play:1.25};
 
   function parseNum(v){
     if(v==null) return NaN;
@@ -407,7 +407,7 @@
       if(isNaN(parseNum(dia.value))||parseNum(dia.value)<=0) m.push('diameter');
     }
     if(isNaN(din)||din<=0) m.push('depth');
-    if(mode==='ton' && densityUS()==null) m.push('material density');
+    if(mode==='ton' && densityUS()==null) m.push('sand density');
     if(!m.length) return 'the details';
     if(m.length===1) return m[0];
     return m.slice(0,-1).join(', ')+' and '+m[m.length-1];
@@ -696,12 +696,12 @@
     [].forEach.call(document.querySelectorAll('[data-depth]'),function(el){el.textContent=pu});
     [].forEach.call(document.querySelectorAll('[data-bagu]'),function(el){el.textContent=bu});
     // depth chips
-    var chipVals = sys==='us'?['2','3','4','6']:['5','8','10','15'];
-    var chipTxt  = sys==='us'?['2"','3"','4"','6"']:['5 cm','8 cm','10 cm','15 cm'];
+    var chipVals = sys==='us'?['1','2','3','6']:['2.5','5','8','15'];
+    var chipTxt  = sys==='us'?['1"','2"','3"','6"']:['2.5 cm','5 cm','8 cm','15 cm'];
     [].forEach.call($('depthChips').children,function(c,i){ c.dataset.d=chipVals[i]; c.textContent=chipTxt[i]; });
-    depth.placeholder = sys==='us'?'e.g. 3':'e.g. 8';
+    depth.placeholder = sys==='us'?'e.g. 2':'e.g. 5';
     bagSize.placeholder = sys==='us'?'0.5':'25';
-    customDens.placeholder = sys==='us'?'e.g. 1.5':'e.g. 1.8';
+    customDens.placeholder = sys==='us'?'e.g. 1.35':'e.g. 1.6';
     $('customSuf').textContent = sys==='us'?'t/yd³':'t/m³';
     updateModeLabels();
     renderAll();
