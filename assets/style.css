@@ -130,9 +130,11 @@
   .tally-head button{font:inherit;font-size:12.5px;font-weight:600;color:var(--muted);background:none;border:0;cursor:pointer;text-decoration:underline;text-underline-offset:2px}
   .tally-head button:hover{color:var(--amber-deep)}
   .tally-empty{font-size:13.5px;color:var(--muted);padding:14px;text-align:center;background:#FCFAF6;border:1px dashed var(--line);border-radius:10px;line-height:1.45}
-  .trow{display:grid;grid-template-columns:1fr 74px 70px 22px;gap:10px;align-items:center;padding:9px 2px;border-bottom:1px solid var(--line);font-size:13.5px}
+  .trow{display:grid;grid-template-columns:1fr 74px 70px 22px;gap:10px;align-items:end;padding:9px 2px;border-bottom:1px solid var(--line);font-size:13.5px}
   .trow:last-child{border-bottom:none}
   .trow .desc{color:var(--ink-soft);font-variant-numeric:tabular-nums;min-width:0}
+  .trow .desc .m{display:block;font-weight:600;color:var(--ink);font-variant-numeric:normal;line-height:1.25}
+  .trow .desc .d{display:block;color:var(--ink-soft);font-size:12px;margin-top:1px}
   .trow .qt{font-weight:600;font-variant-numeric:tabular-nums;text-align:right}
   .trow .qt.na{color:var(--muted);font-weight:500}
   .trow .rc{font-weight:600;font-variant-numeric:tabular-nums;text-align:left;border-left:1px solid #CBBBA0;padding-left:10px;color:var(--spruce)}

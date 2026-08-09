@@ -22,6 +22,7 @@ const PAGES = [
   { file: 'board-foot-calculator/index.html',  slug: '/board-foot-calculator/' },
   { file: 'gravel-calculator/index.html',      slug: '/gravel-calculator/' },
   { file: 'sand-calculator/index.html',        slug: '/sand-calculator/' },
+  { file: 'topsoil-calculator/index.html',     slug: '/topsoil-calculator/' },
   { file: 'mulch-calculator/index.html',       slug: '/mulch-calculator/' },
   { file: 'concrete-calculator/index.html',    slug: '/concrete-calculator/' },
 ];

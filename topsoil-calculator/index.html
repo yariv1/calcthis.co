@@ -11,11 +11,11 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gravel Calculator — How Much Gravel Do I Need? (Tons &amp; Yards)</title>
-<link rel="canonical" href="https://calcthis.co/gravel-calculator/">
+<title>Topsoil Calculator — How Much Topsoil Do I Need? (Yards, Tons &amp; Bags)</title>
+<link rel="canonical" href="https://calcthis.co/topsoil-calculator/">
 <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
 <meta name="theme-color" content="#B5761F">
-<meta name="description" content="Free gravel calculator. Enter your area and depth to get how much gravel you need in tons, cubic yards, or bags — plus cost. Add multiple areas for a whole project. Rectangle or circle, US or metric.">
+<meta name="description" content="Free topsoil calculator. Enter your area and depth to get how much topsoil you need in cubic yards, tons, or bags — plus cost. Also covers garden soil, fill dirt, and compost. Add multiple beds or areas for a whole project. US or metric.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -26,18 +26,18 @@
   "@graph": [
     {
       "@type": "WebApplication",
-      "name": "Gravel Calculator",
-      "url": "https://calcthis.co/gravel-calculator/",
-      "description": "Free gravel calculator. Enter your area and depth to get how much gravel you need in tons, cubic yards, or bags, plus estimated cost. Add multiple areas to total a whole project, with a waste buffer.",
+      "name": "Topsoil Calculator",
+      "url": "https://calcthis.co/topsoil-calculator/",
+      "description": "Free topsoil calculator. Enter your area and depth to get how much topsoil you need in cubic yards, tons, or bags, plus estimated cost. Also covers garden soil, fill dirt, and compost. Add multiple beds or areas to total a whole project, with a waste buffer.",
       "applicationCategory": "UtilityApplication",
       "operatingSystem": "Any (web browser)",
       "browserRequirements": "Requires JavaScript",
       "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
       "featureList": [
-        "Gravel amount in tons, cubic yards, or bags",
+        "Topsoil amount in cubic yards, tons, or bags",
+        "Topsoil, garden soil, fill dirt, and compost presets",
         "Rectangle and circle areas",
-        "Material presets with typical densities",
-        "Running project total across multiple areas",
+        "Running project total across multiple beds or areas",
         "Waste factor buffer on the total",
         "US and metric units",
         "Instant cost estimate"
@@ -48,27 +48,32 @@
       "mainEntity": [
         {
           "@type": "Question",
-          "name": "How much gravel do I need?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Multiply your area by the depth to get a volume, then convert to cubic yards or tons. For a rectangle, area is length times width; for a circle it is pi times the radius squared. Multiply by depth in feet, divide by 27 for cubic yards, then multiply by the material density for tons. The calculator above does all of this instantly as you type." }
+          "name": "How much topsoil do I need?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Multiply your area by the depth to get a volume, then convert to cubic yards or tons. For a rectangle, area is length times width; for a circle it is pi times the radius squared. Multiply by depth in feet, divide by 27 for cubic yards, then multiply by the soil density for tons. The calculator above does all of this instantly as you type." }
         },
         {
           "@type": "Question",
-          "name": "How many tons are in a cubic yard of gravel?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Most gravel weighs about 1.4 to 1.6 tons per cubic yard. Pea gravel and river rock are near the lighter end, crushed stone toward the heavier end. Density varies with moisture and stone type, so use your supplier's figure when they give one. Pick a material above and the calculator applies a typical density automatically." }
+          "name": "How much does a 40 lb bag of topsoil cover?",
+          "acceptedAnswer": { "@type": "Answer", "text": "A 40 lb bag of topsoil holds roughly 0.75 cubic feet, so it covers about 9 square feet at 1 inch deep, or about 3 square feet at 3 inches deep. Switch Sold by to Bag in the calculator and set your bag size, and it rounds up to the number of whole bags you need for the area and depth you entered." }
         },
         {
           "@type": "Question",
-          "name": "How deep should the gravel be?",
-          "acceptedAnswer": { "@type": "Answer", "text": "For paths and decorative ground cover, 2 to 3 inches is typical. For garden beds and general coverage, aim for about 4 inches. For a driveway, 4 to 6 inches is common, often over a compacted base. Tap a depth chip in the calculator to use one of these common depths." }
+          "name": "How much will 1 ton of topsoil cover?",
+          "acceptedAnswer": { "@type": "Answer", "text": "One ton of topsoil is roughly 0.9 cubic yards, since topsoil weighs about 1.1 tons per cubic yard. That covers around 240 square feet at 1 inch deep, about 80 square feet at 3 inches, or about 60 square feet at 4 inches. Damp or clay-heavy soil weighs more, so coverage per ton drops a little." }
         },
         {
           "@type": "Question",
-          "name": "Should I order extra gravel for waste?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Gravel settles and compacts, and some is lost to uneven ground and spillage, so ordering about 10 percent extra is a good rule of thumb. Use the Add waste calc option in the project total to add a percentage buffer to your order." }
+          "name": "How deep should topsoil be?",
+          "acceptedAnswer": { "@type": "Answer", "text": "For overseeding or top-dressing an existing lawn, 0.5 to 1 inch is enough. For a new lawn, aim for 3 to 4 inches of topsoil over the graded base. For garden and raised beds, 6 to 12 inches gives roots room to establish. Tap a depth chip in the calculator to use one of these common depths." }
         },
         {
           "@type": "Question",
-          "name": "Does this gravel calculator work in metric?",
+          "name": "What is the difference between topsoil and fill dirt?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Topsoil is the nutrient-rich upper layer that plants grow in; fill dirt is subsoil with no organic matter, used to raise grade, fill holes, or backfill because it is cheaper and settles firmly. Many projects use fill dirt for bulk volume and cap it with a few inches of topsoil for planting. This calculator includes both, plus garden soil and compost — pick the material to apply the right density." }
+        },
+        {
+          "@type": "Question",
+          "name": "Does this topsoil calculator work in metric?",
           "acceptedAnswer": { "@type": "Answer", "text": "Yes. Switch to Metric to enter your area in metres and depth in centimetres. The result is shown in cubic metres and tonnes, or bags, so you can order in whichever unit your supplier uses." }
         }
       ]
@@ -77,7 +82,7 @@
 }
 </script>
 </head>
-<body class="p-gravel">
+<body class="p-topsoil">
 <div class="wrap">
 
 <!--HEADER:START-->
@@ -93,9 +98,9 @@
     <nav class="menu" id="siteMenu" hidden>
       <a href="/">Home</a>
       <a href="/board-foot-calculator/">Board Foot Calculator</a>
-      <a href="/gravel-calculator/" class="current">Gravel Calculator</a>
+      <a href="/gravel-calculator/">Gravel Calculator</a>
       <a href="/sand-calculator/">Sand Calculator</a>
-      <a href="/topsoil-calculator/">Topsoil Calculator</a>
+      <a href="/topsoil-calculator/" class="current">Topsoil Calculator</a>
       <a href="/mulch-calculator/">Mulch Calculator</a>
       <a href="/concrete-calculator/">Concrete Calculator</a>
     </nav>
@@ -104,8 +109,8 @@
 
   <section class="hero">
     <div class="eyebrow">Landscaping math, done instantly</div>
-    <h1>Gravel Calculator</h1>
-    <p>Enter the size of your area and how deep you want the gravel — get the amount in tons, cubic yards, or bags, plus the cost, the moment you type. Covering more than one area? Add each to the running project total below.</p>
+    <h1>Topsoil Calculator</h1>
+    <p>Enter the size of your area and how deep you need the soil — get the amount in cubic yards, tons, or bags, plus the cost, the moment you type. Filling several beds or areas? Add each to the running project total below.</p>
   </section>
 
   <div class="grid">
@@ -153,10 +158,10 @@
 
         <label class="fld">
           <span class="lab">Depth <span class="unit" data-depth>in</span></span>
-          <div class="inp"><input id="depth" type="number" inputmode="decimal" placeholder="e.g. 3"><span class="suf" data-depth>in</span></div>
+          <div class="inp"><input id="depth" type="number" inputmode="decimal" placeholder="e.g. 4"><span class="suf" data-depth>in</span></div>
           <div class="chips" id="depthChips">
+            <button data-d="1">1&quot;</button>
             <button data-d="2">2&quot;</button>
-            <button data-d="3">3&quot;</button>
             <button data-d="4">4&quot;</button>
             <button data-d="6">6&quot;</button>
           </div>
@@ -166,17 +171,15 @@
           <span class="lab">Material</span>
           <div class="sel">
             <select id="matSel">
-              <option value="gravel">Gravel (¾″)</option>
-              <option value="pea">Pea gravel</option>
-              <option value="crushed">Crushed stone</option>
-              <option value="river">River rock</option>
-              <option value="sand">Sand</option>
               <option value="topsoil">Topsoil</option>
+              <option value="gardensoil">Garden / raised-bed soil</option>
+              <option value="filldirt">Fill dirt</option>
+              <option value="compost">Compost</option>
               <option value="custom">Custom density…</option>
             </select>
           </div>
           <div class="inp" id="customWrap" style="display:none;margin-top:9px">
-            <input id="customDens" type="number" inputmode="decimal" placeholder="e.g. 1.5">
+            <input id="customDens" type="number" inputmode="decimal" placeholder="e.g. 1.1">
             <span class="suf" id="customSuf">t/yd³</span>
           </div>
         </label>
@@ -197,7 +200,7 @@
           </label>
           <label class="fld" id="bagWrap" style="margin-bottom:0;display:none">
             <span class="lab">Bag size <span class="unit" data-bagu>ft³</span></span>
-            <div class="inp"><input id="bagSize" type="number" inputmode="decimal" placeholder="0.5" step="0.05"><span class="suf" data-bagu>ft³</span></div>
+            <div class="inp"><input id="bagSize" type="number" inputmode="decimal" placeholder="0.75" step="0.05"><span class="suf" data-bagu>ft³</span></div>
           </label>
         </div>
 
@@ -207,7 +210,7 @@
             <button class="linkbtn" id="clearFieldsBtn">Clear fields</button>
           </div>
           <div class="res-hint" id="hint">Enter your length, width and depth</div>
-          <div class="add-note" id="addNote">Covering several spots? Add each area to total the whole job.</div>
+          <div class="add-note" id="addNote">Filling several beds? Add each area to total the whole job.</div>
         </div>
       </div>
     </div>
@@ -220,7 +223,7 @@
         <div class="res-big"><span id="resQty">—</span> <span class="res-unit" id="resUnit">tons</span></div>
         <div class="res-sub" id="resSub">Enter dimensions to see the amount.</div>
         <div class="res-cost hide" id="resCostWrap"><span class="k">Estimated cost</span><span class="v" id="resCost"></span></div>
-        <div class="res-tip" id="resTip">Tip: order about 10% extra for settling and spillage.</div>
+        <div class="res-tip" id="resTip">Tip: order about 10% extra for settling and uneven ground.</div>
 
         <div class="proj-sep"></div>
 
@@ -230,7 +233,7 @@
           <button id="clearBtn" style="display:none">Clear all</button>
         </div>
         <div id="tallyBody">
-          <div class="tally-empty">Covering more than one area? Add each above and they'll total here.</div>
+          <div class="tally-empty">Filling more than one bed or area? Add each above and they'll total here.</div>
         </div>
         <div class="trow wrow" id="wasteRow" style="display:none">
           <span class="desc wdesc">
@@ -267,54 +270,53 @@
   <section class="content">
     <div class="grid2">
       <div>
-        <h2>How much gravel do I need?</h2>
-        <p>Working out how much gravel to buy comes down to one thing: the <strong>volume</strong> of the space you're filling. Measure the area, choose a depth, multiply them together, then convert that volume into the unit your supplier sells by — cubic yards, tons, or bags.</p>
+        <h2>How much topsoil do I need?</h2>
+        <p>Working out how much topsoil to buy comes down to one thing: the <strong>volume</strong> of the space you're filling. Measure the area, choose a depth, multiply them together, then convert that volume into the unit your supplier sells by — cubic yards, tons, or bags.</p>
         <div class="formula">
           Area × Depth ÷ 27 = Cubic yards
           <small>DEPTH IN FEET · ÷27 CONVERTS CUBIC FEET TO CUBIC YARDS</small>
         </div>
-        <p>To get the <strong>weight in tons</strong>, multiply the cubic yards by the gravel's density — most gravel is about 1.4–1.6 tons per cubic yard. The calculator above does all of this the instant you type, in whichever units and shape you pick.</p>
+        <p>To get the <strong>weight in tons</strong>, multiply the cubic yards by the soil's density — screened topsoil is about 1.1 tons per cubic yard. The calculator above does all of this the instant you type, in whichever units and shape you pick.</p>
 
-        <h2>Rectangle or circle</h2>
-        <p>For a rectangular area — a driveway, patio, or path — the area is simply length × width. For a round area like a fire-pit border or circular bed, it's π × radius². Pick the shape at the top of the calculator and the right measurement boxes appear.</p>
+        <h2>Topsoil, garden soil, fill dirt or compost</h2>
+        <p>They're priced and weighed differently, so pick the right one. <strong>Topsoil</strong> is the nutrient-rich growing layer for lawns and beds. <strong>Garden / raised-bed soil</strong> is a lighter, blended mix. <strong>Fill dirt</strong> is heavy subsoil for raising grade and backfilling — cheap and stable, but nothing grows in it. <strong>Compost</strong> is light and used to enrich existing soil. A common approach is to bulk-fill with fill dirt and cap it with a few inches of topsoil — size the base with the <a href="/gravel-calculator/">gravel calculator</a> where drainage matters.</p>
 
         <h2>Worked example</h2>
-        <p>A rectangular path 20 ft long and 3 ft wide, filled 3 inches deep with gravel:</p>
-        <p style="color:var(--ink);font-weight:500">20 × 3 × 0.25 ÷ 27 = <strong>0.56 cubic yards</strong>, or about <strong>0.8 tons</strong>. Add ~10% for settling and you'd order a bit under a ton.</p>
+        <p>A new lawn area 20 ft long and 15 ft wide, topped with 3 inches of topsoil:</p>
+        <p style="color:var(--ink);font-weight:500">20 × 15 × 0.25 ÷ 27 = <strong>2.8 cubic yards</strong>, or about <strong>3 tons</strong>. Add ~10% for settling and you'd order a little over 3 tons.</p>
       </div>
 
       <div>
-        <h2>How deep should gravel be?</h2>
+        <h2>How deep should topsoil be?</h2>
         <ul>
-          <li><strong>2–3 inches</strong> — paths and decorative ground cover</li>
-          <li><strong>4 inches</strong> — garden beds and general coverage</li>
-          <li><strong>4–6 inches</strong> — driveways, usually over a compacted base</li>
+          <li><strong>0.5–1 inch</strong> — top-dressing or overseeding an existing lawn</li>
+          <li><strong>3–4 inches</strong> — laying a new lawn over graded ground</li>
+          <li><strong>6–12 inches</strong> — garden beds and raised beds</li>
         </ul>
         <p>Tap a depth chip in the calculator to drop in one of these common depths without typing.</p>
 
-        <h2>Typical gravel densities</h2>
-        <p>Weight depends on the material. These are the typical figures the calculator uses; your supplier's number may differ with moisture and stone type — pick <em>Custom density</em> to enter your own.</p>
+        <h2>Typical soil densities</h2>
+        <p>Weight depends on the material and how damp it is. These are the typical dry figures the calculator uses; your supplier's number may differ with moisture and screening — pick <em>Custom density</em> to enter your own.</p>
         <table class="dtable">
           <thead><tr><th>Material</th><th>Tons / yd³</th></tr></thead>
           <tbody>
-            <tr><td>Gravel (¾″)</td><td>1.5</td></tr>
-            <tr><td>Pea gravel</td><td>1.4</td></tr>
-            <tr><td>Crushed stone</td><td>1.6</td></tr>
-            <tr><td>River rock</td><td>1.4</td></tr>
-            <tr><td>Sand</td><td>1.4</td></tr>
-            <tr><td>Topsoil</td><td>1.1</td></tr>
+            <tr><td>Topsoil (screened)</td><td>1.1</td></tr>
+            <tr><td>Garden / raised-bed soil</td><td>1.0</td></tr>
+            <tr><td>Fill dirt</td><td>1.25</td></tr>
+            <tr><td>Compost</td><td>0.5</td></tr>
           </tbody>
         </table>
-        <p>Buying bagged gravel instead? Switch <strong>Sold by</strong> to <em>Bag</em> and set your bag size — the calculator rounds up to whole bags.</p>
+        <p>Buying bagged soil instead? Switch <strong>Sold by</strong> to <em>Bag</em> and set your bag size — a 40 lb bag of topsoil is roughly 0.75 ft³. The calculator rounds up to whole bags.</p>
       </div>
     </div>
 
     <h2 style="margin-top:36px">Common questions</h2>
-    <details class="faq"><summary>How much gravel do I need?</summary><p>Multiply your area by the depth to get a volume, then convert to cubic yards or tons. For a rectangle, area is length × width; for a circle it's π × radius². Multiply by depth in feet, divide by 27 for cubic yards, then multiply by the material density for tons. The calculator above does all of this instantly as you type.</p></details>
-    <details class="faq"><summary>How many tons are in a cubic yard of gravel?</summary><p>Most gravel weighs about <strong>1.4 to 1.6 tons</strong> per cubic yard. Pea gravel and river rock sit near the lighter end, crushed stone toward the heavier end. Density varies with moisture and stone type, so use your supplier's figure when they give one — or pick a material above and the calculator applies a typical density automatically.</p></details>
-    <details class="faq"><summary>How deep should the gravel be?</summary><p>For paths and decorative ground cover, <strong>2–3 inches</strong> is typical. For garden beds and general coverage, aim for about <strong>4 inches</strong>. For a driveway, <strong>4–6 inches</strong> is common, often over a compacted base. Tap a depth chip in the calculator to use one of these.</p></details>
-    <details class="faq"><summary>Should I order extra gravel for waste?</summary><p>Yes. Gravel settles and compacts, and some is lost to uneven ground and spillage, so ordering about <strong>10% extra</strong> is a good rule of thumb. Tap <strong>&ldquo;+ Add waste calc&rdquo;</strong> in the project total to add a percentage buffer to your order.</p></details>
-    <details class="faq"><summary>Does this gravel calculator work in metric?</summary><p>Yes. Switch to "Metric" to enter your area in metres and depth in centimetres. The result is shown in cubic metres and tonnes, or bags, so you can order in whichever unit your supplier uses.</p></details>
+    <details class="faq"><summary>How much topsoil do I need?</summary><p>Multiply your area by the depth to get a volume, then convert to cubic yards or tons. For a rectangle, area is length × width; for a circle it's π × radius². Multiply by depth in feet, divide by 27 for cubic yards, then multiply by the soil density for tons. The calculator above does all of this instantly as you type.</p></details>
+    <details class="faq"><summary>How much does a 40 lb bag of topsoil cover?</summary><p>A 40 lb bag of topsoil holds roughly <strong>0.75 cubic feet</strong>, so it covers about 9 square feet at 1 inch deep, or about 3 square feet at 3 inches deep. Switch <strong>Sold by</strong> to <em>Bag</em> and set your bag size — the calculator rounds up to the number of whole bags you need.</p></details>
+    <details class="faq"><summary>How much will 1 ton of topsoil cover?</summary><p>One ton of topsoil is roughly <strong>0.9 cubic yards</strong> (topsoil weighs about 1.1 tons per cubic yard). That covers around 240 sq ft at 1 inch deep, about 80 sq ft at 3 inches, or about 60 sq ft at 4 inches. Damp or clay-heavy soil weighs more, so coverage per ton drops a little.</p></details>
+    <details class="faq"><summary>How deep should topsoil be?</summary><p>For overseeding or top-dressing a lawn, <strong>0.5–1 inch</strong> is enough. For a new lawn, aim for <strong>3–4 inches</strong> over the graded base. For garden and raised beds, <strong>6–12 inches</strong> gives roots room. Tap a depth chip in the calculator to use one of these.</p></details>
+    <details class="faq"><summary>What is the difference between topsoil and fill dirt?</summary><p>Topsoil is the nutrient-rich upper layer that plants grow in; <strong>fill dirt</strong> is subsoil with no organic matter, used to raise grade or backfill because it's cheaper and settles firmly. Many projects use fill dirt for bulk volume and cap it with a few inches of topsoil. This calculator includes both, plus garden soil and compost — pick the material to apply the right density.</p></details>
+    <details class="faq"><summary>Does this topsoil calculator work in metric?</summary><p>Yes. Switch to "Metric" to enter your area in metres and depth in centimetres. The result is shown in cubic metres and tonnes, or bags, so you can order in whichever unit your supplier uses.</p></details>
   </section>
 
   <footer>
@@ -328,19 +330,19 @@
 <script src="/assets/app.js?v=4"></script>
 <script>
 (function(){
-  var sys='us', shape='rect', mode='ton', matKey='gravel';
+  var sys='us', shape='rect', mode='ton', matKey='topsoil';
   var $=function(id){return document.getElementById(id)};
   var len=$('len'), wid=$('wid'), dia=$('dia'), depth=$('depth'),
       price=$('price'), bagSize=$('bagSize'), customDens=$('customDens'), matSel=$('matSel');
-  var tally=[];                     // each: {label, volYd3, volM3, tons, tonnes}
+  var tally=[];                     // each: {label, volYd3, volM3, tons, tonnes, mode, bagVolYd3, rate}
   var waste={active:false,pct:''};  // project-level buffer
   var customDensUS=null;            // stored internally as tons/yd³
 
   // constants
   var M3_PER_YD3=0.764554858;
   var DENS_US_TO_METRIC=1.186552;   // tons/yd³ -> tonnes/m³
-  var MAT={gravel:1.5, pea:1.4, crushed:1.6, river:1.4, sand:1.4, topsoil:1.1};
-  var MATLABEL={gravel:'Gravel (¾″)', pea:'Pea gravel', crushed:'Crushed stone', river:'River rock', sand:'Sand', topsoil:'Topsoil', custom:'Custom'};
+  var MAT={topsoil:1.1, gardensoil:1.0, filldirt:1.25, compost:0.5};
+  var MATLABEL={topsoil:'Topsoil', gardensoil:'Garden / raised-bed soil', filldirt:'Fill dirt', compost:'Compost', custom:'Custom'};
 
   function parseNum(v){
     if(v==null) return NaN;
@@ -362,7 +364,7 @@
     return MAT[matKey];
   }
   function bagVol(){ // in current system's volume unit for area volume (ft³ for US, m³ for metric)
-    if(sys==='us'){ var b=parseNum(bagSize.value); return (isNaN(b)||b<=0)?0.5:b; }        // ft³
+    if(sys==='us'){ var b=parseNum(bagSize.value); return (isNaN(b)||b<=0)?0.75:b; }       // ft³
     var l=parseNum(bagSize.value); return ((isNaN(l)||l<=0)?25:l)/1000;                     // litres -> m³
   }
 
@@ -577,7 +579,7 @@
     updateMbar(g, tBag, tVol, tTon, tCost);
 
     if(!tally.length){
-      body.innerHTML='<div class="tally-empty">Covering more than one area? Add each above and they\u2019ll total here.</div>';
+      body.innerHTML='<div class="tally-empty">Filling more than one bed or area? Add each above and they\u2019ll total here.</div>';
       tot.style.display='none'; $('clearBtn').style.display='none';
       waste.active=false; waste.pct=''; $('wastePct').value='';
       $('wasteRow').style.display='none'; $('addWasteBtn').style.display='none';
@@ -698,12 +700,12 @@
     [].forEach.call(document.querySelectorAll('[data-depth]'),function(el){el.textContent=pu});
     [].forEach.call(document.querySelectorAll('[data-bagu]'),function(el){el.textContent=bu});
     // depth chips
-    var chipVals = sys==='us'?['2','3','4','6']:['5','8','10','15'];
-    var chipTxt  = sys==='us'?['2"','3"','4"','6"']:['5 cm','8 cm','10 cm','15 cm'];
+    var chipVals = sys==='us'?['1','2','4','6']:['2.5','5','10','15'];
+    var chipTxt  = sys==='us'?['1"','2"','4"','6"']:['2.5 cm','5 cm','10 cm','15 cm'];
     [].forEach.call($('depthChips').children,function(c,i){ c.dataset.d=chipVals[i]; c.textContent=chipTxt[i]; });
-    depth.placeholder = sys==='us'?'e.g. 3':'e.g. 8';
-    bagSize.placeholder = sys==='us'?'0.5':'25';
-    customDens.placeholder = sys==='us'?'e.g. 1.5':'e.g. 1.8';
+    depth.placeholder = sys==='us'?'e.g. 4':'e.g. 10';
+    bagSize.placeholder = sys==='us'?'0.75':'25';
+    customDens.placeholder = sys==='us'?'e.g. 1.1':'e.g. 1.3';
     $('customSuf').textContent = sys==='us'?'t/yd³':'t/m³';
     updateModeLabels();
     renderAll();
