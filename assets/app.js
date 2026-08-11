@@ -33,16 +33,17 @@ function fmt(n){
   var s=''+r; if(s.indexOf('.')>=0) s=s.replace(/\.?0+$/,''); return s||'0';
 }
 
-/* ---- shared volume/aggregate calculator engine (Fix B) ----
-   Powers the identical-engine calcs: gravel, sand, topsoil.
-   Each page supplies only its material map, labels and default:
-     CalcThis.initVolumeCalc({ defaultMat, mat:{key:tonsPerYd3,...}, matLabel:{key:'Label',...} });
-   Every tally row remains a frozen snapshot taken at add time — changing any
-   live input afterwards never rewrites a locked row. */
+/* ===== CalcThis shared volume engine (Fix B) =====
+   ONE core, two entry points:
+     initVolumeCalc(cfg)      labeled  — material selector + ton/yd³/bag (gravel, sand, topsoil)
+     initVolumeCalcLite(cfg)  no-material — yd³/bag only, unlabeled rows (mulch, ...)
+   Both call _initVolumeCore below; the only difference is cfg.hasMaterial and the
+   material/ton layer it gates. Frozen-snapshot tally discipline lives here once:
+   a locked row never changes when a live input changes. */
 window.CalcThis = window.CalcThis || {};
-CalcThis.initVolumeCalc = function(cfg){
+function _initVolumeCore(cfg){
 
-  var sys='us', shape='rect', mode='ton', matKey=cfg.defaultMat;
+  var sys='us', shape='rect', mode=cfg.startMode, matKey=cfg.defaultMat;
   var $=function(id){return document.getElementById(id)};
   var len=$('len'), wid=$('wid'), dia=$('dia'), depth=$('depth'),
       price=$('price'), bagSize=$('bagSize'), customDens=$('customDens'), matSel=$('matSel');
@@ -53,8 +54,8 @@ CalcThis.initVolumeCalc = function(cfg){
   // constants
   var M3_PER_YD3=0.764554858;
   var DENS_US_TO_METRIC=1.186552;   // tons/yd³ -> tonnes/m³
-  var MAT=cfg.mat;
-  var MATLABEL=cfg.matLabel;
+  var MAT=cfg.mat||{};
+  var MATLABEL=cfg.matLabel||{};
 
   function parseNum(v){
     if(v==null) return NaN;
@@ -72,12 +73,13 @@ CalcThis.initVolumeCalc = function(cfg){
   function money(n){return '$'+n.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}
 
   function densityUS(){
+    if(!cfg.hasMaterial) return null;
     if(matKey==='custom') return customDensUS;   // may be null
     return MAT[matKey];
   }
   function bagVol(){ // in current system's volume unit for area volume (ft³ for US, m³ for metric)
-    if(sys==='us'){ var b=parseNum(bagSize.value); return (isNaN(b)||b<=0)?0.5:b; }        // ft³
-    var l=parseNum(bagSize.value); return ((isNaN(l)||l<=0)?25:l)/1000;                     // litres -> m³
+    if(sys==='us'){ var b=parseNum(bagSize.value); return (isNaN(b)||b<=0)?(cfg.bagDefaultUS||0.5):b; }        // ft³
+    var l=parseNum(bagSize.value); return ((isNaN(l)||l<=0)?(cfg.bagDefaultMetricL||25):l)/1000;                     // litres -> m³
   }
 
   // current area volume in current system's cubic unit (ft³ US, m³ metric)
@@ -123,7 +125,7 @@ CalcThis.initVolumeCalc = function(cfg){
       if(isNaN(parseNum(dia.value))||parseNum(dia.value)<=0) m.push('diameter');
     }
     if(isNaN(din)||din<=0) m.push('depth');
-    if(mode==='ton' && densityUS()==null) m.push('material density');
+    if(mode==='ton' && densityUS()==null) m.push(cfg.densityWord||'material density');
     if(!m.length) return 'the details';
     if(m.length===1) return m[0];
     return m.slice(0,-1).join(', ')+' and '+m[m.length-1];
@@ -155,7 +157,7 @@ CalcThis.initVolumeCalc = function(cfg){
     // yd3 / m3
     var vol2=(sys==='us'?v.volYd3:v.volM3)*mlt;
     var w2=(sys==='us'?v.tons:v.tonnes);
-    var sub = (w2==null)? '' : '= '+fmt(w2*mlt)+' '+weightUnit();
+    var sub = !cfg.hasMaterial ? (sys==='us' ? '= '+fmt(v.volYd3*27*mlt)+' cu ft' : '') : ((w2==null)? '' : '= '+fmt(w2*mlt)+' '+weightUnit());
     return {qty:vol2, qtyNull:false, subTxt:sub};
   }
 
@@ -255,8 +257,10 @@ CalcThis.initVolumeCalc = function(cfg){
 
   // sum quantities into per-unit groups: bags, cu yd/m³, tons/tonnes
   function groupTotals(){
-    var g={bagQ:0,bagHas:false,volQ:0,volHas:false,tonQ:0,tonHas:false,tonNull:false,cost:0,hasCost:false};
+    var g={bagQ:0,bagHas:false,volQ:0,volHas:false,tonQ:0,tonHas:false,tonNull:false,cost:0,hasCost:false,order:[]};
     tally.forEach(function(r){
+      var k=r.mode==='bag'?'bag':(r.mode==='ton'?'ton':'vol');
+      if(g.order.indexOf(k)<0) g.order.push(k);   // total lists units in the order they were first added
       if(r.mode==='bag'){ g.bagQ+=itemQty(r); g.bagHas=true; }
       else if(r.mode==='ton'){ var t=itemQty(r); if(t==null){g.tonNull=true;} else {g.tonQ+=t;} g.tonHas=true; }
       else { g.volQ+=itemQty(r); g.volHas=true; }
@@ -265,11 +269,10 @@ CalcThis.initVolumeCalc = function(cfg){
     return g;
   }
   function amountParts(bagQ,volQ,tonQ,g){
-    var p=[];
-    if(g.tonHas) p.push({num:tonQ, unit:tonWord()});
-    if(g.volHas) p.push({num:volQ, unit:volUnitNow()});
-    if(g.bagHas) p.push({num:bagQ, unit:bagWord(bagQ)});
-    return p;
+    var val={ton:tonQ, vol:volQ, bag:bagQ};
+    var lab={ton:tonWord(), vol:volUnitNow(), bag:bagWord(bagQ)};
+    var has={ton:g.tonHas, vol:g.volHas, bag:g.bagHas};
+    return g.order.filter(function(k){return has[k];}).map(function(k){return {num:val[k], unit:lab[k]};});
   }
   function partsStr(parts,plus){
     return parts.map(function(p){return (plus?'+':'')+fmt(p.num)+' '+p.unit;}).join(plus?'  ':' + ');
@@ -291,7 +294,7 @@ CalcThis.initVolumeCalc = function(cfg){
     updateMbar(g, tBag, tVol, tTon, tCost);
 
     if(!tally.length){
-      body.innerHTML='<div class="tally-empty">Covering more than one area? Add each above and they\u2019ll total here.</div>';
+      body.innerHTML='<div class="tally-empty">'+cfg.emptyText+'</div>';
       tot.style.display='none'; $('clearBtn').style.display='none';
       waste.active=false; waste.pct=''; $('wastePct').value='';
       $('wasteRow').style.display='none'; $('addWasteBtn').style.display='none';
@@ -314,10 +317,10 @@ CalcThis.initVolumeCalc = function(cfg){
       $('addWasteBtn').style.display='none';
       var wq=$('wasteQty'), wr=$('wasteRc');
       if(hasWp){
-        var wparts=[];
-        if(g.tonHas && wTon>0) wparts.push({num:wTon,unit:tonWord()});
-        if(g.volHas && wVol>0) wparts.push({num:wVol,unit:volUnitNow()});
-        if(g.bagHas && wBag>0) wparts.push({num:wBag,unit:bagWord(wBag)});
+        var wval={ton:wTon, vol:wVol, bag:wBag};
+        var wlab={ton:tonWord(), vol:volUnitNow(), bag:bagWord(wBag)};
+        var whas={ton:g.tonHas&&wTon>0, vol:g.volHas&&wVol>0, bag:g.bagHas&&wBag>0};
+        var wparts=g.order.filter(function(k){return whas[k];}).map(function(k){return {num:wval[k], unit:wlab[k]};});
         wq.className='qt'; wq.textContent = wparts.length? partsStr(wparts,true) : '—';
         if(g.hasCost){ wr.className='rc'; wr.textContent='+'+money(wCost); }
         else { wr.className='rc na'; wr.textContent='—'; }
@@ -356,7 +359,7 @@ CalcThis.initVolumeCalc = function(cfg){
       return;
     }
     // no areas → mirror the live single area in the currently-selected unit
-    $('mLab').textContent='This area';
+    $('mLab').textContent=cfg.thisLabel||'This area';
     var v=currentArea();
     if(v==null || (mode==='ton'&&densityUS()==null)){
       $('mSeg').innerHTML='<b>—</b> '+qtyUnit(); $('mCostWrap').classList.add('hide'); return;
@@ -404,7 +407,7 @@ CalcThis.initVolumeCalc = function(cfg){
     // dimension & price units differ across systems → clear the live inputs.
     // Locked areas keep their canonical $/yd³ rate, so their cost re-expresses correctly.
     len.value='';wid.value='';dia.value='';depth.value='';price.value='';bagSize.value='';
-    if(matKey==='custom'){ customDens.value=''; customDensUS=null; }
+    if(matKey==='custom' && customDens){ customDens.value=''; customDensUS=null; }
     [].forEach.call($('depthChips').children,function(c){c.classList.remove('on')});
     // labels
     var du=sys==='us'?'ft':'m', pu=sys==='us'?'in':'cm', bu=sys==='us'?'ft³':'L';
@@ -412,25 +415,25 @@ CalcThis.initVolumeCalc = function(cfg){
     [].forEach.call(document.querySelectorAll('[data-depth]'),function(el){el.textContent=pu});
     [].forEach.call(document.querySelectorAll('[data-bagu]'),function(el){el.textContent=bu});
     // depth chips
-    var chipVals = sys==='us'?['2','3','4','6']:['5','8','10','15'];
-    var chipTxt  = sys==='us'?['2"','3"','4"','6"']:['5 cm','8 cm','10 cm','15 cm'];
+    var chipVals = sys==='us'?cfg.depthChips.us:cfg.depthChips.metric;
+    var chipTxt  = sys==='us'?cfg.depthChipTxt.us:cfg.depthChipTxt.metric;
     [].forEach.call($('depthChips').children,function(c,i){ c.dataset.d=chipVals[i]; c.textContent=chipTxt[i]; });
-    depth.placeholder = sys==='us'?'e.g. 3':'e.g. 8';
-    bagSize.placeholder = sys==='us'?'0.5':'25';
-    customDens.placeholder = sys==='us'?'e.g. 1.5':'e.g. 1.8';
-    $('customSuf').textContent = sys==='us'?'t/yd³':'t/m³';
+    depth.placeholder = sys==='us'?cfg.depthPh.us:cfg.depthPh.metric;
+    bagSize.placeholder = sys==='us'?cfg.bagPh.us:cfg.bagPh.metric;
+    if(customDens) customDens.placeholder = sys==='us'?(cfg.customPh?cfg.customPh.us:''):(cfg.customPh?cfg.customPh.metric:'');
+    var _cs=$('customSuf'); if(_cs) _cs.textContent = sys==='us'?'t/yd³':'t/m³';
     updateModeLabels();
     renderAll();
   });
 
   // material select
-  matSel.addEventListener('change',function(){
+  if(matSel) matSel.addEventListener('change',function(){
     matKey=this.value;
     $('customWrap').style.display = matKey==='custom'?'block':'none';
     if(matKey!=='custom'){ customDensUS=null; }
     renderAll();
   });
-  customDens.addEventListener('input',function(){
+  if(customDens) customDens.addEventListener('input',function(){
     var v=parseNum(this.value);
     if(isNaN(v)||v<=0){ customDensUS=null; }
     else { customDensUS = sys==='us'? v : v/DENS_US_TO_METRIC; }
@@ -494,4 +497,6 @@ CalcThis.initVolumeCalc = function(cfg){
   updateModeLabels();
   renderAll();
 
-};
+}
+CalcThis.initVolumeCalc = function(cfg){ cfg.hasMaterial=true; if(!cfg.startMode) cfg.startMode='ton'; _initVolumeCore(cfg); };
+CalcThis.initVolumeCalcLite = function(cfg){ cfg.hasMaterial=false; cfg.startMode='yd3'; cfg.mat={}; cfg.matLabel={}; cfg.defaultMat=null; _initVolumeCore(cfg); };

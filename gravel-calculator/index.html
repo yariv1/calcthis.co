@@ -19,7 +19,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=6">
+<link rel="stylesheet" href="/assets/style.css?v=7">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -325,12 +325,18 @@
 </div>
 
 <!-- mobile sticky bar sub-line uses mUnit as words; hero cost uses money -->
-<script src="/assets/app.js?v=6"></script>
+<script src="/assets/app.js?v=7"></script>
 <script>
 CalcThis.initVolumeCalc({
-  defaultMat:'gravel',
+  defaultMat:'gravel', startMode:'ton',
   mat:{gravel:1.5, pea:1.4, crushed:1.6, river:1.4, sand:1.4, topsoil:1.1},
-  matLabel:{gravel:'Gravel (\u00be\u2033)', pea:'Pea gravel', crushed:'Crushed stone', river:'River rock', sand:'Sand', topsoil:'Topsoil', custom:'Custom'}
+  matLabel:{gravel:'Gravel (\u00be\u2033)', pea:'Pea gravel', crushed:'Crushed stone', river:'River rock', sand:'Sand', topsoil:'Topsoil', custom:'Custom'},
+  densityWord:'material density', thisLabel:'This area',
+  depthChips:{us:['2','3','4','6'], metric:['5','8','10','15']},
+  depthChipTxt:{us:['2\u2033','3\u2033','4\u2033','6\u2033'], metric:['5 cm','8 cm','10 cm','15 cm']},
+  depthPh:{us:'e.g. 3', metric:'e.g. 8'}, customPh:{us:'e.g. 1.5', metric:'e.g. 1.8'},
+  bagDefaultUS:0.5, bagDefaultMetricL:25, bagPh:{us:'0.5', metric:'25'},
+  emptyText:'Covering more than one area? Add each above and they\u2019ll total here.'
 });
 </script>
 </body>
