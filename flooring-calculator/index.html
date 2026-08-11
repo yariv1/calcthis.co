@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flooring Calculator — How Much Flooring Do I Need? (Boxes &amp; Sq Ft)</title>
+<link rel="canonical" href="https://calcthis.co/flooring-calculator/">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<meta name="theme-color" content="#B5761F">
+<meta name="description" content="Free flooring calculator. Enter your room size to get how many boxes of flooring you need — laminate, vinyl plank, hardwood or tile — plus square footage, waste and cost. Add multiple rooms for a whole project. US or metric.">
+<meta property="og:title" content="Flooring Calculator — How Much Flooring Do I Need?">
+<meta property="og:description" content="Enter your room size to get how many boxes of flooring you need, plus square footage, waste factor and cost. Add multiple rooms to total a whole project.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://calcthis.co/flooring-calculator/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css?v=8">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Flooring Calculator",
+      "url": "https://calcthis.co/flooring-calculator/",
+      "description": "Free flooring calculator. Enter your room size to get how many boxes of flooring you need in laminate, vinyl plank, hardwood or tile, plus square footage, a waste buffer and estimated cost. Add multiple rooms to total a whole project.",
+      "applicationCategory": "UtilityApplication",
+      "operatingSystem": "Any (web browser)",
+      "browserRequirements": "Requires JavaScript",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "featureList": [
+        "Flooring amount in boxes or square feet",
+        "Laminate, vinyl plank, hardwood, engineered, tile and carpet presets",
+        "Editable box coverage per material",
+        "Rectangle and circle rooms",
+        "Running project total across multiple rooms",
+        "Waste factor buffer for cuts and offcuts",
+        "US and metric units",
+        "Instant cost estimate"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How much flooring do I need?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Measure each room's length and width and multiply them for the floor area in square feet. To get boxes, divide the area by the square footage each box covers and round up to a whole box. Add a waste allowance of about 10 percent for cuts and offcuts. The calculator above does all of this instantly and totals several rooms at once." }
+        },
+        {
+          "@type": "Question",
+          "name": "How many boxes of flooring do I need?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Divide your total floor area by the coverage printed on the box, then round up. For example, a 180 sq ft room with boxes that cover 20 sq ft each needs 9 boxes before waste, or 10 boxes with a 10 percent buffer. Enter your box coverage in the calculator and it rounds up for you." }
+        },
+        {
+          "@type": "Question",
+          "name": "How much extra flooring should I buy for waste?",
+          "acceptedAnswer": { "@type": "Answer", "text": "For a standard straight lay, add about 5 to 10 percent for cuts, offcuts and future repairs. For diagonal or herringbone patterns, or rooms with lots of angles, add about 15 percent. Use the Add waste calc option in the project total to add a percentage buffer to your order." }
+        },
+        {
+          "@type": "Question",
+          "name": "Is flooring sold by the box or by the square foot?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Laminate, vinyl plank, hardwood, engineered wood and tile are usually sold by the box, with each box covering a set number of square feet. Carpet and some vinyl are sold by the area. Switch Sold by between Box and Sq ft in the calculator to match how your supplier prices it." }
+        },
+        {
+          "@type": "Question",
+          "name": "Does this flooring calculator work in metric?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Switch to Metric to enter your room in metres and box coverage in square metres. The result is shown in boxes or square metres, so you can order in whichever unit your supplier uses." }
+        }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body class="p-flooring">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <a href="/">Home</a>
+      <a href="/board-foot-calculator/">Board Foot Calculator</a>
+      <a href="/gravel-calculator/">Gravel Calculator</a>
+      <a href="/sand-calculator/">Sand Calculator</a>
+      <a href="/topsoil-calculator/">Topsoil Calculator</a>
+      <a href="/mulch-calculator/">Mulch Calculator</a>
+      <a href="/concrete-calculator/">Concrete Calculator</a>
+      <a href="/flooring-calculator/" class="current">Flooring Calculator</a>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">Renovation math, done instantly</div>
+    <h1>Flooring Calculator</h1>
+    <p>Enter the size of your room and pick your flooring — get how many boxes you need, the square footage, and the cost the moment you type. Doing more than one room? Add each to the running project total below.</p>
+  </section>
+
+  <div class="grid">
+
+    <!-- INPUT -->
+    <div class="card">
+      <div class="card-pad">
+        <div class="row-top">
+          <h2>Your room</h2>
+          <div class="seg" id="unitSeg">
+            <button class="on" data-sys="us">US</button>
+            <button data-sys="metric">Metric</button>
+          </div>
+        </div>
+
+        <label class="fld">
+          <span class="lab">Shape</span>
+          <div class="seg" id="shapeSeg" style="display:flex;width:100%">
+            <button class="on" data-shape="rect" style="flex:1">Rectangle</button>
+            <button data-shape="circle" style="flex:1">Circle</button>
+          </div>
+        </label>
+
+        <!-- rectangle fields -->
+        <div id="rectFields">
+          <div class="two">
+            <label class="fld">
+              <span class="lab">Length <span class="unit" data-dim>ft</span></span>
+              <div class="inp"><input id="len" type="number" inputmode="decimal" placeholder="0"><span class="suf" data-dim>ft</span></div>
+            </label>
+            <label class="fld">
+              <span class="lab">Width <span class="unit" data-dim>ft</span></span>
+              <div class="inp"><input id="wid" type="number" inputmode="decimal" placeholder="0"><span class="suf" data-dim>ft</span></div>
+            </label>
+          </div>
+        </div>
+
+        <!-- circle fields -->
+        <div id="circleFields" style="display:none">
+          <label class="fld">
+            <span class="lab">Diameter <span class="unit" data-dim>ft</span></span>
+            <div class="inp"><input id="dia" type="number" inputmode="decimal" placeholder="0"><span class="suf" data-dim>ft</span></div>
+          </label>
+        </div>
+
+        <label class="fld">
+          <span class="lab">Flooring</span>
+          <div class="sel">
+            <select id="matSel">
+              <option value="laminate">Laminate</option>
+              <option value="vinyl">Vinyl plank (LVP)</option>
+              <option value="hardwood">Hardwood</option>
+              <option value="engineered">Engineered wood</option>
+              <option value="tile">Tile</option>
+              <option value="carpet">Carpet</option>
+              <option value="custom">Custom…</option>
+            </select>
+          </div>
+        </label>
+
+        <label class="fld">
+          <span class="lab">Sold by</span>
+          <div class="modeseg" id="modeSeg" style="grid-template-columns:1fr 1fr">
+            <button class="on" data-mode="box">Box</button>
+            <button data-mode="sqft">Sq ft</button>
+          </div>
+        </label>
+
+        <label class="fld" id="boxWrap">
+          <span class="lab">Box covers <span class="unit" data-cov>sq ft/box</span></span>
+          <div class="inp"><input id="boxCov" type="number" inputmode="decimal" placeholder="e.g. 20" step="0.01"><span class="suf" data-cov>sq ft/box</span></div>
+        </label>
+
+        <label class="fld" style="margin-bottom:0">
+          <span class="lab"><span id="priceLab">Price per box</span> <span class="unit">optional</span></span>
+          <div class="inp"><input id="price" type="number" inputmode="decimal" placeholder="0.00" step="0.01"><span class="suf" id="priceSuf">$/box</span></div>
+        </label>
+
+        <div class="add-wrap">
+          <div class="add-row">
+            <button class="btn" id="addBtn">+ Add room to project</button>
+            <button class="linkbtn" id="clearFieldsBtn">Clear fields</button>
+          </div>
+          <div class="res-hint" id="hint">Enter your length and width</div>
+          <div class="add-note" id="addNote">Flooring several rooms? Add each to total the whole job.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT + PROJECT -->
+    <div class="card">
+      <div class="card-pad">
+        <!-- live single-room answer -->
+        <div class="res-lab" id="resLab">This room needs</div>
+        <div class="res-big"><span id="resQty">—</span> <span class="res-unit" id="resUnit">boxes</span></div>
+        <div class="res-sub" id="resSub">Enter dimensions to see the amount.</div>
+        <div class="res-cost hide" id="resCostWrap"><span class="k">Estimated cost</span><span class="v" id="resCost"></span></div>
+        <div class="res-tip" id="resTip">Tip: order about 10% extra for cuts and offcuts (15% for diagonal or herringbone).</div>
+
+        <div class="proj-sep"></div>
+
+        <!-- project total (multi-room) -->
+        <div class="tally-head">
+          <h3>Project total</h3>
+          <button id="clearBtn" style="display:none">Clear all</button>
+        </div>
+        <div id="tallyBody">
+          <div class="tally-empty">Flooring more than one room? Add each above and they'll total here.</div>
+        </div>
+        <div class="trow wrow" id="wasteRow" style="display:none">
+          <span class="desc wdesc">
+            <span class="wtag">Waste</span>
+            <input id="wastePct" class="win" type="text" inputmode="decimal" placeholder="recommended 10" autocomplete="off">
+            <span class="wsuf">%</span>
+          </span>
+          <span class="qt na" id="wasteQty">—</span>
+          <span class="rc na" id="wasteRc">—</span>
+          <button class="x wx" id="wasteRemove" type="button" aria-label="Remove waste">×</button>
+        </div>
+        <div class="tally-total" id="projTotal" style="display:none">
+          <span class="tl">Total <span class="sub" id="projCount"></span></span>
+          <span class="tv"><span id="totalQty">0</span> <span id="totalUnit">boxes</span></span>
+          <span class="tl sub" id="totalCostRow" style="display:none">Estimated cost</span>
+          <span class="tv" id="totalCost" style="display:none"></span>
+        </div>
+        <button class="add-waste-btn" id="addWasteBtn" type="button">+ Add waste calc</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- mobile sticky bar -->
+  <div class="mbar" id="mbar">
+    <span class="mbar-lab" id="mLab">This room</span>
+    <div class="mbar-vals">
+      <span class="mbar-seg" id="mSeg"><b id="mQty">0</b> <span id="mUnit">boxes</span></span>
+      <span class="mbar-cost hide" id="mCostWrap"><span class="mbar-eq">=</span> <b id="mCost"></b></span>
+    </div>
+  </div>
+
+  <!-- CONTENT / SEO -->
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How much flooring do I need?</h2>
+        <p>Working out how much flooring to buy starts with the <strong>floor area</strong> of each room. Measure the length and width, multiply them for the area in square feet, then divide by the coverage on the box and round up to whole boxes — plus a little extra for cuts and offcuts.</p>
+        <div class="formula">
+          Area ÷ Box coverage = Boxes
+          <small>LENGTH × WIDTH = AREA · ROUND UP TO WHOLE BOXES · ADD WASTE</small>
+        </div>
+        <p>Most boxes tell you the square footage they cover — around 20 sq ft is common for laminate and hardwood. The calculator above does the division and rounding the instant you type, in whichever units and shape you pick.</p>
+
+        <h2>Boxes or square feet</h2>
+        <p>Laminate, vinyl plank, hardwood, engineered wood and tile are almost always sold <strong>by the box</strong>, each covering a set area. Carpet and some sheet vinyl are sold <strong>by the area</strong> instead. Switch <strong>Sold by</strong> between <em>Box</em> and <em>Sq ft</em> to match how your supplier prices the floor.</p>
+
+        <h2>Worked example</h2>
+        <p>A rectangular living room 15 ft long and 12 ft wide, in laminate with boxes covering 20 sq ft:</p>
+        <p style="color:var(--ink);font-weight:500">15 × 12 = <strong>180 sq ft</strong>. 180 ÷ 20 = 9 boxes, and with ~10% waste you'd order <strong>10 boxes</strong>.</p>
+      </div>
+
+      <div>
+        <h2>How much extra for waste?</h2>
+        <ul>
+          <li><strong>5–10%</strong> — standard straight or plank lay in a simple rectangular room</li>
+          <li><strong>10–15%</strong> — rooms with lots of corners, closets or angles</li>
+          <li><strong>15%+</strong> — diagonal, herringbone or chevron patterns</li>
+        </ul>
+        <p>Tap a percentage into the <strong>&ldquo;+ Add waste calc&rdquo;</strong> buffer in the project total and it's added on top of your order.</p>
+
+        <h2>Typical box coverage</h2>
+        <p>These are common figures the calculator starts from; your box may differ, so check the label and type the exact coverage into <em>Box covers</em>.</p>
+        <table class="dtable">
+          <thead><tr><th>Flooring</th><th>Sq ft / box</th></tr></thead>
+          <tbody>
+            <tr><td>Laminate</td><td>20</td></tr>
+            <tr><td>Vinyl plank (LVP)</td><td>24</td></tr>
+            <tr><td>Hardwood</td><td>20</td></tr>
+            <tr><td>Engineered wood</td><td>22</td></tr>
+            <tr><td>Tile</td><td>15</td></tr>
+          </tbody>
+        </table>
+        <p>Buying carpet or sheet vinyl by the area? Switch <strong>Sold by</strong> to <em>Sq ft</em> and price it per square foot instead.</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>How much flooring do I need?</summary><p>Measure each room's length and width and multiply them for the floor area in square feet. To get boxes, divide the area by the square footage each box covers and round up to a whole box, then add about 10% for cuts and offcuts. The calculator above does all of this instantly and totals several rooms at once.</p></details>
+    <details class="faq"><summary>How many boxes of flooring do I need?</summary><p>Divide your total floor area by the coverage printed on the box, then round up. For example, a 180 sq ft room with boxes that cover 20 sq ft each needs <strong>9 boxes</strong> before waste, or <strong>10 boxes</strong> with a 10% buffer. Enter your box coverage in the calculator and it rounds up for you.</p></details>
+    <details class="faq"><summary>How much extra flooring should I buy for waste?</summary><p>For a standard straight lay, add about <strong>5–10%</strong> for cuts, offcuts and future repairs. For diagonal or herringbone patterns, or rooms with lots of angles, add about <strong>15%</strong>. Tap <strong>&ldquo;+ Add waste calc&rdquo;</strong> in the project total to add a percentage buffer.</p></details>
+    <details class="faq"><summary>Is flooring sold by the box or by the square foot?</summary><p>Laminate, vinyl plank, hardwood, engineered wood and tile are usually sold <strong>by the box</strong>, with each box covering a set number of square feet. Carpet and some vinyl are sold <strong>by the area</strong>. Switch <strong>Sold by</strong> between Box and Sq ft to match how your supplier prices it.</p></details>
+    <details class="faq"><summary>Does this flooring calculator work in metric?</summary><p>Yes. Switch to "Metric" to enter your room in metres and box coverage in square metres. The result is shown in boxes or square metres, so you can order in whichever unit your supplier uses.</p></details>
+  </section>
+
+  <footer>
+    <span>Estimates only — confirm coverage &amp; box size with your supplier. Free, no sign-up.</span>
+    <span><a href="#">How it works</a></span>
+  </footer>
+
+</div>
+
+<script src="/assets/app.js?v=8"></script>
+<script>
+CalcThis.initAreaCalc({
+  defaultMat:'laminate', startMode:'box',
+  mat:{laminate:20, vinyl:24, hardwood:20, engineered:22, tile:15, carpet:20},
+  matLabel:{laminate:'Laminate', vinyl:'Vinyl plank (LVP)', hardwood:'Hardwood', engineered:'Engineered wood', tile:'Tile', carpet:'Carpet', custom:'Custom'},
+  covDefaultUS:20, thisLabel:'This room',
+  emptyText:'Flooring more than one room? Add each above and they\u2019ll total here.'
+});
+</script>
+</body>
+</html>

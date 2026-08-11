@@ -446,6 +446,9 @@ function _initVolumeCore(cfg){
     var sufWord  = mode==='ton'?(sys==='us'?'$/ton':'$/tonne'):(mode==='yd3'?(sys==='us'?'$/yd³':'$/m³'):'$/bag');
     $('priceLab').textContent='Price per '+unitWord;
     $('priceSuf').textContent=sufWord;
+    var _seg=$('modeSeg');
+    var _tb=_seg.querySelector('button[data-mode="ton"]'); if(_tb) _tb.textContent = sys==='us'?'Ton':'Tonne';
+    var _yb=_seg.querySelector('button[data-mode="yd3"]'); if(_yb) _yb.textContent = sys==='us'?'Cubic yard':'m³';
     $('bagWrap').style.display = mode==='bag'?'block':'none';
   }
   $('modeSeg').addEventListener('click',function(e){
@@ -500,3 +503,349 @@ function _initVolumeCore(cfg){
 }
 CalcThis.initVolumeCalc = function(cfg){ cfg.hasMaterial=true; if(!cfg.startMode) cfg.startMode='ton'; _initVolumeCore(cfg); };
 CalcThis.initVolumeCalcLite = function(cfg){ cfg.hasMaterial=false; cfg.startMode='yd3'; cfg.mat={}; cfg.matLabel={}; cfg.defaultMat=null; _initVolumeCore(cfg); };
+
+/* ===== CalcThis shared AREA engine (flooring, tile, …) =====
+   Same frozen-snapshot tally discipline as the volume core, but the physical
+   model is AREA (sq ft / m²) → boxes (area ÷ box coverage, ceil) or direct area.
+   ONE core, one entry point today:
+     initAreaCalc(cfg)   — material selector + Box / Sq-ft modes (flooring)
+   Structurally parallel to _initVolumeCore so QA + behaviour match; a future
+   tile calculator reuses this same core with its own config. Locked rows read
+   ONLY from their own snapshot — changing a live input never alters a locked row. */
+function _initAreaCore(cfg){
+
+  var sys='us', shape='rect', mode=cfg.startMode||'box', matKey=cfg.defaultMat;
+  var $=function(id){return document.getElementById(id)};
+  var len=$('len'), wid=$('wid'), dia=$('dia'),
+      price=$('price'), boxCov=$('boxCov'), matSel=$('matSel');
+  var tally=[];                     // each: {label, matLabel, areaSqft, areaM2, mode, boxCov, rate}
+  var waste={active:false,pct:''};
+
+  var FT2_PER_M2=10.7639104;
+  var MAT=cfg.mat||{};              // {key: sq ft per box}
+  var MATLABEL=cfg.matLabel||{};
+
+  function parseNum(v){ if(v==null) return NaN; v=(''+v).trim(); if(!v) return NaN; var n=parseFloat(v); return isNaN(n)?NaN:n; }
+  function fmt(n){ if(n==null||isNaN(n)) return '—'; if(n>=100) return n.toFixed(1).replace(/\.0$/,''); var r=Math.round(n*100)/100; var s=''+r; if(s.indexOf('.')>=0) s=s.replace(/\.?0+$/,''); return s||'0'; }
+  function money(n){return '$'+n.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}
+
+  // material's typical box coverage (sq ft/box, US canonical) with a global fallback
+  function matCovUS(){ var c=MAT[matKey]; return (c&&c>0)? c : (cfg.covDefaultUS||20); }
+  // live box coverage in sq ft, from the input, falling back to the material typical
+  function boxCovSqft(){
+    if(!boxCov) return matCovUS();
+    var c=parseNum(boxCov.value);
+    if(isNaN(c)||c<=0) return matCovUS();
+    return sys==='us'? c : c*FT2_PER_M2;   // m²/box -> sq ft/box
+  }
+
+  // current room area (null if dims incomplete)
+  function currentArea(){
+    var a;
+    if(shape==='rect'){
+      var L=parseNum(len.value), W=parseNum(wid.value);
+      if(isNaN(L)||isNaN(W)||L<=0||W<=0) return null;
+      a=L*W;                                 // ft² (US) or m² (metric)
+    } else {
+      var D=parseNum(dia.value); if(isNaN(D)||D<=0) return null;
+      var r=D/2; a=Math.PI*r*r;
+    }
+    var areaSqft, areaM2;
+    if(sys==='us'){ areaSqft=a; areaM2=a/FT2_PER_M2; }
+    else { areaM2=a; areaSqft=a*FT2_PER_M2; }
+    return {areaSqft:areaSqft, areaM2:areaM2};
+  }
+
+  function areaComplete(){ return currentArea()!=null; }
+  function listMissing(){
+    var m=[];
+    if(shape==='rect'){
+      if(isNaN(parseNum(len.value))||parseNum(len.value)<=0) m.push('length');
+      if(isNaN(parseNum(wid.value))||parseNum(wid.value)<=0) m.push('width');
+    } else {
+      if(isNaN(parseNum(dia.value))||parseNum(dia.value)<=0) m.push('diameter');
+    }
+    if(!m.length) return 'the details';
+    if(m.length===1) return m[0];
+    return m.slice(0,-1).join(', ')+' and '+m[m.length-1];
+  }
+
+  function areaUnit(){ return sys==='us'?'sq ft':'m²'; }
+  function qtyUnit(){ return mode==='box'?'boxes':areaUnit(); }
+
+  // sold quantity for canonical area incl waste (bags are boxes here, ceil'd)
+  function soldQty(v, wp){
+    var mlt=(wp&&wp>0)?(1+wp/100):1;
+    if(mode==='box'){
+      var cov=boxCovSqft();
+      var boxes=Math.ceil((v.areaSqft*mlt)/cov);
+      return {qty:boxes, qtyNull:false, subTxt:'= '+fmt((sys==='us'?v.areaSqft:v.areaM2)*mlt)+' '+areaUnit()};
+    }
+    var area=(sys==='us'?v.areaSqft:v.areaM2)*mlt;
+    return {qty:area, qtyNull:false, subTxt:''};
+  }
+
+  function priceVal(){ var p=parseNum(price.value); return (!isNaN(p)&&p>0)?p:null; }
+
+  // canonical $ per sq ft from the LIVE price (current mode+system); null if none
+  function liveRateSqft(){
+    var p=priceVal(); if(p==null) return null;
+    if(mode==='box'){ var cov=boxCovSqft(); return cov>0? p/cov : null; }   // $/box -> $/sq ft
+    return sys==='us'? p : p/FT2_PER_M2;                                     // $/sq ft, or $/m² -> $/sq ft
+  }
+  function costFor(sq){ var p=priceVal(); if(p==null||sq.qty==null) return null; return sq.qty*p; }
+
+  // per-row quantity in THAT ROW's own sold-by unit (frozen at add time)
+  function itemQty(r){
+    if(r.mode==='box'){ return Math.ceil(r.areaSqft / r.boxCov); }
+    return sys==='us'? r.areaSqft : r.areaM2;
+  }
+  // per-row cost uses the row's LOCKED canonical $/sq ft rate + its own frozen unit
+  function itemCost(r){
+    if(r.rate==null) return null;
+    if(r.mode==='box'){ return itemQty(r) * (r.rate * r.boxCov); }   // boxes × $/box
+    return r.areaSqft * r.rate;                                       // area: physical, system-independent
+  }
+
+  function areaLabel(){
+    var du=sys==='us'?'ft':'m';
+    if(shape==='rect'){
+      var L=len.value.trim()||'?', W=wid.value.trim()||'?';
+      return L+'×'+W+' '+du;
+    }
+    var D=dia.value.trim()||'?';
+    return 'Ø'+D+' '+du;
+  }
+
+  // ---------- live single room ----------
+  function renderArea(){
+    var v=currentArea(); var b=$('addBtn'), complete=areaComplete();
+    b.disabled=!complete; b.style.opacity=complete?'1':'.5'; b.style.cursor=complete?'pointer':'not-allowed';
+    $('hint').style.display=complete?'none':'block';
+    $('addNote').style.display=complete?'block':'none';
+    if(!complete) $('hint').textContent='Enter '+listMissing();
+    $('resUnit').textContent=qtyUnit();
+    $('resCostWrap').classList.remove('hide');
+    $('resTip').classList.remove('hide');
+    if(v==null){
+      $('resQty').textContent='—'; $('resSub').textContent='Enter dimensions to see the amount.'; $('resCost').textContent='—'; return;
+    }
+    var sq=soldQty(v,0);
+    $('resQty').textContent=sq.qtyNull?'—':fmt(sq.qty);
+    $('resSub').textContent=sq.subTxt||'';
+    var c=costFor(sq);
+    $('resCost').textContent=(c!=null)?money(c):'—';
+  }
+
+  // ---------- project tally ----------
+  function boxWord(n){ return n===1?'box':'boxes'; }
+  function areaUnitNow(){ return sys==='us'?'sq ft':'m²'; }
+  function rowQtyText(r){
+    var q=itemQty(r); if(q==null) return {txt:'—',na:true};
+    if(r.mode==='box') return {txt:fmt(q)+' '+boxWord(q), na:false};
+    return {txt:fmt(q)+' '+areaUnitNow(), na:false};
+  }
+  function rowCost(r){ var c=itemCost(r); return (c==null)?{txt:'—',na:true}:{txt:money(c),na:false}; }
+
+  function groupTotals(){
+    var g={boxQ:0,boxHas:false,areaQ:0,areaHas:false,cost:0,hasCost:false,order:[]};
+    tally.forEach(function(r){
+      var k=r.mode==='box'?'box':'area';
+      if(g.order.indexOf(k)<0) g.order.push(k);   // total lists units in the order first added
+      if(r.mode==='box'){ g.boxQ+=itemQty(r); g.boxHas=true; }
+      else { g.areaQ+=itemQty(r); g.areaHas=true; }
+      var c=itemCost(r); if(c!=null){ g.cost+=c; g.hasCost=true; }
+    });
+    return g;
+  }
+  function amountParts(boxQ,areaQ,g){
+    var val={box:boxQ, area:areaQ};
+    var lab={box:boxWord(boxQ), area:areaUnitNow()};
+    var has={box:g.boxHas, area:g.areaHas};
+    return g.order.filter(function(k){return has[k];}).map(function(k){return {num:val[k], unit:lab[k]};});
+  }
+  function partsStr(parts,plus){ return parts.map(function(p){return (plus?'+':'')+fmt(p.num)+' '+p.unit;}).join(plus?'  ':' + '); }
+
+  function renderTally(){
+    var body=$('tallyBody'), tot=$('projTotal');
+    var g=groupTotals();
+    var wp=waste.active?parseNum(waste.pct):NaN;
+    var hasWp=waste.active&&!isNaN(wp)&&wp>0;
+    var mlt=hasWp?wp/100:0;
+    var wBox=g.boxHas?Math.ceil(g.boxQ*mlt):0;
+    var wArea=g.areaHas?g.areaQ*mlt:0;
+    var wCost=g.hasCost?g.cost*mlt:0;
+    var tBox=g.boxQ+wBox, tArea=g.areaQ+wArea, tCost=g.cost+wCost;
+
+    updateMbar(g,tBox,tArea,tCost);
+
+    if(!tally.length){
+      body.innerHTML='<div class="tally-empty">'+cfg.emptyText+'</div>';
+      tot.style.display='none'; $('clearBtn').style.display='none';
+      waste.active=false; waste.pct=''; $('wastePct').value='';
+      $('wasteRow').style.display='none'; $('addWasteBtn').style.display='none';
+      return;
+    }
+    $('clearBtn').style.display='inline';
+    var html='';
+    tally.forEach(function(r,i){
+      var q=rowQtyText(r), c=rowCost(r);
+      html+='<div class="trow"><span class="desc">'+(r.matLabel?'<span class="m">'+r.matLabel+'</span>':'')+'<span class="d">'+r.label+'</span></span>'
+          +'<span class="qt'+(q.na?' na':'')+'">'+q.txt+'</span>'
+          +'<span class="rc'+(c.na?' na':'')+'">'+c.txt+'</span>'
+          +'<button class="x" data-i="'+i+'" aria-label="Remove">×</button></div>';
+    });
+    body.innerHTML=html;
+
+    if(waste.active){
+      $('wasteRow').style.display='grid';
+      $('addWasteBtn').style.display='none';
+      var wq=$('wasteQty'), wr=$('wasteRc');
+      if(hasWp){
+        var wval={box:wBox, area:wArea};
+        var wlab={box:boxWord(wBox), area:areaUnitNow()};
+        var whas={box:g.boxHas&&wBox>0, area:g.areaHas&&wArea>0};
+        var wparts=g.order.filter(function(k){return whas[k];}).map(function(k){return {num:wval[k], unit:wlab[k]};});
+        wq.className='qt'; wq.textContent=wparts.length?partsStr(wparts,true):'—';
+        if(g.hasCost){ wr.className='rc'; wr.textContent='+'+money(wCost); }
+        else { wr.className='rc na'; wr.textContent='—'; }
+      } else {
+        wq.className='qt na'; wq.textContent='—';
+        wr.className='rc na'; wr.textContent='—';
+      }
+    } else {
+      $('wasteRow').style.display='none';
+      $('addWasteBtn').style.display='block';
+    }
+
+    tot.style.display='grid';
+    $('projCount').textContent='';
+    $('totalUnit').textContent='';
+    $('totalQty').textContent=partsStr(amountParts(tBox,tArea,g),false);
+    if(g.hasCost){
+      $('totalCostRow').style.display='block'; $('totalCost').style.display='block'; $('totalCost').textContent=money(tCost);
+    } else {
+      $('totalCostRow').style.display='none'; $('totalCost').style.display='none';
+    }
+  }
+
+  function segHTML(parts){ return parts.map(function(p){return '<b>'+fmt(p.num)+'</b> '+p.unit;}).join(' + '); }
+  function updateMbar(g,tBox,tArea,tCost){
+    if(tally.length){
+      $('mLab').textContent='Project total';
+      $('mSeg').innerHTML=segHTML(amountParts(tBox,tArea,g));
+      if(g.hasCost){ $('mCostWrap').classList.remove('hide'); $('mCost').textContent=money(tCost); }
+      else { $('mCostWrap').classList.add('hide'); }
+      return;
+    }
+    $('mLab').textContent=cfg.thisLabel||'This room';
+    var v=currentArea();
+    if(v==null){ $('mSeg').innerHTML='<b>—</b> '+qtyUnit(); $('mCostWrap').classList.add('hide'); return; }
+    var sq=soldQty(v,0);
+    $('mSeg').innerHTML='<b>'+(sq.qtyNull?'—':fmt(sq.qty))+'</b> '+qtyUnit();
+    var c=costFor(sq);
+    if(c!=null){ $('mCostWrap').classList.remove('hide'); $('mCost').textContent=money(c); }
+    else { $('mCostWrap').classList.add('hide'); }
+  }
+
+  function renderAll(){ renderArea(); renderTally(); }
+
+  // prefill the box-coverage field from the material's typical, in current system
+  function prefillCov(){
+    if(!boxCov) return;
+    var c=MAT[matKey];
+    if(matKey==='custom' || !c || c<=0){ boxCov.value=''; return; }
+    boxCov.value = sys==='us'? c : +(c/FT2_PER_M2).toFixed(2);
+  }
+
+  // ---------- events ----------
+  [len,wid,dia,price].forEach(function(el){ if(el) el.addEventListener('input',renderAll); });
+  if(boxCov) boxCov.addEventListener('input',renderAll);
+
+  $('shapeSeg').addEventListener('click',function(e){
+    var b=e.target.closest('button'); if(!b)return;
+    if(b.dataset.shape===shape) return;
+    shape=b.dataset.shape;
+    [].forEach.call(this.children,function(c){c.classList.toggle('on',c===b)});
+    $('rectFields').style.display=shape==='rect'?'block':'none';
+    $('circleFields').style.display=shape==='circle'?'block':'none';
+    renderAll();
+  });
+
+  $('unitSeg').addEventListener('click',function(e){
+    var b=e.target.closest('button'); if(!b)return;
+    if(b.dataset.sys===sys) return;
+    sys=b.dataset.sys;
+    [].forEach.call(this.children,function(c){c.classList.toggle('on',c===b)});
+    // dimension & price units differ across systems → clear live inputs.
+    // Locked rows keep their canonical $/sq ft rate, so their cost re-expresses correctly.
+    len.value='';wid.value='';dia.value='';price.value='';
+    var du=sys==='us'?'ft':'m';
+    [].forEach.call(document.querySelectorAll('[data-dim]'),function(el){el.textContent=du});
+    var cu=sys==='us'?'sq ft/box':'m²/box';
+    [].forEach.call(document.querySelectorAll('[data-cov]'),function(el){el.textContent=cu});
+    prefillCov();
+    updateModeLabels();
+    renderAll();
+  });
+
+  if(matSel) matSel.addEventListener('change',function(){
+    matKey=this.value;
+    prefillCov();
+    renderAll();
+  });
+
+  function updateModeLabels(){
+    var unitWord = mode==='box'?'box':(sys==='us'?'sq ft':'m²');
+    var sufWord  = mode==='box'?'$/box':(sys==='us'?'$/sq ft':'$/m²');
+    $('priceLab').textContent='Price per '+unitWord;
+    $('priceSuf').textContent=sufWord;
+    var sqBtn=$('modeSeg').querySelector('button[data-mode="sqft"]');
+    if(sqBtn) sqBtn.textContent = sys==='us'?'Sq ft':'m²';
+    var bw=$('boxWrap'); if(bw) bw.style.display = mode==='box'?'block':'none';
+  }
+  $('modeSeg').addEventListener('click',function(e){
+    var b=e.target.closest('button'); if(!b)return;
+    if(b.dataset.mode===mode) return;
+    mode=b.dataset.mode;
+    [].forEach.call(this.children,function(c){c.classList.toggle('on',c===b)});
+    price.value='';   // live price is per-unit — user re-enters in the new unit. Locked rows keep their rate.
+    updateModeLabels();
+    renderAll();
+  });
+
+  // add / clear / remove
+  $('addBtn').addEventListener('click',function(){
+    if(!areaComplete()) return;
+    var v=currentArea(); if(v==null) return;
+    tally.push({label:areaLabel(), matLabel:(MATLABEL[matKey]||''), areaSqft:v.areaSqft, areaM2:v.areaM2,
+                mode:mode, boxCov:boxCovSqft(), rate:liveRateSqft()});
+    len.value='';wid.value='';dia.value='';price.value='';
+    renderAll();
+    (shape==='rect'?len:dia).focus();
+  });
+  $('clearFieldsBtn').addEventListener('click',function(){
+    len.value='';wid.value='';dia.value='';price.value='';
+    renderAll();
+    (shape==='rect'?len:dia).focus();
+  });
+  $('tallyBody').addEventListener('click',function(e){
+    var x=e.target.closest('.x'); if(!x)return;
+    tally.splice(+x.dataset.i,1); renderTally();
+  });
+  $('clearBtn').addEventListener('click',function(){tally=[];renderTally()});
+
+  // waste
+  $('addWasteBtn').addEventListener('click',function(){
+    if(!tally.length) return;
+    waste.active=true; waste.pct=''; $('wastePct').value='';
+    renderTally(); $('wastePct').focus();
+  });
+  $('wastePct').addEventListener('input',function(){ waste.pct=this.value; renderTally(); });
+  $('wasteRemove').addEventListener('click',function(){ waste.active=false; waste.pct=''; $('wastePct').value=''; renderTally(); });
+
+  prefillCov();
+  updateModeLabels();
+  renderAll();
+}
+CalcThis.initAreaCalc = function(cfg){ cfg.hasMaterial=true; if(!cfg.startMode) cfg.startMode='box'; _initAreaCore(cfg); };
