@@ -25,7 +25,7 @@
     +   'max-height:calc(100vh - 32px);overflow:auto;}'
     + '#fbPanel h3{margin:0 28px 6px 0;font-size:15px;line-height:1.35;font-weight:700;}'
     + '#fbPanel p{margin:0 0 12px;font-size:12.5px;line-height:1.45;color:var(--muted,#8A7A66);}'
-    + '#fbX{position:absolute;top:14px;right:14px;width:26px;height:26px;border:none;background:transparent;'
+    + '#fbX{position:absolute;top:0;right:0;width:26px;height:26px;border:none;background:transparent;'
     +   'color:var(--muted,#8A7A66);font-size:20px;line-height:1;cursor:pointer;border-radius:8px;}'
     + '#fbX:hover{color:var(--ink,#241A11);}'
     + '#fbWrap{position:relative;}'
