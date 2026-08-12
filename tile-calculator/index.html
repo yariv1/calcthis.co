@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tile Calculator — How Many Tiles Do I Need? (Tiles, Boxes &amp; Cost)</title>
+<link rel="canonical" href="https://calcthis.co/tile-calculator/">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<meta name="theme-color" content="#B5761F">
+<meta name="description" content="Free tile calculator. Enter your area and tile size to get exactly how many tiles you need — plus boxes, waste and cost. Works for floors, walls and backsplashes, ceramic to mosaic. Add multiple areas for a whole project. US or metric.">
+<meta property="og:title" content="Tile Calculator — How Many Tiles Do I Need?">
+<meta property="og:description" content="Enter your area and tile size to get exactly how many tiles you need, plus boxes, waste factor and cost. Add multiple areas to total a whole project.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://calcthis.co/tile-calculator/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css?v=9">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Tile Calculator",
+      "url": "https://calcthis.co/tile-calculator/",
+      "description": "Free tile calculator. Enter your area and tile size to get exactly how many tiles you need, plus the number of boxes, a waste buffer and estimated cost. Works for floors, walls and backsplashes in ceramic, porcelain, mosaic or natural stone. Add multiple areas to total a whole project.",
+      "applicationCategory": "UtilityApplication",
+      "operatingSystem": "Any (web browser)",
+      "browserRequirements": "Requires JavaScript",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "featureList": [
+        "Exact tile count from your tile size and area",
+        "Ceramic, porcelain, mosaic, natural stone and subway presets",
+        "Editable individual tile size",
+        "Optional tiles-per-box to get a box count",
+        "Sold by tile, box or square foot",
+        "Rectangle and circle areas",
+        "Running project total across multiple rooms and walls",
+        "Waste factor buffer for cuts and breakage",
+        "US and metric units",
+        "Instant cost estimate"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How many tiles do I need?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Measure the length and width of the area and multiply them for the area in square feet. Work out the area a single tile covers (tile width times height, divided by 144 for inches), then divide the area by the tile size and round up. Add about 10 percent for cuts and breakage. The calculator above does all of this instantly from your tile size and totals several areas at once." }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I work out tiles from tile size?",
+          "acceptedAnswer": { "@type": "Answer", "text": "A 12 by 12 inch tile covers 1 square foot, so a 100 square foot floor needs about 100 tiles before waste. A 12 by 24 inch tile covers 2 square feet, so the same floor needs about 50. Enter your exact tile size in the calculator and it divides and rounds up for you, in inches or centimetres." }
+        },
+        {
+          "@type": "Question",
+          "name": "How many boxes of tile do I need?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Divide your total tile count by the number of tiles in a box and round up. Enter the tiles per box in the calculator's optional field and it shows the box count alongside the tile count, or switch Sold by to Box and enter the square footage each box covers." }
+        },
+        {
+          "@type": "Question",
+          "name": "How much extra tile should I buy for waste?",
+          "acceptedAnswer": { "@type": "Answer", "text": "For a standard straight lay, add about 10 percent for cuts, breakage and future repairs. For diagonal or herringbone layouts, or rooms with many cuts around fixtures, add about 15 percent. Use the Add waste calc option in the project total to add a percentage buffer to your order." }
+        },
+        {
+          "@type": "Question",
+          "name": "Does this tile calculator work for walls and backsplashes?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. The math is the same for any flat area — enter the height and width of a wall or backsplash instead of a floor's length and width. Add each wall and floor to the project total to get a single tile count and cost for the whole job." }
+        }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body class="p-tile">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <a href="/">Home</a>
+      <a href="/board-foot-calculator/">Board Foot Calculator</a>
+      <a href="/gravel-calculator/">Gravel Calculator</a>
+      <a href="/sand-calculator/">Sand Calculator</a>
+      <a href="/topsoil-calculator/">Topsoil Calculator</a>
+      <a href="/mulch-calculator/">Mulch Calculator</a>
+      <a href="/concrete-calculator/">Concrete Calculator</a>
+      <a href="/flooring-calculator/">Flooring Calculator</a>
+      <a href="/tile-calculator/" class="current">Tile Calculator</a>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">Renovation math, done instantly</div>
+    <h1>Tile Calculator</h1>
+    <p>Enter your area and tile size and get exactly how many tiles you need — plus boxes, cost and a waste buffer — the moment you type. Tiling more than one room or wall? Add each to the running project total below.</p>
+  </section>
+
+  <div class="grid">
+
+    <!-- INPUT -->
+    <div class="card">
+      <div class="card-pad">
+        <div class="row-top">
+          <h2>Your area</h2>
+          <div class="seg" id="unitSeg">
+            <button class="on" data-sys="us">US</button>
+            <button data-sys="metric">Metric</button>
+          </div>
+        </div>
+
+        <label class="fld">
+          <span class="lab">Shape</span>
+          <div class="seg" id="shapeSeg" style="display:flex;width:100%">
+            <button class="on" data-shape="rect" style="flex:1">Rectangle</button>
+            <button data-shape="circle" style="flex:1">Circle</button>
+          </div>
+        </label>
+
+        <!-- rectangle fields -->
+        <div id="rectFields">
+          <div class="two">
+            <label class="fld">
+              <span class="lab">Length / height <span class="unit" data-dim>ft</span></span>
+              <div class="inp"><input id="len" type="number" inputmode="decimal" placeholder="0"><span class="suf" data-dim>ft</span></div>
+            </label>
+            <label class="fld">
+              <span class="lab">Width <span class="unit" data-dim>ft</span></span>
+              <div class="inp"><input id="wid" type="number" inputmode="decimal" placeholder="0"><span class="suf" data-dim>ft</span></div>
+            </label>
+          </div>
+        </div>
+
+        <!-- circle fields -->
+        <div id="circleFields" style="display:none">
+          <label class="fld">
+            <span class="lab">Diameter <span class="unit" data-dim>ft</span></span>
+            <div class="inp"><input id="dia" type="number" inputmode="decimal" placeholder="0"><span class="suf" data-dim>ft</span></div>
+          </label>
+        </div>
+
+        <label class="fld">
+          <span class="lab">Tile type</span>
+          <div class="sel">
+            <select id="matSel">
+              <option value="ceramic">Ceramic</option>
+              <option value="porcelain">Porcelain</option>
+              <option value="mosaic">Mosaic sheet</option>
+              <option value="stone">Natural stone</option>
+              <option value="subway">Subway</option>
+              <option value="custom">Custom…</option>
+            </select>
+          </div>
+        </label>
+
+        <label class="fld">
+          <span class="lab">Sold by</span>
+          <div class="modeseg" id="modeSeg" style="grid-template-columns:1fr 1fr 1fr">
+            <button class="on" data-mode="tile">Tile</button>
+            <button data-mode="box">Box</button>
+            <button data-mode="sqft">Sq ft</button>
+          </div>
+        </label>
+
+        <!-- tile-size fields (Tile mode) -->
+        <div class="fld" id="tileWrap">
+          <span class="lab">Tile size <span class="unit" data-tdim>in</span></span>
+          <div class="two">
+            <div class="inp"><input id="tileW" type="number" inputmode="decimal" placeholder="width" step="0.01"><span class="suf" data-tdim>in</span></div>
+            <div class="inp"><input id="tileH" type="number" inputmode="decimal" placeholder="height" step="0.01"><span class="suf" data-tdim>in</span></div>
+          </div>
+          <label class="fld" style="margin-top:10px;margin-bottom:0">
+            <span class="lab">Tiles per box <span class="unit">optional — adds a box count</span></span>
+            <div class="inp"><input id="perBox" type="number" inputmode="numeric" placeholder="e.g. 10" step="1"><span class="suf">/box</span></div>
+          </label>
+        </div>
+
+        <!-- box-coverage field (Box mode) -->
+        <label class="fld" id="boxWrap" style="display:none">
+          <span class="lab">Box covers <span class="unit" data-cov>sq ft/box</span></span>
+          <div class="inp"><input id="boxCov" type="number" inputmode="decimal" placeholder="e.g. 15" step="0.01"><span class="suf" data-cov>sq ft/box</span></div>
+        </label>
+
+        <label class="fld" style="margin-bottom:0">
+          <span class="lab"><span id="priceLab">Price per tile</span> <span class="unit">optional</span></span>
+          <div class="inp"><input id="price" type="number" inputmode="decimal" placeholder="0.00" step="0.01"><span class="suf" id="priceSuf">$/tile</span></div>
+        </label>
+
+        <div class="add-wrap">
+          <div class="add-row">
+            <button class="btn" id="addBtn">+ Add area to project</button>
+            <button class="linkbtn" id="clearFieldsBtn">Clear fields</button>
+          </div>
+          <div class="res-hint" id="hint">Enter your length and width</div>
+          <div class="add-note" id="addNote">Tiling several rooms or walls? Add each to total the whole job.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT + PROJECT -->
+    <div class="card">
+      <div class="card-pad">
+        <!-- live single-area answer -->
+        <div class="res-lab" id="resLab">This area needs</div>
+        <div class="res-big"><span id="resQty">—</span> <span class="res-unit" id="resUnit">tiles</span></div>
+        <div class="res-sub" id="resSub">Enter dimensions to see the amount.</div>
+        <div class="res-cost hide" id="resCostWrap"><span class="k">Estimated cost</span><span class="v" id="resCost"></span></div>
+        <div class="res-tip" id="resTip">Tip: order about 10% extra for cuts and breakage (15% for diagonal or herringbone).</div>
+
+        <div class="proj-sep"></div>
+
+        <!-- project total (multi-area) -->
+        <div class="tally-head">
+          <h3>Project total</h3>
+          <button id="clearBtn" style="display:none">Clear all</button>
+        </div>
+        <div id="tallyBody">
+          <div class="tally-empty">Tiling more than one area? Add each above and they'll total here.</div>
+        </div>
+        <div class="trow wrow" id="wasteRow" style="display:none">
+          <span class="desc wdesc">
+            <span class="wtag">Waste</span>
+            <input id="wastePct" class="win" type="text" inputmode="decimal" placeholder="recommended 10" autocomplete="off">
+            <span class="wsuf">%</span>
+          </span>
+          <span class="qt na" id="wasteQty">—</span>
+          <span class="rc na" id="wasteRc">—</span>
+          <button class="x wx" id="wasteRemove" type="button" aria-label="Remove waste">×</button>
+        </div>
+        <div class="tally-total" id="projTotal" style="display:none">
+          <span class="tl">Total <span class="sub" id="projCount"></span></span>
+          <span class="tv"><span id="totalQty">0</span> <span id="totalUnit">tiles</span></span>
+          <span class="tl sub" id="totalCostRow" style="display:none">Estimated cost</span>
+          <span class="tv" id="totalCost" style="display:none"></span>
+        </div>
+        <button class="add-waste-btn" id="addWasteBtn" type="button">+ Add waste calc</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- mobile sticky bar -->
+  <div class="mbar" id="mbar">
+    <span class="mbar-lab" id="mLab">This area</span>
+    <div class="mbar-vals">
+      <span class="mbar-seg" id="mSeg"><b id="mQty">0</b> <span id="mUnit">tiles</span></span>
+      <span class="mbar-cost hide" id="mCostWrap"><span class="mbar-eq">=</span> <b id="mCost"></b></span>
+    </div>
+  </div>
+
+  <!-- CONTENT / SEO -->
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How many tiles do I need?</h2>
+        <p>Working out how many tiles to buy starts with two numbers: the <strong>area</strong> you're covering and the size of a <strong>single tile</strong>. Measure the length and width of the floor or wall, multiply them for the area, then divide by the area one tile covers and round up — plus a little extra for cuts and breakage.</p>
+        <div class="formula">
+          Area ÷ Tile size = Tiles
+          <small>LENGTH × WIDTH = AREA · ROUND UP TO WHOLE TILES · ADD WASTE</small>
+        </div>
+        <p>A 12×12&nbsp;in tile covers exactly 1&nbsp;sq&nbsp;ft, so it's an easy check: a 100&nbsp;sq&nbsp;ft floor needs about 100 tiles before waste. Change the tile size and the count changes with it — the calculator above does the division and rounding the instant you type.</p>
+
+        <h2>Tiles, boxes or square feet</h2>
+        <p>Tile is priced a few different ways. Buying loose or by the piece? Keep <strong>Sold by</strong> on <em>Tile</em> and enter the tile size. Buying by the box? Add your <strong>tiles per box</strong> for a box count too, or switch to <em>Box</em> and enter the coverage printed on the carton. Some large-format and stone tile is sold by area — switch to <em>Sq ft</em> for that.</p>
+
+        <h2>Worked example</h2>
+        <p>A bathroom floor 8&nbsp;ft by 6&nbsp;ft, tiled in 12×24&nbsp;in porcelain (each tile covers 2&nbsp;sq&nbsp;ft):</p>
+        <p style="color:var(--ink);font-weight:500">8 × 6 = <strong>48 sq ft</strong>. 48 ÷ 2 = 24 tiles, and with ~10% waste you'd order <strong>27 tiles</strong>.</p>
+      </div>
+
+      <div>
+        <h2>How much extra for waste?</h2>
+        <ul>
+          <li><strong>10%</strong> — standard straight lay in a simple rectangular room</li>
+          <li><strong>10–15%</strong> — rooms with lots of cuts around fixtures, niches or corners</li>
+          <li><strong>15%+</strong> — diagonal, herringbone or mosaic patterns</li>
+        </ul>
+        <p>Tap a percentage into the <strong>&ldquo;+ Add waste calc&rdquo;</strong> buffer in the project total and it's added on top of your order.</p>
+
+        <h2>Common tile sizes</h2>
+        <p>These are the sizes the calculator starts from when you pick a type; your tile may differ, so type the exact size into <em>Tile size</em>.</p>
+        <table class="dtable">
+          <thead><tr><th>Tile</th><th>Typical size</th><th>Covers</th></tr></thead>
+          <tbody>
+            <tr><td>Ceramic</td><td>12 × 12 in</td><td>1.0 sq ft</td></tr>
+            <tr><td>Porcelain</td><td>12 × 24 in</td><td>2.0 sq ft</td></tr>
+            <tr><td>Mosaic sheet</td><td>12 × 12 in</td><td>1.0 sq ft</td></tr>
+            <tr><td>Natural stone</td><td>12 × 12 in</td><td>1.0 sq ft</td></tr>
+            <tr><td>Subway</td><td>3 × 6 in</td><td>0.125 sq ft</td></tr>
+          </tbody>
+        </table>
+        <p>Tiling a wall or backsplash? Enter its height and width the same way — the math is identical to a floor.</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>How many tiles do I need?</summary><p>Measure the length and width of the area and multiply them for the area in square feet. Work out the area a single tile covers (tile width × height ÷ 144 for inches), divide the area by that and round up, then add about 10% for cuts and breakage. The calculator above does all of this instantly from your tile size and totals several areas at once.</p></details>
+    <details class="faq"><summary>How do I work out tiles from tile size?</summary><p>A 12×12&nbsp;in tile covers 1&nbsp;sq&nbsp;ft, so a 100&nbsp;sq&nbsp;ft floor needs about <strong>100 tiles</strong> before waste. A 12×24&nbsp;in tile covers 2&nbsp;sq&nbsp;ft, so the same floor needs about <strong>50</strong>. Enter your exact tile size and the calculator divides and rounds up for you, in inches or centimetres.</p></details>
+    <details class="faq"><summary>How many boxes of tile do I need?</summary><p>Divide your total tile count by the number of tiles in a box and round up. Enter the <strong>tiles per box</strong> in the calculator's optional field and it shows the box count next to the tile count, or switch <strong>Sold by</strong> to Box and enter the square footage each box covers.</p></details>
+    <details class="faq"><summary>How much extra tile should I buy for waste?</summary><p>For a standard straight lay, add about <strong>10%</strong> for cuts, breakage and future repairs. For diagonal or herringbone layouts, or rooms with lots of cuts, add about <strong>15%</strong>. Tap <strong>&ldquo;+ Add waste calc&rdquo;</strong> in the project total to add a percentage buffer.</p></details>
+    <details class="faq"><summary>Does this tile calculator work for walls and backsplashes?</summary><p>Yes. The math is the same for any flat area — enter the height and width of a wall or backsplash instead of a floor's length and width. Add each wall and floor to the project total to get a single tile count and cost for the whole job.</p></details>
+  </section>
+
+  <footer>
+    <span>Estimates only — confirm tile size &amp; box count with your supplier. Free, no sign-up.</span>
+    <span><a href="#">How it works</a></span>
+  </footer>
+
+</div>
+
+<script src="/assets/app.js?v=9"></script>
+<script>
+CalcThis.initTileCalc({
+  defaultMat:'ceramic', startMode:'tile',
+  mat:{ceramic:15, porcelain:16, mosaic:10, stone:10, subway:12.5},
+  tileSize:{ceramic:[12,12], porcelain:[12,24], mosaic:[12,12], stone:[12,12], subway:[3,6], custom:[]},
+  matLabel:{ceramic:'Ceramic', porcelain:'Porcelain', mosaic:'Mosaic sheet', stone:'Natural stone', subway:'Subway', custom:'Custom'},
+  covDefaultUS:15, thisLabel:'This area',
+  emptyText:'Tiling more than one area? Add each above and they\u2019ll total here.'
+});
+</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>

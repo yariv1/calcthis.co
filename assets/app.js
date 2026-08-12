@@ -518,12 +518,15 @@ function _initAreaCore(cfg){
   var $=function(id){return document.getElementById(id)};
   var len=$('len'), wid=$('wid'), dia=$('dia'),
       price=$('price'), boxCov=$('boxCov'), matSel=$('matSel');
-  var tally=[];                     // each: {label, matLabel, areaSqft, areaM2, mode, boxCov, rate}
+  var tileW=$('tileW'), tileH=$('tileH'), perBox=$('perBox');   // tile mode only (may be null)
+  var tally=[];                     // each: {label, matLabel, areaSqft, areaM2, mode, boxCov, tileAreaSqft, rate}
   var waste={active:false,pct:''};
 
   var FT2_PER_M2=10.7639104;
+  var IN2_PER_FT2=144, CM2_PER_M2=10000;
   var MAT=cfg.mat||{};              // {key: sq ft per box}
   var MATLABEL=cfg.matLabel||{};
+  var TILESIZE=cfg.tileSize||{};    // {key:[w,h]} individual tile size, US inches
 
   function parseNum(v){ if(v==null) return NaN; v=(''+v).trim(); if(!v) return NaN; var n=parseFloat(v); return isNaN(n)?NaN:n; }
   function fmt(n){ if(n==null||isNaN(n)) return '—'; if(n>=100) return n.toFixed(1).replace(/\.0$/,''); var r=Math.round(n*100)/100; var s=''+r; if(s.indexOf('.')>=0) s=s.replace(/\.?0+$/,''); return s||'0'; }
@@ -538,6 +541,18 @@ function _initAreaCore(cfg){
     if(isNaN(c)||c<=0) return matCovUS();
     return sys==='us'? c : c*FT2_PER_M2;   // m²/box -> sq ft/box
   }
+
+  // ----- tile mode helpers (individual tile size -> tiles) -----
+  // live individual-tile area in sq ft, from tileW/tileH (US inches, metric cm). null if incomplete.
+  function tileAreaSqft(){
+    if(!tileW||!tileH) return null;
+    var w=parseNum(tileW.value), h=parseNum(tileH.value);
+    if(isNaN(w)||isNaN(h)||w<=0||h<=0) return null;
+    if(sys==='us') return (w*h)/IN2_PER_FT2;          // in² -> ft²
+    return ((w*h)/CM2_PER_M2)*FT2_PER_M2;             // cm² -> m² -> ft²
+  }
+  function perBoxVal(){ if(!perBox) return null; var n=parseNum(perBox.value); return (!isNaN(n)&&n>0)?Math.floor(n):null; }
+  function tileDimsOK(){ return !cfg.tileMode || mode!=='tile' || tileAreaSqft()!=null; }
 
   // current room area (null if dims incomplete)
   function currentArea(){
@@ -556,7 +571,7 @@ function _initAreaCore(cfg){
     return {areaSqft:areaSqft, areaM2:areaM2};
   }
 
-  function areaComplete(){ return currentArea()!=null; }
+  function areaComplete(){ return currentArea()!=null && tileDimsOK(); }
   function listMissing(){
     var m=[];
     if(shape==='rect'){
@@ -565,21 +580,31 @@ function _initAreaCore(cfg){
     } else {
       if(isNaN(parseNum(dia.value))||parseNum(dia.value)<=0) m.push('diameter');
     }
+    if(cfg.tileMode && mode==='tile' && tileAreaSqft()==null) m.push('tile size');
     if(!m.length) return 'the details';
     if(m.length===1) return m[0];
     return m.slice(0,-1).join(', ')+' and '+m[m.length-1];
   }
 
   function areaUnit(){ return sys==='us'?'sq ft':'m²'; }
-  function qtyUnit(){ return mode==='box'?'boxes':areaUnit(); }
+  function qtyUnit(){ return mode==='box'?'boxes':(mode==='tile'?'tiles':areaUnit()); }
 
-  // sold quantity for canonical area incl waste (bags are boxes here, ceil'd)
+  // sold quantity for canonical area incl waste (boxes/tiles ceil'd)
   function soldQty(v, wp){
     var mlt=(wp&&wp>0)?(1+wp/100):1;
+    var areaTxt='= '+fmt((sys==='us'?v.areaSqft:v.areaM2)*mlt)+' '+areaUnit();
     if(mode==='box'){
       var cov=boxCovSqft();
       var boxes=Math.ceil((v.areaSqft*mlt)/cov);
-      return {qty:boxes, qtyNull:false, subTxt:'= '+fmt((sys==='us'?v.areaSqft:v.areaM2)*mlt)+' '+areaUnit()};
+      return {qty:boxes, qtyNull:false, subTxt:areaTxt};
+    }
+    if(mode==='tile'){
+      var ta=tileAreaSqft(); if(ta==null||ta<=0) return {qty:null, qtyNull:true, subTxt:''};
+      var tiles=Math.ceil((v.areaSqft*mlt)/ta);
+      var pb=perBoxVal();
+      var sub=areaTxt;
+      if(pb){ var bx=Math.ceil(tiles/pb); sub+=' \u00b7 \u2248 '+bx+' '+boxWord(bx); }
+      return {qty:tiles, qtyNull:false, subTxt:sub};
     }
     var area=(sys==='us'?v.areaSqft:v.areaM2)*mlt;
     return {qty:area, qtyNull:false, subTxt:''};
@@ -591,6 +616,7 @@ function _initAreaCore(cfg){
   function liveRateSqft(){
     var p=priceVal(); if(p==null) return null;
     if(mode==='box'){ var cov=boxCovSqft(); return cov>0? p/cov : null; }   // $/box -> $/sq ft
+    if(mode==='tile'){ var ta=tileAreaSqft(); return (ta&&ta>0)? p/ta : null; } // $/tile -> $/sq ft
     return sys==='us'? p : p/FT2_PER_M2;                                     // $/sq ft, or $/m² -> $/sq ft
   }
   function costFor(sq){ var p=priceVal(); if(p==null||sq.qty==null) return null; return sq.qty*p; }
@@ -598,13 +624,15 @@ function _initAreaCore(cfg){
   // per-row quantity in THAT ROW's own sold-by unit (frozen at add time)
   function itemQty(r){
     if(r.mode==='box'){ return Math.ceil(r.areaSqft / r.boxCov); }
+    if(r.mode==='tile'){ return Math.ceil(r.areaSqft / r.tileAreaSqft); }
     return sys==='us'? r.areaSqft : r.areaM2;
   }
   // per-row cost uses the row's LOCKED canonical $/sq ft rate + its own frozen unit
   function itemCost(r){
     if(r.rate==null) return null;
-    if(r.mode==='box'){ return itemQty(r) * (r.rate * r.boxCov); }   // boxes × $/box
-    return r.areaSqft * r.rate;                                       // area: physical, system-independent
+    if(r.mode==='box'){ return itemQty(r) * (r.rate * r.boxCov); }        // boxes × $/box
+    if(r.mode==='tile'){ return itemQty(r) * (r.rate * r.tileAreaSqft); } // tiles × $/tile
+    return r.areaSqft * r.rate;                                            // area: physical, system-independent
   }
 
   function areaLabel(){
@@ -639,29 +667,32 @@ function _initAreaCore(cfg){
 
   // ---------- project tally ----------
   function boxWord(n){ return n===1?'box':'boxes'; }
+  function tileWord(n){ return n===1?'tile':'tiles'; }
   function areaUnitNow(){ return sys==='us'?'sq ft':'m²'; }
   function rowQtyText(r){
     var q=itemQty(r); if(q==null) return {txt:'—',na:true};
     if(r.mode==='box') return {txt:fmt(q)+' '+boxWord(q), na:false};
+    if(r.mode==='tile') return {txt:fmt(q)+' '+tileWord(q), na:false};
     return {txt:fmt(q)+' '+areaUnitNow(), na:false};
   }
   function rowCost(r){ var c=itemCost(r); return (c==null)?{txt:'—',na:true}:{txt:money(c),na:false}; }
 
   function groupTotals(){
-    var g={boxQ:0,boxHas:false,areaQ:0,areaHas:false,cost:0,hasCost:false,order:[]};
+    var g={boxQ:0,boxHas:false,tileQ:0,tileHas:false,areaQ:0,areaHas:false,cost:0,hasCost:false,order:[]};
     tally.forEach(function(r){
-      var k=r.mode==='box'?'box':'area';
+      var k=r.mode==='box'?'box':(r.mode==='tile'?'tile':'area');
       if(g.order.indexOf(k)<0) g.order.push(k);   // total lists units in the order first added
       if(r.mode==='box'){ g.boxQ+=itemQty(r); g.boxHas=true; }
+      else if(r.mode==='tile'){ g.tileQ+=itemQty(r); g.tileHas=true; }
       else { g.areaQ+=itemQty(r); g.areaHas=true; }
       var c=itemCost(r); if(c!=null){ g.cost+=c; g.hasCost=true; }
     });
     return g;
   }
-  function amountParts(boxQ,areaQ,g){
-    var val={box:boxQ, area:areaQ};
-    var lab={box:boxWord(boxQ), area:areaUnitNow()};
-    var has={box:g.boxHas, area:g.areaHas};
+  function amountParts(boxQ,tileQ,areaQ,g){
+    var val={box:boxQ, tile:tileQ, area:areaQ};
+    var lab={box:boxWord(boxQ), tile:tileWord(tileQ), area:areaUnitNow()};
+    var has={box:g.boxHas, tile:g.tileHas, area:g.areaHas};
     return g.order.filter(function(k){return has[k];}).map(function(k){return {num:val[k], unit:lab[k]};});
   }
   function partsStr(parts,plus){ return parts.map(function(p){return (plus?'+':'')+fmt(p.num)+' '+p.unit;}).join(plus?'  ':' + '); }
@@ -673,11 +704,12 @@ function _initAreaCore(cfg){
     var hasWp=waste.active&&!isNaN(wp)&&wp>0;
     var mlt=hasWp?wp/100:0;
     var wBox=g.boxHas?Math.ceil(g.boxQ*mlt):0;
+    var wTile=g.tileHas?Math.ceil(g.tileQ*mlt):0;
     var wArea=g.areaHas?g.areaQ*mlt:0;
     var wCost=g.hasCost?g.cost*mlt:0;
-    var tBox=g.boxQ+wBox, tArea=g.areaQ+wArea, tCost=g.cost+wCost;
+    var tBox=g.boxQ+wBox, tTile=g.tileQ+wTile, tArea=g.areaQ+wArea, tCost=g.cost+wCost;
 
-    updateMbar(g,tBox,tArea,tCost);
+    updateMbar(g,tBox,tTile,tArea,tCost);
 
     if(!tally.length){
       body.innerHTML='<div class="tally-empty">'+cfg.emptyText+'</div>';
@@ -702,9 +734,9 @@ function _initAreaCore(cfg){
       $('addWasteBtn').style.display='none';
       var wq=$('wasteQty'), wr=$('wasteRc');
       if(hasWp){
-        var wval={box:wBox, area:wArea};
-        var wlab={box:boxWord(wBox), area:areaUnitNow()};
-        var whas={box:g.boxHas&&wBox>0, area:g.areaHas&&wArea>0};
+        var wval={box:wBox, tile:wTile, area:wArea};
+        var wlab={box:boxWord(wBox), tile:tileWord(wTile), area:areaUnitNow()};
+        var whas={box:g.boxHas&&wBox>0, tile:g.tileHas&&wTile>0, area:g.areaHas&&wArea>0};
         var wparts=g.order.filter(function(k){return whas[k];}).map(function(k){return {num:wval[k], unit:wlab[k]};});
         wq.className='qt'; wq.textContent=wparts.length?partsStr(wparts,true):'—';
         if(g.hasCost){ wr.className='rc'; wr.textContent='+'+money(wCost); }
@@ -721,7 +753,7 @@ function _initAreaCore(cfg){
     tot.style.display='grid';
     $('projCount').textContent='';
     $('totalUnit').textContent='';
-    $('totalQty').textContent=partsStr(amountParts(tBox,tArea,g),false);
+    $('totalQty').textContent=partsStr(amountParts(tBox,tTile,tArea,g),false);
     if(g.hasCost){
       $('totalCostRow').style.display='block'; $('totalCost').style.display='block'; $('totalCost').textContent=money(tCost);
     } else {
@@ -730,10 +762,10 @@ function _initAreaCore(cfg){
   }
 
   function segHTML(parts){ return parts.map(function(p){return '<b>'+fmt(p.num)+'</b> '+p.unit;}).join(' + '); }
-  function updateMbar(g,tBox,tArea,tCost){
+  function updateMbar(g,tBox,tTile,tArea,tCost){
     if(tally.length){
       $('mLab').textContent='Project total';
-      $('mSeg').innerHTML=segHTML(amountParts(tBox,tArea,g));
+      $('mSeg').innerHTML=segHTML(amountParts(tBox,tTile,tArea,g));
       if(g.hasCost){ $('mCostWrap').classList.remove('hide'); $('mCost').textContent=money(tCost); }
       else { $('mCostWrap').classList.add('hide'); }
       return;
@@ -757,10 +789,19 @@ function _initAreaCore(cfg){
     if(matKey==='custom' || !c || c<=0){ boxCov.value=''; return; }
     boxCov.value = sys==='us'? c : +(c/FT2_PER_M2).toFixed(2);
   }
+  // prefill individual tile W×H from the material's typical size (US inches -> cm in metric)
+  function prefillTileSize(){
+    if(!tileW||!tileH) return;
+    var s=TILESIZE[matKey];
+    if(matKey==='custom' || !s || !s.length){ tileW.value=''; tileH.value=''; return; }
+    if(sys==='us'){ tileW.value=s[0]; tileH.value=s[1]; }
+    else { tileW.value=+(s[0]*2.54).toFixed(1); tileH.value=+(s[1]*2.54).toFixed(1); }
+  }
 
   // ---------- events ----------
   [len,wid,dia,price].forEach(function(el){ if(el) el.addEventListener('input',renderAll); });
   if(boxCov) boxCov.addEventListener('input',renderAll);
+  [tileW,tileH,perBox].forEach(function(el){ if(el) el.addEventListener('input',renderAll); });
 
   $('shapeSeg').addEventListener('click',function(e){
     var b=e.target.closest('button'); if(!b)return;
@@ -784,7 +825,10 @@ function _initAreaCore(cfg){
     [].forEach.call(document.querySelectorAll('[data-dim]'),function(el){el.textContent=du});
     var cu=sys==='us'?'sq ft/box':'m²/box';
     [].forEach.call(document.querySelectorAll('[data-cov]'),function(el){el.textContent=cu});
+    var tu=sys==='us'?'in':'cm';
+    [].forEach.call(document.querySelectorAll('[data-tdim]'),function(el){el.textContent=tu});
     prefillCov();
+    prefillTileSize();
     updateModeLabels();
     renderAll();
   });
@@ -792,17 +836,19 @@ function _initAreaCore(cfg){
   if(matSel) matSel.addEventListener('change',function(){
     matKey=this.value;
     prefillCov();
+    prefillTileSize();
     renderAll();
   });
 
   function updateModeLabels(){
-    var unitWord = mode==='box'?'box':(sys==='us'?'sq ft':'m²');
-    var sufWord  = mode==='box'?'$/box':(sys==='us'?'$/sq ft':'$/m²');
+    var unitWord = mode==='box'?'box':(mode==='tile'?'tile':(sys==='us'?'sq ft':'m²'));
+    var sufWord  = mode==='box'?'$/box':(mode==='tile'?'$/tile':(sys==='us'?'$/sq ft':'$/m²'));
     $('priceLab').textContent='Price per '+unitWord;
     $('priceSuf').textContent=sufWord;
     var sqBtn=$('modeSeg').querySelector('button[data-mode="sqft"]');
     if(sqBtn) sqBtn.textContent = sys==='us'?'Sq ft':'m²';
     var bw=$('boxWrap'); if(bw) bw.style.display = mode==='box'?'block':'none';
+    var tw=$('tileWrap'); if(tw) tw.style.display = mode==='tile'?'block':'none';
   }
   $('modeSeg').addEventListener('click',function(e){
     var b=e.target.closest('button'); if(!b)return;
@@ -819,7 +865,7 @@ function _initAreaCore(cfg){
     if(!areaComplete()) return;
     var v=currentArea(); if(v==null) return;
     tally.push({label:areaLabel(), matLabel:(MATLABEL[matKey]||''), areaSqft:v.areaSqft, areaM2:v.areaM2,
-                mode:mode, boxCov:boxCovSqft(), rate:liveRateSqft()});
+                mode:mode, boxCov:boxCovSqft(), tileAreaSqft:tileAreaSqft(), rate:liveRateSqft()});
     len.value='';wid.value='';dia.value='';price.value='';
     renderAll();
     (shape==='rect'?len:dia).focus();
@@ -845,7 +891,9 @@ function _initAreaCore(cfg){
   $('wasteRemove').addEventListener('click',function(){ waste.active=false; waste.pct=''; $('wastePct').value=''; renderTally(); });
 
   prefillCov();
+  prefillTileSize();
   updateModeLabels();
   renderAll();
 }
 CalcThis.initAreaCalc = function(cfg){ cfg.hasMaterial=true; if(!cfg.startMode) cfg.startMode='box'; _initAreaCore(cfg); };
+CalcThis.initTileCalc = function(cfg){ cfg.hasMaterial=true; cfg.tileMode=true; if(!cfg.startMode) cfg.startMode='tile'; _initAreaCore(cfg); };

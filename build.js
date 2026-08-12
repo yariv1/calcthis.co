@@ -26,6 +26,7 @@ const PAGES = [
   { file: 'mulch-calculator/index.html',       slug: '/mulch-calculator/' },
   { file: 'concrete-calculator/index.html',    slug: '/concrete-calculator/' },
   { file: 'flooring-calculator/index.html',    slug: '/flooring-calculator/' },
+  { file: 'tile-calculator/index.html',        slug: '/tile-calculator/' },
 ];
 
 // ---- bump shared asset version ----
