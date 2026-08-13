@@ -910,13 +910,6 @@ CalcThis.initPaceCalc = function (cfg) {
   var $ = function (id) { return document.getElementById(id); };
   var KM_PER_MI = 1.609344;
   var PRESET = { '5k': 5, '10k': 10, 'half': 21.0975, 'marathon': 42.195, 'mile': 1.609344 };
-  var FINISH = [
-    { label: '1 mile', km: 1.609344 },
-    { label: '5K', km: 5 },
-    { label: '10K', km: 10 },
-    { label: 'Half marathon', km: 21.0975 },
-    { label: 'Marathon', km: 42.195 }
-  ];
 
   var target = 'pace';   // pace | time | distance
   var distUnit = 'km';   // km | mi
@@ -1032,8 +1025,16 @@ CalcThis.initPaceCalc = function (cfg) {
   }
 
   function renderFinish(pKm, dKm) {
+    // short landmark row follows the unit toggle; named races stay fixed
+    var shortRow = distUnit === 'mi' ? { label: '1 mile', km: 1.609344 } : { label: '1 km', km: 1 };
+    var list = [shortRow,
+      { label: '5K', km: 5 },
+      { label: '10K', km: 10 },
+      { label: 'Half marathon', km: 21.0975 },
+      { label: 'Marathon', km: 42.195 }
+    ];
     var body = '', shown = {};
-    FINISH.forEach(function (f) {
+    list.forEach(function (f) {
       shown[f.km.toFixed(3)] = 1;
       var cur = Math.abs(f.km - dKm) < 0.01 ? ' class="cur"' : '';
       body += '<tr' + cur + '><td>' + f.label + '</td><td>' + hms(f.km * pKm) + '</td><td>' +
