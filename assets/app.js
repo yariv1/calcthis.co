@@ -897,3 +897,307 @@ function _initAreaCore(cfg){
 }
 CalcThis.initAreaCalc = function(cfg){ cfg.hasMaterial=true; if(!cfg.startMode) cfg.startMode='box'; _initAreaCore(cfg); };
 CalcThis.initTileCalc = function(cfg){ cfg.hasMaterial=true; cfg.tileMode=true; if(!cfg.startMode) cfg.startMode='tile'; _initAreaCore(cfg); };
+
+/* ===== CalcThis Pace engine (Pillar 2 · Fitness) =====
+   CalcThis.initPaceCalc(cfg) — running pace / time / distance solver.
+   Independent of the area/volume cores. Internal units: distance in km,
+   time in seconds, pace in seconds-per-km. Live-solves the chosen target
+   field from the other two, always derives speed, and (advanced mode)
+   renders per-km/mi splits with even/negative/positive pacing plus
+   equivalent finish-times for the standard race distances. */
+CalcThis.initPaceCalc = function (cfg) {
+  cfg = cfg || {};
+  var $ = function (id) { return document.getElementById(id); };
+  var KM_PER_MI = 1.609344;
+  var PRESET = { '5k': 5, '10k': 10, 'half': 21.0975, 'marathon': 42.195, 'mile': 1.609344 };
+  var FINISH = [
+    { label: '1 mile', km: 1.609344 },
+    { label: '5K', km: 5 },
+    { label: '10K', km: 10 },
+    { label: 'Half marathon', km: 21.0975 },
+    { label: 'Marathon', km: 42.195 }
+  ];
+
+  var target = 'pace';   // pace | time | distance
+  var distUnit = 'km';   // km | mi
+  var paceUnit = 'km';   // km | mi  (per km / per mile)
+  var splitUnit = 'km';  // km | mi
+  var strategy = 'even'; // even | neg | pos
+  var advanced = false;
+  var lastValid = null;  // {dKm, tSec, pKm}
+
+  var distIn = $('distVal'), hIn = $('h'), mIn = $('m'), sIn = $('s'),
+      pmIn = $('pMin'), psIn = $('pSec'), deltaIn = $('splitDelta');
+  var distFld = $('distFld'), timeFld = $('timeFld'), paceFld = $('paceFld'),
+      distChips = $('distChips');
+
+  function num(v) { v = parseFloat(('' + v).trim()); return isNaN(v) ? NaN : v; }
+  function pad(n) { n = Math.round(n); return (n < 10 ? '0' : '') + n; }
+  function hms(sec) {
+    if (!isFinite(sec) || sec <= 0) return '—';
+    sec = Math.round(sec);
+    var h = Math.floor(sec / 3600), m = Math.floor((sec % 3600) / 60), s = sec % 60;
+    return h > 0 ? h + ':' + pad(m) + ':' + pad(s) : m + ':' + pad(s);
+  }
+  function paceStr(secPerKm, unit) {
+    if (!isFinite(secPerKm) || secPerKm <= 0) return '—';
+    var per = unit === 'mi' ? secPerKm * KM_PER_MI : secPerKm;
+    var m = Math.floor(per / 60), s = Math.round(per % 60);
+    if (s === 60) { m++; s = 0; }
+    return m + ':' + pad(s);
+  }
+  function trimNum(n, d) {
+    if (!isFinite(n)) return '—';
+    var s = n.toFixed(d == null ? 2 : d);
+    return s.replace(/\.?0+$/, '');
+  }
+
+  // ---- readers (to internal units) ----
+  function readDistKm() {
+    var v = num(distIn.value);
+    if (isNaN(v) || v <= 0) return NaN;
+    return distUnit === 'mi' ? v * KM_PER_MI : v;
+  }
+  function readTimeSec() {
+    var h = num(hIn.value), m = num(mIn.value), s = num(sIn.value);
+    var t = (isNaN(h) ? 0 : h) * 3600 + (isNaN(m) ? 0 : m) * 60 + (isNaN(s) ? 0 : s);
+    return t > 0 ? t : NaN;
+  }
+  function readPaceSecPerKm() {
+    var m = num(pmIn.value), s = num(psIn.value);
+    var per = (isNaN(m) ? 0 : m) * 60 + (isNaN(s) ? 0 : s);
+    if (per <= 0) return NaN;
+    return paceUnit === 'mi' ? per / KM_PER_MI : per;
+  }
+
+  // ---- writers (fill the read-only target field) ----
+  function writeTime(sec) {
+    if (!isFinite(sec) || sec <= 0) { hIn.value = mIn.value = sIn.value = ''; return; }
+    sec = Math.round(sec);
+    hIn.value = Math.floor(sec / 3600);
+    mIn.value = Math.floor((sec % 3600) / 60);
+    sIn.value = sec % 60;
+  }
+  function writePace(secPerKm) {
+    if (!isFinite(secPerKm) || secPerKm <= 0) { pmIn.value = psIn.value = ''; return; }
+    var per = paceUnit === 'mi' ? secPerKm * KM_PER_MI : secPerKm;
+    var m = Math.floor(per / 60), s = Math.round(per % 60);
+    if (s === 60) { m++; s = 0; }
+    pmIn.value = m; psIn.value = s;
+  }
+  function writeDist(km) {
+    if (!isFinite(km) || km <= 0) { distIn.value = ''; return; }
+    distIn.value = trimNum(distUnit === 'mi' ? km / KM_PER_MI : km, 3);
+  }
+
+  // ---- split table ----
+  function renderSplits(dKm, tSec, pKm) {
+    var wrap = $('splitTable');
+    var totUnit = dKm / (splitUnit === 'mi' ? KM_PER_MI : 1);
+    var avgPer = pKm * (splitUnit === 'mi' ? KM_PER_MI : 1); // sec per split unit
+    var segN = Math.max(1, Math.ceil(totUnit - 1e-9));
+    var lens = [], i;
+    for (i = 0; i < segN; i++) lens.push(1);
+    var rem = totUnit - (segN - 1);
+    lens[segN - 1] = (rem > 1e-6 && rem < 1) ? rem : 1;
+
+    var delta = num(deltaIn.value); if (isNaN(delta) || delta < 0) delta = 0;
+    var offset = strategy === 'even' ? 0 : delta / 2;
+    // ramp -1..+1 across segments; neg split = start slower (higher pace first)
+    var times = [], raw = 0;
+    for (i = 0; i < segN; i++) {
+      var r = segN === 1 ? 0 : (i / (segN - 1)) * 2 - 1; // -1..+1
+      var sign = strategy === 'neg' ? -1 : 1;            // neg: first slower
+      var pacePer = avgPer + sign * offset * r;
+      var ti = pacePer * lens[i];
+      times.push(ti); raw += ti;
+    }
+    var scale = raw > 0 ? tSec / raw : 1;                // keep total exact
+    var rows = '', cum = 0, distAcc = 0;
+    for (i = 0; i < segN; i++) {
+      var t = times[i] * scale; cum += t; distAcc += lens[i];
+      var splitPace = t / lens[i]; // sec per unit
+      var lbl = (Math.abs(lens[i] - 1) < 1e-6)
+        ? trimNum(distAcc, 2) + (splitUnit === 'mi' ? ' mi' : ' km')
+        : trimNum(distAcc, 2) + (splitUnit === 'mi' ? ' mi' : ' km');
+      rows += '<tr><td>' + lbl + '</td><td>' + paceStr(splitUnit === 'mi' ? splitPace / KM_PER_MI : splitPace, splitUnit) +
+              '</td><td>' + hms(t) + '</td><td>' + hms(cum) + '</td></tr>';
+    }
+    wrap.innerHTML =
+      '<thead><tr><th>Distance</th><th>Split pace</th><th>Split time</th><th>Elapsed</th></tr></thead><tbody>' +
+      rows + '</tbody>';
+    $('splitMeta').textContent =
+      (strategy === 'even' ? 'Even' : strategy === 'neg' ? 'Negative' : 'Positive') +
+      ' · per ' + (splitUnit === 'mi' ? 'mile' : 'km');
+  }
+
+  function renderFinish(pKm, dKm) {
+    var body = '', shown = {};
+    FINISH.forEach(function (f) {
+      shown[f.km.toFixed(3)] = 1;
+      var cur = Math.abs(f.km - dKm) < 0.01 ? ' class="cur"' : '';
+      body += '<tr' + cur + '><td>' + f.label + '</td><td>' + hms(f.km * pKm) + '</td><td>' +
+              paceStr(pKm, paceUnit) + '/' + (paceUnit === 'mi' ? 'mi' : 'km') + '</td></tr>';
+    });
+    if (dKm > 0 && !shown[dKm.toFixed(3)]) {
+      body = '<tr class="cur"><td>' + trimNum(distUnit === 'mi' ? dKm / KM_PER_MI : dKm, 2) +
+             ' ' + (distUnit === 'mi' ? 'mi' : 'km') + ' (yours)</td><td>' + hms(dKm * pKm) +
+             '</td><td>' + paceStr(pKm, paceUnit) + '/' + (paceUnit === 'mi' ? 'mi' : 'km') +
+             '</td></tr>' + body;
+    }
+    $('finishTable').innerHTML =
+      '<thead><tr><th>Distance</th><th>Finish</th><th>Pace</th></tr></thead><tbody>' + body + '</tbody>';
+  }
+
+  // ---- core solve ----
+  function solve() {
+    var dKm, tSec, pKm;
+    if (target === 'pace') {
+      dKm = readDistKm(); tSec = readTimeSec();
+      pKm = (dKm > 0 && tSec > 0) ? tSec / dKm : NaN;
+      writePace(pKm);
+    } else if (target === 'time') {
+      dKm = readDistKm(); pKm = readPaceSecPerKm();
+      tSec = (dKm > 0 && pKm > 0) ? dKm * pKm : NaN;
+      writeTime(tSec);
+    } else {
+      tSec = readTimeSec(); pKm = readPaceSecPerKm();
+      dKm = (tSec > 0 && pKm > 0) ? tSec / pKm : NaN;
+      writeDist(dKm);
+    }
+
+    var ok = isFinite(dKm) && dKm > 0 && isFinite(tSec) && tSec > 0 && isFinite(pKm) && pKm > 0;
+    var resBig = $('resBig'), resUnit = $('resUnit'), resLab = $('resLab'),
+        resSub = $('resSub'), speedWrap = $('speedWrap'), speedVal = $('speedVal');
+
+    if (target === 'pace') {
+      resLab.textContent = 'Your pace';
+      resBig.textContent = ok ? paceStr(pKm, paceUnit) : '—';
+      resUnit.textContent = '/' + (paceUnit === 'mi' ? 'mi' : 'km');
+    } else if (target === 'time') {
+      resLab.textContent = 'Your finish time';
+      resBig.textContent = ok ? hms(tSec) : '—';
+      resUnit.textContent = '';
+    } else {
+      resLab.textContent = 'Your distance';
+      resBig.textContent = ok ? trimNum(distUnit === 'mi' ? dKm / KM_PER_MI : dKm, 2) : '—';
+      resUnit.textContent = distUnit === 'mi' ? 'mi' : 'km';
+    }
+
+    if (ok) {
+      var kmh = dKm / (tSec / 3600), mph = kmh / KM_PER_MI;
+      speedVal.textContent = trimNum(kmh, 2) + ' km/h · ' + trimNum(mph, 2) + ' mph';
+      speedWrap.style.display = '';
+      resSub.textContent = 'Pace ' + paceStr(pKm, 'km') + '/km · ' + paceStr(pKm, 'mi') + '/mi';
+      lastValid = { dKm: dKm, tSec: tSec, pKm: pKm };
+    } else {
+      speedWrap.style.display = 'none';
+      resSub.textContent = target === 'pace' ? 'Enter distance and time.'
+        : target === 'time' ? 'Enter distance and pace.' : 'Enter time and pace.';
+      lastValid = null;
+    }
+
+    // mobile bar
+    var mBig = $('mBig'), mUnit = $('mUnit'), mSpeed = $('mSpeed');
+    if (mBig) {
+      mBig.textContent = resBig.textContent; mUnit.textContent = resUnit.textContent;
+      mSpeed.textContent = ok ? trimNum(dKm / (tSec / 3600), 1) + ' km/h' : '';
+    }
+
+    // advanced outputs
+    if (advanced) {
+      if (ok) {
+        renderSplits(dKm, tSec, pKm);
+        renderFinish(pKm, dKm);
+        $('splitWrap').style.display = '';
+        $('finishWrap').style.display = '';
+      } else {
+        $('splitWrap').style.display = 'none';
+        $('finishWrap').style.display = 'none';
+      }
+    }
+  }
+
+  // ---- target UI (which field is the read-only result) ----
+  function applyTarget() {
+    [['pace', paceFld, [pmIn, psIn]], ['time', timeFld, [hIn, mIn, sIn]], ['distance', distFld, [distIn]]]
+      .forEach(function (g) {
+        var isOut = g[0] === target;
+        g[1].classList.toggle('isout', isOut);
+        g[2].forEach(function (inp) { if (inp) inp.readOnly = isOut; });
+      });
+    distChips.style.display = target === 'distance' ? 'none' : '';
+  }
+
+  // ---- wiring ----
+  function seg(id, attr, fn) {
+    var box = $(id); if (!box) return;
+    box.addEventListener('click', function (e) {
+      var b = e.target.closest('button'); if (!b) return;
+      [].forEach.call(box.querySelectorAll('button'), function (x) { x.classList.remove('on'); });
+      b.classList.add('on'); fn(b.getAttribute(attr));
+    });
+  }
+
+  seg('targetSeg', 'data-t', function (v) { target = v; applyTarget(); solve(); });
+  seg('distUnitSeg', 'data-du', function (v) {
+    if (v === distUnit) return;
+    // preserve physical distance + pace; one unit system drives dist, pace and splits
+    var km = readDistKm(), sk = readPaceSecPerKm();
+    distUnit = v; paceUnit = v; splitUnit = v;
+    setUnitLabels();
+    if (isFinite(km) && km > 0 && target !== 'distance') writeDist(km);
+    if (isFinite(sk) && sk > 0 && target !== 'pace') writePace(sk);
+    clearChips(); solve();
+  });
+  seg('stratSeg', 'data-st', function (v) {
+    strategy = v;
+    $('deltaFld').style.display = v === 'even' ? 'none' : '';
+    solve();
+  });
+
+  function setUnitLabels() {
+    [].forEach.call(document.querySelectorAll('[data-du]'), function (el) {
+      if (el.tagName !== 'BUTTON') el.textContent = distUnit === 'mi' ? 'mi' : 'km';
+    });
+    [].forEach.call(document.querySelectorAll('[data-pu-suf]'), function (el) {
+      el.textContent = '/' + (paceUnit === 'mi' ? 'mi' : 'km');
+    });
+  }
+
+  function clearChips() {
+    [].forEach.call(distChips.querySelectorAll('button'), function (b) { b.classList.remove('on'); });
+  }
+  distChips.addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    clearChips(); b.classList.add('on');
+    var km = PRESET[b.getAttribute('data-p')];
+    distIn.value = trimNum(distUnit === 'mi' ? km / KM_PER_MI : km, 3);
+    solve();
+  });
+
+  // live inputs
+  [distIn, hIn, mIn, sIn, pmIn, psIn, deltaIn].forEach(function (inp) {
+    if (!inp) return;
+    inp.addEventListener('input', function () {
+      if (inp === distIn) clearChips();
+      solve();
+    });
+  });
+
+  // advanced toggle
+  var advBtn = $('advBtn');
+  advBtn.addEventListener('click', function () {
+    advanced = !advanced;
+    advBtn.classList.toggle('open', advanced);
+    $('advBtnLab').textContent = advanced ? 'Go simple' : 'Go advanced';
+    $('advIn').style.display = advanced ? '' : 'none';
+    if (!advanced) { $('splitWrap').style.display = 'none'; $('finishWrap').style.display = 'none'; }
+    solve();
+    if (advanced) { var sw = $('splitWrap'); if (sw && sw.scrollIntoView) sw.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+  });
+
+  setUnitLabels();
+  applyTarget();
+  solve();
+};

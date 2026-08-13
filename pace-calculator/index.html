@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pace Calculator — Running Pace, Time &amp; Distance (with Splits)</title>
+<link rel="canonical" href="https://calcthis.co/pace-calculator/">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<meta name="theme-color" content="#B5761F">
+<meta name="description" content="Free running pace calculator. Enter any two of pace, time and distance and get the third instantly — plus speed in km/h and mph, per-km or per-mile splits, and equivalent 5K, 10K, half and marathon finish times. km or miles.">
+<meta property="og:title" content="Pace Calculator — Running Pace, Time & Distance">
+<meta property="og:description" content="Enter any two of pace, time and distance and get the third instantly — with speed, per-km/mile splits and equivalent race finish times. km or miles.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://calcthis.co/pace-calculator/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Pace Calculator",
+      "url": "https://calcthis.co/pace-calculator/",
+      "description": "Free running pace calculator. Enter any two of pace, time and distance and get the third instantly, plus speed in km/h and mph, per-kilometre or per-mile splits with even, negative or positive pacing, and equivalent finish times for the mile, 5K, 10K, half marathon and marathon. Works in kilometres or miles.",
+      "applicationCategory": "HealthApplication",
+      "operatingSystem": "Any (web browser)",
+      "browserRequirements": "Requires JavaScript",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "featureList": [
+        "Solve pace, time or distance from the other two",
+        "Instant speed in km/h and mph",
+        "Distance presets for 5K, 10K, half and marathon",
+        "Pace in min/km and min/mile",
+        "Per-kilometre or per-mile split table",
+        "Even, negative or positive split pacing",
+        "Equivalent finish times for standard race distances",
+        "Kilometres or miles"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How do I calculate running pace?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Pace is your time divided by your distance. Run 10 km in 50 minutes and your pace is 50 ÷ 10 = 5 minutes per kilometre. The calculator above does this instantly — enter any two of pace, time and distance and it works out the third, and shows your speed in km/h and mph at the same time." }
+        },
+        {
+          "@type": "Question",
+          "name": "What is a good running pace?",
+          "acceptedAnswer": { "@type": "Answer", "text": "It depends on the runner and the distance. Many recreational runners cover a 5K around 6 to 7 minutes per kilometre (about 10 to 11 minutes per mile), while a sub-25-minute 5K is roughly 5 minutes per kilometre. Use the calculator to see the pace behind any goal time, then check the equivalent finish times it predicts for other distances." }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I convert pace to speed?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Speed in km/h is 60 divided by your pace in minutes per kilometre — a 5:00/km pace is 12 km/h. For miles, 60 divided by your minutes-per-mile pace gives mph. The calculator shows both km/h and mph automatically whenever your pace is known." }
+        },
+        {
+          "@type": "Question",
+          "name": "What are negative splits?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Negative splits mean running the second half of a race faster than the first — a common strategy for a strong finish. Switch on the advanced view, choose Negative, and set how many seconds per kilometre to spread across the run; the split table shows each split slowing at the start and speeding up to the finish while keeping your overall time the same." }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I use pace to predict a race time?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Enter a distance and your target time (or pace) and open the advanced view. The equivalent finish times table applies that same pace to the mile, 5K, 10K, half marathon and marathon, so you can see what your current effort translates to at other distances." }
+        }
+      ]
+    }
+  ]
+}
+</script>
+<link rel="stylesheet" href="/assets/style.css?v=10">
+</head>
+<body class="p-pace">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <a href="/">Home</a>
+      <a href="/board-foot-calculator/">Board Foot Calculator</a>
+      <a href="/gravel-calculator/">Gravel Calculator</a>
+      <a href="/sand-calculator/">Sand Calculator</a>
+      <a href="/topsoil-calculator/">Topsoil Calculator</a>
+      <a href="/mulch-calculator/">Mulch Calculator</a>
+      <a href="/concrete-calculator/">Concrete Calculator</a>
+      <a href="/flooring-calculator/">Flooring Calculator</a>
+      <a href="/tile-calculator/">Tile Calculator</a>
+      <span class="navsep" aria-hidden="true"></span>
+      <a href="/pace-calculator/" class="current">Pace Calculator</a>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">Running math, done instantly</div>
+    <h1>Pace Calculator</h1>
+    <p>Enter any two of <strong>pace</strong>, <strong>time</strong> and <strong>distance</strong> and get the third the moment you type — with your speed in km/h and mph. Need splits and race predictions? Tap <em>Go advanced</em>.</p>
+  </section>
+
+  <div class="grid">
+
+    <!-- INPUT -->
+    <div class="card">
+      <div class="card-pad">
+        <div class="row-top">
+          <h2>Your run</h2>
+          <div class="seg" id="distUnitSeg">
+            <button class="on" data-du="km">km</button>
+            <button data-du="mi">mi</button>
+          </div>
+        </div>
+
+        <label class="fld">
+          <span class="lab">I want to calculate</span>
+          <div class="modeseg" id="targetSeg" style="grid-template-columns:1fr 1fr 1fr">
+            <button class="on" data-t="pace">Pace</button>
+            <button data-t="time">Time</button>
+            <button data-t="distance">Distance</button>
+          </div>
+        </label>
+
+        <!-- distance -->
+        <div class="fld" id="distFld">
+          <span class="lab">Distance <span class="unit" data-du>km</span></span>
+          <div class="inp"><input id="distVal" type="number" inputmode="decimal" placeholder="0" step="0.01"><span class="suf" data-du>km</span></div>
+          <div class="chips" id="distChips">
+            <button type="button" data-p="5k">5K</button>
+            <button type="button" data-p="10k">10K</button>
+            <button type="button" data-p="half">Half</button>
+            <button type="button" data-p="marathon">Marathon</button>
+          </div>
+        </div>
+
+        <!-- time -->
+        <div class="fld" id="timeFld">
+          <span class="lab">Time</span>
+          <div class="three">
+            <div class="tcol"><div class="inp"><input id="h" type="number" inputmode="numeric" placeholder="0" min="0"></div><div class="csub">Hours</div></div>
+            <div class="tsep">:</div>
+            <div class="tcol"><div class="inp"><input id="m" type="number" inputmode="numeric" placeholder="0" min="0"></div><div class="csub">Minutes</div></div>
+            <div class="tsep">:</div>
+            <div class="tcol"><div class="inp"><input id="s" type="number" inputmode="numeric" placeholder="0" min="0"></div><div class="csub">Seconds</div></div>
+          </div>
+        </div>
+
+        <!-- pace -->
+        <div class="fld" id="paceFld">
+          <span class="lab">Pace <span class="unit" data-du>km</span></span>
+          <div class="two-c">
+            <div class="tcol"><div class="inp"><input id="pMin" type="number" inputmode="numeric" placeholder="0" min="0"></div><div class="csub">Minutes</div></div>
+            <div class="tsep">:</div>
+            <div class="tcol"><div class="inp"><input id="pSec" type="number" inputmode="numeric" placeholder="0" min="0"></div><div class="csub">Seconds</div></div>
+          </div>
+        </div>
+
+        <!-- ADVANCED inputs -->
+        <div id="advIn" style="display:none">
+          <div class="proj-sep"></div>
+          <label class="fld">
+            <span class="lab">Pacing strategy</span>
+            <div class="modeseg" id="stratSeg" style="grid-template-columns:1fr 1fr 1fr">
+              <button class="on" data-st="even">Even</button>
+              <button data-st="neg">Negative</button>
+              <button data-st="pos">Positive</button>
+            </div>
+          </label>
+          <label class="fld" id="deltaFld" style="display:none;margin-bottom:0">
+            <span class="lab">Spread first → last split <span class="unit">seconds per split</span></span>
+            <div class="inp"><input id="splitDelta" type="number" inputmode="numeric" placeholder="e.g. 10" min="0" step="1"><span class="suf">sec</span></div>
+          </label>
+        </div>
+
+        <div class="add-wrap">
+          <div class="add-row split" style="justify-content:flex-end">
+            <button class="advbtn" id="advBtn" type="button">
+              <span id="advBtnLab">Go advanced</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div class="card">
+      <div class="card-pad">
+        <div class="res-lab" id="resLab">Your pace</div>
+        <div class="res-big"><span id="resBig">—</span> <span class="res-unit" id="resUnit">/km</span></div>
+        <div class="res-sub" id="resSub">Enter distance and time.</div>
+        <div class="res-cost hide" id="speedWrap" style="display:none"><span class="k">Speed</span><span class="v" id="speedVal"></span></div>
+        <div class="res-tip">Tip: switch <em>I want to calculate</em> to solve for whichever value you're missing.</div>
+
+        <!-- advanced: equivalent finish times -->
+        <div id="finishWrap" style="display:none">
+          <div class="proj-sep"></div>
+          <div class="tally-head"><h3>Equivalent finish times</h3></div>
+          <table class="dtable" id="finishTable"></table>
+        </div>
+      </div>
+    </div>
+
+    <!-- advanced: split table (full width) -->
+    <div class="card splitcard" id="splitWrap" style="display:none">
+      <div class="card-pad">
+        <div class="tally-head"><h3>Split times</h3><span class="unit" id="splitMeta"></span></div>
+        <div class="stable-wrap"><table class="stable" id="splitTable"></table></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- mobile sticky bar -->
+  <div class="mbar" id="mbar">
+    <span class="mbar-lab" id="mLab">Result</span>
+    <div class="mbar-vals">
+      <span class="mbar-seg"><b id="mBig">—</b> <span id="mUnit">/km</span></span>
+      <span class="mbar-cost" id="mSpeedWrap"><span class="mbar-eq">·</span> <b id="mSpeed"></b></span>
+    </div>
+  </div>
+
+  <!-- CONTENT / SEO -->
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to calculate running pace</h2>
+        <p>Pace ties together three numbers: the <strong>distance</strong> you run, the <strong>time</strong> it takes, and your <strong>pace</strong> — the minutes and seconds you spend on each kilometre or mile. Know any two and the third is fixed.</p>
+        <div class="formula">
+          Pace = Time ÷ Distance
+          <small>TIME = PACE × DISTANCE · DISTANCE = TIME ÷ PACE</small>
+        </div>
+        <p>Run 10&nbsp;km in 50&nbsp;minutes and your pace is 50&nbsp;÷&nbsp;10&nbsp;=&nbsp;<strong>5:00 per km</strong>. Flip it around — hold 5:00/km for a marathon and you'll finish in about 3&nbsp;h&nbsp;30&nbsp;m. The calculator above solves in whichever direction you need and shows your speed in km/h and mph as you go.</p>
+
+        <h2>Pace, speed and splits</h2>
+        <p>Pace and speed are two views of the same thing: 5:00&nbsp;per&nbsp;km is exactly 12&nbsp;km/h. Runners usually think in pace, cyclists and treadmills in speed, so the tool shows both. Open <strong>Go advanced</strong> for a full <strong>split table</strong> — the time you'd pass each kilometre or mile marker — and switch it to <strong>negative</strong> or <strong>positive</strong> splits to plan a fast finish or a hard start.</p>
+
+        <h2>Worked example</h2>
+        <p>Goal: a sub-2-hour half marathon (21.1&nbsp;km).</p>
+        <p style="color:var(--ink);font-weight:500">2:00:00 ÷ 21.1 = <strong>5:41 per km</strong> (about 9:09 per mile, 10.5&nbsp;km/h). The equivalent-times table shows that same effort is roughly a 28:26 10K and a 58:36 10-miler.</p>
+      </div>
+
+      <div>
+        <h2>Common race distances</h2>
+        <p>Tap a preset to load the exact distance, then enter a target time to see the pace behind it.</p>
+        <table class="dtable">
+          <thead><tr><th>Race</th><th>Distance</th></tr></thead>
+          <tbody>
+            <tr><td>Mile</td><td>1.609 km</td></tr>
+            <tr><td>5K</td><td>5.0 km</td></tr>
+            <tr><td>10K</td><td>10.0 km</td></tr>
+            <tr><td>Half marathon</td><td>21.10 km</td></tr>
+            <tr><td>Marathon</td><td>42.20 km</td></tr>
+          </tbody>
+        </table>
+
+        <h2>Even vs negative splits</h2>
+        <ul>
+          <li><strong>Even</strong> — the same pace throughout; the simplest race plan and easy to hold.</li>
+          <li><strong>Negative</strong> — start a little slower and speed up; often the strongest way to race a long distance.</li>
+          <li><strong>Positive</strong> — start faster and ease off; useful for downhill-start courses or hard efforts.</li>
+        </ul>
+        <p>In the advanced view, pick a strategy and set how many seconds to spread from the first split to the last — your overall time stays the same, only the distribution changes.</p>
+
+        <h2>Kilometres or miles</h2>
+        <p>Switch distance and pace units independently. Enter a distance in miles while reading pace in min/km if that's how your watch is set — the maths stays exact either way.</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>How do I calculate running pace?</summary><p>Pace is your time divided by your distance. Run 10&nbsp;km in 50&nbsp;minutes and your pace is 50&nbsp;÷&nbsp;10&nbsp;=&nbsp;<strong>5:00 per km</strong>. Enter any two of pace, time and distance above and the calculator works out the third instantly, plus your speed in km/h and mph.</p></details>
+    <details class="faq"><summary>What is a good running pace?</summary><p>It varies by runner and distance. Many recreational runners cover a 5K around 6–7&nbsp;min/km (about 10–11&nbsp;min/mile); a sub-25-minute 5K is roughly 5:00/km. Enter a goal time to see the pace it needs, then check the equivalent finish times for other distances.</p></details>
+    <details class="faq"><summary>How do I convert pace to speed?</summary><p>Speed in km/h is 60 divided by your pace in min/km — so 5:00/km is 12&nbsp;km/h. For miles, 60 divided by your min/mile pace gives mph. The calculator shows both automatically whenever pace is known.</p></details>
+    <details class="faq"><summary>What are negative splits?</summary><p>Running the second half faster than the first. In the advanced view choose <strong>Negative</strong> and set the seconds to spread; the split table starts slower and finishes faster while keeping your overall time the same.</p></details>
+    <details class="faq"><summary>How do I predict a race time from my pace?</summary><p>Enter a distance and your target time or pace, then open the advanced view. The <strong>equivalent finish times</strong> table applies that pace to the mile, 5K, 10K, half and marathon so you can see what it means at other distances.</p></details>
+  </section>
+
+  <footer>
+    <span>Estimates only — real race times vary with terrain, weather and fatigue. Free, no sign-up.</span>
+    <span><a href="#">How it works</a></span>
+  </footer>
+
+</div>
+
+<script src="/assets/app.js?v=10"></script>
+<script>
+CalcThis.initPaceCalc({});
+</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>
