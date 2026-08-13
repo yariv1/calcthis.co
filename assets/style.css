@@ -308,4 +308,4 @@
   .dtable tr.cur td{color:var(--ink);font-weight:700;background:#FCF7EE}
   .splitcard{grid-column:1/-1}
   /* nav pillar divider */
-  .menu .navsep{height:1px;background:var(--line);margin:7px 6px}
+  .menu .navsep{display:block;height:1px;background:var(--line);margin:7px 6px}
