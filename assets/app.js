@@ -1202,3 +1202,93 @@ CalcThis.initPaceCalc = function (cfg) {
   applyTarget();
   solve();
 };
+
+/* ===== CalcThis Heart-Rate Zone engine (Pillar 2 · Fitness) =====
+   CalcThis.initHRZoneCalc(cfg) — 5-zone training-HR calculator.
+   Independent of the area/volume/pace engines. Simple mode: age only,
+   %-of-max HR (Tanaka 208-0.7*age). Advanced mode reveals resting HR
+   (adds a Karvonen / heart-rate-reserve column) and an optional max-HR
+   override. Zone 2 (fat-burn / aerobic base) is highlighted. Live. */
+CalcThis.initHRZoneCalc = function (cfg) {
+  cfg = cfg || {};
+  var $ = function (id) { return document.getElementById(id); };
+  var advanced = false;
+
+  var ZONES = [
+    { n:1, name:'Recovery',    sub:'very light',      lo:0.50, hi:0.60 },
+    { n:2, name:'Endurance',   sub:'fat burn \u00b7 base', lo:0.60, hi:0.70 },
+    { n:3, name:'Tempo',       sub:'aerobic power',   lo:0.70, hi:0.80 },
+    { n:4, name:'Threshold',   sub:'lactate',         lo:0.80, hi:0.90 },
+    { n:5, name:'VO\u2082 max', sub:'maximum effort', lo:0.90, hi:1.00 }
+  ];
+
+  var ageIn = $('age'), rhrIn = $('rhr'), maxIn = $('maxhr');
+  if (!ageIn) return;
+
+  function num(v) { v = parseFloat(('' + v).trim()); return isNaN(v) ? NaN : v; }
+  function bpm(x) { return Math.round(x); }
+
+  function solve() {
+    var age = num(ageIn.value);
+    var ageOK = isFinite(age) && age >= 5 && age <= 120;
+
+    var ov = maxIn ? num(maxIn.value) : NaN;
+    var hasOverride = isFinite(ov) && ov > 0;
+    var maxHR = hasOverride ? Math.round(ov) : (ageOK ? Math.round(208 - 0.7 * age) : NaN);
+
+    var resting = rhrIn ? num(rhrIn.value) : NaN;
+    var karv = advanced && isFinite(resting) && resting > 0 && isFinite(maxHR) && resting < maxHR;
+
+    var resBig = $('resBig'), resUnit = $('resUnit'), resLab = $('resLab'), resSub = $('resSub');
+    resLab.textContent = hasOverride ? 'Your max heart rate' : 'Your estimated max heart rate';
+
+    if (!(isFinite(maxHR) && maxHR > 0)) {
+      resBig.textContent = '\u2014'; resUnit.textContent = '';
+      resSub.textContent = 'Enter your age to see your zones.';
+      $('zoneTable').innerHTML = '';
+      if ($('kvNote')) $('kvNote').style.display = 'none';
+      return;
+    }
+
+    resBig.textContent = maxHR; resUnit.textContent = 'bpm';
+
+    function lo(z) { return karv ? bpm(resting + (maxHR - resting) * z.lo) : bpm(maxHR * z.lo); }
+    function hi(z) { return karv ? bpm(resting + (maxHR - resting) * z.hi) : bpm(maxHR * z.hi); }
+
+    var z2 = ZONES[1];
+    resSub.textContent = 'Zone 2 \u00b7 ' + z2.sub + ': ' + lo(z2) + '\u2013' + hi(z2) + ' bpm';
+
+    var head = '<thead><tr><th>Zone</th><th>% of max</th><th>' +
+      (karv ? 'Heart rate \u00b7 Karvonen' : 'Heart rate') + '</th></tr></thead>';
+    var rows = '';
+    ZONES.forEach(function (z) {
+      var cur = z.n === 2 ? ' class="cur"' : '';
+      rows += '<tr' + cur + '><td>Zone ' + z.n +
+        ' <span class="zsub">' + z.name + ' \u00b7 ' + z.sub + '</span></td>' +
+        '<td>' + Math.round(z.lo * 100) + '\u2013' + Math.round(z.hi * 100) + '%</td>' +
+        '<td>' + lo(z) + '\u2013' + hi(z) + ' bpm</td></tr>';
+    });
+    $('zoneTable').innerHTML = head + '<tbody>' + rows + '</tbody>';
+
+    if ($('kvNote')) $('kvNote').style.display = karv ? '' : 'none';
+  }
+
+  var advBtn = $('advBtn');
+  if (advBtn) {
+    advBtn.addEventListener('click', function () {
+      advanced = !advanced;
+      advBtn.classList.toggle('open', advanced);
+      $('advBtnLab').textContent = advanced ? 'Go simple' : 'Go advanced';
+      $('advIn').style.display = advanced ? '' : 'none';
+      solve();
+      if (advanced) { var a = $('advIn'); if (a && a.scrollIntoView) a.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+    });
+  }
+
+  [ageIn, rhrIn, maxIn].forEach(function (inp) {
+    if (!inp) return;
+    inp.addEventListener('input', solve);
+  });
+
+  solve();
+};

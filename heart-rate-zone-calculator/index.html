@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Heart Rate Zone Calculator — Zone 2, Karvonen &amp; Max HR | CalcThis</title>
+<meta name="description" content="Free heart rate zone calculator. Get your 5 training zones and Zone 2 fat-burn range from your age, plus personalised Karvonen zones from your resting heart rate. Instant, no sign-up.">
+<link rel="canonical" href="https://calcthis.co/heart-rate-zone-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Heart Rate Zone Calculator — Zone 2, Karvonen &amp; Max HR">
+<meta property="og:description" content="Your 5 training zones and Zone 2 fat-burn range from your age, plus Karvonen zones from resting heart rate. Instant, no sign-up.">
+<meta property="og:url" content="https://calcthis.co/heart-rate-zone-calculator/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css?v=13">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Heart Rate Zone Calculator",
+  "url": "https://calcthis.co/heart-rate-zone-calculator/",
+  "applicationCategory": "HealthApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Calculate your five heart rate training zones from your age, including your Zone 2 fat-burn range, plus personalised Karvonen zones from your resting heart rate."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "How is my maximum heart rate calculated?", "acceptedAnswer": { "@type": "Answer", "text": "By default we use the Tanaka formula, 208 minus 0.7 times your age, which fits most adults better than 220 minus age. If you know your true max from a test, you can enter it in advanced mode to override the estimate." } },
+    { "@type": "Question", "name": "What is Zone 2 heart rate?", "acceptedAnswer": { "@type": "Answer", "text": "Zone 2 sits at roughly 60 to 70 percent of your maximum heart rate, or of your heart-rate reserve with the Karvonen method. It is the aerobic, fat-burning zone: an easy, conversational effort you can hold for a long time." } },
+    { "@type": "Question", "name": "Which is more accurate, percentage of max or Karvonen?", "acceptedAnswer": { "@type": "Answer", "text": "Karvonen is usually more personalised because it factors in your resting heart rate. Both are estimates; only a lab or field test gives your true numbers." } },
+    { "@type": "Question", "name": "What is a good resting heart rate to enter?", "acceptedAnswer": { "@type": "Answer", "text": "Measure your pulse first thing in the morning before getting up. Most adults fall between 55 and 75 bpm; well-trained endurance athletes can be lower." } }
+  ]
+}
+</script>
+</head>
+<body class="p-hrzone">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <a href="/">Home</a>
+      <a href="/board-foot-calculator/">Board Foot Calculator</a>
+      <a href="/gravel-calculator/">Gravel Calculator</a>
+      <a href="/sand-calculator/">Sand Calculator</a>
+      <a href="/topsoil-calculator/">Topsoil Calculator</a>
+      <a href="/mulch-calculator/">Mulch Calculator</a>
+      <a href="/concrete-calculator/">Concrete Calculator</a>
+      <a href="/flooring-calculator/">Flooring Calculator</a>
+      <a href="/tile-calculator/">Tile Calculator</a>
+      <span class="navsep" aria-hidden="true"></span>
+      <a href="/pace-calculator/">Pace Calculator</a>
+      <a href="/heart-rate-zone-calculator/" class="current">Heart Rate Zone</a>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">Heart-rate training, done instantly</div>
+    <h1>Heart Rate Zone Calculator</h1>
+    <p>Find your five training zones from your age — including your fat-burning <strong>Zone 2</strong>. Tap <em>Go advanced</em> for personalised <strong>Karvonen</strong> zones based on your resting heart rate.</p>
+  </section>
+
+  <div class="grid" style="grid-template-columns:1fr">
+    <div class="card">
+      <div class="card-pad">
+        <div class="row-top"><h2>Your heart rate zones</h2></div>
+
+        <label class="fld" for="age">
+          <span class="lab">Age <span class="unit">years</span></span>
+          <div class="inp"><input id="age" type="number" inputmode="numeric" min="5" max="120" placeholder="30"></div>
+        </label>
+
+        <div class="fld" id="advIn" style="display:none">
+          <label class="fld" for="rhr">
+            <span class="lab">Resting heart rate <span class="unit">bpm · optional</span></span>
+            <div class="inp"><input id="rhr" type="number" inputmode="numeric" min="30" max="120" placeholder="60"></div>
+          </label>
+          <label class="fld" for="maxhr" style="margin-bottom:0">
+            <span class="lab">Max heart rate <span class="unit">bpm · override</span></span>
+            <div class="inp"><input id="maxhr" type="number" inputmode="numeric" min="100" max="230" placeholder="auto"></div>
+          </label>
+        </div>
+
+        <div class="hr-res">
+          <div class="res-lab" id="resLab">Your estimated max heart rate</div>
+          <div class="res-big"><span id="resBig">—</span> <span class="res-unit" id="resUnit"></span></div>
+          <div class="res-sub" id="resSub">Enter your age to see your zones.</div>
+        </div>
+
+        <div class="stable-wrap">
+          <table class="dtable" id="zoneTable"></table>
+        </div>
+
+        <p class="res-tip" id="kvNote" style="display:none">
+          <strong>Karvonen</strong> also uses your resting heart rate, so these zones are personalised to your fitness — usually more accurate than the plain %-of-max method.
+        </p>
+
+        <div class="add-row split">
+          <span></span>
+          <button class="advbtn" id="advBtn" type="button">
+            <span id="advBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use it</h2>
+        <p>Enter your <strong>age</strong> and the calculator instantly estimates your maximum heart rate and splits it into five training zones. Your max heart rate uses the Tanaka formula, <strong>208 − 0.7 × age</strong>, which fits most adults better than the older “220 − age” rule.</p>
+        <p>For sharper numbers, tap <strong>Go advanced</strong> and add your <strong>resting heart rate</strong>. That switches the zones to the <strong>Karvonen (heart-rate-reserve)</strong> method, which personalises each zone to your own fitness. You can also override the estimated max if you know yours from a lab or field test.</p>
+
+        <h2>Why Zone 2 gets all the attention</h2>
+        <p>Zone 2 is where most endurance training happens. It’s easy enough to sustain, trains your body to burn fat efficiently, and builds the aerobic base everything else is built on. If you only remember one number, remember your Zone 2 range.</p>
+
+        <h2>%-of-max vs Karvonen</h2>
+        <p>The simple method takes a straight percentage of your maximum heart rate. The <strong>Karvonen</strong> method uses your <strong>heart-rate reserve</strong> — the gap between max and resting heart rate — so a fitter person with a low resting pulse gets zones tuned to them. Both are estimates; a lab test is the gold standard.</p>
+      </div>
+
+      <div>
+        <h2>What the five zones mean</h2>
+        <table class="dtable">
+          <thead><tr><th>Zone</th><th>% of max</th><th>Feels like</th></tr></thead>
+          <tbody>
+            <tr><td>Zone 1 · Recovery</td><td>50–60%</td><td>very easy</td></tr>
+            <tr><td>Zone 2 · Endurance</td><td>60–70%</td><td>fat burn · base</td></tr>
+            <tr><td>Zone 3 · Tempo</td><td>70–80%</td><td>moderately hard</td></tr>
+            <tr><td>Zone 4 · Threshold</td><td>80–90%</td><td>hard</td></tr>
+            <tr><td>Zone 5 · VO₂ max</td><td>90–100%</td><td>maximum</td></tr>
+          </tbody>
+        </table>
+
+        <h2>Training by pace instead?</h2>
+        <p>If you plan runs by pace rather than heart rate, our <a href="/pace-calculator/">Pace Calculator</a> solves pace, time or distance and predicts your finish times and splits.</p>
+
+        <h2>A good resting heart rate</h2>
+        <p>Measure your pulse first thing in the morning before getting up. Most adults sit between 55 and 75 bpm; well-trained endurance athletes are often lower.</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>How is my maximum heart rate calculated?</summary><p>By default we use the Tanaka formula, 208 − 0.7 × age. It fits most adults better than “220 − age.” If you know your true max from a test, enter it in advanced mode to override the estimate.</p></details>
+    <details class="faq"><summary>What is Zone 2 heart rate?</summary><p>Zone 2 sits at roughly 60–70% of your maximum heart rate (or heart-rate reserve with Karvonen). It’s the aerobic, fat-burning zone — an easy, conversational effort you can hold for a long time.</p></details>
+    <details class="faq"><summary>Which is more accurate, %-of-max or Karvonen?</summary><p>Karvonen is usually more personalised because it factors in your resting heart rate. Both are estimates; only a lab or field test gives your true numbers.</p></details>
+    <details class="faq"><summary>What’s a good resting heart rate to enter?</summary><p>Measure your pulse first thing in the morning before getting up. Most adults fall between 55 and 75 bpm; well-trained endurance athletes can be lower.</p></details>
+  </section>
+
+  <footer>
+    <span>Estimates only — heart-rate formulas are approximations; a lab or field test gives your true numbers. Free, no sign-up.</span>
+    <span><a href="/pace-calculator/">Pace Calculator</a></span>
+  </footer>
+
+</div>
+
+<script src="/assets/app.js?v=13"></script>
+<script>CalcThis.initHRZoneCalc({});</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>

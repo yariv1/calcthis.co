@@ -28,6 +28,7 @@ const PAGES = [
   { file: 'flooring-calculator/index.html',    slug: '/flooring-calculator/' },
   { file: 'tile-calculator/index.html',        slug: '/tile-calculator/' },
   { file: 'pace-calculator/index.html',        slug: '/pace-calculator/' },
+  { file: 'heart-rate-zone-calculator/index.html', slug: '/heart-rate-zone-calculator/' },
 ];
 
 // ---- bump shared asset version ----

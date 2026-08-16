@@ -309,3 +309,20 @@
   .splitcard{grid-column:1/-1}
   /* nav pillar divider */
   .menu .navsep{display:block;height:1px;background:var(--line);margin:7px 6px}
+
+  /* =========================================================
+     FITNESS · HEART-RATE ZONES  (body.p-hrzone)
+     ========================================================= */
+  .p-hrzone .fld{margin-bottom:18px}
+  .p-hrzone .inp{max-width:190px}
+  .p-hrzone .hr-res{margin:12px 0 18px}
+  .p-hrzone .zsub{color:var(--muted);font-weight:500;font-size:12.5px}
+  .p-hrzone .dtable td:first-child{color:var(--ink)}
+
+  /* homepage category tabs */
+  .cat-tabs{display:flex;gap:22px;margin:34px 0 16px;border-bottom:1px solid var(--line)}
+  .cat-tab{font-family:'Fraunces',serif;font-weight:600;font-size:15px;letter-spacing:.02em;text-transform:uppercase;color:var(--muted);background:none;border:0;padding:0 0 12px;margin:0;cursor:pointer;position:relative;transition:color .14s ease}
+  .cat-tab:hover{color:var(--ink-soft)}
+  .cat-tab.on{color:var(--ink)}
+  .cat-tab.on::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--amber)}
+  .cat-grp[hidden]{display:none}
