@@ -77,3 +77,31 @@ for (const p of PAGES) {
 }
 
 console.log('\nStamped ' + changed + ' page(s) at asset v=' + ver + (warned ? ('  [' + warned + ' warning(s)]') : ''));
+
+
+/* ===== INDEXNOW:START ===== auto-submit all sitemap URLs to IndexNow (Bing/Yandex) ===== */
+(function () {
+  try {
+    var fs = require('fs'), https = require('https');
+    var KEY = '80b8eca625ef5ad5e2c6eead557eb625';
+    var HOST = 'calcthis.co';
+    var sm = fs.readFileSync('sitemap.xml', 'utf8');
+    var urls = (sm.match(/<loc>([^<]+)<\/loc>/g) || []).map(function (m) {
+      return m.replace(/<\/?loc>/g, '').trim();
+    });
+    if (!urls.length) { console.log('IndexNow: no <loc> URLs in sitemap.xml - skipped.'); return; }
+    var payload = JSON.stringify({
+      host: HOST,
+      key: KEY,
+      keyLocation: 'https://' + HOST + '/' + KEY + '.txt',
+      urlList: urls
+    });
+    var req = https.request({
+      hostname: 'api.indexnow.org', path: '/indexnow', method: 'POST',
+      headers: { 'Content-Type': 'application/json; charset=utf-8', 'Content-Length': Buffer.byteLength(payload) }
+    }, function (res) { console.log('IndexNow: submitted ' + urls.length + ' URLs -> HTTP ' + res.statusCode); res.resume(); });
+    req.on('error', function (e) { console.log('IndexNow: skipped (network) - ' + e.message); });
+    req.write(payload); req.end();
+  } catch (e) { console.log('IndexNow: skipped - ' + e.message); }
+})();
+/* ===== INDEXNOW:END ===== */
