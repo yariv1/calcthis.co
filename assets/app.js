@@ -1478,19 +1478,19 @@ CalcThis.initBodyFatCalc = function (cfg) {
 
   // Default to inches for US users (imperial audience); metric elsewhere.
   function prefersImperial() {
+    // Location-based only (timezone). Do NOT use navigator.language —
+    // en-US UI is common outside the US and must not force imperial.
     try {
-      var langs = [];
-      if (typeof navigator !== 'undefined') {
-        if (navigator.language) langs.push(navigator.language);
-        if (navigator.languages && navigator.languages.length) langs = langs.concat(navigator.languages);
-      }
-      for (var i = 0; i < langs.length; i++) {
-        if (('' + langs[i]).toUpperCase().indexOf('-US') !== -1) return true;
-      }
       var tz = (Intl.DateTimeFormat().resolvedOptions().timeZone || '');
-      var us = ['America/New_York','America/Chicago','America/Denver','America/Los_Angeles',
-        'America/Phoenix','America/Anchorage','America/Detroit','America/Boise',
-        'America/Indiana/Indianapolis','America/Kentucky/Louisville','Pacific/Honolulu'];
+      var us = ['America/New_York','America/Detroit','America/Kentucky/Louisville',
+        'America/Kentucky/Monticello','America/Indiana/Indianapolis','America/Indiana/Vincennes',
+        'America/Indiana/Winamac','America/Indiana/Marengo','America/Indiana/Petersburg',
+        'America/Indiana/Vevay','America/Chicago','America/Indiana/Tell_City',
+        'America/Indiana/Knox','America/Menominee','America/North_Dakota/Center',
+        'America/North_Dakota/New_Salem','America/North_Dakota/Beulah','America/Denver',
+        'America/Boise','America/Phoenix','America/Los_Angeles','America/Anchorage',
+        'America/Juneau','America/Sitka','America/Metlakatla','America/Yakutat',
+        'America/Nome','America/Adak','Pacific/Honolulu'];
       return us.indexOf(tz) !== -1;
     } catch (e) { return false; }
   }
@@ -1652,19 +1652,19 @@ CalcThis.initTDEECalc = function (cfg) {
   if (actSel) actSel.addEventListener('change', solve);
 
   function prefersImperial() {
+    // Location-based only (timezone). Do NOT use navigator.language —
+    // en-US UI is common outside the US and must not force imperial.
     try {
-      var langs = [];
-      if (typeof navigator !== 'undefined') {
-        if (navigator.language) langs.push(navigator.language);
-        if (navigator.languages && navigator.languages.length) langs = langs.concat(navigator.languages);
-      }
-      for (var i = 0; i < langs.length; i++) {
-        if (('' + langs[i]).toUpperCase().indexOf('-US') !== -1) return true;
-      }
       var tz = (Intl.DateTimeFormat().resolvedOptions().timeZone || '');
-      var us = ['America/New_York','America/Chicago','America/Denver','America/Los_Angeles',
-        'America/Phoenix','America/Anchorage','America/Detroit','America/Boise',
-        'America/Indiana/Indianapolis','America/Kentucky/Louisville','Pacific/Honolulu'];
+      var us = ['America/New_York','America/Detroit','America/Kentucky/Louisville',
+        'America/Kentucky/Monticello','America/Indiana/Indianapolis','America/Indiana/Vincennes',
+        'America/Indiana/Winamac','America/Indiana/Marengo','America/Indiana/Petersburg',
+        'America/Indiana/Vevay','America/Chicago','America/Indiana/Tell_City',
+        'America/Indiana/Knox','America/Menominee','America/North_Dakota/Center',
+        'America/North_Dakota/New_Salem','America/North_Dakota/Beulah','America/Denver',
+        'America/Boise','America/Phoenix','America/Los_Angeles','America/Anchorage',
+        'America/Juneau','America/Sitka','America/Metlakatla','America/Yakutat',
+        'America/Nome','America/Adak','Pacific/Honolulu'];
       return us.indexOf(tz) !== -1;
     } catch (e) { return false; }
   }
@@ -1801,19 +1801,19 @@ CalcThis.init1RMCalc = function (cfg) {
   if (liftSel) liftSel.addEventListener('change', solve);
 
   function prefersImperial() {
+    // Location-based only (timezone). Do NOT use navigator.language —
+    // en-US UI is common outside the US and must not force imperial.
     try {
-      var langs = [];
-      if (typeof navigator !== 'undefined') {
-        if (navigator.language) langs.push(navigator.language);
-        if (navigator.languages && navigator.languages.length) langs = langs.concat(navigator.languages);
-      }
-      for (var i = 0; i < langs.length; i++) {
-        if (('' + langs[i]).toUpperCase().indexOf('-US') !== -1) return true;
-      }
       var tz = (Intl.DateTimeFormat().resolvedOptions().timeZone || '');
-      var us = ['America/New_York','America/Chicago','America/Denver','America/Los_Angeles',
-        'America/Phoenix','America/Anchorage','America/Detroit','America/Boise',
-        'America/Indiana/Indianapolis','America/Kentucky/Louisville','Pacific/Honolulu'];
+      var us = ['America/New_York','America/Detroit','America/Kentucky/Louisville',
+        'America/Kentucky/Monticello','America/Indiana/Indianapolis','America/Indiana/Vincennes',
+        'America/Indiana/Winamac','America/Indiana/Marengo','America/Indiana/Petersburg',
+        'America/Indiana/Vevay','America/Chicago','America/Indiana/Tell_City',
+        'America/Indiana/Knox','America/Menominee','America/North_Dakota/Center',
+        'America/North_Dakota/New_Salem','America/North_Dakota/Beulah','America/Denver',
+        'America/Boise','America/Phoenix','America/Los_Angeles','America/Anchorage',
+        'America/Juneau','America/Sitka','America/Metlakatla','America/Yakutat',
+        'America/Nome','America/Adak','Pacific/Honolulu'];
       return us.indexOf(tz) !== -1;
     } catch (e) { return false; }
   }
