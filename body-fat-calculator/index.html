@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Body Fat Calculator — US Navy Body Fat % for Men &amp; Women | CalcThis</title>
+<meta name="description" content="Free body fat percentage calculator using the US Navy tape method. Get your body fat % and category for men and women from a tape measure — no scale needed. Advanced mode adds a BMI cross-check plus fat and lean mass. Instant, no sign-up.">
+<link rel="canonical" href="https://calcthis.co/body-fat-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Body Fat Calculator — US Navy Body Fat % for Men &amp; Women">
+<meta property="og:description" content="Your body fat percentage and category from the US Navy tape method, for men and women. Advanced mode adds fat mass, lean mass and a BMI cross-check. Instant, no sign-up.">
+<meta property="og:url" content="https://calcthis.co/body-fat-calculator/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css?v=15">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Body Fat Calculator",
+  "url": "https://calcthis.co/body-fat-calculator/",
+  "applicationCategory": "HealthApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Estimate your body fat percentage for men and women using the US Navy tape method, with a body-fat category, plus a BMI-method cross-check and fat and lean mass in advanced mode."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "How does the US Navy body fat calculator work?", "acceptedAnswer": { "@type": "Answer", "text": "It estimates body fat from a few tape-measure circumferences instead of a scale. Men enter height, neck and waist; women add hip. The Navy formula turns those measurements into a body fat percentage. It is the same method used for the army and navy body composition standards." } },
+    { "@type": "Question", "name": "What is a healthy body fat percentage for men and women?", "acceptedAnswer": { "@type": "Answer", "text": "Women naturally carry more essential fat than men. Using common ACE ranges, men are typically 14 to 17 percent in the fitness range and 18 to 24 percent average, while women are 21 to 24 percent fitness and 25 to 31 percent average. Below those is athletic or essential fat; above is classed as obese." } },
+    { "@type": "Question", "name": "How do I measure my neck, waist and hip?", "acceptedAnswer": { "@type": "Answer", "text": "Use a flexible tape, relaxed and level, without pulling tight. Measure the neck just below the larynx, the waist at the navel for men and at the narrowest point for women, and the hip at the widest point. Take each measurement twice and average them." } },
+    { "@type": "Question", "name": "Is the Navy method or the BMI method more accurate?", "acceptedAnswer": { "@type": "Answer", "text": "The Navy tape method reads where you actually carry fat, so it usually beats the BMI method, which only uses height and weight and can mislabel muscular people. Neither matches a DEXA scan, but the Navy method is a solid, free estimate. Advanced mode shows both side by side." } },
+    { "@type": "Question", "name": "Does this work for the army or navy body fat standard?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. The army and navy tape test uses the same circumference method this calculator implements, so it is a good way to check where you stand before an official measurement. Official assessments round and follow their own procedure, so treat this as a close estimate." } }
+  ]
+}
+</script>
+</head>
+<body class="p-bodyfat">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <a href="/">Home</a>
+      <a href="/board-foot-calculator/">Board Foot Calculator</a>
+      <a href="/gravel-calculator/">Gravel Calculator</a>
+      <a href="/sand-calculator/">Sand Calculator</a>
+      <a href="/topsoil-calculator/">Topsoil Calculator</a>
+      <a href="/mulch-calculator/">Mulch Calculator</a>
+      <a href="/concrete-calculator/">Concrete Calculator</a>
+      <a href="/flooring-calculator/">Flooring Calculator</a>
+      <a href="/tile-calculator/">Tile Calculator</a>
+      <span class="navsep" aria-hidden="true"></span>
+      <a href="/pace-calculator/">Pace Calculator</a>
+      <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+      <a href="/body-fat-calculator/" class="current">Body Fat</a>
+      <a href="/tdee-calculator/">TDEE / Calories</a>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">Body composition, from a tape measure</div>
+    <h1>Body Fat Calculator</h1>
+    <p>Estimate your <strong>body fat percentage</strong> with the <strong>US Navy tape method</strong> — no scale, no calipers. Works for <strong>men and women</strong>. Tap <em>Go advanced</em> for a BMI cross-check plus your fat and lean mass.</p>
+  </section>
+
+  <div class="grid">
+    <div class="card">
+      <div class="card-pad">
+        <div class="row-top">
+          <h2>Your body fat</h2>
+          <div class="seg" id="sexSeg">
+            <button type="button" data-sex="male" class="on">Male</button>
+            <button type="button" data-sex="female">Female</button>
+          </div>
+        </div>
+
+        <div class="bf-units">
+          <span class="ul">Measurements in</span>
+          <div class="seg" id="unitSeg">
+            <button type="button" data-unit="cm" class="on">cm</button>
+            <button type="button" data-unit="in">inches</button>
+          </div>
+        </div>
+
+        <label class="fld" for="height">
+          <span class="lab">Height <span class="unit" id="uHeight">cm</span></span>
+          <div class="inp"><input id="height" type="number" inputmode="decimal" min="80" max="250" placeholder="178"></div>
+        </label>
+
+        <label class="fld" for="neck">
+          <span class="lab">Neck <span class="unit" id="uNeck">cm</span></span>
+          <div class="inp"><input id="neck" type="number" inputmode="decimal" min="20" max="80" placeholder="38"></div>
+        </label>
+
+        <label class="fld" for="waist">
+          <span class="lab">Waist <span class="unit" id="uWaist">cm</span></span>
+          <div class="inp"><input id="waist" type="number" inputmode="decimal" min="40" max="200" placeholder="92"></div>
+        </label>
+
+        <label class="fld" for="hip" id="hipFld" style="display:none">
+          <span class="lab">Hip <span class="unit" id="uHip">cm</span></span>
+          <div class="inp"><input id="hip" type="number" inputmode="decimal" min="50" max="200" placeholder="100"></div>
+        </label>
+
+        <div class="fld" id="advIn" style="display:none">
+          <label class="fld" for="age">
+            <span class="lab">Age <span class="unit">years</span></span>
+            <div class="inp"><input id="age" type="number" inputmode="numeric" min="15" max="100" placeholder="30"></div>
+          </label>
+          <label class="fld" for="weight" style="margin-bottom:0">
+            <span class="lab">Weight <span class="unit" id="uWeight">kg</span></span>
+            <div class="inp"><input id="weight" type="number" inputmode="decimal" min="30" max="400" placeholder="80"></div>
+          </label>
+        </div>
+
+        <div class="add-row split">
+          <span></span>
+          <button class="advbtn" id="advBtn" type="button">
+            <span id="advBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-pad">
+        <div class="bf-res">
+          <div class="res-lab">Your estimated body fat</div>
+          <div class="res-big"><span id="resBig">—</span> <span class="res-unit" id="resUnit"></span></div>
+          <div class="res-sub" id="resSub">Enter height, neck and waist to see your body fat.</div>
+        </div>
+
+        <div class="stable-wrap">
+          <table class="dtable" id="catTable"></table>
+        </div>
+
+        <div id="advOut" style="display:none"></div>
+      </div>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use it</h2>
+        <p>Pick <strong>Male</strong> or <strong>Female</strong>, choose <strong>cm</strong> or <strong>inches</strong>, then take three quick tape measurements: <strong>height</strong>, <strong>neck</strong> and <strong>waist</strong>. Women also add <strong>hip</strong>. The calculator returns your <strong>body fat percentage</strong> and category the moment the numbers make sense — no scale, no calipers, no calculate button.</p>
+        <p>Tap <strong>Go advanced</strong> to add your <strong>age</strong> and <strong>weight</strong>. That unlocks a <strong>BMI-method</strong> estimate next to the Navy figure, plus your <strong>fat mass</strong> and <strong>lean mass</strong> in kg or lb.</p>
+
+        <h2>The US Navy tape method</h2>
+        <p>The Navy method estimates body fat from body circumferences rather than a scale reading. Because it looks at <em>where</em> you carry fat — the waist for men, waist and hips for women — it tends to track real body composition better than height-and-weight rules alone.</p>
+        <p>Measure with a flexible tape, relaxed and level, without pulling it tight. Neck just below the larynx; waist at the navel for men and at the narrowest point for women; hip at the widest point. Measure twice and average.</p>
+
+        <h2>Army &amp; navy body fat standard</h2>
+        <p>The <strong>army</strong> and <strong>navy</strong> body-composition test uses the same tape-measure circumference method built into this calculator. If you need to check yourself against a service standard, this is a fast, private way to see roughly where you land before an official measurement — just remember the services round and follow their own procedure.</p>
+
+        <h2>Prefer to train by numbers?</h2>
+        <p>Pair this with our <a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a> to set your fat-burning Zone 2, or plan runs with the <a href="/pace-calculator/">Pace Calculator</a>.</p>
+      </div>
+
+      <div>
+        <h2>Body fat categories — men</h2>
+        <table class="dtable">
+          <thead><tr><th>Category</th><th>Men · body fat</th></tr></thead>
+          <tbody>
+            <tr><td>Essential fat</td><td>2–5%</td></tr>
+            <tr><td>Athletes</td><td>6–13%</td></tr>
+            <tr><td>Fitness</td><td>14–17%</td></tr>
+            <tr><td>Average</td><td>18–24%</td></tr>
+            <tr><td>Obese</td><td>25%+</td></tr>
+          </tbody>
+        </table>
+
+        <h2>Body fat categories — women</h2>
+        <table class="dtable">
+          <thead><tr><th>Category</th><th>Women · body fat</th></tr></thead>
+          <tbody>
+            <tr><td>Essential fat</td><td>10–13%</td></tr>
+            <tr><td>Athletes</td><td>14–20%</td></tr>
+            <tr><td>Fitness</td><td>21–24%</td></tr>
+            <tr><td>Average</td><td>25–31%</td></tr>
+            <tr><td>Obese</td><td>32%+</td></tr>
+          </tbody>
+        </table>
+        <p>Women carry more <strong>essential fat</strong> than men — it's biologically necessary — so healthy ranges sit higher. Ranges shown follow common ACE guidelines and are general reference points, not medical thresholds.</p>
+
+        <h2>Navy vs BMI method</h2>
+        <p>The BMI method estimates body fat from height, weight and age only, so it can mislabel a lean, muscular person as high-fat. The Navy tape method reads your actual shape. Advanced mode shows both so you can see the gap for yourself.</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>How does the US Navy body fat calculator work?</summary><p>It estimates body fat from a few tape-measure circumferences instead of a scale. Men enter height, neck and waist; women also add hip. The Navy formula converts those into a body fat percentage — the same circumference method behind the army and navy body-composition standards.</p></details>
+    <details class="faq"><summary>What's a healthy body fat percentage for men and women?</summary><p>Women naturally carry more essential fat than men. Using common ACE ranges, men are about 14–17% in the fitness range and 18–24% average; women are 21–24% fitness and 25–31% average. Below those is athletic or essential; above is classed as obese.</p></details>
+    <details class="faq"><summary>How do I measure my neck, waist and hip?</summary><p>Use a flexible tape, relaxed and level, without pulling tight. Neck just below the larynx; waist at the navel (men) or narrowest point (women); hip at the widest point. Measure each twice and average.</p></details>
+    <details class="faq"><summary>Is the Navy method or the BMI method more accurate?</summary><p>The Navy tape method reads where you actually carry fat, so it usually beats the BMI method, which uses only height and weight and can mislabel muscular people. Neither matches a DEXA scan, but Navy is a solid free estimate. Advanced mode shows both side by side.</p></details>
+    <details class="faq"><summary>Does this work for the army or navy body fat standard?</summary><p>Yes — the army and navy tape test uses the same circumference method this calculator implements, so it's a good pre-check. Official assessments round and follow their own procedure, so treat this as a close estimate.</p></details>
+  </section>
+
+  <footer>
+    <span>Estimates only — the Navy tape method is an approximation; a DEXA or hydrostatic test gives your true body fat. Free, no sign-up.</span>
+    <span><a href="/heart-rate-zone-calculator/">Heart Rate Zone</a> · <a href="/pace-calculator/">Pace Calculator</a></span>
+  </footer>
+
+</div>
+
+<script src="/assets/app.js?v=15"></script>
+<script>CalcThis.initBodyFatCalc({});</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>

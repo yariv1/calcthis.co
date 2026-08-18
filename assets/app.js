@@ -1292,3 +1292,385 @@ CalcThis.initHRZoneCalc = function (cfg) {
 
   solve();
 };
+
+/* -----------------------------------------------------------
+   CalcThis.initBodyFatCalc(cfg) — US Navy tape-method body-fat %.
+   Independent of the area/volume/pace/hrzone engines. Simple mode:
+   sex toggle + height / neck / waist (+ hip for female), cm/in unit
+   toggle, US Navy formula, category table with the user's row
+   highlighted. Advanced mode adds a BMI-method cross-check plus
+   fat-mass / lean-mass (needs age + weight). Live, no button. */
+CalcThis.initBodyFatCalc = function (cfg) {
+  cfg = cfg || {};
+  var $ = function (id) { return document.getElementById(id); };
+  var sex = 'male', unit = 'cm', advanced = false;
+
+  var CATS = {
+    male: [
+      { name:'Essential fat', hi:5,   range:'2\u20135%'   },
+      { name:'Athletes',      hi:13,  range:'6\u201313%'  },
+      { name:'Fitness',       hi:17,  range:'14\u201317%' },
+      { name:'Average',       hi:24,  range:'18\u201324%' },
+      { name:'Obese',         hi:999, range:'25%+'        }
+    ],
+    female: [
+      { name:'Essential fat', hi:13,  range:'10\u201313%' },
+      { name:'Athletes',      hi:20,  range:'14\u201320%' },
+      { name:'Fitness',       hi:24,  range:'21\u201324%' },
+      { name:'Average',       hi:31,  range:'25\u201331%' },
+      { name:'Obese',         hi:999, range:'32%+'        }
+    ]
+  };
+
+  var heightIn = $('height'), neckIn = $('neck'), waistIn = $('waist'), hipIn = $('hip'),
+      ageIn = $('age'), weightIn = $('weight');
+  if (!heightIn) return;
+
+  function num(v) { v = parseFloat(('' + v).trim()); return isNaN(v) ? NaN : v; }
+  function toCm(v) { return unit === 'in' ? v * 2.54 : v; }
+  function toKg(v) { return unit === 'in' ? v / 2.2046226 : v; }
+  function log10(x) { return Math.log(x) / Math.LN10; }
+  function one(x) { return (Math.round(x * 10) / 10).toFixed(1); }
+
+  function catFor(bf) {
+    var arr = CATS[sex];
+    for (var i = 0; i < arr.length; i++) { if (bf <= arr[i].hi) return arr[i]; }
+    return arr[arr.length - 1];
+  }
+
+  function navyBF() {
+    var h = toCm(num(heightIn.value)), nk = toCm(num(neckIn.value)), w = toCm(num(waistIn.value));
+    if (!(isFinite(h) && h > 0 && isFinite(nk) && nk > 0 && isFinite(w) && w > 0)) return NaN;
+    var bf;
+    if (sex === 'male') {
+      var d = w - nk; if (!(d > 0)) return NaN;
+      bf = 495 / (1.0324 - 0.19077 * log10(d) + 0.15456 * log10(h)) - 450;
+    } else {
+      var hp = toCm(num(hipIn ? hipIn.value : NaN)); if (!(isFinite(hp) && hp > 0)) return NaN;
+      var s = w + hp - nk; if (!(s > 0)) return NaN;
+      bf = 495 / (1.29579 - 0.35004 * log10(s) + 0.22100 * log10(h)) - 450;
+    }
+    if (!isFinite(bf)) return NaN;
+    if (bf < 1) bf = 1; if (bf > 75) bf = 75;
+    return bf;
+  }
+
+  function fillCatTable(bf) {
+    var arr = CATS[sex], hasBf = isFinite(bf), cur = hasBf ? catFor(bf) : null;
+    var head = '<thead><tr><th>Category</th><th>' + (sex === 'male' ? 'Men' : 'Women') +
+      ' \u00b7 body fat</th></tr></thead>';
+    var rows = '';
+    arr.forEach(function (c) {
+      var on = cur && c.name === cur.name ? ' class="cur"' : '';
+      rows += '<tr' + on + '><td>' + c.name + '</td><td>' + c.range + '</td></tr>';
+    });
+    $('catTable').innerHTML = head + '<tbody>' + rows + '</tbody>';
+  }
+
+  function solve() {
+    var bf = navyBF();
+    var resBig = $('resBig'), resUnit = $('resUnit'), resSub = $('resSub');
+
+    if (!isFinite(bf)) {
+      resBig.textContent = '\u2014'; resUnit.textContent = '';
+      resSub.textContent = sex === 'female'
+        ? 'Enter height, neck, waist and hip to see your body fat.'
+        : 'Enter height, neck and waist to see your body fat.';
+      fillCatTable(NaN);
+      if ($('advOut')) $('advOut').style.display = 'none';
+      return;
+    }
+
+    resBig.textContent = one(bf); resUnit.textContent = '%';
+    resSub.textContent = catFor(bf).name + ' \u00b7 US Navy tape method';
+    fillCatTable(bf);
+
+    var advOut = $('advOut');
+    if (advanced && advOut) {
+      var age = num(ageIn ? ageIn.value : NaN);
+      var wKg = isFinite(num(weightIn ? weightIn.value : NaN)) ? toKg(num(weightIn.value)) : NaN;
+      var h = toCm(num(heightIn.value));
+      var parts = [];
+
+      if (isFinite(age) && age > 0 && isFinite(wKg) && wKg > 0 && isFinite(h) && h > 0) {
+        var bmi = wKg / Math.pow(h / 100, 2);
+        var sexVal = sex === 'male' ? 1 : 0;
+        var bmiBF = 1.20 * bmi + 0.23 * age - 10.8 * sexVal - 5.4;
+        if (bmiBF < 1) bmiBF = 1;
+        parts.push('<div class="bf-cmp"><span class="k">BMI-method estimate</span><span class="v">' + one(bmiBF) + '%</span></div>');
+      }
+      if (isFinite(wKg) && wKg > 0) {
+        var fatKg = wKg * bf / 100, leanKg = wKg - fatKg, u = unit === 'in' ? 'lb' : 'kg';
+        var fatD = unit === 'in' ? fatKg * 2.2046226 : fatKg;
+        var leanD = unit === 'in' ? leanKg * 2.2046226 : leanKg;
+        parts.push('<div class="bf-cmp"><span class="k">Fat mass</span><span class="v">' + one(fatD) + ' ' + u + '</span></div>');
+        parts.push('<div class="bf-cmp"><span class="k">Lean mass</span><span class="v">' + one(leanD) + ' ' + u + '</span></div>');
+      }
+
+      if (parts.length) {
+        advOut.innerHTML = parts.join('') +
+          '<p class="res-tip">The Navy tape method and the BMI method use different inputs, so they rarely match exactly \u2014 Navy reads where you carry fat, BMI uses only weight and height. Both are estimates.</p>';
+      } else {
+        advOut.innerHTML = '<p class="res-tip">Add your age and weight above for a BMI-method cross-check and your fat / lean mass.</p>';
+      }
+      advOut.style.display = '';
+    } else if (advOut) {
+      advOut.style.display = 'none';
+    }
+  }
+
+  var sexSeg = $('sexSeg');
+  if (sexSeg) {
+    sexSeg.addEventListener('click', function (e) {
+      var b = e.target.closest ? e.target.closest('button') : null; if (!b) return;
+      sex = b.getAttribute('data-sex');
+      [].forEach.call(sexSeg.querySelectorAll('button'), function (x) { x.classList.toggle('on', x === b); });
+      var hf = $('hipFld'); if (hf) hf.style.display = sex === 'female' ? '' : 'none';
+      solve();
+    });
+  }
+
+  var PH = {
+    cm: { height:'178', neck:'38', waist:'92', hip:'100', weight:'80' },
+    in: { height:'70',  neck:'15', waist:'36', hip:'40',  weight:'176' }
+  };
+  function applyUnit() {
+    var mu = unit === 'in' ? 'in' : 'cm', wu = unit === 'in' ? 'lb' : 'kg', p = PH[unit];
+    ['uHeight', 'uNeck', 'uWaist', 'uHip'].forEach(function (id) { if ($(id)) $(id).textContent = mu; });
+    if ($('uWeight')) $('uWeight').textContent = wu;
+    if (heightIn) heightIn.placeholder = p.height;
+    if (neckIn) neckIn.placeholder = p.neck;
+    if (waistIn) waistIn.placeholder = p.waist;
+    if (hipIn) hipIn.placeholder = p.hip;
+    if (weightIn) weightIn.placeholder = p.weight;
+    if (unitSeg) [].forEach.call(unitSeg.querySelectorAll('button'), function (x) {
+      x.classList.toggle('on', x.getAttribute('data-unit') === unit);
+    });
+  }
+
+  var unitSeg = $('unitSeg');
+  if (unitSeg) {
+    unitSeg.addEventListener('click', function (e) {
+      var b = e.target.closest ? e.target.closest('button') : null; if (!b) return;
+      unit = b.getAttribute('data-unit');
+      applyUnit();
+      solve();
+    });
+  }
+
+  var advBtn = $('advBtn');
+  if (advBtn) {
+    advBtn.addEventListener('click', function () {
+      advanced = !advanced;
+      advBtn.classList.toggle('open', advanced);
+      $('advBtnLab').textContent = advanced ? 'Go simple' : 'Go advanced';
+      $('advIn').style.display = advanced ? '' : 'none';
+      solve();
+      if (advanced) { var a = $('advIn'); if (a && a.scrollIntoView) a.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+    });
+  }
+
+  [heightIn, neckIn, waistIn, hipIn, ageIn, weightIn].forEach(function (inp) {
+    if (!inp) return; inp.addEventListener('input', solve);
+  });
+
+  var hf0 = $('hipFld'); if (hf0) hf0.style.display = 'none';
+
+  // Default to inches for US users (imperial audience); metric elsewhere.
+  function prefersImperial() {
+    try {
+      var langs = [];
+      if (typeof navigator !== 'undefined') {
+        if (navigator.language) langs.push(navigator.language);
+        if (navigator.languages && navigator.languages.length) langs = langs.concat(navigator.languages);
+      }
+      for (var i = 0; i < langs.length; i++) {
+        if (('' + langs[i]).toUpperCase().indexOf('-US') !== -1) return true;
+      }
+      var tz = (Intl.DateTimeFormat().resolvedOptions().timeZone || '');
+      var us = ['America/New_York','America/Chicago','America/Denver','America/Los_Angeles',
+        'America/Phoenix','America/Anchorage','America/Detroit','America/Boise',
+        'America/Indiana/Indianapolis','America/Kentucky/Louisville','Pacific/Honolulu'];
+      return us.indexOf(tz) !== -1;
+    } catch (e) { return false; }
+  }
+  if (cfg.unit === 'in' || cfg.unit === 'cm') unit = cfg.unit;
+  else if (prefersImperial()) unit = 'in';
+  applyUnit();
+
+  solve();
+};
+
+/* -----------------------------------------------------------
+   CalcThis.initTDEECalc(cfg) — TDEE / daily-calorie / maintenance.
+   Independent engine. Simple: sex + age + height + weight + unit
+   toggle + activity level -> Mifflin-St Jeor BMR x activity =
+   maintenance calories, with a goal table (cut/maintain/bulk),
+   maintain row highlighted. Advanced: optional body-fat % switches
+   BMR to Katch-McArdle, and reveals BMR + a protein/carb/fat macro
+   split for the maintenance figure. Live, no button. Inches default
+   for US users (metric elsewhere). */
+CalcThis.initTDEECalc = function (cfg) {
+  cfg = cfg || {};
+  var $ = function (id) { return document.getElementById(id); };
+  var sex = 'male', unit = 'cm', advanced = false;
+
+  var GOALS = [
+    { name:'Weight loss',  sub:'≈0.5 kg/wk', d:-500 },
+    { name:'Mild loss',    sub:'≈0.25 kg/wk', d:-250 },
+    { name:'Maintain',     sub:'stay the same', d:0 },
+    { name:'Mild gain',    sub:'≈0.25 kg/wk', d:250 },
+    { name:'Weight gain',  sub:'≈0.5 kg/wk', d:500 }
+  ];
+
+  var ageIn = $('age'), heightIn = $('height'), weightIn = $('weight'),
+      bfIn = $('bodyfat'), actSel = $('activity');
+  if (!ageIn) return;
+
+  function num(v) { v = parseFloat(('' + v).trim()); return isNaN(v) ? NaN : v; }
+  function toCm(v) { return unit === 'in' ? v * 2.54 : v; }
+  function toKg(v) { return unit === 'in' ? v / 2.2046226 : v; }
+  function r0(x) { return Math.round(x); }
+
+  var PH = {
+    cm: { height:'178', weight:'80' },
+    in: { height:'70',  weight:'176' }
+  };
+  function applyUnit() {
+    var mu = unit === 'in' ? 'in' : 'cm', wu = unit === 'in' ? 'lb' : 'kg', p = PH[unit];
+    if ($('uHeight')) $('uHeight').textContent = mu;
+    if ($('uWeight')) $('uWeight').textContent = wu;
+    if (heightIn) heightIn.placeholder = p.height;
+    if (weightIn) weightIn.placeholder = p.weight;
+    if (unitSeg) [].forEach.call(unitSeg.querySelectorAll('button'), function (x) {
+      x.classList.toggle('on', x.getAttribute('data-unit') === unit);
+    });
+  }
+
+  function compute() {
+    var age = num(ageIn.value), h = toCm(num(heightIn.value)), w = toKg(num(weightIn.value));
+    if (!(isFinite(age) && age > 0 && isFinite(h) && h > 0 && isFinite(w) && w > 0)) return null;
+    var act = actSel ? parseFloat(actSel.value) : 1.55;
+    if (!(act > 0)) act = 1.55;
+    var bf = advanced ? num(bfIn ? bfIn.value : NaN) : NaN;
+    var useKatch = advanced && isFinite(bf) && bf > 0 && bf < 70;
+    var bmr;
+    if (useKatch) {
+      var lbm = w * (1 - bf / 100);
+      bmr = 370 + 21.6 * lbm;
+    } else {
+      bmr = 10 * w + 6.25 * h - 5 * age + (sex === 'male' ? 5 : -161);
+    }
+    var tdee = bmr * act;
+    return { bmr: bmr, tdee: tdee, w: w, method: useKatch ? 'Katch-McArdle' : 'Mifflin-St Jeor' };
+  }
+
+  function fillGoalTable(tdee) {
+    var head = '<thead><tr><th>Goal</th><th>Calories</th></tr></thead>';
+    var rows = '';
+    GOALS.forEach(function (g) {
+      var cur = g.d === 0 ? ' class="cur"' : '';
+      var cals = tdee != null ? r0(tdee + g.d).toLocaleString() + ' kcal' : '—';
+      rows += '<tr' + cur + '><td>' + g.name + ' <span class="zsub">' + g.sub + '</span></td><td>' + cals + '</td></tr>';
+    });
+    $('goalTable').innerHTML = head + '<tbody>' + rows + '</tbody>';
+  }
+
+  function solve() {
+    var c = compute();
+    var resBig = $('resBig'), resUnit = $('resUnit'), resSub = $('resSub');
+
+    if (!c) {
+      resBig.textContent = '—'; resUnit.textContent = '';
+      resSub.textContent = 'Enter age, height, weight and activity to see your calories.';
+      fillGoalTable(null);
+      if ($('advOut')) $('advOut').style.display = 'none';
+      return;
+    }
+
+    resBig.textContent = r0(c.tdee).toLocaleString(); resUnit.textContent = 'kcal/day';
+    resSub.textContent = 'Maintenance · ' + c.method + ' method';
+    fillGoalTable(c.tdee);
+
+    var advOut = $('advOut');
+    if (advanced && advOut) {
+      var protein_g = 1.6 * c.w;
+      var protein_k = protein_g * 4;
+      var fat_k = 0.25 * c.tdee, fat_g = fat_k / 9;
+      var carbs_k = c.tdee - protein_k - fat_k; if (carbs_k < 0) carbs_k = 0;
+      var carbs_g = carbs_k / 4;
+      var pctP = Math.round(protein_k / c.tdee * 100),
+          pctF = Math.round(fat_k / c.tdee * 100),
+          pctC = Math.round(carbs_k / c.tdee * 100);
+      advOut.innerHTML =
+        '<div class="bf-cmp"><span class="k">BMR (at rest)</span><span class="v">' + r0(c.bmr).toLocaleString() + ' kcal</span></div>' +
+        '<div class="macro-head">Daily macros at maintenance</div>' +
+        '<div class="macro"><span class="k">Protein</span><span class="g">' + r0(protein_g) + ' g</span><span class="pc">' + pctP + '%</span></div>' +
+        '<div class="macro"><span class="k">Carbs</span><span class="g">' + r0(carbs_g) + ' g</span><span class="pc">' + pctC + '%</span></div>' +
+        '<div class="macro"><span class="k">Fat</span><span class="g">' + r0(fat_g) + ' g</span><span class="pc">' + pctF + '%</span></div>' +
+        '<p class="res-tip">Protein set at 1.6 g/kg, fat at 25% of calories, carbs the rest. Scale grams with your goal calories above. ' +
+        (c.method === 'Katch-McArdle' ? 'Using Katch-McArdle from your body fat %.' : 'Add your body fat % for a Katch-McArdle estimate.') + '</p>';
+      advOut.style.display = '';
+    } else if (advOut) {
+      advOut.style.display = 'none';
+    }
+  }
+
+  var sexSeg = $('sexSeg');
+  if (sexSeg) {
+    sexSeg.addEventListener('click', function (e) {
+      var b = e.target.closest ? e.target.closest('button') : null; if (!b) return;
+      sex = b.getAttribute('data-sex');
+      [].forEach.call(sexSeg.querySelectorAll('button'), function (x) { x.classList.toggle('on', x === b); });
+      solve();
+    });
+  }
+
+  var unitSeg = $('unitSeg');
+  if (unitSeg) {
+    unitSeg.addEventListener('click', function (e) {
+      var b = e.target.closest ? e.target.closest('button') : null; if (!b) return;
+      unit = b.getAttribute('data-unit');
+      applyUnit();
+      solve();
+    });
+  }
+
+  var advBtn = $('advBtn');
+  if (advBtn) {
+    advBtn.addEventListener('click', function () {
+      advanced = !advanced;
+      advBtn.classList.toggle('open', advanced);
+      $('advBtnLab').textContent = advanced ? 'Go simple' : 'Go advanced';
+      $('advIn').style.display = advanced ? '' : 'none';
+      solve();
+      if (advanced) { var a = $('advIn'); if (a && a.scrollIntoView) a.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+    });
+  }
+
+  [ageIn, heightIn, weightIn, bfIn].forEach(function (inp) { if (inp) inp.addEventListener('input', solve); });
+  if (actSel) actSel.addEventListener('change', solve);
+
+  function prefersImperial() {
+    try {
+      var langs = [];
+      if (typeof navigator !== 'undefined') {
+        if (navigator.language) langs.push(navigator.language);
+        if (navigator.languages && navigator.languages.length) langs = langs.concat(navigator.languages);
+      }
+      for (var i = 0; i < langs.length; i++) {
+        if (('' + langs[i]).toUpperCase().indexOf('-US') !== -1) return true;
+      }
+      var tz = (Intl.DateTimeFormat().resolvedOptions().timeZone || '');
+      var us = ['America/New_York','America/Chicago','America/Denver','America/Los_Angeles',
+        'America/Phoenix','America/Anchorage','America/Detroit','America/Boise',
+        'America/Indiana/Indianapolis','America/Kentucky/Louisville','Pacific/Honolulu'];
+      return us.indexOf(tz) !== -1;
+    } catch (e) { return false; }
+  }
+  if (cfg.unit === 'in' || cfg.unit === 'cm') unit = cfg.unit;
+  else if (prefersImperial()) unit = 'in';
+  applyUnit();
+
+  solve();
+};

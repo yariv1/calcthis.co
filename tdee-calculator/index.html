@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TDEE Calculator — Daily Calorie &amp; Maintenance Calories | CalcThis</title>
+<meta name="description" content="Free TDEE calculator. Find your total daily energy expenditure and maintenance calories from the Mifflin-St Jeor equation, plus calorie targets for losing or gaining weight. Advanced mode adds a Katch-McArdle estimate and a protein, carb and fat macro split. Instant, no sign-up.">
+<link rel="canonical" href="https://calcthis.co/tdee-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="TDEE Calculator — Daily Calorie &amp; Maintenance Calories">
+<meta property="og:description" content="Your total daily energy expenditure and maintenance calories, plus targets for cutting or bulking and a protein/carb/fat macro split. Instant, no sign-up.">
+<meta property="og:url" content="https://calcthis.co/tdee-calculator/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css?v=15">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "TDEE Calculator",
+  "url": "https://calcthis.co/tdee-calculator/",
+  "applicationCategory": "HealthApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Estimate your total daily energy expenditure (TDEE) and maintenance calories using the Mifflin-St Jeor equation, with calorie targets for weight loss and gain, a Katch-McArdle option, and a protein, carb and fat macro split."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "What is TDEE and how is it calculated?", "acceptedAnswer": { "@type": "Answer", "text": "TDEE is your total daily energy expenditure — the calories you burn in a day. We estimate your basal metabolic rate with the Mifflin-St Jeor equation from your sex, age, height and weight, then multiply by an activity factor from 1.2 (sedentary) to 1.9 (very active). The result is your maintenance calories." } },
+    { "@type": "Question", "name": "What are maintenance calories?", "acceptedAnswer": { "@type": "Answer", "text": "Maintenance calories are the daily intake that keeps your weight stable — it equals your TDEE. Eat below it to lose weight and above it to gain. A deficit or surplus of about 500 calories a day corresponds to roughly half a kilo per week." } },
+    { "@type": "Question", "name": "How many calories to lose or gain weight?", "acceptedAnswer": { "@type": "Answer", "text": "A common target is 250 to 500 calories below maintenance for steady fat loss, or 250 to 500 above for lean gaining. The goal table shows both. These are estimates; adjust based on how your weight actually trends over a few weeks." } },
+    { "@type": "Question", "name": "Mifflin-St Jeor or Katch-McArdle — which is more accurate?", "acceptedAnswer": { "@type": "Answer", "text": "Mifflin-St Jeor is the reliable default and needs no body composition. Katch-McArdle can be more accurate for lean or muscular people because it uses lean body mass from your body fat percentage. Enter your body fat % in advanced mode to switch to it." } },
+    { "@type": "Question", "name": "How much protein, carbs and fat should I eat?", "acceptedAnswer": { "@type": "Answer", "text": "A solid starting split is protein at about 1.6 grams per kilogram of bodyweight, fat at around 25 percent of calories, and the rest from carbohydrates. Advanced mode shows this breakdown in grams for your maintenance calories; scale it to your goal." } }
+  ]
+}
+</script>
+</head>
+<body class="p-tdee">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <a href="/">Home</a>
+      <a href="/board-foot-calculator/">Board Foot Calculator</a>
+      <a href="/gravel-calculator/">Gravel Calculator</a>
+      <a href="/sand-calculator/">Sand Calculator</a>
+      <a href="/topsoil-calculator/">Topsoil Calculator</a>
+      <a href="/mulch-calculator/">Mulch Calculator</a>
+      <a href="/concrete-calculator/">Concrete Calculator</a>
+      <a href="/flooring-calculator/">Flooring Calculator</a>
+      <a href="/tile-calculator/">Tile Calculator</a>
+      <span class="navsep" aria-hidden="true"></span>
+      <a href="/pace-calculator/">Pace Calculator</a>
+      <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+      <a href="/body-fat-calculator/">Body Fat</a>
+      <a href="/tdee-calculator/" class="current">TDEE / Calories</a>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">Daily calories, done instantly</div>
+    <h1>TDEE Calculator</h1>
+    <p>Find your <strong>total daily energy expenditure</strong> and <strong>maintenance calories</strong> with the trusted <strong>Mifflin-St Jeor</strong> equation — plus targets for losing or gaining weight. Tap <em>Go advanced</em> for a <strong>Katch-McArdle</strong> estimate and your protein, carb and fat split.</p>
+  </section>
+
+  <div class="grid">
+    <div class="card">
+      <div class="card-pad">
+        <div class="row-top">
+          <h2>Your calories</h2>
+          <div class="seg" id="sexSeg">
+            <button type="button" data-sex="male" class="on">Male</button>
+            <button type="button" data-sex="female">Female</button>
+          </div>
+        </div>
+
+        <div class="bf-units">
+          <span class="ul">Measurements in</span>
+          <div class="seg" id="unitSeg">
+            <button type="button" data-unit="cm" class="on">cm / kg</button>
+            <button type="button" data-unit="in">in / lb</button>
+          </div>
+        </div>
+
+        <label class="fld" for="age">
+          <span class="lab">Age <span class="unit">years</span></span>
+          <div class="inp"><input id="age" type="number" inputmode="numeric" min="15" max="100" placeholder="30"></div>
+        </label>
+
+        <label class="fld" for="height">
+          <span class="lab">Height <span class="unit" id="uHeight">cm</span></span>
+          <div class="inp"><input id="height" type="number" inputmode="decimal" min="80" max="250" placeholder="178"></div>
+        </label>
+
+        <label class="fld" for="weight">
+          <span class="lab">Weight <span class="unit" id="uWeight">kg</span></span>
+          <div class="inp"><input id="weight" type="number" inputmode="decimal" min="30" max="400" placeholder="80"></div>
+        </label>
+
+        <label class="fld" for="activity">
+          <span class="lab">Activity level</span>
+          <div class="sel">
+            <select id="activity">
+              <option value="1.2">Sedentary — little or no exercise</option>
+              <option value="1.375">Light — 1–3 days/week</option>
+              <option value="1.55" selected>Moderate — 3–5 days/week</option>
+              <option value="1.725">Active — 6–7 days/week</option>
+              <option value="1.9">Very active — hard training / physical job</option>
+            </select>
+          </div>
+        </label>
+
+        <div class="fld" id="advIn" style="display:none">
+          <label class="fld" for="bodyfat" style="margin-bottom:0">
+            <span class="lab">Body fat <span class="unit">% · optional, enables Katch-McArdle</span></span>
+            <div class="inp"><input id="bodyfat" type="number" inputmode="decimal" min="3" max="70" placeholder="20"></div>
+          </label>
+        </div>
+
+        <div class="add-row split">
+          <span></span>
+          <button class="advbtn" id="advBtn" type="button">
+            <span id="advBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-pad">
+        <div class="bf-res">
+          <div class="res-lab">Your maintenance calories</div>
+          <div class="res-big"><span id="resBig">—</span> <span class="res-unit" id="resUnit"></span></div>
+          <div class="res-sub" id="resSub">Enter age, height, weight and activity to see your calories.</div>
+        </div>
+
+        <div class="stable-wrap">
+          <table class="dtable" id="goalTable"></table>
+        </div>
+
+        <div id="advOut" style="display:none"></div>
+      </div>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use it</h2>
+        <p>Pick <strong>Male</strong> or <strong>Female</strong>, choose <strong>cm/kg</strong> or <strong>in/lb</strong>, then enter your <strong>age</strong>, <strong>height</strong>, <strong>weight</strong> and <strong>activity level</strong>. You instantly get your <strong>maintenance calories</strong> (your TDEE) plus a goal table with calorie targets for losing or gaining weight — no calculate button.</p>
+        <p>Tap <strong>Go advanced</strong> to add your <strong>body fat percentage</strong>. That switches the estimate to the <strong>Katch-McArdle</strong> equation, which uses your lean body mass, and reveals your <strong>BMR</strong> and a <strong>protein, carb and fat</strong> split for the day.</p>
+
+        <h2>TDEE, BMR and maintenance calories</h2>
+        <p>Your <strong>BMR</strong> is what you'd burn at complete rest. Multiply it by an activity factor and you get your <strong>TDEE</strong> — the calories you actually burn in a normal day. Eating at your TDEE holds your weight steady, which is why TDEE and <strong>maintenance calories</strong> are the same number.</p>
+
+        <h2>Losing or gaining weight</h2>
+        <p>To lose weight, eat below maintenance; to gain, eat above. A daily gap of about <strong>500 calories</strong> is roughly half a kilo (about a pound) a week. The goal table does this for you. Treat every figure as a starting estimate and adjust from how your weight actually trends.</p>
+
+        <h2>Get your body fat % first</h2>
+        <p>For the more precise Katch-McArdle estimate, you need your body fat percentage — grab it in seconds with our <a href="/body-fat-calculator/">Body Fat Calculator</a>, then come back and enter it in advanced mode.</p>
+      </div>
+
+      <div>
+        <h2>Activity multipliers</h2>
+        <table class="dtable">
+          <thead><tr><th>Activity</th><th>× BMR</th></tr></thead>
+          <tbody>
+            <tr><td>Sedentary — little/no exercise</td><td>1.2</td></tr>
+            <tr><td>Light — 1–3 days/week</td><td>1.375</td></tr>
+            <tr><td>Moderate — 3–5 days/week</td><td>1.55</td></tr>
+            <tr><td>Active — 6–7 days/week</td><td>1.725</td></tr>
+            <tr><td>Very active — hard training</td><td>1.9</td></tr>
+          </tbody>
+        </table>
+
+        <h2>The equations we use</h2>
+        <p><strong>Mifflin-St Jeor (default)</strong> estimates BMR from sex, age, height and weight — the modern standard, accurate for most people. <strong>Katch-McArdle</strong> instead uses your lean body mass, so it can be sharper for lean or very muscular people. Advanced mode uses it automatically once you enter a body fat %.</p>
+
+        <h2>A sensible macro split</h2>
+        <p>Advanced mode splits your maintenance calories into <strong>protein</strong> (about 1.6 g per kg of bodyweight), <strong>fat</strong> (around 25% of calories) and <strong>carbs</strong> (the remainder). It's a balanced starting point — nudge it to fit your training and preferences.</p>
+
+        <h2>Training too?</h2>
+        <p>Set your fat-burning effort with the <a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a>, or plan runs with the <a href="/pace-calculator/">Pace Calculator</a>.</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>What is TDEE and how is it calculated?</summary><p>TDEE is your total daily energy expenditure — the calories you burn in a day. We estimate BMR with Mifflin-St Jeor from your sex, age, height and weight, then multiply by an activity factor from 1.2 (sedentary) to 1.9 (very active). That's your maintenance calories.</p></details>
+    <details class="faq"><summary>What are maintenance calories?</summary><p>The daily intake that keeps your weight stable — it equals your TDEE. Eat below it to lose weight, above it to gain. A gap of about 500 calories a day is roughly half a kilo per week.</p></details>
+    <details class="faq"><summary>How many calories to lose or gain weight?</summary><p>A common target is 250–500 calories below maintenance for steady fat loss, or 250–500 above for lean gaining. The goal table shows both. Adjust based on how your weight actually trends over a few weeks.</p></details>
+    <details class="faq"><summary>Mifflin-St Jeor or Katch-McArdle — which is more accurate?</summary><p>Mifflin-St Jeor is the reliable default and needs no body composition. Katch-McArdle can be sharper for lean or muscular people because it uses lean body mass from your body fat %. Enter your body fat % in advanced mode to switch to it.</p></details>
+    <details class="faq"><summary>How much protein, carbs and fat should I eat?</summary><p>A solid starting split is protein around 1.6 g per kg of bodyweight, fat around 25% of calories, and the rest from carbs. Advanced mode shows the breakdown in grams for your maintenance calories; scale it to your goal.</p></details>
+  </section>
+
+  <footer>
+    <span>Estimates only — calorie formulas are approximations and not medical or nutritional advice. Adjust to your real-world results. Free, no sign-up.</span>
+    <span><a href="/body-fat-calculator/">Body Fat</a> · <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a></span>
+  </footer>
+
+</div>
+
+<script src="/assets/app.js?v=15"></script>
+<script>CalcThis.initTDEECalc({});</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>

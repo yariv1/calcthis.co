@@ -29,6 +29,8 @@ const PAGES = [
   { file: 'tile-calculator/index.html',        slug: '/tile-calculator/' },
   { file: 'pace-calculator/index.html',        slug: '/pace-calculator/' },
   { file: 'heart-rate-zone-calculator/index.html', slug: '/heart-rate-zone-calculator/' },
+  { file: 'body-fat-calculator/index.html',    slug: '/body-fat-calculator/' },
+  { file: 'tdee-calculator/index.html',        slug: '/tdee-calculator/' },
 ];
 
 // ---- bump shared asset version ----

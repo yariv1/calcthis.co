@@ -326,3 +326,45 @@
   .cat-tab.on{color:var(--ink)}
   .cat-tab.on::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--amber)}
   .cat-grp[hidden]{display:none}
+
+  /* =========================================================
+     FITNESS · TDEE / CALORIES  (body.p-tdee) — Mifflin-St Jeor
+     Reuses .seg, .dtable tr.cur, .advbtn / .add-row.split.
+     ========================================================= */
+  .p-tdee .fld{margin-bottom:16px}
+  .p-tdee .bf-units{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:2px 0 18px}
+  .p-tdee .bf-units .ul{font-size:13px;font-weight:600;color:var(--ink-soft)}
+  .p-tdee #sexSeg{flex:none}
+  .p-tdee .bf-res{margin:2px 0 16px}
+  .p-tdee .dtable td:first-child{color:var(--ink)}
+  .p-tdee .zsub{color:var(--muted);font-weight:500;font-size:12.5px}
+  .p-tdee #advOut{margin:6px 0 4px}
+  .p-tdee .bf-cmp{display:flex;justify-content:space-between;align-items:baseline;padding:9px 0;border-bottom:1px dashed var(--line)}
+  .p-tdee .bf-cmp:first-child{border-top:1px dashed var(--line)}
+  .p-tdee .bf-cmp .k{font-size:13.5px;font-weight:500;color:var(--ink-soft)}
+  .p-tdee .bf-cmp .v{font-family:'Fraunces',serif;font-size:22px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--ink)}
+  .p-tdee .macro-head{font-size:12.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--spruce-soft);margin:14px 0 4px}
+  .p-tdee .macro{display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:baseline;padding:8px 0;border-bottom:1px solid var(--line)}
+  .p-tdee .macro:last-of-type{border-bottom:none}
+  .p-tdee .macro .k{font-size:14px;font-weight:600;color:var(--ink)}
+  .p-tdee .macro .g{font-family:'Fraunces',serif;font-size:18px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--ink)}
+  .p-tdee .macro .pc{font-size:13px;color:var(--muted);font-weight:600;font-variant-numeric:tabular-nums;min-width:40px;text-align:right}
+
+
+  /* =========================================================
+     FITNESS · BODY FAT  (body.p-bodyfat) — Navy tape method
+     Reuses .seg (sex + unit), .dtable tr.cur (category row),
+     .advbtn / .add-row.split (advanced toggle).
+     ========================================================= */
+  .p-bodyfat .fld{margin-bottom:16px}
+  .p-bodyfat .bf-units{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:2px 0 18px}
+  .p-bodyfat .bf-units .ul{font-size:13px;font-weight:600;color:var(--ink-soft)}
+  .p-bodyfat #sexSeg{flex:none}
+  .p-bodyfat .bf-res{margin:2px 0 16px}
+  .p-bodyfat .dtable td:first-child{color:var(--ink)}
+  .p-bodyfat #advOut{margin:6px 0 4px}
+  .p-bodyfat .bf-cmp{display:flex;justify-content:space-between;align-items:baseline;padding:9px 0;border-bottom:1px dashed var(--line)}
+  .p-bodyfat .bf-cmp:first-child{border-top:1px dashed var(--line)}
+  .p-bodyfat .bf-cmp .k{font-size:13.5px;font-weight:500;color:var(--ink-soft)}
+  .p-bodyfat .bf-cmp .v{font-family:'Fraunces',serif;font-size:22px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--ink)}
+
