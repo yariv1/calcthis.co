@@ -328,6 +328,22 @@
   .cat-grp[hidden]{display:none}
 
   /* =========================================================
+     FITNESS · ONE REP MAX  (body.p-1rm) — 1RM estimator
+     Reuses .seg, .dtable tr.cur, .advbtn / .add-row.split.
+     ========================================================= */
+  .p-1rm .fld{margin-bottom:16px}
+  .p-1rm #unitSeg{flex:none}
+  .p-1rm .bf-res{margin:2px 0 16px}
+  .p-1rm .dtable td:first-child{color:var(--ink)}
+  .p-1rm #advOut{margin:6px 0 4px}
+  .p-1rm .orm-head{font-size:12.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--spruce-soft);margin:2px 0 4px}
+  .p-1rm .bf-cmp{display:flex;justify-content:space-between;align-items:baseline;padding:9px 0;border-bottom:1px dashed var(--line)}
+  .p-1rm .bf-cmp:last-of-type{border-bottom:none}
+  .p-1rm .bf-cmp .k{font-size:13.5px;font-weight:500;color:var(--ink-soft)}
+  .p-1rm .bf-cmp .v{font-family:'Fraunces',serif;font-size:20px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--ink)}
+
+
+  /* =========================================================
      FITNESS · TDEE / CALORIES  (body.p-tdee) — Mifflin-St Jeor
      Reuses .seg, .dtable tr.cur, .advbtn / .add-row.split.
      ========================================================= */

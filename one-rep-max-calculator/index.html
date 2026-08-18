@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>One Rep Max Calculator — 1RM for Bench, Squat &amp; Deadlift | CalcThis</title>
+<meta name="description" content="Free one rep max calculator. Estimate your 1RM for bench, squat, deadlift or any lift from the weight and reps of a working set, plus a full %-of-1RM training table. Advanced mode compares Epley, Brzycki and Lombardi. Instant, no sign-up.">
+<link rel="canonical" href="https://calcthis.co/one-rep-max-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="One Rep Max Calculator — 1RM for Bench, Squat &amp; Deadlift">
+<meta property="og:description" content="Estimate your one rep max from any working set, with a %-of-1RM training table and Epley/Brzycki/Lombardi comparison. Instant, no sign-up.">
+<meta property="og:url" content="https://calcthis.co/one-rep-max-calculator/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css?v=16">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "One Rep Max Calculator",
+  "url": "https://calcthis.co/one-rep-max-calculator/",
+  "applicationCategory": "HealthApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Estimate your one-rep max (1RM) for bench press, squat, deadlift or any lift from the weight and reps of a working set, with a percentage-of-1RM training table and a comparison of the Epley, Brzycki and Lombardi formulas."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "How is one rep max calculated?", "acceptedAnswer": { "@type": "Answer", "text": "From the weight and reps of a set you took short of failure. The default Epley formula is 1RM = weight × (1 + reps ÷ 30). So 100 kg for 5 reps estimates about 117 kg. Advanced mode also shows the Brzycki and Lombardi formulas and their average." } },
+    { "@type": "Question", "name": "Does this work for bench, squat and deadlift?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. The formulas are lift-agnostic, so the same calculator estimates your 1RM for bench press, squat, deadlift, overhead press or any barbell lift. Pick the lift from the selector to label your result; the maths is identical." } },
+    { "@type": "Question", "name": "How many reps give an accurate 1RM estimate?", "acceptedAnswer": { "@type": "Answer", "text": "Estimates are most accurate at low reps. A set of 1 to 5 reps predicts your true 1RM closely; beyond about 10 to 12 reps the error grows because endurance and technique start to dominate. Use your heaviest honest set for the best estimate." } },
+    { "@type": "Question", "name": "What is the percentage of 1RM table for?", "acceptedAnswer": { "@type": "Answer", "text": "It converts your estimated 1RM into working weights for a target number of reps — for example roughly 80% of 1RM for sets of 8. Programmes are often written as percentages of 1RM, so the table tells you what to actually load on the bar." } },
+    { "@type": "Question", "name": "Which 1RM formula is most accurate?", "acceptedAnswer": { "@type": "Answer", "text": "No single formula wins for everyone. Epley and Brzycki are the most widely used and agree closely at low reps. Lombardi runs higher on high-rep sets. Advanced mode shows all three plus their average, and the only definitive number is a tested single." } }
+  ]
+}
+</script>
+</head>
+<body class="p-1rm">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <a href="/">Home</a>
+      <a href="/board-foot-calculator/">Board Foot Calculator</a>
+      <a href="/gravel-calculator/">Gravel Calculator</a>
+      <a href="/sand-calculator/">Sand Calculator</a>
+      <a href="/topsoil-calculator/">Topsoil Calculator</a>
+      <a href="/mulch-calculator/">Mulch Calculator</a>
+      <a href="/concrete-calculator/">Concrete Calculator</a>
+      <a href="/flooring-calculator/">Flooring Calculator</a>
+      <a href="/tile-calculator/">Tile Calculator</a>
+      <span class="navsep" aria-hidden="true"></span>
+      <a href="/pace-calculator/">Pace Calculator</a>
+      <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+      <a href="/body-fat-calculator/">Body Fat</a>
+      <a href="/tdee-calculator/">TDEE / Calories</a>
+      <a href="/one-rep-max-calculator/" class="current">One Rep Max</a>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">Strength, done instantly</div>
+    <h1>One Rep Max Calculator</h1>
+    <p>Estimate your <strong>1RM</strong> for <strong>bench</strong>, <strong>squat</strong>, <strong>deadlift</strong> or any lift from a working set — just enter the <strong>weight</strong> and <strong>reps</strong>. You also get a full <strong>%-of-1RM</strong> training table. Tap <em>Go advanced</em> to compare formulas.</p>
+  </section>
+
+  <div class="grid">
+    <div class="card">
+      <div class="card-pad">
+        <div class="row-top">
+          <h2>Your one rep max</h2>
+          <div class="seg" id="unitSeg">
+            <button type="button" data-unit="kg" class="on">kg</button>
+            <button type="button" data-unit="lb">lb</button>
+          </div>
+        </div>
+
+        <label class="fld" for="lift">
+          <span class="lab">Lift <span class="unit">optional</span></span>
+          <div class="sel">
+            <select id="lift">
+              <option value="">Any lift</option>
+              <option value="Bench press">Bench press</option>
+              <option value="Squat">Squat</option>
+              <option value="Deadlift">Deadlift</option>
+              <option value="Overhead press">Overhead press</option>
+            </select>
+          </div>
+        </label>
+
+        <label class="fld" for="weight">
+          <span class="lab">Weight lifted <span class="unit" id="uWeight">kg</span></span>
+          <div class="inp"><input id="weight" type="number" inputmode="decimal" min="1" max="1500" placeholder="60"></div>
+        </label>
+
+        <label class="fld" for="reps">
+          <span class="lab">Reps performed <span class="unit">1–15</span></span>
+          <div class="inp"><input id="reps" type="number" inputmode="numeric" min="1" max="15" placeholder="5"></div>
+        </label>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-pad">
+        <div class="bf-res">
+          <div class="res-lab">Your estimated one rep max</div>
+          <div class="res-big"><span id="resBig">—</span> <span class="res-unit" id="resUnit"></span></div>
+          <div class="res-sub" id="resSub">Enter the weight and reps of a set to estimate your 1RM.</div>
+        </div>
+
+        <div class="stable-wrap">
+          <table class="dtable" id="pctTable"></table>
+        </div>
+
+        <div id="advOut" style="display:none"></div>
+
+        <div class="add-row split">
+          <span></span>
+          <button class="advbtn" id="advBtn" type="button">
+            <span id="advBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use it</h2>
+        <p>Enter the <strong>weight</strong> you lifted and the <strong>reps</strong> you managed on a hard set — ideally one you stopped a rep or two short of failure. The calculator instantly estimates your <strong>one rep max</strong> and builds a <strong>%-of-1RM</strong> table so you know what to load for any rep target. No calculate button.</p>
+        <p>Pick your <strong>lift</strong> to label the result — the same maths covers bench, squat, deadlift and overhead press. Tap <strong>Go advanced</strong> to see the <strong>Epley</strong>, <strong>Brzycki</strong> and <strong>Lombardi</strong> estimates side by side, plus their average.</p>
+
+        <h2>Bench, squat &amp; deadlift</h2>
+        <p>1RM formulas don't care which lift you're doing, so this works as a <strong>bench press 1RM calculator</strong>, a <strong>squat one rep max calculator</strong> and a <strong>deadlift 1RM calculator</strong> all at once. Deadlifts and squats often estimate slightly high from high-rep sets because grip and technique fail before the muscles do — keep test sets heavy for accuracy.</p>
+
+        <h2>Programming by percentage</h2>
+        <p>Most strength programmes are written as percentages of your 1RM: heavy singles near 90–100%, strength work around 80–90%, hypertrophy around 67–80%. The training table on the right turns your estimated max into real bar weights for each rep range.</p>
+
+        <h2>Track the rest of your training</h2>
+        <p>Dial in conditioning with our <a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a>, set eating targets with the <a href="/tdee-calculator/">TDEE Calculator</a>, or check body composition with the <a href="/body-fat-calculator/">Body Fat Calculator</a>.</p>
+      </div>
+
+      <div>
+        <h2>The formulas we use</h2>
+        <table class="dtable">
+          <thead><tr><th>Formula</th><th>Estimate of 1RM</th></tr></thead>
+          <tbody>
+            <tr><td>Epley (default)</td><td>w × (1 + reps ÷ 30)</td></tr>
+            <tr><td>Brzycki</td><td>w ÷ (1.0278 − 0.0278 × reps)</td></tr>
+            <tr><td>Lombardi</td><td>w × reps^0.10</td></tr>
+          </tbody>
+        </table>
+        <p><em>w</em> is the weight lifted and <em>reps</em> the number completed. Epley and Brzycki agree closely at low reps; the three diverge as reps climb, which is why heavy sets give the truest estimate.</p>
+
+        <h2>Percent-of-1RM guide</h2>
+        <table class="dtable">
+          <thead><tr><th>Reps</th><th>≈ % of 1RM</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>100%</td></tr>
+            <tr><td>3</td><td>94%</td></tr>
+            <tr><td>5</td><td>89%</td></tr>
+            <tr><td>8</td><td>81%</td></tr>
+            <tr><td>10</td><td>75%</td></tr>
+            <tr><td>12</td><td>71%</td></tr>
+          </tbody>
+        </table>
+        <p>Use the live table on the calculator for the exact weights from your own 1RM.</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>How is one rep max calculated?</summary><p>From the weight and reps of a set taken close to failure. The default Epley formula is 1RM = weight × (1 + reps ÷ 30) — so 100 kg for 5 reps estimates about 117 kg. Advanced mode also shows Brzycki, Lombardi and their average.</p></details>
+    <details class="faq"><summary>Does this work for bench, squat and deadlift?</summary><p>Yes. The formulas are lift-agnostic, so the same calculator estimates 1RM for bench press, squat, deadlift, overhead press or any barbell lift. Pick the lift to label your result; the maths is identical.</p></details>
+    <details class="faq"><summary>How many reps give an accurate estimate?</summary><p>Low reps are most accurate. A set of 1–5 reps predicts your true 1RM closely; beyond about 10–12 the error grows as endurance and technique take over. Use your heaviest honest set.</p></details>
+    <details class="faq"><summary>What is the percentage-of-1RM table for?</summary><p>It converts your estimated 1RM into working weights for a target rep count — roughly 80% of 1RM for sets of 8, for example. Programmes are written as percentages of 1RM, so it tells you what to load on the bar.</p></details>
+    <details class="faq"><summary>Which formula is most accurate?</summary><p>No single formula wins for everyone. Epley and Brzycki are the most used and agree at low reps; Lombardi runs higher on high-rep sets. Advanced shows all three plus their average — and the only definitive number is a tested single.</p></details>
+  </section>
+
+  <footer>
+    <span>Estimates only — predicted maxes are approximations; only a tested single is your true 1RM. Warm up, use a spotter, and lift within your limits. Free, no sign-up.</span>
+    <span><a href="/tdee-calculator/">TDEE</a> · <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a></span>
+  </footer>
+
+</div>
+
+<script src="/assets/app.js?v=16"></script>
+<script>CalcThis.init1RMCalc({});</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>

@@ -1674,3 +1674,152 @@ CalcThis.initTDEECalc = function (cfg) {
 
   solve();
 };
+
+/* -----------------------------------------------------------
+   CalcThis.init1RMCalc(cfg) — one-rep-max estimator.
+   Independent engine. Enter weight + reps of a working set ->
+   estimated 1RM (Epley by default). A %-of-1RM training table
+   maps common rep targets to working weights, with the entered
+   rep row highlighted. Optional lift selector (bench/squat/…)
+   for context only. Advanced: Brzycki + Lombardi + the average
+   of the three formulas. lb default for US users, kg elsewhere.
+   Live, no button. */
+CalcThis.init1RMCalc = function (cfg) {
+  cfg = cfg || {};
+  var $ = function (id) { return document.getElementById(id); };
+  var unit = 'kg', advanced = false;
+
+  // reps -> % of 1RM (classic strength chart)
+  var PCT = [
+    { r:1,  p:100 }, { r:2, p:97 }, { r:3, p:94 }, { r:4, p:92 }, { r:5, p:89 },
+    { r:6,  p:86 },  { r:7, p:83 }, { r:8, p:81 }, { r:9, p:78 }, { r:10, p:75 },
+    { r:12, p:71 },  { r:15, p:67 }
+  ];
+
+  var wIn = $('weight'), rIn = $('reps'), liftSel = $('lift');
+  if (!wIn) return;
+
+  function num(v) { v = parseFloat(('' + v).trim()); return isNaN(v) ? NaN : v; }
+  function r1(x) { return Math.round(x * 10) / 10; }
+  function fmtW(x) { var v = r1(x); return (v % 1 === 0 ? v.toFixed(0) : v.toFixed(1)); }
+
+  var PH = { kg: '60', lb: '135' };
+  function applyUnit() {
+    var u = unit;
+    if ($('uWeight')) $('uWeight').textContent = u;
+    if (wIn) wIn.placeholder = PH[u];
+    if (unitSeg) [].forEach.call(unitSeg.querySelectorAll('button'), function (x) {
+      x.classList.toggle('on', x.getAttribute('data-unit') === u);
+    });
+  }
+
+  // 1RM formulas (w = weight, r = reps)
+  function epley(w, r)   { return r === 1 ? w : w * (1 + r / 30); }
+  function brzycki(w, r) { var d = 1.0278 - 0.0278 * r; return d > 0 ? w / d : NaN; }
+  function lombardi(w, r){ return w * Math.pow(r, 0.10); }
+
+  function fillPctTable(orm, reps) {
+    var u = unit;
+    var head = '<thead><tr><th>Reps</th><th>% of 1RM</th><th>Weight</th></tr></thead>';
+    var rows = '';
+    PCT.forEach(function (row) {
+      var cur = (isFinite(reps) && reps === row.r) ? ' class="cur"' : '';
+      var wt = (orm != null) ? fmtW(orm * row.p / 100) + ' ' + u : '—';
+      rows += '<tr' + cur + '><td>' + row.r + '</td><td>' + row.p + '%</td><td>' + wt + '</td></tr>';
+    });
+    $('pctTable').innerHTML = head + '<tbody>' + rows + '</tbody>';
+  }
+
+  function solve() {
+    var w = num(wIn.value), r = num(rIn ? rIn.value : NaN);
+    var resBig = $('resBig'), resUnit = $('resUnit'), resSub = $('resSub');
+    var ok = isFinite(w) && w > 0 && isFinite(r) && r >= 1 && r <= 15;
+
+    if (!ok) {
+      resBig.textContent = '—'; resUnit.textContent = '';
+      resSub.textContent = (isFinite(r) && r > 15)
+        ? 'Estimates are reliable up to about 15 reps — use a heavier set.'
+        : 'Enter the weight and reps of a set to estimate your 1RM.';
+      fillPctTable(null, NaN);
+      if ($('advOut')) {
+        if (advanced) {
+          $('advOut').innerHTML = '<div class="orm-head">By formula</div>' +
+            '<p class="res-tip">Enter a weight and reps above to compare the Epley, Brzycki and Lombardi estimates side by side.</p>';
+          $('advOut').style.display = '';
+        } else {
+          $('advOut').style.display = 'none';
+        }
+      }
+      return;
+    }
+
+    var epl = epley(w, r);
+    resBig.textContent = fmtW(epl); resUnit.textContent = unit;
+    var lift = liftSel && liftSel.value ? liftSel.value : '';
+    resSub.textContent = (lift ? lift + ' · ' : '') + 'Epley estimate from ' + fmtW(w) + ' ' + unit + ' × ' + r;
+    fillPctTable(epl, r);
+
+    var advOut = $('advOut');
+    if (advanced && advOut) {
+      var br = brzycki(w, r), lo = lombardi(w, r);
+      var vals = [epl, br, lo].filter(function (x) { return isFinite(x) && x > 0; });
+      var avg = vals.reduce(function (a, b) { return a + b; }, 0) / vals.length;
+      advOut.innerHTML =
+        '<div class="orm-head">By formula</div>' +
+        '<div class="bf-cmp"><span class="k">Epley</span><span class="v">' + fmtW(epl) + ' ' + unit + '</span></div>' +
+        '<div class="bf-cmp"><span class="k">Brzycki</span><span class="v">' + (isFinite(br) ? fmtW(br) + ' ' + unit : '—') + '</span></div>' +
+        '<div class="bf-cmp"><span class="k">Lombardi</span><span class="v">' + fmtW(lo) + ' ' + unit + '</span></div>' +
+        '<div class="bf-cmp"><span class="k">Average</span><span class="v">' + fmtW(avg) + ' ' + unit + '</span></div>' +
+        '<p class="res-tip">Different formulas weight reps differently, so they diverge on high-rep sets. The hero uses Epley; the average is a reasonable middle. All are estimates — the only true 1RM is a tested single.</p>';
+      advOut.style.display = '';
+    } else if (advOut) {
+      advOut.style.display = 'none';
+    }
+  }
+
+  var unitSeg = $('unitSeg');
+  if (unitSeg) {
+    unitSeg.addEventListener('click', function (e) {
+      var b = e.target.closest ? e.target.closest('button') : null; if (!b) return;
+      unit = b.getAttribute('data-unit');
+      applyUnit();
+      solve();
+    });
+  }
+
+  var advBtn = $('advBtn');
+  if (advBtn) {
+    advBtn.addEventListener('click', function () {
+      advanced = !advanced;
+      advBtn.classList.toggle('open', advanced);
+      $('advBtnLab').textContent = advanced ? 'Go simple' : 'Go advanced';
+      solve();
+    });
+  }
+
+  [wIn, rIn].forEach(function (inp) { if (inp) inp.addEventListener('input', solve); });
+  if (liftSel) liftSel.addEventListener('change', solve);
+
+  function prefersImperial() {
+    try {
+      var langs = [];
+      if (typeof navigator !== 'undefined') {
+        if (navigator.language) langs.push(navigator.language);
+        if (navigator.languages && navigator.languages.length) langs = langs.concat(navigator.languages);
+      }
+      for (var i = 0; i < langs.length; i++) {
+        if (('' + langs[i]).toUpperCase().indexOf('-US') !== -1) return true;
+      }
+      var tz = (Intl.DateTimeFormat().resolvedOptions().timeZone || '');
+      var us = ['America/New_York','America/Chicago','America/Denver','America/Los_Angeles',
+        'America/Phoenix','America/Anchorage','America/Detroit','America/Boise',
+        'America/Indiana/Indianapolis','America/Kentucky/Louisville','Pacific/Honolulu'];
+      return us.indexOf(tz) !== -1;
+    } catch (e) { return false; }
+  }
+  if (cfg.unit === 'lb' || cfg.unit === 'kg') unit = cfg.unit;
+  else if (prefersImperial()) unit = 'lb';
+  applyUnit();
+
+  solve();
+};

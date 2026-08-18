@@ -31,6 +31,7 @@ const PAGES = [
   { file: 'heart-rate-zone-calculator/index.html', slug: '/heart-rate-zone-calculator/' },
   { file: 'body-fat-calculator/index.html',    slug: '/body-fat-calculator/' },
   { file: 'tdee-calculator/index.html',        slug: '/tdee-calculator/' },
+  { file: 'one-rep-max-calculator/index.html', slug: '/one-rep-max-calculator/' },
 ];
 
 // ---- bump shared asset version ----
