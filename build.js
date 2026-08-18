@@ -32,6 +32,7 @@ const PAGES = [
   { file: 'body-fat-calculator/index.html',    slug: '/body-fat-calculator/' },
   { file: 'tdee-calculator/index.html',        slug: '/tdee-calculator/' },
   { file: 'one-rep-max-calculator/index.html', slug: '/one-rep-max-calculator/' },
+  { file: 'sleep-calculator/index.html',       slug: '/sleep-calculator/' },
 ];
 
 // ---- bump shared asset version ----

@@ -1823,3 +1823,213 @@ CalcThis.init1RMCalc = function (cfg) {
 
   solve();
 };
+/* -----------------------------------------------------------
+   CalcThis.initSleepCalc(cfg) — sleep-cycle bedtime / wake-time planner.
+   Independent engine (modeled on HRZone). Uses ~90-minute sleep cycles
+   plus a ~15-minute fall-asleep buffer. Two modes:
+     wake  — "I want to wake up at [time]"  -> ideal BEDTIMES
+     sleep — "I'm going to sleep at [time]" -> ideal WAKE-UP times
+   Outputs 4 options (6/5/4/3 cycles = 9h/7.5h/6h/4.5h); the recommended
+   7.5–9 h rows (5–6 cycles) are highlighted. Times only — no unit system,
+   no location logic. Live, no button. */
+CalcThis.initSleepCalc = function (cfg) {
+  cfg = cfg || {};
+  var $ = function (id) { return document.getElementById(id); };
+  var mode = 'wake';                     // 'wake' | 'sleep'
+  var CYCLE = 90, BUFFER = 15;           // minutes
+  var OPTS = [6, 5, 4, 3];               // cycle counts, most sleep first
+  var band = 'adult';                    // 'kid' | 'teen' | 'adult' | 'older'
+  var meridiem = 'am';                    // 'am' | 'pm' | '24'
+
+  // NSF/CDC recommended nightly sleep by age band (hours). Reaffirmed 2026.
+  // rec = which whole 90-min cycle counts (of OPTS) fall inside the band.
+  var BANDS = {
+    kid:   { label: 'Kid',          lo: 9, hi: 11, note: 'kids 6\u201312',    rec: [6] },
+    teen:  { label: 'Teen',         lo: 8, hi: 10, note: 'teens 13\u201317',  rec: [6] },
+    adult: { label: 'Adult',        lo: 7, hi: 9,  note: 'adults 18\u201364', rec: [5, 6] },
+    older: { label: 'Older adult',  lo: 7, hi: 8,  note: 'older adults 65+',  rec: [5] }
+  };
+  function isRec(c) { return BANDS[band].rec.indexOf(c) !== -1; }
+
+  var timeIn = $('timeIn'), modeSeg = $('modeSeg'),
+      nowBtn = $('nowBtn'), timeLab = $('timeLab'), ageSel = $('ageSel'),
+      apSeg = $('apSeg'), clockIc = $('clockIc'), ghostEl = $('timeGhost');
+  if (!timeIn) return;
+
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function is24() { return meridiem === '24'; }
+
+  // Group the raw digits into an hour/minute pair for a fixed HH:MM mask.
+  // Smart hour: a leading digit that can't start a valid 2-digit hour
+  // (>2 in 24h, >1 in 12h) is treated as a complete single-digit hour and padded.
+  function splitDigits(raw) {
+    var d = ('' + raw).replace(/\D/g, '').slice(0, 4);
+    if (!d) return { empty: true };
+    var maxFirst = is24() ? '2' : '1';
+    if (d[0] > maxFirst) return { hDig: '0' + d[0], mDig: d.slice(1, 3), hourDone: true };
+    if (d.length === 1) return { hDig: d, mDig: '', hourDone: false };
+    return { hDig: d.slice(0, 2), mDig: d.slice(2, 4), hourDone: true };
+  }
+
+  // Reformat the field to the masked "HH:MM" (partial ok) and repaint the ghost scaffold.
+  function refresh() {
+    var s = splitDigits(timeIn.value);
+    var val = s.empty ? '' : (s.hourDone ? s.hDig + ':' + s.mDig : s.hDig);
+    if (val !== timeIn.value) timeIn.value = val;
+    if (!ghostEl) return;
+    var hc = s.empty ? '' : s.hDig, mc = s.empty ? '' : s.mDig;
+    var cells = [hc[0], hc[1], ':', mc[0], mc[1]], html = '';
+    for (var i = 0; i < 5; i++) {
+      if (i === 2) html += '<span class="g-sep">:</span>';
+      else if (cells[i] != null) html += '<span class="g-on">' + cells[i] + '</span>';
+      else html += '<span class="g-off">-</span>';
+    }
+    ghostEl.innerHTML = html;
+  }
+
+  // Field value + current meridiem -> minutes since midnight, or NaN.
+  function parseTime() {
+    var s = splitDigits(timeIn.value);
+    if (s.empty) return NaN;
+    var h = +s.hDig;
+    var md = s.mDig, m = md.length === 0 ? 0 : (md.length === 1 ? (+md) * 10 : +md);
+    if (m > 59) return NaN;
+    if (is24()) { if (h > 23) return NaN; return h * 60 + m; }
+    if (h < 1 || h > 12) return NaN;      // 12-hour clock
+    var base = h % 12;                    // 12 -> 0
+    if (meridiem === 'pm') base += 12;
+    return base * 60 + m;
+  }
+
+  function applyMeridiem() {
+    if (apSeg) [].forEach.call(apSeg.querySelectorAll('button'), function (b) {
+      b.classList.toggle('on', b.getAttribute('data-ap') === meridiem);
+    });
+  }
+
+  // Fill the field with the current local time, honoring the active meridiem mode.
+  function setNow() {
+    var d = new Date(), H = d.getHours(), M = d.getMinutes();
+    if (is24()) {
+      timeIn.value = pad(H) + ':' + pad(M);
+    } else {
+      meridiem = H < 12 ? 'am' : 'pm'; applyMeridiem();
+      var h12 = H % 12; if (h12 === 0) h12 = 12;
+      timeIn.value = pad(h12) + ':' + pad(M);
+    }
+    refresh();
+  }
+
+  // minutes since midnight -> "HH:MM" (24h mode) or "h:MM AM/PM" (12h modes)
+  function fmtClock(mins) {
+    mins = ((mins % 1440) + 1440) % 1440;
+    var h = Math.floor(mins / 60), mi = mins % 60;
+    if (is24()) return pad(h) + ':' + pad(mi);
+    var ap = h < 12 ? 'AM' : 'PM', h12 = h % 12; if (h12 === 0) h12 = 12;
+    return h12 + ':' + pad(mi) + ' ' + ap;
+  }
+  function fmtDur(cycles) {
+    var h = cycles * 1.5;                 // 90 min = 1.5 h
+    return (h % 1 === 0 ? h.toFixed(0) : h.toFixed(1)) + ' h';
+  }
+
+  function applyModeLabels() {
+    if (timeLab) timeLab.textContent = mode === 'wake'
+      ? 'I want to wake up at' : 'I\u2019m going to sleep at';
+    if (nowBtn) nowBtn.style.display = mode === 'sleep' ? '' : 'none';
+    if (modeSeg) [].forEach.call(modeSeg.querySelectorAll('button'), function (b) {
+      b.classList.toggle('on', b.getAttribute('data-mode') === mode);
+    });
+  }
+
+  function timeFor(base, cycles) {
+    return mode === 'wake'
+      ? base - (cycles * CYCLE + BUFFER)
+      : base + BUFFER + cycles * CYCLE;
+  }
+
+  function solve() {
+    var base = parseTime();
+    var resBig = $('resBig'), resUnit = $('resUnit'),
+        resLab = $('resLab'), resSub = $('resSub');
+    resLab.textContent = mode === 'wake' ? 'Ideal bedtime' : 'Ideal wake-up time';
+    if (ageSel && ageSel.value !== band && BANDS[ageSel.value]) band = ageSel.value;
+
+    if (!isFinite(base)) {
+      resBig.textContent = '\u2014'; resUnit.textContent = '';
+      resSub.textContent = mode === 'wake'
+        ? 'Enter the time you need to wake up to see when to head to bed.'
+        : 'Enter the time you\u2019ll go to sleep — or tap Now — to see when to wake up.';
+      $('sleepTable').innerHTML = '';
+      return;
+    }
+
+    var b = BANDS[band];
+    var top = b.rec[b.rec.length - 1], bot = b.rec[0];   // top = most cycles recommended
+    var hero = timeFor(base, top);
+    resBig.textContent = fmtClock(hero); resUnit.textContent = '';
+    var range = (bot === top)
+      ? fmtDur(top) + ' (' + top + ' cycles)'
+      : fmtDur(bot) + '\u2013' + fmtDur(top) + ' (' + bot + '\u2013' + top + ' cycles)';
+    resSub.textContent = (mode === 'wake' ? 'Lights out here' : 'Set your alarm here') +
+      ' for ' + range + ' \u2014 the target for ' + b.note + '. More options below.';
+
+    var col1 = mode === 'wake' ? 'Go to bed at' : 'Wake up at';
+    var head = '<thead><tr><th>' + col1 + '</th><th>Sleep</th><th>Cycles</th></tr></thead>';
+    var rows = '';
+    OPTS.forEach(function (c) {
+      var cur = isRec(c) ? ' class="cur"' : '';
+      rows += '<tr' + cur + '><td>' + fmtClock(timeFor(base, c)) + '</td><td>' +
+        fmtDur(c) + '</td><td>' + c + '</td></tr>';
+    });
+    $('sleepTable').innerHTML = head + '<tbody>' + rows + '</tbody>';
+  }
+
+  if (modeSeg) {
+    modeSeg.addEventListener('click', function (e) {
+      var b = e.target.closest ? e.target.closest('button') : null; if (!b) return;
+      var m = b.getAttribute('data-mode'); if (!m || m === mode) return;
+      mode = m;
+      // entering "sleep" mode with an empty field: prefill current time ("sleep now")
+      if (mode === 'sleep' && timeIn.value.trim() === '') setNow();
+      applyModeLabels();
+      solve();
+    });
+  }
+  if (apSeg) {
+    apSeg.addEventListener('click', function (e) {
+      var b = e.target.closest ? e.target.closest('button') : null; if (!b) return;
+      var to = b.getAttribute('data-ap'); if (!to || to === meridiem) return;
+      var from = meridiem;
+      // am <-> pm: keep the dial digits, just flip the meaning (7:30 AM <-> 7:30 PM).
+      if (from !== '24' && to !== '24') {
+        meridiem = to; applyMeridiem(); solve(); return;
+      }
+      var mins = parseTime();                 // parsed under the OLD mode
+      if (to === '24') {                      // 12h -> 24h: absolute time
+        meridiem = to;
+        if (isFinite(mins)) timeIn.value = pad(Math.floor(mins / 60)) + ':' + pad(mins % 60);
+      } else {                                // 24h -> am/pm: keep the dial reading, honor the clicked side
+        var s = splitDigits(timeIn.value);    // still under 24h
+        meridiem = to;                        // ALWAYS the button the user pressed
+        if (!s.empty) {
+          var H = +s.hDig, h12 = H % 12; if (h12 === 0) h12 = 12;
+          var md = s.mDig, mm = md.length === 0 ? '00' : (md.length === 1 ? md + '0' : md);
+          timeIn.value = pad(h12) + ':' + mm;
+        }
+      }
+      applyMeridiem(); refresh(); solve();
+    });
+  }
+  if (clockIc) clockIc.addEventListener('click', function () { timeIn.focus(); });
+  if (nowBtn) nowBtn.addEventListener('click', function () { setNow(); solve(); });
+  if (ageSel) ageSel.addEventListener('change', function () {
+    if (BANDS[ageSel.value]) band = ageSel.value; solve();
+  });
+  timeIn.addEventListener('input', function () { refresh(); solve(); });
+
+  applyMeridiem();
+  refresh();
+  applyModeLabels();
+  solve();
+};

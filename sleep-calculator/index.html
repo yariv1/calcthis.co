@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sleep Calculator — Best Bedtime &amp; Wake-Up Time by Sleep Cycles | CalcThis</title>
+<meta name="description" content="Free sleep calculator. Find the best time to go to bed or wake up using 90-minute sleep cycles, so you wake between cycles feeling rested. Works from your wake-up time or from when you fall asleep. Instant, no sign-up.">
+<link rel="canonical" href="https://calcthis.co/sleep-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Sleep Calculator — Best Bedtime &amp; Wake-Up Time by Sleep Cycles">
+<meta property="og:description" content="Find the best bedtime or wake-up time using 90-minute sleep cycles, so you wake between cycles feeling rested. Instant, no sign-up.">
+<meta property="og:url" content="https://calcthis.co/sleep-calculator/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css?v=18">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Sleep Calculator",
+  "url": "https://calcthis.co/sleep-calculator/",
+  "applicationCategory": "HealthApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Find the best time to go to bed or wake up using 90-minute sleep cycles and a short fall-asleep buffer, so you wake between cycles feeling more rested. Works backwards from your wake-up time or forwards from when you fall asleep."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "How does the sleep calculator work?", "acceptedAnswer": { "@type": "Answer", "text": "Sleep runs in cycles of about 90 minutes. Waking at the end of a cycle, rather than mid-cycle, tends to feel easier. The calculator counts back or forward in 90-minute blocks and adds roughly 15 minutes to fall asleep, then lists the times that land you at the end of a full cycle." } },
+    { "@type": "Question", "name": "What time should I go to bed to wake up at a set time?", "acceptedAnswer": { "@type": "Answer", "text": "Choose 'I want to wake up at', enter your alarm time, and the calculator shows several bedtimes. Aim for one that gives 5 to 6 cycles (7.5 to 9 hours) for most adults. Those rows are highlighted." } },
+    { "@type": "Question", "name": "How many sleep cycles do I need?", "acceptedAnswer": { "@type": "Answer", "text": "Most adults do best on 5 to 6 complete cycles a night, which is about 7.5 to 9 hours of sleep. Four cycles (6 hours) can work occasionally; three (4.5 hours) is a short night to get through, not a target." } },
+    { "@type": "Question", "name": "Why 90 minutes and a 15-minute buffer?", "acceptedAnswer": { "@type": "Answer", "text": "A full cycle through light, deep and REM sleep averages about 90 minutes, though it varies by person and across the night. The extra 15 minutes accounts for the time it takes most people to actually fall asleep after lying down." } },
+    { "@type": "Question", "name": "Does the ideal amount of sleep change with age?", "acceptedAnswer": { "@type": "Answer", "text": "The recommended nightly total does, per the National Sleep Foundation: about 9 to 11 hours for kids 6 to 12, 8 to 10 for teens 13 to 17, 7 to 9 for adults 18 to 64, and 7 to 8 for older adults 65 and up. Set your age group and the calculator highlights the cycle options that hit your target. The 90-minute cycle length itself does not meaningfully change with adult age, so only the recommendation shifts, not the times." } },
+    { "@type": "Question", "name": "What is the 10-3-2-1 sleep rule?", "acceptedAnswer": { "@type": "Answer", "text": "A popular wind-down guide: no caffeine 10 hours before bed, no food or alcohol 3 hours before, no work 2 hours before, and no screens 1 hour before. It is a rule of thumb, not medical advice, but it pairs well with a consistent bedtime." } }
+  ]
+}
+</script>
+</head>
+<body class="p-sleep">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <a href="/">Home</a>
+      <a href="/board-foot-calculator/">Board Foot Calculator</a>
+      <a href="/gravel-calculator/">Gravel Calculator</a>
+      <a href="/sand-calculator/">Sand Calculator</a>
+      <a href="/topsoil-calculator/">Topsoil Calculator</a>
+      <a href="/mulch-calculator/">Mulch Calculator</a>
+      <a href="/concrete-calculator/">Concrete Calculator</a>
+      <a href="/flooring-calculator/">Flooring Calculator</a>
+      <a href="/tile-calculator/">Tile Calculator</a>
+      <span class="navsep" aria-hidden="true"></span>
+      <a href="/pace-calculator/">Pace Calculator</a>
+      <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+      <a href="/body-fat-calculator/">Body Fat</a>
+      <a href="/tdee-calculator/">TDEE / Calories</a>
+      <a href="/one-rep-max-calculator/">One Rep Max</a>
+      <a href="/sleep-calculator/" class="current">Sleep</a>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">Rest, timed right</div>
+    <h1>Sleep Calculator</h1>
+    <p>Find the best time to <strong>go to bed</strong> or <strong>wake up</strong> using <strong>90-minute sleep cycles</strong>. Wake at the end of a cycle instead of the middle and you'll usually feel more rested — even on the same hours. Pick a mode, set a time, get your options instantly.</p>
+  </section>
+
+  <div class="grid">
+    <div class="card">
+      <div class="card-pad">
+        <div class="row-top">
+          <h2>Your sleep schedule</h2>
+        </div>
+
+        <div class="seg" id="modeSeg">
+          <button type="button" data-mode="wake" class="on">Wake up at…</button>
+          <button type="button" data-mode="sleep">Go to sleep at…</button>
+        </div>
+
+        <label class="fld" for="timeIn">
+          <span class="time-lab">
+            <span id="timeLab">I want to wake up at</span>
+            <button type="button" id="nowBtn" style="display:none">Set to now</button>
+          </span>
+          <div class="time-field">
+            <div class="time-box">
+              <div class="time-ghost" id="timeGhost" aria-hidden="true"><span class="g-off">-</span><span class="g-off">-</span><span class="g-sep">:</span><span class="g-off">-</span><span class="g-off">-</span></div>
+              <input id="timeIn" class="time-digits" type="text" inputmode="numeric" autocomplete="off" maxlength="5" aria-label="Time">
+            </div>
+            <div class="seg ap-seg" id="apSeg">
+              <button type="button" data-ap="am" class="on">AM</button>
+              <button type="button" data-ap="pm">PM</button>
+              <button type="button" data-ap="24">24hrs</button>
+            </div>
+            <button type="button" class="clock-ic" id="clockIc" aria-label="Edit time" tabindex="-1">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            </button>
+          </div>
+        </label>
+
+        <label class="fld" for="ageSel">
+          <span class="lab">Age group <span class="unit">sets your target</span></span>
+          <div class="sel">
+            <select id="ageSel">
+              <option value="kid">Kid (6–12)</option>
+              <option value="teen">Teen (13–17)</option>
+              <option value="adult" selected>Adult (18–64)</option>
+              <option value="older">Older adult (65+)</option>
+            </select>
+          </div>
+        </label>
+
+        <p class="res-tip">We count in 90-minute cycles and add about 15 minutes to fall asleep. Aim for the highlighted options — the recommended nightly total shifts with your age group.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-pad">
+        <div class="bf-res">
+          <div class="res-lab" id="resLab">Ideal bedtime</div>
+          <div class="res-big"><span id="resBig">—</span> <span class="res-unit" id="resUnit"></span></div>
+          <div class="res-sub" id="resSub">Enter the time you need to wake up to see when to head to bed.</div>
+        </div>
+
+        <div class="stable-wrap">
+          <table class="dtable" id="sleepTable"></table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use it</h2>
+        <p>Choose a mode. <strong>Wake up at…</strong> works backwards from your alarm to show what time to <strong>go to bed</strong>. <strong>Go to sleep at…</strong> works forwards from when you'll fall asleep to show the best times to <strong>wake up</strong> — tap <strong>Set to now</strong> if you're heading to bed this minute. The results update live; there's no calculate button.</p>
+        <p>Each option ends at the close of a full 90-minute cycle, so your alarm is less likely to catch you in deep sleep. The rows for <strong>5 and 6 cycles</strong> — roughly <strong>7.5 to 9 hours</strong> — are highlighted because that's the sweet spot for most adults.</p>
+
+        <h2>Sleep cycles &amp; REM</h2>
+        <p>A night's sleep isn't uniform. You move through light sleep, <strong>deep (slow-wave) sleep</strong> and <strong>REM sleep</strong> in cycles that average about <strong>90 minutes</strong>. Deep sleep dominates early in the night; REM stretches get longer toward morning. Waking at the seam between cycles — in lighter sleep — feels gentler than being pulled out of deep sleep mid-cycle, which is where grogginess comes from.</p>
+
+        <h2>How many hours of sleep by age</h2>
+        <p>Sleep needs shift over a lifetime, so pick your <strong>age group</strong> to set the target the calculator highlights. The bands follow the National Sleep Foundation's evidence-based guidance for <strong>hours of sleep by age</strong>: kids 6–12 need about 9–11 hours, teens 13–17 about 8–10, adults 18–64 about 7–9, and older adults 65+ about 7–8. The cycle times themselves don't change with age — only which options are recommended for you.</p>
+
+        <h2>The rest of your routine</h2>
+        <p>Pair good sleep with easy training: find your <a href="/heart-rate-zone-calculator/">heart rate zones</a>, set eating targets with the <a href="/tdee-calculator/">TDEE Calculator</a>, or plan a run with the <a href="/pace-calculator/">Pace Calculator</a>.</p>
+      </div>
+
+      <div>
+        <h2>Cycles at a glance</h2>
+        <table class="dtable">
+          <thead><tr><th>Cycles</th><th>Sleep</th><th>Feels like</th></tr></thead>
+          <tbody>
+            <tr class="cur"><td>6</td><td>9 h</td><td>Full night</td></tr>
+            <tr class="cur"><td>5</td><td>7.5 h</td><td>Recommended (adult)</td></tr>
+            <tr><td>4</td><td>6 h</td><td>Short but workable</td></tr>
+            <tr><td>3</td><td>4.5 h</td><td>Get-through-it</td></tr>
+          </tbody>
+        </table>
+        <p>Highlighted rows show the adult target (7–9 h). Choose your age group in the calculator to shift the recommendation. Shorter nights are there for when life happens — not as a plan.</p>
+
+        <h2>Recommended hours by age</h2>
+        <table class="dtable">
+          <thead><tr><th>Age group</th><th>Hours / night</th></tr></thead>
+          <tbody>
+            <tr><td>Kid (6–12)</td><td>9–11 h</td></tr>
+            <tr><td>Teen (13–17)</td><td>8–10 h</td></tr>
+            <tr><td>Adult (18–64)</td><td>7–9 h</td></tr>
+            <tr><td>Older adult (65+)</td><td>7–8 h</td></tr>
+          </tbody>
+        </table>
+        <p>Ranges per the National Sleep Foundation, reaffirmed in 2026. Set your age group in the calculator to highlight the cycle options that hit your target.</p>
+
+        <h2>The 10-3-2-1 rule</h2>
+        <table class="dtable">
+          <thead><tr><th>Before bed</th><th>Cut out</th></tr></thead>
+          <tbody>
+            <tr><td>10 hours</td><td>Caffeine</td></tr>
+            <tr><td>3 hours</td><td>Food &amp; alcohol</td></tr>
+            <tr><td>2 hours</td><td>Work</td></tr>
+            <tr><td>1 hour</td><td>Screens</td></tr>
+          </tbody>
+        </table>
+        <p>A simple wind-down checklist. It won't fix everything, but a consistent bedtime plus the highlighted cycle count does most of the work.</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>How does the sleep calculator work?</summary><p>Sleep runs in cycles of about 90 minutes, and waking at the end of a cycle rather than the middle tends to feel easier. The calculator counts back or forward in 90-minute blocks, adds roughly 15 minutes to fall asleep, and lists the times that land you at the end of a full cycle.</p></details>
+    <details class="faq"><summary>What time should I go to bed to wake at a set time?</summary><p>Pick <em>Wake up at…</em>, enter your alarm time, and you'll get several bedtimes. Aim for one giving 5–6 cycles (7.5–9 hours) — those rows are highlighted.</p></details>
+    <details class="faq"><summary>How many sleep cycles do I need?</summary><p>Most adults do best on 5–6 complete cycles a night, about 7.5–9 hours. Four cycles (6 hours) can work occasionally; three (4.5 hours) is a short night to get through, not a target.</p></details>
+    <details class="faq"><summary>Why 90 minutes and a 15-minute buffer?</summary><p>A full cycle through light, deep and REM sleep averages about 90 minutes, though it varies. The extra 15 minutes covers the time most people take to actually fall asleep after lying down.</p></details>
+    <details class="faq"><summary>Does the ideal amount of sleep change with age?</summary><p>The recommended nightly total does. Per the National Sleep Foundation: about 9–11 h for kids 6–12, 8–10 h for teens 13–17, 7–9 h for adults 18–64, and 7–8 h for older adults 65+. Set your age group and the highlighted rows update. The 90-minute cycle length doesn't meaningfully shift with adult age, so only the recommendation changes — not the times.</p></details>
+    <details class="faq"><summary>What is the 10-3-2-1 rule?</summary><p>A wind-down guide: no caffeine 10 hours before bed, no food or alcohol 3 hours before, no work 2 hours before, no screens 1 hour before. A rule of thumb, not medical advice.</p></details>
+  </section>
+
+  <footer>
+    <span>Estimates only — sleep cycles vary from person to person and night to night, so treat these times as a helpful guide, not a rule. If you regularly struggle to sleep, talk to a doctor. Free, no sign-up.</span>
+    <span><a href="/heart-rate-zone-calculator/">Heart Rate Zone</a> · <a href="/tdee-calculator/">TDEE</a></span>
+  </footer>
+
+</div>
+
+<script src="/assets/app.js?v=18"></script>
+<script>CalcThis.initSleepCalc({});</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>
