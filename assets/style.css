@@ -311,6 +311,24 @@
   .menu .navsep{display:block;height:1px;background:var(--line);margin:7px 6px}
 
   /* =========================================================
+     FITNESS · RACE TIME PREDICTOR  (body.p-predictor)
+     Reuses .three/.tcol time inputs, .chips presets, .seg toggles,
+     .stable prediction/split tables, .advbtn / .add-row.split, .mbar.
+     No input width cap → fields fill container + go full-width on mobile.
+     ========================================================= */
+  .p-predictor .fld{margin-bottom:18px}
+  .p-predictor .stable td:first-child,.p-predictor .stable th:first-child{color:var(--ink)}
+  .p-predictor .zsub{color:var(--muted);font-weight:500;font-size:12.5px}
+  /* first column may wrap (e.g. "your race" caption); number columns stay on one line */
+  .p-predictor .stable td:first-child,.p-predictor .stable th:first-child{white-space:normal}
+  .p-predictor .stable .zsub{display:block;margin-top:1px}
+  @media(max-width:820px){
+    .p-predictor .stable{font-size:13px}
+    .p-predictor .stable th,.p-predictor .stable td{padding:7px 6px}
+    .p-predictor .stable td:first-child,.p-predictor .stable th:first-child{min-width:58px}
+  }
+
+  /* =========================================================
      FITNESS · HEART-RATE ZONES  (body.p-hrzone)
      ========================================================= */
   .p-hrzone .fld{margin-bottom:18px}

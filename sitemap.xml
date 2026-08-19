@@ -60,6 +60,7 @@
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
+  <url><loc>https://calcthis.co/race-time-predictor/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url>
     <loc>https://calcthis.co/heart-rate-zone-calculator/</loc>
     <lastmod>2026-08-17</lastmod>

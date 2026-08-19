@@ -28,6 +28,7 @@ const PAGES = [
   { file: 'flooring-calculator/index.html',    slug: '/flooring-calculator/' },
   { file: 'tile-calculator/index.html',        slug: '/tile-calculator/' },
   { file: 'pace-calculator/index.html',        slug: '/pace-calculator/' },
+  { file: 'race-time-predictor/index.html',    slug: '/race-time-predictor/' },
   { file: 'heart-rate-zone-calculator/index.html', slug: '/heart-rate-zone-calculator/' },
   { file: 'body-fat-calculator/index.html',    slug: '/body-fat-calculator/' },
   { file: 'tdee-calculator/index.html',        slug: '/tdee-calculator/' },

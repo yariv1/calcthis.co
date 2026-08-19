@@ -2033,3 +2033,227 @@ CalcThis.initSleepCalc = function (cfg) {
   applyModeLabels();
   solve();
 };
+
+/* -----------------------------------------------------------
+   CalcThis.initPredictorCalc(cfg) — race time predictor.
+   Independent engine. Reuses pace's formatting *patterns* (hms /
+   paceStr / trimNum re-implemented locally — no shared global state).
+   From one recent race (distance + time) it predicts finish times for
+   every standard distance with TWO models side by side:
+     • Riegel:  T2 = T1 * (D2/D1)^1.06
+     • VDOT (Daniels/Gilbert): VO2 cost + %VO2max drop, solved by
+       bisection for the target-distance time.
+   Simple mode = full prediction table + VDOT fitness score + speed.
+   Advanced = per-km/mi even splits for a chosen target + pace cross-link.
+   Internal units: distance km, time seconds, pace sec/km. Live, no button. */
+CalcThis.initPredictorCalc = function (cfg) {
+  cfg = cfg || {};
+  var $ = function (id) { return document.getElementById(id); };
+  var KM_PER_MI = 1.609344;
+  var PRESET = { '5k': 5, '10k': 10, 'half': 21.0975, 'marathon': 42.195, 'mile': 1.609344 };
+
+  var unit = 'km';            // km | mi — display distance + predicted pace
+  var advanced = false;
+  var splitTarget = 'marathon';
+  var last = null;           // {d1km, t1sec, vdot}
+
+  var distIn = $('distVal'), hIn = $('h'), mIn = $('m'), sIn = $('s'),
+      distChips = $('distChips');
+  if (!distIn) return;
+
+  function num(v) { v = parseFloat(('' + v).trim()); return isNaN(v) ? NaN : v; }
+  function pad(n) { n = Math.round(n); return (n < 10 ? '0' : '') + n; }
+  function hms(sec) {
+    if (!isFinite(sec) || sec <= 0) return '\u2014';
+    sec = Math.round(sec);
+    var h = Math.floor(sec / 3600), m = Math.floor((sec % 3600) / 60), s = sec % 60;
+    return h > 0 ? h + ':' + pad(m) + ':' + pad(s) : m + ':' + pad(s);
+  }
+  function paceStr(secPerKm, u) {
+    if (!isFinite(secPerKm) || secPerKm <= 0) return '\u2014';
+    var per = u === 'mi' ? secPerKm * KM_PER_MI : secPerKm;
+    var m = Math.floor(per / 60), s = Math.round(per % 60);
+    if (s === 60) { m++; s = 0; }
+    return m + ':' + pad(s);
+  }
+  function trimNum(n, d) {
+    if (!isFinite(n)) return '\u2014';
+    return (n.toFixed(d == null ? 2 : d)).replace(/\.?0+$/, '');
+  }
+
+  function readD1km() {
+    var v = num(distIn.value);
+    if (isNaN(v) || v <= 0) return NaN;
+    return unit === 'mi' ? v * KM_PER_MI : v;
+  }
+  function readT1sec() {
+    var h = num(hIn.value), m = num(mIn.value), s = num(sIn.value);
+    var t = (isNaN(h) ? 0 : h) * 3600 + (isNaN(m) ? 0 : m) * 60 + (isNaN(s) ? 0 : s);
+    return t > 0 ? t : NaN;
+  }
+
+  // ---- models ----
+  function riegel(t1sec, d1km, d2km) { return t1sec * Math.pow(d2km / d1km, 1.06); }
+
+  function vo2cost(vMpMin) { return -4.60 + 0.182258 * vMpMin + 0.000104 * vMpMin * vMpMin; }
+  function pctMax(tMin) {
+    return 0.8 + 0.1894393 * Math.exp(-0.012778 * tMin) + 0.2989558 * Math.exp(-0.1932605 * tMin);
+  }
+  function vdotFrom(d1km, t1sec) {
+    var meters = d1km * 1000, tMin = t1sec / 60, v = meters / tMin;
+    return vo2cost(v) / pctMax(tMin);
+  }
+  function predictVdot(vdot, d2km, seedSec) {
+    var meters = d2km * 1000;
+    function g(tSec) { var tMin = tSec / 60, v = meters / tMin; return vo2cost(v) / pctMax(tMin) - vdot; }
+    var lo = Math.max(3, seedSec * 0.35), hi = seedSec * 2.8, i;
+    for (i = 0; i < 80 && g(lo) < 0; i++) lo *= 0.7;   // push lo until g(lo) > 0
+    for (i = 0; i < 80 && g(hi) > 0; i++) hi *= 1.4;   // push hi until g(hi) < 0
+    for (i = 0; i < 90; i++) { var mid = (lo + hi) / 2; if (g(mid) > 0) lo = mid; else hi = mid; }
+    return (lo + hi) / 2;
+  }
+
+  var TARGETS = [
+    { key: 'mile', label: '1 mi', km: 1.609344 },
+    { key: '5k', label: '5K', km: 5 },
+    { key: '10k', label: '10K', km: 10 },
+    { key: 'half', label: 'Half', km: 21.0975 },
+    { key: 'marathon', label: 'Marathon', km: 42.195 }
+  ];
+
+  function renderTable(d1km, t1sec, vdot) {
+    var body = '';
+    TARGETS.forEach(function (f) {
+      var rieg = riegel(t1sec, d1km, f.km);
+      var vd = predictVdot(vdot, f.km, rieg);
+      var pKm = vd / f.km;
+      var isInput = Math.abs(f.km - d1km) < 0.01;
+      var cur = isInput ? ' class="cur"' : '';
+      body += '<tr' + cur + '><td>' + f.label + (isInput ? ' <span class="zsub">your race</span>' : '') +
+        '</td><td>' + hms(rieg) + '</td><td>' + hms(vd) + '</td><td>' +
+        paceStr(pKm, unit) + '/' + (unit === 'mi' ? 'mi' : 'km') + '</td></tr>';
+    });
+    $('predTable').innerHTML =
+      '<thead><tr><th>Distance</th><th>Riegel</th><th>VDOT</th><th>Pace \u00b7 VDOT</th></tr></thead><tbody>' +
+      body + '</tbody>';
+  }
+
+  function renderSplits(vdot, d1km, t1sec) {
+    var tgt = null, i;
+    for (i = 0; i < TARGETS.length; i++) if (TARGETS[i].key === splitTarget) tgt = TARGETS[i];
+    if (!tgt) tgt = TARGETS[4];
+    var rieg = riegel(t1sec, d1km, tgt.km);
+    var predSec = predictVdot(vdot, tgt.km, rieg);
+    var pKm = predSec / tgt.km;                       // sec per km (even)
+    var totUnit = tgt.km / (unit === 'mi' ? KM_PER_MI : 1);
+    var avgPer = pKm * (unit === 'mi' ? KM_PER_MI : 1); // sec per split unit
+    var segN = Math.max(1, Math.ceil(totUnit - 1e-9));
+    var rows = '', cum = 0, distAcc = 0;
+    for (i = 0; i < segN; i++) {
+      var len = (i === segN - 1) ? (totUnit - (segN - 1)) : 1;
+      if (len <= 1e-6) len = 1;
+      var t = avgPer * len; cum += t; distAcc += len;
+      rows += '<tr><td>' + trimNum(distAcc, 2) + ' ' + (unit === 'mi' ? 'mi' : 'km') + '</td><td>' +
+        paceStr(pKm, unit) + '</td><td>' + hms(t) + '</td><td>' + hms(cum) + '</td></tr>';
+    }
+    $('splitTable').innerHTML =
+      '<thead><tr><th>Distance</th><th>Pace</th><th>Split</th><th>Elapsed</th></tr></thead><tbody>' +
+      rows + '</tbody>';
+    $('splitMeta').textContent = tgt.label + ' \u00b7 VDOT \u00b7 even pace \u00b7 ' + hms(predSec);
+  }
+
+  function solve() {
+    var d1km = readD1km(), t1sec = readT1sec();
+    var ok = isFinite(d1km) && d1km > 0 && isFinite(t1sec) && t1sec > 0;
+
+    var resBig = $('resBig'), resUnit = $('resUnit'), resLab = $('resLab'), resSub = $('resSub');
+    var predWrap = $('predWrap'), tipEl = $('predTip');
+
+    if (!ok) {
+      resLab.textContent = 'Your fitness score';
+      resBig.textContent = '\u2014'; resUnit.textContent = '';
+      resSub.textContent = 'Enter a recent race distance and time.';
+      $('predTable').innerHTML = '';
+      if (predWrap) predWrap.style.display = 'none';
+      if (tipEl) tipEl.style.display = 'none';
+      if ($('splitWrap')) $('splitWrap').style.display = 'none';
+      var mb0 = $('mBig'); if (mb0) { mb0.textContent = '\u2014'; $('mUnit').textContent = ''; $('mSpeed').textContent = ''; }
+      last = null;
+      return;
+    }
+
+    var vdot = vdotFrom(d1km, t1sec);
+    var pKm = t1sec / d1km;
+    last = { d1km: d1km, t1sec: t1sec, vdot: vdot };
+
+    resLab.textContent = 'Your fitness score (VDOT)';
+    resBig.textContent = trimNum(vdot, 1);
+    resUnit.textContent = 'VDOT';
+    resSub.textContent = 'From ' + trimNum(unit === 'mi' ? d1km / KM_PER_MI : d1km, 2) + ' ' +
+      (unit === 'mi' ? 'mi' : 'km') + ' in ' + hms(t1sec) + ' \u00b7 ' +
+      paceStr(pKm, unit) + '/' + (unit === 'mi' ? 'mi' : 'km');
+
+    renderTable(d1km, t1sec, vdot);
+    if (predWrap) predWrap.style.display = '';
+    if (tipEl) tipEl.style.display = '';
+
+    // mobile bar: VDOT + marathon prediction
+    var marSec = predictVdot(vdot, 42.195, riegel(t1sec, d1km, 42.195));
+    var mb = $('mBig'); if (mb) { mb.textContent = trimNum(vdot, 1); $('mUnit').textContent = 'VDOT'; $('mSpeed').textContent = 'Marathon ' + hms(marSec); }
+
+    if (advanced) { renderSplits(vdot, d1km, t1sec); $('splitWrap').style.display = ''; }
+  }
+
+  // ---- wiring ----
+  function seg(id, attr, fn) {
+    var box = $(id); if (!box) return;
+    box.addEventListener('click', function (e) {
+      var b = e.target.closest('button'); if (!b) return;
+      [].forEach.call(box.querySelectorAll('button'), function (x) { x.classList.remove('on'); });
+      b.classList.add('on'); fn(b.getAttribute(attr));
+    });
+  }
+
+  function clearChips() { [].forEach.call(distChips.querySelectorAll('button'), function (b) { b.classList.remove('on'); }); }
+
+  seg('distUnitSeg', 'data-du', function (v) {
+    if (v === unit) return;
+    var km = readD1km();
+    unit = v;
+    [].forEach.call(document.querySelectorAll('[data-du]'), function (el) {
+      if (el.tagName !== 'BUTTON') el.textContent = unit === 'mi' ? 'mi' : 'km';
+    });
+    if (isFinite(km) && km > 0) distIn.value = trimNum(unit === 'mi' ? km / KM_PER_MI : km, 3);
+    clearChips(); solve();
+  });
+
+  distChips.addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    clearChips(); b.classList.add('on');
+    var km = PRESET[b.getAttribute('data-p')];
+    distIn.value = trimNum(unit === 'mi' ? km / KM_PER_MI : km, 3);
+    solve();
+  });
+
+  seg('splitSeg', 'data-tg', function (v) { splitTarget = v; if (advanced) solve(); });
+
+  [distIn, hIn, mIn, sIn].forEach(function (inp) {
+    if (!inp) return;
+    inp.addEventListener('input', function () { if (inp === distIn) clearChips(); solve(); });
+  });
+
+  var advBtn = $('advBtn');
+  if (advBtn) {
+    advBtn.addEventListener('click', function () {
+      advanced = !advanced;
+      advBtn.classList.toggle('open', advanced);
+      $('advBtnLab').textContent = advanced ? 'Go simple' : 'Go advanced';
+      $('advIn').style.display = advanced ? '' : 'none';
+      if (!advanced) { $('splitWrap').style.display = 'none'; }
+      solve();
+      if (advanced) { var sw = $('splitWrap'); if (sw && sw.scrollIntoView) sw.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+    });
+  }
+
+  solve();
+};
