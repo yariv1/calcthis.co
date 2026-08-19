@@ -314,7 +314,6 @@
      FITNESS · HEART-RATE ZONES  (body.p-hrzone)
      ========================================================= */
   .p-hrzone .fld{margin-bottom:18px}
-  .p-hrzone .inp{max-width:190px}
   .p-hrzone .hr-res{margin:12px 0 18px}
   .p-hrzone .zsub{color:var(--muted);font-weight:500;font-size:12.5px}
   .p-hrzone .dtable td:first-child{color:var(--ink)}

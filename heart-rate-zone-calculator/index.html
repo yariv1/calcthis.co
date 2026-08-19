@@ -15,7 +15,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=18">
+<link rel="stylesheet" href="/assets/style.css?v=19">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -81,7 +81,7 @@
     <p>Find your five training zones from your age — including your fat-burning <strong>Zone 2</strong>. Tap <em>Go advanced</em> for personalised <strong>Karvonen</strong> zones based on your resting heart rate.</p>
   </section>
 
-  <div class="grid" style="grid-template-columns:1fr">
+  <div class="grid">
     <div class="card">
       <div class="card-pad">
         <div class="row-top"><h2>Your heart rate zones</h2></div>
@@ -102,6 +102,18 @@
           </label>
         </div>
 
+        <div class="add-row split">
+          <span></span>
+          <button class="advbtn" id="advBtn" type="button">
+            <span id="advBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-pad">
         <div class="hr-res">
           <div class="res-lab" id="resLab">Your estimated max heart rate</div>
           <div class="res-big"><span id="resBig">—</span> <span class="res-unit" id="resUnit"></span></div>
@@ -115,14 +127,6 @@
         <p class="res-tip" id="kvNote" style="display:none">
           <strong>Karvonen</strong> also uses your resting heart rate, so these zones are personalised to your fitness — usually more accurate than the plain %-of-max method.
         </p>
-
-        <div class="add-row split">
-          <span></span>
-          <button class="advbtn" id="advBtn" type="button">
-            <span id="advBtnLab">Go advanced</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-          </button>
-        </div>
       </div>
     </div>
   </div>
@@ -176,7 +180,7 @@
 
 </div>
 
-<script src="/assets/app.js?v=18"></script>
+<script src="/assets/app.js?v=19"></script>
 <script>CalcThis.initHRZoneCalc({});</script>
 <script src="/feedback.js" defer></script>
 </body>
