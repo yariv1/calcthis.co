@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grade Calculator — Weighted Categories for Any Course</title>
+<link rel="canonical" href="https://calcthis.co/grade-calculator/">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<meta name="theme-color" content="#B5761F">
+<meta name="description" content="Free weighted grade calculator. Enter your syllabus categories (homework, quizzes, midterm, final), weights, and scores for an instant course grade. Supports % scores and points mode.">
+<meta property="og:title" content="Grade Calculator — Weighted Categories for Any Course">
+<meta property="og:description" content="Calculate your weighted course grade instantly. Enter categories, weights, and scores. Supports percentage and points mode with live what-if analysis.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://calcthis.co/grade-calculator/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Grade Calculator",
+  "url": "https://calcthis.co/grade-calculator/",
+  "description": "Weighted grade calculator for any course. Enter categories, weights, and scores — supports percentage and points mode with live what-if analysis.",
+  "applicationCategory": "EducationApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+}
+</script>
+<link rel="stylesheet" href="/assets/style.css?v=23">
+<style>
+  .p-grade .modeseg{grid-template-columns:1fr 1fr!important;margin-bottom:20px}
+
+  /* Category rows */
+  .p-grade .cat-block{display:flex;flex-direction:row;gap:10px;align-items:center;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+  .p-grade .cat-block:last-of-type{border-bottom:none;margin-bottom:0;padding-bottom:0}
+  .p-grade .cat-fields{flex:1;min-width:0}
+  .p-grade .cat-name-row{margin-bottom:8px}
+  .p-grade .cat-name-lbl{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.05em;text-transform:uppercase;margin-bottom:4px;display:block}
+
+  /* grids */
+  .p-grade .cat-grid-pct{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+  .p-grade .cat-grid-pts{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+
+  .p-grade .cat-col{display:flex;flex-direction:column;gap:4px;min-width:0}
+  .p-grade .cat-lbl{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.05em;text-transform:uppercase}
+
+  /* uniform field */
+  .p-grade .cf{width:100%;font:inherit;font-size:15px;font-weight:500;color:var(--ink);background:#FCFAF6;border:1.5px solid var(--line);border-radius:10px;padding:0 10px;height:42px;box-sizing:border-box;transition:.15s;appearance:none;-webkit-appearance:none;display:block}
+  .p-grade .cf:focus{outline:none;border-color:var(--amber);background:#fff;box-shadow:0 0 0 3px rgba(181,118,31,.13)}
+  .p-grade .cf.warn{border-color:#e07b30}
+
+  .p-grade .del-btn{display:flex;align-items:center;justify-content:center;width:28px;height:28px;border:0;background:none;color:var(--muted);cursor:pointer;border-radius:7px;font-size:16px;transition:.12s;padding:0;flex:none;align-self:center}
+  .p-grade .del-btn:hover{color:#b23030;background:#FDECEC}
+
+  /* contribution bar */
+  .p-grade .contrib-bar-wrap{height:6px;background:var(--line);border-radius:3px;margin-top:5px;overflow:hidden}
+  .p-grade .contrib-bar{height:100%;border-radius:3px;background:var(--amber);transition:width .3s}
+
+  /* weight warning */
+  .p-grade .weight-warn{font-size:12px;color:#c07030;font-weight:600;margin:10px 0 0;display:none}
+
+  /* big grade */
+  .p-grade .grade-big{font-family:'Fraunces',serif;font-size:clamp(52px,10vw,72px);font-weight:600;line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:var(--ink);margin:6px 0 2px}
+  .p-grade .grade-big.ga{color:var(--spruce)}
+  .p-grade .grade-big.gb{color:var(--spruce-soft)}
+  .p-grade .grade-big.gc{color:var(--amber-deep)}
+  .p-grade .grade-big.gd{color:#B05A1F}
+  .p-grade .grade-big.gf{color:#b23030}
+
+  .p-grade .letter-badge{display:inline-block;font-family:'Fraunces',serif;font-size:18px;font-weight:600;border-radius:8px;padding:4px 12px;margin-bottom:10px}
+  .p-grade .letter-badge.la{background:#EDF2ED;color:var(--spruce)}
+  .p-grade .letter-badge.lb{background:#EDF2ED;color:var(--spruce-soft)}
+  .p-grade .letter-badge.lc{background:#F6EEDF;color:var(--amber-deep)}
+  .p-grade .letter-badge.ld{background:#FDF0E8;color:#B05A1F}
+  .p-grade .letter-badge.lf{background:#FDECEC;color:#b23030}
+
+  /* breakdown table */
+  .p-grade .bk-wrap{margin-top:16px;padding-top:14px;border-top:1px dashed var(--line)}
+  .p-grade .bk-title{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+  .p-grade .bk-table{width:100%;border-collapse:collapse;font-size:13.5px}
+  .p-grade .bk-table th{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);text-align:left;padding:5px 6px;border-bottom:2px solid var(--line)}
+  .p-grade .bk-table td{padding:7px 6px;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums;vertical-align:middle}
+  .p-grade .bk-table tr:last-child td{border-bottom:none}
+  .p-grade .bk-table .contrib-cell{min-width:80px}
+
+  /* what-if */
+  .p-grade .wi-wrap{margin-top:16px;padding-top:14px;border-top:1px dashed var(--line)}
+  .p-grade .wi-title{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+  .p-grade .wi-row{display:grid;grid-template-columns:1fr 80px 80px;gap:8px;align-items:end;margin-bottom:8px}
+  .p-grade .wi-col{display:flex;flex-direction:column;gap:4px}
+  .p-grade .wi-lbl{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.05em;text-transform:uppercase}
+  .p-grade .wi-result{font-size:13.5px;color:var(--ink-soft);min-height:20px;margin-top:4px}
+  .p-grade .wi-sel-wrap{position:relative}
+  .p-grade .wi-sel-wrap::after{content:"▾";position:absolute;right:10px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none;font-size:11px}
+  .p-grade .wi-sel-wrap select{padding-right:26px}
+
+  /* xlinks */
+  .p-grade .xlinks{display:flex;flex-direction:column;gap:8px;margin-top:18px}
+  .p-grade .xlink{display:flex;align-items:center;gap:8px;padding:11px 13px;background:#F5EFE4;border:1px solid var(--line);border-radius:10px;text-decoration:none;color:var(--ink-soft);font-size:13px;font-weight:600;transition:.15s}
+  .p-grade .xlink:hover{background:#F0E8D6;color:var(--ink)}
+  .p-grade .xlink svg{flex:none;color:var(--amber-deep)}
+
+  @media(max-width:480px){
+    .p-grade .wi-row{grid-template-columns:1fr 70px 70px}
+    .p-grade .cat-grid-pts{grid-template-columns:1fr 1fr}
+    .p-grade .cat-grid-pts .cat-col:last-child{display:none}
+  }
+</style>
+</head>
+<body class="p-grade">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <span class="menu-col-head">Construction</span>
+          <a href="/">Home</a>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <span class="navsep" aria-hidden="true"></span>
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/" class="current">Grade</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+<div class="hero">
+  <p class="eyebrow">School &amp; Grades</p>
+  <h1>Grade Calculator</h1>
+  <p>Enter your syllabus categories, weights, and scores — your weighted course grade updates live. Supports percentage scores or raw points.</p>
+</div>
+
+<div class="grid">
+
+  <!-- LEFT: Inputs -->
+  <div class="card card-pad">
+    <div class="row-top">
+      <h2>Your Categories</h2>
+    </div>
+
+    <!-- Mode toggle -->
+    <div class="modeseg" id="modeSeg" role="group" aria-label="Input mode">
+      <button class="on" data-mode="pct">% Score</button>
+      <button data-mode="pts">Points</button>
+    </div>
+
+    <!-- Category rows -->
+    <div id="catRows"></div>
+
+    <p class="weight-warn" id="weightWarn"></p>
+
+    <div style="margin-top:16px">
+      <div class="add-row">
+        <button class="btn" id="addCatBtn" type="button">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+          Add Category
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Results -->
+  <div class="card card-pad">
+    <div class="row-top"><h2>Your Grade</h2></div>
+
+    <div class="bf-res">
+      <div class="res-lab" id="gradeLabel">Weighted Course Grade</div>
+      <div class="grade-big" id="gradeBig">—</div>
+      <div id="letterBadge"></div>
+      <div class="res-sub" id="gradeSub">Fill in at least one category above.</div>
+    </div>
+
+    <!-- Breakdown table -->
+    <div class="bk-wrap" id="bkWrap" style="display:none">
+      <div class="bk-title">Category Breakdown</div>
+      <table class="bk-table">
+        <thead><tr><th>Category</th><th>Weight</th><th>Score</th><th>Contribution</th></tr></thead>
+        <tbody id="bkBody"></tbody>
+      </table>
+    </div>
+
+    <!-- What-if -->
+    <div class="wi-wrap" id="wiWrap" style="display:none">
+      <div class="wi-title">What Score Do I Need?</div>
+      <div class="wi-row">
+        <div class="wi-col">
+          <span class="wi-lbl">Category</span>
+          <div class="wi-sel-wrap">
+            <select class="cf" id="wiCat" aria-label="What-if category"></select>
+          </div>
+        </div>
+        <div class="wi-col">
+          <span class="wi-lbl">Target %</span>
+          <input type="number" class="cf" id="wiTarget" placeholder="e.g. 90" min="0" max="100" step="0.1">
+        </div>
+        <div class="wi-col">
+          <span class="wi-lbl">Need</span>
+          <input type="text" class="cf" id="wiNeed" readonly style="background:#F5EFE4;cursor:default;font-family:'Fraunces',serif;font-size:17px;font-weight:600;color:var(--ink)">
+        </div>
+      </div>
+      <div class="wi-result" id="wiResult"></div>
+    </div>
+
+    <!-- Cross-links -->
+    <div class="xlinks">
+      <a class="xlink" href="/final-grade-calculator/">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><rect x="4" y="3" width="14" height="18" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M8 8h8M8 12h8M8 16h5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity=".6"/></svg>
+        What exam score do I need? → Final Grade Calculator
+      </a>
+      <a class="xlink" href="/gpa-calculator/">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M8 12h8M8 8h5M8 16h3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity=".6"/></svg>
+        Calculate your GPA → GPA Calculator
+      </a>
+    </div>
+  </div>
+
+</div>
+
+<section class="prose">
+  <h2>How weighted grades work</h2>
+  <p>Most courses divide your grade into categories — homework, quizzes, midterm, final exam — each worth a different percentage of your total grade. A weighted grade calculator multiplies each category's score by its weight, sums the results, and divides by the total weight. So a 78% midterm worth 25% contributes 19.5 percentage points to your final grade, while a 95% homework score worth 10% only contributes 9.5 points.</p>
+  <p>The formula: <strong>Weighted Grade = Σ(Score × Weight) / Σ(Weights)</strong>. If your weights add to 100%, the denominator is 100 and the result is your direct course percentage. If they don't add to 100% — say your instructor uses partial weights or extra credit — the calculator still works correctly by dividing by whatever they sum to.</p>
+  <h3>% Score vs Points mode</h3>
+  <p>Use <strong>% Score mode</strong> when your syllabus lists category weights as percentages and you know your average score per category. Use <strong>Points mode</strong> when you track raw points — enter total points earned and total points possible per category; the calculator converts to percentages automatically.</p>
+  <h3>What-if analysis</h3>
+  <p>The "What Score Do I Need?" tool works backwards: given your current scores in all other categories, it calculates exactly what score you need in the selected category to hit your target course grade. Useful for planning before a final exam or major project.</p>
+</section>
+
+<footer>
+  <span>© <span id="yr">2026</span> CalcThis — estimates only; verify with your instructor's gradebook.</span>
+  <nav>
+    <a href="/board-foot-calculator/">Board Foot</a>
+    <a href="/gravel-calculator/">Gravel</a>
+    <a href="/sand-calculator/">Sand</a>
+    <a href="/topsoil-calculator/">Topsoil</a>
+    <a href="/mulch-calculator/">Mulch</a>
+    <a href="/concrete-calculator/">Concrete</a>
+    <a href="/flooring-calculator/">Flooring</a>
+    <a href="/tile-calculator/">Tile</a>
+    <a href="/pace-calculator/">Pace</a>
+    <a href="/race-time-predictor/">Race Time Predictor</a>
+    <a href="/heart-rate-zone-calculator/">Heart Rate Zones</a>
+    <a href="/body-fat-calculator/">Body Fat</a>
+    <a href="/tdee-calculator/">TDEE / Calories</a>
+    <a href="/one-rep-max-calculator/">One Rep Max</a>
+    <a href="/sleep-calculator/">Sleep</a>
+    <a href="/final-grade-calculator/">Final Grade</a>
+    <a href="/gpa-calculator/">GPA</a>
+    <a href="/grade-calculator/">Grade</a>
+  </nav>
+</footer>
+
+</div><!-- /.wrap -->
+
+<script src="/assets/app.js?v=23"></script>
+<script>
+(function(){
+  var mode = 'pct'; // 'pct' | 'pts'
+  var cats = [];
+  var rowId = 0;
+
+  var DEFAULTS = [
+    {name:'Homework',   weight:20, score:'', earned:'', possible:''},
+    {name:'Quizzes',    weight:20, score:'', earned:'', possible:''},
+    {name:'Midterm',    weight:25, score:'', earned:'', possible:''},
+    {name:'Final Exam', weight:35, score:'', earned:'', possible:''}
+  ];
+
+  function pctToLetter(p){
+    if(p>=90) return 'A';
+    if(p>=80) return 'B';
+    if(p>=70) return 'C';
+    if(p>=60) return 'D';
+    return 'F';
+  }
+  function letterClass(l){
+    return {A:'ga',B:'gb',C:'gc',D:'gd',F:'gf'}[l]||'';
+  }
+  function badgeClass(l){
+    return {A:'la',B:'lb',C:'lc',D:'ld',F:'lf'}[l]||'';
+  }
+
+  function getScore(cat){
+    if(mode==='pct'){
+      var s=parseFloat(cat.score);
+      return isNaN(s)?NaN:s;
+    } else {
+      var e=parseFloat(cat.earned), p=parseFloat(cat.possible);
+      if(isNaN(e)||isNaN(p)||p<=0) return NaN;
+      return (e/p)*100;
+    }
+  }
+
+  function solve(){
+    var totalW=0, weightedSum=0, validCats=[];
+    cats.forEach(function(c){
+      var w=parseFloat(c.weight);
+      if(isNaN(w)||w<=0) return;
+      totalW+=w;
+      var s=getScore(c);
+      if(!isNaN(s)){
+        weightedSum+=s*w;
+        validCats.push({name:c.name||'Category',weight:w,score:s,contrib:(s*w)});
+      }
+    });
+
+    // weight warning
+    var warnEl=document.getElementById('weightWarn');
+    var allW=cats.reduce(function(a,c){var w=parseFloat(c.weight);return a+(isNaN(w)?0:w);},0);
+    if(cats.length>0 && Math.abs(allW-100)>0.5){
+      warnEl.style.display='';
+      warnEl.textContent='Weights sum to '+allW.toFixed(1)+'% (not 100%). Grade is still calculated correctly.';
+    } else {
+      warnEl.style.display='none';
+    }
+
+    var gradeBig=document.getElementById('gradeBig');
+    var letterBadge=document.getElementById('letterBadge');
+    var gradeSub=document.getElementById('gradeSub');
+    var bkWrap=document.getElementById('bkWrap');
+    var wiWrap=document.getElementById('wiWrap');
+
+    if(validCats.length===0){
+      gradeBig.textContent='—';
+      gradeBig.className='grade-big';
+      letterBadge.innerHTML='';
+      gradeSub.textContent='Fill in at least one category above.';
+      bkWrap.style.display='none';
+      wiWrap.style.display='none';
+      return;
+    }
+
+    var usedW=validCats.reduce(function(a,c){return a+c.weight;},0);
+    var grade=weightedSum/usedW;
+    var letter=pctToLetter(grade);
+
+    gradeBig.textContent=grade.toFixed(1)+'%';
+    gradeBig.className='grade-big '+letterClass(letter);
+    letterBadge.innerHTML='<span class="letter-badge '+badgeClass(letter)+'">'+letter+'</span>';
+    gradeSub.textContent=validCats.length+' of '+cats.length+' categor'+(cats.length===1?'y':'ies')+' filled · '+allW.toFixed(0)+'% total weight';
+
+    // breakdown
+    bkWrap.style.display='';
+    var bkBody=document.getElementById('bkBody');
+    var maxContrib=Math.max.apply(null,validCats.map(function(c){return c.contrib/usedW;}));
+    bkBody.innerHTML=validCats.map(function(c){
+      var contrib=(c.contrib/usedW).toFixed(1);
+      var barW=maxContrib>0?Math.round((c.contrib/usedW)/maxContrib*100):0;
+      return '<tr>'+
+        '<td>'+escHtml(c.name)+'</td>'+
+        '<td>'+c.weight.toFixed(0)+'%</td>'+
+        '<td>'+c.score.toFixed(1)+'%</td>'+
+        '<td class="contrib-cell">'+
+          '<div style="display:flex;align-items:center;gap:6px">'+
+            '<span style="font-variant-numeric:tabular-nums;min-width:36px">'+contrib+'%</span>'+
+            '<div class="contrib-bar-wrap" style="flex:1"><div class="contrib-bar" style="width:'+barW+'%"></div></div>'+
+          '</div>'+
+        '</td>'+
+      '</tr>';
+    }).join('');
+
+    // what-if
+    wiWrap.style.display='';
+    populateWiCat();
+    solveWhatIf(grade, usedW, weightedSum);
+  }
+
+  function escHtml(s){
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function populateWiCat(){
+    var sel=document.getElementById('wiCat');
+    var prev=sel.value;
+    sel.innerHTML=cats.map(function(c,i){
+      return '<option value="'+i+'">'+(c.name||'Category '+(i+1))+'</option>';
+    }).join('');
+    if(prev) sel.value=prev;
+  }
+
+  function solveWhatIf(currentGrade, usedW, weightedSum){
+    var sel=document.getElementById('wiCat');
+    var targetEl=document.getElementById('wiTarget');
+    var needEl=document.getElementById('wiNeed');
+    var resultEl=document.getElementById('wiResult');
+
+    var idx=parseInt(sel.value);
+    var target=parseFloat(targetEl.value);
+    if(isNaN(idx)||isNaN(target)){
+      needEl.value='';
+      resultEl.textContent='Select a category and enter your target grade.';
+      return;
+    }
+    var cat=cats[idx];
+    var catW=parseFloat(cat.weight);
+    if(isNaN(catW)||catW<=0){
+      needEl.value='';
+      resultEl.textContent='Give that category a weight first.';
+      return;
+    }
+    // remove this cat's contribution from sum
+    var catScore=getScore(cat);
+    var sumWithout=isNaN(catScore)?weightedSum:weightedSum-(catScore*catW);
+    var wWithout=isNaN(catScore)?usedW:usedW-catW;
+    // need: target = (sumWithout + need*catW) / (wWithout + catW)
+    var need=(target*(wWithout+catW)-sumWithout)/catW;
+    needEl.value=need.toFixed(1)+'%';
+    var color=need>100?'#b23030':need<0?'var(--spruce)':'var(--ink-soft)';
+    if(need>100){
+      resultEl.innerHTML='<span style="color:#b23030">Not mathematically possible — you\'d need more than 100%.</span>';
+    } else if(need<0){
+      resultEl.innerHTML='<span style="color:var(--spruce)">You\'ve already secured a '+target+'% course grade!</span>';
+    } else {
+      resultEl.innerHTML='Score <strong style="color:'+color+'">'+need.toFixed(1)+'%</strong> on <em>'+escHtml(cat.name||'this category')+'</em> to reach <strong>'+target+'%</strong> overall.';
+    }
+  }
+
+  // build a category row
+  function buildCat(id, data){
+    var div=document.createElement('div');
+    div.className='cat-block';
+    div.setAttribute('data-cid', id);
+
+    var isPts=mode==='pts';
+
+    var fieldsHtml = isPts
+      ? '<div class="cat-grid-pts">'+
+          '<div class="cat-col"><span class="cat-lbl">Weight %</span><input type="number" class="cf cat-weight" placeholder="%" min="0" max="200" step="0.5" value="'+(data.weight||'')+'" aria-label="Weight"></div>'+
+          '<div class="cat-col"><span class="cat-lbl">Earned pts</span><input type="number" class="cf cat-earned" placeholder="pts" min="0" step="0.5" value="'+(data.earned||'')+'" aria-label="Points earned"></div>'+
+          '<div class="cat-col"><span class="cat-lbl">Total pts</span><input type="number" class="cf cat-possible" placeholder="pts" min="0.1" step="0.5" value="'+(data.possible||'')+'" aria-label="Total points"></div>'+
+        '</div>'
+      : '<div class="cat-grid-pct">'+
+          '<div class="cat-col"><span class="cat-lbl">Weight %</span><input type="number" class="cf cat-weight" placeholder="%" min="0" max="200" step="0.5" value="'+(data.weight||'')+'" aria-label="Weight"></div>'+
+          '<div class="cat-col"><span class="cat-lbl">Your score (0–100)</span><input type="number" class="cf cat-score" placeholder="e.g. 85" min="0" max="110" step="0.1" value="'+(data.score||'')+'" aria-label="Score"></div>'+
+        '</div>';
+
+    div.innerHTML=
+      '<div class="cat-fields">'+
+        '<div class="cat-name-row">'+
+          '<span class="cat-name-lbl">Category name (optional)</span>'+
+          '<input type="text" class="cf cat-name" placeholder="e.g. Homework" value="'+(data.name||'')+'" aria-label="Category name">'+
+        '</div>'+
+        fieldsHtml+
+      '</div>'+
+      '<button class="del-btn" data-cid="'+id+'" aria-label="Remove category" type="button">&#215;</button>';
+
+    function onChange(){readCat(id,div);solve();}
+    div.querySelector('.cat-name').addEventListener('input',onChange);
+    div.querySelector('.cat-weight').addEventListener('input',onChange);
+    if(isPts){
+      div.querySelector('.cat-earned').addEventListener('input',onChange);
+      div.querySelector('.cat-possible').addEventListener('input',onChange);
+    } else {
+      div.querySelector('.cat-score').addEventListener('input',onChange);
+    }
+    div.querySelector('.del-btn').addEventListener('click',function(){
+      cats=cats.filter(function(c){return c._id!==id;});
+      div.parentNode.removeChild(div);
+      solve();
+    });
+    return div;
+  }
+
+  function readCat(id,div){
+    var idx=-1;
+    for(var i=0;i<cats.length;i++) if(cats[i]._id===id){idx=i;break;}
+    var obj={
+      _id:id,
+      name:div.querySelector('.cat-name').value,
+      weight:div.querySelector('.cat-weight').value,
+      score: div.querySelector('.cat-score') ? div.querySelector('.cat-score').value : cats[idx]&&cats[idx].score||'',
+      earned: div.querySelector('.cat-earned') ? div.querySelector('.cat-earned').value : cats[idx]&&cats[idx].earned||'',
+      possible: div.querySelector('.cat-possible') ? div.querySelector('.cat-possible').value : cats[idx]&&cats[idx].possible||''
+    };
+    if(idx>=0) cats[idx]=obj; else cats.push(obj);
+  }
+
+  function addCat(data){
+    var id=++rowId;
+    var obj={_id:id,name:data.name||'',weight:data.weight||'',score:data.score||'',earned:data.earned||'',possible:data.possible||''};
+    cats.push(obj);
+    var div=buildCat(id,obj);
+    document.getElementById('catRows').appendChild(div);
+    return div;
+  }
+
+  function rebuildRows(){
+    var saved=cats.slice();
+    cats=[];
+    document.getElementById('catRows').innerHTML='';
+    rowId=0;
+    saved.forEach(function(c){addCat(c);});
+  }
+
+  // mode toggle
+  document.getElementById('modeSeg').addEventListener('click',function(e){
+    var b=e.target.closest('button');if(!b)return;
+    [].forEach.call(this.querySelectorAll('button'),function(x){x.classList.remove('on');});
+    b.classList.add('on');
+    mode=b.getAttribute('data-mode');
+    rebuildRows();
+    solve();
+  });
+
+  document.getElementById('addCatBtn').addEventListener('click',function(){
+    addCat({});
+    solve();
+  });
+
+  // what-if listeners
+  document.getElementById('wiCat').addEventListener('change',function(){
+    var grade=parseFloat(document.getElementById('gradeBig').textContent);
+    if(!isNaN(grade)) solve();
+  });
+  document.getElementById('wiTarget').addEventListener('input',function(){solve();});
+
+  // init with defaults
+  DEFAULTS.forEach(function(d){addCat(d);});
+  solve();
+
+  document.getElementById('yr').textContent=new Date().getFullYear();
+})();
+</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>

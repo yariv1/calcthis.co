@@ -36,6 +36,7 @@ const PAGES = [
   { file: 'sleep-calculator/index.html',       slug: '/sleep-calculator/' },
   { file: 'final-grade-calculator/index.html', slug: '/final-grade-calculator/' },
   { file: 'gpa-calculator/index.html',         slug: '/gpa-calculator/' },
+  { file: 'grade-calculator/index.html',       slug: '/grade-calculator/' },
 ];
 
 // ---- bump shared asset version ----
