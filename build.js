@@ -34,6 +34,7 @@ const PAGES = [
   { file: 'tdee-calculator/index.html',        slug: '/tdee-calculator/' },
   { file: 'one-rep-max-calculator/index.html', slug: '/one-rep-max-calculator/' },
   { file: 'sleep-calculator/index.html',       slug: '/sleep-calculator/' },
+  { file: 'final-grade-calculator/index.html', slug: '/final-grade-calculator/' },
 ];
 
 // ---- bump shared asset version ----

@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Final Grade Calculator — What Do I Need on My Final Exam?</title>
+<link rel="canonical" href="https://calcthis.co/final-grade-calculator/">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<meta name="theme-color" content="#B5761F">
+<meta name="description" content="Find out exactly what score you need on your final exam to reach your target grade — or predict your course grade from an expected exam score. Instant, no sign-up.">
+<meta property="og:title" content="Final Grade Calculator — What Do I Need on My Final Exam?">
+<meta property="og:description" content="Find out exactly what score you need on your final exam to reach your target grade — or predict your course grade from an expected exam score.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://calcthis.co/final-grade-calculator/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Final Grade Calculator",
+      "url": "https://calcthis.co/final-grade-calculator/",
+      "description": "Calculate what score you need on your final exam to reach your target grade, or predict your course grade from an expected exam score.",
+      "applicationCategory": "EducationApplication",
+      "operatingSystem": "Any (web browser)",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How do I calculate what I need on my final exam?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Use the formula: Required exam score = (Target grade − Current grade × (1 − Final weight)) ÷ Final weight. For example, if your current grade is 78%, your target is 80%, and the final is worth 30%, you need (0.80 − 0.78 × 0.70) ÷ 0.30 = 84.7% on the final."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What if the required score is over 100%?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "If the calculator shows a score above 100%, your target grade is mathematically impossible given your current grade and the exam's weight. You would need to adjust your target to a lower grade."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How is my final course grade calculated?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Your final course grade = Current grade × (1 − Final exam weight) + Exam score × Final exam weight. So if your current grade is 85%, the final is worth 40%, and you score 90%, your final grade = 85 × 0.60 + 90 × 0.40 = 87%."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What does 'current grade' mean?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Your current grade is your grade in the course before the final exam — the weighted average of all your assignments, quizzes, and tests so far. Check your course gradebook or learning management system (Canvas, Blackboard, etc.) for this number."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What if my final exam is worth more than 50%?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The calculator handles any final weight from 1% to 99%. The higher the weight, the more the final exam can move your grade in either direction. Enter the exact percentage your syllabus specifies."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+<link rel="stylesheet" href="/assets/style.css?v=21">
+</head>
+<body class="p-finalgrade">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <span class="menu-col-head">Construction</span>
+          <a href="/">Home</a>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <span class="navsep" aria-hidden="true"></span>
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/" class="current">Final Grade</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">School &amp; Grades</div>
+    <h1>Final Grade Calculator</h1>
+    <p>What score do you need on your final exam to hit your target grade — or predict your course grade from an expected score.</p>
+  </section>
+
+  <div class="grid">
+
+    <!-- INPUTS CARD -->
+    <div class="card card-pad">
+      <div class="modeseg" id="modeSeg">
+        <button class="on" data-mode="need" type="button">What do I need?</button>
+        <button data-mode="predict" type="button">What will I get?</button>
+      </div>
+
+      <label class="fld">
+        <span class="lab"><span>Current grade</span><span class="unit">%</span></span>
+        <div class="inp"><input type="number" id="currentGrade" min="0" max="100" step="0.1" placeholder="e.g. 78" inputmode="decimal"><span class="suf">%</span></div>
+      </label>
+
+      <label class="fld">
+        <span class="lab"><span>Final exam weight</span><span class="unit">% of course</span></span>
+        <div class="inp"><input type="number" id="finalWeight" min="1" max="99" step="1" placeholder="e.g. 30" inputmode="decimal"><span class="suf">%</span></div>
+      </label>
+
+      <!-- Mode: need -->
+      <label class="fld" id="targetRow">
+        <span class="lab"><span>Target course grade</span><span class="unit">%</span></span>
+        <div class="inp"><input type="number" id="targetGrade" min="0" max="100" step="0.1" placeholder="e.g. 80" inputmode="decimal"><span class="suf">%</span></div>
+      </label>
+
+      <!-- Mode: predict -->
+      <label class="fld" id="examRow" style="display:none">
+        <span class="lab"><span>Expected exam score</span><span class="unit">%</span></span>
+        <div class="inp"><input type="number" id="examScore" min="0" max="100" step="0.1" placeholder="e.g. 75" inputmode="decimal"><span class="suf">%</span></div>
+      </label>
+
+      <!-- Advanced -->
+      <div class="add-row" style="margin-top:4px">
+        <button class="advbtn" id="advBtn" type="button" style="margin-left:auto">
+          Advanced (weighted categories)
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+
+      <div id="advOut" style="display:none">
+        <div style="height:10px"></div>
+        <div style="font-size:12.5px;color:var(--muted);margin-bottom:10px;line-height:1.45">Override your current grade with a weighted breakdown of your course categories.</div>
+
+        <div class="two" style="margin-bottom:4px">
+          <div style="font-size:12px;font-weight:700;color:var(--ink-soft);padding:0 2px 4px">Category</div>
+          <div style="font-size:12px;font-weight:700;color:var(--ink-soft);padding:0 2px 4px">Weight → Grade</div>
+        </div>
+        <div id="catRows"></div>
+        <button class="btn" id="addCatBtn" type="button" style="margin-top:8px;background:none;color:var(--amber-deep);border-color:var(--line);font-size:13px;padding:9px">+ Add category</button>
+      </div>
+    </div>
+
+    <!-- RESULTS CARD -->
+    <div class="card card-pad">
+      <div class="row-top" style="margin-bottom:14px">
+        <h2 id="resTitle">Score needed on final</h2>
+      </div>
+
+      <!-- need mode result -->
+      <div id="needRes">
+        <div class="res-lab">Required exam score</div>
+        <div class="req-score" id="reqScore">—</div>
+        <div class="res-sub" id="reqSub"></div>
+
+        <div id="badgeWrap" style="margin-top:12px"></div>
+
+        <div class="whatif-wrap">
+          <div class="whatif-title">What-if table</div>
+          <div class="stable-wrap">
+            <table class="stable" id="whatIfTable">
+              <thead><tr><th>Exam score</th><th>Course grade</th><th>Letter</th></tr></thead>
+              <tbody id="whatIfBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- predict mode result -->
+      <div id="predictRes" style="display:none">
+        <div class="res-lab">Predicted course grade</div>
+        <div class="req-score" id="predScore">—</div>
+        <div class="res-sub" id="predSub"></div>
+        <div id="predBadgeWrap" style="margin-top:12px"></div>
+
+        <div class="whatif-wrap">
+          <div class="whatif-title">What-if table</div>
+          <div class="stable-wrap">
+            <table class="stable" id="whatIfTable2">
+              <thead><tr><th>Exam score</th><th>Course grade</th><th>Letter</th></tr></thead>
+              <tbody id="whatIfBody2"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /.grid -->
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How the calculator works</h2>
+        <p>There are two modes. <strong>"What do I need?"</strong> solves for the minimum exam score required to finish the course at your target grade. <strong>"What will I get?"</strong> predicts your final course grade based on an expected exam score.</p>
+
+        <h3>Required exam score formula</h3>
+        <div class="formula">
+          Required = (Target − Current × (1 − Weight)) ÷ Weight
+          <small>where Weight is the final exam's share of your course grade (0–1)</small>
+        </div>
+        <p>For example: current grade 78%, target 80%, final worth 30% → Required = (0.80 − 0.78 × 0.70) ÷ 0.30 = <strong>84.7%</strong>.</p>
+
+        <h3>Predicted grade formula</h3>
+        <div class="formula">
+          Predicted = Current × (1 − Weight) + Exam × Weight
+          <small>straight weighted average of pre-final work and exam score</small>
+        </div>
+      </div>
+      <div>
+        <h2>Reading the results</h2>
+        <p>If the required score shows <strong style="color:#b23030">over 100%</strong>, the target grade is mathematically impossible — you'll need to lower your target. If it shows a very low number, you have a comfortable cushion going into the exam.</p>
+        <p>The <strong>what-if table</strong> shows a range of possible exam scores alongside the resulting course grade, so you can see exactly how much each exam point matters.</p>
+
+        <h3>Where to find your current grade</h3>
+        <p>Check your course's learning management system (Canvas, Blackboard, Moodle, etc.). Use the overall weighted grade, not just your average on individual assignments.</p>
+
+        <h3>Where to find the final exam weight</h3>
+        <p>It's in your course syllabus — usually listed as a percentage or fraction of your total grade. Common values are 20%, 25%, 30%, and 40%.</p>
+      </div>
+    </div>
+
+    <h2>Frequently asked questions</h2>
+
+    <details class="faq">
+      <summary>What if the required score is over 100%?</summary>
+      <p>Your target grade is impossible given your current standing and the exam's weight. Lower your target grade until the required score drops to 100% or below. The what-if table shows what course grade you can still realistically achieve.</p>
+    </details>
+    <details class="faq">
+      <summary>What does "current grade" mean exactly?</summary>
+      <p>It's your weighted grade in the course before the final exam — the combined score on all assignments, quizzes, midterms, and other graded work so far. Your gradebook in Canvas or Blackboard will show this as your overall percentage.</p>
+    </details>
+    <details class="faq">
+      <summary>My professor uses weighted categories — how do I handle that?</summary>
+      <p>Use the Advanced mode. Enter each graded category (Homework, Quizzes, Midterm, etc.) with its weight and your current score in that category. The calculator will compute your true current grade and use it in the formula.</p>
+    </details>
+    <details class="faq">
+      <summary>Can I use this for a class where the final replaces my lowest test?</summary>
+      <p>Not directly — that policy changes the effective weight of the final depending on your test scores. Use your professor's own grade calculator or gradebook for that scenario.</p>
+    </details>
+    <details class="faq">
+      <summary>How accurate is this?</summary>
+      <p>Perfectly accurate for a standard weighted-grade course. The only variable is your "current grade" input — if your gradebook shows a rounded number, your result may be off by a fraction of a percent.</p>
+    </details>
+  </section>
+
+  <footer>
+    <span>© <span id="yr">2026</span> CalcThis — estimates only; confirm with your professor or syllabus.</span>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/final-grade-calculator/">Final Grade</a>
+      <a href="/pace-calculator/">Pace</a>
+      <a href="/body-fat-calculator/">Body Fat</a>
+      <a href="/tdee-calculator/">TDEE / Calories</a>
+    </nav>
+  </footer>
+
+</div><!-- /.wrap -->
+
+<script src="/assets/app.js?v=21"></script>
+<script>
+(function(){
+  // ── dom refs ──
+  var modeSeg   = document.getElementById('modeSeg');
+  var curIn     = document.getElementById('currentGrade');
+  var wIn       = document.getElementById('finalWeight');
+  var tgtIn     = document.getElementById('targetGrade');
+  var examIn    = document.getElementById('examScore');
+  var targetRow = document.getElementById('targetRow');
+  var examRow   = document.getElementById('examRow');
+  var needRes   = document.getElementById('needRes');
+  var predictRes= document.getElementById('predictRes');
+  var resTitle  = document.getElementById('resTitle');
+
+  var reqScoreEl= document.getElementById('reqScore');
+  var reqSubEl  = document.getElementById('reqSub');
+  var badgeWrap = document.getElementById('badgeWrap');
+  var whatIfBody= document.getElementById('whatIfBody');
+
+  var predScoreEl   = document.getElementById('predScore');
+  var predSubEl     = document.getElementById('predSub');
+  var predBadgeWrap = document.getElementById('predBadgeWrap');
+  var whatIfBody2   = document.getElementById('whatIfBody2');
+
+  var advBtn  = document.getElementById('advBtn');
+  var advOut  = document.getElementById('advOut');
+  var catRows = document.getElementById('catRows');
+  var addCatBtn= document.getElementById('addCatBtn');
+
+  var mode = 'need';
+  var advOpen = false;
+  var cats = []; // {weightEl, gradeEl}
+
+  // ── mode toggle ──
+  modeSeg.addEventListener('click', function(e){
+    var b = e.target.closest('button'); if(!b) return;
+    modeSeg.querySelectorAll('button').forEach(function(x){x.classList.remove('on');});
+    b.classList.add('on');
+    mode = b.getAttribute('data-mode');
+    if(mode === 'need'){
+      targetRow.style.display=''; examRow.style.display='none';
+      needRes.style.display=''; predictRes.style.display='none';
+      resTitle.textContent = 'Score needed on final';
+    } else {
+      targetRow.style.display='none'; examRow.style.display='';
+      needRes.style.display='none'; predictRes.style.display='';
+      resTitle.textContent = 'Predicted course grade';
+    }
+    calc();
+  });
+
+  // ── advanced toggle ──
+  advBtn.addEventListener('click', function(){
+    advOpen = !advOpen;
+    advOut.style.display = advOpen ? '' : 'none';
+    advBtn.classList.toggle('open', advOpen);
+    if(advOpen && cats.length === 0) addCat();
+    calc();
+  });
+
+  addCatBtn.addEventListener('click', function(){ addCat(); calc(); });
+
+  function addCat(){
+    var row = document.createElement('div');
+    row.className = 'two';
+    row.style.cssText = 'margin-bottom:8px;align-items:center';
+    var wEl = document.createElement('input');
+    wEl.type='number'; wEl.min=0; wEl.max=100; wEl.step=1; wEl.placeholder='Weight %';
+    wEl.style.cssText='width:100%;font:inherit;font-size:15px;font-weight:500;color:var(--ink);background:#FCFAF6;border:1.5px solid var(--line);border-radius:10px;padding:10px 13px';
+    var gEl = document.createElement('input');
+    gEl.type='number'; gEl.min=0; gEl.max=100; gEl.step=0.1; gEl.placeholder='Grade %';
+    gEl.style.cssText=wEl.style.cssText;
+    wEl.addEventListener('input', calc);
+    gEl.addEventListener('input', calc);
+    row.appendChild(wEl); row.appendChild(gEl);
+    catRows.appendChild(row);
+    cats.push({weightEl:wEl, gradeEl:gEl});
+  }
+
+  // ── letter grade helper ──
+  function letter(g){
+    if(g>=90) return 'A';
+    if(g>=80) return 'B';
+    if(g>=70) return 'C';
+    if(g>=60) return 'D';
+    return 'F';
+  }
+
+  function badgeHTML(g){
+    var l = letter(g);
+    return '<span class="grade-badge letter-'+l+'">' + l + ' · ' + g.toFixed(1) + '%</span>';
+  }
+
+  // ── what-if table ──
+  var WIF_SCORES = [50,55,60,65,70,75,80,85,90,95,100];
+
+  function buildWhatIf(tbody, cur, w, targetScore){
+    tbody.innerHTML = '';
+    WIF_SCORES.forEach(function(es){
+      var cg = cur*(1-w) + es*w;
+      var tr = document.createElement('tr');
+      var isCur = (targetScore !== null && Math.abs(es - targetScore) < 5);
+      // highlight row closest to required/expected
+      var nearTarget = (targetScore !== null && Math.abs(es - Math.round(targetScore)) <= 2.5);
+      if(nearTarget) tr.className = 'cur-row';
+      if(cg < 60) tr.className = (tr.className ? tr.className + ' ' : '') + 'warn-row';
+      tr.innerHTML = '<td>'+ es +'%</td><td>'+ cg.toFixed(1)+'%</td><td>'+ letter(cg) +'</td>';
+      tbody.appendChild(tr);
+    });
+  }
+
+  // ── advanced current grade override ──
+  function advCurrent(){
+    if(!advOpen || cats.length === 0) return null;
+    var totalW=0, totalWG=0, valid=true;
+    cats.forEach(function(c){
+      var w=parseFloat(c.weightEl.value), g=parseFloat(c.gradeEl.value);
+      if(isNaN(w)||isNaN(g)) { valid=false; return; }
+      totalW+=w; totalWG+=w*g;
+    });
+    if(!valid || totalW===0) return null;
+    return totalWG/totalW;
+  }
+
+  // ── main calc ──
+  function calc(){
+    var rawCur = parseFloat(curIn.value);
+    var w      = parseFloat(wIn.value)/100;
+    var adv    = advCurrent();
+    var cur    = (adv !== null) ? adv : rawCur;
+
+    if(mode === 'need'){
+      var tgt = parseFloat(tgtIn.value); // stays in %
+      if(isNaN(cur)||isNaN(w)||isNaN(tgt)||w<=0||w>=1){
+        reqScoreEl.textContent='—'; reqScoreEl.className='req-score';
+        reqSubEl.textContent=''; badgeWrap.innerHTML=''; whatIfBody.innerHTML=''; return;
+      }
+      // all values in %: req = (tgt - cur*(1-w)) / w
+      var req = (tgt - cur*(1-w)) / w;
+      reqScoreEl.textContent = req > 100 ? req.toFixed(1)+'%' : (req < 0 ? 'Any score' : req.toFixed(1)+'%');
+      reqScoreEl.className = 'req-score' + (req>100?' impossible':' easy');
+      if(req > 100){
+        reqScoreEl.className = 'req-score impossible';
+        reqSubEl.textContent = 'Not achievable — lower your target grade.';
+        badgeWrap.innerHTML = '';
+      } else if(req < 0){
+        reqScoreEl.className = 'req-score easy';
+        reqSubEl.textContent = 'You\'ve already locked in this grade — any exam score keeps it.';
+        badgeWrap.innerHTML = badgeHTML(tgt);
+      } else {
+        reqScoreEl.className = 'req-score' + (req<=70?' easy':'');
+        reqSubEl.textContent = 'Score ' + req.toFixed(1) + '% or above on the final.';
+        badgeWrap.innerHTML = badgeHTML(tgt);
+      }
+      buildWhatIf(whatIfBody, cur, w, req);
+
+    } else {
+      var es = parseFloat(examIn.value);
+      if(isNaN(cur)||isNaN(w)||isNaN(es)||w<=0||w>=1){
+        predScoreEl.textContent='—'; predScoreEl.className='req-score';
+        predSubEl.textContent=''; predBadgeWrap.innerHTML=''; whatIfBody2.innerHTML=''; return;
+      }
+      var pred = cur*(1-w) + es*w; // all in %
+      predScoreEl.textContent = pred.toFixed(1)+'%';
+      predScoreEl.className = 'req-score' + (pred>=90?' easy':'');
+      predSubEl.textContent = 'Projected course grade with a '+es.toFixed(0)+'% on the final.';
+      predBadgeWrap.innerHTML = badgeHTML(pred);
+      buildWhatIf(whatIfBody2, cur, w, es);
+    }
+  }
+
+  // ── listeners ──
+  [curIn, wIn, tgtIn, examIn].forEach(function(el){
+    el.addEventListener('input', calc);
+  });
+
+  document.getElementById('yr').textContent = new Date().getFullYear();
+})();
+</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>

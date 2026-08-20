@@ -429,3 +429,52 @@
   .p-bodyfat .bf-cmp .k{font-size:13.5px;font-weight:500;color:var(--ink-soft)}
   .p-bodyfat .bf-cmp .v{font-family:'Fraunces',serif;font-size:22px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--ink)}
 
+
+  /* =========================================================
+     NAV — two-column menu + mobile scroll fix
+     ========================================================= */
+  .menu{
+    position:absolute;top:calc(100% + 6px);left:0;z-index:60;
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    box-shadow:var(--shadow);padding:10px;
+    max-height:calc(100dvh - 70px);overflow-y:auto;
+    /* override old single-column min-width */
+    min-width:0;
+  }
+  .menu-cols{display:grid;grid-template-columns:1fr 1fr;gap:0 4px;min-width:420px}
+  .menu-col{display:flex;flex-direction:column;padding:2px 4px}
+  .menu-col-head{font-family:'Fraunces',serif;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);padding:8px 9px 5px;display:block}
+  /* links inside columns stay the same style */
+  .menu-col a{display:block;font-family:'Fraunces',serif;font-size:15px;font-weight:500;color:var(--ink-soft);text-decoration:none;padding:7px 9px;border-radius:8px;transition:.12s;white-space:nowrap}
+  .menu-col a:hover{background:#F5EFE4;color:var(--ink)}
+  .menu-col a.current{background:#F3EADA;color:var(--ink);font-weight:600}
+  /* navsep inside column */
+  .menu-col .navsep{display:block;height:1px;background:var(--line);margin:6px 4px 8px}
+  @media(max-width:520px){
+    .menu-cols{grid-template-columns:1fr;min-width:220px}
+    .menu{max-height:calc(100dvh - 60px);overflow-y:auto;-webkit-overflow-scrolling:touch}
+  }
+
+  /* =========================================================
+     ACADEMIC · FINAL GRADE  (body.p-finalgrade)
+     Two-card layout, live results, two modes, what-if table.
+     ========================================================= */
+  .p-finalgrade .fld{margin-bottom:16px}
+  .p-finalgrade .bf-res{margin:2px 0 16px}
+  .p-finalgrade .modeseg{grid-template-columns:1fr 1fr!important;margin-bottom:20px}
+  .p-finalgrade .req-score{font-family:'Fraunces',serif;font-size:clamp(52px,10vw,72px);font-weight:600;line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:var(--ink);margin:6px 0 2px}
+  .p-finalgrade .req-score.impossible{color:#b23030}
+  .p-finalgrade .req-score.easy{color:var(--spruce)}
+  .p-finalgrade .grade-badge{display:inline-block;font-family:'Fraunces',serif;font-size:18px;font-weight:600;border-radius:8px;padding:4px 12px;margin-bottom:10px}
+  .p-finalgrade .grade-badge.letter-A{background:#EDF2ED;color:var(--spruce)}
+  .p-finalgrade .grade-badge.letter-B{background:#EDF2ED;color:var(--spruce-soft)}
+  .p-finalgrade .grade-badge.letter-C{background:#F6EEDF;color:var(--amber-deep)}
+  .p-finalgrade .grade-badge.letter-D{background:#FDF0E8;color:#B05A1F}
+  .p-finalgrade .grade-badge.letter-F{background:#FDECEC;color:#b23030}
+  .p-finalgrade .whatif-wrap{margin-top:16px;padding-top:14px;border-top:1px dashed var(--line)}
+  .p-finalgrade .whatif-title{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+  .p-finalgrade .stable td,.p-finalgrade .stable th{font-size:13.5px}
+  .p-finalgrade .stable tr.cur-row td{background:#FCF7EE;color:var(--ink);font-weight:700}
+  .p-finalgrade .stable tr.warn-row td{color:#b23030}
+  .p-finalgrade #advOut{margin:6px 0 4px}
+  @media(max-width:430px){.p-finalgrade #catRows .two{grid-template-columns:1fr 1fr}}

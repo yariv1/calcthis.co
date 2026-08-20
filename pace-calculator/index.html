@@ -80,7 +80,7 @@
   ]
 }
 </script>
-<link rel="stylesheet" href="/assets/style.css?v=20">
+<link rel="stylesheet" href="/assets/style.css?v=21">
 </head>
 <body class="p-pace">
 <div class="wrap">
@@ -96,23 +96,33 @@
       <span>Calc<b>This</b></span>
     </a>
     <nav class="menu" id="siteMenu" hidden>
-      <a href="/">Home</a>
-      <a href="/board-foot-calculator/">Board Foot Calculator</a>
-      <a href="/gravel-calculator/">Gravel Calculator</a>
-      <a href="/sand-calculator/">Sand Calculator</a>
-      <a href="/topsoil-calculator/">Topsoil Calculator</a>
-      <a href="/mulch-calculator/">Mulch Calculator</a>
-      <a href="/concrete-calculator/">Concrete Calculator</a>
-      <a href="/flooring-calculator/">Flooring Calculator</a>
-      <a href="/tile-calculator/">Tile Calculator</a>
-      <span class="navsep" aria-hidden="true"></span>
-      <a href="/pace-calculator/" class="current">Pace Calculator</a>
-      <a href="/race-time-predictor/">Race Time Predictor</a>
-      <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
-      <a href="/body-fat-calculator/">Body Fat</a>
-      <a href="/tdee-calculator/">TDEE / Calories</a>
-      <a href="/one-rep-max-calculator/">One Rep Max</a>
-      <a href="/sleep-calculator/">Sleep</a>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <span class="menu-col-head">Construction</span>
+          <a href="/">Home</a>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/" class="current">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <span class="navsep" aria-hidden="true"></span>
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+        </div>
+      </div>
     </nav>
   </header>
   <!--HEADER:END-->
@@ -309,7 +319,7 @@
 
 </div>
 
-<script src="/assets/app.js?v=20"></script>
+<script src="/assets/app.js?v=21"></script>
 <script>
 CalcThis.initPaceCalc({});
 </script>

@@ -15,7 +15,7 @@
 <link rel="canonical" href="https://calcthis.co/">
 <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
 <meta name="theme-color" content="#B5761F">
-<meta name="description" content="CalcThis is a growing hub of fast, single-purpose calculators — board foot, gravel, sand, topsoil, mulch, concrete, flooring and tile. Free, instant, no sign-up.">
+<meta name="description" content="CalcThis is a growing hub of fast, single-purpose calculators — construction, health &amp; fitness, and school &amp; grades. Free, instant, no sign-up.">
 <meta property="og:title" content="CalcThis — Fast, Purpose-Built Calculators">
 <meta property="og:description" content="A growing hub of fast, single-purpose calculators — board foot, gravel, sand, topsoil, mulch, concrete, flooring and tile. Free, instant, no sign-up.">
 <meta property="og:type" content="website">
@@ -52,13 +52,14 @@
         { "@type": "WebApplication", "name": "Body Fat Calculator", "url": "https://calcthis.co/body-fat-calculator/", "applicationCategory": "HealthApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "TDEE Calculator", "url": "https://calcthis.co/tdee-calculator/", "applicationCategory": "HealthApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "One Rep Max Calculator", "url": "https://calcthis.co/one-rep-max-calculator/", "applicationCategory": "HealthApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
-        { "@type": "WebApplication", "name": "Sleep Calculator", "url": "https://calcthis.co/sleep-calculator/", "applicationCategory": "HealthApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } }
+        { "@type": "WebApplication", "name": "Sleep Calculator", "url": "https://calcthis.co/sleep-calculator/", "applicationCategory": "HealthApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
+        { "@type": "WebApplication", "name": "Final Grade Calculator", "url": "https://calcthis.co/final-grade-calculator/", "applicationCategory": "EducationApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } }
       ]
     }
   ]
 }
 </script>
-<link rel="stylesheet" href="/assets/style.css?v=20">
+<link rel="stylesheet" href="/assets/style.css?v=21">
 </head>
 <body class="p-home">
 <div class="wrap">
@@ -74,23 +75,33 @@
       <span>Calc<b>This</b></span>
     </a>
     <nav class="menu" id="siteMenu" hidden>
-      <a href="/" class="current">Home</a>
-      <a href="/board-foot-calculator/">Board Foot Calculator</a>
-      <a href="/gravel-calculator/">Gravel Calculator</a>
-      <a href="/sand-calculator/">Sand Calculator</a>
-      <a href="/topsoil-calculator/">Topsoil Calculator</a>
-      <a href="/mulch-calculator/">Mulch Calculator</a>
-      <a href="/concrete-calculator/">Concrete Calculator</a>
-      <a href="/flooring-calculator/">Flooring Calculator</a>
-      <a href="/tile-calculator/">Tile Calculator</a>
-      <span class="navsep" aria-hidden="true"></span>
-      <a href="/pace-calculator/">Pace Calculator</a>
-      <a href="/race-time-predictor/">Race Time Predictor</a>
-      <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
-      <a href="/body-fat-calculator/">Body Fat</a>
-      <a href="/tdee-calculator/">TDEE / Calories</a>
-      <a href="/one-rep-max-calculator/">One Rep Max</a>
-      <a href="/sleep-calculator/">Sleep</a>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <span class="menu-col-head">Construction</span>
+          <a href="/" class="current">Home</a>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <span class="navsep" aria-hidden="true"></span>
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+        </div>
+      </div>
     </nav>
   </header>
   <!--HEADER:END-->
@@ -109,6 +120,7 @@
   <div class="cat-tabs" id="catTabs" role="tablist">
     <button class="cat-tab on" type="button" data-cat="construction" role="tab" aria-selected="true">Construction &amp; Gardening</button>
     <button class="cat-tab" type="button" data-cat="health" role="tab" aria-selected="false">Health &amp; Lifestyle</button>
+    <button class="cat-tab" type="button" data-cat="academic" role="tab" aria-selected="false">School &amp; Grades</button>
   </div>
 
   <section id="grp-construction" class="cat-grp" aria-label="Construction &amp; Gardening calculators">
@@ -366,10 +378,41 @@
   </div>
   </section>
 
+  <section id="grp-academic" class="cat-grp" aria-label="School &amp; Grades calculators" hidden>
+  <div class="cards">
+
+    <a class="calc" href="/final-grade-calculator/">
+      <span class="ico" aria-hidden="true">
+        <svg width="30" height="30" viewBox="0 0 32 32" fill="none">
+          <rect x="6" y="4" width="20" height="24" rx="2.5" fill="#EDF2ED" stroke="#37503F" stroke-width="1.4"/>
+          <path d="M11 11h10M11 15h10M11 19h6" stroke="#37503F" stroke-width="1.4" stroke-linecap="round" opacity=".7"/>
+          <circle cx="23" cy="22" r="5.5" fill="#B5761F" stroke="#fff" stroke-width="1.5"/>
+          <path d="M20.5 22l1.8 1.8 2.7-3" stroke="#fff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+      <h3>Final Grade Calculator</h3>
+      <p>What score do you need on the final exam to hit your target grade — or predict your course grade from an expected exam score.</p>
+      <span class="go">Open calculator
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+    </a>
+
+    <div class="calc soon" aria-hidden="true">
+      <span class="ico">
+        <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><path d="M16 5v22M5 16h22" stroke="#8A7A66" stroke-width="1.6" stroke-linecap="round"/><circle cx="16" cy="16" r="12" stroke="#8A7A66" stroke-width="1.4" opacity=".5"/></svg>
+      </span>
+      <h3>More soon</h3>
+      <p>GPA, Grade and Test Score calculators are on the way.</p>
+      <span class="badge">Coming soon</span>
+    </div>
+
+  </div>
+  </section>
+
   <section class="prose">
     <h2>Calculators that do one thing well</h2>
     <p>Most calculator sites are enormous libraries where every tool is a compromise — a generic form bolted onto a shared template. <strong>CalcThis takes the opposite approach.</strong> Each calculator here is designed around a single real-world task, so the inputs match how you actually measure, the results come out in the units your supplier sells by, and the whole thing works the instant you type — no compute button, no account, no clutter.</p>
-    <p>Today the hub covers eight of the most-searched estimating jobs in construction and landscaping: figuring out <strong>board feet</strong> and lumber cost for a cut list, working out how much <strong>gravel</strong> a driveway or path needs in tons or bags, how much <strong>sand</strong> a paver base or leveling job takes, how much <strong>topsoil</strong> a lawn or raised bed needs by the cubic yard or bag, estimating <strong>mulch</strong> for garden beds, working out how many <strong>bags of concrete</strong> a slab or footing takes, how many <strong>boxes of flooring</strong> a room needs, and exactly how many <strong>tiles</strong> a floor, wall or backsplash takes. Each construction tool includes a running project total so you can add several boards, areas or beds and price the whole job at once — plus a waste factor so you order enough the first time. The hub also opens a second category — health &amp; fitness — with a <strong>running pace</strong> tool that solves pace, time or distance and predicts finish times, a <strong>race time predictor</strong> that projects your 5K, 10K, half and marathon times from one recent race, a <strong>heart rate zone</strong> calculator that maps your five training zones and fat-burning Zone 2, a <strong>body fat</strong> calculator using the US Navy tape method, a <strong>TDEE</strong> calculator for maintenance calories and macros, a <strong>one rep max</strong> calculator with a full training table, and a <strong>sleep cycle</strong> calculator for ideal bedtimes and wake-up times — fifteen calculators in all.</p>
+    <p>Today the hub covers eight of the most-searched estimating jobs in construction and landscaping: figuring out <strong>board feet</strong> and lumber cost for a cut list, working out how much <strong>gravel</strong> a driveway or path needs in tons or bags, how much <strong>sand</strong> a paver base or leveling job takes, how much <strong>topsoil</strong> a lawn or raised bed needs by the cubic yard or bag, estimating <strong>mulch</strong> for garden beds, working out how many <strong>bags of concrete</strong> a slab or footing takes, how many <strong>boxes of flooring</strong> a room needs, and exactly how many <strong>tiles</strong> a floor, wall or backsplash takes. Each construction tool includes a running project total so you can add several boards, areas or beds and price the whole job at once — plus a waste factor so you order enough the first time. A second category covers health &amp; fitness — with a <strong>running pace</strong> tool that solves pace, time or distance and predicts finish times, a <strong>race time predictor</strong> that projects your 5K, 10K, half and marathon times from one recent race, a <strong>heart rate zone</strong> calculator that maps your five training zones and fat-burning Zone 2, a <strong>body fat</strong> calculator using the US Navy tape method, a <strong>TDEE</strong> calculator for maintenance calories and macros, a <strong>one rep max</strong> calculator with a full training table, and a <strong>sleep cycle</strong> calculator for ideal bedtimes and wake-up times. A third category covers school and grades, starting with a <strong>final grade calculator</strong> that tells you exactly what score you need on your final exam to hit your target course grade — sixteen calculators in all.</p>
 
     <h3>Why single-purpose beats all-in-one</h3>
     <p>A dedicated tool can make choices a general calculator can't: sensible defaults, the exact depth options people really use, unit handling that matches the trade, and a layout tuned for one job on a phone at the lumber yard or garden centre. That focus is the whole point — <strong>fast, accurate, and purpose-built</strong>, one calculator at a time.</p>
@@ -396,6 +439,7 @@
       <a href="/tdee-calculator/">TDEE / Calories</a>
       <a href="/one-rep-max-calculator/">One Rep Max</a>
       <a href="/sleep-calculator/">Sleep</a>
+      <a href="/final-grade-calculator/">Final Grade</a>
     </nav>
   </footer>
 
@@ -404,7 +448,7 @@
 <script>
 (function(){
   var tabs=document.getElementById('catTabs'); if(!tabs) return;
-  var grp={construction:document.getElementById('grp-construction'),health:document.getElementById('grp-health')};
+  var grp={construction:document.getElementById('grp-construction'),health:document.getElementById('grp-health'),academic:document.getElementById('grp-academic')};
   tabs.addEventListener('click',function(e){
     var b=e.target.closest('.cat-tab'); if(!b) return;
     [].forEach.call(tabs.querySelectorAll('.cat-tab'),function(x){x.classList.remove('on');x.setAttribute('aria-selected','false');});
@@ -414,7 +458,7 @@
   });
 })();
 </script>
-<script src="/assets/app.js?v=20"></script>
+<script src="/assets/app.js?v=21"></script>
 <script src="/feedback.js" defer></script>
 </body>
 </html>
