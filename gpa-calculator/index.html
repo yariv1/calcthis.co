@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GPA Calculator — College & High School (Weighted/Unweighted)</title>
+<link rel="canonical" href="https://calcthis.co/gpa-calculator/">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<meta name="theme-color" content="#B5761F">
+<meta name="description" content="Free GPA calculator for college and high school. Supports weighted and unweighted GPA, AP/IB/Honors bumps, letter grades or percentages, and a live what-if course adder.">
+<meta property="og:title" content="GPA Calculator — College & High School (Weighted/Unweighted)">
+<meta property="og:description" content="Calculate your GPA instantly. Supports college 4.0 scale, high school weighted and unweighted, AP/IB/Honors weight bumps, letter grades or percentages.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://calcthis.co/gpa-calculator/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "GPA Calculator",
+  "url": "https://calcthis.co/gpa-calculator/",
+  "description": "Calculate your GPA for college or high school. Supports weighted and unweighted scales, AP/IB/Honors bumps, letter grades or percentages, and a live what-if planner.",
+  "applicationCategory": "EducationApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+}
+</script>
+<link rel="stylesheet" href="/assets/style.css?v=22">
+<style>
+  .p-gpa .modeseg{grid-template-columns:1fr 1fr!important;margin-bottom:20px}
+  .p-gpa .fld{margin-bottom:16px}
+  .p-gpa .bf-res{margin:2px 0 16px}
+
+  /* GPA big display */
+  .p-gpa .gpa-big{font-family:'Fraunces',serif;font-size:clamp(52px,10vw,72px);font-weight:600;line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:var(--ink);margin:6px 0 2px}
+  .p-gpa .gpa-big.gpa-a{color:var(--spruce)}
+  .p-gpa .gpa-big.gpa-b{color:var(--spruce-soft)}
+  .p-gpa .gpa-big.gpa-c{color:var(--amber-deep)}
+  .p-gpa .gpa-big.gpa-d{color:#B05A1F}
+  .p-gpa .gpa-big.gpa-f{color:#b23030}
+
+  .p-gpa .grade-badge{display:inline-block;font-family:'Fraunces',serif;font-size:18px;font-weight:600;border-radius:8px;padding:4px 12px;margin-bottom:10px}
+  .p-gpa .grade-badge.letter-A{background:#EDF2ED;color:var(--spruce)}
+  .p-gpa .grade-badge.letter-B{background:#EDF2ED;color:var(--spruce-soft)}
+  .p-gpa .grade-badge.letter-C{background:#F6EEDF;color:var(--amber-deep)}
+  .p-gpa .grade-badge.letter-D{background:#FDF0E8;color:#B05A1F}
+  .p-gpa .grade-badge.letter-F{background:#FDECEC;color:#b23030}
+
+  /* Course rows — stacked: name full-width top, grade/credits/type grid below */
+  .p-gpa .course-block{display:flex;flex-direction:row;align-items:center;gap:10px;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+  .p-gpa .course-block:last-of-type{border-bottom:none;margin-bottom:0;padding-bottom:0}
+  .p-gpa .course-fields{flex:1;min-width:0}
+
+  /* uniform field height — input AND select identical */
+  .p-gpa .cr-field{
+    width:100%;font:inherit;font-size:15px;font-weight:500;color:var(--ink);
+    background:#FCFAF6;border:1.5px solid var(--line);border-radius:10px;
+    padding:0 10px;height:42px;line-height:1;
+    box-sizing:border-box;transition:.15s;
+    appearance:none;-webkit-appearance:none;display:block;
+  }
+  .p-gpa .cr-field:focus{outline:none;border-color:var(--amber);background:#fff;box-shadow:0 0 0 3px rgba(181,118,31,.13)}
+
+  /* row 1: course name */
+  .p-gpa .cr-name-row{margin-bottom:8px}
+
+  /* row 2: grade | credits | [type] | del */
+  .p-gpa .cr-fields-row{display:grid;gap:6px;align-items:end}
+  .p-gpa .cr-fields-row.no-type{grid-template-columns:1fr 1fr}
+  .p-gpa .cr-fields-row.has-type{grid-template-columns:1fr 1fr 1fr}
+  /* label above name field */
+  .p-gpa .cr-name-lbl{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.05em;text-transform:uppercase;margin-bottom:4px;display:block}
+
+  .p-gpa .cr-col{display:flex;flex-direction:column;gap:4px;min-width:0}
+  .p-gpa .cr-lbl{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.05em;text-transform:uppercase}
+
+  .p-gpa .cr-sel-wrap{position:relative}
+  .p-gpa .cr-sel-wrap::after{content:"▾";position:absolute;right:13px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none;font-size:12px}
+  .p-gpa .cr-sel-wrap select{padding-right:26px;cursor:pointer}
+
+  .p-gpa .del-btn{display:flex;align-items:center;justify-content:center;width:28px;height:28px;border:0;background:none;color:var(--muted);cursor:pointer;border-radius:7px;font-size:16px;transition:.12s;padding:0;flex:none;align-self:center}
+  .p-gpa .del-btn:hover{color:#b23030;background:#FDECEC}
+
+  .p-gpa .add-course-wrap{margin-top:16px}
+
+  /* What-if section */
+  .p-gpa .whatif-wrap{margin-top:16px;padding-top:14px;border-top:1px dashed var(--line)}
+  .p-gpa .whatif-title{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+
+  /* Results breakdown */
+  .p-gpa .scale-note{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.45}
+  .p-gpa .stat-row{display:flex;justify-content:space-between;align-items:baseline;padding:8px 0;border-bottom:1px dashed var(--line)}
+  .p-gpa .stat-row:last-of-type{border-bottom:none}
+  .p-gpa .stat-row .k{font-size:13.5px;font-weight:500;color:var(--ink-soft)}
+  .p-gpa .stat-row .v{font-family:'Fraunces',serif;font-size:20px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--ink)}
+  .p-gpa #statsWrap{margin-top:14px;padding-top:14px;border-top:1px dashed var(--line)}
+
+  /* Grade lookup table */
+  .p-gpa .lookup-wrap{margin-top:16px;padding-top:14px;border-top:1px dashed var(--line)}
+  .p-gpa .lookup-title{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+  .p-gpa .dtable{width:100%;border-collapse:collapse;font-size:13.5px}
+  .p-gpa .dtable th{font-size:11.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);text-align:left;padding:5px 8px;border-bottom:2px solid var(--line)}
+  .p-gpa .dtable td{padding:6px 8px;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums;vertical-align:middle}
+  .p-gpa .dtable tr:last-child td{border-bottom:none}
+  .p-gpa .dtable tr.cur td{background:#FCF7EE;font-weight:700}
+
+  /* Cross-link */
+  .p-gpa .xlink{display:flex;align-items:center;gap:8px;margin-top:18px;padding:12px 14px;background:#F5EFE4;border:1px solid var(--line);border-radius:10px;text-decoration:none;color:var(--ink-soft);font-size:13.5px;font-weight:600;transition:.15s}
+  .p-gpa .xlink:hover{background:#F0E8D6;color:var(--ink)}
+  .p-gpa .xlink svg{flex:none;color:var(--amber-deep)}
+
+    .p-gpa .course-row.has-type{grid-template-columns:1fr 75px 60px 80px 32px}
+    .p-gpa .col-heads{grid-template-columns:1fr 75px 60px 32px}
+    .p-gpa .col-heads.has-type{grid-template-columns:1fr 75px 60px 80px 32px}
+  }
+    .p-gpa .col-heads,.p-gpa .col-heads.has-type{grid-template-columns:1fr 70px 55px 28px}
+    .p-gpa .course-row.has-type .type-col{display:none}
+    .p-gpa .col-heads.has-type .type-head{display:none}
+  }
+</style>
+</head>
+<body class="p-gpa">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <span class="menu-col-head">Construction</span>
+          <a href="/">Home</a>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <span class="navsep" aria-hidden="true"></span>
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/" class="current">GPA</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+<div class="hero">
+  <p class="eyebrow">School &amp; Grades</p>
+  <h1>GPA Calculator</h1>
+  <p>Enter your courses, grades, and credit hours — your GPA updates live. Supports college 4.0 scale, high school weighted and unweighted, AP/IB/Honors bumps.</p>
+</div>
+
+<div class="grid">
+
+  <!-- LEFT: Inputs -->
+  <div class="card card-pad">
+    <div class="row-top">
+      <h2>Your Courses</h2>
+    </div>
+
+    <!-- Mode toggle -->
+    <div class="modeseg" id="modeSeg" role="group" aria-label="GPA mode">
+      <button class="on" data-mode="college">College</button>
+      <button data-mode="highschool">High School</button>
+    </div>
+
+    <!-- HS: weighted toggle (hidden in college mode) -->
+    <div id="weightedRow" style="display:none;margin-bottom:18px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:600;color:var(--ink-soft)">Weighted GPA</span>
+        <div class="seg" id="weightedSeg">
+          <button class="on" data-w="weighted">Weighted</button>
+          <button data-w="unweighted">Unweighted</button>
+        </div>
+      </div>
+      <p style="font-size:12px;color:var(--muted);margin-top:6px">AP/IB +1.0 · Honors +0.5 · Regular +0</p>
+    </div>
+
+    <!-- Course rows -->
+    <div id="courseRows"></div>
+
+    <!-- Add course -->
+    <div class="add-course-wrap">
+      <div class="add-row">
+        <button class="btn" id="addCourseBtn" type="button">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+          Add Course
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT: Results -->
+  <div class="card card-pad">
+    <div class="row-top">
+      <h2>Your GPA</h2>
+    </div>
+
+    <div class="bf-res">
+      <div class="res-lab" id="gpaLabel">GPA (4.0 scale)</div>
+      <div class="gpa-big" id="gpaBig">—</div>
+      <div id="gradeBadge"></div>
+      <div class="res-sub" id="gpaSub">Add at least one course above.</div>
+    </div>
+
+    <!-- Stats breakdown -->
+    <div id="statsWrap" style="display:none">
+      <div class="stat-row">
+        <span class="k">Total Credit Hours</span>
+        <span class="v" id="statCredits">—</span>
+      </div>
+      <div class="stat-row">
+        <span class="k">Quality Points</span>
+        <span class="v" id="statPoints">—</span>
+      </div>
+      <div class="stat-row" id="statUnweightedRow" style="display:none">
+        <span class="k">Unweighted GPA</span>
+        <span class="v" id="statUnweighted">—</span>
+      </div>
+    </div>
+
+    <!-- What-if: add a projected course -->
+    <div class="whatif-wrap" id="whatifWrap" style="display:none">
+      <div class="whatif-title">What-If: Add a Projected Course</div>
+      <div style="display:grid;grid-template-columns:1fr 90px 80px;gap:8px;margin-bottom:8px" id="whatifRow">
+        <input type="text" id="wiName" placeholder="Course name" style="font:inherit;font-size:15px;font-weight:500;color:var(--ink);background:#FCFAF6;border:1.5px solid var(--line);border-radius:10px;padding:9px 10px;transition:.15s;width:100%">
+        <select id="wiGrade" style="font:inherit;font-size:15px;font-weight:500;color:var(--ink);background:#FCFAF6;border:1.5px solid var(--line);border-radius:10px;padding:9px 8px;transition:.15s;width:100%;appearance:none;cursor:pointer">
+          <option value="">Grade</option>
+          <option value="A">A</option>
+          <option value="A-">A-</option>
+          <option value="B+">B+</option>
+          <option value="B">B</option>
+          <option value="B-">B-</option>
+          <option value="C+">C+</option>
+          <option value="C">C</option>
+          <option value="C-">C-</option>
+          <option value="D+">D+</option>
+          <option value="D">D</option>
+          <option value="F">F</option>
+        </select>
+        <input type="number" id="wiCredits" placeholder="Hrs" min="0.5" max="6" step="0.5" style="font:inherit;font-size:15px;font-weight:500;color:var(--ink);background:#FCFAF6;border:1.5px solid var(--line);border-radius:10px;padding:9px 10px;transition:.15s;width:100%">
+      </div>
+      <div id="whatifResult" style="font-size:13.5px;color:var(--ink-soft);min-height:20px"></div>
+    </div>
+
+    <!-- Grade scale lookup -->
+    <div class="lookup-wrap">
+      <div class="lookup-title">Grade → GPA Points</div>
+      <table class="dtable" id="scaleTable">
+        <thead><tr><th>Letter</th><th>%</th><th>4.0</th><th id="wtHead" style="display:none">Weighted AP/IB</th></tr></thead>
+        <tbody id="scaleTbody"></tbody>
+      </table>
+    </div>
+
+    <!-- Cross-link -->
+    <a class="xlink" href="/final-grade-calculator/">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="4" y="3" width="14" height="18" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M8 8h8M8 12h8M8 16h5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity=".6"/></svg>
+      Need your exam score to hit a target grade? → Final Grade Calculator
+    </a>
+  </div>
+
+</div><!-- /.grid -->
+
+<section class="prose">
+  <h2>How GPA is calculated</h2>
+  <p>GPA stands for Grade Point Average. Each course's letter grade converts to a numeric point value (A = 4.0, B = 3.0, and so on), then that value is multiplied by the number of credit hours for the course. Sum those products across all courses, divide by total credit hours, and you get your GPA.</p>
+  <p><strong>Weighted high school GPA</strong> adds a bump to honors and advanced courses before averaging: AP and IB courses add 1.0 point, Honors courses add 0.5. A student who earns a B in AP Chemistry (3.0 + 1.0 = 4.0 weighted) is recognized for the harder course load.</p>
+  <p><strong>Unweighted GPA</strong> treats every course equally regardless of difficulty, maxing out at 4.0. Many colleges recalculate submitted GPAs on an unweighted scale to compare applicants fairly.</p>
+  <h3>Letter grade to GPA point conversion</h3>
+  <p>The standard 4.0 scale: A/A+ = 4.0, A- = 3.7, B+ = 3.3, B = 3.0, B- = 2.7, C+ = 2.3, C = 2.0, C- = 1.7, D+ = 1.3, D = 1.0, D- = 0.7, F = 0.0. Some schools use percentage-to-letter cutoffs that differ slightly — this calculator uses the most common US standard.</p>
+</section>
+
+<footer>
+  <span>© <span id="yr">2026</span> CalcThis — estimates only; verify with your school's registrar.</span>
+  <nav>
+    <a href="/board-foot-calculator/">Board Foot</a>
+    <a href="/gravel-calculator/">Gravel</a>
+    <a href="/sand-calculator/">Sand</a>
+    <a href="/topsoil-calculator/">Topsoil</a>
+    <a href="/mulch-calculator/">Mulch</a>
+    <a href="/concrete-calculator/">Concrete</a>
+    <a href="/flooring-calculator/">Flooring</a>
+    <a href="/tile-calculator/">Tile</a>
+    <a href="/pace-calculator/">Pace</a>
+    <a href="/race-time-predictor/">Race Time Predictor</a>
+    <a href="/heart-rate-zone-calculator/">Heart Rate Zones</a>
+    <a href="/body-fat-calculator/">Body Fat</a>
+    <a href="/tdee-calculator/">TDEE / Calories</a>
+    <a href="/one-rep-max-calculator/">One Rep Max</a>
+    <a href="/sleep-calculator/">Sleep</a>
+    <a href="/final-grade-calculator/">Final Grade</a>
+    <a href="/gpa-calculator/">GPA</a>
+  </nav>
+</footer>
+
+</div><!-- /.wrap -->
+
+<script src="/assets/app.js?v=22"></script>
+<script>
+(function(){
+  var SCALE = [
+    {letter:'A+', pct:'97–100', pts:4.0},
+    {letter:'A',  pct:'93–96',  pts:4.0},
+    {letter:'A-', pct:'90–92',  pts:3.7},
+    {letter:'B+', pct:'87–89',  pts:3.3},
+    {letter:'B',  pct:'83–86',  pts:3.0},
+    {letter:'B-', pct:'80–82',  pts:2.7},
+    {letter:'C+', pct:'77–79',  pts:2.3},
+    {letter:'C',  pct:'73–76',  pts:2.0},
+    {letter:'C-', pct:'70–72',  pts:1.7},
+    {letter:'D+', pct:'67–69',  pts:1.3},
+    {letter:'D',  pct:'63–66',  pts:1.0},
+    {letter:'D-', pct:'60–62',  pts:0.7},
+    {letter:'F',  pct:'0–59',   pts:0.0}
+  ];
+
+  // weight bump for HS weighted mode
+  var BUMP = {AP:1.0, IB:1.0, Honors:0.5, Regular:0};
+
+  var mode = 'college';  // 'college' | 'highschool'
+  var weighted = 'weighted'; // 'weighted' | 'unweighted'
+  var courses = []; // [{name,grade,credits,type}]
+  var rowId = 0;
+
+  function letterPts(letter){
+    if(!letter) return NaN;
+    letter = letter.trim().toUpperCase();
+    // handle percent input
+    if(/^\d+(\.\d+)?$/.test(letter)){
+      var p = parseFloat(letter);
+      if(p >= 97) return 4.0;
+      if(p >= 93) return 4.0;
+      if(p >= 90) return 3.7;
+      if(p >= 87) return 3.3;
+      if(p >= 83) return 3.0;
+      if(p >= 80) return 2.7;
+      if(p >= 77) return 2.3;
+      if(p >= 73) return 2.0;
+      if(p >= 70) return 1.7;
+      if(p >= 67) return 1.3;
+      if(p >= 63) return 1.0;
+      if(p >= 60) return 0.7;
+      return 0.0;
+    }
+    // normalize: remove spaces, handle A+
+    letter = letter.replace(/\s/g,'');
+    if(letter==='A+'||letter==='A') return 4.0;
+    if(letter==='A-') return 3.7;
+    if(letter==='B+') return 3.3;
+    if(letter==='B') return 3.0;
+    if(letter==='B-') return 2.7;
+    if(letter==='C+') return 2.3;
+    if(letter==='C') return 2.0;
+    if(letter==='C-') return 1.7;
+    if(letter==='D+') return 1.3;
+    if(letter==='D') return 1.0;
+    if(letter==='D-') return 0.7;
+    if(letter==='F') return 0.0;
+    return NaN;
+  }
+
+  function fmtGPA(n){
+    if(isNaN(n)||n==null) return '—';
+    return n.toFixed(2);
+  }
+
+  function gpaLetterClass(gpa){
+    if(isNaN(gpa)) return '';
+    if(gpa >= 3.7) return 'gpa-a';
+    if(gpa >= 2.7) return 'gpa-b';
+    if(gpa >= 1.7) return 'gpa-c';
+    if(gpa >= 1.0) return 'gpa-d';
+    return 'gpa-f';
+  }
+
+  function badgeLetter(gpa){
+    if(isNaN(gpa)) return '';
+    if(gpa >= 3.7) return 'A';
+    if(gpa >= 3.0) return 'B';
+    if(gpa >= 2.0) return 'C';
+    if(gpa >= 1.0) return 'D';
+    return 'F';
+  }
+
+  function calcGPA(courseList, useWeighted){
+    var totalCredits = 0, totalPoints = 0, totalPointsUW = 0;
+    var valid = 0;
+    for(var i=0;i<courseList.length;i++){
+      var c = courseList[i];
+      var pts = letterPts(c.grade);
+      var cr = parseFloat(c.credits);
+      if(isNaN(pts)||isNaN(cr)||cr<=0) continue;
+      var ptsUW = pts;
+      var bump = 0;
+      if(useWeighted && c.type){
+        bump = BUMP[c.type] || 0;
+        // cap weighted at 5.0 style: don't exceed 4.0+bump max
+        pts = Math.min(pts + bump, 4.0 + bump);
+      }
+      totalCredits += cr;
+      totalPoints += pts * cr;
+      totalPointsUW += ptsUW * cr;
+      valid++;
+    }
+    if(totalCredits === 0) return {gpa:NaN, uw:NaN, credits:0, points:0, valid:0};
+    return {
+      gpa: totalPoints / totalCredits,
+      uw:  totalPointsUW / totalCredits,
+      credits: totalCredits,
+      points: totalPoints,
+      valid: valid
+    };
+  }
+
+  function isHS(){ return mode === 'highschool'; }
+  function isWeighted(){ return isHS() && weighted === 'weighted'; }
+
+  // ---- DOM refs ----
+  var modeSeg = document.getElementById('modeSeg');
+  var weightedSeg = document.getElementById('weightedSeg');
+  var weightedRow = document.getElementById('weightedRow');
+  var courseRows = document.getElementById('courseRows');
+  var addBtn = document.getElementById('addCourseBtn');
+  var gpaBig = document.getElementById('gpaBig');
+  var gpaLabel = document.getElementById('gpaLabel');
+  var gradeBadge = document.getElementById('gradeBadge');
+  var gpaSub = document.getElementById('gpaSub');
+  var statsWrap = document.getElementById('statsWrap');
+  var statCredits = document.getElementById('statCredits');
+  var statPoints = document.getElementById('statPoints');
+  var statUnweightedRow = document.getElementById('statUnweightedRow');
+  var statUnweighted = document.getElementById('statUnweighted');
+  var whatifWrap = document.getElementById('whatifWrap');
+  var wiName = document.getElementById('wiName');
+  var wiGrade = document.getElementById('wiGrade');
+  var wiCredits = document.getElementById('wiCredits');
+  var whatifResult = document.getElementById('whatifResult');
+  var scaleTbody = document.getElementById('scaleTbody');
+  var wtHead = document.getElementById('wtHead');
+
+  // ---- Scale table ----
+  function renderScale(){
+    var showWt = isWeighted();
+    wtHead.style.display = showWt ? '' : 'none';
+    var rows = '';
+    SCALE.forEach(function(s){
+      rows += '<tr><td>'+s.letter+'</td><td>'+s.pct+'%</td><td>'+s.pts.toFixed(1)+'</td>'+(showWt?'<td>'+(s.pts+1.0>4.0?''+(s.pts+1.0).toFixed(1)+' / '+(s.pts+0.5).toFixed(1):''+(s.pts+1.0).toFixed(1)+' / '+(s.pts+0.5).toFixed(1))+'</td>':'')+'</tr>';
+    });
+    scaleTbody.innerHTML = rows;
+  }
+
+  // ---- Course row builder ----
+  function buildRow(id, data){
+    var hs = isHS();
+    var div = document.createElement('div');
+    div.className = 'course-block';
+    div.setAttribute('data-rid', id);
+
+    var gradeOptions = [
+      'A+','A','A-','B+','B','B-','C+','C','C-','D+','D','D-','F'
+    ].map(function(g){
+      return '<option value="'+g+'"'+(data&&data.grade===g?' selected':'')+'>'+g+'</option>';
+    }).join('');
+
+    var typeOptions = ['Regular','Honors','AP','IB'].map(function(t){
+      return '<option value="'+t+'"'+(data&&data.type===t?' selected':'')+'>'+t+'</option>';
+    }).join('');
+
+    var typeLabel = hs ? 'Type' : 'Type';
+    var typeCol = '<div class="cr-col"><span class="cr-lbl">'+typeLabel+'</span><div class="cr-sel-wrap"><select class="cr-field cr-type" aria-label="Course type"><option value="">Type</option>'+typeOptions+'</select></div></div>';
+
+    div.innerHTML =
+      '<div class="course-fields">'+
+        '<div class="cr-name-row">'+
+          '<span class="cr-name-lbl">Course (optional)</span>'+
+          '<input type="text" class="cr-field cr-name" placeholder="Course name" value="'+(data&&data.name?data.name:'')+'" aria-label="Course name">'+
+        '</div>'+
+        '<div class="cr-fields-row has-type">'+
+          '<div class="cr-col"><span class="cr-lbl">Grade</span><div class="cr-sel-wrap"><select class="cr-field cr-grade" aria-label="Grade"><option value="">Grade</option>'+gradeOptions+'</select></div></div>'+
+          '<div class="cr-col"><span class="cr-lbl">Credits</span><input type="number" class="cr-field cr-credits" placeholder="hrs" min="0.5" max="6" step="0.5" value="'+(data&&data.credits?data.credits:'')+'" aria-label="Credit hours"></div>'+
+          typeCol+
+        '</div>'+
+      '</div>'+
+      '<button class="del-btn" data-rid="'+id+'" aria-label="Remove course" type="button">&#215;</button>';
+
+    // events
+    function onChange(){ readRow(id, div); solve(); }
+    div.querySelector('.cr-name').addEventListener('input', onChange);
+    div.querySelector('.cr-grade').addEventListener('change', onChange);
+    div.querySelector('.cr-credits').addEventListener('input', onChange);
+    if(div.querySelector('.cr-type')) div.querySelector('.cr-type').addEventListener('change', onChange);
+    div.querySelector('.del-btn').addEventListener('click', function(){
+      courses = courses.filter(function(c){ return c._id !== id; });
+      div.parentNode.removeChild(div);
+      solve();
+    });
+
+    return div;
+  }
+
+  function readRow(id, div){
+    var idx = -1;
+    for(var i=0;i<courses.length;i++) if(courses[i]._id===id){ idx=i; break; }
+    var obj = {
+      _id: id,
+      name: div.querySelector('.cr-name').value,
+      grade: div.querySelector('.cr-grade').value,
+      credits: div.querySelector('.cr-credits').value,
+      type: div.querySelector('.cr-type') ? div.querySelector('.cr-type').value : ''
+    };
+    if(idx>=0) courses[idx]=obj; else courses.push(obj);
+  }
+
+  function addRow(data){
+    var id = ++rowId;
+    var obj = {_id:id, name:(data&&data.name)||'', grade:(data&&data.grade)||'', credits:(data&&data.credits)||'', type:(data&&data.type)||''};
+    courses.push(obj);
+    var div = buildRow(id, obj);
+    courseRows.appendChild(div);
+    return div;
+  }
+
+  // ---- Solve ----
+  function solve(){
+    var useW = isWeighted();
+    var res = calcGPA(courses, useW);
+
+    // label
+    if(isHS()){
+      gpaLabel.textContent = useW ? 'Weighted GPA' : 'Unweighted GPA';
+    } else {
+      gpaLabel.textContent = 'GPA (4.0 scale)';
+    }
+
+    if(res.valid === 0 || isNaN(res.gpa)){
+      gpaBig.textContent = '—';
+      gpaBig.className = 'gpa-big';
+      gradeBadge.innerHTML = '';
+      gpaSub.textContent = 'Add at least one course with a grade and credit hours.';
+      statsWrap.style.display = 'none';
+      whatifWrap.style.display = 'none';
+      whatifResult.textContent = '';
+      return;
+    }
+
+    var g = res.gpa;
+    gpaBig.textContent = fmtGPA(g);
+    gpaBig.className = 'gpa-big ' + gpaLetterClass(g);
+
+    var bl = badgeLetter(g);
+    gradeBadge.innerHTML = '<span class="grade-badge letter-'+bl+'">'+bl+' range</span>';
+
+    gpaSub.textContent = res.valid + ' course'+(res.valid===1?'':'s')+' · '+res.credits.toFixed(1)+' credit hour'+(res.credits===1?'':'s');
+
+    statCredits.textContent = res.credits.toFixed(1);
+    statPoints.textContent = res.points.toFixed(2);
+    if(useW && Math.abs(res.gpa - res.uw) > 0.005){
+      statUnweightedRow.style.display = '';
+      statUnweighted.textContent = fmtGPA(res.uw);
+    } else {
+      statUnweightedRow.style.display = 'none';
+    }
+    statsWrap.style.display = '';
+    whatifWrap.style.display = '';
+    solveWhatIf(res, useW);
+  }
+
+  function solveWhatIf(currentRes, useW){
+    var wiG = wiGrade.value;
+    var wiC = parseFloat(wiCredits.value);
+    if(!wiG || isNaN(wiC) || wiC <= 0){
+      whatifResult.textContent = 'Enter a grade and credit hours above to see projected GPA.';
+      return;
+    }
+    var wiType = isHS() ? 'Regular' : ''; // what-if doesn't have type selector for simplicity
+    var projected = courses.slice();
+    projected.push({_id:0, name: wiName.value||'New course', grade: wiG, credits: wiC, type: wiType});
+    var res2 = calcGPA(projected, useW);
+    var diff = res2.gpa - currentRes.gpa;
+    var sign = diff > 0 ? '+' : '';
+    var color = diff > 0 ? 'var(--spruce)' : diff < 0 ? '#b23030' : 'var(--ink-soft)';
+    whatifResult.innerHTML =
+      'Projected GPA: <strong style="font-family:\'Fraunces\',serif;font-size:18px;color:'+color+'">'+fmtGPA(res2.gpa)+'</strong>' +
+      ' <span style="font-size:13px;color:'+color+';">('+sign+fmtGPA(diff)+')</span>';
+  }
+
+  // ---- Mode / weighted toggle ----
+  modeSeg.addEventListener('click', function(e){
+    var b = e.target.closest('button'); if(!b) return;
+    [].forEach.call(modeSeg.querySelectorAll('button'), function(x){ x.classList.remove('on'); });
+    b.classList.add('on');
+    mode = b.getAttribute('data-mode');
+    weightedRow.style.display = isHS() ? '' : 'none';
+    // rebuild all rows to add/remove type column
+    rebuildRows();
+    renderScale();
+    solve();
+  });
+
+  weightedSeg.addEventListener('click', function(e){
+    var b = e.target.closest('button'); if(!b) return;
+    [].forEach.call(weightedSeg.querySelectorAll('button'), function(x){ x.classList.remove('on'); });
+    b.classList.add('on');
+    weighted = b.getAttribute('data-w');
+    renderScale();
+    solve();
+  });
+
+  function rebuildRows(){
+    // save current data
+    var saved = courses.slice();
+    courses = [];
+    courseRows.innerHTML = '';
+    rowId = 0;
+    if(saved.length === 0){ addRow(); return; }
+    saved.forEach(function(c){ addRow(c); });
+  }
+
+  // What-if inputs
+  [wiGrade, wiCredits, wiName].forEach(function(el){
+    el.addEventListener(el.tagName==='SELECT'?'change':'input', function(){
+      var useW = isWeighted();
+      var res = calcGPA(courses, useW);
+      if(res.valid > 0) solveWhatIf(res, useW);
+    });
+  });
+
+  addBtn.addEventListener('click', function(){ addRow(); });
+
+  // ---- Init ----
+  renderScale();
+  // Seed 1 default row
+  addRow({_id:null,name:'',grade:'',credits:'',type:''});
+  solve();
+
+})();
+</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>
