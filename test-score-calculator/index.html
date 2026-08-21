@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Test Score Calculator — Raw Score, Percentage & Letter Grade</title>
+  <meta name="description" content="Convert raw test scores to percentages and letter grades instantly. Find out how many questions you can miss, calculate curved grades, and estimate AP scores (1–5). Free, live, no sign-up.">
+  <link rel="canonical" href="https://calcthis.co/test-score-calculator/">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/style.css?v=24">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Test Score Calculator",
+    "url": "https://calcthis.co/test-score-calculator/",
+    "description": "Convert raw test scores to percentages and letter grades. Calculate how many questions you can miss, apply curve, and estimate AP scores.",
+    "applicationCategory": "EducationApplication",
+    "operatingSystem": "Any (web browser)",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+  }
+  </script>
+  <style>
+    /* ---- miss budget bar ---- */
+    .miss-bar-wrap { margin-top: 18px; }
+    .miss-bar-label { font-size: 12.5px; font-weight: 600; color: var(--ink-soft); margin-bottom: 7px; display: flex; justify-content: space-between; }
+    .miss-bar { display: flex; gap: 2px; flex-wrap: wrap; }
+    .miss-dot {
+      width: 14px; height: 14px; border-radius: 3px; flex: none;
+      transition: background .15s;
+    }
+    .miss-dot.safe   { background: #D1C7B5; }
+    .miss-dot.missed { background: #e05252; }
+    .miss-dot.ok     { background: #4caf7d; }
+
+    /* ---- grade scale picker ---- */
+    .scale-row { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; margin-bottom: 15px; }
+
+    /* ---- AP estimator note ---- */
+    .ap-note { font-size: 12px; color: var(--muted); margin-top: 8px; line-height: 1.45; }
+
+    /* ---- breakdown table (contribution bars) ---- */
+    .breakdown { margin-top: 18px; }
+    .breakdown-head { font-size: 12.5px; font-weight: 600; color: var(--ink-soft); margin-bottom: 10px; letter-spacing:.04em; text-transform:uppercase; }
+    .brow { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 13px; }
+    .brow .blabel { width: 80px; flex: none; color: var(--ink-soft); font-weight: 500; }
+    .brow .bbar-wrap { flex: 1; background: #EDE8DF; border-radius: 4px; height: 8px; overflow: hidden; }
+    .brow .bbar { height: 100%; border-radius: 4px; transition: width .3s; }
+    .brow .bval { width: 40px; text-align: right; flex: none; font-weight: 600; font-variant-numeric: tabular-nums; }
+
+    /* ---- what-if retake ---- */
+    .whatif-sep { border-top: 1px solid var(--line); margin: 18px 0 14px; }
+    .whatif-head { font-size: 13px; font-weight: 600; color: var(--ink-soft); margin-bottom: 12px; }
+    .whatif-result { font-size: 15px; font-weight: 600; color: var(--ink); margin-top: 10px; }
+    .whatif-result .wi-grade { font-family: 'Fraunces', serif; font-size: 22px; color: var(--amber); }
+
+    /* ---- reverse mode ---- */
+    .reverse-result { margin-top: 14px; padding: 14px; background: #F3EADA; border-radius: 10px; }
+    .reverse-result .rr-main { font-family: 'Fraunces', serif; font-size: 28px; font-weight: 600; color: var(--ink); }
+    .reverse-result .rr-sub  { font-size: 13px; color: var(--ink-soft); margin-top: 3px; }
+
+    /* ---- AP table ---- */
+    .ap-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13.5px; }
+    .ap-table th, .ap-table td { text-align: left; padding: 7px 8px; border-bottom: 1px solid var(--line); }
+    .ap-table th { font-size: 12px; font-weight: 600; color: var(--ink); }
+    .ap-table tr.cur td { font-weight: 700; color: var(--spruce); background: #EDF2ED; }
+    .ap-table .ap-score { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 600; }
+    .ap-table .ap-meaning { color: var(--ink-soft); }
+    .ap-badge { display: inline-block; width: 28px; height: 28px; border-radius: 50%; background: var(--spruce); color: #fff; font-family: 'Fraunces', serif; font-weight: 700; font-size: 15px; text-align: center; line-height: 28px; margin-right: 6px; }
+    .ap-badge.s5 { background: #2e7d32; }
+    .ap-badge.s4 { background: #388e3c; }
+    .ap-badge.s3 { background: var(--spruce); }
+    .ap-badge.s2 { background: #b5761f; }
+    .ap-badge.s1 { background: #9e3a3a; }
+
+    /* ---- cross links ---- */
+    .cross-links { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+    .cross-link { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: var(--spruce); background: #EDF2ED; border: 1px solid #C5D9C9; border-radius: 8px; padding: 8px 12px; text-decoration: none; transition: .15s; }
+    .cross-link:hover { background: #D6E9DA; color: var(--spruce); }
+    .cross-link svg { flex: none; }
+
+    /* mode tabs full width */
+    .mode-tabs { display: grid; grid-template-columns: 1fr 1fr; background: #F2EBDF; border: 1px solid var(--line); border-radius: 10px; padding: 3px; gap: 2px; margin-bottom: 18px; }
+    .mode-tabs button { font: inherit; font-size: 13px; font-weight: 600; color: var(--ink-soft); background: none; border: 0; border-radius: 7px; padding: 9px 6px; cursor: pointer; transition: .15s; }
+    .mode-tabs button.on { background: var(--card); color: var(--ink); box-shadow: 0 1px 2px rgba(36,26,17,.08); }
+
+    /* letter grade big badge */
+    .grade-badge { display: inline-block; font-family: 'Fraunces', serif; font-size: 42px; font-weight: 700; line-height: 1; color: var(--spruce); margin-left: 12px; vertical-align: middle; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <!--HEADER:START-->
+  <header>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <span class="menu-col-head">Construction</span>
+          <a href="/">Home</a>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <span class="navsep" aria-hidden="true"></span>
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/test-score-calculator/" class="current">Test Score</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <div class="hero">
+    <p class="eyebrow">School &amp; Grades</p>
+    <h1>Test Score Calculator</h1>
+    <p>Enter your raw score or total questions — get your percentage, letter grade, and exactly how many questions you could miss. Reverse it to plan your next test.</p>
+  </div>
+
+  <div class="grid">
+
+    <!-- LEFT: inputs -->
+    <div class="card card-pad">
+
+      <div class="mode-tabs" id="modeTabs" role="tablist">
+        <button class="on" data-m="score" role="tab" aria-selected="true">Score a Test</button>
+        <button data-m="reverse" role="tab" aria-selected="false">What Do I Need?</button>
+      </div>
+
+      <!-- SCORE MODE -->
+      <div id="scorePane">
+
+        <div class="row-top" style="margin-bottom:14px">
+          <h2>Your score</h2>
+        </div>
+
+        <div class="two">
+          <label class="fld">
+            <span class="lab">Questions correct <span class="unit" id="uCorrect">answered</span></span>
+            <div class="inp"><input type="number" id="correct" min="0" placeholder="e.g. 42" inputmode="decimal"></div>
+          </label>
+          <label class="fld">
+            <span class="lab">Total questions</span>
+            <div class="inp"><input type="number" id="total" min="1" placeholder="e.g. 50" inputmode="decimal"></div>
+          </label>
+        </div>
+
+        <!-- Curve toggle -->
+        <label class="fld">
+          <span class="lab">Curve <span class="unit">optional</span></span>
+          <div class="inp">
+            <input type="number" id="curve" min="0" max="50" placeholder="e.g. 5 (adds points to %)" inputmode="decimal">
+            <span class="suf">pts</span>
+          </div>
+        </label>
+
+        <!-- Grade scale -->
+        <div class="scale-row">
+          <label class="fld" style="margin-bottom:0">
+            <span class="lab">Grade scale</span>
+            <div class="sel">
+              <select id="scalePreset">
+                <option value="standard">Standard (90/80/70/60)</option>
+                <option value="strict">Strict (93/83/73/63)</option>
+                <option value="easy">Easy (85/75/65/55)</option>
+                <option value="plus">Plus/minus scale</option>
+                <option value="custom">Custom cutoffs</option>
+              </select>
+            </div>
+          </label>
+          <label class="fld" id="aMinFld" style="margin-bottom:0;opacity:.4;pointer-events:none">
+            <span class="lab">A starts at <span class="unit">%</span></span>
+            <div class="inp"><input type="number" id="aMin" min="50" max="100" placeholder="90" inputmode="decimal" disabled></div>
+          </label>
+        </div>
+
+        <!-- Advanced toggle -->
+        <div class="add-row split" style="margin-top:6px">
+          <span></span>
+          <button class="advbtn" id="advBtn" type="button">
+            <span id="advBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+
+        <div id="advIn" style="display:none;margin-top:14px">
+          <div class="two">
+            <label class="fld">
+              <span class="lab">Points possible <span class="unit">optional</span></span>
+              <div class="inp"><input type="number" id="pointsTotal" min="1" placeholder="e.g. 100" inputmode="decimal">
+              </div>
+            </label>
+            <label class="fld">
+              <span class="lab">Points earned <span class="unit">optional</span></span>
+              <div class="inp"><input type="number" id="pointsEarned" min="0" placeholder="e.g. 87" inputmode="decimal">
+              </div>
+            </label>
+          </div>
+          <p class="res-tip" style="margin-top:-6px;margin-bottom:14px">Use points mode when your teacher grades by points rather than question count — the percentage is points earned ÷ points possible.</p>
+
+          <!-- AP estimator -->
+          <div style="border-top:1px solid var(--line);padding-top:14px">
+            <div class="whatif-head">AP Score Estimate <span style="font-weight:400;color:var(--muted)">(1–5 scale)</span></div>
+            <div id="apOut" style="display:none">
+              <table class="ap-table" id="apTable"></table>
+              <p class="ap-note">AP scores are curved by College Board each year — this is an estimate based on general historical thresholds. Actual cutoffs vary by subject.</p>
+            </div>
+            <p id="apEmpty" class="res-tip">Enter your score above to see an estimated AP score.</p>
+          </div>
+        </div>
+
+      </div><!-- /scorePane -->
+
+      <!-- REVERSE MODE -->
+      <div id="reversePane" style="display:none">
+
+        <div class="row-top" style="margin-bottom:14px">
+          <h2>Plan your test</h2>
+        </div>
+
+        <label class="fld">
+          <span class="lab">Total questions on test</span>
+          <div class="inp"><input type="number" id="rTotal" min="1" placeholder="e.g. 50" inputmode="decimal"></div>
+        </label>
+
+        <label class="fld">
+          <span class="lab">Grade I need</span>
+          <div class="sel">
+            <select id="rGrade">
+              <option value="90">A (90%)</option>
+              <option value="80" selected>B (80%)</option>
+              <option value="70">C (70%)</option>
+              <option value="60">D (60%)</option>
+              <option value="custom">Custom %</option>
+            </select>
+          </div>
+        </label>
+
+        <div id="rCustomWrap" style="display:none">
+          <label class="fld">
+            <span class="lab">Target % <span class="unit">%</span></span>
+            <div class="inp"><input type="number" id="rCustomPct" min="1" max="100" placeholder="e.g. 75" inputmode="decimal"></div>
+          </label>
+        </div>
+
+        <label class="fld">
+          <span class="lab">Curve on this test <span class="unit">pts, optional</span></span>
+          <div class="inp">
+            <input type="number" id="rCurve" min="0" max="50" placeholder="0" inputmode="decimal">
+            <span class="suf">pts</span>
+          </div>
+        </label>
+
+      </div><!-- /reversePane -->
+
+    </div><!-- /left card -->
+
+    <!-- RIGHT: results -->
+    <div>
+      <!-- SCORE RESULTS -->
+      <div id="scoreResult">
+        <div class="card card-pad">
+          <div id="resLab" class="res-lab">Your score</div>
+          <div style="display:flex;align-items:baseline;flex-wrap:wrap;gap:4px">
+            <span id="resBig" class="res-big">—</span>
+            <span id="resUnit" class="res-unit">%</span>
+            <span id="gradeDisplay" class="grade-badge"></span>
+          </div>
+          <div id="resSub" class="res-sub">Enter questions correct and total to see your score.</div>
+
+          <!-- Miss budget bar -->
+          <div id="missBudgetWrap" class="miss-bar-wrap" style="display:none">
+            <div class="miss-bar-label">
+              <span id="missBudgetLabel">Questions you can miss</span>
+              <span id="missBudgetCount"></span>
+            </div>
+            <div class="miss-bar" id="missBudgetBar"></div>
+          </div>
+
+          <!-- Retake what-if -->
+          <div id="retakeWrap" style="display:none">
+            <div class="whatif-sep"></div>
+            <div class="whatif-head">Retake goal</div>
+            <div style="display:flex;gap:13px;align-items:center">
+              <label class="fld" style="margin-bottom:0;flex:1">
+                <span class="lab">I need a <span class="unit">%</span></span>
+                <div class="inp"><input type="number" id="retakeTarget" min="1" max="100" placeholder="e.g. 80" inputmode="decimal"></div>
+              </label>
+              <div id="retakeResult" class="whatif-result" style="flex:1;align-self:flex-end;padding-bottom:3px">—</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cross links -->
+        <div class="cross-links">
+          <a class="cross-link" href="/grade-calculator/">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Weighted Grade Calculator
+          </a>
+          <a class="cross-link" href="/final-grade-calculator/">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Final Exam Calculator
+          </a>
+          <a class="cross-link" href="/gpa-calculator/">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M22 12h-4l-3 9L9 3l-3 9H2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            GPA Calculator
+          </a>
+        </div>
+      </div>
+
+      <!-- REVERSE RESULTS -->
+      <div id="reverseResult" style="display:none">
+        <div class="card card-pad">
+          <div class="res-lab">Questions you must get right</div>
+          <div style="display:flex;align-items:baseline;gap:6px;flex-wrap:wrap">
+            <span id="rResBig" class="res-big">—</span>
+            <span class="res-unit" style="font-size:16px">out of <span id="rResTotal">—</span></span>
+          </div>
+          <div id="rResSub" class="res-sub">Enter your test details to see what you need.</div>
+
+          <div id="rMissBudgetWrap" class="miss-bar-wrap" style="display:none">
+            <div class="miss-bar-label">
+              <span id="rMissBudgetLabel">Questions you can miss</span>
+              <span id="rMissBudgetCount"></span>
+            </div>
+            <div class="miss-bar" id="rMissBudgetBar"></div>
+          </div>
+
+          <div class="reverse-result" id="rDetailBox" style="display:none;margin-top:14px">
+            <div class="rr-main" id="rDetailMain"></div>
+            <div class="rr-sub" id="rDetailSub"></div>
+          </div>
+        </div>
+        <div class="cross-links">
+          <a class="cross-link" href="/grade-calculator/">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Weighted Grade Calculator
+          </a>
+          <a class="cross-link" href="/final-grade-calculator/">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Final Exam Calculator
+          </a>
+        </div>
+      </div>
+
+    </div><!-- /right -->
+
+  </div><!-- /grid -->
+
+  <!-- Content -->
+  <div class="content">
+    <h2>How test scores are calculated</h2>
+    <div class="grid2">
+      <div>
+        <h3>Raw score to percentage</h3>
+        <p>Your percentage is simply the number of questions you answered correctly divided by the total, multiplied by 100. If you got 42 out of 50, that's 42 ÷ 50 × 100 = 84%.</p>
+        <div class="formula">% = (Correct ÷ Total) × 100<small>or: Points Earned ÷ Points Possible × 100</small></div>
+        <h3>Curved grading</h3>
+        <p>A curve adds a flat number of points to everyone's percentage. If a teacher curves by 5 points, a raw 79% becomes 84%. Some teachers curve to match a target average — this calculator uses the simpler flat-point curve.</p>
+      </div>
+      <div>
+        <h3>Standard letter grade cutoffs</h3>
+        <table class="dtable">
+          <thead><tr><th>Grade</th><th>Standard</th><th>Strict</th><th>Easy</th></tr></thead>
+          <tbody>
+            <tr><td>A</td><td>90–100%</td><td>93–100%</td><td>85–100%</td></tr>
+            <tr><td>B</td><td>80–89%</td><td>83–92%</td><td>75–84%</td></tr>
+            <tr><td>C</td><td>70–79%</td><td>73–82%</td><td>65–74%</td></tr>
+            <tr><td>D</td><td>60–69%</td><td>63–72%</td><td>55–64%</td></tr>
+            <tr><td>F</td><td>&lt;60%</td><td>&lt;63%</td><td>&lt;55%</td></tr>
+          </tbody>
+        </table>
+        <h3>AP scores explained</h3>
+        <p>AP exams use a 1–5 scale set by College Board each year. A score of 3 is generally considered "passing" (qualifying for college credit), while 4 and 5 signal strong mastery. The estimated AP score shown in advanced mode uses general historical thresholds — actual cutoffs shift slightly each exam year.</p>
+      </div>
+    </div>
+
+    <details class="faq">
+      <summary>What's the difference between "questions correct" and "points mode"?</summary>
+      <p>Some tests assign one point per question — in that case both modes give the same result. Points mode is for tests where questions have different point values: a short-answer worth 5 points and an essay worth 20. Enter your total points earned and total points possible for an accurate percentage.</p>
+    </details>
+    <details class="faq">
+      <summary>How does the "miss budget" bar work?</summary>
+      <p>The miss budget shows you at a glance how many questions you can get wrong and still keep your current letter grade. Green squares are the questions you can miss without dropping a grade; red squares are the ones you've already missed; gray squares are the ones you still need to answer correctly.</p>
+    </details>
+    <details class="faq">
+      <summary>How accurate is the AP score estimate?</summary>
+      <p>The AP estimate is a general approximation based on historical score distributions. College Board adjusts the actual cutoffs each year based on exam difficulty and student performance. Use the estimate to understand roughly where you stand — for example, knowing whether you're closer to a 3 or a 4. Don't treat it as an official prediction.</p>
+    </details>
+    <details class="faq">
+      <summary>What does the retake goal calculator do?</summary>
+      <p>Enter a target percentage for your retake and it instantly tells you how many questions you need to answer correctly on a test of the same length. It's a quick sanity check — instead of doing the math yourself, you see directly: "I need to get 40 out of 50 right."</p>
+    </details>
+  </div>
+
+  <footer>
+    <span>© <span id="yr"></span> CalcThis</span>
+    <nav style="display:flex;gap:16px;flex-wrap:wrap">
+      <a href="/board-foot-calculator/">Board Foot</a>
+      <a href="/pace-calculator/">Pace</a>
+      <a href="/final-grade-calculator/">Final Grade</a>
+      <a href="/gpa-calculator/">GPA</a>
+      <a href="/grade-calculator/">Grade</a>
+      <a href="/test-score-calculator/">Test Score</a>
+    </nav>
+  </footer>
+</div><!-- /wrap -->
+
+<script src="/assets/app.js?v=24"></script>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+
+  // ---- state ----
+  var mode = 'score'; // 'score' | 'reverse'
+  var advanced = false;
+
+  // Score mode inputs
+  var correctIn = $('correct'), totalIn = $('total'), curveIn = $('curve');
+  var scalePreset = $('scalePreset'), aMinIn = $('aMin');
+  var pointsTotalIn = $('pointsTotal'), pointsEarnedIn = $('pointsEarned');
+  var retakeTargetIn = $('retakeTarget');
+
+  // Reverse mode inputs
+  var rTotalIn = $('rTotal'), rGradeSel = $('rGrade'), rCurveIn = $('rCurve'), rCustomIn = $('rCustomPct');
+
+  // ---- grade scales ----
+  var SCALES = {
+    standard: { A: 90, B: 80, C: 70, D: 60 },
+    strict:   { A: 93, B: 83, C: 73, D: 63 },
+    easy:     { A: 85, B: 75, C: 65, D: 55 },
+    plus:     { A: 90, B: 80, C: 70, D: 60 }, // same cutoffs, different label logic
+    custom:   null
+  };
+
+  // AP thresholds (general historical estimate, % → AP 1-5)
+  var AP_THRESHOLDS = [
+    { score: 5, lo: 75, meaning: 'Extremely well qualified' },
+    { score: 4, lo: 65, meaning: 'Well qualified' },
+    { score: 3, lo: 50, meaning: 'Qualified' },
+    { score: 2, lo: 35, meaning: 'Possibly qualified' },
+    { score: 1, lo: 0,  meaning: 'No recommendation' }
+  ];
+
+  function num(v) {
+    v = parseFloat(('' + v).trim());
+    return isNaN(v) ? NaN : v;
+  }
+
+  function getScale() {
+    var preset = scalePreset.value;
+    if (preset === 'custom') {
+      var aVal = num(aMinIn.value);
+      if (isNaN(aVal)) aVal = 90;
+      aVal = Math.min(Math.max(aVal, 50), 100);
+      var diff = 100 - aVal;
+      var step = diff / 4;
+      return { A: aVal, B: aVal - step, C: aVal - step * 2, D: aVal - step * 3 };
+    }
+    return SCALES[preset] || SCALES.standard;
+  }
+
+  function letterGrade(pct, scale, usePlus) {
+    if (!isFinite(pct)) return '—';
+    if (usePlus) {
+      if (pct >= 97) return 'A+';
+      if (pct >= scale.A) return 'A';
+      if (pct >= scale.A - 3) return 'A−';
+      if (pct >= scale.B + 7) return 'B+';
+      if (pct >= scale.B) return 'B';
+      if (pct >= scale.B - 3) return 'B−';
+      if (pct >= scale.C + 7) return 'C+';
+      if (pct >= scale.C) return 'C';
+      if (pct >= scale.C - 3) return 'C−';
+      if (pct >= scale.D + 7) return 'D+';
+      if (pct >= scale.D) return 'D';
+      return 'F';
+    }
+    if (pct >= scale.A) return 'A';
+    if (pct >= scale.B) return 'B';
+    if (pct >= scale.C) return 'C';
+    if (pct >= scale.D) return 'D';
+    return 'F';
+  }
+
+  function gradeColor(letter) {
+    var l = letter.charAt(0);
+    if (l === 'A') return 'var(--spruce)';
+    if (l === 'B') return '#2e6b9e';
+    if (l === 'C') return 'var(--amber-deep)';
+    if (l === 'D') return '#b06020';
+    return '#9e3a3a';
+  }
+
+  function apScore(pct) {
+    for (var i = 0; i < AP_THRESHOLDS.length; i++) {
+      if (pct >= AP_THRESHOLDS[i].lo) return AP_THRESHOLDS[i];
+    }
+    return AP_THRESHOLDS[AP_THRESHOLDS.length - 1];
+  }
+
+  function renderMissBar(container, labelEl, countEl, total, missed, canMiss) {
+    if (!isFinite(total) || total <= 0) { container.style.display = 'none'; return; }
+    container.style.display = '';
+    var max = Math.min(total, 60); // cap visual at 60 dots
+    var scale = total > 60 ? total / 60 : 1;
+    var missedScaled = Math.round(missed / scale);
+    var canMissScaled = Math.round(canMiss / scale);
+    var html = '';
+    var shown = 0;
+    var mustGet = Math.max(0, Math.round(total) - Math.round(canMiss));
+    var mustGetScaled = Math.round(mustGet / scale);
+    var alreadyMissedScaled = Math.round(missed / scale);
+    var canMissRemaining = Math.max(0, Math.round(canMiss) - Math.round(missed));
+    var canMissRemainingScaled = Math.round(canMissRemaining / scale);
+    // green dots = must get right (success — these are your safe correct answers)
+    for (var i = 0; i < mustGetScaled && shown < max; i++, shown++) {
+      html += '<div class="miss-dot ok" title="Must get right"></div>';
+    }
+    // red dots = already missed
+    for (var j = 0; j < alreadyMissedScaled && shown < max; j++, shown++) {
+      html += '<div class="miss-dot missed" title="Already missed"></div>';
+    }
+    // beige dots = can still miss
+    while (shown < max) {
+      html += '<div class="miss-dot safe" title="Can miss"></div>';
+      shown++;
+    }
+    labelEl.textContent = canMiss <= 0 ? 'No misses allowed for this grade' : 'Questions you can miss';
+    countEl.textContent = canMiss <= 0 ? '' : canMiss + ' of ' + total;
+    container.querySelector('.miss-bar').innerHTML = html;
+  }
+
+  function solveScore() {
+    var scale = getScale();
+    var usePlus = scalePreset.value === 'plus';
+
+    // determine source: points mode takes priority if filled
+    var ptTotal = num(pointsTotalIn ? pointsTotalIn.value : NaN);
+    var ptEarned = num(pointsEarnedIn ? pointsEarnedIn.value : NaN);
+    var usePoints = advanced && isFinite(ptTotal) && ptTotal > 0 && isFinite(ptEarned) && ptEarned >= 0;
+
+    var correct = num(correctIn.value);
+    var total = num(totalIn.value);
+    var curve = num(curveIn.value); if (isNaN(curve) || curve < 0) curve = 0;
+
+    var pct, missedQ, totalQ;
+    if (usePoints) {
+      pct = (ptEarned / ptTotal) * 100 + curve;
+      totalQ = ptTotal;
+      missedQ = ptTotal - ptEarned;
+    } else {
+      if (!isFinite(correct) || !isFinite(total) || total <= 0) {
+        $('resBig').textContent = '—';
+        $('resUnit').textContent = '%';
+        $('gradeDisplay').textContent = '';
+        $('resSub').textContent = 'Enter questions correct and total to see your score.';
+        $('missBudgetWrap').style.display = 'none';
+        $('retakeWrap').style.display = 'none';
+        if (advanced) { $('apOut').style.display = 'none'; $('apEmpty').style.display = ''; }
+        return;
+      }
+      if (correct > total) correct = total;
+      pct = (correct / total) * 100 + curve;
+      missedQ = total - correct;
+      totalQ = total;
+    }
+    pct = Math.min(pct, 100);
+
+    var letter = letterGrade(pct, scale, usePlus);
+    var pctRounded = Math.round(pct * 10) / 10;
+
+    $('resBig').textContent = pctRounded % 1 === 0 ? pctRounded.toFixed(0) : pctRounded.toFixed(1);
+    $('resUnit').textContent = '%';
+    $('gradeDisplay').textContent = letter;
+    $('gradeDisplay').style.color = gradeColor(letter);
+
+    var wrongLabel = usePoints ? 'points lost' : 'wrong';
+    $('resSub').textContent = (usePoints
+      ? ptEarned.toFixed(0) + ' of ' + ptTotal.toFixed(0) + ' points'
+      : correct.toFixed(0) + ' of ' + total.toFixed(0) + ' correct')
+      + (curve > 0 ? ' · +' + curve + ' pt curve' : '')
+      + ' · ' + (missedQ > 0 ? missedQ.toFixed(0) + ' ' + wrongLabel : 'none missed');
+
+    // miss budget: how many can miss and stay in this letter grade
+    var letterFloor = letter.charAt(0) === 'A' ? scale.A : letter.charAt(0) === 'B' ? scale.B : letter.charAt(0) === 'C' ? scale.C : letter.charAt(0) === 'D' ? scale.D : 0;
+    var canMiss = Math.floor(totalQ * (1 - (letterFloor - curve) / 100));
+    canMiss = Math.max(0, Math.min(canMiss, totalQ));
+
+    var mbWrap = $('missBudgetWrap');
+    renderMissBar(mbWrap, $('missBudgetLabel'), $('missBudgetCount'), totalQ, Math.round(missedQ), canMiss);
+
+    // retake what-if
+    $('retakeWrap').style.display = '';
+    var retakeTarget = num(retakeTargetIn ? retakeTargetIn.value : NaN);
+    var retakeEl = $('retakeResult');
+    if (isFinite(retakeTarget) && retakeTarget > 0 && isFinite(totalQ) && totalQ > 0) {
+      var needed = Math.ceil(totalQ * (retakeTarget - curve) / 100);
+      needed = Math.max(0, Math.min(needed, totalQ));
+      var retakeLetter = letterGrade(retakeTarget, scale, usePlus);
+      retakeEl.innerHTML = 'Get <span class="wi-grade">' + needed + '</span> of ' + Math.round(totalQ) + ' right for a ' + retakeLetter;
+    } else {
+      retakeEl.innerHTML = '<span style="color:var(--muted);font-size:12.5px;font-weight:500;line-height:1.45">Enter a target %<br>in the field to the left.</span>';
+    }
+
+    // AP score (advanced)
+    if (advanced) {
+      var ap = apScore(pct);
+      var html = '<thead><tr><th>AP Score</th><th>% Range</th><th>Meaning</th></tr></thead><tbody>';
+      var classes = ['s1','s2','s3','s4','s5'];
+      for (var i = AP_THRESHOLDS.length - 1; i >= 0; i--) {
+        var t = AP_THRESHOLDS[i];
+        var hiPct = i === 0 ? 100 : AP_THRESHOLDS[i-1].lo - 1;
+        var isCur = ap.score === t.score ? ' class="cur"' : '';
+        html += '<tr' + isCur + '><td><span class="ap-badge ' + classes[t.score - 1] + '">' + t.score + '</span></td>' +
+          '<td>' + t.lo + '–' + hiPct + '%</td>' +
+          '<td class="ap-meaning">' + t.meaning + '</td></tr>';
+      }
+      html += '</tbody>';
+      $('apTable').innerHTML = html;
+      $('apOut').style.display = '';
+      $('apEmpty').style.display = 'none';
+    }
+  }
+
+  function solveReverse() {
+    var total = num(rTotalIn.value);
+    var curve = num(rCurveIn.value); if (isNaN(curve) || curve < 0) curve = 0;
+
+    var targetPct;
+    if (rGradeSel.value === 'custom') {
+      targetPct = num(rCustomIn.value);
+    } else {
+      targetPct = num(rGradeSel.value);
+    }
+
+    if (!isFinite(total) || total <= 0 || !isFinite(targetPct)) {
+      $('rResBig').textContent = '—';
+      $('rResTotal').textContent = '—';
+      $('rResSub').textContent = 'Enter your test details to see what you need.';
+      $('rMissBudgetWrap').style.display = 'none';
+      $('rDetailBox').style.display = 'none';
+      return;
+    }
+
+    var effectivePct = Math.max(0, targetPct - curve);
+    var needed = Math.ceil(total * effectivePct / 100);
+    needed = Math.max(0, Math.min(needed, total));
+    var canMiss = total - needed;
+
+    $('rResBig').textContent = needed;
+    $('rResTotal').textContent = Math.round(total);
+    $('rResSub').textContent = 'To reach ' + targetPct + '%' + (curve > 0 ? ' (with ' + curve + ' pt curve)' : '') + ' on a ' + Math.round(total) + '-question test.';
+
+    renderMissBar($('rMissBudgetWrap'), $('rMissBudgetLabel'), $('rMissBudgetCount'), total, 0, canMiss);
+    $('rMissBudgetWrap').style.display = '';
+
+    var pctIfNeeded = ((needed / total) * 100 + curve).toFixed(1).replace(/\.0$/, '');
+    $('rDetailMain').textContent = canMiss <= 0 ? 'No misses allowed — every question counts.' : 'You can miss up to ' + canMiss + ' question' + (canMiss === 1 ? '' : 's') + '.';
+    $('rDetailSub').textContent = 'That gives you ' + pctIfNeeded + '%' + (curve > 0 ? ' after the curve' : '') + '.';
+    $('rDetailBox').style.display = '';
+  }
+
+  function solve() {
+    if (mode === 'score') solveScore();
+    else solveReverse();
+  }
+
+  // ---- mode tabs ----
+  $('modeTabs').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    var m = b.getAttribute('data-m'); if (!m || m === mode) return;
+    mode = m;
+    [].forEach.call($('modeTabs').querySelectorAll('button'), function (x) {
+      x.classList.toggle('on', x.getAttribute('data-m') === mode);
+      x.setAttribute('aria-selected', x.getAttribute('data-m') === mode ? 'true' : 'false');
+    });
+    $('scorePane').style.display = mode === 'score' ? '' : 'none';
+    $('reversePane').style.display = mode === 'reverse' ? '' : 'none';
+    $('scoreResult').style.display = mode === 'score' ? '' : 'none';
+    $('reverseResult').style.display = mode === 'reverse' ? '' : 'none';
+    solve();
+  });
+
+  // ---- advanced toggle ----
+  $('advBtn').addEventListener('click', function () {
+    advanced = !advanced;
+    $('advBtn').classList.toggle('open', advanced);
+    $('advBtnLab').textContent = advanced ? 'Go simple' : 'Go advanced';
+    $('advIn').style.display = advanced ? '' : 'none';
+    solve();
+    if (advanced) { var a = $('advIn'); if (a && a.scrollIntoView) a.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+  });
+
+  // ---- scale preset wires ----
+  scalePreset.addEventListener('change', function () {
+    var isCustom = scalePreset.value === 'custom';
+    var fld = $('aMinFld');
+    aMinIn.disabled = !isCustom;
+    fld.style.opacity = isCustom ? '1' : '.4';
+    fld.style.pointerEvents = isCustom ? '' : 'none';
+    if (!isCustom) aMinIn.value = '';
+    solve();
+  });
+  aMinIn.disabled = true;
+  aMinIn.addEventListener('input', solve);
+
+  // ---- reverse grade select ----
+  rGradeSel.addEventListener('change', function () {
+    $('rCustomWrap').style.display = rGradeSel.value === 'custom' ? '' : 'none';
+    solve();
+  });
+
+  // ---- wire all inputs ----
+  [correctIn, totalIn, curveIn, pointsTotalIn, pointsEarnedIn, retakeTargetIn,
+   rTotalIn, rCurveIn, rCustomIn].forEach(function (inp) {
+    if (inp) inp.addEventListener('input', solve);
+  });
+
+  solve();
+})();
+</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>

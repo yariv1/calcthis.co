@@ -37,6 +37,7 @@ const PAGES = [
   { file: 'final-grade-calculator/index.html', slug: '/final-grade-calculator/' },
   { file: 'gpa-calculator/index.html',         slug: '/gpa-calculator/' },
   { file: 'grade-calculator/index.html',       slug: '/grade-calculator/' },
+  { file: 'test-score-calculator/index.html', slug: '/test-score-calculator/' },
 ];
 
 // ---- bump shared asset version ----
