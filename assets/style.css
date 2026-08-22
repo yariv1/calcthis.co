@@ -191,6 +191,7 @@
     position:relative;
     left:50%;
     margin-left:-50vw;
+    margin-bottom:-88px;
   }
   body{overflow-x:hidden}
   .footer-cols{
