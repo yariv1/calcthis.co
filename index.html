@@ -62,9 +62,10 @@
   ]
 }
 </script>
-<link rel="stylesheet" href="/assets/style.css?v=24">
+<link rel="stylesheet" href="/assets/style.css?v=25">
 <style>
   .cat-tabs{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .cat-grp--hidden{display:none}
   .cat-tabs::-webkit-scrollbar{display:none}
   .cat-tab{white-space:normal;text-align:left;flex-shrink:0;line-height:1.25}
 </style>
@@ -286,7 +287,7 @@
   </div>
   </section>
 
-  <section id="grp-health" class="cat-grp" aria-label="Health &amp; Lifestyle calculators" hidden>
+  <section id="grp-health" class="cat-grp cat-grp--hidden" aria-label="Health &amp; Lifestyle calculators">
   <div class="cards">
 
 <a class="calc" href="/pace-calculator/">
@@ -391,7 +392,7 @@
   </div>
   </section>
 
-  <section id="grp-academic" class="cat-grp" aria-label="School &amp; Grades calculators" hidden>
+  <section id="grp-academic" class="cat-grp cat-grp--hidden" aria-label="School &amp; Grades calculators">
   <div class="cards">
 
     <a class="calc" href="/final-grade-calculator/">
@@ -510,11 +511,11 @@
     b.classList.add('on'); b.setAttribute('aria-selected','true');
     b.scrollIntoView({behavior:'smooth',block:'nearest',inline:'start'});
     var cat=b.getAttribute('data-cat');
-    for(var k in grp){ if(grp[k]) grp[k].hidden=(k!==cat); }
+    for(var k in grp){ if(grp[k]){ if(k===cat){grp[k].classList.remove('cat-grp--hidden');}else{grp[k].classList.add('cat-grp--hidden');} } }
   });
 })();
 </script>
-<script src="/assets/app.js?v=24"></script>
+<script src="/assets/app.js?v=25"></script>
 <script src="/feedback.js" defer></script>
 </body>
 </html>
