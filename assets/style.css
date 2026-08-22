@@ -574,3 +574,90 @@
   .p-finalgrade .stable tr.warn-row td{color:#b23030}
   .p-finalgrade #advOut{margin:6px 0 4px}
   @media(max-width:430px){.p-finalgrade #catRows .two{grid-template-columns:1fr 1fr}}
+
+
+/* ============================================================
+   FOOTER — legal nav row  (About · Terms of use · Privacy policy)
+   ============================================================ */
+.footer-legal-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 32px;
+  margin-bottom: 12px;
+  color: #91826A;
+  font-family: Inter, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.footer-legal-nav a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.footer-legal-nav a:hover {
+  text-decoration: underline;
+}
+
+.footer-legal-nav span {
+  user-select: none;
+  opacity: 0.6;
+}
+
+
+/* ============================================================
+   LEGAL PAGES  (About, Privacy Policy, Terms of Use)
+   ============================================================ */
+.legal-page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 56px 24px 80px;
+}
+
+.legal-content h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.legal-meta {
+  font-size: 14px;
+  color: #91826A;
+  margin-bottom: 32px;
+}
+
+.legal-content h2 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-top: 36px;
+  margin-bottom: 8px;
+}
+
+.legal-content p,
+.legal-content li {
+  font-size: 15px;
+  line-height: 1.7;
+  margin-bottom: 12px;
+}
+
+.legal-content ul {
+  padding-left: 20px;
+  margin-bottom: 12px;
+}
+
+.legal-content a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+  .legal-page {
+    padding: 40px 20px 64px;
+  }
+  .legal-content h1 {
+    font-size: 1.6rem;
+  }
+}
