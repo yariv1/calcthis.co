@@ -38,6 +38,10 @@ const PAGES = [
   { file: 'gpa-calculator/index.html',         slug: '/gpa-calculator/' },
   { file: 'grade-calculator/index.html',       slug: '/grade-calculator/' },
   { file: 'test-score-calculator/index.html', slug: '/test-score-calculator/' },
+  // Legal & info pages
+  { file: 'about/index.html',           slug: '/about/' },
+  { file: 'privacy-policy/index.html',  slug: '/privacy-policy/' },
+  { file: 'terms-of-use/index.html',    slug: '/terms-of-use/' },
 ];
 
 // ---- bump shared asset version ----
