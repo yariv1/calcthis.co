@@ -58,7 +58,11 @@ function headerFor(slug) {
   );
 }
 
+// ---- load footer partial ----
+const footerRaw = fs.readFileSync(path.join(ROOT, 'partials', 'footer.html'), 'utf8');
+
 const HDR_RE = /<!--HEADER:START-->[\s\S]*?<!--HEADER:END-->/;
+const FTR_RE = /<!--FOOTER:START-->[\s\S]*?<!--FOOTER:END-->/;
 const ASSET_RE = /(\/assets\/(?:style\.css|app\.js))(\?v=\d+)?/g;
 
 let changed = 0, warned = 0;
@@ -77,7 +81,16 @@ for (const p of PAGES) {
     warned++;
   }
 
-  // 2. cache-bust
+  // 2. footer
+  if (FTR_RE.test(html)) {
+    const block = '<!--FOOTER:START-->\n' + footerRaw + '<!--FOOTER:END-->';
+    html = html.replace(FTR_RE, block);
+  } else {
+    console.warn('  ! no FOOTER markers in ' + p.file + ' (skipped footer stamp)');
+    warned++;
+  }
+
+  // 3. cache-bust
   html = html.replace(ASSET_RE, '$1?v=' + ver);
 
   fs.writeFileSync(fp, html);

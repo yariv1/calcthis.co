@@ -2257,3 +2257,19 @@ CalcThis.initPredictorCalc = function (cfg) {
 
   solve();
 };
+
+/* =========================================================
+   SITE FOOTER — mobile accordion
+   Multiple pillars can be open simultaneously.
+   First pillar starts expanded (aria-expanded="true" in HTML).
+   ========================================================= */
+(function () {
+  var btns = document.querySelectorAll('.footer-col-btn');
+  if (!btns.length) return;
+  btns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var expanded = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+    });
+  });
+})();

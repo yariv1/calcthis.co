@@ -179,8 +179,105 @@
   .faq[open] summary::after{content:"–"}
   .faq p{margin-top:10px}
 
-  footer{border-top:1px solid var(--line);margin-top:30px;padding:22px 0 40px;color:var(--muted);font-size:13px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
-  footer a{color:var(--ink-soft);text-decoration:none}
+  /* =========================================================
+     SITE FOOTER — multi-column by pillar
+     ========================================================= */
+  .site-footer{
+    background:#FAF2E7;
+    border-top:1px solid var(--line);
+    margin-top:40px;
+    padding:40px 0 32px;
+    width:100vw;
+    position:relative;
+    left:50%;
+    margin-left:-50vw;
+  }
+  body{overflow-x:hidden}
+  .footer-cols{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:32px;
+    max-width:1040px;
+    margin:0 auto;
+    padding:0 20px;
+  }
+  .footer-col-btn{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    width:100%;
+    background:none;
+    border:0;
+    padding:0;
+    cursor:default;
+    text-align:left;
+    gap:8px;
+    pointer-events:none; /* desktop: not interactive */
+  }
+  .footer-col-btn span{
+    font-family:'Fraunces',serif;
+    font-size:16px;
+    font-weight:600;
+    line-height:1.2;
+    color:#684B31;
+  }
+  .footer-chevron{
+    display:none; /* hidden on desktop */
+    flex:none;
+    margin-top:2px;
+    color:#684B31;
+    transition:transform .22s ease;
+  }
+  .footer-links{
+    list-style:none;
+    margin:14px 0 0;
+    padding:0;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .footer-links a{
+    font-family:'Inter',system-ui,sans-serif;
+    font-size:14px;
+    font-weight:400;
+    line-height:1.2;
+    color:#604F47;
+    text-decoration:none;
+    transition:color .12s;
+  }
+  .footer-links a:hover{color:#684B31}
+  .footer-copy{
+    font-family:'Inter',system-ui,sans-serif;
+    font-size:12.5px;
+    color:var(--muted);
+    max-width:1040px;
+    margin:32px auto 0;
+    padding:0 20px;
+    line-height:1.5;
+  }
+
+  /* mobile footer accordion */
+  @media(max-width:700px){
+    .site-footer{padding-top:24px}
+    .footer-cols{
+      grid-template-columns:1fr;
+      gap:0;
+    }
+    .footer-col{border-bottom:1px solid var(--line)}
+    .footer-col:first-of-type{border-top:none}
+    .footer-col-btn{
+      pointer-events:auto;
+      cursor:pointer;
+      padding:16px 0;
+    }
+    .footer-chevron{display:block}
+    .footer-col-btn[aria-expanded="true"] .footer-chevron{transform:rotate(180deg)}
+    .footer-links{margin:0 0 16px}
+    .footer-col-btn[aria-expanded="false"] + .footer-links{display:none}
+  }
+
+  /* remove old homepage footer nav override */
+  .p-home footer nav a{margin-left:0}
 
   /* mobile sticky bar */
   .mbar{display:none}
@@ -251,8 +348,6 @@
   .prose h3{font-family:'Fraunces',serif;font-weight:600;font-size:18px;margin:26px 0 8px}
   .prose p{color:var(--ink-soft);font-size:16px;margin:0 0 13px}
   .prose strong{color:var(--ink);font-weight:600}
-
-  .p-home footer nav a{margin-left:16px}
 
   /* =========================================================
      BOARD FOOT  (body.p-board-foot) — length toggle, ghost btn, cut-list row
