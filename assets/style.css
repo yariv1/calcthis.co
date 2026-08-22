@@ -583,9 +583,10 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  justify-content: center;
-  margin-top: 32px;
-  margin-bottom: 12px;
+  justify-content: flex-start;
+  max-width: 1040px;
+  margin: 32px auto 12px;
+  padding: 0 20px;
   color: #91826A;
   font-family: Inter, sans-serif;
   font-size: 14px;
