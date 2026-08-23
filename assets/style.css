@@ -217,11 +217,15 @@
   }
   .footer-col-btn span{
     font-family:'Fraunces',serif;
-    font-size:16px;
+    font-size:15px;
     font-weight:600;
     line-height:1.2;
+    letter-spacing:.03em;
+    text-transform:uppercase;
     color:#684B31;
   }
+  .footer-col-btn .fttl .ft1,
+  .footer-col-btn .fttl .ft2{display:block}
   .footer-chevron{
     display:none; /* hidden on desktop */
     flex:none;
@@ -271,6 +275,12 @@
       cursor:pointer;
       padding:16px 0;
     }
+    .footer-col-btn span{
+      font-size:16px;
+      white-space:nowrap;
+    }
+    .footer-col-btn .fttl .ft1,
+    .footer-col-btn .fttl .ft2{display:inline}
     .footer-chevron{display:block}
     .footer-col-btn[aria-expanded="true"] .footer-chevron{transform:rotate(180deg)}
     .footer-links{margin:0 0 16px}
@@ -404,7 +414,7 @@
   .dtable tr.cur td{color:var(--ink);font-weight:700;background:#FCF7EE}
   .splitcard{grid-column:1/-1}
   /* nav pillar divider */
-  .menu .navsep{display:block;height:1px;background:var(--line);margin:7px 6px}
+  .menu .navsep{display:none}
 
   /* =========================================================
      FITNESS · RACE TIME PREDICTOR  (body.p-predictor)
@@ -540,15 +550,18 @@
   .menu-cols{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0 4px;min-width:560px}
   .menu-col{display:flex;flex-direction:column;padding:2px 4px}
   .menu-col-head{font-family:'Fraunces',serif;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);padding:8px 9px 5px;display:block}
+  /* extra breathing room before a section head that follows links */
+  .menu-col a + .menu-col-head,
+  .menu-col .navsep + .menu-col-head{margin-top:14px}
   /* links inside columns stay the same style */
   .menu-col a{display:block;font-family:'Fraunces',serif;font-size:15px;font-weight:500;color:var(--ink-soft);text-decoration:none;padding:7px 9px;border-radius:8px;transition:.12s;white-space:nowrap}
   .menu-col a:hover{background:#F5EFE4;color:var(--ink)}
   .menu-col a.current{background:#F3EADA;color:var(--ink);font-weight:600}
-  /* navsep inside column */
-  .menu-col .navsep{display:block;height:1px;background:var(--line);margin:6px 4px 8px}
+  /* navsep removed */
+  .menu-col .navsep{display:none}
   @media(max-width:520px){
     .menu-cols{grid-template-columns:1fr;min-width:220px}
-    .menu{max-height:calc(100dvh - 60px);overflow-y:auto;-webkit-overflow-scrolling:touch}
+    .menu{max-height:calc(100dvh - 70px - 40px);overflow-y:auto;-webkit-overflow-scrolling:touch}
   }
 
   /* =========================================================
