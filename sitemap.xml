@@ -76,6 +76,11 @@
   <url><loc>https://calcthis.co/grade-calculator/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://calcthis.co/test-score-calculator/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url>
+    <loc>https://calcthis.co/ratio-calculator/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://calcthis.co/about/</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>yearly</changefreq>

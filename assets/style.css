@@ -196,8 +196,8 @@
   body{overflow-x:hidden}
   .footer-cols{
     display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:32px;
+    grid-template-columns:repeat(4,1fr);
+    gap:24px;
     max-width:1040px;
     margin:0 auto;
     padding:0 20px;
@@ -537,7 +537,7 @@
     /* override old single-column min-width */
     min-width:0;
   }
-  .menu-cols{display:grid;grid-template-columns:1fr 1fr;gap:0 4px;min-width:420px}
+  .menu-cols{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0 4px;min-width:560px}
   .menu-col{display:flex;flex-direction:column;padding:2px 4px}
   .menu-col-head{font-family:'Fraunces',serif;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);padding:8px 9px 5px;display:block}
   /* links inside columns stay the same style */

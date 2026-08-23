@@ -39,6 +39,7 @@ const PAGES = [
   { file: 'grade-calculator/index.html',       slug: '/grade-calculator/' },
   { file: 'test-score-calculator/index.html', slug: '/test-score-calculator/' },
   // Legal & info pages
+  { file: 'ratio-calculator/index.html', slug: '/ratio-calculator/' },
   { file: 'about/index.html',           slug: '/about/' },
   { file: 'privacy-policy/index.html',  slug: '/privacy-policy/' },
   { file: 'terms-of-use/index.html',    slug: '/terms-of-use/' },

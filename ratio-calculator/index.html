@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ratio Calculator — Simplify, Solve &amp; Scale Any Ratio | CalcThis</title>
+<link rel="canonical" href="https://calcthis.co/ratio-calculator/">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<meta name="theme-color" content="#B5761F">
+<meta name="description" content="Free ratio calculator. Simplify ratios instantly, solve for a missing value, or scale any ratio up or down — with a live visual proportion bar and real-world presets.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Ratio Calculator — Simplify, Solve &amp; Scale Any Ratio">
+<meta property="og:description" content="Free ratio calculator. Simplify ratios instantly, solve for a missing value, or scale any ratio up or down — with a live visual proportion bar.">
+<meta property="og:url" content="https://calcthis.co/ratio-calculator/">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Ratio Calculator",
+      "url": "https://calcthis.co/ratio-calculator/",
+      "description": "Free ratio calculator. Simplify ratios, solve for a missing value in a proportion, and scale ratios up or down with a live visual proportion bar.",
+      "applicationCategory": "UtilityApplication",
+      "operatingSystem": "Any (web browser)",
+      "browserRequirements": "Requires JavaScript",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "featureList": ["Simplify any ratio to lowest terms","Solve for missing value in A:B = C:D","Scale ratios with interactive slider","Live visual proportion bar","Equivalent ratios table","Real-world presets: recipe, concrete mix, screen, cost split, map scale"]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {"@type":"Question","name":"What is the difference between a ratio and a proportion?","acceptedAnswer":{"@type":"Answer","text":"A ratio (3:2) compares two quantities. A proportion states that two ratios are equal: 3:2 = 6:4. Use Simplify for ratios, use Solve when you have a proportion with one missing term."}},
+        {"@type":"Question","name":"Can I use decimals in a ratio calculator?","acceptedAnswer":{"@type":"Answer","text":"Yes. Enter decimals like 1.5:2 or 0.75:1 — the calculator converts to whole-number equivalents internally before simplifying, so results are always clean integers."}},
+        {"@type":"Question","name":"How do I scale a ratio up or down?","acceptedAnswer":{"@type":"Answer","text":"Use Scale mode. Enter your base ratio and drag the slider to your desired multiplier. Both sides scale together so the proportion stays identical."}},
+        {"@type":"Question","name":"What is the GCD and why does it matter for ratios?","acceptedAnswer":{"@type":"Answer","text":"The Greatest Common Divisor is the largest number that divides evenly into both values. Dividing both sides of a ratio by the GCD gives the simplest possible form."}}
+      ]
+    }
+  ]
+}
+</script>
+<link rel="stylesheet" href="/assets/style.css?v=31">
+<style>
+.presets-label{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
+.presets{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px}
+.preset-btn{font:inherit;font-size:12.5px;font-weight:600;color:var(--ink-soft);background:#F5EFE4;border:1.5px solid var(--line);border-radius:20px;padding:5px 12px;cursor:pointer;transition:.12s}
+.preset-btn:hover{border-color:var(--amber);color:var(--amber-deep)}
+.preset-btn.on{background:var(--amber);border-color:var(--amber);color:#fff}
+.mode-panel{display:none}.mode-panel.active{display:block}
+.ratio-inputs{display:grid;grid-template-columns:1fr 28px 1fr;align-items:end;gap:8px;margin-bottom:6px}
+.colon-div{font-family:'Fraunces',serif;font-size:30px;font-weight:600;color:var(--amber);text-align:center;padding-bottom:10px;line-height:1}
+.solve-grid{display:grid;grid-template-columns:1fr 24px 1fr 20px 1fr;align-items:end;gap:6px;margin-bottom:6px}
+.solve-eq{font-family:'Fraunces',serif;font-size:20px;font-weight:600;color:var(--muted);text-align:center;padding-bottom:10px;line-height:1}
+.inp input{text-align:center;font-size:18px;font-weight:600}
+.inp-solved input{background:#F0F6F2!important;border-color:var(--spruce)!important;color:var(--spruce)!important;text-align:center;font-size:18px;font-weight:600}
+.scale-lab{font-size:12.5px;font-weight:600;color:var(--ink-soft);margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
+.scale-lab strong{font-family:'Fraunces',serif;font-size:17px;color:var(--amber)}
+.slider-wrap{position:relative;padding-bottom:18px}
+input[type=range]{width:100%;-webkit-appearance:none;appearance:none;height:6px;border-radius:3px;outline:none;cursor:pointer;background:linear-gradient(to right,var(--amber) 0%,var(--amber) var(--pct,10%),#E7DECF var(--pct,10%),#E7DECF 100%)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--amber);border:3px solid #fff;box-shadow:0 1px 4px rgba(36,26,17,.22);cursor:pointer}
+input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--amber);border:3px solid #fff;cursor:pointer}
+.scale-ticks{position:absolute;bottom:0;left:0;right:0;font-size:11px;color:var(--muted)}
+.scale-ticks span{position:absolute;transform:translateX(-50%);white-space:nowrap}
+.placeholder{text-align:center;padding:40px 24px;color:var(--muted)}
+.placeholder p{font-size:14px;line-height:1.5;margin-top:12px}
+.result-inner{padding:22px}
+.vis-bar-wrap{margin-bottom:22px}
+.vis-bar-labels{display:flex;justify-content:space-between;font-size:12px;font-weight:600;margin-bottom:7px}
+.lbl-a{color:var(--amber-deep)}.lbl-b{color:var(--spruce)}
+.vis-bar{height:38px;border-radius:9px;overflow:hidden;display:flex}
+.bar-a{background:var(--amber);transition:width .35s cubic-bezier(.4,0,.2,1);display:flex;align-items:center;justify-content:center;min-width:0;overflow:hidden}
+.bar-b{background:var(--spruce);flex:1;display:flex;align-items:center;justify-content:center;min-width:0;overflow:hidden}
+.bar-lbl{font-family:'Fraunces',serif;font-size:13px;font-weight:600;color:#fff;padding:0 8px;white-space:nowrap}
+.res-lab{font-size:11.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--spruce-soft);margin-bottom:4px}
+.res-big{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(38px,8vw,56px);line-height:1;letter-spacing:-.02em;color:var(--ink);font-variant-numeric:tabular-nums;margin-bottom:20px}
+.res-big em{color:var(--amber);font-style:normal;font-size:.65em}
+.res-details{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:20px}
+.det-card{background:#FCFAF6;border:1px solid var(--line);border-radius:10px;padding:11px 13px}
+.det-card .k{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
+.det-card .v{font-family:'Fraunces',serif;font-size:19px;font-weight:600;color:var(--ink);font-variant-numeric:tabular-nums}
+.equiv-label{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
+.equiv-table{width:100%;border-collapse:collapse;font-size:13.5px}
+.equiv-table th{text-align:left;padding:6px 8px;font-size:11.5px;font-weight:600;color:var(--ink-soft);border-bottom:1px solid var(--line)}
+.equiv-table td{padding:6px 8px;border-bottom:1px solid #F2EBE0;font-variant-numeric:tabular-nums;color:var(--ink-soft)}
+.equiv-table tr:last-child td{border-bottom:none}
+.equiv-table td:first-child{font-weight:600;color:var(--ink)}
+.equiv-table tr.active-row td{background:#F5EFE4;color:var(--ink);font-weight:700}
+.equiv-table tr.active-row td:first-child{color:var(--amber-deep)}
+.preset-content{position:absolute;visibility:hidden;pointer-events:none;height:0;overflow:hidden}
+.preset-content.active{position:static;visibility:visible;pointer-events:auto;height:auto;overflow:visible}
+.preset-badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--amber-deep);background:#FEF4E4;border:1px solid #F0D9A8;border-radius:20px;padding:4px 12px;margin-bottom:16px}
+</style>
+</head>
+<body class="p-ratio">
+<div class="wrap">
+<!--HEADER:START-->
+  <header>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <span class="menu-col-head">Construction</span>
+          <a href="/">Home</a>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <span class="navsep" aria-hidden="true"></span>
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/ratio-calculator/" class="current">Ratio</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <div class="hero">
+    <div class="eyebrow">Math &amp; Numbers</div>
+    <h1>Ratio Calculator</h1>
+    <p>Simplify, solve for a missing value, or scale any ratio — results update live as you type.</p>
+  </div>
+
+  <div class="grid">
+    <div class="card card-pad">
+      <div class="modeseg" role="group">
+        <button class="on" data-mode="simplify">Simplify</button>
+        <button data-mode="solve">Solve</button>
+        <button data-mode="scale">Scale</button>
+      </div>
+      <div class="presets-label">Quick context</div>
+      <div class="presets">
+        <button class="preset-btn on" data-preset="none">General</button>
+        <button class="preset-btn" data-preset="recipe">🍳 Recipe</button>
+        <button class="preset-btn" data-preset="concrete">🏗️ Mix</button>
+        <button class="preset-btn" data-preset="screen">🖼️ Screen</button>
+        <button class="preset-btn" data-preset="split">💰 Split</button>
+        <button class="preset-btn" data-preset="map">📐 Map</button>
+      </div>
+      <div class="mode-panel active" id="panel-simplify">
+        <div class="ratio-inputs">
+          <label class="fld"><div class="lab" id="lab-s-a">Part A</div><div class="inp"><input type="number" id="s-a" placeholder="e.g. 12" min="0" step="any" autocomplete="off"></div></label>
+          <div class="colon-div">:</div>
+          <label class="fld"><div class="lab" id="lab-s-b">Part B</div><div class="inp"><input type="number" id="s-b" placeholder="e.g. 8" min="0" step="any" autocomplete="off"></div></label>
+        </div>
+      </div>
+      <div class="mode-panel" id="panel-solve">
+        <p style="font-size:13px;color:var(--muted);margin-bottom:12px">Enter A, B, C — D is solved automatically (A:B = C:D)</p>
+        <div class="solve-grid">
+          <label class="fld"><div class="lab">A</div><div class="inp"><input type="number" id="v-a" placeholder="3" min="0" step="any" autocomplete="off"></div></label>
+          <div class="colon-div" style="font-size:24px">:</div>
+          <label class="fld"><div class="lab">B</div><div class="inp"><input type="number" id="v-b" placeholder="4" min="0" step="any" autocomplete="off"></div></label>
+          <div class="solve-eq">=</div>
+          <label class="fld"><div class="lab">C</div><div class="inp"><input type="number" id="v-c" placeholder="9" min="0" step="any" autocomplete="off"></div></label>
+        </div>
+        <label class="fld" style="margin-top:10px">
+          <div class="lab" style="color:var(--spruce);font-weight:700">D (result)</div>
+          <div class="inp inp-solved"><input type="text" id="v-d" placeholder="—" readonly></div>
+        </label>
+      </div>
+      <div class="mode-panel" id="panel-scale">
+        <div class="ratio-inputs" style="margin-bottom:18px">
+          <label class="fld"><div class="lab" id="lab-sc-a">Part A</div><div class="inp"><input type="number" id="sc-a" placeholder="e.g. 2" min="0" step="any" autocomplete="off"></div></label>
+          <div class="colon-div">:</div>
+          <label class="fld"><div class="lab" id="lab-sc-b">Part B</div><div class="inp"><input type="number" id="sc-b" placeholder="e.g. 3" min="0" step="any" autocomplete="off"></div></label>
+        </div>
+        <div class="scale-lab">Scale factor <strong id="scale-val">×3</strong></div>
+        <div class="slider-wrap">
+          <input type="range" id="scale-slider" min="1" max="20" value="3" step="1">
+          <div class="scale-ticks" id="scale-ticks"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="result-card">
+      <div class="placeholder" id="result-placeholder">
+        <svg width="56" height="48" viewBox="0 0 56 48" fill="none"><rect x="2" y="14" width="20" height="22" rx="5" fill="#B5761F" opacity=".2"/><rect x="34" y="8" width="20" height="28" rx="5" fill="#37503F" opacity=".2"/><path d="M22 25h12" stroke="#C4B49A" stroke-width="2.5" stroke-linecap="round"/></svg>
+        <p>Enter values on the left —<br>results appear here instantly.</p>
+      </div>
+      <div class="result-inner" id="result-output" style="display:none">
+        <div class="vis-bar-wrap">
+          <div class="vis-bar-labels">
+            <span class="lbl-a" id="lbl-a">Part A</span>
+            <span class="lbl-b" id="lbl-b">Part B</span>
+          </div>
+          <div class="vis-bar">
+            <div class="bar-a" id="bar-a" style="width:50%"><span class="bar-lbl" id="bval-a"></span></div>
+            <div class="bar-b"><span class="bar-lbl" id="bval-b"></span></div>
+          </div>
+        </div>
+        <div class="res-lab" id="res-label">Simplified ratio</div>
+        <div class="res-big" id="res-big"></div>
+        <div class="res-details">
+          <div class="det-card"><div class="k">As fraction</div><div class="v" id="d-frac"></div></div>
+          <div class="det-card"><div class="k">As decimal</div><div class="v" id="d-dec"></div></div>
+          <div class="det-card"><div class="k">Part A of whole</div><div class="v" id="d-pa"></div></div>
+          <div class="det-card"><div class="k">Part B of whole</div><div class="v" id="d-pb"></div></div>
+        </div>
+        <div class="equiv-label">Equivalent ratios</div>
+        <table class="equiv-table">
+          <thead><tr><th>×</th><th id="eth-a">Part A</th><th id="eth-b">Part B</th><th>Total</th></tr></thead>
+          <tbody id="equiv-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="mbar" id="mbar">
+    <span class="mbar-lab" id="mbar-lab">Ratio</span>
+    <div class="mbar-vals"><b id="mbar-val">—</b></div>
+  </div>
+
+  <div class="content">
+    <div class="preset-content active" id="content-none">
+      <div class="content grid2">
+        <div>
+          <h2>What is a ratio?</h2>
+          <p>A ratio compares two quantities and shows their relative sizes. 3:2 means “for every 3 of one thing, there are 2 of another.” Ratios are unit-agnostic — they work for cups, litres, pixels, or dollars equally well.</p>
+          <h2>How simplification works</h2>
+          <p>Both numbers are divided by their Greatest Common Divisor (GCD). The ratio 12:8 simplifies to 3:2 because GCD(12,8) = 4. The result is the same proportion in the smallest whole numbers possible.</p>
+          <div class="formula">GCD(A, B) → A÷GCD : B÷GCD<small>Euclid’s algorithm — runs instantly</small></div>
+        </div>
+        <div>
+          <h2>Solving for a missing value</h2>
+          <p>If A:B = C:D and you know three values, cross-multiplication finds the fourth.</p>
+          <div class="formula">D = (B × C) ÷ A<small>Cross-multiplication for proportions</small></div>
+          <h2>Common real-world uses</h2>
+          <table class="dtable">
+            <thead><tr><th>Context</th><th>Example</th></tr></thead>
+            <tbody>
+              <tr><td>Concrete mix</td><td>1:2:3 cement:sand:gravel</td></tr>
+              <tr><td>Recipe scaling</td><td>2:1 flour:sugar</td></tr>
+              <tr><td>Screen aspect</td><td>16:9 (1920:1080)</td></tr>
+              <tr><td>Map scale</td><td>1:50,000</td></tr>
+              <tr><td>Bill split</td><td>3:2 shares</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <h2>Frequently asked questions</h2>
+      <details class="faq"><summary>What’s the difference between a ratio and a proportion?</summary><p>A ratio (3:2) compares two quantities. A proportion states that two ratios are equal: 3:2 = 6:4. Use Simplify for ratios, use Solve when you have a proportion with one missing term.</p></details>
+      <details class="faq"><summary>Can I use decimals?</summary><p>Yes. Enter 1.5:2 or 0.75:1 — the calculator converts to whole-number equivalents internally before simplifying, so results are always clean integers.</p></details>
+      <details class="faq"><summary>What does the Scale mode do?</summary><p>Scale multiplies both sides of a ratio by the same factor. Useful for scaling a recipe (×4 batches), a larger concrete pour, or resizing an image at a fixed aspect ratio.</p></details>
+      <details class="faq"><summary>What is the GCD?</summary><p>The Greatest Common Divisor is the largest number that divides evenly into both values. Dividing by it gives the lowest-terms form of the ratio.</p></details>
+    </div>
+
+    <div class="preset-content" id="content-recipe">
+      <div class="preset-badge">🍳 Recipe ratios</div>
+      <div class="content grid2">
+        <div>
+          <h2>Why ratios matter in cooking</h2>
+          <p>A ratio is the backbone of any recipe. Once you know the ratio, you can scale to any batch size — just multiply both sides by the same factor. The classic vinaigrette is 3:1 oil to vinegar.</p>
+          <h2>How to scale a recipe</h2>
+          <p>Switch to <strong>Scale</strong> mode, enter your base ratio, and drag the slider. Every ingredient stays in proportion automatically.</p>
+          <div class="formula">New amount = Original × Scale factor<small>Both sides multiply equally — the ratio never changes</small></div>
+        </div>
+        <div>
+          <h2>Classic cooking ratios</h2>
+          <table class="dtable">
+            <thead><tr><th>Recipe</th><th>Ratio</th></tr></thead>
+            <tbody>
+              <tr><td>Vinaigrette</td><td>3:1 (oil:vinegar)</td></tr>
+              <tr><td>Pancake batter</td><td>2:1 (flour:liquid)</td></tr>
+              <tr><td>Bread dough</td><td>5:3 (flour:water)</td></tr>
+              <tr><td>Pie crust</td><td>3:2 (flour:fat)</td></tr>
+              <tr><td>Béchamel</td><td>1:1 (butter:flour)</td></tr>
+              <tr><td>Cookie dough</td><td>3:2 (flour:butter)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <details class="faq"><summary>My recipe doesn’t use round numbers — will this work?</summary><p>Yes. Enter decimals like 1.5:1 or 2.25:1. The calculator gives you the simplified whole-number form plus all scaled equivalents.</p></details>
+      <details class="faq"><summary>How do I scale a 3-ingredient recipe?</summary><p>Use Simplify for any two ingredients at a time, or use Scale mode and apply the same factor to all three components.</p></details>
+    </div>
+
+    <div class="preset-content" id="content-concrete">
+      <div class="preset-badge">🏗️ Mix ratios</div>
+      <div class="content grid2">
+        <div>
+          <h2>Mix ratios in construction</h2>
+          <p>Concrete, mortar, grout, and render are all defined by ratios. The proportions of cement, sand, and aggregate determine final strength and workability.</p>
+          <h2>How to use this for a mix</h2>
+          <p>Enter two main components (e.g. cement:sand as 1:3). Use <strong>Scale</strong> mode to find exact quantities for your batch size.</p>
+          <div class="formula">1 : 2 : 3<small>Cement : Sand : Gravel — general-purpose concrete</small></div>
+        </div>
+        <div>
+          <h2>Standard mix ratios</h2>
+          <table class="dtable">
+            <thead><tr><th>Application</th><th>Cement:Sand(:Gravel)</th></tr></thead>
+            <tbody>
+              <tr><td>General concrete</td><td>1:2:3</td></tr>
+              <tr><td>Strong concrete</td><td>1:1.5:3</td></tr>
+              <tr><td>Mortar (brickwork)</td><td>1:4</td></tr>
+              <tr><td>Mortar (pointing)</td><td>1:3</td></tr>
+              <tr><td>Render (base coat)</td><td>1:4</td></tr>
+              <tr><td>Screed</td><td>1:3</td></tr>
+              <tr><td>Grout (floor tiles)</td><td>1:2</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <details class="faq"><summary>My mix ratio has 3 parts — how do I use this calculator?</summary><p>Work with two components at a time. For a 1:2:3 mix, check cement:sand (1:2) and cement:gravel (1:3) separately.</p></details>
+      <details class="faq"><summary>How do I find how much of each material I need?</summary><p>Simplify your ratio, then use Scale mode. If you need 60 units total at a 1:2 ratio, that’s 20 of part A and 40 of part B.</p></details>
+    </div>
+
+    <div class="preset-content" id="content-screen">
+      <div class="preset-badge">🖼️ Screen &amp; image ratios</div>
+      <div class="content grid2">
+        <div>
+          <h2>Aspect ratios explained</h2>
+          <p>An aspect ratio is the relationship between width and height. A 1920×1080 screen has a 16:9 ratio — both values divided by their GCD of 120.</p>
+          <h2>Finding your ratio</h2>
+          <p>Enter width and height in Simplify mode — you get the simplified aspect ratio instantly, plus the decimal (e.g. 1.78 for 16:9) useful for CSS.</p>
+        </div>
+        <div>
+          <h2>Common screen aspect ratios</h2>
+          <table class="dtable">
+            <thead><tr><th>Format</th><th>Resolution → Ratio</th></tr></thead>
+            <tbody>
+              <tr><td>HD / Full HD</td><td>1920×1080 → 16:9</td></tr>
+              <tr><td>4K UHD</td><td>3840×2160 → 16:9</td></tr>
+              <tr><td>Old monitor</td><td>1024×768 → 4:3</td></tr>
+              <tr><td>Ultrawide</td><td>3440×1440 → 43:18</td></tr>
+              <tr><td>Square (Instagram)</td><td>1080×1080 → 1:1</td></tr>
+              <tr><td>Portrait (Reels/TikTok)</td><td>1080×1920 → 9:16</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <details class="faq"><summary>How do I resize an image while keeping the ratio?</summary><p>Use Scale mode. Enter your original width:height, then drag the slider. Both dimensions scale together so the aspect ratio stays identical.</p></details>
+      <details class="faq"><summary>What’s the decimal value of 16:9?</summary><p>16÷9 = 1.777… This is shown in the result panel as the decimal. CSS uses it in the aspect-ratio property: aspect-ratio: 16/9.</p></details>
+    </div>
+
+    <div class="preset-content" id="content-split">
+      <div class="preset-badge">💰 Cost &amp; split ratios</div>
+      <div class="content grid2">
+        <div>
+          <h2>Splitting costs by ratio</h2>
+          <p>When two people share a cost in proportion — by income, usage, or agreement — a ratio defines each person’s fair share. A 3:2 ratio means one person pays 60%, the other 40%.</p>
+          <p>Use Simplify to find the base ratio, then read the percentage cards in the result panel — those are the exact shares.</p>
+        </div>
+        <div>
+          <h2>Common split scenarios</h2>
+          <table class="dtable">
+            <thead><tr><th>Scenario</th><th>Ratio → shares</th></tr></thead>
+            <tbody>
+              <tr><td>Equal split (2 people)</td><td>1:1 → 50% / 50%</td></tr>
+              <tr><td>2:1 income split</td><td>2:1 → 67% / 33%</td></tr>
+              <tr><td>3:2 income split</td><td>3:2 → 60% / 40%</td></tr>
+              <tr><td>Business profit split</td><td>Equity % → simplify</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <details class="faq"><summary>How do I split between 3 people?</summary><p>Work in pairs. For a 3:2:1 split, check 3:2 for persons A and B, then 3:1 for A vs C.</p></details>
+      <details class="faq"><summary>Can I enter dollar amounts directly?</summary><p>Yes — enter $3,500 : $2,100 and simplify to get the ratio, then read the percentage split from the result panel.</p></details>
+    </div>
+
+    <div class="preset-content" id="content-map">
+      <div class="preset-badge">📐 Map &amp; scale ratios</div>
+      <div class="content grid2">
+        <div>
+          <h2>Map scales as ratios</h2>
+          <p>A map scale of 1:50,000 means 1 unit on the map equals 50,000 units in reality. 1 cm on the map = 500 metres on the ground.</p>
+          <p>Use Solve mode: set A=1, B=scale denominator, C=your measured map distance. D gives the real-world distance in the same unit.</p>
+          <div class="formula">Real distance = Map distance × Scale denominator<small>e.g. 4 cm × 50,000 = 200,000 cm = 2 km</small></div>
+        </div>
+        <div>
+          <h2>Common map scales</h2>
+          <table class="dtable">
+            <thead><tr><th>Scale</th><th>1 cm = real distance</th></tr></thead>
+            <tbody>
+              <tr><td>1:1,000</td><td>10 metres</td></tr>
+              <tr><td>1:10,000</td><td>100 metres</td></tr>
+              <tr><td>1:25,000</td><td>250 metres (OS Explorer)</td></tr>
+              <tr><td>1:50,000</td><td>500 metres (OS Landranger)</td></tr>
+              <tr><td>1:100,000</td><td>1 kilometre</td></tr>
+              <tr><td>1:250,000</td><td>2.5 kilometres</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <details class="faq"><summary>How do I use Solve mode for map distances?</summary><p>Enter A=1, B=50000, C=your measured map distance in cm. D gives the real-world distance in cm — divide by 100,000 to get kilometres.</p></details>
+      <details class="faq"><summary>What’s the difference between 1:25,000 and 1:50,000?</summary><p>A 1:25,000 map shows more detail — 1 cm covers 250 m, good for hiking. A 1:50,000 map covers more area — 1 cm covers 500 m, better for longer route planning.</p></details>
+    </div>
+
+  </div>
+</div>
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span>Construction &amp; Gardening</span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span>Health &amp; Lifestyle</span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span>School &amp; Grades</span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span>Math &amp; Numbers</span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+        </ul>
+      </div>
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+<script src="/assets/app.js?v=31"></script>
+<script>
+function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){var t=b;b=a%b;a=t;}return a;}
+function toInts(a,b){var sa=(''+a).split('.')[1]||'',sb=(''+b).split('.')[1]||'';var s=Math.pow(10,Math.max(sa.length,sb.length));var ai=Math.round(a*s),bi=Math.round(b*s);var g=gcd(ai,bi);return[ai/g,bi/g];}
+function fmtNum(n){if(n==null||isNaN(n))return'—';var r=Math.round(n*10000)/10000;var s=''+r;if(s.indexOf('.')>=0)s=s.replace(/\.?0+$/,'');return s;}
+
+function buildEquivTable(fA,fB,activeFactor){
+  var tbody=document.getElementById('equiv-body');
+  tbody.innerHTML='';
+  var start=1;
+  if(activeFactor!==null){if(activeFactor>15)start=11;else if(activeFactor>10)start=5;else start=1;}
+  for(var i=start;i<=start+9;i++){
+    var isActive=activeFactor!==null&&i===activeFactor;
+    var tr=document.createElement('tr');
+    if(isActive)tr.className='active-row';
+    ['×'+i,fA*i,fB*i,fA*i+fB*i].forEach(function(val){var td=document.createElement('td');td.textContent=val;tr.appendChild(td);});
+    tbody.appendChild(tr);
+  }
+}
+
+function render(rA,rB,labA,labB,mainLab,activeFactor){
+  var r=toInts(rA,rB);var fA=r[0],fB=r[1];
+  var total=fA+fB;var pA=(fA/total*100).toFixed(1);var pB=(fB/total*100).toFixed(1);
+  document.getElementById('bar-a').style.width=pA+'%';
+  document.getElementById('bval-a').textContent=fA;
+  document.getElementById('bval-b').textContent=fB;
+  document.getElementById('lbl-a').innerHTML=(labA||'Part A')+' — <strong>'+pA+'%</strong>';
+  document.getElementById('lbl-b').innerHTML=(labB||'Part B')+' — <strong>'+pB+'%</strong>';
+  document.getElementById('res-label').textContent=mainLab||'Simplified ratio';
+  document.getElementById('res-big').innerHTML=fA+' <em>:</em> '+fB;
+  document.getElementById('d-frac').textContent=fA+'/'+fB;
+  document.getElementById('d-dec').textContent=fmtNum(fA/fB);
+  document.getElementById('d-pa').textContent=pA+'%';
+  document.getElementById('d-pb').textContent=pB+'%';
+  document.getElementById('eth-a').textContent=labA||'Part A';
+  document.getElementById('eth-b').textContent=labB||'Part B';
+  buildEquivTable(fA,fB,activeFactor);
+  document.getElementById('result-placeholder').style.display='none';
+  document.getElementById('result-output').style.display='block';
+  document.getElementById('mbar-val').textContent=fA+' : '+fB;
+  document.getElementById('mbar-lab').textContent=mainLab||'Simplified ratio';
+}
+
+var PRESETS={none:{labA:'Part A',labB:'Part B'},recipe:{labA:'Ingredient A',labB:'Ingredient B'},concrete:{labA:'Cement',labB:'Sand / Gravel'},screen:{labA:'Width',labB:'Height'},split:{labA:'Your share',labB:'Their share'},map:{labA:'Map distance',labB:'Real distance'}};
+var activePreset='none',activeMode='simplify';
+
+function applyPreset(key){
+  activePreset=key;var p=PRESETS[key];
+  document.getElementById('lab-s-a').textContent=p.labA;document.getElementById('lab-s-b').textContent=p.labB;
+  document.getElementById('lab-sc-a').textContent=p.labA;document.getElementById('lab-sc-b').textContent=p.labB;
+  document.querySelectorAll('.preset-btn').forEach(function(b){b.classList.toggle('on',b.dataset.preset===key);});
+  document.querySelectorAll('.preset-content').forEach(function(c){c.classList.remove('active');});
+  document.getElementById('content-'+key).classList.add('active');
+  tryCalc();
+}
+document.querySelectorAll('.preset-btn').forEach(function(btn){btn.addEventListener('click',function(){applyPreset(btn.dataset.preset);});});
+
+document.querySelectorAll('.modeseg button').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    activeMode=btn.dataset.mode;
+    document.querySelectorAll('.modeseg button').forEach(function(b){b.classList.remove('on');});
+    btn.classList.add('on');
+    document.querySelectorAll('.mode-panel').forEach(function(p){p.classList.remove('active');});
+    document.getElementById('panel-'+activeMode).classList.add('active');
+    tryCalc();
+  });
+});
+
+function tryCalc(){
+  var p=PRESETS[activePreset];
+  if(activeMode==='simplify'){
+    var a=parseFloat(document.getElementById('s-a').value),b=parseFloat(document.getElementById('s-b').value);
+    if(a>0&&b>0)render(a,b,p.labA,p.labB,'Simplified ratio',null);
+  } else if(activeMode==='solve'){
+    var a=parseFloat(document.getElementById('v-a').value),b=parseFloat(document.getElementById('v-b').value),c=parseFloat(document.getElementById('v-c').value);
+    if(a>0&&b>0&&c>0){var d=(b*c)/a;document.getElementById('v-d').value=fmtNum(d);render(c,d,'C','D','Solved: C:D proportion',null);}
+    else document.getElementById('v-d').value='';
+  } else if(activeMode==='scale'){
+    var a=parseFloat(document.getElementById('sc-a').value),b=parseFloat(document.getElementById('sc-b').value);
+    var factor=parseInt(document.getElementById('scale-slider').value);
+    if(a>0&&b>0)render(a,b,p.labA,p.labB,'Scaled ×'+factor,factor);
+  }
+}
+
+['s-a','s-b','v-a','v-b','v-c','sc-a','sc-b'].forEach(function(id){var el=document.getElementById(id);if(el)el.addEventListener('input',tryCalc);});
+
+var slider=document.getElementById('scale-slider');
+function updateSlider(v){document.getElementById('scale-val').textContent='×'+v;slider.style.setProperty('--pct',((v-1)/19*100).toFixed(2)+'%');}
+slider.addEventListener('input',function(){updateSlider(parseInt(slider.value));tryCalc();});
+updateSlider(3);
+
+(function(){
+  var el=document.getElementById('scale-ticks');
+  [1,5,10,15,20].forEach(function(v){
+    var s=document.createElement('span');s.textContent='×'+v;
+    var pct=(v-1)/19;s.style.left='calc('+(pct*100)+'% - '+(pct*22-11)+'px)';
+    el.appendChild(s);
+  });
+})();
+</script>
+</body>
+</html>
