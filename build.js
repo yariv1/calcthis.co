@@ -41,6 +41,7 @@ const PAGES = [
   // Legal & info pages
   { file: 'ratio-calculator/index.html', slug: '/ratio-calculator/' },
   { file: 'percentage-calculator/index.html', slug: '/percentage-calculator/' },
+  { file: 'macro-calculator/index.html',      slug: '/macro-calculator/' },
   { file: 'about/index.html',           slug: '/about/' },
   { file: 'privacy-policy/index.html',  slug: '/privacy-policy/' },
   { file: 'terms-of-use/index.html',    slug: '/terms-of-use/' },

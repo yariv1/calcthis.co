@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Macro Calculator — Daily Protein, Carbs &amp; Fat Goals | CalcThis</title>
+<link rel="canonical" href="https://calcthis.co/macro-calculator/">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<meta name="theme-color" content="#B5761F">
+<meta name="description" content="Free macro calculator — get your daily protein, carbs and fat targets based on your goal. Live animated ring shows your macro split. Balanced, high-protein, keto and low-carb modes.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Macro Calculator",
+      "url": "https://calcthis.co/macro-calculator/",
+      "description": "Calculate your daily protein, carbohydrate and fat targets based on your body stats, activity level and goal.",
+      "applicationCategory": "UtilityApplication",
+      "operatingSystem": "Any (web browser)",
+      "browserRequirements": "Requires JavaScript",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "featureList": ["Daily calorie target","Protein, carbs and fat in grams","Live animated macro ring","Balanced, high-protein, keto and low-carb modes","Real-world protein food equivalents","Goal weight timeline"]
+    }
+  ]
+}
+</script>
+<link rel="stylesheet" href="/assets/style.css?v=35">
+<style>
+/* ---- Macro Calculator page-specific ---- */
+.p-macro .fld{margin-bottom:15px}
+
+/* unit + sex rows */
+.p-macro .mac-units{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:2px 0 18px}
+.p-macro .mac-units .ul{font-size:14px;font-weight:600;color:var(--ink-soft)}
+.p-macro #sexSeg{display:flex;width:100%}
+.p-macro #sexSeg button{flex:1;text-align:center}
+
+/* goal modeseg — 3-col */
+.p-macro #goalSeg{grid-template-columns:1fr 1fr 1fr;margin-bottom:0}
+
+/* adv section labels */
+.p-macro .adv-sec-lab{font-size:14px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin:16px 0 7px;display:block}
+.p-macro .int-label{font-size:14px;font-weight:600;color:var(--ink-soft);margin:12px 0 6px;display:block}
+
+/* ---- Results card ---- */
+.mac-res{padding:22px}
+
+/* calorie hero */
+.mac-cal-lab{font-size:14px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--spruce-soft);margin-bottom:4px}
+.mac-cal{display:flex;align-items:baseline;gap:6px}
+.mac-cal-num{font-family:'Fraunces',serif;font-size:clamp(42px,8vw,56px);font-weight:700;line-height:1;font-variant-numeric:tabular-nums;color:var(--ink)}
+.mac-cal-unit{font-family:'Fraunces',serif;font-size:17px;font-weight:500;color:var(--muted)}
+.mac-cal-sub{font-size:14px;color:var(--muted);margin-top:4px;margin-bottom:16px}
+
+/* donut ring */
+.mac-ring-wrap{display:flex;justify-content:center;margin:2px 0 18px;position:relative}
+.mac-ring-wrap svg{display:block}
+.mac-ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;gap:2px}
+.mac-ring-center .rc-label{font-size:14px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.mac-ring-center .rc-val{font-family:'Fraunces',serif;font-size:15px;font-weight:700;color:var(--ink);line-height:1;font-variant-numeric:tabular-nums}
+.mac-ring circle{transition:stroke-dasharray .45s ease,stroke-dashoffset .45s ease}
+
+/* macro rows */
+.mac-head{font-size:14px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.mac-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}
+.mac-row:last-child{border-bottom:none;margin-bottom:14px}
+.mac-dot{width:10px;height:10px;border-radius:50%;flex:none}
+.mac-k{font-size:14px;font-weight:600;color:var(--ink);flex:1}
+.mac-g{font-family:'Fraunces',serif;font-size:18px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--ink);min-width:52px;text-align:right}
+.mac-pc{font-size:14px;color:var(--muted);font-weight:600;min-width:36px;text-align:right}
+
+/* protein equivalents */
+.mac-equiv{background:#FDFAF4;border:1px solid var(--line);border-radius:10px;padding:10px 14px}
+.mac-equiv-lab{font-size:14px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.mac-equiv-txt{font-size:14px;color:var(--ink-soft);line-height:1.6}
+.mac-equiv-txt strong{color:var(--ink);font-weight:600}
+
+/* goal timeline */
+.mac-timeline-wrap{margin-top:14px;padding-top:14px;border-top:1px dashed var(--line)}
+.mac-timeline{font-size:16px;color:var(--ink-soft);line-height:1.5;margin-top:6px}
+.mac-timeline strong{color:var(--ink);font-weight:600}
+
+/* empty state */
+.mac-empty{text-align:center;padding:40px 24px;color:var(--muted)}
+.mac-empty p{font-size:14px;line-height:1.5}
+
+/* cross-links */
+.mac-pills{display:flex;flex-wrap:wrap;gap:8px;margin:24px 0}
+.mac-pills a{display:inline-flex;align-items:center;gap:6px;text-decoration:none}
+
+/* seo */
+.seo-block{margin-top:48px;max-width:720px}
+.seo-block h2{font-family:'Fraunces',serif;font-size:1.35rem;font-weight:700;margin-bottom:10px}
+.seo-block h3{font-family:'Fraunces',serif;font-size:1rem;font-weight:600;margin:22px 0 5px}
+.seo-block p{font-size:14px;color:var(--ink-soft);line-height:1.7;margin-bottom:6px}
+</style>
+</head>
+<body class="p-macro">
+<div class="wrap">
+<!--HEADER:START-->
+  <header>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <span class="menu-col-head">Construction</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/macro-calculator/" class="current">Macro</a>
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <div class="hero">
+    <div class="eyebrow">Health &amp; Fitness</div>
+    <h1>Macro Calculator</h1>
+    <p>Find your daily protein, carbs and fat targets — with a live visual of your split. Switch diet styles and watch the ring change.</p>
+  </div>
+
+  <div class="grid">
+
+    <!-- LEFT: inputs -->
+    <div class="card card-pad">
+
+      <!-- Units toggle -->
+      <div class="mac-units">
+        <span class="ul">Units</span>
+        <div class="seg" id="unitSeg">
+          <button class="on" data-unit="cm">Metric</button>
+          <button data-unit="in">Imperial</button>
+        </div>
+      </div>
+
+      <!-- Sex -->
+      <label class="fld">
+        <span class="lab">Biological sex</span>
+        <div class="seg" id="sexSeg">
+          <button class="on" data-sex="male">Male</button>
+          <button data-sex="female">Female</button>
+        </div>
+      </label>
+
+      <!-- Age -->
+      <label class="fld" for="age">
+        <span class="lab">Age <span class="unit">years</span></span>
+        <div class="inp"><input id="age" type="number" min="10" max="100" placeholder="e.g. 30" inputmode="decimal"></div>
+      </label>
+
+      <!-- Height + Weight -->
+      <div class="two">
+        <label class="fld" for="height">
+          <span class="lab">Height <span class="unit" id="uHeight">cm</span></span>
+          <div class="inp"><input id="height" type="number" min="1" placeholder="178" inputmode="decimal"></div>
+        </label>
+        <label class="fld" for="weight">
+          <span class="lab">Weight <span class="unit" id="uWeight">kg</span></span>
+          <div class="inp"><input id="weight" type="number" min="1" placeholder="80" inputmode="decimal"></div>
+        </label>
+      </div>
+
+      <!-- Activity -->
+      <label class="fld" for="activity">
+        <span class="lab">Activity level</span>
+        <div class="sel">
+          <select id="activity">
+            <option value="1.2">Sedentary (little or no exercise)</option>
+            <option value="1.375">Lightly active (1–3 days/week)</option>
+            <option value="1.55" selected>Moderately active (3–5 days/week)</option>
+            <option value="1.725">Very active (6–7 days/week)</option>
+            <option value="1.9">Extra active (physical job + training)</option>
+          </select>
+        </div>
+      </label>
+
+      <!-- Goal -->
+      <label class="fld">
+        <span class="lab">Goal</span>
+        <div class="modeseg" id="goalSeg" role="tablist">
+          <button class="on" data-goal="lose" role="tab" aria-selected="true">Lose Weight</button>
+          <button data-goal="maintain" role="tab" aria-selected="false">Maintain</button>
+          <button data-goal="gain" role="tab" aria-selected="false">Build Muscle</button>
+        </div>
+      </label>
+
+      <!-- Advanced panel — ABOVE the button -->
+      <div id="advIn" style="display:none">
+
+        <span class="adv-sec-lab">Diet style</span>
+        <div class="chips" id="dietChips">
+          <button class="on" data-diet="balanced">Balanced</button>
+          <button data-diet="high-protein">High-Protein</button>
+          <button data-diet="keto">Keto</button>
+          <button data-diet="low-carb">Low-Carb</button>
+        </div>
+
+        <span class="int-label" id="intLabel">Deficit intensity</span>
+        <div class="chips" id="intChips">
+          <button data-int="mild">Mild (−250 kcal)</button>
+          <button class="on" data-int="moderate">Moderate (−500 kcal)</button>
+          <button data-int="aggressive">Aggressive (−750 kcal)</button>
+        </div>
+
+        <label class="fld" for="goalWeight" id="goalWeightFld" style="margin-top:14px">
+          <span class="lab">Goal weight <span class="unit" id="uGoalWeight">kg</span></span>
+          <div class="inp"><input id="goalWeight" type="number" min="1" placeholder="e.g. 70" inputmode="decimal"></div>
+        </label>
+
+      </div><!-- /advIn -->
+
+      <!-- Go Advanced button -->
+      <div class="add-row split" style="margin-top:6px">
+        <span></span>
+        <button class="advbtn" id="advBtn" type="button">
+          <span id="advBtnLab">Go advanced</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+      </div>
+
+    </div><!-- /card -->
+
+    <!-- RIGHT: results -->
+    <div class="card">
+
+      <!-- Empty state -->
+      <div id="macEmpty" class="mac-empty">
+        <p>Enter numbers and here is where result shows up</p>
+      </div>
+
+      <!-- Results -->
+      <div id="macResult" class="mac-res" hidden>
+
+        <div class="mac-cal-lab">Daily calorie target</div>
+        <div class="mac-cal">
+          <span id="calNum" class="mac-cal-num">—</span>
+          <span class="mac-cal-unit">kcal/day</span>
+        </div>
+        <div id="calSub" class="mac-cal-sub"></div>
+
+        <!-- Animated donut ring -->
+        <div class="mac-ring-wrap">
+          <svg width="160" height="160" viewBox="0 0 160 160" aria-hidden="true">
+            <circle cx="80" cy="80" r="60" fill="none" stroke="#EDE5D8" stroke-width="20"/>
+            <circle id="ringP" cx="80" cy="80" r="60" fill="none" stroke="#B5761F" stroke-width="20" stroke-linecap="butt" transform="rotate(-90 80 80)" stroke-dasharray="0 377" stroke-dashoffset="0"/>
+            <circle id="ringC" cx="80" cy="80" r="60" fill="none" stroke="#37503F" stroke-width="20" stroke-linecap="butt" transform="rotate(-90 80 80)" stroke-dasharray="0 377" stroke-dashoffset="0"/>
+            <circle id="ringF" cx="80" cy="80" r="60" fill="none" stroke="#8A7A66" stroke-width="20" stroke-linecap="butt" transform="rotate(-90 80 80)" stroke-dasharray="0 377" stroke-dashoffset="0"/>
+          </svg>
+          <div class="mac-ring-center">
+            <span class="rc-label">P · C · F</span>
+            <span id="ringLabel" class="rc-val">—</span>
+          </div>
+        </div>
+
+        <!-- Macro rows -->
+        <div class="mac-head">Macros</div>
+        <div class="mac-row">
+          <span class="mac-dot" style="background:#B5761F"></span>
+          <span class="mac-k">Protein</span>
+          <span id="protG" class="mac-g">—</span>
+          <span id="protPc" class="mac-pc">—</span>
+        </div>
+        <div class="mac-row">
+          <span class="mac-dot" style="background:#37503F"></span>
+          <span class="mac-k">Carbs</span>
+          <span id="carbG" class="mac-g">—</span>
+          <span id="carbPc" class="mac-pc">—</span>
+        </div>
+        <div class="mac-row">
+          <span class="mac-dot" style="background:#8A7A66"></span>
+          <span class="mac-k">Fat</span>
+          <span id="fatG" class="mac-g">—</span>
+          <span id="fatPc" class="mac-pc">—</span>
+        </div>
+
+        <!-- Protein real-world equivalents -->
+        <div class="mac-equiv">
+          <div class="mac-equiv-lab">Your protein goal ≈</div>
+          <div id="equivTxt" class="mac-equiv-txt"></div>
+        </div>
+
+        <!-- Goal timeline (advanced only) -->
+        <div class="mac-timeline-wrap" id="timelineBox" hidden>
+          <div class="mac-head">Goal Estimation</div>
+          <div id="timelineTxt" class="mac-timeline"></div>
+        </div>
+
+      </div><!-- /macResult -->
+
+    </div><!-- /card -->
+  </div><!-- /grid -->
+
+  <!-- Cross-links -->
+  <div class="mac-pills">
+    <a class="pill" href="/tdee-calculator/">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+      TDEE Calculator
+    </a>
+    <a class="pill" href="/body-fat-calculator/">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      Body Fat Calculator
+    </a>
+    <a class="pill" href="/one-rep-max-calculator/">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 6.5h11M6.5 17.5h11M3 12h18"/></svg>
+      One Rep Max
+    </a>
+  </div>
+
+  <section class="seo-block">
+    <h2>How to Calculate Your Macros</h2>
+    <p>Macronutrients — protein, carbohydrates and fat — are the three main sources of calories in your diet. Getting the right balance for your goal can make the difference between spinning your wheels and making consistent progress.</p>
+    <h3>Step 1: Find Your Maintenance Calories (TDEE)</h3>
+    <p>Everything starts with your Total Daily Energy Expenditure — the number of calories your body burns each day. This calculator uses the Mifflin-St Jeor formula to estimate your Basal Metabolic Rate, then multiplies by your activity factor to get your TDEE.</p>
+    <h3>Step 2: Adjust for Your Goal</h3>
+    <p>To lose weight, eat fewer calories than you burn. A 500 kcal/day deficit produces roughly 0.5 kg (1 lb) of loss per week — a sustainable, research-backed rate. To build muscle, a 300 kcal surplus gives your body fuel to grow without excessive fat gain. Maintaining means eating at your TDEE.</p>
+    <h3>Step 3: Split Into Macros</h3>
+    <p>Protein is the most important macro to get right — it preserves muscle on a cut and builds it on a bulk. A starting point of 1.6–2.2 g per kg of bodyweight covers most goals. Carbohydrates fuel training and daily function. Fat supports hormones and absorbs fat-soluble vitamins; never drop below around 20% of total calories.</p>
+    <h3>Balanced vs. High-Protein vs. Keto</h3>
+    <p>Different diet styles shift the macro split without necessarily changing total calories. Keto cuts carbs to under 5% of calories to push the body into ketosis. High-protein raises protein to 40%+ to maximise muscle retention on a cut. Low-carb sits in between. All can work for weight loss — the best one is the one you can stick to.</p>
+    <h3>Why Real-World Food Equivalents Help</h3>
+    <p>Abstract grams are hard to visualise. Knowing your daily protein goal equals roughly 4–5 chicken breasts or 25 eggs makes meal planning concrete — you know exactly what you're aiming for before you open a tracking app.</p>
+  </section>
+
+</div><!-- /wrap -->
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+        </ul>
+      </div>
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+<script src="/assets/app.js?v=35"></script>
+<script>
+(function(){
+  var $ = function(id){ return document.getElementById(id); };
+  var C = 2 * Math.PI * 60; // circumference ≈ 376.99
+
+  var sex = 'male', unit = 'cm', goal = 'lose', diet = 'balanced', intensity = 'moderate';
+  var advanced = false;
+
+  /* ---- unit placeholders ---- */
+  var PH = {
+    cm: { height:'178', weight:'80',  goalWeight:'70'  },
+    in: { height:'70',  weight:'176', goalWeight:'154' }
+  };
+
+  function applyUnit(){
+    var mu = unit==='in'?'in':'cm', wu = unit==='in'?'lb':'kg';
+    $('uHeight').textContent = mu;
+    $('uWeight').textContent = wu;
+    $('uGoalWeight').textContent = wu;
+    var p = PH[unit];
+    $('height').placeholder    = p.height;
+    $('weight').placeholder    = p.weight;
+    $('goalWeight').placeholder = p.goalWeight;
+  }
+
+  /* ---- unit toggle ---- */
+  $('unitSeg').addEventListener('click', function(e){
+    var b = e.target.closest('button'); if(!b) return;
+    var nu = b.getAttribute('data-unit'); if(nu === unit) return;
+    unit = nu;
+    [].forEach.call($('unitSeg').querySelectorAll('button'), function(x){ x.classList.toggle('on', x===b); });
+    $('height').value = '';
+    $('weight').value = '';
+    $('goalWeight').value = '';
+    applyUnit();
+    solve();
+  });
+
+  /* ---- sex toggle ---- */
+  $('sexSeg').addEventListener('click', function(e){
+    var b = e.target.closest('button'); if(!b) return;
+    sex = b.getAttribute('data-sex');
+    [].forEach.call($('sexSeg').querySelectorAll('button'), function(x){ x.classList.toggle('on', x===b); });
+    solve();
+  });
+
+  /* ---- goal tabs ---- */
+  $('goalSeg').addEventListener('click', function(e){
+    var b = e.target.closest('[data-goal]'); if(!b) return;
+    goal = b.dataset.goal;
+    [].forEach.call($('goalSeg').querySelectorAll('button'), function(x){
+      x.classList.toggle('on', x===b);
+      x.setAttribute('aria-selected', x===b?'true':'false');
+    });
+    updateAdvancedUI();
+    solve();
+  });
+
+  /* ---- diet chips ---- */
+  $('dietChips').addEventListener('click', function(e){
+    var b = e.target.closest('[data-diet]'); if(!b) return;
+    diet = b.dataset.diet;
+    [].forEach.call($('dietChips').querySelectorAll('button'), function(x){ x.classList.toggle('on', x===b); });
+    solve();
+  });
+
+  /* ---- intensity chips ---- */
+  $('intChips').addEventListener('click', function(e){
+    var b = e.target.closest('[data-int]'); if(!b) return;
+    intensity = b.dataset.int;
+    [].forEach.call($('intChips').querySelectorAll('button'), function(x){ x.classList.toggle('on', x===b); });
+    solve();
+  });
+
+  /* ---- sync advanced panel UI to current goal ---- */
+  function updateAdvancedUI(){
+    var isMaintain = goal === 'maintain';
+    var sign = goal==='gain' ? '+' : '−';
+    $('intLabel').style.display   = isMaintain ? 'none' : '';
+    $('intChips').style.display   = isMaintain ? 'none' : '';
+    $('goalWeightFld').style.display = isMaintain ? 'none' : '';
+    if(!isMaintain){
+      $('intLabel').textContent = goal==='lose' ? 'Deficit intensity' : 'Surplus intensity';
+      var chips = $('intChips').querySelectorAll('button');
+      chips[0].textContent = 'Mild ('+sign+'250 kcal)';
+      chips[1].textContent = 'Moderate ('+sign+'500 kcal)';
+      chips[2].textContent = 'Aggressive ('+sign+'750 kcal)';
+    }
+  }
+
+  /* ---- advanced toggle ---- */
+  $('advBtn').addEventListener('click', function(){
+    advanced = !advanced;
+    $('advBtn').classList.toggle('open', advanced);
+    $('advBtnLab').textContent = advanced ? 'Go simple' : 'Go advanced';
+    $('advIn').style.display = advanced ? '' : 'none';
+    solve();
+  });
+
+  /* ---- live inputs ---- */
+  ['age','height','weight','goalWeight'].forEach(function(id){
+    var el = $(id); if(el) el.addEventListener('input', solve);
+  });
+  $('activity').addEventListener('change', solve);
+
+  /* ---- helpers ---- */
+  function num(v){ v=parseFloat((''+v).trim()); return isNaN(v)?NaN:v; }
+  function r0(x){ return Math.round(x); }
+  function toKg(v){ return unit==='in'? v/2.2046226 : v; }
+  function toCm(v){ return unit==='in'? v*2.54 : v; }
+
+  /* macro ratios [P%, C%, F%] by diet style */
+  var DIETS = {
+    'balanced':    [30, 40, 30],
+    'high-protein':[40, 35, 25],
+    'keto':        [25,  5, 70],
+    'low-carb':    [35, 25, 40]
+  };
+
+  /* calorie delta based on goal + intensity */
+  function calDelta(){
+    if(goal === 'maintain') return 0;
+    var sign = goal==='lose' ? -1 : 1;
+    var mag = !advanced ? 500
+      : intensity==='mild' ? 250
+      : intensity==='aggressive' ? 750 : 500;
+    return sign * mag;
+  }
+
+  /* animate the donut ring */
+  function updateRing(pP, pC, pF){
+    var lP = pP/100*C, lC = pC/100*C, lF = pF/100*C;
+    $('ringP').setAttribute('stroke-dasharray', lP + ' ' + C);
+    $('ringP').setAttribute('stroke-dashoffset', '0');
+    $('ringC').setAttribute('stroke-dasharray', lC + ' ' + C);
+    $('ringC').setAttribute('stroke-dashoffset', -lP);
+    $('ringF').setAttribute('stroke-dasharray', lF + ' ' + C);
+    $('ringF').setAttribute('stroke-dashoffset', -(lP + lC));
+    $('ringLabel').textContent = pP + '·' + pC + '·' + pF;
+  }
+
+  /* protein real-world equivalents */
+  function equivText(protG){
+    var chicken = (protG / 46).toFixed(1);   // ~46g per breast (150g cooked)
+    var eggs    = Math.round(protG / 6);      // ~6g per large egg
+    var tuna    = (protG / 25).toFixed(1);    // ~25g per 5oz can
+    return '<strong>' + chicken + '</strong> chicken breasts &nbsp;·&nbsp; '
+         + '<strong>' + eggs + '</strong> eggs &nbsp;·&nbsp; '
+         + '<strong>' + tuna + '</strong> cans of tuna';
+  }
+
+  /* ---- main solve ---- */
+  function solve(){
+    var age = num($('age').value);
+    var h   = toCm(num($('height').value));
+    var w   = toKg(num($('weight').value));
+    var act = parseFloat($('activity').value);
+    var ok  = isFinite(age)&&age>0 && isFinite(h)&&h>0 && isFinite(w)&&w>0 && isFinite(act)&&act>0;
+
+    if(!ok){
+      $('macEmpty').hidden = false;
+      $('macResult').hidden = true;
+      return;
+    }
+
+    /* BMR — Mifflin-St Jeor */
+    var bmr      = 10*w + 6.25*h - 5*age + (sex==='male'?5:-161);
+    var tdee     = bmr * act;
+    var goalCals = Math.max(1200, tdee + calDelta());
+
+    /* macro split */
+    var d    = DIETS[diet] || DIETS['balanced'];
+    var pP = d[0], pC = d[1], pF = d[2];
+    var protG = r0(goalCals * pP / 100 / 4);
+    var carbG = r0(goalCals * pC / 100 / 4);
+    var fatG  = r0(goalCals * pF / 100 / 9);
+
+    /* show results */
+    $('macEmpty').hidden = true;
+    $('macResult').hidden = false;
+
+    $('calNum').textContent = r0(goalCals).toLocaleString();
+
+    var dietNames = {'balanced':'Balanced','high-protein':'High-protein','keto':'Keto','low-carb':'Low-carb'};
+    var goalNames = {'lose':'cut','maintain':'maintenance','gain':'bulk'};
+    $('calSub').textContent = (dietNames[diet]||'Balanced') + ' · ' + (goalNames[goal]||'');
+
+    /* ring */
+    updateRing(pP, pC, pF);
+
+    /* macro rows */
+    $('protG').textContent  = protG + 'g';
+    $('carbG').textContent  = carbG + 'g';
+    $('fatG').textContent   = fatG  + 'g';
+    $('protPc').textContent = pP + '%';
+    $('carbPc').textContent = pC + '%';
+    $('fatPc').textContent  = pF + '%';
+
+    /* equivalents */
+    $('equivTxt').innerHTML = equivText(protG);
+
+    /* goal timeline — advanced + goal weight entered */
+    var tlBox = $('timelineBox');
+    if(advanced && goal !== 'maintain'){
+      var gw   = toKg(num($('goalWeight').value));
+      var diff = w - gw;               // kg to lose (positive) or gain (negative)
+      var dailyDelta = Math.abs(calDelta());
+      if(isFinite(gw) && gw > 0 && isFinite(w) && dailyDelta > 0){
+        var kgPerWeek   = dailyDelta * 7 / 7700;
+        var weeksNeeded = Math.abs(diff) / kgPerWeek;
+        var direction   = diff > 0 ? 'lose' : 'gain';
+        var diffDisplay = unit==='in'
+          ? (Math.abs(diff*2.2046226).toFixed(1)) + ' lb'
+          : (Math.abs(diff).toFixed(1)) + ' kg';
+        $('timelineTxt').innerHTML = '⏱ At this rate, you\'ll ' + direction + ' <strong>' + diffDisplay + '</strong> in approximately <strong>' + Math.round(weeksNeeded) + ' weeks</strong>.';
+        tlBox.hidden = false;
+      } else {
+        tlBox.hidden = true;
+      }
+    } else {
+      tlBox.hidden = true;
+    }
+  }
+
+  /* ---- imperial auto-detect (timezone-based, same logic as TDEE/body-fat) ---- */
+  function prefersImperial(){
+    try{
+      var tz = (Intl.DateTimeFormat().resolvedOptions().timeZone||'');
+      var us = ['America/New_York','America/Detroit','America/Kentucky/Louisville',
+        'America/Kentucky/Monticello','America/Indiana/Indianapolis','America/Indiana/Vincennes',
+        'America/Indiana/Winamac','America/Indiana/Marengo','America/Indiana/Petersburg',
+        'America/Indiana/Vevay','America/Chicago','America/Indiana/Tell_City',
+        'America/Indiana/Knox','America/Menominee','America/North_Dakota/Center',
+        'America/North_Dakota/New_Salem','America/North_Dakota/Beulah','America/Denver',
+        'America/Boise','America/Phoenix','America/Los_Angeles','America/Anchorage',
+        'America/Juneau','America/Sitka','America/Metlakatla','America/Yakutat',
+        'America/Nome','America/Adak','Pacific/Honolulu'];
+      return us.indexOf(tz) !== -1;
+    }catch(e){ return false; }
+  }
+
+  if(prefersImperial()){
+    unit = 'in';
+    var impBtn = $('unitSeg').querySelector('[data-unit="in"]');
+    var metBtn = $('unitSeg').querySelector('[data-unit="cm"]');
+    if(impBtn && metBtn){ metBtn.classList.remove('on'); impBtn.classList.add('on'); }
+  }
+
+  applyUnit();
+  updateAdvancedUI();
+  solve();
+})();
+</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>
