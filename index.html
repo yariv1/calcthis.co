@@ -63,7 +63,7 @@
   ]
 }
 </script>
-<link rel="stylesheet" href="/assets/style.css?v=31">
+<link rel="stylesheet" href="/assets/style.css?v=32">
 <style>
   .cat-tabs{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
   .cat-grp--hidden{display:none}
@@ -140,6 +140,7 @@
     <button class="cat-tab on" type="button" data-cat="construction" role="tab" aria-selected="true">Construction &amp;<br>Gardening</button>
     <button class="cat-tab" type="button" data-cat="health" role="tab" aria-selected="false">Health &amp;<br>Lifestyle</button>
     <button class="cat-tab" type="button" data-cat="academic" role="tab" aria-selected="false">School &amp;<br>Grades</button>
+    <button class="cat-tab" type="button" data-cat="math" role="tab" aria-selected="false">Math &amp;<br>Numbers</button>
   </div>
 
   <section id="grp-construction" class="cat-grp" aria-label="Construction &amp; Gardening calculators">
@@ -467,6 +468,28 @@
   </div>
   </section>
 
+  <section id="grp-math" class="cat-grp cat-grp--hidden" aria-label="Math &amp; Numbers calculators">
+  <div class="cards">
+
+    <a class="calc" href="/ratio-calculator/">
+      <span class="ico" aria-hidden="true">
+        <svg width="30" height="30" viewBox="0 0 32 32" fill="none">
+          <rect x="4" y="8" width="10" height="7" rx="2" fill="#E7CF9E" stroke="#8F5C13" stroke-width="1.4"/>
+          <rect x="18" y="17" width="10" height="7" rx="2" fill="#B5761F" stroke="#8F5C13" stroke-width="1.4"/>
+          <path d="M14 11.5h4M14 20.5h4" stroke="#8F5C13" stroke-width="1.4" stroke-linecap="round"/>
+          <path d="M16 7v18" stroke="#8F5C13" stroke-width="1" stroke-linecap="round" opacity=".35" stroke-dasharray="2 2"/>
+        </svg>
+      </span>
+      <h3>Ratio Calculator</h3>
+      <p>Simplify any ratio, solve for a missing value, or scale a ratio up or down — with a live visual proportion bar and real-world presets for recipes, mixes, screens, and more.</p>
+      <span class="go">Open calculator
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+    </a>
+
+  </div>
+  </section>
+
   <section class="prose">
     <h2>Calculators that do one thing well</h2>
     <p>Most calculator sites are enormous libraries where every tool is a compromise — a generic form bolted onto a shared template. <strong>CalcThis takes the opposite approach.</strong> Each calculator here is designed around a single real-world task, so the inputs match how you actually measure, the results come out in the units your supplier sells by, and the whole thing works the instant you type — no compute button, no account, no clutter.</p>
@@ -556,7 +579,7 @@
 <script>
 (function(){
   var tabs=document.getElementById('catTabs'); if(!tabs) return;
-  var grp={construction:document.getElementById('grp-construction'),health:document.getElementById('grp-health'),academic:document.getElementById('grp-academic')};
+  var grp={construction:document.getElementById('grp-construction'),health:document.getElementById('grp-health'),academic:document.getElementById('grp-academic'),math:document.getElementById('grp-math')};
   tabs.addEventListener('click',function(e){
     var b=e.target.closest('.cat-tab'); if(!b) return;
     [].forEach.call(tabs.querySelectorAll('.cat-tab'),function(x){x.classList.remove('on');x.setAttribute('aria-selected','false');});
@@ -567,7 +590,7 @@
   });
 })();
 </script>
-<script src="/assets/app.js?v=31"></script>
+<script src="/assets/app.js?v=32"></script>
 <script src="/feedback.js" defer></script>
 </body>
 </html>
