@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Percentage Calculator — % of a Number, What %, % Change | CalcThis</title>
+<link rel="canonical" href="https://calcthis.co/percentage-calculator/">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<meta name="theme-color" content="#B5761F">
+<meta name="description" content="Free percentage calculator — find % of a number, calculate what percent one number is of another, or find % change between two values. Live visual result, instant answers.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Percentage Calculator",
+      "url": "https://calcthis.co/percentage-calculator/",
+      "description": "Calculate percentages instantly — find % of a number, what percent one number is of another, or percentage change between two values.",
+      "applicationCategory": "UtilityApplication",
+      "operatingSystem": "Any (web browser)",
+      "browserRequirements": "Requires JavaScript",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "featureList": ["Find percentage of a number","Calculate what percent X is of Y","Percentage increase and decrease","Live visual fill bar","Plain-English result explanation","Tip and discount shortcut"]
+    }
+  ]
+}
+</script>
+<link rel="stylesheet" href="/assets/style.css?v=33">
+<style>
+.pct-empty{text-align:center;padding:40px 24px;color:var(--muted)}
+.pct-empty svg{opacity:.3;margin-bottom:12px;display:block;margin-left:auto;margin-right:auto}
+.pct-empty p{font-size:14px;line-height:1.5}
+.pct-result-wrap{padding:22px}
+.result-number{font-family:'Fraunces',serif;font-size:clamp(2.6rem,8vw,3.8rem);font-weight:700;color:var(--ink);line-height:1;font-variant-numeric:tabular-nums}
+.result-unit{font-family:'Fraunces',serif;font-size:clamp(1.4rem,4vw,2rem);font-weight:600;color:var(--muted);margin-left:4px}
+.result-sentence{font-size:14px;color:var(--muted);margin:8px 0 20px;line-height:1.5}
+.pct-bar-wrap{margin-bottom:16px}
+.pct-bar-track{position:relative;height:14px;border-radius:8px;background:var(--line);overflow:hidden}
+.pct-bar-fill{position:absolute;top:0;left:0;height:100%;border-radius:8px;background:var(--amber);transition:width .25s ease,left .25s ease,background .2s}
+.pct-bar-labels{display:flex;justify-content:space-between;font-size:11.5px;font-weight:600;color:var(--muted);margin-top:5px}
+.change-dir{display:flex;align-items:center;gap:8px;font-size:1rem;font-weight:700;margin:4px 0 12px}
+.adv-divider{border:none;border-top:1px solid var(--line);margin:14px 0}
+.adv-section-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
+.qpct-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.qpct-btn{font:inherit;font-size:12.5px;font-weight:600;color:var(--ink-soft);background:#F5EFE4;border:1.5px solid var(--line);border-radius:20px;padding:5px 12px;cursor:pointer;transition:.12s}
+.qpct-btn:hover{border-color:var(--amber);color:var(--amber-deep)}
+.qpct-btn.on{background:var(--amber);border-color:var(--amber);color:#fff}
+.adv-result-block{border-top:1px solid var(--line);margin-top:16px;padding-top:14px}
+.adv-result-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0}
+.adv-result-label{font-size:13px;color:var(--muted)}
+.adv-result-val{font-family:'Fraunces',serif;font-size:17px;font-weight:600;color:var(--ink)}
+.pct-pills{display:flex;flex-wrap:wrap;gap:8px;margin:24px 0}
+.pct-pills a{display:inline-flex;align-items:center;gap:6px;text-decoration:none}
+.seo-block{margin-top:48px;max-width:720px}
+.seo-block h2{font-family:'Fraunces',serif;font-size:1.35rem;font-weight:700;margin-bottom:10px}
+.seo-block h3{font-family:'Fraunces',serif;font-size:1rem;font-weight:600;margin:22px 0 5px}
+.seo-block p{font-size:14px;color:var(--ink-soft);line-height:1.7;margin-bottom:6px}
+</style>
+</head>
+<body class="p-percentage">
+<div class="wrap">
+<!--HEADER:START-->
+  <header>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <span class="menu-col-head">Construction</span>
+          <a href="/">Home</a>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <span class="navsep" aria-hidden="true"></span>
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/" class="current">Percentage</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <div class="hero">
+    <div class="eyebrow">Math &amp; Numbers</div>
+    <h1>Percentage Calculator</h1>
+    <p>Find a percentage, figure out what percent something is, or see how much something changed — with a live visual.</p>
+  </div>
+
+  <div class="grid">
+
+    <!-- LEFT: inputs -->
+    <div class="card card-pad">
+
+      <div class="modeseg" id="modeSeg" role="tablist" style="margin-bottom:20px">
+        <button class="on" data-m="of" role="tab" aria-selected="true">% of a Number</button>
+        <button data-m="what" role="tab" aria-selected="false">What %?</button>
+        <button data-m="change" role="tab" aria-selected="false">% Change</button>
+      </div>
+
+      <!-- Pane: % of number -->
+      <div id="pane-of">
+        <label class="fld" for="of-pct">
+          <span class="lab">Percentage (%)</span>
+          <div class="inp"><input id="of-pct" type="number" min="0" placeholder="e.g. 20" inputmode="decimal"></div>
+        </label>
+        <label class="fld" for="of-num">
+          <span class="lab">of Number</span>
+          <div class="inp"><input id="of-num" type="number" min="0" placeholder="e.g. 350" inputmode="decimal"></div>
+        </label>
+      </div>
+
+      <!-- Pane: what % -->
+      <div id="pane-what" hidden>
+        <label class="fld" for="what-part">
+          <span class="lab">Number (part)</span>
+          <div class="inp"><input id="what-part" type="number" min="0" placeholder="e.g. 45" inputmode="decimal"></div>
+        </label>
+        <label class="fld" for="what-whole">
+          <span class="lab">of Number (whole)</span>
+          <div class="inp"><input id="what-whole" type="number" min="0" placeholder="e.g. 180" inputmode="decimal"></div>
+        </label>
+      </div>
+
+      <!-- Pane: % change -->
+      <div id="pane-change" hidden>
+        <label class="fld" for="chg-from">
+          <span class="lab">From (original value)</span>
+          <div class="inp"><input id="chg-from" type="number" placeholder="e.g. 80" inputmode="decimal"></div>
+        </label>
+        <label class="fld" for="chg-to" style="margin-bottom:0">
+          <span class="lab">To (new value)</span>
+          <div class="inp"><input id="chg-to" type="number" placeholder="e.g. 96" inputmode="decimal"></div>
+        </label>
+      </div>
+
+      <!-- Advanced panel -->
+      <div id="advPanel" style="display:none">
+        <p class="adv-section-label" style="margin-top:40px">Tip &amp; Discount Shortcut</p>
+        <label class="fld" for="adv-amount">
+          <span class="lab">Amount ($)</span>
+          <div class="inp"><input id="adv-amount" type="number" min="0" placeholder="e.g. 85.00" inputmode="decimal"></div>
+        </label>
+        <label class="fld" for="adv-pct" style="margin-bottom:0">
+          <span class="lab">Percentage (%)</span>
+          <div class="inp"><input id="adv-pct" type="number" min="0" placeholder="e.g. 18" inputmode="decimal"></div>
+        </label>
+        <div class="qpct-row">
+          <button class="qpct-btn" data-p="10">10%</button>
+          <button class="qpct-btn" data-p="15">15%</button>
+          <button class="qpct-btn" data-p="18">18%</button>
+          <button class="qpct-btn" data-p="20">20%</button>
+          <button class="qpct-btn" data-p="25">25%</button>
+        </div>
+      </div>
+
+      <div class="add-row split">
+        <span></span>
+        <button class="advbtn" id="advBtn" type="button">
+          <span id="advBtnLab">Go advanced</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+      </div>
+
+    </div><!-- /card -->
+
+    <!-- RIGHT: results -->
+    <div class="card" id="resultCard">
+
+      <div id="pct-empty" class="pct-empty">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg>
+        <p>Enter numbers on the left<br>to see your result</p>
+      </div>
+
+      <div id="pct-result" class="pct-result-wrap" hidden>
+        <div style="display:flex;align-items:baseline;gap:4px;margin-bottom:4px">
+          <span id="resultValue" class="result-number">—</span>
+          <span id="resultUnit" class="result-unit"></span>
+        </div>
+        <p id="resultSentence" class="result-sentence"></p>
+        <div class="pct-bar-wrap">
+          <div class="pct-bar-track">
+            <div class="pct-bar-fill" id="barFill"></div>
+          </div>
+          <div class="pct-bar-labels">
+            <span>0%</span>
+            <span id="barMidLabel">50%</span>
+            <span>100%</span>
+          </div>
+        </div>
+        <div id="changeDir" class="change-dir" hidden></div>
+        <div id="advResult" hidden class="adv-result-block">
+          <div class="adv-result-row">
+            <span class="adv-result-label" id="advResultLabel">Amount</span>
+            <span class="adv-result-val" id="advResultAmt"></span>
+          </div>
+          <div class="adv-result-row">
+            <span class="adv-result-label">Total</span>
+            <span class="adv-result-val" id="advResultTotal"></span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /grid -->
+
+  <!-- Cross-links -->
+  <div class="pct-pills">
+    <a href="/ratio-calculator/" class="pill">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="12" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><path d="M12 12h6M11.5 9.5l5-3M11.5 14.5l5 3"/></svg>
+      Ratio Calculator
+    </a>
+    <a href="/grade-calculator/" class="pill">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+      Grade Calculator
+    </a>
+    <a href="/test-score-calculator/" class="pill">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+      Test Score Calculator
+    </a>
+  </div>
+
+  <section class="seo-block">
+    <h2>How to Calculate a Percentage</h2>
+    <p>A percentage is a number expressed as a fraction of 100. The word "percent" literally means "per hundred." Percentages are everywhere — discounts, grades, tips, interest rates, statistics — making this one of the most practically useful calculations in everyday life.</p>
+    <h3>% of a Number — Find the Part</h3>
+    <p>To find what <em>X%</em> of a number is, multiply the number by X and divide by 100. For example, 20% of 350 = (350 × 20) ÷ 100 = <strong>70</strong>. This is the most common percentage question — used for discounts, tips, and tax calculations.</p>
+    <h3>What % Is X of Y? — Find the Rate</h3>
+    <p>To find what percentage one number is of another, divide the part by the whole and multiply by 100. Example: 45 is what percent of 180? (45 ÷ 180) × 100 = <strong>25%</strong>. Useful for grades, survey results, and proportions.</p>
+    <h3>Percentage Change — Increase or Decrease</h3>
+    <p>Percentage change measures how much a value grew or shrank relative to its starting point. Formula: ((New − Old) ÷ Old) × 100. Example: from 80 to 96 → ((96 − 80) ÷ 80) × 100 = <strong>+20%</strong>. A positive result is an increase; negative is a decrease.</p>
+    <h3>Percentage vs. Percentage Points</h3>
+    <p>These are often confused. If an interest rate rises from 2% to 3%, that's a 1 <em>percentage point</em> increase — but a 50% <em>percentage change</em>. The percentage change tells you how big the shift is relative to where you started.</p>
+    <h3>Common Percentage Landmarks</h3>
+    <p>Some percentages are worth memorizing: 50% = one half, 25% = one quarter, 75% = three quarters, 10% = one tenth (easy to calculate by moving the decimal point one place left), 1% = one hundredth. Knowing these makes mental estimation much faster.</p>
+  </section>
+
+</div><!-- /wrap -->
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span>Construction &amp; Gardening</span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span>Health &amp; Lifestyle</span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span>School &amp; Grades</span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span>Math &amp; Numbers</span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+        </ul>
+      </div>
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+<script src="/assets/app.js?v=33"></script>
+<script>
+(function(){
+  var mode = 'of';
+  var advanced = false;
+
+  var modeSeg = document.getElementById('modeSeg');
+  var panes = { of: document.getElementById('pane-of'), what: document.getElementById('pane-what'), change: document.getElementById('pane-change') };
+  var advBtn = document.getElementById('advBtn');
+  var advBtnLab = document.getElementById('advBtnLab');
+  var advPanel = document.getElementById('advPanel');
+  var advResult = document.getElementById('advResult');
+  var pctEmpty = document.getElementById('pct-empty');
+  var pctResult = document.getElementById('pct-result');
+  var resultValue = document.getElementById('resultValue');
+  var resultUnit = document.getElementById('resultUnit');
+  var resultSentence = document.getElementById('resultSentence');
+  var barFill = document.getElementById('barFill');
+  var barMidLabel = document.getElementById('barMidLabel');
+  var changeDir = document.getElementById('changeDir');
+
+  modeSeg.addEventListener('click', function(e) {
+    var btn = e.target.closest('[data-m]');
+    if (!btn) return;
+    mode = btn.dataset.m;
+    modeSeg.querySelectorAll('button').forEach(function(b) {
+      b.classList.toggle('on', b === btn);
+      b.setAttribute('aria-selected', b === btn ? 'true' : 'false');
+    });
+    Object.keys(panes).forEach(function(k) { panes[k].hidden = k !== mode; });
+    calc();
+  });
+
+  advBtn.addEventListener('click', function() {
+    advanced = !advanced;
+    advBtn.classList.toggle('open', advanced);
+    advBtnLab.textContent = advanced ? 'Go simple' : 'Go advanced';
+    advPanel.style.display = advanced ? 'block' : 'none';
+    if (!advanced) advResult.hidden = true;
+    calc();
+  });
+
+  document.querySelectorAll('.qpct-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      document.getElementById('adv-pct').value = btn.dataset.p;
+      document.querySelectorAll('.qpct-btn').forEach(function(b) { b.classList.remove('on'); });
+      btn.classList.add('on');
+      calc();
+    });
+  });
+
+  document.querySelectorAll('input[type=number]').forEach(function(inp) {
+    inp.addEventListener('input', calc);
+  });
+
+  function fmt(n) {
+    if (n === null || isNaN(n)) return '—';
+    var r = parseFloat(n.toPrecision(6));
+    return r.toLocaleString('en-US', { maximumFractionDigits: 4 });
+  }
+
+  function fmtMoney(n) {
+    return '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  function landmark(pct) {
+    var abs = Math.abs(pct);
+    if (Math.abs(abs - 100) < 0.5) return 'the full amount';
+    if (Math.abs(abs - 50) < 0.5) return 'exactly half';
+    if (Math.abs(abs - 25) < 0.5) return 'one quarter';
+    if (Math.abs(abs - 75) < 0.5) return 'three quarters';
+    if (Math.abs(abs - 10) < 0.5) return 'one tenth';
+    if (Math.abs(abs - 33.33) < 0.5) return 'one third';
+    if (Math.abs(abs - 66.67) < 0.5) return 'two thirds';
+    return null;
+  }
+
+  function setBar(pct, isChange) {
+    if (isChange) {
+      var clamped = Math.min(Math.max(pct, -100), 100);
+      var isInc = pct >= 0;
+      var w = Math.abs(clamped) / 2;
+      barFill.style.width = w + '%';
+      barFill.style.left = isInc ? '50%' : (50 - w) + '%';
+      barFill.style.background = isInc ? '#3d9e6b' : '#c0392b';
+      barMidLabel.textContent = '0%';
+    } else {
+      barFill.style.width = Math.min(Math.max(pct, 0), 100) + '%';
+      barFill.style.left = '0';
+      barFill.style.background = '';
+      barMidLabel.textContent = '50%';
+    }
+  }
+
+  function calc() {
+    var result = null, unit = '', sentence = '', barPct = 0, isChange = false;
+
+    if (mode === 'of') {
+      var pct = parseFloat(document.getElementById('of-pct').value);
+      var num = parseFloat(document.getElementById('of-num').value);
+      if (!isNaN(pct) && !isNaN(num)) {
+        result = (pct / 100) * num;
+        var lm = landmark(pct);
+        sentence = fmt(pct) + '% of ' + fmt(num) + ' = ' + fmt(result) + (lm ? ' — that\'s ' + lm : '') + '.';
+        barPct = Math.min(pct, 100);
+      }
+    } else if (mode === 'what') {
+      var part = parseFloat(document.getElementById('what-part').value);
+      var whole = parseFloat(document.getElementById('what-whole').value);
+      if (!isNaN(part) && !isNaN(whole) && whole !== 0) {
+        result = (part / whole) * 100;
+        unit = '%';
+        var lm2 = landmark(result);
+        sentence = fmt(part) + ' is ' + fmt(result) + '% of ' + fmt(whole) + (lm2 ? ' — that\'s ' + lm2 : '') + '.';
+        barPct = Math.min(result, 100);
+      }
+    } else if (mode === 'change') {
+      var from = parseFloat(document.getElementById('chg-from').value);
+      var to = parseFloat(document.getElementById('chg-to').value);
+      if (!isNaN(from) && !isNaN(to) && from !== 0) {
+        result = ((to - from) / Math.abs(from)) * 100;
+        unit = '%';
+        var dir = result > 0 ? 'increase' : result < 0 ? 'decrease' : 'no change';
+        sentence = 'From ' + fmt(from) + ' to ' + fmt(to) + ' is a ' + fmt(Math.abs(result)) + '% ' + dir + '.';
+        barPct = result;
+        isChange = true;
+        changeDir.hidden = false;
+        if (result > 0) {
+          changeDir.innerHTML = '<span style="color:#3d9e6b">▲ +' + fmt(Math.abs(result)) + '% increase</span>';
+        } else if (result < 0) {
+          changeDir.innerHTML = '<span style="color:#c0392b">▼ −' + fmt(Math.abs(result)) + '% decrease</span>';
+        } else {
+          changeDir.innerHTML = '<span>→ No change</span>';
+        }
+      }
+    }
+
+    if (!isChange) changeDir.hidden = true;
+
+    if (advanced) {
+      var amt = parseFloat(document.getElementById('adv-amount').value);
+      var ap = parseFloat(document.getElementById('adv-pct').value);
+      if (!isNaN(amt) && !isNaN(ap)) {
+        var share = (ap / 100) * amt;
+        document.getElementById('advResultLabel').textContent = fmt(ap) + '% of ' + fmtMoney(amt);
+        document.getElementById('advResultAmt').textContent = fmtMoney(share);
+        document.getElementById('advResultTotal').textContent = fmtMoney(amt + share);
+        advResult.hidden = false;
+      } else {
+        advResult.hidden = true;
+      }
+    } else {
+      advResult.hidden = true;
+    }
+
+    if (result !== null && !isNaN(result)) {
+      pctEmpty.hidden = true;
+      pctResult.hidden = false;
+      resultValue.textContent = fmt(result);
+      resultUnit.textContent = unit;
+      resultSentence.textContent = sentence;
+      setBar(barPct, isChange);
+    } else {
+      pctEmpty.hidden = false;
+      pctResult.hidden = true;
+    }
+  }
+
+  calc();
+})();
+</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>
