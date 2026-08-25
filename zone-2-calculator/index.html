@@ -1,0 +1,497 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zone 2 Heart Rate Calculator | CalcThis</title>
+<meta name="description" content="Find your Zone 2 heart rate training range instantly. Enter your age, choose your MHR formula (Fox, Tanaka, or Gulati), and add your resting heart rate for personalised Karvonen results.">
+<link rel="canonical" href="https://calcthis.co/zone-2-calculator/">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<meta name="theme-color" content="#B5761F">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Zone 2 Heart Rate Calculator — Fat-Burn Range by Age | CalcThis">
+<meta property="og:description" content="Zone 2 heart rate range from your age. Fox, Tanaka, and Gulati MHR formulas. Karvonen personalisation from resting HR. Instant, no sign-up.">
+<meta property="og:url" content="https://calcthis.co/zone-2-calculator/">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Zone 2 Heart Rate Calculator",
+  "url": "https://calcthis.co/zone-2-calculator/",
+  "applicationCategory": "HealthApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Calculate your Zone 2 heart rate training range from your age. Supports Fox, Tanaka, and Gulati MHR formulas, plus personalised Karvonen zones from your resting heart rate."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "What is Zone 2 heart rate?", "acceptedAnswer": { "@type": "Answer", "text": "Zone 2 is 60–70% of your maximum heart rate (or heart-rate reserve with the Karvonen method). It is an easy, conversational effort that trains aerobic capacity and fat-burning efficiency." } },
+    { "@type": "Question", "name": "How long should I stay in Zone 2?", "acceptedAnswer": { "@type": "Answer", "text": "Most coaches recommend 45–90 minutes per session. Shorter sessions still count; weekly consistency matters more than session length." } },
+    { "@type": "Question", "name": "Which MHR formula should I use — Fox, Tanaka, or Gulati?", "acceptedAnswer": { "@type": "Answer", "text": "Tanaka (208 minus 0.7 times age) is the most validated for most adults. Fox (220 minus age) is the classic formula. Gulati (206 minus 0.88 times age) was derived specifically from women and is recommended when a female-specific estimate matters." } },
+    { "@type": "Question", "name": "What is the Karvonen method?", "acceptedAnswer": { "@type": "Answer", "text": "The Karvonen method uses your heart-rate reserve — the gap between your resting and maximum heart rate — instead of a straight percentage of max HR. It gives personalised zones because fitness level affects the result." } }
+  ]
+}
+</script>
+<link rel="stylesheet" href="/assets/style.css?v=36">
+<style>
+/* ===== Zone 2 Calculator — page-specific ===== */
+.p-zone2 .fld{margin-bottom:18px}
+
+/* modeseg label wrapper (non-input field) */
+.p-zone2 .seg-fld{margin-bottom:18px}
+.p-zone2 .seg-fld .lab{display:flex;justify-content:space-between;align-items:baseline;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
+
+/* Zone 2 visual bar */
+.z2-bar-wrap{margin:16px 0 6px}
+.z2-bar-track{position:relative;height:16px;background:#F0E8DB;border-radius:20px;overflow:visible}
+.z2-bar-fill{
+  position:absolute;top:0;bottom:0;
+  background:var(--spruce);border-radius:20px;
+  transition:left .25s ease,width .25s ease;
+  min-width:4px;
+}
+.z2-bar-markers{position:relative;height:0}
+.z2-bar-tick{
+  position:absolute;top:0;
+  width:1px;height:10px;
+  background:var(--spruce);
+  transform:translateX(-50%);
+  margin-top:-1px;
+}
+.z2-bar-labels{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  margin-top:20px;font-size:12px;font-weight:600;color:var(--muted);
+  font-variant-numeric:tabular-nums;
+}
+.z2-bar-labels .z2-range-lab{
+  color:var(--spruce);font-size:13px;text-align:center;
+}
+.z2-method-note{font-size:12.5px;color:var(--muted);margin-top:10px;line-height:1.45}
+.p-zone2 .dtable td:first-child{color:var(--ink)}
+.p-zone2 .pill{display:inline-flex;align-items:center;gap:5px;text-decoration:none}
+</style>
+</head>
+<body class="p-zone2">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <span class="menu-col-head">Construction</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-calculator/" class="current">Zone 2</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/macro-calculator/">Macro</a>
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <div class="hero">
+    <div class="eyebrow">Health &amp; Fitness</div>
+    <h1>Zone 2 Heart Rate Calculator</h1>
+    <p>Get your fat-burning Zone 2 range from your age. Choose your MHR formula — and tap <em>Go advanced</em> to personalise with your resting heart rate using the <strong>Karvonen</strong> method.</p>
+  </div>
+
+  <div class="grid">
+
+    <div class="card card-pad">
+      <div class="row-top"><h2>Your Zone 2 range</h2></div>
+
+      <label class="fld" for="age">
+        <span class="lab">Age <span class="unit">years</span></span>
+        <div class="inp"><input id="age" type="number" inputmode="numeric" min="5" max="120" placeholder="30"></div>
+      </label>
+
+      <div class="seg-fld">
+        <span class="lab">MHR formula</span>
+        <div class="modeseg" id="methodSeg" role="tablist">
+          <button class="on" data-m="tanaka" role="tab" aria-selected="true">Tanaka</button>
+          <button data-m="fox" role="tab" aria-selected="false">Fox</button>
+          <button data-m="gulati" role="tab" aria-selected="false">Gulati</button>
+        </div>
+      </div>
+
+      <div id="advIn" style="display:none">
+        <label class="fld" for="rhr">
+          <span class="lab">Resting heart rate <span class="unit">bpm · optional</span></span>
+          <div class="inp"><input id="rhr" type="number" inputmode="numeric" min="30" max="120" placeholder="60"></div>
+        </label>
+        <label class="fld" for="maxhr" style="margin-bottom:0">
+          <span class="lab">Max heart rate <span class="unit">bpm · override</span></span>
+          <div class="inp"><input id="maxhr" type="number" inputmode="numeric" min="100" max="230" placeholder="auto"></div>
+        </label>
+      </div>
+
+      <div class="add-row split" style="margin-top:6px">
+        <span></span>
+        <button class="advbtn" id="advBtn" type="button">
+          <span id="advBtnLab">Go advanced</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-pad">
+        <div class="hr-res" style="margin:8px 0 6px">
+          <div class="res-lab" id="resLab">Your Zone 2 heart rate</div>
+          <div class="res-big" id="resBig" style="display:flex;align-items:baseline;gap:2px">
+            <span id="z2lo">—</span><span id="z2dash" style="font-family:inherit;font-size:28px;color:var(--ink-soft);margin:0 5px;font-weight:400">–</span><span id="z2hi">—</span> <span class="res-unit" id="resUnit"></span>
+          </div>
+          <div class="res-sub" id="resSub">Enter your age to see your Zone 2 range.</div>
+        </div>
+
+        <div class="z2-bar-wrap" id="barWrap" style="display:none">
+          <div class="z2-bar-track">
+            <div class="z2-bar-fill" id="barFill" style="left:0%;width:0%"></div>
+          </div>
+          <div class="z2-bar-labels">
+            <span>0</span>
+            <span class="z2-range-lab" id="barRangeLab"></span>
+            <span id="barMaxLab"></span>
+          </div>
+        </div>
+
+        <p class="z2-method-note" id="methodNote" style="display:none"></p>
+
+        <p class="res-tip" id="kvNote" style="display:none">
+          <strong>Karvonen</strong> personalises zones using your resting heart rate — usually more accurate than plain %-of-max.
+        </p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="pills" style="margin-top:20px">
+    <a class="pill" href="/heart-rate-zone-calculator/">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      All 5 Heart Rate Zones
+    </a>
+    <a class="pill" href="/pace-calculator/">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      Pace Calculator
+    </a>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>What is Zone 2?</h2>
+        <p>Zone 2 is 60–70% of your maximum heart rate — an easy, conversational effort where you can speak in full sentences while moving. It's the cornerstone of endurance training: your body burns fat as its primary fuel, builds more mitochondria over time, and lays the aerobic base that makes every other zone possible. <strong>Most elite endurance athletes spend 70–80% of their weekly training volume here.</strong></p>
+
+        <h2>How long should a Zone 2 session be?</h2>
+        <p>Aim for at least <strong>45 minutes</strong> to drive meaningful aerobic adaptation; 60–90 minutes is the sweet spot most coaches target. Shorter sessions still count — what matters most is consistent Zone 2 volume across weeks and months, not any single session. Running, cycling, rowing, and swimming all qualify equally.</p>
+
+        <h2>Choosing your MHR formula</h2>
+        <p><strong>Tanaka</strong> (208 − 0.7 × age) is the most widely validated modern formula and fits most adults better than the classic alternative. <strong>Fox</strong> (220 − age) is the original, still widely used — simple, but it tends to overestimate max HR for younger athletes and underestimate it for older ones. <strong>Gulati</strong> (206 − 0.88 × age) was derived specifically from women and is preferred when a female-specific estimate matters. All three are estimates — a lab or field test gives your true max.</p>
+      </div>
+
+      <div>
+        <h2>MHR formula comparison</h2>
+        <table class="dtable">
+          <thead><tr><th>Formula</th><th>Equation</th><th>Best for</th></tr></thead>
+          <tbody>
+            <tr><td>Tanaka</td><td>208 − 0.7 × age</td><td>Most adults</td></tr>
+            <tr><td>Fox</td><td>220 − age</td><td>Classic / quick</td></tr>
+            <tr><td>Gulati</td><td>206 − 0.88 × age</td><td>Women</td></tr>
+          </tbody>
+        </table>
+
+        <h2>%-of-max vs Karvonen</h2>
+        <p>The simple method takes a straight percentage of your max HR — the same for everyone the same age. The <strong>Karvonen</strong> method uses your <strong>heart-rate reserve</strong> (max minus resting) so a fit person with a low resting HR gets lower absolute targets than a less-fit person the same age. Tap <em>Go advanced</em> and enter your morning resting HR to switch. Measure it before getting out of bed for the most accurate reading.</p>
+
+        <h2>Zone 2 vs pace-based training</h2>
+        <p>Heart rate responds to heat, fatigue, and hills in ways pace can't — a hot humid day may push your HR into Zone 3 at your usual easy pace. Use HR when conditions vary and pace when you want consistent splits. If you train by pace, our <a href="/pace-calculator/">Pace Calculator</a> solves pace, time, and distance instantly.</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>What is Zone 2 heart rate?</summary><p>Zone 2 is the 60–70% band of your maximum heart rate — or of your heart-rate reserve with the Karvonen method. It's an easy, conversational effort that trains fat-burning efficiency and builds aerobic base.</p></details>
+    <details class="faq"><summary>How long should I stay in Zone 2?</summary><p>Aim for 45–90 minutes per session to drive aerobic adaptation. Shorter sessions still contribute — consistent weekly Zone 2 volume matters far more than the length of any individual workout.</p></details>
+    <details class="faq"><summary>Which MHR formula is most accurate?</summary><p>No age-based formula perfectly predicts your individual max HR — variation between people is large. Tanaka (208 − 0.7 × age) outperforms the classic Fox formula in most research. For women, Gulati is often recommended. If you know your true MHR from a field test or lab, enter it in advanced mode to override the estimate.</p></details>
+    <details class="faq"><summary>What is the Karvonen method?</summary><p>The Karvonen method calculates zones from your heart-rate reserve — the difference between your resting and maximum heart rate. It gives personalised results: a fit person with a resting HR of 45 bpm gets lower Zone 2 targets than a sedentary person the same age with a resting HR of 75 bpm, even if both have the same max HR.</p></details>
+    <details class="faq"><summary>How is this different from the 5-zone calculator?</summary><p>The <a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a> shows all five training zones at once. This Zone 2 calculator is purpose-built for Zone 2: your target range is the centrepiece, the three MHR formulas are easy to compare, and everything is focused on the zone that drives the most aerobic development.</p></details>
+  </section>
+
+</div><!-- /wrap -->
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+        </ul>
+      </div>
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+<script src="/assets/app.js?v=36"></script>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var method = 'tanaka';
+  var advanced = false;
+
+  function calcMHR(age) {
+    if (method === 'fox')    return Math.round(220 - age);
+    if (method === 'gulati') return Math.round(206 - 0.88 * age);
+    return Math.round(208 - 0.7 * age); // tanaka default
+  }
+
+  function methodLabel() {
+    if (method === 'fox')    return 'Fox formula · 220 − age';
+    if (method === 'gulati') return 'Gulati formula · 206 − 0.88 × age · optimised for women';
+    return 'Tanaka formula · 208 − 0.7 × age';
+  }
+
+  function num(v) {
+    v = parseFloat(('' + (v || '')).trim());
+    return isNaN(v) ? NaN : v;
+  }
+
+  function solve() {
+    var age = num($('age').value);
+    var ageOK = isFinite(age) && age >= 5 && age <= 120;
+
+    var ov = $('maxhr') ? num($('maxhr').value) : NaN;
+    var hasOverride = isFinite(ov) && ov > 0;
+
+    var maxHR = hasOverride ? Math.round(ov) : (ageOK ? calcMHR(age) : NaN);
+
+    var resting = (advanced && $('rhr')) ? num($('rhr').value) : NaN;
+    var karv = isFinite(resting) && resting > 0 && isFinite(maxHR) && resting < maxHR;
+
+    var lo, hi;
+    if (isFinite(maxHR) && maxHR > 0) {
+      if (karv) {
+        var hrr = maxHR - resting;
+        lo = Math.round(resting + hrr * 0.60);
+        hi = Math.round(resting + hrr * 0.70);
+      } else {
+        lo = Math.round(maxHR * 0.60);
+        hi = Math.round(maxHR * 0.70);
+      }
+    }
+
+    var resLab   = $('resLab');
+    var z2lo     = $('z2lo');
+    var z2hi     = $('z2hi');
+    var z2dash   = $('z2dash');
+    var resUnit  = $('resUnit');
+    var resSub   = $('resSub');
+    var barWrap  = $('barWrap');
+    var barFill  = $('barFill');
+    var barRangeLab = $('barRangeLab');
+    var barMaxLab   = $('barMaxLab');
+    var methodNote  = $('methodNote');
+    var kvNote      = $('kvNote');
+
+    if (!(isFinite(maxHR) && maxHR > 0)) {
+      z2lo.textContent = '—';
+      z2hi.textContent = '—';
+      if (z2dash) z2dash.style.opacity = '0.3';
+      resUnit.textContent = '';
+      resSub.textContent = 'Enter your age to see your Zone 2 range.';
+      resLab.textContent = 'Your Zone 2 heart rate';
+      if (barWrap)   barWrap.style.display = 'none';
+      if (methodNote) methodNote.style.display = 'none';
+      if (kvNote)    kvNote.style.display = 'none';
+      return;
+    }
+
+    z2lo.textContent = lo;
+    z2hi.textContent = hi;
+    if (z2dash) z2dash.style.opacity = '1';
+    resUnit.textContent = 'bpm';
+
+    var methodName = method.charAt(0).toUpperCase() + method.slice(1);
+    resLab.textContent = hasOverride
+      ? 'Zone 2 · max HR override'
+      : (karv ? 'Zone 2 · Karvonen' : 'Zone 2 · ' + methodName + ' formula');
+
+    resSub.textContent = 'Max HR: ' + maxHR + ' bpm · 60\u201370% ' + (karv ? 'HRR' : 'MHR');
+
+    // visual bar (scale 0 → maxHR)
+    if (barWrap) {
+      barWrap.style.display = '';
+      var loP  = (lo  / maxHR * 100).toFixed(2);
+      var widP = ((hi - lo) / maxHR * 100).toFixed(2);
+      barFill.style.left  = loP + '%';
+      barFill.style.width = widP + '%';
+      barRangeLab.textContent = lo + '\u2013' + hi + ' bpm';
+      barMaxLab.textContent   = maxHR + ' bpm';
+    }
+
+    if (methodNote) {
+      methodNote.textContent = methodLabel() + (hasOverride ? ' · max HR overridden' : '');
+      methodNote.style.display = '';
+    }
+    if (kvNote) kvNote.style.display = karv ? '' : 'none';
+  }
+
+  // MHR formula toggle
+  var methodSeg = $('methodSeg');
+  if (methodSeg) {
+    methodSeg.addEventListener('click', function (e) {
+      var b = e.target.closest('button');
+      if (!b) return;
+      [].forEach.call(methodSeg.querySelectorAll('button'), function (x) {
+        x.classList.remove('on');
+        x.setAttribute('aria-selected', 'false');
+      });
+      b.classList.add('on');
+      b.setAttribute('aria-selected', 'true');
+      method = b.getAttribute('data-m');
+      solve();
+    });
+  }
+
+  // advanced toggle
+  var advBtn = $('advBtn');
+  if (advBtn) {
+    advBtn.addEventListener('click', function () {
+      advanced = !advanced;
+      advBtn.classList.toggle('open', advanced);
+      $('advBtnLab').textContent = advanced ? 'Go simple' : 'Go advanced';
+      $('advIn').style.display = advanced ? '' : 'none';
+      solve();
+      if (advanced) {
+        var a = $('advIn');
+        if (a && a.scrollIntoView) a.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    });
+  }
+
+  // live inputs
+  ['age', 'rhr', 'maxhr'].forEach(function (id) {
+    var el = $(id);
+    if (el) el.addEventListener('input', solve);
+  });
+
+  solve();
+})();
+</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>

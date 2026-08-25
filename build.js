@@ -30,6 +30,7 @@ const PAGES = [
   { file: 'pace-calculator/index.html',        slug: '/pace-calculator/' },
   { file: 'race-time-predictor/index.html',    slug: '/race-time-predictor/' },
   { file: 'heart-rate-zone-calculator/index.html', slug: '/heart-rate-zone-calculator/' },
+  { file: 'zone-2-calculator/index.html',          slug: '/zone-2-calculator/' },
   { file: 'body-fat-calculator/index.html',    slug: '/body-fat-calculator/' },
   { file: 'tdee-calculator/index.html',        slug: '/tdee-calculator/' },
   { file: 'one-rep-max-calculator/index.html', slug: '/one-rep-max-calculator/' },

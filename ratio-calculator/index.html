@@ -52,7 +52,7 @@
   ]
 }
 </script>
-<link rel="stylesheet" href="/assets/style.css?v=35">
+<link rel="stylesheet" href="/assets/style.css?v=36">
 <style>
 .presets-label{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
 .presets{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px}
@@ -135,6 +135,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
           <a href="/pace-calculator/">Pace</a>
           <a href="/race-time-predictor/">Race Time Predictor</a>
           <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-calculator/">Zone 2</a>
           <a href="/body-fat-calculator/">Body Fat</a>
           <a href="/tdee-calculator/">TDEE / Calories</a>
           <a href="/one-rep-max-calculator/">One Rep Max</a>
@@ -457,6 +458,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
           <li><a href="/pace-calculator/">Pace Calculator</a></li>
           <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
           <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-calculator/">Zone 2 Heart Rate Calculator</a></li>
           <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
           <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
           <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
@@ -501,7 +503,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
   </footer>
 <!--FOOTER:END-->
 
-<script src="/assets/app.js?v=35"></script>
+<script src="/assets/app.js?v=36"></script>
 <script>
 function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){var t=b;b=a%b;a=t;}return a;}
 function toInts(a,b){var sa=(''+a).split('.')[1]||'',sb=(''+b).split('.')[1]||'';var s=Math.pow(10,Math.max(sa.length,sb.length));var ai=Math.round(a*s),bi=Math.round(b*s);var g=gcd(ai,bi);return[ai/g,bi/g];}
