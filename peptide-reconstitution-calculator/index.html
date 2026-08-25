@@ -1,0 +1,643 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Peptide Reconstitution Calculator | CalcThis</title>
+<meta name="description" content="Enter your vial size, BAC water volume, and target dose. Instantly see your U-100 syringe draw units on a visual syringe — plus concentration, doses per vial, and cycle planning for BPC-157, TB-500, and more.">
+<link rel="canonical" href="https://calcthis.co/peptide-reconstitution-calculator/">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<meta name="theme-color" content="#B5761F">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Peptide Reconstitution Calculator — Exact U-100 Syringe Units | CalcThis">
+<meta property="og:description" content="Enter vial size, BAC water, and target dose. Get your exact U-100 draw units with a visual syringe so you can't miscount the marks.">
+<meta property="og:url" content="https://calcthis.co/peptide-reconstitution-calculator/">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Peptide Reconstitution Calculator",
+  "url": "https://calcthis.co/peptide-reconstitution-calculator/",
+  "applicationCategory": "HealthApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Calculate peptide reconstitution: concentration, exact U-100 syringe draw units, doses per vial, and vials needed for a full research cycle. Visual syringe shows exactly where to draw. Works for BPC-157, TB-500, and any research peptide."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How many units do I draw on a U-100 syringe?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Units on a U-100 insulin syringe equal your draw volume in mL multiplied by 100. For example, 0.25 mL = 25 units. This calculator works it out automatically and shows the exact mark on a visual syringe so you can confirm before drawing."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I reconstitute a peptide?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Draw the desired volume of bacteriostatic water (BAC water) into a syringe. Inject it slowly down the inner wall of the peptide vial — not directly onto the powder — then swirl gently. Never shake. Allow a few minutes for full dissolution."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How much BAC water should I use to reconstitute?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "There is no single correct amount — it depends on your dose size. Aim for a draw volume between 5 and 50 units (0.05 to 0.50 mL) for best accuracy. Use this calculator to try different volumes until your unit mark lands in that range."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the BPC-157 reconstitution setup?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A common setup is 5 mg reconstituted in 2 mL of BAC water, giving a concentration of 2.5 mg/mL. At a 250 mcg dose, you draw to the 10-unit mark on a U-100 syringe, giving 20 doses per vial."
+      }
+    }
+  ]
+}
+</script>
+<link rel="stylesheet" href="/assets/style.css?v=40?v=N">
+<style>
+/* ===== Peptide Reconstitution Calculator — page-specific ===== */
+.p-peptide .fld{margin-bottom:18px}
+.p-peptide .preset-wrap{margin-bottom:20px}
+.p-peptide .preset-lab{font-size:14px;font-weight:600;color:var(--ink-soft);margin-bottom:8px}
+
+/* Idle state */
+.p-peptide .res-idle{font-size:15px;color:var(--muted);padding:28px 0 24px;text-align:center;line-height:1.55}
+
+/* Syringe visual */
+.syringe-section{margin:18px 0 6px}
+.syringe-sec-lab{font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--spruce-soft);margin-bottom:10px}
+.syringe-svg{width:100%;display:block;overflow:visible}
+#syFill{transition:width .3s ease}
+.syringe-callout{font-size:16px;font-weight:700;color:var(--spruce);text-align:center;margin-top:10px;font-variant-numeric:tabular-nums;min-height:24px;line-height:1.4}
+.syringe-callout.warn{color:var(--amber-deep);font-size:14px;font-weight:600}
+
+/* Secondary metrics */
+.p-peptide .metrics{margin-top:14px;padding-top:2px}
+.p-peptide .met-row{display:flex;justify-content:space-between;align-items:baseline;padding:10px 0;border-bottom:1px dashed var(--line)}
+.p-peptide .met-row:last-of-type{border-bottom:none}
+.p-peptide .met-row .k{font-size:14px;font-weight:500;color:var(--ink-soft)}
+.p-peptide .met-row .v{font-family:'Fraunces',serif;font-size:20px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--ink)}
+.p-peptide .vu{font-size:14px;color:var(--muted);font-weight:500;font-family:'Inter',sans-serif;margin-left:3px}
+
+/* Advanced results */
+.p-peptide .adv-res{margin-top:14px;padding-top:4px;border-top:1px dashed var(--line)}
+
+/* Disclaimer */
+.p-peptide .disclaimer{font-size:14px;color:var(--muted);margin-top:14px;padding-top:12px;border-top:1px solid var(--line);text-align:center;line-height:1.45}
+
+.p-peptide .pill{display:inline-flex;align-items:center;gap:5px;text-decoration:none}
+</style>
+</head>
+<body class="p-peptide">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <span class="menu-col-head">Construction</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/macro-calculator/">Macro</a>
+          <a href="/peptide-reconstitution-calculator/" class="current">Peptide Reconstitution</a>
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <div class="hero">
+    <div class="eyebrow">Health &amp; Fitness</div>
+    <h1>Peptide Reconstitution Calculator</h1>
+    <p>Enter your vial size, BAC water volume, and target dose. See your exact U-100 syringe draw units on a visual syringe — no more guessing which line to hit.</p>
+  </div>
+
+  <div class="grid">
+
+    <!-- LEFT: Inputs -->
+    <div class="card card-pad">
+      <div class="row-top"><h2>Your vial &amp; dose</h2></div>
+
+      <div class="preset-wrap">
+        <div class="preset-lab">Quick presets</div>
+        <div class="chips">
+          <button class="chip-preset" data-vial="5" data-bac="2" data-dose="250" type="button">BPC-157 · 5 mg</button>
+          <button class="chip-preset" data-vial="10" data-bac="3" data-dose="2000" type="button">TB-500 · 10 mg</button>
+        </div>
+      </div>
+
+      <label class="fld" for="vialMg">
+        <span class="lab">Vial size <span class="unit">mg</span></span>
+        <div class="inp"><input id="vialMg" type="number" inputmode="decimal" min="0.1" max="500" step="0.1" placeholder="5"></div>
+      </label>
+
+      <label class="fld" for="bacMl">
+        <span class="lab">BAC water added <span class="unit">mL</span></span>
+        <div class="inp"><input id="bacMl" type="number" inputmode="decimal" min="0.1" max="50" step="0.1" placeholder="2"></div>
+      </label>
+
+      <label class="fld" for="doseMcg">
+        <span class="lab">Target dose <span class="unit">mcg</span></span>
+        <div class="inp"><input id="doseMcg" type="number" inputmode="decimal" min="1" max="50000" step="1" placeholder="250"></div>
+      </label>
+
+      <!-- Advanced panel — sits ABOVE the advBtn, hidden via display:none -->
+      <div id="advIn" style="display:none">
+        <label class="fld" for="dosesWeek">
+          <span class="lab">Doses per week</span>
+          <div class="inp"><input id="dosesWeek" type="number" inputmode="numeric" min="1" max="21" step="1" placeholder="5"></div>
+        </label>
+        <label class="fld" for="cycleWeeks" style="margin-bottom:0">
+          <span class="lab">Research cycle length <span class="unit">weeks</span></span>
+          <div class="inp"><input id="cycleWeeks" type="number" inputmode="numeric" min="1" max="52" step="1" placeholder="12"></div>
+        </label>
+      </div>
+
+      <div class="add-row split" style="margin-top:6px">
+        <span></span>
+        <button class="advbtn" id="advBtn" type="button">
+          <span id="advBtnLab">Go advanced</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- RIGHT: Results -->
+    <div class="card">
+      <div class="card-pad">
+
+        <!-- Idle state -->
+        <div id="resIdle" class="res-idle">Enter your vial size, BAC water, and target dose to see your syringe units.</div>
+
+        <!-- Result output -->
+        <div id="resOut" style="display:none">
+
+          <!-- Primary result -->
+          <div style="margin:6px 0 2px">
+            <div class="res-lab" id="resLab">Draw to unit mark</div>
+            <div class="res-big"><span id="resUnits">—</span> <span class="res-unit" id="resUnitLabel">units</span></div>
+            <div class="res-sub" id="resSub"></div>
+          </div>
+
+          <!-- U-100 syringe visual -->
+          <!--
+            Barrel: x=42, width=228 (x 42→270), height=19 (y 17→36)
+            Scale: 2.28 px per unit (228 ÷ 100)
+            Major ticks (every 10 units): 22.8 px apart
+            Minor ticks (every 5 units): 11.4 px apart
+          -->
+          <div class="syringe-section">
+            <div class="syringe-sec-lab">U-100 insulin syringe</div>
+            <svg class="syringe-svg" viewBox="0 0 312 54" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+              <!-- Needle tip -->
+              <polygon points="6,26 24,23 24,29" fill="#C0B4A4"/>
+              <!-- Needle shaft -->
+              <rect x="24" y="25" width="10" height="3" fill="#C4B8A8"/>
+              <!-- Hub -->
+              <rect x="34" y="21" width="8" height="11" rx="2" fill="#D8CFBF" stroke="#C4B8A8" stroke-width="1"/>
+              <!-- Barrel background -->
+              <rect x="42" y="17" width="228" height="19" rx="4" fill="#FBF6EE" stroke="#D4C8B5" stroke-width="1.5"/>
+              <!-- Clip path (keeps fill inside rounded barrel) -->
+              <clipPath id="bClip"><rect x="42" y="17" width="228" height="19" rx="4"/></clipPath>
+              <!-- Liquid fill — width is set by JS; CSS transition animates it -->
+              <rect id="syFill" x="42" y="17" width="0" height="19" fill="#37503F" opacity="0.75" clip-path="url(#bClip)"/>
+              <!-- Major ticks: 10, 20, ... 90 (100 = barrel right edge) -->
+              <g stroke="#C0B0A0" stroke-width="1.2">
+                <line x1="64.8"  y1="36" x2="64.8"  y2="46"/>
+                <line x1="87.6"  y1="36" x2="87.6"  y2="46"/>
+                <line x1="110.4" y1="36" x2="110.4" y2="46"/>
+                <line x1="133.2" y1="36" x2="133.2" y2="46"/>
+                <line x1="156"   y1="36" x2="156"   y2="46"/>
+                <line x1="178.8" y1="36" x2="178.8" y2="46"/>
+                <line x1="201.6" y1="36" x2="201.6" y2="46"/>
+                <line x1="224.4" y1="36" x2="224.4" y2="46"/>
+                <line x1="247.2" y1="36" x2="247.2" y2="46"/>
+              </g>
+              <!-- Minor ticks (5-unit marks between major ticks) -->
+              <g stroke="#D8CFBF" stroke-width="0.8">
+                <line x1="53.4"  y1="36" x2="53.4"  y2="41"/>
+                <line x1="76.2"  y1="36" x2="76.2"  y2="41"/>
+                <line x1="99"    y1="36" x2="99"    y2="41"/>
+                <line x1="121.8" y1="36" x2="121.8" y2="41"/>
+                <line x1="144.6" y1="36" x2="144.6" y2="41"/>
+                <line x1="167.4" y1="36" x2="167.4" y2="41"/>
+                <line x1="190.2" y1="36" x2="190.2" y2="41"/>
+                <line x1="213"   y1="36" x2="213"   y2="41"/>
+                <line x1="235.8" y1="36" x2="235.8" y2="41"/>
+                <line x1="258.6" y1="36" x2="258.6" y2="41"/>
+              </g>
+              <!-- Amber draw marker — dashed line from above barrel down through it -->
+              <line id="syMarker" x1="42" y1="12" x2="42" y2="38" stroke="#B5761F" stroke-width="2" stroke-dasharray="3,2.5" opacity="0"/>
+              <!-- Arrowhead pointing down at the mark -->
+              <polygon id="syArrow" points="0,0 5,-7 -5,-7" fill="#B5761F" transform="translate(42,14)" opacity="0"/>
+              <!-- Plunger assembly (static, at barrel right end) -->
+              <rect x="267" y="11" width="3" height="33" rx="1.5" fill="#DDD0C0"/>
+              <rect x="270" y="17" width="5" height="19" fill="#D8CFBF" stroke="#C8B8A5" stroke-width="1"/>
+              <rect x="275" y="23" width="27" height="7" rx="3" fill="#E0D4C4"/>
+              <rect x="299" y="6" width="5" height="42" rx="2.5" fill="#D0C4B0"/>
+              <rect x="296" y="14" width="11" height="26" rx="2" fill="none" stroke="#C8B8A5" stroke-width="1.5"/>
+            </svg>
+            <div class="syringe-callout" id="syCallout"></div>
+          </div>
+
+          <!-- Secondary metrics -->
+          <div class="metrics">
+            <div class="met-row">
+              <span class="k">Concentration</span>
+              <span class="v" id="resConc">—</span>
+            </div>
+            <div class="met-row">
+              <span class="k">Doses per vial</span>
+              <span class="v" id="resDoses">—</span>
+            </div>
+          </div>
+
+          <!-- Advanced results -->
+          <div class="adv-res" id="advResOut" style="display:none">
+            <div class="met-row">
+              <span class="k">Total doses in cycle</span>
+              <span class="v" id="advTotalDoses">—</span>
+            </div>
+            <div class="met-row">
+              <span class="k">Vials needed</span>
+              <span class="v" id="advVials">—</span>
+            </div>
+          </div>
+
+          <!-- Disclaimer -->
+          <p class="disclaimer">For research use only · not medical advice</p>
+
+        </div><!-- /resOut -->
+      </div>
+    </div>
+
+  </div><!-- /grid -->
+
+  <!-- Cross-links -->
+  <div class="pills" style="margin-top:20px">
+    <a class="pill" href="/tdee-calculator/">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      TDEE / Calories
+    </a>
+    <a class="pill" href="/body-fat-calculator/">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+      Body Fat Calculator
+    </a>
+    <a class="pill" href="/one-rep-max-calculator/">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="3" height="10" rx="1"/><rect x="19" y="7" width="3" height="10" rx="1"/><rect x="5" y="9" width="14" height="6" rx="1"/></svg>
+      One Rep Max
+    </a>
+  </div>
+
+  <!-- SEO content -->
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How peptide reconstitution works</h2>
+        <p>Lyophilised (freeze-dried) peptides arrive as a powder. You dissolve them in bacteriostatic water (BAC water) before use — this is reconstitution. The amount of water you add sets the <strong>concentration</strong>: more water = lower concentration and larger draw volume per dose; less water = higher concentration and smaller draw. There is no single correct volume — you choose based on what gives you a comfortable, accurate draw.</p>
+
+        <h2>Reading a U-100 syringe</h2>
+        <p>A U-100 insulin syringe holds exactly 1 mL, divided into <strong>100 equal units</strong>. One unit equals 0.01 mL. To convert: multiply your mL draw volume by 100. This calculator does it automatically and shows the mark on the visual syringe above — so you can confirm the position before drawing your dose.</p>
+
+        <h2>Choosing the right water amount</h2>
+        <p>A good target is a draw volume between <strong>5 and 50 units (0.05–0.50 mL)</strong>. Below 5 units, small measurement errors become a large percentage of your dose. Above 50 units, you're drawing more than half a syringe, which is manageable but less precise. Adjust BAC water volume until your unit mark lands in that window.</p>
+      </div>
+      <div>
+        <h2>Common peptides at a glance</h2>
+        <table class="dtable">
+          <thead><tr><th>Peptide</th><th>Typical vial</th><th>Typical dose</th></tr></thead>
+          <tbody>
+            <tr><td>BPC-157</td><td>5 mg</td><td>250–500 mcg</td></tr>
+            <tr><td>TB-500</td><td>10 mg</td><td>2,000–5,000 mcg</td></tr>
+            <tr><td>CJC-1295</td><td>2 mg</td><td>100–200 mcg</td></tr>
+            <tr><td>Ipamorelin</td><td>5 mg</td><td>200–300 mcg</td></tr>
+            <tr><td>Semaglutide</td><td>5 mg</td><td>250–2,400 mcg</td></tr>
+            <tr><td>Tesamorelin</td><td>2 mg</td><td>1,000–2,000 mcg</td></tr>
+          </tbody>
+        </table>
+
+        <h2>Storing reconstituted peptides</h2>
+        <p>Once dissolved in BAC water, refrigerate at <strong>2–8°C (36–46°F)</strong>, away from light. Most reconstituted peptides remain stable for 4–6 weeks. Never freeze a reconstituted solution — freeze-thaw cycles degrade the peptide. Use bacteriostatic water (not sterile water) specifically because it inhibits bacterial growth during refrigerated storage.</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>How do I reconstitute a peptide step by step?</summary><p>Draw the BAC water volume into a syringe. Insert the needle through the vial's stopper and angle it so the water runs down the inner glass wall — don't squirt directly onto the powder. Inject slowly, then swirl gently until dissolved. Never shake. The solution should be clear; discard if cloudy or if particles remain.</p></details>
+    <details class="faq"><summary>How many units do I draw on a U-100 syringe?</summary><p>Units = mL × 100. This calculator works it out and shows the exact mark on the visual syringe above, so you can confirm the draw position visually before loading the dose.</p></details>
+    <details class="faq"><summary>Can I use bacteriostatic saline instead of BAC water?</summary><p>Bacteriostatic saline (0.9% NaCl + benzyl alcohol) works for many peptides and is sometimes preferred for nasal or inhalation delivery. BAC water (sterile water + benzyl alcohol) is most common for subcutaneous injection. The math in this calculator is identical regardless of which diluent you use.</p></details>
+    <details class="faq"><summary>What happens if I add too much BAC water?</summary><p>Your concentration drops and the draw volume per dose increases. If the calculator shows more than 80–100 units, reconstitute with less BAC water to bring the draw into a more accurate range. The calculator will show a warning when your draw exceeds 100 units (the syringe's full capacity).</p></details>
+    <details class="faq"><summary>Is this the same as a peptide mixing ratio calculator?</summary><p>Yes — reconstitution, mixing ratio, and dilution all describe the same step: dissolving the powder in a diluent. Vial size (mg) ÷ BAC water (mL) = concentration (mg/mL). All other outputs follow from that single number.</p></details>
+  </section>
+
+</div><!-- /wrap -->
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+        </ul>
+      </div>
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+<script src="/assets/app.js?v=40?v=N"></script>
+<script>
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+  var advanced = false;
+
+  // SVG geometry constants (must match SVG viewBox)
+  // Barrel: x=42, width=228 → 100 units, 2.28px per unit
+  var SY_X0    = 42;
+  var SY_SCALE = 2.28; // px per unit
+
+  function num(v) {
+    v = parseFloat(('' + (v || '')).trim());
+    return isNaN(v) ? NaN : v;
+  }
+
+  function fmtUnits(u) {
+    // 12.5 → "12.5", 25.0 → "25"
+    var r = Math.round(u * 10) / 10;
+    return r % 1 === 0 ? String(r) : r.toFixed(1);
+  }
+
+  function fmtMl(ml) {
+    // strip trailing zeros after 3 decimals
+    return parseFloat(ml.toFixed(3)).toString();
+  }
+
+  function updateSyringe(units) {
+    var syFill   = $('syFill');
+    var syMarker = $('syMarker');
+    var syArrow  = $('syArrow');
+    var callout  = $('syCallout');
+
+    if (!isFinite(units) || units <= 0) {
+      syFill.setAttribute('width', '0');
+      syMarker.setAttribute('opacity', '0');
+      syArrow.setAttribute('opacity', '0');
+      callout.textContent = '';
+      callout.className   = 'syringe-callout';
+      return;
+    }
+
+    if (units > 100) {
+      syFill.setAttribute('width', '228');
+      syMarker.setAttribute('opacity', '0');
+      syArrow.setAttribute('opacity', '0');
+      callout.textContent = 'Draw volume exceeds 100 units — use less BAC water to concentrate.';
+      callout.className   = 'syringe-callout warn';
+      return;
+    }
+
+    var fillW  = units * SY_SCALE;
+    var markX  = SY_X0 + fillW;
+
+    syFill.setAttribute('width', fillW.toFixed(2));
+    syMarker.setAttribute('x1', markX.toFixed(2));
+    syMarker.setAttribute('x2', markX.toFixed(2));
+    syMarker.setAttribute('opacity', '1');
+    syArrow.setAttribute('transform', 'translate(' + markX.toFixed(2) + ',14)');
+    syArrow.setAttribute('opacity', '1');
+
+    callout.textContent = 'Draw to the ' + fmtUnits(units) + '-unit mark';
+    callout.className   = 'syringe-callout';
+  }
+
+  function solve() {
+    var vial = num($('vialMg').value);
+    var bac  = num($('bacMl').value);
+    var dose = num($('doseMcg').value);
+
+    var ok = isFinite(vial) && vial > 0
+          && isFinite(bac)  && bac  > 0
+          && isFinite(dose) && dose > 0;
+
+    if (!ok) {
+      $('resIdle').style.display = '';
+      $('resOut').style.display  = 'none';
+      updateSyringe(NaN);
+      return;
+    }
+
+    var concMgMl  = vial / bac;
+    var drawMl    = (dose / 1000) / concMgMl;
+    var units     = drawMl * 100;
+    var dosesVial = Math.floor((vial * 1000) / dose);
+
+    $('resIdle').style.display = 'none';
+    $('resOut').style.display  = '';
+
+    // Primary
+    $('resLab').textContent      = units > 100 ? 'Syringe overflow' : 'Draw to unit mark';
+    $('resUnits').textContent    = units > 100 ? '>100' : fmtUnits(units);
+    $('resUnitLabel').textContent = 'units on U-100';
+    $('resSub').textContent      = fmtMl(drawMl) + ' mL per dose · ' + concMgMl.toFixed(2) + ' mg/mL';
+
+    // Syringe
+    updateSyringe(units);
+
+    // Metrics
+    $('resConc').innerHTML  = concMgMl.toFixed(2) + '<span class="vu">mg/mL</span>';
+
+    if (dosesVial === 0) {
+      $('resDoses').textContent = 'Dose exceeds vial size';
+    } else {
+      $('resDoses').textContent = dosesVial + (dosesVial === 1 ? ' dose' : ' doses');
+    }
+
+    // Advanced
+    var advResOut = $('advResOut');
+    if (advanced && dosesVial > 0) {
+      var dw = num($('dosesWeek').value);
+      var cw = num($('cycleWeeks').value);
+      if (isFinite(dw) && dw > 0 && isFinite(cw) && cw > 0) {
+        var totalD  = Math.ceil(dw * cw);
+        var vialsN  = Math.ceil(totalD / dosesVial);
+        $('advTotalDoses').textContent = totalD + (totalD === 1 ? ' dose' : ' doses');
+        $('advVials').textContent      = vialsN + (vialsN === 1 ? ' vial' : ' vials');
+        advResOut.style.display = '';
+      } else {
+        advResOut.style.display = 'none';
+      }
+    } else {
+      advResOut.style.display = 'none';
+    }
+  }
+
+  // Presets
+  var presets = document.querySelectorAll('.chip-preset');
+  presets.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      $('vialMg').value  = btn.getAttribute('data-vial');
+      $('bacMl').value   = btn.getAttribute('data-bac');
+      $('doseMcg').value = btn.getAttribute('data-dose');
+      presets.forEach(function (b) { b.classList.remove('on'); });
+      btn.classList.add('on');
+      solve();
+    });
+  });
+
+  // Advanced toggle
+  var advBtn = $('advBtn');
+  if (advBtn) {
+    advBtn.addEventListener('click', function () {
+      advanced = !advanced;
+      advBtn.classList.toggle('open', advanced);
+      $('advBtnLab').textContent = advanced ? 'Go simple' : 'Go advanced';
+      $('advIn').style.display   = advanced ? '' : 'none';
+      solve();
+      if (advanced) {
+        var a = $('advIn');
+        if (a && a.scrollIntoView) a.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    });
+  }
+
+  // Live inputs
+  ['vialMg', 'bacMl', 'doseMcg', 'dosesWeek', 'cycleWeeks'].forEach(function (id) {
+    var el = $(id);
+    if (el) el.addEventListener('input', function () {
+      if (id !== 'dosesWeek' && id !== 'cycleWeeks') {
+        presets.forEach(function (b) { b.classList.remove('on'); });
+      }
+      solve();
+    });
+  });
+
+  solve();
+})();
+</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>
