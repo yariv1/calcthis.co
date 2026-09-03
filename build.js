@@ -44,6 +44,8 @@ const PAGES = [
   { file: 'percentage-calculator/index.html', slug: '/percentage-calculator/' },
   { file: 'macro-calculator/index.html',      slug: '/macro-calculator/' },
   { file: 'peptide-reconstitution-calculator/index.html', slug: '/peptide-reconstitution-calculator/' },
+  { file: 'blog/index.html',            slug: '/blog/' },
+  { file: 'blog/how-much-gravel-do-i-need-for-a-driveway/index.html', slug: '/blog/how-much-gravel-do-i-need-for-a-driveway/' },
   { file: 'about/index.html',           slug: '/about/' },
   { file: 'contact/index.html',         slug: '/contact/' },
   { file: 'privacy-policy/index.html',  slug: '/privacy-policy/' },
