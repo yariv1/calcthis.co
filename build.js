@@ -45,6 +45,7 @@ const PAGES = [
   { file: 'macro-calculator/index.html',      slug: '/macro-calculator/' },
   { file: 'peptide-reconstitution-calculator/index.html', slug: '/peptide-reconstitution-calculator/' },
   { file: 'about/index.html',           slug: '/about/' },
+  { file: 'contact/index.html',         slug: '/contact/' },
   { file: 'privacy-policy/index.html',  slug: '/privacy-policy/' },
   { file: 'terms-of-use/index.html',    slug: '/terms-of-use/' },
 ];

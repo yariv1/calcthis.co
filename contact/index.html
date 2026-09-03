@@ -12,17 +12,44 @@
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Privacy Policy – CalcThis</title>
-<link rel="canonical" href="https://calcthis.co/privacy-policy/">
+<title>Contact – CalcThis</title>
+<link rel="canonical" href="https://calcthis.co/contact/">
 <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
 <meta name="theme-color" content="#B5761F">
-<meta name="description" content="CalcThis privacy policy. We don't collect personal data. Learn how we use cookies and third-party services.">
+<meta name="description" content="Get in touch with CalcThis. Questions, corrections, or a calculator you'd like us to build — send a message and a real person will read it.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"ContactPage","name":"Contact CalcThis","url":"https://calcthis.co/contact/","description":"Get in touch with the CalcThis team with questions, corrections, or suggestions.","publisher":{"@type":"Organization","name":"CalcThis","url":"https://calcthis.co/","email":"getapps.support@gmail.com"}}</script>
 <link rel="stylesheet" href="/assets/style.css?v=41">
+<style>
+  /* ===== Contact page ===== */
+  .p-contact .contact-card{margin-top:24px}
+  .p-contact .fld{display:block;margin-bottom:16px}
+  .p-contact .fld .lab{display:block;font-size:14px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
+  .p-contact .fld input,
+  .p-contact .fld textarea{
+    width:100%;font:inherit;font-size:16px;color:var(--ink);
+    background:#FCFAF6;border:1.5px solid var(--line);border-radius:10px;
+    padding:11px 13px;transition:.15s;
+  }
+  .p-contact .fld input{font-weight:500;font-variant-numeric:tabular-nums}
+  .p-contact .fld textarea{min-height:150px;resize:vertical;line-height:1.6;font-weight:400}
+  .p-contact .fld input:focus,
+  .p-contact .fld textarea:focus{outline:none;border-color:var(--amber);background:#fff;box-shadow:0 0 0 3px rgba(181,118,31,.13)}
+  .p-contact .contact-submit{margin-top:4px}
+  .p-contact .contact-submit .btn{width:100%}
+  .p-contact .form-msg{font-size:14px;font-weight:600;line-height:1.5;margin-top:12px;color:var(--amber-deep)}
+  .p-contact .form-msg:empty{display:none}
+  .p-contact #contactThanks{display:none;text-align:center;padding:18px 4px}
+  .p-contact #contactThanks .big{font-family:'Fraunces',serif;font-size:28px;font-weight:600;color:var(--ink);margin-bottom:6px}
+  .p-contact #contactThanks .sub{font-size:15px;color:var(--ink-soft);line-height:1.6}
+  .p-contact .contact-alt{font-size:14px;color:var(--muted);margin-top:20px;text-align:center}
+  .p-contact .contact-alt a{color:var(--amber-deep);text-decoration:underline}
+  .p-contact .hpot{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+</style>
 </head>
-<body class="p-legal">
+<body class="p-legal p-contact">
 <div class="wrap">
 
 <!--HEADER:START-->
@@ -81,40 +108,42 @@
 
 <main class="legal-page">
   <div class="legal-content">
-    <h1>Privacy Policy</h1>
-    <p class="legal-meta">Effective date: August 22, 2026</p>
+    <h1>Contact us</h1>
 
-    <p>CalcThis ("we", "us", or "our") operates calcthis.co. This page explains what information we collect, how we use it, and your rights.</p>
+    <p>Have a question, spotted an error in a calculator, or want to suggest a tool we should build? Send us a note below — it lands straight in our inbox, and a real person reads every one.</p>
 
-    <h2>Information we collect</h2>
-    <p><strong>Calculator inputs.</strong> All calculations run entirely in your browser. Values you enter into any calculator are never transmitted to our servers and are not stored.</p>
-    <p><strong>Usage data.</strong> We use Google Analytics to collect anonymised information about how visitors use the site — pages visited, time on page, general location (country/region), device type, and referring source. This data does not identify you personally.</p>
-    <p><strong>Advertising.</strong> We use Google AdSense to display advertisements. AdSense may use cookies and similar technologies to show ads based on your prior visits to this and other websites. You can opt out of personalised advertising by visiting <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener">Google's Ads Settings</a>.</p>
+    <div class="card card-pad contact-card">
+      <form id="contactForm" novalidate>
+        <input type="text" class="hpot" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true">
 
-    <h2>Cookies</h2>
-    <p>CalcThis itself does not set first-party cookies. Third-party services we use (Google Analytics, Google AdSense) may set cookies on your device. You can control cookies through your browser settings or a browser extension such as uBlock Origin.</p>
+        <label class="fld">
+          <span class="lab">Name</span>
+          <input type="text" id="cName" name="name" autocomplete="name" required>
+        </label>
 
-    <h2>How we use information</h2>
-    <ul>
-      <li>To understand how visitors use the site so we can improve it.</li>
-      <li>To serve relevant advertisements that help fund the free calculators.</li>
-    </ul>
-    <p>We do not sell, rent, or trade any personal information with third parties.</p>
+        <label class="fld">
+          <span class="lab">E-mail</span>
+          <input type="email" id="cEmail" name="email" autocomplete="email" required>
+        </label>
 
-    <h2>Third-party links</h2>
-    <p>Some pages may contain links to external websites. We are not responsible for the privacy practices of those sites and encourage you to review their policies.</p>
+        <label class="fld">
+          <span class="lab">Message</span>
+          <textarea id="cMsg" name="message" rows="6" required></textarea>
+        </label>
 
-    <h2>Children's privacy</h2>
-    <p>CalcThis is not directed at children under 13. We do not knowingly collect personal information from children.</p>
+        <div class="contact-submit">
+          <button class="btn" id="cSend" type="submit">Send message</button>
+        </div>
+        <div class="form-msg" id="cErr" role="alert"></div>
+      </form>
 
-    <h2>Your rights</h2>
-    <p>Depending on your location, you may have the right to access, correct, or delete data held about you by Google Analytics or Google AdSense. See Google's <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Privacy Policy</a> for details.</p>
+      <div id="contactThanks">
+        <div class="big">Thanks &#128578;</div>
+        <div class="sub">Your message is on its way. We read every note and reply when it's needed.</div>
+      </div>
+    </div>
 
-    <h2>Changes to this policy</h2>
-    <p>We may update this policy from time to time. Changes will be posted on this page with an updated effective date.</p>
-
-    <h2>Contact</h2>
-    <p>Questions about this policy? Email us at <a href="mailto:getapps.support@gmail.com">getapps.support@gmail.com</a>.</p>
+    <p class="contact-alt">Prefer email? Reach us directly at <a href="mailto:getapps.support@gmail.com">getapps.support@gmail.com</a>.</p>
   </div>
 </main>
 
@@ -197,6 +226,55 @@
 <!--FOOTER:END-->
 
 <script src="/assets/app.js?v=41"></script>
+<script>
+(function(){
+  var form = document.getElementById('contactForm');
+  if(!form) return;
+  var name   = document.getElementById('cName'),
+      email  = document.getElementById('cEmail'),
+      msg    = document.getElementById('cMsg'),
+      send   = document.getElementById('cSend'),
+      err    = document.getElementById('cErr'),
+      thanks = document.getElementById('contactThanks'),
+      honey  = form.querySelector('[name="_honey"]');
+  var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    err.textContent = '';
+    if(honey && honey.value){ return; } // bot trap
+    var n = (name.value  || '').trim(),
+        em = (email.value || '').trim(),
+        m  = (msg.value   || '').trim();
+    if(!n || !em || !m){ err.textContent = 'Please fill in your name, email, and message.'; return; }
+    if(!EMAIL_RE.test(em)){ err.textContent = 'That email doesn\u2019t look right — please check it.'; email.focus(); return; }
+
+    send.disabled = true; send.textContent = 'Sending\u2026';
+    fetch('https://formsubmit.co/ajax/getapps.support@gmail.com', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({
+        name: n, email: em, message: m,
+        _subject: 'calcthis.co contact',
+        _template: 'table',
+        page: location.href
+      })
+    }).then(function(r){ return r.json().catch(function(){ return {}; }); })
+      .then(function(d){
+        if(d && (d.success === true || d.success === 'true')){
+          form.style.display = 'none'; thanks.style.display = 'block';
+        } else {
+          send.disabled = false; send.textContent = 'Send message';
+          err.textContent = 'Couldn\u2019t send just now — please try again, or email getapps.support@gmail.com.';
+        }
+      })
+      .catch(function(){
+        send.disabled = false; send.textContent = 'Send message';
+        err.textContent = 'Couldn\u2019t send just now — please try again, or email getapps.support@gmail.com.';
+      });
+  });
+})();
+</script>
 <script src="/feedback.js" defer></script>
 </body>
 </html>
