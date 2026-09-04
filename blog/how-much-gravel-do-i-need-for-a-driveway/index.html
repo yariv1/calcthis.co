@@ -37,13 +37,16 @@
   }
 }
 </script>
-<link rel="stylesheet" href="/assets/style.css?v=45">
+<link rel="stylesheet" href="/assets/style.css?v=46">
 </head>
 <body class="p-blog-post">
 <div class="wrap">
 
 <!--HEADER:START-->
   <header>
+    <a class="hdr-back" href="/blog/" aria-label="Back to blog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </a>
     <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
       <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
       <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
@@ -95,12 +98,7 @@
   </header>
   <!--HEADER:END-->
 
-  <div class="hero" style="padding:20px 0 0">
-    <a class="blog-back" href="/blog/">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
-      Blog
-    </a>
-
+  <div class="hero" style="padding:4px 0 0">
     <div class="blog-hero-art">
     <img src="/assets/images/blog-gravel-driveway-article-header.webp"
          alt="A gravel driveway stretching toward a home in warm golden-hour light"
@@ -110,9 +108,7 @@
     <div class="blog-meta">
       <a href="/blog/">Blog</a>
       <span class="bm-sep">·</span>
-      <span class="eyebrow" style="font-size:11px;letter-spacing:.07em">Construction</span>
-      <span class="bm-sep">·</span>
-      <span>September 3, 2026</span>
+      <span class="blog-meta-cat">Construction</span>
       <span class="bm-sep">·</span>
       <span>6 min read</span>
     </div>
@@ -425,7 +421,7 @@
 
 </div><!-- /wrap -->
 
-<script src="/assets/app.js?v=45"></script>
+<script src="/assets/app.js?v=46"></script>
 <script src="/feedback.js" defer></script>
 </body>
 </html>
