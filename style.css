@@ -740,6 +740,9 @@
     display: block;
   }
   .blog-hero-art img {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -794,6 +797,7 @@
 
   /* Article — hero art banner */
   .blog-hero-art {
+    position: relative;
     width: 100%;
     aspect-ratio: 1400 / 520;
     border-radius: var(--radius);
