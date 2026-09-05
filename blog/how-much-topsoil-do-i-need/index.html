@@ -37,7 +37,17 @@
   }
 }
 </script>
-<link rel="stylesheet" href="/assets/style.css?v=56">
+<link rel="stylesheet" href="/assets/style.css?v=57">
+<style>
+.diagram-zoomable{cursor:zoom-in;position:relative}
+.diagram-zoomable::after{content:"🔍 Click to enlarge";position:absolute;bottom:10px;right:14px;font-family:Inter,sans-serif;font-size:11px;font-weight:600;color:rgba(255,255,255,.55);letter-spacing:.04em;pointer-events:none}
+.dg-overlay{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.88);display:flex;align-items:center;justify-content:center;padding:24px;cursor:zoom-out;animation:dg-in .18s ease}
+@keyframes dg-in{from{opacity:0}to{opacity:1}}
+.dg-overlay svg{max-width:min(96vw,1100px);max-height:85vh;border-radius:10px;box-shadow:0 8px 48px rgba(0,0,0,.6);cursor:zoom-out}
+.dg-close{position:fixed;top:20px;right:24px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.12);border:none;color:#fff;font-size:20px;line-height:36px;text-align:center;cursor:pointer;z-index:10000;transition:background .15s}
+.dg-close:hover{background:rgba(255,255,255,.22)}
+.blog-meta{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+</style>
 </head>
 <body class="p-blog-post">
 <div class="wrap">
@@ -107,11 +117,17 @@
     </div>
 
     <div class="blog-meta">
-      <a href="/blog/">Blog</a>
-      <span class="bm-sep">·</span>
-      <span class="blog-meta-cat">Gardening</span>
-      <span class="bm-sep">·</span>
-      <span>5 min read</span>
+      <div class="bm-left">
+        <a href="/blog/">Blog</a>
+        <span class="bm-sep">·</span>
+        <span class="blog-meta-cat">Gardening</span>
+        <span class="bm-sep">·</span>
+        <span>5 min read</span>
+      </div>
+      <div class="seg" id="unitToggle" role="group" aria-label="Unit system" style="display:none">
+        <button class="on" data-unit="imp" type="button" aria-pressed="true">Imperial</button>
+        <button data-unit="met" type="button" aria-pressed="false">Metric</button>
+      </div>
     </div>
 
     <h1>How Much Topsoil Do I Need?</h1>
@@ -129,7 +145,7 @@
     </div>
 
     <p>A lawn 30 ft × 20 ft getting a 4-inch (0.33 ft) layer of topsoil:</p>
-    <p><strong>30 × 20 × 0.33 ÷ 27 = 7.3 cubic yards.</strong></p>
+    <p><strong><span class="u" data-imp="30 × 20 × 0.33 ÷ 27 = 7.3 cubic yards" data-met="9 × 6 × 0.1 = 5.4 m³">30 × 20 × 0.33 ÷ 27 = 7.3 cubic yards</span>.</strong></p>
 
     <p>For irregular shapes or multiple areas, the <a href="/topsoil-calculator/">topsoil calculator</a> adds them together and includes a waste buffer automatically.</p>
 
@@ -138,12 +154,12 @@
 
     <div class="blog-stat">
       <div class="stat-block">
-        <div class="stat-num">4–6"</div>
+        <div class="stat-num"><span class="u" data-imp='4–6"' data-met="10–15 cm">4–6"</span></div>
         <div class="stat-label">New lawn from seed or sod</div>
       </div>
       <div class="stat-sep"></div>
       <div class="stat-block">
-        <div class="stat-num">2–3"</div>
+        <div class="stat-num"><span class="u" data-imp='2–3"' data-met="5–7.5 cm">2–3"</span></div>
         <div class="stat-label">Top-dressing an existing lawn</div>
       </div>
     </div>
@@ -153,11 +169,11 @@
         <tr><th>Use case</th><th>Recommended depth</th></tr>
       </thead>
       <tbody>
-        <tr><td>Top-dressing existing lawn</td><td>2–3 inches</td></tr>
-        <tr><td>New lawn from seed</td><td>4–6 inches</td></tr>
-        <tr><td>New lawn from sod</td><td>4–6 inches</td></tr>
-        <tr><td>Raised vegetable beds</td><td>8–12 inches</td></tr>
-        <tr><td>Flower and shrub beds</td><td>6–8 inches</td></tr>
+        <tr><td>Top-dressing existing lawn</td><td><span class="u" data-imp="2–3 inches" data-met="5–7.5 cm">2–3 inches</span></td></tr>
+        <tr><td>New lawn from seed</td><td><span class="u" data-imp="4–6 inches" data-met="10–15 cm">4–6 inches</span></td></tr>
+        <tr><td>New lawn from sod</td><td><span class="u" data-imp="4–6 inches" data-met="10–15 cm">4–6 inches</span></td></tr>
+        <tr><td>Raised vegetable beds</td><td><span class="u" data-imp="8–12 inches" data-met="20–30 cm">8–12 inches</span></td></tr>
+        <tr><td>Flower and shrub beds</td><td><span class="u" data-imp="6–8 inches" data-met="15–20 cm">6–8 inches</span></td></tr>
         <tr><td>Filling low spots</td><td>As needed to level</td></tr>
       </tbody>
     </table>
@@ -177,31 +193,31 @@
     <p>A blend of sand, silt, and clay that drains well without drying out too fast. Ideal for lawns and any situation where drainage is a concern. If your existing soil is heavy clay, sandy loam on top helps balance drainage over time.</p>
 
     <h3>Fill Dirt vs. Topsoil</h3>
-    <p>Fill dirt is subsoil — it has little to no organic matter and won't support plant growth on its own. It's cheaper and fine for raising grade or filling large low spots, but always needs 4–6 inches of topsoil over it before planting or seeding. Never confuse the two when ordering.</p>
+    <p>Fill dirt is subsoil — it has little to no organic matter and won't support plant growth on its own. It's cheaper and fine for raising grade or filling large low spots, but always needs <span class="u" data-imp="4–6 inches" data-met="10–15 cm">4–6 inches</span> of topsoil over it before planting or seeding. Never confuse the two when ordering.</p>
 
     <h2>Coverage Per Cubic Yard</h2>
 
     <div class="blog-stat">
       <div class="stat-block">
-        <div class="stat-num">100 sq ft</div>
-        <div class="stat-label">covered at 3 inches per cubic yard</div>
+        <div class="stat-num"><span class="u" data-imp="100 sq ft" data-met="9.3 m²">100 sq ft</span></div>
+        <div class="stat-label">covered at <span class="u" data-imp="3 inches" data-met="7.5 cm">3 inches</span> per <span class="u" data-imp="cubic yard" data-met="cubic metre">cubic yard</span></div>
       </div>
       <div class="stat-sep"></div>
       <div class="stat-block">
-        <div class="stat-num">54 sq ft</div>
-        <div class="stat-label">covered at 6 inches per cubic yard</div>
+        <div class="stat-num"><span class="u" data-imp="54 sq ft" data-met="5 m²">54 sq ft</span></div>
+        <div class="stat-label">covered at <span class="u" data-imp="6 inches" data-met="15 cm">6 inches</span> per <span class="u" data-imp="cubic yard" data-met="cubic metre">cubic yard</span></div>
       </div>
     </div>
 
-    <p>Quick rule of thumb: one cubic yard covers 100 sq ft at 3 inches deep. Halve the coverage for every extra 3 inches of depth.</p>
+    <p>Quick rule of thumb: one <span class="u" data-imp="cubic yard" data-met="cubic metre">cubic yard</span> covers <span class="u" data-imp="100 sq ft at 3 inches" data-met="9.3 m² at 7.5 cm">100 sq ft at 3 inches</span> deep. Halve the coverage for every extra <span class="u" data-imp="3 inches" data-met="7.5 cm">3 inches</span> of depth.</p>
 
     <h2>Cost Estimate</h2>
-    <p>Bulk topsoil is almost always cheaper than bagged once you need more than 1–2 cubic yards.</p>
+    <p>Bulk topsoil is almost always cheaper than bagged once you need more than <span class="u" data-imp="1–2 cubic yards" data-met="0.75–1.5 m³">1–2 cubic yards</span>.</p>
 
     <div class="blog-stat">
       <div class="stat-block">
         <div class="stat-num">$25–50</div>
-        <div class="stat-label">per cubic yard, bulk screened topsoil</div>
+        <div class="stat-label">per <span class="u" data-imp="cubic yard" data-met="cubic metre">cubic yard</span>, bulk screened topsoil</div>
       </div>
       <div class="stat-sep"></div>
       <div class="stat-block">
@@ -210,7 +226,7 @@
       </div>
     </div>
 
-    <p>A 40 lb bag covers roughly 6 sq ft at 3 inches deep — barely enough for a small bed. For anything larger than a few square feet, bulk delivery wins on both cost and convenience. Most suppliers have a delivery minimum of 2–3 cubic yards; if your project is smaller, bagged topsoil avoids the delivery fee.</p>
+    <p>A <span class="u" data-imp="40 lb bag" data-met="18 kg bag">40 lb bag</span> covers roughly <span class="u" data-imp="6 sq ft at 3 inches" data-met="0.56 m² at 7.5 cm">6 sq ft at 3 inches</span> deep — barely enough for a small bed. For anything larger than a few square feet, bulk delivery wins on both cost and convenience. Most suppliers have a delivery minimum of <span class="u" data-imp="2–3 cubic yards" data-met="1.5–2.3 m³">2–3 cubic yards</span>; if your project is smaller, bagged topsoil avoids the delivery fee.</p>
 
     <a class="calc-cta" href="/topsoil-calculator/">
       <div class="calc-cta-text">
@@ -228,27 +244,27 @@
     <ul class="blog-checklist">
       <li><strong>Add 10–15% for waste.</strong> Topsoil settles after delivery and watering. Order a little extra so you're not short at the edges or in low spots.</li>
       <li><strong>Test your existing soil first.</strong> A basic soil test (under $20 at most garden centers) tells you what's missing. Buying the wrong topsoil type can make a pH or drainage problem worse, not better.</li>
-      <li><strong>Know fill dirt vs. topsoil.</strong> If you're raising a grade significantly, use cheaper fill dirt for the bulk and top with 4–6 inches of topsoil. Ordering all topsoil for a large fill job is expensive and unnecessary.</li>
-      <li><strong>Check delivery access.</strong> A cubic yard of topsoil weighs roughly 1–1.5 tons. Confirm the truck can reach your drop point without damaging a lawn or driveway. Most suppliers will dump at the curb if access is tight.</li>
+      <li><strong>Know fill dirt vs. topsoil.</strong> If you're raising a grade significantly, use cheaper fill dirt for the bulk and top with <span class="u" data-imp="4–6 inches" data-met="10–15 cm">4–6 inches</span> of topsoil. Ordering all topsoil for a large fill job is expensive and unnecessary.</li>
+      <li><strong>Check delivery access.</strong> A <span class="u" data-imp="cubic yard" data-met="cubic metre">cubic yard</span> of topsoil weighs roughly <span class="u" data-imp="1–1.5 tons" data-met="900–1,350 kg">1–1.5 tons</span>. Confirm the truck can reach your drop point without damaging a lawn or driveway. Most suppliers will dump at the curb if access is tight.</li>
       <li><strong>Plan to spread within 24–48 hours.</strong> A pile of topsoil left sitting compacts, can kill the grass underneath, and is a neighbourhood eyesore. Have your tools and time lined up before delivery.</li>
-      <li><strong>Don't bury existing grass too deep.</strong> Covering an established lawn with more than 2–3 inches of topsoil can suffocate it. For deeper applications, remove the existing turf first.</li>
+      <li><strong>Don't bury existing grass too deep.</strong> Covering an established lawn with more than <span class="u" data-imp="2–3 inches" data-met="5–7.5 cm">2–3 inches</span> of topsoil can suffocate it. For deeper applications, remove the existing turf first.</li>
     </ul>
 
     <h2>Common questions</h2>
 
     <details class="faq">
       <summary>How many bags of topsoil do I need?</summary>
-      <p>A standard 40 lb bag covers about 6 sq ft at 3 inches deep. Divide your total square footage by 6 to get the number of bags. For anything over 20–25 bags, bulk delivery will be cheaper. The <a href="/topsoil-calculator/">topsoil calculator</a> gives you the bag count automatically.</p>
+      <p>A standard <span class="u" data-imp="40 lb bag" data-met="18 kg bag">40 lb bag</span> covers about <span class="u" data-imp="6 sq ft at 3 inches deep" data-met="0.56 m² at 7.5 cm deep">6 sq ft at 3 inches deep</span>. Divide your total <span class="u" data-imp="square footage" data-met="square metres">square footage</span> by <span class="u" data-imp="6" data-met="0.56">6</span> to get the number of bags. For anything over 20–25 bags, bulk delivery will be cheaper. The <a href="/topsoil-calculator/">topsoil calculator</a> gives you the bag count automatically.</p>
     </details>
 
     <details class="faq">
       <summary>How much does a cubic yard of topsoil weigh?</summary>
-      <p>Roughly <strong>1,000–1,500 lbs</strong> depending on moisture content and soil type. Wet topsoil after rain can be significantly heavier. This matters for delivery — most pickup trucks can safely carry about half a cubic yard; anything more needs a dedicated delivery truck.</p>
+      <p>Roughly <strong><span class="u" data-imp="1,000–1,500 lbs" data-met="450–680 kg">1,000–1,500 lbs</span></strong> depending on moisture content and soil type. Wet topsoil after rain can be significantly heavier. This matters for delivery — most pickup trucks can safely carry about <span class="u" data-imp="half a cubic yard" data-met="0.38 m³">half a cubic yard</span>; anything more needs a dedicated delivery truck.</p>
     </details>
 
     <details class="faq">
       <summary>Can I put topsoil over existing grass?</summary>
-      <p>Yes, but depth matters. Up to 2–3 inches over an existing lawn is fine — grass can grow through it. More than that and you risk suffocating the turf. For deep applications (4+ inches), remove the existing grass first with a sod cutter or by tilling.</p>
+      <p>Yes, but depth matters. Up to <span class="u" data-imp="2–3 inches" data-met="5–7.5 cm">2–3 inches</span> over an existing lawn is fine — grass can grow through it. More than that and you risk suffocating the turf. For deep applications (<span class="u" data-imp="4+ inches" data-met="10+ cm">4+ inches</span>), remove the existing grass first with a sod cutter or by tilling.</p>
     </details>
 
     <details class="faq">
@@ -360,7 +376,42 @@
 
 </div><!-- /wrap -->
 
-<script src="/assets/app.js?v=56"></script>
+<script src="/assets/app.js?v=57"></script>
 <script src="/feedback.js" defer></script>
+<script>
+(function(){
+  document.querySelectorAll('.diagram-zoomable').forEach(function(wrap){
+    wrap.addEventListener('click',function(){
+      var svg=wrap.querySelector('svg'); if(!svg)return;
+      var ov=document.createElement('div'); ov.className='dg-overlay';
+      var btn=document.createElement('button'); btn.className='dg-close'; btn.innerHTML='&times;'; btn.setAttribute('aria-label','Close');
+      var clone=svg.cloneNode(true);
+      ov.appendChild(btn); ov.appendChild(clone); document.body.appendChild(ov); document.body.style.overflow='hidden';
+      function close(){document.body.removeChild(ov);document.body.style.overflow='';}
+      ov.addEventListener('click',function(e){if(e.target===ov||e.target===clone)close();});
+      btn.addEventListener('click',close);
+      document.addEventListener('keydown',function esc(e){if(e.key==='Escape'){close();document.removeEventListener('keydown',esc);}});
+    });
+  });
+})();
+(function(){
+  var toggle=document.getElementById('unitToggle');
+  if(!toggle||!document.querySelector('.u'))return;
+  toggle.style.display='';
+  var S='calcthis-units';
+  var cur=localStorage.getItem(S)||'imp';
+  function apply(u){
+    cur=u; try{localStorage.setItem(S,u);}catch(e){}
+    document.querySelectorAll('.u').forEach(function(el){ el.textContent=el.dataset[u]||el.dataset.imp; });
+    document.querySelectorAll('.blog-meta .seg button').forEach(function(btn){
+      var on=btn.dataset.unit===u; btn.classList.toggle('on',on); btn.setAttribute('aria-pressed',String(on));
+    });
+  }
+  document.querySelectorAll('.blog-meta .seg button').forEach(function(btn){
+    btn.addEventListener('click',function(){apply(btn.dataset.unit);});
+  });
+  apply(cur);
+})();
+</script>
 </body>
 </html>

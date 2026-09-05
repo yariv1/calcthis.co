@@ -37,7 +37,17 @@
   }
 }
 </script>
-<link rel="stylesheet" href="/assets/style.css?v=56">
+<link rel="stylesheet" href="/assets/style.css?v=57">
+<style>
+.diagram-zoomable{cursor:zoom-in;position:relative}
+.diagram-zoomable::after{content:"🔍 Click to enlarge";position:absolute;bottom:10px;right:14px;font-family:Inter,sans-serif;font-size:11px;font-weight:600;color:rgba(255,255,255,.55);letter-spacing:.04em;pointer-events:none}
+.dg-overlay{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.88);display:flex;align-items:center;justify-content:center;padding:24px;cursor:zoom-out;animation:dg-in .18s ease}
+@keyframes dg-in{from{opacity:0}to{opacity:1}}
+.dg-overlay svg{max-width:min(96vw,1100px);max-height:85vh;border-radius:10px;box-shadow:0 8px 48px rgba(0,0,0,.6);cursor:zoom-out}
+.dg-close{position:fixed;top:20px;right:24px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.12);border:none;color:#fff;font-size:20px;line-height:36px;text-align:center;cursor:pointer;z-index:10000;transition:background .15s}
+.dg-close:hover{background:rgba(255,255,255,.22)}
+.blog-meta{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+</style>
 </head>
 <body class="p-blog-post">
 <div class="wrap">
@@ -107,11 +117,17 @@
     </div>
 
     <div class="blog-meta">
-      <a href="/blog/">Blog</a>
-      <span class="bm-sep">·</span>
-      <span class="blog-meta-cat">Construction</span>
-      <span class="bm-sep">·</span>
-      <span>6 min read</span>
+      <div class="bm-left">
+        <a href="/blog/">Blog</a>
+        <span class="bm-sep">·</span>
+        <span class="blog-meta-cat">Construction</span>
+        <span class="bm-sep">·</span>
+        <span>6 min read</span>
+      </div>
+      <div class="seg" id="unitToggle" role="group" aria-label="Unit system" style="display:none">
+        <button class="on" data-unit="imp" type="button" aria-pressed="true">Imperial</button>
+        <button data-unit="met" type="button" aria-pressed="false">Metric</button>
+      </div>
     </div>
 
     <h1>How Much Gravel Do I Need for a Driveway?</h1>
@@ -128,8 +144,8 @@
       <small>Multiply cubic yards by material density (typically 1.4–1.6) to get tons</small>
     </div>
 
-    <p>A standard 2-car driveway runs about 20 ft wide × 40 ft long. At a 4-inch depth (0.333 ft), that's:</p>
-    <p><strong>20 × 40 × 0.333 ÷ 27 = 9.9 cubic yards</strong>, or roughly <strong>15 tons</strong> of crushed stone.</p>
+    <p>A standard 2-car driveway runs about <span class="u" data-imp="20 ft wide × 40 ft long" data-met="6 m wide × 12 m long">20 ft wide × 40 ft long</span>. At a <span class="u" data-imp="4-inch depth (0.333 ft)" data-met="10 cm depth (0.1 m)">4-inch depth (0.333 ft)</span>, that's:</p>
+    <p><strong><span class="u" data-imp="20 × 40 × 0.333 ÷ 27 = 9.9 cubic yards" data-met="6 × 12 × 0.1 = 7.6 m³">20 × 40 × 0.333 ÷ 27 = 9.9 cubic yards</span></strong>, or roughly <strong><span class="u" data-imp="15 tons" data-met="13.6 tonnes">15 tons</span></strong> of crushed stone.</p>
 
     <p>Don't want to do the arithmetic? The <a href="/gravel-calculator/">gravel calculator</a> handles it instantly — including irregular shapes, cost estimates, and waste buffers.</p>
 
@@ -138,12 +154,12 @@
 
     <div class="blog-stat">
       <div class="stat-block">
-        <div class="stat-num">4"</div>
+        <div class="stat-num"><span class="u" data-imp='4"' data-met="10 cm">4"</span></div>
         <div class="stat-label">Standard depth for a single-layer driveway</div>
       </div>
       <div class="stat-sep"></div>
       <div class="stat-block">
-        <div class="stat-num">6–9"</div>
+        <div class="stat-num"><span class="u" data-imp='6–9"' data-met="15–23 cm">6–9"</span></div>
         <div class="stat-label">Total depth for a new two-layer build</div>
       </div>
     </div>
@@ -153,28 +169,28 @@
         <tr><th>Use case</th><th>Recommended depth</th></tr>
       </thead>
       <tbody>
-        <tr><td>Top-up on existing gravel</td><td>1–2 inches</td></tr>
-        <tr><td>Footpath or light foot traffic</td><td>2–3 inches</td></tr>
-        <tr><td>Standard driveway (single layer)</td><td>4 inches</td></tr>
-        <tr><td>New driveway, base layer only</td><td>4–6 inches</td></tr>
-        <tr><td>New driveway, total (base + surface)</td><td>6–9 inches</td></tr>
+        <tr><td>Top-up on existing gravel</td><td><span class="u" data-imp="1–2 inches" data-met="2.5–5 cm">1–2 inches</span></td></tr>
+        <tr><td>Footpath or light foot traffic</td><td><span class="u" data-imp="2–3 inches" data-met="5–7.5 cm">2–3 inches</span></td></tr>
+        <tr><td>Standard driveway (single layer)</td><td><span class="u" data-imp="4 inches" data-met="10 cm">4 inches</span></td></tr>
+        <tr><td>New driveway, base layer only</td><td><span class="u" data-imp="4–6 inches" data-met="10–15 cm">4–6 inches</span></td></tr>
+        <tr><td>New driveway, total (base + surface)</td><td><span class="u" data-imp="6–9 inches" data-met="15–23 cm">6–9 inches</span></td></tr>
       </tbody>
     </table>
 
     <!-- Cross-section diagram -->
-    <div class="blog-diagram">
-      <svg viewBox="0 0 700 220" xmlns="http://www.w3.org/2000/svg" aria-label="Cross-section diagram showing three layers of a gravel driveway: surface gravel at top, compacted base in the middle, and subgrade at the bottom">
+    <div class="blog-diagram diagram-zoomable" title="Click to enlarge">
+      <svg viewBox="0 0 740 220" xmlns="http://www.w3.org/2000/svg" aria-label="Cross-section diagram showing three layers of a gravel driveway: surface gravel at top, compacted base in the middle, and subgrade at the bottom">
         <!-- Subgrade -->
-        <rect x="0" y="155" width="700" height="65" fill="#3A1E0A"/>
+        <rect x="0" y="155" width="740" height="65" fill="#3A1E0A"/>
         <!-- Subgrade texture wavy lines -->
         <path d="M0 168 Q87 165 175 170 Q262 175 350 170 Q437 165 525 172 Q612 179 700 173" stroke="rgba(255,255,255,.07)" stroke-width="1.5" fill="none"/>
         <path d="M0 182 Q87 179 175 184 Q262 189 350 184 Q437 179 525 186 Q612 193 700 187" stroke="rgba(255,255,255,.05)" stroke-width="1.5" fill="none"/>
         <path d="M0 196 Q87 193 175 198 Q262 203 350 198 Q437 193 525 200 Q612 207 700 201" stroke="rgba(255,255,255,.04)" stroke-width="1.5" fill="none"/>
         <!-- Subgrade label -->
-        <text x="18" y="208" fill="rgba(255,255,255,.38)" font-family="Inter,sans-serif" font-size="11" font-weight="700" letter-spacing=".07em">SUBGRADE</text>
+        <text x="18" y="208" fill="rgba(255,255,255,.75)" font-family="Inter,sans-serif" font-size="13" font-weight="700" letter-spacing=".06em">SUBGRADE</text>
 
         <!-- Base layer -->
-        <rect x="0" y="62" width="700" height="93" fill="#7A4E25"/>
+        <rect x="0" y="62" width="740" height="93" fill="#7A4E25"/>
         <!-- Angular stones in base -->
         <polygon points="42,90 62,78 74,92 55,106" fill="rgba(0,0,0,.18)"/>
         <polygon points="100,95 118,82 130,97 115,108" fill="rgba(0,0,0,.15)"/>
@@ -189,10 +205,10 @@
         <polygon points="605,88 624,75 638,90 618,104" fill="rgba(0,0,0,.2)"/>
         <polygon points="660,93 680,80 693,95 673,109" fill="rgba(0,0,0,.15)"/>
         <!-- Base label -->
-        <text x="18" y="102" fill="rgba(255,255,255,.55)" font-family="Inter,sans-serif" font-size="11" font-weight="700" letter-spacing=".07em">BASE LAYER  —  4–6 inches, compacted crusher run</text>
+        <text x="18" y="102" fill="rgba(255,255,255,.88)" font-family="Inter,sans-serif" font-size="13" font-weight="700" letter-spacing=".06em">BASE LAYER  —  4–6 inches, compacted crusher run</text>
 
         <!-- Surface gravel layer -->
-        <rect x="0" y="0" width="700" height="62" fill="#B5761F"/>
+        <rect x="0" y="0" width="740" height="62" fill="#B5761F"/>
         <!-- Surface stones (round) -->
         <circle cx="28"  cy="34" r="7.5" fill="rgba(255,255,255,.12)"/>
         <circle cx="52"  cy="24" r="6"   fill="rgba(0,0,0,.1)"/>
@@ -224,36 +240,36 @@
         <circle cx="652" cy="26" r="6.5" fill="rgba(0,0,0,.12)"/>
         <circle cx="677" cy="40" r="5"   fill="rgba(255,255,255,.1)"/>
         <!-- Surface label -->
-        <text x="18" y="18" fill="rgba(255,255,255,.72)" font-family="Inter,sans-serif" font-size="11" font-weight="700" letter-spacing=".07em">SURFACE GRAVEL  —  2–3 inches, #57 crushed stone or pea gravel</text>
+        <text x="18" y="18" fill="rgba(255,255,255,.95)" font-family="Inter,sans-serif" font-size="13" font-weight="700" letter-spacing=".06em">SURFACE GRAVEL  —  2–3 inches, #57 crushed stone or pea gravel</text>
 
         <!-- Dividers -->
-        <line x1="0" y1="62"  x2="700" y2="62"  stroke="rgba(255,255,255,.22)" stroke-width="1.5"/>
-        <line x1="0" y1="155" x2="700" y2="155" stroke="rgba(255,255,255,.15)" stroke-width="1.5"/>
+        <line x1="0" y1="62"  x2="740" y2="62"  stroke="rgba(255,255,255,.22)" stroke-width="1.5"/>
+        <line x1="0" y1="155" x2="740" y2="155" stroke="rgba(255,255,255,.15)" stroke-width="1.5"/>
 
         <!-- Measurement brackets (right) -->
         <!-- Surface bracket -->
-        <line x1="670" y1="1"  x2="670" y2="61" stroke="rgba(255,255,255,.35)" stroke-width="1"/>
-        <line x1="664" y1="1"  x2="676" y2="1"  stroke="rgba(255,255,255,.35)" stroke-width="1"/>
-        <line x1="664" y1="61" x2="676" y2="61" stroke="rgba(255,255,255,.35)" stroke-width="1"/>
-        <text x="680" y="36" fill="rgba(255,255,255,.5)" font-family="Inter,sans-serif" font-size="11" font-weight="600">2–3"</text>
+        <line x1="656" y1="1"  x2="656" y2="61" stroke="rgba(255,255,255,.6)" stroke-width="1"/>
+        <line x1="650" y1="1"  x2="662" y2="1"  stroke="rgba(255,255,255,.6)" stroke-width="1"/>
+        <line x1="650" y1="61" x2="662" y2="61" stroke="rgba(255,255,255,.6)" stroke-width="1"/>
+        <text x="666" y="36" fill="rgba(255,255,255,.9)" font-family="Inter,sans-serif" font-size="13" font-weight="700">2–3"</text>
         <!-- Base bracket -->
-        <line x1="670" y1="63"  x2="670" y2="154" stroke="rgba(255,255,255,.28)" stroke-width="1"/>
-        <line x1="664" y1="63"  x2="676" y2="63"  stroke="rgba(255,255,255,.28)" stroke-width="1"/>
-        <line x1="664" y1="154" x2="676" y2="154" stroke="rgba(255,255,255,.28)" stroke-width="1"/>
-        <text x="680" y="113" fill="rgba(255,255,255,.42)" font-family="Inter,sans-serif" font-size="11" font-weight="600">4–6"</text>
+        <line x1="656" y1="63"  x2="656" y2="154" stroke="rgba(255,255,255,.5)" stroke-width="1"/>
+        <line x1="650" y1="63"  x2="662" y2="63"  stroke="rgba(255,255,255,.5)" stroke-width="1"/>
+        <line x1="650" y1="154" x2="662" y2="154" stroke="rgba(255,255,255,.5)" stroke-width="1"/>
+        <text x="666" y="113" fill="rgba(255,255,255,.8)" font-family="Inter,sans-serif" font-size="13" font-weight="700">4–6"</text>
       </svg>
     </div>
 
-    <p>For a brand-new driveway on bare ground, most pros recommend two layers: a compacted base of crusher run (4–6 inches) topped with a finish layer of #57 crushed stone (2–3 inches). This costs more upfront but holds up under vehicle weight without rutting. For a simple refresh, 1–2 inches on top of the existing gravel is usually all you need.</p>
+    <p>For a brand-new driveway on bare ground, most pros recommend two layers: a compacted base of crusher run (<span class="u" data-imp="4–6 inches" data-met="10–15 cm">4–6 inches</span>) topped with a finish layer of #57 crushed stone (<span class="u" data-imp="2–3 inches" data-met="5–7.5 cm">2–3 inches</span>). This costs more upfront but holds up under vehicle weight without rutting. For a simple refresh, <span class="u" data-imp="1–2 inches" data-met="2.5–5 cm">1–2 inches</span> on top of the existing gravel is usually all you need.</p>
 
     <h2>Which Gravel Is Right for a Driveway?</h2>
     <p>Not all gravel performs equally under tire pressure. Here's what to know before you choose.</p>
 
     <h3>Crushed Stone (#57 Limestone or Granite)</h3>
-    <p>The go-to choice for driveways. Angular edges interlock under pressure, which means the stones stay put instead of migrating to the edges. A density of about <strong>1.6 tons per cubic yard</strong>. Best for: any driveway that sees regular vehicle traffic.</p>
+    <p>The go-to choice for driveways. Angular edges interlock under pressure, which means the stones stay put instead of migrating to the edges. A density of about <strong><span class="u" data-imp="1.6 tons per cubic yard" data-met="1.9 t/m³">1.6 tons per cubic yard</span></strong>. Best for: any driveway that sees regular vehicle traffic.</p>
 
     <h3>Crusher Run (Processed Gravel)</h3>
-    <p>A mix of angular stone and stone dust that compacts into an almost-solid surface. Ideal for the base layer of a new driveway. Compacts so well that some people use it as the only layer. Density varies 1.4–1.6 tons/yd³.</p>
+    <p>A mix of angular stone and stone dust that compacts into an almost-solid surface. Ideal for the base layer of a new driveway. Compacts so well that some people use it as the only layer. Density varies <span class="u" data-imp="1.4–1.6 tons/yd³" data-met="1.7–1.9 t/m³">1.4–1.6 tons/yd³</span>.</p>
 
     <h3>Pea Gravel</h3>
     <p>Round, smooth, and visually attractive — but it rolls under tires and drifts to the edges without containment. Better for walkways and decorative areas. If you want the look, use it as a surface layer over a crushed stone base, with solid edging on both sides.</p>
@@ -276,7 +292,7 @@
       </div>
     </div>
 
-    <p>For a standard 2-car driveway (20 × 40 ft, 4-inch depth): expect <strong>9.9 cubic yards</strong>, roughly <strong>15 tons</strong> of crushed stone. At $30/ton plus $100 delivery, that's around <strong>$550 total</strong> — but get local quotes, because prices swing dramatically by ZIP code.</p>
+    <p>For a standard 2-car driveway (<span class="u" data-imp="20 × 40 ft, 4-inch depth" data-met="6 × 12 m, 10 cm depth">20 × 40 ft, 4-inch depth</span>): expect <strong><span class="u" data-imp="9.9 cubic yards" data-met="7.6 m³">9.9 cubic yards</span></strong>, roughly <strong><span class="u" data-imp="15 tons" data-met="13.6 tonnes">15 tons</span></strong> of crushed stone. At $30/ton plus $100 delivery, that's around <strong>$550 total</strong> — but get local quotes, because prices swing dramatically by ZIP code.</p>
     <p>Always request at least two quotes. Price differences of 30–40% between local suppliers are common.</p>
 
     <a class="calc-cta" href="/gravel-calculator/">
@@ -298,29 +314,29 @@
       <li><strong>Check the subgrade.</strong> Soft or clay-heavy ground benefits from a geotextile fabric layer underneath the base — it prevents the gravel from slowly sinking into the soil.</li>
       <li><strong>Plan your edging.</strong> Without a border (metal, timber, or plastic), gravel migrates over time. Install edging before you pour.</li>
       <li><strong>Confirm delivery access.</strong> Most trucks need space to dump or extend a chute. Ask the supplier about your specific driveway length and any overhead obstructions.</li>
-      <li><strong>Compact in layers.</strong> If laying more than 3–4 inches, compact each 2-inch layer with a plate compactor before adding the next. Dumping it all at once leads to soft spots.</li>
+      <li><strong>Compact in layers.</strong> If laying more than <span class="u" data-imp="3–4 inches" data-met="7.5–10 cm">3–4 inches</span>, compact each <span class="u" data-imp="2-inch layer" data-met="5 cm layer">2-inch layer</span> with a plate compactor before adding the next. Dumping it all at once leads to soft spots.</li>
     </ul>
 
     <h2>Common questions</h2>
 
     <details class="faq">
       <summary>How much gravel for a 2-car driveway?</summary>
-      <p>A typical 2-car driveway (20 × 40 ft) at 4 inches deep needs about <strong>9.9 cubic yards</strong> or <strong>15 tons</strong> of crushed stone. Bump that to 6 inches (new driveway base layer) and you're looking at about 14.8 cubic yards / 22 tons. Use the <a href="/gravel-calculator/">gravel calculator</a> to enter your exact dimensions.</p>
+      <p>A typical 2-car driveway (<span class="u" data-imp="20 × 40 ft" data-met="6 × 12 m">20 × 40 ft</span>) at <span class="u" data-imp="4 inches" data-met="10 cm">4 inches</span> deep needs about <strong><span class="u" data-imp="9.9 cubic yards" data-met="7.6 m³">9.9 cubic yards</span></strong> or <strong><span class="u" data-imp="15 tons" data-met="13.6 tonnes">15 tons</span></strong> of crushed stone. Bump that to <span class="u" data-imp="6 inches" data-met="15 cm">6 inches</span> (new driveway base layer) and you're looking at about <span class="u" data-imp="14.8 cubic yards / 22 tons" data-met="11.3 m³ / 20 tonnes">14.8 cubic yards / 22 tons</span>. Use the <a href="/gravel-calculator/">gravel calculator</a> to enter your exact dimensions.</p>
     </details>
 
     <details class="faq">
       <summary>How many cubic yards is a ton of gravel?</summary>
-      <p>It depends on the material. Crushed stone runs about <strong>0.63 cubic yards per ton</strong> (1.6 tons/yd³). Pea gravel and river rock are slightly lighter — about 0.71 cubic yards per ton (1.4 tons/yd³). Your supplier may give you a more precise figure for the specific stone they carry.</p>
+      <p>It depends on the material. Crushed stone runs about <strong><span class="u" data-imp="0.63 cubic yards per ton" data-met="0.53 m³ per tonne">0.63 cubic yards per ton</span></strong> (<span class="u" data-imp="1.6 tons/yd³" data-met="1.9 t/m³">1.6 tons/yd³</span>). Pea gravel and river rock are slightly lighter — about <span class="u" data-imp="0.71 cubic yards per ton" data-met="0.59 m³ per tonne">0.71 cubic yards per ton</span> (<span class="u" data-imp="1.4 tons/yd³" data-met="1.7 t/m³">1.4 tons/yd³</span>). Your supplier may give you a more precise figure for the specific stone they carry.</p>
     </details>
 
     <details class="faq">
       <summary>One layer or two?</summary>
-      <p>For a new driveway, two layers is the better long-term investment: 4–6 inches of compacted crusher run as a base, topped with 2–3 inches of #57 crushed stone as the finish surface. This costs more upfront but creates a firm, load-bearing base that won't rut. For a driveway that just needs freshening, a 1–2 inch single top-up layer works fine.</p>
+      <p>For a new driveway, two layers is the better long-term investment: <span class="u" data-imp="4–6 inches" data-met="10–15 cm">4–6 inches</span> of compacted crusher run as a base, topped with <span class="u" data-imp="2–3 inches" data-met="5–7.5 cm">2–3 inches</span> of #57 crushed stone as the finish surface. This costs more upfront but creates a firm, load-bearing base that won't rut. For a driveway that just needs freshening, a <span class="u" data-imp="1–2 inch" data-met="2.5–5 cm">1–2 inch</span> single top-up layer works fine.</p>
     </details>
 
     <details class="faq">
       <summary>How often do gravel driveways need a refresh?</summary>
-      <p>Most gravel driveways need topping up every <strong>3–5 years</strong>. Gravel settles, compacts, and migrates to the edges over time — especially in high-traffic areas and after heavy rain. A 1–2 inch top-up typically restores the surface without full excavation.</p>
+      <p>Most gravel driveways need topping up every <strong>3–5 years</strong>. Gravel settles, compacts, and migrates to the edges over time — especially in high-traffic areas and after heavy rain. A <span class="u" data-imp="1–2 inch" data-met="2.5–5 cm">1–2 inch</span> top-up typically restores the surface without full excavation.</p>
     </details>
 
     <div class="blog-pills">
@@ -422,7 +438,51 @@
 
 </div><!-- /wrap -->
 
-<script src="/assets/app.js?v=56"></script>
+<script src="/assets/app.js?v=57"></script>
 <script src="/feedback.js" defer></script>
+<script>
+(function(){
+  document.querySelectorAll('.diagram-zoomable').forEach(function(wrap){
+    wrap.addEventListener('click',function(){
+      var svg=wrap.querySelector('svg');
+      if(!svg)return;
+      var ov=document.createElement('div');
+      ov.className='dg-overlay';
+      var btn=document.createElement('button');
+      btn.className='dg-close';
+      btn.innerHTML='&times;';
+      btn.setAttribute('aria-label','Close');
+      var clone=svg.cloneNode(true);
+      ov.appendChild(btn);
+      ov.appendChild(clone);
+      document.body.appendChild(ov);
+      document.body.style.overflow='hidden';
+      function close(){document.body.removeChild(ov);document.body.style.overflow='';}
+      ov.addEventListener('click',function(e){if(e.target===ov||e.target===clone)close();});
+      btn.addEventListener('click',close);
+      document.addEventListener('keydown',function esc(e){if(e.key==='Escape'){close();document.removeEventListener('keydown',esc);}});
+    });
+  });
+})();
+// Unit toggle — shows only when article has .u measurement spans
+(function(){
+  var toggle=document.getElementById('unitToggle');
+  if(!toggle||!document.querySelector('.u'))return;
+  toggle.style.display='';
+  var S='calcthis-units';
+  var cur=localStorage.getItem(S)||'imp';
+  function apply(u){
+    cur=u; try{localStorage.setItem(S,u);}catch(e){}
+    document.querySelectorAll('.u').forEach(function(el){ el.textContent=el.dataset[u]||el.dataset.imp; });
+    document.querySelectorAll('.blog-meta .seg button').forEach(function(btn){
+      var on=btn.dataset.unit===u; btn.classList.toggle('on',on); btn.setAttribute('aria-pressed',String(on));
+    });
+  }
+  document.querySelectorAll('.blog-meta .seg button').forEach(function(btn){
+    btn.addEventListener('click',function(){apply(btn.dataset.unit);});
+  });
+  apply(cur);
+})();
+</script>
 </body>
 </html>
