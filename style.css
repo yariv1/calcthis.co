@@ -799,12 +799,11 @@
   .blog-hero-art {
     position: relative;
     width: 100%;
-    aspect-ratio: 1400 / 520;
+    height: 0;
+    padding-bottom: 37.143%;
     border-radius: var(--radius);
     overflow: hidden;
     margin: 24px 0 28px;
-    display: block;
-    line-height: 0;
   }
   .blog-hero-art svg { display: block; width: 100%; }
 
