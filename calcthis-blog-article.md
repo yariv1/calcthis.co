@@ -7,9 +7,7 @@ Every blog article is the same structure. Swap the content. Done.
 ## Hero image rule — NON-NEGOTIABLE
 
 Every article hero image renders at **1400 × 520** — always.
-This is enforced in CSS via `aspect-ratio: 1400/520` + `object-fit: cover` on `.blog-hero-art`.
-It does not matter what the source image's actual pixel dimensions are.
-**Never touch this CSS. Never add inline height or width overrides.**
+Enforced via inline styles directly on the HTML elements. No CSS dependency, no caching issues, works everywhere, every time.
 
 Image file goes in: `assets/images/`
 Naming convention: `blog-{topic}-article-header.webp`
@@ -64,10 +62,11 @@ Naming convention: `blog-{topic}-article-header.webp`
 <!--HEADER:END-->
 
   <div class="hero" style="padding:4px 0 0">
-    <div class="blog-hero-art">
+    <div class="blog-hero-art" style="position:relative;width:100%;height:0;padding-bottom:37.143%;overflow:hidden;border-radius:12px;margin:24px 0 28px;">
       <img src="/assets/images/blog-IMAGE-NAME-article-header.webp"
            alt="ALT TEXT"
-           width="1400" height="520" loading="eager">
+           width="1400" height="520" loading="eager"
+           style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;display:block;">
     </div>
 
     <div class="blog-meta">
@@ -149,22 +148,17 @@ Unzip ~/Downloads/calcthis-vN.zip into the repo root (overwrite existing files),
 
 ---
 
-## CSS rules that make the hero work (do not touch)
+## Hero sizing — inline styles (do not remove, do not change)
 
-```css
-.blog-hero-art {
-  width: 100%;
-  aspect-ratio: 1400 / 520;   /* enforces height regardless of image dimensions */
-  border-radius: var(--radius);
-  overflow: hidden;
-  margin: 24px 0 28px;
-  display: block;
-  line-height: 0;
-}
-.blog-hero-art img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;           /* fills the fixed container, crops if needed */
-  display: block;
-}
+The hero sizing is in the HTML, not CSS. Copy exactly as-is for every article:
+
+```html
+<div class="blog-hero-art" style="position:relative;width:100%;height:0;padding-bottom:37.143%;overflow:hidden;border-radius:12px;margin:24px 0 28px;">
+  <img src="/assets/images/blog-IMAGE-NAME-article-header.webp"
+       alt="ALT TEXT"
+       width="1400" height="520" loading="eager"
+       style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;display:block;">
+</div>
 ```
+
+`padding-bottom: 37.143%` = 520 ÷ 1400 × 100. This locks the height to the correct ratio regardless of image dimensions, CSS caching, or anything else.
