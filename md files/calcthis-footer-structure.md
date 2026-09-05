@@ -1,0 +1,95 @@
+# CalcThis — Footer Structure
+
+Exact footer HTML in `partials/footer.html`. Add new calculator links under the correct pillar.
+
+Pillars:
+- Construction & Gardening
+- Health & Lifestyle
+- School & Grades
+- Math & Numbers
+
+## Pillar titles
+Uppercase (`text-transform:uppercase`), forced two-line on desktop, one line on mobile.
+Use the two-span pattern (NOT `<br>`, which can't be un-broken on mobile reliably):
+
+```html
+<span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+```
+```css
+/* desktop */
+.footer-col-btn .fttl .ft1,.footer-col-btn .fttl .ft2{display:block}
+/* mobile (max-width:700px) */
+.footer-col-btn .fttl .ft1,.footer-col-btn .fttl .ft2{display:inline}
+```
+The literal space between the two spans keeps correct spacing when inline on mobile.
+
+## Full footer
+```html
+  <footer class="site-footer">
+    <div class="footer-cols">
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+        </ul>
+      </div>
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+```
+
+Mobile: accordion (chevrons show, columns collapse). Desktop: all columns open, chevrons hidden, `.footer-col-btn` non-interactive.
