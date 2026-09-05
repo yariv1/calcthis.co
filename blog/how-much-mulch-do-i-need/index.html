@@ -38,24 +38,72 @@
   }
 }
 </script>
-<link rel="stylesheet" href="/assets/style.css?v=42">
+<link rel="stylesheet" href="/assets/style.css?v=47">
 </head>
 <body class="p-blog-post">
 <div class="wrap">
 
 <!--HEADER:START-->
-<!--HEADER:END-->
+  <header>
+    <a class="hdr-back" href="/blog/" aria-label="Back to blog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <span class="menu-col-head">Construction</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/macro-calculator/">Macro</a>
+          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
 
   <div class="hero" style="padding:4px 0 0">
-
     <div class="blog-hero-art">
-      <img
-        src="/assets/images/blog-mulch-calculator-article-header.webp"
-        alt="Freshly mulched garden border with dark brown wood chip mulch around ornamental shrubs and perennials in warm afternoon light"
-        width="1400"
-        height="520"
-        loading="eager"
-      >
+    <img src="/assets/images/blog-mulch-calculator-article-header.webp"
+         alt="Freshly mulched garden border with dark brown wood chip mulch around ornamental shrubs and perennials in warm afternoon light"
+         width="1400" height="520" loading="eager">
     </div>
 
     <div class="blog-meta">
@@ -76,7 +124,7 @@
     <p>Mulch volume is simple: area times depth, converted to cubic yards (how landscapers sell it in bulk) or cubic feet (how bags are measured).</p>
 
     <div class="formula">
-      Length (ft) × Width (ft) × Depth (ft) ÷ 27 = Cubic yards
+      Length (ft) &times; Width (ft) &times; Depth (ft) &divide; 27 = Cubic yards
       <small>1 cubic yard = 27 cubic feet · Most bags are 2 cu ft</small>
     </div>
 
@@ -107,7 +155,7 @@
         <tr><td>Annual top-up (existing mulch)</td><td>1 inch</td></tr>
         <tr><td>Flower beds and perennials</td><td>2 inches</td></tr>
         <tr><td>Shrub and mixed borders</td><td>2–3 inches</td></tr>
-        <tr><td>Trees and large shrubs</td><td>3 inches (keep clear of trunk)</td></tr>
+        <tr><td>Trees and large shrubs</td><td>3 inches</td></tr>
         <tr><td>Weed suppression on bare soil</td><td>3–4 inches</td></tr>
         <tr><td>Pathways</td><td>3–4 inches</td></tr>
       </tbody>
@@ -115,129 +163,23 @@
 
     <p>One important rule: never pile mulch directly against plant stems or tree trunks. Leave a 2–3 inch gap around the base. Mulch volcanoes — the cone-shaped mounds you often see around trees — cause bark rot and long-term damage.</p>
 
-    <!-- Depth diagram -->
-    <div class="blog-diagram">
-      <svg viewBox="0 0 700 200" xmlns="http://www.w3.org/2000/svg" aria-label="Cross-section diagram showing correct mulch depth around a plant: 2 to 3 inches of mulch on soil, with a clear gap at the plant stem">
-        <defs>
-          <linearGradient id="sky-g" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#2D4633"/>
-            <stop offset="100%" stop-color="#1A2B20"/>
-          </linearGradient>
-          <linearGradient id="soil-g" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#5C3A1A"/>
-            <stop offset="100%" stop-color="#3A1E0A"/>
-          </linearGradient>
-        </defs>
-
-        <!-- Background -->
-        <rect width="700" height="200" fill="#F3EADA"/>
-
-        <!-- Soil layer -->
-        <rect x="0" y="120" width="700" height="80" fill="url(#soil-g)"/>
-        <!-- Soil texture -->
-        <path d="M0 130 Q87 127 175 132 Q262 137 350 132 Q437 127 525 134 Q612 141 700 135" stroke="rgba(255,255,255,.06)" stroke-width="1.5" fill="none"/>
-        <path d="M0 148 Q87 145 175 150 Q262 155 350 150 Q437 145 525 152 Q612 159 700 153" stroke="rgba(255,255,255,.04)" stroke-width="1.5" fill="none"/>
-        <text x="18" y="172" fill="rgba(255,255,255,.4)" font-family="Inter,sans-serif" font-size="11" font-weight="700" letter-spacing=".07em">SOIL</text>
-
-        <!-- Mulch layer -->
-        <rect x="0" y="76" width="700" height="44" fill="#8B4A1A"/>
-        <!-- Mulch chip texture -->
-        <rect x="18"  y="82" width="28" height="8"  rx="3" fill="rgba(181,118,31,.35)" transform="rotate(-8,32,86)"/>
-        <rect x="58"  y="88" width="22" height="7"  rx="3" fill="rgba(0,0,0,.18)" transform="rotate(5,69,91)"/>
-        <rect x="95"  y="80" width="30" height="8"  rx="3" fill="rgba(181,118,31,.3)" transform="rotate(-4,110,84)"/>
-        <rect x="140" y="86" width="24" height="7"  rx="3" fill="rgba(0,0,0,.15)" transform="rotate(7,152,89)"/>
-        <rect x="178" y="82" width="28" height="8"  rx="3" fill="rgba(181,118,31,.32)" transform="rotate(-6,192,86)"/>
-        <rect x="220" y="88" width="22" height="7"  rx="3" fill="rgba(0,0,0,.2)" transform="rotate(4,231,91)"/>
-        <rect x="400" y="82" width="28" height="8"  rx="3" fill="rgba(181,118,31,.35)" transform="rotate(-8,414,86)"/>
-        <rect x="445" y="88" width="22" height="7"  rx="3" fill="rgba(0,0,0,.18)" transform="rotate(5,456,91)"/>
-        <rect x="485" y="80" width="30" height="8"  rx="3" fill="rgba(181,118,31,.3)" transform="rotate(-4,500,84)"/>
-        <rect x="530" y="86" width="24" height="7"  rx="3" fill="rgba(0,0,0,.15)" transform="rotate(7,542,89)"/>
-        <rect x="570" y="82" width="28" height="8"  rx="3" fill="rgba(181,118,31,.32)" transform="rotate(-6,584,86)"/>
-        <rect x="614" y="88" width="22" height="7"  rx="3" fill="rgba(0,0,0,.2)" transform="rotate(4,625,91)"/>
-        <rect x="650" y="82" width="30" height="8"  rx="3" fill="rgba(181,118,31,.28)" transform="rotate(-3,665,86)"/>
-        <text x="18" y="107" fill="rgba(255,255,255,.55)" font-family="Inter,sans-serif" font-size="11" font-weight="700" letter-spacing=".07em">MULCH — 2–3 inches</text>
-
-        <!-- Plant stem (centre) -->
-        <rect x="338" y="10" width="24" height="110" rx="4" fill="#37503F"/>
-        <!-- Leaves suggestion -->
-        <ellipse cx="350" cy="18" rx="32" ry="14" fill="#4A6B52" opacity=".9"/>
-        <ellipse cx="320" cy="30" rx="26" ry="12" fill="#37503F" opacity=".8"/>
-        <ellipse cx="380" cy="28" rx="28" ry="13" fill="#4A6B52" opacity=".8"/>
-
-        <!-- Clear gap zone -->
-        <rect x="290" y="76" width="120" height="44" fill="#F3EADA" opacity=".85"/>
-        <!-- Gap label -->
-        <line x1="290" y1="98" x2="338" y2="98" stroke="#B5761F" stroke-width="1.2" stroke-dasharray="4 3"/>
-        <text x="256" y="102" fill="#8F5C13" font-family="Inter,sans-serif" font-size="10" font-weight="700">GAP</text>
-        <line x1="362" y1="98" x2="410" y2="98" stroke="#B5761F" stroke-width="1.2" stroke-dasharray="4 3"/>
-        <text x="413" y="102" fill="#8F5C13" font-family="Inter,sans-serif" font-size="10" font-weight="700">2–3"</text>
-
-        <!-- Depth bracket (right) -->
-        <line x1="672" y1="76"  x2="672" y2="120" stroke="#8F5C13" stroke-width="1.2"/>
-        <line x1="666" y1="76"  x2="678" y2="76"  stroke="#8F5C13" stroke-width="1.2"/>
-        <line x1="666" y1="120" x2="678" y2="120" stroke="#8F5C13" stroke-width="1.2"/>
-        <text x="682" y="103" fill="#8F5C13" font-family="Inter,sans-serif" font-size="11" font-weight="700">2–3"</text>
-
-        <!-- Divider lines -->
-        <line x1="0" y1="76"  x2="700" y2="76"  stroke="rgba(0,0,0,.12)" stroke-width="1.5"/>
-        <line x1="0" y1="120" x2="700" y2="120" stroke="rgba(0,0,0,.15)" stroke-width="1.5"/>
-      </svg>
-    </div>
-
     <h2>Which Mulch Type Is Right for You?</h2>
     <p>The right mulch depends on where it's going and what you're trying to achieve. Here's how the main options compare.</p>
 
     <h3>Shredded Wood / Bark Mulch</h3>
-    <p>The most popular choice for garden beds. Shredded hardwood or bark decomposes slowly, adds organic matter to the soil, and stays in place well. Dark brown varieties give a clean, finished look. <strong>Density: ~0.8 cubic yards per ton.</strong> Best for: flower beds, shrub borders, tree rings.</p>
+    <p>The most popular choice for garden beds. Shredded hardwood or bark decomposes slowly, adds organic matter to the soil, and stays in place well. Dark brown varieties give a clean, finished look. Best for: flower beds, shrub borders, tree rings.</p>
 
     <h3>Wood Chips</h3>
-    <p>Coarser than shredded bark — larger irregular pieces that lock together under foot traffic and don't blow around. Excellent for pathways and play areas. Decomposes more slowly than shredded bark, so it lasts longer before needing a top-up. Best for: paths, around fruit trees, natural-style plantings.</p>
+    <p>Coarser than shredded bark — larger irregular pieces that lock together under foot traffic and don't blow around. Excellent for pathways and play areas. Decomposes more slowly, so it lasts longer before needing a top-up. Best for: paths, around fruit trees, natural-style plantings.</p>
 
     <h3>Pine Straw (Pine Needles)</h3>
-    <p>Lightweight, easy to spread, and very effective at moisture retention. Slightly acidic as it breaks down — ideal around acid-loving plants like blueberries, azaleas, and rhododendrons. Coverage per bale is much higher than bagged mulch. Best for: sloped beds where heavy mulch would wash, acid-loving plants.</p>
+    <p>Lightweight, easy to spread, and very effective at moisture retention. Slightly acidic as it breaks down — ideal around acid-loving plants like blueberries, azaleas, and rhododendrons. Best for: sloped beds where heavy mulch would wash, acid-loving plants.</p>
 
     <h3>Rubber Mulch</h3>
-    <p>Made from recycled tyres. Doesn't decompose, so it never needs replacing — but it also adds nothing to the soil. Gets very hot in direct sun (can damage shallow roots) and doesn't look natural. Best for: play areas and pathways where permanence matters more than soil health.</p>
+    <p>Made from recycled tyres. Doesn't decompose, so it never needs replacing — but it also adds nothing to the soil. Gets very hot in direct sun and doesn't look natural. Best for: play areas and pathways where permanence matters more than soil health.</p>
 
     <h3>Straw</h3>
     <p>Cheap, effective, and biodegrades quickly. The go-to for vegetable gardens and new lawn seeding. Breaks down in one season, adding organic matter — plan to reapply each year. Best for: vegetable beds, seeded areas, winter protection.</p>
-
-    <!-- Coverage chart diagram -->
-    <div class="blog-diagram">
-      <svg viewBox="0 0 700 270" xmlns="http://www.w3.org/2000/svg" aria-label="Bar chart showing cubic yards of mulch needed per 100 square feet at different depths: 1 inch needs 0.31 yards, 2 inches needs 0.62 yards, 3 inches needs 0.93 yards, 4 inches needs 1.23 yards">
-        <rect width="700" height="270" fill="#F3EADA" rx="12"/>
-
-        <!-- Title — safely above all bars -->
-        <text x="350" y="34" fill="#241A11" font-family="Fraunces,serif" font-size="15" font-weight="600" text-anchor="middle" letter-spacing="-.01em">Cubic yards needed per 100 sq ft</text>
-
-        <!-- Bars — all shifted down 50px to give title clearance -->
-        <!-- 1 inch: 0.31 yd³ → bar height 50px, top y=185 -->
-        <rect x="80"  y="185" width="80" height="50"  rx="6" fill="#B5761F" opacity=".55"/>
-        <text x="120" y="178" fill="#8F5C13" font-family="Fraunces,serif" font-size="17" font-weight="700" text-anchor="middle">0.31</text>
-        <text x="120" y="253" fill="#5B4C3B" font-family="Inter,sans-serif" font-size="12" font-weight="600" text-anchor="middle">1 inch</text>
-
-        <!-- 2 inches: 0.62 yd³ → bar height 100px, top y=135 -->
-        <rect x="220" y="135" width="80" height="100" rx="6" fill="#B5761F" opacity=".7"/>
-        <text x="260" y="128" fill="#8F5C13" font-family="Fraunces,serif" font-size="17" font-weight="700" text-anchor="middle">0.62</text>
-        <text x="260" y="253" fill="#5B4C3B" font-family="Inter,sans-serif" font-size="12" font-weight="600" text-anchor="middle">2 inches</text>
-
-        <!-- 3 inches: 0.93 yd³ → bar height 150px, top y=85 -->
-        <rect x="360" y="85"  width="80" height="150" rx="6" fill="#B5761F" opacity=".85"/>
-        <text x="400" y="78"  fill="#8F5C13" font-family="Fraunces,serif" font-size="17" font-weight="700" text-anchor="middle">0.93</text>
-        <text x="400" y="253" fill="#5B4C3B" font-family="Inter,sans-serif" font-size="12" font-weight="600" text-anchor="middle">3 inches</text>
-
-        <!-- 4 inches: 1.23 yd³ → bar height 170px, top y=65 -->
-        <rect x="500" y="65"  width="80" height="170" rx="6" fill="#B5761F"/>
-        <text x="540" y="58"  fill="#8F5C13" font-family="Fraunces,serif" font-size="17" font-weight="700" text-anchor="middle">1.23</text>
-        <text x="540" y="253" fill="#5B4C3B" font-family="Inter,sans-serif" font-size="12" font-weight="600" text-anchor="middle">4 inches</text>
-
-        <!-- Baseline -->
-        <line x1="60" y1="235" x2="640" y2="235" stroke="#E7DECF" stroke-width="1.5"/>
-
-        <!-- Y-axis label -->
-        <text x="30" y="150" fill="#8A7A66" font-family="Inter,sans-serif" font-size="10" font-weight="600" letter-spacing=".05em" text-anchor="middle" transform="rotate(-90,30,150)">CU YARDS</text>
-      </svg>
-    </div>
 
     <h2>Bulk vs Bagged: Which Should You Buy?</h2>
 
@@ -274,7 +216,7 @@
       <li><strong>Add 10% for waste.</strong> Uneven ground, edges, and spreading loss all eat into your order. A 10% buffer prevents a second trip.</li>
       <li><strong>Check existing depth before ordering.</strong> If you already have 1.5 inches of old mulch, you only need 1–1.5 inches of top-up, not a full 3-inch layer.</li>
       <li><strong>Keep mulch away from stems and trunks.</strong> Leave a 2–3 inch gap at the base of every plant. Mulch touching bark traps moisture and causes rot.</li>
-      <li><strong>Confirm bulk delivery access.</strong> Bulk mulch arrives by truck and is dumped on your driveway or street. Make sure the driver has room to manoeuvre and you have a way to move it quickly.</li>
+      <li><strong>Confirm bulk delivery access.</strong> Bulk mulch arrives by truck and is dumped on your driveway. Make sure the driver has room and you can move it quickly.</li>
       <li><strong>Check colour fastness.</strong> Dyed mulches (black, red) look sharp but fade in sun. Natural brown and undyed hardwood hold colour better long-term.</li>
     </ul>
 
@@ -282,7 +224,7 @@
 
     <details class="faq">
       <summary>How many bags of mulch do I need for a 10×10 bed?</summary>
-      <p>A 10×10 ft bed (100 sq ft) at 2 inches deep needs <strong>0.62 cubic yards</strong>, which is about <strong>8–9 bags</strong> of 2 cu ft each. At 3 inches deep: 0.93 cubic yards, about <strong>13 bags</strong>. Use the <a href="/mulch-calculator/">mulch calculator</a> to enter your exact dimensions and get bag count, cubic yards, and a cost estimate.</p>
+      <p>A 10×10 ft bed (100 sq ft) at 2 inches deep needs <strong>0.62 cubic yards</strong>, which is about <strong>8–9 bags</strong> of 2 cu ft each. At 3 inches deep: 0.93 cubic yards, about <strong>13 bags</strong>. Use the <a href="/mulch-calculator/">mulch calculator</a> to enter your exact dimensions.</p>
     </details>
 
     <details class="faq">
@@ -302,7 +244,7 @@
 
     <details class="faq">
       <summary>What's the difference between mulch and compost?</summary>
-      <p>Mulch goes on top of the soil to suppress weeds, retain moisture, and regulate temperature — it's not mixed in. Compost is worked into the soil to improve its structure and fertility. You can use both: add compost first, then mulch on top. They do different jobs and work well together.</p>
+      <p>Mulch goes on top of the soil to suppress weeds, retain moisture, and regulate temperature — it's not mixed in. Compost is worked into the soil to improve its structure and fertility. You can use both: add compost first, then mulch on top.</p>
     </details>
 
     <div class="blog-pills">
@@ -327,11 +269,88 @@
   </div><!-- /blog-content -->
 
 <!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+        </ul>
+      </div>
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/blog/">Blog</a>
+      <span aria-hidden="true">·</span>
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
 <!--FOOTER:END-->
 
 </div><!-- /wrap -->
 
-<script src="/assets/app.js?v=42"></script>
+<script src="/assets/app.js?v=47"></script>
 <script src="/feedback.js" defer></script>
 </body>
 </html>
