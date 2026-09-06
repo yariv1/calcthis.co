@@ -4,6 +4,80 @@ Every blog article is the same structure. Swap the content. Done.
 
 ---
 
+## ⛔ FULL ARTICLE WORKFLOW — MANDATORY EVERY SINGLE SESSION — NO EXCEPTIONS
+
+Every blog article session produces **exactly 4 files in the zip** and **2 previews** and **1 Claude Code deploy prompt**. No exceptions. No manual steps. No "add this yourself". Everything ships complete.
+
+### Step 1 — Build the article
+Create `blog/SLUG/index.html` using the template below.
+
+### Step 2 — Update `blog/index.html` (THE HUB)
+**ALWAYS included in the zip. ALWAYS rebuilt with the new card added.**
+- Add the new `<a class="bcard">` inside the correct section's `<div class="blog-grid">`
+- Add the new entry to the JSON-LD `"blogPost": []` array in the hub `<head>`
+- Verify `<!--FOOTER:START-->` and `<!--HEADER:START-->` markers are still present
+
+### Step 3 — Update `build.js`
+Add to the PAGES array:
+```js
+{ file: 'blog/SLUG/index.html', slug: '/blog/SLUG/' },
+```
+
+### Step 4 — Update `sitemap.xml`
+Add before `</urlset>`:
+```xml
+<url>
+  <loc>https://calcthis.co/blog/SLUG/</loc>
+  <lastmod>YYYY-MM-DD</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+</url>
+```
+
+### Step 5 — Build both previews
+Run the preview builder script for:
+1. The new article → `preview-SLUG.html`
+2. The hub → `preview-hub.html`
+
+Run sanity checks on both.
+
+### Step 6 — Zip exactly these 4 files
+```
+blog/SLUG/index.html          ← new article
+blog/index.html               ← hub with new card
+build.js                      ← updated PAGES entry
+sitemap.xml                   ← updated with new URL
+```
+
+### Step 7 — Present files
+```
+present_files([
+  preview-SLUG.html,
+  preview-hub.html,
+  calcthis-vNN.zip
+])
+```
+
+### Step 8 — Output the Claude Code deploy prompt
+Always end the response with this exact block:
+
+```
+Unzip ~/Downloads/calcthis-vNN.zip into the repo root (overwrite existing files), run node build.js, then commit with the message "Blog article: ARTICLE TITLE" and push to main.
+```
+
+---
+
+### What NEVER happens
+- ❌ Telling the user to "add this manually" to any file
+- ❌ Omitting `blog/index.html` from the zip
+- ❌ Omitting the Claude Code deploy prompt
+- ❌ A zip with fewer than 4 files
+- ❌ Presenting the zip without both previews
+
+---
+
+---
+
 ## Hero image rule — NON-NEGOTIABLE
 
 Every article hero image renders at **1400 × 520** — always.

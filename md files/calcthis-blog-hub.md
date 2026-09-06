@@ -93,10 +93,27 @@ Located in `<head>`. Add inside the `"blogPost": [ ]` array:
 
 ---
 
+## CRITICAL — FOOTER and HEADER markers in blog/index.html
+
+`blog/index.html` must always contain both markers for `build.js` to stamp the footer:
+
+```html
+<!--FOOTER:START-->
+<!--FOOTER:END-->
+```
+
+**Never remove or overwrite `<!--FOOTER:START-->`** when editing this file. Every str_replace that touches content near the footer must include the marker in both `old_str` and `new_str`. If `build.js` warns "no FOOTER markers in blog/index.html", this marker was accidentally dropped — restore it immediately before committing.
+
+Same rule applies to `<!--HEADER:START-->` / `<!--HEADER:END-->`.
+
+---
+
 ## Checklist when adding a new article card
 
 - [ ] Card image exists at `assets/images/blog-TOPIC-article-card.webp` (800×400)
 - [ ] Card HTML added inside the correct `blog-grid` (existing section) or new section added below existing ones
+- [ ] Both `<!--FOOTER:START-->` and `<!--FOOTER:END-->` markers still present in file after edits
+- [ ] Both `<!--HEADER:START-->` and `<!--HEADER:END-->` markers still present in file after edits
 - [ ] JSON-LD `blogPost` array updated with new entry
 - [ ] `blog/index.html` saved and included in the deploy zip
 - [ ] `node build.js` run after zip extraction

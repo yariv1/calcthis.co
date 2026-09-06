@@ -51,6 +51,7 @@ const PAGES = [
   { file: 'blog/how-much-concrete-do-i-need/index.html', slug: '/blog/how-much-concrete-do-i-need/' },
   { file: 'blog/how-much-sand-do-i-need/index.html', slug: '/blog/how-much-sand-do-i-need/' },
   { file: 'blog/how-to-calculate-your-macros/index.html', slug: '/blog/how-to-calculate-your-macros/' },
+  { file: 'blog/what-is-zone-2-heart-rate/index.html',   slug: '/blog/what-is-zone-2-heart-rate/' },
   { file: 'about/index.html',           slug: '/about/' },
   { file: 'contact/index.html',         slug: '/contact/' },
   { file: 'privacy-policy/index.html',  slug: '/privacy-policy/' },
