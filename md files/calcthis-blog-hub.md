@@ -2,6 +2,72 @@
 
 ---
 
+## ⛔ MASTER IMAGE REGISTRY — EXACT FILENAMES — NEVER GUESS
+
+Every card and header image filename is listed here. When building or editing `blog/index.html`, use **only** these exact filenames. If a new article is added, add its image names here immediately. No exceptions.
+
+### Construction & Gardening
+
+| Article | Card image (`assets/images/`) | Header image (`assets/images/`) |
+|---|---|---|
+| How Much Gravel Do I Need for a Driveway? | `blog-gravel-driveway-article-card.webp` | `blog-gravel-driveway-article-header.webp` |
+| How Much Mulch Do I Need? | `blog-mulch-calculator-article-card.webp` | `blog-mulch-calculator-article-header.webp` |
+| How Much Topsoil Do I Need? | `blog-topsoil-calculator-article-card.webp` | `blog-topsoil-calculator-article-header.webp` |
+| How Much Concrete Do I Need? | `blog-concrete-article-card.webp` | `blog-concrete-article-header.webp` |
+| How Much Sand Do I Need? | `blog-sand-calculator-article-card.webp` | `blog-sand-article-header.webp` |
+
+### Health & Lifestyle
+
+| Article | Card image (`assets/images/`) | Header image (`assets/images/`) |
+|---|---|---|
+| How to Calculate Your Macros | `blog-macros-calculator-article-card.webp` | `blog-macros-article-header.webp` |
+| What Is Zone 2 Heart Rate? | `blog-zone2-heart-rate-article-card.webp` | `blog-zone2-heart-rate-article-header.webp` |
+
+### Rules
+- ❌ Never guess a filename. If it's not in this table, stop and check the actual file.
+- ✅ When adding a new article, add both image filenames to this table **before** writing any HTML.
+- ✅ This table is the single source of truth. The hub `<img src>` must always match exactly.
+
+---
+
+## ⛔ SECTION SPACING & "MORE GUIDES" RULE — MANDATORY — NEVER SKIP
+
+Every section gets a `<p class="blog-coming">` after its grid. The FIRST section's `.blog-coming` overrides the bottom padding to 0 so the 38px margin on the next section head is exact. The LAST section's `.blog-coming` keeps the default CSS (48px bottom padding for page-end spacing).
+
+```html
+<!-- FIRST section — no margin-top needed (hero provides the gap) -->
+<p class="blog-sec-head">Construction &amp; Gardening</p>
+<div class="blog-grid">
+  <!-- cards -->
+</div>
+<p class="blog-coming" style="padding:4px 0 0">More guides on the way.</p>
+
+<!-- EVERY SUBSEQUENT section — always margin-top:38px on the section head -->
+<p class="blog-sec-head" style="margin-top:38px">Health &amp; Lifestyle</p>
+<div class="blog-grid">
+  <!-- cards -->
+</div>
+<p class="blog-coming">More guides on the way.</p>  ← LAST section: no inline style, keeps 48px bottom padding
+
+<!-- If a third section is ever added: -->
+<p class="blog-sec-head" style="margin-top:38px">New Section</p>
+<div class="blog-grid">
+  <!-- cards -->
+</div>
+<p class="blog-coming">More guides on the way.</p>
+```
+
+**Rules:**
+- ✅ Every section grid is followed immediately by `<p class="blog-coming">More guides on the way.</p>`
+- ✅ All section heads after the first get `style="margin-top:38px"`
+- ✅ Between-section `.blog-coming` elements get `style="padding:4px 0 0"` — no bottom padding
+- ✅ Only the LAST `.blog-coming` on the page keeps default CSS (no inline style)
+- ❌ Never put a single `.blog-coming` at the end of the entire page — one per section
+
+---
+
+---
+
 ## File location
 `blog/index.html`
 

@@ -73,6 +73,24 @@ Unzip ~/Downloads/calcthis-vNN.zip into the repo root (overwrite existing files)
 - ❌ Omitting the Claude Code deploy prompt
 - ❌ A zip with fewer than 4 files
 - ❌ Presenting the zip without both previews
+- ❌ Reconstructing `blog/index.html` from scratch — it must be uploaded every session
+
+---
+
+## REQUIRED FILES — every blog session (8 files + skill files)
+
+1. `assets/style.css`
+2. `assets/app.js`
+3. `partials/header.html`
+4. `partials/footer.html`
+5. `build.js`
+6. `sitemap.xml`
+7. One existing blog article (reference)
+8. **`blog/index.html` ← THE HUB — always upload, never reconstruct**
+
+Skill files: `calcthis-blog-article.md` + `calcthis-blog-hub.md`
+
+If `blog/index.html` is missing at session start — **stop and ask for it before building anything.**
 
 ---
 
