@@ -9,6 +9,21 @@ session, a rule below was broken.
 
 ---
 
+## ⛔ RULE 0 — SESSION START: TWO-FILE UPLOAD PROTOCOL
+
+`blog/index.html` (hub) and any `blog/SLUG/index.html` (article reference) are BOTH
+named `index.html` — only ONE can be in session at a time. Never ask for both together.
+
+MANDATORY session-start sequence:
+  Message 1: Ask for one existing blog article file (reference).
+  Message 2 (after receiving it): Ask for the blog hub file.
+
+NEVER ask for both in the same message.
+NEVER assume the hub is already present.
+NEVER proceed to build without both files confirmed in session.
+
+---
+
 ## ⛔ RULE 1 — NEVER GUESS. STOP AND ASK.
 
 If ANY value is unknown — an image filename, a CSS value, a file, a slug, a date,

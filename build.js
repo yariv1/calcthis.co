@@ -55,6 +55,7 @@ const PAGES = [
   { file: 'blog/what-is-zone-2-heart-rate/index.html',   slug: '/blog/what-is-zone-2-heart-rate/' },
   { file: 'blog/what-is-one-rep-max/index.html',         slug: '/blog/what-is-one-rep-max/' },
   { file: 'blog/how-to-calculate-your-tdee/index.html',  slug: '/blog/how-to-calculate-your-tdee/' },
+  { file: 'blog/how-to-calculate-your-body-fat-percentage/index.html', slug: '/blog/how-to-calculate-your-body-fat-percentage/' },
   { file: 'about/index.html',           slug: '/about/' },
   { file: 'contact/index.html',         slug: '/contact/' },
   { file: 'privacy-policy/index.html',  slug: '/privacy-policy/' },
