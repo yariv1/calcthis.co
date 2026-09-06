@@ -50,6 +50,7 @@ const PAGES = [
   { file: 'blog/how-much-topsoil-do-i-need/index.html', slug: '/blog/how-much-topsoil-do-i-need/' },
   { file: 'blog/how-much-concrete-do-i-need/index.html', slug: '/blog/how-much-concrete-do-i-need/' },
   { file: 'blog/how-much-sand-do-i-need/index.html', slug: '/blog/how-much-sand-do-i-need/' },
+  { file: 'blog/how-to-calculate-your-macros/index.html', slug: '/blog/how-to-calculate-your-macros/' },
   { file: 'about/index.html',           slug: '/about/' },
   { file: 'contact/index.html',         slug: '/contact/' },
   { file: 'privacy-policy/index.html',  slug: '/privacy-policy/' },
