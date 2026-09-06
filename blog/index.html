@@ -88,7 +88,7 @@
   ]
 }
 </script>
-<link rel="stylesheet" href="/assets/style.css?v=63">
+<link rel="stylesheet" href="/assets/style.css?v=64">
 </head>
 <body class="p-blog">
 <div class="wrap">
@@ -388,6 +388,22 @@
 
 </div><!-- /wrap -->
 
-<script src="/assets/app.js?v=63"></script>
+<script src="/assets/app.js?v=64"></script>
+<script>
+/* Hub scroll position — save on article click, restore on return */
+history.scrollRestoration = 'manual';
+(function(){
+  var y = sessionStorage.getItem('hubScrollY');
+  if(y !== null){
+    sessionStorage.removeItem('hubScrollY');
+    setTimeout(function(){ window.scrollTo(0, parseInt(y, 10)); }, 50);
+  }
+  document.querySelectorAll('a[href]').forEach(function(link){
+    link.addEventListener('click', function(){
+      sessionStorage.setItem('hubScrollY', window.scrollY);
+    });
+  });
+})();
+</script>
 </body>
 </html>
