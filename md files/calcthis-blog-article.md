@@ -4,6 +4,87 @@ Every blog article is the same structure. Swap the content. Done.
 
 ---
 
+## ⛔ RULE #0 — NEVER GUESS. EVER.
+
+If ANY value is unknown — an image filename, a CSS value, a file structure, anything — **STOP immediately and ask for the answer or the file needed.** Do not guess. Do not estimate. Do not reconstruct from memory. Guessing wastes the user's time and money and is completely unacceptable.
+
+**If in doubt → STOP → ASK.**
+
+---
+
+## ⛔ IMAGE PROMPTS — ALWAYS FIRST — BEFORE ANY HTML IS WRITTEN
+
+When the user says "give me image prompts" or when a new article is being built, **this is always the first step** — before writing a single line of HTML. No exceptions.
+
+### Exact output format — always this, every time
+
+Give the user:
+1. The **exact filenames** (copy from master registry in `calcthis-blog-hub.md`)
+2. Two prompts — card first, header second
+3. Each prompt labelled with filename + exact pixel dimensions + export spec
+
+### Exact sizes
+
+| Image | Dimensions | Export |
+|---|---|---|
+| Card | **800 × 400 px** | WebP, 70–75% quality |
+| Header | **1400 × 520 px** | WebP, 70–75% quality |
+
+### ChatGPT tip (always include this)
+ChatGPT's widest format is **1792×1024 (landscape)**. Always tell the user to request landscape, then crop to the final ratio in any image editor.
+
+### People / characters — when to include
+
+| Category | People? | Notes |
+|---|---|---|
+| Health & Fitness | ✅ Yes | Show a real person doing the activity — running, lifting, stretching. Makes it feel human and editorial. |
+| Construction & Gardening | ❌ Usually no | Aerial/landscape shots of materials work better. Exception: if the activity is inherently human (e.g. tiling), a person's hands are fine. |
+
+### Prompt structure — always include these elements
+- **Scene** — what's happening, what's in frame
+- **Subject** — person (age, gender, action) OR material/object
+- **Lighting** — natural, golden hour, cinematic, studio, etc.
+- **Composition** — wide, close-up, aerial, ground-level, subject position
+- **Style** — photorealistic, editorial fitness photography, etc.
+- **Negatives** — always end with: `No text, no overlays, no logos.`
+- For header: add `Clean enough to have white text overlaid on it.`
+
+### Example output format (copy this structure exactly)
+
+```
+**Image 1 — Article Card**
+Filename: `blog-TOPIC-article-card.webp`
+Size: 800 × 400px | WebP 70–75%
+
+> [prompt here]
+
+---
+
+**Image 2 — Article Header**
+Filename: `blog-TOPIC-article-header.webp`
+Size: 1400 × 520px | WebP 70–75%
+
+> [prompt here]
+
+---
+💡 In ChatGPT: request **landscape** format (1792×1024), then crop to the target ratio.
+```
+
+### ⛔ MANDATORY — update both skill files when new images are named
+
+The moment image filenames are decided, **immediately add them to the master registry in `calcthis-blog-hub.md`** under the correct section. Both card and header. This happens BEFORE any HTML is written. The hub registry and the article must always match.
+
+### ❌ What never happens
+- ❌ Giving prompts without exact filenames
+- ❌ Giving prompts without exact pixel dimensions on each one
+- ❌ Omitting the export spec (WebP, quality %)
+- ❌ Omitting people for health/fitness articles
+- ❌ Including people for construction/gardening articles (unless hands-only is appropriate)
+- ❌ Forgetting the ChatGPT landscape tip
+- ❌ Naming images without immediately updating the master registry in `calcthis-blog-hub.md`
+
+---
+
 ## ⛔ FULL ARTICLE WORKFLOW — MANDATORY EVERY SINGLE SESSION — NO EXCEPTIONS
 
 Every blog article session produces **exactly 4 files in the zip** and **2 previews** and **1 Claude Code deploy prompt**. No exceptions. No manual steps. No "add this yourself". Everything ships complete.

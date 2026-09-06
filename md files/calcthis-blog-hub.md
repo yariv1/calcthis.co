@@ -22,6 +22,7 @@ Every card and header image filename is listed here. When building or editing `b
 |---|---|---|
 | How to Calculate Your Macros | `blog-macros-calculator-article-card.webp` | `blog-macros-article-header.webp` |
 | What Is Zone 2 Heart Rate? | `blog-zone2-heart-rate-article-card.webp` | `blog-zone2-heart-rate-article-header.webp` |
+| What Is One Rep Max? | `blog-one-rep-max-article-card.webp` | `blog-one-rep-max-article-header.webp` |
 
 ### Rules
 - ❌ Never guess a filename. If it's not in this table, stop and check the actual file.
