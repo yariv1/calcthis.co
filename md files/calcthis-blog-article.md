@@ -277,11 +277,48 @@ with open('preview.html', 'w') as f: f.write(preview)
 | Stat blocks | `<div class="blog-stat">` with `.stat-block` + `.stat-sep` | 2 stats side by side |
 | Data table | `<table class="dtable">` | thead + tbody |
 | SVG diagram | `<div class="blog-diagram diagram-zoomable" title="Click to enlarge">` | Always zoomable, always 740-wide viewBox |
-| CTA to calculator | `<a class="calc-cta" href="/CALC/">` | Always link to the related calc |
+| CTA to calculator | See exact HTML below | Always use full card structure — never a bare link |
 | Checklist | `<ul class="blog-checklist">` | `<li><strong>Heading.</strong> Text.</li>` |
 | FAQ accordion | `<details class="faq"><summary>Q</summary><p>A</p></details>` | |
 | Cross-link pills | `<div class="blog-pills"><a class="pill" href="...">` | 2–4 pills at the end |
 | Unit-swappable value | `<span class="u" data-imp="X" data-met="Y">X</span>` | Wrap every measurement |
+
+---
+
+## Calculator CTA — EXACT HTML (never use a bare link)
+
+```html
+<a class="calc-cta" href="/CALC-SLUG/">
+  <div class="calc-cta-text">
+    <div class="calc-cta-label">Free Tool</div>
+    <div class="calc-cta-title">CALCULATOR NAME</div>
+    <div class="calc-cta-sub">ONE OR TWO SENTENCES — what it calculates and what the output includes.</div>
+  </div>
+  <span class="calc-cta-btn">
+    Calculate now
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+  </span>
+</a>
+```
+
+## Unit toggle — show logic (MANDATORY in page script)
+
+The toggle div starts `style="display:none"`. The page script MUST reveal it when `.u` spans exist. Add this block BEFORE the button click listeners:
+
+```javascript
+if(document.querySelectorAll('.u').length){
+  var tog=document.getElementById('unitToggle');
+  if(tog) tog.style.display='';
+}
+```
+
+## Formula strong color fix (MANDATORY in `<style>` block)
+
+`.blog-content strong` sets `color: var(--ink)` which overrides formula text on dark background. Always include:
+
+```css
+.formula strong{color:inherit}
+```
 
 ---
 
