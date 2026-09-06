@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How to Calculate Your TDEE | CalcThis</title>
+<link rel="canonical" href="https://calcthis.co/blog/how-to-calculate-your-tdee/">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<meta name="theme-color" content="#B5761F">
+<meta name="description" content="Learn how to calculate your TDEE step by step: estimate your BMR with the Mifflin-St Jeor equation, apply the right activity multiplier, and turn the number into a plan for losing, maintaining, or gaining weight.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "How to Calculate Your TDEE",
+  "url": "https://calcthis.co/blog/how-to-calculate-your-tdee/",
+  "datePublished": "2026-09-06",
+  "dateModified": "2026-09-06",
+  "author": { "@type": "Organization", "name": "CalcThis", "url": "https://calcthis.co" },
+  "publisher": { "@type": "Organization", "name": "CalcThis", "url": "https://calcthis.co" },
+  "description": "Learn how to calculate your TDEE step by step: estimate your BMR with the Mifflin-St Jeor equation, apply the right activity multiplier, and turn the number into a plan for losing, maintaining, or gaining weight.",
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://calcthis.co/blog/how-to-calculate-your-tdee/" }
+}
+</script>
+<link rel="stylesheet" href="/assets/style.css?v=65?v=N">
+<style>
+/* Lightbox — diagram click-to-enlarge */
+.diagram-zoomable{cursor:zoom-in;position:relative}
+.diagram-zoomable::after{content:"🔍 Click to enlarge";position:absolute;bottom:10px;right:14px;font-family:Inter,sans-serif;font-size:11px;font-weight:600;color:rgba(255,255,255,.55);letter-spacing:.04em;pointer-events:none}
+.dg-overlay{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.88);display:flex;align-items:center;justify-content:center;padding:24px;cursor:zoom-out;animation:dg-in .18s ease}
+@keyframes dg-in{from{opacity:0}to{opacity:1}}
+.dg-overlay svg{max-width:min(96vw,1100px);max-height:85vh;border-radius:10px;box-shadow:0 8px 48px rgba(0,0,0,.6);cursor:zoom-out}
+.dg-close{position:fixed;top:20px;right:24px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.12);border:none;color:#fff;font-size:20px;line-height:36px;text-align:center;cursor:pointer;z-index:10000;transition:background .15s}
+.dg-close:hover{background:rgba(255,255,255,.22)}
+/* Unit toggle — .blog-meta flex layout only. Visual style comes from .seg in style.css */
+.blog-meta{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.formula strong{color:inherit}
+</style>
+</head>
+<body class="p-blog-post">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <a class="hdr-back" href="/blog/" aria-label="Back to blog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <span class="menu-col-head">Construction</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/macro-calculator/">Macro</a>
+          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <div class="hero" style="padding:4px 0 0">
+    <div class="blog-hero-art">
+      <img src="/assets/images/blog-tdee-article-header.webp"
+           alt="Woman running on a treadmill in a bright modern gym with a calorie display visible on the console"
+           width="1400" height="520" loading="eager">
+    </div>
+
+    <div class="blog-meta">
+      <div class="bm-left">
+        <a href="/blog/">Blog</a>
+        <span class="bm-sep">·</span>
+        <span class="blog-meta-cat">Health &amp; Lifestyle</span>
+        <span class="bm-sep">·</span>
+        <span>8 min read</span>
+      </div>
+      <!-- Unit toggle: always in template, JS auto-shows only when page has .u spans, hidden otherwise -->
+      <div class="seg" id="unitToggle" role="group" aria-label="Unit system" style="display:none">
+        <button class="on" data-unit="imp" type="button" aria-pressed="true">Imperial</button>
+        <button data-unit="met" type="button" aria-pressed="false">Metric</button>
+      </div>
+    </div>
+
+    <h1>How to Calculate Your TDEE</h1>
+    <p class="blog-lede">Your TDEE — Total Daily Energy Expenditure — is the number of calories your body burns in a full day. Get it right and every nutrition goal becomes simple arithmetic: eat below it to lose fat, at it to maintain, above it to gain. Here's how to work it out in two steps and turn it into a plan.</p>
+  </div>
+
+  <div class="blog-content">
+
+    <h2>What TDEE actually means</h2>
+    <p>TDEE is the total amount of energy, measured in calories, that your body uses over 24 hours. It bundles together everything: keeping you alive at rest, digesting your food, walking to the kitchen, and whatever training you do. It's the single most useful number in nutrition because it's the line you eat above or below to change your weight.</p>
+    <p>Every TDEE calculation is built from two pieces. First you estimate your <strong>BMR</strong> — the calories you'd burn lying in bed all day doing nothing. Then you multiply that by an <strong>activity factor</strong> that accounts for movement and exercise. That's the whole method.</p>
+
+    <div class="blog-stat">
+      <div class="stat-block">
+        <div class="stat-num">60–70%</div>
+        <div class="stat-lbl">of TDEE is your BMR for most people</div>
+      </div>
+      <div class="stat-sep"></div>
+      <div class="stat-block">
+        <div class="stat-num">±20%</div>
+        <div class="stat-lbl">activity can swing your total day-to-day</div>
+      </div>
+    </div>
+
+    <h2>Step 1 — Estimate your BMR</h2>
+    <p>The most reliable formula in everyday use is the <strong>Mifflin-St Jeor equation</strong>. It's the modern standard, more accurate for most people than the older Harris-Benedict equation. There's one version for each sex, differing only in the final constant.</p>
+
+    <div class="formula">
+      <strong>Men:</strong> BMR = (10 × weight kg) + (6.25 × height cm) − (5 × age) + 5<br>
+      <strong>Women:</strong> BMR = (10 × weight kg) + (6.25 × height cm) − (5 × age) − 161
+      <small>Mifflin-St Jeor equation — weight in kilograms, height in centimetres, age in years</small>
+    </div>
+
+    <p>If you think in imperial units, convert first: <span class="u" data-imp="1 lb" data-met="0.45 kg">1 lb</span> is <span class="u" data-imp="0.45 kg" data-met="0.45 kg">0.45 kg</span>, and <span class="u" data-imp="1 inch" data-met="2.54 cm">1 inch</span> is <span class="u" data-imp="2.54 cm" data-met="2.54 cm">2.54 cm</span>. Height in feet and inches becomes total inches first, then centimetres.</p>
+
+    <h2>Step 2 — Apply your activity multiplier</h2>
+    <p>BMR is only the resting figure. To reach TDEE you multiply it by a factor that reflects how much you move. Be honest here — this is where most people overestimate. "Moderately active" means genuine, structured exercise several times a week, not a busy day at the office.</p>
+
+    <table class="dtable">
+      <thead>
+        <tr><th>Activity level</th><th>Multiplier</th><th>Who it fits</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Sedentary</td><td>× 1.2</td><td>Desk job, little or no exercise</td></tr>
+        <tr><td>Lightly active</td><td>× 1.375</td><td>Light exercise 1–3 days/week</td></tr>
+        <tr><td>Moderately active</td><td>× 1.55</td><td>Moderate exercise 3–5 days/week</td></tr>
+        <tr><td>Very active</td><td>× 1.725</td><td>Hard exercise 6–7 days/week</td></tr>
+        <tr><td>Extra active</td><td>× 1.9</td><td>Physical job or twice-daily training</td></tr>
+      </tbody>
+    </table>
+
+    <div class="formula">
+      TDEE = BMR × activity multiplier
+      <small>The result is your maintenance calories — eat this to hold your current weight</small>
+    </div>
+
+    <h2>A worked example</h2>
+    <p>Take a 32-year-old woman, <span class="u" data-imp="5 ft 6 in" data-met="168 cm">5 ft 6 in</span> tall, weighing <span class="u" data-imp="150 lb" data-met="68 kg">150 lb</span>, who lifts weights and runs four days a week (moderately active).</p>
+    <p><strong>BMR:</strong> (10 × 68) + (6.25 × 168) − (5 × 32) − 161 = 680 + 1,050 − 160 − 161 = <strong>1,409 calories</strong>.</p>
+    <p><strong>TDEE:</strong> 1,409 × 1.55 = <strong>≈ 2,184 calories</strong>. That's roughly what she burns in a full day, and the number she eats to maintain her weight.</p>
+
+    <h2>Turning TDEE into a goal</h2>
+    <p>Once you have your maintenance number, adjusting your weight is straightforward. A pound of body fat is about 3,500 calories, so a daily deficit of 500 calories predicts roughly <span class="u" data-imp="1 lb" data-met="0.45 kg">1 lb</span> of fat loss per week. The same logic runs in reverse for gaining.</p>
+
+    <ul class="blog-checklist">
+      <li><strong>Lose fat.</strong> Subtract 10–20% from your TDEE. A moderate deficit protects muscle and is easier to sustain than a crash diet.</li>
+      <li><strong>Maintain.</strong> Eat at your TDEE. Weight holding steady over 2–3 weeks confirms your estimate is accurate.</li>
+      <li><strong>Gain muscle.</strong> Add 5–15% above your TDEE. A small surplus paired with resistance training favours lean mass over fat.</li>
+      <li><strong>Recheck monthly.</strong> As your weight changes, so does your BMR. Recalculate every few weeks to keep the target honest.</li>
+    </ul>
+
+    <a class="calc-cta" href="/tdee-calculator/">
+      <div class="calc-cta-text">
+        <div class="calc-cta-label">Free Tool</div>
+        <div class="calc-cta-title">TDEE Calculator</div>
+        <div class="calc-cta-sub">Enter your age, height, weight, and activity level to get your BMR, maintenance calories, and target numbers for cutting, maintaining, or bulking — instantly.</div>
+      </div>
+      <span class="calc-cta-btn">
+        Calculate now
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </span>
+    </a>
+
+    <h2>Why your TDEE is an estimate, not a law</h2>
+    <p>Every equation produces a prediction, not a guarantee. Two people with identical stats can differ by a few hundred calories a day thanks to genetics, muscle mass, hormones, and how much they fidget. The formula gets you a strong starting point; your own results over a few weeks are the real calibration. If the scale isn't moving the way the math predicts, adjust your intake by 100–200 calories and give it another two weeks.</p>
+
+    <h2>Frequently asked questions</h2>
+
+    <details class="faq">
+      <summary>Is TDEE the same as maintenance calories?</summary>
+      <p>Yes. Your TDEE is the number of calories that keeps your weight stable, which is exactly what "maintenance calories" means. Eat above it to gain, below it to lose.</p>
+    </details>
+
+    <details class="faq">
+      <summary>How is TDEE different from BMR?</summary>
+      <p>BMR is only what your body burns at complete rest. TDEE is BMR plus all the energy you spend moving, exercising, and digesting food. TDEE is always the larger number.</p>
+    </details>
+
+    <details class="faq">
+      <summary>Should I eat back the calories I burn during exercise?</summary>
+      <p>Not if you used an activity multiplier to calculate your TDEE — that exercise is already baked into the number. Eating it back a second time double-counts it and can stall fat loss.</p>
+    </details>
+
+    <details class="faq">
+      <summary>How often should I recalculate?</summary>
+      <p>Every time your weight shifts by about <span class="u" data-imp="10 lb" data-met="4.5 kg">10 lb</span>, or roughly once a month during an active cut or bulk. A lighter body burns fewer calories, so an old TDEE slowly becomes wrong.</p>
+    </details>
+
+    <div class="blog-pills">
+      <a class="pill" href="/tdee-calculator/">TDEE Calculator</a>
+      <a class="pill" href="/macro-calculator/">Macro Calculator</a>
+      <a class="pill" href="/blog/how-to-calculate-your-macros/">How to Calculate Your Macros</a>
+      <a class="pill" href="/body-fat-calculator/">Body Fat Calculator</a>
+    </div>
+
+  </div><!-- /blog-content -->
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+        </ul>
+      </div>
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/blog/">Blog</a>
+      <span aria-hidden="true">·</span>
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+</div><!-- /wrap -->
+
+<script src="/assets/app.js?v=65?v=N"></script>
+<script src="/feedback.js" defer></script>
+<script>
+/* Lightbox — runs on any .diagram-zoomable */
+(function(){
+  document.querySelectorAll('.diagram-zoomable').forEach(function(wrap){
+    wrap.addEventListener('click',function(){
+      var svg=wrap.querySelector('svg'); if(!svg)return;
+      var ov=document.createElement('div'); ov.className='dg-overlay';
+      var btn=document.createElement('button'); btn.className='dg-close'; btn.innerHTML='&times;'; btn.setAttribute('aria-label','Close');
+      var clone=svg.cloneNode(true);
+      ov.appendChild(btn); ov.appendChild(clone); document.body.appendChild(ov); document.body.style.overflow='hidden';
+      function close(){document.body.removeChild(ov);document.body.style.overflow='';}
+      ov.addEventListener('click',function(e){if(e.target===ov||e.target===clone)close();});
+      btn.addEventListener('click',close);
+      document.addEventListener('keydown',function esc(e){if(e.key==='Escape'){close();document.removeEventListener('keydown',esc);}});
+    });
+  });
+})();
+/* Unit toggle — persists choice in localStorage */
+(function(){
+  var S='calcthis-units';
+  var cur=localStorage.getItem(S)||'imp';
+  if(document.querySelectorAll('.u').length){
+    var tog=document.getElementById('unitToggle');
+    if(tog) tog.style.display='';
+  }
+  function apply(u){
+    cur=u; try{localStorage.setItem(S,u);}catch(e){}
+    document.querySelectorAll('.u').forEach(function(el){ el.textContent=el.dataset[u]||el.dataset.imp; });
+    document.querySelectorAll('.blog-meta .seg button').forEach(function(btn){
+      var on=btn.dataset.unit===u; btn.classList.toggle('on',on); btn.setAttribute('aria-pressed',String(on));
+    });
+  }
+  document.querySelectorAll('.blog-meta .seg button').forEach(function(btn){
+    btn.addEventListener('click',function(){apply(btn.dataset.unit);});
+  });
+  apply(cur);
+})();
+</script>
+</body>
+</html>
