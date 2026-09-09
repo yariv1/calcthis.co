@@ -8,14 +8,14 @@
 |---|---|---|---|---|---|
 | 1 | BMI Calculator | Massive — #1 health calc keyword globally | Health & Fitness | Simple | ✅ Shipped v68–v69 |
 | 2 | Age Calculator | Very high — surprisingly huge for how simple it is | Math & Numbers | Trivial | ✅ Shipped v70 |
-| 3 | Calorie Calculator | Very high — distinct from TDEE | Health & Fitness | Medium | ⬜ Not started |
+| 3 | Calorie Calculator | Very high — distinct from TDEE | Health & Fitness | Medium | ✅ Shipped v71 |
 | 4 | Pregnancy Calculator / Due Date Calculator | Very high — top-5 on every competitor | Health & Fitness | Medium | ⬜ Not started |
 | 5 | Ideal Weight Calculator | Solid — complements BMI + Body Fat | Health & Fitness | Simple | ⬜ Not started |
 | 6 | Date Calculator | High — days between dates, add/subtract | Math & Numbers | Simple | ⬜ Not started |
 
 ---
 
-## Already Live (26 calculators)
+## Already Live (27 calculators)
 
 ### Construction & Gardening (8)
 - ✅ Board Foot
@@ -27,8 +27,9 @@
 - ✅ Flooring
 - ✅ Tile
 
-### Health & Fitness (11)
+### Health & Fitness (12)
 - ✅ BMI
+- ✅ Calorie
 - ✅ Pace
 - ✅ Race Time Predictor
 - ✅ Heart Rate Zone

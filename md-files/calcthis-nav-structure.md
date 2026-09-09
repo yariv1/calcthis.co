@@ -43,6 +43,7 @@ No `.navsep` dividers in the nav (removed). Extra top spacing before a section h
           <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
           <a href="/bmi-calculator/">BMI</a>
           <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/calorie-calculator/">Calorie</a>
           <a href="/tdee-calculator/">TDEE / Calories</a>
           <a href="/one-rep-max-calculator/">One Rep Max</a>
           <a href="/sleep-calculator/">Sleep</a>

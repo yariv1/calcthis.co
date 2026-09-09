@@ -10,8 +10,8 @@
 
 ## Project state
 
-- **Asset version:** v70
-- **Total pages:** 40
+- **Asset version:** v71
+- **Total pages:** 41
 - **Model:** Opus 4.6
 
 ---
@@ -32,13 +32,13 @@
 
 ---
 
-## Live calculators (26)
+## Live calculators (27)
 
 ### Construction & Gardening (8)
 Board Foot · Gravel · Sand · Topsoil · Mulch · Concrete · Flooring · Tile
 
-### Health & Fitness (11)
-Pace · Race Time Predictor · Heart Rate Zone · Zone 2 Heart Rate · BMI · Body Fat · TDEE · One Rep Max · Sleep · Macro · Peptide Reconstitution
+### Health & Fitness (12)
+Pace · Race Time Predictor · Heart Rate Zone · Zone 2 Heart Rate · BMI · Body Fat · Calorie · TDEE · One Rep Max · Sleep · Macro · Peptide Reconstitution
 
 ### School & Grades (4)
 Final Grade · GPA · Grade · Test Score
@@ -48,19 +48,25 @@ Ratio · Percentage · Age
 
 ---
 
-## Last session (v70)
+## Last session (v71)
 
-- Built and deployed **Age Calculator** (`/age-calculator/`) — `CalcThis.initAgeCalc` in app.js, `.p-age` block in style.css
-- Exact age y/m/d + live seconds ticker · totals (months/weeks/days/hours) · born-weekday · next-birthday countdown · life-progress timeline SVG to next decade · 1,000- & 10,000-day milestones · advanced = age on any past/future date
-- **Date picker: vanillajs-datepicker vendored** (`assets/datepicker.min.{js,css}`), themed to the DS (`.datepicker-*` block in style.css) — type OR pick, decade year grid, no spinner. Load `datepicker.min.css` BEFORE `style.css`. Reuse on future date calcs (Date / Pregnancy / Due Date). Page adds two `<link>`/`<script>` refs; only date calcs need them.
-- Design system: **≥14px text-size floor** added; advanced-output `.res-tip` → 16px + `rgb(181,118,31)`
-- Wired build.js, sitemap.xml, header/footer partials, homepage card + JSON-LD hasPart + prose count (25 → 26)
-- **Deploy is now gated**: no `node build.js` + commit + push until the user previews in their own Chrome and says "deploy" (RULES in workflow-rules / working-rules / deploy-flow / deploy-checklist)
+- Built and deployed **Calorie Calculator** (`/calorie-calculator/`) — `CalcThis.initCalorieCalc` in app.js, `.p-calorie` block in style.css
+- Goal-weight framing (distinct from TDEE calc): daily calorie target for a chosen pace (gentle/moderate/fast **clickable** `#paceTable`), explicit deficit, **projected weight-loss curve** SVG with 25/50/75/100% milestone dates + goal date, protein target, maintenance anchor
+- Best practice: Mifflin-St Jeor (Katch-McArdle w/ body fat %), safety floors + flags (<1200 F / <1500 M, >1%/wk), 7700 kcal/kg adaptation caveat
+- Advanced: **plan by target date** (reuses the vanillajs-datepicker), body fat %, full macro split
+- **Female default**; unit default order = `localStorage['ct_units']` → `prefersImperial()` (regional) → metric. Only the Calorie calc writes/reads `ct_units` so far — retrofit BMI/TDEE/BodyFat later.
+- `.pill` cross-links (TDEE / Macro / BMI / Body Fat) after the grid
 
-### Earlier this session (v68–v69)
-- v68: BMI Calculator (`/bmi-calculator/`, `initBMICalc`, `.p-bmi`) — colour-coded BMI scale + marker, healthy weight range, advanced (target weight / BMI Prime / Ponderal Index)
-- v69: BMI edge — interactive height×weight **BMI chart** (SVG, live dot, category bands + legend) + contextual "check body fat %" callout when BMI ≥ 25
-- Added `.claude/launch.json` (`calcthis-static` — `python -m http.server 8123`) for served previews; RULES 8–9 + PRODUCT PHILOSOPHY in the skill files
+### Also v71 — chart + pill fixes across the site
+- **12px SVG-text floor** on the BMI + Age charts (were 9–10px); viewBoxes bumped (BMI 300→308, Age 64→84)
+- Calorie pace table: error flag ("below safe min") drops below a **top-aligned** number, row grows — `#paceTable td{vertical-align:top}`, `.cal-warn{display:block}`
+- `.pill` is now **underline-free + inline-flex** in the BASE rule (`display:inline-flex;gap:5px;text-decoration:none` + `a.pill:hover`); removed the redundant `.p-zone2 .pill` page override
+- Skill files: cross-links now **required** (`.pill` row after the grid + a contextual inline link); 12px chart-text floor; `.pill` no-underline rule
+
+### Earlier this session (v68–v70)
+- v68–v69: BMI Calculator (`/bmi-calculator/`, `initBMICalc`, `.p-bmi`) — BMI scale + marker, healthy weight range, advanced (target weight / BMI Prime / Ponderal Index); + interactive height×weight **BMI chart** (SVG, live dot, bands + legend) + "check body fat %" callout when BMI ≥ 25
+- v70: Age Calculator (`/age-calculator/`, `initAgeCalc`, `.p-age`) — exact age y/m/d + seconds ticker · totals · born-weekday · next-birthday countdown · life timeline SVG · day-milestones · advanced = age on any date. **Vendored vanillajs-datepicker** (`assets/datepicker.min.{js,css}`), themed via `.datepicker-*` in style.css — type OR pick, decade year grid. Load `datepicker.min.css` BEFORE `style.css`.
+- `.claude/launch.json` (`calcthis-static` — `python -m http.server 8123`) for served previews; RULES 8–9 + PRODUCT PHILOSOPHY; ≥14px text floor; **deploy gated** on the user previewing in Chrome + saying "deploy"
 
 ---
 
@@ -68,8 +74,8 @@ Ratio · Percentage · Age
 
 1. ~~BMI Calculator~~ — ✅ shipped v68–v69
 2. ~~Age Calculator~~ — ✅ shipped v70
-3. **Calorie Calculator** — distinct from TDEE, very high volume ← next
-4. Pregnancy / Due Date Calculator — top-5 on every competitor (reuse the date picker)
+3. ~~Calorie Calculator~~ — ✅ shipped v71
+4. **Pregnancy / Due Date Calculator** — top-5 on every competitor (reuse the date picker) ← next
 5. Ideal Weight Calculator — complements BMI + Body Fat
 6. Date Calculator — days between dates, utility tool (reuse the date picker)
 

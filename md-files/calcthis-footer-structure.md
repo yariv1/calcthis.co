@@ -55,6 +55,7 @@ The literal space between the two spans keeps correct spacing when inline on mob
           <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
           <li><a href="/bmi-calculator/">BMI Calculator</a></li>
           <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/calorie-calculator/">Calorie Calculator</a></li>
           <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
           <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
           <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
