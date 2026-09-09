@@ -6,10 +6,16 @@ Follow this at the end of every session, no exceptions.
 
 ## Steps
 
-1. Run `node build.js` — confirm asset version bumps, all pages ✓, no warnings.
-2. Present preview file(s) for user approval.
-3. After approval: commit all changes with a descriptive message, push to `main`.
+1. Serve the preview (`calcthis-static` :8123) — verify it in the browser pane, give the user
+   the localhost + LAN Chrome links.
+2. **WAIT.** The user previews it themselves in Chrome. Do nothing until they explicitly say
+   "deploy" / "push" / "ship it". "Looks good" on the pane is NOT that — they want to open it
+   in their own browser first.
+3. Only after the explicit go-ahead: `node build.js` (asset version bumps, all pages ✓, no
+   warnings) → commit all changes with a descriptive message → push to `main`.
 4. Update `CLAUDE.md` — bump version, log what shipped.
+
+⚠️ `git push` to `main` IS the deploy (host auto-builds from main). Never push until step 2 is done.
 
 ---
 

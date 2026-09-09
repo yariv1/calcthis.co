@@ -61,11 +61,14 @@ Inline rules for that fallback: header/footer HTML inline between the markers ·
 `<link ... style.css?v=N>` -> `<style>{css}</style>` (AS-IS, no dedent) · strip the AdSense `pagead2` script (JS-blocks on file://) ·
 `app.js?v=N` -> `<script>{app_js}</script>` (before the page script) · remove `feedback.js`.
 
-## Deploy
+## Deploy — gated on an explicit go-ahead
 
-* Run `node build.js` — asset version bumps +1, all pages ✓, no warnings
-* Commit with a descriptive message and push to main
-* Update nav + footer skill files after every new calculator added
+* `git push` to `main` IS the live deploy (host auto-builds from main).
+* NEVER run `node build.js` + commit + push until the user has previewed in their own
+  Chrome AND explicitly said "deploy" / "push" / "ship it". Preview "looks good" ≠ deploy.
+* On the go-ahead: `node build.js` (version +1, all pages ✓, no warnings) → commit
+  (descriptive message) → push to main.
+* After the push: update `CLAUDE.md` + nav / footer / roadmap skill files.
 
 ## SEO — URL Slugs
 * Slugs MUST contain the full target keyword, no exceptions.

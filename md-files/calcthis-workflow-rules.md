@@ -93,7 +93,13 @@ The final message contains ONLY:
 
 No preamble. No process narration. No apology paragraphs.
 
-After approval: commit with a descriptive message, push to main, update CLAUDE.md.
+### Preview approval ≠ deploy approval
+
+- "Looks good" on the preview means the BUILD is right. It does NOT authorize a push.
+- The user previews in their own Chrome first. `node build.js` + commit + **push to main**
+  only happen after an explicit "deploy" / "push" / "ship it" in a later message.
+- `git push` to `main` = the live deploy (host auto-builds). Treat it as a separate, gated step.
+- After the deploy: update CLAUDE.md + nav/footer/roadmap skill files.
 
 ---
 
