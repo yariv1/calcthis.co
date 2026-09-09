@@ -1,32 +1,16 @@
 # ⛔⛔⛔ CalcThis — MASTER WORKFLOW RULES ⛔⛔⛔
 ### Load this EVERY session. It overrides everything. Never violate it.
 
-This file applies to **every task — every article, every edit, anything at all.**
-Not just TDEE. Not just articles. Everything.
+This file applies to **every task — every article, every calculator, every edit, anything at all.**
 
 A blog article is a 4–5 minute job. If it takes longer or eats a large share of a
 session, a rule below was broken.
 
 ---
 
-## ⛔ RULE 0 — SESSION START: TWO-FILE UPLOAD PROTOCOL
-
-`blog/index.html` (hub) and any `blog/SLUG/index.html` (article reference) are BOTH
-named `index.html` — only ONE can be in session at a time. Never ask for both together.
-
-MANDATORY session-start sequence:
-  Message 1: Ask for one existing blog article file (reference).
-  Message 2 (after receiving it): Ask for the blog hub file.
-
-NEVER ask for both in the same message.
-NEVER assume the hub is already present.
-NEVER proceed to build without both files confirmed in session.
-
----
-
 ## ⛔ RULE 1 — NEVER GUESS. STOP AND ASK.
 
-If ANY value is unknown — an image filename, a CSS value, a file, a slug, a date,
+If ANY value is unknown — an image filename, a CSS value, a slug, a date,
 anything at all — **STOP IMMEDIATELY and ask.**
 
 - ❌ Do NOT guess.
@@ -50,18 +34,15 @@ image filenames. This rule exists specifically to prevent using a wrong filename
 - ✅ The moment a new image name is confirmed by the user, add it to the registry
   in `calcthis-blog-hub.md` in the SAME step, before any HTML is written.
 
-**This rule was violated in the TDEE session** — a header filename was used that was
-not in the registry. That is exactly what this rule exists to prevent. Never again.
-
 ---
 
 ## ⛔ RULE 3 — NEED A FILE OR A FILENAME? STOP INSTANTLY.
 
-If a required file is missing, or a filename is needed and not confirmed:
+If a required file is missing or unreadable, or a filename is needed and not confirmed:
 
 - ✅ STOP immediately — not after "one more step," not "for a second."
 - ✅ Ask for the exact file or the exact name.
-- ✅ Wait. Do nothing else until it's provided.
+- ✅ Wait. Do nothing else until it's provided or resolved.
 
 Do not stall. Do not partially build around the gap. Do not proceed hoping to fix
 it later. STOP the instant the gap appears.
@@ -80,13 +61,10 @@ Filler messages are BANNED. They burn a full turn and produce nothing.
 
 ## ⛔ RULE 5 — BATCH ALL FILE READS INTO ONE STEP
 
-At session start, read every needed file in ONE step. Never one tool call per file.
+At session start, read every needed file in ONE step. Never one file per call.
 
 ```bash
-for f in style.css app.js header.html footer.html build.js sitemap.xml index.html \
-         calcthis-blog-article.md calcthis-blog-hub.md calcthis-workflow-rules.md; do
-  echo "===== $f ====="; cat "/mnt/user-data/uploads/$f"; echo;
-done
+cat assets/style.css assets/app.js partials/header.html partials/footer.html build.js sitemap.xml
 ```
 
 - ❌ Never read files one at a time across multiple calls.
@@ -97,9 +75,9 @@ done
 
 ## ⛔ RULE 6 — BUILD IN ONE PASS
 
-Article → hub card + JSON-LD → build.js → sitemap → both previews → zip → present.
+All changes → preview → present.
 Back to back, one uninterrupted run. No check-ins between steps. No "does this look
-right?" until the finished previews and zip are presented.
+right?" until the finished preview is presented.
 
 The ONLY thing that stops a build is an unknown value (Rules 1–3) — and then you STOP
 and ASK, you do not stall.
@@ -111,26 +89,19 @@ and ASK, you do not stall.
 The final message contains ONLY:
 1. One line confirming what shipped.
 2. Any assumptions made (should be none if Rules 1–3 were followed).
-3. The 3 files: `preview-SLUG.html`, `preview-hub.html`, `calcthis-vNN.zip`.
-4. The Claude Code deploy prompt.
+3. Preview file(s) for approval.
 
 No preamble. No process narration. No apology paragraphs.
 
----
-
-## WHERE THIS FILE LIVES
-
-- **Filename:** `calcthis-workflow-rules.md`
-- **Upload EVERY session**, alongside `calcthis-blog-article.md` and `calcthis-blog-hub.md`.
-- It loads at session start and must be followed for the entire session.
+After approval: commit with a descriptive message, push to main, update CLAUDE.md.
 
 ---
 
-## The failures this file exists to prevent (TDEE session):
+## The failures these rules exist to prevent:
 
 1. **Guessed an image filename not in the registry** — violated the registry rule (Rule 2).
 2. **Reading files one at a time** instead of one batched read (Rule 5).
 3. **Stalling** — multiple "building now" messages that produced nothing (Rule 4),
-   and asking the header-filename question late instead of stopping up front (Rules 1, 3).
+   and asking questions late instead of stopping up front (Rules 1, 3).
 
 Follow Rules 1–7 and none of this happens again.

@@ -52,10 +52,14 @@ The literal space between the two spans keeps correct spacing when inline on mob
           <li><a href="/pace-calculator/">Pace Calculator</a></li>
           <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
           <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/bmi-calculator/">BMI Calculator</a></li>
           <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
           <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
           <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
           <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
         </ul>
       </div>
       <div class="footer-col">
@@ -82,7 +86,11 @@ The literal space between the two spans keeps correct spacing when inline on mob
       </div>
     </div>
     <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/blog/">Blog</a>
+      <span aria-hidden="true">·</span>
       <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact</a>
       <span aria-hidden="true">·</span>
       <a href="/terms-of-use/">Terms of use</a>
       <span aria-hidden="true">·</span>

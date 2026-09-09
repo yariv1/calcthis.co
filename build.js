@@ -31,6 +31,7 @@ const PAGES = [
   { file: 'race-time-predictor/index.html',    slug: '/race-time-predictor/' },
   { file: 'heart-rate-zone-calculator/index.html', slug: '/heart-rate-zone-calculator/' },
   { file: 'zone-2-heart-rate-calculator/index.html', slug: '/zone-2-heart-rate-calculator/' },
+  { file: 'bmi-calculator/index.html',         slug: '/bmi-calculator/' },
   { file: 'body-fat-calculator/index.html',    slug: '/body-fat-calculator/' },
   { file: 'tdee-calculator/index.html',        slug: '/tdee-calculator/' },
   { file: 'one-rep-max-calculator/index.html', slug: '/one-rep-max-calculator/' },

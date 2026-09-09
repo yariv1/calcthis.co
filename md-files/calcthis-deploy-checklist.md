@@ -1,6 +1,6 @@
 # CalcThis — Deploy Checklist
 
-Run through this before delivering any build. No exceptions.
+Run through this before committing any build. No exceptions.
 
 - [ ] New folder + `index.html` created
 - [ ] `build.js` PAGES array entry added `{ file: 'SLUG/index.html', slug: '/SLUG/' }`
@@ -9,7 +9,8 @@ Run through this before delivering any build. No exceptions.
 - [ ] Homepage `index.html` — calc card + JSON-LD `hasPart` entry + prose count bumped
 - [ ] `sitemap.xml` — new `<url>` entry added
 - [ ] `node build.js` — asset version bumps +1, all pages ✓, no warnings
-- [ ] No leftover `DEPLOY_*.txt` files in repo
-- [ ] Zip as `calcthis-vN.zip`, presented for download, CC prompt provided
-- [ ] CC prompt includes commit message + push to main
-- [ ] nav + footer skill files updated to reflect new calculator
+- [ ] No leftover temp files in repo
+- [ ] Preview approved by user
+- [ ] Commit with descriptive message, push to main
+- [ ] `CLAUDE.md` updated (version, new calc/article logged)
+- [ ] Nav + footer skill files updated to reflect new calculator

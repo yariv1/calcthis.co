@@ -15,6 +15,7 @@ Every card and header image filename is listed here. When building or editing `b
 | How Much Topsoil Do I Need? | `blog-topsoil-calculator-article-card.webp` | `blog-topsoil-calculator-article-header.webp` |
 | How Much Concrete Do I Need? | `blog-concrete-article-card.webp` | `blog-concrete-article-header.webp` |
 | How Much Sand Do I Need? | `blog-sand-calculator-article-card.webp` | `blog-sand-article-header.webp` |
+| How Much Flooring Do I Need? | `blog-flooring-calculator-article-card.webp` | `blog-flooring-calculator-article-header.webp` |
 
 ### Health & Lifestyle
 
@@ -23,6 +24,8 @@ Every card and header image filename is listed here. When building or editing `b
 | How to Calculate Your Macros | `blog-macros-calculator-article-card.webp` | `blog-macros-article-header.webp` |
 | What Is Zone 2 Heart Rate? | `blog-zone2-heart-rate-article-card.webp` | `blog-zone2-heart-rate-article-header.webp` |
 | What Is One Rep Max? | `blog-one-rep-max-article-card.webp` | `blog-one-rep-max-article-header.webp` |
+| How to Calculate Your TDEE | `blog-tdee-article-card.webp` | `blog-tdee-article-header.webp` |
+| How to Calculate Your Body Fat Percentage | `blog-body-fat-article-card.webp` | `blog-body-fat-article-header.webp` |
 
 ### Rules
 - ❌ Never guess a filename. If it's not in this table, stop and check the actual file.
@@ -139,6 +142,7 @@ New sections go BELOW all existing sections, before `<p class="blog-coming">`.
 
 **Current sections (in order):**
 1. `Construction &amp; Gardening`
+2. `Health &amp; Lifestyle`
 
 **When adding a new section:** use `&amp;` for `&` in section names. Place it below all existing sections, above `<p class="blog-coming">More guides on the way.</p>`.
 
@@ -169,7 +173,7 @@ Located in `<head>`. Add inside the `"blogPost": [ ]` array:
 <!--FOOTER:END-->
 ```
 
-**Never remove or overwrite `<!--FOOTER:START-->`** when editing this file. Every str_replace that touches content near the footer must include the marker in both `old_str` and `new_str`. If `build.js` warns "no FOOTER markers in blog/index.html", this marker was accidentally dropped — restore it immediately before committing.
+**Never remove or overwrite `<!--FOOTER:START-->`** when editing this file. Every edit that touches content near the footer must include the marker. If `build.js` warns "no FOOTER markers in blog/index.html", this marker was accidentally dropped — restore it immediately before committing.
 
 Same rule applies to `<!--HEADER:START-->` / `<!--HEADER:END-->`.
 
@@ -182,8 +186,8 @@ Same rule applies to `<!--HEADER:START-->` / `<!--HEADER:END-->`.
 - [ ] Both `<!--FOOTER:START-->` and `<!--FOOTER:END-->` markers still present in file after edits
 - [ ] Both `<!--HEADER:START-->` and `<!--HEADER:END-->` markers still present in file after edits
 - [ ] JSON-LD `blogPost` array updated with new entry
-- [ ] `blog/index.html` saved and included in the deploy zip
-- [ ] `node build.js` run after zip extraction
+- [ ] `blog/index.html` saved
+- [ ] `node build.js` run after changes
 
 ---
 
@@ -195,6 +199,19 @@ Same rule applies to `<!--HEADER:START-->` / `<!--HEADER:END-->`.
 <div class="blog-grid">
   <a class="bcard"> — gravel article
   <a class="bcard"> — mulch article
+  <a class="bcard"> — topsoil article
+  <a class="bcard"> — concrete article
+  <a class="bcard"> — sand article
+  <a class="bcard"> — flooring article
+</div>
+<p class="blog-coming" style="padding:4px 0 0"> — "More guides on the way."
+<p class="blog-sec-head" style="margin-top:38px"> — "Health & Lifestyle"
+<div class="blog-grid">
+  <a class="bcard"> — macros article
+  <a class="bcard"> — zone 2 heart rate article
+  <a class="bcard"> — one rep max article
+  <a class="bcard"> — TDEE article
+  <a class="bcard"> — body fat percentage article
 </div>
 <p class="blog-coming"> — "More guides on the way."
 <!--FOOTER:START-->

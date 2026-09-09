@@ -1,9 +1,9 @@
 # CalcThis — New Page Checklist + Design System
 
-## MANDATORY FIRST STEP — FILE UPLOADS
-**Before writing a single line of code, confirm all 6 files are in session.**
-**If ANY are missing — STOP and ask for them. Not asking is a SERIOUS VIOLATION.**
-**If any OTHER file is needed for a 100% accurate build — ask for it. Not asking is a SERIOUS VIOLATION.**
+## MANDATORY FIRST STEP — READ SOURCE FILES
+**Before writing a single line of code, read all required files from disk.**
+**If ANY file is missing or unreadable — STOP and report. Not stopping is a SERIOUS VIOLATION.**
+**If any OTHER file is needed for a 100% accurate build — read it. Not reading it is a SERIOUS VIOLATION.**
 
 Required files:
 1. `assets/style.css` — source of truth for ALL class names and CSS variables
@@ -116,15 +116,23 @@ Footer is OUTSIDE the wrap. No `<main>` tag — it does not exist in this codeba
 
 ```python
 import re
-# load: page html, style.css (site_css), app.js, header.html, footer.html
+# Read files from disk
+with open('SLUG/index.html', 'r') as f: preview = f.read()
+with open('assets/style.css', 'r') as f: site_css = f.read()
+with open('assets/app.js', 'r') as f: app_js = f.read()
+with open('partials/header.html', 'r') as f: header_html = f.read()
+with open('partials/footer.html', 'r') as f: footer_html = f.read()
+
 preview = re.sub(r'<!--HEADER:START-->.*?<!--HEADER:END-->', '<!--HEADER:START-->\n'+header_html+'\n<!--HEADER:END-->', preview, flags=re.DOTALL)
 preview = re.sub(r'<!--FOOTER:START-->.*?<!--FOOTER:END-->', '<!--FOOTER:START-->\n'+footer_html+'\n<!--FOOTER:END-->', preview, flags=re.DOTALL)
 preview = preview.replace('href="/assets/favicon.svg"', 'href="https://calcthis.co/assets/favicon.svg"')
 preview = preview.replace('src="/assets/favicon.svg"', 'src="https://calcthis.co/assets/favicon.svg"')
-preview = re.sub(r'<script async src="https://pagead2[^"]*"[^>]*></script>\n', '', preview)  # strip AdSense
-preview = preview.replace('<link rel="stylesheet" href="/assets/style.css?v=N">', '<style>\n'+site_css+'\n</style>')  # inline as-is
-preview = preview.replace('<script src="/assets/app.js?v=N"></script>', '<script>\n'+app_js+'\n</script>')
-preview = re.sub(r'\n<script src="/feedback\.js"[^>]*></script>', '', preview)
+preview = re.sub(r'<script async src="https://pagead2[^"]*"[^>]*></script>\n?', '', preview)
+preview = re.sub(r'<link rel="stylesheet" href="/assets/style\.css\?v=[^"]+">',  lambda m: '<style>\n'+site_css+'\n</style>', preview)
+preview = re.sub(r'<script src="/assets/app\.js\?v=[^"]+"></script>', lambda m: '<script>\n'+app_js+'\n</script>', preview)
+preview = re.sub(r'\n?<script src="/feedback\.js"[^>]*></script>', '', preview)
+
+with open('preview.html', 'w') as f: f.write(preview)
 ```
 
 Why each step is mandatory:
@@ -141,14 +149,15 @@ Why each step is mandatory:
 4. Add footer link in `partials/footer.html` (correct pillar)
 5. Homepage `index.html` — calc card + JSON-LD `hasPart` + prose count bump
 6. Add URL to `sitemap.xml`
-7. `node build.js` via CC -> commit -> push
-8. Update nav + footer skill files
+7. Run `node build.js` — verify all pages ✓
+8. Commit and push to main
+9. Update nav + footer skill files + CLAUDE.md
 
 ---
 
 ## VIOLATIONS — must never happen
-1. Starting a build without all 6 files confirmed in session
-2. Not asking for an additional file needed for an accurate build
+1. Starting a build without all required files read from disk
+2. Not reading an additional file needed for an accurate build
 3. Using class names not verified from the actual `style.css`
 4. Using `<main>` tag — does not exist in this codebase
 5. Putting content outside `<div class="wrap">`

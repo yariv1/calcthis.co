@@ -1676,6 +1676,171 @@ CalcThis.initTDEECalc = function (cfg) {
 };
 
 /* -----------------------------------------------------------
+   CalcThis.initBMICalc(cfg) — Body Mass Index.
+   Independent engine. Simple: unit toggle + height + weight ->
+   BMI, WHO category, a live position marker on a colour-coded
+   BMI scale, and the healthy-weight range for that height with
+   the change needed to reach it. Advanced: a target-BMI input
+   (default 22) -> target weight + change, plus BMI Prime and the
+   Ponderal Index. Live, no button. Inches default for US users
+   (metric elsewhere). */
+CalcThis.initBMICalc = function (cfg) {
+  cfg = cfg || {};
+  var $ = function (id) { return document.getElementById(id); };
+  var unit = 'cm', advanced = false;
+
+  var CATS = [
+    { name: 'Underweight', hi: 18.5, range: '< 18.5' },
+    { name: 'Normal',      hi: 25,   range: '18.5 – 24.9' },
+    { name: 'Overweight',  hi: 30,   range: '25.0 – 29.9' },
+    { name: 'Obese',       hi: 999,  range: '30.0 +' }
+  ];
+  var SCALE_MIN = 12, SCALE_MAX = 42;
+
+  var heightIn = $('height'), weightIn = $('weight'), targetIn = $('targetBmi');
+  if (!heightIn) return;
+
+  function num(v) { v = parseFloat(('' + v).trim()); return isNaN(v) ? NaN : v; }
+  function toCm(v) { return unit === 'in' ? v * 2.54 : v; }
+  function toKg(v) { return unit === 'in' ? v / 2.2046226 : v; }
+  function fromKg(v) { return unit === 'in' ? v * 2.2046226 : v; }
+  function one(x) { return (Math.round(x * 10) / 10).toFixed(1); }
+  function wUnit() { return unit === 'in' ? 'lb' : 'kg'; }
+
+  function catFor(bmi) {
+    for (var i = 0; i < CATS.length; i++) { if (bmi < CATS[i].hi) return CATS[i]; }
+    return CATS[CATS.length - 1];
+  }
+
+  var PH = { cm: { height: '178', weight: '75' }, in: { height: '70', weight: '165' } };
+  function applyUnit() {
+    if ($('uHeight')) $('uHeight').textContent = unit === 'in' ? 'in' : 'cm';
+    if ($('uWeight')) $('uWeight').textContent = wUnit();
+    var p = PH[unit];
+    heightIn.placeholder = p.height;
+    if (weightIn) weightIn.placeholder = p.weight;
+    if (unitSeg) [].forEach.call(unitSeg.querySelectorAll('button'), function (x) {
+      x.classList.toggle('on', x.getAttribute('data-unit') === unit);
+    });
+  }
+
+  function fillCatTable(bmi) {
+    var has = isFinite(bmi), cur = has ? catFor(bmi) : null;
+    var head = '<thead><tr><th>Category</th><th>BMI</th></tr></thead>';
+    var rows = '';
+    CATS.forEach(function (c) {
+      var on = cur && c.name === cur.name ? ' class="cur"' : '';
+      rows += '<tr' + on + '><td>' + c.name + '</td><td>' + c.range + '</td></tr>';
+    });
+    $('catTable').innerHTML = head + '<tbody>' + rows + '</tbody>';
+  }
+
+  function solve() {
+    var h = toCm(num(heightIn.value)), w = toKg(num(weightIn.value));
+    var resBig = $('resBig'), resUnit = $('resUnit'), resSub = $('resSub');
+    var gauge = $('bmiGauge'), marker = $('bmiMarker'), range = $('bmiRange');
+
+    if (!(isFinite(h) && h > 0 && isFinite(w) && w > 0)) {
+      resBig.textContent = '—'; if (resUnit) resUnit.textContent = '';
+      resSub.textContent = 'Enter your height and weight to see your BMI.';
+      if (gauge) gauge.style.visibility = 'hidden';
+      if (range) range.innerHTML = '';
+      fillCatTable(NaN);
+      if ($('advOut')) $('advOut').style.display = 'none';
+      return;
+    }
+
+    var m = h / 100;
+    var bmi = w / (m * m);
+    var cat = catFor(bmi);
+    resBig.textContent = one(bmi); if (resUnit) resUnit.textContent = '';
+    resSub.textContent = cat.name + ' · World Health Organization';
+    fillCatTable(bmi);
+
+    if (gauge && marker) {
+      gauge.style.visibility = 'visible';
+      var pct = (bmi - SCALE_MIN) / (SCALE_MAX - SCALE_MIN) * 100;
+      marker.style.left = Math.max(0, Math.min(100, pct)) + '%';
+    }
+
+    var loKg = 18.5 * m * m, hiKg = 24.9 * m * m;
+    if (range) {
+      var msg = 'Healthy weight for this height: <strong>' + one(fromKg(loKg)) + ' – ' +
+        one(fromKg(hiKg)) + ' ' + wUnit() + '</strong>';
+      if (bmi >= 25) msg += ' · lose <strong>' + one(fromKg(w - hiKg)) + ' ' + wUnit() + '</strong> to reach it';
+      else if (bmi < 18.5) msg += ' · gain <strong>' + one(fromKg(loKg - w)) + ' ' + wUnit() + '</strong> to reach it';
+      range.innerHTML = msg;
+    }
+
+    var advOut = $('advOut');
+    if (advanced && advOut) {
+      var tb = targetIn ? num(targetIn.value) : NaN;
+      if (!(isFinite(tb) && tb > 0)) tb = 22;
+      var tgtKg = tb * m * m, diff = fromKg(tgtKg - w);
+      var diffTxt = Math.abs(diff) < 0.05 ? 'you’re there' :
+        (diff < 0 ? 'lose ' : 'gain ') + one(Math.abs(diff)) + ' ' + wUnit();
+      var prime = bmi / 25, pondl = w / (m * m * m);
+      advOut.innerHTML =
+        '<div class="bf-cmp"><span class="k">Target weight at BMI ' + one(tb) + '</span><span class="v">' + one(fromKg(tgtKg)) + ' ' + wUnit() + '</span></div>' +
+        '<div class="bf-cmp"><span class="k">To reach it</span><span class="v">' + diffTxt + '</span></div>' +
+        '<div class="bf-cmp"><span class="k">BMI Prime</span><span class="v">' + (Math.round(prime * 100) / 100).toFixed(2) + '</span></div>' +
+        '<div class="bf-cmp"><span class="k">Ponderal Index</span><span class="v">' + one(pondl) + ' kg/m³</span></div>' +
+        '<p class="res-tip">BMI Prime is your BMI divided by 25 — under 1 sits inside the normal range. The Ponderal Index divides weight by height cubed, which holds up better at extreme heights. BMI alone can’t tell muscle from fat.</p>';
+      advOut.style.display = '';
+    } else if (advOut) {
+      advOut.style.display = 'none';
+    }
+  }
+
+  var unitSeg = $('unitSeg');
+  if (unitSeg) {
+    unitSeg.addEventListener('click', function (e) {
+      var b = e.target.closest ? e.target.closest('button') : null; if (!b) return;
+      unit = b.getAttribute('data-unit');
+      applyUnit();
+      solve();
+    });
+  }
+
+  var advBtn = $('advBtn');
+  if (advBtn) {
+    advBtn.addEventListener('click', function () {
+      advanced = !advanced;
+      advBtn.classList.toggle('open', advanced);
+      $('advBtnLab').textContent = advanced ? 'Go simple' : 'Go advanced';
+      $('advIn').style.display = advanced ? '' : 'none';
+      solve();
+      if (advanced) { var a = $('advIn'); if (a && a.scrollIntoView) a.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+    });
+  }
+
+  [heightIn, weightIn, targetIn].forEach(function (inp) { if (inp) inp.addEventListener('input', solve); });
+
+  function prefersImperial() {
+    // Location-based only (timezone). Do NOT use navigator.language —
+    // en-US UI is common outside the US and must not force imperial.
+    try {
+      var tz = (Intl.DateTimeFormat().resolvedOptions().timeZone || '');
+      var us = ['America/New_York','America/Detroit','America/Kentucky/Louisville',
+        'America/Kentucky/Monticello','America/Indiana/Indianapolis','America/Indiana/Vincennes',
+        'America/Indiana/Winamac','America/Indiana/Marengo','America/Indiana/Petersburg',
+        'America/Indiana/Vevay','America/Chicago','America/Indiana/Tell_City',
+        'America/Indiana/Knox','America/Menominee','America/North_Dakota/Center',
+        'America/North_Dakota/New_Salem','America/North_Dakota/Beulah','America/Denver',
+        'America/Boise','America/Phoenix','America/Los_Angeles','America/Anchorage',
+        'America/Juneau','America/Sitka','America/Metlakatla','America/Yakutat',
+        'America/Nome','America/Adak','Pacific/Honolulu'];
+      return us.indexOf(tz) !== -1;
+    } catch (e) { return false; }
+  }
+  if (cfg.unit === 'in' || cfg.unit === 'cm') unit = cfg.unit;
+  else if (prefersImperial()) unit = 'in';
+  applyUnit();
+
+  solve();
+};
+
+/* -----------------------------------------------------------
    CalcThis.init1RMCalc(cfg) — one-rep-max estimator.
    Independent engine. Enter weight + reps of a working set ->
    estimated 1RM (Epley by default). A %-of-1RM training table

@@ -6,7 +6,7 @@ Every blog article is the same structure. Swap the content. Done.
 
 ## ⛔ RULE #0 — NEVER GUESS. EVER.
 
-If ANY value is unknown — an image filename, a CSS value, a file structure, anything — **STOP immediately and ask for the answer or the file needed.** Do not guess. Do not estimate. Do not reconstruct from memory. Guessing wastes the user's time and money and is completely unacceptable.
+If ANY value is unknown — an image filename, a CSS value, a file structure, anything — **STOP immediately and ask for the answer.** Do not guess. Do not estimate. Do not reconstruct from memory. Guessing wastes the user's time and money and is completely unacceptable.
 
 **If in doubt → STOP → ASK.**
 
@@ -70,7 +70,7 @@ Size: 1400 × 520px | WebP 70–75%
 💡 In ChatGPT: request **landscape** format (1792×1024), then crop to the target ratio.
 ```
 
-### ⛔ MANDATORY — update both skill files when new images are named
+### ⛔ MANDATORY — update registry when new images are named
 
 The moment image filenames are decided, **immediately add them to the master registry in `calcthis-blog-hub.md`** under the correct section. Both card and header. This happens BEFORE any HTML is written. The hub registry and the article must always match.
 
@@ -87,13 +87,12 @@ The moment image filenames are decided, **immediately add them to the master reg
 
 ## ⛔ FULL ARTICLE WORKFLOW — MANDATORY EVERY SINGLE SESSION — NO EXCEPTIONS
 
-Every blog article session produces **exactly 4 files in the zip** and **2 previews** and **1 Claude Code deploy prompt**. No exceptions. No manual steps. No "add this yourself". Everything ships complete.
+Every blog article session produces all changed files, previews, and a commit. No exceptions. No manual steps. No "add this yourself". Everything ships complete.
 
 ### Step 1 — Build the article
 Create `blog/SLUG/index.html` using the template below.
 
 ### Step 2 — Update `blog/index.html` (THE HUB)
-**ALWAYS included in the zip. ALWAYS rebuilt with the new card added.**
 - Add the new `<a class="bcard">` inside the correct section's `<div class="blog-grid">`
 - Add the new entry to the JSON-LD `"blogPost": []` array in the hub `<head>`
 - Verify `<!--FOOTER:START-->` and `<!--HEADER:START-->` markers are still present
@@ -122,43 +121,27 @@ Run the preview builder script for:
 
 Run sanity checks on both.
 
-### Step 6 — Zip exactly these 4 files
-```
-blog/SLUG/index.html          ← new article
-blog/index.html               ← hub with new card
-build.js                      ← updated PAGES entry
-sitemap.xml                   ← updated with new URL
-```
+### Step 6 — Present previews for approval
 
-### Step 7 — Present files
-```
-present_files([
-  preview-SLUG.html,
-  preview-hub.html,
-  calcthis-vNN.zip
-])
-```
-
-### Step 8 — Output the Claude Code deploy prompt
-Always end the response with this exact block:
-
-```
-Unzip ~/Downloads/calcthis-vNN.zip into the repo root (overwrite existing files), run node build.js, then commit with the message "Blog article: ARTICLE TITLE" and push to main.
-```
+### Step 7 — After approval
+- Run `node build.js` — verify all pages ✓
+- Commit with message `Blog article: ARTICLE TITLE`
+- Push to main
+- Update `CLAUDE.md`
 
 ---
 
 ### What NEVER happens
 - ❌ Telling the user to "add this manually" to any file
-- ❌ Omitting `blog/index.html` from the zip
-- ❌ Omitting the Claude Code deploy prompt
-- ❌ A zip with fewer than 4 files
-- ❌ Presenting the zip without both previews
-- ❌ Reconstructing `blog/index.html` from scratch — it must be uploaded every session
+- ❌ Omitting `blog/index.html` from the changes
+- ❌ Presenting previews without both article + hub
+- ❌ Reconstructing `blog/index.html` from scratch — always read from disk
 
 ---
 
-## REQUIRED FILES — every blog session (8 files + skill files)
+## REQUIRED FILES — every blog session
+
+Read these from disk at session start:
 
 1. `assets/style.css`
 2. `assets/app.js`
@@ -166,12 +149,12 @@ Unzip ~/Downloads/calcthis-vNN.zip into the repo root (overwrite existing files)
 4. `partials/footer.html`
 5. `build.js`
 6. `sitemap.xml`
-7. One existing blog article (reference)
-8. **`blog/index.html` ← THE HUB — always upload, never reconstruct**
+7. One existing blog article (structure reference)
+8. `blog/index.html` — THE HUB — always read from disk, never reconstruct
 
 Skill files: `calcthis-blog-article.md` + `calcthis-blog-hub.md`
 
-If `blog/index.html` is missing at session start — **stop and ask for it before building anything.**
+If `blog/index.html` is missing or unreadable — **stop and report before building anything.**
 
 ---
 
@@ -436,13 +419,13 @@ with open('preview.html', 'w') as f: f.write(preview)
 
 **Why each step is mandatory:**
 - AdSense strip: blocks page script on `file://`, calculator won't work
-- CSS regex (not string replace): uploaded files may have any version number — `?v=N`, `?v=55`, `?v=56`, etc.
+- CSS regex (not string replace): files may have any version number — `?v=N`, `?v=55`, `?v=56`, etc.
 - style.css inlined as-is: transforming it breaks all styles
 - app.js before page script: order must match source
 
 ---
 
-## Available content components (copy from concrete article)
+## Available content components
 
 | Component | Class / Element | Notes |
 |---|---|---|
@@ -501,10 +484,10 @@ if(document.querySelectorAll('.u').length){
 - [ ] Add `{ file: 'blog/SLUG/index.html', slug: '/blog/SLUG/' }` to `build.js` PAGES array
 - [ ] Add `<url>` entry to `sitemap.xml`
 - [ ] Add article card to `blog/index.html` hub
-- [ ] Copy hero image to `assets/images/blog-IMAGE-NAME-article-header.webp`
-- [ ] Wrap all measurements in `<span class="u" data-imp="..." data-met="...">` 
-- [ ] Run preview builder script above — verify styled, toggle works, diagrams zoom
-- [ ] Approve preview → zip → deploy
+- [ ] Hero image in `assets/images/blog-IMAGE-NAME-article-header.webp`
+- [ ] Wrap all measurements in `<span class="u" data-imp="..." data-met="...">`
+- [ ] Run preview builder script — verify styled, toggle works, diagrams zoom
+- [ ] Approve preview → commit → push to main → update CLAUDE.md
 
 ---
 
