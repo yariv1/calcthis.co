@@ -10,7 +10,7 @@
 
 ## Project state
 
-- **Asset version:** v71
+- **Asset version:** v72
 - **Total pages:** 41
 - **Model:** Opus 4.6
 
@@ -48,8 +48,12 @@ Ratio · Percentage · Age
 
 ---
 
-## Last session (v71)
+## Last session (v71–v72)
 
+- v72: `.related-calcs` block (heading + `.pills` after the grid) — width capped to the grid's
+  left column so the 4 hug-chips wrap 2×2 under the input card. **LOCKED SPEC** in
+  `calcthis-design-system.md` with a DO-NOT list (no flex:1 / centering / label-shortening /
+  pill-dropping / per-page overrides). `.pill` base rule is also final (inline-flex, no underline).
 - Built and deployed **Calorie Calculator** (`/calorie-calculator/`) — `CalcThis.initCalorieCalc` in app.js, `.p-calorie` block in style.css
 - Goal-weight framing (distinct from TDEE calc): daily calorie target for a chosen pace (gentle/moderate/fast **clickable** `#paceTable`), explicit deficit, **projected weight-loss curve** SVG with 25/50/75/100% milestone dates + goal date, protein target, maintenance anchor
 - Best practice: Mifflin-St Jeor (Katch-McArdle w/ body fat %), safety floors + flags (<1200 F / <1500 M, >1%/wk), 7700 kcal/kg adaptation caveat
