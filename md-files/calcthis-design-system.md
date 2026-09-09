@@ -63,28 +63,52 @@ ALWAYS use this exact pattern:
 
 Two placements, both expected on a finished page:
 
-### 1. `.pill` row after the calculator grid (standard)
+### 1. `.related-calcs` block after the calculator grid — LOCKED SPEC
 
-2–4 **genuinely related** calculators, immediately after `</div><!-- grid -->` and BEFORE
-`<section class="content">`. Exact pattern (matches `zone-2-heart-rate-calculator`):
+Immediately after `</div><!-- grid -->`, before `<section class="content">`. Copy this exactly:
 
 ```html
-  <div class="pills" style="margin-top:20px">
-    <a class="pill" href="/related-calculator/">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><!-- simple icon --></svg>
-      Related Calculator
-    </a>
-    <!-- 1–3 more -->
+  <div class="related-calcs">
+    <p class="related-calcs-h">More health calculators that may interest you</p>
+    <div class="pills">
+      <a class="pill" href="/related-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><!-- simple icon --></svg>
+        Related Calculator
+      </a>
+      <!-- 3 more, ~4 total -->
+    </div>
   </div>
 ```
 
-Pick by real user journey, not category. e.g. Calorie → TDEE, Macro, BMI, Body Fat.
-CSS is `.pills` + `.pill` in style.css already — no new classes, no page-level `.pill` overrides.
+The CSS is already in style.css and is FINAL — do not touch it, do not override it per page:
 
-**`.pill` is a button-style chip — NEVER underlined.** The base `.pill` rule handles it:
-`display:inline-flex; align-items:center; gap:5px; text-decoration:none` (+ `.pill svg{flex:none}`
-and an `a.pill:hover`). Don't add `text-decoration` and don't re-declare flex/gap per page —
-if a pill looks wrong, fix the base rule.
+```css
+  .related-calcs{margin:22px 0 2px}
+  .related-calcs-h{font-size:14px;font-weight:600;color:var(--ink-soft);margin:0 0 10px}
+  .related-calcs .pills{margin-top:0}
+  @media(min-width:821px){ .related-calcs{max-width:calc((100% - 20px) * 0.5122)} }
+```
+
+**What it is:** ~4 plain `.pill` chips that **hug their content** (`[ icon  Name Calculator ]`
+with normal padding), in a normal wrapping flex row. The wrapper is capped on desktop to the
+grid's left-column width so the row wraps **under the input card** (2×2 for four) instead of
+spilling past it. That width cap is the wrapper's ONLY purpose.
+
+**DO:**
+- ~4 pills, full **"X Calculator"** anchor text (target-page keyword; calculator.net does this)
+- Heading names the category: "More health calculators…", "More construction calculators…"
+- Pick by real user journey. e.g. Calorie → TDEE, Macro, BMI, Body Fat
+
+**DO NOT** (this exact churn already happened once — don't repeat it):
+- ❌ `flex:1` / `flex-grow` / `justify-content:center` / any width-fill on the pills
+- ❌ shorten labels to "TDEE" / "BMI" to fit fewer rows — keep "…Calculator", let it wrap
+- ❌ drop pills to avoid a wrap — a 2×2 wrap under the card is correct and fine
+- ❌ page-level `.pill` or `.related-calcs` overrides, or a fixed pixel `max-width`
+- ❌ `text-decoration` on `.pill` — the base rule already sets `text-decoration:none`
+
+**`.pill` base rule** (also final): `display:inline-flex; align-items:center; gap:5px;
+text-decoration:none` + `.pill svg{flex:none}` + `a.pill:hover`. If a pill looks wrong, the
+fix is in the base rule, never per page.
 
 ### 2. Contextual inline links in results / advanced notes (where it earns its place)
 

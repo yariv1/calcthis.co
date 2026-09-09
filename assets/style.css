@@ -335,6 +335,15 @@
   .pill{display:inline-flex;align-items:center;gap:5px;font-size:13px;font-weight:600;color:var(--spruce);background:#EDF2ED;border:1px solid #DCE6DC;border-radius:20px;padding:5px 12px;text-decoration:none}
   .pill svg{flex:none}
   a.pill:hover{border-color:#C7D6C7;background:#E4EEE4}
+
+  /* related-calculators block: heading + wrapping .pill row after a calculator grid.
+     On desktop, cap width to the grid's left column (1.05fr of 1.05fr+1fr, 20px gap)
+     so the pills line up under the input card and wrap within it — never wider. */
+  .related-calcs{margin:22px 0 2px}
+  .related-calcs-h{font-size:14px;font-weight:600;color:var(--ink-soft);margin:0 0 10px}
+  .related-calcs .pills{margin-top:0}
+  /* cap width to the grid's left column so the chips wrap under the input card, never wider */
+  @media(min-width:821px){ .related-calcs{max-width:calc((100% - 20px) * 0.5122)} }
   .pill.amber{color:var(--amber-deep);background:#F6EEDF;border-color:#EADFC8}
 
   .sec-h{font-family:'Fraunces',serif;font-weight:600;font-size:15px;letter-spacing:.02em;color:var(--ink-soft);text-transform:uppercase;margin:34px 0 14px;display:flex;align-items:center;gap:10px}
