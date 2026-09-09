@@ -4,7 +4,14 @@
 
 ## ⛔ MASTER IMAGE REGISTRY — EXACT FILENAMES — NEVER GUESS
 
-Every card and header image filename is listed here. When building or editing `blog/index.html`, use **only** these exact filenames. If a new article is added, add its image names here immediately. No exceptions.
+Every card, header, and in-article image filename is listed here. When building or editing
+`blog/index.html` or an article, use **only** these exact filenames. If a new article is added,
+add ALL its image names here immediately (card + hero + each in-article `blog-TOPIC-<what>.webp`).
+No exceptions.
+
+**Every new article ships:** card (800×400) · hero (800×400, ⚠️ ratio TBD — see
+`calcthis-blog-article.md`) · 1–3 in-article photos (800×400). All must depict the article's
+actual subject — never generic atmosphere shots.
 
 ### Construction & Gardening
 

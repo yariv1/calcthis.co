@@ -16,19 +16,35 @@ If ANY value is unknown — an image filename, a CSS value, a file structure, an
 
 When the user says "give me image prompts" or when a new article is being built, **this is always the first step** — before writing a single line of HTML. No exceptions.
 
+### ⛔ IMAGES MUST BE IN CONTEXT — NOT ATMOSPHERE
+
+Every image has to depict something the article actually explains — a measurement being taken,
+the specific method, the thing being calculated, a real worked scenario. **No generic mood /
+lifestyle / "vibe" shots.** If the prompt could sit on any fitness or DIY blog, it's wrong —
+rewrite it to show the article's actual subject.
+
+### Every new article needs (minimum):
+
+| Image | Purpose | Dimensions | Export |
+|---|---|---|---|
+| **Card** | blog hub grid | **800 × 400 px** | WebP, 70–75% |
+| **Hero** | top of the article | **800 × 400 px** ⚠️ see note | WebP, 70–75% |
+| **In-article ×1 (prefer 2–3)** | inside `.blog-content`, next to the section it illustrates | **800 × 400 px** | WebP, 70–75% |
+
+⚠️ **Hero size — OPEN, confirm with the user before generating prompts.** The live CSS
+(`.blog-hero-art{aspect-ratio:1400/520}`) and the 11 existing heroes are **2.69:1**. The user
+now wants **800×400 (2:1)**. Either (a) change `.blog-hero-art` to `aspect-ratio:2/1` site-wide
+(re-crops the 11 existing heroes — check them), or (b) keep 2.69:1 and generate the hero source
+wider. **Ask which. Do not assume.**
+
 ### Exact output format — always this, every time
 
-Give the user:
-1. The **exact filenames** (copy from master registry in `calcthis-blog-hub.md`)
-2. Two prompts — card first, header second
-3. Each prompt labelled with filename + exact pixel dimensions + export spec
-
-### Exact sizes
-
-| Image | Dimensions | Export |
-|---|---|---|
-| Card | **800 × 400 px** | WebP, 70–75% quality |
-| Header | **1400 × 520 px** | WebP, 70–75% quality |
+Give the user, in this order:
+1. The **exact filenames** for card, hero, and each in-article image (copy from / add to the
+   master registry in `calcthis-blog-hub.md` in the SAME step)
+2. One prompt per image — card, then hero, then each in-article — each labelled with filename +
+   pixel dimensions + export spec
+3. For every in-article prompt, note **which section of the article it sits next to**
 
 ### ChatGPT tip (always include this)
 ChatGPT's widest format is **1792×1024 (landscape)**. Always tell the user to request landscape, then crop to the final ratio in any image editor.
@@ -56,17 +72,27 @@ ChatGPT's widest format is **1792×1024 (landscape)**. Always tell the user to r
 Filename: `blog-TOPIC-article-card.webp`
 Size: 800 × 400px | WebP 70–75%
 
-> [prompt here]
+> [prompt — shows the article's actual subject]
 
 ---
 
-**Image 2 — Article Header**
+**Image 2 — Article Hero**
 Filename: `blog-TOPIC-article-header.webp`
-Size: 1400 × 520px | WebP 70–75%
+Size: 800 × 400px | WebP 70–75%   (⚠️ confirm hero ratio first)
 
-> [prompt here]
+> [prompt]
 
 ---
+
+**Image 3 — In-article: <which section>**
+Filename: `blog-TOPIC-<what-it-shows>.webp`
+Size: 800 × 400px | WebP 70–75%
+
+> [prompt — depicts exactly what that section explains]
+
+---
+(repeat Image 3 for each in-article image, 1–3 total)
+
 💡 In ChatGPT: request **landscape** format (1792×1024), then crop to the target ratio.
 ```
 
@@ -433,11 +459,33 @@ with open('preview.html', 'w') as f: f.write(preview)
 | Stat blocks | `<div class="blog-stat">` with `.stat-block` + `.stat-sep` | 2 stats side by side |
 | Data table | `<table class="dtable">` | thead + tbody |
 | SVG diagram | `<div class="blog-diagram diagram-zoomable" title="Click to enlarge">` | Always zoomable, always 740-wide viewBox |
+| **In-article photo** | `<figure class="blog-figure">` | Contextual `.webp`, 1–3 per article — see below |
 | CTA to calculator | See exact HTML below | Always use full card structure — never a bare link |
 | Checklist | `<ul class="blog-checklist">` | `<li><strong>Heading.</strong> Text.</li>` |
 | FAQ accordion | `<details class="faq"><summary>Q</summary><p>A</p></details>` | |
 | Cross-link pills | `<div class="blog-pills"><a class="pill" href="...">` | 2–4 pills at the end |
 | Unit-swappable value | `<span class="u" data-imp="X" data-met="Y">X</span>` | Wrap every measurement |
+
+## In-article photo — `.blog-figure`
+
+Place each in-article image inside `.blog-content`, directly after the paragraph of the section
+it illustrates. Optional caption.
+
+```html
+<figure class="blog-figure">
+  <img src="/assets/images/blog-TOPIC-what-it-shows.webp" alt="DESCRIPTIVE ALT — what is happening"
+       width="800" height="400" loading="lazy">
+  <figcaption>One line tying the image to the point being made.</figcaption>
+</figure>
+```
+
+CSS — **does not exist yet, add to style.css during the build** (near the other `.blog-*` rules):
+
+```css
+  .blog-figure{margin:28px 0;max-width:700px}
+  .blog-figure img{width:100%;height:auto;border-radius:12px;display:block}
+  .blog-figure figcaption{font-size:13px;color:var(--muted);margin-top:8px;line-height:1.5}
+```
 
 ---
 
@@ -480,13 +528,17 @@ if(document.querySelectorAll('.u').length){
 
 ## Checklist when adding a new article
 
+- [ ] Image prompts FIRST — card + hero + 1–3 in-article, all in-context (not atmosphere); add every filename to the `calcthis-blog-hub.md` registry in the same step
+- [ ] Confirm the hero aspect ratio with the user (see the ⚠️ note above) before generating prompts
 - [ ] Create `blog/SLUG/index.html` using the template above
 - [ ] Add `{ file: 'blog/SLUG/index.html', slug: '/blog/SLUG/' }` to `build.js` PAGES array
 - [ ] Add `<url>` entry to `sitemap.xml`
-- [ ] Add article card to `blog/index.html` hub
-- [ ] Hero image in `assets/images/blog-IMAGE-NAME-article-header.webp`
+- [ ] Add article card to `blog/index.html` hub + JSON-LD `blogPost` entry
+- [ ] Hero image `assets/images/blog-TOPIC-article-header.webp` + card `…-article-card.webp` + in-article `blog-TOPIC-<what>.webp`
+- [ ] Add `.blog-figure` CSS to style.css if not already there
 - [ ] Wrap all measurements in `<span class="u" data-imp="..." data-met="...">`
-- [ ] Run preview builder script — verify styled, toggle works, diagrams zoom
+- [ ] `.related-calcs`-style cross-link: the article ends with `.blog-pills` + a `.calc-cta` to the calculator it explains
+- [ ] Run preview builder script — verify styled, toggle works, diagrams zoom, images load
 - [ ] Approve preview → commit → push to main → update CLAUDE.md
 
 ---
