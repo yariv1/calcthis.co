@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>BMI Calculator — Body Mass Index for Men &amp; Women | CalcThis</title>
-<meta name="description" content="Free BMI calculator. Get your body mass index and weight category from height and weight, in metric or imperial, with a live BMI scale and your healthy weight range. Advanced mode adds a target weight, BMI Prime and the Ponderal Index. Instant, no sign-up.">
+<meta name="description" content="Free BMI calculator with a live BMI chart. Get your body mass index and weight category from height and weight, in metric or imperial, see your point on the height-weight map, and your healthy weight range. Advanced mode adds a target weight, BMI Prime and the Ponderal Index. Instant, no sign-up.">
 <link rel="canonical" href="https://calcthis.co/bmi-calculator/">
 <meta property="og:type" content="website">
 <meta property="og:title" content="BMI Calculator — Body Mass Index for Men &amp; Women">
@@ -15,7 +15,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=68">
+<link rel="stylesheet" href="/assets/style.css?v=69">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
 <script>
@@ -34,7 +34,7 @@
   "applicationCategory": "HealthApplication",
   "operatingSystem": "Any (web browser)",
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-  "description": "Calculate your body mass index (BMI) and weight category from height and weight, in metric or imperial, with a live BMI scale, your healthy weight range, and a target weight, BMI Prime and Ponderal Index in advanced mode."
+  "description": "Calculate your body mass index (BMI) and weight category from height and weight, in metric or imperial, with a live BMI scale, an interactive BMI chart of height against weight, your healthy weight range, and a target weight, BMI Prime and Ponderal Index in advanced mode."
 }
 </script>
 <script type="application/ld+json">
@@ -114,7 +114,7 @@
   <section class="hero">
     <div class="eyebrow">Body mass index, done instantly</div>
     <h1>BMI Calculator</h1>
-    <p>Get your <strong>body mass index</strong> and <strong>weight category</strong> from your height and weight — metric or imperial. See where you land on a live <strong>BMI scale</strong> and the <strong>healthy weight range</strong> for your height. Tap <em>Go advanced</em> for a target weight, <strong>BMI Prime</strong> and the <strong>Ponderal Index</strong>.</p>
+    <p>Get your <strong>body mass index</strong> and <strong>weight category</strong> from your height and weight — metric or imperial. See where you land on a live <strong>BMI scale</strong> and a <strong>BMI chart</strong> of height against weight, plus the <strong>healthy weight range</strong> for your height. Tap <em>Go advanced</em> for a target weight, <strong>BMI Prime</strong> and the <strong>Ponderal Index</strong>.</p>
   </section>
 
   <div class="grid">
@@ -176,8 +176,23 @@
 
         <p class="bmi-range" id="bmiRange"></p>
 
+        <div class="bmi-chart" id="bmiChart" style="display:none">
+          <div class="bmi-chart-cap">Your point on the height &amp; weight map</div>
+          <svg id="bmiChartSvg" viewBox="0 0 320 300" role="img" aria-label="Chart plotting your height against your weight across the BMI categories"></svg>
+          <div class="bmi-chart-key">
+            <span><i style="background:#5A7361"></i>Underweight</span>
+            <span><i style="background:#37503F"></i>Normal</span>
+            <span><i style="background:#B5761F"></i>Overweight</span>
+            <span><i style="background:#8F5C13"></i>Obese</span>
+          </div>
+        </div>
+
         <div class="stable-wrap">
           <table class="dtable" id="catTable"></table>
+        </div>
+
+        <div class="bmi-note" id="bmiNote" style="display:none">
+          Carry a lot of muscle? BMI can't tell muscle from fat, so it can overstate things for a lean, athletic build. <a href="/body-fat-calculator/">Check your body fat&nbsp;%</a> for a second read.
         </div>
 
         <div id="advOut" style="display:none"></div>
@@ -189,7 +204,7 @@
     <div class="grid2">
       <div>
         <h2>How to use it</h2>
-        <p>Choose <strong>cm / kg</strong> or <strong>in / lb</strong>, then enter your <strong>height</strong> and <strong>weight</strong>. Your <strong>BMI</strong> and category appear straight away — no calculate button. The marker on the scale shows exactly where you sit between underweight, normal, overweight and obese, and the line below gives the <strong>weight range</strong> that keeps you in the normal band for your height.</p>
+        <p>Choose <strong>cm / kg</strong> or <strong>in / lb</strong>, then enter your <strong>height</strong> and <strong>weight</strong>. Your <strong>BMI</strong> and category appear straight away — no calculate button. The marker on the scale shows exactly where you sit between underweight, normal, overweight and obese, the line below gives the <strong>weight range</strong> that keeps you in the normal band for your height, and the <strong>BMI chart</strong> plots your point on the full height-against-weight map so you can see how far the nearest category line is.</p>
         <p>Tap <strong>Go advanced</strong> to set a <strong>target BMI</strong> (22 is the middle of the healthy range). You'll get the goal weight it works out to, how much to lose or gain to get there, plus <strong>BMI Prime</strong> and the <strong>Ponderal Index</strong>.</p>
 
         <h2>The BMI formula</h2>
@@ -223,6 +238,9 @@
 
         <h2>Healthy weight range</h2>
         <p>For any height there's a span of weights that all sit in the normal BMI band. The calculator shows yours in your chosen units, so you can see how much room you have — or how far there is to go — without guessing.</p>
+
+        <h2>Reading the BMI chart</h2>
+        <p>The <strong>BMI chart</strong> maps height against weight, shaded by category. Your dot moves live as you type. Find your dot, then read straight down to the weight axis or across to the height axis to see exactly how many kg or lb separate you from the next band — more useful than a single number when you're tracking a change.</p>
       </div>
     </div>
 
@@ -317,7 +335,7 @@
 
 </div>
 
-<script src="/assets/app.js?v=68"></script>
+<script src="/assets/app.js?v=69"></script>
 <script>CalcThis.initBMICalc({});</script>
 <script src="/feedback.js" defer></script>
 </body>

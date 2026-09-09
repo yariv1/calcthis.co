@@ -10,7 +10,7 @@
 
 ## Project state
 
-- **Asset version:** v68
+- **Asset version:** v69
 - **Total pages:** 39
 - **Model:** Opus 4.6
 
@@ -48,12 +48,13 @@ Ratio · Percentage
 
 ---
 
-## Last session (v68)
+## Last session (v69)
 
 - Built and deployed BMI Calculator (`/bmi-calculator/`) — `CalcThis.initBMICalc` in app.js, `.p-bmi` block in style.css
 - Live colour-coded BMI scale + marker, healthy weight range; advanced adds target weight, BMI Prime, Ponderal Index
+- Added the edge (post-research): interactive **BMI chart** (height×weight SVG map, live dot, category bands + legend) in the simple view, and a contextual "BMI misreads muscle → check body fat %" callout shown only when BMI ≥ 25
 - Wired build.js, sitemap.xml, header/footer partials, homepage card + JSON-LD hasPart + prose count (24 → 25)
-- Added `.claude/launch.json` (`calcthis-static` — `python -m http.server 8123`) for live localhost previews
+- Added `.claude/launch.json` (`calcthis-static` — `python -m http.server 8123`) + RULES 8–9 in workflow-rules (beat-competition step + served-preview delivery); expanded design-system PRODUCT PHILOSOPHY
 
 ---
 

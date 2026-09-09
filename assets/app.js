@@ -1697,6 +1697,14 @@ CalcThis.initBMICalc = function (cfg) {
   ];
   var SCALE_MIN = 12, SCALE_MAX = 42;
 
+  // height/weight chart — plot bounds in metric (kg, cm); ticks per unit
+  var CH = { x0: 36, y0: 10, x1: 312, y1: 272 };   // drawing box inside a 320x300 viewBox
+  var WB = [38, 142], HB = [138, 202];
+  var TICKS = {
+    cm: { w: [40, 60, 80, 100, 120, 140], h: [140, 150, 160, 170, 180, 190, 200] },
+    in: { w: [100, 150, 200, 250, 300], h: [55, 60, 65, 70, 75] }
+  };
+
   var heightIn = $('height'), weightIn = $('weight'), targetIn = $('targetBmi');
   if (!heightIn) return;
 
@@ -1735,6 +1743,47 @@ CalcThis.initBMICalc = function (cfg) {
     $('catTable').innerHTML = head + '<tbody>' + rows + '</tbody>';
   }
 
+  // ---- height vs weight chart ----
+  function sx(kg) { kg = Math.max(WB[0], Math.min(WB[1], kg)); return CH.x0 + (kg - WB[0]) / (WB[1] - WB[0]) * (CH.x1 - CH.x0); }
+  function sy(cm) { cm = Math.max(HB[0], Math.min(HB[1], cm)); return CH.y1 - (cm - HB[0]) / (HB[1] - HB[0]) * (CH.y1 - CH.y0); }
+  function curve(bmi) {
+    var p = [], N = 24, i, w;
+    for (i = 0; i <= N; i++) { w = WB[0] + (WB[1] - WB[0]) * i / N; p.push(sx(w) + ',' + sy(100 * Math.sqrt(w / bmi))); }
+    return p;
+  }
+  function renderChart(kg, cm) {
+    var svg = $('bmiChartSvg'); if (!svg) return;
+    var c185 = curve(18.5), c25 = curve(25), c30 = curve(30);
+    var midX = (CH.x0 + CH.x1) / 2, midY = (CH.y0 + CH.y1) / 2;
+    var g = '';
+    g += '<polygon points="' + c185.join(' ') + ' ' + CH.x1 + ',' + CH.y0 + ' ' + CH.x0 + ',' + CH.y0 + '" fill="#5A7361" fill-opacity=".22"/>';
+    g += '<polygon points="' + c185.join(' ') + ' ' + c25.slice().reverse().join(' ') + '" fill="#37503F" fill-opacity=".34"/>';
+    g += '<polygon points="' + c25.join(' ') + ' ' + c30.slice().reverse().join(' ') + '" fill="#B5761F" fill-opacity=".34"/>';
+    g += '<polygon points="' + c30.join(' ') + ' ' + CH.x1 + ',' + CH.y1 + ' ' + CH.x0 + ',' + CH.y1 + '" fill="#8F5C13" fill-opacity=".42"/>';
+    [c185, c25, c30].forEach(function (c) { g += '<polyline points="' + c.join(' ') + '" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="1.5"/>'; });
+    g += '<rect x="' + CH.x0 + '" y="' + CH.y0 + '" width="' + (CH.x1 - CH.x0) + '" height="' + (CH.y1 - CH.y0) + '" fill="none" stroke="#E7DECF" stroke-width="1"/>';
+    var tk = TICKS[unit === 'in' ? 'in' : 'cm'];
+    tk.w.forEach(function (tv) {
+      var kv = unit === 'in' ? tv / 2.2046226 : tv; if (kv < WB[0] || kv > WB[1]) return;
+      var x = sx(kv);
+      g += '<line x1="' + x + '" y1="' + CH.y1 + '" x2="' + x + '" y2="' + (CH.y1 + 4) + '" stroke="#8A7A66" stroke-width="1"/>';
+      g += '<text x="' + x + '" y="' + (CH.y1 + 15) + '" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#8A7A66">' + tv + '</text>';
+    });
+    tk.h.forEach(function (tv) {
+      var cv = unit === 'in' ? tv * 2.54 : tv; if (cv < HB[0] || cv > HB[1]) return;
+      var y = sy(cv);
+      g += '<line x1="' + (CH.x0 - 4) + '" y1="' + y + '" x2="' + CH.x0 + '" y2="' + y + '" stroke="#8A7A66" stroke-width="1"/>';
+      g += '<text x="' + (CH.x0 - 7) + '" y="' + (y + 3) + '" text-anchor="end" font-family="Inter,sans-serif" font-size="9" fill="#8A7A66">' + tv + '</text>';
+    });
+    g += '<text x="' + midX + '" y="299" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" font-weight="600" fill="#5B4C3B">Weight (' + (unit === 'in' ? 'lb' : 'kg') + ')</text>';
+    g += '<text x="9" y="' + midY + '" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" font-weight="600" fill="#5B4C3B" transform="rotate(-90 9 ' + midY + ')">Height (' + (unit === 'in' ? 'in' : 'cm') + ')</text>';
+    var cx = sx(kg), cy = sy(cm);
+    g += '<line x1="' + cx + '" y1="' + cy + '" x2="' + cx + '" y2="' + CH.y1 + '" stroke="#241A11" stroke-width="1" stroke-dasharray="3 2" opacity=".4"/>';
+    g += '<line x1="' + cx + '" y1="' + cy + '" x2="' + CH.x0 + '" y2="' + cy + '" stroke="#241A11" stroke-width="1" stroke-dasharray="3 2" opacity=".4"/>';
+    g += '<circle cx="' + cx + '" cy="' + cy + '" r="5" fill="#241A11" stroke="#fff" stroke-width="2"/>';
+    svg.innerHTML = g;
+  }
+
   function solve() {
     var h = toCm(num(heightIn.value)), w = toKg(num(weightIn.value));
     var resBig = $('resBig'), resUnit = $('resUnit'), resSub = $('resSub');
@@ -1745,6 +1794,8 @@ CalcThis.initBMICalc = function (cfg) {
       resSub.textContent = 'Enter your height and weight to see your BMI.';
       if (gauge) gauge.style.visibility = 'hidden';
       if (range) range.innerHTML = '';
+      if ($('bmiChart')) $('bmiChart').style.display = 'none';
+      if ($('bmiNote')) $('bmiNote').style.display = 'none';
       fillCatTable(NaN);
       if ($('advOut')) $('advOut').style.display = 'none';
       return;
@@ -1756,6 +1807,9 @@ CalcThis.initBMICalc = function (cfg) {
     resBig.textContent = one(bmi); if (resUnit) resUnit.textContent = '';
     resSub.textContent = cat.name + ' · World Health Organization';
     fillCatTable(bmi);
+
+    if ($('bmiChart')) { $('bmiChart').style.display = ''; renderChart(w, h); }
+    if ($('bmiNote')) $('bmiNote').style.display = bmi >= 25 ? '' : 'none';
 
     if (gauge && marker) {
       gauge.style.visibility = 'visible';

@@ -557,6 +557,13 @@
   .p-bmi .bmi-ticks span{position:absolute;transform:translateX(-50%)}
   .p-bmi .bmi-range{font-size:13px;color:var(--ink-soft);line-height:1.5;margin:0 0 4px}
   .p-bmi .bmi-range strong{color:var(--ink);font-weight:600}
+  .p-bmi .bmi-chart{margin:18px 0 6px}
+  .p-bmi .bmi-chart-cap{font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+  .p-bmi .bmi-chart svg{display:block;width:100%;max-width:420px;height:auto;overflow:visible}
+  .p-bmi .bmi-chart-key{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:9px;font-size:11px;font-weight:500;color:var(--ink-soft)}
+  .p-bmi .bmi-chart-key i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px;opacity:.55}
+  .p-bmi .bmi-note{margin:14px 0 4px;padding:11px 14px;background:#F6EEDF;border-left:3px solid var(--amber);border-radius:0 8px 8px 0;font-size:12.5px;line-height:1.5;color:var(--ink-soft)}
+  .p-bmi .bmi-note a{color:var(--amber-deep);font-weight:600;text-decoration:underline;text-underline-offset:2px}
 
 
   /* =========================================================
