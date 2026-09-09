@@ -112,7 +112,15 @@ Footer is OUTSIDE the wrap. No `<main>` tag — it does not exist in this codeba
 
 ---
 
-## PREVIEW BUILD SCRIPT (run exactly, never improvise)
+## PREVIEW — default is the served local site
+
+Run `preview_start` (name `calcthis-static` → `python -m http.server 8123` at repo root), then open
+`http://localhost:8123/<slug>/` in the browser pane. It renders fully before `node build.js`.
+In the final message give the user: `http://localhost:8123/<slug>/` (same PC) and
+`http://<LAN-IP>:8123/<slug>/` (other device on Wi-Fi; `ipconfig | grep IPv4`).
+See `calcthis-working-rules.md` → "Previews". The script below is the FALLBACK when the server can't run.
+
+## PREVIEW BUILD SCRIPT — fallback only (run exactly, never improvise)
 
 ```python
 import re
@@ -143,7 +151,7 @@ Why each step is mandatory:
 ---
 
 ## AFTER CREATING THE FILE
-1. Provide a full styled HTML preview (RULE #1 — never ship before approved preview)
+1. Serve the preview (`calcthis-static` on :8123), verify it in the browser pane, give the user the localhost + LAN Chrome links (RULE #1 — never ship before approved preview)
 2. Add page to `PAGES` array in `build.js` — `{ file: 'SLUG/index.html', slug: '/SLUG/' }`
 3. Add nav link in `partials/header.html` (correct column)
 4. Add footer link in `partials/footer.html` (correct pillar)

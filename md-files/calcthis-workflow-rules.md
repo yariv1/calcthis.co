@@ -97,6 +97,20 @@ After approval: commit with a descriptive message, push to main, update CLAUDE.m
 
 ---
 
+## ⛔ RULE 8 — EVERY CALCULATOR MUST BEAT THE COMPETITION BY ONE CLEAR THING
+
+Before writing code: research the top-ranking calculators for the keyword, then decide the
+**one** thing we do better — usually a live visual aid (bar / gauge / marker / diagram) and/or
+a genuinely useful extra output. Power-user depth goes behind **Go advanced**; the default
+view stays minimal. No bloat — nothing ships "just in case".
+Full checklist: `calcthis-design-system.md` → "PRODUCT PHILOSOPHY".
+
+## RULE 9 — PREVIEW IS SERVED, AND SHOWN BOTH WAYS
+
+End every build by: (1) `preview_start` `calcthis-static` + open `http://localhost:8123/<slug>/`
+in the browser pane and verify it works, (2) give the user the localhost + `<LAN-IP>:8123`
+Chrome links in the final message. Details: `calcthis-working-rules.md` → "Previews".
+
 ## The failures these rules exist to prevent:
 
 1. **Guessed an image filename not in the registry** — violated the registry rule (Rule 2).

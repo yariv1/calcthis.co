@@ -37,23 +37,29 @@ These files are the single source of truth. Never guess class names. Never guess
 Read `calcthis-new-page-checklist.md` before writing any code.
 It contains every class name, structure pattern, and the exact preview build script.
 
-## Previews
+## Previews — DEFAULT: served, not a file
 
-* Preview = standalone self-contained HTML file (CSS + app.js inlined, fonts from Google CDN).
-* Deliverables: new calc page preview (+ homepage preview when the homepage changed).
-* ALWAYS tell the user when a preview is functional-only (no real CSS) — never let them guess.
-* RULE #1: never deliver/ship before a full styled HTML preview is approved.
-* Run the exact Python preview script from the checklist skill — never improvise it.
+At the end of every build, deliver the preview BOTH ways:
 
-## Preview Builder Rules
+1. **In the browser pane here** — `preview_start` with `name: "calcthis-static"` (from `.claude/launch.json`,
+   runs `python -m http.server 8123` at repo root), then `navigate` the pane to
+   `http://localhost:8123/<slug>/` and confirm it renders + the calculator works.
+2. **Chrome links for the user**, in the final message:
+   * Same PC: `http://localhost:8123/<slug>/`
+   * Same Wi-Fi (other device): `http://<LAN-IP>:8123/<slug>/` — get the IP with `ipconfig | grep IPv4`.
+   * Note the server only lives while the session does; a firewall prompt may need allowing Python.
+* The served page renders fully BEFORE `node build.js` (header/footer already inline; build.js only stamps
+  `class="current"` + bumps the asset version). No inlining, no file to download.
+* Deliverables: new calc page (+ the homepage when it changed).
+* RULE #1: never deliver/ship before a full styled preview is approved.
 
-* Replace `<!--HEADER:START-->...<!--HEADER:END-->` with real header HTML inline
-* Replace `<!--FOOTER:START-->...<!--FOOTER:END-->` with real footer HTML inline
-* Fix favicon/asset paths: `/assets/favicon.svg` -> `https://calcthis.co/assets/favicon.svg`
-* Replace `<link rel="stylesheet" href="/assets/style.css?v=N">` with `<style>{css}</style>` — inline style.css AS-IS, no dedent, no transformation
-* Strip AdSense `<script async src="https://pagead2...">` — it JS-blocks on file:// and breaks the page
-* Replace `<script src="/assets/app.js?v=N"></script>` with `<script>{app_js}</script>` (keep order: app.js before page script)
-* Remove `<script src="/feedback.js" defer></script>`
+### Fallback only — self-contained HTML file
+
+Use the Python inline script from the checklist skill ONLY if the local server can't run
+(no Python, port taken, etc.). If a preview is ever functional-only (no real CSS), SAY SO — never let the user guess.
+Inline rules for that fallback: header/footer HTML inline between the markers · favicon `/assets/...` -> `https://calcthis.co/assets/...` ·
+`<link ... style.css?v=N>` -> `<style>{css}</style>` (AS-IS, no dedent) · strip the AdSense `pagead2` script (JS-blocks on file://) ·
+`app.js?v=N` -> `<script>{app_js}</script>` (before the page script) · remove `feedback.js`.
 
 ## Deploy
 

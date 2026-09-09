@@ -2,10 +2,41 @@
 
 Always use these exact patterns. Do not deviate or invent alternatives.
 
-Also apply the product philosophy on every build:
-- Research what everyone else does (99% do the same). Find the one thing we can do BETTER that gives real added value and brings users back.
-- Prefer visual aids where relevant — let the user SEE the result (live bars, fills, visual feedback), not only a dry form. Outperform existing calculators.
-- Do NOT overcomplicate or add things the user won't need. Value, not bloat.
+---
+
+## ⭐ PRODUCT PHILOSOPHY — do this on EVERY calculator, before writing code
+
+This is a required design step, not a nice-to-have. A calculator that only matches the
+competition is a failed build.
+
+### 1. Research first — then beat it by one clear thing
+- Look at what the top 3–5 ranking calculators for this keyword actually do. ~99% are the
+  same dry form → number.
+- "Everyone does it this way" is NOT proof it's the best way. Question the common pattern.
+- Pick **one** thing we do genuinely better — a real reason a user bookmarks us and comes
+  back. Name it explicitly in the build. Examples already shipped:
+  - Peptide: live syringe diagram showing the exact draw mark.
+  - Macro / Ratio / Percentage: live animated ring / proportion bar / fill bar.
+  - BMI: colour-coded scale with a sliding marker + healthy-weight range for your height.
+  - Construction calcs: running project tally + waste factor across multiple areas.
+
+### 2. Show, don't just tell — visual aids where relevant
+- Prefer a visual the user can SEE update live: bars, fills, gauges, markers, diagrams,
+  highlighted table rows, a plotted position.
+- The dry input→number form is the baseline everyone has. The visual is the edge.
+- Only when it genuinely helps understanding — don't bolt a chart onto something that
+  doesn't need one.
+
+### 3. Depth without clutter — use "Go advanced"
+- Keep the default view minimal: the inputs a normal user needs, nothing else.
+- Anything power-user (extra formulas, secondary metrics, optional inputs) goes behind the
+  **Go advanced** toggle (see pattern below). Simple stays simple; depth is opt-in.
+
+### 4. Value, not bloat
+- Do NOT add inputs or outputs "just in case" or because a competitor has them.
+- If a typical user won't use it, it doesn't ship — not even in advanced mode unless it
+  earns its place.
+- More features ≠ better. One sharp differentiator + a clean form beats a wall of options.
 
 ---
 
