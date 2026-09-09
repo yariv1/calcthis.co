@@ -59,18 +59,42 @@ ALWAYS use this exact pattern:
 
 ---
 
-## Cross-links (.pill)
+## Cross-links — REQUIRED on every calculator
 
-Placed outside the right card, below on mobile:
+Two placements, both expected on a finished page:
+
+### 1. `.pill` row after the calculator grid (standard)
+
+2–4 **genuinely related** calculators, immediately after `</div><!-- grid -->` and BEFORE
+`<section class="content">`. Exact pattern (matches `zone-2-heart-rate-calculator`):
 
 ```html
-<div class="pct-pills">  <!-- or page-appropriate wrapper -->
-  <a class="pill" href="/calc-url/">
-    <svg ...></svg>
-    Calculator Name
-  </a>
-</div>
+  <div class="pills" style="margin-top:20px">
+    <a class="pill" href="/related-calculator/">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><!-- simple icon --></svg>
+      Related Calculator
+    </a>
+    <!-- 1–3 more -->
+  </div>
 ```
+
+Pick by real user journey, not category. e.g. Calorie → TDEE, Macro, BMI, Body Fat.
+CSS is `.pills` + `.pill` in style.css already — no new classes, no page-level `.pill` overrides.
+
+**`.pill` is a button-style chip — NEVER underlined.** The base `.pill` rule handles it:
+`display:inline-flex; align-items:center; gap:5px; text-decoration:none` (+ `.pill svg{flex:none}`
+and an `a.pill:hover`). Don't add `text-decoration` and don't re-declare flex/gap per page —
+if a pill looks wrong, fix the base rule.
+
+### 2. Contextual inline links in results / advanced notes (where it earns its place)
+
+A link inside a `.res-tip` / note at the exact moment it's useful — e.g. the Calorie calc's
+advanced note: "…For a fuller macro breakdown use the <a href="/tdee-calculator/">TDEE
+calculator</a>." or BMI's "check your body fat %" callout when BMI ≥ 25. These convert
+better than a generic footer link because the context is live.
+
+Also keep 1–2 links in the SEO content prose. Every calculator should hand the user their
+next obvious step.
 
 ---
 
@@ -139,8 +163,10 @@ Single `.sel` wrapper — never nest two:
 * No body / data / label text below **14px**. This includes result sub-lines, hint/tip text
   (`.res-tip`, `.res-sub`, `.zsub`), table cells, list rows, captions.
 * Only exceptions ("extreme case — depends when and where"): tiny uppercase tracked
-  micro-labels (eyebrow / section caption style) and in-SVG chart tick labels, and only
-  when 14px genuinely breaks the layout. Flag these to the user rather than assuming.
+  micro-labels (eyebrow / section caption style), and **in-SVG chart text** — axis labels,
+  tick values, titles — which sits at a **12px floor** (in viewBox units; charts scale up
+  with their container so 12 renders ≥12px). Never ship chart text below that. Flag any
+  other sub-14px text to the user rather than assuming.
 * `.res-tip` in a calculator's advanced output pane: 16px, colour `rgb(181,118,31)` (`--amber`)
   — see `.p-age #advOut .res-tip`. Reuse that treatment for advanced-mode explanatory lines.
 

@@ -1698,7 +1698,7 @@ CalcThis.initBMICalc = function (cfg) {
   var SCALE_MIN = 12, SCALE_MAX = 42;
 
   // height/weight chart — plot bounds in metric (kg, cm); ticks per unit
-  var CH = { x0: 36, y0: 10, x1: 312, y1: 272 };   // drawing box inside a 320x300 viewBox
+  var CH = { x0: 42, y0: 10, x1: 312, y1: 270 };   // drawing box inside a 320x308 viewBox
   var WB = [38, 142], HB = [138, 202];
   var TICKS = {
     cm: { w: [40, 60, 80, 100, 120, 140], h: [140, 150, 160, 170, 180, 190, 200] },
@@ -1767,16 +1767,16 @@ CalcThis.initBMICalc = function (cfg) {
       var kv = unit === 'in' ? tv / 2.2046226 : tv; if (kv < WB[0] || kv > WB[1]) return;
       var x = sx(kv);
       g += '<line x1="' + x + '" y1="' + CH.y1 + '" x2="' + x + '" y2="' + (CH.y1 + 4) + '" stroke="#8A7A66" stroke-width="1"/>';
-      g += '<text x="' + x + '" y="' + (CH.y1 + 15) + '" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#8A7A66">' + tv + '</text>';
+      g += '<text x="' + x + '" y="' + (CH.y1 + 18) + '" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#8A7A66">' + tv + '</text>';
     });
     tk.h.forEach(function (tv) {
       var cv = unit === 'in' ? tv * 2.54 : tv; if (cv < HB[0] || cv > HB[1]) return;
       var y = sy(cv);
       g += '<line x1="' + (CH.x0 - 4) + '" y1="' + y + '" x2="' + CH.x0 + '" y2="' + y + '" stroke="#8A7A66" stroke-width="1"/>';
-      g += '<text x="' + (CH.x0 - 7) + '" y="' + (y + 3) + '" text-anchor="end" font-family="Inter,sans-serif" font-size="9" fill="#8A7A66">' + tv + '</text>';
+      g += '<text x="' + (CH.x0 - 8) + '" y="' + (y + 4) + '" text-anchor="end" font-family="Inter,sans-serif" font-size="12" fill="#8A7A66">' + tv + '</text>';
     });
-    g += '<text x="' + midX + '" y="299" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" font-weight="600" fill="#5B4C3B">Weight (' + (unit === 'in' ? 'lb' : 'kg') + ')</text>';
-    g += '<text x="9" y="' + midY + '" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" font-weight="600" fill="#5B4C3B" transform="rotate(-90 9 ' + midY + ')">Height (' + (unit === 'in' ? 'in' : 'cm') + ')</text>';
+    g += '<text x="' + midX + '" y="305" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="600" fill="#5B4C3B">Weight (' + (unit === 'in' ? 'lb' : 'kg') + ')</text>';
+    g += '<text x="13" y="' + midY + '" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="600" fill="#5B4C3B" transform="rotate(-90 13 ' + midY + ')">Height (' + (unit === 'in' ? 'in' : 'cm') + ')</text>';
     var cx = sx(kg), cy = sy(cm);
     g += '<line x1="' + cx + '" y1="' + cy + '" x2="' + cx + '" y2="' + CH.y1 + '" stroke="#241A11" stroke-width="1" stroke-dasharray="3 2" opacity=".4"/>';
     g += '<line x1="' + cx + '" y1="' + cy + '" x2="' + CH.x0 + '" y2="' + cy + '" stroke="#241A11" stroke-width="1" stroke-dasharray="3 2" opacity=".4"/>';
@@ -1957,7 +1957,7 @@ CalcThis.initAgeCalc = function (cfg) {
     var nextDec = Math.floor(age / 10) * 10 + 10;
     function decBd(n) { return new Date(dob.getFullYear() + n, dob.getMonth(), dob.getDate()); }
     var t0 = dob.getTime(), t1 = decBd(nextDec).getTime();
-    var x0 = 12, x1 = 308, y = 40, h = 12;
+    var x0 = 12, x1 = 308, y = 44, h = 12;
     function sx(dt) { return x0 + Math.max(0, Math.min(1, (dt.getTime() - t0) / (t1 - t0))) * (x1 - x0); }
     var g = '';
     g += '<rect x="' + x0 + '" y="' + y + '" width="' + (x1 - x0) + '" height="' + h + '" rx="6" fill="#EDF2ED"/>';
@@ -1965,14 +1965,14 @@ CalcThis.initAgeCalc = function (cfg) {
     for (var d = 10; d < nextDec; d += 10) {
       var dx = sx(decBd(d));
       g += '<line x1="' + dx + '" y1="' + (y - 4) + '" x2="' + dx + '" y2="' + (y + h + 4) + '" stroke="#8A7A66" stroke-width="1"/>';
-      g += '<text x="' + dx + '" y="' + (y + h + 16) + '" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#8A7A66">' + d + '</text>';
+      g += '<text x="' + dx + '" y="' + (y + h + 18) + '" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#8A7A66">' + d + '</text>';
     }
     var nx = sx(today);
-    g += '<line x1="' + nx + '" y1="' + (y - 12) + '" x2="' + nx + '" y2="' + (y + h + 6) + '" stroke="#241A11" stroke-width="1.5"/>';
+    g += '<line x1="' + nx + '" y1="' + (y - 14) + '" x2="' + nx + '" y2="' + (y + h + 6) + '" stroke="#241A11" stroke-width="1.5"/>';
     g += '<circle cx="' + nx + '" cy="' + (y + h / 2) + '" r="4" fill="#241A11" stroke="#fff" stroke-width="1.5"/>';
-    g += '<text x="' + nx + '" y="' + (y - 16) + '" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" font-weight="700" fill="#241A11">' + age + '</text>';
-    g += '<text x="' + x0 + '" y="14" font-family="Inter,sans-serif" font-size="9" fill="#8A7A66">Born ' + dob.getFullYear() + '</text>';
-    g += '<text x="' + x1 + '" y="14" text-anchor="end" font-family="Inter,sans-serif" font-size="9" fill="#8A7A66">' + nextDec + '</text>';
+    g += '<text x="' + nx + '" y="' + (y - 19) + '" text-anchor="middle" font-family="Inter,sans-serif" font-size="13" font-weight="700" fill="#241A11">' + age + '</text>';
+    g += '<text x="' + x0 + '" y="18" font-family="Inter,sans-serif" font-size="12" fill="#8A7A66">Born ' + dob.getFullYear() + '</text>';
+    g += '<text x="' + x1 + '" y="18" text-anchor="end" font-family="Inter,sans-serif" font-size="12" fill="#8A7A66">' + nextDec + '</text>';
     svg.innerHTML = g;
   }
 
@@ -2076,6 +2076,319 @@ CalcThis.initAgeCalc = function (cfg) {
     dobIn.addEventListener(ev, solve);
     if (onIn) onIn.addEventListener(ev, solve);
   });
+
+  solve();
+};
+
+/* -----------------------------------------------------------
+   CalcThis.initCalorieCalc(cfg) — calories to reach a goal weight.
+   Independent engine. Mifflin-St Jeor BMR (Katch-McArdle when a
+   body-fat % is given) x activity = maintenance. Enter a goal
+   weight -> daily calorie target for a chosen pace, a pace table
+   (gentle / moderate / fast) with unsafe rows flagged, a projected
+   weight-loss curve with 25/50/75% milestone dates and a goal
+   date, plus a protein target. Advanced: plan by target date
+   instead of pace, body-fat % (Katch-McArdle), full macro split.
+   Live, no button. Inches default for US users. */
+CalcThis.initCalorieCalc = function (cfg) {
+  cfg = cfg || {};
+  var $ = function (id) { return document.getElementById(id); };
+  var sex = 'female', unit = 'cm', advanced = false, pace = 'moderate', planByDate = false, dpTarget = null;
+
+  var KCAL_PER_KG = 7700;
+  var PACES = { gentle: 0.25, moderate: 0.5, fast: 1.0 };
+  var PACE_ORDER = ['gentle', 'moderate', 'fast'];
+  var PACE_LABEL = { gentle: 'Gentle', moderate: 'Moderate', fast: 'Fast' };
+  var PACE_RATE = {
+    gentle: { cm: '0.25 kg', in: '0.5 lb' },
+    moderate: { cm: '0.5 kg', in: '1 lb' },
+    fast: { cm: '1 kg', in: '2 lb' }
+  };
+  var DOW = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  var MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+  var ageIn = $('age'), heightIn = $('height'), weightIn = $('weight'), goalIn = $('goal'),
+      bfIn = $('bodyfat'), actSel = $('activity'), targetIn = $('targetDate');
+  if (!ageIn) return;
+
+  function num(v) { v = parseFloat(('' + v).trim()); return isNaN(v) ? NaN : v; }
+  function toCm(v) { return unit === 'in' ? v * 2.54 : v; }
+  function toKg(v) { return unit === 'in' ? v / 2.2046226 : v; }
+  function fromKg(v) { return unit === 'in' ? v * 2.2046226 : v; }
+  function r0(x) { return Math.round(x); }
+  function one(x) { return (Math.round(x * 10) / 10).toFixed(1); }
+  function wU() { return unit === 'in' ? 'lb' : 'kg'; }
+  function midnight(d) { return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
+  function addDays(d, n) { return new Date(d.getFullYear(), d.getMonth(), d.getDate() + n); }
+  function fmtD(d) { return DOW[d.getDay()] + ' ' + d.getDate() + ' ' + MON[d.getMonth()] + ' ' + d.getFullYear(); }
+  function floorCal() { return sex === 'female' ? 1200 : 1500; }
+
+  var PH = {
+    cm: { age: '30', height: '178', weight: '85', goal: '75' },
+    in: { age: '30', height: '70', weight: '187', goal: '165' }
+  };
+  function applyUnit() {
+    var mu = unit === 'in' ? 'in' : 'cm', wu = wU(), p = PH[unit];
+    if ($('uHeight')) $('uHeight').textContent = mu;
+    if ($('uWeight')) $('uWeight').textContent = wu;
+    if ($('uGoal')) $('uGoal').textContent = wu;
+    if (heightIn) heightIn.placeholder = p.height;
+    if (weightIn) weightIn.placeholder = p.weight;
+    if (goalIn) goalIn.placeholder = p.goal;
+    if (ageIn) ageIn.placeholder = p.age;
+    if (unitSeg) [].forEach.call(unitSeg.querySelectorAll('button'), function (x) {
+      x.classList.toggle('on', x.getAttribute('data-unit') === unit);
+    });
+  }
+
+  function bmrOf(wKg) {
+    var h = toCm(num(heightIn.value)), age = num(ageIn.value);
+    if (!(wKg > 0 && h > 0 && age > 0)) return null;
+    var bf = advanced ? num(bfIn ? bfIn.value : NaN) : NaN;
+    if (isFinite(bf) && bf > 0 && bf < 70) {
+      return { bmr: 370 + 21.6 * (wKg * (1 - bf / 100)), method: 'Katch-McArdle' };
+    }
+    return { bmr: 10 * wKg + 6.25 * h - 5 * age + (sex === 'male' ? 5 : -161), method: 'Mifflin-St Jeor' };
+  }
+
+  function model() {
+    var wKg = toKg(num(weightIn.value));
+    var m = bmrOf(wKg);
+    if (!m) return null;
+    var act = actSel ? parseFloat(actSel.value) : 1.55; if (!(act > 0)) act = 1.55;
+    var goalKg = toKg(num(goalIn.value));
+    var hasGoal = isFinite(goalKg) && goalKg > 0;
+    var dir = !hasGoal ? -1 : (goalKg < wKg ? -1 : (goalKg > wKg ? 1 : 0));
+    return { bmr: m.bmr, method: m.method, tdee: m.bmr * act, wKg: wKg, goalKg: goalKg, hasGoal: hasGoal, dir: dir };
+  }
+
+  function calForRate(md, weeklyKg) { return md.tdee + md.dir * (weeklyKg * KCAL_PER_KG / 7); }
+  function unsafe(md, weeklyKg, cal) {
+    if (md.dir === -1 && cal < floorCal()) return 'below';
+    if (weeklyKg > 0.0125 * md.wKg) return 'fast';
+    return null;
+  }
+  function weeksToGoal(md, weeklyKg) {
+    if (!md.hasGoal || md.dir === 0 || !(weeklyKg > 0)) return null;
+    return Math.abs(md.goalKg - md.wKg) / weeklyKg;
+  }
+
+  function renderChart(md, weeklyKg) {
+    var svg = $('calChart'); if (!svg) return;
+    var weeks = weeksToGoal(md, weeklyKg);
+    if (weeks == null || weeks <= 0 || weeks > 520) { $('calChartWrap').style.display = 'none'; return; }
+    $('calChartWrap').style.display = '';
+    var X0 = 46, X1 = 312, Y0 = 16, Y1 = 158;
+    var wStart = md.wKg, wEnd = md.goalKg;
+    var lo = Math.min(wStart, wEnd), hi = Math.max(wStart, wEnd), pad = (hi - lo) * 0.12 || 1;
+    lo -= pad; hi += pad;
+    function sx(wk) { return X0 + wk / weeks * (X1 - X0); }
+    function sy(kg) { return Y1 - (kg - lo) / (hi - lo) * (Y1 - Y0); }
+    var today = midnight(new Date());
+    var g = '';
+    g += '<rect x="' + X0 + '" y="' + Y0 + '" width="' + (X1 - X0) + '" height="' + (Y1 - Y0) + '" fill="none" stroke="#E7DECF" stroke-width="1"/>';
+    // y ticks (start & goal weight)
+    [wStart, wEnd].forEach(function (kg) {
+      var y = sy(kg);
+      g += '<line x1="' + (X0 - 4) + '" y1="' + y + '" x2="' + X0 + '" y2="' + y + '" stroke="#8A7A66" stroke-width="1"/>';
+      g += '<text x="' + (X0 - 8) + '" y="' + (y + 4) + '" text-anchor="end" font-family="Inter,sans-serif" font-size="12" fill="#8A7A66">' + one(fromKg(kg)) + '</text>';
+    });
+    // projection line + fill
+    g += '<path d="M' + sx(0) + ' ' + Y1 + ' L' + sx(0) + ' ' + sy(wStart) + ' L' + sx(weeks) + ' ' + sy(wEnd) + ' L' + sx(weeks) + ' ' + Y1 + ' Z" fill="#B5761F" fill-opacity=".10"/>';
+    g += '<line x1="' + sx(0) + '" y1="' + sy(wStart) + '" x2="' + sx(weeks) + '" y2="' + sy(wEnd) + '" stroke="#B5761F" stroke-width="2"/>';
+    // milestone dots 25/50/75/100
+    [0.25, 0.5, 0.75, 1].forEach(function (f) {
+      var wk = weeks * f, kg = wStart + (wEnd - wStart) * f;
+      var x = sx(wk), y = sy(kg), d = addDays(today, Math.round(wk * 7));
+      g += '<circle cx="' + x + '" cy="' + y + '" r="3.5" fill="#B5761F" stroke="#fff" stroke-width="1.5"/>';
+      if (f === 1) g += '<text x="' + x + '" y="' + (Y1 + 20) + '" text-anchor="end" font-family="Inter,sans-serif" font-size="12" font-weight="700" fill="#5B4C3B">' + fmtD(d) + '</text>';
+    });
+    g += '<text x="' + X0 + '" y="' + (Y1 + 20) + '" font-family="Inter,sans-serif" font-size="12" fill="#8A7A66">today</text>';
+    g += '<text x="13" y="' + ((Y0 + Y1) / 2) + '" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="600" fill="#5B4C3B" transform="rotate(-90 13 ' + ((Y0 + Y1) / 2) + ')">Weight (' + wU() + ')</text>';
+    svg.innerHTML = g;
+  }
+
+  function fillPaceTable(md) {
+    var head = '<thead><tr><th>Pace</th><th>Per week</th><th>Calories</th></tr></thead>';
+    var rows = '';
+    PACE_ORDER.forEach(function (k) {
+      var wk = PACES[k], cal = calForRate(md, wk), u = unsafe(md, wk, cal);
+      var cls = (k === pace && !planByDate) ? ' cur' : '';
+      var flag = u === 'below' ? '<span class="cal-warn">below safe min</span>' : (u === 'fast' ? '<span class="cal-warn">fast</span>' : '');
+      rows += '<tr class="cal-row' + cls + '" data-pace="' + k + '"><td>' + PACE_LABEL[k] + '</td><td>' +
+        PACE_RATE[k][unit === 'in' ? 'in' : 'cm'] + '/wk</td><td>' + r0(cal).toLocaleString() + flag + '</td></tr>';
+    });
+    $('paceTable').innerHTML = head + '<tbody>' + rows + '</tbody>';
+  }
+
+  function solve() {
+    var md = model();
+    var big = $('resBig'), unitEl = $('resUnit'), sub = $('resSub');
+    var detail = $('calDetail'), note = $('calNote');
+
+    if (!md) {
+      big.textContent = '—'; unitEl.textContent = '';
+      sub.textContent = 'Enter your age, height, weight and activity to see your target.';
+      if (detail) detail.style.display = 'none';
+      if (note) note.style.display = 'none';
+      if ($('advOut')) $('advOut').style.display = 'none';
+      return;
+    }
+
+    if (detail) detail.style.display = '';
+    fillPaceTable(md);
+
+    // determine the active plan: by date (advanced) or by pace
+    var weeklyKg, planTxt, dateWeeks = null;
+    if (planByDate && dpTarget && dpTarget.getDate() && md.hasGoal && md.dir !== 0) {
+      var td = midnight(dpTarget.getDate()), today = midnight(new Date());
+      dateWeeks = (td - today) / 6048e5;
+      if (dateWeeks > 0) {
+        weeklyKg = Math.abs(md.goalKg - md.wKg) / dateWeeks;
+        planTxt = 'to reach ' + one(fromKg(md.goalKg)) + ' ' + wU() + ' by ' + fmtD(td);
+      }
+    }
+    if (weeklyKg == null) { weeklyKg = PACES[pace]; planTxt = PACE_LABEL[pace].toLowerCase() + ' pace'; }
+
+    var cal = calForRate(md, weeklyKg);
+    var u = unsafe(md, weeklyKg, cal);
+    var perDay = weeklyKg * KCAL_PER_KG / 7;
+
+    if (md.dir === 0) {
+      big.textContent = r0(md.tdee).toLocaleString(); unitEl.textContent = 'kcal/day';
+      sub.textContent = "You're at your goal — this is your maintenance.";
+    } else {
+      big.textContent = r0(cal).toLocaleString(); unitEl.textContent = 'kcal/day';
+      sub.textContent = '≈ ' + r0(perDay).toLocaleString() + ' kcal/day ' + (md.dir === -1 ? 'below' : 'above') +
+        ' maintenance · ' + planTxt;
+    }
+
+    // safety note
+    if (note) {
+      if (u === 'below') {
+        note.className = 'cal-note warn'; note.style.display = '';
+        note.textContent = 'That target is under the ' + floorCal() + ' kcal safe minimum for ' +
+          (sex === 'female' ? 'women' : 'men') + '. Choose a gentler pace, or get medical guidance before eating this low.';
+      } else if (u === 'fast') {
+        note.className = 'cal-note warn'; note.style.display = '';
+        note.textContent = md.dir === 1
+          ? 'That surplus adds weight faster than about 1% of your bodyweight a week — most of the extra would be fat, not muscle. A gentler pace makes for leaner gains.'
+          : 'This loses more than about 1% of your bodyweight per week — faster than most guidelines advise. A gentler pace protects muscle and is easier to sustain.';
+      } else { note.style.display = 'none'; }
+    }
+
+    // goal line + chart
+    var wk = weeksToGoal(md, weeklyKg);
+    if ($('calGoal')) {
+      if (wk != null) {
+        var gd = addDays(midnight(new Date()), Math.round(wk * 7));
+        $('calGoal').innerHTML = 'At this rate you reach <strong>' + one(fromKg(md.goalKg)) + ' ' + wU() +
+          '</strong> around <strong>' + fmtD(gd) + '</strong> — about ' +
+          (wk < 12 ? r0(wk) + ' weeks' : one(wk / 4.345) + ' months') + '.';
+        $('calGoal').style.display = '';
+      } else if (!md.hasGoal) {
+        $('calGoal').innerHTML = 'Add a <strong>goal weight</strong> for a target date and a projected path.';
+        $('calGoal').style.display = '';
+      } else { $('calGoal').style.display = 'none'; }
+    }
+    renderChart(md, weeklyKg);
+
+    // protein
+    if ($('calProtein')) {
+      var pg = 1.8 * md.wKg;
+      $('calProtein').innerHTML = 'Protein: aim for about <strong>' + r0(pg) + ' g/day</strong> (1.8 g/kg) to hold on to muscle' +
+        (md.dir === -1 ? ' while losing.' : '.');
+    }
+    if ($('calMaint')) $('calMaint').innerHTML = 'Maintenance (' + md.method + '): <strong>' + r0(md.tdee).toLocaleString() + ' kcal/day</strong>.';
+
+    // advanced macro split
+    var advOut = $('advOut');
+    if (advanced && advOut) {
+      var base = md.dir === 0 ? md.tdee : cal;
+      var pk = 1.8 * md.wKg * 4, fk = 0.25 * base, ck = base - pk - fk; if (ck < 0) ck = 0;
+      advOut.innerHTML =
+        '<div class="macro-head">Daily macros at ' + r0(base).toLocaleString() + ' kcal</div>' +
+        '<div class="macro"><span class="k">Protein</span><span class="g">' + r0(pk / 4) + ' g</span><span class="pc">' + Math.round(pk / base * 100) + '%</span></div>' +
+        '<div class="macro"><span class="k">Carbs</span><span class="g">' + r0(ck / 4) + ' g</span><span class="pc">' + Math.round(ck / base * 100) + '%</span></div>' +
+        '<div class="macro"><span class="k">Fat</span><span class="g">' + r0(fk / 9) + ' g</span><span class="pc">' + Math.round(fk / base * 100) + '%</span></div>' +
+        '<p class="res-tip">The 7700 kcal per kg rule is a planning estimate — real loss slows as you go because your body adapts, so re-check every few weeks. For a fuller macro breakdown use the <a href="/tdee-calculator/">TDEE calculator</a>.</p>';
+      advOut.style.display = '';
+    } else if (advOut) { advOut.style.display = 'none'; }
+  }
+
+  var sexSeg = $('sexSeg');
+  if (sexSeg) sexSeg.addEventListener('click', function (e) {
+    var b = e.target.closest ? e.target.closest('button') : null; if (!b) return;
+    sex = b.getAttribute('data-sex');
+    [].forEach.call(sexSeg.querySelectorAll('button'), function (x) { x.classList.toggle('on', x === b); });
+    solve();
+  });
+
+  var unitSeg = $('unitSeg');
+  if (unitSeg) unitSeg.addEventListener('click', function (e) {
+    var b = e.target.closest ? e.target.closest('button') : null; if (!b) return;
+    unit = b.getAttribute('data-unit');
+    try { localStorage.setItem('ct_units', unit); } catch (err) {}
+    applyUnit(); solve();
+  });
+
+  var paceTable = $('paceTable');
+  if (paceTable) paceTable.addEventListener('click', function (e) {
+    var tr = e.target.closest ? e.target.closest('.cal-row') : null; if (!tr) return;
+    pace = tr.getAttribute('data-pace'); planByDate = false;
+    if ($('planDateWrap')) { var t = $('planToggle'); if (t) t.checked = false; $('planDateWrap').style.display = 'none'; }
+    solve();
+  });
+
+  var planToggle = $('planToggle');
+  if (planToggle) planToggle.addEventListener('change', function () {
+    planByDate = this.checked;
+    if ($('planDateWrap')) $('planDateWrap').style.display = planByDate ? '' : 'none';
+    solve();
+  });
+
+  var advBtn = $('advBtn');
+  if (advBtn) advBtn.addEventListener('click', function () {
+    advanced = !advanced;
+    advBtn.classList.toggle('open', advanced);
+    $('advBtnLab').textContent = advanced ? 'Go simple' : 'Go advanced';
+    $('advIn').style.display = advanced ? '' : 'none';
+    if (!advanced) { planByDate = false; if (planToggle) planToggle.checked = false; if ($('planDateWrap')) $('planDateWrap').style.display = 'none'; }
+    solve();
+    if (advanced) { var a = $('advIn'); if (a && a.scrollIntoView) a.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+  });
+
+  [ageIn, heightIn, weightIn, goalIn, bfIn].forEach(function (inp) { if (inp) inp.addEventListener('input', solve); });
+  if (actSel) actSel.addEventListener('change', solve);
+  if (targetIn) {
+    if (window.Datepicker) {
+      dpTarget = new Datepicker(targetIn, { format: 'd MM yyyy', autohide: true, weekStart: 0, todayHighlight: true, minDate: new Date() });
+      targetIn.addEventListener('changeDate', solve);
+    } else {
+      targetIn.addEventListener('change', solve);
+    }
+  }
+
+  function prefersImperial() {
+    try {
+      var tz = (Intl.DateTimeFormat().resolvedOptions().timeZone || '');
+      var us = ['America/New_York','America/Detroit','America/Kentucky/Louisville',
+        'America/Kentucky/Monticello','America/Indiana/Indianapolis','America/Indiana/Vincennes',
+        'America/Indiana/Winamac','America/Indiana/Marengo','America/Indiana/Petersburg',
+        'America/Indiana/Vevay','America/Chicago','America/Indiana/Tell_City',
+        'America/Indiana/Knox','America/Menominee','America/North_Dakota/Center',
+        'America/North_Dakota/New_Salem','America/North_Dakota/Beulah','America/Denver',
+        'America/Boise','America/Phoenix','America/Los_Angeles','America/Anchorage',
+        'America/Juneau','America/Sitka','America/Metlakatla','America/Yakutat',
+        'America/Nome','America/Adak','Pacific/Honolulu'];
+      return us.indexOf(tz) !== -1;
+    } catch (e) { return false; }
+  }
+  var savedU; try { savedU = localStorage.getItem('ct_units'); } catch (e) {}
+  if (cfg.unit === 'in' || cfg.unit === 'cm') unit = cfg.unit;
+  else if (savedU === 'in' || savedU === 'cm') unit = savedU;
+  else if (prefersImperial()) unit = 'in';
+  applyUnit();
 
   solve();
 };

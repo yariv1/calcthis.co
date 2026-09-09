@@ -332,7 +332,9 @@
   .p-home .hero p{color:var(--ink-soft);font-size:17px}
 
   .pills{display:flex;flex-wrap:wrap;gap:9px;margin-top:16px}
-  .pill{font-size:13px;font-weight:600;color:var(--spruce);background:#EDF2ED;border:1px solid #DCE6DC;border-radius:20px;padding:5px 12px}
+  .pill{display:inline-flex;align-items:center;gap:5px;font-size:13px;font-weight:600;color:var(--spruce);background:#EDF2ED;border:1px solid #DCE6DC;border-radius:20px;padding:5px 12px;text-decoration:none}
+  .pill svg{flex:none}
+  a.pill:hover{border-color:#C7D6C7;background:#E4EEE4}
   .pill.amber{color:var(--amber-deep);background:#F6EEDF;border-color:#EADFC8}
 
   .sec-h{font-family:'Fraunces',serif;font-weight:600;font-size:15px;letter-spacing:.02em;color:var(--ink-soft);text-transform:uppercase;margin:34px 0 14px;display:flex;align-items:center;gap:10px}
@@ -516,6 +518,45 @@
   .p-tdee .macro .k{font-size:14px;font-weight:600;color:var(--ink)}
   .p-tdee .macro .g{font-family:'Fraunces',serif;font-size:18px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--ink)}
   .p-tdee .macro .pc{font-size:13px;color:var(--muted);font-weight:600;font-variant-numeric:tabular-nums;min-width:40px;text-align:right}
+
+
+  /* =========================================================
+     FITNESS · CALORIE  (body.p-calorie) — calories to a goal weight
+     Reuses .seg (sex + unit), .dtable, .advbtn / .add-row.split,
+     .macro rows (from p-tdee). Adds a pace table + weight-loss curve.
+     ========================================================= */
+  .p-calorie .fld{margin-bottom:16px}
+  .p-calorie .bf-units{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:2px 0 18px}
+  .p-calorie .bf-units .ul{font-size:13px;font-weight:600;color:var(--ink-soft)}
+  .p-calorie #sexSeg{flex:none}
+  .p-calorie .bf-res{margin:2px 0 14px}
+  .p-calorie .dtable td:first-child{color:var(--ink)}
+  .p-calorie .cal-row{cursor:pointer;transition:background .12s}
+  .p-calorie .cal-row:hover{background:#FCF7EE}
+  .p-calorie .dtable tr.cal-row.cur td{background:#FCF7EE;color:var(--ink);font-weight:700}
+  .p-calorie #paceTable td{vertical-align:top}
+  .p-calorie .cal-warn{display:block;font-size:12px;font-weight:700;letter-spacing:.02em;color:#b23030;margin-top:5px;white-space:nowrap}
+  .p-calorie .cal-note{margin:12px 0 4px;padding:11px 14px;border-radius:0 8px 8px 0;font-size:14px;line-height:1.5}
+  .p-calorie .cal-note.warn{background:#FDECEC;border-left:3px solid #c0392b;color:#7c2c22}
+  .p-calorie .cal-cap{font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin:16px 0 8px}
+  .p-calorie #calChartWrap{margin:14px 0 22px}
+  .p-calorie #calChartWrap svg{display:block;width:100%;max-width:440px;height:auto;overflow:visible}
+  @media(max-width:520px){.p-calorie #calChartWrap{margin-bottom:30px}}
+  .p-calorie .cal-line{font-size:14px;line-height:1.55;color:var(--ink-soft);margin:10px 0 0}
+  .p-calorie .cal-line strong{color:var(--ink);font-weight:600}
+  .p-calorie #calProtein,.p-calorie #calMaint{font-size:14px;line-height:1.5;color:var(--ink-soft);margin-top:8px}
+  .p-calorie #calProtein strong,.p-calorie #calMaint strong{color:var(--ink);font-weight:600}
+  .p-calorie #advIn .fld{margin-bottom:14px}
+  .p-calorie .plan-row{display:flex;align-items:center;gap:9px;font-size:14px;font-weight:600;color:var(--ink-soft);margin:2px 0 12px}
+  .p-calorie .plan-row input{width:16px;height:16px;accent-color:var(--amber);flex:none}
+  .p-calorie #advOut{margin:8px 0 2px}
+  .p-calorie .macro-head{font-size:12.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--spruce-soft);margin:6px 0 4px}
+  .p-calorie .macro{display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:baseline;padding:8px 0;border-bottom:1px solid var(--line)}
+  .p-calorie .macro:last-of-type{border-bottom:none}
+  .p-calorie .macro .k{font-size:14px;font-weight:600;color:var(--ink)}
+  .p-calorie .macro .g{font-family:'Fraunces',serif;font-size:18px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--ink)}
+  .p-calorie .macro .pc{font-size:13px;color:var(--muted);font-weight:600;font-variant-numeric:tabular-nums;min-width:40px;text-align:right}
+  .p-calorie #advOut .res-tip{font-size:14px}
 
 
   /* =========================================================

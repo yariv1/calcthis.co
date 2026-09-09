@@ -107,7 +107,10 @@ Footer is OUTSIDE the wrap. No `<main>` tag — it does not exist in this codeba
 - Cards: `.card` and `.card.card-pad`
 - Grid: `.grid` (2-col desktop, 1-col mobile)
 - Mode tabs: `.modeseg` (grid, full-width segmented)
-- Cross-links: `.pill` — never custom classes
+- Cross-links: `.pill` — never custom classes. REQUIRED: a `<div class="pills" style="margin-top:20px">`
+  row of 2–4 related calculators right after `</div><!-- grid -->`, before `<section class="content">`.
+  Plus a contextual inline link in a results/advanced note where it earns its place.
+  See `calcthis-design-system.md` → "Cross-links".
 - Advanced panel: ABOVE the `.advbtn`, hidden via `display:none` (NOT the `hidden` attribute)
 
 ---
