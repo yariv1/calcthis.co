@@ -1895,6 +1895,192 @@ CalcThis.initBMICalc = function (cfg) {
 };
 
 /* -----------------------------------------------------------
+   CalcThis.initAgeCalc(cfg) — chronological age.
+   Independent engine. Date of birth -> exact age in
+   years/months/days, a live-ticking seconds count, totals
+   (months/weeks/days/hours), the weekday you were born, a
+   next-birthday countdown, and a life-progress timeline to your
+   next decade with 1,000- and 10,000-day milestones plotted.
+   Advanced: your age on any past or future date. Live, no button. */
+CalcThis.initAgeCalc = function (cfg) {
+  cfg = cfg || {};
+  var $ = function (id) { return document.getElementById(id); };
+  var DOW = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  var MON = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
+    'September', 'October', 'November', 'December'];
+  var advanced = false, ticker = null, dpDob = null, dpOn = null;
+
+  var dobIn = $('dob'), onIn = $('onDate');
+  if (!dobIn) return;
+
+  function parseD(v) {
+    if (!v) return null;
+    var p = ('' + v).split('-');
+    if (p.length !== 3) return null;
+    var y = +p[0], m = +p[1], d = +p[2];
+    if (!(y > 0 && m >= 1 && m <= 12 && d >= 1 && d <= 31)) return null;
+    var dt = new Date(y, m - 1, d);
+    if (dt.getFullYear() !== y || dt.getMonth() !== m - 1 || dt.getDate() !== d) return null;
+    return dt;
+  }
+  function midnight(dt) { return new Date(dt.getFullYear(), dt.getMonth(), dt.getDate()); }
+  function addDays(dt, n) { return new Date(dt.getFullYear(), dt.getMonth(), dt.getDate() + n); }
+  function isoOf(dt) { return dt.getFullYear() + '-' + ('0' + (dt.getMonth() + 1)).slice(-2) + '-' + ('0' + dt.getDate()).slice(-2); }
+  function fmtD(d) { return DOW[d.getDay()] + ', ' + d.getDate() + ' ' + MON[d.getMonth()] + ' ' + d.getFullYear(); }
+  function diffDays(a, b) { return Math.round((midnight(b) - midnight(a)) / 86400000); }
+
+  function ymd(from, to) {
+    var y = to.getFullYear() - from.getFullYear();
+    var m = to.getMonth() - from.getMonth();
+    var d = to.getDate() - from.getDate();
+    if (d < 0) { m--; d += new Date(to.getFullYear(), to.getMonth(), 0).getDate(); }
+    if (m < 0) { y--; m += 12; }
+    return { y: y, m: m, d: d };
+  }
+  function ymdStr(o) {
+    return o.y + (o.y === 1 ? ' year, ' : ' years, ') + o.m + (o.m === 1 ? ' month, ' : ' months, ') +
+      o.d + (o.d === 1 ? ' day' : ' days');
+  }
+  function nextBirthday(dob, today) {
+    function bd(yr) {
+      if (dob.getMonth() === 1 && dob.getDate() === 29 && new Date(yr, 1, 29).getMonth() !== 1) return new Date(yr, 2, 1);
+      return new Date(yr, dob.getMonth(), dob.getDate());
+    }
+    var b = bd(today.getFullYear());
+    if (diffDays(today, b) <= 0) b = bd(today.getFullYear() + 1);
+    return b;
+  }
+
+  function renderTimeline(dob, today) {
+    var svg = $('ageTl'); if (!svg) return;
+    var age = ymd(dob, today).y;
+    var nextDec = Math.floor(age / 10) * 10 + 10;
+    function decBd(n) { return new Date(dob.getFullYear() + n, dob.getMonth(), dob.getDate()); }
+    var t0 = dob.getTime(), t1 = decBd(nextDec).getTime();
+    var x0 = 12, x1 = 308, y = 40, h = 12;
+    function sx(dt) { return x0 + Math.max(0, Math.min(1, (dt.getTime() - t0) / (t1 - t0))) * (x1 - x0); }
+    var g = '';
+    g += '<rect x="' + x0 + '" y="' + y + '" width="' + (x1 - x0) + '" height="' + h + '" rx="6" fill="#EDF2ED"/>';
+    g += '<rect x="' + x0 + '" y="' + y + '" width="' + (sx(today) - x0) + '" height="' + h + '" rx="6" fill="#B5761F"/>';
+    for (var d = 10; d < nextDec; d += 10) {
+      var dx = sx(decBd(d));
+      g += '<line x1="' + dx + '" y1="' + (y - 4) + '" x2="' + dx + '" y2="' + (y + h + 4) + '" stroke="#8A7A66" stroke-width="1"/>';
+      g += '<text x="' + dx + '" y="' + (y + h + 16) + '" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#8A7A66">' + d + '</text>';
+    }
+    var nx = sx(today);
+    g += '<line x1="' + nx + '" y1="' + (y - 12) + '" x2="' + nx + '" y2="' + (y + h + 6) + '" stroke="#241A11" stroke-width="1.5"/>';
+    g += '<circle cx="' + nx + '" cy="' + (y + h / 2) + '" r="4" fill="#241A11" stroke="#fff" stroke-width="1.5"/>';
+    g += '<text x="' + nx + '" y="' + (y - 16) + '" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" font-weight="700" fill="#241A11">' + age + '</text>';
+    g += '<text x="' + x0 + '" y="14" font-family="Inter,sans-serif" font-size="9" fill="#8A7A66">Born ' + dob.getFullYear() + '</text>';
+    g += '<text x="' + x1 + '" y="14" text-anchor="end" font-family="Inter,sans-serif" font-size="9" fill="#8A7A66">' + nextDec + '</text>';
+    svg.innerHTML = g;
+  }
+
+  function stopTick() { if (ticker) { clearInterval(ticker); ticker = null; } }
+
+  function pickedDate(dp, inp) {
+    if (dp) { var d = dp.getDate(); return d ? midnight(d) : null; }
+    return parseD(inp ? inp.value : '');
+  }
+
+  function solve() {
+    stopTick();
+    var dob = pickedDate(dpDob, dobIn);
+    var today = midnight(new Date());
+    var big = $('resBig'), unit = $('resUnit'), sub = $('resSub');
+
+    if (!dob || diffDays(dob, today) < 0) {
+      big.textContent = '—'; unit.textContent = '';
+      sub.textContent = dob ? 'That date is in the future — enter your date of birth.' : 'Enter your date of birth to see your age.';
+      if ($('ageDetail')) $('ageDetail').style.display = 'none';
+      if ($('advOut')) $('advOut').style.display = 'none';
+      return;
+    }
+
+    var a = ymd(dob, today), days = diffDays(dob, today);
+    var months = a.y * 12 + a.m, weeks = Math.floor(days / 7);
+    big.textContent = a.y; unit.textContent = a.y === 1 ? 'year old' : 'years old';
+    sub.textContent = a.m + (a.m === 1 ? ' month, ' : ' months, ') + a.d + (a.d === 1 ? ' day' : ' days');
+    if ($('ageDetail')) $('ageDetail').style.display = '';
+
+    var dobExact = dob.getTime();
+    function tick() { if ($('ageSecs')) $('ageSecs').textContent = Math.floor((Date.now() - dobExact) / 1000).toLocaleString(); }
+    tick(); ticker = setInterval(tick, 1000);
+
+    $('ageTotals').innerHTML =
+      '<thead><tr><th>In total</th><th></th></tr></thead><tbody>' +
+      '<tr><td>Months</td><td>' + months.toLocaleString() + '</td></tr>' +
+      '<tr><td>Weeks</td><td>' + weeks.toLocaleString() + '</td></tr>' +
+      '<tr><td>Days</td><td>' + days.toLocaleString() + '</td></tr>' +
+      '<tr><td>Hours</td><td>' + (days * 24).toLocaleString() + '</td></tr>' +
+      '</tbody>';
+
+    var isBday = today.getMonth() === dob.getMonth() && today.getDate() === dob.getDate();
+    var nb = nextBirthday(dob, today), toNb = diffDays(today, nb), turning = nb.getFullYear() - dob.getFullYear();
+    $('ageFacts').innerHTML =
+      '<div class="bf-cmp"><span class="k">You were born on a</span><span class="v">' + DOW[dob.getDay()] + '</span></div>' +
+      '<div class="bf-cmp"><span class="k">Next birthday</span><span class="v">' + (isBday ? 'Today!' : toNb.toLocaleString() + (toNb === 1 ? ' day' : ' days')) + '</span></div>' +
+      (isBday ? '' : '<div class="bf-cmp"><span class="k">You’ll turn ' + turning + ' on</span><span class="v">' + fmtD(nb) + '</span></div>');
+
+    renderTimeline(dob, today);
+
+    var k1 = (Math.floor(days / 1000) + 1) * 1000, k10 = (Math.floor(days / 10000) + 1) * 10000;
+    $('ageMiles').innerHTML =
+      '<div class="age-mile"><span>' + k1.toLocaleString() + ' days old</span><span>' + fmtD(addDays(dob, k1)) + '</span></div>' +
+      '<div class="age-mile"><span>' + k10.toLocaleString() + ' days old</span><span>' + fmtD(addDays(dob, k10)) + '</span></div>';
+
+    var advOut = $('advOut');
+    if (advanced && advOut) {
+      var on = pickedDate(dpOn, onIn);
+      if (!on) {
+        advOut.innerHTML = '<p class="res-tip">Pick a date to see how old you were — or will be — then.</p>';
+      } else if (diffDays(dob, on) < 0) {
+        advOut.innerHTML = '<p class="res-tip">That date is before your date of birth.</p>';
+      } else {
+        var rel = diffDays(today, on);
+        advOut.innerHTML = '<p class="res-tip">On <strong>' + fmtD(on) + '</strong> you ' +
+          (rel > 0 ? 'will be' : (rel === 0 ? 'are' : 'were')) + ' <strong>' + ymdStr(ymd(dob, on)) +
+          '</strong> old — ' + diffDays(dob, on).toLocaleString() + ' days.</p>';
+      }
+      advOut.style.display = '';
+    } else if (advOut) {
+      advOut.style.display = 'none';
+    }
+  }
+
+  var advBtn = $('advBtn');
+  if (advBtn) {
+    advBtn.addEventListener('click', function () {
+      advanced = !advanced;
+      advBtn.classList.toggle('open', advanced);
+      $('advBtnLab').textContent = advanced ? 'Go simple' : 'Go advanced';
+      $('advIn').style.display = advanced ? '' : 'none';
+      solve();
+      if (advanced) { var el = $('advIn'); if (el && el.scrollIntoView) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+    });
+  }
+
+  if (window.Datepicker) {
+    dpDob = new Datepicker(dobIn, { format: 'd MM yyyy', autohide: true, weekStart: 0, todayHighlight: true, maxDate: new Date() });
+    dobIn.addEventListener('changeDate', solve);
+    if (onIn) {
+      dpOn = new Datepicker(onIn, { format: 'd MM yyyy', autohide: true, weekStart: 0, todayHighlight: true });
+      onIn.addEventListener('changeDate', solve);
+      dpOn.setDate(new Date());
+    }
+  } else {
+    dobIn.max = isoOf(new Date());
+    if (onIn && !onIn.value) onIn.value = isoOf(new Date());
+  }
+  ['input', 'change'].forEach(function (ev) {
+    dobIn.addEventListener(ev, solve);
+    if (onIn) onIn.addEventListener(ev, solve);
+  });
+
+  solve();
+};
+
+/* -----------------------------------------------------------
    CalcThis.init1RMCalc(cfg) — one-rep-max estimator.
    Independent engine. Enter weight + reps of a working set ->
    estimated 1RM (Epley by default). A %-of-1RM training table

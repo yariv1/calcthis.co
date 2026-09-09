@@ -43,6 +43,7 @@ const PAGES = [
   // Legal & info pages
   { file: 'ratio-calculator/index.html', slug: '/ratio-calculator/' },
   { file: 'percentage-calculator/index.html', slug: '/percentage-calculator/' },
+  { file: 'age-calculator/index.html',         slug: '/age-calculator/' },
   { file: 'macro-calculator/index.html',      slug: '/macro-calculator/' },
   { file: 'peptide-reconstitution-calculator/index.html', slug: '/peptide-reconstitution-calculator/' },
   { file: 'blog/index.html',            slug: '/blog/' },

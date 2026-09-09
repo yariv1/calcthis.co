@@ -567,6 +567,68 @@
 
 
   /* =========================================================
+     MATH · AGE  (body.p-age) — chronological age
+     Reuses .row-top, .dtable, .bf-cmp rows, .advbtn / .add-row.split.
+     Adds a life-progress timeline SVG + a milestones list.
+     ========================================================= */
+  .p-age .fld{margin-bottom:16px}
+  .p-age .bf-res{margin:2px 0 14px}
+  .p-age .inp input{padding:11px 13px}
+  .p-age .age-secs{font-size:14px;color:var(--amber-deep);font-weight:600;font-variant-numeric:tabular-nums;margin:0 0 14px}
+  .p-age .age-cap{font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin:16px 0 8px}
+  .p-age .age-tl-wrap{margin:6px 0 4px}
+  .p-age .age-tl-wrap svg{display:block;width:100%;max-width:440px;height:auto;overflow:visible}
+  .p-age #ageFacts{margin:14px 0 4px}
+  .p-age .bf-cmp{display:flex;justify-content:space-between;align-items:baseline;gap:6px 14px;padding:9px 0;border-bottom:1px dashed var(--line);flex-wrap:wrap}
+  .p-age .bf-cmp:first-child{border-top:1px dashed var(--line)}
+  .p-age .bf-cmp .k{font-size:14px;font-weight:500;color:var(--ink-soft);flex:none}
+  .p-age .bf-cmp .v{font-family:'Fraunces',serif;font-size:17px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--ink);text-align:right;margin-left:auto}
+  .p-age .dtable td,.p-age .dtable th{font-size:14.5px}
+  .p-age .dtable td:first-child{color:var(--ink)}
+  .p-age .age-mile{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px}
+  .p-age .age-mile:last-child{border-bottom:none}
+  .p-age .age-mile span:first-child{color:var(--ink);font-weight:600;flex:none}
+  .p-age .age-mile span:last-child{color:var(--ink-soft);font-variant-numeric:tabular-nums;text-align:right}
+  .p-age #advOut{margin:8px 0 2px}
+  .p-age #advOut .res-tip{font-size:16px;line-height:1.55;color:rgb(181,118,31)}
+  .p-age #advOut .res-tip strong{color:rgb(181,118,31);font-weight:700}
+
+
+  /* =========================================================
+     DATE PICKER — vanillajs-datepicker, CalcThis theme.
+     Vendored: assets/datepicker.min.{js,css}. Used on the age
+     calculator and future date calculators. Load datepicker.min.css
+     BEFORE style.css so these overrides win.
+     ========================================================= */
+  .datepicker{font-family:'Inter',system-ui,sans-serif}
+  .datepicker-picker{border-radius:12px}
+  .datepicker-dropdown .datepicker-picker{box-shadow:var(--shadow),0 0 0 1px var(--line)}
+  .datepicker-main{padding:6px}
+  .datepicker-view{width:16.5rem}
+  .datepicker-controls .button{background:var(--card);border:1px solid var(--line);color:var(--ink-soft);border-radius:8px;font-size:14px;height:2.25em}
+  .datepicker-controls .button:hover{border-color:var(--line);background:#F5EFE4;color:var(--ink)}
+  .datepicker-controls .button:focus{border-color:var(--amber);box-shadow:0 0 0 3px rgba(181,118,31,.13);color:var(--ink)}
+  .datepicker-controls .button:active{border-color:var(--amber);color:var(--ink)}
+  .datepicker-header .datepicker-controls .button{border-color:transparent;color:var(--amber-deep)}
+  .datepicker-header .datepicker-controls .button:hover{background:#F5EFE4}
+  .datepicker-controls .view-switch{font-family:'Fraunces',serif;font-weight:600;font-size:15px;color:var(--ink)}
+  .datepicker .dow{color:var(--muted);font-weight:600;font-size:13px}
+  .datepicker span{border-radius:8px}
+  .datepicker-cell{color:var(--ink-soft);font-size:14px;height:2.4rem}
+  .datepicker-cell:not(.disabled):hover{background:#F5EFE4}
+  .datepicker-cell.focused:not(.selected){background:#F3EADA}
+  .datepicker-cell.selected,.datepicker-cell.selected:hover{background:var(--amber);color:#fff;font-weight:700}
+  .datepicker-cell.selected:hover{background:var(--amber-deep)}
+  .datepicker-cell.disabled{color:var(--muted);opacity:.4}
+  .datepicker-cell.next:not(.disabled),.datepicker-cell.prev:not(.disabled){color:var(--muted)}
+  .datepicker-cell.today:not(.selected){background:transparent;box-shadow:inset 0 0 0 1px var(--amber)}
+  .datepicker-cell.today:not(.selected):not(.disabled){color:var(--amber-deep);font-weight:700}
+  .datepicker-cell.today.focused:not(.selected){background:#F5EFE4}
+  .datepicker-input.in-edit{border-color:var(--amber)}
+  .datepicker-input.in-edit:active,.datepicker-input.in-edit:focus{box-shadow:0 0 0 3px rgba(181,118,31,.2)}
+
+
+  /* =========================================================
      NAV — two-column menu + mobile scroll fix
      ========================================================= */
   .menu{

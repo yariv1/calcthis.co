@@ -134,6 +134,16 @@ Single `.sel` wrapper — never nest two:
 
 ---
 
+## Minimum text size — 14px floor
+
+* No body / data / label text below **14px**. This includes result sub-lines, hint/tip text
+  (`.res-tip`, `.res-sub`, `.zsub`), table cells, list rows, captions.
+* Only exceptions ("extreme case — depends when and where"): tiny uppercase tracked
+  micro-labels (eyebrow / section caption style) and in-SVG chart tick labels, and only
+  when 14px genuinely breaks the layout. Flag these to the user rather than assuming.
+* `.res-tip` in a calculator's advanced output pane: 16px, colour `rgb(181,118,31)` (`--amber`)
+  — see `.p-age #advOut .res-tip`. Reuse that treatment for advanced-mode explanatory lines.
+
 ## Accessibility — Text on Colored Backgrounds
 
 **Rule: always verify contrast before shipping. Failing AA (4.5:1) is a Google penalty risk.**

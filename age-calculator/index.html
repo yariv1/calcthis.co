@@ -3,18 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Heart Rate Zone Calculator — Zone 2, Karvonen &amp; Max HR | CalcThis</title>
-<meta name="description" content="Free heart rate zone calculator. Get your 5 training zones and Zone 2 fat-burn range from your age, plus personalised Karvonen zones from your resting heart rate. Instant, no sign-up.">
-<link rel="canonical" href="https://calcthis.co/heart-rate-zone-calculator/">
+<title>Age Calculator — How Old Am I? Exact Age from Date of Birth | CalcThis</title>
+<meta name="description" content="Free age calculator. Enter your date of birth for your exact age in years, months and days, a live seconds count, totals in weeks and days, the weekday you were born, a next-birthday countdown and a life timeline. Advanced mode finds your age on any past or future date. Instant, no sign-up.">
+<link rel="canonical" href="https://calcthis.co/age-calculator/">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Heart Rate Zone Calculator — Zone 2, Karvonen &amp; Max HR">
-<meta property="og:description" content="Your 5 training zones and Zone 2 fat-burn range from your age, plus Karvonen zones from resting heart rate. Instant, no sign-up.">
-<meta property="og:url" content="https://calcthis.co/heart-rate-zone-calculator/">
+<meta property="og:title" content="Age Calculator — How Old Am I? Exact Age from Date of Birth">
+<meta property="og:description" content="Your exact age in years, months and days, plus a live seconds count, totals, the weekday you were born, a next-birthday countdown and a life timeline. Instant, no sign-up.">
+<meta property="og:url" content="https://calcthis.co/age-calculator/">
 <meta name="twitter:card" content="summary">
 <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/datepicker.min.css">
 <link rel="stylesheet" href="/assets/style.css?v=70">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
@@ -29,12 +30,12 @@
 {
   "@context": "https://schema.org",
   "@type": "WebApplication",
-  "name": "Heart Rate Zone Calculator",
-  "url": "https://calcthis.co/heart-rate-zone-calculator/",
-  "applicationCategory": "HealthApplication",
+  "name": "Age Calculator",
+  "url": "https://calcthis.co/age-calculator/",
+  "applicationCategory": "UtilityApplication",
   "operatingSystem": "Any (web browser)",
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-  "description": "Calculate your five heart rate training zones from your age, including your Zone 2 fat-burn range, plus personalised Karvonen zones from your resting heart rate."
+  "description": "Calculate your exact chronological age in years, months and days from your date of birth, with a live seconds count, totals in months, weeks, days and hours, the weekday you were born, a next-birthday countdown, a life-progress timeline, and your age on any past or future date."
 }
 </script>
 <script type="application/ld+json">
@@ -42,15 +43,16 @@
   "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [
-    { "@type": "Question", "name": "How is my maximum heart rate calculated?", "acceptedAnswer": { "@type": "Answer", "text": "By default we use the Tanaka formula, 208 minus 0.7 times your age, which fits most adults better than 220 minus age. If you know your true max from a test, you can enter it in advanced mode to override the estimate." } },
-    { "@type": "Question", "name": "What is Zone 2 heart rate?", "acceptedAnswer": { "@type": "Answer", "text": "Zone 2 sits at roughly 60 to 70 percent of your maximum heart rate, or of your heart-rate reserve with the Karvonen method. It is the aerobic, fat-burning zone: an easy, conversational effort you can hold for a long time." } },
-    { "@type": "Question", "name": "Which is more accurate, percentage of max or Karvonen?", "acceptedAnswer": { "@type": "Answer", "text": "Karvonen is usually more personalised because it factors in your resting heart rate. Both are estimates; only a lab or field test gives your true numbers." } },
-    { "@type": "Question", "name": "What is a good resting heart rate to enter?", "acceptedAnswer": { "@type": "Answer", "text": "Measure your pulse first thing in the morning before getting up. Most adults fall between 55 and 75 bpm; well-trained endurance athletes can be lower." } }
+    { "@type": "Question", "name": "How is age calculated in years, months and days?", "acceptedAnswer": { "@type": "Answer", "text": "The calculator counts whole years from your date of birth to today, then the whole months since your last birthday, then the remaining days since the month count. It accounts for leap years and the different lengths of each month, so the result matches how age is stated on official forms." } },
+    { "@type": "Question", "name": "How do I calculate how many days old I am?", "acceptedAnswer": { "@type": "Answer", "text": "Enter your date of birth and the calculator shows your total age in days, along with weeks, months and hours. The days figure is the exact number of calendar days between your birth date and today." } },
+    { "@type": "Question", "name": "How many days until my next birthday?", "acceptedAnswer": { "@type": "Answer", "text": "The calculator shows the number of days to your next birthday, the exact date it falls on and the day of the week, and the age you will turn. If today is your birthday it says so." } },
+    { "@type": "Question", "name": "What day of the week was I born on?", "acceptedAnswer": { "@type": "Answer", "text": "The calculator returns the weekday of your date of birth automatically. It also plots milestones such as the date you turn 10,000 days old, with the weekday for each." } },
+    { "@type": "Question", "name": "How old will I be on a future date?", "acceptedAnswer": { "@type": "Answer", "text": "Open advanced mode and pick any date, past or future. The calculator shows how old you were or will be on that date in years, months and days, plus the total days." } }
   ]
 }
 </script>
 </head>
-<body class="p-hrzone">
+<body class="p-age">
 <div class="wrap">
 
 <!--HEADER:START-->
@@ -85,7 +87,7 @@
           <span class="menu-col-head">Health &amp; Fitness</span>
           <a href="/pace-calculator/">Pace</a>
           <a href="/race-time-predictor/">Race Time Predictor</a>
-          <a href="/heart-rate-zone-calculator/" class="current">Heart Rate Zone</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
           <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
           <a href="/bmi-calculator/">BMI</a>
           <a href="/body-fat-calculator/">Body Fat</a>
@@ -104,7 +106,7 @@
           <span class="menu-col-head">Math &amp; Numbers</span>
           <a href="/ratio-calculator/">Ratio</a>
           <a href="/percentage-calculator/">Percentage</a>
-          <a href="/age-calculator/">Age</a>
+          <a href="/age-calculator/" class="current">Age</a>
         </div>
       </div>
     </nav>
@@ -112,33 +114,29 @@
   <!--HEADER:END-->
 
   <section class="hero">
-    <div class="eyebrow">Heart-rate training, done instantly</div>
-    <h1>Heart Rate Zone Calculator</h1>
-    <p>Find your five training zones from your age — including your fat-burning <strong>Zone 2</strong>. Tap <em>Go advanced</em> for personalised <strong>Karvonen</strong> zones based on your resting heart rate.</p>
+    <div class="eyebrow">Dates &amp; time, done instantly</div>
+    <h1>Age Calculator</h1>
+    <p>Enter your <strong>date of birth</strong> for your <strong>exact age</strong> in years, months and days — plus a live seconds count, totals in weeks and days, the <strong>weekday you were born</strong>, a <strong>next-birthday countdown</strong> and a life timeline. Tap <em>Go advanced</em> for your age on <strong>any date</strong>, past or future.</p>
   </section>
 
   <div class="grid">
     <div class="card">
       <div class="card-pad">
-        <div class="row-top"><h2>Your heart rate zones</h2></div>
+        <div class="row-top"><h2>Your age</h2></div>
 
-        <label class="fld" for="age">
-          <span class="lab">Age <span class="unit">years</span></span>
-          <div class="inp"><input id="age" type="number" inputmode="numeric" min="5" max="120" placeholder="30"></div>
+        <label class="fld" for="dob">
+          <span class="lab">Date of birth</span>
+          <div class="inp"><input id="dob" type="text" inputmode="numeric" placeholder="e.g. 15 June 1990" autocomplete="off"></div>
         </label>
 
         <div class="fld" id="advIn" style="display:none">
-          <label class="fld" for="rhr">
-            <span class="lab">Resting heart rate <span class="unit">bpm · optional</span></span>
-            <div class="inp"><input id="rhr" type="number" inputmode="numeric" min="30" max="120" placeholder="60"></div>
-          </label>
-          <label class="fld" for="maxhr" style="margin-bottom:0">
-            <span class="lab">Max heart rate <span class="unit">bpm · override</span></span>
-            <div class="inp"><input id="maxhr" type="number" inputmode="numeric" min="100" max="230" placeholder="auto"></div>
+          <label class="fld" for="onDate" style="margin-bottom:0">
+            <span class="lab">Age on this date <span class="unit">past or future</span></span>
+            <div class="inp"><input id="onDate" type="text" inputmode="numeric" placeholder="Pick a date" autocomplete="off"></div>
           </label>
         </div>
 
-        <div class="add-row split">
+        <div class="add-row split" style="margin-top:6px">
           <span></span>
           <button class="advbtn" id="advBtn" type="button">
             <span id="advBtnLab">Go advanced</span>
@@ -150,77 +148,86 @@
 
     <div class="card">
       <div class="card-pad">
-        <div class="hr-res">
-          <div class="res-lab" id="resLab">Your estimated max heart rate</div>
+        <div class="bf-res">
+          <div class="res-lab">Your age</div>
           <div class="res-big"><span id="resBig">—</span> <span class="res-unit" id="resUnit"></span></div>
-          <div class="res-sub" id="resSub">Enter your age to see your zones.</div>
+          <div class="res-sub" id="resSub">Enter your date of birth to see your age.</div>
         </div>
 
-        <div class="stable-wrap">
-          <table class="dtable" id="zoneTable"></table>
+        <div id="ageDetail" style="display:none">
+          <div class="age-secs">≈ <span id="ageSecs">—</span> seconds alive</div>
+
+          <div class="age-tl-wrap">
+            <div class="age-cap">Your life so far</div>
+            <svg id="ageTl" viewBox="0 0 320 64" role="img" aria-label="Timeline of your life from birth to your next decade birthday"></svg>
+          </div>
+
+          <div id="ageFacts"></div>
+
+          <div class="stable-wrap">
+            <table class="dtable" id="ageTotals"></table>
+          </div>
+
+          <div class="age-cap">Milestones coming up</div>
+          <div id="ageMiles"></div>
         </div>
 
-        <p class="res-tip" id="kvNote" style="display:none">
-          <strong>Karvonen</strong> also uses your resting heart rate, so these zones are personalised to your fitness — usually more accurate than the plain %-of-max method.
-        </p>
+        <div id="advOut" style="display:none"></div>
       </div>
     </div>
-  </div>
-
-  <div class="pills" style="margin-top:20px">
-    <a class="pill" href="/zone-2-heart-rate-calculator/" style="display:inline-flex;align-items:center;gap:5px;text-decoration:none">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
-      Zone 2 Calculator
-    </a>
-    <a class="pill" href="/pace-calculator/" style="display:inline-flex;align-items:center;gap:5px;text-decoration:none">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-      Pace Calculator
-    </a>
   </div>
 
   <section class="content">
     <div class="grid2">
       <div>
         <h2>How to use it</h2>
-        <p>Enter your <strong>age</strong> and the calculator instantly estimates your maximum heart rate and splits it into five training zones. Your max heart rate uses the Tanaka formula, <strong>208 − 0.7 × age</strong>, which fits most adults better than the older “220 − age” rule.</p>
-        <p>For sharper numbers, tap <strong>Go advanced</strong> and add your <strong>resting heart rate</strong>. That switches the zones to the <strong>Karvonen (heart-rate-reserve)</strong> method, which personalises each zone to your own fitness. You can also override the estimated max if you know yours from a lab or field test.</p>
+        <p>Enter your <strong>date of birth</strong>. Your age appears at once in <strong>years, months and days</strong> — the way official forms ask for it — with a seconds counter ticking underneath. Below that you get totals in <strong>months, weeks, days and hours</strong>, the <strong>day of the week you were born</strong>, and how long until your <strong>next birthday</strong>, including the date and weekday it lands on.</p>
+        <p>The <strong>timeline</strong> shows your life so far as a bar running to your next decade birthday, with a marker for today and ticks at each past decade. Tap <strong>Go advanced</strong> and pick any date to see how old you were — or will be — on that day.</p>
 
-        <h2>Why Zone 2 gets all the attention</h2>
-        <p>Zone 2 is where most endurance training happens. It’s easy enough to sustain, trains your body to burn fat efficiently, and builds the aerobic base everything else is built on. If you only remember one number, remember your Zone 2 range.</p>
+        <h2>How age in years, months and days is counted</h2>
+        <p>The calculator counts <strong>whole years</strong> from your birth date to today, then the <strong>whole months</strong> since your last birthday, then the <strong>days</strong> left over. Leap years and the different lengths of each month are handled for you, so a date like 31 January to 1 March comes out right rather than off by a day or two.</p>
 
-        <h2>%-of-max vs Karvonen</h2>
-        <p>The simple method takes a straight percentage of your maximum heart rate. The <strong>Karvonen</strong> method uses your <strong>heart-rate reserve</strong> — the gap between max and resting heart rate — so a fitter person with a low resting pulse gets zones tuned to them. Both are estimates; a lab test is the gold standard.</p>
+        <h2>Why a dedicated tool beats mental math</h2>
+        <p>Working out an exact age by hand means juggling leap years, 28-, 30- and 31-day months, and year boundaries. It's easy to be a day or two out — which matters for visa forms, school-year cut-offs, retirement dates and legal paperwork. This tool gives the same answer every time, instantly.</p>
+
+        <h2>Plan around the date</h2>
+        <p>Need the gap between two other dates, or to add days to a date? That's next on our list. For now, pair this with the <a href="/percentage-calculator/">Percentage Calculator</a> or the <a href="/ratio-calculator/">Ratio Calculator</a> for the rest of your quick-number jobs.</p>
       </div>
 
       <div>
-        <h2>What the five zones mean</h2>
+        <h2>What you get</h2>
         <table class="dtable">
-          <thead><tr><th>Zone</th><th>% of max</th><th>Feels like</th></tr></thead>
+          <thead><tr><th>Output</th><th>Example</th></tr></thead>
           <tbody>
-            <tr><td>Zone 1 · Recovery</td><td>50–60%</td><td>very easy</td></tr>
-            <tr><td>Zone 2 · Endurance</td><td>60–70%</td><td>fat burn · base</td></tr>
-            <tr><td>Zone 3 · Tempo</td><td>70–80%</td><td>moderately hard</td></tr>
-            <tr><td>Zone 4 · Threshold</td><td>80–90%</td><td>hard</td></tr>
-            <tr><td>Zone 5 · VO₂ max</td><td>90–100%</td><td>maximum</td></tr>
+            <tr><td>Exact age</td><td>34 years, 2 months, 15 days</td></tr>
+            <tr><td>Seconds alive</td><td>1,079,000,000+</td></tr>
+            <tr><td>Total months / weeks / days</td><td>410 / 1,785 / 12,494</td></tr>
+            <tr><td>Born on</td><td>a Tuesday</td></tr>
+            <tr><td>Next birthday</td><td>in 118 days</td></tr>
+            <tr><td>Milestones</td><td>13,000 days old on a date</td></tr>
           </tbody>
         </table>
 
-        <h2>Training by pace instead?</h2>
-        <p>If you plan runs by pace rather than heart rate, our <a href="/pace-calculator/">Pace Calculator</a> solves pace, time or distance and predicts your finish times and splits.</p>
+        <h2>Age on a specific date</h2>
+        <p>Advanced mode answers "<strong>how old was I on</strong>…" and "<strong>how old will I be on</strong>…". Useful for working out your age at a past event, at a future deadline, or on the day a rule kicks in — a driving age, a pension date, an exam cut-off.</p>
 
-        <h2>A good resting heart rate</h2>
-        <p>Measure your pulse first thing in the morning before getting up. Most adults sit between 55 and 75 bpm; well-trained endurance athletes are often lower.</p>
+        <h2>Chronological age for school</h2>
+        <p>Schools often record a child's age in <strong>years and months</strong> for grade placement and assessment scoring, because a few months either way can change the reference group. The years-and-months figure at the top is exactly that number.</p>
+
+        <h2>Leap-day birthdays</h2>
+        <p>Born on 29 February? In non-leap years the calculator treats your birthday as 1 March for the countdown, which is the most common convention. Your age in years still increases once per calendar year.</p>
       </div>
     </div>
 
     <h2 style="margin-top:36px">Common questions</h2>
-    <details class="faq"><summary>How is my maximum heart rate calculated?</summary><p>By default we use the Tanaka formula, 208 − 0.7 × age. It fits most adults better than “220 − age.” If you know your true max from a test, enter it in advanced mode to override the estimate.</p></details>
-    <details class="faq"><summary>What is Zone 2 heart rate?</summary><p>Zone 2 sits at roughly 60–70% of your maximum heart rate (or heart-rate reserve with Karvonen). It’s the aerobic, fat-burning zone — an easy, conversational effort you can hold for a long time.</p></details>
-    <details class="faq"><summary>Which is more accurate, %-of-max or Karvonen?</summary><p>Karvonen is usually more personalised because it factors in your resting heart rate. Both are estimates; only a lab or field test gives your true numbers.</p></details>
-    <details class="faq"><summary>What’s a good resting heart rate to enter?</summary><p>Measure your pulse first thing in the morning before getting up. Most adults fall between 55 and 75 bpm; well-trained endurance athletes can be lower.</p></details>
+    <details class="faq"><summary>How is age calculated in years, months and days?</summary><p>The calculator counts whole years from your birth date to today, then whole months since your last birthday, then the leftover days. Leap years and month lengths are handled, so the result matches how age is stated on official forms.</p></details>
+    <details class="faq"><summary>How do I calculate how many days old I am?</summary><p>Enter your date of birth and you get your total age in days, plus weeks, months and hours. The days figure is the exact number of calendar days between your birth date and today.</p></details>
+    <details class="faq"><summary>How many days until my next birthday?</summary><p>The calculator shows the days to your next birthday, the exact date and weekday it falls on, and the age you'll turn. If today is your birthday, it says so.</p></details>
+    <details class="faq"><summary>What day of the week was I born on?</summary><p>It returns the weekday of your date of birth automatically, and also dates milestones such as when you turn 10,000 days old, with the weekday for each.</p></details>
+    <details class="faq"><summary>How old will I be on a future date?</summary><p>Open advanced mode and pick any date, past or future. You'll see how old you were or will be that day in years, months and days, plus the total days.</p></details>
   </section>
 
-  <!--FOOTER:START-->
+<!--FOOTER:START-->
   <footer class="site-footer">
     <div class="footer-cols">
 
@@ -304,8 +311,9 @@
 
 </div>
 
+<script src="/assets/datepicker.min.js"></script>
 <script src="/assets/app.js?v=70"></script>
-<script>CalcThis.initHRZoneCalc({});</script>
+<script>CalcThis.initAgeCalc({});</script>
 <script src="/feedback.js" defer></script>
 </body>
 </html>
