@@ -27,9 +27,12 @@ rewrite it to show the article's actual subject.
 
 | Image | Purpose | Dimensions | Export |
 |---|---|---|---|
-| **Card** | blog hub grid | **800 × 400 px** | WebP, 70–75% |
-| **Hero** | top of the article | **800 × 400 px** ⚠️ see note | WebP, 70–75% |
-| **In-article ×1 (prefer 2–3)** | inside `.blog-content`, next to the section it illustrates | **800 × 400 px** | WebP, 70–75% |
+| **Card** | blog hub grid | **800 × 400 px** | WebP |
+| **Hero** | top of the article | **800 × 400 px** ⚠️ see note | WebP |
+| **In-article ×1 (prefer 2–3)** | inside `.blog-content`, next to the section it illustrates | **800 × 320 px** | WebP |
+
+The **user supplies every image already cropped to size and in WebP** — the prompt step just
+gives them the brief + exact filename + target dimensions per image. No export-spec hand-wringing.
 
 ⚠️ **Hero size — OPEN, confirm with the user before generating prompts.** The live CSS
 (`.blog-hero-art{aspect-ratio:1400/520}`) and the 11 existing heroes are **2.69:1**. The user
@@ -86,7 +89,7 @@ Size: 800 × 400px | WebP 70–75%   (⚠️ confirm hero ratio first)
 
 **Image 3 — In-article: <which section>**
 Filename: `blog-TOPIC-<what-it-shows>.webp`
-Size: 800 × 400px | WebP 70–75%
+Size: 800 × 320px | WebP
 
 > [prompt — depicts exactly what that section explains]
 
@@ -474,7 +477,7 @@ it illustrates. Optional caption.
 ```html
 <figure class="blog-figure">
   <img src="/assets/images/blog-TOPIC-what-it-shows.webp" alt="DESCRIPTIVE ALT — what is happening"
-       width="800" height="400" loading="lazy">
+       width="800" height="320" loading="lazy">
   <figcaption>One line tying the image to the point being made.</figcaption>
 </figure>
 ```
