@@ -82,6 +82,7 @@ The literal space between the two spans keeps correct spacing when inline on mob
         <ul class="footer-links">
           <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
           <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+          <li><a href="/age-calculator/">Age Calculator</a></li>
         </ul>
       </div>
     </div>

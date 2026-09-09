@@ -6,8 +6,8 @@
 
 | # | Calculator | Keyword Volume | Category | Complexity | Status |
 |---|---|---|---|---|---|
-| 1 | BMI Calculator | Massive — #1 health calc keyword globally | Health & Fitness | Simple | ✅ Shipped v68 |
-| 2 | Age Calculator | Very high — surprisingly huge for how simple it is | Math & Numbers | Trivial | ⬜ Not started |
+| 1 | BMI Calculator | Massive — #1 health calc keyword globally | Health & Fitness | Simple | ✅ Shipped v68–v69 |
+| 2 | Age Calculator | Very high — surprisingly huge for how simple it is | Math & Numbers | Trivial | ✅ Shipped v70 |
 | 3 | Calorie Calculator | Very high — distinct from TDEE | Health & Fitness | Medium | ⬜ Not started |
 | 4 | Pregnancy Calculator / Due Date Calculator | Very high — top-5 on every competitor | Health & Fitness | Medium | ⬜ Not started |
 | 5 | Ideal Weight Calculator | Solid — complements BMI + Body Fat | Health & Fitness | Simple | ⬜ Not started |
@@ -15,7 +15,7 @@
 
 ---
 
-## Already Live (25 calculators)
+## Already Live (26 calculators)
 
 ### Construction & Gardening (8)
 - ✅ Board Foot
@@ -46,9 +46,10 @@
 - ✅ Grade
 - ✅ Test Score
 
-### Math & Numbers (2)
+### Math & Numbers (3)
 - ✅ Ratio
 - ✅ Percentage
+- ✅ Age
 
 ---
 
