@@ -10,7 +10,7 @@
 
 ## Project state
 
-- **Asset version:** v75
+- **Asset version:** v77
 - **Total pages:** 44
 - **Model:** Opus 4.6
 
@@ -51,7 +51,12 @@ Ratio · Percentage · Age
 
 ---
 
-## Last session (v73–v75)
+## Last session (v73–v77)
+
+- v76–v77: **Blog image naming convention** — `blog-{article}-card.webp` /
+  `-hero.webp` / `-inArticle-1.webp` (…-2, -3). Renamed the 12 v73–v75 images
+  (BMI, Calorie, Age) + all refs + registry. Pre-v75 articles keep legacy names
+  (do not rename). Convention is in both blog skill files.
 
 - v75: Shipped blog article **"How to Calculate Your Exact Age"**
   (`/blog/how-to-calculate-your-exact-age/`) → CTA to `/age-calculator/`. Borrow-and-subtract
@@ -77,8 +82,8 @@ Ratio · Percentage · Age
   range, BMI limitations (muscle / waist / age / population / fitness), kids-and-teens note,
   4-question FAQ, `.blog-pills` cross-links.
 - Added **`.blog-figure`** CSS to `style.css` (in-article contextual photo — was missing).
-- Images: `blog-bmi-article-card.webp` (800×400), `blog-bmi-article-header.webp` (1400×520),
-  `blog-bmi-height-weight-measurement.webp` + `blog-bmi-scale-categories.webp` (800×320).
+- Images (renamed in v76): `blog-bmi-card.webp` (800×400), `blog-bmi-hero.webp` (1400×520),
+  `blog-bmi-inArticle-1.webp` + `blog-bmi-inArticle-2.webp` (800×320).
 - **Hero size settled: 1400×520 (2.69:1).** `.blog-hero-art` has no `aspect-ratio` lock —
   renders the WebP's natural ratio — so 1400×520 source + `width="1400" height="520"` attrs
   just work, no CSS change. Blog skill files updated (removed the stale "ratio TBD" flag);
