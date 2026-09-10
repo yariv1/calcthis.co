@@ -3167,6 +3167,313 @@ CalcThis.initPredictorCalc = function (cfg) {
   solve();
 };
 
+/* -----------------------------------------------------------
+   CalcThis.initDateCalc(cfg) — date calculator.
+   Independent engine. Two modes:
+     between  — days / weeks / months / years between two dates,
+                with a live span bar (month gridlines, weekend
+                shading in business-day mode, a "today" marker),
+                the weekday + day-of-year of each date, and totals.
+                Advanced: business days only + exclude US federal
+                holidays.
+     addsub   — add or subtract years / months / weeks / days from
+                a start date; returns the resulting date, its
+                weekday and day-of-year, on the same span bar.
+   Reuses the vendored vanillajs-datepicker. Live, no button. */
+CalcThis.initDateCalc = function (cfg) {
+  cfg = cfg || {};
+  var $ = function (id) { return document.getElementById(id); };
+  var DOW = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  var MON = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
+    'September', 'October', 'November', 'December'];
+  var mode = 'between', op = 'add', advanced = false;
+  var dpFrom = null, dpTo = null, dpStart = null;
+  var holCache = {};
+
+  var fromIn = $('fromDate'), toIn = $('toDate'), startIn = $('startDate');
+  var yIn = $('addY'), moIn = $('addMo'), wIn = $('addW'), dIn = $('addD');
+  var incEnd = $('incEnd'), bizOnly = $('bizOnly'), exclHol = $('exclHol');
+  if (!fromIn) return;
+
+  function midnight(dt) { return new Date(dt.getFullYear(), dt.getMonth(), dt.getDate()); }
+  function addDays(dt, n) { return new Date(dt.getFullYear(), dt.getMonth(), dt.getDate() + n); }
+  function diffDays(a, b) { return Math.round((midnight(b) - midnight(a)) / 86400000); }
+  function isoOf(dt) { return dt.getFullYear() + '-' + ('0' + (dt.getMonth() + 1)).slice(-2) + '-' + ('0' + dt.getDate()).slice(-2); }
+  function fmtD(d) { return DOW[d.getDay()] + ', ' + d.getDate() + ' ' + MON[d.getMonth()] + ' ' + d.getFullYear(); }
+  function fmtShort(d) { return d.getDate() + ' ' + MON[d.getMonth()].slice(0, 3) + ' ' + d.getFullYear(); }
+  function num(v) { var n = parseInt(('' + v).trim(), 10); return isNaN(n) || n < 0 ? 0 : n; }
+  function dayOfYear(d) { return diffDays(new Date(d.getFullYear(), 0, 1), d) + 1; }
+
+  function parseD(v) {
+    if (!v) return null;
+    var p = ('' + v).split('-');
+    if (p.length !== 3) return null;
+    var y = +p[0], m = +p[1], d = +p[2];
+    if (!(y > 0 && m >= 1 && m <= 12 && d >= 1 && d <= 31)) return null;
+    var dt = new Date(y, m - 1, d);
+    if (dt.getFullYear() !== y || dt.getMonth() !== m - 1 || dt.getDate() !== d) return null;
+    return dt;
+  }
+  function picked(dp, inp) {
+    if (dp) { var d = dp.getDate(); return d ? midnight(d) : null; }
+    return parseD(inp ? inp.value : '');
+  }
+
+  function ymd(from, to) {
+    var y = to.getFullYear() - from.getFullYear();
+    var m = to.getMonth() - from.getMonth();
+    var d = to.getDate() - from.getDate();
+    if (d < 0) { m--; d += new Date(to.getFullYear(), to.getMonth(), 0).getDate(); }
+    if (m < 0) { y--; m += 12; }
+    return { y: y, m: m, d: d };
+  }
+  function ymdStr(o) {
+    var parts = [];
+    if (o.y) parts.push(o.y + (o.y === 1 ? ' year' : ' years'));
+    if (o.m) parts.push(o.m + (o.m === 1 ? ' month' : ' months'));
+    parts.push(o.d + (o.d === 1 ? ' day' : ' days'));
+    return parts.join(', ');
+  }
+
+  // ---- US federal holidays (observed), computed per year ----
+  function usHolidays(year) {
+    function nth(month, weekday, n) {
+      var first = new Date(year, month, 1);
+      var add = (weekday - first.getDay() + 7) % 7;
+      return new Date(year, month, 1 + add + (n - 1) * 7);
+    }
+    function last(month, weekday) {
+      var eom = new Date(year, month + 1, 0);
+      var sub = (eom.getDay() - weekday + 7) % 7;
+      return new Date(year, month + 1, 0 - sub);
+    }
+    function obs(d) { var wd = d.getDay(); if (wd === 0) return addDays(d, 1); if (wd === 6) return addDays(d, -1); return d; }
+    return [
+      obs(new Date(year, 0, 1)),   // New Year's Day
+      nth(0, 1, 3),                // MLK Day
+      nth(1, 1, 3),                // Presidents' Day
+      last(4, 1),                  // Memorial Day
+      obs(new Date(year, 5, 19)),  // Juneteenth
+      obs(new Date(year, 6, 4)),   // Independence Day
+      nth(8, 1, 1),                // Labor Day
+      nth(9, 1, 2),                // Columbus Day
+      obs(new Date(year, 10, 11)), // Veterans Day
+      nth(10, 4, 4),               // Thanksgiving
+      obs(new Date(year, 11, 25))  // Christmas Day
+    ].map(function (d) { return midnight(d).getTime(); });
+  }
+  function isHoliday(d) {
+    var y = d.getFullYear();
+    if (!holCache[y]) holCache[y] = usHolidays(y);
+    return holCache[y].indexOf(midnight(d).getTime()) >= 0;
+  }
+
+  // count business / weekend / holiday days across the counted set
+  function breakdown(from, to, inc) {
+    var start = inc ? midnight(from) : addDays(from, 1);
+    var biz = 0, wknd = 0, hol = 0;
+    for (var d = new Date(start); diffDays(d, to) >= 0; d = addDays(d, 1)) {
+      var wd = d.getDay();
+      if (wd === 0 || wd === 6) { wknd++; continue; }
+      if (isHoliday(d)) { hol++; if (!(exclHol && exclHol.checked)) biz++; }
+      else biz++;
+    }
+    return { biz: biz, wknd: wknd, hol: hol };
+  }
+
+  function addYMWD(d, sign, y, mo, w, dd) {
+    var t = new Date(d.getFullYear() + sign * y, d.getMonth() + sign * mo, 1);
+    var dim = new Date(t.getFullYear(), t.getMonth() + 1, 0).getDate();
+    var res = new Date(t.getFullYear(), t.getMonth(), Math.min(d.getDate(), dim));
+    return addDays(res, sign * (w * 7 + dd));
+  }
+
+  // ---- span bar ----
+  function renderBar(a, b, showWeekends) {
+    var svg = $('dcBar'); if (!svg) return;
+    var lo = midnight(a < b ? a : b), hi = midnight(a < b ? b : a);
+    var span = diffDays(lo, hi);
+    var x0 = 14, x1 = 306, y = 46, h = 12;
+    var t0 = lo.getTime(), t1 = hi.getTime() || t0 + 1;
+    function sx(dt) { return x0 + Math.max(0, Math.min(1, (dt.getTime() - t0) / (t1 - t0))) * (x1 - x0); }
+    var g = '';
+    g += '<rect x="' + x0 + '" y="' + y + '" width="' + (x1 - x0) + '" height="' + h + '" rx="6" fill="#EDF2ED"/>';
+    // weekend shading (only when readable + requested)
+    if (showWeekends && span > 0 && span <= 140) {
+      for (var d = new Date(lo); diffDays(d, hi) > 0; d = addDays(d, 1)) {
+        var wd = d.getDay();
+        if (wd === 6 || wd === 0) {
+          var xa = sx(d), xb = sx(addDays(d, 1));
+          g += '<rect x="' + xa + '" y="' + y + '" width="' + Math.max(0.6, xb - xa) + '" height="' + h + '" fill="#D8C8A8"/>';
+        }
+      }
+    } else {
+      g += '<rect x="' + x0 + '" y="' + y + '" width="' + (sx(hi) - x0) + '" height="' + h + '" rx="6" fill="#B5761F"/>';
+    }
+    // month-boundary ticks
+    if (span > 0 && span <= 3660) {
+      var m = new Date(lo.getFullYear(), lo.getMonth() + 1, 1);
+      var guard = 0;
+      while (m < hi && guard++ < 200) {
+        var mx = sx(m);
+        g += '<line x1="' + mx + '" y1="' + (y - 3) + '" x2="' + mx + '" y2="' + (y + h + 3) + '" stroke="#8A7A66" stroke-width="1" opacity=".5"/>';
+        m = new Date(m.getFullYear(), m.getMonth() + 1, 1);
+      }
+    }
+    // today marker
+    var today = midnight(new Date());
+    if (diffDays(lo, today) >= 0 && diffDays(today, hi) >= 0 && span > 0) {
+      var nx = sx(today);
+      g += '<line x1="' + nx + '" y1="' + (y - 13) + '" x2="' + nx + '" y2="' + (y + h + 5) + '" stroke="#241A11" stroke-width="1.5"/>';
+      g += '<circle cx="' + nx + '" cy="' + (y + h / 2) + '" r="3.5" fill="#241A11" stroke="#fff" stroke-width="1.5"/>';
+      g += '<text x="' + nx + '" y="' + (y - 18) + '" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="700" fill="#241A11">today</text>';
+    }
+    // endpoint labels
+    g += '<text x="' + x0 + '" y="' + (y + h + 20) + '" font-family="Inter,sans-serif" font-size="12" fill="#8A7A66">' + fmtShort(lo) + '</text>';
+    g += '<text x="' + x1 + '" y="' + (y + h + 20) + '" text-anchor="end" font-family="Inter,sans-serif" font-size="12" fill="#8A7A66">' + fmtShort(hi) + '</text>';
+    g += '<text x="' + ((x0 + x1) / 2) + '" y="26" text-anchor="middle" font-family="Inter,sans-serif" font-size="13" font-weight="700" fill="#241A11">' + span.toLocaleString() + (span === 1 ? ' day' : ' days') + '</text>';
+    svg.innerHTML = g;
+  }
+
+  function setLabels() {
+    $('dcResLab').textContent = mode === 'between' ? 'Days between' : 'Resulting date';
+    $('betweenIn').style.display = mode === 'between' ? '' : 'none';
+    $('addsubIn').style.display = mode === 'addsub' ? '' : 'none';
+    $('advRow').style.display = mode === 'between' ? '' : 'none';
+    if (mode === 'addsub' && advanced) { advanced = false; $('advBtn').classList.remove('open'); $('advBtnLab').textContent = 'Go advanced'; $('advIn').style.display = 'none'; }
+  }
+
+  function solveBetween() {
+    var a = picked(dpFrom, fromIn), b = picked(dpTo, toIn);
+    var big = $('dcResBig'), unit = $('dcResUnit'), sub = $('dcResSub');
+    if (!a || !b) {
+      big.textContent = '—'; unit.textContent = '';
+      sub.textContent = a || b ? 'Pick both dates to see the gap.' : 'Pick a start and end date.';
+      $('dcDetail').style.display = 'none';
+      return;
+    }
+    var swapped = b < a;
+    var lo = swapped ? b : a, hi = swapped ? a : b;
+    var inc = incEnd && incEnd.checked;
+    var days = diffDays(lo, hi) + (inc ? 1 : 0);
+    var o = ymd(lo, hi);
+    var weeks = Math.floor(days / 7), rem = days % 7;
+    big.textContent = days.toLocaleString();
+    unit.textContent = days === 1 ? 'day' : 'days';
+    sub.textContent = (swapped ? 'That end date is before the start — showing the gap. ' : '') +
+      '= ' + weeks.toLocaleString() + (weeks === 1 ? ' week' : ' weeks') + (rem ? ', ' + rem + (rem === 1 ? ' day' : ' days') : '') +
+      '  ·  ' + ymdStr(o);
+    $('dcDetail').style.display = '';
+
+    var bd = (advanced && bizOnly && bizOnly.checked) ? breakdown(lo, hi, inc) : null;
+    renderBar(lo, hi, !!bd);
+
+    var months = o.y * 12 + o.m;
+    $('dcTotals').innerHTML =
+      '<thead><tr><th>In total</th><th></th></tr></thead><tbody>' +
+      '<tr><td>Years, months, days</td><td>' + ymdStr(o) + '</td></tr>' +
+      '<tr><td>Months</td><td>' + months.toLocaleString() + '</td></tr>' +
+      '<tr><td>Weeks</td><td>' + weeks.toLocaleString() + '</td></tr>' +
+      '<tr><td>Days</td><td>' + days.toLocaleString() + '</td></tr>' +
+      '<tr><td>Hours</td><td>' + (days * 24).toLocaleString() + '</td></tr>' +
+      '</tbody>';
+
+    var facts =
+      '<div class="bf-cmp"><span class="k">' + fmtShort(lo) + ' is a</span><span class="v">' + DOW[lo.getDay()] + '</span></div>' +
+      '<div class="bf-cmp"><span class="k">' + fmtShort(hi) + ' is a</span><span class="v">' + DOW[hi.getDay()] + '</span></div>' +
+      '<div class="bf-cmp"><span class="k">Day of the year (' + hi.getFullYear() + ')</span><span class="v">' + dayOfYear(hi) + ' of ' + (((hi.getFullYear() % 4 === 0 && hi.getFullYear() % 100 !== 0) || hi.getFullYear() % 400 === 0) ? 366 : 365) + '</span></div>';
+    if (bd) {
+      facts +=
+        '<div class="bf-cmp"><span class="k">Business days</span><span class="v">' + bd.biz.toLocaleString() + '</span></div>' +
+        '<div class="bf-cmp"><span class="k">Weekend days</span><span class="v">' + bd.wknd.toLocaleString() + '</span></div>';
+      if (exclHol && exclHol.checked) facts += '<div class="bf-cmp"><span class="k">US federal holidays</span><span class="v">' + bd.hol.toLocaleString() + '</span></div>';
+    }
+    $('dcFacts').innerHTML = facts;
+  }
+
+  function solveAddSub() {
+    var s = picked(dpStart, startIn);
+    var big = $('dcResBig'), unit = $('dcResUnit'), sub = $('dcResSub');
+    var y = num(yIn.value), mo = num(moIn.value), w = num(wIn.value), dd = num(dIn.value);
+    if (!s || (y + mo + w + dd === 0)) {
+      big.textContent = '—'; unit.textContent = '';
+      sub.textContent = !s ? 'Pick a start date.' : 'Enter an amount to add or subtract.';
+      $('dcDetail').style.display = 'none';
+      return;
+    }
+    var sign = op === 'sub' ? -1 : 1;
+    var res = addYMWD(s, sign, y, mo, w, dd);
+    var total = diffDays(s, res);
+    big.textContent = fmtShort(res);
+    unit.textContent = '';
+    sub.textContent = DOW[res.getDay()] + '  ·  ' + (op === 'sub' ? '' : '+') + total.toLocaleString() + (Math.abs(total) === 1 ? ' day' : ' days') + ' from the start';
+    $('dcDetail').style.display = '';
+    renderBar(s, res, false);
+
+    var o = ymd(res < s ? res : s, res < s ? s : res);
+    $('dcTotals').innerHTML =
+      '<thead><tr><th>The gap</th><th></th></tr></thead><tbody>' +
+      '<tr><td>Years, months, days</td><td>' + ymdStr(o) + '</td></tr>' +
+      '<tr><td>Total days</td><td>' + Math.abs(total).toLocaleString() + '</td></tr>' +
+      '<tr><td>Weeks</td><td>' + Math.floor(Math.abs(total) / 7).toLocaleString() + '</td></tr>' +
+      '</tbody>';
+    $('dcFacts').innerHTML =
+      '<div class="bf-cmp"><span class="k">Start date</span><span class="v">' + DOW[s.getDay()] + ', ' + fmtShort(s) + '</span></div>' +
+      '<div class="bf-cmp"><span class="k">Result</span><span class="v">' + DOW[res.getDay()] + ', ' + fmtShort(res) + '</span></div>' +
+      '<div class="bf-cmp"><span class="k">Day of the year (' + res.getFullYear() + ')</span><span class="v">' + dayOfYear(res) + '</span></div>';
+  }
+
+  function solve() { if (mode === 'between') solveBetween(); else solveAddSub(); }
+
+  $('modeSeg').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b || b.dataset.mode === mode) return;
+    mode = b.dataset.mode;
+    [].forEach.call(this.children, function (c) { c.classList.toggle('on', c === b); });
+    this.querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-selected', String(x === b)); });
+    setLabels(); solve();
+  });
+  $('opSeg').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b || b.dataset.op === op) return;
+    op = b.dataset.op;
+    [].forEach.call(this.children, function (c) { c.classList.toggle('on', c === b); });
+    solve();
+  });
+
+  var advBtn = $('advBtn');
+  advBtn.addEventListener('click', function () {
+    advanced = !advanced;
+    advBtn.classList.toggle('open', advanced);
+    $('advBtnLab').textContent = advanced ? 'Go simple' : 'Go advanced';
+    $('advIn').style.display = advanced ? '' : 'none';
+    solve();
+    if (advanced) { var el = $('advIn'); if (el && el.scrollIntoView) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+  });
+
+  [incEnd, bizOnly, exclHol].forEach(function (el) { if (el) el.addEventListener('change', solve); });
+  [yIn, moIn, wIn, dIn].forEach(function (el) { if (el) el.addEventListener('input', solve); });
+
+  var today = new Date();
+  if (window.Datepicker) {
+    var opt = { format: 'd MM yyyy', autohide: true, weekStart: 0, todayHighlight: true };
+    dpFrom = new Datepicker(fromIn, opt);
+    dpTo = new Datepicker(toIn, opt);
+    dpStart = new Datepicker(startIn, opt);
+    [fromIn, toIn, startIn].forEach(function (el) { el.addEventListener('changeDate', solve); });
+    dpFrom.setDate(today);
+    dpTo.setDate(addDays(today, 90));
+    dpStart.setDate(today);
+  } else {
+    fromIn.value = isoOf(today); toIn.value = isoOf(addDays(today, 90)); startIn.value = isoOf(today);
+  }
+  ['input', 'change'].forEach(function (ev) {
+    [fromIn, toIn, startIn].forEach(function (el) { el.addEventListener(ev, solve); });
+  });
+  if (dIn && !dIn.value) dIn.value = '30';
+
+  setLabels();
+  solve();
+};
+
 /* =========================================================
    SITE FOOTER — mobile accordion
    Multiple pillars can be open simultaneously.

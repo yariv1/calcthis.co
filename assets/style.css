@@ -687,6 +687,34 @@
 
 
   /* =========================================================
+     DATE/TIME · DATE CALCULATOR  (body.p-datecalc)
+     Two modes (Days between / Add · subtract). Reuses the
+     datepicker, .modeseg, .seg, .dtable, .bf-cmp rows, .advbtn.
+     Adds a live span bar (month ticks, weekend shading, today).
+     ========================================================= */
+  .p-datecalc .fld{margin-bottom:16px}
+  .p-datecalc .bf-res{margin:2px 0 14px}
+  .p-datecalc .res-big{font-size:clamp(30px,6vw,42px)}
+  .p-datecalc .inp input{padding:11px 13px}
+  .p-datecalc #modeSeg{display:flex;width:100%;margin-bottom:18px}
+  .p-datecalc #modeSeg button{flex:1;text-align:center}
+  .p-datecalc .dc-check{display:flex;align-items:flex-start;gap:9px;font-size:14px;font-weight:600;color:var(--ink-soft);margin:2px 0 12px;cursor:pointer;line-height:1.45}
+  .p-datecalc .dc-check input{width:16px;height:16px;accent-color:var(--amber);flex:none;margin-top:2px}
+  .p-datecalc #advIn .dc-check:last-child{margin-bottom:2px}
+  .p-datecalc .dc-cap{font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin:16px 0 8px}
+  .p-datecalc .dc-bar-wrap{margin:6px 0 4px}
+  .p-datecalc .dc-bar-wrap svg{display:block;width:100%;max-width:440px;height:auto;overflow:visible}
+  .p-datecalc #dcFacts{margin:14px 0 4px}
+  .p-datecalc .bf-cmp{display:flex;justify-content:space-between;align-items:baseline;gap:6px 14px;padding:9px 0;border-bottom:1px dashed var(--line);flex-wrap:wrap}
+  .p-datecalc .bf-cmp:first-child{border-top:1px dashed var(--line)}
+  .p-datecalc .bf-cmp .k{font-size:14px;font-weight:500;color:var(--ink-soft);flex:none}
+  .p-datecalc .bf-cmp .v{font-family:'Fraunces',serif;font-size:17px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--ink);text-align:right;margin-left:auto}
+  .p-datecalc .dtable td,.p-datecalc .dtable th{font-size:14.5px}
+  .p-datecalc .dtable td:first-child{color:var(--ink)}
+  .p-datecalc .dtable td:last-child{font-variant-numeric:tabular-nums}
+
+
+  /* =========================================================
      DATE PICKER — vanillajs-datepicker, CalcThis theme.
      Vendored: assets/datepicker.min.{js,css}. Used on the age
      calculator and future date calculators. Load datepicker.min.css

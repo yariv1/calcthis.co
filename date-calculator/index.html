@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Date Calculator — Days Between Dates + Add or Subtract Days | CalcThis</title>
+<meta name="description" content="Free date calculator. Get the number of days, weeks, months and years between two dates, or add and subtract days from a date. Business-days count, the weekday and day-of-year of each date, and a live span timeline. Instant, no sign-up.">
+<link rel="canonical" href="https://calcthis.co/date-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Date Calculator — Days Between Dates + Add or Subtract Days">
+<meta property="og:description" content="Days, weeks, months and years between two dates, or add and subtract days from a date — with a business-days count, weekdays, and a live span timeline. Instant, no sign-up.">
+<meta property="og:url" content="https://calcthis.co/date-calculator/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<meta name="theme-color" content="#B5761F">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/datepicker.min.css">
+<link rel="stylesheet" href="/assets/style.css?v=81">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Date Calculator",
+  "url": "https://calcthis.co/date-calculator/",
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Calculate the number of days, weeks, months and years between two dates, or add and subtract years, months, weeks and days from a start date. Includes a business-days count that can exclude US federal holidays, the weekday and day-of-year of each date, and a live span timeline."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "How many days are between two dates?", "acceptedAnswer": { "@type": "Answer", "text": "Enter a start date and an end date and the calculator shows the exact number of calendar days between them, along with the gap in weeks, months and years, months and days. It accounts for leap years and the different lengths of each month." } },
+    { "@type": "Question", "name": "Does the calculator count both the start and end date?", "acceptedAnswer": { "@type": "Answer", "text": "By default it counts the number of nights between the two dates, so the start date is not included and the end date is. Tick 'Include the end date' to add one day, which is the count you want when both the first and last day matter, such as a hotel stay counted in days or a rental period." } },
+    { "@type": "Question", "name": "How do I add 90 days to a date?", "acceptedAnswer": { "@type": "Answer", "text": "Switch to Add / subtract mode, pick your start date, leave the direction on Add, and enter 90 in the days field. The calculator returns the resulting date and its weekday. You can combine years, months, weeks and days in one calculation." } },
+    { "@type": "Question", "name": "How many working days are there between two dates?", "acceptedAnswer": { "@type": "Answer", "text": "In Days between mode, tap Go advanced and turn on 'Count business days only'. The calculator counts Monday to Friday dates in the range and shows the weekend days separately. Turn on the second option to also exclude the 11 US federal holidays." } },
+    { "@type": "Question", "name": "How many days until a specific date?", "acceptedAnswer": { "@type": "Answer", "text": "Set the start date to today, set the end date to the date you are counting to, and read the total days. The span timeline marks where today falls between the two dates." } }
+  ]
+}
+</script>
+</head>
+<body class="p-datecalc">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <a class="hdr-back" href="/blog/" aria-label="Back to blog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <span class="menu-col-head">Construction</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
+          <a href="/bmi-calculator/">BMI</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/ideal-weight-calculator/">Ideal Weight</a>
+          <a href="/calorie-calculator/">Calorie</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/macro-calculator/">Macro</a>
+          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+          <a href="/age-calculator/">Age</a>
+          <a href="/date-calculator/" class="current">Date</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">Dates &amp; time, done instantly</div>
+    <h1>Date Calculator</h1>
+    <p>Get the <strong>number of days between two dates</strong> — in days, weeks, months and years — or switch to <strong>add / subtract</strong> to find a date a set number of days, weeks, months or years from another. Every result comes with a <strong>live span timeline</strong> and the <strong>weekday</strong> of each date. Tap <em>Go advanced</em> for a <strong>business-days</strong> count.</p>
+  </section>
+
+  <div class="grid">
+    <div class="card">
+      <div class="card-pad">
+        <h2 class="card-h2">Date calculator</h2>
+
+        <div class="modeseg" id="modeSeg" role="tablist">
+          <button type="button" class="on" data-mode="between" role="tab" aria-selected="true">Days between</button>
+          <button type="button" data-mode="addsub" role="tab" aria-selected="false">Add / subtract</button>
+        </div>
+
+        <div id="betweenIn">
+          <label class="fld" for="fromDate">
+            <span class="lab">From <span class="unit">start date</span></span>
+            <div class="inp"><input id="fromDate" type="text" inputmode="numeric" placeholder="e.g. 1 January 2026" autocomplete="off"></div>
+          </label>
+          <label class="fld" for="toDate">
+            <span class="lab">To <span class="unit">end date</span></span>
+            <div class="inp"><input id="toDate" type="text" inputmode="numeric" placeholder="e.g. 1 April 2026" autocomplete="off"></div>
+          </label>
+          <label class="dc-check" for="incEnd">
+            <input type="checkbox" id="incEnd">
+            <span>Include the end date <span class="unit" style="font-weight:500;color:var(--muted)">adds one day</span></span>
+          </label>
+
+          <div class="fld" id="advIn" style="display:none">
+            <label class="dc-check" for="bizOnly" style="margin-top:4px">
+              <input type="checkbox" id="bizOnly">
+              <span>Count business days only <span class="unit" style="font-weight:500;color:var(--muted)">excludes weekends</span></span>
+            </label>
+            <label class="dc-check" for="exclHol">
+              <input type="checkbox" id="exclHol">
+              <span>Also exclude US federal holidays</span>
+            </label>
+          </div>
+        </div>
+
+        <div id="addsubIn" style="display:none">
+          <label class="fld" for="startDate">
+            <span class="lab">Start date</span>
+            <div class="inp"><input id="startDate" type="text" inputmode="numeric" placeholder="e.g. 1 January 2026" autocomplete="off"></div>
+          </label>
+          <div class="ctl-row">
+            <span class="ctl-lab">Direction</span>
+            <div class="seg" id="opSeg">
+              <button type="button" data-op="add" class="on">Add</button>
+              <button type="button" data-op="sub">Subtract</button>
+            </div>
+          </div>
+          <div class="two">
+            <label class="fld" for="addY">
+              <span class="lab">Years</span>
+              <div class="inp"><input id="addY" type="text" inputmode="numeric" placeholder="0" autocomplete="off"></div>
+            </label>
+            <label class="fld" for="addMo">
+              <span class="lab">Months</span>
+              <div class="inp"><input id="addMo" type="text" inputmode="numeric" placeholder="0" autocomplete="off"></div>
+            </label>
+          </div>
+          <div class="two">
+            <label class="fld" for="addW">
+              <span class="lab">Weeks</span>
+              <div class="inp"><input id="addW" type="text" inputmode="numeric" placeholder="0" autocomplete="off"></div>
+            </label>
+            <label class="fld" for="addD">
+              <span class="lab">Days</span>
+              <div class="inp"><input id="addD" type="text" inputmode="numeric" placeholder="0" autocomplete="off"></div>
+            </label>
+          </div>
+        </div>
+
+        <div class="add-row split" id="advRow" style="margin-top:6px">
+          <span></span>
+          <button class="advbtn" id="advBtn" type="button">
+            <span id="advBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-pad">
+        <div class="bf-res">
+          <div class="res-lab" id="dcResLab">Days between</div>
+          <div class="res-big"><span id="dcResBig">—</span> <span class="res-unit" id="dcResUnit"></span></div>
+          <div class="res-sub" id="dcResSub">Pick a start and end date.</div>
+        </div>
+
+        <div id="dcDetail" style="display:none">
+          <div class="dc-bar-wrap">
+            <div class="dc-cap">The span</div>
+            <svg id="dcBar" viewBox="0 0 320 84" role="img" aria-label="Timeline showing the span between the two dates"></svg>
+          </div>
+
+          <div id="dcFacts"></div>
+
+          <div class="stable-wrap">
+            <table class="dtable" id="dcTotals"></table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="related-calcs">
+    <p class="related-calcs-h">More math &amp; date calculators that may interest you</p>
+    <div class="pills">
+      <a class="pill" href="/age-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></svg>
+        Age Calculator
+      </a>
+      <a class="pill" href="/percentage-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 5 5 19M6.5 6.5h.01M17.5 17.5h.01"/></svg>
+        Percentage Calculator
+      </a>
+      <a class="pill" href="/ratio-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7" cy="7" r="3"/><circle cx="17" cy="17" r="3"/><path d="M7 10v4M17 10v4"/></svg>
+        Ratio Calculator
+      </a>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use the date calculator</h2>
+        <p>In <strong>Days between</strong> mode, pick a <strong>From</strong> date and a <strong>To</strong> date — type them or use the picker. The gap appears at once as a total in <strong>days</strong>, then as <strong>weeks and days</strong> and as <strong>years, months and days</strong>. Below that you get a table of totals, the <strong>weekday</strong> each date falls on, and which <strong>day of the year</strong> the end date is.</p>
+        <p>Switch to <strong>Add / subtract</strong> to go the other way: pick a start date, choose <strong>Add</strong> or <strong>Subtract</strong>, and enter any mix of years, months, weeks and days. The calculator returns the <strong>resulting date</strong> and its weekday.</p>
+
+        <h2>How many days between two dates</h2>
+        <p>The plain day count is the number of <strong>calendar days</strong> from the start date to the end date. By default the start date is not counted and the end date is — the same as counting nights between them. If you need both the first and last day included, tick <strong>Include the end date</strong> and the total goes up by one.</p>
+
+        <h2>How days, weeks, months and years are counted</h2>
+        <p>Total <strong>weeks</strong> is the day count divided by seven, with any remainder shown as extra days. The <strong>years, months and days</strong> figure is a calendar breakdown: whole years first, then whole months, then the days left over — so 1 January to 1 March reads as "2 months", not "59 days". Month lengths and leap years are handled automatically.</p>
+
+        <h2>Add or subtract days from a date</h2>
+        <p>Adding a period works calendar-first. Add one month to 31 January and you land on <strong>28 February</strong> (or 29 in a leap year), because February has no 31st — the date clamps to the last valid day. Weeks and days are then added as exact 7-day and 1-day steps. Subtracting works the same way in reverse.</p>
+
+        <h2>Business days only (excluding weekends and holidays)</h2>
+        <p>Tap <strong>Go advanced</strong> and turn on <strong>Count business days only</strong> to count just Monday-to-Friday dates in the range; the weekend days are shown separately and shaded on the timeline. Turn on the second option to also drop the <strong>11 US federal holidays</strong> (New Year's Day, MLK Day, Presidents' Day, Memorial Day, Juneteenth, Independence Day, Labor Day, Columbus Day, Veterans Day, Thanksgiving and Christmas), each shifted to its observed weekday.</p>
+      </div>
+
+      <div>
+        <h2>Why "include end date" changes the answer</h2>
+        <p>"How many days from Monday to Friday" has two right answers. If you mean <strong>how many nights</strong>, it's 4. If you mean <strong>how many days are you there</strong>, counting both Monday and Friday, it's 5. Leaving the box unticked gives the first; ticking it gives the second. Rental periods, trip lengths and notice periods usually want the end date included.</p>
+
+        <h2>Counting days from today</h2>
+        <p>To find <strong>how many days until</strong> a deadline, set the From date to today and the To date to the target. The <strong>day-of-year</strong> line tells you how far through the year that date sits, and the timeline puts a <strong>today</strong> marker in place so you can see the run-up at a glance.</p>
+
+        <h2>Date math and leap years</h2>
+        <p>A leap year adds 29 February, so any span crossing late February of a leap year is one day longer than the same span in a common year. The calculator uses real calendar dates throughout, so leap days, month lengths and year boundaries are always counted correctly — no need to adjust anything by hand.</p>
+
+        <h2>What you get</h2>
+        <table class="dtable">
+          <thead><tr><th>Output</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td>Total days</td><td>90</td></tr>
+            <tr><td>Weeks and days</td><td>12 weeks, 6 days</td></tr>
+            <tr><td>Years, months, days</td><td>2 months, 30 days</td></tr>
+            <tr><td>Weekday of each date</td><td>Wednesday &rarr; Tuesday</td></tr>
+            <tr><td>Business days</td><td>64 (26 weekend days)</td></tr>
+            <tr><td>Resulting date (add / subtract)</td><td>1 Apr 2026, a Wednesday</td></tr>
+          </tbody>
+        </table>
+
+        <h2>Common uses</h2>
+        <p>Contract terms and <strong>notice periods</strong>, invoice and <strong>payment due dates</strong> ("net 30"), project and <strong>sprint planning</strong>, visa and passport windows, return-by dates, warranty and returns cut-offs, counting down to an <strong>exam, wedding or trip</strong>, and working out how many days old something is. For an age from a date of birth, use the <a href="/age-calculator/">Age Calculator</a>; for the rest of your quick-number jobs, the <a href="/percentage-calculator/">Percentage Calculator</a>.</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>How many days are between two dates?</summary><p>Enter a start and end date and you get the exact number of calendar days between them, plus the gap in weeks, and in years, months and days. Leap years and month lengths are handled for you.</p></details>
+    <details class="faq"><summary>Does it count both the start and end date?</summary><p>By default, no — it counts the nights between them, so the start date is excluded and the end date included. Tick "Include the end date" to add one day, which is what you want when both the first and last day count.</p></details>
+    <details class="faq"><summary>How do I add 90 days to a date?</summary><p>Switch to Add / subtract mode, pick your start date, keep the direction on Add, and put 90 in the Days field. You'll get the resulting date and its weekday. Years, months, weeks and days can be combined in one go.</p></details>
+    <details class="faq"><summary>How many working days are there between two dates?</summary><p>In Days between mode, tap Go advanced and turn on "Count business days only". It counts Monday-to-Friday dates and shows the weekend days separately. The second option also removes the 11 US federal holidays.</p></details>
+    <details class="faq"><summary>How many days until a specific date?</summary><p>Set the From date to today and the To date to the day you're counting to. The total days is your answer, and the timeline marks where today sits in the span.</p></details>
+  </section>
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/bmi-calculator/">BMI Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/ideal-weight-calculator/">Ideal Weight Calculator</a></li>
+          <li><a href="/calorie-calculator/">Calorie Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+          <li><a href="/age-calculator/">Age Calculator</a></li>
+          <li><a href="/date-calculator/">Date Calculator</a></li>
+        </ul>
+      </div>
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/blog/">Blog</a>
+      <span aria-hidden="true">·</span>
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+</div>
+
+<script src="/assets/datepicker.min.js"></script>
+<script src="/assets/app.js?v=81"></script>
+<script>CalcThis.initDateCalc({});</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>
