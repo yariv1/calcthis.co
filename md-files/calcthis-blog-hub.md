@@ -9,9 +9,8 @@ Every card, header, and in-article image filename is listed here. When building 
 add ALL its image names here immediately (card + hero + each in-article `blog-TOPIC-<what>.webp`).
 No exceptions.
 
-**Every new article ships:** card (800×400) · hero (800×400, ⚠️ ratio TBD — see
-`calcthis-blog-article.md`) · 1–3 in-article photos (800×400). All must depict the article's
-actual subject — never generic atmosphere shots.
+**Every new article ships:** card (800×400) · hero (1400×520, 2.69:1) · 1–3 in-article photos
+(800×320). All must depict the article's actual subject — never generic atmosphere shots.
 
 ### Construction & Gardening
 
@@ -33,6 +32,13 @@ actual subject — never generic atmosphere shots.
 | What Is One Rep Max? | `blog-one-rep-max-article-card.webp` | `blog-one-rep-max-article-header.webp` |
 | How to Calculate Your TDEE | `blog-tdee-article-card.webp` | `blog-tdee-article-header.webp` |
 | How to Calculate Your Body Fat Percentage | `blog-body-fat-article-card.webp` | `blog-body-fat-article-header.webp` |
+| What Is BMI? How to Calculate and Interpret Your Body Mass Index | `blog-bmi-article-card.webp` | `blog-bmi-article-header.webp` |
+
+### In-article images
+
+| Article | In-article filenames (`assets/images/`) |
+|---|---|
+| What Is BMI? How to Calculate and Interpret Your Body Mass Index | `blog-bmi-height-weight-measurement.webp` · `blog-bmi-scale-categories.webp` |
 
 ### Rules
 - ❌ Never guess a filename. If it's not in this table, stop and check the actual file.

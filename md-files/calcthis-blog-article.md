@@ -28,17 +28,16 @@ rewrite it to show the article's actual subject.
 | Image | Purpose | Dimensions | Export |
 |---|---|---|---|
 | **Card** | blog hub grid | **800 × 400 px** | WebP |
-| **Hero** | top of the article | **800 × 400 px** ⚠️ see note | WebP |
+| **Hero** | top of the article | **1400 × 520 px** (2.69:1) | WebP |
 | **In-article ×1 (prefer 2–3)** | inside `.blog-content`, next to the section it illustrates | **800 × 320 px** | WebP |
 
 The **user supplies every image already cropped to size and in WebP** — the prompt step just
 gives them the brief + exact filename + target dimensions per image. No export-spec hand-wringing.
 
-⚠️ **Hero size — OPEN, confirm with the user before generating prompts.** The live CSS
-(`.blog-hero-art{aspect-ratio:1400/520}`) and the 11 existing heroes are **2.69:1**. The user
-now wants **800×400 (2:1)**. Either (a) change `.blog-hero-art` to `aspect-ratio:2/1` site-wide
-(re-crops the 11 existing heroes — check them), or (b) keep 2.69:1 and generate the hero source
-wider. **Ask which. Do not assume.**
+**Hero size — SETTLED: 1400 × 520 (2.69:1).** All 12 heroes use this ratio. The live
+`.blog-hero-art` CSS renders the image at its natural ratio (`width:100%` + `img{height:auto}`,
+no `aspect-ratio` lock), so supplying the WebP at 1400×520 gives 2.69:1 with no CSS change.
+Hero `<img>` attrs are always `width="1400" height="520"`. Card stays 800×400, in-article 800×320.
 
 ### Exact output format — always this, every time
 
@@ -81,7 +80,7 @@ Size: 800 × 400px | WebP 70–75%
 
 **Image 2 — Article Hero**
 Filename: `blog-TOPIC-article-header.webp`
-Size: 800 × 400px | WebP 70–75%   (⚠️ confirm hero ratio first)
+Size: 1400 × 520px (2.69:1) | WebP 70–75%
 
 > [prompt]
 
@@ -532,7 +531,7 @@ if(document.querySelectorAll('.u').length){
 ## Checklist when adding a new article
 
 - [ ] Image prompts FIRST — card + hero + 1–3 in-article, all in-context (not atmosphere); add every filename to the `calcthis-blog-hub.md` registry in the same step
-- [ ] Confirm the hero aspect ratio with the user (see the ⚠️ note above) before generating prompts
+- [ ] Hero is 1400×520 (2.69:1); card 800×400; in-article 800×320 — no ratio question needed
 - [ ] Create `blog/SLUG/index.html` using the template above
 - [ ] Add `{ file: 'blog/SLUG/index.html', slug: '/blog/SLUG/' }` to `build.js` PAGES array
 - [ ] Add `<url>` entry to `sitemap.xml`

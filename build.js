@@ -59,6 +59,7 @@ const PAGES = [
   { file: 'blog/what-is-one-rep-max/index.html',         slug: '/blog/what-is-one-rep-max/' },
   { file: 'blog/how-to-calculate-your-tdee/index.html',  slug: '/blog/how-to-calculate-your-tdee/' },
   { file: 'blog/how-to-calculate-your-body-fat-percentage/index.html', slug: '/blog/how-to-calculate-your-body-fat-percentage/' },
+  { file: 'blog/what-is-bmi/index.html', slug: '/blog/what-is-bmi/' },
   { file: 'about/index.html',           slug: '/about/' },
   { file: 'contact/index.html',         slug: '/contact/' },
   { file: 'privacy-policy/index.html',  slug: '/privacy-policy/' },

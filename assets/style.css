@@ -1147,3 +1147,8 @@
 
   /* Cross-links at article bottom */
   .blog-pills { display: flex; flex-wrap: wrap; gap: 9px; margin: 40px 0 0; }
+
+  /* In-article contextual photo */
+  .blog-figure { margin: 28px 0; max-width: 700px; }
+  .blog-figure img { width: 100%; height: auto; border-radius: 12px; display: block; }
+  .blog-figure figcaption { font-size: 13px; color: var(--muted); margin-top: 8px; line-height: 1.5; }

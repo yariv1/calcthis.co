@@ -12,11 +12,11 @@
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>How to Calculate Your TDEE | CalcThis</title>
-<link rel="canonical" href="https://calcthis.co/blog/how-to-calculate-your-tdee/">
+<title>What Is BMI? How to Calculate and Interpret Your Body Mass Index | CalcThis</title>
+<link rel="canonical" href="https://calcthis.co/blog/what-is-bmi/">
 <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
 <meta name="theme-color" content="#B5761F">
-<meta name="description" content="Learn how to calculate your TDEE step by step: estimate your BMR with the Mifflin-St Jeor equation, apply the right activity multiplier, and turn the number into a plan for losing, maintaining, or gaining weight.">
+<meta name="description" content="What BMI is, the formula in metric and imperial, a worked example, the WHO weight categories, how to read your number into a healthy weight range, and where BMI falls short.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -24,17 +24,17 @@
 {
   "@context": "https://schema.org",
   "@type": "BlogPosting",
-  "headline": "How to Calculate Your TDEE",
-  "url": "https://calcthis.co/blog/how-to-calculate-your-tdee/",
-  "datePublished": "2026-09-06",
-  "dateModified": "2026-09-06",
+  "headline": "What Is BMI? How to Calculate and Interpret Your Body Mass Index",
+  "url": "https://calcthis.co/blog/what-is-bmi/",
+  "datePublished": "2026-09-10",
+  "dateModified": "2026-09-10",
   "author": { "@type": "Organization", "name": "CalcThis", "url": "https://calcthis.co" },
   "publisher": { "@type": "Organization", "name": "CalcThis", "url": "https://calcthis.co" },
-  "description": "Learn how to calculate your TDEE step by step: estimate your BMR with the Mifflin-St Jeor equation, apply the right activity multiplier, and turn the number into a plan for losing, maintaining, or gaining weight.",
-  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://calcthis.co/blog/how-to-calculate-your-tdee/" }
+  "description": "What BMI is, the formula in metric and imperial, a worked example, the WHO weight categories, how to read your number into a healthy weight range, and where BMI falls short.",
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://calcthis.co/blog/what-is-bmi/" }
 }
 </script>
-<link rel="stylesheet" href="/assets/style.css?v=73?v=N">
+<link rel="stylesheet" href="/assets/style.css?v=73">
 <style>
 /* Lightbox — diagram click-to-enlarge */
 .diagram-zoomable{cursor:zoom-in;position:relative}
@@ -113,8 +113,8 @@
 
   <div class="hero" style="padding:4px 0 0">
     <div class="blog-hero-art">
-      <img src="/assets/images/blog-tdee-article-header.webp"
-           alt="Woman running on a treadmill in a bright modern gym with a calorie display visible on the console"
+      <img src="/assets/images/blog-bmi-article-header.webp"
+           alt="A woman in athletic wear having her height measured against a wall-mounted stadiometer in a bright clinic, a digital scale on the floor beside her"
            width="1400" height="520" loading="eager">
     </div>
 
@@ -124,89 +124,137 @@
         <span class="bm-sep">·</span>
         <span class="blog-meta-cat">Health &amp; Lifestyle</span>
         <span class="bm-sep">·</span>
-        <span>8 min read</span>
+        <span>7 min read</span>
       </div>
-      <!-- Unit toggle: always in template, JS auto-shows only when page has .u spans, hidden otherwise -->
       <div class="seg" id="unitToggle" role="group" aria-label="Unit system" style="display:none">
         <button class="on" data-unit="imp" type="button" aria-pressed="true">Imperial</button>
         <button data-unit="met" type="button" aria-pressed="false">Metric</button>
       </div>
     </div>
 
-    <h1>How to Calculate Your TDEE</h1>
-    <p class="blog-lede">Your TDEE — Total Daily Energy Expenditure — is the number of calories your body burns in a full day. Get it right and every nutrition goal becomes simple arithmetic: eat below it to lose fat, at it to maintain, above it to gain. Here's how to work it out in two steps and turn it into a plan.</p>
+    <h1>What Is BMI? How to Calculate and Interpret Your Body Mass Index</h1>
+    <p class="blog-lede">Body Mass Index is a single number built from just your height and weight. It's the quickest way to see roughly where your weight sits relative to your frame — and the starting point most doctors use before any closer look. Here's the formula, a worked example, the categories, and the honest limits of what BMI can tell you.</p>
   </div>
 
   <div class="blog-content">
 
-    <h2>What TDEE actually means</h2>
-    <p>TDEE is the total amount of energy, measured in calories, that your body uses over 24 hours. It bundles together everything: keeping you alive at rest, digesting your food, walking to the kitchen, and whatever training you do. It's the single most useful number in nutrition because it's the line you eat above or below to change your weight.</p>
-    <p>Every TDEE calculation is built from two pieces. First you estimate your <strong>BMR</strong> — the calories you'd burn lying in bed all day doing nothing. Then you multiply that by an <strong>activity factor</strong> that accounts for movement and exercise. That's the whole method.</p>
+    <h2>What BMI actually measures</h2>
+    <p>BMI — Body Mass Index — is your weight divided by the square of your height. That's the entire definition. It doesn't measure body fat, fitness, or health directly. What it does is scale your weight to your height, so a tall person and a short person carrying a proportionally similar amount of mass land on a similar number.</p>
+    <p>It was designed in the 1830s by a Belgian statistician, Adolphe Quetelet, as a population-level tool — a way to describe the "average" build of a group. It only became a personal screening number in the 20th century. That history matters: BMI is very good at describing populations and only roughly informative about any one individual.</p>
+
+    <div class="formula">
+      BMI = weight (kg) ÷ height (m)²
+      <small>Metric — weight in kilograms, height in metres</small>
+    </div>
+
+    <div class="formula">
+      BMI = weight (lb) ÷ height (in)² × 703
+      <small>Imperial — the 703 factor converts pounds-per-inch² into the metric result</small>
+    </div>
 
     <div class="blog-stat">
       <div class="stat-block">
-        <div class="stat-num">60–70%</div>
-        <div class="stat-lbl">of TDEE is your BMR for most people</div>
+        <div class="stat-num">2</div>
+        <div class="stat-label">measurements needed — height and weight, nothing else</div>
       </div>
       <div class="stat-sep"></div>
       <div class="stat-block">
-        <div class="stat-num">±20%</div>
-        <div class="stat-lbl">activity can swing your total day-to-day</div>
+        <div class="stat-num">18.5–24.9</div>
+        <div class="stat-label">the BMI range classified as a healthy weight for adults</div>
       </div>
     </div>
 
-    <h2>Step 1 — Estimate your BMR</h2>
-    <p>The most reliable formula in everyday use is the <strong>Mifflin-St Jeor equation</strong>. It's the modern standard, more accurate for most people than the older Harris-Benedict equation. There's one version for each sex, differing only in the final constant.</p>
+    <h2>How to calculate your BMI</h2>
+    <p>Work in metric if you can — the formula is cleaner. Convert first if you think in imperial: <span class="u" data-imp="1 lb" data-met="1 lb">1 lb</span> = <span class="u" data-imp="0.45 kg" data-met="0.45 kg">0.45 kg</span>, and <span class="u" data-imp="1 inch" data-met="1 inch">1 inch</span> = <span class="u" data-imp="2.54 cm" data-met="2.54 cm">2.54 cm</span>. Height in feet and inches becomes total inches first, then metres.</p>
+    <p><strong>Worked example.</strong> Take someone who is <span class="u" data-imp="5 ft 8 in" data-met="173 cm">5 ft 8 in</span> tall and weighs <span class="u" data-imp="165 lb" data-met="75 kg">165 lb</span>.</p>
+    <ul>
+      <li>Height: <span class="u" data-imp="5 ft 8 in = 68 in = 1.73 m" data-met="173 cm = 1.73 m">5 ft 8 in = 68 in = 1.73 m</span></li>
+      <li>Height squared: 1.73 × 1.73 = 2.99</li>
+      <li>Weight: <span class="u" data-imp="165 lb = 74.8 kg" data-met="75 kg">165 lb = 74.8 kg</span></li>
+      <li>BMI: 74.8 ÷ 2.99 = <strong>25.0</strong></li>
+    </ul>
+    <p>A BMI of 25.0 sits right on the line between the healthy and overweight categories — a good illustration of why the number is a prompt for context, not a verdict.</p>
 
-    <div class="formula">
-      <strong>Men:</strong> BMR = (10 × weight kg) + (6.25 × height cm) − (5 × age) + 5<br>
-      <strong>Women:</strong> BMR = (10 × weight kg) + (6.25 × height cm) − (5 × age) − 161
-      <small>Mifflin-St Jeor equation — weight in kilograms, height in centimetres, age in years</small>
-    </div>
+    <figure class="blog-figure">
+      <img src="/assets/images/blog-bmi-height-weight-measurement.webp"
+           alt="A tape measure and a digital scale display side by side, with a person's feet on the scale and a hand adjusting a stadiometer slider behind"
+           width="800" height="320" loading="lazy">
+      <figcaption>BMI is built from exactly two inputs. Measure without shoes, ideally in the morning, for the most consistent number.</figcaption>
+    </figure>
 
-    <p>If you think in imperial units, convert first: <span class="u" data-imp="1 lb" data-met="0.45 kg">1 lb</span> is <span class="u" data-imp="0.45 kg" data-met="0.45 kg">0.45 kg</span>, and <span class="u" data-imp="1 inch" data-met="2.54 cm">1 inch</span> is <span class="u" data-imp="2.54 cm" data-met="2.54 cm">2.54 cm</span>. Height in feet and inches becomes total inches first, then centimetres.</p>
-
-    <h2>Step 2 — Apply your activity multiplier</h2>
-    <p>BMR is only the resting figure. To reach TDEE you multiply it by a factor that reflects how much you move. Be honest here — this is where most people overestimate. "Moderately active" means genuine, structured exercise several times a week, not a busy day at the office.</p>
+    <h2>The BMI categories</h2>
+    <p>The World Health Organization and the CDC use the same adult cut-offs. They apply to men and women aged 20 and over, and are read the same way regardless of age.</p>
 
     <table class="dtable">
       <thead>
-        <tr><th>Activity level</th><th>Multiplier</th><th>Who it fits</th></tr>
+        <tr><th>Category</th><th>BMI range</th><th>What it flags</th></tr>
       </thead>
       <tbody>
-        <tr><td>Sedentary</td><td>× 1.2</td><td>Desk job, little or no exercise</td></tr>
-        <tr><td>Lightly active</td><td>× 1.375</td><td>Light exercise 1–3 days/week</td></tr>
-        <tr><td>Moderately active</td><td>× 1.55</td><td>Moderate exercise 3–5 days/week</td></tr>
-        <tr><td>Very active</td><td>× 1.725</td><td>Hard exercise 6–7 days/week</td></tr>
-        <tr><td>Extra active</td><td>× 1.9</td><td>Physical job or twice-daily training</td></tr>
+        <tr><td>Underweight</td><td>Below 18.5</td><td>Possible undernutrition or an underlying condition</td></tr>
+        <tr><td>Healthy weight</td><td>18.5 – 24.9</td><td>Lowest average risk band for weight-related conditions</td></tr>
+        <tr><td>Overweight</td><td>25.0 – 29.9</td><td>Raised average risk; worth looking at trend and waist</td></tr>
+        <tr><td>Obesity</td><td>30.0 and above</td><td>Higher average risk; often split into class I, II, III</td></tr>
       </tbody>
     </table>
 
-    <div class="formula">
-      TDEE = BMR × activity multiplier
-      <small>The result is your maintenance calories — eat this to hold your current weight</small>
+    <div class="blog-diagram diagram-zoomable" title="Click to enlarge">
+      <svg viewBox="0 0 740 150" xmlns="http://www.w3.org/2000/svg" aria-label="The BMI scale from 15 to 40 divided into underweight, healthy, overweight and obese ranges">
+        <rect x="0" y="0" width="740" height="150" fill="#FBF8F3"/>
+        <rect x="0" y="46" width="103.6" height="44" fill="#5A7361"/>
+        <rect x="103.6" y="46" width="192.4" height="44" fill="#37503F"/>
+        <rect x="296" y="46" width="148" height="44" fill="#B5761F"/>
+        <rect x="444" y="46" width="296" height="44" fill="#8F5C13"/>
+        <text x="52" y="34" text-anchor="middle" fill="#5B4C3B" font-family="Inter,sans-serif" font-size="13" font-weight="700">Underweight</text>
+        <text x="200" y="34" text-anchor="middle" fill="#5B4C3B" font-family="Inter,sans-serif" font-size="13" font-weight="700">Healthy</text>
+        <text x="370" y="34" text-anchor="middle" fill="#5B4C3B" font-family="Inter,sans-serif" font-size="13" font-weight="700">Overweight</text>
+        <text x="592" y="34" text-anchor="middle" fill="#5B4C3B" font-family="Inter,sans-serif" font-size="13" font-weight="700">Obese</text>
+        <text x="52" y="73" text-anchor="middle" fill="rgba(255,255,255,.9)" font-family="Inter,sans-serif" font-size="12" font-weight="700">&lt; 18.5</text>
+        <text x="200" y="73" text-anchor="middle" fill="rgba(255,255,255,.95)" font-family="Inter,sans-serif" font-size="12" font-weight="700">18.5–24.9</text>
+        <text x="370" y="73" text-anchor="middle" fill="rgba(255,255,255,.95)" font-family="Inter,sans-serif" font-size="12" font-weight="700">25.0–29.9</text>
+        <text x="592" y="73" text-anchor="middle" fill="rgba(255,255,255,.9)" font-family="Inter,sans-serif" font-size="12" font-weight="700">30.0 +</text>
+        <line x1="103.6" y1="90" x2="103.6" y2="104" stroke="#8A7A66" stroke-width="1"/>
+        <line x1="296" y1="90" x2="296" y2="104" stroke="#8A7A66" stroke-width="1"/>
+        <line x1="444" y1="90" x2="444" y2="104" stroke="#8A7A66" stroke-width="1"/>
+        <text x="103.6" y="120" text-anchor="middle" fill="#5B4C3B" font-family="Inter,sans-serif" font-size="12" font-weight="700">18.5</text>
+        <text x="296" y="120" text-anchor="middle" fill="#5B4C3B" font-family="Inter,sans-serif" font-size="12" font-weight="700">25</text>
+        <text x="444" y="120" text-anchor="middle" fill="#5B4C3B" font-family="Inter,sans-serif" font-size="12" font-weight="700">30</text>
+        <text x="16" y="120" text-anchor="middle" fill="#8A7A66" font-family="Inter,sans-serif" font-size="12" font-weight="600">15</text>
+        <text x="726" y="120" text-anchor="middle" fill="#8A7A66" font-family="Inter,sans-serif" font-size="12" font-weight="600">40</text>
+      </svg>
     </div>
 
-    <h2>A worked example</h2>
-    <p>Take a 32-year-old woman, <span class="u" data-imp="5 ft 6 in" data-met="168 cm">5 ft 6 in</span> tall, weighing <span class="u" data-imp="150 lb" data-met="68 kg">150 lb</span>, who lifts weights and runs four days a week (moderately active).</p>
-    <p><strong>BMR:</strong> (10 × 68) + (6.25 × 168) − (5 × 32) − 161 = 680 + 1,050 − 160 − 161 = <strong>1,409 calories</strong>.</p>
-    <p><strong>TDEE:</strong> 1,409 × 1.55 = <strong>≈ 2,184 calories</strong>. That's roughly what she burns in a full day, and the number she eats to maintain her weight.</p>
+    <h2>Turning your BMI into a healthy weight range</h2>
+    <p>The more useful direction is backwards: fix your height, then solve the formula for the weight range that lands you in the healthy band. Multiply 18.5 and 24.9 each by your height in metres squared.</p>
+    <p>For the <span class="u" data-imp="5 ft 8 in" data-met="173 cm">5 ft 8 in</span> person above, height squared is 2.99, so the healthy range is 18.5 × 2.99 to 24.9 × 2.99 — about <span class="u" data-imp="122 to 164 lb" data-met="55 to 74 kg">122 to 164 lb</span>. That band, not the single BMI figure, is what's worth writing down. The <a href="/bmi-calculator/">BMI calculator</a> shows your personal range automatically and marks where you fall on the scale.</p>
 
-    <h2>Turning TDEE into a goal</h2>
-    <p>Once you have your maintenance number, adjusting your weight is straightforward. A pound of body fat is about 3,500 calories, so a daily deficit of 500 calories predicts roughly <span class="u" data-imp="1 lb" data-met="0.45 kg">1 lb</span> of fat loss per week. The same logic runs in reverse for gaining.</p>
+    <h2>What BMI gets wrong</h2>
+    <p>BMI only knows your total weight. It can't tell muscle from fat, or where fat is stored — and both of those matter more for health than the raw number.</p>
+
+    <figure class="blog-figure">
+      <img src="/assets/images/blog-bmi-scale-categories.webp"
+           alt="A lean, muscular male athlete standing on a bathroom scale in a gym, looking down at the readout with a skeptical expression"
+           width="800" height="320" loading="lazy">
+      <figcaption>A heavily muscled athlete often reads as "overweight" on BMI despite carrying little fat — muscle is denser than fat, and BMI can't tell the difference.</figcaption>
+    </figure>
 
     <ul class="blog-checklist">
-      <li><strong>Lose fat.</strong> Subtract 10–20% from your TDEE. A moderate deficit protects muscle and is easier to sustain than a crash diet.</li>
-      <li><strong>Maintain.</strong> Eat at your TDEE. Weight holding steady over 2–3 weeks confirms your estimate is accurate.</li>
-      <li><strong>Gain muscle.</strong> Add 5–15% above your TDEE. A small surplus paired with resistance training favours lean mass over fat.</li>
-      <li><strong>Recheck monthly.</strong> As your weight changes, so does your BMR. Recalculate every few weeks to keep the target honest.</li>
+      <li><strong>Muscle reads as excess weight.</strong> Athletes and regular lifters are frequently pushed into the overweight or obese band despite low body fat.</li>
+      <li><strong>It ignores fat distribution.</strong> Waist circumference — fat carried around the middle — predicts metabolic risk better than BMI alone. A waist over <span class="u" data-imp="40 in (men) or 35 in (women)" data-met="102 cm (men) or 88 cm (women)">40 in (men) or 35 in (women)</span> is the common threshold.</li>
+      <li><strong>It shifts with age.</strong> Older adults lose muscle and gain fat at the same weight, so an unchanged BMI can hide a real change in body composition.</li>
+      <li><strong>Population differences.</strong> Some groups — including many people of South Asian descent — face weight-related risk at lower BMI values, and some health bodies use a lower overweight threshold as a result.</li>
+      <li><strong>It says nothing about fitness.</strong> Blood pressure, blood sugar, activity level, and cardiorespiratory fitness all sit outside the number.</li>
     </ul>
 
-    <a class="calc-cta" href="/tdee-calculator/">
+    <p>If your BMI is 25 or higher, or you carry weight around your waist, a <a href="/body-fat-calculator/">body fat percentage estimate</a> adds the context BMI misses. Our guide to <a href="/blog/how-to-calculate-your-body-fat-percentage/">calculating body fat percentage</a> walks through the tape method and how the two numbers compare.</p>
+
+    <h2>BMI for children and teens</h2>
+    <p>For anyone under 20, the adult categories don't apply. Children's body composition changes constantly with growth, and it differs by age and sex. BMI is still calculated the same way, but the result is plotted on age-and-sex percentile charts — so a child's BMI is reported as a percentile ("85th percentile for age"), not a fixed category.</p>
+
+    <a class="calc-cta" href="/bmi-calculator/">
       <div class="calc-cta-text">
         <div class="calc-cta-label">Free Tool</div>
-        <div class="calc-cta-title">TDEE Calculator</div>
-        <div class="calc-cta-sub">Enter your age, height, weight, and activity level to get your BMR, maintenance calories, and target numbers for cutting, maintaining, or bulking — instantly.</div>
+        <div class="calc-cta-title">BMI Calculator</div>
+        <div class="calc-cta-sub">Enter your height and weight to get your BMI, your category, and the exact healthy weight range for your height — with a live marker on the BMI scale.</div>
       </div>
       <span class="calc-cta-btn">
         Calculate now
@@ -214,36 +262,33 @@
       </span>
     </a>
 
-    <h2>Why your TDEE is an estimate, not a law</h2>
-    <p>Every equation produces a prediction, not a guarantee. Two people with identical stats can differ by a few hundred calories a day thanks to genetics, muscle mass, hormones, and how much they fidget. The formula gets you a strong starting point; your own results over a few weeks are the real calibration. If the scale isn't moving the way the math predicts, adjust your intake by 100–200 calories and give it another two weeks.</p>
-
     <h2>Frequently asked questions</h2>
 
     <details class="faq">
-      <summary>Is TDEE the same as maintenance calories?</summary>
-      <p>Yes. Your TDEE is the number of calories that keeps your weight stable, which is exactly what "maintenance calories" means. Eat above it to gain, below it to lose.</p>
+      <summary>Is BMI accurate?</summary>
+      <p>It's accurate as a description of the population and a rough screen for an individual. For most people who aren't very muscular, a high BMI does track with higher body fat. It becomes unreliable for athletes, older adults, and anyone whose build sits far from average — which is why it's a starting point, not a diagnosis.</p>
     </details>
 
     <details class="faq">
-      <summary>How is TDEE different from BMR?</summary>
-      <p>BMR is only what your body burns at complete rest. TDEE is BMR plus all the energy you spend moving, exercising, and digesting food. TDEE is always the larger number.</p>
+      <summary>What is a healthy BMI?</summary>
+      <p>For adults, a BMI between 18.5 and 24.9 is classified as a healthy weight. The band spans a wide weight range at any given height, so being anywhere inside it is fine — there's no advantage to being near the bottom of it.</p>
     </details>
 
     <details class="faq">
-      <summary>Should I eat back the calories I burn during exercise?</summary>
-      <p>Not if you used an activity multiplier to calculate your TDEE — that exercise is already baked into the number. Eating it back a second time double-counts it and can stall fat loss.</p>
+      <summary>Does BMI differ for men and women?</summary>
+      <p>The formula and the categories are identical. Women carry more essential body fat than men at the same BMI, but the cut-offs aren't adjusted for that — another reason to treat the number as a screen rather than a precise measure of fatness.</p>
     </details>
 
     <details class="faq">
-      <summary>How often should I recalculate?</summary>
-      <p>Every time your weight shifts by about <span class="u" data-imp="10 lb" data-met="4.5 kg">10 lb</span>, or roughly once a month during an active cut or bulk. A lighter body burns fewer calories, so an old TDEE slowly becomes wrong.</p>
+      <summary>My BMI says overweight but I'm fit — what should I do?</summary>
+      <p>Check a second number. Estimate your body fat percentage and measure your waist. If both are in a healthy range and your bloodwork is normal, a BMI just over 25 driven by muscle isn't a concern. If your waist is high, the BMI is likely picking up something real.</p>
     </details>
 
     <div class="blog-pills">
-      <a class="pill" href="/tdee-calculator/">TDEE Calculator</a>
-      <a class="pill" href="/macro-calculator/">Macro Calculator</a>
-      <a class="pill" href="/blog/how-to-calculate-your-macros/">How to Calculate Your Macros</a>
+      <a class="pill" href="/bmi-calculator/">BMI Calculator</a>
       <a class="pill" href="/body-fat-calculator/">Body Fat Calculator</a>
+      <a class="pill" href="/blog/how-to-calculate-your-body-fat-percentage/">How to Calculate Your Body Fat Percentage</a>
+      <a class="pill" href="/calorie-calculator/">Calorie Calculator</a>
     </div>
 
   </div><!-- /blog-content -->
@@ -333,7 +378,7 @@
 
 </div><!-- /wrap -->
 
-<script src="/assets/app.js?v=73?v=N"></script>
+<script src="/assets/app.js?v=73"></script>
 <script src="/feedback.js" defer></script>
 <script>
 /* Lightbox — runs on any .diagram-zoomable */
