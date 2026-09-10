@@ -10,13 +10,13 @@
 
 ## Project state
 
-- **Asset version:** v74
-- **Total pages:** 43
+- **Asset version:** v75
+- **Total pages:** 44
 - **Model:** Opus 4.6
 
 ---
 
-## Live blog articles (13)
+## Live blog articles (14)
 
 - How Much Gravel Do I Need for a Driveway?
 - How Much Mulch Do I Need?
@@ -31,6 +31,7 @@
 - How to Calculate Your Body Fat Percentage
 - What Is BMI? How to Calculate and Interpret Your Body Mass Index
 - How Many Calories Should I Eat to Lose Weight?
+- How to Calculate Your Exact Age
 
 ---
 
@@ -50,7 +51,17 @@ Ratio · Percentage · Age
 
 ---
 
-## Last session (v73–v74)
+## Last session (v73–v75)
+
+- v75: Shipped blog article **"How to Calculate Your Exact Age"**
+  (`/blog/how-to-calculate-your-exact-age/`) → CTA to `/age-calculator/`. Borrow-and-subtract
+  method (day/month/year columns), worked example, age in total days/hours, leap-year + Feb 29
+  edge cases, why calculators disagree by a day, 5-question FAQ, 2 `.blog-figure` photos.
+  No `.u` unit spans — toggle correctly stays hidden. **Completes the BMI/Calorie/Age trio.**
+- Reprioritized `calcthis-calculator-roadmap.md` around **cluster completion**:
+  next = Ideal Weight (completes Weight cluster) → Pregnancy/Due Date + Ovulation (new
+  vertical, **post-AdSense**, YMYL) → Date Calculator. Finance + basic/scientific calc parked
+  as unwinnable.
 
 - v74: Shipped blog article **"How Many Calories Should I Eat to Lose Weight?"**
   (`/blog/how-many-calories-to-lose-weight/`) → CTA to `/calorie-calculator/`. Calorie-deficit
