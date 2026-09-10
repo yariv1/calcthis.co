@@ -715,6 +715,48 @@
 
 
   /* =========================================================
+     HEALTH · WATER INTAKE  (body.p-water) — daily hydration target
+     Reuses .card-h2 / .ctl-row, .seg (unit + sex), .modeseg-style
+     activity/climate segs, .advbtn, .dtable. Adds a stacked bar of
+     what makes up the number + a glass-by-glass day schedule.
+     ========================================================= */
+  .p-water .fld{margin-bottom:16px}
+  .p-water .bf-res{margin:2px 0 14px}
+  .p-water .res-big{font-size:clamp(40px,8vw,58px)}
+  .p-water .seg{flex-wrap:wrap}
+  .p-water #actSeg,.p-water #climSeg,.p-water #specialSeg{display:flex;width:100%}
+  .p-water #actSeg button,.p-water #climSeg button,.p-water #specialSeg button{flex:1;text-align:center;padding:8px 6px}
+  .p-water .wtr-bar{display:flex;height:26px;border-radius:8px;overflow:hidden;margin:10px 0 8px;background:#EFE7D8}
+  .p-water .wtr-seg{display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;min-width:0}
+  .p-water .wtr-seg.base{background:var(--spruce)}
+  .p-water .wtr-seg.act{background:var(--spruce-soft)}
+  .p-water .wtr-seg.heat{background:var(--amber)}
+  .p-water .wtr-seg.special{background:var(--amber-deep)}
+  .p-water .wtr-key{display:flex;flex-wrap:wrap;gap:5px 16px;margin:8px 0 4px;font-size:12px;font-weight:500;color:var(--ink-soft)}
+  .p-water .wtr-key i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+  .p-water .wtr-key .k-base{background:var(--spruce)}
+  .p-water .wtr-key .k-act{background:var(--spruce-soft)}
+  .p-water .wtr-key .k-heat{background:var(--amber)}
+  .p-water .wtr-key .k-special{background:var(--amber-deep)}
+  .p-water .wtr-cap{font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin:18px 0 6px}
+  .p-water .wtr-grp{padding:12px 0;border-bottom:1px solid var(--line)}
+  .p-water .wtr-grp:last-child{border-bottom:none}
+  .p-water .wtr-grp-h{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:var(--ink);margin-bottom:9px}
+  .p-water .wtr-grp-h .ic{display:inline-flex;width:17px;height:17px;color:var(--amber-deep);flex:none}
+  .p-water .wtr-grp-h .ic svg{width:100%;height:100%;display:block}
+  .p-water .wtr-grp-h .when{color:var(--muted);font-weight:500}
+  .p-water .wtr-grp-h .cnt{margin-left:auto;font-family:'Fraunces',serif;font-weight:600;color:var(--amber-deep);white-space:nowrap}
+  .p-water .wtr-glasses{display:flex;flex-wrap:wrap;gap:6px}
+  .p-water .wtr-glasses svg{width:19px;height:25px;flex:none}
+  .p-water .wtr-tip{font-size:14px;color:var(--muted);line-height:1.5;margin:12px 0 0}
+  .p-water .wtr-note{font-size:14px;line-height:1.55;color:var(--ink-soft);margin:14px 0 0;padding:11px 14px;background:#F6EEDF;border-left:3px solid var(--amber);border-radius:0 8px 8px 0}
+  .p-water .wtr-note strong{color:var(--ink);font-weight:600}
+  .p-water .dtable td:first-child{color:var(--ink)}
+  .p-water .dtable td:last-child{font-variant-numeric:tabular-nums}
+  .p-water #advIn .fld{margin-bottom:14px}
+
+
+  /* =========================================================
      DATE PICKER — vanillajs-datepicker, CalcThis theme.
      Vendored: assets/datepicker.min.{js,css}. Used on the age
      calculator and future date calculators. Load datepicker.min.css

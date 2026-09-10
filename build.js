@@ -38,6 +38,7 @@ const PAGES = [
   { file: 'tdee-calculator/index.html',        slug: '/tdee-calculator/' },
   { file: 'one-rep-max-calculator/index.html', slug: '/one-rep-max-calculator/' },
   { file: 'sleep-calculator/index.html',       slug: '/sleep-calculator/' },
+  { file: 'water-intake-calculator/index.html', slug: '/water-intake-calculator/' },
   { file: 'final-grade-calculator/index.html', slug: '/final-grade-calculator/' },
   { file: 'gpa-calculator/index.html',         slug: '/gpa-calculator/' },
   { file: 'grade-calculator/index.html',       slug: '/grade-calculator/' },

@@ -1,0 +1,423 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Water Intake Calculator — How Much Water Should You Drink a Day? | CalcThis</title>
+<meta name="description" content="Free water intake calculator. Get your personalised daily target from your weight, activity and climate — in glasses, litres and fl oz — plus a glass-by-glass schedule for the day. Adjusts for pregnancy and breastfeeding. No sign-up.">
+<link rel="canonical" href="https://calcthis.co/water-intake-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Water Intake Calculator — How Much Water Should You Drink a Day?">
+<meta property="og:description" content="A personalised daily water target from your weight, activity and climate — in glasses, litres and fl oz — with a glass-by-glass schedule to hit it.">
+<meta property="og:url" content="https://calcthis.co/water-intake-calculator/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<meta name="theme-color" content="#B5761F">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css?v=83">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Water Intake Calculator",
+  "url": "https://calcthis.co/water-intake-calculator/",
+  "applicationCategory": "HealthApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Estimate how much water to drink a day from your body weight, activity level and climate, with adjustments for older adults, pregnancy and breastfeeding. Shows the target in glasses, litres and US fluid ounces, a breakdown of what drives the number, and a glass-by-glass schedule across the waking day."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "How much water should I drink a day?", "acceptedAnswer": { "@type": "Answer", "text": "A common estimate is 30 to 35 ml of fluid per kilogram of body weight per day, which for most adults lands between 2 and 3 litres from drinks. This is close to the 'half your body weight in ounces' rule and to the U.S. National Academies Adequate Intake of about 2.7 litres of total water a day for women and 3.7 litres for men, including the water in food. Needs rise with exercise, hot weather, pregnancy and breastfeeding." } },
+    { "@type": "Question", "name": "Is 8 glasses of water a day right?", "acceptedAnswer": { "@type": "Answer", "text": "Eight 8-ounce glasses is about 1.9 litres, which is a reasonable floor for a smaller, sedentary adult in a temperate climate but too low for many people. This calculator scales the target to your body weight and adds for activity and heat, then splits it into 250 ml glasses, which usually comes to more than eight." } },
+    { "@type": "Question", "name": "Does coffee or tea count toward water intake?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Caffeinated drinks are only mildly diuretic and still provide a net gain of fluid. Coffee, tea, milk and most other drinks count toward your daily total. Alcohol is the exception — it increases fluid loss." } },
+    { "@type": "Question", "name": "How much more water should I drink when exercising?", "acceptedAnswer": { "@type": "Answer", "text": "Roughly an extra 350 to 700 ml for a typical workout, and more for long or intense sessions in the heat. A practical guide is 400 to 800 ml per hour of exercise, adjusted for how much you sweat. Drink to thirst rather than forcing large volumes quickly." } },
+    { "@type": "Question", "name": "How do I know if I am drinking enough water?", "acceptedAnswer": { "@type": "Answer", "text": "Pale straw-coloured urine and passing urine every few hours usually mean you are well hydrated. Dark yellow urine, headache, tiredness or feeling thirsty are signs to drink more. Very clear urine all day can mean you are drinking more than you need." } }
+  ]
+}
+</script>
+</head>
+<body class="p-water">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <a class="hdr-back" href="/blog/" aria-label="Back to blog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <span class="menu-col-head">Construction</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
+          <a href="/bmi-calculator/">BMI</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/ideal-weight-calculator/">Ideal Weight</a>
+          <a href="/calorie-calculator/">Calorie</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/macro-calculator/">Macro</a>
+          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+          <a href="/age-calculator/">Age</a>
+          <a href="/date-calculator/">Date</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">Health &amp; fitness</div>
+    <h1>Water Intake Calculator</h1>
+    <p>Enter your <strong>weight</strong>, how active you are and your <strong>climate</strong> for a personalised <strong>daily water target</strong> — in glasses, litres and fl oz. See <strong>what makes up the number</strong> and get a <strong>glass-by-glass schedule</strong> for the day. Tap <em>Go advanced</em> to adjust for age, coffee, <strong>pregnancy or breastfeeding</strong>.</p>
+  </section>
+
+  <div class="grid">
+    <div class="card">
+      <div class="card-pad">
+        <h2 class="card-h2">Your water intake</h2>
+
+        <div class="ctl-row">
+          <span class="ctl-lab">Units</span>
+          <div class="seg" id="unitSeg">
+            <button type="button" data-unit="kg" class="on">kg</button>
+            <button type="button" data-unit="lb">lb</button>
+          </div>
+        </div>
+
+        <label class="fld" for="weight">
+          <span class="lab">Weight <span class="unit" id="uWeight">kg</span></span>
+          <div class="inp"><input id="weight" type="number" inputmode="decimal" min="20" max="350" placeholder="68"></div>
+        </label>
+
+        <div class="ctl-row">
+          <span class="ctl-lab">Sex</span>
+          <div class="seg" id="sexSeg">
+            <button type="button" data-sex="female" class="on">Female</button>
+            <button type="button" data-sex="male">Male</button>
+          </div>
+        </div>
+
+        <div class="fld">
+          <span class="lab">Exercise <span class="unit">a typical week</span></span>
+          <div class="seg" id="actSeg">
+            <button type="button" data-act="none" class="on">None</button>
+            <button type="button" data-act="light">Light</button>
+            <button type="button" data-act="moderate">Moderate</button>
+            <button type="button" data-act="intense">Intense</button>
+          </div>
+        </div>
+
+        <div class="fld">
+          <span class="lab">Climate</span>
+          <div class="seg" id="climSeg">
+            <button type="button" data-clim="temperate" class="on">Temperate</button>
+            <button type="button" data-clim="hot">Hot</button>
+          </div>
+        </div>
+
+        <div id="advIn" style="display:none">
+          <label class="fld" for="age">
+            <span class="lab">Age <span class="unit">optional</span></span>
+            <div class="inp"><input id="age" type="number" inputmode="numeric" min="14" max="110" placeholder="35"></div>
+          </label>
+          <label class="fld" for="coffee">
+            <span class="lab">Cups of coffee or tea a day <span class="unit">optional</span></span>
+            <div class="inp"><input id="coffee" type="number" inputmode="numeric" min="0" max="15" placeholder="2"></div>
+          </label>
+          <div class="fld" id="specialRow" style="display:none;margin-bottom:0">
+            <span class="lab">Pregnant or breastfeeding</span>
+            <div class="seg" id="specialSeg">
+              <button type="button" data-special="none" class="on">Neither</button>
+              <button type="button" data-special="pregnant">Pregnant</button>
+              <button type="button" data-special="breastfeeding">Breastfeeding</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="add-row split" style="margin-top:6px">
+          <span></span>
+          <button class="advbtn" id="advBtn" type="button">
+            <span id="advBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-pad">
+        <div class="bf-res">
+          <div class="res-lab">Daily water target</div>
+          <div class="res-big"><span id="resBig">—</span> <span class="res-unit" id="resUnit"></span></div>
+          <div class="res-sub" id="resSub">Enter your weight to see your daily target.</div>
+        </div>
+
+        <div id="wtrDetail" style="display:none">
+          <div class="wtr-cap">What makes up your target</div>
+          <div class="wtr-bar" id="wtrBar"></div>
+          <div class="wtr-key" id="wtrKey"></div>
+
+          <div class="wtr-cap">Your day, glass by glass</div>
+          <div id="wtrDay"></div>
+          <p class="wtr-tip">A glass on waking and one with each meal covers most of it. Ease off after about 8pm so it doesn't disturb your sleep.</p>
+
+          <div class="stable-wrap">
+            <table class="dtable" id="wtrTable"></table>
+          </div>
+
+          <p class="wtr-note" id="wtrNote"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="related-calcs">
+    <p class="related-calcs-h">More health calculators that may interest you</p>
+    <div class="pills">
+      <a class="pill" href="/tdee-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        TDEE Calculator
+      </a>
+      <a class="pill" href="/calorie-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c1 3-1 5-1 7a3 3 0 0 0 6 0M6 21h12"/></svg>
+        Calorie Calculator
+      </a>
+      <a class="pill" href="/bmi-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h18M12 3v18"/></svg>
+        BMI Calculator
+      </a>
+      <a class="pill" href="/macro-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 12l0-9M12 12l7.8 4.5"/></svg>
+        Macro Calculator
+      </a>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use it</h2>
+        <p>Pick <strong>kg</strong> or <strong>lb</strong>, enter your <strong>weight</strong> and choose your sex, activity level and climate. Your <strong>daily target</strong> appears straight away in <strong>250 ml glasses</strong>, with the same figure in litres and fluid ounces underneath. The coloured bar shows how the target breaks down — base need, plus what activity and heat add. Below it, <strong>Your day</strong> spreads the glasses across your waking hours with a suggested time for each.</p>
+        <p>Tap <strong>Go advanced</strong> to enter your <strong>age</strong> (older adults use a slightly lower baseline), how many cups of <strong>coffee or tea</strong> you drink, and whether you're <strong>pregnant or breastfeeding</strong>.</p>
+
+        <h2>How much water you need a day</h2>
+        <p>There's no single number that fits everyone. The U.S. National Academies of Sciences (formerly the Institute of Medicine) set an <strong>Adequate Intake</strong> of about <strong>2.7 litres of total water a day for women and 3.7 litres for men</strong>, aged 19 and over. That figure includes the water in food, which supplies roughly 20%, so the amount from drinks is closer to <strong>2.2 litres for women and 3.0 litres for men</strong>.</p>
+        <p>Those are population averages. Because water needs track body size, this calculator scales them to your weight.</p>
+
+        <h2>How the calculator works</h2>
+        <p>The baseline is <strong>33 ml of fluid per kilogram of body weight</strong> per day — the same as the common "half your body weight in ounces" rule, and near the middle of the 30–35 ml/kg range used in clinical practice (30 ml/kg for adults aged 65 and over, who have a lower thirst response and kidney concentrating ability). That baseline is kept at or above a sensible floor near the Adequate Intake, and additions are made on top:</p>
+        <div class="formula">daily target = (33 ml &times; kg) + exercise + climate + pregnancy / breastfeeding<small>older adults: 30 ml &times; kg &nbsp;·&nbsp; result shown as fluid from drinks, not counting food</small></div>
+        <ul>
+          <li><strong>Exercise</strong> — light (a few sessions a week) +350 ml, moderate (most days) +700 ml, intense (daily or hard training) +1,100 ml.</li>
+          <li><strong>Hot climate</strong> — +500 ml.</li>
+          <li><strong>Pregnancy</strong> — +300 ml. <strong>Breastfeeding</strong> — +700 ml (from the same National Academies table).</li>
+        </ul>
+
+        <h2>Adjusting for exercise</h2>
+        <p>Exercise raises fluid loss through sweat and breathing. A practical range is <strong>400 to 800 ml per hour</strong> of activity, higher if you sweat heavily or train in the heat. Weigh yourself before and after a long session if you want a precise figure: each kilogram lost is roughly a litre to replace over the following hours. Drink to thirst during exercise rather than forcing large volumes at once.</p>
+
+        <h2>Adjusting for heat, humidity and altitude</h2>
+        <p>Hot or humid conditions increase sweat losses, and the calculator's <strong>Hot</strong> setting adds 500 ml as a starting point — more if you're outdoors or active. <strong>Altitude</strong> above about 2,500 m also raises needs through faster breathing and increased urine output; add another 500 ml to 1 litre on high-altitude days.</p>
+
+        <h2>Does coffee, tea and food count?</h2>
+        <p>Yes to both. <strong>Coffee and tea are only mildly diuretic</strong> and still leave you with a net gain of fluid, so they count toward your total. Milk, juice and most soft drinks count as well. <strong>Alcohol is the exception</strong> — it increases fluid loss. Food provides roughly a fifth of total water intake, more if you eat plenty of fruit, vegetables, soup and yoghurt, which is why the target here is for drinks only.</p>
+      </div>
+
+      <div>
+        <h2>Spreading it across the day</h2>
+        <p>Meeting a target is easier as a routine than as a number to remember. The <strong>Your day</strong> panel splits your glasses into three blocks — <strong>morning, afternoon and evening</strong> — with a bit more in the first half of the day and less in the evening. Anchor them to natural cues: a glass on waking, one with each meal, one mid-morning and mid-afternoon. Sipping through the day absorbs better than drinking a large amount at once, and easing off after about 8pm reduces night waking.</p>
+
+        <h2>How to tell if you're drinking enough</h2>
+        <table class="dtable">
+          <thead><tr><th>Sign</th><th>What it suggests</th></tr></thead>
+          <tbody>
+            <tr><td>Pale straw urine, every few hours</td><td>Well hydrated</td></tr>
+            <tr><td>Dark yellow urine, infrequent</td><td>Drink more</td></tr>
+            <tr><td>Thirst, headache, tiredness, dizziness</td><td>Likely under-hydrated</td></tr>
+            <tr><td>Completely clear urine all day</td><td>Probably more than you need</td></tr>
+          </tbody>
+        </table>
+        <p>Thirst is a reliable guide for most healthy adults under 65. It becomes less reliable with age, in illness, and during hard exercise, when it helps to drink on a schedule.</p>
+
+        <h2>Can you drink too much water?</h2>
+        <p>Rarely, but yes. Drinking far more than the kidneys can excrete — very roughly <strong>more than 0.8 to 1.0 litre per hour for several hours</strong> — can dilute blood sodium to a dangerous level (hyponatremia). It's mostly seen in endurance events where people over-drink. Spreading your intake through the day and not forcing large volumes quickly keeps you well clear of that risk.</p>
+
+        <h2>Water needs by group</h2>
+        <ul>
+          <li><strong>Children and teens</strong> need less in absolute terms but more per kilogram; this calculator is intended for adults.</li>
+          <li><strong>Older adults</strong> have a blunted thirst response — a scheduled intake matters more, and the baseline here is set slightly lower to reflect kidney changes.</li>
+          <li><strong>Pregnancy and breastfeeding</strong> raise needs by roughly 300 ml and 700 ml a day respectively. Follow your midwife or doctor's advice, especially if fluids are being managed for a medical reason.</li>
+          <li><strong>Endurance athletes</strong> can lose 1 to 2 litres of sweat per hour and should tailor intake to measured sweat rate rather than a formula.</li>
+        </ul>
+
+        <h2>When to get medical advice</h2>
+        <p>This tool gives a general estimate for healthy adults. Fluid targets are sometimes deliberately restricted in heart failure, kidney disease and some other conditions, and raised for kidney stones or recurrent urinary infections. If a clinician has given you a fluid target, follow theirs. See a doctor for persistent excessive thirst, which can have medical causes.</p>
+
+        <h2>What you get</h2>
+        <table class="dtable">
+          <thead><tr><th>Output</th><th>Example (68 kg, no regular exercise)</th></tr></thead>
+          <tbody>
+            <tr><td>Daily target</td><td>9 glasses</td></tr>
+            <tr><td>In litres</td><td>2.2 L</td></tr>
+            <tr><td>In fluid ounces</td><td>76 fl oz</td></tr>
+            <tr><td>Breakdown</td><td>base 2.2 L (add a workout for more)</td></tr>
+            <tr><td>Your day</td><td>4 glasses morning · 3 afternoon · 2 evening</td></tr>
+          </tbody>
+        </table>
+        <p>Once you have a routine, pair this with the <a href="/tdee-calculator/">TDEE calculator</a> for energy needs and the <a href="/macro-calculator/">macro calculator</a> for protein, carbs and fat.</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>How much water should I drink a day?</summary><p>Around 30 to 35 ml of fluid per kilogram of body weight is the usual estimate — this calculator uses 33 ml/kg, which is also the common "half your body weight in ounces" rule. For most adults that's 2 to 3 litres from drinks. The U.S. National Academies set an Adequate Intake of about 2.7 litres of total water for women and 3.7 litres for men, food included. Add more for exercise, heat, pregnancy and breastfeeding.</p></details>
+    <details class="faq"><summary>Is 8 glasses of water a day right?</summary><p>Eight 8-ounce glasses is roughly 1.9 litres — a reasonable minimum for a small, sedentary adult, but low for many people. Scaling to body weight and adding for activity and climate usually gives a higher number, which is what this calculator does.</p></details>
+    <details class="faq"><summary>Does coffee or tea count toward water intake?</summary><p>Yes. Caffeinated drinks are only mildly diuretic and still hydrate you overall. Coffee, tea, milk and most soft drinks all count toward your daily total. Alcohol is the one that works against you.</p></details>
+    <details class="faq"><summary>How much more water should I drink when exercising?</summary><p>Roughly 400 to 800 ml per hour of exercise, more if you sweat heavily or train in heat. For a precise figure, weigh yourself before and after a long session and replace about a litre for each kilogram lost.</p></details>
+    <details class="faq"><summary>How do I know if I'm dehydrated?</summary><p>Dark yellow, infrequent urine, thirst, headache and tiredness are the common signs. Pale straw-coloured urine every few hours means you're well hydrated. Completely clear urine all day can mean you're drinking more than you need.</p></details>
+
+    <p class="wtr-note" style="max-width:none;margin-top:28px">This calculator gives a general estimate for healthy adults and is not medical advice. Figures are based on the U.S. National Academies of Sciences, Engineering, and Medicine Dietary Reference Intakes for water (2005). If a healthcare professional has given you a specific fluid target, follow theirs.</p>
+  </section>
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/bmi-calculator/">BMI Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/ideal-weight-calculator/">Ideal Weight Calculator</a></li>
+          <li><a href="/calorie-calculator/">Calorie Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+          <li><a href="/age-calculator/">Age Calculator</a></li>
+          <li><a href="/date-calculator/">Date Calculator</a></li>
+        </ul>
+      </div>
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/blog/">Blog</a>
+      <span aria-hidden="true">·</span>
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+</div>
+
+<script src="/assets/app.js?v=83"></script>
+<script>CalcThis.initWaterCalc({});</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>

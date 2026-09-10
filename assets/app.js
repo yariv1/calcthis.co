@@ -3474,6 +3474,184 @@ CalcThis.initDateCalc = function (cfg) {
   solve();
 };
 
+/* -----------------------------------------------------------
+   CalcThis.initWaterCalc(cfg) — daily water intake.
+   Independent engine. Baseline 35 mL/kg/day (30 mL/kg for
+   older adults), floored near the IOM/NASEM Adequate Intake
+   for beverages, plus additions for activity, hot climate and
+   (advanced) pregnancy or breastfeeding. Shows the target in
+   glasses / litres / fl oz, a stacked bar of what makes up the
+   number, and a glass-by-glass schedule across the waking day.
+   Live, no button. Female default. */
+CalcThis.initWaterCalc = function (cfg) {
+  cfg = cfg || {};
+  var $ = function (id) { return document.getElementById(id); };
+  var unit = 'kg', sex = 'female', act = 'none', clim = 'temperate', special = 'none', advanced = false;
+
+  var GLASS = 250;        // mL per glass
+  var OZ = 29.5735;       // mL per US fl oz
+  var LB = 2.2046226;
+  var ACT_ADD = { none: 0, light: 350, moderate: 700, intense: 1100 };
+  var SPECIAL_ADD = { none: 0, pregnant: 300, breastfeeding: 700 };
+
+  var wIn = $('weight'), ageIn = $('age'), coffeeIn = $('coffee');
+  if (!wIn) return;
+
+  function num(v) { v = parseFloat(('' + v).trim()); return isNaN(v) ? NaN : v; }
+  function r0(x) { return Math.round(x); }
+  function one(x) { return (Math.round(x * 10) / 10).toFixed(1); }
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+
+  function applyUnit() {
+    if ($('uWeight')) $('uWeight').textContent = unit === 'lb' ? 'lb' : 'kg';
+    if (wIn) wIn.placeholder = unit === 'lb' ? '150' : '68';
+  }
+
+  function targetParts() {
+    var w = num(wIn.value);
+    if (isNaN(w) || w <= 0) return null;
+    var wKg = unit === 'lb' ? w / LB : w;
+    if (wKg < 20 || wKg > 350) return null;
+    var age = advanced ? num(ageIn.value) : NaN;
+    var perKg = (isFinite(age) && age >= 65) ? 30 : 33;
+    var base = perKg * wKg;
+    var floor = sex === 'male' ? 2500 : 2000;
+    if (base < floor) base = floor;
+    var actAdd = ACT_ADD[act] || 0;
+    var heatAdd = clim === 'hot' ? 500 : 0;
+    var spAdd = (advanced && sex === 'female') ? (SPECIAL_ADD[special] || 0) : 0;
+    return { base: base, act: actAdd, heat: heatAdd, special: spAdd, total: base + actAdd + heatAdd + spAdd, age: age };
+  }
+
+  function renderBar(p) {
+    var wrap = $('wtrBar'); if (!wrap) return;
+    var segs = [
+      { k: 'base', lab: 'Base need', v: p.base },
+      { k: 'act', lab: 'Activity', v: p.act },
+      { k: 'heat', lab: 'Hot climate', v: p.heat },
+      { k: 'special', lab: special === 'breastfeeding' ? 'Breastfeeding' : 'Pregnancy', v: p.special }
+    ].filter(function (s) { return s.v > 0; });
+    wrap.innerHTML = segs.map(function (s) {
+      return '<span class="wtr-seg ' + s.k + '" style="flex:' + s.v + '">' + (s.v / p.total > 0.12 ? one(s.v / 1000) + ' L' : '') + '</span>';
+    }).join('');
+    $('wtrKey').innerHTML = segs.map(function (s) {
+      return '<span><i class="k-' + s.k + '"></i>' + s.lab + ' &middot; ' + r0(s.v).toLocaleString() + ' ml</span>';
+    }).join('');
+  }
+
+  var GLASS_SVG = '<svg viewBox="0 0 20 26" aria-hidden="true">' +
+    '<path d="M2 1h16l-1.5 22a2 2 0 0 1-2 1.9H5.5a2 2 0 0 1-2-1.9L2 1z" fill="#EFE2C7"/>' +
+    '<path d="M3 9h14l-1 14a2 2 0 0 1-2 1.9H6a2 2 0 0 1-2-1.9L3 9z" fill="#B5761F"/></svg>';
+  var GRP_ICON = {
+    morning: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M5 10l2 1M19 10l-2 1M4 18h16M8 18a4 4 0 0 1 8 0"/></svg>',
+    afternoon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4 12H2M22 12h-2M5 5l1.5 1.5M17.5 17.5 19 19M19 5l-1.5 1.5M6.5 17.5 5 19"/></svg>',
+    evening: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14A8 8 0 0 1 10 4a8 8 0 1 0 10 10z"/></svg>'
+  };
+
+  // split the day's glasses into 3 named blocks — front-loaded, easing off in the evening
+  function renderDay(totalMl) {
+    var n = Math.max(4, Math.round(totalMl / GLASS));
+    var morning = Math.round(n * 0.40);
+    var afternoon = Math.round(n * 0.35);
+    var evening = n - morning - afternoon;
+    if (evening < 1) { evening = 1; afternoon = n - morning - evening; }
+    var blocks = [
+      { k: 'morning', lab: 'Morning', when: 'wake – noon', c: morning },
+      { k: 'afternoon', lab: 'Afternoon', when: 'noon – 6pm', c: afternoon },
+      { k: 'evening', lab: 'Evening', when: '6 – 10pm', c: evening }
+    ];
+    $('wtrDay').innerHTML = blocks.map(function (b) {
+      var glasses = '';
+      for (var i = 0; i < b.c; i++) glasses += GLASS_SVG;
+      return '<div class="wtr-grp">' +
+        '<div class="wtr-grp-h"><span class="ic">' + GRP_ICON[b.k] + '</span>' + b.lab +
+        ' <span class="when">' + b.when + '</span>' +
+        '<span class="cnt">' + b.c + (b.c === 1 ? ' glass' : ' glasses') + '</span></div>' +
+        '<div class="wtr-glasses">' + glasses + '</div></div>';
+    }).join('');
+    return n;
+  }
+
+  function solve() {
+    var p = targetParts();
+    var big = $('resBig'), unitEl = $('resUnit'), sub = $('resSub');
+    if (!p) {
+      big.textContent = '—'; unitEl.textContent = '';
+      sub.textContent = 'Enter your weight to see your daily target.';
+      $('wtrDetail').style.display = 'none';
+      return;
+    }
+    var glasses = Math.max(4, Math.round(p.total / GLASS));
+    big.textContent = glasses;
+    unitEl.textContent = glasses === 1 ? 'glass a day' : 'glasses a day';
+    sub.textContent = '≈ ' + one(p.total / 1000) + ' L  ·  ' + r0(p.total / OZ) + ' fl oz  ·  a 250 ml glass';
+    $('wtrDetail').style.display = '';
+
+    renderBar(p);
+    renderDay(p.total);
+
+    $('wtrTable').innerHTML =
+      '<thead><tr><th>Your target</th><th></th></tr></thead><tbody>' +
+      '<tr><td>Glasses (250 ml)</td><td>' + glasses + '</td></tr>' +
+      '<tr><td>Litres</td><td>' + one(p.total / 1000) + ' L</td></tr>' +
+      '<tr><td>US fluid ounces</td><td>' + r0(p.total / OZ) + ' fl oz</td></tr>' +
+      '<tr><td>US cups (240 ml)</td><td>' + one(p.total / 240) + '</td></tr>' +
+      '</tbody>';
+
+    var cof = advanced ? num(coffeeIn.value) : NaN;
+    var note = '<strong>Food gives you roughly another 20%</strong> on top of this, so the figure above is water and other drinks only. ';
+    if (isFinite(cof) && cof > 0) {
+      note += 'Your ' + r0(cof) + ' cup' + (cof === 1 ? '' : 's') + ' of coffee or tea count toward the total — mildly diuretic, but still a net gain of about ' +
+        one((cof * 240) / 1000) + ' L.';
+    } else {
+      note += 'Coffee and tea count too — they are only mildly diuretic and still hydrate you.';
+    }
+    $('wtrNote').innerHTML = note;
+  }
+
+  // ---- toggles ----
+  function bindSeg(id, fn) {
+    var seg = $(id); if (!seg) return;
+    seg.addEventListener('click', function (e) {
+      var b = e.target.closest('button'); if (!b) return;
+      [].forEach.call(this.children, function (c) { c.classList.toggle('on', c === b); });
+      fn(b); solve();
+    });
+  }
+  bindSeg('unitSeg', function (b) {
+    var nu = b.dataset.unit;
+    if (nu !== unit) {
+      var w = num(wIn.value);
+      if (isFinite(w) && w > 0) wIn.value = one(nu === 'lb' ? w * LB : w / LB);
+      unit = nu; applyUnit();
+    }
+  });
+  bindSeg('sexSeg', function (b) {
+    sex = b.dataset.sex;
+    var sp = $('specialRow'); if (sp) sp.style.display = (advanced && sex === 'female') ? '' : 'none';
+  });
+  bindSeg('actSeg', function (b) { act = b.dataset.act; });
+  bindSeg('climSeg', function (b) { clim = b.dataset.clim; });
+  bindSeg('specialSeg', function (b) { special = b.dataset.special; });
+
+  wIn.addEventListener('input', solve);
+  [ageIn, coffeeIn].forEach(function (el) { if (el) el.addEventListener('input', solve); });
+
+  var advBtn = $('advBtn');
+  advBtn.addEventListener('click', function () {
+    advanced = !advanced;
+    advBtn.classList.toggle('open', advanced);
+    $('advBtnLab').textContent = advanced ? 'Go simple' : 'Go advanced';
+    $('advIn').style.display = advanced ? '' : 'none';
+    var sp = $('specialRow'); if (sp) sp.style.display = (advanced && sex === 'female') ? '' : 'none';
+    solve();
+    if (advanced) { var el = $('advIn'); if (el && el.scrollIntoView) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+  });
+
+  applyUnit();
+  solve();
+};
+
 /* =========================================================
    SITE FOOTER — mobile accordion
    Multiple pillars can be open simultaneously.
