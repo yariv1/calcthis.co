@@ -104,12 +104,18 @@ Ratio · Percentage · Age
 
 ## Calculator roadmap (priority order)
 
+Strategy = **cluster completion** (see `md-files/calcthis-calculator-roadmap.md`). Skip
+finance + basic/scientific calc (unwinnable). Pregnancy/Ovulation are YMYL — build **after
+AdSense approval**.
+
 1. ~~BMI Calculator~~ — ✅ shipped v68–v69
 2. ~~Age Calculator~~ — ✅ shipped v70
 3. ~~Calorie Calculator~~ — ✅ shipped v71
-4. **Pregnancy / Due Date Calculator** — top-5 on every competitor (reuse the date picker) ← next
-5. Ideal Weight Calculator — complements BMI + Body Fat
-6. Date Calculator — days between dates, utility tool (reuse the date picker)
+4. **Ideal Weight Calculator** ← next — completes the Weight cluster, fast build
+5. **Pregnancy / Due Date Calculator** — big new vertical, after AdSense approval (reuse date picker)
+6. **Ovulation / Fertility Calculator** — completes the Pregnancy cluster
+7. Date Calculator — days between / add-subtract, completes Date/Time cluster (reuse date picker)
+8. Water Intake · 9. Time Calculator
 
 ---
 

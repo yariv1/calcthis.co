@@ -2,16 +2,41 @@
 
 ---
 
+## Strategy — cluster completion, not one-off keywords
+
+The traffic play is **finishing tight topical clusters** so Google treats CalcThis as a
+niche authority. We already own a strong Weight/Fitness cluster (BMI · Body Fat · Calorie ·
+TDEE · Macro + articles). Next moves fill the obvious gaps in that cluster and open one new
+high-volume vertical (Pregnancy), each sharing an audience and a component (the datepicker).
+
+**Deliberately skipped** — basic/scientific calculator, mortgage, loan, compound interest.
+Massive volume but unwinnable vs Google / Desmos / NerdWallet, and finance is not our lane.
+
+⚠️ **AdSense-review timing:** Pregnancy/fertility is YMYL — needs careful, well-sourced,
+cautious content or it can hurt a review. Ship Ideal Weight + Date first (safe); slot
+Pregnancy + Ovulation immediately **after** AdSense approval.
+
+---
+
 ## Next Builds (priority order)
 
-| # | Calculator | Keyword Volume | Category | Complexity | Status |
+| # | Calculator | Keyword Volume | Cluster | Complexity | Status |
 |---|---|---|---|---|---|
-| 1 | BMI Calculator | Massive — #1 health calc keyword globally | Health & Fitness | Simple | ✅ Shipped v68–v69 |
-| 2 | Age Calculator | Very high — surprisingly huge for how simple it is | Math & Numbers | Trivial | ✅ Shipped v70 |
-| 3 | Calorie Calculator | Very high — distinct from TDEE | Health & Fitness | Medium | ✅ Shipped v71 |
-| 4 | Pregnancy Calculator / Due Date Calculator | Very high — top-5 on every competitor | Health & Fitness | Medium | ⬜ Not started |
-| 5 | Ideal Weight Calculator | Solid — complements BMI + Body Fat | Health & Fitness | Simple | ⬜ Not started |
-| 6 | Date Calculator | High — days between dates, add/subtract | Math & Numbers | Simple | ⬜ Not started |
+| 1 | BMI Calculator | Massive — #1 health calc keyword | Weight | Simple | ✅ Shipped v68–v69 |
+| 2 | Age Calculator | Very high for how simple it is | Date/Time | Trivial | ✅ Shipped v70 |
+| 3 | Calorie Calculator | Very high — distinct from TDEE | Weight | Medium | ✅ Shipped v71 |
+| 4 | **Ideal Weight Calculator** | Solid, ~3M/mo — completes the Weight cluster (BMI + Body Fat + Calorie + TDEE + Macro). Highest ROI per hour. | Weight | Simple | ⬜ Next |
+| 5 | **Pregnancy / Due Date Calculator** | Very high, ~3M/mo — top-5 on every competitor, recurring weekly visits, reuses datepicker. Opens a new vertical. Build **after AdSense approval**. | Pregnancy | Medium | ⬜ |
+| 6 | **Ovulation / Fertility Calculator** | ~3M/mo — same audience + component as Due Date, completes the Pregnancy cluster. | Pregnancy | Medium | ⬜ |
+| 7 | **Date Calculator** | High — days between / add-subtract dates, low competition, reuses datepicker, completes Date/Time cluster with Age. | Date/Time | Simple | ⬜ |
+| 8 | Water Intake Calculator | ~3M/mo, simple — easy Health win, shallower content ceiling | Weight-adjacent | Simple | ⬜ |
+| 9 | Time Calculator | Medium, utility — rounds out Date/Time | Date/Time | Simple | ⬜ |
+
+### Companion articles to build alongside
+- Ideal Weight → "What's My Ideal Weight? Height, Frame, and the Formulas"
+- Due Date → "How Is My Due Date Calculated?" + "How Many Weeks Pregnant Am I?"
+- Ovulation → "When Am I Most Fertile? How to Calculate Your Ovulation Window"
+- Date → "How to Calculate the Number of Days Between Two Dates"
 
 ---
 
@@ -56,12 +81,10 @@
 
 ## Parked Ideas (not prioritized yet)
 
-- Water Intake Calculator — medium volume, simple
 - BMR Calculator — overlaps heavily with TDEE, may not be worth a standalone page
-- Mortgage Calculator — massive volume but extremely competitive, not our lane currently
-- Loan Calculator — same as mortgage
-- Compound Interest Calculator — high volume, would open a Finance category
-- Time Calculator — medium volume, utility
+- Mortgage / Loan / Compound Interest — massive volume, unwinnable competition, opens a
+  Finance category we'd have to defend. Not our lane.
+- Basic / Scientific Calculator — ~25M/mo but can't out-rank Google's own + Desmos.
 - Fraction Calculator — medium volume, math/school
 
 ---
