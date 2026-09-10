@@ -4,10 +4,23 @@
 
 ## ⛔ MASTER IMAGE REGISTRY — EXACT FILENAMES — NEVER GUESS
 
-Every card, header, and in-article image filename is listed here. When building or editing
+Every card, hero, and in-article image filename is listed here. When building or editing
 `blog/index.html` or an article, use **only** these exact filenames. If a new article is added,
-add ALL its image names here immediately (card + hero + each in-article `blog-TOPIC-<what>.webp`).
-No exceptions.
+add ALL its image names here immediately. No exceptions.
+
+### ⛔ NAMING CONVENTION — all articles from v75 on
+
+`{article}` = a short kebab token for the article (e.g. `bmi`, `calories-lose-weight`, `exact-age`).
+
+| Image | Filename |
+|---|---|
+| Blog-home card | `blog-{article}-card.webp` |
+| Article hero | `blog-{article}-hero.webp` |
+| In-article, 1st | `blog-{article}-inArticle-1.webp` |
+| In-article, 2nd, 3rd… | `blog-{article}-inArticle-2.webp`, `-inArticle-3.webp`, … |
+
+Pre-v75 articles (gravel … body-fat) use legacy names like `blog-TOPIC-article-header.webp` —
+left as-is; the tables below are the source of truth for those. Do not rename them.
 
 **Every new article ships:** card (800×400) · hero (1400×520, 2.69:1) · 1–3 in-article photos
 (800×320). All must depict the article's actual subject — never generic atmosphere shots.
@@ -32,17 +45,17 @@ No exceptions.
 | What Is One Rep Max? | `blog-one-rep-max-article-card.webp` | `blog-one-rep-max-article-header.webp` |
 | How to Calculate Your TDEE | `blog-tdee-article-card.webp` | `blog-tdee-article-header.webp` |
 | How to Calculate Your Body Fat Percentage | `blog-body-fat-article-card.webp` | `blog-body-fat-article-header.webp` |
-| What Is BMI? How to Calculate and Interpret Your Body Mass Index | `blog-bmi-article-card.webp` | `blog-bmi-article-header.webp` |
-| How Many Calories Should I Eat to Lose Weight? | `blog-calories-lose-weight-article-card.webp` | `blog-calories-lose-weight-article-header.webp` |
-| How to Calculate Your Exact Age | `blog-exact-age-article-card.webp` | `blog-exact-age-article-header.webp` |
+| What Is BMI? How to Calculate and Interpret Your Body Mass Index | `blog-bmi-card.webp` | `blog-bmi-hero.webp` |
+| How Many Calories Should I Eat to Lose Weight? | `blog-calories-lose-weight-card.webp` | `blog-calories-lose-weight-hero.webp` |
+| How to Calculate Your Exact Age | `blog-exact-age-card.webp` | `blog-exact-age-hero.webp` |
 
 ### In-article images
 
 | Article | In-article filenames (`assets/images/`) |
 |---|---|
-| What Is BMI? How to Calculate and Interpret Your Body Mass Index | `blog-bmi-height-weight-measurement.webp` · `blog-bmi-scale-categories.webp` |
-| How Many Calories Should I Eat to Lose Weight? | `blog-calories-lose-weight-food-scale.webp` · `blog-calories-lose-weight-meal-tracking.webp` |
-| How to Calculate Your Exact Age | `blog-exact-age-date-subtraction.webp` · `blog-exact-age-leap-year-february.webp` |
+| What Is BMI? How to Calculate and Interpret Your Body Mass Index | `blog-bmi-inArticle-1.webp` · `blog-bmi-inArticle-2.webp` |
+| How Many Calories Should I Eat to Lose Weight? | `blog-calories-lose-weight-inArticle-1.webp` · `blog-calories-lose-weight-inArticle-2.webp` |
+| How to Calculate Your Exact Age | `blog-exact-age-inArticle-1.webp` · `blog-exact-age-inArticle-2.webp` |
 
 ### Rules
 - ❌ Never guess a filename. If it's not in this table, stop and check the actual file.
@@ -98,10 +111,7 @@ Every section gets a `<p class="blog-coming">` after its grid. The FIRST section
 - **Location:** `assets/images/` — already in the repo, never needs to be copied
 - **Dimensions:** 800 × 400px
 - **Format:** `.webp`
-- **Naming:** `blog-{topic}-article-card.webp`
-- **Examples:**
-  - `blog-gravel-driveway-article-card.webp`
-  - `blog-mulch-calculator-article-card.webp`
+- **Naming (v75+):** `blog-{article}-card.webp` — e.g. `blog-bmi-card.webp`
 
 ---
 
@@ -111,7 +121,7 @@ Every section gets a `<p class="blog-coming">` after its grid. The FIRST section
 <a class="bcard" href="/blog/ARTICLE-SLUG/">
   <div class="bcard-img">
     <img
-      src="/assets/images/blog-TOPIC-article-card.webp"
+      src="/assets/images/blog-{article}-card.webp"
       alt="ALT TEXT"
       width="800"
       height="400"
@@ -133,7 +143,7 @@ Every section gets a `<p class="blog-coming">` after its grid. The FIRST section
 
 **Fields to fill:**
 - `ARTICLE-SLUG` → full URL slug, e.g. `how-much-mulch-do-i-need`
-- `blog-TOPIC-article-card.webp` → exact card image filename
+- `blog-{article}-card.webp` → exact card image filename (from the registry above)
 - `ALT TEXT` → descriptive alt text for the card image
 - `CATEGORY` → e.g. `Construction`, `Gardening`, `Health`
 - `ARTICLE TITLE` → same as the article `<h1>`

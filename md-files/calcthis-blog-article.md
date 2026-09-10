@@ -25,11 +25,15 @@ rewrite it to show the article's actual subject.
 
 ### Every new article needs (minimum):
 
-| Image | Purpose | Dimensions | Export |
-|---|---|---|---|
-| **Card** | blog hub grid | **800 × 400 px** | WebP |
-| **Hero** | top of the article | **1400 × 520 px** (2.69:1) | WebP |
-| **In-article ×1 (prefer 2–3)** | inside `.blog-content`, next to the section it illustrates | **800 × 320 px** | WebP |
+| Image | Purpose | Filename (v75+) | Dimensions | Export |
+|---|---|---|---|---|
+| **Card** | blog hub grid | `blog-{article}-card.webp` | **800 × 400 px** | WebP |
+| **Hero** | top of the article | `blog-{article}-hero.webp` | **1400 × 520 px** (2.69:1) | WebP |
+| **In-article ×1 (prefer 2–3)** | inside `.blog-content`, next to the section it illustrates | `blog-{article}-inArticle-1.webp`, `-inArticle-2`, … | **800 × 320 px** | WebP |
+
+`{article}` = short kebab token for the article (`bmi`, `calories-lose-weight`, `exact-age`).
+Add every filename to the registry in `calcthis-blog-hub.md` in the same step. Pre-v75
+articles keep their legacy names — don't rename them.
 
 The **user supplies every image already cropped to size and in WebP** — the prompt step just
 gives them the brief + exact filename + target dimensions per image. No export-spec hand-wringing.
@@ -71,7 +75,7 @@ ChatGPT's widest format is **1792×1024 (landscape)**. Always tell the user to r
 
 ```
 **Image 1 — Article Card**
-Filename: `blog-TOPIC-article-card.webp`
+Filename: `blog-{article}-card.webp`
 Size: 800 × 400px | WebP 70–75%
 
 > [prompt — shows the article's actual subject]
@@ -79,7 +83,7 @@ Size: 800 × 400px | WebP 70–75%
 ---
 
 **Image 2 — Article Hero**
-Filename: `blog-TOPIC-article-header.webp`
+Filename: `blog-{article}-hero.webp`
 Size: 1400 × 520px (2.69:1) | WebP 70–75%
 
 > [prompt]
@@ -87,7 +91,7 @@ Size: 1400 × 520px (2.69:1) | WebP 70–75%
 ---
 
 **Image 3 — In-article: <which section>**
-Filename: `blog-TOPIC-<what-it-shows>.webp`
+Filename: `blog-{article}-inArticle-N.webp`
 Size: 800 × 320px | WebP
 
 > [prompt — depicts exactly what that section explains]
@@ -196,7 +200,7 @@ It does not matter what the source image's actual pixel dimensions are.
 **Never touch this CSS. Never add inline height or width overrides.**
 
 Image file goes in: `assets/images/`
-Naming convention: `blog-{topic}-article-header.webp`
+Naming convention: `blog-{article}-hero.webp`
 
 ---
 
@@ -261,7 +265,7 @@ Naming convention: `blog-{topic}-article-header.webp`
 
   <div class="hero" style="padding:4px 0 0">
     <div class="blog-hero-art">
-      <img src="/assets/images/blog-IMAGE-NAME-article-header.webp"
+      <img src="/assets/images/blog-{article}-hero.webp"
            alt="ALT TEXT"
            width="1400" height="520" loading="eager">
     </div>
@@ -475,7 +479,7 @@ it illustrates. Optional caption.
 
 ```html
 <figure class="blog-figure">
-  <img src="/assets/images/blog-TOPIC-what-it-shows.webp" alt="DESCRIPTIVE ALT — what is happening"
+  <img src="/assets/images/blog-{article}-inArticle-1.webp" alt="DESCRIPTIVE ALT — what is happening"
        width="800" height="320" loading="lazy">
   <figcaption>One line tying the image to the point being made.</figcaption>
 </figure>
@@ -536,7 +540,7 @@ if(document.querySelectorAll('.u').length){
 - [ ] Add `{ file: 'blog/SLUG/index.html', slug: '/blog/SLUG/' }` to `build.js` PAGES array
 - [ ] Add `<url>` entry to `sitemap.xml`
 - [ ] Add article card to `blog/index.html` hub + JSON-LD `blogPost` entry
-- [ ] Hero image `assets/images/blog-TOPIC-article-header.webp` + card `…-article-card.webp` + in-article `blog-TOPIC-<what>.webp`
+- [ ] Hero image `assets/images/blog-{article}-hero.webp` + `blog-{article}-card.webp` + `blog-{article}-inArticle-1.webp` (…-2, …-3)
 - [ ] Add `.blog-figure` CSS to style.css if not already there
 - [ ] Wrap all measurements in `<span class="u" data-imp="..." data-met="...">`
 - [ ] `.related-calcs`-style cross-link: the article ends with `.blog-pills` + a `.calc-cta` to the calculator it explains
