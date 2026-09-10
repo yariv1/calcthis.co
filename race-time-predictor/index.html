@@ -15,7 +15,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=79">
+<link rel="stylesheet" href="/assets/style.css?v=80">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
 <script>
@@ -122,8 +122,10 @@
   <div class="grid">
     <div class="card">
       <div class="card-pad">
-        <div class="row-top">
-          <h2>Your recent race</h2>
+        <h2 class="card-h2">Your recent race</h2>
+
+        <div class="ctl-row">
+          <span class="ctl-lab">Units</span>
           <div class="seg" id="distUnitSeg">
             <button type="button" data-du="km" class="on">km</button>
             <button type="button" data-du="mi">mi</button>
@@ -330,7 +332,7 @@
   <div class="mbar-vals"><span class="mbar-seg"><b id="mBig">—</b><span id="mUnit"></span></span><span class="mbar-sub" id="mSpeed"></span></div>
 </div>
 
-<script src="/assets/app.js?v=79"></script>
+<script src="/assets/app.js?v=80"></script>
 <script>CalcThis.initPredictorCalc({});</script>
 <script src="/feedback.js" defer></script>
 </body>

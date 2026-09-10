@@ -66,13 +66,20 @@ CSS is already in `style.css` and final: `.card-h2` (Fraunces 18/600, `margin-bo
 `.ctl-row .seg{flex:none}`. Label text: **"Units"** (not "Measurement units" — too long on
 mobile), **"Sex"**, **"Mode"**, **"Shape"**, etc. — one short word.
 
-The 24 pre-v78 calculators still use `.row-top` and are being migrated to this pattern.
+**Migrated v79:** all 16 calculators that had an inline `.seg` toggle on the title row (BMI,
+Body Fat, Ideal Weight, Calorie, TDEE, One Rep Max, Pace, Race Time Predictor, Board Foot,
+Concrete, Flooring, Gravel, Mulch, Sand, Tile, Topsoil) now use `.card-h2` + `.ctl-row`.
+`.row-top` is still in `style.css` and still fine for a **bare `<h2>`** (9 pages: age,
+final-grade, gpa, grade, heart-rate-zone, peptide, sleep, test-score, zone-2) — never put a
+toggle in it again.
 
 ## Sex toggle — FEMALE is the default (STANDARD)
 
 Every health calculator with a sex selection defaults to **Female** — first button in the
-`.seg`, `class="on"`, and the JS state var initialised to `'female'`. (Calorie already does
-this; BMI has no sex selection; Body Fat / TDEE / Ideal Weight follow the rule.)
+`.seg`, `class="on"`, and the JS state var initialised to `'female'`. **Done v79** for
+Calorie, Body Fat, TDEE, Ideal Weight (BMI has no sex selection). Body Fat also needed its
+init line for `#hipFld` changed to `sex === 'female' ? '' : 'none'` so the hip field shows
+on load.
 
 ```html
 <div class="seg" id="sexSeg">

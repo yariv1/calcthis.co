@@ -1303,7 +1303,7 @@ CalcThis.initHRZoneCalc = function (cfg) {
 CalcThis.initBodyFatCalc = function (cfg) {
   cfg = cfg || {};
   var $ = function (id) { return document.getElementById(id); };
-  var sex = 'male', unit = 'cm', advanced = false;
+  var sex = 'female', unit = 'cm', advanced = false;
 
   var CATS = {
     male: [
@@ -1474,7 +1474,7 @@ CalcThis.initBodyFatCalc = function (cfg) {
     if (!inp) return; inp.addEventListener('input', solve);
   });
 
-  var hf0 = $('hipFld'); if (hf0) hf0.style.display = 'none';
+  var hf0 = $('hipFld'); if (hf0) hf0.style.display = sex === 'female' ? '' : 'none';
 
   // Default to inches for US users (imperial audience); metric elsewhere.
   function prefersImperial() {
@@ -1513,7 +1513,7 @@ CalcThis.initBodyFatCalc = function (cfg) {
 CalcThis.initTDEECalc = function (cfg) {
   cfg = cfg || {};
   var $ = function (id) { return document.getElementById(id); };
-  var sex = 'male', unit = 'cm', advanced = false;
+  var sex = 'female', unit = 'cm', advanced = false;
 
   var GOALS = [
     { name:'Weight loss',  sub:'≈0.5 kg/wk', d:-500 },
