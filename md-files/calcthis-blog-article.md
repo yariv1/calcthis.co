@@ -16,6 +16,12 @@ If ANY value is unknown — an image filename, a CSS value, a file structure, an
 
 When the user says "give me image prompts" or when a new article is being built, **this is always the first step** — before writing a single line of HTML. No exceptions.
 
+⛔ **Deliver ALL prompts in ONE message** — card, then hero, then each in-article, in that
+order, in a single reply. Do NOT drip them one per turn or wait for the user between prompts,
+even if the user's phrasing ("one at a time", "one by one") seems to ask for that — it means
+"one prompt per image", not "one message per prompt". The user generates all the images from
+that one message and drops the finished `.webp` files in together.
+
 ### ⛔ IMAGES MUST BE IN CONTEXT — NOT ATMOSPHERE
 
 Every image has to depict something the article actually explains — a measurement being taken,

@@ -34,7 +34,7 @@ Pregnancy + Ovulation immediately **after** AdSense approval.
 
 ### Companion articles to build alongside
 - Ideal Weight → "What's My Ideal Weight? Height, Frame, and the Formulas"
-- Date → "How to Calculate the Number of Days Between Two Dates" (**pending — build next**)
+- Date → "How to Calculate the Number of Days Between Two Dates" — ✅ shipped v82
 - Due Date → "How Is My Due Date Calculated?" + "How Many Weeks Pregnant Am I?"
 - Ovulation → "When Am I Most Fertile? How to Calculate Your Ovulation Window"
 

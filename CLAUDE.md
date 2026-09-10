@@ -10,13 +10,13 @@
 
 ## Project state
 
-- **Asset version:** v81
-- **Total pages:** 47
+- **Asset version:** v82
+- **Total pages:** 48
 - **Model:** Opus 4.6
 
 ---
 
-## Live blog articles (15)
+## Live blog articles (16)
 
 - How Much Gravel Do I Need for a Driveway?
 - How Much Mulch Do I Need?
@@ -33,6 +33,7 @@
 - How Many Calories Should I Eat to Lose Weight?
 - How to Calculate Your Exact Age
 - How Much Should I Weigh?
+- How to Calculate the Number of Days Between Two Dates
 
 ---
 
@@ -54,7 +55,17 @@ Total live calculators: **29**
 
 ---
 
-## Last session (v81)
+## Last session (v81–v82)
+
+- v82: Shipped blog article **"How to Calculate the Number of Days Between Two Dates"**
+  (`/blog/how-to-calculate-the-number-of-days-between-two-dates/`) → CTA to `/date-calculator/`.
+  Two by-hand methods (count-forward; day-of-year subtraction), include-end-date (+1), weeks
+  vs. calendar months, business-days shortcut (5 × weeks + leftover − weekday holidays),
+  leap-year traps + why two tools disagree by a day, full worked example (4 Jul → 25 Dec 2026
+  = 174 days), 5 FAQs, 2 `.blog-figure` photos. Images: `blog-days-between-{card,hero,inArticle-1,inArticle-2}.webp`.
+  **New "Math & Numbers" section on the blog hub** — the Exact Age card moved out of Health &
+  Lifestyle into it; hub now has 3 sections. Completes the Date/Time cluster (Age + Date, calc + article each).
+  Skill fix: `calcthis-blog-article.md` now states image prompts ship as ONE message, card→hero→in-article, no pausing between.
 
 - v81: Built + deployed **Date Calculator** (`/date-calculator/`) — roadmap #7, completes the
   Date/Time cluster with Age. `CalcThis.initDateCalc` in app.js, `.p-datecalc` in style.css.
@@ -67,7 +78,7 @@ Total live calculators: **29**
   prefilled today / today+90). WebApplication + FAQPage JSON-LD, 10 SEO H2s, 5 FAQs,
   `.related-calcs` (Age / Percentage / Ratio). Wired into nav (Math & Numbers, after Age),
   footer, homepage (card + hasPart + prose count → 29), build.js, sitemap.xml.
-  Companion article "How to Calculate the Number of Days Between Two Dates" still to build.
+  Companion article shipped v82.
 
 ## Earlier (v73–v80)
 
