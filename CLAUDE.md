@@ -10,8 +10,8 @@
 
 ## Project state
 
-- **Asset version:** v82
-- **Total pages:** 48
+- **Asset version:** v83
+- **Total pages:** 49
 - **Model:** Opus 4.6
 
 ---
@@ -37,13 +37,13 @@
 
 ---
 
-## Live calculators (29)
+## Live calculators (30)
 
 ### Construction & Gardening (8)
 Board Foot · Gravel · Sand · Topsoil · Mulch · Concrete · Flooring · Tile
 
-### Health & Fitness (13)
-Pace · Race Time Predictor · Heart Rate Zone · Zone 2 Heart Rate · BMI · Body Fat · Ideal Weight · Calorie · TDEE · One Rep Max · Sleep · Macro · Peptide Reconstitution
+### Health & Fitness (14)
+Pace · Race Time Predictor · Heart Rate Zone · Zone 2 Heart Rate · BMI · Body Fat · Ideal Weight · Calorie · TDEE · One Rep Max · Sleep · Water Intake · Macro · Peptide Reconstitution
 
 ### School & Grades (4)
 Final Grade · GPA · Grade · Test Score
@@ -51,11 +51,27 @@ Final Grade · GPA · Grade · Test Score
 ### Math & Numbers (4)
 Ratio · Percentage · Age · Date
 
-Total live calculators: **29**
+Total live calculators: **30**
 
 ---
 
-## Last session (v81–v82)
+## Last session (v81–v83)
+
+- v83: Built + deployed **Water Intake Calculator** (`/water-intake-calculator/`) — roadmap #8.
+  `CalcThis.initWaterCalc` in app.js, `.p-water` in style.css. Baseline **33 ml/kg/day**
+  (30 for 65+), floored near the NASEM/IOM Adequate Intake, + exercise (None/Light/Moderate/
+  Intense = +0/350/700/1100) + hot climate (+500) + pregnancy (+300) / breastfeeding (+700) —
+  all cited to the 2005 DRI for water. Sex toggle = **Female default**; pregnancy/breastfeeding
+  row only shows for Female + advanced. Output in glasses (250 ml) / litres / fl oz / cups.
+  **Differentiator (Rule 8):** a stacked "what makes up your target" bar (base + activity +
+  heat + pregnancy) **plus** a morning/afternoon/evening **glass illustration** (40/35/25 split,
+  sun/sun/moon icons) — replaced an earlier tedious hour-by-hour list. Number was first tuned
+  from 35→33 ml/kg + "Light" default → "None" default after checking it landed ~2 glasses above
+  Omnicalculator / "½ body-weight in oz"; now a 68 kg no-exercise woman gets 9 glasses (2.2 L),
+  in line with both. Not-medical-advice disclaimer + hyponatremia + "when to see a doctor"
+  sections. WebApplication + FAQPage JSON-LD, ~13 H2s, 5 FAQs, `.related-calcs` (TDEE / Calorie
+  / BMI / Macro). Wired into nav (Health, after Sleep), footer, homepage (card + hasPart +
+  prose count → 30), build.js, sitemap.xml.
 
 - v82: Shipped blog article **"How to Calculate the Number of Days Between Two Dates"**
   (`/blog/how-to-calculate-the-number-of-days-between-two-dates/`) → CTA to `/date-calculator/`.
@@ -189,9 +205,10 @@ AdSense approval**; Date was the next non-blocked build and is now shipped.
 3. ~~Calorie Calculator~~ — ✅ shipped v71
 4. ~~Ideal Weight Calculator~~ — ✅ shipped v78
 5. ~~Date Calculator~~ — ✅ shipped v81 (companion article pending)
-6. **Pregnancy / Due Date Calculator** — big new vertical, after AdSense approval (reuse date picker)
-7. **Ovulation / Fertility Calculator** — completes the Pregnancy cluster
-8. Water Intake · 9. Time Calculator
+6. ~~Water Intake Calculator~~ — ✅ shipped v83
+7. **Pregnancy / Due Date Calculator** — big new vertical, after AdSense approval (reuse date picker)
+8. **Ovulation / Fertility Calculator** — completes the Pregnancy cluster
+9. Time Calculator — rounds out the Date/Time cluster
 
 ---
 

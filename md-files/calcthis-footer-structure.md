@@ -59,6 +59,7 @@ The literal space between the two spans keeps correct spacing when inline on mob
           <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
           <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
           <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/water-intake-calculator/">Water Intake Calculator</a></li>
           <li><a href="/macro-calculator/">Macro Calculator</a></li>
           <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
         </ul>

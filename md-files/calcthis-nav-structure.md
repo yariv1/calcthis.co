@@ -47,6 +47,7 @@ No `.navsep` dividers in the nav (removed). Extra top spacing before a section h
           <a href="/tdee-calculator/">TDEE / Calories</a>
           <a href="/one-rep-max-calculator/">One Rep Max</a>
           <a href="/sleep-calculator/">Sleep</a>
+          <a href="/water-intake-calculator/">Water Intake</a>
           <a href="/macro-calculator/">Macro</a>
           <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
           <span class="menu-col-head">School &amp; Grades</span>

@@ -27,9 +27,9 @@ Pregnancy + Ovulation immediately **after** AdSense approval.
 | 3 | Calorie Calculator | Very high — distinct from TDEE | Weight | Medium | ✅ Shipped v71 |
 | 4 | Ideal Weight Calculator | Solid, ~3M/mo — completes the Weight cluster. | Weight | Simple | ✅ Shipped v78 |
 | 5 | **Date Calculator** | High — days between / add-subtract dates, low competition, reuses datepicker, completes Date/Time cluster with Age. | Date/Time | Simple | ✅ Shipped v81 |
-| 6 | **Pregnancy / Due Date Calculator** | Very high, ~3M/mo — top-5 on every competitor, recurring weekly visits, reuses datepicker. Opens a new vertical. Build **after AdSense approval**. | Pregnancy | Medium | ⬜ |
-| 7 | **Ovulation / Fertility Calculator** | ~3M/mo — same audience + component as Due Date, completes the Pregnancy cluster. | Pregnancy | Medium | ⬜ |
-| 8 | Water Intake Calculator | ~3M/mo, simple — easy Health win, shallower content ceiling | Weight-adjacent | Simple | ⬜ |
+| 6 | **Water Intake Calculator** | ~3M/mo, simple — easy Health win. 33 ml/kg + activity/climate/pregnancy; differentiator = stacked contribution bar + morning/afternoon/evening glass illustration. | Health | Simple | ✅ Shipped v83 |
+| 7 | **Pregnancy / Due Date Calculator** | Very high, ~3M/mo — top-5 on every competitor, recurring weekly visits, reuses datepicker. Opens a new vertical. Build **after AdSense approval**. | Pregnancy | Medium | ⬜ |
+| 8 | **Ovulation / Fertility Calculator** | ~3M/mo — same audience + component as Due Date, completes the Pregnancy cluster. | Pregnancy | Medium | ⬜ |
 | 9 | Time Calculator | Medium, utility — rounds out Date/Time | Date/Time | Simple | ⬜ |
 
 ### Companion articles to build alongside
@@ -40,7 +40,7 @@ Pregnancy + Ovulation immediately **after** AdSense approval.
 
 ---
 
-## Already Live (29 calculators)
+## Already Live (30 calculators)
 
 ### Construction & Gardening (8)
 - ✅ Board Foot
@@ -52,7 +52,7 @@ Pregnancy + Ovulation immediately **after** AdSense approval.
 - ✅ Flooring
 - ✅ Tile
 
-### Health & Fitness (12)
+### Health & Fitness (14)
 - ✅ BMI
 - ✅ Calorie
 - ✅ Pace
@@ -60,9 +60,11 @@ Pregnancy + Ovulation immediately **after** AdSense approval.
 - ✅ Heart Rate Zone
 - ✅ Zone 2 Heart Rate
 - ✅ Body Fat
+- ✅ Ideal Weight
 - ✅ TDEE
 - ✅ One Rep Max
 - ✅ Sleep
+- ✅ Water Intake
 - ✅ Macro
 - ✅ Peptide Reconstitution
 
