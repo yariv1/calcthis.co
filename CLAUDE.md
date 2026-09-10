@@ -10,13 +10,13 @@
 
 ## Project state
 
-- **Asset version:** v72
-- **Total pages:** 41
+- **Asset version:** v73
+- **Total pages:** 42
 - **Model:** Opus 4.6
 
 ---
 
-## Live blog articles (11)
+## Live blog articles (12)
 
 - How Much Gravel Do I Need for a Driveway?
 - How Much Mulch Do I Need?
@@ -29,6 +29,7 @@
 - What Is One Rep Max? How to Calculate Your 1RM
 - How to Calculate Your TDEE
 - How to Calculate Your Body Fat Percentage
+- What Is BMI? How to Calculate and Interpret Your Body Mass Index
 
 ---
 
@@ -48,7 +49,25 @@ Ratio · Percentage · Age
 
 ---
 
-## Last session (v71–v72)
+## Last session (v73)
+
+- Shipped blog article **"What Is BMI? How to Calculate and Interpret Your Body Mass Index"**
+  (`/blog/what-is-bmi/`) → CTA to `/bmi-calculator/`. Formula (metric + imperial ×703),
+  worked example, WHO categories table, colour-coded BMI scale SVG (15–40), healthy weight
+  range, BMI limitations (muscle / waist / age / population / fitness), kids-and-teens note,
+  4-question FAQ, `.blog-pills` cross-links.
+- Added **`.blog-figure`** CSS to `style.css` (in-article contextual photo — was missing).
+- Images: `blog-bmi-article-card.webp` (800×400), `blog-bmi-article-header.webp` (1400×520),
+  `blog-bmi-height-weight-measurement.webp` + `blog-bmi-scale-categories.webp` (800×320).
+- **Hero size settled: 1400×520 (2.69:1).** `.blog-hero-art` has no `aspect-ratio` lock —
+  renders the WebP's natural ratio — so 1400×520 source + `width="1400" height="520"` attrs
+  just work, no CSS change. Blog skill files updated (removed the stale "ratio TBD" flag);
+  in-article images confirmed 800×320.
+- Still pending this session: BMI companion done; **Calorie** ("How Many Calories Should I
+  Eat to Lose Weight?" → `/calorie-calculator/`) and **Age** ("How to Calculate Your Exact
+  Age" → `/age-calculator/`) articles next.
+
+## Earlier (v71–v72)
 
 - v72: `.related-calcs` block (heading + `.pills` after the grid) — width capped to the grid's
   left column so the 4 hug-chips wrap 2×2 under the input card. **LOCKED SPEC** in
