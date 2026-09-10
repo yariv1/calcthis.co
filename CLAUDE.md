@@ -10,13 +10,13 @@
 
 ## Project state
 
-- **Asset version:** v73
-- **Total pages:** 42
+- **Asset version:** v74
+- **Total pages:** 43
 - **Model:** Opus 4.6
 
 ---
 
-## Live blog articles (12)
+## Live blog articles (13)
 
 - How Much Gravel Do I Need for a Driveway?
 - How Much Mulch Do I Need?
@@ -30,6 +30,7 @@
 - How to Calculate Your TDEE
 - How to Calculate Your Body Fat Percentage
 - What Is BMI? How to Calculate and Interpret Your Body Mass Index
+- How Many Calories Should I Eat to Lose Weight?
 
 ---
 
@@ -49,9 +50,17 @@ Ratio · Percentage · Age
 
 ---
 
-## Last session (v73)
+## Last session (v73–v74)
 
-- Shipped blog article **"What Is BMI? How to Calculate and Interpret Your Body Mass Index"**
+- v74: Shipped blog article **"How Many Calories Should I Eat to Lose Weight?"**
+  (`/blog/how-many-calories-to-lose-weight/`) → CTA to `/calorie-calculator/`. Calorie-deficit
+  method, TDEE step (links TDEE article/calc), deficit-size table, "3,500 cal = 1 lb" caveat,
+  safety floors (1,200 F / 1,500 M / cap 1%/wk), worked example, protein in a deficit,
+  scale-stall guidance, 5-question FAQ, 2 `.blog-figure` photos, `.blog-pills`.
+- **Age** article ("How to Calculate Your Exact Age" → `/age-calculator/`) still pending —
+  last of the 3 BMI/Calorie/Age companion pieces.
+
+- v73: Shipped blog article **"What Is BMI? How to Calculate and Interpret Your Body Mass Index"**
   (`/blog/what-is-bmi/`) → CTA to `/bmi-calculator/`. Formula (metric + imperial ×703),
   worked example, WHO categories table, colour-coded BMI scale SVG (15–40), healthy weight
   range, BMI limitations (muscle / waist / age / population / fitness), kids-and-teens note,
