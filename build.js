@@ -61,6 +61,7 @@ const PAGES = [
   { file: 'blog/how-to-calculate-your-body-fat-percentage/index.html', slug: '/blog/how-to-calculate-your-body-fat-percentage/' },
   { file: 'blog/what-is-bmi/index.html', slug: '/blog/what-is-bmi/' },
   { file: 'blog/how-many-calories-to-lose-weight/index.html', slug: '/blog/how-many-calories-to-lose-weight/' },
+  { file: 'blog/how-to-calculate-your-exact-age/index.html', slug: '/blog/how-to-calculate-your-exact-age/' },
   { file: 'about/index.html',           slug: '/about/' },
   { file: 'contact/index.html',         slug: '/contact/' },
   { file: 'privacy-policy/index.html',  slug: '/privacy-policy/' },
