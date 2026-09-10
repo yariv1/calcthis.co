@@ -10,13 +10,13 @@
 
 ## Project state
 
-- **Asset version:** v78
-- **Total pages:** 45
+- **Asset version:** v79
+- **Total pages:** 46
 - **Model:** Opus 4.6
 
 ---
 
-## Live blog articles (14)
+## Live blog articles (15)
 
 - How Much Gravel Do I Need for a Driveway?
 - How Much Mulch Do I Need?
@@ -32,6 +32,7 @@
 - What Is BMI? How to Calculate and Interpret Your Body Mass Index
 - How Many Calories Should I Eat to Lose Weight?
 - How to Calculate Your Exact Age
+- How Much Should I Weigh?
 
 ---
 
@@ -53,7 +54,13 @@ Total live calculators: **28**
 
 ---
 
-## Last session (v73–v78)
+## Last session (v73–v79)
+
+- v79: Shipped blog article **"How Much Should I Weigh?"** (`/blog/how-much-should-i-weigh/`)
+  → CTA to `/ideal-weight-calculator/`. Healthy weight = a range not a number; BMI 18.5–24.9
+  span by height (table), the 4 formulas as points inside it, frame size, "for my age",
+  women vs men, when the number misleads, 5-question FAQ, 2 `.blog-figure` photos. Completes
+  the Weight cluster (calc + article).
 
 - v78: Built + deployed **Ideal Weight Calculator** (`/ideal-weight-calculator/`) —
   `CalcThis.initIdealWeightCalc` in app.js, `.p-ideal-weight` in style.css. Headline output
