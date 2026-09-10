@@ -10,8 +10,8 @@
 
 ## Project state
 
-- **Asset version:** v77
-- **Total pages:** 44
+- **Asset version:** v78
+- **Total pages:** 45
 - **Model:** Opus 4.6
 
 ---
@@ -35,13 +35,13 @@
 
 ---
 
-## Live calculators (27)
+## Live calculators (28)
 
 ### Construction & Gardening (8)
 Board Foot · Gravel · Sand · Topsoil · Mulch · Concrete · Flooring · Tile
 
-### Health & Fitness (12)
-Pace · Race Time Predictor · Heart Rate Zone · Zone 2 Heart Rate · BMI · Body Fat · Calorie · TDEE · One Rep Max · Sleep · Macro · Peptide Reconstitution
+### Health & Fitness (13)
+Pace · Race Time Predictor · Heart Rate Zone · Zone 2 Heart Rate · BMI · Body Fat · Ideal Weight · Calorie · TDEE · One Rep Max · Sleep · Macro · Peptide Reconstitution
 
 ### School & Grades (4)
 Final Grade · GPA · Grade · Test Score
@@ -49,9 +49,26 @@ Final Grade · GPA · Grade · Test Score
 ### Math & Numbers (3)
 Ratio · Percentage · Age
 
+Total live calculators: **28**
+
 ---
 
-## Last session (v73–v77)
+## Last session (v73–v78)
+
+- v78: Built + deployed **Ideal Weight Calculator** (`/ideal-weight-calculator/`) —
+  `CalcThis.initIdealWeightCalc` in app.js, `.p-ideal-weight` in style.css. Headline output
+  is the healthy weight **range** (BMI 18.5–24.9 for the height); Robinson/Devine/Miller/Hamwi
+  plotted as ticks on the same scale (differentiator: no "which of 4 numbers?" table dump).
+  Advanced = current-weight marker + distance-to-range readout + body-frame target. WebApplication
+  + FAQPage JSON-LD, 10 SEO H2s, `.related-calcs`. Companion article `/blog/how-much-should-i-weigh/`
+  next.
+- v78: **NEW global card-header standard** — `.card-h2` (title, own line) + `.ctl-row` / `.ctl-lab`
+  (each toggle in a labelled row: "Units", "Sex"). Replaces `.row-top` h2+toggle, which made a
+  unit toggle read as part of the calculator title. **24 pre-v78 pages still on `.row-top` —
+  migration pass pending this session.**
+- v78: **NEW global rule** — every health calc with a sex toggle defaults to **Female**
+  (first button, `class="on"`, JS state `'female'`). Calorie already did; Ideal Weight follows;
+  Body Fat / TDEE to be updated in the migration pass.
 
 - v76–v77: **Blog image naming convention** — `blog-{article}-card.webp` /
   `-hero.webp` / `-inArticle-1.webp` (…-2, -3). Renamed the 12 v73–v75 images
@@ -127,7 +144,7 @@ AdSense approval**.
 1. ~~BMI Calculator~~ — ✅ shipped v68–v69
 2. ~~Age Calculator~~ — ✅ shipped v70
 3. ~~Calorie Calculator~~ — ✅ shipped v71
-4. **Ideal Weight Calculator** ← next — completes the Weight cluster, fast build
+4. ~~Ideal Weight Calculator~~ — ✅ shipped v78 (article + row-top migration pending)
 5. **Pregnancy / Due Date Calculator** — big new vertical, after AdSense approval (reuse date picker)
 6. **Ovulation / Fertility Calculator** — completes the Pregnancy cluster
 7. Date Calculator — days between / add-subtract, completes Date/Time cluster (reuse date picker)

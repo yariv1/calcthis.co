@@ -25,7 +25,7 @@ Pregnancy + Ovulation immediately **after** AdSense approval.
 | 1 | BMI Calculator | Massive — #1 health calc keyword | Weight | Simple | ✅ Shipped v68–v69 |
 | 2 | Age Calculator | Very high for how simple it is | Date/Time | Trivial | ✅ Shipped v70 |
 | 3 | Calorie Calculator | Very high — distinct from TDEE | Weight | Medium | ✅ Shipped v71 |
-| 4 | **Ideal Weight Calculator** | Solid, ~3M/mo — completes the Weight cluster (BMI + Body Fat + Calorie + TDEE + Macro). Highest ROI per hour. | Weight | Simple | ⬜ Next |
+| 4 | Ideal Weight Calculator | Solid, ~3M/mo — completes the Weight cluster. | Weight | Simple | ✅ Shipped v78 |
 | 5 | **Pregnancy / Due Date Calculator** | Very high, ~3M/mo — top-5 on every competitor, recurring weekly visits, reuses datepicker. Opens a new vertical. Build **after AdSense approval**. | Pregnancy | Medium | ⬜ |
 | 6 | **Ovulation / Fertility Calculator** | ~3M/mo — same audience + component as Due Date, completes the Pregnancy cluster. | Pregnancy | Medium | ⬜ |
 | 7 | **Date Calculator** | High — days between / add-subtract dates, low competition, reuses datepicker, completes Date/Time cluster with Age. | Date/Time | Simple | ⬜ |
