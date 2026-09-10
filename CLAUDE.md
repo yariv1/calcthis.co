@@ -10,8 +10,8 @@
 
 ## Project state
 
-- **Asset version:** v80
-- **Total pages:** 46
+- **Asset version:** v81
+- **Total pages:** 47
 - **Model:** Opus 4.6
 
 ---
@@ -36,7 +36,7 @@
 
 ---
 
-## Live calculators (28)
+## Live calculators (29)
 
 ### Construction & Gardening (8)
 Board Foot · Gravel · Sand · Topsoil · Mulch · Concrete · Flooring · Tile
@@ -47,14 +47,29 @@ Pace · Race Time Predictor · Heart Rate Zone · Zone 2 Heart Rate · BMI · Bo
 ### School & Grades (4)
 Final Grade · GPA · Grade · Test Score
 
-### Math & Numbers (3)
-Ratio · Percentage · Age
+### Math & Numbers (4)
+Ratio · Percentage · Age · Date
 
-Total live calculators: **28**
+Total live calculators: **29**
 
 ---
 
-## Last session (v73–v80)
+## Last session (v81)
+
+- v81: Built + deployed **Date Calculator** (`/date-calculator/`) — roadmap #7, completes the
+  Date/Time cluster with Age. `CalcThis.initDateCalc` in app.js, `.p-datecalc` in style.css.
+  Two modes via a full-width `.modeseg` (**Days between** / **Add · subtract**). Differentiator
+  (Rule 8) = a **live span bar** SVG: month-boundary ticks, weekend shading in business-day
+  mode, a "today" marker — plus the answer given every way at once (days / weeks+days /
+  y·m·d) with no unit dropdown. Advanced (between mode only) = business-days count +
+  optional US-federal-holiday exclusion (11 holidays computed per year, observed-day
+  shifted — no checkbox wall). Reuses the vendored vanillajs-datepicker (From/To/Start,
+  prefilled today / today+90). WebApplication + FAQPage JSON-LD, 10 SEO H2s, 5 FAQs,
+  `.related-calcs` (Age / Percentage / Ratio). Wired into nav (Math & Numbers, after Age),
+  footer, homepage (card + hasPart + prose count → 29), build.js, sitemap.xml.
+  Companion article "How to Calculate the Number of Days Between Two Dates" still to build.
+
+## Earlier (v73–v80)
 
 - v80: **Card-header migration** — 16 calculators that had an inline `.seg` toggle on the
   `<h2>` title row moved to `.card-h2` + `.ctl-row`/`.ctl-lab` (title on its own line, toggle
@@ -156,15 +171,15 @@ Total live calculators: **28**
 
 Strategy = **cluster completion** (see `md-files/calcthis-calculator-roadmap.md`). Skip
 finance + basic/scientific calc (unwinnable). Pregnancy/Ovulation are YMYL — build **after
-AdSense approval**.
+AdSense approval**; Date was the next non-blocked build and is now shipped.
 
 1. ~~BMI Calculator~~ — ✅ shipped v68–v69
 2. ~~Age Calculator~~ — ✅ shipped v70
 3. ~~Calorie Calculator~~ — ✅ shipped v71
-4. ~~Ideal Weight Calculator~~ — ✅ shipped v78 (article + row-top migration pending)
-5. **Pregnancy / Due Date Calculator** — big new vertical, after AdSense approval (reuse date picker)
-6. **Ovulation / Fertility Calculator** — completes the Pregnancy cluster
-7. Date Calculator — days between / add-subtract, completes Date/Time cluster (reuse date picker)
+4. ~~Ideal Weight Calculator~~ — ✅ shipped v78
+5. ~~Date Calculator~~ — ✅ shipped v81 (companion article pending)
+6. **Pregnancy / Due Date Calculator** — big new vertical, after AdSense approval (reuse date picker)
+7. **Ovulation / Fertility Calculator** — completes the Pregnancy cluster
 8. Water Intake · 9. Time Calculator
 
 ---

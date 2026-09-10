@@ -26,21 +26,21 @@ Pregnancy + Ovulation immediately **after** AdSense approval.
 | 2 | Age Calculator | Very high for how simple it is | Date/Time | Trivial | ✅ Shipped v70 |
 | 3 | Calorie Calculator | Very high — distinct from TDEE | Weight | Medium | ✅ Shipped v71 |
 | 4 | Ideal Weight Calculator | Solid, ~3M/mo — completes the Weight cluster. | Weight | Simple | ✅ Shipped v78 |
-| 5 | **Pregnancy / Due Date Calculator** | Very high, ~3M/mo — top-5 on every competitor, recurring weekly visits, reuses datepicker. Opens a new vertical. Build **after AdSense approval**. | Pregnancy | Medium | ⬜ |
-| 6 | **Ovulation / Fertility Calculator** | ~3M/mo — same audience + component as Due Date, completes the Pregnancy cluster. | Pregnancy | Medium | ⬜ |
-| 7 | **Date Calculator** | High — days between / add-subtract dates, low competition, reuses datepicker, completes Date/Time cluster with Age. | Date/Time | Simple | ⬜ |
+| 5 | **Date Calculator** | High — days between / add-subtract dates, low competition, reuses datepicker, completes Date/Time cluster with Age. | Date/Time | Simple | ✅ Shipped v81 |
+| 6 | **Pregnancy / Due Date Calculator** | Very high, ~3M/mo — top-5 on every competitor, recurring weekly visits, reuses datepicker. Opens a new vertical. Build **after AdSense approval**. | Pregnancy | Medium | ⬜ |
+| 7 | **Ovulation / Fertility Calculator** | ~3M/mo — same audience + component as Due Date, completes the Pregnancy cluster. | Pregnancy | Medium | ⬜ |
 | 8 | Water Intake Calculator | ~3M/mo, simple — easy Health win, shallower content ceiling | Weight-adjacent | Simple | ⬜ |
 | 9 | Time Calculator | Medium, utility — rounds out Date/Time | Date/Time | Simple | ⬜ |
 
 ### Companion articles to build alongside
 - Ideal Weight → "What's My Ideal Weight? Height, Frame, and the Formulas"
+- Date → "How to Calculate the Number of Days Between Two Dates" (**pending — build next**)
 - Due Date → "How Is My Due Date Calculated?" + "How Many Weeks Pregnant Am I?"
 - Ovulation → "When Am I Most Fertile? How to Calculate Your Ovulation Window"
-- Date → "How to Calculate the Number of Days Between Two Dates"
 
 ---
 
-## Already Live (27 calculators)
+## Already Live (29 calculators)
 
 ### Construction & Gardening (8)
 - ✅ Board Foot
@@ -72,10 +72,11 @@ Pregnancy + Ovulation immediately **after** AdSense approval.
 - ✅ Grade
 - ✅ Test Score
 
-### Math & Numbers (3)
+### Math & Numbers (4)
 - ✅ Ratio
 - ✅ Percentage
 - ✅ Age
+- ✅ Date
 
 ---
 

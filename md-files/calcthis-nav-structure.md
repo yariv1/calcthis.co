@@ -60,6 +60,7 @@ No `.navsep` dividers in the nav (removed). Extra top spacing before a section h
           <a href="/ratio-calculator/">Ratio</a>
           <a href="/percentage-calculator/">Percentage</a>
           <a href="/age-calculator/">Age</a>
+          <a href="/date-calculator/">Date</a>
         </div>
       </div>
     </nav>
