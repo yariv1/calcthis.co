@@ -10,7 +10,7 @@
 
 ## Project state
 
-- **Asset version:** v79
+- **Asset version:** v80
 - **Total pages:** 46
 - **Model:** Opus 4.6
 
@@ -54,7 +54,17 @@ Total live calculators: **28**
 
 ---
 
-## Last session (v73–v79)
+## Last session (v73–v80)
+
+- v80: **Card-header migration** — 16 calculators that had an inline `.seg` toggle on the
+  `<h2>` title row moved to `.card-h2` + `.ctl-row`/`.ctl-lab` (title on its own line, toggle
+  in a labelled "Units"/"Sex" row): BMI, Body Fat, Ideal Weight, Calorie, TDEE, One Rep Max,
+  Pace, Race Time Predictor, Board Foot, Concrete, Flooring, Gravel, Mulch, Sand, Tile,
+  Topsoil. No behaviour change — button ids/attrs untouched. **Female default** now applied to
+  Body Fat + TDEE in app.js (Calorie + Ideal Weight already were); Body Fat `#hipFld` init
+  fixed to show on load. `.row-top` kept for the 9 title-only pages (age, final-grade, gpa,
+  grade, heart-rate-zone, peptide, sleep, test-score, zone-2) — never add a toggle to it.
+  Both standards are in `calcthis-design-system.md`.
 
 - v79: Shipped blog article **"How Much Should I Weigh?"** (`/blog/how-much-should-i-weigh/`)
   → CTA to `/ideal-weight-calculator/`. Healthy weight = a range not a number; BMI 18.5–24.9
