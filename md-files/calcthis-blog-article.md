@@ -51,6 +51,8 @@ Give the user, in this order:
 2. One prompt per image — card, then hero, then each in-article — each labelled with filename +
    pixel dimensions + export spec
 3. For every in-article prompt, note **which section of the article it sits next to**
+4. **End every prompt string with `Size: WxH.`** (e.g. `Size: 1400x520.`) — right inside the
+   prompt text, after the negatives, so it survives a copy-paste into ChatGPT
 
 ### ChatGPT tip (always include this)
 ChatGPT's widest format is **1792×1024 (landscape)**. Always tell the user to request landscape, then crop to the final ratio in any image editor.
@@ -75,10 +77,9 @@ ChatGPT's widest format is **1792×1024 (landscape)**. Always tell the user to r
 
 ```
 **Image 1 — Article Card**
-Filename: `blog-{article}-card.webp`
-Size: 800 × 400px | WebP 70–75%
+Filename: `blog-{article}-card.webp` | WebP 70–75%
 
-> [prompt — shows the article's actual subject]
+> [prompt — shows the article's actual subject] … No text, no overlays, no logos. Size: 800x400.
 
 ---
 
