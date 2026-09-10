@@ -1895,6 +1895,197 @@ CalcThis.initBMICalc = function (cfg) {
 };
 
 /* -----------------------------------------------------------
+   CalcThis.initIdealWeightCalc(cfg) — "how much should I weigh".
+   Headline output is a RANGE (the BMI 18.5-24.9 weight span for
+   the entered height), not a single number. The classic formulas
+   (Robinson, Devine, Miller, Hamwi) are plotted as ticks on the
+   same scale so the user sees they are just points inside the
+   healthy band. Advanced: current weight -> distance to range,
+   and a body-frame adjustment that places a target within the
+   range. Live, no button. Inches default for US users. */
+CalcThis.initIdealWeightCalc = function (cfg) {
+  cfg = cfg || {};
+  var $ = function (id) { return document.getElementById(id); };
+  var unit = 'cm', sex = 'female', frame = 'medium', advanced = false;
+
+  var BMIN = 15, BMAX = 32, LO = 18.5, HI = 25;
+
+  var heightIn = $('height'), weightIn = $('curWeight');
+  if (!heightIn) return;
+
+  function num(v) { v = parseFloat(('' + v).trim()); return isNaN(v) ? NaN : v; }
+  function toCm(v) { return unit === 'in' ? v * 2.54 : v; }
+  function toKg(v) { return unit === 'in' ? v / 2.2046226 : v; }
+  function fromKg(v) { return unit === 'in' ? v * 2.2046226 : v; }
+  function wUnit() { return unit === 'in' ? 'lb' : 'kg'; }
+  function one(x) { return (Math.round(x * 10) / 10).toFixed(1); }
+  function r0(x) { return Math.round(x); }
+  function pct(bmi) { return Math.max(0, Math.min(100, (bmi - BMIN) / (BMAX - BMIN) * 100)); }
+
+  function hInDisp(hIn) {
+    var ft = Math.floor(hIn / 12), inch = Math.round(hIn - ft * 12);
+    if (inch === 12) { ft++; inch = 0; }
+    return ft + "'" + inch + '"';
+  }
+
+  var PH = { cm: '178', in: '70' };
+  function applyUnit() {
+    if ($('uHeight')) $('uHeight').textContent = unit === 'in' ? 'in' : 'cm';
+    if ($('uWeight')) $('uWeight').textContent = wUnit();
+    heightIn.placeholder = PH[unit];
+    if (weightIn) weightIn.placeholder = unit === 'in' ? '175' : '80';
+    if (unitSeg) [].forEach.call(unitSeg.querySelectorAll('button'), function (x) {
+      x.classList.toggle('on', x.getAttribute('data-unit') === unit);
+    });
+  }
+
+  // ideal-weight formulas -> kg. over = inches over 5 ft (may be negative).
+  function formulas(hIn) {
+    var o = hIn - 60;
+    return sex === 'male'
+      ? { Robinson: 52 + 1.9 * o, Devine: 50 + 2.3 * o, Miller: 56.2 + 1.41 * o, Hamwi: 48 + 2.7 * o }
+      : { Robinson: 49 + 1.7 * o, Devine: 45.5 + 2.3 * o, Miller: 53.1 + 1.36 * o, Hamwi: 45.5 + 2.2 * o };
+  }
+  var FKEYS = ['Robinson', 'Devine', 'Miller', 'Hamwi'];
+
+  function solve() {
+    var hCm = toCm(num(heightIn.value));
+    var res = $('resBig'), sub = $('resSub'), viz = $('iwViz'), band = $('iwBand'),
+        ticks = $('iwTicks'), tbl = $('iwTable'), sentence = $('iwSentence'),
+        curOut = $('iwCurOut'), frameOut = $('iwFrameOut'),
+        curM = $('iwCurMarker'), frameM = $('iwFrameMarker');
+
+    if (!(isFinite(hCm) && hCm >= 130 && hCm <= 220)) {
+      res.textContent = '—';
+      sub.textContent = 'Enter your height to see your healthy weight range.';
+      viz.style.visibility = 'hidden';
+      tbl.innerHTML = ''; sentence.innerHTML = '';
+      if (curOut) curOut.innerHTML = '';
+      if (frameOut) frameOut.innerHTML = '';
+      return;
+    }
+
+    var m = hCm / 100, hIn = hCm / 2.54;
+    var loKg = LO * m * m, hiKg = HI * m * m;
+    var f = formulas(hIn);
+    var fVals = FKEYS.map(function (k) { return f[k]; });
+    var fMin = Math.min.apply(null, fVals), fMax = Math.max.apply(null, fVals);
+
+    res.textContent = r0(fromKg(loKg)) + ' – ' + r0(fromKg(hiKg)) + ' ' + wUnit();
+    sub.textContent = 'Healthy weight range for ' +
+      (unit === 'in' ? hInDisp(hIn) : r0(hCm) + ' cm') + ' · ' + (sex === 'male' ? 'male' : 'female');
+
+    viz.style.visibility = 'visible';
+    band.style.left = pct(LO) + '%';
+    band.style.width = (pct(HI) - pct(LO)) + '%';
+
+    var tHtml = '';
+    FKEYS.forEach(function (k) {
+      tHtml += '<span class="iw-tick" style="left:' + pct(f[k] / (m * m)) + '%" title="' + k + '"></span>';
+    });
+    $('iwTickLayer').innerHTML = tHtml;
+
+    ticks.innerHTML =
+      '<span style="left:' + pct(LO) + '%">' + r0(fromKg(loKg)) + '</span>' +
+      '<span style="left:' + pct(HI) + '%">' + r0(fromKg(hiKg)) + '</span>';
+
+    var rows = '';
+    FKEYS.forEach(function (k) {
+      rows += '<tr><td>' + k + '</td><td>' + r0(fromKg(f[k])) + ' ' + wUnit() + '</td></tr>';
+    });
+    tbl.innerHTML = '<thead><tr><th>Formula</th><th>Estimate</th></tr></thead><tbody>' + rows + '</tbody>';
+
+    sentence.innerHTML = 'Most guidelines put a healthy weight for your height between <strong>' +
+      r0(fromKg(loKg)) + ' and ' + r0(fromKg(hiKg)) + ' ' + wUnit() + '</strong>. The classic formulas land at <strong>' +
+      r0(fromKg(fMin)) + '–' + r0(fromKg(fMax)) + ' ' + wUnit() +
+      '</strong>, inside that range — a reference point, not a single correct number.';
+
+    var cw = weightIn ? toKg(num(weightIn.value)) : NaN;
+    if (isFinite(cw) && cw > 0) {
+      var cbmi = cw / (m * m);
+      curM.style.display = ''; curM.style.left = pct(cbmi) + '%';
+      var msg;
+      if (cw > hiKg) msg = 'You are <strong>' + one(fromKg(cw - hiKg)) + ' ' + wUnit() + '</strong> above the top of your healthy range.';
+      else if (cw < loKg) msg = 'You are <strong>' + one(fromKg(loKg - cw)) + ' ' + wUnit() + '</strong> below the bottom of your healthy range.';
+      else msg = 'You are <strong>within</strong> your healthy weight range.';
+      curOut.innerHTML =
+        '<div class="bf-cmp"><span class="k">Current weight</span><span class="v">' + one(fromKg(cw)) + ' ' + wUnit() + ' · BMI ' + one(cbmi) + '</span></div>' +
+        '<p class="res-tip">' + msg + '</p>';
+    } else {
+      curM.style.display = 'none';
+      if (curOut) curOut.innerHTML = '';
+    }
+
+    if (advanced && frameOut) {
+      var frac = frame === 'small' ? 0.25 : (frame === 'large' ? 0.75 : 0.5);
+      var tgtKg = loKg + (hiKg - loKg) * frac;
+      frameM.style.display = ''; frameM.style.left = pct(tgtKg / (m * m)) + '%';
+      var wr = sex === 'male'
+        ? 'under 6.75 in / 17 cm is small, over 7.5 in / 19 cm is large'
+        : 'under 5.5 in / 14 cm is small, over 5.75 in / 14.5 cm is large';
+      frameOut.innerHTML =
+        '<div class="bf-cmp"><span class="k">Frame-adjusted target (' + frame + ' frame)</span><span class="v">' + r0(fromKg(tgtKg)) + ' ' + wUnit() + '</span></div>' +
+        '<p class="res-tip">A larger frame carries more bone and lean mass, so a target higher in the healthy range is normal. Measure your wrist: ' + wr + '.</p>';
+    } else {
+      if (frameM) frameM.style.display = 'none';
+      if (frameOut) frameOut.innerHTML = '';
+    }
+  }
+
+  var unitSeg = $('unitSeg');
+  if (unitSeg) unitSeg.addEventListener('click', function (e) {
+    var b = e.target.closest ? e.target.closest('button') : null; if (!b) return;
+    unit = b.getAttribute('data-unit'); applyUnit(); solve();
+  });
+  var sexSeg = $('sexSeg');
+  if (sexSeg) sexSeg.addEventListener('click', function (e) {
+    var b = e.target.closest ? e.target.closest('button') : null; if (!b) return;
+    sex = b.getAttribute('data-sex');
+    [].forEach.call(sexSeg.querySelectorAll('button'), function (x) { x.classList.toggle('on', x === b); });
+    solve();
+  });
+  var frameSeg = $('frameSeg');
+  if (frameSeg) frameSeg.addEventListener('click', function (e) {
+    var b = e.target.closest ? e.target.closest('button') : null; if (!b) return;
+    frame = b.getAttribute('data-frame');
+    [].forEach.call(frameSeg.querySelectorAll('button'), function (x) { x.classList.toggle('on', x === b); });
+    solve();
+  });
+
+  var advBtn = $('advBtn');
+  if (advBtn) advBtn.addEventListener('click', function () {
+    advanced = !advanced;
+    advBtn.classList.toggle('open', advanced);
+    $('advBtnLab').textContent = advanced ? 'Go simple' : 'Go advanced';
+    $('advIn').style.display = advanced ? '' : 'none';
+    solve();
+    if (advanced) { var a = $('advIn'); if (a && a.scrollIntoView) a.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+  });
+
+  [heightIn, weightIn].forEach(function (inp) { if (inp) inp.addEventListener('input', solve); });
+
+  function prefersImperial() {
+    try {
+      var tz = (Intl.DateTimeFormat().resolvedOptions().timeZone || '');
+      var us = ['America/New_York','America/Detroit','America/Kentucky/Louisville',
+        'America/Kentucky/Monticello','America/Indiana/Indianapolis','America/Indiana/Vincennes',
+        'America/Indiana/Winamac','America/Indiana/Marengo','America/Indiana/Petersburg',
+        'America/Indiana/Vevay','America/Chicago','America/Indiana/Tell_City',
+        'America/Indiana/Knox','America/Menominee','America/North_Dakota/Center',
+        'America/North_Dakota/New_Salem','America/North_Dakota/Beulah','America/Denver',
+        'America/Boise','America/Phoenix','America/Los_Angeles','America/Anchorage',
+        'America/Juneau','America/Sitka','America/Metlakatla','America/Yakutat',
+        'America/Nome','America/Adak','Pacific/Honolulu'];
+      return us.indexOf(tz) !== -1;
+    } catch (e) { return false; }
+  }
+  if (cfg.unit === 'in' || cfg.unit === 'cm') unit = cfg.unit;
+  else if (prefersImperial()) unit = 'in';
+  applyUnit();
+  solve();
+};
+
+/* -----------------------------------------------------------
    CalcThis.initAgeCalc(cfg) — chronological age.
    Independent engine. Date of birth -> exact age in
    years/months/days, a live-ticking seconds count, totals

@@ -40,6 +40,47 @@ competition is a failed build.
 
 ---
 
+## Card header — title + labelled control rows (STANDARD, v78+)
+
+The first input card's header is **always**: the `<h2>` title on its own line, then
+each toggle in its own labelled row. A unit toggle sharing a flex row with the title
+(the old `.row-top` h2 + `.seg` pattern) reads as if the units belong to the title — do
+not use it on new pages.
+
+```html
+<h2 class="card-h2">Your ideal weight</h2>
+
+<div class="ctl-row">
+  <span class="ctl-lab">Units</span>
+  <div class="seg" id="unitSeg"> … </div>
+</div>
+
+<div class="ctl-row">
+  <span class="ctl-lab">Sex</span>
+  <div class="seg" id="sexSeg"> … </div>
+</div>
+```
+
+CSS is already in `style.css` and final: `.card-h2` (Fraunces 18/600, `margin-bottom:16px`),
+`.ctl-row` (flex, space-between, `margin-bottom:16px`), `.ctl-lab` (13px/600/`--ink-soft`),
+`.ctl-row .seg{flex:none}`. Label text: **"Units"** (not "Measurement units" — too long on
+mobile), **"Sex"**, **"Mode"**, **"Shape"**, etc. — one short word.
+
+The 24 pre-v78 calculators still use `.row-top` and are being migrated to this pattern.
+
+## Sex toggle — FEMALE is the default (STANDARD)
+
+Every health calculator with a sex selection defaults to **Female** — first button in the
+`.seg`, `class="on"`, and the JS state var initialised to `'female'`. (Calorie already does
+this; BMI has no sex selection; Body Fat / TDEE / Ideal Weight follow the rule.)
+
+```html
+<div class="seg" id="sexSeg">
+  <button type="button" data-sex="female" class="on">Female</button>
+  <button type="button" data-sex="male">Male</button>
+</div>
+```
+
 ## Go Advanced Button
 
 ALWAYS use this exact pattern:

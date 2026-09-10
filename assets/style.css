@@ -63,6 +63,16 @@
   .row-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:10px}
   .row-top h2{font-family:'Fraunces',serif;font-size:18px;font-weight:600}
 
+  /* card heading + labelled control row — the standard for a calculator's
+     first-card header. The title is always its own line; each toggle
+     (Units, Sex, Mode…) sits in its own .ctl-row with a .ctl-lab on the left,
+     so a unit toggle never reads as part of the title. Replaces the old
+     .row-top h2 + toggle pattern. */
+  .card-h2{font-family:'Fraunces',serif;font-size:18px;font-weight:600;margin-bottom:16px}
+  .ctl-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+  .ctl-row .ctl-lab{font-size:13px;font-weight:600;color:var(--ink-soft)}
+  .ctl-row .seg{flex:none}
+
   label.fld{display:block;margin-bottom:15px}
   .fld .lab{display:flex;justify-content:space-between;align-items:baseline;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
   .fld .lab .unit{font-weight:500;color:var(--muted);font-size:12px}
@@ -614,6 +624,38 @@
   .p-bmi .bmi-chart-key i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px;opacity:.55}
   .p-bmi .bmi-note{margin:14px 0 4px;padding:11px 14px;background:#F6EEDF;border-left:3px solid var(--amber);border-radius:0 8px 8px 0;font-size:12.5px;line-height:1.5;color:var(--ink-soft)}
   .p-bmi .bmi-note a{color:var(--amber-deep);font-weight:600;text-decoration:underline;text-underline-offset:2px}
+
+
+  /* =========================================================
+     HEALTH · IDEAL WEIGHT  (body.p-ideal-weight) — "how much should I weigh"
+     Headline output is a weight RANGE (BMI 18.5–24.9 for the height).
+     A neutral track with a green healthy band; Robinson/Devine/Miller/
+     Hamwi plotted as ticks; advanced adds a current-weight marker and a
+     frame-adjusted target marker. Reuses .bf-res / .bf-cmp / .res-tip.
+     ========================================================= */
+  .p-ideal-weight .fld{margin-bottom:16px}
+  .p-ideal-weight .bf-res{margin:2px 0 18px}
+  .p-ideal-weight .res-big{font-size:clamp(28px,6vw,40px)}
+  .p-ideal-weight .iw-viz{margin:8px 0 16px}
+  .p-ideal-weight .iw-bar{position:relative;height:14px;border-radius:7px;background:#EFE7D8}
+  .p-ideal-weight .iw-band{position:absolute;top:0;height:100%;background:var(--spruce);border-radius:7px;opacity:.85}
+  .p-ideal-weight .iw-tick-layer{position:absolute;inset:0}
+  .p-ideal-weight .iw-tick{position:absolute;top:-4px;width:2px;height:22px;background:var(--ink);opacity:.5;transform:translateX(-50%);border-radius:1px}
+  .p-ideal-weight .iw-cur{position:absolute;top:-7px;width:3px;height:28px;background:var(--amber);transform:translateX(-50%);border-radius:2px;box-shadow:0 0 0 2px var(--card)}
+  .p-ideal-weight .iw-frame{position:absolute;top:-7px;width:3px;height:28px;background:var(--amber-deep);transform:translateX(-50%);border-radius:2px;box-shadow:0 0 0 2px var(--card)}
+  .p-ideal-weight .iw-ticks{position:relative;height:16px;margin-top:8px;font-size:12px;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums}
+  .p-ideal-weight .iw-ticks span{position:absolute;transform:translateX(-50%)}
+  .p-ideal-weight .iw-key{display:flex;flex-wrap:wrap;gap:5px 16px;margin-top:12px;font-size:12px;font-weight:500;color:var(--ink-soft)}
+  .p-ideal-weight .iw-key i{display:inline-block;margin-right:5px;vertical-align:-1px}
+  .p-ideal-weight .iw-key .k-band{width:11px;height:11px;border-radius:3px;background:var(--spruce);opacity:.85}
+  .p-ideal-weight .iw-key .k-tick{width:3px;height:12px;border-radius:1px;background:var(--ink);opacity:.5;vertical-align:-2px}
+  .p-ideal-weight .iw-sentence{font-size:14px;line-height:1.6;color:var(--ink-soft);margin:0 0 14px}
+  .p-ideal-weight .iw-sentence strong{color:var(--ink);font-weight:600}
+  .p-ideal-weight .dtable td:first-child{color:var(--ink)}
+  .p-ideal-weight #iwCurOut .bf-cmp,.p-ideal-weight #iwFrameOut .bf-cmp{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:9px 0;border-bottom:1px dashed var(--line)}
+  .p-ideal-weight #iwCurOut .bf-cmp .k,.p-ideal-weight #iwFrameOut .bf-cmp .k{font-size:13.5px;font-weight:500;color:var(--ink-soft)}
+  .p-ideal-weight #iwCurOut .bf-cmp .v,.p-ideal-weight #iwFrameOut .bf-cmp .v{font-family:'Fraunces',serif;font-size:18px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--ink);text-align:right}
+  .p-ideal-weight #iwCurOut .res-tip,.p-ideal-weight #iwFrameOut .res-tip{font-size:14px;line-height:1.55;margin-top:8px}
 
 
   /* =========================================================

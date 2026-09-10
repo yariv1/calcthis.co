@@ -33,6 +33,7 @@ const PAGES = [
   { file: 'zone-2-heart-rate-calculator/index.html', slug: '/zone-2-heart-rate-calculator/' },
   { file: 'bmi-calculator/index.html',         slug: '/bmi-calculator/' },
   { file: 'body-fat-calculator/index.html',    slug: '/body-fat-calculator/' },
+  { file: 'ideal-weight-calculator/index.html', slug: '/ideal-weight-calculator/' },
   { file: 'calorie-calculator/index.html',      slug: '/calorie-calculator/' },
   { file: 'tdee-calculator/index.html',        slug: '/tdee-calculator/' },
   { file: 'one-rep-max-calculator/index.html', slug: '/one-rep-max-calculator/' },
