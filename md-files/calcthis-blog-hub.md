@@ -33,12 +33,14 @@ No exceptions.
 | How to Calculate Your TDEE | `blog-tdee-article-card.webp` | `blog-tdee-article-header.webp` |
 | How to Calculate Your Body Fat Percentage | `blog-body-fat-article-card.webp` | `blog-body-fat-article-header.webp` |
 | What Is BMI? How to Calculate and Interpret Your Body Mass Index | `blog-bmi-article-card.webp` | `blog-bmi-article-header.webp` |
+| How Many Calories Should I Eat to Lose Weight? | `blog-calories-lose-weight-article-card.webp` | `blog-calories-lose-weight-article-header.webp` |
 
 ### In-article images
 
 | Article | In-article filenames (`assets/images/`) |
 |---|---|
 | What Is BMI? How to Calculate and Interpret Your Body Mass Index | `blog-bmi-height-weight-measurement.webp` · `blog-bmi-scale-categories.webp` |
+| How Many Calories Should I Eat to Lose Weight? | `blog-calories-lose-weight-food-scale.webp` · `blog-calories-lose-weight-meal-tracking.webp` |
 
 ### Rules
 - ❌ Never guess a filename. If it's not in this table, stop and check the actual file.
