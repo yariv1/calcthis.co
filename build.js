@@ -65,6 +65,7 @@ const PAGES = [
   { file: 'blog/how-many-calories-to-lose-weight/index.html', slug: '/blog/how-many-calories-to-lose-weight/' },
   { file: 'blog/how-to-calculate-your-exact-age/index.html', slug: '/blog/how-to-calculate-your-exact-age/' },
   { file: 'blog/how-much-should-i-weigh/index.html', slug: '/blog/how-much-should-i-weigh/' },
+  { file: 'blog/how-to-calculate-the-number-of-days-between-two-dates/index.html', slug: '/blog/how-to-calculate-the-number-of-days-between-two-dates/' },
   { file: 'about/index.html',           slug: '/about/' },
   { file: 'contact/index.html',         slug: '/contact/' },
   { file: 'privacy-policy/index.html',  slug: '/privacy-policy/' },

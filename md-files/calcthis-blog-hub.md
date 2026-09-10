@@ -50,6 +50,12 @@ left as-is; the tables below are the source of truth for those. Do not rename th
 | How to Calculate Your Exact Age | `blog-exact-age-card.webp` | `blog-exact-age-hero.webp` |
 | How Much Should I Weigh? | `blog-should-i-weigh-card.webp` | `blog-should-i-weigh-hero.webp` |
 
+### Math & Numbers
+
+| Article | Card image (`assets/images/`) | Header image (`assets/images/`) |
+|---|---|---|
+| How to Calculate the Number of Days Between Two Dates | `blog-days-between-card.webp` | `blog-days-between-hero.webp` |
+
 ### In-article images
 
 | Article | In-article filenames (`assets/images/`) |
@@ -58,6 +64,7 @@ left as-is; the tables below are the source of truth for those. Do not rename th
 | How Many Calories Should I Eat to Lose Weight? | `blog-calories-lose-weight-inArticle-1.webp` · `blog-calories-lose-weight-inArticle-2.webp` |
 | How to Calculate Your Exact Age | `blog-exact-age-inArticle-1.webp` · `blog-exact-age-inArticle-2.webp` |
 | How Much Should I Weigh? | `blog-should-i-weigh-inArticle-1.webp` · `blog-should-i-weigh-inArticle-2.webp` |
+| How to Calculate the Number of Days Between Two Dates | `blog-days-between-inArticle-1.webp` · `blog-days-between-inArticle-2.webp` |
 
 ### Rules
 - ❌ Never guess a filename. If it's not in this table, stop and check the actual file.

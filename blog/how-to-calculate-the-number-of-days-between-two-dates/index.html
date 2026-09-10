@@ -12,11 +12,11 @@
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>How to Calculate Your TDEE | CalcThis</title>
-<link rel="canonical" href="https://calcthis.co/blog/how-to-calculate-your-tdee/">
+<title>How to Calculate the Number of Days Between Two Dates | CalcThis</title>
+<link rel="canonical" href="https://calcthis.co/blog/how-to-calculate-the-number-of-days-between-two-dates/">
 <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
 <meta name="theme-color" content="#B5761F">
-<meta name="description" content="Learn how to calculate your TDEE step by step: estimate your BMR with the Mifflin-St Jeor equation, apply the right activity multiplier, and turn the number into a plan for losing, maintaining, or gaining weight.">
+<meta name="description" content="How to count the days between two dates by hand: the day-number method, the count-forward method, whether to include the end date, weeks and months, business days, and the leap-year traps that make two calculators disagree.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -24,17 +24,17 @@
 {
   "@context": "https://schema.org",
   "@type": "BlogPosting",
-  "headline": "How to Calculate Your TDEE",
-  "url": "https://calcthis.co/blog/how-to-calculate-your-tdee/",
-  "datePublished": "2026-09-06",
-  "dateModified": "2026-09-06",
+  "headline": "How to Calculate the Number of Days Between Two Dates",
+  "url": "https://calcthis.co/blog/how-to-calculate-the-number-of-days-between-two-dates/",
+  "datePublished": "2026-09-10",
+  "dateModified": "2026-09-10",
   "author": { "@type": "Organization", "name": "CalcThis", "url": "https://calcthis.co" },
   "publisher": { "@type": "Organization", "name": "CalcThis", "url": "https://calcthis.co" },
-  "description": "Learn how to calculate your TDEE step by step: estimate your BMR with the Mifflin-St Jeor equation, apply the right activity multiplier, and turn the number into a plan for losing, maintaining, or gaining weight.",
-  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://calcthis.co/blog/how-to-calculate-your-tdee/" }
+  "description": "How to count the days between two dates by hand: the day-number method, the count-forward method, whether to include the end date, weeks and months, business days, and the leap-year traps that make two calculators disagree.",
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://calcthis.co/blog/how-to-calculate-the-number-of-days-between-two-dates/" }
 }
 </script>
-<link rel="stylesheet" href="/assets/style.css?v=82?v=N">
+<link rel="stylesheet" href="/assets/style.css?v=82">
 <style>
 /* Lightbox — diagram click-to-enlarge */
 .diagram-zoomable{cursor:zoom-in;position:relative}
@@ -115,8 +115,8 @@
 
   <div class="hero" style="padding:4px 0 0">
     <div class="blog-hero-art">
-      <img src="/assets/images/blog-tdee-article-header.webp"
-           alt="Woman running on a treadmill in a bright modern gym with a calorie display visible on the console"
+      <img src="/assets/images/blog-days-between-hero.webp"
+           alt="An open three-month paper calendar on a desk with a start date and an end date circled and a ruler measuring the gap between them"
            width="1400" height="520" loading="eager">
     </div>
 
@@ -124,91 +124,116 @@
       <div class="bm-left">
         <a href="/blog/">Blog</a>
         <span class="bm-sep">·</span>
-        <span class="blog-meta-cat">Health &amp; Lifestyle</span>
+        <span class="blog-meta-cat">Math &amp; Numbers</span>
         <span class="bm-sep">·</span>
-        <span>8 min read</span>
+        <span>6 min read</span>
       </div>
-      <!-- Unit toggle: always in template, JS auto-shows only when page has .u spans, hidden otherwise -->
       <div class="seg" id="unitToggle" role="group" aria-label="Unit system" style="display:none">
         <button class="on" data-unit="imp" type="button" aria-pressed="true">Imperial</button>
         <button data-unit="met" type="button" aria-pressed="false">Metric</button>
       </div>
     </div>
 
-    <h1>How to Calculate Your TDEE</h1>
-    <p class="blog-lede">Your TDEE — Total Daily Energy Expenditure — is the number of calories your body burns in a full day. Get it right and every nutrition goal becomes simple arithmetic: eat below it to lose fat, at it to maintain, above it to gain. Here's how to work it out in two steps and turn it into a plan.</p>
+    <h1>How to Calculate the Number of Days Between Two Dates</h1>
+    <p class="blog-lede">Counting the days between two dates sounds like it should be subtraction, and across a single month it is. The moment the span crosses a month boundary — or a year, or a 29 February — you need a method that keeps track of how long each month actually is. Here are the two that work by hand, plus the choice that quietly changes the answer.</p>
   </div>
 
   <div class="blog-content">
 
-    <h2>What TDEE actually means</h2>
-    <p>TDEE is the total amount of energy, measured in calories, that your body uses over 24 hours. It bundles together everything: keeping you alive at rest, digesting your food, walking to the kitchen, and whatever training you do. It's the single most useful number in nutrition because it's the line you eat above or below to change your weight.</p>
-    <p>Every TDEE calculation is built from two pieces. First you estimate your <strong>BMR</strong> — the calories you'd burn lying in bed all day doing nothing. Then you multiply that by an <strong>activity factor</strong> that accounts for movement and exercise. That's the whole method.</p>
+    <h2>The two ways to count</h2>
+    <p>There are two honest answers to "how many days from 4 July to 25 December", and they differ by one:</p>
+    <ul>
+      <li><strong>Calendar days between</strong> — the number of nights, or full days, that separate the two dates. The start date is not counted; the end date is. This is the default almost everywhere.</li>
+      <li><strong>Days including both ends</strong> — you add one, because you're counting the first day <em>and</em> the last day. This is what you want for a stay, a rental, a trip length, or "how many days am I on site".</li>
+    </ul>
+    <p>Neither is wrong. Decide which one the question is asking before you start, because every method below gives you the "between" figure and you add one at the end if you need the inclusive count.</p>
 
     <div class="blog-stat">
       <div class="stat-block">
-        <div class="stat-num">60–70%</div>
-        <div class="stat-lbl">of TDEE is your BMR for most people</div>
+        <div class="stat-num">+1</div>
+        <div class="stat-label">the difference between "days between" and "days including both ends"</div>
       </div>
       <div class="stat-sep"></div>
       <div class="stat-block">
-        <div class="stat-num">±20%</div>
-        <div class="stat-lbl">activity can swing your total day-to-day</div>
+        <div class="stat-num">2</div>
+        <div class="stat-label">methods that work by hand — count forward, or subtract day-numbers</div>
       </div>
     </div>
 
-    <h2>Step 1 — Estimate your BMR</h2>
-    <p>The most reliable formula in everyday use is the <strong>Mifflin-St Jeor equation</strong>. It's the modern standard, more accurate for most people than the older Harris-Benedict equation. There's one version for each sex, differing only in the final constant.</p>
+    <h2>Method 1: count forward through the calendar</h2>
+    <p>Best when the two dates are close together, or in the same year. Move from the start date to the end date in chunks and add the chunks up:</p>
+    <ul>
+      <li>Days left in the <strong>start month</strong> — subtract the start day from the number of days in that month.</li>
+      <li>The full <strong>months in between</strong> — add their lengths (30, 31, 28 or 29 for February).</li>
+      <li>The <strong>day number in the end month</strong>.</li>
+    </ul>
+    <p>For 4 July to 25 December 2026: July has 31 days, so 31 − 4 = <strong>27</strong> days left in July. The full months between are August (31), September (30), October (31) and November (30) — that's <strong>122</strong>. Then <strong>25</strong> days into December. Total: 27 + 122 + 25 = <strong>174 days</strong>.</p>
+
+    <figure class="blog-figure">
+      <img src="/assets/images/blog-days-between-inArticle-1.webp"
+           alt="A hand tracing along a row of dates on a wall calendar page, counting days, with the current week bracketed in amber marker"
+           width="800" height="320" loading="lazy">
+      <figcaption>Counting forward: days left in the first month, plus whole months, plus the day-number in the last month.</figcaption>
+    </figure>
+
+    <h2>Method 2: convert each date to a day-number and subtract</h2>
+    <p>Best when the dates are far apart or in different years. Give each date its <strong>ordinal day of the year</strong> — 1 for 1 January, 32 for 1 February, and so on — then subtract.</p>
 
     <div class="formula">
-      <strong>Men:</strong> BMR = (10 × weight kg) + (6.25 × height cm) − (5 × age) + 5<br>
-      <strong>Women:</strong> BMR = (10 × weight kg) + (6.25 × height cm) − (5 × age) − 161
-      <small>Mifflin-St Jeor equation — weight in kilograms, height in centimetres, age in years</small>
+      days between = (end day-of-year − start day-of-year) + 365 &times; (full years in between)
+      <small>Add 1 for each 29 February that falls inside the span</small>
     </div>
 
-    <p>If you think in imperial units, convert first: <span class="u" data-imp="1 lb" data-met="0.45 kg">1 lb</span> is <span class="u" data-imp="0.45 kg" data-met="0.45 kg">0.45 kg</span>, and <span class="u" data-imp="1 inch" data-met="2.54 cm">1 inch</span> is <span class="u" data-imp="2.54 cm" data-met="2.54 cm">2.54 cm</span>. Height in feet and inches becomes total inches first, then centimetres.</p>
+    <p>4 July 2026 is day <strong>185</strong> of the year. 25 December 2026 is day <strong>359</strong>. Same year, so: 359 − 185 = <strong>174 days</strong> — the same answer Method 1 gave.</p>
+    <p>Across years, add 365 for each full year between the dates and then add one more day for every 29 February inside the span. From 1 March 2023 to 1 March 2025 is 365 + 366 = <strong>731 days</strong>, because 2024 was a leap year and its 29 February sits inside the range.</p>
 
-    <h2>Step 2 — Apply your activity multiplier</h2>
-    <p>BMR is only the resting figure. To reach TDEE you multiply it by a factor that reflects how much you move. Be honest here — this is where most people overestimate. "Moderately active" means genuine, structured exercise several times a week, not a busy day at the office.</p>
+    <h2>Counting in weeks, months and years instead</h2>
+    <p>Once you have the day count, <strong>weeks</strong> is just division: 174 ÷ 7 = 24 weeks with 6 days left over.</p>
+    <p><strong>Months and years</strong> are different — you can't divide, because months aren't all the same length. You count them the calendar way: whole years first, then whole months, then leftover days. 4 July to 25 December is <strong>0 years, 5 months, 21 days</strong> (July 4 → December 4 is five months; December 4 → 25 is 21 days). This is the same borrow-and-carry idea used to work out an <a href="/blog/how-to-calculate-your-exact-age/">exact age</a>.</p>
 
-    <table class="dtable">
-      <thead>
-        <tr><th>Activity level</th><th>Multiplier</th><th>Who it fits</th></tr>
-      </thead>
-      <tbody>
-        <tr><td>Sedentary</td><td>× 1.2</td><td>Desk job, little or no exercise</td></tr>
-        <tr><td>Lightly active</td><td>× 1.375</td><td>Light exercise 1–3 days/week</td></tr>
-        <tr><td>Moderately active</td><td>× 1.55</td><td>Moderate exercise 3–5 days/week</td></tr>
-        <tr><td>Very active</td><td>× 1.725</td><td>Hard exercise 6–7 days/week</td></tr>
-        <tr><td>Extra active</td><td>× 1.9</td><td>Physical job or twice-daily training</td></tr>
-      </tbody>
-    </table>
+    <h2>Business days only — excluding weekends and holidays</h2>
 
-    <div class="formula">
-      TDEE = BMR × activity multiplier
-      <small>The result is your maintenance calories — eat this to hold your current weight</small>
-    </div>
+    <figure class="blog-figure">
+      <img src="/assets/images/blog-days-between-inArticle-2.webp"
+           alt="A monthly calendar with the Saturday and Sunday columns shaded grey and two weekdays marked with an amber holiday dot, leaving the working days clear"
+           width="800" height="320" loading="lazy">
+      <figcaption>Working days = total days, minus weekends, minus any public holidays that land on a weekday.</figcaption>
+    </figure>
 
-    <h2>A worked example</h2>
-    <p>Take a 32-year-old woman, <span class="u" data-imp="5 ft 6 in" data-met="168 cm">5 ft 6 in</span> tall, weighing <span class="u" data-imp="150 lb" data-met="68 kg">150 lb</span>, who lifts weights and runs four days a week (moderately active).</p>
-    <p><strong>BMR:</strong> (10 × 68) + (6.25 × 168) − (5 × 32) − 161 = 680 + 1,050 − 160 − 161 = <strong>1,409 calories</strong>.</p>
-    <p><strong>TDEE:</strong> 1,409 × 1.55 = <strong>≈ 2,184 calories</strong>. That's roughly what she burns in a full day, and the number she eats to maintain her weight.</p>
+    <p>For contracts, notice periods and "net 30" invoice terms, what's often meant is <strong>working days</strong>. The shortcut: every 7-day block contains exactly 5 weekdays. So for a span of <strong>N</strong> days, start with <strong>5 &times; (N ÷ 7)</strong>, then add the leftover weekdays from the partial week, and finally subtract any <strong>public holidays that fall on a weekday</strong> inside the range.</p>
+    <p>174 days is 24 whole weeks (120 working days) plus 6 leftover days. Depending on which weekday the span starts on, those 6 add 4 or 5 more working days — so roughly 124-125 before holidays. Independence Day 2026 falls on a Saturday and Christmas Day on a Friday, so only Christmas comes out of the count here. Hand estimates get fiddly fast, which is what the calculator's business-day mode is for.</p>
 
-    <h2>Turning TDEE into a goal</h2>
-    <p>Once you have your maintenance number, adjusting your weight is straightforward. A pound of body fat is about 3,500 calories, so a daily deficit of 500 calories predicts roughly <span class="u" data-imp="1 lb" data-met="0.45 kg">1 lb</span> of fat loss per week. The same logic runs in reverse for gaining.</p>
-
+    <h2>Leap years, and why two calculators disagree by a day</h2>
+    <p>A year is a leap year if it divides by 4 — unless it's a century year, which must divide by 400. 2000 was a leap year; 1900 and 2100 are not. Any span that steps over a 29 February is one day longer than the same span in a common year, and forgetting that is the single most common hand-count error.</p>
+    <p>When two tools disagree by a day for the same two dates, it's almost always one of these:</p>
     <ul class="blog-checklist">
-      <li><strong>Lose fat.</strong> Subtract 10–20% from your TDEE. A moderate deficit protects muscle and is easier to sustain than a crash diet.</li>
-      <li><strong>Maintain.</strong> Eat at your TDEE. Weight holding steady over 2–3 weeks confirms your estimate is accurate.</li>
-      <li><strong>Gain muscle.</strong> Add 5–15% above your TDEE. A small surplus paired with resistance training favours lean mass over fat.</li>
-      <li><strong>Recheck monthly.</strong> As your weight changes, so does your BMR. Recalculate every few weeks to keep the target honest.</li>
+      <li><strong>End date included or not.</strong> One tool counts the last day, the other doesn't. This is the "+1" from the top of the article.</li>
+      <li><strong>A missed leap day.</strong> One handled 29 February inside the range and the other didn't.</li>
+      <li><strong>Time zones.</strong> One is using local time and the other UTC, which can shift a date across midnight.</li>
+      <li><strong>Month-length in the borrow.</strong> For the years-months-days breakdown, tools sometimes borrow a different month's length and land a day apart.</li>
     </ul>
 
-    <a class="calc-cta" href="/tdee-calculator/">
+    <h2>A worked example, start to finish</h2>
+    <p>Question: <strong>how many days from 4 July 2026 to 25 December 2026, and how many working days?</strong></p>
+    <table class="dtable">
+      <thead><tr><th>Step</th><th>Working</th><th>Result</th></tr></thead>
+      <tbody>
+        <tr><td>Days left in July</td><td>31 − 4</td><td>27</td></tr>
+        <tr><td>Whole months between</td><td>31 + 30 + 31 + 30</td><td>122</td></tr>
+        <tr><td>Days into December</td><td>—</td><td>25</td></tr>
+        <tr><td>Calendar days between</td><td>27 + 122 + 25</td><td>174</td></tr>
+        <tr><td>Including both ends</td><td>174 + 1</td><td>175</td></tr>
+        <tr><td>In weeks</td><td>174 ÷ 7</td><td>24 weeks, 6 days</td></tr>
+        <tr><td>In months</td><td>calendar count</td><td>5 months, 21 days</td></tr>
+      </tbody>
+    </table>
+    <p>The <a href="/date-calculator/">date calculator</a> returns all of these at once, marks the span on a timeline, and gives the business-day figure with or without US federal holidays.</p>
+
+    <a class="calc-cta" href="/date-calculator/">
       <div class="calc-cta-text">
         <div class="calc-cta-label">Free Tool</div>
-        <div class="calc-cta-title">TDEE Calculator</div>
-        <div class="calc-cta-sub">Enter your age, height, weight, and activity level to get your BMR, maintenance calories, and target numbers for cutting, maintaining, or bulking — instantly.</div>
+        <div class="calc-cta-title">Date Calculator</div>
+        <div class="calc-cta-sub">Enter two dates for the exact gap in days, weeks, months and years — plus the weekday of each date, a business-days count, and a live span timeline. Or switch to add and subtract days from a date.</div>
       </div>
       <span class="calc-cta-btn">
         Calculate now
@@ -216,36 +241,38 @@
       </span>
     </a>
 
-    <h2>Why your TDEE is an estimate, not a law</h2>
-    <p>Every equation produces a prediction, not a guarantee. Two people with identical stats can differ by a few hundred calories a day thanks to genetics, muscle mass, hormones, and how much they fidget. The formula gets you a strong starting point; your own results over a few weeks are the real calibration. If the scale isn't moving the way the math predicts, adjust your intake by 100–200 calories and give it another two weeks.</p>
-
     <h2>Frequently asked questions</h2>
 
     <details class="faq">
-      <summary>Is TDEE the same as maintenance calories?</summary>
-      <p>Yes. Your TDEE is the number of calories that keeps your weight stable, which is exactly what "maintenance calories" means. Eat above it to gain, below it to lose.</p>
+      <summary>How do I calculate the number of days between two dates?</summary>
+      <p>Either count forward — days left in the start month, plus the whole months between, plus the day-number in the end month — or give each date its day-of-year number and subtract, adding 365 for each full year between and one more day for each 29 February in the span.</p>
     </details>
 
     <details class="faq">
-      <summary>How is TDEE different from BMR?</summary>
-      <p>BMR is only what your body burns at complete rest. TDEE is BMR plus all the energy you spend moving, exercising, and digesting food. TDEE is always the larger number.</p>
+      <summary>Should I count both the start and end date?</summary>
+      <p>By default, no — the standard "days between" figure counts the nights, so the start date is excluded and the end date included. Add one day when you need both the first and last day counted, such as the length of a trip or a rental period.</p>
     </details>
 
     <details class="faq">
-      <summary>Should I eat back the calories I burn during exercise?</summary>
-      <p>Not if you used an activity multiplier to calculate your TDEE — that exercise is already baked into the number. Eating it back a second time double-counts it and can stall fat loss.</p>
+      <summary>How many days are there between two dates in different years?</summary>
+      <p>Take the end date's day-of-year minus the start date's day-of-year, then add 365 for every full year between them. Add one extra day for each 29 February that falls inside the range.</p>
     </details>
 
     <details class="faq">
-      <summary>How often should I recalculate?</summary>
-      <p>Every time your weight shifts by about <span class="u" data-imp="10 lb" data-met="4.5 kg">10 lb</span>, or roughly once a month during an active cut or bulk. A lighter body burns fewer calories, so an old TDEE slowly becomes wrong.</p>
+      <summary>How do I count only the working days between two dates?</summary>
+      <p>Multiply the whole number of weeks in the span by 5, add the leftover weekdays from the partial week, then subtract any public holidays that land on a weekday inside the range. A calculator with a business-day mode does the weekday and holiday bookkeeping for you.</p>
+    </details>
+
+    <details class="faq">
+      <summary>Why do two date calculators give me different answers?</summary>
+      <p>Usually one includes the end date and the other doesn't, one missed a leap day, or they're using different time zones. For the years-months-days breakdown, they can also borrow a different month's length and land a day apart.</p>
     </details>
 
     <div class="blog-pills">
-      <a class="pill" href="/tdee-calculator/">TDEE Calculator</a>
-      <a class="pill" href="/macro-calculator/">Macro Calculator</a>
-      <a class="pill" href="/blog/how-to-calculate-your-macros/">How to Calculate Your Macros</a>
-      <a class="pill" href="/body-fat-calculator/">Body Fat Calculator</a>
+      <a class="pill" href="/date-calculator/">Date Calculator</a>
+      <a class="pill" href="/age-calculator/">Age Calculator</a>
+      <a class="pill" href="/percentage-calculator/">Percentage Calculator</a>
+      <a class="pill" href="/blog/how-to-calculate-your-exact-age/">How to Calculate Your Exact Age</a>
     </div>
 
   </div><!-- /blog-content -->
@@ -337,7 +364,7 @@
 
 </div><!-- /wrap -->
 
-<script src="/assets/app.js?v=82?v=N"></script>
+<script src="/assets/app.js?v=82"></script>
 <script src="/feedback.js" defer></script>
 <script>
 /* Lightbox — runs on any .diagram-zoomable */
