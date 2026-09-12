@@ -56,6 +56,12 @@ left as-is; the tables below are the source of truth for those. Do not rename th
 |---|---|---|
 | How to Calculate the Number of Days Between Two Dates | `blog-days-between-card.webp` | `blog-days-between-hero.webp` |
 
+### Construction & Gardening — v87+
+
+| Article | Card image (`assets/images/`) | Header image (`assets/images/`) |
+|---|---|---|
+| How to Add and Subtract Fractions on a Tape Measure | `blog-tape-fractions-card.webp` | `blog-tape-fractions-hero.webp` |
+
 ### In-article images
 
 | Article | In-article filenames (`assets/images/`) |
@@ -65,6 +71,7 @@ left as-is; the tables below are the source of truth for those. Do not rename th
 | How to Calculate Your Exact Age | `blog-exact-age-inArticle-1.webp` · `blog-exact-age-inArticle-2.webp` |
 | How Much Should I Weigh? | `blog-should-i-weigh-inArticle-1.webp` · `blog-should-i-weigh-inArticle-2.webp` |
 | How to Calculate the Number of Days Between Two Dates | `blog-days-between-inArticle-1.webp` · `blog-days-between-inArticle-2.webp` |
+| How to Add and Subtract Fractions on a Tape Measure | `blog-tape-fractions-inArticle-1.webp` · `blog-tape-fractions-inArticle-2.webp` |
 
 ### Rules
 - ❌ Never guess a filename. If it's not in this table, stop and check the actual file.

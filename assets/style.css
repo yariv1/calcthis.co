@@ -1357,3 +1357,35 @@
   /* advanced-mode explanatory line (pay tip) — same treatment as .p-age #advOut .res-tip */
   .p-timecalc #tcPayTip{font-size:16px;line-height:1.55;color:rgb(181,118,31)}
   .p-timecalc #tcPayTip strong{color:rgb(181,118,31);font-weight:700}
+
+
+  /* =========================================================
+     CONSTRUCTION · TAPE MEASURE FRACTION CALCULATOR  (body.p-fraction)
+     Reuses .card-h2/.ctl-row, .three/.tcol (numerator/denominator),
+     .seg, .dc-bar-wrap, the running-tally .arow pattern (from Time
+     Calculator), .advbtn, .dtable. Adds a tape-measure ruler with a
+     live marker at the nearest-1/16 tick.
+     ========================================================= */
+  .p-fraction .fld{margin-bottom:16px}
+  .p-fraction .bf-res{margin:2px 0 14px}
+  .p-fraction .res-big{font-size:clamp(30px,6vw,42px)}
+  .p-fraction .dc-cap{font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin:16px 0 8px}
+  .p-fraction .dc-bar-wrap{margin:6px 0 4px}
+  .p-fraction .dc-bar-wrap svg{display:block;width:100%;max-width:440px;height:auto;overflow:visible}
+  .p-fraction .dtable td,.p-fraction .dtable th{font-size:14.5px}
+  .p-fraction .dtable td:first-child{color:var(--ink)}
+  .p-fraction .dtable td:last-child{font-variant-numeric:tabular-nums}
+  .p-fraction .tally-head{margin:18px 0 10px}
+  .p-fraction .arow{display:grid;grid-template-columns:1fr auto 26px;gap:10px;align-items:center;padding:9px 2px;border-bottom:1px solid var(--line);font-size:14px}
+  .p-fraction .arow:last-child{border-bottom:none}
+  .p-fraction .arow .desc{color:var(--ink-soft);font-variant-numeric:tabular-nums}
+  .p-fraction .arow .desc b{color:var(--ink);font-weight:600}
+  .p-fraction .arow .run{font-weight:600;font-variant-numeric:tabular-nums;color:var(--ink);text-align:right;white-space:nowrap}
+  .p-fraction .arow .x{background:none;border:0;color:var(--muted);cursor:pointer;font-size:16px;line-height:1;padding:2px 4px;border-radius:5px}
+  .p-fraction .arow .x:hover{color:#b23;background:#f7e9e9}
+  .p-fraction #frAdvOut .res-tip{font-size:16px;line-height:1.55;color:rgb(181,118,31)}
+  .p-fraction #frAdvOut .res-tip strong{color:rgb(181,118,31);font-weight:700}
+  .p-fraction #frMarksWrap{margin-top:10px}
+  .p-fraction .three .tcol{width:86px}
+  .p-fraction .three .tcol .sel select{padding:11px 26px 11px 10px}
+  .p-fraction .three .tcol .sel::after{right:9px}

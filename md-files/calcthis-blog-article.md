@@ -12,9 +12,16 @@ If ANY value is unknown — an image filename, a CSS value, a file structure, an
 
 ---
 
-## ⛔ IMAGE PROMPTS — ALWAYS FIRST — BEFORE ANY HTML IS WRITTEN
+## ⛔ IMAGE PROMPTS — WRITE THE ARTICLE, THEN (OR ALONGSIDE) GIVE IMAGE PROMPTS
 
-When the user says "give me image prompts" or when a new article is being built, **this is always the first step** — before writing a single line of HTML. No exceptions.
+**Workflow order (locked — do not deviate session to session):**
+1. Write the article HTML.
+2. Give the image prompts — either in parallel with step 1 or immediately after. Never later than this.
+3. Give clickable localhost preview links for the article + blog hub (see Step 6 below — never sent files, never screenshots).
+4. Apply any corrections the user asks for.
+5. Deploy only after the user explicitly approves.
+
+This replaced an earlier "images always first" rule — don't revert to that.
 
 ⛔ **Deliver ALL prompts in ONE message** — card, then hero, then each in-article, in that
 order, in a single reply. Do NOT drip them one per turn or wait for the user between prompts,
@@ -160,7 +167,70 @@ Run the preview builder script for:
 
 Run sanity checks on both.
 
+### Step 5.5 — MANDATORY automated gate before any preview link is sent
+
+⛔ **Do not invent a policy for how the toggle should behave. Copy the working example.**
+This rule previously said some article "types" should get no toggle at all (procedural /
+method content like fraction arithmetic). That was itself wrong and caused a three-round
+failure: a toggle was skipped, then partially added (only headline numbers wrapped, leaving
+procedural prose in inches), before anyone checked how an existing live article actually does
+it. **`blog/how-much-topsoil-do-i-need/index.html` is the canonical reference** — open it and
+copy its technique exactly, every time, no exceptions and no new interpretations:
+
+- Wrap **every single measurement mention** in `.u`, including ones inside a sentence that's
+  demonstrating a calculation (topsoil wraps `30 × 20 × 0.33 ÷ 27 = 7.3 cubic yards` as ONE
+  span with a fully separate metric-equivalent equation as `data-met`, not word-by-word).
+- When a sentence or step can't be converted number-by-number without breaking the arithmetic
+  (a formula, a multi-step borrow/carry, a full worked paragraph), wrap the **whole clause**
+  as one `.u` span with a completely rewritten, self-consistent alternate version in `data-met`
+  — never leave the untranslatable part as bare imperial text next to converted numbers.
+  - Watch the `data-met` text itself for stray leftover imperial words (e.g. writing "1 foot"
+    or "12 inches" inside what's supposed to be the all-metric string) — this happened and
+    slipped through because the wrapping was checked structurally but not read as prose.
+  - The only untouched exceptions in a real article: `<h2>` headings (never toggled anywhere
+    on the site), image `alt` text, and text that literally describes the imperial tool's real
+    inputs (e.g. a calculator CTA blurb naming "feet, inches and fractions" because that's
+    what the linked calculator actually takes).
+- There is no "this article's topic doesn't support metric" carve-out. If the article has a
+  toggle, it converts completely — full stop.
+
+This is a hard gate, not a mental checklist item — run it as an actual command, every article,
+no exceptions:
+
+```bash
+grep -c 'class="u"' blog/SLUG/index.html
+```
+
+- Count must be **greater than 0** whenever the article has measurements — every value
+  anywhere in the article body must appear inside a `.u` span, read back through the WHOLE
+  article text, not just the section you last edited.
+- Then open the preview in the Browser tool, click "Metric" for real (`javascript_exec` a
+  `.click()` on the button is fine, or use `computer`), and run this exact check against the
+  live DOM — not a visual glance, not "does the button render":
+
+  ```js
+  document.body.innerText.match(/\b\w*inch\w*\b|\bfoot\b|\bfeet\b/gi)
+  ```
+
+  Every match it returns must be manually justified as one of the three allowed exceptions
+  above (heading, alt text, calculator-input description) — anything else is a bug, go fix it
+  and re-run the check. This exact failure mode (a rendered, working toggle sitting next to
+  body text that still silently showed inches) is what triggered this rule — checking the
+  button exists is not the same as checking the content converted.
+- Only after this gate passes does Step 6 (send the clickable links) happen.
+
 ### Step 6 — Present previews for approval
+
+⛔ **Always as clickable localhost links, never as sent/attached files, never as screenshots.**
+Serve the two preview files on a local static server (start one on a free port if the
+`calcthis-static` port is already in use by another session) and give plain markdown links
+the user can click straight into their own Chrome, e.g.:
+- `http://localhost:PORT/preview-SLUG.html`
+- `http://localhost:PORT/preview-hub.html`
+
+Do not use SendUserFile for these. Do not screenshot the Browser pane and paste that instead —
+the user opens the real link in their own browser. This is the same for every future article,
+not a one-off — don't revert to a different presentation method next session.
 
 ### Step 7 — After approval
 - Run `node build.js` — verify all pages ✓

@@ -1,5 +1,20 @@
 # CalcThis — Project Context
 
+## ⛔ HARD RULE — NEVER INVENT. FOLLOW THE EXISTING WORKFLOW 100%.
+
+Never invent a new approach, exception, or interpretation for anything this project already
+has an established, working pattern for — component behavior, workflow steps, content rules,
+anything. If a skill file in `md-files/` documents how something works, or a live page already
+does it, that is the only source of truth. Copy it exactly. Do not improvise a variation, do
+not carve out a special case, do not decide a rule doesn't apply to the current situation —
+even with good intentions, even to "fix" something.
+
+If something is genuinely unclear or missing from the skill files, **stop and ask** rather than
+guessing. Guessing at how an existing pattern should behave is what causes work to be redone
+from scratch — this happened concretely with the unit-toggle rule in
+`md-files/calcthis-blog-article.md` (three rounds of invented, wrong behavior before anyone
+checked the working reference article that already solved it).
+
 > **Self-maintenance rule:** At the end of every session, update this file:
 > - Bump asset version
 > - Add any new articles/calculators to the live lists
@@ -10,13 +25,13 @@
 
 ## Project state
 
-- **Asset version:** v85
-- **Total pages:** 50
+- **Asset version:** v87
+- **Total pages:** 55
 - **Model:** Opus 4.6
 
 ---
 
-## Live blog articles (16)
+## Live blog articles (17)
 
 - How Much Gravel Do I Need for a Driveway?
 - How Much Mulch Do I Need?
@@ -34,13 +49,14 @@
 - How to Calculate Your Exact Age
 - How Much Should I Weigh?
 - How to Calculate the Number of Days Between Two Dates
+- How to Add and Subtract Fractions on a Tape Measure
 
 ---
 
-## Live calculators (30)
+## Live calculators (32)
 
-### Construction & Gardening (8)
-Board Foot · Gravel · Sand · Topsoil · Mulch · Concrete · Flooring · Tile
+### Construction & Gardening (9)
+Board Foot · Gravel · Sand · Topsoil · Mulch · Concrete · Flooring · Tile · Tape Measure Fraction
 
 ### Health & Fitness (14)
 Pace · Race Time Predictor · Heart Rate Zone · Zone 2 Heart Rate · BMI · Body Fat · Ideal Weight · Calorie · TDEE · One Rep Max · Sleep · Water Intake · Macro · Peptide Reconstitution

@@ -3975,6 +3975,197 @@ CalcThis.initTimeCalc = function (cfg) {
   solve();
 };
 
+/* -----------------------------------------------------------
+   CalcThis.initFractionCalc(cfg) — tape measure fraction calculator.
+   Independent engine. Add/subtract feet-inches-fraction entries
+   into a running total (tally pattern), rounded to a chosen
+   precision (1/8, 1/16, 1/32, 1/64), with a live ruler showing
+   the nearest-1/16 tick. Advanced = multiply the total or split
+   it into N equal parts with a marks list. Live, no button. */
+CalcThis.initFractionCalc = function (cfg) {
+  cfg = cfg || {};
+  var $ = function (id) { return document.getElementById(id); };
+  var op = 'add', scaleOp = 'mul', advanced = false;
+  var list = [];
+
+  var feetIn = $('frFeet'), inchIn = $('frInch'), numIn = $('frNum'), denSel = $('frDen'), precSel = $('frPrec');
+  if (!feetIn) return;
+
+  function num(v) { var n = parseFloat(('' + v).trim()); return isNaN(n) || n < 0 ? 0 : n; }
+  function gcd(a, b) { return b ? gcd(b, a % b) : a; }
+  function simplify(n, d) { if (n === 0) return { n: 0, d: 1 }; var g = gcd(n, d); return { n: n / g, d: d / g }; }
+
+  function readEntry() {
+    var f = num(feetIn.value), i = num(inchIn.value);
+    var n = num(numIn.value), d = parseInt(denSel.value, 10) || 16;
+    var frac = d > 0 ? n / d : 0;
+    return f * 12 + i + frac;
+  }
+
+  // total signed inches -> "7' 5-3/8"" at the chosen precision
+  function fmtLen(totalInches) {
+    var precDen = parseInt(precSel.value, 10) || 16;
+    var sign = totalInches < 0 ? '−' : '';
+    var abs = Math.abs(totalInches);
+    var steps = Math.round(abs * precDen);
+    var wholeInches = Math.floor(steps / precDen);
+    var remNum = steps - wholeInches * precDen;
+    var feet = Math.floor(wholeInches / 12), inch = wholeInches % 12;
+    var s = simplify(remNum, precDen);
+    var fracStr = s.n ? (s.n + '/' + s.d) : '';
+    var out = '';
+    if (feet) out += feet + "' ";
+    out += inch + (fracStr ? '-' + fracStr : '') + '"';
+    return sign + out;
+  }
+
+  function totalInches() { return list.reduce(function (t, e) { return t + (e.sign * e.inches); }, 0); }
+
+  // ---- ruler: nearest-1/16 tick + exact-precision label ----
+  function renderRuler(t) {
+    var svg = $('frRuler'); if (!svg) return;
+    var precDen = parseInt(precSel.value, 10) || 16;
+    var abs = Math.abs(t);
+    var steps = Math.round(abs * precDen);
+    var wholeInches = Math.floor(steps / precDen);
+    var remNum = steps - wholeInches * precDen;
+    var inchOnly = wholeInches % 12;
+    var s = simplify(remNum, precDen);
+    var pos16 = Math.round((s.n / s.d) * 16);
+    var x0 = 14, x1 = 306, y = 40, h = 14, W = x1 - x0;
+    var g = '<rect x="' + x0 + '" y="' + y + '" width="' + W + '" height="' + h + '" rx="4" fill="#EDF2ED"/>';
+    for (var i = 0; i <= 16; i++) {
+      var x = x0 + (i / 16) * W;
+      var major = i === 0 || i === 16, quarter = i % 4 === 0, eighth = i % 2 === 0;
+      var th = major ? 18 : quarter ? 13 : eighth ? 10 : 7;
+      var sw = major ? 1.8 : quarter ? 1.3 : 1;
+      g += '<line x1="' + x + '" y1="' + (y + h / 2 - th / 2) + '" x2="' + x + '" y2="' + (y + h / 2 + th / 2) + '" stroke="#8A7A66" stroke-width="' + sw + '" opacity="' + (major ? 1 : .6) + '"/>';
+    }
+    var mx = x0 + (pos16 / 16) * W;
+    g += '<line x1="' + mx + '" y1="' + (y - 10) + '" x2="' + mx + '" y2="' + (y + h + 6) + '" stroke="#B5761F" stroke-width="2"/>';
+    g += '<circle cx="' + mx + '" cy="' + (y - 10) + '" r="3.5" fill="#B5761F"/>';
+    g += '<text x="' + x0 + '" y="' + (y + h + 20) + '" font-family="Inter,sans-serif" font-size="12" fill="#8A7A66">' + inchOnly + '"</text>';
+    g += '<text x="' + x1 + '" y="' + (y + h + 20) + '" text-anchor="end" font-family="Inter,sans-serif" font-size="12" fill="#8A7A66">' + (inchOnly + 1) + '"</text>';
+    var labelText = (t < 0 ? '−' : '') + inchOnly + (s.n ? '-' + s.n + '/' + s.d : '') + '"';
+    g += '<text x="' + mx + '" y="' + (y - 16) + '" text-anchor="middle" font-family="Inter,sans-serif" font-size="13" font-weight="700" fill="#241A11">' + labelText + '</text>';
+    svg.innerHTML = g;
+  }
+
+  function renderList() {
+    var wrap = $('frRows'), empty = $('frEmpty');
+    if (!list.length) { empty.style.display = ''; wrap.innerHTML = ''; }
+    else {
+      empty.style.display = 'none';
+      var running = 0;
+      wrap.innerHTML = list.map(function (e, i) {
+        running += e.sign * e.inches;
+        var sign = e.sign > 0 ? '+' : '−';
+        return '<div class="arow"><span class="desc"><b>' + sign + ' ' + fmtLen(e.inches) + '</b></span>' +
+          '<span class="run">' + fmtLen(running) + '</span>' +
+          '<button class="x" data-i="' + i + '" type="button" aria-label="Remove">&times;</button></div>';
+      }).join('');
+    }
+  }
+
+  function solve() {
+    var big = $('frResBig'), sub = $('frResSub');
+    if (!list.length) {
+      big.textContent = '—';
+      sub.textContent = 'Add a measurement to start a running total.';
+      $('frDetail').style.display = 'none';
+    } else {
+      var t = totalInches();
+      big.textContent = fmtLen(t);
+      var dec = (Math.round(t * 1000) / 1000);
+      sub.textContent = dec.toFixed(3).replace(/\.?0+$/, '') + '" decimal  ·  ' + (Math.round(t * 25.4 * 10) / 10) + ' mm';
+      $('frDetail').style.display = '';
+      renderRuler(t);
+      renderList();
+      var mm = t * 25.4;
+      $('frTotals').innerHTML =
+        '<thead><tr><th>In total</th><th></th></tr></thead><tbody>' +
+        '<tr><td>Feet, inches, fraction</td><td>' + fmtLen(t) + '</td></tr>' +
+        '<tr><td>Decimal inches</td><td>' + dec.toFixed(3).replace(/\.?0+$/, '') + '"</td></tr>' +
+        '<tr><td>Decimal feet</td><td>' + (Math.round((t / 12) * 1000) / 1000).toFixed(3).replace(/\.?0+$/, '') + " ft</td></tr>" +
+        '<tr><td>Millimetres</td><td>' + (Math.round(mm * 10) / 10) + ' mm</td></tr>' +
+        '<tr><td>Centimetres</td><td>' + (Math.round(mm / 10 * 100) / 100) + ' cm</td></tr>' +
+        '</tbody>';
+    }
+    solveScale();
+  }
+
+  function solveScale() {
+    var out = $('frScaleOut'), wrap = $('frMarksWrap');
+    if (!advanced) return;
+    var t = totalInches();
+    var n = parseFloat(($('frScaleN').value || '').trim());
+    if (!list.length || !t || isNaN(n) || n <= 0) {
+      out.textContent = !list.length ? 'Add a measurement to the list first.' : 'Enter a number.';
+      wrap.style.display = 'none';
+      return;
+    }
+    if (scaleOp === 'mul') {
+      out.innerHTML = '<strong>' + fmtLen(t) + ' × ' + n + ' = ' + fmtLen(t * n) + '</strong>';
+      wrap.style.display = 'none';
+    } else {
+      var parts = Math.max(1, Math.round(n));
+      var per = t / parts;
+      out.innerHTML = '<strong>' + fmtLen(t) + ' ÷ ' + parts + ' = ' + fmtLen(per) + ' each</strong>';
+      var rows = '';
+      for (var i = 1; i < parts; i++) rows += '<tr><td>Mark ' + i + '</td><td>' + fmtLen(per * i) + '</td></tr>';
+      if (rows) {
+        $('frMarksTable').innerHTML = '<thead><tr><th>From one end</th><th></th></tr></thead><tbody>' + rows + '</tbody>';
+        wrap.style.display = '';
+      } else wrap.style.display = 'none';
+    }
+  }
+
+  $('frOpSeg').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b || b.dataset.op === op) return;
+    op = b.dataset.op;
+    [].forEach.call(this.children, function (c) { c.classList.toggle('on', c === b); });
+  });
+
+  $('frAddBtn').addEventListener('click', function () {
+    var inches = readEntry();
+    if (!inches) return;
+    list.push({ sign: op === 'sub' ? -1 : 1, inches: inches });
+    feetIn.value = ''; inchIn.value = ''; numIn.value = '';
+    solve();
+  });
+  $('frClearBtn').addEventListener('click', function () { list = []; solve(); });
+  $('frRows').addEventListener('click', function (e) {
+    var b = e.target.closest('.x'); if (!b) return;
+    list.splice(+b.dataset.i, 1);
+    solve();
+  });
+
+  precSel.addEventListener('change', solve);
+
+  $('frScaleSeg').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b || b.dataset.sc === scaleOp) return;
+    scaleOp = b.dataset.sc;
+    [].forEach.call(this.children, function (c) { c.classList.toggle('on', c === b); });
+    $('frScaleLab').textContent = scaleOp === 'mul' ? 'Multiply by' : 'Number of equal parts';
+    $('frScaleN').placeholder = scaleOp === 'mul' ? 'e.g. 3' : 'e.g. 4';
+    solveScale();
+  });
+  $('frScaleN').addEventListener('input', solveScale);
+
+  var advBtn = $('frAdvBtn');
+  advBtn.addEventListener('click', function () {
+    advanced = !advanced;
+    advBtn.classList.toggle('open', advanced);
+    $('frAdvBtnLab').textContent = advanced ? 'Go simple' : 'Go advanced';
+    $('frAdvIn').style.display = advanced ? '' : 'none';
+    $('frAdvOut').style.display = advanced ? '' : 'none';
+    solveScale();
+    if (advanced) { var el = $('frAdvIn'); if (el && el.scrollIntoView) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+  });
+
+  solve();
+};
+
 /* =========================================================
    SITE FOOTER — mobile accordion
    Multiple pillars can be open simultaneously.
