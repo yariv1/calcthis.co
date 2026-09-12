@@ -31,6 +31,7 @@ Pregnancy + Ovulation immediately **after** AdSense approval.
 | 7 | **Time Calculator** | Elapsed time / free time card / weekly hours (Ahrefs Easy-KD terms) — rounds out Date/Time cluster. Differentiator = a live visual per mode (24h timeline / running tally / week-at-a-glance bar chart) vs. every competitor's bare table. | Date/Time | Medium | ✅ Shipped v85 |
 | 8 | **Pregnancy / Due Date Calculator** | Very high, ~3M/mo — top-5 on every competitor, recurring weekly visits, reuses datepicker. Opens a new vertical. Build **after AdSense approval**. | Pregnancy | Medium | ⬜ |
 | 9 | **Ovulation / Fertility Calculator** | ~3M/mo — same audience + component as Due Date, completes the Pregnancy cluster. | Pregnancy | Medium | ⬜ |
+| 10 | **Tape Measure Fraction Calculator** | ~18,000/mo — winnable reframe of the unwinnable generic "fraction calculator". | Construction & Gardening | Medium | ✅ Shipped v87–v88 |
 
 ### Companion articles to build alongside
 - Ideal Weight → "What's My Ideal Weight? Height, Frame, and the Formulas"
@@ -40,9 +41,9 @@ Pregnancy + Ovulation immediately **after** AdSense approval.
 
 ---
 
-## Already Live (31 calculators)
+## Already Live (32 calculators)
 
-### Construction & Gardening (8)
+### Construction & Gardening (9)
 - ✅ Board Foot
 - ✅ Gravel
 - ✅ Sand
@@ -51,6 +52,7 @@ Pregnancy + Ovulation immediately **after** AdSense approval.
 - ✅ Concrete
 - ✅ Flooring
 - ✅ Tile
+- ✅ Tape Measure Fraction
 
 ### Health & Fitness (14)
 - ✅ BMI
@@ -86,11 +88,11 @@ Pregnancy + Ovulation immediately **after** AdSense approval.
 ## Candidates under research (post-Time-Calculator) — NotebookLM pass, 2026-09-12
 
 Volume/KD are NotebookLM estimates, not Ahrefs-verified — spot-check in Ahrefs before
-committing a full build, same as every other roadmap entry.
+committing a full build, same as every other roadmap entry. Tape Measure Fraction Calculator
+(was in this list) shipped v87–v88 — moved to Next Builds #10 above.
 
 | Calculator | Keyword | Est. volume | Difficulty | Cluster | Differentiator |
 |---|---|---|---|---|---|
-| **Tape Measure Fraction Calculator** | `tape measure fraction calculator` | ~18,000/mo | Low–Medium (generic "fraction calculator" is unwinnable at 500k/mo — this is the winnable reframe of it) | Construction & Gardening | Live digital tape-measure ruler (1/16"/1/32") with an animated marker showing the exact tick as fractions are added/subtracted |
 | **VO2 Max Calculator** | `vo2 max calculator` | 40,000–90,000/mo (protocol long-tails 2,400–8,000/mo, lower difficulty) | Moderate (low on protocol-specific long-tails) | Health & Fitness | Aerobic-fitness gauge (age/sex percentile) + race-time predictor bar (5K/10K/half/marathon) |
 | **Steps-to-Miles / Calories Burned Walking** | `steps to miles calculator` | ~22,000–45,000/mo | Low–Medium | Health & Fitness | Distance-milestone progress bar (real-world landmark comparisons) + incline/speed calorie-burn curve |
 | **ABSI (A Body Shape Index) Calculator** | `absi calculator` | ~4,800/mo | Extremely low (~8 exact-match competitors) | Health & Fitness (Weight cluster) | BMI-vs-ABSI visceral-risk 2D body-contour comparison |
@@ -100,9 +102,8 @@ committing a full build, same as every other roadmap entry.
 Benjamin Moore, big construction-affiliate sites); generic Tip / Discount / Unit Converter
 (owned by calculator.net, Omnicalculator, Google's own inline results).
 
-Not yet decided which ships next — weigh cluster fit (Tape Measure Fraction completes a
-measurement-math gap in Construction; VO2 Max/ABSI/RFM extend Health & Fitness) against
-volume vs. difficulty above.
+Not yet decided which ships next — weigh cluster fit (VO2 Max/Steps-to-Miles/ABSI/RFM all
+extend Health & Fitness) against volume vs. difficulty above.
 
 ## Parked Ideas (not prioritized yet)
 
