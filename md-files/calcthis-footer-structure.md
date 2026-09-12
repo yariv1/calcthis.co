@@ -86,6 +86,7 @@ The literal space between the two spans keeps correct spacing when inline on mob
           <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
           <li><a href="/age-calculator/">Age Calculator</a></li>
           <li><a href="/date-calculator/">Date Calculator</a></li>
+          <li><a href="/time-calculator/">Time Calculator</a></li>
         </ul>
       </div>
     </div>

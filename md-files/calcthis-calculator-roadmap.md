@@ -28,9 +28,9 @@ Pregnancy + Ovulation immediately **after** AdSense approval.
 | 4 | Ideal Weight Calculator | Solid, ~3M/mo — completes the Weight cluster. | Weight | Simple | ✅ Shipped v78 |
 | 5 | **Date Calculator** | High — days between / add-subtract dates, low competition, reuses datepicker, completes Date/Time cluster with Age. | Date/Time | Simple | ✅ Shipped v81 |
 | 6 | **Water Intake Calculator** | ~3M/mo, simple — easy Health win. 33 ml/kg + activity/climate/pregnancy; differentiator = stacked contribution bar + morning/afternoon/evening glass illustration. | Health | Simple | ✅ Shipped v83 |
-| 7 | **Pregnancy / Due Date Calculator** | Very high, ~3M/mo — top-5 on every competitor, recurring weekly visits, reuses datepicker. Opens a new vertical. Build **after AdSense approval**. | Pregnancy | Medium | ⬜ |
-| 8 | **Ovulation / Fertility Calculator** | ~3M/mo — same audience + component as Due Date, completes the Pregnancy cluster. | Pregnancy | Medium | ⬜ |
-| 9 | Time Calculator | Medium, utility — rounds out Date/Time | Date/Time | Simple | ⬜ |
+| 7 | **Time Calculator** | Elapsed time / free time card / weekly hours (Ahrefs Easy-KD terms) — rounds out Date/Time cluster. Differentiator = a live visual per mode (24h timeline / running tally / week-at-a-glance bar chart) vs. every competitor's bare table. | Date/Time | Medium | ✅ Shipped v85 |
+| 8 | **Pregnancy / Due Date Calculator** | Very high, ~3M/mo — top-5 on every competitor, recurring weekly visits, reuses datepicker. Opens a new vertical. Build **after AdSense approval**. | Pregnancy | Medium | ⬜ |
+| 9 | **Ovulation / Fertility Calculator** | ~3M/mo — same audience + component as Due Date, completes the Pregnancy cluster. | Pregnancy | Medium | ⬜ |
 
 ### Companion articles to build alongside
 - Ideal Weight → "What's My Ideal Weight? Height, Frame, and the Formulas"
@@ -40,7 +40,7 @@ Pregnancy + Ovulation immediately **after** AdSense approval.
 
 ---
 
-## Already Live (30 calculators)
+## Already Live (31 calculators)
 
 ### Construction & Gardening (8)
 - ✅ Board Foot
@@ -74,11 +74,12 @@ Pregnancy + Ovulation immediately **after** AdSense approval.
 - ✅ Grade
 - ✅ Test Score
 
-### Math & Numbers (4)
+### Math & Numbers (5)
 - ✅ Ratio
 - ✅ Percentage
 - ✅ Age
 - ✅ Date
+- ✅ Time
 
 ---
 

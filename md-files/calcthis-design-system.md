@@ -88,6 +88,17 @@ on load.
 </div>
 ```
 
+## Clock-time field (masked h:mm digit input + AM/PM toggle)
+
+No native `<input type="time">` — it hides the AM/PM control behind a click zone
+users don't discover, and the native picker UI is jumpy/inconsistent across browsers.
+Every clock-time field reuses the Sleep calculator's masked digit input instead:
+`.time-field` > `.time-box` (`.time-ghost` + `.time-digits`) + `.ap-seg` (full-size,
+2–3 buttons, for 1–2 fields per screen) or `.ap-mini` (compact 2-button toggle, for
+dense repeated rows — introduced on the Time Calculator's time-card day rows). See
+`CalcThis.initSleepCalc` / `initTimeCalc` in app.js for the `splitDigits` /
+`refreshGhost` / masked-input wiring — reuse that logic, don't reimplement it.
+
 ## Go Advanced Button
 
 ALWAYS use this exact pattern:

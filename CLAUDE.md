@@ -10,8 +10,8 @@
 
 ## Project state
 
-- **Asset version:** v83
-- **Total pages:** 49
+- **Asset version:** v85
+- **Total pages:** 50
 - **Model:** Opus 4.6
 
 ---
@@ -48,14 +48,48 @@ Pace · Race Time Predictor · Heart Rate Zone · Zone 2 Heart Rate · BMI · Bo
 ### School & Grades (4)
 Final Grade · GPA · Grade · Test Score
 
-### Math & Numbers (4)
-Ratio · Percentage · Age · Date
+### Math & Numbers (5)
+Ratio · Percentage · Age · Date · Time
 
-Total live calculators: **30**
+Total live calculators: **31**
 
 ---
 
-## Last session (v81–v83)
+## Last session (v84–v85)
+
+- v84–v85: Built + deployed **Time Calculator** (`/time-calculator/`) — roadmap #9,
+  completes the Date/Time cluster (Age + Date + Time). `CalcThis.initTimeCalc` in app.js,
+  `.p-timecalc` in style.css. Three modes via `.modeseg`: **Elapsed time** (start/end
+  clock time → duration, rolls to next day if end ≤ start, advanced = extra full days),
+  **Add / subtract** (h:m:s entries + Add/Subtract direction → a running tally list with
+  a live running total, reusing the `.trow`-style tally pattern), **Time card** (Mon–Sun
+  clock-in/out + break minutes → daily + weekly hours, advanced = hourly rate → weekly pay).
+  Targets the three Easy-KD terms from Ahrefs research (elapsed time calculator / free
+  time card calculator / weekly-total hours calculator), skipping the Hard head terms.
+  **Differentiator (Rule 8, verified against live competitor pages via WebFetch —
+  Omnicalculator elapsed-time and timecardcalculator.net are both text/table-only):**
+  every mode shows a live visual instead of a bare table — a 24-hour timeline bar
+  (elapsed), a running tally list (add/subtract), and a week-at-a-glance daily-hours bar
+  chart with days over 8h flagged in amber (time card).
+  **Clock-time input:** no vendored time-picker exists alongside the datepicker, so all
+  clock-time fields (elapsed start/end, 14× time-card in/out) reuse the Sleep calculator's
+  masked h:mm digit input (`.time-box`/`.time-ghost`/`.time-digits`) + a visible AM/PM
+  toggle — full-size `.ap-seg` for elapsed (2 fields), a new compact `.ap-mini` 2-button
+  toggle for time-card's dense per-day rows (new pattern, not yet in design-system.md).
+  Iterated twice on user feedback: replaced native `<input type="time">` (confusing hidden
+  AM/PM click zones, jumpy native picker) with the above; fixed time-card responsive layout
+  (mobile: In/Out stay on one line via `grid-template-areas`, Break wraps below full-width;
+  desktop: single "Clock in / Clock out / Break" header row replaces a per-row Break label
+  so every row cell is the same height and aligns on one line — `.tc-head`); tuned mobile
+  day-label-to-value gap and `#tcPayTip` advanced-note styling (16px, `rgb(181,118,31)`,
+  matching the `.p-age #advOut .res-tip` treatment). WebApplication + FAQPage JSON-LD,
+  `.related-calcs` (Date / Age / Percentage). Wired into nav, footer, homepage (card +
+  hasPart + prose count → 31), build.js, sitemap.xml.
+  **Also fixed:** `partials/header.html` + `partials/footer.html` were missing the Water
+  Intake Calculator link since v83 (never added to the shared partials, only would have
+  applied per-page) — added it in the same build.js run so it's now site-wide.
+
+## Earlier (v81–v83)
 
 - v83: Built + deployed **Water Intake Calculator** (`/water-intake-calculator/`) — roadmap #8.
   `CalcThis.initWaterCalc` in app.js, `.p-water` in style.css. Baseline **33 ml/kg/day**
@@ -198,7 +232,7 @@ Total live calculators: **30**
 
 Strategy = **cluster completion** (see `md-files/calcthis-calculator-roadmap.md`). Skip
 finance + basic/scientific calc (unwinnable). Pregnancy/Ovulation are YMYL — build **after
-AdSense approval**; Date was the next non-blocked build and is now shipped.
+AdSense approval**. Date/Time cluster (Age + Date + Time) is now complete.
 
 1. ~~BMI Calculator~~ — ✅ shipped v68–v69
 2. ~~Age Calculator~~ — ✅ shipped v70
@@ -206,9 +240,9 @@ AdSense approval**; Date was the next non-blocked build and is now shipped.
 4. ~~Ideal Weight Calculator~~ — ✅ shipped v78
 5. ~~Date Calculator~~ — ✅ shipped v81 (companion article pending)
 6. ~~Water Intake Calculator~~ — ✅ shipped v83
-7. **Pregnancy / Due Date Calculator** — big new vertical, after AdSense approval (reuse date picker)
-8. **Ovulation / Fertility Calculator** — completes the Pregnancy cluster
-9. Time Calculator — rounds out the Date/Time cluster
+7. ~~Time Calculator~~ — ✅ shipped v85 (completes Date/Time cluster)
+8. **Pregnancy / Due Date Calculator** — big new vertical, after AdSense approval (reuse date picker)
+9. **Ovulation / Fertility Calculator** — completes the Pregnancy cluster
 
 ---
 
