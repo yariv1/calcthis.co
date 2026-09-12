@@ -48,6 +48,7 @@ const PAGES = [
   { file: 'percentage-calculator/index.html', slug: '/percentage-calculator/' },
   { file: 'age-calculator/index.html',         slug: '/age-calculator/' },
   { file: 'date-calculator/index.html',        slug: '/date-calculator/' },
+  { file: 'time-calculator/index.html',        slug: '/time-calculator/' },
   { file: 'macro-calculator/index.html',      slug: '/macro-calculator/' },
   { file: 'peptide-reconstitution-calculator/index.html', slug: '/peptide-reconstitution-calculator/' },
   { file: 'blog/index.html',            slug: '/blog/' },

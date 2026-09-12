@@ -7,6 +7,7 @@ Read and apply at the start of every CalcThis session, no exceptions.
 ## Behavior
 
 * NO narration when coding. Silent execution. Text ONLY for a question or decision needing input.
+* NO narrations or descriptions when writing code or "thinking" — do not describe every move. All of it happens in the background. Write ONLY if there is a question or something to clear up.
 * Concise, short, tight bullets. Copy-paste-ready commands.
 * CONFIRM before adding anything not explicitly asked.
 * Own mistakes plainly. No deflection.

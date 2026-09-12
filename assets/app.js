@@ -3652,6 +3652,329 @@ CalcThis.initWaterCalc = function (cfg) {
   solve();
 };
 
+/* -----------------------------------------------------------
+   CalcThis.initTimeCalc(cfg) — time calculator.
+   Independent engine. Three modes:
+     elapsed  — duration between a start and end clock time,
+                rolling to the next day if end <= start (+ extra
+                full days in advanced). Live 24h timeline bar.
+     addsub   — add/subtract h:m:s entries into a running list
+                with a live running total (tally pattern).
+     timecard — Mon-Sun clock in/out + break minutes -> daily
+                and weekly hours (+ decimal), a week-at-a-glance
+                bar chart, and optional hourly pay.
+   Clock-time fields reuse the Sleep calculator's masked h:mm
+   digit input (stable, no native picker jumpiness) + a visible
+   AM/PM toggle instead of a hidden native time control.
+   Live, no button. */
+CalcThis.initTimeCalc = function (cfg) {
+  cfg = cfg || {};
+  var $ = function (id) { return document.getElementById(id); };
+  var mode = 'elapsed', op = 'add', elAdvanced = false, tcAdvanced = false;
+  var DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  var asList = [];
+
+  if (!$('elStart')) return;
+
+  function num(v) { var n = parseInt(('' + v).trim(), 10); return isNaN(n) || n < 0 ? 0 : n; }
+  function fnum(v) { var n = parseFloat(('' + v).trim()); return isNaN(n) || n < 0 ? NaN : n; }
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function hm(mins) { var h = Math.floor(mins / 60), m = Math.round(mins % 60); return h + ' hr' + (m ? ' ' + m + ' min' : ''); }
+  function dec(mins) { return (Math.round((mins / 60) * 100) / 100).toFixed(2).replace(/\.00$/, ''); }
+
+  // ---- masked h:mm digit field + AM/PM toggle (shared by every clock-time input) ----
+  function splitDigits(raw) {
+    var d = ('' + raw).replace(/\D/g, '').slice(0, 4);
+    if (!d) return { empty: true };
+    if (d[0] > '1') return { hDig: '0' + d[0], mDig: d.slice(1, 3), hourDone: true };
+    if (d.length === 1) return { hDig: d, mDig: '', hourDone: false };
+    return { hDig: d.slice(0, 2), mDig: d.slice(2, 4), hourDone: true };
+  }
+  function refreshGhost(input, ghost) {
+    var s = splitDigits(input.value);
+    var val = s.empty ? '' : (s.hourDone ? s.hDig + ':' + s.mDig : s.hDig);
+    if (val !== input.value) input.value = val;
+    var hc = s.empty ? '' : s.hDig, mc = s.empty ? '' : s.mDig;
+    var cells = [hc[0], hc[1], ':', mc[0], mc[1]], html = '';
+    for (var i = 0; i < 5; i++) {
+      if (i === 2) html += '<span class="g-sep">:</span>';
+      else if (cells[i] != null) html += '<span class="g-on">' + cells[i] + '</span>';
+      else html += '<span class="g-off">-</span>';
+    }
+    ghost.innerHTML = html;
+  }
+  function parseField(input, ap) {
+    var s = splitDigits(input.value);
+    if (s.empty) return null;
+    var h = +s.hDig;
+    var md = s.mDig, m = md.length === 0 ? 0 : (md.length === 1 ? (+md) * 10 : +md);
+    if (m > 59 || h < 1 || h > 12) return null;
+    var base = h % 12; if (ap === 'pm') base += 12;
+    return base * 60 + m;
+  }
+  // wires one masked input + its ghost + its AM/PM seg; returns {minutes()}
+  function makeTimeField(inputId, ghostId, apSegId) {
+    var input = $(inputId), ghost = $(ghostId), apSeg = $(apSegId);
+    var ap = apSeg.querySelector('button.on').dataset.ap;
+    apSeg.addEventListener('click', function (e) {
+      var b = e.target.closest('button'); if (!b || b.dataset.ap === ap) return;
+      ap = b.dataset.ap;
+      [].forEach.call(apSeg.children, function (c) { c.classList.toggle('on', c === b); });
+      solve();
+    });
+    input.addEventListener('input', function () { refreshGhost(input, ghost); solve(); });
+    refreshGhost(input, ghost);
+    return { minutes: function () { return parseField(input, ap); } };
+  }
+
+  function setLabels() {
+    $('elapsedIn').style.display = mode === 'elapsed' ? '' : 'none';
+    $('addsubIn').style.display = mode === 'addsub' ? '' : 'none';
+    $('timecardIn').style.display = mode === 'timecard' ? '' : 'none';
+    $('elDetail').style.display = mode === 'elapsed' ? '' : 'none';
+    $('asDetail').style.display = mode === 'addsub' ? '' : 'none';
+    $('tcDetail').style.display = mode === 'timecard' ? '' : 'none';
+    $('tcResLab').textContent = mode === 'elapsed' ? 'Elapsed time' : mode === 'addsub' ? 'Running total' : 'This week';
+  }
+
+  // ---- 24h timeline bar (elapsed mode) ----
+  function renderElBar(startMin, endMin, extraDays) {
+    var svg = $('elBar'); if (!svg) return;
+    var x0 = 14, x1 = 306, y = 46, h = 12, W = x1 - x0;
+    function sx(m) { return x0 + Math.max(0, Math.min(1, (m % 1440) / 1440)) * W; }
+    var g = '<rect x="' + x0 + '" y="' + y + '" width="' + W + '" height="' + h + '" rx="6" fill="#EDF2ED"/>';
+    var wrapped = endMin < startMin;
+    if (!wrapped && extraDays === 0) {
+      g += '<rect x="' + sx(startMin) + '" y="' + y + '" width="' + Math.max(1, sx(endMin) - sx(startMin)) + '" height="' + h + '" rx="6" fill="#B5761F"/>';
+    } else {
+      g += '<rect x="' + sx(startMin) + '" y="' + y + '" width="' + Math.max(1, x1 - sx(startMin)) + '" height="' + h + '" fill="#B5761F"/>';
+      g += '<rect x="' + x0 + '" y="' + y + '" width="' + Math.max(1, sx(endMin) - x0) + '" height="' + h + '" fill="#B5761F"/>';
+    }
+    // hour ticks every 6h
+    [0, 360, 720, 1080, 1440].forEach(function (m) {
+      var mx = sx(m === 1440 ? 0 : m);
+      if (m === 0 || m === 1440) mx = m === 0 ? x0 : x1;
+      g += '<line x1="' + mx + '" y1="' + (y - 3) + '" x2="' + mx + '" y2="' + (y + h + 3) + '" stroke="#8A7A66" stroke-width="1" opacity=".4"/>';
+    });
+    var labs = ['12am', '6am', '12pm', '6pm', '12am'];
+    [x0, x0 + W * 0.25, x0 + W * 0.5, x0 + W * 0.75, x1].forEach(function (px, i) {
+      var anchor = i === 0 ? 'start' : (i === 4 ? 'end' : 'middle');
+      g += '<text x="' + px + '" y="' + (y + h + 20) + '" text-anchor="' + anchor + '" font-family="Inter,sans-serif" font-size="11" fill="#8A7A66">' + labs[i] + '</text>';
+    });
+    g += '<text x="' + ((x0 + x1) / 2) + '" y="26" text-anchor="middle" font-family="Inter,sans-serif" font-size="13" font-weight="700" fill="#241A11">' +
+      (wrapped ? 'crosses midnight' : (extraDays > 0 ? '+' + extraDays + ' extra day' + (extraDays === 1 ? '' : 's') : 'same day')) + '</text>';
+    svg.innerHTML = g;
+  }
+
+  function solveElapsed() {
+    var big = $('tcResBig'), unit = $('tcResUnit'), sub = $('tcResSub');
+    var sMin = elStartField.minutes(), eMin = elEndField.minutes();
+    if (sMin === null || eMin === null) {
+      big.textContent = '—'; unit.textContent = '';
+      sub.textContent = 'Pick a start and end time.';
+      $('elDetail').style.display = 'none';
+      return;
+    }
+    var extra = elAdvanced ? num(elExtraDays.value) : 0;
+    var totalMin = eMin - sMin;
+    if (totalMin < 0) totalMin += 1440;
+    totalMin += extra * 1440;
+    big.textContent = hm(totalMin).split(' hr')[0];
+    unit.textContent = 'hr' + (totalMin % 60 ? ' ' + Math.round(totalMin % 60) + ' min' : '');
+    sub.textContent = '= ' + Math.round(totalMin).toLocaleString() + ' minutes  ·  ' + dec(totalMin) + ' decimal hours';
+    $('elDetail').style.display = '';
+    renderElBar(sMin, eMin, extra);
+    $('elTotals').innerHTML =
+      '<thead><tr><th>In total</th><th></th></tr></thead><tbody>' +
+      '<tr><td>Hours &amp; minutes</td><td>' + hm(totalMin) + '</td></tr>' +
+      '<tr><td>Total minutes</td><td>' + Math.round(totalMin).toLocaleString() + '</td></tr>' +
+      '<tr><td>Total seconds</td><td>' + (Math.round(totalMin) * 60).toLocaleString() + '</td></tr>' +
+      '<tr><td>Decimal hours</td><td>' + dec(totalMin) + '</td></tr>' +
+      '</tbody>';
+  }
+
+  // ---- add/subtract running tally ----
+  function renderAsList() {
+    var wrap = $('asRows'), empty = $('asEmpty');
+    if (!asList.length) { empty.style.display = ''; wrap.innerHTML = ''; }
+    else {
+      empty.style.display = 'none';
+      var running = 0;
+      wrap.innerHTML = asList.map(function (e, i) {
+        running += e.sign * e.mins;
+        var sign = e.sign > 0 ? '+' : '−';
+        return '<div class="arow"><span class="desc"><b>' + sign + ' ' + hm(e.mins) + '</b></span>' +
+          '<span class="run">' + (running < 0 ? '−' : '') + hm(Math.abs(running)) + '</span>' +
+          '<button class="x" data-i="' + i + '" type="button" aria-label="Remove">&times;</button></div>';
+      }).join('');
+    }
+    var total = asList.reduce(function (t, e) { return t + e.sign * e.mins; }, 0);
+    var big = $('tcResBig'), unit = $('tcResUnit'), sub = $('tcResSub');
+    if (!asList.length) {
+      big.textContent = '—'; unit.textContent = '';
+      sub.textContent = 'Add a time to start a running total.';
+    } else {
+      var neg = total < 0;
+      big.textContent = (neg ? '−' : '') + hm(Math.abs(total)).split(' hr')[0];
+      unit.textContent = 'hr' + (Math.abs(total) % 60 ? ' ' + Math.round(Math.abs(total) % 60) + ' min' : '');
+      sub.textContent = '= ' + (neg ? '−' : '') + dec(Math.abs(total)) + ' decimal hours  ·  ' + asList.length + (asList.length === 1 ? ' entry' : ' entries');
+    }
+  }
+
+  // ---- time card ----
+  function miniTf(idBase, defAp) {
+    return '<div class="tf">' +
+      '<div class="time-box">' +
+      '<div class="time-ghost" id="' + idBase + 'Ghost" aria-hidden="true"><span class="g-off">-</span><span class="g-off">-</span><span class="g-sep">:</span><span class="g-off">-</span><span class="g-off">-</span></div>' +
+      '<input id="' + idBase + '" class="time-digits" type="text" inputmode="numeric" autocomplete="off" maxlength="5" aria-label="' + idBase + '">' +
+      '</div>' +
+      '<div class="ap-mini" id="' + idBase + 'Ap">' +
+      '<button type="button" data-ap="am"' + (defAp === 'am' ? ' class="on"' : '') + '>AM</button>' +
+      '<button type="button" data-ap="pm"' + (defAp === 'pm' ? ' class="on"' : '') + '>PM</button>' +
+      '</div></div>';
+  }
+  var tcInField = [], tcOutField = [];
+  function buildTcRows() {
+    var wrap = $('tcRows'); if (!wrap) return;
+    wrap.innerHTML = DAYS.map(function (d, i) {
+      return '<div class="tc-day">' +
+        '<div class="tc-dlab">' + d + '</div>' +
+        '<div class="tc-in">' + miniTf('tcIn' + i, 'am') + '</div>' +
+        '<div class="tc-out">' + miniTf('tcOut' + i, 'pm') + '</div>' +
+        '<label class="fld tc-brk" for="tcBrk' + i + '"><span class="lab">Break</span><div class="inp"><input id="tcBrk' + i + '" type="text" inputmode="numeric" placeholder="0"><span class="suf">min</span></div></label>' +
+        '</div>';
+    }).join('');
+    tcInField = []; tcOutField = [];
+    DAYS.forEach(function (d, i) {
+      tcInField.push(makeTimeField('tcIn' + i, 'tcIn' + i + 'Ghost', 'tcIn' + i + 'Ap'));
+      tcOutField.push(makeTimeField('tcOut' + i, 'tcOut' + i + 'Ghost', 'tcOut' + i + 'Ap'));
+    });
+    [].slice.call(wrap.querySelectorAll('#tcRows > .tc-day input[id^="tcBrk"]')).forEach(function (el) {
+      el.addEventListener('input', solve);
+    });
+  }
+
+  function dayMinutes(i) {
+    var inMin = tcInField[i].minutes(), outMin = tcOutField[i].minutes();
+    if (inMin === null || outMin === null) return 0;
+    var brk = num($('tcBrk' + i).value);
+    var m = outMin - inMin;
+    if (m < 0) m += 1440;
+    m -= brk;
+    return Math.max(0, m);
+  }
+
+  function renderTcChart(mins) {
+    var svg = $('tcChart'); if (!svg) return;
+    var x0 = 20, x1 = 306, top = 10, base = 108, bw = (x1 - x0) / 7;
+    var maxH = Math.max(8 * 60, Math.max.apply(null, mins)) * 1.15 || 480;
+    var g = '<line x1="' + x0 + '" y1="' + base + '" x2="' + x1 + '" y2="' + base + '" stroke="#E7DECF" stroke-width="1"/>';
+    DAYS.forEach(function (d, i) {
+      var m = mins[i];
+      var bh = (m / maxH) * (base - top);
+      var bx = x0 + i * bw + bw * 0.18, bwid = bw * 0.64;
+      var fill = m > 480 ? '#B5761F' : '#37503F';
+      g += '<rect x="' + bx + '" y="' + (base - bh) + '" width="' + bwid + '" height="' + Math.max(0, bh) + '" rx="3" fill="' + fill + '"/>';
+      if (m > 0) g += '<text x="' + (bx + bwid / 2) + '" y="' + (base - bh - 6) + '" text-anchor="middle" font-family="Inter,sans-serif" font-size="10.5" font-weight="700" fill="#241A11">' + dec(m) + '</text>';
+      g += '<text x="' + (bx + bwid / 2) + '" y="' + (base + 18) + '" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#8A7A66">' + d + '</text>';
+    });
+    svg.innerHTML = g;
+  }
+
+  function solveTimecard() {
+    var mins = DAYS.map(function (_, i) { return dayMinutes(i); });
+    var total = mins.reduce(function (a, b) { return a + b; }, 0);
+    var worked = mins.filter(function (m) { return m > 0; }).length;
+    var big = $('tcResBig'), unit = $('tcResUnit'), sub = $('tcResSub');
+    if (total === 0) {
+      big.textContent = '—'; unit.textContent = '';
+      sub.textContent = 'Enter clock-in and clock-out times for each day worked.';
+    } else {
+      big.textContent = dec(total);
+      unit.textContent = 'hours this week';
+      sub.textContent = '= ' + hm(total) + '  ·  across ' + worked + (worked === 1 ? ' day' : ' days') + ' worked';
+    }
+    renderTcChart(mins);
+    var rows = DAYS.map(function (d, i) {
+      return '<tr><td>' + d + '</td><td>' + (mins[i] > 0 ? hm(mins[i]) + ' &middot; ' + dec(mins[i]) : '&mdash;') + '</td></tr>';
+    }).join('');
+    $('tcTable').innerHTML = '<thead><tr><th>Day</th><th>Hours</th></tr></thead><tbody>' + rows +
+      '<tr class="cur"><td>Week total</td><td>' + hm(total) + ' &middot; ' + dec(total) + '</td></tr></tbody>';
+
+    var payTip = $('tcPayTip');
+    var rate = tcAdvanced ? fnum($('tcRate').value) : NaN;
+    if (isFinite(rate) && rate > 0 && total > 0) {
+      payTip.style.display = '';
+      payTip.innerHTML = '<strong>' + dec(total) + ' hours &times; $' + rate.toFixed(2) + '/hr = $' + ((total / 60) * rate).toFixed(2) + '</strong> for the week (no overtime multiplier applied).';
+    } else {
+      payTip.style.display = 'none';
+    }
+  }
+
+  function solve() {
+    if (mode === 'elapsed') solveElapsed();
+    else if (mode === 'addsub') renderAsList();
+    else solveTimecard();
+  }
+
+  $('modeSeg').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b || b.dataset.mode === mode) return;
+    mode = b.dataset.mode;
+    [].forEach.call(this.children, function (c) { c.classList.toggle('on', c === b); });
+    this.querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-selected', String(x === b)); });
+    setLabels(); solve();
+  });
+
+  $('opSeg').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b || b.dataset.op === op) return;
+    op = b.dataset.op;
+    [].forEach.call(this.children, function (c) { c.classList.toggle('on', c === b); });
+  });
+
+  var elStartField = makeTimeField('elStart', 'elStartGhost', 'elStartAp');
+  var elEndField = makeTimeField('elEnd', 'elEndGhost', 'elEndAp');
+  var elExtraDays = $('elExtraDays');
+  if (elExtraDays) elExtraDays.addEventListener('input', solve);
+
+  var elAdvBtn = $('elAdvBtn');
+  elAdvBtn.addEventListener('click', function () {
+    elAdvanced = !elAdvanced;
+    elAdvBtn.classList.toggle('open', elAdvanced);
+    $('elAdvBtnLab').textContent = elAdvanced ? 'Go simple' : 'Go advanced';
+    $('elAdvIn').style.display = elAdvanced ? '' : 'none';
+    solve();
+  });
+
+  $('asAddBtn').addEventListener('click', function () {
+    var h = num($('asH').value), m = num($('asM').value), s = num($('asS').value);
+    var mins = h * 60 + m + s / 60;
+    if (mins <= 0) return;
+    asList.push({ sign: op === 'sub' ? -1 : 1, mins: mins });
+    $('asH').value = ''; $('asM').value = ''; $('asS').value = '';
+    renderAsList();
+  });
+  $('asClearBtn').addEventListener('click', function () { asList = []; renderAsList(); });
+  $('asRows').addEventListener('click', function (e) {
+    var b = e.target.closest('.x'); if (!b) return;
+    asList.splice(+b.dataset.i, 1);
+    renderAsList();
+  });
+
+  var tcAdvBtn = $('tcAdvBtn');
+  tcAdvBtn.addEventListener('click', function () {
+    tcAdvanced = !tcAdvanced;
+    tcAdvBtn.classList.toggle('open', tcAdvanced);
+    $('tcAdvBtnLab').textContent = tcAdvanced ? 'Go simple' : 'Go advanced';
+    $('tcAdvIn').style.display = tcAdvanced ? '' : 'none';
+    solve();
+  });
+  var tcRate = $('tcRate'); if (tcRate) tcRate.addEventListener('input', solve);
+
+  buildTcRows();
+  setLabels();
+  solve();
+};
+
 /* =========================================================
    SITE FOOTER — mobile accordion
    Multiple pillars can be open simultaneously.

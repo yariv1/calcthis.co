@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Time Calculator — Elapsed Time, Add/Subtract &amp; Time Card | CalcThis</title>
+<meta name="description" content="Free time calculator. Find the elapsed time between two clock times, add or subtract hours minutes and seconds with a running total, or total your work hours with a time card — clock in/out, breaks, overtime and weekly pay. Instant, no sign-up.">
+<link rel="canonical" href="https://calcthis.co/time-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Time Calculator — Elapsed Time, Add/Subtract &amp; Time Card">
+<meta property="og:description" content="Elapsed time between two clock times, add or subtract durations with a running total, or a full time card with breaks and weekly pay. Instant, no sign-up.">
+<meta property="og:url" content="https://calcthis.co/time-calculator/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<meta name="theme-color" content="#B5761F">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css?v=85">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Time Calculator",
+  "url": "https://calcthis.co/time-calculator/",
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Calculate the elapsed time between two clock times, add or subtract hours, minutes and seconds with a running total, or fill out a weekly time card with clock in/out times, unpaid breaks and an hourly rate to get total hours and pay."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "How do I calculate elapsed time between two clock times?", "acceptedAnswer": { "@type": "Answer", "text": "Enter a start time and an end time in Elapsed time mode. If the end time is earlier than the start time the calculator assumes it falls the next day and adds 24 hours automatically. Tap Go advanced to add extra full days for spans longer than a day." } },
+    { "@type": "Question", "name": "How do I add or subtract times?", "acceptedAnswer": { "@type": "Answer", "text": "Switch to Add / subtract mode, enter hours, minutes and seconds, choose Add or Subtract, and tap Add to list. Each entry joins a running list with a live running total, so you can keep stacking times instead of doing one calculation at a time." } },
+    { "@type": "Question", "name": "How does the time card calculator work?", "acceptedAnswer": { "@type": "Answer", "text": "In Time card mode, enter a clock-in time, clock-out time and unpaid break minutes for each day you worked. The calculator totals each day's hours and adds them into a weekly total, shown both as hours and minutes and as decimal hours for payroll." } },
+    { "@type": "Question", "name": "How do I convert time to decimal hours for payroll?", "acceptedAnswer": { "@type": "Answer", "text": "Any duration is shown in decimal hours automatically — for example 7 hours 30 minutes is 7.5 decimal hours. In Time card mode the weekly total is also shown in decimal hours so it can be entered directly into a payroll or invoicing system." } },
+    { "@type": "Question", "name": "Does the time card calculator handle overtime?", "acceptedAnswer": { "@type": "Answer", "text": "The week-at-a-glance chart flags any day over 8 hours so long days stand out at a glance. Tap Go advanced and enter an hourly rate to see total pay at that rate for the hours entered; the calculator does not apply a separate overtime multiplier, since overtime rules vary by employer and jurisdiction." } }
+  ]
+}
+</script>
+</head>
+<body class="p-timecalc">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <a class="hdr-back" href="/blog/" aria-label="Back to blog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <span class="menu-col-head">Construction</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
+          <a href="/bmi-calculator/">BMI</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/ideal-weight-calculator/">Ideal Weight</a>
+          <a href="/calorie-calculator/">Calorie</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/water-intake-calculator/">Water Intake</a>
+          <a href="/macro-calculator/">Macro</a>
+          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+          <a href="/age-calculator/">Age</a>
+          <a href="/date-calculator/">Date</a>
+          <a href="/time-calculator/" class="current">Time</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">Dates &amp; time, done instantly</div>
+    <h1>Time Calculator</h1>
+    <p>Find the <strong>elapsed time</strong> between two clock times, <strong>add or subtract</strong> hours, minutes and seconds with a running total, or fill out a <strong>time card</strong> to total your work hours and pay. Every mode shows the numbers as a <strong>live visual</strong>, not just a table.</p>
+  </section>
+
+  <div class="grid">
+    <div class="card">
+      <div class="card-pad">
+        <h2 class="card-h2">Time calculator</h2>
+
+        <div class="modeseg" id="modeSeg" role="tablist">
+          <button type="button" class="on" data-mode="elapsed" role="tab" aria-selected="true">Elapsed time</button>
+          <button type="button" data-mode="addsub" role="tab" aria-selected="false">Add / subtract</button>
+          <button type="button" data-mode="timecard" role="tab" aria-selected="false">Time card</button>
+        </div>
+
+        <div id="elapsedIn">
+          <label class="fld" for="elStart">
+            <span class="lab">Start time</span>
+            <div class="time-field">
+              <div class="time-box">
+                <div class="time-ghost" id="elStartGhost" aria-hidden="true"><span class="g-off">-</span><span class="g-off">-</span><span class="g-sep">:</span><span class="g-off">-</span><span class="g-off">-</span></div>
+                <input id="elStart" class="time-digits" type="text" inputmode="numeric" autocomplete="off" maxlength="5" aria-label="Start time" value="9:00">
+              </div>
+              <div class="seg ap-seg" id="elStartAp">
+                <button type="button" data-ap="am" class="on">AM</button>
+                <button type="button" data-ap="pm">PM</button>
+              </div>
+            </div>
+          </label>
+          <label class="fld" for="elEnd">
+            <span class="lab">End time</span>
+            <div class="time-field">
+              <div class="time-box">
+                <div class="time-ghost" id="elEndGhost" aria-hidden="true"><span class="g-off">-</span><span class="g-off">-</span><span class="g-sep">:</span><span class="g-off">-</span><span class="g-off">-</span></div>
+                <input id="elEnd" class="time-digits" type="text" inputmode="numeric" autocomplete="off" maxlength="5" aria-label="End time" value="5:30">
+              </div>
+              <div class="seg ap-seg" id="elEndAp">
+                <button type="button" data-ap="am">AM</button>
+                <button type="button" data-ap="pm" class="on">PM</button>
+              </div>
+            </div>
+          </label>
+
+          <div class="fld" id="elAdvIn" style="display:none">
+            <label class="fld" for="elExtraDays">
+              <span class="lab">Extra full days <span class="unit">for spans longer than a day</span></span>
+              <div class="inp"><input id="elExtraDays" type="text" inputmode="numeric" placeholder="0"></div>
+            </label>
+          </div>
+
+          <div class="add-row split" id="elAdvRow" style="margin-top:6px">
+            <span></span>
+            <button class="advbtn" id="elAdvBtn" type="button">
+              <span id="elAdvBtnLab">Go advanced</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div id="addsubIn" style="display:none">
+          <div class="three">
+            <div class="tcol"><div class="inp"><input id="asH" type="number" inputmode="numeric" placeholder="0" min="0"></div><div class="csub">Hours</div></div>
+            <div class="tsep">:</div>
+            <div class="tcol"><div class="inp"><input id="asM" type="number" inputmode="numeric" placeholder="0" min="0"></div><div class="csub">Minutes</div></div>
+            <div class="tsep">:</div>
+            <div class="tcol"><div class="inp"><input id="asS" type="number" inputmode="numeric" placeholder="0" min="0"></div><div class="csub">Seconds</div></div>
+          </div>
+
+          <div class="ctl-row" style="margin-top:16px">
+            <span class="ctl-lab">Direction</span>
+            <div class="seg" id="opSeg">
+              <button type="button" data-op="add" class="on">Add</button>
+              <button type="button" data-op="sub">Subtract</button>
+            </div>
+          </div>
+
+          <div class="add-wrap">
+            <div class="add-row">
+              <button class="btn" id="asAddBtn" type="button">Add to list</button>
+              <button class="linkbtn" id="asClearBtn" type="button">Clear list</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="timecardIn" style="display:none">
+          <div class="tc-day tc-head" aria-hidden="true">
+            <div class="tc-colcap">Clock in</div>
+            <div class="tc-colcap">Clock out</div>
+            <div class="tc-colcap">Break</div>
+          </div>
+          <div id="tcRows"></div>
+
+          <div class="fld" id="tcAdvIn" style="display:none">
+            <label class="fld" for="tcRate">
+              <span class="lab">Hourly rate <span class="unit">optional</span></span>
+              <div class="inp"><input id="tcRate" type="text" inputmode="decimal" placeholder="e.g. 22.50"><span class="suf">$/hr</span></div>
+            </label>
+          </div>
+
+          <div class="add-row split" style="margin-top:6px">
+            <span></span>
+            <button class="advbtn" id="tcAdvBtn" type="button">
+              <span id="tcAdvBtnLab">Go advanced</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-pad">
+        <div class="bf-res">
+          <div class="res-lab" id="tcResLab">Elapsed time</div>
+          <div class="res-big"><span id="tcResBig">—</span> <span class="res-unit" id="tcResUnit"></span></div>
+          <div class="res-sub" id="tcResSub">Pick a start and end time.</div>
+        </div>
+
+        <div id="elDetail" style="display:none">
+          <div class="dc-bar-wrap">
+            <div class="dc-cap">The day</div>
+            <svg id="elBar" viewBox="0 0 320 84" role="img" aria-label="24-hour timeline showing the elapsed window"></svg>
+          </div>
+          <div class="stable-wrap">
+            <table class="dtable" id="elTotals"></table>
+          </div>
+        </div>
+
+        <div id="asDetail" style="display:none">
+          <div class="tally-head">
+            <h3>Running list</h3>
+          </div>
+          <div class="tally-empty" id="asEmpty">No entries yet — add a time above.</div>
+          <div id="asRows"></div>
+        </div>
+
+        <div id="tcDetail" style="display:none">
+          <div class="dc-bar-wrap">
+            <div class="dc-cap">Week at a glance</div>
+            <svg id="tcChart" viewBox="0 0 320 140" role="img" aria-label="Bar chart of hours worked each day this week"></svg>
+          </div>
+          <div class="stable-wrap">
+            <table class="dtable" id="tcTable"></table>
+          </div>
+          <div class="res-tip" id="tcPayTip" style="display:none"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="related-calcs">
+    <p class="related-calcs-h">More math &amp; date calculators that may interest you</p>
+    <div class="pills">
+      <a class="pill" href="/date-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></svg>
+        Date Calculator
+      </a>
+      <a class="pill" href="/age-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+        Age Calculator
+      </a>
+      <a class="pill" href="/percentage-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 5 5 19M6.5 6.5h.01M17.5 17.5h.01"/></svg>
+        Percentage Calculator
+      </a>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use the time calculator</h2>
+        <p>In <strong>Elapsed time</strong> mode, enter a start time and an end time and the gap appears at once — in hours and minutes, then broken down into total minutes, seconds and decimal hours. If the end time is earlier in the clock than the start time, the calculator assumes the end falls the next day and adds 24 hours for you. Use <strong>Go advanced</strong> to add extra full days for a span that runs longer than one day.</p>
+        <p>In <strong>Add / subtract</strong> mode, enter hours, minutes and seconds, choose <strong>Add</strong> or <strong>Subtract</strong>, and tap <strong>Add to list</strong>. Each entry joins a running list with a live running total — useful for summing race splits, video clip lengths, or a handful of billable time chunks in one place.</p>
+        <p>In <strong>Time card</strong> mode, enter a clock-in time, clock-out time and unpaid break minutes for each day you worked. The calculator totals each day and adds it into a weekly total, shown in hours and minutes and in decimal hours for payroll, with a bar chart showing your week at a glance.</p>
+
+        <h2>How elapsed time is calculated</h2>
+        <p>The calculator subtracts the start time from the end time. Because clock times don't carry a date, an end time earlier than the start time is treated as falling the next calendar day — for example a 10:00 PM start and a 6:00 AM end is read as an 8-hour overnight shift, not a negative duration.</p>
+
+        <h2>Converting time to decimal hours</h2>
+        <p>Payroll and invoicing systems usually want decimal hours rather than hours and minutes. The conversion is minutes divided by 60 added to the whole hours — <strong>7 hours 30 minutes</strong> becomes <strong>7.5</strong>, and <strong>7 hours 45 minutes</strong> becomes <strong>7.75</strong>. Every result on this page shows both formats side by side.</p>
+      </div>
+
+      <div>
+        <h2>Time card hours and overtime</h2>
+        <p>Each day's hours are the time between clock-in and clock-out, minus any unpaid break minutes entered. The week-at-a-glance chart shades any day over 8 hours differently so long days stand out immediately, without hunting through a table. Add an hourly rate in <strong>Go advanced</strong> to see total pay for the hours entered — the calculator doesn't apply an overtime multiplier automatically, since overtime rules vary by employer and jurisdiction.</p>
+
+        <h2>What you get</h2>
+        <table class="dtable">
+          <thead><tr><th>Output</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td>Elapsed time</td><td>8 hr 30 min</td></tr>
+            <tr><td>Decimal hours</td><td>8.5</td></tr>
+            <tr><td>Running total (add/subtract)</td><td>4 hr 15 min from 3 entries</td></tr>
+            <tr><td>Weekly hours (time card)</td><td>38 hr 45 min &middot; 38.75</td></tr>
+            <tr><td>Weekly pay (advanced)</td><td>$775.00 at $20.00/hr</td></tr>
+          </tbody>
+        </table>
+
+        <h2>Common uses</h2>
+        <p>Timing a work shift or exam window, adding up video or podcast clip lengths, totalling a freelance timesheet, checking how long until an appointment, and turning a week of clock-ins into payroll-ready decimal hours. For the gap between two calendar dates instead of two clock times, use the <a href="/date-calculator/">Date Calculator</a>; for a birthdate-to-today age, use the <a href="/age-calculator/">Age Calculator</a>.</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>How do I calculate elapsed time between two clock times?</summary><p>Enter a start time and an end time in Elapsed time mode. If the end time is earlier than the start time the calculator assumes it falls the next day and adds 24 hours automatically. Tap Go advanced to add extra full days for spans longer than a day.</p></details>
+    <details class="faq"><summary>How do I add or subtract times?</summary><p>Switch to Add / subtract mode, enter hours, minutes and seconds, choose Add or Subtract, and tap Add to list. Each entry joins a running list with a live running total, so you can keep stacking times instead of doing one calculation at a time.</p></details>
+    <details class="faq"><summary>How does the time card calculator work?</summary><p>In Time card mode, enter a clock-in time, clock-out time and unpaid break minutes for each day you worked. The calculator totals each day's hours and adds them into a weekly total, shown both as hours and minutes and as decimal hours for payroll.</p></details>
+    <details class="faq"><summary>How do I convert time to decimal hours for payroll?</summary><p>Any duration is shown in decimal hours automatically — for example 7 hours 30 minutes is 7.5 decimal hours. In Time card mode the weekly total is also shown in decimal hours so it can be entered directly into a payroll or invoicing system.</p></details>
+    <details class="faq"><summary>Does the time card calculator handle overtime?</summary><p>The week-at-a-glance chart flags any day over 8 hours so long days stand out at a glance. Tap Go advanced and enter an hourly rate to see total pay at that rate for the hours entered; the calculator does not apply a separate overtime multiplier, since overtime rules vary by employer and jurisdiction.</p></details>
+  </section>
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/bmi-calculator/">BMI Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/ideal-weight-calculator/">Ideal Weight Calculator</a></li>
+          <li><a href="/calorie-calculator/">Calorie Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/water-intake-calculator/">Water Intake Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+          <li><a href="/age-calculator/">Age Calculator</a></li>
+          <li><a href="/date-calculator/">Date Calculator</a></li>
+          <li><a href="/time-calculator/">Time Calculator</a></li>
+        </ul>
+      </div>
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/blog/">Blog</a>
+      <span aria-hidden="true">·</span>
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+</div>
+
+<script src="/assets/app.js?v=85"></script>
+<script>CalcThis.initTimeCalc({});</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>
