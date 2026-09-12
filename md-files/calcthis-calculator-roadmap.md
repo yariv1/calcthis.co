@@ -83,6 +83,27 @@ Pregnancy + Ovulation immediately **after** AdSense approval.
 
 ---
 
+## Candidates under research (post-Time-Calculator) — NotebookLM pass, 2026-09-12
+
+Volume/KD are NotebookLM estimates, not Ahrefs-verified — spot-check in Ahrefs before
+committing a full build, same as every other roadmap entry.
+
+| Calculator | Keyword | Est. volume | Difficulty | Cluster | Differentiator |
+|---|---|---|---|---|---|
+| **Tape Measure Fraction Calculator** | `tape measure fraction calculator` | ~18,000/mo | Low–Medium (generic "fraction calculator" is unwinnable at 500k/mo — this is the winnable reframe of it) | Construction & Gardening | Live digital tape-measure ruler (1/16"/1/32") with an animated marker showing the exact tick as fractions are added/subtracted |
+| **VO2 Max Calculator** | `vo2 max calculator` | 40,000–90,000/mo (protocol long-tails 2,400–8,000/mo, lower difficulty) | Moderate (low on protocol-specific long-tails) | Health & Fitness | Aerobic-fitness gauge (age/sex percentile) + race-time predictor bar (5K/10K/half/marathon) |
+| **Steps-to-Miles / Calories Burned Walking** | `steps to miles calculator` | ~22,000–45,000/mo | Low–Medium | Health & Fitness | Distance-milestone progress bar (real-world landmark comparisons) + incline/speed calorie-burn curve |
+| **ABSI (A Body Shape Index) Calculator** | `absi calculator` | ~4,800/mo | Extremely low (~8 exact-match competitors) | Health & Fitness (Weight cluster) | BMI-vs-ABSI visceral-risk 2D body-contour comparison |
+| **RFM (Relative Fat Mass) Calculator** | `rfm calculator` | ~3,200/mo | Extremely low | Health & Fitness (Weight cluster) | Height-to-waist geometric ratio slider vs. DEXA/Navy-tape benchmarks |
+
+**Crowded — ruled out:** Paint / Roofing / Fence / Deck (owned by Sherwin-Williams, Lowe's,
+Benjamin Moore, big construction-affiliate sites); generic Tip / Discount / Unit Converter
+(owned by calculator.net, Omnicalculator, Google's own inline results).
+
+Not yet decided which ships next — weigh cluster fit (Tape Measure Fraction completes a
+measurement-math gap in Construction; VO2 Max/ABSI/RFM extend Health & Fitness) against
+volume vs. difficulty above.
+
 ## Parked Ideas (not prioritized yet)
 
 - BMR Calculator — overlaps heavily with TDEE, may not be worth a standalone page
