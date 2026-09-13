@@ -33,7 +33,7 @@ Pregnancy + Ovulation immediately **after** AdSense approval.
 | 9 | **Ovulation / Fertility Calculator** | ~3M/mo — same audience + component as Due Date, completes the Pregnancy cluster. | Pregnancy | Medium | ⬜ |
 | 10 | **Tape Measure Fraction Calculator** | ~18,000/mo — winnable reframe of the unwinnable generic "fraction calculator". | Construction & Gardening | Medium | ✅ Shipped v87–v88 |
 | 11 | **VO2 Max Calculator** | 40,000–90,000/mo — highest remaining volume of the researched candidates. | Health & Fitness | Medium | ✅ Shipped v89–v99 |
-| 12 | **Steps-to-Miles Calculator** | Ahrefs-verified >10,000/mo, Easy KD, trending up — plus a long-tail cluster of "N steps to miles" variants. | Health & Fitness | Simple–Medium | ⬜ |
+| 12 | **Steps-to-Miles Calculator** | Ahrefs-verified >10,000/mo, Easy KD, trending up — plus a long-tail cluster of "N steps to miles" variants. | Health & Fitness | Simple–Medium | ✅ Shipped v100 |
 
 ### Companion articles to build alongside
 - Ideal Weight → "What's My Ideal Weight? Height, Frame, and the Formulas"
@@ -43,7 +43,7 @@ Pregnancy + Ovulation immediately **after** AdSense approval.
 
 ---
 
-## Already Live (33 calculators)
+## Already Live (34 calculators)
 
 ### Construction & Gardening (9)
 - ✅ Board Foot
@@ -72,6 +72,7 @@ Pregnancy + Ovulation immediately **after** AdSense approval.
 - ✅ Water Intake
 - ✅ Macro
 - ✅ Peptide Reconstitution
+- ✅ Steps to Miles
 
 ### School & Grades (4)
 - ✅ Final Grade

@@ -17,7 +17,9 @@ If ANY value is unknown — an image filename, a CSS value, a file structure, an
 This is mandatory for every article, every time, whether it ends up needing a toggle or not —
 "this one obviously doesn't have units" is not an exemption, run the QA anyway:
 
-1. Run the full Step 5.5 procedure below (Step A decide → Step B wrap → Step C verify) in order.
+1. Run the full Step 5.5 procedure below (Step A0 framing-unit check → Step A decide → Step B
+   wrap → Step C verify, with a COMPLETE Imperial-word regex for this article's actual units)
+   in order.
 2. As part of Step C, run `node build.js` and confirm it completes with **zero** unit-toggle
    gate failures printed. The gate (built into `build.js`) refuses to write any file and stops
    the whole build if `.u` markup is broken — that's the mechanical backstop, but it only
@@ -205,6 +207,38 @@ three are the same root failure — treating this as a judgment call instead of 
 procedure below. **Never skip straight to writing `.u` spans. Run this procedure, in order,
 every single article, with no shortcuts:**
 
+**Step A0 — If the article's whole subject IS a unit (a "framing unit" article), the toggle
+must rewrite the narrative, not just swap numbers.** Some articles aren't just "an article that
+mentions some measurements" — the entire piece is framed around one specific unit as its
+subject (e.g. "How Many Steps Are in a **Mile**?", a per-inch or per-foot pricing article). For
+these, Metric mode must read as a genuinely different, self-consistent narrative in the OTHER
+unit — not the Imperial narrative with numbers swapped underneath the same word. Concretely:
+  - The **H1 and every heading/FAQ-summary** that names the framing unit must wrap it
+    (`data-imp="Mile?" data-met="Kilometer?"`), so "How Many Steps Are in a Mile?" reads
+    "...in a Kilometer?" in Metric — not stay "Mile?" with only the body numbers changing.
+  - Every occurrence of the bare unit word in flowing prose ("...covers a mile", "steps per
+    mile") gets wrapped too, even with no adjacent number.
+  - **Any number expressed "per [framing unit]" must be recalculated for the other unit, not
+    reused.** "2,250 steps per mile" is NOT "2,250 steps per kilometer" — a kilometer is
+    shorter, so the correct data-met is the recomputed figure (steps-per-mile × 0.621371,
+    or recompute from the underlying formula directly). Reusing the same number with a
+    different unit word is a silent wrong-math bug, not a cosmetic one.
+  - A "formula-internal constant" is only exempt (see Step A below) if restating it in the
+    other unit would require a disclaimer. A conversion constant that's ITSELF just a
+    unit-of-length fact (e.g. "63,360 ÷ stride in inches" = inches-per-mile) is NOT exempt —
+    it converts cleanly to "1,000 ÷ stride in metres" and must be wrapped as a dual formula.
+  - When computing a table of derived values across multiple rows (e.g. steps-per-mile by
+    height), compute BOTH the imperial and metric outputs independently and precisely — don't
+    eyeball round or reuse a rougher mental-math value. Use a script (Bash/node) for anything
+    beyond trivial arithmetic; this caught three real rounding errors (2,558→2,557 etc.) the
+    first time this was done by hand.
+  - Found and fixed on `blog/how-many-steps-are-in-a-mile/` (2026-09-13) after shipping with
+    the H1, every heading, and every "steps per mile" figure left as bare Imperial text next
+    to a metric distance table — the user caught it, twice, in different spots. This is the
+    same "leave part of it unconverted next to converted numbers" failure Rule 0.5 already
+    bans; a framing-unit article is just the case where "part of it" is the article's own
+    voice, not only a stray number.
+
 **Step A — Decide if the article needs a toggle at all.** Read the finished article and list
 every number that has a unit. For each one, ask: *is this a standalone physical quantity the
 reader is meant to take away* (a bag weight, a board length, a distance, a temperature, a
@@ -265,11 +299,23 @@ If a toggle is present, click "Metric" for real (`.click()` via `javascript_exec
 `computer` tool) and run this against the live DOM:
 
 ```js
-document.body.innerText.match(/\b\w*inch\w*\b|\bfoot\b|\bfeet\b/gi)
+document.body.innerText.match(/\b\w*inch\w*\b|\bfoot\b|\bfeet\b|\bmile\w*\b|\byard\w*\b|\bpound\w*\b|\blb\w*\b/gi)
 ```
+⛔ **This word list must cover every Imperial unit word the article actually uses — inch/foot/
+feet is NOT enough.** The original version of this check only scanned for inch/foot/feet and
+completely missed every "mile" left in the body of `how-many-steps-are-in-a-mile` (headings,
+FAQ summaries, and multiple "steps per mile" figures) — the check "passed" while the article
+was still full of unconverted Imperial text. Before running this, look at what units the
+article actually discusses and make sure they're all in the regex (add `\bton\w*\b`,
+`\bpsi\b`, etc. as needed) — don't paste the list above without checking it's complete for
+THIS article.
+
 Every match must be manually justified as one of the Step A exceptions (heading, alt text,
 protocol name, calculator-CTA description) — anything else is a bug: fix it and re-run every
-check in Step C from the top, not just the one that failed.
+check in Step C from the top, not just the one that failed. For a framing-unit article (see
+Step A0), also spot-check that headings/summaries actually reworded (not just that no bare
+unit word survived) — e.g. confirm the H1 literally reads "...in a Kilometer?" in Metric, not
+merely that "Mile" doesn't appear unwrapped elsewhere.
 
 Only after all of Step C passes does Step 6 (send the clickable links) happen.
 

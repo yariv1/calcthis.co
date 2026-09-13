@@ -53,6 +53,7 @@ const PAGES = [
   { file: 'time-calculator/index.html',        slug: '/time-calculator/' },
   { file: 'macro-calculator/index.html',      slug: '/macro-calculator/' },
   { file: 'peptide-reconstitution-calculator/index.html', slug: '/peptide-reconstitution-calculator/' },
+  { file: 'steps-to-miles-calculator/index.html', slug: '/steps-to-miles-calculator/' },
   { file: 'blog/index.html',            slug: '/blog/' },
   { file: 'blog/how-much-gravel-do-i-need-for-a-driveway/index.html', slug: '/blog/how-much-gravel-do-i-need-for-a-driveway/' },
   { file: 'blog/how-much-mulch-do-i-need/index.html', slug: '/blog/how-much-mulch-do-i-need/' },
@@ -72,6 +73,7 @@ const PAGES = [
   { file: 'blog/how-to-calculate-the-number-of-days-between-two-dates/index.html', slug: '/blog/how-to-calculate-the-number-of-days-between-two-dates/' },
   { file: 'blog/how-to-add-fractions-on-a-tape-measure/index.html', slug: '/blog/how-to-add-fractions-on-a-tape-measure/' },
   { file: 'blog/what-is-vo2-max/index.html', slug: '/blog/what-is-vo2-max/' },
+  { file: 'blog/how-many-steps-are-in-a-mile/index.html', slug: '/blog/how-many-steps-are-in-a-mile/' },
   { file: 'about/index.html',           slug: '/about/' },
   { file: 'contact/index.html',         slug: '/contact/' },
   { file: 'privacy-policy/index.html',  slug: '/privacy-policy/' },
@@ -98,7 +100,7 @@ const PAGES = [
   const blogDir = path.join(ROOT, 'blog');
   if (!fs.existsSync(blogDir)) return;
   const failures = [];
-  const IMP_WORD = /\b(inch|inches|foot|feet)\b/i;
+  const IMP_WORD = /\b(inch|inches|foot|feet|mile|miles|yard|yards|pound|pounds|lb|lbs|ton|tons)\b/i;
   const TAG_RE = /<[a-zA-Z][\w-]*\b[^>]*\bclass=["'][^"']*\bu\b[^"']*["'][^>]*>/g;
   const ATTR_RE = /(data-imp|data-met)=(?:"([^"]*)"|'([^']*)')/g;
 
@@ -149,7 +151,11 @@ const PAGES = [
             // allow cm<->mm when the expected unit is cm (e.g. small values reasonably shown in mm)
             if (expectedUnit === 'cm' && actualMetUnit === 'mm') expected *= 10;
             if (expectedUnit === 'm' && actualMetUnit === 'km') expected /= 1000;
-            else if (expectedUnit !== actualMetUnit && !(expectedUnit === 'cm' && actualMetUnit === 'mm')) {
+            // allow cm<->m — a larger ft/in-derived distance is often more naturally shown in
+            // metres than centimetres (e.g. "24 feet" -> "7.3 m", not "731.5 cm"); this is the
+            // same ft->m pairing already documented in calcthis-blog-article.md's conversion table
+            if (expectedUnit === 'cm' && actualMetUnit === 'm') expected /= 100;
+            else if (expectedUnit !== actualMetUnit && !(expectedUnit === 'cm' && actualMetUnit === 'mm') && !(expectedUnit === 'cm' && actualMetUnit === 'm')) {
               // unit family mismatch entirely (e.g. lb paired with cm) — flag regardless of number
               failures.push(rel + ': unit family mismatch -> data-imp="' + attrs['data-imp'] + '" data-met="' + attrs['data-met'] + '"');
             }

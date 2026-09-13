@@ -120,6 +120,16 @@
   .res-tip{font-size:12.5px;color:var(--muted);margin-top:12px;line-height:1.45}
   .res-tip.hide{display:none}
 
+  /* advanced-mode explanatory line — the single narrative takeaway inside an
+     advanced panel (e.g. Age's "you were X on date Y", Time's pay breakdown,
+     a calorie-burn readout). GLOBAL — add class="res-tip adv-tip" (or just
+     adv-tip) directly on the element. Do NOT add a page-scoped CSS override
+     for this treatment; that's what caused it to be missed/duplicated across
+     builds (Age, Time, Tape Measure Fraction, Steps to Miles all reinvented
+     it separately with the same 3 lines of CSS before this was made global). */
+  .adv-tip{font-size:16px;line-height:1.55;color:rgb(181,118,31)}
+  .adv-tip strong{color:rgb(181,118,31);font-weight:700}
+
   .btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;font:inherit;font-size:14px;font-weight:600;cursor:pointer;border-radius:10px;padding:12px 16px;border:1.5px solid var(--ink);background:var(--ink);color:#fff;transition:.15s;width:100%}
   .btn:hover{background:#000}
   .add-wrap{margin-top:18px}
@@ -697,8 +707,6 @@
   .p-age .age-mile span:first-child{color:var(--ink);font-weight:600;flex:none}
   .p-age .age-mile span:last-child{color:var(--ink-soft);font-variant-numeric:tabular-nums;text-align:right}
   .p-age #advOut{margin:8px 0 2px}
-  .p-age #advOut .res-tip{font-size:16px;line-height:1.55;color:rgb(181,118,31)}
-  .p-age #advOut .res-tip strong{color:rgb(181,118,31);font-weight:700}
 
 
   /* =========================================================
@@ -1369,9 +1377,6 @@
   .p-timecalc .tc-key .k-reg{background:var(--spruce)}
   .p-timecalc .tc-key .k-ot{background:var(--amber)}
 
-  /* advanced-mode explanatory line (pay tip) — same treatment as .p-age #advOut .res-tip */
-  .p-timecalc #tcPayTip{font-size:16px;line-height:1.55;color:rgb(181,118,31)}
-  .p-timecalc #tcPayTip strong{color:rgb(181,118,31);font-weight:700}
 
 
   /* =========================================================
@@ -1398,9 +1403,32 @@
   .p-fraction .arow .run{font-weight:600;font-variant-numeric:tabular-nums;color:var(--ink);text-align:right;white-space:nowrap}
   .p-fraction .arow .x{background:none;border:0;color:var(--muted);cursor:pointer;font-size:16px;line-height:1;padding:2px 4px;border-radius:5px}
   .p-fraction .arow .x:hover{color:#b23;background:#f7e9e9}
-  .p-fraction #frAdvOut .res-tip{font-size:16px;line-height:1.55;color:rgb(181,118,31)}
-  .p-fraction #frAdvOut .res-tip strong{color:rgb(181,118,31);font-weight:700}
   .p-fraction #frMarksWrap{margin-top:10px}
   .p-fraction .three .tcol{width:86px}
   .p-fraction .three .tcol .sel select{padding:11px 26px 11px 10px}
   .p-fraction .three .tcol .sel::after{right:9px}
+
+  /* =========================================================
+     FITNESS · STEPS TO MILES CALCULATOR  (body.p-steps)
+     Reuses .card-h2/.ctl-row, .chips (speed/incline), .advbtn.
+     Adds a distance-milestone progress bar (bar + marker + ticks,
+     same technique as the VO2 Max gauge) and, in advanced mode, a
+     speed-vs-calories curve chart (same technique as the Calorie
+     calculator's weight-loss curve).
+     ========================================================= */
+  .p-steps .fld{margin-bottom:16px}
+  .p-steps .bf-res{margin:2px 0 14px}
+  .p-steps .stm-gauge{margin:22px 0 14px}
+  .p-steps .stm-bar{position:relative;height:12px;border-radius:6px;background:linear-gradient(90deg,#F2EBDF,#E5D6BC)}
+  .p-steps .stm-marker{position:absolute;top:-5px;width:3px;height:22px;border-radius:2px;background:var(--ink);transform:translateX(-50%);box-shadow:0 0 0 2px var(--card);transition:left .25s ease}
+  .p-steps .stm-ticks{position:relative;height:15px;margin-top:6px;font-size:11px;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums}
+  .p-steps .stm-ticks span{position:absolute;transform:translateX(-50%)}
+  .p-steps .stm-cat{font-size:13px;color:var(--ink-soft);line-height:1.5;margin:0 0 4px}
+  .p-steps .stm-cat strong{color:var(--ink);font-weight:600}
+  .p-steps .dc-cap{font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin:16px 0 8px}
+  .p-steps #calSummary{font-size:14px;line-height:1.55;color:var(--ink-soft);margin-bottom:4px}
+  .p-steps #calSummary strong{color:var(--ink);font-weight:600}
+  .p-steps #calChartWrap{margin:10px 0 14px}
+  .p-steps #calChartWrap svg{display:block;width:100%;max-width:440px;height:auto;overflow:visible}
+  .p-steps .stm-key{display:flex;flex-wrap:wrap;gap:5px 16px;margin:6px 0 14px;font-size:12px;font-weight:500;color:var(--ink-soft)}
+  .p-steps .stm-key i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px;vertical-align:-1px}

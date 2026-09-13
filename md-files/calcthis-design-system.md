@@ -282,8 +282,17 @@ Single `.sel` wrapper — never nest two:
   tick values, titles — which sits at a **12px floor** (in viewBox units; charts scale up
   with their container so 12 renders ≥12px). Never ship chart text below that. Flag any
   other sub-14px text to the user rather than assuming.
-* `.res-tip` in a calculator's advanced output pane: 16px, colour `rgb(181,118,31)` (`--amber`)
-  — see `.p-age #advOut .res-tip`. Reuse that treatment for advanced-mode explanatory lines.
+* Advanced-mode explanatory line (the single narrative takeaway inside an advanced panel —
+  e.g. Age's "you were X on date Y", Time's pay breakdown, Steps to Miles' calorie-burn
+  disclaimer): 16px, colour `rgb(181,118,31)` (`--amber`), via the **global** `.adv-tip`
+  class already in `style.css` (`.adv-tip{font-size:16px;line-height:1.55;color:rgb(181,118,31)}`
+  + `.adv-tip strong{...}`). Add `class="res-tip adv-tip"` (or just `adv-tip`) directly on the
+  element — in static HTML or in the JS that sets `.innerHTML`.
+  ⛔ **Do NOT add a page-scoped CSS override for this** (e.g. `.p-PAGENAME #advOut .res-tip{...}`).
+  That's what happened four separate times (Age, Time, Tape Measure Fraction, Steps to Miles
+  each reinvented the same 3 lines of CSS, and Steps to Miles briefly shipped it wrong at
+  13px before this was made global) before the fix was to make it a single global class
+  instead of a pattern every page has to remember to repeat.
 
 ## Accessibility — Text on Colored Backgrounds
 

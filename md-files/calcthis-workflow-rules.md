@@ -49,13 +49,33 @@ it later. STOP the instant the gap appears.
 
 ---
 
-## ⛔ RULE 4 — NO STALLING MESSAGES. EVER.
+## ⛔ RULE 4 — NO STALLING MESSAGES. EVER. NO NARRATION. EVER.
 
 Filler messages are BANNED. They burn a full turn and produce nothing.
 
 - ❌ "Building now." / "Creating the file." / "No more reading." / "Doing it now."
 - ✅ Either you are running tool calls that produce real output, or you are delivering
   the finished result. Nothing in between.
+
+**No narration of moves, ever — this is the same rule, not a separate one.** No "reading
+files now," "let me check X," "now writing the CSS," "verifying Y" between tool calls, even
+during a long multi-step build (calculator, article, QA pass). Work silently. The ONLY text
+that belongs mid-task is a genuine question needing the user's input to proceed. Everything
+else — narration, progress updates, "thinking out loud" — is a Rule 4 violation exactly like
+a stalling message, because it produces the same thing: text instead of either a real tool
+call or the finished result. This has been violated repeatedly (2026-09-13 session, called
+out twice by the user in the same session) — it is not a soft preference, treat it with the
+same weight as every other ⛔ rule in this file.
+
+## ⛔ RULE 4.5 — A MULTI-STEP DELIVERABLE ISN'T DONE UNTIL EVERY PART OF IT SHIPS IN THE SAME REPLY
+
+When a task has multiple required deliverables (e.g. a blog article = article HTML + image
+prompts + clickable preview links, per `calcthis-blog-article.md`), getting pulled into deep
+verification or QA on one part (unit-toggle checks, debugging a chart, etc.) is not a reason
+to stop before the others ship. Before sending the final message, re-read the workflow's own
+checklist and confirm every item is actually present in THIS reply — not "I'll do it next
+turn," not silently skipped because attention drifted to a sub-task. QA and verification are
+means to a correct, presentable result — they are never themselves a stopping point.
 
 ---
 
@@ -123,5 +143,10 @@ Chrome links in the final message. Details: `calcthis-working-rules.md` → "Pre
 2. **Reading files one at a time** instead of one batched read (Rule 5).
 3. **Stalling** — multiple "building now" messages that produced nothing (Rule 4),
    and asking questions late instead of stopping up front (Rules 1, 3).
+4. **Narrating moves during a build** ("reading files now," "let me verify X") instead of
+   working silently — Rule 4, called out twice in one session (2026-09-13).
+5. **Shipping a partial deliverable** — building the article/calculator and running QA, but
+   not circling back to send the image prompts and clickable preview links in the same
+   reply — Rule 4.5, same session.
 
-Follow Rules 1–7 and none of this happens again.
+Follow Rules 1–9 (4 and 4.5 especially) and none of this happens again.

@@ -48,6 +48,13 @@ about whether a value needed wrapping in the first place, or wrong conversion ma
 require the manual Step A/C review, every time. This exists after the same unit-toggle bug
 shipped four times across two articles before it was fixed structurally.
 
+**Extended (2026-09-13) after a 5th occurrence** on `how-many-steps-are-in-a-mile`: an article
+whose whole subject IS a unit (mile) needs the toggle to rewrite the narrative (H1, headings,
+FAQ summaries, every "per mile" figure recalculated) not just swap numbers under an unchanged
+word — see `calcthis-blog-article.md` Step A0. Also fixed the Step C verification regex itself,
+which only checked for inch/foot/feet and would pass even with "mile" left everywhere — it now
+must be built from the article's actual units, every time, not pasted from a template.
+
 > **Self-maintenance rule:** At the end of every session, update this file:
 > - Bump asset version
 > - Add any new articles/calculators to the live lists
@@ -58,8 +65,8 @@ shipped four times across two articles before it was fixed structurally.
 
 ## Project state
 
-- **Asset version:** v99
-- **Total pages:** 57
+- **Asset version:** v99 (Steps to Miles Calculator built, pending deploy — version bumps to v100 on `node build.js`, gated on explicit "deploy" go-ahead)
+- **Total pages:** 58
 - **Model:** Opus 4.6
 
 ---
@@ -92,8 +99,8 @@ shipped four times across two articles before it was fixed structurally.
 ### Construction & Gardening (9)
 Board Foot · Gravel · Sand · Topsoil · Mulch · Concrete · Flooring · Tile · Tape Measure Fraction
 
-### Health & Fitness (15)
-Pace · Race Time Predictor · VO2 Max · Heart Rate Zone · Zone 2 Heart Rate · BMI · Body Fat · Ideal Weight · Calorie · TDEE · One Rep Max · Sleep · Water Intake · Macro · Peptide Reconstitution
+### Health & Fitness (16)
+Pace · Race Time Predictor · VO2 Max · Heart Rate Zone · Zone 2 Heart Rate · BMI · Body Fat · Ideal Weight · Calorie · TDEE · One Rep Max · Sleep · Water Intake · Macro · Peptide Reconstitution · Steps to Miles
 
 ### School & Grades (4)
 Final Grade · GPA · Grade · Test Score
@@ -101,11 +108,43 @@ Final Grade · GPA · Grade · Test Score
 ### Math & Numbers (5)
 Ratio · Percentage · Age · Date · Time
 
-Total live calculators: **33**
+Total live calculators: **34**
 
 ---
 
-## Last session (v87–v99)
+## This session (pending deploy — will bump to v100)
+
+- Built **Steps to Miles Calculator** (`/steps-to-miles-calculator/`, roadmap #12) —
+  approved and researched last session (Ahrefs-verified `steps to miles calculator`,
+  >10,000/mo, Easy KD), built directly per the pre-approved differentiator.
+  `CalcThis.initStepsMilesCalc` in app.js, `.p-steps` in style.css. Steps + height + sex
+  (Female default) → distance in miles/km using the standard pedometer stride-length
+  formula (height × 0.413 men / 0.415 women), not a flat "2,000 steps = 1 mile" constant
+  like every competitor checked. **Differentiator (Rule 8):** a live distance-milestone
+  progress bar (1 mile / 5K / 10K / half / marathon ticks, same bar+marker+ticks technique
+  as the VO2 Max gauge) instead of a bare number, plus (Go advanced) a calorie-burn
+  estimate using the ACSM walking metabolic equation — weight + speed/incline chips →
+  calories for the computed distance, with a speed-vs-calories curve across 0/5/10%
+  incline (same SVG-polyline technique as the Calorie calculator's weight-loss curve).
+  Custom stride override available for users who've measured their own.
+  **Bug caught in preview QA:** the calorie curve chart's wrapper div stayed
+  `display:none` even when weight was entered — `renderCalChart()` populated the SVG but
+  nothing ever un-hid the wrapper on the success path (only the "no weight" fallback path
+  cleared it). Fixed before shipping; verified via direct JS inspection since the browser
+  pane's screenshot tool was flaky scrolling this page (stale/blank frames on scroll) —
+  cross-checked the same state with `getBoundingClientRect`/computed styles instead of
+  trusting screenshots alone.
+  **Also fixed in passing:** homepage prose section was stale — missing any mention of
+  VO2 Max (shipped v89–99, never added to the prose paragraph) and undercounting at
+  "thirty-two calculators" when 33 were already live; and the homepage JSON-LD `hasPart`
+  list was missing the Ratio Calculator entirely (pre-existing gap, unrelated to this
+  build, fixed since it was directly adjacent). WebApplication + FAQPage JSON-LD, 5 FAQs,
+  `.related-calcs` (Pace / Calorie / VO2 Max / Water Intake). Wired into nav, footer,
+  homepage (card + hasPart + prose count → 34), build.js, sitemap.xml.
+  **Still pending:** user preview approval, then `node build.js` + commit + push on an
+  explicit "deploy" go-ahead.
+
+## Earlier (v87–v99)
 
 - v87–v88: Built + deployed **Tape Measure Fraction Calculator** (`/tape-measure-fraction-calculator/`,
   roadmap #10) + companion article **"How to Add and Subtract Fractions on a Tape Measure"**.
@@ -330,8 +369,9 @@ AdSense approval**. Date/Time cluster (Age + Date + Time) is now complete.
 5. ~~Date Calculator~~ — ✅ shipped v81 (companion article pending)
 6. ~~Water Intake Calculator~~ — ✅ shipped v83
 7. ~~Time Calculator~~ — ✅ shipped v85 (completes Date/Time cluster)
-8. **Pregnancy / Due Date Calculator** — big new vertical, after AdSense approval (reuse date picker)
-9. **Ovulation / Fertility Calculator** — completes the Pregnancy cluster
+8. ~~Steps-to-Miles Calculator~~ — ✅ built this session (pending deploy)
+9. **Pregnancy / Due Date Calculator** — big new vertical, after AdSense approval (reuse date picker)
+10. **Ovulation / Fertility Calculator** — completes the Pregnancy cluster
 
 ---
 

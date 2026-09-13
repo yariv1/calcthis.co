@@ -194,3 +194,7 @@ Why each step is mandatory:
 15. Using a `<div class="fld">` without adding a page-specific `.p-PAGENAME .fld{margin-bottom:...}`
     rule in `style.css` — `label.fld` CSS does not cover divs, so this ships broken spacing
     (happened once on VO2 Max Calculator's `.two-c` field, fixed after ship — don't repeat it)
+16. Reinventing a page-scoped CSS override for a pattern that already has a global class —
+    check `calcthis-design-system.md` first. The advanced-mode explanatory line (16px amber)
+    is `.adv-tip`, global in `style.css` — never write `.p-PAGENAME #advOut .res-tip{...}`
+    again (happened 4 times, including once shipped at the wrong size, before this was fixed)

@@ -2224,12 +2224,12 @@ CalcThis.initAgeCalc = function (cfg) {
     if (advanced && advOut) {
       var on = pickedDate(dpOn, onIn);
       if (!on) {
-        advOut.innerHTML = '<p class="res-tip">Pick a date to see how old you were — or will be — then.</p>';
+        advOut.innerHTML = '<p class="res-tip adv-tip">Pick a date to see how old you were — or will be — then.</p>';
       } else if (diffDays(dob, on) < 0) {
-        advOut.innerHTML = '<p class="res-tip">That date is before your date of birth.</p>';
+        advOut.innerHTML = '<p class="res-tip adv-tip">That date is before your date of birth.</p>';
       } else {
         var rel = diffDays(today, on);
-        advOut.innerHTML = '<p class="res-tip">On <strong>' + fmtD(on) + '</strong> you ' +
+        advOut.innerHTML = '<p class="res-tip adv-tip">On <strong>' + fmtD(on) + '</strong> you ' +
           (rel > 0 ? 'will be' : (rel === 0 ? 'are' : 'were')) + ' <strong>' + ymdStr(ymd(dob, on)) +
           '</strong> old — ' + diffDays(dob, on).toLocaleString() + ' days.</p>';
       }
@@ -4387,6 +4387,245 @@ CalcThis.initFractionCalc = function (cfg) {
     if (advanced) { var el = $('frAdvIn'); if (el && el.scrollIntoView) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
   });
 
+  solve();
+};
+
+/* -----------------------------------------------------------
+   CalcThis.initStepsMilesCalc(cfg) — steps to miles/km.
+   Independent engine. Steps x personal stride length (from height
+   + sex via the pedometer-standard 0.413/0.415 formula, or a
+   custom override) -> distance. Live distance-milestone progress
+   bar (1 mile / 5K / 10K / half / marathon ticks) instead of a
+   bare number. Advanced: weight + walking speed/incline chips ->
+   calories burned (ACSM walking metabolic equation) for that
+   distance, plus a speed-vs-calories curve across 0/5/10% incline.
+   Live, no button. Inches default for US users. */
+CalcThis.initStepsMilesCalc = function (cfg) {
+  cfg = cfg || {};
+  var $ = function (id) { return document.getElementById(id); };
+  var unit = 'cm', sex = 'female', advanced = false, speedMph = 3, inclinePct = 0;
+
+  var IN_PER_MILE = 63360, KM_PER_MI = 1.609344, LB_PER_KG = 2.2046226;
+  var LANDMARKS = [
+    { mi: 1,    short: '1 mi',    label: '1 mile' },
+    { mi: 3.1,  short: '5K',      label: 'a 5K' },
+    { mi: 6.2,  short: '10K',     label: 'a 10K' },
+    { mi: 13.1, short: 'Half',    label: 'a half marathon' },
+    { mi: 26.2, short: 'Marathon',label: 'a marathon' }
+  ];
+  var MAX_MI = 26.2;
+  var SPEED_STEPS = [2, 2.5, 3, 3.5, 4];
+
+  var stepsIn = $('steps'), heightIn = $('height'), strideIn = $('stride'), weightIn = $('weight');
+  if (!stepsIn) return;
+  var unitSeg = $('unitSeg'), sexSeg = $('sexSeg'), speedChips = $('speedChips'), inclineChips = $('inclineChips');
+  var advBtn = $('advBtn'), advIn = $('advIn'), advOut = $('advOut');
+
+  function num(v) { v = parseFloat(('' + v).trim()); return isNaN(v) ? NaN : v; }
+  function toIn(v) { return unit === 'cm' ? v / 2.54 : v; }
+  function toKg(v) { return unit === 'in' ? v / LB_PER_KG : v; }
+  function one(x) { return (Math.round(x * 10) / 10).toFixed(1); }
+  function trim1(x) { var s = x.toFixed(1); return s.replace(/\.0$/, ''); }
+
+  function prefersImperial() {
+    try {
+      var tz = (Intl.DateTimeFormat().resolvedOptions().timeZone || '');
+      var us = ['America/New_York', 'America/Detroit', 'America/Kentucky/Louisville',
+        'America/Kentucky/Monticello', 'America/Indiana/Indianapolis', 'America/Indiana/Vincennes',
+        'America/Indiana/Winamac', 'America/Indiana/Marengo', 'America/Indiana/Petersburg',
+        'America/Indiana/Vevay', 'America/Chicago', 'America/Indiana/Tell_City',
+        'America/Indiana/Knox', 'America/Menominee', 'America/North_Dakota/Center',
+        'America/North_Dakota/New_Salem', 'America/North_Dakota/Beulah', 'America/Denver',
+        'America/Boise', 'America/Phoenix', 'America/Los_Angeles', 'America/Anchorage',
+        'America/Juneau', 'America/Sitka', 'America/Metlakatla', 'America/Yakutat',
+        'America/Nome', 'America/Adak', 'Pacific/Honolulu'];
+      return us.indexOf(tz) !== -1;
+    } catch (e) { return false; }
+  }
+
+  var PH = { cm: { height: '168' }, in: { height: '66' } };
+  function applyUnit() {
+    var mu = unit === 'in' ? 'in' : 'cm', wu = unit === 'in' ? 'lb' : 'kg';
+    if ($('uHeight')) $('uHeight').textContent = mu;
+    if ($('uStride')) $('uStride').textContent = mu;
+    if ($('uWeight')) $('uWeight').textContent = wu;
+    if (heightIn) heightIn.placeholder = PH[unit].height;
+    if (unitSeg) [].forEach.call(unitSeg.querySelectorAll('button'), function (b) {
+      b.classList.toggle('on', b.getAttribute('data-unit') === unit);
+    });
+    if (speedChips) [].forEach.call(speedChips.querySelectorAll('button'), function (b) {
+      var mph = parseFloat(b.getAttribute('data-mph'));
+      b.textContent = unit === 'in' ? trim1(mph) + ' mph' : trim1(mph * KM_PER_MI) + ' km/h';
+    });
+  }
+
+  function strideInches() {
+    var custom = strideIn ? num(strideIn.value) : NaN;
+    if (isFinite(custom) && custom > 0) return toIn(custom);
+    var h = toIn(num(heightIn.value));
+    if (isFinite(h) && h > 0) return h * (sex === 'male' ? 0.413 : 0.415);
+    return sex === 'male' ? 30 : 26.4;
+  }
+
+  function buildTicks() {
+    var el = $('stmTicks'); if (!el) return;
+    el.innerHTML = LANDMARKS.map(function (l) {
+      return '<span style="left:' + (l.mi / MAX_MI * 100) + '%">' + l.short + '</span>';
+    }).join('');
+  }
+
+  // ACSM walking metabolic equation (valid ~1.9-4mph on a treadmill grade)
+  function kcalFor(mph, incPct, distMi, wKg) {
+    var speedMmin = mph * 26.8224, grade = incPct / 100;
+    var vo2 = 0.1 * speedMmin + 1.8 * speedMmin * grade + 3.5;
+    var met = vo2 / 3.5;
+    var kcalPerMin = met * 3.5 * wKg / 200;
+    var durMin = distMi / mph * 60;
+    return kcalPerMin * durMin;
+  }
+  function durTxt(min) {
+    min = Math.round(min);
+    if (min < 60) return min + ' min';
+    var h = Math.floor(min / 60), m = min % 60;
+    return h + 'h' + (m ? ' ' + m + 'm' : '');
+  }
+
+  function renderCalChart(distMi, wKg) {
+    var svg = $('calChart'); if (!svg) return;
+    var X0 = 46, X1 = 320, Y0 = 14, Y1 = 150;
+    var incs = [{ p: 0, c: '#8F5C13' }, { p: 5, c: '#B5761F' }, { p: 10, c: '#37503F' }];
+    var speeds = [], s;
+    for (s = 2; s <= 4.5001; s += 0.25) speeds.push(Math.round(s * 100) / 100);
+    var lo = Infinity, hi = -Infinity;
+    var lines = incs.map(function (inc) {
+      var pts = speeds.map(function (sp) { var k = kcalFor(sp, inc.p, distMi, wKg); if (k < lo) lo = k; if (k > hi) hi = k; return { sp: sp, k: k }; });
+      return { inc: inc, pts: pts };
+    });
+    var pad = (hi - lo) * 0.12 || 5; lo = Math.max(0, lo - pad); hi += pad;
+    function sx(sp) { return X0 + (sp - 2) / 2.5 * (X1 - X0); }
+    function sy(k) { return Y1 - (k - lo) / (hi - lo) * (Y1 - Y0); }
+    var g = '';
+    g += '<rect x="' + X0 + '" y="' + Y0 + '" width="' + (X1 - X0) + '" height="' + (Y1 - Y0) + '" fill="none" stroke="#E7DECF" stroke-width="1"/>';
+    [2, 3, 4].forEach(function (sp) {
+      var x = sx(sp);
+      g += '<line x1="' + x + '" y1="' + Y1 + '" x2="' + x + '" y2="' + (Y1 + 4) + '" stroke="#8A7A66" stroke-width="1"/>';
+      g += '<text x="' + x + '" y="' + (Y1 + 17) + '" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#8A7A66">' + (unit === 'in' ? sp : trim1(sp * KM_PER_MI)) + '</text>';
+    });
+    [lo, hi].forEach(function (k) {
+      var y = sy(k);
+      g += '<line x1="' + (X0 - 4) + '" y1="' + y + '" x2="' + X0 + '" y2="' + y + '" stroke="#8A7A66" stroke-width="1"/>';
+      g += '<text x="' + (X0 - 8) + '" y="' + (y + 4) + '" text-anchor="end" font-family="Inter,sans-serif" font-size="12" fill="#8A7A66">' + Math.round(k) + '</text>';
+    });
+    lines.forEach(function (ln) {
+      var pts = ln.pts.map(function (p) { return sx(p.sp) + ',' + sy(p.k); }).join(' ');
+      g += '<polyline points="' + pts + '" fill="none" stroke="' + ln.inc.c + '" stroke-width="2"/>';
+    });
+    var selLine = lines.filter(function (ln) { return ln.inc.p === inclinePct; })[0] || lines[0];
+    var selK = kcalFor(speedMph, inclinePct, distMi, wKg);
+    g += '<circle cx="' + sx(speedMph) + '" cy="' + sy(selK) + '" r="4" fill="' + selLine.inc.c + '" stroke="#fff" stroke-width="2"/>';
+    g += '<text x="' + ((X0 + X1) / 2) + '" y="178" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="600" fill="#5B4C3B">Speed (' + (unit === 'in' ? 'mph' : 'km/h') + ')</text>';
+    g += '<text x="13" y="' + ((Y0 + Y1) / 2) + '" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="600" fill="#5B4C3B" transform="rotate(-90 13 ' + ((Y0 + Y1) / 2) + ')">Calories (kcal)</text>';
+    svg.innerHTML = g;
+  }
+
+  function solve() {
+    var resBig = $('resBig'), resUnit = $('resUnit'), resSub = $('resSub');
+    var gauge = $('stmGauge'), marker = $('stmMarker'), cat = $('stmCat');
+    var steps = num(stepsIn.value);
+
+    if (!(isFinite(steps) && steps > 0)) {
+      resBig.textContent = '—'; if (resUnit) resUnit.textContent = '';
+      resSub.textContent = 'Enter your steps to see the distance.';
+      if (gauge) gauge.style.visibility = 'hidden';
+      if (cat) cat.textContent = '';
+      if (advOut) advOut.style.display = 'none';
+      return;
+    }
+
+    var strideI = strideInches();
+    var distMi = steps * strideI / IN_PER_MILE;
+    var distKm = distMi * KM_PER_MI;
+    var stepsPerMile = Math.round(IN_PER_MILE / strideI);
+
+    resBig.textContent = unit === 'in' ? one(distMi) : one(distKm);
+    if (resUnit) resUnit.textContent = unit === 'in' ? 'mi' : 'km';
+    resSub.textContent = '≈ ' + stepsPerMile.toLocaleString() + ' steps per mile at a ' +
+      (unit === 'in' ? one(strideI) + '"' : one(strideI * 2.54) + ' cm') + ' stride';
+
+    if (gauge && marker) {
+      gauge.style.visibility = 'visible';
+      marker.style.left = Math.max(0, Math.min(100, distMi / MAX_MI * 100)) + '%';
+    }
+    if (cat) {
+      var reached = null, i;
+      for (i = LANDMARKS.length - 1; i >= 0; i--) { if (distMi >= LANDMARKS[i].mi) { reached = LANDMARKS[i]; break; } }
+      if (distMi >= MAX_MI) {
+        cat.innerHTML = 'That’s <strong>' + one(distMi / MAX_MI) + ' marathons</strong> worth of walking.';
+      } else if (reached) {
+        cat.innerHTML = 'That’s about the same distance as <strong>' + reached.label + '</strong>.';
+      } else {
+        cat.innerHTML = 'Keep going — every step counts toward that first mile.';
+      }
+    }
+
+    if (advOut) {
+      var wKg = weightIn ? toKg(num(weightIn.value)) : NaN;
+      if (advanced && isFinite(wKg) && wKg > 0) {
+        var kcal = kcalFor(speedMph, inclinePct, distMi, wKg);
+        var durMin = distMi / speedMph * 60;
+        var speedTxt = unit === 'in' ? trim1(speedMph) + ' mph' : trim1(speedMph * KM_PER_MI) + ' km/h';
+        $('calSummary').innerHTML = 'At <strong>' + speedTxt + '</strong> on a <strong>' + inclinePct + '% incline</strong>, this distance takes about <strong>' + durTxt(durMin) + '</strong> and burns approximately <strong>' + Math.round(kcal) + ' kcal</strong>.';
+        if ($('calChartWrap')) $('calChartWrap').style.display = '';
+        renderCalChart(distMi, wKg);
+        advOut.style.display = '';
+      } else if (advanced) {
+        $('calSummary').innerHTML = 'Enter your weight above to see calories burned for this distance.';
+        advOut.style.display = '';
+        if ($('calChartWrap')) $('calChartWrap').style.display = 'none';
+      } else {
+        advOut.style.display = 'none';
+      }
+    }
+  }
+
+  if (unitSeg) unitSeg.addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    unit = b.getAttribute('data-unit');
+    applyUnit(); solve();
+  });
+  if (sexSeg) sexSeg.addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    sex = b.getAttribute('data-sex');
+    [].forEach.call(sexSeg.querySelectorAll('button'), function (x) { x.classList.toggle('on', x === b); });
+    solve();
+  });
+  if (speedChips) speedChips.addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    speedMph = parseFloat(b.getAttribute('data-mph'));
+    [].forEach.call(speedChips.querySelectorAll('button'), function (x) { x.classList.toggle('on', x === b); });
+    solve();
+  });
+  if (inclineChips) inclineChips.addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    inclinePct = parseFloat(b.getAttribute('data-inc'));
+    [].forEach.call(inclineChips.querySelectorAll('button'), function (x) { x.classList.toggle('on', x === b); });
+    solve();
+  });
+  [stepsIn, heightIn, strideIn, weightIn].forEach(function (inp) { if (inp) inp.addEventListener('input', solve); });
+
+  if (advBtn) advBtn.addEventListener('click', function () {
+    advanced = !advanced;
+    advBtn.classList.toggle('open', advanced);
+    $('advBtnLab').textContent = advanced ? 'Go simple' : 'Go advanced';
+    if (advIn) advIn.style.display = advanced ? '' : 'none';
+    solve();
+    if (advanced && advIn && advIn.scrollIntoView) advIn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  });
+
+  if (cfg.unit === 'in' || cfg.unit === 'cm') unit = cfg.unit;
+  else if (prefersImperial()) unit = 'in';
+  applyUnit();
+  buildTicks();
   solve();
 };
 
