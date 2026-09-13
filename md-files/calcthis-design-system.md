@@ -99,6 +99,38 @@ dense repeated rows — introduced on the Time Calculator's time-card day rows).
 `CalcThis.initSleepCalc` / `initTimeCalc` in app.js for the `splitDigits` /
 `refreshGhost` / masked-input wiring — reuse that logic, don't reimplement it.
 
+## Two-field colon input (mm:ss, m:s — NOT a masked clock field)
+
+For a plain two-number field pair joined by a colon (walk-test time, pace, any m:s or
+similar pair that does NOT need an AM/PM toggle — for that, use the Clock-time field
+above instead), reuse `.two-c` — never `.two` (that's a 2-column grid that WRAPS on
+mobile at 430px, exactly wrong for a field pair that must stay joined). `.two-c` is
+`display:flex`, so it never wraps at any width. Verified live on Pace Calculator
+(`pMin`/`pSec`) and VO2 Max Calculator (`vxWalkM`/`vxWalkS`):
+
+```html
+<div class="fld" id="someTimeFld">
+  <span class="lab">Label <span class="unit">min : sec</span></span>
+  <div class="two-c">
+    <div class="tcol"><div class="inp"><input id="fieldA" type="number" inputmode="numeric" placeholder="0" min="0"></div><div class="csub">Minutes</div></div>
+    <div class="tsep">:</div>
+    <div class="tcol"><div class="inp"><input id="fieldB" type="number" inputmode="numeric" placeholder="0" min="0"></div><div class="csub">Seconds</div></div>
+  </div>
+</div>
+```
+
+⛔ **MANDATORY when the wrapper is a `<div class="fld">` (not a `<label class="fld">`):**
+`style.css` line ~76 scopes the default field spacing to `label.fld` ONLY —
+`label.fld{display:block;margin-bottom:15px}`. A `<div class="fld">` gets **zero**
+margin from that rule, which reads as broken/inconsistent spacing between fields
+(this shipped once on VO2 Max Calculator and had to be fixed after ship). Every page
+with ANY div-based `.fld` — which includes every page using `.two-c` or `.three`, since
+those examples all use `<div class="fld">` wrappers, not `<label>` — MUST add its own
+page rule in `style.css` (not inline in the page): `.p-PAGENAME .fld{margin-bottom:16px}`
+(16px is the standard used by nearly every calculator; a few use 18px — match whichever
+your page's other `.fld` elements already use). This is not optional and not a "looks
+fine to me" judgment call — check it by measuring the actual gap, don't eyeball it.
+
 ## Go Advanced Button
 
 ALWAYS use this exact pattern:

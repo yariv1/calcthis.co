@@ -50,6 +50,7 @@
         { "@type": "WebApplication", "name": "Tape Measure Fraction Calculator", "url": "https://calcthis.co/tape-measure-fraction-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Pace Calculator", "url": "https://calcthis.co/pace-calculator/", "applicationCategory": "HealthApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Race Time Predictor", "url": "https://calcthis.co/race-time-predictor/", "applicationCategory": "HealthApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
+        { "@type": "WebApplication", "name": "VO2 Max Calculator", "url": "https://calcthis.co/vo2-max-calculator/", "applicationCategory": "HealthApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Heart Rate Zone Calculator", "url": "https://calcthis.co/heart-rate-zone-calculator/", "applicationCategory": "HealthApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Zone 2 Heart Rate Calculator", "url": "https://calcthis.co/zone-2-heart-rate-calculator/", "applicationCategory": "HealthApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "BMI Calculator", "url": "https://calcthis.co/bmi-calculator/", "applicationCategory": "HealthApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
@@ -75,7 +76,7 @@
   ]
 }
 </script>
-<link rel="stylesheet" href="/assets/style.css?v=88">
+<link rel="stylesheet" href="/assets/style.css?v=99">
 <style>
   .cat-tabs{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
   .cat-grp--hidden{display:none}
@@ -119,6 +120,7 @@
           <span class="menu-col-head">Health &amp; Fitness</span>
           <a href="/pace-calculator/">Pace</a>
           <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/vo2-max-calculator/">VO2 Max</a>
           <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
           <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
           <a href="/bmi-calculator/">BMI</a>
@@ -367,6 +369,20 @@
       </span>
       <h3>Race Time Predictor</h3>
       <p>Predict your 5K, 10K, half and marathon finish times from one recent race — Riegel and VDOT side by side.</p>
+      <span class="go">Open calculator
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+    </a>
+
+    <a class="calc" href="/vo2-max-calculator/">
+      <span class="ico" aria-hidden="true">
+        <svg width="30" height="30" viewBox="0 0 32 32" fill="none">
+          <path d="M6 20c2-8 5-8 6 0s5 8 6 0 4-8 5 0" stroke="#B5761F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="16" cy="10" r="4" fill="#EDF2ED" stroke="#37503F" stroke-width="1.5"/>
+        </svg>
+      </span>
+      <h3>VO2 Max</h3>
+      <p>Estimate your aerobic fitness from resting heart rate or a walk test, ranked against age-and-sex norms on a live gauge.</p>
       <span class="go">Open calculator
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </span>
@@ -747,6 +763,7 @@
         <ul class="footer-links">
           <li><a href="/pace-calculator/">Pace Calculator</a></li>
           <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/vo2-max-calculator/">VO2 Max Calculator</a></li>
           <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
           <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
           <li><a href="/bmi-calculator/">BMI Calculator</a></li>
@@ -821,7 +838,7 @@
   });
 })();
 </script>
-<script src="/assets/app.js?v=88"></script>
+<script src="/assets/app.js?v=99"></script>
 <script src="/feedback.js" defer></script>
 </body>
 </html>

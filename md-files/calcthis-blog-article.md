@@ -12,6 +12,24 @@ If ANY value is unknown — an image filename, a CSS value, a file structure, an
 
 ---
 
+## ⛔ RULE #0.5 — QA THE UNIT TOGGLE ON EVERY SINGLE ARTICLE. NO EXCEPTIONS.
+
+This is mandatory for every article, every time, whether it ends up needing a toggle or not —
+"this one obviously doesn't have units" is not an exemption, run the QA anyway:
+
+1. Run the full Step 5.5 procedure below (Step A decide → Step B wrap → Step C verify) in order.
+2. As part of Step C, run `node build.js` and confirm it completes with **zero** unit-toggle
+   gate failures printed. The gate (built into `build.js`) refuses to write any file and stops
+   the whole build if `.u` markup is broken — that's the mechanical backstop, but it only
+   catches missing attributes and stray imperial words leaking into `data-met`. It does **not**
+   catch whether a value should have been wrapped at all, or whether a conversion's numbers are
+   actually correct — that's still on you to verify by hand per Step A/C.
+3. Do this before Step 6 (sending preview links) on every article, not just ones that "seem to"
+   involve measurements. Skipping the QA because a topic looks unit-free is exactly the kind of
+   judgment call that has already gone wrong before.
+
+---
+
 ## ⛔ IMAGE PROMPTS — WRITE THE ARTICLE, THEN (OR ALONGSIDE) GIVE IMAGE PROMPTS
 
 **Workflow order (locked — do not deviate session to session):**
@@ -167,57 +185,93 @@ Run the preview builder script for:
 
 Run sanity checks on both.
 
-### Step 5.5 — MANDATORY automated gate before any preview link is sent
+### Step 5.5 — THE UNIT TOGGLE RULE — FINAL, NOT UP FOR REINTERPRETATION
 
-⛔ **Do not invent a policy for how the toggle should behave. Copy the working example.**
-This rule previously said some article "types" should get no toggle at all (procedural /
-method content like fraction arithmetic). That was itself wrong and caused a three-round
-failure: a toggle was skipped, then partially added (only headline numbers wrapped, leaving
-procedural prose in inches), before anyone checked how an existing live article actually does
-it. **`blog/how-much-topsoil-do-i-need/index.html` is the canonical reference** — open it and
-copy its technique exactly, every time, no exceptions and no new interpretations:
+This is the whole rule, in two sentences. Nothing below adds a new rule — it only makes these
+two mechanically checkable so they can never again be reinterpreted, partially applied, or
+quietly relaxed:
 
-- Wrap **every single measurement mention** in `.u`, including ones inside a sentence that's
-  demonstrating a calculation (topsoil wraps `30 × 20 × 0.33 ÷ 27 = 7.3 cubic yards` as ONE
-  span with a fully separate metric-equivalent equation as `data-met`, not word-by-word).
-- When a sentence or step can't be converted number-by-number without breaking the arithmetic
-  (a formula, a multi-step borrow/carry, a full worked paragraph), wrap the **whole clause**
-  as one `.u` span with a completely rewritten, self-consistent alternate version in `data-met`
-  — never leave the untranslatable part as bare imperial text next to converted numbers.
-  - Watch the `data-met` text itself for stray leftover imperial words (e.g. writing "1 foot"
-    or "12 inches" inside what's supposed to be the all-metric string) — this happened and
-    slipped through because the wrapping was checked structurally but not read as prose.
-  - The only untouched exceptions in a real article: `<h2>` headings (never toggled anywhere
-    on the site), image `alt` text, and text that literally describes the imperial tool's real
-    inputs (e.g. a calculator CTA blurb naming "feet, inches and fractions" because that's
-    what the linked calculator actually takes).
-- There is no "this article's topic doesn't support metric" carve-out. If the article has a
-  toggle, it converts completely — full stop.
+> 1. **The toggle appears only when the article has a genuine measurement to convert.** No
+>    such measurement → the toggle is hidden. Full stop — not "usually hidden," not "hidden
+>    unless there's an interesting example."
+> 2. **If it appears, every measurement in the article switches correctly** between Imperial
+>    and Metric when clicked. No exceptions, no leftover value from the other system, no
+>    mismatched math sitting next to a converted number.
 
-This is a hard gate, not a mental checklist item — run it as an actual command, every article,
-no exceptions:
+This has been broken three separate times on three different articles: no toggle when one was
+needed, a toggle with only some values wrapped, and a toggle triggered by a single incidental
+number that never should have counted as "a measurement to convert" in the first place. All
+three are the same root failure — treating this as a judgment call instead of running the fixed
+procedure below. **Never skip straight to writing `.u` spans. Run this procedure, in order,
+every single article, with no shortcuts:**
+
+**Step A — Decide if the article needs a toggle at all.** Read the finished article and list
+every number that has a unit. For each one, ask: *is this a standalone physical quantity the
+reader is meant to take away* (a bag weight, a board length, a distance, a temperature, a
+pressure) — or is it something else? These do **NOT** count toward needing a toggle, and must
+NOT be wrapped in `.u`:
+  - A number that only makes sense as part of a demonstrated formula/regression whose
+    coefficients are calibrated to one specific unit (e.g. the Rockport walk-test formula's
+    `0.0769 × weight in lb` — the constant itself is lb-specific). **The tell:** if converting
+    it honestly requires a disclaimer like "the formula still uses lb internally" — that is
+    proof the number is formula-internal, not a reader-facing measurement. Don't wrap it. Leave
+    it as plain text, unconverted, in whichever unit the source formula uses.
+  - A named protocol/distance that functions as a proper noun, not an adjustable quantity
+    (a "1-mile walk test," a "5K," a "10K" — these are the test's name, not a value the reader
+    would want re-expressed in another unit).
+  - A heading, image `alt` text, or a calculator-CTA blurb naming the linked tool's real inputs.
+
+  **If after this filter zero genuine standalone measurements remain, STOP — do not add a
+  toggle, do not wrap anything, do not add a `.u` class anywhere in the file.** This is a valid,
+  common, and completely acceptable outcome — most articles that mention a unit in passing do
+  NOT need a toggle. Needing a disclaimer to make a conversion "work" is a sign you're about to
+  break rule 1 above; walk away from wrapping that value instead.
+
+  If one or more genuine standalone measurements survive the filter, proceed to Step B.
+
+**Step B — Wrap every surviving measurement, exhaustively, the "topsoil" way.**
+`blog/how-much-topsoil-do-i-need/index.html` is the canonical reference — open it and copy its
+technique exactly:
+- Wrap **every single instance** of every surviving measurement in `.u`, including ones inside
+  a sentence demonstrating a calculation (topsoil wraps `30 × 20 × 0.33 ÷ 27 = 7.3 cubic yards`
+  as ONE span with a fully separate, self-consistent metric-equivalent equation as `data-met`
+  — never word-by-word substitution into a formula that would then be mathematically wrong).
+- When a sentence or worked example can't be converted number-by-number without breaking the
+  arithmetic, wrap the **whole clause** as one `.u` span with a completely rewritten,
+  self-consistent alternate version in `data-met` — never leave part of it as bare imperial
+  text next to converted numbers, and never leave a stray imperial word (e.g. "1 foot") sitting
+  inside what's supposed to be the all-metric `data-met` string.
+- There is no partial-coverage option. Once Step A says the article needs a toggle, every
+  surviving measurement gets wrapped — not most of them.
+
+**Step C — Verify mechanically, not by eye. Run all three checks before sending any preview:**
 
 ```bash
 grep -c 'class="u"' blog/SLUG/index.html
 ```
+- If Step A concluded "no toggle needed," this **must be exactly 0**. Any non-zero count means
+  Step A was skipped or ignored — go back and remove the wraps.
+- If Step A concluded "toggle needed," this **must be greater than 0**.
 
-- Count must be **greater than 0** whenever the article has measurements — every value
-  anywhere in the article body must appear inside a `.u` span, read back through the WHOLE
-  article text, not just the section you last edited.
-- Then open the preview in the Browser tool, click "Metric" for real (`javascript_exec` a
-  `.click()` on the button is fine, or use `computer`), and run this exact check against the
-  live DOM — not a visual glance, not "does the button render":
+Then open the preview in the Browser tool and check the toggle's actual rendered state — not
+just that the button exists in the DOM (`find` returns hidden elements too):
 
-  ```js
-  document.body.innerText.match(/\b\w*inch\w*\b|\bfoot\b|\bfeet\b/gi)
-  ```
+```js
+getComputedStyle(document.getElementById('unitToggle')).display
+```
+- Must be `"none"` when Step A said no toggle, and must NOT be `"none"` when Step A said yes.
 
-  Every match it returns must be manually justified as one of the three allowed exceptions
-  above (heading, alt text, calculator-input description) — anything else is a bug, go fix it
-  and re-run the check. This exact failure mode (a rendered, working toggle sitting next to
-  body text that still silently showed inches) is what triggered this rule — checking the
-  button exists is not the same as checking the content converted.
-- Only after this gate passes does Step 6 (send the clickable links) happen.
+If a toggle is present, click "Metric" for real (`.click()` via `javascript_exec`, or the
+`computer` tool) and run this against the live DOM:
+
+```js
+document.body.innerText.match(/\b\w*inch\w*\b|\bfoot\b|\bfeet\b/gi)
+```
+Every match must be manually justified as one of the Step A exceptions (heading, alt text,
+protocol name, calculator-CTA description) — anything else is a bug: fix it and re-run every
+check in Step C from the top, not just the one that failed.
+
+Only after all of Step C passes does Step 6 (send the clickable links) happen.
 
 ### Step 6 — Present previews for approval
 

@@ -456,6 +456,21 @@
   }
 
   /* =========================================================
+     FITNESS · VO2 MAX  (body.p-vo2max)
+     Reuses .two-c/.tcol time input, .seg toggles, .bf-res, .dtable,
+     .advbtn / .add-row.split. Adds a dynamic percentile gauge
+     (bar + marker + ticks, band positions computed per age+sex in JS).
+     ========================================================= */
+  .p-vo2max .fld{margin-bottom:16px}
+  .p-vo2max .vx-gauge{margin:22px 0 14px}
+  .p-vo2max .vx-bar{position:relative;height:12px;border-radius:6px}
+  .p-vo2max .vx-marker{position:absolute;top:-5px;width:3px;height:22px;border-radius:2px;background:var(--ink);transform:translateX(-50%);box-shadow:0 0 0 2px var(--card);transition:left .25s ease}
+  .p-vo2max .vx-ticks{position:relative;height:15px;margin-top:6px;font-size:11px;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums}
+  .p-vo2max .vx-ticks span{position:absolute;transform:translateX(-50%)}
+  .p-vo2max .vx-cat{font-size:13px;color:var(--ink-soft);line-height:1.5;margin:0 0 4px}
+  .p-vo2max .vx-cat strong{color:var(--ink);font-weight:600}
+
+  /* =========================================================
      FITNESS · HEART-RATE ZONES  (body.p-hrzone)
      ========================================================= */
   .p-hrzone .fld{margin-bottom:18px}

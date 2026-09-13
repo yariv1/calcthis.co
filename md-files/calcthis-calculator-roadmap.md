@@ -32,6 +32,7 @@ Pregnancy + Ovulation immediately **after** AdSense approval.
 | 8 | **Pregnancy / Due Date Calculator** | Very high, ~3M/mo — top-5 on every competitor, recurring weekly visits, reuses datepicker. Opens a new vertical. Build **after AdSense approval**. | Pregnancy | Medium | ⬜ |
 | 9 | **Ovulation / Fertility Calculator** | ~3M/mo — same audience + component as Due Date, completes the Pregnancy cluster. | Pregnancy | Medium | ⬜ |
 | 10 | **Tape Measure Fraction Calculator** | ~18,000/mo — winnable reframe of the unwinnable generic "fraction calculator". | Construction & Gardening | Medium | ✅ Shipped v87–v88 |
+| 11 | **VO2 Max Calculator** | 40,000–90,000/mo — highest remaining volume of the researched candidates. | Health & Fitness | Medium | ✅ Shipped v89–v99 |
 
 ### Companion articles to build alongside
 - Ideal Weight → "What's My Ideal Weight? Height, Frame, and the Formulas"
@@ -41,7 +42,7 @@ Pregnancy + Ovulation immediately **after** AdSense approval.
 
 ---
 
-## Already Live (32 calculators)
+## Already Live (33 calculators)
 
 ### Construction & Gardening (9)
 - ✅ Board Foot
@@ -54,11 +55,12 @@ Pregnancy + Ovulation immediately **after** AdSense approval.
 - ✅ Tile
 - ✅ Tape Measure Fraction
 
-### Health & Fitness (14)
+### Health & Fitness (15)
 - ✅ BMI
 - ✅ Calorie
 - ✅ Pace
 - ✅ Race Time Predictor
+- ✅ VO2 Max
 - ✅ Heart Rate Zone
 - ✅ Zone 2 Heart Rate
 - ✅ Body Fat
@@ -89,11 +91,10 @@ Pregnancy + Ovulation immediately **after** AdSense approval.
 
 Volume/KD are NotebookLM estimates, not Ahrefs-verified — spot-check in Ahrefs before
 committing a full build, same as every other roadmap entry. Tape Measure Fraction Calculator
-(was in this list) shipped v87–v88 — moved to Next Builds #10 above.
+and VO2 Max Calculator (both were in this list) have shipped — moved to Next Builds #10–11 above.
 
 | Calculator | Keyword | Est. volume | Difficulty | Cluster | Differentiator |
 |---|---|---|---|---|---|
-| **VO2 Max Calculator** | `vo2 max calculator` | 40,000–90,000/mo (protocol long-tails 2,400–8,000/mo, lower difficulty) | Moderate (low on protocol-specific long-tails) | Health & Fitness | Aerobic-fitness gauge (age/sex percentile) + race-time predictor bar (5K/10K/half/marathon) |
 | **Steps-to-Miles / Calories Burned Walking** | `steps to miles calculator` | ~22,000–45,000/mo | Low–Medium | Health & Fitness | Distance-milestone progress bar (real-world landmark comparisons) + incline/speed calorie-burn curve |
 | **ABSI (A Body Shape Index) Calculator** | `absi calculator` | ~4,800/mo | Extremely low (~8 exact-match competitors) | Health & Fitness (Weight cluster) | BMI-vs-ABSI visceral-risk 2D body-contour comparison |
 | **RFM (Relative Fat Mass) Calculator** | `rfm calculator` | ~3,200/mo | Extremely low | Health & Fitness (Weight cluster) | Height-to-waist geometric ratio slider vs. DEXA/Navy-tape benchmarks |

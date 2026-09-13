@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VO2 Max Calculator — Estimate Your Aerobic Fitness | CalcThis</title>
+<meta name="description" content="Free VO2 max calculator. Estimate your aerobic fitness from resting heart rate or a 1-mile walk test, see where you rank against age-and-sex norms on a live percentile gauge, and get equivalent 5K, 10K, half and marathon race times. Instant, no sign-up.">
+<link rel="canonical" href="https://calcthis.co/vo2-max-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="VO2 Max Calculator — Estimate Your Aerobic Fitness">
+<meta property="og:description" content="Estimate your VO2 max from resting heart rate or a walk test, see your percentile against age-and-sex norms, and get equivalent race times. Instant, no sign-up.">
+<meta property="og:url" content="https://calcthis.co/vo2-max-calculator/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<meta name="theme-color" content="#B5761F">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css?v=99">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "VO2 Max Calculator",
+  "url": "https://calcthis.co/vo2-max-calculator/",
+  "applicationCategory": "HealthApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Estimate VO2 max from resting heart rate or a 1-mile walk test, rank it against age-and-sex percentile norms on a live gauge, and see equivalent 5K, 10K, half marathon and marathon race times."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "How is VO2 max estimated without a lab test?", "acceptedAnswer": { "@type": "Answer", "text": "The default method uses your resting heart rate and estimated maximum heart rate — VO2 max = 15.3 x (max heart rate / resting heart rate). For a more accurate estimate, switch to the 1-mile walk test in Go advanced, which uses your weight, age, sex, walk time and finishing heart rate." } },
+    { "@type": "Question", "name": "What is a good VO2 max for my age?", "acceptedAnswer": { "@type": "Answer", "text": "It depends on your age and sex — VO2 max naturally declines with age and is typically higher in men than women at the same fitness level. The gauge compares your number to Cooper Institute norms for your specific age band and sex rather than a single universal number." } },
+    { "@type": "Question", "name": "How accurate is a resting heart rate VO2 max estimate?", "acceptedAnswer": { "@type": "Answer", "text": "It's a rough field estimate, not a lab measurement — useful for tracking your own trend over time rather than a precise absolute number. The 1-mile walk test method is generally more accurate since it's based on an actual physical effort rather than a resting measurement." } },
+    { "@type": "Question", "name": "How does VO2 max relate to race times?", "acceptedAnswer": { "@type": "Answer", "text": "Higher aerobic capacity generally supports faster sustainable paces. The advanced panel converts your estimated VO2 max into approximate 5K, 10K, half marathon and marathon times using the same VDOT model as our Race Time Predictor, though real race times also depend on running economy and training, not aerobic capacity alone." } },
+    { "@type": "Question", "name": "Can I improve my VO2 max?", "acceptedAnswer": { "@type": "Answer", "text": "Yes — VO2 max responds to aerobic training, especially sustained moderate effort and interval work at high intensity. It typically improves over weeks to months of consistent training and declines gradually with age and inactivity." } }
+  ]
+}
+</script>
+</head>
+<body class="p-vo2max">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <a class="hdr-back" href="/blog/" aria-label="Back to blog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <span class="menu-col-head">Construction &amp; Gardening</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+          <a href="/tape-measure-fraction-calculator/">Tape Measure Fraction</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/vo2-max-calculator/" class="current">VO2 Max</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
+          <a href="/bmi-calculator/">BMI</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/ideal-weight-calculator/">Ideal Weight</a>
+          <a href="/calorie-calculator/">Calorie</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/water-intake-calculator/">Water Intake</a>
+          <a href="/macro-calculator/">Macro</a>
+          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+          <a href="/age-calculator/">Age</a>
+          <a href="/date-calculator/">Date</a>
+          <a href="/time-calculator/">Time</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">Aerobic fitness, estimated in 30 seconds</div>
+    <h1>VO2 Max Calculator</h1>
+    <p>Estimate your <strong>VO2 max</strong> — the standard measure of aerobic fitness — from your resting heart rate. See exactly where you rank against <strong>Cooper Institute norms for your age and sex</strong> on a live gauge, not just a bare number.</p>
+  </section>
+
+  <div class="grid">
+    <div class="card">
+      <div class="card-pad">
+        <h2 class="card-h2">Your details</h2>
+
+        <div class="ctl-row">
+          <span class="ctl-lab">Sex</span>
+          <div class="seg" id="vxSexSeg">
+            <button type="button" data-sex="female" class="on">Female</button>
+            <button type="button" data-sex="male">Male</button>
+          </div>
+        </div>
+
+        <label class="fld" for="vxAge">
+          <span class="lab">Age</span>
+          <div class="inp"><input id="vxAge" type="number" inputmode="numeric" placeholder="30" min="10" max="99"></div>
+        </label>
+
+        <div id="vxRhrIn">
+          <label class="fld" for="vxRhr">
+            <span class="lab">Resting heart rate <span class="unit">bpm</span></span>
+            <div class="inp"><input id="vxRhr" type="number" inputmode="numeric" placeholder="60" min="30" max="120"></div>
+          </label>
+        </div>
+
+        <div id="vxWalkIn" style="display:none">
+          <div class="ctl-row">
+            <span class="ctl-lab">Units</span>
+            <div class="seg" id="vxUnitSeg">
+              <button type="button" data-u="imp" class="on">lb</button>
+              <button type="button" data-u="met">kg</button>
+            </div>
+          </div>
+          <label class="fld" for="vxWeight">
+            <span class="lab">Weight <span class="unit" id="vxWUnit">lb</span></span>
+            <div class="inp"><input id="vxWeight" type="number" inputmode="decimal" placeholder="160" min="1"></div>
+          </label>
+          <div class="fld" id="vxWalkTimeFld">
+            <span class="lab">1-mile walk time <span class="unit">min : sec</span></span>
+            <div class="two-c">
+              <div class="tcol"><div class="inp"><input id="vxWalkM" type="number" inputmode="numeric" placeholder="15" min="0" max="59"></div><div class="csub">Minutes</div></div>
+              <div class="tsep">:</div>
+              <div class="tcol"><div class="inp"><input id="vxWalkS" type="number" inputmode="numeric" placeholder="00" min="0" max="59"></div><div class="csub">Seconds</div></div>
+            </div>
+          </div>
+          <label class="fld" for="vxWalkHR">
+            <span class="lab">Heart rate at finish <span class="unit">bpm</span></span>
+            <div class="inp"><input id="vxWalkHR" type="number" inputmode="numeric" placeholder="130" min="60" max="220"></div>
+          </label>
+        </div>
+
+        <div class="fld" id="vxAdvIn" style="display:none;margin-top:4px">
+          <div class="ctl-row">
+            <span class="ctl-lab">Method</span>
+            <div class="seg" id="vxMethodSeg">
+              <button type="button" data-m="rhr" class="on">Resting HR</button>
+              <button type="button" data-m="walk">1-mile walk test</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="add-row split" style="margin-top:6px">
+          <span></span>
+          <button class="advbtn" id="vxAdvBtn" type="button">
+            <span id="vxAdvBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-pad">
+        <div class="bf-res">
+          <div class="res-lab">Estimated VO2 max</div>
+          <div class="res-big"><span id="vxResBig">—</span> <span class="res-unit" id="vxResUnit"></span></div>
+          <div class="res-sub" id="vxResSub">Enter your age and resting heart rate.</div>
+        </div>
+
+        <div class="vx-gauge" id="vxGauge" style="visibility:hidden">
+          <div class="vx-bar" id="vxBar"><span class="vx-marker" id="vxMarker" style="left:0"></span></div>
+          <div class="vx-ticks" id="vxTicks"></div>
+        </div>
+
+        <p class="vx-cat" id="vxCat"></p>
+
+        <div id="vxAdvOut" style="display:none">
+          <div class="dc-cap">Equivalent race times</div>
+          <div class="stable-wrap"><table class="dtable" id="vxRaceTable"></table></div>
+          <p class="res-tip">These use the same VDOT model as our <a href="/race-time-predictor/">Race Time Predictor</a>. Real race times also depend on running economy and training, not aerobic capacity alone — treat these as a rough equivalence, not a guarantee.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="related-calcs">
+    <p class="related-calcs-h">More fitness calculators that may interest you</p>
+    <div class="pills">
+      <a class="pill" href="/race-time-predictor/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        Race Time Predictor
+      </a>
+      <a class="pill" href="/heart-rate-zone-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
+        Heart Rate Zone Calculator
+      </a>
+      <a class="pill" href="/pace-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+        Pace Calculator
+      </a>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use the VO2 max calculator</h2>
+        <p>Choose your <strong>sex</strong> and enter your <strong>age</strong> and <strong>resting heart rate</strong> — the number of beats per minute at complete rest, most accurate first thing in the morning before getting out of bed. That's the default, zero-equipment estimate.</p>
+        <p>Tap <strong>Go advanced</strong> to switch to the <strong>1-mile walk test</strong> instead — walk one mile at a brisk, steady pace, note your time and your heart rate immediately at the finish line, and it uses your weight for a more accurate estimate. Advanced also shows equivalent 5K, 10K, half marathon and marathon race times.</p>
+
+        <h2>What VO2 max actually measures</h2>
+        <p>VO2 max is the maximum rate of oxygen your body can use during intense exercise, in millilitres per kilogram of body weight per minute (ml/kg/min). It's the standard lab measure of aerobic fitness — a higher number means your heart and lungs can deliver and your muscles can use more oxygen, which generally supports faster sustainable paces and better endurance.</p>
+
+        <h2>Why the number alone isn't the whole story</h2>
+        <p>A VO2 max of 40 means something different for a 25-year-old woman than a 60-year-old man — aerobic capacity naturally declines with age and differs by sex at every fitness level. That's why the gauge compares your result to <strong>Cooper Institute norms for your specific age band and sex</strong>, not a single universal scale.</p>
+      </div>
+
+      <div>
+        <h2>Resting heart rate vs. the walk test</h2>
+        <p>The resting heart rate method needs nothing but a quiet moment and a pulse check — quick, but a rougher estimate since it doesn't involve any actual effort. The <strong>1-mile walk test</strong> (Kline/Rockport formula) is generally more accurate because it's based on a real physical effort, at the cost of needing a measured mile and a way to check your heart rate at the finish.</p>
+
+        <h2>VO2 max and race pace</h2>
+        <p>The advanced panel translates your estimated VO2 max into approximate finish times using the same VDOT model behind our <a href="/race-time-predictor/">Race Time Predictor</a>. It's a useful rough guide, but real race performance also depends on running economy, pacing and training — not aerobic capacity alone.</p>
+
+        <h2>Common uses</h2>
+        <p>Tracking aerobic fitness over months of training, benchmarking against age-group peers, and getting a sense of what race times your current fitness could support. Pair it with the <a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a> to train at the right effort, and the <a href="/pace-calculator/">Pace Calculator</a> to plan a session around a goal pace.</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>How is VO2 max estimated without a lab test?</summary><p>The default method uses your resting heart rate and estimated maximum heart rate — VO2 max = 15.3 &times; (max heart rate &divide; resting heart rate). For a more accurate estimate, switch to the 1-mile walk test in Go advanced, which uses your weight, age, sex, walk time and finishing heart rate.</p></details>
+    <details class="faq"><summary>What is a good VO2 max for my age?</summary><p>It depends on your age and sex — VO2 max naturally declines with age and is typically higher in men than women at the same fitness level. The gauge compares your number to Cooper Institute norms for your specific age band and sex rather than a single universal number.</p></details>
+    <details class="faq"><summary>How accurate is a resting heart rate VO2 max estimate?</summary><p>It's a rough field estimate, not a lab measurement — useful for tracking your own trend over time rather than a precise absolute number. The 1-mile walk test method is generally more accurate since it's based on an actual physical effort rather than a resting measurement.</p></details>
+    <details class="faq"><summary>How does VO2 max relate to race times?</summary><p>Higher aerobic capacity generally supports faster sustainable paces. The advanced panel converts your estimated VO2 max into approximate 5K, 10K, half marathon and marathon times using the same VDOT model as our Race Time Predictor, though real race times also depend on running economy and training, not aerobic capacity alone.</p></details>
+    <details class="faq"><summary>Can I improve my VO2 max?</summary><p>Yes — VO2 max responds to aerobic training, especially sustained moderate effort and interval work at high intensity. It typically improves over weeks to months of consistent training and declines gradually with age and inactivity.</p></details>
+  </section>
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+          <li><a href="/tape-measure-fraction-calculator/">Tape Measure Fraction Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/vo2-max-calculator/">VO2 Max Calculator</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/bmi-calculator/">BMI Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/ideal-weight-calculator/">Ideal Weight Calculator</a></li>
+          <li><a href="/calorie-calculator/">Calorie Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/water-intake-calculator/">Water Intake Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+          <li><a href="/age-calculator/">Age Calculator</a></li>
+          <li><a href="/date-calculator/">Date Calculator</a></li>
+          <li><a href="/time-calculator/">Time Calculator</a></li>
+        </ul>
+      </div>
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/blog/">Blog</a>
+      <span aria-hidden="true">·</span>
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+</div>
+
+<script src="/assets/app.js?v=99"></script>
+<script>CalcThis.initVO2MaxCalc({});</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>

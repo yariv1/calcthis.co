@@ -30,6 +30,7 @@ const PAGES = [
   { file: 'tape-measure-fraction-calculator/index.html', slug: '/tape-measure-fraction-calculator/' },
   { file: 'pace-calculator/index.html',        slug: '/pace-calculator/' },
   { file: 'race-time-predictor/index.html',    slug: '/race-time-predictor/' },
+  { file: 'vo2-max-calculator/index.html',     slug: '/vo2-max-calculator/' },
   { file: 'heart-rate-zone-calculator/index.html', slug: '/heart-rate-zone-calculator/' },
   { file: 'zone-2-heart-rate-calculator/index.html', slug: '/zone-2-heart-rate-calculator/' },
   { file: 'bmi-calculator/index.html',         slug: '/bmi-calculator/' },
@@ -70,11 +71,107 @@ const PAGES = [
   { file: 'blog/how-much-should-i-weigh/index.html', slug: '/blog/how-much-should-i-weigh/' },
   { file: 'blog/how-to-calculate-the-number-of-days-between-two-dates/index.html', slug: '/blog/how-to-calculate-the-number-of-days-between-two-dates/' },
   { file: 'blog/how-to-add-fractions-on-a-tape-measure/index.html', slug: '/blog/how-to-add-fractions-on-a-tape-measure/' },
+  { file: 'blog/what-is-vo2-max/index.html', slug: '/blog/what-is-vo2-max/' },
   { file: 'about/index.html',           slug: '/about/' },
   { file: 'contact/index.html',         slug: '/contact/' },
   { file: 'privacy-policy/index.html',  slug: '/privacy-policy/' },
   { file: 'terms-of-use/index.html',    slug: '/terms-of-use/' },
 ];
+
+// ---- MANDATORY unit-toggle gate — runs before anything else touches disk ----
+// Enforces md-files/calcthis-blog-article.md Step 5.5 / Rule #0.5. This exists because
+// the same mistake shipped repeatedly before anyone thought to check it in tooling
+// instead of by hand. Checks, on every class="u" element in blog/*/index.html:
+//   1. Both data-imp and data-met are present.
+//   2. data-met never carries a leftover imperial word ("inch"/"foot"/"feet") unless
+//      data-imp/data-met are a deliberately identical stated constant (e.g. "1 inch"
+//      = "1 inch" next to "2.54 cm" = "2.54 cm").
+//   3. For simple single-number/single-unit pairs (not ranges or compound feet+inches
+//      values, which are too ambiguous to auto-check), the metric number is actually
+//      the correct conversion of the imperial number (>5% off = fail), and the unit
+//      families match (imperial length can't pair with a metric mass, etc).
+// Any violation stops the ENTIRE build — no pages are stamped, no version bump, no
+// IndexNow ping — until it's fixed. This is deliberately not a warning. It does NOT
+// (and cannot) verify whether a value should have been wrapped in the first place —
+// that judgment call is still Step A in the skill file, done by hand, every article.
+(function checkUnitToggles() {
+  const blogDir = path.join(ROOT, 'blog');
+  if (!fs.existsSync(blogDir)) return;
+  const failures = [];
+  const IMP_WORD = /\b(inch|inches|foot|feet)\b/i;
+  const TAG_RE = /<[a-zA-Z][\w-]*\b[^>]*\bclass=["'][^"']*\bu\b[^"']*["'][^>]*>/g;
+  const ATTR_RE = /(data-imp|data-met)=(?:"([^"]*)"|'([^']*)')/g;
+
+  for (const slug of fs.readdirSync(blogDir)) {
+    const fp = path.join(blogDir, slug, 'index.html');
+    if (!fs.existsSync(fp)) continue;
+    const html = fs.readFileSync(fp, 'utf8');
+    const rel = 'blog/' + slug + '/index.html';
+    let m;
+    while ((m = TAG_RE.exec(html))) {
+      const tag = m[0];
+      const attrs = {};
+      let a;
+      ATTR_RE.lastIndex = 0;
+      while ((a = ATTR_RE.exec(tag))) attrs[a[1]] = a[2] !== undefined ? a[2] : a[3];
+      if (!('data-imp' in attrs) || !('data-met' in attrs)) {
+        failures.push(rel + ': a class="u" element is missing data-imp or data-met -> ' + tag.slice(0, 120));
+        continue;
+      }
+      // A data-imp/data-met pair that's deliberately identical (a stated universal
+      // conversion constant, e.g. "1 inch" = "1 inch" alongside "2.54 cm" = "2.54 cm")
+      // is correct and intentionally non-toggling — only flag when they DIFFER and
+      // the metric side still carries an imperial word, which means a real leftover.
+      if (attrs['data-imp'] !== attrs['data-met'] && IMP_WORD.test(attrs['data-met'])) {
+        failures.push(rel + ': data-met contains an imperial word ("inch"/"foot"/"feet") -> data-met="' + attrs['data-met'].slice(0, 140) + '"');
+      }
+      // Numeric sanity check — only for the SIMPLE case (one number, one recognized
+      // unit, on each side). Ranges, feet+inches combos, and multi-value strings are
+      // too ambiguous to safely auto-verify and are skipped here (still require the
+      // manual Step A/C review) rather than risk a false failure on legitimate content.
+      if (attrs['data-imp'] !== attrs['data-met']) {
+        const impM = attrs['data-imp'].trim().match(/^~?\s*([\d.]+)\s*(in|inch|inches|ft|foot|feet|lb|lbs|pound|pounds|mi|mile|miles|yd|yards?)\.?$/i);
+        const metM = attrs['data-met'].trim().match(/^~?\s*([\d.]+)\s*(cm|mm|km|kg|g|m|metres?|meters?)\.?$/i);
+        if (impM && metM) {
+          const FACTORS = { in: 2.54, inch: 2.54, inches: 2.54, ft: 30.48, foot: 30.48, feet: 30.48,
+            lb: 0.453592, lbs: 0.453592, pound: 0.453592, pounds: 0.453592,
+            mi: 1.609344, mile: 1.609344, miles: 1.609344, yd: 0.9144, yard: 0.9144, yards: 0.9144 };
+          const TARGET_UNIT = { in: 'cm', inch: 'cm', inches: 'cm', ft: 'cm', foot: 'cm', feet: 'cm',
+            lb: 'kg', lbs: 'kg', pound: 'kg', pounds: 'kg',
+            mi: 'km', mile: 'km', miles: 'km', yd: 'm', yard: 'm', yards: 'm' };
+          const impUnit = impM[2].toLowerCase(), metUnit = metM[2].toLowerCase().replace(/s$/, '').replace(/^metre|^meter/, 'm');
+          const impVal = parseFloat(impM[1]), metVal = parseFloat(metM[1]);
+          const factor = FACTORS[impUnit];
+          let expectedUnit = TARGET_UNIT[impUnit];
+          if (factor && expectedUnit) {
+            let expected = impVal * factor;
+            let actualMetUnit = metUnit;
+            // allow cm<->mm when the expected unit is cm (e.g. small values reasonably shown in mm)
+            if (expectedUnit === 'cm' && actualMetUnit === 'mm') expected *= 10;
+            if (expectedUnit === 'm' && actualMetUnit === 'km') expected /= 1000;
+            else if (expectedUnit !== actualMetUnit && !(expectedUnit === 'cm' && actualMetUnit === 'mm')) {
+              // unit family mismatch entirely (e.g. lb paired with cm) — flag regardless of number
+              failures.push(rel + ': unit family mismatch -> data-imp="' + attrs['data-imp'] + '" data-met="' + attrs['data-met'] + '"');
+            }
+            if (expected) {
+              const pctOff = Math.abs(expected - metVal) / expected;
+              if (pctOff > 0.05) {
+                failures.push(rel + ': conversion looks wrong (off by ' + (pctOff * 100).toFixed(1) + '%) -> data-imp="' + attrs['data-imp'] + '" data-met="' + attrs['data-met'] + '" (expected ~' + expected.toFixed(2) + ' ' + actualMetUnit + ')');
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  if (failures.length) {
+    console.error('\n⛔ UNIT TOGGLE GATE FAILED — build stopped, nothing was written.\n');
+    failures.forEach(function (f) { console.error('  - ' + f); });
+    console.error('\nSee md-files/calcthis-blog-article.md → Step 5.5. Fix every line above, then re-run node build.js.\n');
+    process.exit(1);
+  }
+})();
 
 // ---- bump shared asset version ----
 const verFile = path.join(ROOT, '.assetver');

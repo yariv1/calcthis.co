@@ -3168,6 +3168,230 @@ CalcThis.initPredictorCalc = function (cfg) {
 };
 
 /* -----------------------------------------------------------
+   CalcThis.initVO2MaxCalc(cfg) — VO2 max estimator.
+   Independent engine. Two methods:
+     rhr  — resting heart rate: VO2max = 15.3 * (HRmax/HRrest),
+            HRmax = 208 - 0.7*age (Tanaka, same as Heart Rate Zone calc).
+     walk — 1-mile walk test (Kline/Rockport): VO2max = 132.853 -
+            0.0769*lb - 0.3877*age + 6.315*sexM - 3.2649*min - 0.1565*hr.
+   Differentiator: a live percentile gauge against Cooper Institute
+   age+sex norms (quartile bands), plus (Go advanced) equivalent race
+   times reusing the exact VDOT solver from Race Time Predictor
+   (vo2cost/pctMax/predictVdot re-implemented locally — no shared
+   global state, same pattern as initPredictorCalc itself uses).
+   Live, no button. */
+CalcThis.initVO2MaxCalc = function (cfg) {
+  cfg = cfg || {};
+  var $ = function (id) { return document.getElementById(id); };
+  var sex = 'female', method = 'rhr', unit = 'imp', advanced = false;
+
+  // Cooper Institute / ACSM norms, ml/kg/min: [p10, p25, p50, p75, p90] per age band
+  var NORMS = {
+    male: {
+      20: [32.1, 40.1, 48.0, 55.2, 61.8], 30: [30.2, 35.9, 42.4, 49.2, 56.5],
+      40: [26.8, 31.9, 37.8, 45.0, 52.1], 50: [22.8, 27.1, 32.6, 39.7, 45.6],
+      60: [19.8, 23.7, 28.2, 34.5, 40.3], 70: [17.1, 20.4, 24.4, 30.4, 36.6]
+    },
+    female: {
+      20: [23.9, 30.5, 37.6, 44.7, 51.3], 30: [20.9, 25.3, 30.2, 36.1, 41.4],
+      40: [18.8, 22.1, 26.7, 32.4, 38.4], 50: [17.3, 19.9, 23.4, 27.6, 32.0],
+      60: [14.6, 17.2, 20.0, 23.8, 27.0], 70: [13.6, 15.6, 18.3, 20.8, 23.1]
+    }
+  };
+  var SCALE_MIN = 10, SCALE_MAX = 68;
+  var CATS = [
+    { name: 'Below average', cls: 0 },
+    { name: 'Average', cls: 1 },
+    { name: 'Good', cls: 2 },
+    { name: 'Excellent', cls: 3 }
+  ];
+  var BAND_COLORS = ['#8F5C13', '#B5761F', '#5A7361', '#37503F'];
+
+  var ageIn = $('vxAge'), rhrIn = $('vxRhr'), weightIn = $('vxWeight'),
+      walkMIn = $('vxWalkM'), walkSIn = $('vxWalkS'), walkHRIn = $('vxWalkHR');
+  if (!ageIn) return;
+
+  function num(v) { v = parseFloat(('' + v).trim()); return isNaN(v) ? NaN : v; }
+  function one(x) { return (Math.round(x * 10) / 10).toFixed(1); }
+  function normRow(age) {
+    var band = Math.floor(Math.max(20, Math.min(79, age)) / 10) * 10;
+    if (band > 70) band = 70;
+    return NORMS[sex][band];
+  }
+  function catFor(vo2, row) {
+    if (vo2 < row[1]) return CATS[0];
+    if (vo2 < row[2]) return CATS[1];
+    if (vo2 < row[3]) return CATS[2];
+    return CATS[3];
+  }
+
+  // ---- VDOT solver, copied from initPredictorCalc (self-contained, no shared state) ----
+  function vo2cost(vMpMin) { return -4.60 + 0.182258 * vMpMin + 0.000104 * vMpMin * vMpMin; }
+  function pctMax(tMin) {
+    return 0.8 + 0.1894393 * Math.exp(-0.012778 * tMin) + 0.2989558 * Math.exp(-0.1932605 * tMin);
+  }
+  function predictVdot(vdot, d2km, seedSec) {
+    var meters = d2km * 1000;
+    function g(tSec) { var tMin = tSec / 60, v = meters / tMin; return vo2cost(v) / pctMax(tMin) - vdot; }
+    var lo = Math.max(3, seedSec * 0.35), hi = seedSec * 2.8, i;
+    for (i = 0; i < 80 && g(lo) < 0; i++) lo *= 0.7;
+    for (i = 0; i < 80 && g(hi) > 0; i++) hi *= 1.4;
+    for (i = 0; i < 90; i++) { var mid = (lo + hi) / 2; if (g(mid) > 0) lo = mid; else hi = mid; }
+    return (lo + hi) / 2;
+  }
+  function hms(sec) {
+    if (!isFinite(sec) || sec <= 0) return '—';
+    sec = Math.round(sec);
+    var h = Math.floor(sec / 3600), m = Math.floor((sec % 3600) / 60), s = sec % 60;
+    function pad(n) { return (n < 10 ? '0' : '') + n; }
+    return h > 0 ? h + ':' + pad(m) + ':' + pad(s) : m + ':' + pad(s);
+  }
+  var RACE_TARGETS = [
+    { label: '5K', km: 5 }, { label: '10K', km: 10 },
+    { label: 'Half', km: 21.0975 }, { label: 'Marathon', km: 42.195 }
+  ];
+
+  function computeRhr(age, rhr) {
+    var hrMax = 208 - 0.7 * age;
+    return 15.3 * (hrMax / rhr);
+  }
+  function computeWalk(age, isMale, weightLb, walkMin, hr) {
+    return 132.853 - 0.0769 * weightLb - 0.3877 * age + 6.315 * (isMale ? 1 : 0) -
+      3.2649 * walkMin - 0.1565 * hr;
+  }
+
+  function renderGauge(vo2, row) {
+    var gauge = $('vxGauge'), marker = $('vxMarker'), bar = $('vxBar'), ticks = $('vxTicks');
+    if (!gauge) return;
+    gauge.style.visibility = 'visible';
+    var edges = [SCALE_MIN, row[1], row[2], row[3], SCALE_MAX];
+    var stops = [];
+    for (var i = 0; i < 4; i++) {
+      var p0 = (edges[i] - SCALE_MIN) / (SCALE_MAX - SCALE_MIN) * 100;
+      var p1 = (edges[i + 1] - SCALE_MIN) / (SCALE_MAX - SCALE_MIN) * 100;
+      stops.push(BAND_COLORS[i] + ' ' + p0 + '%', BAND_COLORS[i] + ' ' + p1 + '%');
+    }
+    bar.style.background = 'linear-gradient(to right,' + stops.join(',') + ')';
+    var pct = (vo2 - SCALE_MIN) / (SCALE_MAX - SCALE_MIN) * 100;
+    marker.style.left = Math.max(0, Math.min(100, pct)) + '%';
+    var tickVals = [row[0], row[1], row[2], row[3], row[4]];
+    var html = '';
+    tickVals.forEach(function (v) {
+      var p = (v - SCALE_MIN) / (SCALE_MAX - SCALE_MIN) * 100;
+      html += '<span style="left:' + p + '%">' + Math.round(v) + '</span>';
+    });
+    ticks.innerHTML = html;
+  }
+
+  function renderRaceTable(vo2) {
+    var wrap = $('vxAdvOut'); if (!wrap) return;
+    if (!advanced) { wrap.style.display = 'none'; return; }
+    wrap.style.display = '';
+    var body = '';
+    RACE_TARGETS.forEach(function (t) {
+      var seedSec = t.km * 300; // universal wide-bracket seed, 5 min/km
+      var sec = predictVdot(vo2, t.km, seedSec);
+      body += '<tr><td>' + t.label + '</td><td>' + hms(sec) + '</td></tr>';
+    });
+    $('vxRaceTable').innerHTML =
+      '<thead><tr><th>Distance</th><th>Estimated time</th></tr></thead><tbody>' + body + '</tbody>';
+  }
+
+  function solve() {
+    var age = num(ageIn.value);
+    var resBig = $('vxResBig'), resSub = $('vxResSub'), catEl = $('vxCat');
+    var ageOk = isFinite(age) && age >= 10 && age <= 99;
+    var vo2 = NaN;
+
+    if (ageOk && method === 'rhr') {
+      var rhr = num(rhrIn.value);
+      if (isFinite(rhr) && rhr > 0) vo2 = computeRhr(age, rhr);
+    } else if (ageOk && method === 'walk') {
+      var wRaw = num(weightIn.value), wLb = isFinite(wRaw) ? (unit === 'met' ? wRaw * 2.2046226 : wRaw) : NaN;
+      var wm = num(walkMIn.value), ws = num(walkSIn.value), hr = num(walkHRIn.value);
+      var walkMin = (isNaN(wm) ? 0 : wm) + (isNaN(ws) ? 0 : ws) / 60;
+      if (isFinite(wLb) && wLb > 0 && walkMin > 0 && isFinite(hr) && hr > 0) {
+        vo2 = computeWalk(age, sex === 'male', wLb, walkMin, hr);
+      }
+    }
+
+    if (!(isFinite(vo2) && vo2 > 0)) {
+      resBig.textContent = '—';
+      resSub.textContent = method === 'rhr' ? 'Enter your age and resting heart rate.' :
+        'Enter your age, weight, walk time and finishing heart rate.';
+      if ($('vxGauge')) $('vxGauge').style.visibility = 'hidden';
+      if (catEl) catEl.innerHTML = '';
+      if ($('vxAdvOut')) $('vxAdvOut').style.display = 'none';
+      return;
+    }
+
+    var row = normRow(age);
+    var cat = catFor(vo2, row);
+    resBig.textContent = one(vo2);
+    $('vxResUnit').textContent = 'ml/kg/min';
+    resSub.textContent = method === 'rhr' ? 'Resting heart rate method' : '1-mile walk test method';
+    catEl.innerHTML = 'Fitness category: <strong>' + cat.name + '</strong> for a ' +
+      Math.floor(Math.max(20, Math.min(79, age)) / 10) * 10 + 's ' + sex;
+    renderGauge(vo2, row);
+    renderRaceTable(vo2);
+  }
+
+  function seg(id, attr, fn) {
+    var box = $(id); if (!box) return;
+    box.addEventListener('click', function (e) {
+      var b = e.target.closest('button'); if (!b) return;
+      [].forEach.call(box.querySelectorAll('button'), function (x) { x.classList.remove('on'); });
+      b.classList.add('on'); fn(b.getAttribute(attr));
+    });
+  }
+
+  seg('vxSexSeg', 'data-sex', function (v) { sex = v; solve(); });
+  seg('vxMethodSeg', 'data-m', function (v) {
+    method = v;
+    $('vxRhrIn').style.display = v === 'rhr' ? '' : 'none';
+    $('vxWalkIn').style.display = v === 'walk' ? '' : 'none';
+    solve();
+  });
+  seg('vxUnitSeg', 'data-u', function (v) {
+    if (v === unit) return;
+    var w = num(weightIn.value);
+    unit = v;
+    $('vxWUnit').textContent = unit === 'met' ? 'kg' : 'lb';
+    if (isFinite(w) && w > 0) {
+      weightIn.value = Math.round(unit === 'met' ? w / 2.2046226 : w * 2.2046226);
+    }
+    solve();
+  });
+
+  [ageIn, rhrIn, weightIn, walkMIn, walkSIn, walkHRIn].forEach(function (inp) {
+    if (!inp) return;
+    inp.addEventListener('input', solve);
+  });
+
+  var advBtn = $('vxAdvBtn');
+  if (advBtn) {
+    advBtn.addEventListener('click', function () {
+      advanced = !advanced;
+      advBtn.classList.toggle('open', advanced);
+      $('vxAdvBtnLab').textContent = advanced ? 'Go simple' : 'Go advanced';
+      $('vxAdvIn').style.display = advanced ? '' : 'none';
+      if (!advanced) {
+        method = 'rhr';
+        $('vxRhrIn').style.display = '';
+        $('vxWalkIn').style.display = 'none';
+        var mseg = $('vxMethodSeg');
+        if (mseg) [].forEach.call(mseg.querySelectorAll('button'), function (b) {
+          b.classList.toggle('on', b.getAttribute('data-m') === 'rhr');
+        });
+      }
+      solve();
+    });
+  }
+
+  solve();
+};
+
+/* -----------------------------------------------------------
    CalcThis.initDateCalc(cfg) — date calculator.
    Independent engine. Two modes:
      between  — days / weeks / months / years between two dates,

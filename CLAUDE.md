@@ -15,6 +15,39 @@ from scratch — this happened concretely with the unit-toggle rule in
 `md-files/calcthis-blog-article.md` (three rounds of invented, wrong behavior before anyone
 checked the working reference article that already solved it).
 
+## ⛔ HARD RULE — CALCULATOR BUILD ORDER: RESEARCH REPORT → APPROVAL → BUILD → PREVIEW
+
+Every new calculator follows this exact order, no skipping or reordering:
+
+1. **Research first, before writing any code.** Look at what competing calculators for the
+   keyword actually do (usually near-identical to each other). Then think about where CalcThis
+   can give the user genuinely more value — something that makes them want to come back and
+   use this one again — not a copy of what everyone already does. The fact that everyone does
+   something a certain way doesn't mean it's the best way. Favor **visual aids** wherever
+   relevant: people respond to seeing the result, not just a dry input form — a live diagram,
+   gauge, bar, chart, or marker beats a bare number whenever the calculation supports one.
+   Power-user depth stays behind **Go advanced** — the default view stays minimal. Do not
+   overcomplicate and do not add something the user is unlikely to actually need "just because."
+   This is Rule 8 in `md-files/calcthis-workflow-rules.md` — read it in full before researching.
+2. **Give a short, concise, to-the-point report** — what competitors do, what the one clear
+   differentiator will be — and wait for explicit approval before writing any code.
+3. **Build the calculator** only after that approval.
+4. **Present a preview** for approval before any deploy.
+
+Do not fold steps together, skip the report, or start building before approval.
+
+## ⛔ HARD RULE — QA THE UNIT TOGGLE ON EVERY ARTICLE, EVERY TIME, NO EXCEPTIONS
+
+Every blog article — regardless of whether it looks like it involves units — gets the full
+unit-toggle QA procedure in `md-files/calcthis-blog-article.md` (Rule #0.5 / Step 5.5: decide →
+wrap → verify) before its preview links are sent. This includes running `node build.js` and
+confirming zero unit-toggle gate failures — `build.js` itself will refuse to write any file and
+stop the whole build if `.u` markup is broken (missing `data-imp`/`data-met`, or a stray
+imperial word leaking into `data-met`). That mechanical gate does not catch bad judgment calls
+about whether a value needed wrapping in the first place, or wrong conversion math — those still
+require the manual Step A/C review, every time. This exists after the same unit-toggle bug
+shipped four times across two articles before it was fixed structurally.
+
 > **Self-maintenance rule:** At the end of every session, update this file:
 > - Bump asset version
 > - Add any new articles/calculators to the live lists
@@ -25,13 +58,13 @@ checked the working reference article that already solved it).
 
 ## Project state
 
-- **Asset version:** v87
-- **Total pages:** 55
+- **Asset version:** v99
+- **Total pages:** 57
 - **Model:** Opus 4.6
 
 ---
 
-## Live blog articles (17)
+## Live blog articles (18)
 
 - How Much Gravel Do I Need for a Driveway?
 - How Much Mulch Do I Need?
@@ -50,16 +83,17 @@ checked the working reference article that already solved it).
 - How Much Should I Weigh?
 - How to Calculate the Number of Days Between Two Dates
 - How to Add and Subtract Fractions on a Tape Measure
+- What Is VO2 Max? How to Estimate Your Aerobic Fitness
 
 ---
 
-## Live calculators (32)
+## Live calculators (33)
 
 ### Construction & Gardening (9)
 Board Foot · Gravel · Sand · Topsoil · Mulch · Concrete · Flooring · Tile · Tape Measure Fraction
 
-### Health & Fitness (14)
-Pace · Race Time Predictor · Heart Rate Zone · Zone 2 Heart Rate · BMI · Body Fat · Ideal Weight · Calorie · TDEE · One Rep Max · Sleep · Water Intake · Macro · Peptide Reconstitution
+### Health & Fitness (15)
+Pace · Race Time Predictor · VO2 Max · Heart Rate Zone · Zone 2 Heart Rate · BMI · Body Fat · Ideal Weight · Calorie · TDEE · One Rep Max · Sleep · Water Intake · Macro · Peptide Reconstitution
 
 ### School & Grades (4)
 Final Grade · GPA · Grade · Test Score
@@ -67,11 +101,50 @@ Final Grade · GPA · Grade · Test Score
 ### Math & Numbers (5)
 Ratio · Percentage · Age · Date · Time
 
-Total live calculators: **31**
+Total live calculators: **33**
 
 ---
 
-## Last session (v84–v85)
+## Last session (v87–v99)
+
+- v87–v88: Built + deployed **Tape Measure Fraction Calculator** (`/tape-measure-fraction-calculator/`,
+  roadmap #10) + companion article **"How to Add and Subtract Fractions on a Tape Measure"**.
+  Companion article's unit toggle went through 3 rounds of bugs (missing, then partially wrapped,
+  then a policy that wrongly excluded it) before landing on the current fixed procedure — see
+  the hard rules below.
+- v89–v99: Built + deployed **VO2 Max Calculator** (`/vo2-max-calculator/`) + companion article
+  **"What Is VO2 Max? How to Estimate Your Aerobic Fitness"**. `CalcThis.initVO2MaxCalc` in
+  app.js, `.p-vo2max` in style.css. Two estimate methods — resting heart rate (default,
+  `VO2max = 15.3 × HRmax/HRrest`, HRmax via the existing Tanaka formula already used by Heart
+  Rate Zone) and the 1-mile walk/Rockport test (Go advanced). **Differentiator (Rule 8,
+  verified against Omnicalculator/MD App/Legion — all bare-number, zero visuals, zero age/sex
+  context):** a live percentile gauge against Cooper Institute age+sex norms (bar + marker +
+  ticks, bands computed per age/sex in JS, same bar/marker technique as the BMI gauge) plus
+  (Go advanced) equivalent 5K/10K/half/marathon times, reusing the exact VDOT solver already
+  in Race Time Predictor's `initPredictorCalc` (copied locally per this codebase's own
+  "independent engine, no shared state" convention). Two-field `min:sec` input reuses the
+  existing `.two-c` pattern (flex-based, never wraps on mobile — confirmed live on Pace
+  Calculator already using it), not `.two` (grid-based, wraps at 430px — wrong for this).
+  **Bug found + fixed:** a `<div class="fld">` for the walk-time field had no vertical margin
+  because `label.fld` CSS doesn't cover divs — every page using `.two-c`/`.three` needs its own
+  `.p-PAGENAME .fld{margin-bottom:...}` rule in style.css; this is now checklist item #15 in
+  `calcthis-new-page-checklist.md`. Also moved page CSS from an (incorrect) inline `<style>`
+  block into `style.css` proper, matching every other live calculator page.
+- **New hard rules this session, in `CLAUDE.md` + skill files, after repeated process failures:**
+  - *Never invent* — copy an existing skill-file pattern or live reference page exactly; stop
+    and ask rather than improvise a variation.
+  - *Calculator build order* — research report → user approval → build → preview, no skipping.
+  - *Unit toggle QA on every article, every time* (`calcthis-blog-article.md` Rule #0.5 / Step
+    5.5) — a mechanical decide → wrap → verify procedure, no judgment-call carve-outs.
+  - **`build.js` now has a hard-fail gate** (`checkUnitToggles`, runs before anything else
+    touches disk) that scans every `blog/*/index.html` and refuses to write ANY file if a
+    `class="u"` element is missing `data-imp`/`data-met`, if `data-met` leaks a stray imperial
+    word, or if a simple single-value conversion's numbers are wrong (>5% off) or the unit
+    families don't match. Caught and fixed one real pre-existing rounding error
+    (`how-many-calories-to-lose-weight`: "0.5 lb" was paired with "0.25 kg", corrected to
+    "0.23 kg") the same day it was added.
+
+## Earlier (v84–v85)
 
 - v84–v85: Built + deployed **Time Calculator** (`/time-calculator/`) — roadmap #9,
   completes the Date/Time cluster (Age + Date + Time). `CalcThis.initTimeCalc` in app.js,

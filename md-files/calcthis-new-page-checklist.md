@@ -51,10 +51,15 @@ Before writing HTML, open an existing working page and extract:
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script type="application/ld+json">{ ... }</script>
 <link rel="stylesheet" href="/assets/style.css?v=N">
-<style>
-/* PAGE-SPECIFIC CSS ONLY HERE */
-</style>
 ```
+
+⛔ **No inline `<style>` block on calculator pages.** Checked every live calculator page —
+none of them has one. ALL page-specific CSS (`.p-PAGENAME ...`) goes into `assets/style.css`
+in its own labeled section (see any existing `/* FITNESS · XXX (body.p-xxx) */` block for the
+pattern), never inline in the page's `<head>`. This shipped wrong once (VO2 Max Calculator had
+an inline `<style>` block) and had to be moved after the fact — don't repeat it. (Blog articles
+are a different template and DO keep a small inline `<style>` for the lightbox/unit-toggle
+boilerplate — this rule is calculator pages only.)
 
 ---
 
@@ -155,6 +160,11 @@ Why each step is mandatory:
 
 ## AFTER CREATING THE FILE
 1. Serve the preview (`calcthis-static` on :8123), verify it in the browser pane, give the user the localhost + LAN Chrome links (RULE #1 — never ship before approved preview)
+1a. ⛔ **Spacing gate — if the page has ANY `<div class="fld">` (not `<label class="fld">`)**,
+    confirm `assets/style.css` has a `.p-PAGENAME .fld{margin-bottom:...px}` rule for this page,
+    then measure the actual gap in the browser (`getBoundingClientRect()` before/after, or the
+    `computed style` margin) — do not eyeball it. See `calcthis-design-system.md` → "Two-field
+    colon input" for why this is required and the exact bug it already caused once.
 2. Add page to `PAGES` array in `build.js` — `{ file: 'SLUG/index.html', slug: '/SLUG/' }`
 3. Add nav link in `partials/header.html` (correct column)
 4. Add footer link in `partials/footer.html` (correct pillar)
@@ -181,3 +191,6 @@ Why each step is mandatory:
 12. Shipping/delivering before a full styled preview is approved
 13. Letting the user believe a functional-only preview is the real styled result
 14. Asking the user to fix things caused by wrong class names or structure
+15. Using a `<div class="fld">` without adding a page-specific `.p-PAGENAME .fld{margin-bottom:...}`
+    rule in `style.css` — `label.fld` CSS does not cover divs, so this ships broken spacing
+    (happened once on VO2 Max Calculator's `.two-c` field, fixed after ship — don't repeat it)
