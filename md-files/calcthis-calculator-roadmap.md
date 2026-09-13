@@ -33,6 +33,7 @@ Pregnancy + Ovulation immediately **after** AdSense approval.
 | 9 | **Ovulation / Fertility Calculator** | ~3M/mo — same audience + component as Due Date, completes the Pregnancy cluster. | Pregnancy | Medium | ⬜ |
 | 10 | **Tape Measure Fraction Calculator** | ~18,000/mo — winnable reframe of the unwinnable generic "fraction calculator". | Construction & Gardening | Medium | ✅ Shipped v87–v88 |
 | 11 | **VO2 Max Calculator** | 40,000–90,000/mo — highest remaining volume of the researched candidates. | Health & Fitness | Medium | ✅ Shipped v89–v99 |
+| 12 | **Steps-to-Miles Calculator** | Ahrefs-verified >10,000/mo, Easy KD, trending up — plus a long-tail cluster of "N steps to miles" variants. | Health & Fitness | Simple–Medium | ⬜ |
 
 ### Companion articles to build alongside
 - Ideal Weight → "What's My Ideal Weight? Height, Frame, and the Formulas"
@@ -89,22 +90,25 @@ Pregnancy + Ovulation immediately **after** AdSense approval.
 
 ## Candidates under research (post-Time-Calculator) — NotebookLM pass, 2026-09-12
 
-Volume/KD are NotebookLM estimates, not Ahrefs-verified — spot-check in Ahrefs before
-committing a full build, same as every other roadmap entry. Tape Measure Fraction Calculator
-and VO2 Max Calculator (both were in this list) have shipped — moved to Next Builds #10–11 above.
+Tape Measure Fraction Calculator and VO2 Max Calculator (both were in this list) have shipped —
+moved to Next Builds #10–11 above.
 
-| Calculator | Keyword | Est. volume | Difficulty | Cluster | Differentiator |
+**Ahrefs-verified, 2026-09-13** (replaces the earlier NotebookLM estimates below):
+
+| Calculator | Keyword | Ahrefs volume | Ahrefs KD | Cluster | Differentiator |
 |---|---|---|---|---|---|
-| **Steps-to-Miles / Calories Burned Walking** | `steps to miles calculator` | ~22,000–45,000/mo | Low–Medium | Health & Fitness | Distance-milestone progress bar (real-world landmark comparisons) + incline/speed calorie-burn curve |
-| **ABSI (A Body Shape Index) Calculator** | `absi calculator` | ~4,800/mo | Extremely low (~8 exact-match competitors) | Health & Fitness (Weight cluster) | BMI-vs-ABSI visceral-risk 2D body-contour comparison |
-| **RFM (Relative Fat Mass) Calculator** | `rfm calculator` | ~3,200/mo | Extremely low | Health & Fitness (Weight cluster) | Height-to-waist geometric ratio slider vs. DEXA/Navy-tape benchmarks |
+| **Steps-to-Miles Calculator** | `steps to miles calculator` | **>10,000/mo**, trending up (updated 6 days ago), 127 related keywords incl. `14,000/7,000/10,000 steps to miles calculator` long-tails | **Easy** | Health & Fitness | Distance-milestone progress bar (real-world landmark comparisons) + incline/speed calorie-burn curve |
+| ABSI (A Body Shape Index) Calculator | `absi calculator` | <100/mo (only 4 related keywords total) | Easy | Health & Fitness (Weight cluster) | — not worth building at this volume, park it |
+| RFM (Relative Fat Mass) Calculator | `rfm calculator` | >100/mo (only 14 related keywords, rest <100) | Easy | Health & Fitness (Weight cluster) | — negligible volume, park it |
+
+**Decision: Steps-to-Miles Calculator ships next** (#12) — by far the best volume of the three,
+Easy KD, and a whole long-tail cluster of "N steps to miles" variants to pick up alongside the
+head term. ABSI and RFM moved to Parked Ideas below — real volume is too low to justify a build
+right now.
 
 **Crowded — ruled out:** Paint / Roofing / Fence / Deck (owned by Sherwin-Williams, Lowe's,
 Benjamin Moore, big construction-affiliate sites); generic Tip / Discount / Unit Converter
 (owned by calculator.net, Omnicalculator, Google's own inline results).
-
-Not yet decided which ships next — weigh cluster fit (VO2 Max/Steps-to-Miles/ABSI/RFM all
-extend Health & Fitness) against volume vs. difficulty above.
 
 ## Parked Ideas (not prioritized yet)
 
@@ -113,6 +117,8 @@ extend Health & Fitness) against volume vs. difficulty above.
   Finance category we'd have to defend. Not our lane.
 - Basic / Scientific Calculator — ~25M/mo but can't out-rank Google's own + Desmos.
 - Fraction Calculator — medium volume, math/school
+- ABSI (A Body Shape Index) Calculator — Ahrefs-verified <100/mo, not worth building
+- RFM (Relative Fat Mass) Calculator — Ahrefs-verified >100/mo but still negligible, not worth building
 
 ---
 
