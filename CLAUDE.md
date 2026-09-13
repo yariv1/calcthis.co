@@ -65,13 +65,13 @@ must be built from the article's actual units, every time, not pasted from a tem
 
 ## Project state
 
-- **Asset version:** v99 (Steps to Miles Calculator built, pending deploy — version bumps to v100 on `node build.js`, gated on explicit "deploy" go-ahead)
+- **Asset version:** v100
 - **Total pages:** 58
 - **Model:** Opus 4.6
 
 ---
 
-## Live blog articles (18)
+## Live blog articles (19)
 
 - How Much Gravel Do I Need for a Driveway?
 - How Much Mulch Do I Need?
@@ -91,10 +91,11 @@ must be built from the article's actual units, every time, not pasted from a tem
 - How to Calculate the Number of Days Between Two Dates
 - How to Add and Subtract Fractions on a Tape Measure
 - What Is VO2 Max? How to Estimate Your Aerobic Fitness
+- How Many Steps Are in a Mile?
 
 ---
 
-## Live calculators (33)
+## Live calculators (34)
 
 ### Construction & Gardening (9)
 Board Foot · Gravel · Sand · Topsoil · Mulch · Concrete · Flooring · Tile · Tape Measure Fraction
@@ -112,7 +113,7 @@ Total live calculators: **34**
 
 ---
 
-## This session (pending deploy — will bump to v100)
+## Last session (v100)
 
 - Built **Steps to Miles Calculator** (`/steps-to-miles-calculator/`, roadmap #12) —
   approved and researched last session (Ahrefs-verified `steps to miles calculator`,
@@ -141,8 +142,16 @@ Total live calculators: **34**
   build, fixed since it was directly adjacent). WebApplication + FAQPage JSON-LD, 5 FAQs,
   `.related-calcs` (Pace / Calorie / VO2 Max / Water Intake). Wired into nav, footer,
   homepage (card + hasPart + prose count → 34), build.js, sitemap.xml.
-  **Still pending:** user preview approval, then `node build.js` + commit + push on an
-  explicit "deploy" go-ahead.
+  Companion article **"How Many Steps Are in a Mile?"** (`/blog/how-many-steps-are-in-a-mile/`)
+  shipped same session — a "framing-unit" article (whole subject IS a unit) whose Metric
+  toggle rewrites the narrative (headings, FAQ, every "steps per mile" figure recomputed),
+  not just swaps numbers under an unchanged word. Caught + fixed after shipping once already:
+  the Step C verification regex only checked inch/foot/feet and missed "mile" entirely, so it
+  falsely passed with the H1 and several figures still unconverted. Fixed both the skill
+  file's regex and `build.js`'s `checkUnitToggles` IMP_WORD list (now covers mile/yard/pound/
+  ton) plus added ft→m as a valid pairing to the gate's numeric check (it only recognized
+  ft→cm before, incorrectly flagging "24 feet"→"7.3 m" as a mismatch). New Step A0 rule added
+  to `calcthis-blog-article.md` for any future framing-unit article. Deployed as v100.
 
 ## Earlier (v87–v99)
 
