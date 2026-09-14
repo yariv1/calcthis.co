@@ -35,7 +35,7 @@ Pregnancy + Ovulation immediately **after** AdSense approval.
 | 11 | **VO2 Max Calculator** | 40,000–90,000/mo — highest remaining volume of the researched candidates. | Health & Fitness | Medium | ✅ Shipped v89–v99 |
 | 12 | **Steps-to-Miles Calculator** | Ahrefs-verified >10,000/mo, Easy KD, trending up — plus a long-tail cluster of "N steps to miles" variants. | Health & Fitness | Simple–Medium | ✅ Shipped v100 |
 
-| 13 | **Protein Intake Calculator** | Ahrefs-verified >10,000/mo, **Easy** KD. | Health & Fitness | Simple–Medium | ⬜ |
+| 13 | **Protein Intake Calculator** | Ahrefs-verified >10,000/mo, **Easy** KD. | Health & Fitness | Simple–Medium | ✅ Shipped v103 |
 | 14 | **Square Footage Calculator** | Ahrefs-verified >10,000/mo, Medium KD. | Construction & Gardening | Simple | ⬜ |
 | 15 | **Stair Calculator** | Ahrefs-verified >10,000/mo, Medium KD. | Construction & Gardening | Medium | ⬜ |
 | 16 | **Lean Body Mass Calculator** | Ahrefs-verified >1,000/mo, Medium KD. | Health & Fitness | Simple | ⬜ |

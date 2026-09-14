@@ -102,13 +102,13 @@ must be built from the article's actual units, every time, not pasted from a tem
 
 ## Project state
 
-- **Asset version:** v100
-- **Total pages:** 58
+- **Asset version:** v103
+- **Total pages:** 60
 - **Model:** Opus 4.6
 
 ---
 
-## Live blog articles (19)
+## Live blog articles (20)
 
 - How Much Gravel Do I Need for a Driveway?
 - How Much Mulch Do I Need?
@@ -129,16 +129,17 @@ must be built from the article's actual units, every time, not pasted from a tem
 - How to Add and Subtract Fractions on a Tape Measure
 - What Is VO2 Max? How to Estimate Your Aerobic Fitness
 - How Many Steps Are in a Mile?
+- How Much Protein Do I Need?
 
 ---
 
-## Live calculators (34)
+## Live calculators (35)
 
 ### Construction & Gardening (9)
 Board Foot · Gravel · Sand · Topsoil · Mulch · Concrete · Flooring · Tile · Tape Measure Fraction
 
-### Health & Fitness (16)
-Pace · Race Time Predictor · VO2 Max · Heart Rate Zone · Zone 2 Heart Rate · BMI · Body Fat · Ideal Weight · Calorie · TDEE · One Rep Max · Sleep · Water Intake · Macro · Peptide Reconstitution · Steps to Miles
+### Health & Fitness (17)
+Pace · Race Time Predictor · VO2 Max · Heart Rate Zone · Zone 2 Heart Rate · BMI · Body Fat · Ideal Weight · Calorie · TDEE · One Rep Max · Sleep · Water Intake · Macro · Protein Intake · Peptide Reconstitution · Steps to Miles
 
 ### School & Grades (4)
 Final Grade · GPA · Grade · Test Score
@@ -146,11 +147,60 @@ Final Grade · GPA · Grade · Test Score
 ### Math & Numbers (5)
 Ratio · Percentage · Age · Date · Time
 
-Total live calculators: **34**
+Total live calculators: **35**
 
 ---
 
-## Last session (v100)
+## Last session (v103)
+
+- Built **Protein Intake Calculator** (`/protein-intake-calculator/`, roadmap #13) —
+  researched and approved this session (Ahrefs-verified `protein intake calculator`,
+  >10,000/mo, Easy KD). `CalcThis.initProteinCalc` in app.js, `.p-protein` in style.css.
+  Age + sex + weight + goal chips (Sedentary/General fitness/Muscle gain/Cutting) → daily
+  protein target in grams, using goal-based g/kg multipliers (0.8/1.4/1.9/2.4) grounded in
+  ISSN position-stand ranges. **Differentiator (Rule 8):** a live gauge (bar + marker +
+  ticks, same technique as VO2 Max's gauge, fixed science-based bands 0.8–2.8 g/kg instead
+  of per-user norms) plotting the target across the full RDA-to-cutting spectrum, plus food
+  equivalents (chicken breasts / eggs, same divisors as the Macro calculator) and (Go
+  advanced) a lean-body-mass mode via body fat %, age-65+ PROT-AGE baseline bump (0.8 →
+  1.1 g/kg), pregnancy (+14 g/day) / breastfeeding (+25 g/day) adjustment gated on
+  Female + advanced (same pattern as Water Intake's `specialRow`), and a per-meal split
+  table (3/4/5 meals). Companion article **"How Much Protein Do I Need?"**
+  (`/blog/how-much-protein-do-i-need/`) shipped same session.
+  **Two real process failures this session, both now hard rules:**
+  1. **Shipped without Age or Sex** even though the competitor research had already found
+     and reported that calculator.net's protein calculator uses Age, Gender, Height, Weight
+     and Activity level — the finding was made and never acted on in the build. User caught
+     it by pointing to calculator.net's own screenshot. Fixed by adding Age + Sex to the
+     default (non-advanced) view. New hard rule added everywhere (`CLAUDE.md`,
+     `calcthis-workflow-rules.md` Rule 8.5, `calcthis-design-system.md` PRODUCT PHILOSOPHY):
+     never ship a calculator with fewer inputs than competitors; when a text-only fetch can't
+     confirm a competitor's actual UI, stop and ask the user for a screenshot rather than
+     guess.
+  2. **The g/kg ratio never converted with the unit toggle** — both the calculator's result
+     text/gauge and the article's every "X g/kg" mention stayed in g/kg regardless of
+     Imperial/Metric selection, even though American fitness content commonly uses the
+     "g per lb of bodyweight" framing instead (exactly like inches vs. cm). The correct
+     dual-unit pattern already existed in two older articles
+     (`how-many-calories-to-lose-weight`, `how-to-calculate-your-macros`) and was not reused
+     — a Never-Invent violation as much as a unit-toggle one. Fixed in both the calculator
+     (`renderGauge`/`solve` in `initProteinCalc` now display g/lb in Imperial, g/kg in
+     Metric) and the article (every ratio mention wrapped, matching the existing precedent
+     exactly). New hard rule added to `calcthis-blog-article.md` (Step A-minus-one): rate/
+     ratio quantities (g/kg, g/lb, $/sqft, etc.) get the same toggle treatment as raw
+     measurements whenever the rate is commonly stated in both systems in real-world use.
+  **Also fixed this session:** blog image prompts kept defaulting to the same "young fit
+  woman in athletic wear" and the same generic marble kitchen across articles — new hard
+  rule in `calcthis-blog-article.md` requiring explicit, varied physical descriptors (age,
+  ethnicity, hair, build) and varied, specific settings (kitchen style, materials, layout)
+  per article, with clothing matched to the actual scene rather than a fitness-brand
+  default. Also reinforced the no-narration rule (violated a third time this session) as
+  the very first hard rule at the top of this file.
+  WebApplication + FAQPage JSON-LD, 5 FAQs, `.related-calcs` (Macro / TDEE / Calorie / One
+  Rep Max). Wired into nav, footer, homepage (card + hasPart + prose count → 35), build.js,
+  sitemap.xml, blog hub. Deployed as v103.
+
+## Earlier (v100)
 
 - Built **Steps to Miles Calculator** (`/steps-to-miles-calculator/`, roadmap #12) —
   approved and researched last session (Ahrefs-verified `steps to miles calculator`,
@@ -415,9 +465,10 @@ AdSense approval**. Date/Time cluster (Age + Date + Time) is now complete.
 5. ~~Date Calculator~~ — ✅ shipped v81 (companion article pending)
 6. ~~Water Intake Calculator~~ — ✅ shipped v83
 7. ~~Time Calculator~~ — ✅ shipped v85 (completes Date/Time cluster)
-8. ~~Steps-to-Miles Calculator~~ — ✅ built this session (pending deploy)
-9. **Pregnancy / Due Date Calculator** — big new vertical, after AdSense approval (reuse date picker)
-10. **Ovulation / Fertility Calculator** — completes the Pregnancy cluster
+8. ~~Steps-to-Miles Calculator~~ — ✅ shipped v100
+9. ~~Protein Intake Calculator~~ — ✅ shipped v103
+10. **Pregnancy / Due Date Calculator** — big new vertical, after AdSense approval (reuse date picker)
+11. **Ovulation / Fertility Calculator** — completes the Pregnancy cluster
 
 ---
 
