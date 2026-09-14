@@ -47,6 +47,7 @@ left as-is; the tables below are the source of truth for those. Do not rename th
 | How to Calculate Your Body Fat Percentage | `blog-body-fat-article-card.webp` | `blog-body-fat-article-header.webp` |
 | What Is VO2 Max? How to Estimate Your Aerobic Fitness | `blog-vo2max-card.webp` | `blog-vo2max-hero.webp` |
 | How Many Steps Are in a Mile? | `blog-steps-mile-card.webp` | `blog-steps-mile-hero.webp` |
+| How Much Protein Do I Need? | `blog-protein-intake-card.webp` | `blog-protein-intake-hero.webp` |
 | What Is BMI? How to Calculate and Interpret Your Body Mass Index | `blog-bmi-card.webp` | `blog-bmi-hero.webp` |
 | How Many Calories Should I Eat to Lose Weight? | `blog-calories-lose-weight-card.webp` | `blog-calories-lose-weight-hero.webp` |
 | How to Calculate Your Exact Age | `blog-exact-age-card.webp` | `blog-exact-age-hero.webp` |
@@ -76,6 +77,7 @@ left as-is; the tables below are the source of truth for those. Do not rename th
 | How to Add and Subtract Fractions on a Tape Measure | `blog-tape-fractions-inArticle-1.webp` · `blog-tape-fractions-inArticle-2.webp` |
 | What Is VO2 Max? How to Estimate Your Aerobic Fitness | `blog-vo2max-inArticle-1.webp` · `blog-vo2max-inArticle-2.webp` |
 | How Many Steps Are in a Mile? | `blog-steps-mile-inArticle-1.webp` · `blog-steps-mile-inArticle-2.webp` |
+| How Much Protein Do I Need? | `blog-protein-intake-inArticle-1.webp` · `blog-protein-intake-inArticle-2.webp` |
 
 ### Rules
 - ❌ Never guess a filename. If it's not in this table, stop and check the actual file.

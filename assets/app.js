@@ -4629,6 +4629,193 @@ CalcThis.initStepsMilesCalc = function (cfg) {
   solve();
 };
 
+/* -----------------------------------------------------------
+   CalcThis.initProteinCalc(cfg) — daily protein target.
+   Independent engine. Goal picks a g/kg-of-bodyweight multiplier
+   (Sedentary/RDA 0.8, General fitness 1.4, Muscle gain 1.9,
+   Cutting 2.4). If a body-fat % is entered (Go advanced), the
+   target switches to g/kg-of-LEAN-mass instead (1.0/1.6/2.3/2.7),
+   which is re-expressed as an effective g/kg-bodyweight figure so
+   it plots on the same gauge either way. Age 65+ bumps the
+   Sedentary/RDA baseline from 0.8 to 1.1 g/kg (PROT-AGE Study
+   Group recommends 1.0-1.2 g/kg for older adults against
+   sarcopenia; the other goals already sit above that threshold).
+   Sex gates a Pregnant/Breastfeeding option in Go advanced, adding
+   the RDA deltas (+14 g/day pregnancy, +25 g/day breastfeeding) on
+   top of the selected goal.
+   Differentiator: a live gauge (bar + marker + ticks, same
+   technique as VO2 Max's vx-gauge, fixed science-based bands
+   instead of per-user norms) plotting the target across the full
+   RDA -> aggressive-cut spectrum, instead of every competitor's
+   bare number. Plus food equivalents (same divisors as the Macro
+   calculator: ~46g/chicken breast, ~6g/egg) and (Go advanced) a
+   per-meal split table. Live, no button. */
+CalcThis.initProteinCalc = function (cfg) {
+  cfg = cfg || {};
+  var $ = function (id) { return document.getElementById(id); };
+  var LB_PER_KG = 2.2046226;
+  var unit = 'imp', sex = 'female', goal = 'fit', special = 'none', meals = 4, advanced = false;
+
+  // g per kg of TOTAL bodyweight (simple/default mode); sed is the under-65 RDA figure
+  var GOAL_TOTAL = { sed: 0.8, fit: 1.4, gain: 1.9, cut: 2.4 };
+  // g per kg of LEAN mass (advanced mode, when body fat % is entered)
+  var GOAL_LBM = { sed: 1.0, fit: 1.6, gain: 2.3, cut: 2.7 };
+  var GOAL_LABEL = { sed: 'Sedentary (RDA)', fit: 'General fitness', gain: 'Muscle gain', cut: 'Fat loss (cutting)' };
+  // PROT-AGE Study Group: 1.0-1.2 g/kg for adults 65+ (midpoint used below), vs 0.8 standard RDA
+  var SED_OLDER_TOTAL = 1.1, SED_OLDER_LBM = 1.3;
+  // RDA absolute increments over non-pregnant baseline
+  var SPECIAL_ADD = { pregnant: 14, breastfeeding: 25 };
+
+  var SCALE_MIN = 0.8, SCALE_MAX = 2.8;
+  var BAND_EDGES = [0.8, 1.2, 1.6, 2.2, 2.8];
+  var BAND_COLORS = ['#8F5C13', '#B5761F', '#5A7361', '#37503F'];
+
+  var weightIn = $('piWeight'), bfIn = $('piBf'), ageIn = $('piAge');
+  if (!weightIn) return;
+
+  function num(v) { v = parseFloat(('' + v).trim()); return isNaN(v) ? NaN : v; }
+  function r0(n) { return Math.round(n); }
+
+  // effGPerKg is always the canonical g/kg figure (the formulas are calibrated in kg);
+  // the gauge and its tick labels display in whichever unit is currently selected —
+  // g/lb when unit is 'imp' (the common US "grams per pound" framing), g/kg when 'met'.
+  function renderGauge(effGPerKg) {
+    var gauge = $('piGauge'), marker = $('piMarker'), bar = $('piBar'), ticks = $('piTicks');
+    if (!gauge) return;
+    gauge.style.visibility = 'visible';
+    var conv = unit === 'imp' ? (1 / LB_PER_KG) : 1;
+    var dp = unit === 'imp' ? 2 : 1;
+    var stops = [];
+    for (var i = 0; i < 4; i++) {
+      var p0 = (BAND_EDGES[i] - SCALE_MIN) / (SCALE_MAX - SCALE_MIN) * 100;
+      var p1 = (BAND_EDGES[i + 1] - SCALE_MIN) / (SCALE_MAX - SCALE_MIN) * 100;
+      stops.push(BAND_COLORS[i] + ' ' + p0 + '%', BAND_COLORS[i] + ' ' + p1 + '%');
+    }
+    bar.style.background = 'linear-gradient(to right,' + stops.join(',') + ')';
+    var pct = (effGPerKg - SCALE_MIN) / (SCALE_MAX - SCALE_MIN) * 100;
+    marker.style.left = Math.max(0, Math.min(100, pct)) + '%';
+    var html = '';
+    BAND_EDGES.forEach(function (v) {
+      var p = (v - SCALE_MIN) / (SCALE_MAX - SCALE_MIN) * 100;
+      html += '<span style="left:' + p + '%">' + (v * conv).toFixed(dp) + '</span>';
+    });
+    ticks.innerHTML = html;
+  }
+
+  function renderEquiv(proteinG) {
+    var wrap = $('piEquiv'); if (!wrap) return;
+    var chicken = (proteinG / 46).toFixed(1);
+    var eggs = Math.round(proteinG / 6);
+    $('piEquivTxt').innerHTML = '<strong>' + chicken + '</strong> chicken breasts &nbsp;·&nbsp; <strong>' + eggs + '</strong> eggs';
+    wrap.style.display = '';
+  }
+
+  function renderMeals(proteinG) {
+    var wrap = $('piAdvOut'); if (!wrap) return;
+    if (!advanced) { wrap.style.display = 'none'; return; }
+    wrap.style.display = '';
+    var per = Math.floor(proteinG / meals);
+    var rem = proteinG - per * meals;
+    var body = '';
+    for (var i = 1; i <= meals; i++) {
+      var g = per + (i === meals ? rem : 0);
+      body += '<tr><td>Meal ' + i + '</td><td>' + g + ' g</td></tr>';
+    }
+    $('piMealTable').innerHTML = '<thead><tr><th>Meal</th><th>Protein</th></tr></thead><tbody>' + body + '</tbody>';
+  }
+
+  function solve() {
+    var wRaw = num(weightIn.value);
+    var resBig = $('piResBig'), resSub = $('piResSub'), catEl = $('piCat');
+    if (!(isFinite(wRaw) && wRaw > 0)) {
+      resBig.textContent = '—';
+      resSub.textContent = 'Enter your weight to see your daily protein target.';
+      if ($('piGauge')) $('piGauge').style.visibility = 'hidden';
+      if (catEl) catEl.innerHTML = '';
+      if ($('piEquiv')) $('piEquiv').style.display = 'none';
+      if ($('piAdvOut')) $('piAdvOut').style.display = 'none';
+      return;
+    }
+    var wKg = unit === 'imp' ? wRaw / LB_PER_KG : wRaw;
+    var age = num(ageIn ? ageIn.value : '');
+    var isOlder = isFinite(age) && age >= 65;
+    var bf = num(bfIn ? bfIn.value : '');
+    var hasBf = isFinite(bf) && bf > 0 && bf < 60;
+    var protein, effGPerKg;
+    if (hasBf) {
+      var lbm = wKg * (1 - bf / 100);
+      var lbmMult = (goal === 'sed' && isOlder) ? SED_OLDER_LBM : GOAL_LBM[goal];
+      protein = lbm * lbmMult;
+      effGPerKg = protein / wKg;
+    } else {
+      effGPerKg = (goal === 'sed' && isOlder) ? SED_OLDER_TOTAL : GOAL_TOTAL[goal];
+      protein = wKg * effGPerKg;
+    }
+    var hasSpecial = advanced && sex === 'female' && special !== 'none';
+    var specialAdd = hasSpecial ? SPECIAL_ADD[special] : 0;
+    protein += specialAdd;
+    var proteinG = r0(protein);
+    resBig.textContent = proteinG;
+    $('piResUnit').textContent = 'g / day';
+    var dispVal = unit === 'imp' ? (effGPerKg / LB_PER_KG).toFixed(2) : effGPerKg.toFixed(1);
+    var dispUnit = unit === 'imp' ? 'g/lb' : 'g/kg';
+    var subParts = 'at ' + dispVal + ' ' + dispUnit + (hasBf ? ' bodyweight-equivalent (lean-mass basis)' : '') +
+      (goal === 'sed' && isOlder ? ' (age 65+ baseline)' : '') + ' for ' + GOAL_LABEL[goal];
+    if (hasSpecial) subParts += ' + ' + specialAdd + ' g/day for ' + special;
+    resSub.textContent = subParts;
+    var catTxt = 'Goal: <strong>' + GOAL_LABEL[goal] + '</strong>' + (hasBf ? ' · based on your lean body mass' : '');
+    if (goal === 'sed' && isOlder) catTxt += ' · age-65+ baseline';
+    if (hasSpecial) catTxt += ' · +' + specialAdd + ' g/day for ' + special;
+    catEl.innerHTML = catTxt;
+    renderGauge(effGPerKg);
+    renderEquiv(proteinG);
+    renderMeals(proteinG);
+  }
+
+  function seg(id, attr, fn) {
+    var box = $(id); if (!box) return;
+    box.addEventListener('click', function (e) {
+      var b = e.target.closest('button'); if (!b) return;
+      [].forEach.call(box.querySelectorAll('button'), function (x) { x.classList.remove('on'); });
+      b.classList.add('on'); fn(b.getAttribute(attr));
+    });
+  }
+
+  seg('piUnitSeg', 'data-u', function (v) {
+    if (v === unit) return;
+    var w = num(weightIn.value);
+    unit = v;
+    $('piWUnit').textContent = unit === 'met' ? 'kg' : 'lb';
+    if (isFinite(w) && w > 0) {
+      weightIn.value = Math.round(unit === 'met' ? w / LB_PER_KG : w * LB_PER_KG);
+    }
+    solve();
+  });
+  seg('piGoalChips', 'data-goal', function (v) { goal = v; solve(); });
+  seg('piMealsChips', 'data-meals', function (v) { meals = parseInt(v, 10); solve(); });
+  seg('piSexSeg', 'data-sex', function (v) {
+    sex = v;
+    var sp = $('piSpecialRow'); if (sp) sp.style.display = (advanced && sex === 'female') ? '' : 'none';
+    solve();
+  });
+  seg('piSpecialSeg', 'data-special', function (v) { special = v; solve(); });
+
+  [weightIn, bfIn, ageIn].forEach(function (inp) { if (inp) inp.addEventListener('input', solve); });
+
+  var advBtn = $('piAdvBtn');
+  if (advBtn) advBtn.addEventListener('click', function () {
+    advanced = !advanced;
+    advBtn.classList.toggle('open', advanced);
+    $('piAdvBtnLab').textContent = advanced ? 'Go simple' : 'Go advanced';
+    $('piAdvIn').style.display = advanced ? '' : 'none';
+    if (!advanced && bfIn) bfIn.value = '';
+    var sp = $('piSpecialRow'); if (sp) sp.style.display = (advanced && sex === 'female') ? '' : 'none';
+    solve();
+  });
+
+  solve();
+};
+
 /* =========================================================
    SITE FOOTER — mobile accordion
    Multiple pillars can be open simultaneously.

@@ -1,5 +1,27 @@
 # CalcThis — Project Context
 
+## ⛔⛔⛔ HARD RULE — NO NARRATION, EVER. SILENT EXECUTION ONLY. ⛔⛔⛔
+
+**Read this before writing a single word of any response in this project.**
+
+Do not narrate, describe, or announce moves while coding, researching, or "thinking" —
+no "reading files now", "let me check X", "building the component", "now writing the CSS",
+no progress updates between tool calls, during a build, or mid-task. Work silently. Run tool
+calls back to back with no text in between them.
+
+The ONLY text allowed mid-task is a genuine question that needs the user's input to proceed.
+The ONLY other text allowed is the final one-or-two-line summary at the end of a turn (what
+shipped, what's next). Everything else is a violation — including a "thinking out loud" line,
+a compliment to yourself about a plan, or a restatement of what you're about to do.
+
+**This has been violated three times already** (2026-09-13 twice, 2026-09-14 once) despite
+being called out explicitly each time, most recently with: "place this rule wherever you need,
+even in a few places, not to violate it again." It is also written into
+`md-files/calcthis-workflow-rules.md` Rule 4 and `md-files/calcthis-working-rules.md`
+Behavior section, and saved to persistent memory — check this rule from CLAUDE.md itself
+every time, not just from memory recall, since memory recall alone has already failed to
+prevent repeat violations.
+
 ## ⛔ HARD RULE — NEVER INVENT. FOLLOW THE EXISTING WORKFLOW 100%.
 
 Never invent a new approach, exception, or interpretation for anything this project already
@@ -35,6 +57,21 @@ Every new calculator follows this exact order, no skipping or reordering:
 4. **Present a preview** for approval before any deploy.
 
 Do not fold steps together, skip the report, or start building before approval.
+
+## ⛔ HARD RULE — NEVER SHIP A CALCULATOR WITH FEWER INPUTS THAN COMPETITORS
+
+Full rule: `md-files/calcthis-workflow-rules.md` Rule 8.5. Two parts, both mandatory:
+
+1. **Match or exceed every competitor input field.** The research report must list every
+   input each top competitor exposes (age, sex, height, activity level, etc.) — not just the
+   one differentiator. Dropping a competitor field is only allowed with the user's explicit
+   sign-off in that report, never silently.
+2. **A text-only fetch of a competitor page is not enough to confirm what it actually shows.**
+   If there's any doubt, stop and ask the user for a screenshot of that competitor's calculator
+   before finalizing the input list — do not guess from a prose summary.
+
+This exists after the Protein Intake Calculator shipped without Age or Sex even though research
+had already found calculator.net uses both — the finding was made and never acted on.
 
 ## ⛔ HARD RULE — QA THE UNIT TOGGLE ON EVERY ARTICLE, EVERY TIME, NO EXCEPTIONS
 

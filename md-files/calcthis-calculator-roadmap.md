@@ -35,6 +35,12 @@ Pregnancy + Ovulation immediately **after** AdSense approval.
 | 11 | **VO2 Max Calculator** | 40,000–90,000/mo — highest remaining volume of the researched candidates. | Health & Fitness | Medium | ✅ Shipped v89–v99 |
 | 12 | **Steps-to-Miles Calculator** | Ahrefs-verified >10,000/mo, Easy KD, trending up — plus a long-tail cluster of "N steps to miles" variants. | Health & Fitness | Simple–Medium | ✅ Shipped v100 |
 
+| 13 | **Protein Intake Calculator** | Ahrefs-verified >10,000/mo, **Easy** KD. | Health & Fitness | Simple–Medium | ⬜ |
+| 14 | **Square Footage Calculator** | Ahrefs-verified >10,000/mo, Medium KD. | Construction & Gardening | Simple | ⬜ |
+| 15 | **Stair Calculator** | Ahrefs-verified >10,000/mo, Medium KD. | Construction & Gardening | Medium | ⬜ |
+| 16 | **Lean Body Mass Calculator** | Ahrefs-verified >1,000/mo, Medium KD. | Health & Fitness | Simple | ⬜ |
+| 17 | **Waist-to-Hip Ratio Calculator** | Ahrefs-verified >1,000/mo, **Easy** KD. | Health & Fitness | Simple | ⬜ |
+
 ### Companion articles to build alongside
 - Ideal Weight → "What's My Ideal Weight? Height, Frame, and the Formulas"
 - Date → "How to Calculate the Number of Days Between Two Dates" — ✅ shipped v82
@@ -110,6 +116,20 @@ right now.
 **Crowded — ruled out:** Paint / Roofing / Fence / Deck (owned by Sherwin-Williams, Lowe's,
 Benjamin Moore, big construction-affiliate sites); generic Tip / Discount / Unit Converter
 (owned by calculator.net, Omnicalculator, Google's own inline results).
+
+**Ahrefs-verified, 2026-09-14** (user ran these directly in their own Ahrefs account):
+
+| Calculator | Ahrefs volume | Ahrefs KD | Cluster |
+|---|---|---|---|
+| **Protein Intake Calculator** | >10,000/mo | **Easy** | Health & Fitness |
+| **Square Footage Calculator** | >10,000/mo | Medium | Construction & Gardening |
+| **Stair Calculator** | >10,000/mo | Medium | Construction & Gardening |
+| Lean Body Mass Calculator | >1,000/mo | Medium | Health & Fitness |
+| Waist-to-Hip Ratio Calculator | >1,000/mo | **Easy** | Health & Fitness |
+
+Added to Next Builds as #13–17 (ranked by volume, then KD). All five are candidates — none
+built or approved yet. Best volume+KD combo is **Protein Intake Calculator** (>10,000/mo,
+Easy) — recommend researching that one first per Rule 8.
 
 ## Parked Ideas (not prioritized yet)
 

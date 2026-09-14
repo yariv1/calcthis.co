@@ -172,6 +172,18 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://calcthis.co/protein-intake-calculator/</loc>
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://calcthis.co/blog/how-much-protein-do-i-need/</loc>
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://calcthis.co/blog/</loc>
     <lastmod>2026-09-03</lastmod>
     <changefreq>weekly</changefreq>

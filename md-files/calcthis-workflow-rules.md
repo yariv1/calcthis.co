@@ -64,8 +64,10 @@ that belongs mid-task is a genuine question needing the user's input to proceed.
 else — narration, progress updates, "thinking out loud" — is a Rule 4 violation exactly like
 a stalling message, because it produces the same thing: text instead of either a real tool
 call or the finished result. This has been violated repeatedly (2026-09-13 session, called
-out twice by the user in the same session) — it is not a soft preference, treat it with the
-same weight as every other ⛔ rule in this file.
+out twice by the user in the same session, and again 2026-09-14) — it is not a soft
+preference, treat it with the same weight as every other ⛔ rule in this file. It is also
+now the very first hard rule at the top of `CLAUDE.md` — check it there every response, not
+just here, since memory recall alone has already failed to prevent repeat violations.
 
 ## ⛔ RULE 4.5 — A MULTI-STEP DELIVERABLE ISN'T DONE UNTIL EVERY PART OF IT SHIPS IN THE SAME REPLY
 
@@ -131,6 +133,32 @@ a genuinely useful extra output. Power-user depth goes behind **Go advanced**; t
 view stays minimal. No bloat — nothing ships "just in case".
 Full checklist: `calcthis-design-system.md` → "PRODUCT PHILOSOPHY".
 
+## ⛔ RULE 8.5 — NEVER SHIP WITH FEWER INPUTS THAN COMPETITORS. VERIFY BY SCREENSHOT, NOT TEXT-FETCH ALONE.
+
+This exists after the Protein Intake Calculator shipped **without Age or Sex** even though the
+research step had already found — and reported — that calculator.net's protein calculator uses
+Age, Gender, Height, Weight and Activity level. The finding was made and then not acted on. That
+is a research-to-build gap, not a one-off miss, and it casts doubt on every prior build's
+research unless this is fixed structurally.
+
+1. **Feature/input floor, not ceiling.** Rule 8's "beat them by one clear thing" is about the
+   **differentiator** — it is never permission to show fewer inputs than competitors just
+   because our differentiator lives elsewhere. Before finalizing the input list for a new
+   calculator, explicitly check every input field the top 3-5 competitors expose. CalcThis
+   must match or exceed that list. If a competitor field is deliberately being dropped (truly
+   redundant, not just inconvenient to add), say so explicitly in the research report and get
+   the user's sign-off on dropping it — do not drop it silently.
+2. **Text-only research is not enough to confirm a competitor's actual inputs.** WebFetch/
+   WebSearch summaries can describe a page in prose and still omit fields, defaults, or toggles
+   that are only obvious from actually looking at the rendered form. If a competitor site can't
+   be opened directly in the Browser tool (blocked, paywalled, JS-heavy, or the fetch tool's
+   summary leaves any doubt about what inputs are actually on the page) — **stop and ask the
+   user for a screenshot** of that competitor's calculator before finalizing the input list.
+   Do not proceed on a text summary alone when a visual would resolve the doubt.
+3. This applies to the **research report step** (before approval) — the report itself must
+   list every input field of every competitor checked, not just the differentiator idea, so
+   the user can catch a gap like this before the build starts, not after.
+
 ## RULE 9 — PREVIEW IS SERVED, AND SHOWN BOTH WAYS
 
 End every build by: (1) `preview_start` `calcthis-static` + open `http://localhost:8123/<slug>/`
@@ -148,5 +176,10 @@ Chrome links in the final message. Details: `calcthis-working-rules.md` → "Pre
 5. **Shipping a partial deliverable** — building the article/calculator and running QA, but
    not circling back to send the image prompts and clickable preview links in the same
    reply — Rule 4.5, same session.
+6. **Finding a competitor input during research and then not building it** — the Protein
+   Intake Calculator's research correctly identified that calculator.net uses Age, Gender,
+   Height, Weight and Activity level, but the build shipped with only Weight and a goal
+   chip. A finding that never reaches the input list is the same as never having researched
+   it — Rule 8.5 (2026-09-14).
 
-Follow Rules 1–9 (4 and 4.5 especially) and none of this happens again.
+Follow Rules 1–9 (4, 4.5 and 8.5 especially) and none of this happens again.

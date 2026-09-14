@@ -12,6 +12,13 @@ competition is a failed build.
 ### 1. Research first — then beat it by one clear thing
 - Look at what the top 3–5 ranking calculators for this keyword actually do. ~99% are the
   same dry form → number.
+- ⛔ **Feature/input floor — never fewer than competitors** (Rule 8.5,
+  `calcthis-workflow-rules.md`). List every input field each competitor exposes and make sure
+  CalcThis matches or exceeds that list. The differentiator below is what we do *better*, not
+  an excuse to do *less*. If a text-only fetch of a competitor page leaves any doubt about what
+  it actually shows, stop and ask the user for a screenshot rather than guessing — this shipped
+  wrong once already (Protein Intake Calculator missed Age + Sex despite research already
+  having found calculator.net uses them).
 - "Everyone does it this way" is NOT proof it's the best way. Question the common pattern.
 - Pick **one** thing we do genuinely better — a real reason a user bookmarks us and comes
   back. Name it explicitly in the build. Examples already shipped:

@@ -97,6 +97,48 @@ ChatGPT's widest format is **1792×1024 (landscape)**. Always tell the user to r
 | Health & Fitness | ✅ Yes | Show a real person doing the activity — running, lifting, stretching. Makes it feel human and editorial. |
 | Construction & Gardening | ❌ Usually no | Aerial/landscape shots of materials work better. Exception: if the activity is inherently human (e.g. tiling), a person's hands are fine. |
 
+### ⛔ RANDOMIZE who's in the image, EVERY article — never the same default person
+
+Every prompt that includes a person must specify explicit, varied physical descriptors —
+**age, ethnicity, skin tone, hair color/style, build** — chosen freshly per article, not
+reused from the last one. This exists because the same "young fit woman in athletic wear"
+kept showing up article after article, which reads as a stock-photo default, not a real
+range of people.
+
+- **Vary across articles, not within one.** The same person can recur across the 3–4 images
+  *inside* a single article (continuity is fine and often better) — the rule is not to let
+  the *next* article's session default back to the same look. Actively pick something
+  different from recently-shipped articles: a different ethnicity, a different hair color,
+  a different age band, a different build.
+- **Clothing must match the actual scene, not a fitness-brand default.** Someone cooking in
+  a kitchen wears normal clothes, not leggings and a sports bra. Someone at a desk wears
+  normal clothes. Reserve athletic wear for a scene that is actually a workout — running,
+  lifting, walking outdoors for exercise. Don't default to "fitness clothing" just because
+  the article's topic is health-adjacent (protein, calories, TDEE) when the pictured scene
+  itself is just a kitchen or a desk.
+- **Be specific in the prompt**, not vague — e.g. "a Black woman in her 40s with short
+  natural hair, wearing a plain grey t-shirt" beats "a woman." Specificity is what actually
+  produces variation; a generic prompt regresses to the same stock-photo default every time.
+
+### ⛔ RANDOMIZE the setting too, whenever the setting is relevant — not just the person
+
+Same failure mode, different variable: kitchens (and other settings) kept coming out as the
+same generic marble-counter, bright-white space article after article. Whenever the scene
+has an environment worth describing (a kitchen, a home gym, an office, a yard), vary it
+explicitly and specifically, the same way the person is varied:
+
+- Describe **counter/surface material, cabinet or wall color, style/era, and any distinguishing
+  detail** (a window over the sink, open shelving, a tiled backsplash, a farmhouse vs. a
+  modern condo vs. a small apartment kitchen) — don't leave it generic and let it default to
+  the same look.
+- Vary it **across articles**, same as the person — a different kitchen style, a different
+  home, a different level of tidiness/lived-in-ness, not the same marble-and-white-cabinet
+  kitchen every time.
+- Only apply this where the setting is actually relevant to the scene (a kitchen for a
+  cooking/meal-prep shot, a gym for a workout shot). Don't force scene-setting detail into a
+  close-up food shot or a construction material close-up where there's no room/backdrop in
+  frame to begin with.
+
 ### Prompt structure — always include these elements
 - **Scene** — what's happening, what's in frame
 - **Subject** — person (age, gender, action) OR material/object
@@ -238,6 +280,42 @@ unit — not the Imperial narrative with numbers swapped underneath the same wor
     same "leave part of it unconverted next to converted numbers" failure Rule 0.5 already
     bans; a framing-unit article is just the case where "part of it" is the article's own
     voice, not only a stray number.
+
+**Step A-minus-one — RATE/RATIO quantities (per kg, per lb, g/kg, $/sqft, etc.) are
+measurements too — they do NOT get a free pass.** A rate is still a standalone quantity the
+reader takes away if the same rate is commonly stated in BOTH systems in real-world use —
+not just a raw weight/length/volume. The test is not "is this a simple number," it's "would a
+reader in the other system phrase this differently." Protein-per-bodyweight is the concrete
+example: American fitness content commonly says "~1 g of protein per lb of bodyweight," while
+the rest of the world says "~2.2 g per kg" — these are the SAME fact in two genuinely
+different, both-real-world-used framings, exactly like inches vs. cm. `data-imp` must be the
+lb-based (or otherwise imperial-native) framing and `data-met` the kg-based one — never the
+same "g/kg" figure copy-pasted into both sides.
+  - **Canonical reference — copy this exactly, don't reinvent:**
+    `blog/how-many-calories-to-lose-weight/index.html` and
+    `blog/how-to-calculate-your-macros/index.html` both already wrap every protein-ratio
+    mention correctly: `data-imp="0.7–1 g per lb of bodyweight" data-met="1.6–2.2 g per kg of
+    bodyweight"`, including inside worked-example table rows (`150 lb × 0.85 g/lb` ↔
+    `68 kg × 1.9 g/kg`). Before writing a single `.u` span for a rate/ratio value, open one of
+    these two files and match the pattern — do not derive it from scratch.
+  - Found and fixed on `blog/how-much-protein-do-i-need/` (2026-09-14) — the article was
+    written entirely in g/kg language with the toggle only wrapping a single incidental body
+    weight example, while every protein-per-bodyweight ratio (the lede, the goal table, the
+    worked examples, the age-adjustment numbers, the meal-spacing figure, every FAQ answer)
+    stayed in g/kg regardless of which button was selected. The user caught it by noticing the
+    article "talks in grams/kg no matter what the toggle shows" — this is the same failure as
+    Step 0.5's core rule (part of the content stays in one system next to a toggle that implies
+    everything converts), just applied to a rate instead of a raw measurement. The exact same
+    correct pattern already existed in two older articles and was not reused — a Never-Invent
+    violation as much as a unit-toggle one. **The live calculator this article supports had the
+    identical bug** (`initProteinCalc` in `assets/app.js` only ever displayed "g/kg," even when
+    the user's weight input was in lb) — when a rate/ratio bug is found in an article, always
+    check the calculator it's paired with for the same gap; the two are not independent code
+    paths and both need fixing.
+  - Not every rate needs this — VO2 max (`ml/kg/min`) has no commonly-used alternate
+    imperial framing anywhere, in the US or elsewhere, so it correctly stays unwrapped on
+    `blog/what-is-vo2-max/`. The test is real-world usage in both systems, not "does this
+    number have a /kg in it."
 
 **Step A — Decide if the article needs a toggle at all.** Read the finished article and list
 every number that has a unit. For each one, ask: *is this a standalone physical quantity the

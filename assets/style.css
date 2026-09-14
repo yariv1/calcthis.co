@@ -481,6 +481,31 @@
   .p-vo2max .vx-cat strong{color:var(--ink);font-weight:600}
 
   /* =========================================================
+     FITNESS · PROTEIN INTAKE  (body.p-protein)
+     Reuses .seg (unit toggle), .chips (goal + meals), .card-h2/.ctl-row,
+     .advbtn / .add-row.split, .dtable, .adv-tip. Adds a g/kg gauge
+     (bar + marker + ticks, same technique as VO2 Max's vx-gauge, fixed
+     science-based bands instead of per-user norms) and a food-equivalents
+     box (same divisors already used by the Macro calculator: ~46g/chicken
+     breast, ~6g/egg).
+     ========================================================= */
+  .p-protein .fld{margin-bottom:16px}
+  .p-protein .pi-res{margin:2px 0 14px}
+  .p-protein .pi-gauge{margin:18px 0 12px}
+  .p-protein .pi-bar{position:relative;height:12px;border-radius:6px}
+  .p-protein .pi-marker{position:absolute;top:-5px;width:3px;height:22px;border-radius:2px;background:var(--ink);transform:translateX(-50%);box-shadow:0 0 0 2px var(--card);transition:left .25s ease}
+  .p-protein .pi-ticks{position:relative;height:15px;margin-top:6px;font-size:11px;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums}
+  .p-protein .pi-ticks span{position:absolute;transform:translateX(-50%)}
+  .p-protein .pi-cat{font-size:13px;color:var(--ink-soft);line-height:1.5;margin:0 0 14px}
+  .p-protein .pi-cat strong{color:var(--ink);font-weight:600}
+  .p-protein .pi-equiv{background:#FDFAF4;border:1px solid var(--line);border-radius:10px;padding:11px 14px;margin-bottom:4px}
+  .p-protein .pi-equiv-lab{font-size:12.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+  .p-protein .pi-equiv-txt{font-size:14px;color:var(--ink-soft);line-height:1.55}
+  .p-protein .pi-equiv-txt strong{color:var(--ink);font-weight:600}
+  .p-protein .dc-cap{font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin:16px 0 8px}
+  .p-protein .dtable td:first-child{color:var(--ink)}
+
+  /* =========================================================
      FITNESS · HEART-RATE ZONES  (body.p-hrzone)
      ========================================================= */
   .p-hrzone .fld{margin-bottom:18px}

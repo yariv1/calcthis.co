@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Protein Intake Calculator — How Much Protein Do I Need? | CalcThis</title>
+<meta name="description" content="Free protein intake calculator. Get your daily protein target in grams for sedentary, general fitness, muscle gain or fat loss, see where it falls on a live g/kg gauge, and get real-world food equivalents. Instant, no sign-up.">
+<link rel="canonical" href="https://calcthis.co/protein-intake-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Protein Intake Calculator — How Much Protein Do I Need?">
+<meta property="og:description" content="Get your daily protein target in grams, see where it falls on a live g/kg gauge across the RDA-to-cutting spectrum, and get real-world food equivalents. Instant, no sign-up.">
+<meta property="og:url" content="https://calcthis.co/protein-intake-calculator/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<meta name="theme-color" content="#B5761F">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css?v=103">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Protein Intake Calculator",
+  "url": "https://calcthis.co/protein-intake-calculator/",
+  "applicationCategory": "HealthApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Get your daily protein target in grams for sedentary, general fitness, muscle gain or fat loss goals, plotted on a live g/kg gauge against the full RDA-to-cutting spectrum, with real-world food equivalents and a per-meal breakdown."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "How much protein do I need per day?", "acceptedAnswer": { "@type": "Answer", "text": "It depends on your goal, not just your weight. The general RDA baseline is 0.8 g/kg of bodyweight for a sedentary adult, but most active people benefit from 1.2-1.6 g/kg, and those focused on muscle gain or fat loss typically do best around 1.6-2.7 g/kg. This calculator picks a target inside the range that matches your specific goal." } },
+    { "@type": "Question", "name": "Is more protein better for muscle gain?", "acceptedAnswer": { "@type": "Answer", "text": "Only up to a point. Research on muscle protein synthesis generally supports about 1.6-2.2 g/kg of bodyweight per day for building muscle - intakes above that don't show a clear extra benefit for most people. Spreading it evenly across 3-4 meals matters as much as the daily total." } },
+    { "@type": "Question", "name": "How much protein should I eat to lose weight?", "acceptedAnswer": { "@type": "Answer", "text": "Higher than maintenance - typically 2.0-2.7 g/kg of bodyweight while cutting calories. A higher protein intake during a deficit helps preserve lean muscle mass so more of the weight you lose comes from fat rather than muscle." } },
+    { "@type": "Question", "name": "Should I use my total weight or lean body mass?", "acceptedAnswer": { "@type": "Answer", "text": "Total bodyweight works fine for most people at a typical body fat level. If you know your body fat percentage, entering it in Go advanced switches the calculation to your lean body mass instead, which is more accurate for people carrying a higher body fat percentage, since fat tissue needs much less protein than muscle does." } },
+    { "@type": "Question", "name": "Can I eat too much protein?", "acceptedAnswer": { "@type": "Answer", "text": "For most healthy adults, intakes up to roughly 2.5-3 g/kg of bodyweight are considered safe based on current research, though it offers no extra benefit beyond your goal-based target. People with existing kidney conditions should check with a doctor before significantly increasing protein intake." } }
+  ]
+}
+</script>
+</head>
+<body class="p-protein">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <a class="hdr-back" href="/blog/" aria-label="Back to blog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <span class="menu-col-head">Construction &amp; Gardening</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+          <a href="/tape-measure-fraction-calculator/">Tape Measure Fraction</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/vo2-max-calculator/">VO2 Max</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
+          <a href="/bmi-calculator/">BMI</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/ideal-weight-calculator/">Ideal Weight</a>
+          <a href="/calorie-calculator/">Calorie</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/water-intake-calculator/">Water Intake</a>
+          <a href="/macro-calculator/">Macro</a>
+          <a href="/protein-intake-calculator/" class="current">Protein Intake</a>
+          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
+          <a href="/steps-to-miles-calculator/">Steps to Miles</a>
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+          <a href="/age-calculator/">Age</a>
+          <a href="/date-calculator/">Date</a>
+          <a href="/time-calculator/">Time</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">How much protein do I need?</div>
+    <h1>Protein Intake Calculator</h1>
+    <p>Enter your <strong>age</strong>, <strong>sex</strong> and <strong>weight</strong> and pick your <strong>goal</strong> to get your daily protein target in grams. See exactly where it falls on a live <strong>g/kg gauge</strong> across the full range from the basic RDA to an aggressive cut — not just a bare number. Tap <em>Go advanced</em> to use your <strong>lean body mass</strong>, adjust for pregnancy or breastfeeding, and split the total across meals.</p>
+  </section>
+
+  <div class="grid">
+    <div class="card">
+      <div class="card-pad">
+        <h2 class="card-h2">Your protein target</h2>
+
+        <div class="ctl-row">
+          <span class="ctl-lab">Units</span>
+          <div class="seg" id="piUnitSeg">
+            <button type="button" data-u="imp" class="on">lb</button>
+            <button type="button" data-u="met">kg</button>
+          </div>
+        </div>
+
+        <div class="ctl-row">
+          <span class="ctl-lab">Sex</span>
+          <div class="seg" id="piSexSeg">
+            <button type="button" data-sex="female" class="on">Female</button>
+            <button type="button" data-sex="male">Male</button>
+          </div>
+        </div>
+
+        <label class="fld" for="piAge">
+          <span class="lab">Age <span class="unit">years</span></span>
+          <div class="inp"><input id="piAge" type="number" inputmode="numeric" min="15" max="100" placeholder="30"></div>
+        </label>
+
+        <label class="fld" for="piWeight">
+          <span class="lab">Weight <span class="unit" id="piWUnit">lb</span></span>
+          <div class="inp"><input id="piWeight" type="number" inputmode="decimal" min="1" placeholder="160"></div>
+        </label>
+
+        <div class="fld">
+          <span class="lab">Goal</span>
+          <div class="chips" id="piGoalChips">
+            <button type="button" data-goal="sed">Sedentary</button>
+            <button type="button" data-goal="fit" class="on">General fitness</button>
+            <button type="button" data-goal="gain">Muscle gain</button>
+            <button type="button" data-goal="cut">Fat loss (cutting)</button>
+          </div>
+        </div>
+
+        <div id="piAdvIn" style="display:none">
+          <label class="fld" for="piBf">
+            <span class="lab">Body fat <span class="unit">% · optional, uses lean mass</span></span>
+            <div class="inp"><input id="piBf" type="number" inputmode="decimal" min="3" max="60" placeholder="20"></div>
+          </label>
+          <div class="fld" id="piSpecialRow" style="display:none">
+            <span class="lab">Pregnant or breastfeeding</span>
+            <div class="seg" id="piSpecialSeg">
+              <button type="button" data-special="none" class="on">Neither</button>
+              <button type="button" data-special="pregnant">Pregnant</button>
+              <button type="button" data-special="breastfeeding">Breastfeeding</button>
+            </div>
+          </div>
+          <div class="fld" style="margin-bottom:0">
+            <span class="lab">Split across</span>
+            <div class="chips" id="piMealsChips">
+              <button type="button" data-meals="3">3 meals</button>
+              <button type="button" data-meals="4" class="on">4 meals</button>
+              <button type="button" data-meals="5">5 meals</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="add-row split" style="margin-top:6px">
+          <span></span>
+          <button class="advbtn" id="piAdvBtn" type="button">
+            <span id="piAdvBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-pad">
+        <div class="pi-res">
+          <div class="res-lab">Your daily protein target</div>
+          <div class="res-big"><span id="piResBig">—</span> <span class="res-unit" id="piResUnit"></span></div>
+          <div class="res-sub" id="piResSub">Enter your weight to see your daily protein target.</div>
+        </div>
+
+        <div class="pi-gauge" id="piGauge" style="visibility:hidden">
+          <div class="pi-bar" id="piBar"><span class="pi-marker" id="piMarker" style="left:0"></span></div>
+          <div class="pi-ticks" id="piTicks"></div>
+        </div>
+
+        <p class="pi-cat" id="piCat"></p>
+
+        <div class="pi-equiv" id="piEquiv" style="display:none">
+          <div class="pi-equiv-lab">That's about</div>
+          <div class="pi-equiv-txt" id="piEquivTxt"></div>
+        </div>
+
+        <div id="piAdvOut" style="display:none">
+          <div class="dc-cap">Per-meal breakdown</div>
+          <div class="stable-wrap"><table class="dtable" id="piMealTable"></table></div>
+          <p class="res-tip adv-tip">Research on muscle protein synthesis favours spreading intake across meals of roughly <strong>0.4 g/kg</strong> bodyweight each, spaced 3-4 hours apart, rather than one large dose.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="related-calcs">
+    <p class="related-calcs-h">More health calculators that may interest you</p>
+    <div class="pills">
+      <a class="pill" href="/macro-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 3"/></svg>
+        Macro Calculator
+      </a>
+      <a class="pill" href="/tdee-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        TDEE Calculator
+      </a>
+      <a class="pill" href="/calorie-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c1 3-1 5-1 7a3 3 0 0 0 6 0M6 21h12"/></svg>
+        Calorie Calculator
+      </a>
+      <a class="pill" href="/one-rep-max-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h2v-3h2v6H6v-3H4zM16 9h2v6h-2v-2h-2v2h-2V9h2v2h2z"/></svg>
+        One Rep Max Calculator
+      </a>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use the protein intake calculator</h2>
+        <p>Enter your <strong>age</strong>, <strong>sex</strong> and <strong>weight</strong>, then choose the <strong>goal</strong> that matches what you're actually doing: <strong>Sedentary</strong> for the basic RDA baseline, <strong>General fitness</strong> for regular recreational activity, <strong>Muscle gain</strong> for building, or <strong>Fat loss (cutting)</strong> for an active weight-loss phase. Your target appears instantly in grams, plotted on the gauge so you can see exactly where it sits relative to every other goal.</p>
+        <p>Tap <strong>Go advanced</strong> to enter your <strong>body fat percentage</strong> — the calculation switches to your lean body mass, which is more accurate if you're carrying more fat than average — adjust for <strong>pregnancy or breastfeeding</strong>, and split your total across 3, 4 or 5 meals.</p>
+
+        <h2>How much protein do you actually need?</h2>
+        <p>The official RDA of 0.8 g/kg of bodyweight is a <strong>minimum</strong> to prevent deficiency, not a target for anyone active. Sports nutrition research supports meaningfully higher intakes depending on your goal — the four ranges below are based on ISSN (International Society of Sports Nutrition) position stand recommendations.</p>
+        <table class="dtable">
+          <thead><tr><th>Goal</th><th>Typical range (g/kg bodyweight)</th></tr></thead>
+          <tbody>
+            <tr><td>Sedentary (RDA)</td><td>0.8 (1.0–1.2 if 65+)</td></tr>
+            <tr><td>General fitness</td><td>1.2 – 1.6</td></tr>
+            <tr><td>Muscle gain</td><td>1.6 – 2.2</td></tr>
+            <tr><td>Fat loss (cutting)</td><td>2.2 – 2.8</td></tr>
+          </tbody>
+        </table>
+        <p>Protein needs go <strong>up</strong>, not down, during a calorie deficit — extra protein helps preserve lean muscle while you're losing fat, which is why the cutting range sits highest of all four.</p>
+
+        <h2>Why age and sex matter</h2>
+        <p>The <strong>PROT-AGE Study Group</strong> recommends adults 65 and older get 1.0–1.2 g/kg of bodyweight daily — meaningfully above the standard 0.8 g/kg RDA — to help offset the muscle loss (sarcopenia) that comes with aging. This calculator applies that higher baseline automatically once you enter an age of 65 or above on the Sedentary goal; the more active goals already sit above that threshold. Sex itself doesn't change the core g/kg targets, but it gates the <strong>pregnancy and breastfeeding</strong> adjustments in Go advanced — pregnancy adds the RDA's <strong>+14 g/day</strong>, and breastfeeding adds <strong>+25 g/day</strong>, on top of your selected goal.</p>
+
+        <h2>Total weight vs. lean body mass</h2>
+        <p>Every range above is normally expressed per kilogram of total bodyweight, which works well for most people at an average body fat level. But fat tissue is metabolically far less demanding than muscle, so at a higher body fat percentage, a total-weight target can overshoot what you actually need. Entering your body fat % in Go advanced re-bases the calculation onto your <strong>lean body mass</strong> instead — check your number with our <a href="/body-fat-calculator/">Body Fat Calculator</a> if you don't already know it.</p>
+      </div>
+
+      <div>
+        <h2>Spreading protein across meals</h2>
+        <p>The daily total matters most, but <strong>how</strong> you spread it matters too. Research on muscle protein synthesis suggests each meal needs a meaningful dose — roughly 0.4 g/kg of bodyweight — spaced about 3-4 hours apart, rather than skipping most meals and loading up at dinner. The advanced per-meal table splits your target evenly across 3, 4 or 5 meals so you can see what that looks like in practice.</p>
+
+        <h2>Real-world food equivalents</h2>
+        <p>A number in grams is hard to picture. Knowing your target equals roughly 4-5 chicken breasts or 25 eggs makes meal planning concrete — you know what you're aiming for before you open a tracking app. The equivalents box updates live alongside your target.</p>
+
+        <h2>Protein and your other targets</h2>
+        <p>Protein is one piece of your overall nutrition picture. Once you know your target, use the <a href="/macro-calculator/">Macro Calculator</a> to fill in carbs and fat around it, or the <a href="/tdee-calculator/">TDEE Calculator</a> to set the total calorie budget it fits inside. If you're training for strength, the <a href="/one-rep-max-calculator/">One Rep Max Calculator</a> pairs well with a muscle-gain protein target.</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>How much protein do I need per day?</summary><p>It depends on your goal, not just your weight. The RDA baseline is 0.8 g/kg for a sedentary adult, but most active people benefit from 1.2-1.6 g/kg, and those focused on muscle gain or fat loss typically do best around 1.6-2.7 g/kg. This calculator picks a target inside the range that matches your specific goal.</p></details>
+    <details class="faq"><summary>Is more protein better for muscle gain?</summary><p>Only up to a point. Research generally supports about 1.6-2.2 g/kg of bodyweight per day for building muscle — intakes above that don't show a clear extra benefit for most people. Spreading it evenly across 3-4 meals matters as much as the daily total.</p></details>
+    <details class="faq"><summary>How much protein should I eat to lose weight?</summary><p>Higher than maintenance — typically 2.0-2.7 g/kg of bodyweight while cutting calories. A higher protein intake during a deficit helps preserve lean muscle mass so more of the weight you lose comes from fat rather than muscle.</p></details>
+    <details class="faq"><summary>Should I use my total weight or lean body mass?</summary><p>Total bodyweight works fine for most people at a typical body fat level. If you know your body fat percentage, entering it in Go advanced switches the calculation to your lean body mass instead, which is more accurate for people carrying a higher body fat percentage.</p></details>
+    <details class="faq"><summary>Can I eat too much protein?</summary><p>For most healthy adults, intakes up to roughly 2.5-3 g/kg of bodyweight are considered safe based on current research, though it offers no extra benefit beyond your goal-based target. People with existing kidney conditions should check with a doctor first.</p></details>
+  </section>
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+          <li><a href="/tape-measure-fraction-calculator/">Tape Measure Fraction Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/vo2-max-calculator/">VO2 Max Calculator</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/bmi-calculator/">BMI Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/ideal-weight-calculator/">Ideal Weight Calculator</a></li>
+          <li><a href="/calorie-calculator/">Calorie Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/water-intake-calculator/">Water Intake Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/protein-intake-calculator/">Protein Intake Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
+          <li><a href="/steps-to-miles-calculator/">Steps to Miles Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+          <li><a href="/age-calculator/">Age Calculator</a></li>
+          <li><a href="/date-calculator/">Date Calculator</a></li>
+          <li><a href="/time-calculator/">Time Calculator</a></li>
+        </ul>
+      </div>
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/blog/">Blog</a>
+      <span aria-hidden="true">·</span>
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+</div>
+
+<script src="/assets/app.js?v=103"></script>
+<script>CalcThis.initProteinCalc({});</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>
