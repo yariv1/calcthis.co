@@ -311,6 +311,31 @@ load** — no per-calculator wiring needed for a select present at page load.
   seen once in `gpa-calculator`'s what-if row), widen it to also match
   `el.classList.contains('csel')` when converting that element.
 
+### ⛔ Any `.csel-btn` override — height MUST match the sibling `.inp input` exactly
+
+`.csel-btn`'s base rule is `font-size:16px; padding:11px 13px` — deliberately identical to
+`.inp input`'s vertical metrics, so a `.csel` sitting next to a text input (e.g. a compact
+numerator/denominator row, a "Round to" dropdown next to a Feet/Inches field) lines up to the
+same row height automatically. **Never shrink `font-size` in a page-specific `.csel-btn`
+override** — a smaller font shrinks `line-height`, which shrinks the button below the standard
+~48.8px row height while sibling inputs stay full height, producing a visibly shorter dropdown
+next to full-height fields. If a compact column needs to fit a narrower width, adjust
+**horizontal padding only** (`padding:11px 8px 11px 10px` etc.) and leave `font-size` alone —
+the base 16px fits short option text (a 2-digit number, a unit word) in a narrow column fine.
+
+Found on `tape-measure-fraction-calculator` (2026-09-15): the Denominator dropdown's
+`.p-fraction .three .tcol .csel-btn` override set `font-size:14px` alongside the padding
+change, shrinking it to 45.7px against the Feet input and Round-to dropdown's 48.8px — visibly
+misaligned, caught by the user from a screenshot. Fixed by dropping the `font-size` override.
+
+**Before shipping any `.csel-btn` size override, verify in the Browser tool:**
+```js
+document.querySelector('THE_CSEL_BTN_SELECTOR').getBoundingClientRect().height
+```
+must equal `document.querySelector('.inp input').getBoundingClientRect().height` in the same
+row/card — do this by eye AND by this exact numeric check, every time, not just a screenshot
+glance (a 2–3px mismatch is easy to miss visually but always shows up in the numbers).
+
 ### Legacy `.sel select` (native select) — do not use for new dropdowns
 Still present on two pages with dynamically-generated per-row selects (not yet retrofitted —
 see above). Single `.sel` wrapper, never nest two:

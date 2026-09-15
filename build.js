@@ -279,6 +279,46 @@ const PAGES = [
   }
 })();
 
+// ---- MANDATORY field-height gate — runs before anything else touches disk ----
+// Enforces md-files/calcthis-design-system.md "Any .csel-btn override — height MUST match".
+// `.inp input`, `.csel-btn`, and `.sel select` (every text field, custom dropdown, and native
+// select on the site) all get their box height from one shared token, `var(--field-h)` in
+// `:root` — never from font-size + padding math. This is a structural fix, not a guideline:
+// because height comes from an explicit `height:var(--field-h)` declaration, no page-specific
+// font-size or padding override can ever shrink or grow the control's height, even by accident
+// — only an explicit `height:` re-declaration in style.css could, and this gate forbids that.
+//
+// Found 2026-09-15 on `tape-measure-fraction-calculator`: a page-specific `.csel-btn` override
+// dropped `font-size` from 16px to 14px to fit a narrow column, which (before this fix) shrank
+// the button's line-height and therefore its total height 3px below the sibling Feet/Inches
+// inputs and the Round-to dropdown — a visible misalignment the user caught from a screenshot.
+// The one-off fix (drop the font-size override) closed that single instance; this gate closes
+// the whole failure class by making height structurally independent of font-size/padding.
+(function checkFieldHeight() {
+  const cssPath = path.join(ROOT, 'assets', 'style.css');
+  if (!fs.existsSync(cssPath)) return;
+  const css = fs.readFileSync(cssPath, 'utf8');
+  const RULE_RE = /([^{}]+)\{([^{}]*)\}/g;
+  const TARGET_RE = /(^|[\s,>+~])(\.inp\s+input|\.csel-btn|\.sel\s+select)(\b|$)/;
+  const failures = [];
+  let m;
+  while ((m = RULE_RE.exec(css))) {
+    const selector = m[1].trim();
+    const body = m[2];
+    if (!TARGET_RE.test(selector)) continue;
+    const heightM = /height\s*:\s*([^;]+)/.exec(body);
+    if (heightM && heightM[1].trim() !== 'var(--field-h)') {
+      failures.push('style.css: "' + selector + '" sets height:' + heightM[1].trim() + ' — every .inp input / .csel-btn / .sel select rule must use height:var(--field-h), or not declare height at all. See calcthis-design-system.md.');
+    }
+  }
+  if (failures.length) {
+    console.error('\n⛔ FIELD-HEIGHT GATE FAILED — build stopped, nothing was written.\n');
+    failures.forEach(function (f) { console.error('  - ' + f); });
+    console.error('\nFix every line above, then re-run node build.js.\n');
+    process.exit(1);
+  }
+})();
+
 // ---- bump shared asset version ----
 const verFile = path.join(ROOT, '.assetver');
 let ver = 1;

@@ -11,6 +11,10 @@
     --spruce-soft:#5A7361;
     --shadow:0 1px 2px rgba(36,26,17,.04),0 8px 28px rgba(36,26,17,.06);
     --radius:14px;
+    /* Single source of truth for every field-height control (.inp input, .csel-btn,
+       .sel select) — see the comment above .csel-btn below for why this must never
+       be overridden per-page. Structural fix, 2026-09-15. */
+    --field-h:48.8px;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{-webkit-text-size-adjust:100%}
@@ -77,8 +81,10 @@
   .fld .lab{display:flex;justify-content:space-between;align-items:baseline;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
   .fld .lab .unit{font-weight:500;color:var(--muted);font-size:12px}
   .inp{position:relative}
+  /* height:var(--field-h) — same load-bearing rule as .csel-btn/.sel select above.
+     Never overridden per-page; a compact column adjusts horizontal padding only. */
   .inp input{
-    width:100%;font:inherit;font-size:16px;font-weight:500;color:var(--ink);
+    width:100%;height:var(--field-h);font:inherit;font-size:16px;font-weight:500;color:var(--ink);
     background:#FCFAF6;border:1.5px solid var(--line);border-radius:10px;
     padding:11px 44px 11px 13px;transition:.15s;font-variant-numeric:tabular-nums;
   }
@@ -90,7 +96,7 @@
   /* select */
   .sel{position:relative}
   .sel select{
-    width:100%;font:inherit;font-size:16px;font-weight:500;color:var(--ink);
+    width:100%;height:var(--field-h);font:inherit;font-size:16px;font-weight:500;color:var(--ink);
     background:#FCFAF6;border:1.5px solid var(--line);border-radius:10px;
     padding:11px 40px 11px 13px;transition:.15s;appearance:none;-webkit-appearance:none;-moz-appearance:none;cursor:pointer;
   }
@@ -111,7 +117,14 @@
      Use this for every new dropdown going forward instead of a bare <select>.
      ========================================================= */
   .csel{position:relative}
-  .csel-btn{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;font:inherit;font-size:16px;font-weight:500;color:var(--ink);background:#FCFAF6;border:1.5px solid var(--line);border-radius:10px;padding:11px 13px;cursor:pointer;transition:.15s;text-align:left}
+  /* height:var(--field-h) is load-bearing — it is what makes .csel-btn line up with
+     .inp input and .sel select regardless of any page-specific font-size/padding
+     override. NEVER set an explicit height on a page-specific .csel-btn override;
+     NEVER remove this declaration. This is why the site-wide fields all share one
+     row height everywhere, permanently — a padding/font-size tweak can no longer
+     change the box height, only its internal spacing. See calcthis-design-system.md
+     "Any .csel-btn override — height MUST match" for the incident this closes. */
+  .csel-btn{width:100%;height:var(--field-h);display:flex;align-items:center;justify-content:space-between;gap:10px;font:inherit;font-size:16px;font-weight:500;color:var(--ink);background:#FCFAF6;border:1.5px solid var(--line);border-radius:10px;padding:11px 13px;cursor:pointer;transition:.15s;text-align:left}
   .csel-btn:hover{border-color:#D8C9AC}
   .csel.open .csel-btn,.csel-btn:focus-visible{outline:none;border-color:var(--amber);background:#fff;box-shadow:0 0 0 3px rgba(181,118,31,.13)}
   .csel-btn svg{flex:none;color:var(--muted);transition:transform .15s}
@@ -929,6 +942,7 @@
    ============================================================ */
 .footer-legal-nav {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 8px;
   justify-content: flex-start;
@@ -942,9 +956,12 @@
   line-height: normal;
 }
 
+/* A link like "Terms of use" must never break mid-phrase onto two lines — it wraps as a
+   whole unit to a new row (via flex-wrap on the parent) if the row runs out of width. */
 .footer-legal-nav a {
   color: inherit;
   text-decoration: none;
+  white-space: nowrap;
 }
 
 .footer-legal-nav a:hover {
@@ -1463,7 +1480,10 @@
   .p-fraction .arow .x:hover{color:#b23;background:#f7e9e9}
   .p-fraction #frMarksWrap{margin-top:10px}
   .p-fraction .three .tcol{width:86px}
-  .p-fraction .three .tcol .csel-btn{padding:11px 8px 11px 10px;font-size:14px}
+  /* Height MUST match sibling .inp input / .csel-btn (48.8px) — never shrink font-size on
+     a .csel-btn override, only horizontal padding. A smaller font-size shrinks line-height
+     and drops the button below the standard row height. See calcthis-design-system.md. */
+  .p-fraction .three .tcol .csel-btn{padding:11px 8px 11px 10px}
 
   /* =========================================================
      FITNESS · STEPS TO MILES CALCULATOR  (body.p-steps)
