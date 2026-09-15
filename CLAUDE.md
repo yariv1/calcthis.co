@@ -121,7 +121,7 @@ must be built from the article's actual units, every time, not pasted from a tem
 
 ## Project state
 
-- **Asset version:** v104 (bumped, `node build.js` run and deployed this session)
+- **Asset version:** v105 (bumped, `node build.js` run and deployed this session)
 - **Total pages:** 64 live
 - **Model:** Opus 4.6
 
@@ -200,7 +200,23 @@ Total live calculators: **36**
 
 ---
 
-## Last session (v104)
+## Last session (v105)
+
+- Two structural UI fixes, both closed with a mechanical gate, not just a one-off patch:
+  1. **Field-height parity.** `.csel-btn`/`.inp input`/`.sel select` now all get their box
+     height from one shared `--field-h` token instead of font-size+padding math — a
+     page-specific override can no longer silently shrink a control below its sibling
+     fields' height. Found on the Tape Measure Fraction Calculator's Denominator dropdown
+     (3px shorter than the Feet input / Round-to dropdown). `build.js` gained a
+     `checkFieldHeight` gate that fails the build if any future CSS rule sets a
+     conflicting `height` on these three selectors. Verified with a sabotage test.
+  2. **Footer legal-nav wrapping.** "Terms of use" / "Privacy policy" now wrap as whole
+     phrases on narrow viewports instead of breaking mid-word — `flex-wrap:wrap` on
+     `.footer-legal-nav` + `white-space:nowrap` on its links. One shared rule via the
+     footer partial, applies to all pages automatically.
+  Deployed as v105.
+
+## Earlier (v104)
 
 - Deployed **Square Footage Calculator** (`/square-footage-calculator/`, roadmap #14 — built
   and approved the prior session, shipped this session) + companion article **"How to
