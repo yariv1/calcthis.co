@@ -66,9 +66,14 @@ Full rule: `md-files/calcthis-workflow-rules.md` Rule 8.5. Two parts, both manda
    input each top competitor exposes (age, sex, height, activity level, etc.) — not just the
    one differentiator. Dropping a competitor field is only allowed with the user's explicit
    sign-off in that report, never silently.
-2. **A text-only fetch of a competitor page is not enough to confirm what it actually shows.**
-   If there's any doubt, stop and ask the user for a screenshot of that competitor's calculator
-   before finalizing the input list — do not guess from a prose summary.
+2. **Always open the actual competitor calculator in the Browser tool — every competitor,
+   every time, not just when something looks off.** A text-only WebFetch/WebSearch summary is
+   never sufficient on its own: screenshot the live page, and where there's a shape/mode
+   dropdown or similar, read the rendered `<select>`'s full option list rather than trusting
+   prose. Confirmed 2026-09-14 (Square Footage research): a text-fetch summary of
+   calculatorsoup.com undercounted its shape modes (implied ~9, actually 13) — only caught by
+   opening the page directly. If a site genuinely can't be opened, stop and ask the user for a
+   screenshot before finalizing the input list.
 
 This exists after the Protein Intake Calculator shipped without Age or Sex even though research
 had already found calculator.net uses both — the finding was made and never acted on.
@@ -79,11 +84,25 @@ Every blog article — regardless of whether it looks like it involves units —
 unit-toggle QA procedure in `md-files/calcthis-blog-article.md` (Rule #0.5 / Step 5.5: decide →
 wrap → verify) before its preview links are sent. This includes running `node build.js` and
 confirming zero unit-toggle gate failures — `build.js` itself will refuse to write any file and
-stop the whole build if `.u` markup is broken (missing `data-imp`/`data-met`, or a stray
-imperial word leaking into `data-met`). That mechanical gate does not catch bad judgment calls
-about whether a value needed wrapping in the first place, or wrong conversion math — those still
-require the manual Step A/C review, every time. This exists after the same unit-toggle bug
-shipped four times across two articles before it was fixed structurally.
+stop the whole build if `.u` markup is broken (missing `data-imp`/`data-met`, a stray imperial
+word leaking into `data-met`, wrong conversion math, or a unit-bearing number left bare anywhere
+in `.blog-content`). This exists after the same unit-toggle bug shipped **six** times across
+three articles before it was fixed structurally — most recently, and most seriously, a whole
+reference table shipped with zero `.u` wraps because it "already looked like" it covered both
+systems by listing several rows. It didn't.
+
+**Fixed for real, 2026-09-15 — this is now a real HTML tokenizer, not a regex guess.** `build.js`
+walks every article's `.blog-content` tag by tag with a stack (true nesting-aware ancestry, not
+lazy same-tag regex matching), and fails the build if **any** unit-bearing number anywhere in
+the article sits outside a `.u` element — with exactly four narrow, named exemptions (heading/
+`<summary>`, `<svg>` diagram text, `<div class="formula">`, and column 0 of a `<table
+class="dtable">` row). The numeric sanity check also now covers ranges ("4–6 inches" vs
+"10–15 cm"), not just single values. Verified against every live article before being enabled:
+found and fixed 11 real pre-existing gaps, then confirmed zero failures twice, including a
+deliberate sabotage test (stripped a real `.u` wrap back out) to prove the gate actually catches
+the failure shape, not just passes silently. Full detail: `build.js`'s `checkUnitToggles`
+comment block. **"It looks like it already covers both systems" is a retired exemption — see
+`calcthis-blog-article.md` Step A — never reinvent it.**
 
 **Extended (2026-09-13) after a 5th occurrence** on `how-many-steps-are-in-a-mile`: an article
 whose whole subject IS a unit (mile) needs the toggle to rewrite the narrative (H1, headings,
@@ -102,13 +121,42 @@ must be built from the article's actual units, every time, not pasted from a tem
 
 ## Project state
 
-- **Asset version:** v103
-- **Total pages:** 60
+- **Asset version:** v104 (bumped, `node build.js` run and deployed this session)
+- **Total pages:** 64 live
 - **Model:** Opus 4.6
+
+### New this session — global `.csel` custom-dropdown component
+
+A native `<select>`'s open dropdown panel can't be styled cross-browser (only its closed box
+can, via the older `.sel select` pattern) — this was raised by the user after seeing the
+Square Footage shape picker's native panel look completely off-brand. Built `.csel`: a
+button + on-brand floating panel (same visual language as the site nav `.menu`), amber
+scrollbar with arrow buttons on long lists, panel widens past a narrow trigger instead of
+wrapping text (`width:max-content;min-width:100%;max-width:min(320px,90vw)`). Exposes the
+same `.value` + `change` event surface as a native select, so existing calculator JS needed
+zero logic changes. Full spec + markup pattern: `md-files/calcthis-design-system.md` →
+"Select Field — `.csel`". CSS in `style.css` (search `CUSTOM SELECT (.csel)`), JS in the
+shared runtime IIFE at the top of `app.js` (`CalcThis.initCsel` / `CalcThis.initAllCsel`,
+auto-inits every `.csel` on page load).
+
+**Retrofitted onto 12 existing live pages this session** (all verified working, zero console
+errors): macro, calorie, tdee (`activity`), flooring, gravel, sand, topsoil, tile (`matSel`),
+one-rep-max (`lift`), tape-measure-fraction (`frPrec` + `frDen`, including a compact-column
+variant), sleep (`ageSel`), test-score (`scalePreset` + `rGrade`), gpa (`wiGrade`). gpa's
+what-if row also needed a small JS fix (`el.tagName==='SELECT'` → also check
+`el.classList.contains('csel')`) since the trigger element is now a `<div>`.
+
+**NOT yet retrofitted — deliberately left as native `<select>`, flagged for a future pass:**
+`grade-calculator`'s what-if category select and `gpa-calculator`'s per-course-row
+grade/type selects. Both build their `<option>`s dynamically via `innerHTML` at runtime (a
+per-row select added by "+ Add course"), which needs the options built as `.csel-opt`
+buttons instead plus a `CalcThis.initCsel()`/`initAllCsel()` call on the newly-inserted node
+— more involved than a markup swap, and higher regression risk on already-live, more complex
+interactive features. Documented in `calcthis-design-system.md`.
 
 ---
 
-## Live blog articles (20)
+## Live blog articles (21)
 
 - How Much Gravel Do I Need for a Driveway?
 - How Much Mulch Do I Need?
@@ -130,13 +178,14 @@ must be built from the article's actual units, every time, not pasted from a tem
 - What Is VO2 Max? How to Estimate Your Aerobic Fitness
 - How Many Steps Are in a Mile?
 - How Much Protein Do I Need?
+- How to Calculate Square Footage (Any Shape, Room, or Project)
 
 ---
 
-## Live calculators (35)
+## Live calculators (36)
 
-### Construction & Gardening (9)
-Board Foot · Gravel · Sand · Topsoil · Mulch · Concrete · Flooring · Tile · Tape Measure Fraction
+### Construction & Gardening (10)
+Board Foot · Gravel · Sand · Topsoil · Mulch · Concrete · Flooring · Tile · Square Footage · Tape Measure Fraction
 
 ### Health & Fitness (17)
 Pace · Race Time Predictor · VO2 Max · Heart Rate Zone · Zone 2 Heart Rate · BMI · Body Fat · Ideal Weight · Calorie · TDEE · One Rep Max · Sleep · Water Intake · Macro · Protein Intake · Peptide Reconstitution · Steps to Miles
@@ -147,11 +196,40 @@ Final Grade · GPA · Grade · Test Score
 ### Math & Numbers (5)
 Ratio · Percentage · Age · Date · Time
 
-Total live calculators: **35**
+Total live calculators: **36**
 
 ---
 
-## Last session (v103)
+## Last session (v104)
+
+- Deployed **Square Footage Calculator** (`/square-footage-calculator/`, roadmap #14 — built
+  and approved the prior session, shipped this session) + companion article **"How to
+  Calculate Square Footage (Any Shape, Room, or Project)"**
+  (`/blog/how-to-calculate-square-footage/`). Calculator: 13 shape modes, live SVG diagram +
+  legend, project tally with waste + cost, wired into nav, footer, homepage (card + hasPart +
+  prose count), build.js, sitemap.xml. Article: formulas table, worked example, sq ft/sq
+  yd/acre conversion table, waste guidance, 5 FAQs, 2 in-article photos, `.blog-pills` +
+  `.calc-cta`. WebApplication + FAQPage JSON-LD.
+  **Real process failure this session, now closed structurally, not just documented:** the
+  article's "Square feet, square yards and acres" reference table shipped with **zero `.u`
+  wraps at all** — it "looked like" it already covered both systems by listing several rows
+  (`1 acre | 43,560 sq ft`, `1 hectare | 10,000 m²`), so it was judged exempt from the unit-
+  toggle rule. It wasn't: every row showed one fixed imperial-framed fact regardless of which
+  toggle button was selected. The user caught it by eye and, after this shipped as "the fix"
+  once already (a `<table class="dtable">`-only gate), pushed back hard that a narrower fix
+  wasn't good enough. Ended with `build.js`'s `checkUnitToggles` rebuilt as a real tag-walking
+  tokenizer (stack-based ancestry, not regex-strip) that fails the build on ANY unit-bearing
+  number left outside a `.u` element anywhere in `.blog-content`, with exactly four named
+  exemptions (heading/`<summary>`, `<svg>`, `<div class="formula">`, table column 0). Verified
+  against all 21 live articles before enabling: found and fixed **11 real pre-existing gaps**
+  this surfaced (concrete, sand, mulch, flooring, topsoil, should-i-weigh, VO2 max articles),
+  then confirmed zero failures twice, plus a deliberate sabotage test to prove the gate
+  actually fires. New hard rule + full narrative in `CLAUDE.md`'s unit-toggle section and
+  `calcthis-blog-article.md` Step A ("it's a reference table, already covers both units" is
+  now a permanently retired exemption — do not reinvent it).
+  Deployed as v104.
+
+## Earlier (v103)
 
 - Built **Protein Intake Calculator** (`/protein-intake-calculator/`, roadmap #13) —
   researched and approved this session (Ahrefs-verified `protein intake calculator`,

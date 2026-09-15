@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/style.css?v=103">
+  <link rel="stylesheet" href="/assets/style.css?v=104">
   <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
 <script>
@@ -130,6 +130,7 @@
           <a href="/concrete-calculator/">Concrete</a>
           <a href="/flooring-calculator/">Flooring</a>
           <a href="/tile-calculator/">Tile</a>
+          <a href="/square-footage-calculator/">Square Footage</a>
           <a href="/tape-measure-fraction-calculator/">Tape Measure Fraction</a>
         </div>
         <div class="menu-col">
@@ -217,14 +218,18 @@
         <div class="scale-row">
           <label class="fld" style="margin-bottom:0">
             <span class="lab">Grade scale</span>
-            <div class="sel">
-              <select id="scalePreset">
-                <option value="standard">Standard (90/80/70/60)</option>
-                <option value="strict">Strict (93/83/73/63)</option>
-                <option value="easy">Easy (85/75/65/55)</option>
-                <option value="plus">Plus/minus scale</option>
-                <option value="custom">Custom cutoffs</option>
-              </select>
+            <div class="csel" id="scalePreset" data-value="standard">
+              <button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false">
+                <span class="csel-val">Standard (90/80/70/60)</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="csel-panel" role="listbox">
+                <button type="button" class="csel-opt on" role="option" aria-selected="true" data-value="standard">Standard (90/80/70/60)</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="strict">Strict (93/83/73/63)</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="easy">Easy (85/75/65/55)</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="plus">Plus/minus scale</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="custom">Custom cutoffs</button>
+              </div>
             </div>
           </label>
           <label class="fld" id="aMinFld" style="margin-bottom:0;opacity:.4;pointer-events:none">
@@ -284,14 +289,18 @@
 
         <label class="fld">
           <span class="lab">Grade I need</span>
-          <div class="sel">
-            <select id="rGrade">
-              <option value="90">A (90%)</option>
-              <option value="80" selected>B (80%)</option>
-              <option value="70">C (70%)</option>
-              <option value="60">D (60%)</option>
-              <option value="custom">Custom %</option>
-            </select>
+          <div class="csel" id="rGrade" data-value="80">
+            <button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false">
+              <span class="csel-val">B (80%)</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <div class="csel-panel" role="listbox">
+              <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="90">A (90%)</button>
+              <button type="button" class="csel-opt on" role="option" aria-selected="true" data-value="80">B (80%)</button>
+              <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="70">C (70%)</button>
+              <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="60">D (60%)</button>
+              <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="custom">Custom %</button>
+            </div>
           </div>
         </label>
 
@@ -470,6 +479,7 @@
           <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
           <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
           <li><a href="/tile-calculator/">Tile Calculator</a></li>
+          <li><a href="/square-footage-calculator/">Square Footage Calculator</a></li>
           <li><a href="/tape-measure-fraction-calculator/">Tape Measure Fraction Calculator</a></li>
         </ul>
       </div>
@@ -544,7 +554,7 @@
 <!--FOOTER:END-->
 </div><!-- /wrap -->
 
-<script src="/assets/app.js?v=103"></script>
+<script src="/assets/app.js?v=104"></script>
 <script>
 (function () {
   var $ = function (id) { return document.getElementById(id); };

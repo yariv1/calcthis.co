@@ -15,10 +15,13 @@ competition is a failed build.
 - ⛔ **Feature/input floor — never fewer than competitors** (Rule 8.5,
   `calcthis-workflow-rules.md`). List every input field each competitor exposes and make sure
   CalcThis matches or exceeds that list. The differentiator below is what we do *better*, not
-  an excuse to do *less*. If a text-only fetch of a competitor page leaves any doubt about what
-  it actually shows, stop and ask the user for a screenshot rather than guessing — this shipped
-  wrong once already (Protein Intake Calculator missed Age + Sex despite research already
-  having found calculator.net uses them).
+  an excuse to do *less*. **Open every competitor's actual calculator in the Browser tool —
+  every time, not just on doubt** — and screenshot it / read its rendered dropdowns; a
+  text-only WebFetch summary alone is not enough and has undersold real functionality twice
+  now (Protein Intake Calculator missed Age + Sex despite research already having found
+  calculator.net uses them; Square Footage research's text-summary implied ~9 shape modes on
+  calculatorsoup.com when the live page actually had 13). Only fall back to asking the user for
+  a screenshot if the site genuinely can't be opened.
 - "Everyone does it this way" is NOT proof it's the best way. Question the common pattern.
 - Pick **one** thing we do genuinely better — a real reason a user bookmarks us and comes
   back. Name it explicitly in the build. Examples already shipped:
@@ -261,8 +264,56 @@ JS toggles opacity + pointer-events on the WRAPPER — never just the input.
 
 ---
 
-## Select Field
-Single `.sel` wrapper — never nest two:
+## Select Field — `.csel` (use for every new dropdown)
+
+A native `<select>`'s CLOSED box can be styled (that's what the older `.sel select` pattern
+below did), but its OPEN dropdown panel is raw, unstylable OS/browser chrome — it cannot be
+made to match the site. **`.csel` is the standard now.** It's a button + an on-brand floating
+panel (same visual language as the site nav `.menu`: card, border, shadow, rounded corners,
+amber current-state, and an amber-colored scrollbar with arrow buttons on long lists), while
+exposing the exact same `.value` + `change` event surface as a native select — so calculator
+JS written as `el.addEventListener('change', function(){ x = this.value })` works completely
+unchanged. The CSS lives in `style.css` (search `CUSTOM SELECT (.csel)`), the JS lives in the
+shared runtime IIFE at the top of `app.js` and **auto-initializes every `.csel` on the page on
+load** — no per-calculator wiring needed for a select present at page load.
+
+```html
+<label class="fld">
+  <span class="lab">Label</span>
+  <div class="csel" id="mySelect" data-value="opt1">
+    <button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false">
+      <span class="csel-val">Option 1</span>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="csel-panel" role="listbox">
+      <button type="button" class="csel-opt on" role="option" aria-selected="true" data-value="opt1">Option 1</button>
+      <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="opt2">Option 2</button>
+    </div>
+  </div>
+</label>
+```
+
+- `id` goes on the outer `.csel` div (not a `<select>` — there isn't one). `data-value` on that
+  same div sets the initial selection; keep it in sync with which `.csel-opt` has class `on` +
+  `aria-selected="true"`.
+- Group long lists with `<div class="csel-group">Group name</div>` between option buttons
+  (see `square-footage-calculator/index.html`'s 13-option shape picker for the full pattern
+  with optgroups).
+- **Dynamically-generated dropdowns** (options built at runtime via `innerHTML`, e.g. a
+  per-row select added by an "+ Add row" button) need one extra step: build `.csel-opt`
+  buttons instead of `<option>` tags, then call `CalcThis.initCsel(elOrItsCselRoot)` (single
+  element) or `CalcThis.initAllCsel(containerEl)` (inits every `.csel` inside a container) on
+  the newly-inserted node — the auto-init on page load only catches what exists at load time.
+  This case is **not yet retrofitted anywhere on the site** — `grade-calculator`'s what-if
+  category select and `gpa-calculator`'s per-course-row grade/type selects still use plain
+  `<select>`/`<option>` for this reason (flagged 2026-09-15, pending a dedicated pass).
+- If a JS handler branches on `el.tagName==='SELECT'` to decide `'change'` vs `'input'` (rare,
+  seen once in `gpa-calculator`'s what-if row), widen it to also match
+  `el.classList.contains('csel')` when converting that element.
+
+### Legacy `.sel select` (native select) — do not use for new dropdowns
+Still present on two pages with dynamically-generated per-row selects (not yet retrofitted —
+see above). Single `.sel` wrapper, never nest two:
 
 ```html
 <label class="fld">

@@ -148,13 +148,20 @@ research unless this is fixed structurally.
    must match or exceed that list. If a competitor field is deliberately being dropped (truly
    redundant, not just inconvenient to add), say so explicitly in the research report and get
    the user's sign-off on dropping it — do not drop it silently.
-2. **Text-only research is not enough to confirm a competitor's actual inputs.** WebFetch/
-   WebSearch summaries can describe a page in prose and still omit fields, defaults, or toggles
-   that are only obvious from actually looking at the rendered form. If a competitor site can't
-   be opened directly in the Browser tool (blocked, paywalled, JS-heavy, or the fetch tool's
-   summary leaves any doubt about what inputs are actually on the page) — **stop and ask the
-   user for a screenshot** of that competitor's calculator before finalizing the input list.
-   Do not proceed on a text summary alone when a visual would resolve the doubt.
+2. **Text-only research is never enough on its own — always open the actual calculator in the
+   Browser tool.** WebFetch/WebSearch summaries can describe a page in prose and still omit
+   fields, defaults, shape/mode selectors, or toggles that are only obvious from actually
+   looking at the rendered, interactive form. This is not a fallback for when something seems
+   off — it is a **mandatory step of every competitor research pass, every time**: for every
+   top competitor checked, `preview_start`/`navigate` to the live calculator, screenshot it,
+   and where the tool has a shape/mode dropdown or similar, click through the options (e.g.
+   `read_page`/`find` to enumerate a `<select>`'s full option list) to see everything it
+   actually offers — not just its default state. Confirmed once this way (2026-09-14, Square
+   Footage research): a text-fetch summary of calculatorsoup.com undercounted — the real page
+   had a 13-option shape dropdown, only visible by opening it and reading the rendered
+   `<select>`. If a competitor site genuinely can't be opened (blocked, paywalled, no working
+   render) — stop and ask the user for a screenshot before finalizing the input list. Do not
+   proceed on a text summary alone, ever, even when nothing about it looks suspicious.
 3. This applies to the **research report step** (before approval) — the report itself must
    list every input field of every competitor checked, not just the differentiator idea, so
    the user can catch a gap like this before the build starts, not after.
@@ -181,5 +188,11 @@ Chrome links in the final message. Details: `calcthis-working-rules.md` → "Pre
    Height, Weight and Activity level, but the build shipped with only Weight and a goal
    chip. A finding that never reaches the input list is the same as never having researched
    it — Rule 8.5 (2026-09-14).
+7. **Trusting a text-only WebFetch summary of a competitor page over actually opening it** —
+   Square Footage research (2026-09-14): a text-fetch summary of calculatorsoup.com's
+   calculator looked complete but undercounted its shape dropdown; opening the live page in
+   the Browser tool and reading the rendered `<select>` found 13 shape modes, not the ~9
+   implied by the summary. Fixed by making a Browser-tool visual pass mandatory for every
+   competitor, every time, not just when something looks off — Rule 8.5.
 
 Follow Rules 1–9 (4, 4.5 and 8.5 especially) and none of this happens again.

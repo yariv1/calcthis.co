@@ -320,8 +320,8 @@ same "g/kg" figure copy-pasted into both sides.
 **Step A — Decide if the article needs a toggle at all.** Read the finished article and list
 every number that has a unit. For each one, ask: *is this a standalone physical quantity the
 reader is meant to take away* (a bag weight, a board length, a distance, a temperature, a
-pressure) — or is it something else? These do **NOT** count toward needing a toggle, and must
-NOT be wrapped in `.u`:
+pressure) — or is it something else? These are the **ONLY THREE** exemptions that exist. There
+is no fourth. Anything not on this list gets wrapped, no exceptions, no new judgment calls:
   - A number that only makes sense as part of a demonstrated formula/regression whose
     coefficients are calibrated to one specific unit (e.g. the Rockport walk-test formula's
     `0.0769 × weight in lb` — the constant itself is lb-specific). **The tell:** if converting
@@ -340,6 +340,36 @@ NOT be wrapped in `.u`:
   break rule 1 above; walk away from wrapping that value instead.
 
   If one or more genuine standalone measurements survive the filter, proceed to Step B.
+
+  ### ⛔ RETIRED EXEMPTION — "it's a reference table, it already shows both units" is NOT valid,
+  as of 2026-09-15. Do not reinvent it, do not apply it, do not let it slip back in.
+
+  **What happened:** the Square Footage article had a "Square feet, square yards and acres"
+  table with rows like `1 acre | 43,560 sq ft` and `1 hectare | 10,000 m²`. The reasoning at the
+  time was "this table already states a fact in both systems across its rows, so no `.u` wrap
+  is needed — same as topsoil's static conversion table." That reasoning is **wrong** and shipped
+  a broken toggle straight to preview: every row showed an **imperial-framed** fact (a fact
+  stated in sq ft, or an imperial→metric identity like "1 hectare = 10,000 m²" that never
+  actually explains the hectare in the reader's own preferred imperial terms) **regardless of
+  which button was selected**. Clicking "Metric" changed nothing in that table. The user caught
+  it by eye, immediately, and asked, verbatim, why this keeps happening.
+
+  **The actual rule, going forward, with no exceptions:** if a table, stat block, checklist
+  item, or any other content shows a unit-bearing numeric fact, and the article has an active
+  unit toggle (i.e. `.u` spans exist anywhere else in the page), **every single value cell
+  showing a unit-bearing number gets wrapped in `.u`** — full stop. It does not matter that the
+  table "looks like" it already covers both systems by listing multiple rows. A table is not
+  a toggle. Only `.u` is a toggle. If a fact is genuinely symmetric and would read identically
+  in both modes (rare), wrap it anyway with `data-imp` and `data-met` set to the *same* string —
+  the build gate below explicitly supports and expects that pattern; it is not wasted effort,
+  it is the only mechanism that proves, mechanically, that the row was reviewed and not just
+  forgotten.
+
+  **Do not cite `blog/how-much-topsoil-do-i-need/index.html`'s old static tables as precedent
+  for this anymore.** That pattern predates this fix and is retroactively considered incorrect
+  wherever it appears unwrapped, even though it currently passes the build gate (the gate did
+  not check tables at all until this fix — see Step C). If touching an old article for any
+  other reason, wrap its bare reference-table numbers too while you're in there.
 
 **Step B — Wrap every surviving measurement, exhaustively, the "topsoil" way.**
 `blog/how-much-topsoil-do-i-need/index.html` is the canonical reference — open it and copy its

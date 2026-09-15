@@ -64,6 +64,7 @@ left as-is; the tables below are the source of truth for those. Do not rename th
 | Article | Card image (`assets/images/`) | Header image (`assets/images/`) |
 |---|---|---|
 | How to Add and Subtract Fractions on a Tape Measure | `blog-tape-fractions-card.webp` | `blog-tape-fractions-hero.webp` |
+| How to Calculate Square Footage (Any Shape, Room, or Project) | `blog-square-footage-card.webp` | `blog-square-footage-hero.webp` |
 
 ### In-article images
 
@@ -78,6 +79,7 @@ left as-is; the tables below are the source of truth for those. Do not rename th
 | What Is VO2 Max? How to Estimate Your Aerobic Fitness | `blog-vo2max-inArticle-1.webp` · `blog-vo2max-inArticle-2.webp` |
 | How Many Steps Are in a Mile? | `blog-steps-mile-inArticle-1.webp` · `blog-steps-mile-inArticle-2.webp` |
 | How Much Protein Do I Need? | `blog-protein-intake-inArticle-1.webp` · `blog-protein-intake-inArticle-2.webp` |
+| How to Calculate Square Footage (Any Shape, Room, or Project) | `blog-square-footage-inArticle-1.webp` · `blog-square-footage-inArticle-2.webp` |
 
 ### Rules
 - ❌ Never guess a filename. If it's not in this table, stop and check the actual file.

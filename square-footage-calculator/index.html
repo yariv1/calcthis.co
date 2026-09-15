@@ -1,0 +1,527 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Square Footage Calculator — Rooms, Circles, Triangles &amp; More | CalcThis</title>
+<meta name="description" content="Free square footage calculator with 13 shapes — rectangle, circle, ring, triangle, trapezoid, wall minus window and more. Add multiple areas to a running project total, see a live diagram of your shape, and get an instant cost estimate.">
+<link rel="canonical" href="https://calcthis.co/square-footage-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Square Footage Calculator — Rooms, Circles, Triangles &amp; More">
+<meta property="og:description" content="13 shapes, a live diagram that redraws as you type, and a running project total across multiple areas. Instant, no sign-up.">
+<meta property="og:url" content="https://calcthis.co/square-footage-calculator/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<meta name="theme-color" content="#B5761F">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css?v=104">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Square Footage Calculator",
+      "url": "https://calcthis.co/square-footage-calculator/",
+      "applicationCategory": "UtilityApplication",
+      "operatingSystem": "Any (web browser)",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "description": "Calculate square footage for 13 shapes — rectangle, square, rectangle border, room, circle, circle border, annulus, triangle (two methods), trapezoid, cathedral wall, wall minus window and known area. Add multiple areas to a running project total, see a live diagram that redraws as you type, and get an instant cost estimate.",
+      "featureList": [
+        "13 shape modes including rectangle, circle, triangle, trapezoid and wall-minus-window",
+        "Live diagram that redraws with your actual dimensions",
+        "Running project total across multiple rooms or areas",
+        "Optional waste factor buffer",
+        "Instant cost estimate",
+        "US and metric units"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "How do I calculate square footage?", "acceptedAnswer": { "@type": "Answer", "text": "For a rectangular room, multiply the length by the width in feet. For an irregular space, split it into simple shapes — rectangles, circles, triangles — calculate each one and add them together. This calculator does that automatically: add each shape to the project total and it sums the whole area for you." } },
+        { "@type": "Question", "name": "How do I find the square footage of a circular area?", "acceptedAnswer": { "@type": "Answer", "text": "Measure the diameter, divide it by 2 to get the radius, then use Area = pi times radius squared. Enter the diameter in the Circle mode above and it's calculated instantly." } },
+        { "@type": "Question", "name": "How do I calculate the area of an L-shaped or irregular room?", "acceptedAnswer": { "@type": "Answer", "text": "Break the room into rectangles (or other simple shapes) that don't overlap, calculate each section's area separately, then add them together. Add each section to the project total above and the running total does the adding for you." } },
+        { "@type": "Question", "name": "How many square feet are in an acre?", "acceptedAnswer": { "@type": "Answer", "text": "One acre is 43,560 square feet. This calculator shows the acre equivalent automatically underneath any US-units result once the area is large enough to matter." } },
+        { "@type": "Question", "name": "How much extra should I buy for material waste?", "acceptedAnswer": { "@type": "Answer", "text": "For straightforward rectangular layouts, 5-10% extra covers cuts and offcuts. For rooms with lots of angles, or diagonal/herringbone patterns, 10-15% is safer. Use the \"+ Add waste calc\" option in the project total to add a percentage buffer to your order." } }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body class="p-sqft">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <a class="hdr-back" href="/blog/" aria-label="Back to blog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <span class="menu-col-head">Construction &amp; Gardening</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+          <a href="/square-footage-calculator/" class="current">Square Footage</a>
+          <a href="/tape-measure-fraction-calculator/">Tape Measure Fraction</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/vo2-max-calculator/">VO2 Max</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
+          <a href="/bmi-calculator/">BMI</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/ideal-weight-calculator/">Ideal Weight</a>
+          <a href="/calorie-calculator/">Calorie</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/water-intake-calculator/">Water Intake</a>
+          <a href="/macro-calculator/">Macro</a>
+          <a href="/protein-intake-calculator/">Protein Intake</a>
+          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
+          <a href="/steps-to-miles-calculator/">Steps to Miles</a>
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+          <a href="/age-calculator/">Age</a>
+          <a href="/date-calculator/">Date</a>
+          <a href="/time-calculator/">Time</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">13 shapes, one running total</div>
+    <h1>Square Footage Calculator</h1>
+    <p>Pick a shape — rectangle, circle, triangle, trapezoid, even a wall with a window cut out — and watch a live diagram redraw with your exact dimensions. Add as many areas as your project needs to one running total, with an instant cost estimate.</p>
+  </section>
+
+  <div class="grid">
+
+    <!-- INPUT -->
+    <div class="card">
+      <div class="card-pad">
+        <h2 class="card-h2">Your area</h2>
+
+        <div class="ctl-row">
+          <span class="ctl-lab">Units</span>
+          <div class="seg" id="unitSeg">
+            <button class="on" data-sys="us">US</button>
+            <button data-sys="metric">Metric</button>
+          </div>
+        </div>
+
+        <label class="fld">
+          <span class="lab">Shape</span>
+          <div class="csel" id="shapeSel" data-value="rect">
+            <button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false">
+              <span class="csel-val">Rectangle</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <div class="csel-panel" role="listbox">
+              <div class="csel-group">Rectangles</div>
+              <button type="button" class="csel-opt on" role="option" aria-selected="true" data-value="rect">Rectangle</button>
+              <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="square">Square</button>
+              <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="rectborder">Rectangle border</button>
+              <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="room">Room</button>
+              <div class="csel-group">Circles</div>
+              <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="circle">Circle</button>
+              <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="circleborder">Circle border (ring)</button>
+              <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="annulus">Annulus (ring by diameters)</button>
+              <div class="csel-group">Triangles</div>
+              <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="tri3">Triangle (3 sides)</button>
+              <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="tribh">Triangle (base &times; height)</button>
+              <div class="csel-group">Trapezoids</div>
+              <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="trap">Trapezoid</button>
+              <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="cathedral">Cathedral wall</button>
+              <div class="csel-group">Other</div>
+              <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="wallwin">Wall minus window</button>
+              <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="known">Known area</button>
+            </div>
+          </div>
+        </label>
+
+        <div id="sqFields">
+
+          <div id="f-rect">
+            <div class="two">
+              <label class="fld"><span class="lab">Length <span class="unit" data-dim>ft</span></span><div class="inp"><input id="len" type="number" inputmode="decimal" placeholder="0"><span class="suf" data-dim>ft</span></div></label>
+              <label class="fld"><span class="lab">Width <span class="unit" data-dim>ft</span></span><div class="inp"><input id="wid" type="number" inputmode="decimal" placeholder="0"><span class="suf" data-dim>ft</span></div></label>
+            </div>
+          </div>
+
+          <div id="f-square" style="display:none">
+            <label class="fld"><span class="lab">Side <span class="unit" data-dim>ft</span></span><div class="inp"><input id="side" type="number" inputmode="decimal" placeholder="0"><span class="suf" data-dim>ft</span></div></label>
+          </div>
+
+          <div id="f-rectborder" style="display:none">
+            <div class="two">
+              <label class="fld"><span class="lab">Outer length <span class="unit" data-dim>ft</span></span><div class="inp"><input id="rbL" type="number" inputmode="decimal" placeholder="0"><span class="suf" data-dim>ft</span></div></label>
+              <label class="fld"><span class="lab">Outer width <span class="unit" data-dim>ft</span></span><div class="inp"><input id="rbW" type="number" inputmode="decimal" placeholder="0"><span class="suf" data-dim>ft</span></div></label>
+            </div>
+            <label class="fld"><span class="lab">Border width <span class="unit" data-dim>ft</span></span><div class="inp"><input id="rbBw" type="number" inputmode="decimal" placeholder="0"><span class="suf" data-dim>ft</span></div></label>
+          </div>
+
+          <div id="f-room" style="display:none">
+            <label class="fld"><span class="lab">Room name <span class="unit">optional</span></span><div class="inp"><input id="roomName" type="text" placeholder="e.g. Living room" maxlength="40"></div></label>
+            <div class="two">
+              <label class="fld"><span class="lab">Length <span class="unit" data-dim>ft</span></span><div class="inp"><input id="roomLen" type="number" inputmode="decimal" placeholder="0"><span class="suf" data-dim>ft</span></div></label>
+              <label class="fld"><span class="lab">Width <span class="unit" data-dim>ft</span></span><div class="inp"><input id="roomWid" type="number" inputmode="decimal" placeholder="0"><span class="suf" data-dim>ft</span></div></label>
+            </div>
+          </div>
+
+          <div id="f-circle" style="display:none">
+            <label class="fld"><span class="lab">Diameter <span class="unit" data-dim>ft</span></span><div class="inp"><input id="dia" type="number" inputmode="decimal" placeholder="0"><span class="suf" data-dim>ft</span></div></label>
+          </div>
+
+          <div id="f-circleborder" style="display:none">
+            <div class="two">
+              <label class="fld"><span class="lab">Outer diameter <span class="unit" data-dim>ft</span></span><div class="inp"><input id="cbDia" type="number" inputmode="decimal" placeholder="0"><span class="suf" data-dim>ft</span></div></label>
+              <label class="fld"><span class="lab">Border width <span class="unit" data-dim>ft</span></span><div class="inp"><input id="cbBw" type="number" inputmode="decimal" placeholder="0"><span class="suf" data-dim>ft</span></div></label>
+            </div>
+          </div>
+
+          <div id="f-annulus" style="display:none">
+            <div class="two">
+              <label class="fld"><span class="lab">Outer diameter <span class="unit" data-dim>ft</span></span><div class="inp"><input id="anOut" type="number" inputmode="decimal" placeholder="0"><span class="suf" data-dim>ft</span></div></label>
+              <label class="fld"><span class="lab">Inner diameter <span class="unit" data-dim>ft</span></span><div class="inp"><input id="anIn" type="number" inputmode="decimal" placeholder="0"><span class="suf" data-dim>ft</span></div></label>
+            </div>
+          </div>
+
+          <div id="f-tri3" style="display:none">
+            <div class="two">
+              <label class="fld"><span class="lab">Side A <span class="unit" data-dim>ft</span></span><div class="inp"><input id="t3a" type="number" inputmode="decimal" placeholder="0"><span class="suf" data-dim>ft</span></div></label>
+              <label class="fld"><span class="lab">Side B <span class="unit" data-dim>ft</span></span><div class="inp"><input id="t3b" type="number" inputmode="decimal" placeholder="0"><span class="suf" data-dim>ft</span></div></label>
+            </div>
+            <label class="fld"><span class="lab">Side C <span class="unit" data-dim>ft</span></span><div class="inp"><input id="t3c" type="number" inputmode="decimal" placeholder="0"><span class="suf" data-dim>ft</span></div></label>
+          </div>
+
+          <div id="f-tribh" style="display:none">
+            <div class="two">
+              <label class="fld"><span class="lab">Base <span class="unit" data-dim>ft</span></span><div class="inp"><input id="tbBase" type="number" inputmode="decimal" placeholder="0"><span class="suf" data-dim>ft</span></div></label>
+              <label class="fld"><span class="lab">Height <span class="unit" data-dim>ft</span></span><div class="inp"><input id="tbH" type="number" inputmode="decimal" placeholder="0"><span class="suf" data-dim>ft</span></div></label>
+            </div>
+          </div>
+
+          <div id="f-trap" style="display:none">
+            <div class="two">
+              <label class="fld"><span class="lab">Base 1 <span class="unit" data-dim>ft</span></span><div class="inp"><input id="trB1" type="number" inputmode="decimal" placeholder="0"><span class="suf" data-dim>ft</span></div></label>
+              <label class="fld"><span class="lab">Base 2 <span class="unit" data-dim>ft</span></span><div class="inp"><input id="trB2" type="number" inputmode="decimal" placeholder="0"><span class="suf" data-dim>ft</span></div></label>
+            </div>
+            <label class="fld"><span class="lab">Height <span class="unit" data-dim>ft</span></span><div class="inp"><input id="trH" type="number" inputmode="decimal" placeholder="0"><span class="suf" data-dim>ft</span></div></label>
+          </div>
+
+          <div id="f-cathedral" style="display:none">
+            <div class="two">
+              <label class="fld"><span class="lab">Short wall height <span class="unit" data-dim>ft</span></span><div class="inp"><input id="cwB1" type="number" inputmode="decimal" placeholder="0"><span class="suf" data-dim>ft</span></div></label>
+              <label class="fld"><span class="lab">Tall wall height <span class="unit" data-dim>ft</span></span><div class="inp"><input id="cwB2" type="number" inputmode="decimal" placeholder="0"><span class="suf" data-dim>ft</span></div></label>
+            </div>
+            <label class="fld"><span class="lab">Width <span class="unit" data-dim>ft</span></span><div class="inp"><input id="cwH" type="number" inputmode="decimal" placeholder="0"><span class="suf" data-dim>ft</span></div></label>
+          </div>
+
+          <div id="f-wallwin" style="display:none">
+            <div class="two">
+              <label class="fld"><span class="lab">Wall length <span class="unit" data-dim>ft</span></span><div class="inp"><input id="wwL" type="number" inputmode="decimal" placeholder="0"><span class="suf" data-dim>ft</span></div></label>
+              <label class="fld"><span class="lab">Wall height <span class="unit" data-dim>ft</span></span><div class="inp"><input id="wwH" type="number" inputmode="decimal" placeholder="0"><span class="suf" data-dim>ft</span></div></label>
+            </div>
+            <div class="two">
+              <label class="fld"><span class="lab">Window width <span class="unit" data-dim>ft</span></span><div class="inp"><input id="winW" type="number" inputmode="decimal" placeholder="0"><span class="suf" data-dim>ft</span></div></label>
+              <label class="fld"><span class="lab">Window height <span class="unit" data-dim>ft</span></span><div class="inp"><input id="winH" type="number" inputmode="decimal" placeholder="0"><span class="suf" data-dim>ft</span></div></label>
+            </div>
+            <label class="fld"><span class="lab">Windows <span class="unit">count</span></span><div class="inp"><input id="winQty" type="number" inputmode="numeric" min="1" placeholder="1"></div></label>
+          </div>
+
+          <div id="f-known" style="display:none">
+            <label class="fld"><span class="lab">Area <span class="unit" data-areaunit>sq ft</span></span><div class="inp"><input id="knownArea" type="number" inputmode="decimal" placeholder="0"><span class="suf" data-areaunit>sq ft</span></div></label>
+          </div>
+
+        </div>
+
+        <label class="fld"><span class="lab">Quantity <span class="unit">identical areas</span></span><div class="inp"><input id="sqQty" type="number" inputmode="numeric" min="1" placeholder="1"></div></label>
+
+        <label class="fld" style="margin-bottom:0">
+          <span class="lab"><span id="priceLab">Price per sq ft</span> <span class="unit">optional</span></span>
+          <div class="inp"><input id="sqPrice" type="number" inputmode="decimal" placeholder="0.00" step="0.01"><span class="suf" id="priceSuf">$/sq ft</span></div>
+        </label>
+
+        <div class="add-wrap">
+          <div class="add-row">
+            <button class="btn" id="addBtn">+ Add area to project</button>
+            <button class="linkbtn" id="clearFieldsBtn">Clear fields</button>
+          </div>
+          <div class="res-hint" id="hint">Enter your length and width</div>
+          <div class="add-note" id="addNote">Measuring more than one area? Add each to total the whole project.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT + PROJECT -->
+    <div class="card">
+      <div class="card-pad">
+        <div class="res-lab" id="resLab">This area</div>
+        <div class="res-big"><span id="resQty">—</span> <span class="res-unit" id="resUnit">sq ft</span></div>
+        <div class="res-sub" id="resSub">Enter dimensions to see the area.</div>
+
+        <div class="sq-diagram" id="sqDiagram"></div>
+
+        <div class="res-cost hide" id="resCostWrap"><span class="k">Estimated cost</span><span class="v" id="resCost"></span></div>
+        <div class="res-tip" id="resTip">Tip: for irregular rooms, split the space into simple shapes and add each one to the project total.</div>
+
+        <div class="proj-sep"></div>
+
+        <div class="tally-head">
+          <h3>Project total</h3>
+          <button id="clearBtn" style="display:none">Clear all</button>
+        </div>
+        <div id="tallyBody">
+          <div class="tally-empty">Doing more than one area? Add each above and they&rsquo;ll total here.</div>
+        </div>
+        <div class="trow wrow" id="wasteRow" style="display:none">
+          <span class="desc wdesc">
+            <span class="wtag">Waste</span>
+            <input id="wastePct" class="win" type="text" inputmode="decimal" placeholder="recommended 10" autocomplete="off">
+            <span class="wsuf">%</span>
+          </span>
+          <span class="qt na" id="wasteQty">—</span>
+          <span class="rc na" id="wasteRc">—</span>
+          <button class="x wx" id="wasteRemove" type="button" aria-label="Remove waste">×</button>
+        </div>
+        <div class="tally-total" id="projTotal" style="display:none">
+          <span class="tl">Total <span class="sub" id="projCount"></span></span>
+          <span class="tv"><span id="totalQty">0</span> <span id="totalUnit">sq ft</span></span>
+          <span class="tl sub" id="totalCostRow" style="display:none">Estimated cost</span>
+          <span class="tv" id="totalCost" style="display:none"></span>
+        </div>
+        <button class="add-waste-btn" id="addWasteBtn" type="button">+ Add waste calc</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- mobile sticky bar -->
+  <div class="mbar" id="mbar">
+    <span class="mbar-lab" id="mLab">This area</span>
+    <div class="mbar-vals">
+      <span class="mbar-seg" id="mSeg"><b id="mQty">0</b> <span id="mUnit">sq ft</span></span>
+      <span class="mbar-cost hide" id="mCostWrap"><span class="mbar-eq">=</span> <b id="mCost"></b></span>
+    </div>
+  </div>
+
+  <div class="related-calcs">
+    <p class="related-calcs-h">More construction calculators that may interest you</p>
+    <div class="pills">
+      <a class="pill" href="/flooring-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>
+        Flooring Calculator
+      </a>
+      <a class="pill" href="/tile-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/><rect x="3" y="13" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/></svg>
+        Tile Calculator
+      </a>
+      <a class="pill" href="/concrete-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10l8-6 8 6v10H4z"/></svg>
+        Concrete Calculator
+      </a>
+      <a class="pill" href="/tape-measure-fraction-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h18M6 9v3M9 9v3M12 6v6M15 9v3M18 9v3"/></svg>
+        Tape Measure Fraction Calculator
+      </a>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use the square footage calculator</h2>
+        <p>Pick your <strong>shape</strong> from the dropdown — most rooms are a plain <strong>Rectangle</strong>, but if you're pricing a circular patio, a triangular gable end, an L-shaped border, or a wall with a window cut out of it, there's a mode for that too. Enter the dimensions and watch the <strong>live diagram</strong> below the result redraw with your actual numbers as you type. Add the area to your <strong>project total</strong> and repeat for every room or section — the running total sums everything for you, with an optional waste buffer and an instant cost estimate.</p>
+
+        <h2>The basic formula</h2>
+        <div class="formula">
+          Length × Width = Area
+          <small>THE SAME PRINCIPLE APPLIES TO EVERY SHAPE — MULTIPLY THE RIGHT DIMENSIONS TOGETHER</small>
+        </div>
+        <p>A rectangle is simply length times width. A circle is π times the radius squared. A triangle is half the base times the height. Every shape mode above works out the correct formula for you — you just need to measure the right dimensions.</p>
+
+        <h2>Splitting an irregular room into simple shapes</h2>
+        <p>Most real rooms aren't perfect rectangles. The standard approach is to mentally split the space into rectangles, circles or triangles that don't overlap, work out each section's area, then add them together. That's exactly what the <strong>project total</strong> does automatically — measure each section, add it, and move to the next one. An L-shaped room, for example, is just two rectangles added together.</p>
+
+        <h2>Worked example</h2>
+        <p>A rectangular bedroom 14 ft long and 11 ft wide, plus a closet alcove 3 ft by 4 ft:</p>
+        <p style="color:var(--ink);font-weight:500">14 × 11 = <strong>154 sq ft</strong>. 3 × 4 = <strong>12 sq ft</strong>. Added together: <strong>166 sq ft</strong> total.</p>
+      </div>
+
+      <div>
+        <h2>Square feet, square yards and acres</h2>
+        <p>Results convert automatically: <strong>9 sq ft = 1 sq yd</strong>, and <strong>43,560 sq ft = 1 acre</strong>. In metric, <strong>10,000 m² = 1 hectare</strong>. The subtitle under every result shows the equivalent so you don't need a separate converter.</p>
+        <table class="dtable">
+          <thead><tr><th>Unit</th><th>Equals</th></tr></thead>
+          <tbody>
+            <tr><td>1 square yard</td><td>9 sq ft</td></tr>
+            <tr><td>1 acre</td><td>43,560 sq ft</td></tr>
+            <tr><td>1 hectare</td><td>10,000 m²</td></tr>
+            <tr><td>1 square metre</td><td>≈10.76 sq ft</td></tr>
+          </tbody>
+        </table>
+
+        <h2>How much extra for waste?</h2>
+        <ul>
+          <li><strong>5–10%</strong> — a simple rectangular layout</li>
+          <li><strong>10–15%</strong> — rooms with lots of corners or angles</li>
+          <li><strong>15%+</strong> — diagonal, herringbone or chevron patterns</li>
+        </ul>
+        <p>Tap <strong>&ldquo;+ Add waste calc&rdquo;</strong> in the project total to add a percentage buffer on top of your measured area.</p>
+
+        <h2>Pricing your project</h2>
+        <p>Enter a <strong>price per unit area</strong> and every area you add gets priced automatically, with a running project cost at the bottom. Pair this with the <a href="/flooring-calculator/">Flooring Calculator</a> once you know the square footage and want an exact box count, or the <a href="/tile-calculator/">Tile Calculator</a> for individual tile counts.</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>How do I calculate square footage?</summary><p>For a rectangular room, multiply the length by the width in feet. For an irregular space, split it into simple shapes — rectangles, circles, triangles — calculate each one and add them together. This calculator does that automatically: add each shape to the project total and it sums the whole area for you.</p></details>
+    <details class="faq"><summary>How do I find the square footage of a circular area?</summary><p>Measure the diameter, divide it by 2 to get the radius, then use Area = π × radius². Enter the diameter in the Circle mode above and it's calculated instantly.</p></details>
+    <details class="faq"><summary>How do I calculate the area of an L-shaped or irregular room?</summary><p>Break the room into rectangles (or other simple shapes) that don't overlap, calculate each section's area separately, then add them together. Add each section to the project total above and the running total does the adding for you.</p></details>
+    <details class="faq"><summary>How many square feet are in an acre?</summary><p>One acre is <strong>43,560 square feet</strong>. This calculator shows the acre equivalent automatically underneath any US-units result once the area is large enough to matter.</p></details>
+    <details class="faq"><summary>How much extra should I buy for material waste?</summary><p>For straightforward rectangular layouts, <strong>5–10%</strong> extra covers cuts and offcuts. For rooms with lots of angles, or diagonal/herringbone patterns, <strong>10–15%</strong> is safer. Use the &ldquo;+ Add waste calc&rdquo; option in the project total to add a percentage buffer to your order.</p></details>
+  </section>
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+          <li><a href="/square-footage-calculator/">Square Footage Calculator</a></li>
+          <li><a href="/tape-measure-fraction-calculator/">Tape Measure Fraction Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/vo2-max-calculator/">VO2 Max Calculator</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/bmi-calculator/">BMI Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/ideal-weight-calculator/">Ideal Weight Calculator</a></li>
+          <li><a href="/calorie-calculator/">Calorie Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/water-intake-calculator/">Water Intake Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/protein-intake-calculator/">Protein Intake Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
+          <li><a href="/steps-to-miles-calculator/">Steps to Miles Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+          <li><a href="/age-calculator/">Age Calculator</a></li>
+          <li><a href="/date-calculator/">Date Calculator</a></li>
+          <li><a href="/time-calculator/">Time Calculator</a></li>
+        </ul>
+      </div>
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/blog/">Blog</a>
+      <span aria-hidden="true">·</span>
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+</div>
+
+<script src="/assets/app.js?v=104"></script>
+<script>CalcThis.initSqftCalc();</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>

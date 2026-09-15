@@ -97,6 +97,39 @@
   .sel select:focus{outline:none;border-color:var(--amber);background:#fff;box-shadow:0 0 0 3px rgba(181,118,31,.13)}
   .sel::after{content:"▾";position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none;font-size:12px}
 
+  /* =========================================================
+     CUSTOM SELECT (.csel) — GLOBAL component.
+     A native <select>'s CLOSED box can be styled (see .sel above), but its
+     OPEN dropdown panel is raw, unstylable OS/browser chrome — it cannot be
+     made to look like the rest of the site. .csel replaces the whole control
+     with a button + an on-brand floating panel (same visual language as the
+     site nav .menu: card, border, shadow, rounded corners, amber current
+     state), while exposing the exact same `.value` + `change` event surface
+     as a native select so calculator JS written against a <select> works
+     completely unchanged. Auto-initializes every `.csel` on the page via the
+     shared runtime IIFE at the top of this file — no per-calculator wiring.
+     Use this for every new dropdown going forward instead of a bare <select>.
+     ========================================================= */
+  .csel{position:relative}
+  .csel-btn{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;font:inherit;font-size:16px;font-weight:500;color:var(--ink);background:#FCFAF6;border:1.5px solid var(--line);border-radius:10px;padding:11px 13px;cursor:pointer;transition:.15s;text-align:left}
+  .csel-btn:hover{border-color:#D8C9AC}
+  .csel.open .csel-btn,.csel-btn:focus-visible{outline:none;border-color:var(--amber);background:#fff;box-shadow:0 0 0 3px rgba(181,118,31,.13)}
+  .csel-btn svg{flex:none;color:var(--muted);transition:transform .15s}
+  .csel.open .csel-btn svg{transform:rotate(180deg)}
+  .csel-panel{display:none;position:absolute;top:calc(100% + 6px);left:0;z-index:40;width:max-content;min-width:100%;max-width:min(320px,90vw);max-height:320px;overflow-y:auto;background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:7px;scrollbar-color:var(--amber) transparent;scrollbar-width:thin}
+  .csel-panel::-webkit-scrollbar{width:14px}
+  .csel-panel::-webkit-scrollbar-track{background:transparent}
+  .csel-panel::-webkit-scrollbar-thumb{background-color:var(--amber);border-radius:8px;border:3px solid transparent;background-clip:padding-box}
+  .csel-panel::-webkit-scrollbar-thumb:hover{background-color:var(--amber-deep);background-clip:padding-box}
+  .csel-panel::-webkit-scrollbar-button{background-color:transparent;display:block;height:14px}
+  .csel-panel::-webkit-scrollbar-button:vertical:start:decrement{background:transparent url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"><polygon points="5,2 9,8 1,8" fill="%23B5761F"/></svg>') no-repeat center}
+  .csel-panel::-webkit-scrollbar-button:vertical:end:increment{background:transparent url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"><polygon points="1,2 9,2 5,8" fill="%23B5761F"/></svg>') no-repeat center}
+  .csel-group{font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:9px 11px 5px;margin-top:4px}
+  .csel-group:first-child{margin-top:0}
+  .csel-opt{display:block;width:100%;text-align:left;font:inherit;font-size:14.5px;font-weight:500;color:var(--ink-soft);background:none;border:0;border-radius:8px;padding:9px 11px;cursor:pointer;transition:.12s}
+  .csel-opt:hover{background:#F5EFE4;color:var(--ink)}
+  .csel-opt.on{background:#F3EADA;color:var(--ink);font-weight:600}
+
   /* depth quick chips */
   .chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
   .chips button{font:inherit;font-size:12.5px;font-weight:600;color:var(--ink-soft);background:#F5EFE4;border:1px solid var(--line);border-radius:20px;padding:5px 11px;cursor:pointer;transition:.12s}
@@ -1430,8 +1463,7 @@
   .p-fraction .arow .x:hover{color:#b23;background:#f7e9e9}
   .p-fraction #frMarksWrap{margin-top:10px}
   .p-fraction .three .tcol{width:86px}
-  .p-fraction .three .tcol .sel select{padding:11px 26px 11px 10px}
-  .p-fraction .three .tcol .sel::after{right:9px}
+  .p-fraction .three .tcol .csel-btn{padding:11px 8px 11px 10px;font-size:14px}
 
   /* =========================================================
      FITNESS · STEPS TO MILES CALCULATOR  (body.p-steps)
@@ -1457,3 +1489,20 @@
   .p-steps #calChartWrap svg{display:block;width:100%;max-width:440px;height:auto;overflow:visible}
   .p-steps .stm-key{display:flex;flex-wrap:wrap;gap:5px 16px;margin:6px 0 14px;font-size:12px;font-weight:500;color:var(--ink-soft)}
   .p-steps .stm-key i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+
+  /* =========================================================
+     CONSTRUCTION · SQUARE FOOTAGE CALCULATOR  (body.p-sqft)
+     Independent engine (no material/box/bag layer) — 13 shape modes,
+     a running multi-area project tally (same trow/waste/mbar pattern
+     as flooring/tile), and a live SVG diagram that redraws with the
+     actual entered dimensions (neither calculator.net nor calculatorsoup
+     draws a diagram tied to input — confirmed live, 2026-09-14).
+     ========================================================= */
+  .p-sqft .fld{margin-bottom:16px}
+  .p-sqft #sqFields{margin-bottom:2px}
+  .p-sqft .sq-diagram{margin:14px 0 16px;background:#FCFAF6;border:1px solid var(--line);border-radius:12px;padding:14px 14px 12px}
+  .p-sqft .sq-diagram svg{display:block;width:100%;height:auto;overflow:visible}
+  .p-sqft .sq-diagram-empty{font-size:13px;color:var(--muted);text-align:center;padding:30px 10px;line-height:1.45}
+  .p-sqft .sq-diagram-legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:8px;padding-top:10px;border-top:1px dashed var(--line);font-size:12.5px;color:var(--ink-soft)}
+  .p-sqft .sq-diagram-legend b{color:var(--ink);font-weight:600}
+  .p-sqft .sq-diagram-legend span{white-space:nowrap}
