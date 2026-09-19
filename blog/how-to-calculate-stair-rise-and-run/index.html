@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How to Calculate Stair Rise and Run (Plus Stringer Length) | CalcThis</title>
+<link rel="canonical" href="https://calcthis.co/blog/how-to-calculate-stair-rise-and-run/">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<meta name="theme-color" content="#B5761F">
+<meta name="description" content="The riser-height formula, standard vs. flush stringer mounts, the Pythagorean stringer-length formula, and the IRC building-code numbers every staircase has to meet — with a full worked example.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "How to Calculate Stair Rise and Run (Plus Stringer Length)",
+  "url": "https://calcthis.co/blog/how-to-calculate-stair-rise-and-run/",
+  "datePublished": "2026-09-19",
+  "dateModified": "2026-09-19",
+  "author": { "@type": "Organization", "name": "CalcThis", "url": "https://calcthis.co" },
+  "publisher": { "@type": "Organization", "name": "CalcThis", "url": "https://calcthis.co" },
+  "description": "The riser-height formula, standard vs. flush stringer mounts, the Pythagorean stringer-length formula, and the IRC building-code numbers every staircase has to meet — with a full worked example.",
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://calcthis.co/blog/how-to-calculate-stair-rise-and-run/" }
+}
+</script>
+<link rel="stylesheet" href="/assets/style.css?v=106">
+<style>
+/* Lightbox — diagram click-to-enlarge */
+.diagram-zoomable{cursor:zoom-in;position:relative}
+.diagram-zoomable::after{content:"🔍 Click to enlarge";position:absolute;bottom:10px;right:14px;font-family:Inter,sans-serif;font-size:11px;font-weight:600;color:rgba(255,255,255,.55);letter-spacing:.04em;pointer-events:none}
+.dg-overlay{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.88);display:flex;align-items:center;justify-content:center;padding:24px;cursor:zoom-out;animation:dg-in .18s ease}
+@keyframes dg-in{from{opacity:0}to{opacity:1}}
+.dg-overlay svg{max-width:min(96vw,1100px);max-height:85vh;border-radius:10px;box-shadow:0 8px 48px rgba(0,0,0,.6);cursor:zoom-out}
+.dg-close{position:fixed;top:20px;right:24px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.12);border:none;color:#fff;font-size:20px;line-height:36px;text-align:center;cursor:pointer;z-index:10000;transition:background .15s}
+.dg-close:hover{background:rgba(255,255,255,.22)}
+/* Unit toggle — .blog-meta flex layout only. Visual style comes from .seg in style.css */
+.blog-meta{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.formula strong{color:inherit}
+</style>
+</head>
+<body class="p-blog-post">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <a class="hdr-back" href="/blog/" aria-label="Back to blog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <span class="menu-col-head">Construction &amp; Gardening</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+          <a href="/square-footage-calculator/">Square Footage</a>
+          <a href="/tape-measure-fraction-calculator/">Tape Measure Fraction</a>
+          <a href="/stair-calculator/">Stair</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/vo2-max-calculator/">VO2 Max</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
+          <a href="/bmi-calculator/">BMI</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/ideal-weight-calculator/">Ideal Weight</a>
+          <a href="/calorie-calculator/">Calorie</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/water-intake-calculator/">Water Intake</a>
+          <a href="/macro-calculator/">Macro</a>
+          <a href="/protein-intake-calculator/">Protein Intake</a>
+          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
+          <a href="/steps-to-miles-calculator/">Steps to Miles</a>
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+          <a href="/age-calculator/">Age</a>
+          <a href="/date-calculator/">Date</a>
+          <a href="/time-calculator/">Time</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <div class="hero" style="padding:4px 0 0">
+    <div class="blog-hero-art">
+      <img src="/assets/images/blog-stair-rise-run-hero.webp"
+           alt="A partially built wooden staircase with cut stringers exposed, a carpenter's framing square and tape measure resting on one stringer"
+           width="1400" height="520" loading="eager">
+    </div>
+
+    <div class="blog-meta">
+      <div class="bm-left">
+        <a href="/blog/">Blog</a>
+        <span class="bm-sep">·</span>
+        <span class="blog-meta-cat">Construction</span>
+        <span class="bm-sep">·</span>
+        <span>7 min read</span>
+      </div>
+      <div class="seg" id="unitToggle" role="group" aria-label="Unit system" style="display:none">
+        <button class="on" data-unit="imp" type="button" aria-pressed="true">Imperial</button>
+        <button data-unit="met" type="button" aria-pressed="false">Metric</button>
+      </div>
+    </div>
+
+    <h1>How to Calculate Stair Rise and Run (Plus Stringer Length)</h1>
+    <p class="blog-lede">Every staircase comes down to the same right triangle: rise, run, and the stringer connecting them. Get the riser height right and tread depth, stringer length, and angle all fall out of one formula.</p>
+  </div>
+
+  <div class="blog-content">
+
+    <h2>Stair terminology, in one diagram</h2>
+    <p>Before the formulas, the parts. A stair <strong>rise</strong> is the vertical height of one step; the <strong>run</strong> is its horizontal depth. The <strong>riser</strong> is the vertical board at the back of a step, the <strong>tread</strong> is the horizontal board you step on, and the <strong>stringer</strong> is the diagonal structural board — usually a 2&times;12 — that the treads and risers are cut into or attached to.</p>
+
+    <div class="blog-diagram diagram-zoomable" title="Click to enlarge">
+      <svg viewBox="0 0 740 300" xmlns="http://www.w3.org/2000/svg" aria-label="Side-view diagram of a staircase labeling total rise, total run, tread, riser, stringer and angle" font-family="Inter,sans-serif">
+        <rect x="1" y="1" width="738" height="298" rx="14" fill="#FFFFFF" stroke="#E7DECF" stroke-width="1.5"/>
+        <polygon points="150,250 150,250 240,250 240,202 240,202 330,202 330,154 330,154 420,154 420,106 420,106 510,106 510,58 510,58 600,58 600,10 600,250" fill="rgba(55,80,63,.14)" stroke="#241A11" stroke-width="2" stroke-linejoin="round"/>
+        <line x1="150" y1="250" x2="600" y2="10" stroke="#8A7A66" stroke-width="1.4" stroke-dasharray="5 4"/>
+
+        <!-- total rise axis -->
+        <line x1="126" y1="250" x2="126" y2="10" stroke="rgba(36,26,17,.45)" stroke-width="1.1"/>
+        <line x1="119" y1="250" x2="133" y2="250" stroke="rgba(36,26,17,.45)" stroke-width="1.1"/>
+        <line x1="119" y1="10" x2="133" y2="10" stroke="rgba(36,26,17,.45)" stroke-width="1.1"/>
+        <text x="108" y="130" text-anchor="middle" font-size="14" font-weight="600" fill="#5B4C3B" transform="rotate(-90 108 130)">Total rise</text>
+
+        <!-- total run axis -->
+        <line x1="150" y1="274" x2="600" y2="274" stroke="rgba(36,26,17,.45)" stroke-width="1.1"/>
+        <line x1="150" y1="267" x2="150" y2="281" stroke="rgba(36,26,17,.45)" stroke-width="1.1"/>
+        <line x1="600" y1="267" x2="600" y2="281" stroke="rgba(36,26,17,.45)" stroke-width="1.1"/>
+        <text x="375" y="294" text-anchor="middle" font-size="14" font-weight="600" fill="#5B4C3B">Total run</text>
+
+        <!-- angle -->
+        <path d="M 180 250 A 30 30 0 0 0 174.6 232.8" fill="none" stroke="#B5761F" stroke-width="1.6"/>
+        <text x="184" y="228" font-size="14" font-weight="700" fill="#8F5C13">Angle</text>
+
+        <!-- tread / riser labels -->
+        <line x1="375" y1="154" x2="375" y2="140" stroke="#37503F" stroke-width="1.3"/>
+        <text x="375" y="132" text-anchor="middle" font-size="14" font-weight="700" fill="#37503F">Tread</text>
+        <line x1="420" y1="130" x2="436" y2="130" stroke="#B5761F" stroke-width="1.3"/>
+        <text x="440" y="134" font-size="14" font-weight="700" fill="#8F5C13">Riser</text>
+
+        <!-- stringer label -->
+        <line x1="195" y1="226" x2="185" y2="238" stroke="#8A7A66" stroke-width="1.1"/>
+        <text x="160" y="252" font-size="14" font-weight="600" fill="#5B4C3B">Stringer</text>
+      </svg>
+    </div>
+
+    <p>Two more terms worth knowing: <strong>nosing</strong> is the small overhang where a tread's front edge hangs past the riser below it (adds foot space, doesn't count toward run), and a <strong>flush</strong> stringer carries a full top tread level with the upper floor, while a <strong>standard</strong> stringer stops one riser short — the upper floor itself is the final "step."</p>
+
+    <h2>The riser-height formula</h2>
+    <p>Start from the one measurement every staircase has to match exactly: <strong>total rise</strong> — the floor-to-floor height it has to climb. Divide by a comfortable riser height, round to a whole number of steps, then divide back so every riser matches:</p>
+
+    <div class="formula">
+      Number of steps = Total rise &divide; Target riser height
+      <small>THEN: ACTUAL RISER = TOTAL RISE &divide; NUMBER OF STEPS (ROUNDED)</small>
+    </div>
+
+    <p>Rounding matters here. A <span class="u" data-imp="9 ft (108 in)" data-met="2.74 m (274 cm)">9 ft (108 in)</span> total rise divided by a <span class="u" data-imp="7.5 in" data-met="19 cm">7.5 in</span> target gives <span class="u" data-imp="14.4" data-met="14.4">14.4</span> — round to <strong>14 steps</strong>, then recompute: <span class="u" data-imp="108 &divide; 14 = 7.71 in" data-met="274 &divide; 14 = 19.6 cm">108 &divide; 14 = 7.71 in</span> per riser. Every step now matches exactly, which is a hard requirement — building codes cap the difference between the tallest and shortest riser in one flight at <span class="u" data-imp="&#8532; in (3/8 in)" data-met="9.5 mm">&#8532; in (3/8 in)</span>.</p>
+
+    <p>Prefer to fix the step count instead of a target height? Work it the other direction: pick the number of steps first, then <span class="u" data-imp="total rise &divide; steps" data-met="total rise &divide; steps">total rise &divide; steps</span> gives the exact riser height directly — no rounding needed. The <a href="/stair-calculator/">stair calculator</a> solves it either way and redraws the diagram as you type.</p>
+
+    <figure class="blog-figure">
+      <img src="/assets/images/blog-stair-rise-run-inArticle-1.webp" alt="Close-up of a carpenter's framing square laid against a 2x12 stringer board, marking a riser and tread cut line in pencil"
+           width="800" height="320" loading="lazy">
+      <figcaption>A framing square set to the riser height and run marks each cut line on the stringer before the saw ever touches it.</figcaption>
+    </figure>
+
+    <h2>Standard vs. flush stringer mount</h2>
+    <p>Once the riser height is set, the run — how much horizontal space the flight needs — depends on how many treads there actually are, and that depends on the mount:</p>
+
+    <table class="dtable">
+      <thead><tr><th>Mount</th><th>Treads vs. risers</th><th>Stringer height</th></tr></thead>
+      <tbody>
+        <tr><td>Standard</td><td>One fewer tread than riser — the upper floor is the final "step"</td><td>Total rise minus one riser</td></tr>
+        <tr><td>Flush</td><td>Equal — a full top tread sits level with the upper floor</td><td>Equals total rise</td></tr>
+      </tbody>
+    </table>
+
+    <p>A standard-mount flight with <strong>14 risers</strong> only needs <strong>13 treads</strong> cut into the stringer, because the 14th "step up" is simply stepping onto the upper floor. Total run is <span class="u" data-imp="run per step &times; 13" data-met="run per step &times; 13">run per step &times; 13</span> — not 14 — a mismatch here is the single most common stair-layout error.</p>
+
+    <h2>The stringer-length formula</h2>
+    <p>Once total run and stringer height are both known, the stringer itself is just the hypotenuse of a right triangle:</p>
+
+    <div class="formula">
+      Stringer length = &radic;(Total run&sup2; + Stringer height&sup2;)
+      <small>PYTHAGOREAN THEOREM — TOTAL RUN AND STRINGER HEIGHT ARE THE TWO LEGS</small>
+    </div>
+
+    <p>And the stair's climb angle comes from the same triangle:</p>
+
+    <div class="formula">
+      Angle = arctan(Stringer height &divide; Total run)
+      <small>30&ndash;40&deg; IS THE COMFORTABLE RANGE FOR A RESIDENTIAL STAIR</small>
+    </div>
+
+    <h2>Building code and comfort guidelines</h2>
+    <p>The 2015 International Residential Code (IRC R311.7) sets hard maximums and minimums for residential stairs. A separate, older rule of thumb — sometimes called Blondel's formula — targets comfort rather than legal minimums, and the two don't always agree exactly.</p>
+
+    <table class="dtable">
+      <thead><tr><th>Measurement</th><th>Limit</th><th>Type</th></tr></thead>
+      <tbody>
+        <tr><td>Riser height</td><td><span class="u" data-imp="7.75 in max" data-met="197 mm max">7.75 in max</span></td><td>IRC code</td></tr>
+        <tr><td>Tread run</td><td><span class="u" data-imp="10 in min" data-met="254 mm min">10 in min</span></td><td>IRC code</td></tr>
+        <tr><td>2&times;Riser + Run</td><td><span class="u" data-imp="24&ndash;25 in" data-met="61&ndash;64 cm">24&ndash;25 in</span></td><td>Comfort guideline</td></tr>
+        <tr><td>Climb angle</td><td>30&ndash;40&deg;</td><td>Comfort guideline</td></tr>
+        <tr><td>Stair width</td><td><span class="u" data-imp="36 in min" data-met="914 mm min">36 in min</span></td><td>IRC code</td></tr>
+        <tr><td>Headroom</td><td><span class="u" data-imp="6 ft 8 in min" data-met="2032 mm min">6 ft 8 in min</span></td><td>IRC code</td></tr>
+        <tr><td>Max rise between landings</td><td><span class="u" data-imp="147 in" data-met="3734 mm">147 in</span></td><td>IRC code</td></tr>
+      </tbody>
+    </table>
+
+    <p>Local codes can be stricter than the IRC baseline — always confirm with your building department before cutting. The <a href="/stair-calculator/">stair calculator</a> checks every one of these automatically and flags anything outside range.</p>
+
+    <h2>Worked example</h2>
+    <p>A staircase needs to climb a <span class="u" data-imp="9 ft (108 in)" data-met="2.74 m (274 cm)">9 ft (108 in)</span> total rise, standard mount, with a <span class="u" data-imp="10 in" data-met="25.4 cm">10 in</span> run per step:</p>
+
+    <ul class="blog-checklist">
+      <li><strong>Steps.</strong> <span class="u" data-imp="108 &divide; 7.5 = 14.4 &rarr; 14 steps, targeting a 7.5 in riser" data-met="274 &divide; 19 = 14.4 &rarr; 14 steps, targeting a 19 cm riser">108 &divide; 7.5 = 14.4 &rarr; 14 steps, targeting a 7.5 in riser</span>.</li>
+      <li><strong>Actual riser.</strong> <span class="u" data-imp="108 &divide; 14 = 7.71 in &mdash; under the 7.75 in code max" data-met="274 &divide; 14 = 19.6 cm &mdash; under the 19.7 cm code max">108 &divide; 14 = 7.71 in &mdash; under the 7.75 in code max</span>.</li>
+      <li><strong>Treads (standard mount).</strong> 14 risers &minus; 1 = <strong>13 treads</strong>.</li>
+      <li><strong>Total run.</strong> <span class="u" data-imp="10 &times; 13 = 130 in (10 ft 10 in)" data-met="25.4 &times; 13 = 330 cm (3.3 m)">10 &times; 13 = 130 in (10 ft 10 in)</span>.</li>
+      <li><strong>Stringer height (standard).</strong> <span class="u" data-imp="108 &minus; 7.71 = 100.29 in" data-met="274 &minus; 19.6 = 254.4 cm">108 &minus; 7.71 = 100.29 in</span>.</li>
+      <li><strong>Stringer length.</strong> <span class="u" data-imp="&radic;(130&sup2; + 100.29&sup2;) &asymp; 164.2 in (13 ft 8.2 in)" data-met="&radic;(330&sup2; + 254.4&sup2;) &asymp; 417 cm (4.17 m)">&radic;(130&sup2; + 100.29&sup2;) &asymp; 164.2 in (13 ft 8.2 in)</span>.</li>
+      <li><strong>Angle.</strong> arctan(100.29 &divide; 130) &asymp; <strong>37.6&deg;</strong> — inside the comfortable 30&ndash;40&deg; range.</li>
+    </ul>
+
+    <figure class="blog-figure">
+      <img src="/assets/images/blog-stair-rise-run-inArticle-2.webp" alt="A finished wooden staircase seen from the side with a tape measure laid along one tread, showing riser and tread boards"
+           width="800" height="320" loading="lazy">
+      <figcaption>The same math either checks a finished staircase or plans one before the first board is cut.</figcaption>
+    </figure>
+
+    <h2>How many stringers — and how much lumber?</h2>
+    <p>Every staircase needs at least <strong>2 stringers</strong>, one on each side. Add a middle stringer for every additional <span class="u" data-imp="24 in (2 ft)" data-met="61 cm">24 in (2 ft)</span> of stair width beyond that, so the treads don't flex underfoot — a <span class="u" data-imp="42 in" data-met="107 cm">42 in</span>-wide stair needs 3 stringers, not 2.</p>
+    <p>Buy stringer boards longer than the raw calculated length — a <span class="u" data-imp="164.2 in" data-met="417 cm">164.2 in</span> stringer needs roughly a <span class="u" data-imp="foot" data-met="30 cm">foot</span> of extra length for the plumb and level end cuts, then rounds up to the next standard stock length (typically sold in <span class="u" data-imp="8, 10, 12, 14, 16 and 20 ft" data-met="2.4, 3, 3.6, 4.2, 4.8 and 6 m">8, 10, 12, 14, 16 and 20 ft</span> lengths). Tread and riser lumber is priced by the <span class="u" data-imp="linear foot" data-met="linear metre">linear foot</span>: each board spans the full stair width, so total footage is (number of treads + number of risers) &times; stair width, plus a waste allowance for cuts.</p>
+
+    <p>The <a href="/stair-calculator/">stair calculator</a> does all of this automatically — enter your stair width and it works out the stringer count, rounds the cut length up to a standard board, and totals the tread and riser lumber with a waste buffer and an instant cost estimate.</p>
+
+    <a class="calc-cta" href="/stair-calculator/">
+      <div class="calc-cta-text">
+        <div class="calc-cta-label">Free tool</div>
+        <div class="calc-cta-title">Stair Calculator</div>
+        <div class="calc-cta-sub">Riser height, run, stringer length and angle from your total rise — with a live diagram, code &amp; comfort checks, and a materials &amp; cost estimate.</div>
+      </div>
+      <div class="calc-cta-btn">
+        Calculate now
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </div>
+    </a>
+
+    <h2>Common questions</h2>
+
+    <details class="faq">
+      <summary>How do I calculate stair rise and run?</summary>
+      <p>Divide your total rise (floor-to-floor height) by a comfortable riser height, around <span class="u" data-imp="7 to 7.5 in" data-met="178 to 190 mm">7 to 7.5 in</span>, and round to a whole number of steps. Divide the total rise back by that step count to get the exact riser height every step will match. The run (tread depth) is typically <span class="u" data-imp="10 to 11 in" data-met="254 to 280 mm">10 to 11 in</span>. The <a href="/stair-calculator/">stair calculator</a> does both directions automatically.</p>
+    </details>
+
+    <details class="faq">
+      <summary>What is the standard rise and run for stairs?</summary>
+      <p>Most residential stairs use a riser height of <span class="u" data-imp="7 to 7.75 in" data-met="178 to 197 mm">7 to 7.75 in</span> and a tread run of <span class="u" data-imp="10 to 11 in" data-met="254 to 280 mm">10 to 11 in</span>. The IRC caps riser height at <span class="u" data-imp="7.75 in" data-met="197 mm">7.75 in</span> and requires at least <span class="u" data-imp="10 in" data-met="254 mm">10 in</span> of run.</p>
+    </details>
+
+    <details class="faq">
+      <summary>How do I calculate stair stringer length?</summary>
+      <p>Stringer length is the hypotenuse of a right triangle: the stringer height (vertical) and the total run (horizontal) are the two legs. Stringer length = &radic;(stringer height&sup2; + total run&sup2;). A <span class="u" data-imp="100.29 in rise with a 130 in run" data-met="254.4 cm rise with a 330 cm run">100.29 in rise with a 130 in run</span> needs about <span class="u" data-imp="164.2 in (13 ft 8.2 in)" data-met="417 cm (4.17 m)">164.2 in (13 ft 8.2 in)</span> of stringer.</p>
+    </details>
+
+    <details class="faq">
+      <summary>What is the difference between a standard and flush stringer mount?</summary>
+      <p>On a standard mount, the top step is the upper floor itself, so the stringer needs one fewer tread than riser. On a flush mount, the top tread is a separate board level with the upper floor, so risers and treads are equal in number.</p>
+    </details>
+
+    <details class="faq">
+      <summary>How many stringers do I need for a staircase?</summary>
+      <p>Use at least <strong>2 stringers</strong> for any staircase, and add a middle stringer for every additional <span class="u" data-imp="24 in (about 61 cm)" data-met="61 cm (about 24 in)">24 in (about 61 cm)</span> of stair width beyond that to keep the treads from flexing. The <a href="/stair-calculator/">stair calculator</a> works out the stringer count from your stair width automatically.</p>
+    </details>
+
+    <div class="blog-pills">
+      <a class="pill" href="/stair-calculator/">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 20h4v-4h4v-4h4v-4h4v-4"/><path d="M6 20h14"/></svg>
+        Stair Calculator
+      </a>
+      <a class="pill" href="/square-footage-calculator/">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>
+        Square Footage Calculator
+      </a>
+      <a class="pill" href="/board-foot-calculator/">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="18" height="10" rx="1"/></svg>
+        Board Foot Calculator
+      </a>
+      <a class="pill" href="/tape-measure-fraction-calculator/">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h18M6 9v3M9 9v3M12 6v6M15 9v3M18 9v3"/></svg>
+        Tape Measure Fraction Calculator
+      </a>
+    </div>
+
+  </div><!-- /blog-content -->
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+          <li><a href="/square-footage-calculator/">Square Footage Calculator</a></li>
+          <li><a href="/tape-measure-fraction-calculator/">Tape Measure Fraction Calculator</a></li>
+          <li><a href="/stair-calculator/">Stair Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/vo2-max-calculator/">VO2 Max Calculator</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/bmi-calculator/">BMI Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/ideal-weight-calculator/">Ideal Weight Calculator</a></li>
+          <li><a href="/calorie-calculator/">Calorie Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/water-intake-calculator/">Water Intake Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/protein-intake-calculator/">Protein Intake Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
+          <li><a href="/steps-to-miles-calculator/">Steps to Miles Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+          <li><a href="/age-calculator/">Age Calculator</a></li>
+          <li><a href="/date-calculator/">Date Calculator</a></li>
+          <li><a href="/time-calculator/">Time Calculator</a></li>
+        </ul>
+      </div>
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/blog/">Blog</a>
+      <span aria-hidden="true">·</span>
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+</div><!-- /wrap -->
+
+<script src="/assets/app.js?v=106"></script>
+<script src="/feedback.js" defer></script>
+<script>
+(function(){
+  document.querySelectorAll('.diagram-zoomable').forEach(function(wrap){
+    wrap.addEventListener('click',function(){
+      var svg=wrap.querySelector('svg'); if(!svg)return;
+      var ov=document.createElement('div'); ov.className='dg-overlay';
+      var btn=document.createElement('button'); btn.className='dg-close'; btn.innerHTML='&times;'; btn.setAttribute('aria-label','Close');
+      var clone=svg.cloneNode(true);
+      ov.appendChild(btn); ov.appendChild(clone); document.body.appendChild(ov); document.body.style.overflow='hidden';
+      function close(){document.body.removeChild(ov);document.body.style.overflow='';}
+      ov.addEventListener('click',function(e){if(e.target===ov||e.target===clone)close();});
+      btn.addEventListener('click',close);
+      document.addEventListener('keydown',function esc(e){if(e.key==='Escape'){close();document.removeEventListener('keydown',esc);}});
+    });
+  });
+})();
+(function(){
+  var toggle=document.getElementById('unitToggle');
+  if(!toggle||!document.querySelector('.u'))return;
+  toggle.style.display='';
+  var S='calcthis-units';
+  var cur=localStorage.getItem(S)||'imp';
+  function apply(u){
+    cur=u; try{localStorage.setItem(S,u);}catch(e){}
+    document.querySelectorAll('.u').forEach(function(el){ el.textContent=el.dataset[u]||el.dataset.imp; });
+    document.querySelectorAll('.blog-meta .seg button').forEach(function(btn){
+      var on=btn.dataset.unit===u; btn.classList.toggle('on',on); btn.setAttribute('aria-pressed',String(on));
+    });
+  }
+  document.querySelectorAll('.blog-meta .seg button').forEach(function(btn){
+    btn.addEventListener('click',function(){apply(btn.dataset.unit);});
+  });
+  apply(cur);
+})();
+</script>
+</body>
+</html>

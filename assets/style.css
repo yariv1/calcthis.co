@@ -1526,3 +1526,28 @@
   .p-sqft .sq-diagram-legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:8px;padding-top:10px;border-top:1px dashed var(--line);font-size:12.5px;color:var(--ink-soft)}
   .p-sqft .sq-diagram-legend b{color:var(--ink);font-weight:600}
   .p-sqft .sq-diagram-legend span{white-space:nowrap}
+
+  /* =========================================================
+     CONSTRUCTION · STAIR CALCULATOR  (body.p-stair)
+     Solves a straight flight from total rise + known run/riser (or step
+     count), standard or flush mount. Reuses .card-h2/.ctl-row/.seg,
+     .csel (stringer lumber), .advbtn / .add-row.split, .dtable, .adv-tip.
+     Differentiator: live to-scale side-view diagram (reuses the sqft
+     diagram box/legend pattern), a colour-coded IRC/comfort code-check
+     table, and a materials + cost estimate (stringer count, stock-length
+     rounding, tread/riser board footage + waste) — no competitor checked
+     (calculator.net, Omnicalculator, ConCalculator, stair-calculator.com)
+     combines a diagram with an actual buy-list. */
+  .p-stair .stair-diagram{margin:14px 0 16px;background:#FCFAF6;border:1px solid var(--line);border-radius:12px;padding:14px 14px 12px}
+  .p-stair .stair-diagram svg{display:block;width:100%;height:auto;overflow:visible}
+  .p-stair .sq-diagram-empty{font-size:13px;color:var(--muted);text-align:center;padding:30px 10px;line-height:1.45}
+  .p-stair .sq-diagram-legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:8px;padding-top:10px;border-top:1px dashed var(--line);font-size:12.5px;color:var(--ink-soft)}
+  .p-stair .sq-diagram-legend b{color:var(--ink);font-weight:600}
+  .p-stair .sq-diagram-legend span{white-space:nowrap}
+  .p-stair .dtable{font-size:13.5px}
+  .p-stair .dtable td:last-child{text-align:left}
+  .p-stair .stair-ok{color:var(--spruce);font-weight:600;white-space:nowrap}
+  .p-stair .stair-bad{color:#b23030;font-weight:600}
+  .p-stair .stair-na{color:var(--muted);font-weight:500}
+  .p-stair .stair-empty{color:var(--muted);font-size:13px;text-align:center;padding:14px 4px}
+  .p-stair #advPanel .fld{margin-bottom:15px}

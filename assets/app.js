@@ -5249,6 +5249,321 @@ CalcThis.initSqftCalc = function () {
   renderAll();
 };
 
+/* ===== CalcThis Stair engine =====
+   CalcThis.initStairCalc() — solves a straight flight from total rise plus
+   either a known run (per step or total) and either a target riser height or
+   a fixed step count, for a standard or flush stringer mount. Differentiator
+   vs. every competitor checked (calculator.net, Omnicalculator, ConCalculator,
+   stair-calculator.com): a live to-scale side-view diagram, a colour-coded
+   IRC/comfort code-check table, AND a materials + cost estimate (stringer
+   count from stair width, stock-length rounding, tread/riser board footage
+   with a waste allowance) — no competitor found in research combines a
+   diagram with an actual buy-list. Independent engine, no shared state. */
+CalcThis.initStairCalc = function () {
+  var $ = function (id) { return document.getElementById(id); };
+
+  var sys = 'us', runMode = 'perstep', riseMode = 'height', mount = 'standard';
+  var riserClosed = true, headroomOn = false, stringerKey = '2x12';
+  var STRINGER_W_IN = { '2x12': 11.25, '2x10': 9.25, '2x8': 7.25 };
+  var STOCK_IN = [96, 120, 144, 168, 192, 240];   // 8/10/12/14/16/20 ft
+  var STOCK_CM = [240, 300, 360, 420, 480, 600];  // 2.4/3/3.6/4.2/4.8/6 m
+
+  function num(id) { var el = $(id); if (!el) return NaN; var n = parseFloat((el.value || '').trim()); return isNaN(n) ? NaN : n; }
+  function fmt(n, dec) {
+    if (n == null || isNaN(n)) return '—';
+    dec = dec == null ? 2 : dec;
+    var r = Math.round(n * Math.pow(10, dec)) / Math.pow(10, dec);
+    var s = r.toFixed(dec);
+    if (s.indexOf('.') >= 0) s = s.replace(/0+$/, '').replace(/\.$/, '');
+    return s;
+  }
+  function money(n) { return '$' + n.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+  function smallUnit() { return sys === 'us' ? 'in' : 'cm'; }
+  function bigUnit() { return sys === 'us' ? 'ft' : 'm'; }
+  function fmtSmall(n) { return fmt(n, 2) + ' ' + smallUnit(); }
+  function fmtBig(nSmall) {
+    if (nSmall == null || isNaN(nSmall)) return '—';
+    if (sys === 'us') { var ft = Math.floor(nSmall / 12), inch = nSmall - ft * 12; return ft + "' " + fmt(inch, 1) + '"'; }
+    return fmt(nSmall / 100, 2) + ' m';
+  }
+
+  function updateUnitLabels() {
+    var bu = bigUnit(), su = smallUnit();
+    [].forEach.call(document.querySelectorAll('[data-bigunit]'), function (el) { el.textContent = bu; });
+    [].forEach.call(document.querySelectorAll('[data-smallunit]'), function (el) { el.textContent = su; });
+    $('runLab').innerHTML = (runMode === 'perstep' ? 'Run per step' : 'Total run') + ' <span class="unit" data-bigunit-inline>' + su + '</span>';
+    if (riseMode === 'height') {
+      $('riseLab').innerHTML = 'Target riser height <span class="unit">' + su + '</span>';
+      $('riseValSuf').textContent = su; $('riseValSuf').style.display = '';
+    } else {
+      $('riseLab').innerHTML = 'Number of steps <span class="unit">count</span>';
+      $('riseValSuf').textContent = ''; $('riseValSuf').style.display = 'none';
+    }
+    $('lumberSuf').textContent = '$/' + bu;
+  }
+
+  function readInputs() {
+    var TRbig = num('totalRise'), SWbig = num('stairWidth');
+    var TR = (!isNaN(TRbig) && TRbig > 0) ? (sys === 'us' ? TRbig * 12 : TRbig * 100) : NaN;
+    var SW = (!isNaN(SWbig) && SWbig > 0) ? (sys === 'us' ? SWbig * 12 : SWbig * 100) : NaN;
+    var runValRaw = num('runVal'), riseValRaw = num('riseVal');
+    var treadThick = num('treadThick'); if (isNaN(treadThick) || treadThick < 0) treadThick = sys === 'us' ? 1 : 2.5;
+    var riserThick = num('riserThick'); if (isNaN(riserThick) || riserThick < 0) riserThick = sys === 'us' ? 0.75 : 1.9;
+    var wastePctRaw = num('wastePct'); var wastePct = (!isNaN(wastePctRaw) && wastePctRaw >= 0) ? wastePctRaw : 10;
+    var headroomVal = num('headroomVal');
+    var headroomReqRaw = num('headroomReq'); var headroomReq = (!isNaN(headroomReqRaw) && headroomReqRaw > 0) ? headroomReqRaw : (sys === 'us' ? 80 : 203);
+    var priceStringer = num('priceStringer'); if (isNaN(priceStringer) || priceStringer <= 0) priceStringer = null;
+    var priceLumber = num('priceLumber'); if (isNaN(priceLumber) || priceLumber <= 0) priceLumber = null;
+    return { TR: TR, SW: SW, runValRaw: runValRaw, riseValRaw: riseValRaw, treadThick: treadThick, riserThick: riserThick, wastePct: wastePct, headroomVal: headroomVal, headroomReq: headroomReq, priceStringer: priceStringer, priceLumber: priceLumber };
+  }
+
+  function solve() {
+    var v = readInputs();
+    var complete = !isNaN(v.TR) && !isNaN(v.runValRaw) && v.runValRaw > 0 && !isNaN(v.riseValRaw) && v.riseValRaw > 0;
+    if (!complete) return null;
+
+    var numSteps;
+    if (riseMode === 'height') numSteps = Math.max(1, Math.round(v.TR / v.riseValRaw));
+    else numSteps = Math.max(1, Math.round(v.riseValRaw));
+    var actualRiser = v.TR / numSteps;
+
+    var treadsForRun = mount === 'standard' ? Math.max(1, numSteps - 1) : numSteps;
+    var runStep, totalRun;
+    if (runMode === 'perstep') { runStep = v.runValRaw; totalRun = runStep * treadsForRun; }
+    else { totalRun = v.runValRaw; runStep = totalRun / treadsForRun; }
+
+    var stringerHeight = mount === 'flush' ? v.TR : v.TR - actualRiser;
+    var stringerLength = Math.sqrt(totalRun * totalRun + stringerHeight * stringerHeight);
+    var angleDeg = Math.atan2(stringerHeight, totalRun) * 180 / Math.PI;
+    var numTreads = treadsForRun, numRisers = numSteps;
+
+    /* ---- materials ---- */
+    var spacingLimit = sys === 'us' ? 24 : 61;
+    var numStringers = isNaN(v.SW) ? 2 : Math.max(2, Math.ceil(v.SW / spacingLimit) + 1);
+    var buffer = sys === 'us' ? 12 : 30;
+    var neededLen = stringerLength + buffer;
+    var stock = sys === 'us' ? STOCK_IN : STOCK_CM;
+    var stockLen = stock[stock.length - 1], overStock = true;
+    for (var i = 0; i < stock.length; i++) { if (stock[i] >= neededLen) { stockLen = stock[i]; overStock = false; break; } }
+
+    var SWforMat = isNaN(v.SW) ? null : v.SW;
+    var treadLin = SWforMat != null ? numTreads * SWforMat : null;
+    var riserLin = (riserClosed && SWforMat != null) ? numRisers * SWforMat : 0;
+    var lumberLinRaw = (treadLin != null) ? treadLin + riserLin : null;
+    var wasteMult = 1 + v.wastePct / 100;
+    var lumberLinWaste = (lumberLinRaw != null) ? lumberLinRaw * wasteMult : null;
+
+    var stringerCost = v.priceStringer != null ? numStringers * v.priceStringer : null;
+    var lumberCost = (v.priceLumber != null && lumberLinWaste != null) ? (lumberLinWaste / (sys === 'us' ? 12 : 100)) * v.priceLumber : null;
+    var totalCost = (stringerCost != null || lumberCost != null) ? (stringerCost || 0) + (lumberCost || 0) : null;
+
+    return {
+      v: v, numSteps: numSteps, actualRiser: actualRiser, runStep: runStep, totalRun: totalRun,
+      stringerHeight: stringerHeight, stringerLength: stringerLength, angleDeg: angleDeg,
+      numTreads: numTreads, numRisers: numRisers, numStringers: numStringers, stockLen: stockLen, overStock: overStock,
+      treadLin: treadLin, riserLin: riserLin, lumberLinWaste: lumberLinWaste,
+      stringerCost: stringerCost, lumberCost: lumberCost, totalCost: totalCost
+    };
+  }
+
+  /* ---------- diagram ---------- */
+  function capLine(x1, y1, x2, y2, color, w) {
+    var cap = 5, dx = x2 - x1, dy = y2 - y1, mag = Math.sqrt(dx * dx + dy * dy) || 1;
+    var px = -(dy / mag), py = dx / mag;
+    var s = '<line x1="' + x1.toFixed(1) + '" y1="' + y1.toFixed(1) + '" x2="' + x2.toFixed(1) + '" y2="' + y2.toFixed(1) + '" stroke="' + color + '" stroke-width="' + w + '"/>';
+    s += '<line x1="' + (x1 - px * cap).toFixed(1) + '" y1="' + (y1 - py * cap).toFixed(1) + '" x2="' + (x1 + px * cap).toFixed(1) + '" y2="' + (y1 + py * cap).toFixed(1) + '" stroke="' + color + '" stroke-width="' + w + '"/>';
+    s += '<line x1="' + (x2 - px * cap).toFixed(1) + '" y1="' + (y2 - py * cap).toFixed(1) + '" x2="' + (x2 + px * cap).toFixed(1) + '" y2="' + (y2 + py * cap).toFixed(1) + '" stroke="' + color + '" stroke-width="' + w + '"/>';
+    return s;
+  }
+  function renderDiagram(r) {
+    var box = $('stairDiagram');
+    if (!r) { box.innerHTML = '<div class="sq-diagram-empty">Enter your dimensions to see the diagram.</div>'; return; }
+    var AXIS = 'rgba(36,26,17,.4)', DIM_RISE = 'var(--amber-deep)', DIM_RUN = 'var(--spruce)';
+    var n = Math.min(r.numSteps, 14);
+    var AXL = 48, AXB = 40, PADT = 14, PADR = 16, VW = 380, VH = 228;
+    var IW = VW - AXL - PADR, IH = VH - PADT - AXB;
+    var ar = r.totalRun / r.stringerHeight; ar = Math.max(0.6, Math.min(3.2, ar));
+    var boxW, boxH;
+    if (ar >= IW / IH) { boxW = IW; boxH = IW / ar; } else { boxH = IH; boxW = IH * ar; }
+    var x0 = AXL, yBase = PADT + IH;
+    var stepW = boxW / n, stepH = boxH / n;
+    var topX = x0 + n * stepW, topY = yBase - n * stepH;
+
+    var pts = [[x0, yBase]];
+    for (var i = 1; i <= n; i++) {
+      pts.push([x0 + (i - 1) * stepW, yBase - (i - 1) * stepH]);
+      pts.push([x0 + i * stepW, yBase - (i - 1) * stepH]);
+      pts.push([x0 + i * stepW, yBase - i * stepH]);
+    }
+    pts.push([topX, yBase]);
+    var poly = pts.map(function (p) { return p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join(' ');
+
+    var s = '<svg viewBox="0 0 ' + VW + ' ' + VH + '" xmlns="http://www.w3.org/2000/svg" font-family="Inter,sans-serif">';
+    /* stair silhouette + stringer line */
+    s += '<polygon points="' + poly + '" fill="rgba(55,80,63,.12)" stroke="var(--ink)" stroke-width="1.6" stroke-linejoin="round"/>';
+    s += '<line x1="' + x0 + '" y1="' + yBase + '" x2="' + topX + '" y2="' + topY + '" stroke="var(--ink-soft)" stroke-width="1.2" stroke-dasharray="3 3"/>';
+
+    /* total-rise axis (left) */
+    var riseAxisX = x0 - 18;
+    s += '<line x1="' + riseAxisX + '" y1="' + topY + '" x2="' + x0 + '" y2="' + topY + '" stroke="' + AXIS + '" stroke-width="1" stroke-dasharray="2 2"/>';
+    s += capLine(riseAxisX, yBase, riseAxisX, topY, AXIS, 1.1);
+    s += '<text x="' + (riseAxisX - 9) + '" y="' + ((yBase + topY) / 2) + '" text-anchor="middle" font-size="12" font-weight="600" fill="var(--ink-soft)" transform="rotate(-90 ' + (riseAxisX - 9) + ' ' + ((yBase + topY) / 2) + ')">Total rise ' + fmtBig(r.v.TR) + '</text>';
+
+    /* total-run axis (bottom) */
+    var runAxisY = yBase + 18;
+    s += '<line x1="' + topX + '" y1="' + yBase + '" x2="' + topX + '" y2="' + runAxisY + '" stroke="' + AXIS + '" stroke-width="1" stroke-dasharray="2 2"/>';
+    s += capLine(x0, runAxisY, topX, runAxisY, AXIS, 1.1);
+    s += '<text x="' + ((x0 + topX) / 2) + '" y="' + (runAxisY + 17) + '" text-anchor="middle" font-size="12" font-weight="600" fill="var(--ink-soft)">Total run ' + fmtBig(r.totalRun) + '</text>';
+
+    /* angle arc */
+    var rad = r.angleDeg * Math.PI / 180, arcR = 24;
+    var ex = x0 + arcR * Math.cos(rad), ey = yBase - arcR * Math.sin(rad);
+    s += '<path d="M ' + (x0 + arcR) + ' ' + yBase + ' A ' + arcR + ' ' + arcR + ' 0 0 0 ' + ex.toFixed(1) + ' ' + ey.toFixed(1) + '" fill="none" stroke="var(--amber)" stroke-width="1.3"/>';
+    s += '<text x="' + (x0 + arcR + 6) + '" y="' + (yBase - 8) + '" font-size="12" font-weight="700" fill="var(--amber-deep)">' + fmt(r.angleDeg, 1) + '&deg;</text>';
+
+    /* one-step callout (run + rise of a single step) */
+    var mid = Math.max(0, Math.min(n - 1, Math.floor(n / 2) - 1));
+    var mx0 = x0 + mid * stepW, my0 = yBase - mid * stepH, mx1 = mx0 + stepW, my1 = my0 - stepH;
+    s += capLine(mx0, my0 - 7, mx1 - 3, my0 - 7, DIM_RUN, 1.3);
+    s += '<text x="' + ((mx0 + mx1) / 2 - 6) + '" y="' + (my0 - 12) + '" text-anchor="middle" font-size="12" font-weight="700" fill="' + DIM_RUN + '">' + fmtSmall(r.runStep) + '</text>';
+    s += capLine(mx1 + 9, my0, mx1 + 9, my1, DIM_RISE, 1.3);
+    s += '<text x="' + (mx1 + 13) + '" y="' + ((my0 + my1) / 2 + 4) + '" font-size="12" font-weight="700" fill="' + DIM_RISE + '">' + fmtSmall(r.actualRiser) + '</text>';
+
+    s += '</svg>';
+    var legend = '<div class="sq-diagram-legend"><span><b>Rise</b> ' + fmtSmall(r.actualRiser) + '</span><span><b>Run</b> ' + fmtSmall(r.runStep) + '</span><span><b>Steps</b> ' + r.numSteps + '</span><span><b>Angle</b> ' + fmt(r.angleDeg, 1) + '&deg;</span>' + (r.numSteps > 14 ? '<span>(diagram shows 14 of ' + r.numSteps + ' steps)</span>' : '') + '</div>';
+    box.innerHTML = s + legend;
+  }
+
+  /* ---------- code & comfort checks ---------- */
+  function checkRow(label, valueText, ok, note) {
+    return '<tr><td>' + label + '</td><td>' + valueText + '</td><td class="' + (ok ? 'stair-ok' : 'stair-bad') + '">' + (ok ? '✓ Pass' : '✗ ' + note) + '</td></tr>';
+  }
+  function renderChecks(r) {
+    var body = $('checksBody');
+    if (!r) { body.innerHTML = '<tr><td colspan="3" class="stair-empty">Enter your dimensions to run the checks.</td></tr>'; return; }
+    var us = sys === 'us';
+    var rows = '';
+    var riserMax = us ? 7.75 : 19.7;
+    rows += checkRow('Riser height (max)', fmtSmall(r.actualRiser), r.actualRiser <= riserMax, 'over ' + riserMax + ' ' + smallUnit());
+    var treadMin = us ? 10 : 25.4;
+    rows += checkRow('Tread run (min)', fmtSmall(r.runStep), r.runStep >= treadMin, 'under ' + treadMin + ' ' + smallUnit());
+    var comfort = 2 * r.actualRiser + r.runStep;
+    var cLo = us ? 24 : 61, cHi = us ? 25 : 64;
+    rows += checkRow('2×Riser + Run (comfort)', fmtSmall(comfort), comfort >= cLo && comfort <= cHi, 'outside ' + cLo + '–' + cHi + ' ' + smallUnit());
+    rows += checkRow('Angle (comfort)', fmt(r.angleDeg, 1) + '&deg;', r.angleDeg >= 30 && r.angleDeg <= 40, 'outside 30–40°');
+    if (!isNaN(r.v.SW)) {
+      var widthMin = us ? 36 : 91.4;
+      rows += checkRow('Stair width (min)', fmtSmall(r.v.SW), r.v.SW >= widthMin, 'under ' + widthMin + ' ' + smallUnit());
+    }
+    if (headroomOn && !isNaN(r.v.headroomVal)) {
+      rows += checkRow('Headroom (min)', fmtSmall(r.v.headroomVal), r.v.headroomVal >= r.v.headroomReq, 'under ' + fmt(r.v.headroomReq, 1) + ' ' + smallUnit());
+    }
+    body.innerHTML = rows;
+    var tip = $('headroomTip');
+    if (headroomOn && !isNaN(r.v.headroomVal)) {
+      var ok = r.v.headroomVal >= r.v.headroomReq;
+      tip.style.display = 'block'; tip.className = 'res-tip adv-tip';
+      tip.innerHTML = ok
+        ? '<strong>Headroom OK</strong> — your planned ' + fmtSmall(r.v.headroomVal) + ' clears the ' + fmt(r.v.headroomReq, 1) + ' ' + smallUnit() + ' minimum.'
+        : '<strong>Headroom too low</strong> — your planned ' + fmtSmall(r.v.headroomVal) + ' is under the ' + fmt(r.v.headroomReq, 1) + ' ' + smallUnit() + ' minimum. Raise the floor opening or lower the stair start.';
+    } else { tip.style.display = 'none'; }
+  }
+
+  /* ---------- materials ---------- */
+  function matRow(label, qty, cost) {
+    return '<tr><td>' + label + '</td><td>' + qty + '</td><td' + (cost == null ? ' class="stair-na"' : '') + '>' + (cost == null ? '—' : money(cost)) + '</td></tr>';
+  }
+  function renderMaterials(r) {
+    var body = $('matBody');
+    if (!r) { body.innerHTML = '<tr><td colspan="3" class="stair-empty">Enter your dimensions to see the materials estimate.</td></tr>'; return; }
+    var us = sys === 'us';
+    var stockDisp = us ? fmt(r.stockLen / 12, 0) + ' ft' : fmt(r.stockLen / 100, 1) + ' m';
+    var rows = '';
+    rows += matRow('Stringers (' + (us ? stockDisp : stockDisp) + ' ea' + (r.overStock ? ', custom length' : '') + ')', r.numStringers + '&times;', r.stringerCost);
+    if (r.treadLin != null) {
+      rows += matRow('Tread boards', r.numTreads + '&times; (' + fmtBig(r.treadLin) + ' total)', null);
+      if (riserClosed) rows += matRow('Riser boards', r.numRisers + '&times; (' + fmtBig(r.riserLin) + ' total)', null);
+      rows += matRow('Tread + riser lumber, +' + fmt(r.v.wastePct, 0) + '% waste', fmtBig(r.lumberLinWaste), r.lumberCost);
+    } else {
+      rows += '<tr><td colspan="3" class="stair-empty">Enter stair width to estimate tread &amp; riser lumber.</td></tr>';
+    }
+    if (r.totalCost != null) rows += '<tr class="cur"><td colspan="2"><strong>Estimated total</strong></td><td><strong>' + money(r.totalCost) + '</strong></td></tr>';
+    body.innerHTML = rows;
+  }
+
+  /* ---------- render all ---------- */
+  function renderAll() {
+    var r = solve();
+    $('riseOutUnit').textContent = smallUnit();
+    if (!r) {
+      $('riseOut').textContent = '—';
+      $('resSub').textContent = 'Enter your total rise, run and riser height (or step count).';
+    } else {
+      $('riseOut').textContent = fmt(r.actualRiser, 2);
+      $('resSub').textContent = 'Run ' + fmtSmall(r.runStep) + ' · ' + r.numRisers + ' risers, ' + r.numTreads + ' treads · Angle ' + fmt(r.angleDeg, 1) + '° · Stringer ' + fmtBig(r.stringerLength);
+    }
+    renderDiagram(r);
+    renderChecks(r);
+    renderMaterials(r);
+  }
+
+  /* ---------- events ---------- */
+  $('unitSeg').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b || b.dataset.sys === sys) return;
+    sys = b.dataset.sys;
+    [].forEach.call(this.children, function (c) { c.classList.toggle('on', c === b); });
+    [].forEach.call(document.querySelectorAll('.p-stair input[type="number"]'), function (el) { el.value = ''; });
+    updateUnitLabels(); renderAll();
+  });
+  $('runModeSeg').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b || b.dataset.m === runMode) return;
+    runMode = b.dataset.m;
+    [].forEach.call(this.children, function (c) { c.classList.toggle('on', c === b); });
+    $('runVal').value = ''; updateUnitLabels(); renderAll();
+  });
+  $('riseModeSeg').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b || b.dataset.m === riseMode) return;
+    riseMode = b.dataset.m;
+    [].forEach.call(this.children, function (c) { c.classList.toggle('on', c === b); });
+    $('riseVal').value = ''; updateUnitLabels(); renderAll();
+  });
+  $('mountSeg').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b || b.dataset.m === mount) return;
+    mount = b.dataset.m;
+    [].forEach.call(this.children, function (c) { c.classList.toggle('on', c === b); });
+    renderAll();
+  });
+  $('riserSeg').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    riserClosed = b.dataset.m === 'yes';
+    [].forEach.call(this.children, function (c) { c.classList.toggle('on', c === b); });
+    $('riserThickFld').style.display = riserClosed ? '' : 'none';
+    renderAll();
+  });
+  $('headroomSeg').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    headroomOn = b.dataset.m === 'yes';
+    [].forEach.call(this.children, function (c) { c.classList.toggle('on', c === b); });
+    $('headroomFlds').style.display = headroomOn ? '' : 'none';
+    renderAll();
+  });
+  $('stringerSel').addEventListener('change', function () { stringerKey = this.value; renderAll(); });
+
+  var grid = document.querySelector('.p-stair .grid');
+  if (grid) grid.addEventListener('input', function (e) { if (e.target.tagName === 'INPUT') renderAll(); });
+
+  var advBtn = $('advBtn'), advPanel = $('advPanel');
+  advBtn.addEventListener('click', function () {
+    var advanced = advPanel.style.display === 'none';
+    advPanel.style.display = advanced ? 'block' : 'none';
+    advBtn.classList.toggle('open', advanced);
+    $('advBtnLab').textContent = advanced ? 'Go simple' : 'Go advanced';
+  });
+
+  updateUnitLabels();
+  renderAll();
+};
+
 /* =========================================================
    SITE FOOTER — mobile accordion
    Multiple pillars can be open simultaneously.
