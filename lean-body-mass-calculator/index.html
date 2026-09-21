@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lean Body Mass Calculator — Boer, James &amp; Hume Formulas | CalcThis</title>
+<meta name="description" content="Free lean body mass calculator using the Boer, James and Hume formulas, with a live lean-vs-fat composition bar. Enter a known body fat % for an exact result, or estimate from height and weight alone. Includes the Peters formula for children.">
+<link rel="canonical" href="https://calcthis.co/lean-body-mass-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Lean Body Mass Calculator — Boer, James &amp; Hume Formulas">
+<meta property="og:description" content="A live lean-vs-fat composition bar, all three classic formulas plotted on one scale, and an exact result if you know your body fat %.">
+<meta property="og:url" content="https://calcthis.co/lean-body-mass-calculator/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<meta name="theme-color" content="#B5761F">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css?v=107">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Lean Body Mass Calculator",
+      "url": "https://calcthis.co/lean-body-mass-calculator/",
+      "applicationCategory": "UtilityApplication",
+      "operatingSystem": "Any (web browser)",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "description": "Estimate lean body mass from height, weight and sex using the Boer, James and Hume formulas, with a live lean-vs-fat composition bar and all three formulas plotted on one scale. Enter a known body fat percentage for an exact result. Includes the Peters formula for children 14 and younger.",
+      "featureList": [
+        "Boer, James and Hume formulas side-by-side",
+        "Live lean-vs-fat body composition bar",
+        "All three formulas plotted on one scale against a healthy range",
+        "Exact result from a known body fat percentage",
+        "Peters formula for children 14 and younger",
+        "Protein target reference based on lean mass",
+        "US and metric units"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "How do I calculate my lean body mass?", "acceptedAnswer": { "@type": "Answer", "text": "If you know your body fat percentage, lean body mass = weight × (1 − body fat %). If you don't, formulas like Boer, James and Hume estimate it from your height, weight and sex alone. This calculator does both automatically." } },
+        { "@type": "Question", "name": "What is a healthy lean body mass percentage?", "acceptedAnswer": { "@type": "Answer", "text": "Roughly 75-86% of total body weight for men and 69-79% for women is considered a typical healthy range, based on common body-fat-percentage guidelines. Athletes often sit above this range; it varies by age and build." } },
+        { "@type": "Question", "name": "Which lean body mass formula is most accurate?", "acceptedAnswer": { "@type": "Answer", "text": "No single formula is correct for everyone. Boer (1984) is the most commonly used modern clinical reference. James (1976) tends to read slightly higher for average male body sizes, and Hume (1966) tends to read lower. The three routinely disagree by 2-5 kg at the same body size, which is the honest measure of uncertainty in any height-and-weight-only estimate." } },
+        { "@type": "Question", "name": "Why does lean body mass matter?", "acceptedAnswer": { "@type": "Answer", "text": "Lean body mass drives most of your metabolism, is what many drug-dosing protocols use instead of total body weight, and is a better way to track a weight-loss or training program than the number on the scale alone, since it separates muscle from fat." } },
+        { "@type": "Question", "name": "How is lean body mass different from fat-free mass?", "acceptedAnswer": { "@type": "Answer", "text": "They're used almost interchangeably. Strictly, fat-free mass excludes the small amount of essential fat inside cell membranes and the nervous system, which lean body mass formulas include. The difference is usually only 2-3% of body weight and rarely matters outside research settings." } }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body class="p-lbm">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <a class="hdr-back" href="/blog/" aria-label="Back to blog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <span class="menu-col-head">Construction &amp; Gardening</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+          <a href="/square-footage-calculator/">Square Footage</a>
+          <a href="/tape-measure-fraction-calculator/">Tape Measure Fraction</a>
+          <a href="/stair-calculator/">Stair</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/vo2-max-calculator/">VO2 Max</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
+          <a href="/bmi-calculator/">BMI</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/ideal-weight-calculator/">Ideal Weight</a>
+          <a href="/lean-body-mass-calculator/" class="current">Lean Body Mass</a>
+          <a href="/calorie-calculator/">Calorie</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/water-intake-calculator/">Water Intake</a>
+          <a href="/macro-calculator/">Macro</a>
+          <a href="/protein-intake-calculator/">Protein Intake</a>
+          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
+          <a href="/steps-to-miles-calculator/">Steps to Miles</a>
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+          <a href="/age-calculator/">Age</a>
+          <a href="/date-calculator/">Date</a>
+          <a href="/time-calculator/">Time</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">Boer, James &amp; Hume, plotted on one bar</div>
+    <h1>Lean Body Mass Calculator</h1>
+    <p>See your <strong>lean-vs-fat composition</strong> on a live bar, compare all three classic formulas at once, and get an <strong>exact</strong> result if you already know your body fat %. Tap <em>Go advanced</em> for the exact mode and a protein-target reference.</p>
+  </section>
+
+  <div class="grid">
+
+    <div class="card">
+      <div class="card-pad">
+        <h2 class="card-h2">Your body</h2>
+
+        <div class="ctl-row">
+          <span class="ctl-lab">Units</span>
+          <div class="seg" id="unitSeg">
+            <button type="button" data-unit="cm" class="on">cm / kg</button>
+            <button type="button" data-unit="in">in / lb</button>
+          </div>
+        </div>
+
+        <div class="ctl-row" id="ageRow">
+          <span class="ctl-lab">Age</span>
+          <div class="seg" id="ageSeg">
+            <button type="button" data-age="adult" class="on">Adult</button>
+            <button type="button" data-age="child">14 or younger</button>
+          </div>
+        </div>
+
+        <div class="ctl-row" id="sexRow">
+          <span class="ctl-lab">Sex</span>
+          <div class="seg" id="sexSeg">
+            <button type="button" data-sex="female" class="on">Female</button>
+            <button type="button" data-sex="male">Male</button>
+          </div>
+        </div>
+
+        <label class="fld" for="height">
+          <span class="lab">Height <span class="unit" id="uHeight">cm</span></span>
+          <div class="inp"><input id="height" type="number" inputmode="decimal" min="80" max="250" placeholder="165"></div>
+        </label>
+
+        <label class="fld" for="weight">
+          <span class="lab">Weight <span class="unit" id="uWeight">kg</span></span>
+          <div class="inp"><input id="weight" type="number" inputmode="decimal" min="20" max="400" placeholder="65"></div>
+        </label>
+
+        <div id="advIn" style="display:none">
+          <label class="fld" for="bfPct">
+            <span class="lab">Known body fat <span class="unit">% · optional, for an exact result</span></span>
+            <div class="inp"><input id="bfPct" type="number" inputmode="decimal" min="1" max="60" step="0.1" placeholder="e.g. 22"></div>
+          </label>
+        </div>
+
+        <div class="add-row split" style="margin-top:6px" id="advRow">
+          <span></span>
+          <button class="advbtn" id="advBtn" type="button">
+            <span id="advBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-pad">
+        <div class="bf-res">
+          <div class="res-lab" id="resLab">Lean body mass</div>
+          <div class="res-big"><span id="resBig">—</span> <span class="res-unit" id="resUnit"></span></div>
+          <div class="res-sub" id="resSub">Enter your height and weight to see your lean body mass.</div>
+        </div>
+
+        <div class="lbm-bar-wrap" id="lbmBarWrap" style="visibility:hidden">
+          <div class="lbm-bar" id="lbmBar">
+            <span class="lbm-seg lean" id="lbmLeanSeg"><b id="lbmLeanLab"></b></span>
+            <span class="lbm-seg fat" id="lbmFatSeg"><b id="lbmFatLab"></b></span>
+          </div>
+          <div class="lbm-key">
+            <span><i class="k-lean"></i>Lean mass</span>
+            <span><i class="k-fat"></i>Fat mass</span>
+          </div>
+        </div>
+
+        <p class="res-tip adv-tip" id="resTip"></p>
+
+        <div id="lbmTableWrap">
+          <table class="dtable" id="lbmTable"></table>
+        </div>
+
+        <div id="advOut" style="display:none">
+          <div class="proj-sep"></div>
+          <p class="lbm-spread-h">All three formulas on one scale</p>
+          <div class="iw-viz" id="lbmViz" style="visibility:hidden">
+            <div class="iw-bar" id="lbmScaleBar">
+              <span class="iw-band" id="lbmBand"></span>
+              <span class="iw-tick-layer" id="lbmTickLayer"></span>
+              <span class="iw-cur" id="lbmCurMarker" style="display:none"></span>
+            </div>
+            <div class="iw-ticks" id="lbmScaleTicks"></div>
+            <div class="iw-key">
+              <span><i class="k-band"></i>Typical healthy range</span>
+              <span><i class="k-tick"></i>Formula estimates</span>
+              <span id="lbmCurKeyWrap" style="display:none"><i class="k-cur"></i>From your body fat %</span>
+            </div>
+          </div>
+          <div id="lbmProteinOut"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="related-calcs">
+    <p class="related-calcs-h">More health calculators that may interest you</p>
+    <div class="pills">
+      <a class="pill" href="/body-fat-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18"/></svg>
+        Body Fat Calculator
+      </a>
+      <a class="pill" href="/ideal-weight-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v4M12 17v4M5 12H3M21 12h-2"/><circle cx="12" cy="12" r="5"/></svg>
+        Ideal Weight Calculator
+      </a>
+      <a class="pill" href="/protein-intake-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 6 6 1-4.5 4.5 1 6.5-5.5-3-5.5 3 1-6.5L3 9l6-1z"/></svg>
+        Protein Intake Calculator
+      </a>
+      <a class="pill" href="/bmi-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h6v6H9z"/></svg>
+        BMI Calculator
+      </a>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use the lean body mass calculator</h2>
+        <p>Enter your <strong>height</strong>, <strong>weight</strong> and <strong>sex</strong>, and the calculator estimates your lean body mass three ways at once — the <strong>Boer</strong>, <strong>James</strong> and <strong>Hume</strong> formulas — plus a live bar showing the lean-vs-fat split of your body weight. If you already know your body fat percentage from a DEXA scan, BodPod, or skinfold caliper, enter it under <strong>Go advanced</strong> for an exact figure instead of an estimate.</p>
+
+        <h2>The exact formula (if you know your body fat %)</h2>
+        <div class="formula">
+          Lean body mass = Weight &times; (1 &minus; Body fat %)
+          <small>THE ONLY EXACT VERSION — EVERYTHING ELSE IS AN ESTIMATE FROM HEIGHT AND WEIGHT ALONE</small>
+        </div>
+        <p>If you don't know your body fat percentage, the <a href="/body-fat-calculator/">body fat calculator</a> estimates it from tape-measure measurements.</p>
+
+        <h2>The three classic estimate formulas</h2>
+        <table class="dtable">
+          <thead><tr><th>Formula</th><th>Year</th><th>Tends to&hellip;</th></tr></thead>
+          <tbody>
+            <tr class="cur"><td>Boer</td><td>1984</td><td>The most common modern clinical reference</td></tr>
+            <tr><td>James</td><td>1976</td><td>Read slightly higher for average male body sizes</td></tr>
+            <tr><td>Hume</td><td>1966</td><td>Read slightly lower vs. modern DEXA validation</td></tr>
+          </tbody>
+        </table>
+        <p>None of the three is "the" correct answer — they were built from different research cohorts decades apart and routinely disagree by 2&ndash;5 kg at the same body size. That spread is the honest measure of uncertainty in any estimate that only uses height and weight.</p>
+      </div>
+
+      <div>
+        <h2>What counts as a healthy lean body mass?</h2>
+        <p>As a rough guide, a lean body mass of about <strong>75&ndash;86% of total weight for men</strong> and <strong>69&ndash;79% for women</strong> is typical, based on common body-fat-percentage guidelines. Athletes often sit above this range; it naturally shifts with age, training, and build — it isn't a strict pass/fail line.</p>
+
+        <h2>Why lean body mass matters</h2>
+        <ul>
+          <li><strong>Tracking a diet or training program.</strong> The scale can't tell you whether weight lost was fat or muscle — lean body mass can.</li>
+          <li><strong>Setting a protein target.</strong> Most modern protein guidelines (roughly 1.6&ndash;2.2 g per kg of lean mass for active adults) reference lean mass, not total body weight.</li>
+          <li><strong>Drug dosing.</strong> Some medications, particularly water-soluble drugs, are dosed by lean body weight rather than total weight.</li>
+        </ul>
+        <p>Once you have a lean-mass figure, the <a href="/protein-intake-calculator/">protein intake calculator</a> turns it into a daily gram target.</p>
+
+        <h2>Lean body mass for children</h2>
+        <p>The Boer, James and Hume formulas were all derived from adult cohorts and don't apply to growing children. For ages 14 and younger, this calculator switches to the <strong>Peters formula</strong>, which estimates lean mass from an estimated extracellular fluid volume instead.</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>How do I calculate my lean body mass?</summary><p>If you know your body fat percentage, lean body mass = weight &times; (1 &minus; body fat %). If you don't, formulas like Boer, James and Hume estimate it from your height, weight and sex alone. This calculator does both automatically.</p></details>
+    <details class="faq"><summary>What is a healthy lean body mass percentage?</summary><p>Roughly <strong>75&ndash;86%</strong> of total body weight for men and <strong>69&ndash;79%</strong> for women is considered a typical healthy range, based on common body-fat-percentage guidelines. Athletes often sit above this range; it varies by age and build.</p></details>
+    <details class="faq"><summary>Which lean body mass formula is most accurate?</summary><p>No single formula is correct for everyone. Boer (1984) is the most commonly used modern clinical reference. James (1976) tends to read slightly higher for average male body sizes, and Hume (1966) tends to read lower. The three routinely disagree by 2&ndash;5 kg at the same body size, which is the honest measure of uncertainty in any height-and-weight-only estimate.</p></details>
+    <details class="faq"><summary>Why does lean body mass matter?</summary><p>Lean body mass drives most of your metabolism, is what many drug-dosing protocols use instead of total body weight, and is a better way to track a weight-loss or training program than the number on the scale alone, since it separates muscle from fat.</p></details>
+    <details class="faq"><summary>How is lean body mass different from fat-free mass?</summary><p>They're used almost interchangeably. Strictly, fat-free mass excludes the small amount of essential fat inside cell membranes and the nervous system, which lean body mass formulas include. The difference is usually only 2&ndash;3% of body weight and rarely matters outside research settings.</p></details>
+  </section>
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+          <li><a href="/square-footage-calculator/">Square Footage Calculator</a></li>
+          <li><a href="/tape-measure-fraction-calculator/">Tape Measure Fraction Calculator</a></li>
+          <li><a href="/stair-calculator/">Stair Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/vo2-max-calculator/">VO2 Max Calculator</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/bmi-calculator/">BMI Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/ideal-weight-calculator/">Ideal Weight Calculator</a></li>
+          <li><a href="/lean-body-mass-calculator/">Lean Body Mass Calculator</a></li>
+          <li><a href="/calorie-calculator/">Calorie Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/water-intake-calculator/">Water Intake Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/protein-intake-calculator/">Protein Intake Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
+          <li><a href="/steps-to-miles-calculator/">Steps to Miles Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+          <li><a href="/age-calculator/">Age Calculator</a></li>
+          <li><a href="/date-calculator/">Date Calculator</a></li>
+          <li><a href="/time-calculator/">Time Calculator</a></li>
+        </ul>
+      </div>
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/blog/">Blog</a>
+      <span aria-hidden="true">·</span>
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+</div>
+
+<script src="/assets/app.js?v=107"></script>
+<script>CalcThis.initLbmCalc();</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>

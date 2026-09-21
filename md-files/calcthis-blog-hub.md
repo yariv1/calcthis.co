@@ -67,6 +67,12 @@ left as-is; the tables below are the source of truth for those. Do not rename th
 | How to Calculate Square Footage (Any Shape, Room, or Project) | `blog-square-footage-card.webp` | `blog-square-footage-hero.webp` |
 | How to Calculate Stair Rise and Run (Plus Stringer Length) | `blog-stair-rise-run-card.webp` | `blog-stair-rise-run-hero.webp` |
 
+### Health & Lifestyle — v106+
+
+| Article | Card image (`assets/images/`) | Header image (`assets/images/`) |
+|---|---|---|
+| What Is Lean Body Mass? How to Calculate and Track It | `blog-lean-body-mass-card.webp` | `blog-lean-body-mass-hero.webp` |
+
 ### In-article images
 
 | Article | In-article filenames (`assets/images/`) |
@@ -82,6 +88,7 @@ left as-is; the tables below are the source of truth for those. Do not rename th
 | How Much Protein Do I Need? | `blog-protein-intake-inArticle-1.webp` · `blog-protein-intake-inArticle-2.webp` |
 | How to Calculate Square Footage (Any Shape, Room, or Project) | `blog-square-footage-inArticle-1.webp` · `blog-square-footage-inArticle-2.webp` |
 | How to Calculate Stair Rise and Run (Plus Stringer Length) | `blog-stair-rise-run-inArticle-1.webp` · `blog-stair-rise-run-inArticle-2.webp` |
+| What Is Lean Body Mass? How to Calculate and Track It | `blog-lean-body-mass-inArticle-1.webp` · `blog-lean-body-mass-inArticle-2.webp` |
 
 ### Rules
 - ❌ Never guess a filename. If it's not in this table, stop and check the actual file.

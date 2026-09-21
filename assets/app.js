@@ -5564,6 +5564,181 @@ CalcThis.initStairCalc = function () {
   renderAll();
 };
 
+/* -----------------------------------------------------------
+   CalcThis.initLbmCalc() — lean body mass.
+   Boer/James/Hume formulas (adults) or Peters formula (age <=14)
+   from height + weight + sex. Differentiator vs. calculator.net,
+   Omnicalculator and ajdesigner (all checked live, all bare
+   number/table output): a live lean-vs-fat composition bar, all
+   three adult formulas plotted on one scale against a typical
+   healthy range (reuses the Ideal Weight calculator's .iw-bar
+   tick pattern exactly — same "multiple formulas as ticks on one
+   scale" idea, not reinvented), an exact result from a known
+   body-fat % (Go advanced), and a protein-target reference tied
+   to lean mass. Independent engine, no shared state. Live, no
+   button. */
+CalcThis.initLbmCalc = function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var unit = 'cm', sex = 'female', ageCat = 'adult', advanced = false;
+
+  function num(v) { v = parseFloat(('' + v).trim()); return isNaN(v) ? NaN : v; }
+  function toCm(v) { return unit === 'in' ? v * 2.54 : v; }
+  function toKg(v) { return unit === 'in' ? v / 2.2046226 : v; }
+  function fromKg(v) { return unit === 'in' ? v * 2.2046226 : v; }
+  function wUnit() { return unit === 'in' ? 'lb' : 'kg'; }
+  function r1(x) { return (Math.round(x * 10) / 10).toFixed(1); }
+  function r0(x) { return Math.round(x); }
+  function pctScale(v, min, max) { return Math.max(0, Math.min(100, (v - min) / (max - min) * 100)); }
+
+  function boer(W, H) { return sex === 'male' ? 0.407 * W + 0.267 * H - 19.2 : 0.252 * W + 0.473 * H - 48.3; }
+  function james(W, H) { return sex === 'male' ? 1.1 * W - 128 * Math.pow(W / H, 2) : 1.07 * W - 148 * Math.pow(W / H, 2); }
+  function hume(W, H) { return sex === 'male' ? 0.32810 * W + 0.33929 * H - 29.5336 : 0.29569 * W + 0.41813 * H - 43.2933; }
+  function peters(W, H) { return 3.8 * (0.0215 * Math.pow(W, 0.6469) * Math.pow(H, 0.7236)); }
+  function healthyBFRange() { return sex === 'male' ? [14, 25] : [21, 31]; }
+
+  var PH = { cm: '165', in: '65' };
+  function applyUnit() {
+    $('uHeight').textContent = unit === 'in' ? 'in' : 'cm';
+    $('uWeight').textContent = wUnit();
+    $('height').placeholder = PH[unit];
+    $('weight').placeholder = unit === 'in' ? '145' : '65';
+    [].forEach.call($('unitSeg').children, function (x) { x.classList.toggle('on', x.getAttribute('data-unit') === unit); });
+  }
+
+  function renderBar(leanKg, W) {
+    var wrap = $('lbmBarWrap');
+    if (!(W > 0) || !(leanKg >= 0)) { wrap.style.visibility = 'hidden'; return; }
+    wrap.style.visibility = 'visible';
+    var leanPct = Math.max(0, Math.min(100, leanKg / W * 100)), fatPct = 100 - leanPct;
+    $('lbmLeanSeg').style.width = leanPct + '%';
+    $('lbmFatSeg').style.width = fatPct + '%';
+    $('lbmLeanLab').textContent = r0(leanPct) + '%';
+    $('lbmFatLab').textContent = r0(fatPct) + '%';
+  }
+
+  function solve() {
+    var H = toCm(num($('height').value)), W = toKg(num($('weight').value));
+    var resBig = $('resBig'), resSub = $('resSub'), resTip = $('resTip'), resUnit = $('resUnit'), resLab = $('resLab');
+    var tableWrap = $('lbmTableWrap');
+
+    if (!(H > 0 && W > 0)) {
+      resBig.textContent = '—'; resUnit.textContent = '';
+      resSub.textContent = 'Enter your height and weight to see your lean body mass.';
+      resTip.textContent = '';
+      $('lbmBarWrap').style.visibility = 'hidden';
+      $('lbmTable').innerHTML = '';
+      $('lbmViz').style.visibility = 'hidden';
+      $('lbmProteinOut').innerHTML = '';
+      return;
+    }
+
+    if (ageCat === 'child') {
+      var lbmC = peters(W, H), bfC = (W - lbmC) / W * 100;
+      resLab.textContent = 'Estimated lean body mass';
+      resBig.textContent = r1(fromKg(lbmC)); resUnit.textContent = wUnit();
+      resSub.textContent = 'Peters formula (ages 14 and younger) · implied body fat ' + r0(bfC) + '%';
+      resTip.innerHTML = 'Adult formulas (Boer, James, Hume) are not derived for growing children, so this uses the pediatric <strong>Peters formula</strong> instead.';
+      renderBar(lbmC, W);
+      tableWrap.style.display = 'none';
+      $('advOut').style.display = 'none';
+      return;
+    }
+    tableWrap.style.display = '';
+
+    var boerKg = boer(W, H), jamesKg = james(W, H), humeKg = hume(W, H);
+    var bfRaw = num($('bfPct').value);
+    var bfKnown = (advanced && bfRaw > 0 && bfRaw < 100) ? bfRaw : null;
+    var exactKg = bfKnown != null ? W * (1 - bfKnown / 100) : null;
+    var headlineKg = exactKg != null ? exactKg : boerKg;
+
+    resLab.textContent = exactKg != null ? 'Lean body mass (exact)' : 'Lean body mass';
+    resBig.textContent = r1(fromKg(headlineKg)); resUnit.textContent = wUnit();
+    resSub.textContent = (exactKg != null ? 'From your ' + r1(bfKnown) + '% body fat' : 'Boer formula') +
+      ' · ' + r0(headlineKg / W * 100) + '% of body weight';
+
+    renderBar(headlineKg, W);
+
+    var rows = '';
+    [['Boer', boerKg, true], ['James', jamesKg, false], ['Hume', humeKg, false]].forEach(function (f) {
+      var bf = (W - f[1]) / W * 100;
+      rows += '<tr' + (f[2] ? ' class="cur"' : '') + '><td>' + f[0] + '</td><td>' + r1(fromKg(f[1])) + ' ' + wUnit() + '</td><td>' + r0(bf) + '%</td></tr>';
+    });
+    $('lbmTable').innerHTML = '<thead><tr><th>Formula</th><th>Lean mass</th><th>Body fat</th></tr></thead><tbody>' + rows + '</tbody>';
+
+    var fMin = Math.min(boerKg, jamesKg, humeKg), fMax = Math.max(boerKg, jamesKg, humeKg);
+    resTip.innerHTML = 'The three formulas span <strong>' + r1(fromKg(fMin)) + '–' + r1(fromKg(fMax)) + ' ' + wUnit() +
+      '</strong> at this height and weight — that spread is the honest uncertainty in any height-and-weight estimate.';
+
+    if (advanced) {
+      $('advOut').style.display = '';
+      var range = healthyBFRange();
+      var bandLoKg = W * (1 - range[1] / 100), bandHiKg = W * (1 - range[0] / 100);
+      var vals = [boerKg, jamesKg, humeKg, bandLoKg, bandHiKg]; if (exactKg != null) vals.push(exactKg);
+      var scaleMin = Math.min.apply(null, vals) * 0.94, scaleMax = Math.max.apply(null, vals) * 1.06;
+      function pct(v) { return pctScale(v, scaleMin, scaleMax); }
+      $('lbmViz').style.visibility = 'visible';
+      $('lbmBand').style.left = pct(bandLoKg) + '%';
+      $('lbmBand').style.width = (pct(bandHiKg) - pct(bandLoKg)) + '%';
+      var tHtml = '';
+      [['Boer', boerKg], ['James', jamesKg], ['Hume', humeKg]].forEach(function (p) {
+        tHtml += '<span class="iw-tick" style="left:' + pct(p[1]) + '%" title="' + p[0] + '"></span>';
+      });
+      $('lbmTickLayer').innerHTML = tHtml;
+      $('lbmScaleTicks').innerHTML =
+        '<span style="left:' + pct(bandLoKg) + '%">' + r0(fromKg(bandLoKg)) + '</span>' +
+        '<span style="left:' + pct(bandHiKg) + '%">' + r0(fromKg(bandHiKg)) + '</span>';
+      var curM = $('lbmCurMarker'), curKeyWrap = $('lbmCurKeyWrap');
+      if (exactKg != null) { curM.style.display = ''; curM.style.left = pct(exactKg) + '%'; curKeyWrap.style.display = ''; }
+      else { curM.style.display = 'none'; curKeyWrap.style.display = 'none'; }
+
+      var loG = 1.6 * headlineKg, hiG = 2.2 * headlineKg;
+      $('lbmProteinOut').innerHTML =
+        '<div class="bf-cmp"><span class="k">Protein reference (1.6–2.2 g/kg lean mass)</span><span class="v">' + r0(loG) + '–' + r0(hiG) + ' g/day</span></div>' +
+        '<p class="res-tip">Based on your lean mass, not total weight — see the <a href="/protein-intake-calculator/">protein intake calculator</a> for a full daily target.</p>';
+    } else {
+      $('advOut').style.display = 'none';
+    }
+  }
+
+  $('unitSeg').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    unit = b.getAttribute('data-unit'); applyUnit(); solve();
+  });
+  $('sexSeg').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    sex = b.getAttribute('data-sex');
+    [].forEach.call($('sexSeg').children, function (x) { x.classList.toggle('on', x === b); });
+    solve();
+  });
+  $('ageSeg').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    ageCat = b.getAttribute('data-age');
+    [].forEach.call($('ageSeg').children, function (x) { x.classList.toggle('on', x === b); });
+    var isChild = ageCat === 'child';
+    $('sexRow').style.display = isChild ? 'none' : '';
+    $('advRow').style.display = isChild ? 'none' : '';
+    if (isChild && advanced) {
+      advanced = false;
+      $('advIn').style.display = 'none';
+      $('advOut').style.display = 'none';
+      $('advBtnLab').textContent = 'Go advanced';
+      $('advBtn').classList.remove('open');
+    }
+    solve();
+  });
+  $('advBtn').addEventListener('click', function () {
+    advanced = !advanced;
+    $('advBtn').classList.toggle('open', advanced);
+    $('advBtnLab').textContent = advanced ? 'Go simple' : 'Go advanced';
+    $('advIn').style.display = advanced ? '' : 'none';
+    solve();
+  });
+  [$('height'), $('weight'), $('bfPct')].forEach(function (el) { if (el) el.addEventListener('input', solve); });
+
+  applyUnit();
+  solve();
+};
+
 /* =========================================================
    SITE FOOTER — mobile accordion
    Multiple pillars can be open simultaneously.

@@ -376,6 +376,15 @@ see above). Single `.sel` wrapper, never nest two:
   each reinvented the same 3 lines of CSS, and Steps to Miles briefly shipped it wrong at
   13px before this was made global) before the fix was to make it a single global class
   instead of a pattern every page has to remember to repeat.
+  ⛔ **5th occurrence, Lean Body Mass Calculator (2026-09-20) — this time the class was
+  simply left off entirely** (plain `class="res-tip"`, 12.5px/muted), not reinvented as a
+  wrong override. The trigger for this rule is NOT "is this literally inside a `#advOut` /
+  Go-advanced panel" — the Lean Body Mass note lived in the default/basic view. The real
+  trigger is: **is this a substantive single-sentence narrative takeaway** (the payoff
+  sentence the user reads after the number), as opposed to a short inline hint like "Tip:
+  switch to Metric." Any element matching that description gets `class="res-tip adv-tip"`
+  written into the FIRST draft of the HTML — decide this at authoring time per element, not
+  as a review afterthought.
 
 ## Accessibility — Text on Colored Backgrounds
 

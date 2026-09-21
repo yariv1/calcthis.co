@@ -121,9 +121,9 @@ must be built from the article's actual units, every time, not pasted from a tem
 
 ## Project state
 
-- **Asset version:** v105 (bumped, `node build.js` run and deployed this session)
-- **Total pages:** 64 live
-- **Model:** Opus 4.6
+- **Asset version:** v106 (bumped, `node build.js` run and deployed this session)
+- **Total pages:** 66 live
+- **Model:** Sonnet 5
 
 ### New this session — global `.csel` custom-dropdown component
 
@@ -156,7 +156,7 @@ interactive features. Documented in `calcthis-design-system.md`.
 
 ---
 
-## Live blog articles (21)
+## Live blog articles (22)
 
 - How Much Gravel Do I Need for a Driveway?
 - How Much Mulch Do I Need?
@@ -179,13 +179,14 @@ interactive features. Documented in `calcthis-design-system.md`.
 - How Many Steps Are in a Mile?
 - How Much Protein Do I Need?
 - How to Calculate Square Footage (Any Shape, Room, or Project)
+- How to Calculate Stair Rise and Run (Plus Stringer Length)
 
 ---
 
-## Live calculators (36)
+## Live calculators (37)
 
-### Construction & Gardening (10)
-Board Foot · Gravel · Sand · Topsoil · Mulch · Concrete · Flooring · Tile · Square Footage · Tape Measure Fraction
+### Construction & Gardening (11)
+Board Foot · Gravel · Sand · Topsoil · Mulch · Concrete · Flooring · Tile · Square Footage · Tape Measure Fraction · Stair
 
 ### Health & Fitness (17)
 Pace · Race Time Predictor · VO2 Max · Heart Rate Zone · Zone 2 Heart Rate · BMI · Body Fat · Ideal Weight · Calorie · TDEE · One Rep Max · Sleep · Water Intake · Macro · Protein Intake · Peptide Reconstitution · Steps to Miles
@@ -196,11 +197,51 @@ Final Grade · GPA · Grade · Test Score
 ### Math & Numbers (5)
 Ratio · Percentage · Age · Date · Time
 
-Total live calculators: **36**
+Total live calculators: **37**
 
 ---
 
-## Last session (v105)
+## Last session (v106)
+
+- Researched, built and deployed **Stair Calculator** (`/stair-calculator/`, roadmap #15 —
+  Ahrefs-verified >10,000/mo, Medium KD). Research opened calculator.net, Omnicalculator,
+  Decks.com, ConCalculator and stair-calculator.com live in the Browser tool (Rule 8.5) —
+  stair-calculator.com already ships a live side/3D-view diagram + IRC code-check badges, so
+  a bare diagram wasn't enough of a differentiator. **Differentiator:** a materials + cost
+  estimate (stringer count from stair width at a 24 in/61 cm spacing rule, cut length rounded
+  up to a standard stock board length, tread/riser board footage with a waste allowance) — no
+  competitor checked combines a diagram with an actual buy-list. `CalcThis.initStairCalc` in
+  app.js, `.p-stair` in style.css. Inputs match/exceed every competitor: run mode (per-step or
+  total), rise mode (target riser height or fixed step count), standard/flush mount, stair
+  width, tread thickness, closed/open risers + riser thickness, stringer lumber size (`.csel`),
+  headroom check (planned headroom vs. required minimum — deliberately the simpler
+  Omnicalculator-style direct-measurement check, not calculator.net's floor-opening geometry,
+  which couldn't be verified confidently), waste %, stringer/lumber pricing. Live side-view
+  SVG diagram (reuses the Square Footage diagram-box/legend technique) redraws with rise/run
+  axis lines, an angle arc, and a per-step rise/run dimension callout — iterated once after
+  the user compared it to Omni's and stair-calculator.com's more detailed diagrams and asked
+  for more annotation; added the axis dimension lines + angle arc + per-step callout to match.
+  Colour-coded IRC/comfort code-check table (riser max, tread min, 2R+T comfort rule, angle
+  range, width min, headroom) using `.stair-ok`/`.stair-bad` (spruce/red, matching the site's
+  existing pass/fail palette). Formulas verified independently by hand against Omnicalculator's
+  published stringer-length/angle formulas before shipping.
+  Companion article **"How to Calculate Stair Rise and Run (Plus Stringer Length)"**
+  (`/blog/how-to-calculate-stair-rise-and-run/`) shipped same session — riser-height formula,
+  standard vs. flush mount, Pythagorean stringer-length formula, IRC code table, full worked
+  example, materials section, 5 FAQs, a custom labeled explainer SVG diagram (not the live
+  calculator's diagram — a simpler static teaching version, same visual language), 2 in-article
+  photos. Unit-toggle QA found and fixed two real gaps this session before shipping (both past
+  the mechanical `build.js` gate, since neither had a bare number immediately adjacent to an
+  imperial word for the regex to catch): a worked-example list item's trailing "targeting a 7.5
+  in riser" and "under the 7.75 in code max" sat outside their `.u` span, and "priced by the
+  linear foot" was a bare unit convention with no wrap. Both fixed and reverified live in the
+  Browser tool with a full Metric-mode text scan (zero Imperial words leaking) — mechanical
+  `build.js` gate passing alone is not sufficient, always also verify live in Metric mode.
+  WebApplication + FAQPage JSON-LD, `.related-calcs` (Square Footage / Board Foot / Flooring /
+  Concrete). Wired into nav, footer, homepage (card + hasPart + prose count → 37), build.js,
+  sitemap.xml, blog hub + registry. Deployed as v106.
+
+## Earlier (v105)
 
 - Two structural UI fixes, both closed with a mechanical gate, not just a one-off patch:
   1. **Field-height parity.** `.csel-btn`/`.inp input`/`.sel select` now all get their box
@@ -561,8 +602,10 @@ AdSense approval**. Date/Time cluster (Age + Date + Time) is now complete.
 7. ~~Time Calculator~~ — ✅ shipped v85 (completes Date/Time cluster)
 8. ~~Steps-to-Miles Calculator~~ — ✅ shipped v100
 9. ~~Protein Intake Calculator~~ — ✅ shipped v103
-10. **Pregnancy / Due Date Calculator** — big new vertical, after AdSense approval (reuse date picker)
-11. **Ovulation / Fertility Calculator** — completes the Pregnancy cluster
+10. ~~Square Footage Calculator~~ — ✅ shipped v104
+11. ~~Stair Calculator~~ — ✅ shipped v106
+12. **Pregnancy / Due Date Calculator** — big new vertical, after AdSense approval (reuse date picker)
+13. **Ovulation / Fertility Calculator** — completes the Pregnancy cluster
 
 ---
 
