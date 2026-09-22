@@ -552,6 +552,20 @@
   .p-protein .dtable td:first-child{color:var(--ink)}
 
   /* =========================================================
+     FITNESS · WAIST-TO-HIP RATIO  (body.p-whr)
+     Reuses .card-h2/.ctl-row, .seg (unit + sex toggles), .advbtn /
+     .add-row.split, .adv-tip. Adds a sex-specific 3-tier health-risk
+     gauge (bar + marker + ticks, same technique as Protein Intake's
+     pi-gauge, band edges swap by sex on toggle).
+     ========================================================= */
+  .p-whr .whr-res{margin:2px 0 14px}
+  .p-whr .whr-gauge{margin:18px 0 12px}
+  .p-whr .whr-bar{position:relative;height:12px;border-radius:6px}
+  .p-whr .whr-marker{position:absolute;top:-5px;width:3px;height:22px;border-radius:2px;background:var(--ink);transform:translateX(-50%);box-shadow:0 0 0 2px var(--card);transition:left .25s ease}
+  .p-whr .whr-ticks{position:relative;height:15px;margin-top:6px;font-size:11px;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums}
+  .p-whr .whr-ticks span{position:absolute;transform:translateX(-50%)}
+
+  /* =========================================================
      FITNESS · HEART-RATE ZONES  (body.p-hrzone)
      ========================================================= */
   .p-hrzone .fld{margin-bottom:18px}

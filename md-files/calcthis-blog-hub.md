@@ -72,6 +72,7 @@ left as-is; the tables below are the source of truth for those. Do not rename th
 | Article | Card image (`assets/images/`) | Header image (`assets/images/`) |
 |---|---|---|
 | What Is Lean Body Mass? How to Calculate and Track It | `blog-lean-body-mass-card.webp` | `blog-lean-body-mass-hero.webp` |
+| What Is Waist-to-Hip Ratio? How to Measure and Interpret Your WHR | `blog-whr-card.webp` | `blog-whr-hero.webp` |
 
 ### In-article images
 
@@ -89,6 +90,7 @@ left as-is; the tables below are the source of truth for those. Do not rename th
 | How to Calculate Square Footage (Any Shape, Room, or Project) | `blog-square-footage-inArticle-1.webp` · `blog-square-footage-inArticle-2.webp` |
 | How to Calculate Stair Rise and Run (Plus Stringer Length) | `blog-stair-rise-run-inArticle-1.webp` · `blog-stair-rise-run-inArticle-2.webp` |
 | What Is Lean Body Mass? How to Calculate and Track It | `blog-lean-body-mass-inArticle-1.webp` · `blog-lean-body-mass-inArticle-2.webp` |
+| What Is Waist-to-Hip Ratio? How to Measure and Interpret Your WHR | `blog-whr-inArticle-1.webp` · `blog-whr-inArticle-2.webp` |
 
 ### Rules
 - ❌ Never guess a filename. If it's not in this table, stop and check the actual file.

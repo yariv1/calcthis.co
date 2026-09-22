@@ -85,8 +85,20 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://calcthis.co/waist-to-hip-ratio-calculator/</loc>
+    <lastmod>2026-09-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://calcthis.co/blog/what-is-lean-body-mass/</loc>
     <lastmod>2026-09-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://calcthis.co/blog/what-is-waist-to-hip-ratio/</loc>
+    <lastmod>2026-09-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>

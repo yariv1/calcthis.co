@@ -5739,6 +5739,156 @@ CalcThis.initLbmCalc = function () {
   solve();
 };
 
+/* ===== CalcThis Waist-to-Hip Ratio engine =====
+   CalcThis.initWhrCalc(cfg) — WHR = waist / hip. Unitless, so no
+   conversion is needed for the ratio itself — waist and hip just need
+   to share a unit, which the in/cm toggle already guarantees.
+   Differentiator: a live sex-specific health-risk gauge (bar + marker +
+   ticks, same technique as Protein Intake's pi-gauge) using WHO-based
+   3-tier bands that differ by sex (female low <=0.80/mod .81-.85/high
+   >=.86; male low <=0.95/mod .96-1.00/high >1.00), plus an informal
+   apple/pear body-shape read. Go advanced adds a WHO absolute
+   waist-circumference obesity cross-check (>=35in/88cm female,
+   >=40in/102cm male) reusing the waist value already entered — no
+   extra input. Independent engine, no shared state. */
+CalcThis.initWhrCalc = function (cfg) {
+  cfg = cfg || {};
+  var $ = function (id) { return document.getElementById(id); };
+  var unit = 'imp', sex = 'female', advanced = false;
+
+  var SCALE_MIN = 0.65, SCALE_MAX = 1.15;
+  var EDGES = {
+    female: [0.65, 0.80, 0.85, 1.15],
+    male: [0.65, 0.95, 1.00, 1.15]
+  };
+  var TICK_VALS = { female: [0.80, 0.85], male: [0.95, 1.00] };
+  var BAND_COLORS = ['#37503F', '#B5761F', '#b23030'];
+  var WAIST_OBESITY = { imp: { female: 35, male: 40 }, met: { female: 88, male: 102 } };
+
+  var waistIn = $('whrWaist'), hipIn = $('whrHip'), heightIn = $('whrHeight');
+  if (!waistIn) return;
+
+  function num(v) { v = parseFloat(('' + v).trim()); return isNaN(v) ? NaN : v; }
+
+  function risk(ratio) {
+    var e = EDGES[sex];
+    if (ratio <= e[1]) return 'low';
+    if (ratio <= e[2]) return 'moderate';
+    return 'high';
+  }
+  var RISK_LABEL = { low: 'Low health risk', moderate: 'Moderate health risk', high: 'Higher health risk' };
+  var SHAPE_LABEL = {
+    low: 'a "pear" tendency — more weight on the hips and thighs',
+    moderate: 'an in-between build, sometimes called "avocado"-shaped',
+    high: 'an "apple" tendency — more weight around the waist'
+  };
+
+  function renderGauge(ratio) {
+    var gauge = $('whrGauge'), marker = $('whrMarker'), bar = $('whrBar'), ticks = $('whrTicks');
+    if (!gauge) return;
+    gauge.style.visibility = 'visible';
+    var e = EDGES[sex], stops = [];
+    for (var i = 0; i < 3; i++) {
+      var p0 = (e[i] - SCALE_MIN) / (SCALE_MAX - SCALE_MIN) * 100;
+      var p1 = (e[i + 1] - SCALE_MIN) / (SCALE_MAX - SCALE_MIN) * 100;
+      stops.push(BAND_COLORS[i] + ' ' + p0 + '%', BAND_COLORS[i] + ' ' + p1 + '%');
+    }
+    bar.style.background = 'linear-gradient(to right,' + stops.join(',') + ')';
+    var pct = (ratio - SCALE_MIN) / (SCALE_MAX - SCALE_MIN) * 100;
+    marker.style.left = Math.max(0, Math.min(100, pct)) + '%';
+    var html = '';
+    TICK_VALS[sex].forEach(function (v) {
+      var p = (v - SCALE_MIN) / (SCALE_MAX - SCALE_MIN) * 100;
+      html += '<span style="left:' + p + '%">' + v.toFixed(2) + '</span>';
+    });
+    ticks.innerHTML = html;
+  }
+
+  function renderAdvanced(waist) {
+    var wrap = $('whrAdvOut'); if (!wrap) return;
+    if (!advanced) { wrap.style.display = 'none'; return; }
+    wrap.style.display = '';
+    var threshold = WAIST_OBESITY[unit][sex];
+    var uLabel = unit === 'imp' ? 'in' : 'cm';
+    var flag = $('whrWaistFlag');
+    var msg = waist >= threshold
+      ? 'Your waist alone (<strong>' + waist + ' ' + uLabel + '</strong>) is at or above the WHO abdominal-obesity threshold of <strong>' + threshold + ' ' + uLabel + '</strong> for ' + sex + 's, an independent risk marker on top of your WHR.'
+      : 'Your waist alone (<strong>' + waist + ' ' + uLabel + '</strong>) is below the WHO abdominal-obesity threshold of <strong>' + threshold + ' ' + uLabel + '</strong> for ' + sex + 's.';
+    var h = num(heightIn ? heightIn.value : '');
+    if (isFinite(h) && h > 0) {
+      var whtr = waist / h;
+      var whtrTxt = whtr.toFixed(2);
+      msg += whtr < 0.5
+        ? ' Your waist-to-height ratio is <strong>' + whtrTxt + '</strong>, below the widely used 0.5 guideline (keep your waist under half your height).'
+        : ' Your waist-to-height ratio is <strong>' + whtrTxt + '</strong>, at or above the widely used 0.5 guideline (keep your waist under half your height) — a second signal worth a look.';
+    } else {
+      msg += ' Add your height above to also check your waist-to-height ratio.';
+    }
+    flag.innerHTML = msg;
+  }
+
+  function solve() {
+    var w = num(waistIn.value), h = num(hipIn.value);
+    var resBig = $('whrResBig'), resSub = $('whrResSub'), catEl = $('whrCat');
+    if (!(isFinite(w) && w > 0 && isFinite(h) && h > 0)) {
+      resBig.textContent = '—';
+      resSub.textContent = 'Enter your waist and hip measurements to see your ratio.';
+      if ($('whrGauge')) $('whrGauge').style.visibility = 'hidden';
+      if (catEl) catEl.innerHTML = '';
+      if ($('whrAdvOut')) $('whrAdvOut').style.display = 'none';
+      return;
+    }
+    var ratio = w / h;
+    var r = risk(ratio);
+    resBig.textContent = ratio.toFixed(2);
+    $('whrResUnit').textContent = 'WHR';
+    var uLabel = unit === 'imp' ? 'in' : 'cm';
+    resSub.textContent = w + ' ' + uLabel + ' waist ÷ ' + h + ' ' + uLabel + ' hip';
+    catEl.innerHTML = '<strong>' + RISK_LABEL[r] + '</strong> for a ' + sex + ' — ' + SHAPE_LABEL[r] + '.';
+    renderGauge(ratio);
+    renderAdvanced(w);
+  }
+
+  function seg(id, attr, fn) {
+    var box = $(id); if (!box) return;
+    box.addEventListener('click', function (e) {
+      var b = e.target.closest('button'); if (!b) return;
+      [].forEach.call(box.querySelectorAll('button'), function (x) { x.classList.remove('on'); });
+      b.classList.add('on'); fn(b.getAttribute(attr));
+    });
+  }
+
+  var CM_PER_IN = 2.54;
+  seg('whrUnitSeg', 'data-u', function (v) {
+    if (v === unit) return;
+    var w = num(waistIn.value), h = num(hipIn.value);
+    unit = v;
+    var lab = unit === 'met' ? 'cm' : 'in';
+    $('whrWUnit').textContent = lab; $('whrHUnit').textContent = lab;
+    if ($('whrHtUnit')) $('whrHtUnit').textContent = lab + ' · optional, adds a waist-to-height check';
+    if (isFinite(w) && w > 0) waistIn.value = Math.round((unit === 'met' ? w * CM_PER_IN : w / CM_PER_IN) * 10) / 10;
+    if (isFinite(h) && h > 0) hipIn.value = Math.round((unit === 'met' ? h * CM_PER_IN : h / CM_PER_IN) * 10) / 10;
+    var ht = num(heightIn ? heightIn.value : '');
+    if (heightIn && isFinite(ht) && ht > 0) heightIn.value = Math.round((unit === 'met' ? ht * CM_PER_IN : ht / CM_PER_IN) * 10) / 10;
+    solve();
+  });
+  seg('whrSexSeg', 'data-sex', function (v) { sex = v; solve(); });
+
+  [waistIn, hipIn].forEach(function (inp) { inp.addEventListener('input', solve); });
+  if (heightIn) heightIn.addEventListener('input', solve);
+
+  var advBtn = $('whrAdvBtn');
+  if (advBtn) advBtn.addEventListener('click', function () {
+    advanced = !advanced;
+    advBtn.classList.toggle('open', advanced);
+    $('whrAdvBtnLab').textContent = advanced ? 'Go simple' : 'Go advanced';
+    if ($('whrAdvIn')) $('whrAdvIn').style.display = advanced ? '' : 'none';
+    solve();
+  });
+
+  solve();
+};
+
 /* =========================================================
    SITE FOOTER — mobile accordion
    Multiple pillars can be open simultaneously.
