@@ -121,8 +121,8 @@ must be built from the article's actual units, every time, not pasted from a tem
 
 ## Project state
 
-- **Asset version:** v106 (bumped, `node build.js` run and deployed this session)
-- **Total pages:** 66 live
+- **Asset version:** v107 (bumped, `node build.js` run and deployed this session)
+- **Total pages:** 68 live
 - **Model:** Sonnet 5
 
 ### New this session — global `.csel` custom-dropdown component
@@ -156,7 +156,7 @@ interactive features. Documented in `calcthis-design-system.md`.
 
 ---
 
-## Live blog articles (22)
+## Live blog articles (23)
 
 - How Much Gravel Do I Need for a Driveway?
 - How Much Mulch Do I Need?
@@ -180,16 +180,17 @@ interactive features. Documented in `calcthis-design-system.md`.
 - How Much Protein Do I Need?
 - How to Calculate Square Footage (Any Shape, Room, or Project)
 - How to Calculate Stair Rise and Run (Plus Stringer Length)
+- What Is Lean Body Mass? How to Calculate and Track It
 
 ---
 
-## Live calculators (37)
+## Live calculators (38)
 
 ### Construction & Gardening (11)
 Board Foot · Gravel · Sand · Topsoil · Mulch · Concrete · Flooring · Tile · Square Footage · Tape Measure Fraction · Stair
 
-### Health & Fitness (17)
-Pace · Race Time Predictor · VO2 Max · Heart Rate Zone · Zone 2 Heart Rate · BMI · Body Fat · Ideal Weight · Calorie · TDEE · One Rep Max · Sleep · Water Intake · Macro · Protein Intake · Peptide Reconstitution · Steps to Miles
+### Health & Fitness (18)
+Pace · Race Time Predictor · VO2 Max · Heart Rate Zone · Zone 2 Heart Rate · BMI · Body Fat · Ideal Weight · Lean Body Mass · Calorie · TDEE · One Rep Max · Sleep · Water Intake · Macro · Protein Intake · Peptide Reconstitution · Steps to Miles
 
 ### School & Grades (4)
 Final Grade · GPA · Grade · Test Score
@@ -197,11 +198,48 @@ Final Grade · GPA · Grade · Test Score
 ### Math & Numbers (5)
 Ratio · Percentage · Age · Date · Time
 
-Total live calculators: **37**
+Total live calculators: **38**
 
 ---
 
-## Last session (v106)
+## Last session (v107)
+
+- Researched, built and deployed **Lean Body Mass Calculator**
+  (`/lean-body-mass-calculator/`, roadmap #16 — Ahrefs-verified >1,000/mo, Medium KD).
+  Research opened calculator.net, Omnicalculator and ajdesigner.com live in the Browser tool
+  (Rule 8.5) — all three are bare number/table output with zero visuals. **Differentiator
+  (user-approved):** a live lean-vs-fat composition bar (spruce/amber split, same technique
+  as Water Intake's stacked bar) plus all three formulas plotted on one scale against a
+  typical healthy range — reuses the Ideal Weight calculator's `.iw-bar` tick pattern exactly
+  (Never-Invent), not a new mechanism — an exact result from a known body-fat % (Go advanced),
+  and a protein-target reference tied to lean mass. `CalcThis.initLbmCalc` in app.js, `.p-lbm`
+  in style.css. Inputs match every competitor: sex, height, weight, units, **and the
+  child/Peters-formula path (age ≤14) that calculator.net has and Omni/ajdesigner don't** —
+  user explicitly asked to keep this in scope after the research report flagged it as
+  optional. Boer/James/Hume formulas verified by hand against ajdesigner's own published
+  worked example (70 kg / 175 cm male → 56.0 / 56.5 / 52.8 kg) before shipping — exact match.
+  Companion article **"What Is Lean Body Mass? How to Calculate and Track It"**
+  (`/blog/what-is-lean-body-mass/`) shipped same session — exact formula, the three estimate
+  formulas, worked example, healthy-range guidance, LBM-vs-fat-free-mass distinction, 5 FAQs,
+  2 in-article photos (varied descriptors per the image-prompt rule). Unit-toggle gate caught
+  4 bare "5 lb"/"5 kg" mismatches on the first pass (a checklist bullet + two disagreement-
+  range mentions) — fixed and reverified with a live Metric-mode text scan before sending
+  preview links.
+  **Real process failure this session, now fixed structurally in the skill file:** the
+  child-mode result note shipped as plain `class="res-tip"` (12.5px, muted grey) instead of
+  the global `class="res-tip adv-tip"` (16px, amber) that this exact "narrative takeaway
+  sentence" pattern already has — the **5th** time this specific class has been left off
+  across the site (after Age, Time, Tape Measure Fraction, Steps to Miles). Root cause: knew
+  the rule existed but didn't re-check `calcthis-design-system.md` at the moment of writing
+  that specific element. Fixed on this page; `calcthis-design-system.md`'s "Advanced-mode
+  explanatory line" section and persistent memory (`calcthis-text-size-floor`) both rewritten
+  with the corrected trigger — "is this a substantive single-sentence narrative takeaway,"
+  not "is this literally inside a `#advOut` panel" (this note lived in the default view).
+  WebApplication + FAQPage JSON-LD, `.related-calcs` (Body Fat / Ideal Weight / Protein
+  Intake / BMI). Wired into nav, footer, homepage (card + hasPart + prose count → 38),
+  build.js, sitemap.xml, blog hub + registry. Deployed as v107.
+
+## Earlier (v106)
 
 - Researched, built and deployed **Stair Calculator** (`/stair-calculator/`, roadmap #15 —
   Ahrefs-verified >10,000/mo, Medium KD). Research opened calculator.net, Omnicalculator,
@@ -604,8 +642,9 @@ AdSense approval**. Date/Time cluster (Age + Date + Time) is now complete.
 9. ~~Protein Intake Calculator~~ — ✅ shipped v103
 10. ~~Square Footage Calculator~~ — ✅ shipped v104
 11. ~~Stair Calculator~~ — ✅ shipped v106
-12. **Pregnancy / Due Date Calculator** — big new vertical, after AdSense approval (reuse date picker)
-13. **Ovulation / Fertility Calculator** — completes the Pregnancy cluster
+12. ~~Lean Body Mass Calculator~~ — ✅ shipped v107
+13. **Pregnancy / Due Date Calculator** — big new vertical, after AdSense approval (reuse date picker)
+14. **Ovulation / Fertility Calculator** — completes the Pregnancy cluster
 
 ---
 

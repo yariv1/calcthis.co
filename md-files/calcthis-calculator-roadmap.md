@@ -38,7 +38,7 @@ Pregnancy + Ovulation immediately **after** AdSense approval.
 | 13 | **Protein Intake Calculator** | Ahrefs-verified >10,000/mo, **Easy** KD. | Health & Fitness | Simple–Medium | ✅ Shipped v103 |
 | 14 | **Square Footage Calculator** | Ahrefs-verified >10,000/mo, Medium KD. | Construction & Gardening | Simple | ✅ Shipped v104 |
 | 15 | **Stair Calculator** | Ahrefs-verified >10,000/mo, Medium KD. | Construction & Gardening | Medium | ✅ Shipped v106 |
-| 16 | **Lean Body Mass Calculator** | Ahrefs-verified >1,000/mo, Medium KD. | Health & Fitness | Simple | ⬜ |
+| 16 | **Lean Body Mass Calculator** | Ahrefs-verified >1,000/mo, Medium KD. | Health & Fitness | Simple | ✅ Shipped v107 |
 | 17 | **Waist-to-Hip Ratio Calculator** | Ahrefs-verified >1,000/mo, **Easy** KD. | Health & Fitness | Simple | ⬜ |
 
 ### Companion articles to build alongside
