@@ -121,8 +121,8 @@ must be built from the article's actual units, every time, not pasted from a tem
 
 ## Project state
 
-- **Asset version:** v107 (bumped, `node build.js` run and deployed this session)
-- **Total pages:** 68 live
+- **Asset version:** v110 (bumped, `node build.js` run and deployed this session)
+- **Total pages:** 70 live
 - **Model:** Sonnet 5
 
 ### New this session — global `.csel` custom-dropdown component
@@ -181,16 +181,17 @@ interactive features. Documented in `calcthis-design-system.md`.
 - How to Calculate Square Footage (Any Shape, Room, or Project)
 - How to Calculate Stair Rise and Run (Plus Stringer Length)
 - What Is Lean Body Mass? How to Calculate and Track It
+- What Is Waist-to-Hip Ratio? How to Measure and Interpret Your WHR
 
 ---
 
-## Live calculators (38)
+## Live calculators (39)
 
 ### Construction & Gardening (11)
 Board Foot · Gravel · Sand · Topsoil · Mulch · Concrete · Flooring · Tile · Square Footage · Tape Measure Fraction · Stair
 
-### Health & Fitness (18)
-Pace · Race Time Predictor · VO2 Max · Heart Rate Zone · Zone 2 Heart Rate · BMI · Body Fat · Ideal Weight · Lean Body Mass · Calorie · TDEE · One Rep Max · Sleep · Water Intake · Macro · Protein Intake · Peptide Reconstitution · Steps to Miles
+### Health & Fitness (19)
+Pace · Race Time Predictor · VO2 Max · Heart Rate Zone · Zone 2 Heart Rate · BMI · Body Fat · Ideal Weight · Lean Body Mass · Waist-to-Hip Ratio · Calorie · TDEE · One Rep Max · Sleep · Water Intake · Macro · Protein Intake · Peptide Reconstitution · Steps to Miles
 
 ### School & Grades (4)
 Final Grade · GPA · Grade · Test Score
@@ -198,11 +199,53 @@ Final Grade · GPA · Grade · Test Score
 ### Math & Numbers (5)
 Ratio · Percentage · Age · Date · Time
 
-Total live calculators: **38**
+Total live calculators: **39**
 
 ---
 
-## Last session (v107)
+## Last session (v108–v110)
+
+- Researched, built and deployed **Waist-to-Hip Ratio Calculator**
+  (`/waist-to-hip-ratio-calculator/`, roadmap #17 — Ahrefs-verified >1,000/mo, Easy KD).
+  Research opened Omnicalculator, MDCalc, TheCalculatorSite, Patient.info live in the
+  Browser tool (Rule 8.5) — all bare number/table output, none with sex-specific live
+  visuals. **Differentiator (user-approved):** a live sex-specific 3-tier health-risk gauge
+  (bar+marker+ticks, reused Protein Intake's gauge technique, band edges swap by sex —
+  female 0.80/0.85, male 0.95/1.00) plus an apple/pear body-shape read. Inputs match every
+  competitor: sex, units, waist, hip. `CalcThis.initWhrCalc` in app.js, `.p-whr` in style.css.
+  **Two real process failures this session, both fixed before deploy:**
+  1. Shipped Go-advanced with only a thin one-line waist-circumference flag reusing the
+     already-entered waist value — user pushed back asking for genuinely more depth. Added
+     an optional Height input (advanced-only) computing waist-to-height ratio against the
+     widely cited "keep waist under half your height" guideline, folded into the same
+     advanced note alongside the WHO absolute-waist-circumference check.
+  2. The risk-verdict sentence ("Higher health risk for a female — an 'apple' tendency…")
+     shipped as a new page-scoped `.whr-cat` class (13px muted), copied from VO2 Max/Protein
+     Intake's `-cat` pattern without checking whether THIS sentence played the same role —
+     it didn't: it stated the actual conclusion, not supplementary context, so it needed the
+     global `.res-tip.adv-tip` (16px amber) per the design system's narrative-takeaway rule.
+     **7th occurrence of this exact class of bug** — memory (`calcthis-text-size-floor`)
+     rewritten with a sharper trigger question ("does this sentence state the conclusion, or
+     just add context around one stated elsewhere?") to stop pattern-matching a new page's
+     text-size class off a sibling calculator's class without re-asking that question.
+  Companion article **"What Is Waist-to-Hip Ratio? How to Measure and Interpret Your WHR"**
+  (`/blog/what-is-waist-to-hip-ratio/`) shipped same session — formula, measuring
+  instructions, worked example, WHO risk table, apple/pear/avocado shapes, WHR vs BMI vs
+  waist-circumference-alone vs waist-to-height, 5 FAQs, calc-cta, 2 in-article photos + hero
+  + card. **New standing image-diversity instruction from the user:** health/fitness article
+  people must look like "regular everyday people," not toned/fitness-model bodies, and must
+  be actively diversified across ethnicity (Caucasian/Hispanic/Indian/Asian/Russian/etc.),
+  hair color/style, eye color, and body shape (athletic/a-bit-fuller/thin/etc.) — saved to
+  persistent memory (`calcthis-image-diversity`) so it applies to every future article, not
+  just this one. This article used an Indian woman (average build, long black hair, brown
+  eyes) for the card/hero/first in-article photo and a Russian woman in her 50s (fuller
+  build, ash-blonde bob) for the second, in a clinic setting. Unit-toggle gate passed clean
+  first pass; live Metric-mode scan confirmed zero leftover Imperial text. WebApplication +
+  FAQPage JSON-LD, `.related-calcs` (BMI / Body Fat / Ideal Weight / Lean Body Mass). Wired
+  into nav, footer, homepage (card + hasPart + prose count → 39), build.js, sitemap.xml, blog
+  hub + registry. Deployed as v110.
+
+## Earlier (v107)
 
 - Researched, built and deployed **Lean Body Mass Calculator**
   (`/lean-body-mass-calculator/`, roadmap #16 — Ahrefs-verified >1,000/mo, Medium KD).

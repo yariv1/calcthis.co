@@ -119,6 +119,15 @@ range of people.
 - **Be specific in the prompt**, not vague — e.g. "a Black woman in her 40s with short
   natural hair, wearing a plain grey t-shirt" beats "a woman." Specificity is what actually
   produces variation; a generic prompt regresses to the same stock-photo default every time.
+- ⛔ **Body shape must NOT default to toned/fitness-model.** Women are the primary audience
+  for many CalcThis health calculators, and readers relate to people who look like everyday
+  people, not to someone who looks better than they'll ever be. Vary body shape explicitly
+  per prompt — athletic, a bit full/soft, thin, average — and reserve a toned/athletic build
+  for a scene that's genuinely an intense workout. Also vary ethnicity (Caucasian, Hispanic,
+  Indian, Asian, Russian/Eastern European, Black, etc.), hair color/style, AND eye color
+  (dark brown, honey, green, blue, grey) — eye color is a variable to actively set, not
+  leave to chance. (User instruction, 2026-09-22 — see persistent memory
+  `calcthis-image-diversity`.)
 
 ### ⛔ RANDOMIZE the setting too, whenever the setting is relevant — not just the person
 
