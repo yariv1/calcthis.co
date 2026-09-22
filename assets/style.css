@@ -905,7 +905,11 @@
     position:absolute;top:calc(100% + 6px);left:0;z-index:60;
     background:var(--card);border:1px solid var(--line);border-radius:12px;
     box-shadow:var(--shadow);padding:10px;
-    max-height:calc(100dvh - 70px);overflow-y:auto;
+    /* 70px accounts for the header + the menu's own top offset; the extra 24px is a
+       permanent bottom margin so the panel never touches the viewport edge, at any
+       screen height — this margin must stay even as the panel grows/shrinks with
+       content, not just be a one-off max-height guess. */
+    max-height:calc(100dvh - 70px - 24px);overflow-y:auto;
     /* override old single-column min-width */
     min-width:0;
   }
