@@ -40,6 +40,8 @@ Pregnancy + Ovulation immediately **after** AdSense approval.
 | 15 | **Stair Calculator** | Ahrefs-verified >10,000/mo, Medium KD. | Construction & Gardening | Medium | ✅ Shipped v106 |
 | 16 | **Lean Body Mass Calculator** | Ahrefs-verified >1,000/mo, Medium KD. | Health & Fitness | Simple | ✅ Shipped v107 |
 | 17 | **Waist-to-Hip Ratio Calculator** | Ahrefs-verified >1,000/mo, **Easy** KD. | Health & Fitness | Simple | ✅ Shipped v110 |
+| 18 | **Weighted Average Calculator** | Ahrefs-verified >1,000/mo, **Easy** KD. | Math & Numbers | Simple | ✅ Shipped v116 |
+| 19 | **Grade Curve Calculator** | Ahrefs-verified >1,000/mo, **Easy** KD. | School & Grades | Simple | ⬜ researched candidate, NOT yet approved to build |
 
 ### Companion articles to build alongside
 - Ideal Weight → "What's My Ideal Weight? Height, Frame, and the Formulas"

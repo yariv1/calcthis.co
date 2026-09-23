@@ -129,8 +129,8 @@ must be built from the article's actual units, every time, not pasted from a tem
 
 ## Project state
 
-- **Asset version:** v110 (bumped, `node build.js` run and deployed this session)
-- **Total pages:** 70 live
+- **Asset version:** v116 (bumped, `node build.js` run and deployed this session)
+- **Total pages:** 72 live
 - **Model:** Sonnet 5
 
 ### New this session — global `.csel` custom-dropdown component
@@ -164,7 +164,7 @@ interactive features. Documented in `calcthis-design-system.md`.
 
 ---
 
-## Live blog articles (23)
+## Live blog articles (24)
 
 - How Much Gravel Do I Need for a Driveway?
 - How Much Mulch Do I Need?
@@ -190,10 +190,11 @@ interactive features. Documented in `calcthis-design-system.md`.
 - How to Calculate Stair Rise and Run (Plus Stringer Length)
 - What Is Lean Body Mass? How to Calculate and Track It
 - What Is Waist-to-Hip Ratio? How to Measure and Interpret Your WHR
+- What Is a Weighted Average? How to Calculate It (With Examples)
 
 ---
 
-## Live calculators (39)
+## Live calculators (40)
 
 ### Construction & Gardening (11)
 Board Foot · Gravel · Sand · Topsoil · Mulch · Concrete · Flooring · Tile · Square Footage · Tape Measure Fraction · Stair
@@ -204,14 +205,63 @@ Pace · Race Time Predictor · VO2 Max · Heart Rate Zone · Zone 2 Heart Rate �
 ### School & Grades (4)
 Final Grade · GPA · Grade · Test Score
 
-### Math & Numbers (5)
-Ratio · Percentage · Age · Date · Time
+### Math & Numbers (6)
+Weighted Average · Ratio · Percentage · Age · Date · Time
 
-Total live calculators: **39**
+Total live calculators: **40**
 
 ---
 
-## Last session (v108–v110)
+## Last session (v111–v116)
+
+- Researched, built and deployed **Weighted Average Calculator**
+  (`/weighted-average-calculator/`, roadmap #18 — Ahrefs-verified >1,000/mo, Easy KD, from a
+  fresh keyword pass the user ran in Ahrefs). Research opened Omnicalculator, RapidTables,
+  HandyMath live in the Browser tool (Rule 8.5) — all bare-number dynamic value+weight rows,
+  none with any visual. **Differentiator (user-approved):** a live per-row contribution bar
+  (weight share of each row, stacked-segment technique reused from Water Intake/Lean Body
+  Mass, color-cycling since row count is unbounded) plus a simple-vs-weighted average
+  comparison line, and a Go-advanced reverse-solve mode (given a target weighted average and
+  which row is unknown, solve for that row's value — same idea as Final Grade Calculator's
+  target-solve). `CalcThis.initWavgCalc` in app.js, `.p-wavg` in style.css. Dynamic rows
+  reuse the GPA Calculator's add/remove-row pattern (`.win` compact inputs instead of
+  GPA's `.cr-field`).
+  **Real bug found and fixed structurally, not just patched:** the "Solve for" row picker is
+  a `.csel` whose options must be rebuilt every time a row is added or removed — re-running
+  the shared `CalcThis.initCsel` on the same element threw `Cannot redefine property: value`
+  (its `Object.defineProperty` was written assuming init runs exactly once per element),
+  which silently aborted the page's init script and dropped a default row. Fixed in the
+  shared runtime (`app.js`): the `.value` property is now defined once and forwards to a
+  `root._cselApi` object that each re-init call simply overwrites; option-click listeners
+  rebind safely on every call (fresh nodes after an innerHTML rebuild); `btn`/`document`
+  listeners still bind only once. This is exactly the re-init call the design system already
+  documents for a dynamically-generated dropdown (`grade-calculator`/`gpa-calculator`'s
+  still-pending per-row select retrofit) — it just never worked until now. Regression-tested
+  live against Square Footage's shape `.csel` after the fix (still selects and fires
+  correctly).
+  Companion article **"What Is a Weighted Average? How to Calculate It (With Examples)"**
+  (`/blog/what-is-a-weighted-average/`) shipped same session — formula, worked example
+  (same 25/25/50%-exam numbers as the calculator's own content), what to use as a weight,
+  weighted-vs-simple divergence, real-world uses beyond grades (GPA, WACC, inventory
+  costing), reverse-solve explainer, 5 FAQs, 2 in-article photos + hero + card. No
+  measurements in this topic — unit toggle correctly stayed hidden (`class="u"` count = 0),
+  confirmed both mechanically and via `getComputedStyle(...).display === 'none'` live.
+  **New standing instruction applied:** images used a Filipino man in his early 20s
+  (average build, short black hair, dark brown eyes) for hero/card/first in-article photo,
+  and a Black woman in her 40s (curly hair, average build) for the second, per
+  [[calcthis-image-diversity]] memory from the previous session.
+  WebApplication + FAQPage JSON-LD, `.related-calcs` (GPA / Final Grade / Percentage /
+  Ratio). Wired into nav, footer, homepage (card + hasPart + prose count → 40), build.js,
+  sitemap.xml, blog hub + registry. Deployed as v116.
+
+- **No-narration rule violated a 4th time** (2026-09-22, mid-debug commentary while chasing
+  the `.csel` bug above). Fixed structurally this time, not just re-stated: added a
+  mechanical per-text-block self-check ("is this narrating an action, or stating a result /
+  asking a question?") to CLAUDE.md's hard rule, `calcthis-workflow-rules.md` Rule 4, and
+  `calcthis-working-rules.md` Behavior section — check runs before every text block for the
+  rest of a session, not just once at the top.
+
+## Earlier (v108–v110)
 
 - Researched, built and deployed **Waist-to-Hip Ratio Calculator**
   (`/waist-to-hip-ratio-calculator/`, roadmap #17 — Ahrefs-verified >1,000/mo, Easy KD).
