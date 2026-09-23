@@ -63,11 +63,14 @@ during a long multi-step build (calculator, article, QA pass). Work silently. Th
 that belongs mid-task is a genuine question needing the user's input to proceed. Everything
 else — narration, progress updates, "thinking out loud" — is a Rule 4 violation exactly like
 a stalling message, because it produces the same thing: text instead of either a real tool
-call or the finished result. This has been violated repeatedly (2026-09-13 session, called
-out twice by the user in the same session, and again 2026-09-14) — it is not a soft
-preference, treat it with the same weight as every other ⛔ rule in this file. It is also
-now the very first hard rule at the top of `CLAUDE.md` — check it there every response, not
-just here, since memory recall alone has already failed to prevent repeat violations.
+call or the finished result. This has been violated FOUR times (2026-09-13 session, called
+out twice by the user in the same session, again 2026-09-14, and again 2026-09-22) — it is
+not a soft preference, treat it with the same weight as every other ⛔ rule in this file. It
+is also now the very first hard rule at the top of `CLAUDE.md` — check it there every
+response, not just here, since memory recall alone has already failed to prevent repeat
+violations. **After the 4th violation:** the check is not "did I read this rule at session
+start" — it's "am I about to output a sentence that describes an action instead of stating
+a result or asking a question," evaluated before every single text block, all session long.
 
 ## ⛔ RULE 4.5 — A MULTI-STEP DELIVERABLE ISN'T DONE UNTIL EVERY PART OF IT SHIPS IN THE SAME REPLY
 

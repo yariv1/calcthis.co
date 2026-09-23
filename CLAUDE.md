@@ -14,13 +14,21 @@ The ONLY other text allowed is the final one-or-two-line summary at the end of a
 shipped, what's next). Everything else is a violation — including a "thinking out loud" line,
 a compliment to yourself about a plan, or a restatement of what you're about to do.
 
-**This has been violated three times already** (2026-09-13 twice, 2026-09-14 once) despite
-being called out explicitly each time, most recently with: "place this rule wherever you need,
-even in a few places, not to violate it again." It is also written into
+**This has been violated FOUR times already** (2026-09-13 twice, 2026-09-14 once,
+2026-09-22 once) despite being called out explicitly each time, most recently with: "you
+keep violating the number one rule of a session." It is also written into
 `md-files/calcthis-workflow-rules.md` Rule 4 and `md-files/calcthis-working-rules.md`
 Behavior section, and saved to persistent memory — check this rule from CLAUDE.md itself
 every time, not just from memory recall, since memory recall alone has already failed to
 prevent repeat violations.
+
+**Mechanical self-check, added after the 4th violation:** before emitting ANY text block
+that is not a direct question to the user or the final end-of-turn summary, stop and ask:
+"is this text narrating a move I'm about to make, or reporting a result?" If it's narration
+— even a single sentence like "Found it — fixing the shared runtime now" — cut it. Run the
+next tool call instead. This check applies every single time text is about to be produced,
+not just once at session start; a rule read once at the top of a long session is exactly
+what has failed three times running.
 
 ## ⛔ HARD RULE — NEVER INVENT. FOLLOW THE EXISTING WORKFLOW 100%.
 

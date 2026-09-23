@@ -51,6 +51,7 @@ const PAGES = [
   { file: 'test-score-calculator/index.html', slug: '/test-score-calculator/' },
   // Legal & info pages
   { file: 'ratio-calculator/index.html', slug: '/ratio-calculator/' },
+  { file: 'weighted-average-calculator/index.html', slug: '/weighted-average-calculator/' },
   { file: 'percentage-calculator/index.html', slug: '/percentage-calculator/' },
   { file: 'age-calculator/index.html',         slug: '/age-calculator/' },
   { file: 'date-calculator/index.html',        slug: '/date-calculator/' },
@@ -84,6 +85,7 @@ const PAGES = [
   { file: 'blog/how-to-calculate-stair-rise-and-run/index.html', slug: '/blog/how-to-calculate-stair-rise-and-run/' },
   { file: 'blog/what-is-lean-body-mass/index.html', slug: '/blog/what-is-lean-body-mass/' },
   { file: 'blog/what-is-waist-to-hip-ratio/index.html', slug: '/blog/what-is-waist-to-hip-ratio/' },
+  { file: 'blog/what-is-a-weighted-average/index.html', slug: '/blog/what-is-a-weighted-average/' },
   { file: 'about/index.html',           slug: '/about/' },
   { file: 'contact/index.html',         slug: '/contact/' },
   { file: 'privacy-policy/index.html',  slug: '/privacy-policy/' },

@@ -566,6 +566,45 @@
   .p-whr .whr-ticks span{position:absolute;transform:translateX(-50%)}
 
   /* =========================================================
+     MATH · WEIGHTED AVERAGE  (body.p-wavg)
+     Dynamic value+weight rows (reuses .win compact-input styling
+     and the .trow delete-button visual, generalized to editable
+     fields), .card-h2, .btn/.add-row (reuses GPA's Add-Course
+     pattern), .csel (Solve-for row picker), .advbtn/.res-tip.adv-tip.
+     Adds a live per-row contribution bar (same stacked-segment
+     technique as Water Intake's wtr-bar / Lean Body Mass's lbm-bar,
+     generalized to a color-cycling palette since row count is
+     unbounded) showing each row's weight share of the average.
+     ========================================================= */
+  .p-wavg .wa-head{display:grid;grid-template-columns:1fr 84px 84px 24px;gap:8px;padding:0 0 6px;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+  .p-wavg .wa-row{display:grid;grid-template-columns:1fr 84px 84px 24px;gap:8px;align-items:center;padding:7px 0}
+  .p-wavg .wa-row .win{width:100%}
+  .p-wavg .wa-row .x{background:none;border:0;color:var(--muted);cursor:pointer;font-size:16px;line-height:1;padding:2px 4px;border-radius:5px;justify-self:center}
+  .p-wavg .wa-row .x:hover{color:#b23;background:#f7e9e9}
+  @media(max-width:520px){
+    .p-wavg .wa-head,.p-wavg .wa-row{grid-template-columns:1fr 62px 62px 22px;gap:5px}
+    .p-wavg .wa-head span:first-child{display:none}
+  }
+  .p-wavg .wa-res{margin:2px 0 14px}
+  .p-wavg .wavg-bar-wrap{margin:4px 0 14px}
+  .p-wavg .wavg-bar{display:flex;height:26px;border-radius:8px;overflow:hidden;background:#EFE7D8}
+  .p-wavg .wavg-seg{display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;min-width:0}
+  .p-wavg .wavg-seg.c0{background:var(--spruce)}
+  .p-wavg .wavg-seg.c1{background:var(--amber)}
+  .p-wavg .wavg-seg.c2{background:var(--spruce-soft)}
+  .p-wavg .wavg-seg.c3{background:var(--amber-deep)}
+  .p-wavg .wavg-seg.c4{background:#6B7A9E}
+  .p-wavg .wavg-seg.c5{background:#A4795A}
+  .p-wavg .wavg-key{display:flex;flex-wrap:wrap;gap:5px 16px;margin:8px 0 0;font-size:12px;font-weight:500;color:var(--ink-soft)}
+  .p-wavg .wavg-key i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+  .p-wavg .wavg-key i.c0{background:var(--spruce)}
+  .p-wavg .wavg-key i.c1{background:var(--amber)}
+  .p-wavg .wavg-key i.c2{background:var(--spruce-soft)}
+  .p-wavg .wavg-key i.c3{background:var(--amber-deep)}
+  .p-wavg .wavg-key i.c4{background:#6B7A9E}
+  .p-wavg .wavg-key i.c5{background:#A4795A}
+
+  /* =========================================================
      FITNESS · HEART-RATE ZONES  (body.p-hrzone)
      ========================================================= */
   .p-hrzone .fld{margin-bottom:18px}

@@ -25,19 +25,12 @@
 window.CalcThis = window.CalcThis || {};
 (function () {
   function initCsel(root) {
-    if (root._cselInit) return;
-    root._cselInit = true;
     var btn = root.querySelector('.csel-btn');
     var lab = root.querySelector('.csel-val');
     var panel = root.querySelector('.csel-panel');
     var opts = [].slice.call(root.querySelectorAll('.csel-opt'));
     if (!btn || !panel || !opts.length) return;
     var current = root.getAttribute('data-value') || opts[0].getAttribute('data-value');
-
-    Object.defineProperty(root, 'value', {
-      get: function () { return current; },
-      set: function (v) { select(v, false); }
-    });
 
     function optFor(v) { for (var i = 0; i < opts.length; i++) if (opts[i].getAttribute('data-value') === v) return opts[i]; return null; }
     function select(v, fire) {
@@ -55,21 +48,47 @@ window.CalcThis = window.CalcThis || {};
     function openPanel() { panel.style.display = 'block'; btn.setAttribute('aria-expanded', 'true'); root.classList.add('open'); }
     function closePanel() { panel.style.display = 'none'; btn.setAttribute('aria-expanded', 'false'); root.classList.remove('open'); }
 
-    btn.addEventListener('click', function (e) { e.stopPropagation(); isOpen() ? closePanel() : openPanel(); });
+    // The `.value` property is defined on `root` exactly once, ever, and forwards to
+    // `root._cselApi` — a plain object whose get/set this call (and any later re-init
+    // call, for a dynamically-rebuilt dropdown like a per-row select) simply overwrites.
+    // Redefining the property itself a second time throws ("Cannot redefine property"),
+    // which is exactly what broke re-initializing a dropdown after rebuilding its options
+    // (found 2026-09-22 on the Weighted Average Calculator's dynamically-populated
+    // "Solve for" row picker — silently aborted the page's whole init script).
+    if (!root._cselApi) {
+      root._cselApi = {};
+      Object.defineProperty(root, 'value', {
+        get: function () { return root._cselApi.get(); },
+        set: function (v) { root._cselApi.set(v); }
+      });
+    }
+    root._cselApi.get = function () { return current; };
+    root._cselApi.set = function (v) { select(v, false); };
+
+    // Option-click listeners are safe to rebind every call: a dynamic-dropdown rebuild
+    // replaces `.csel-panel`'s innerHTML, so these are always freshly-created nodes —
+    // old ones (with their old listeners) are garbage collected, not leaked.
     opts.forEach(function (o) {
       o.addEventListener('click', function () { select(this.getAttribute('data-value'), true); closePanel(); btn.focus(); });
     });
-    document.addEventListener('click', function (e) { if (isOpen() && !root.contains(e.target)) closePanel(); });
-    document.addEventListener('keydown', function (e) {
-      if (!isOpen()) return;
-      if (e.key === 'Escape') { closePanel(); btn.focus(); }
-      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
-        e.preventDefault();
-        var idx = 0; for (var i = 0; i < opts.length; i++) if (opts[i].getAttribute('data-value') === current) { idx = i; break; }
-        idx = e.key === 'ArrowDown' ? Math.min(opts.length - 1, idx + 1) : Math.max(0, idx - 1);
-        select(opts[idx].getAttribute('data-value'), true);
-      }
-    });
+
+    // btn/document listeners bind ONCE ever per root — rebinding them on every re-init
+    // would stack duplicate document-level Escape/outside-click handlers forever.
+    if (!root._cselInit) {
+      root._cselInit = true;
+      btn.addEventListener('click', function (e) { e.stopPropagation(); isOpen() ? closePanel() : openPanel(); });
+      document.addEventListener('click', function (e) { if (isOpen() && !root.contains(e.target)) closePanel(); });
+      document.addEventListener('keydown', function (e) {
+        if (!isOpen()) return;
+        if (e.key === 'Escape') { closePanel(); btn.focus(); }
+        if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+          e.preventDefault();
+          var idx = 0; for (var i = 0; i < opts.length; i++) if (opts[i].getAttribute('data-value') === current) { idx = i; break; }
+          idx = e.key === 'ArrowDown' ? Math.min(opts.length - 1, idx + 1) : Math.max(0, idx - 1);
+          select(opts[idx].getAttribute('data-value'), true);
+        }
+      });
+    }
     closePanel();
     select(current, false);
   }
@@ -5886,6 +5905,204 @@ CalcThis.initWhrCalc = function (cfg) {
     solve();
   });
 
+  solve();
+};
+
+/* ===== CalcThis Weighted Average engine =====
+   CalcThis.initWavgCalc(cfg) — dynamic value+weight rows (reuses the
+   GPA Calculator's add/remove-row pattern, generalized to 2 plain
+   number fields instead of grade+credits+type). Differentiator: a
+   live per-row contribution bar (weight_i / sum(weights) as a %,
+   same stacked-segment technique as Water Intake/Lean Body Mass,
+   color-cycling since row count is unbounded) plus a simple-average
+   comparison line, and a Go-advanced reverse-solve mode (given a
+   target weighted average and which row is unknown, solve for that
+   row's value — same idea as Final Grade Calculator's target-solve,
+   applied to an arbitrary row instead of a fixed final exam slot).
+   Independent engine, no shared state. */
+CalcThis.initWavgCalc = function (cfg) {
+  cfg = cfg || {};
+  var $ = function (id) { return document.getElementById(id); };
+  var rowsWrap = $('waRows');
+  if (!rowsWrap) return;
+  var rows = [];
+  var rowId = 0;
+  var advanced = false;
+  var COLORS = 6;
+
+  function num(v) { v = parseFloat(('' + v).trim()); return isNaN(v) ? NaN : v; }
+  function fmt(n) {
+    if (!isFinite(n)) return '—';
+    var r = Math.round(n * 100) / 100;
+    var s = '' + r;
+    if (s.indexOf('.') >= 0) s = s.replace(/0+$/, '').replace(/\.$/, '');
+    return s;
+  }
+
+  function buildRow(id, data) {
+    var div = document.createElement('div');
+    div.className = 'wa-row';
+    div.setAttribute('data-rid', id);
+    div.innerHTML =
+      '<input type="text" class="win wa-label" placeholder="Label" value="' + ((data && data.label) || '').replace(/"/g, '&quot;') + '" aria-label="Row label">' +
+      '<input type="number" inputmode="decimal" class="win wa-value" placeholder="Value" value="' + ((data && data.value) || '') + '" aria-label="Value">' +
+      '<input type="number" inputmode="decimal" class="win wa-weight" placeholder="Weight" value="' + ((data && data.weight != null) ? data.weight : '1') + '" aria-label="Weight">' +
+      '<button class="x" type="button" aria-label="Remove row">&#215;</button>';
+    function onChange() { readRow(id, div); solve(); }
+    div.querySelector('.wa-label').addEventListener('input', onChange);
+    div.querySelector('.wa-value').addEventListener('input', onChange);
+    div.querySelector('.wa-weight').addEventListener('input', onChange);
+    div.querySelector('.x').addEventListener('click', function () {
+      rows = rows.filter(function (r) { return r._id !== id; });
+      div.parentNode.removeChild(div);
+      renderSolveOptions();
+      solve();
+    });
+    return div;
+  }
+
+  function readRow(id, div) {
+    var idx = -1;
+    for (var i = 0; i < rows.length; i++) if (rows[i]._id === id) { idx = i; break; }
+    var obj = {
+      _id: id,
+      label: div.querySelector('.wa-label').value,
+      value: div.querySelector('.wa-value').value,
+      weight: div.querySelector('.wa-weight').value
+    };
+    if (idx >= 0) rows[idx] = obj; else rows.push(obj);
+  }
+
+  function addRow(data) {
+    var id = ++rowId;
+    var obj = { _id: id, label: (data && data.label) || '', value: (data && data.value) || '', weight: (data && data.weight != null) ? data.weight : '1' };
+    rows.push(obj);
+    var div = buildRow(id, obj);
+    rowsWrap.appendChild(div);
+    renderSolveOptions();
+    return div;
+  }
+
+  // Rebuilt only when rows are added/removed (not on every keystroke) — re-running
+  // CalcThis.initCsel on every input would stack duplicate document-level listeners
+  // (Escape/outside-click) forever, since initCsel is designed to run once per element.
+  function renderSolveOptions() {
+    var box = $('waSolveRow'); if (!box) return;
+    var panel = box.querySelector('.csel-panel');
+    var current = box.getAttribute('data-value');
+    var validIds = {};
+    var html = '';
+    rows.forEach(function (r, i) {
+      validIds[r._id] = true;
+      var lab = (r.label && r.label.trim()) ? r.label.trim() : ('Row ' + (i + 1));
+      html += '<button type="button" class="csel-opt' + (('' + r._id) === current ? ' on' : '') + '" role="option" data-value="' + r._id + '">' + lab.replace(/</g, '&lt;') + '</button>';
+    });
+    panel.innerHTML = html || '<button type="button" class="csel-opt" role="option" data-value="">No rows yet</button>';
+    if (!validIds[current]) {
+      box.setAttribute('data-value', rows.length ? ('' + rows[0]._id) : '');
+    }
+    CalcThis.initCsel(box);
+  }
+
+  function renderBar(shares) {
+    var wrap = $('waBarWrap'), bar = $('waBar'), key = $('waKey');
+    if (!shares.length) { wrap.style.display = 'none'; return; }
+    wrap.style.display = '';
+    var barHtml = '', keyHtml = '';
+    shares.forEach(function (s, i) {
+      var c = 'c' + (i % COLORS);
+      var pct = s.pct;
+      barHtml += '<span class="wavg-seg ' + c + '" style="width:' + pct + '%">' + (pct >= 8 ? pct.toFixed(0) + '%' : '') + '</span>';
+      keyHtml += '<span><i class="' + c + '"></i>' + s.label + ' — ' + pct.toFixed(1) + '%</span>';
+    });
+    bar.innerHTML = barHtml;
+    key.innerHTML = keyHtml;
+  }
+
+  function solve() {
+    var resBig = $('waResBig'), resSub = $('waResSub');
+    var valid = [];
+    rows.forEach(function (r, i) {
+      var x = num(r.value), w = num(r.weight);
+      if (isFinite(x) && isFinite(w) && w > 0) {
+        var lab = (r.label && r.label.trim()) ? r.label.trim() : ('Row ' + (i + 1));
+        valid.push({ x: x, w: w, label: lab });
+      }
+    });
+    if (!valid.length) {
+      resBig.textContent = '—';
+      resSub.textContent = 'Enter at least one value and weight.';
+      $('waBarWrap').style.display = 'none';
+      $('waCmpWrap').style.display = 'none';
+    } else {
+      var sumW = 0, sumWX = 0, sumX = 0;
+      valid.forEach(function (v) { sumW += v.w; sumWX += v.w * v.x; sumX += v.x; });
+      var wavg = sumWX / sumW;
+      var simple = sumX / valid.length;
+      resBig.textContent = fmt(wavg);
+      resSub.textContent = valid.length + ' value' + (valid.length === 1 ? '' : 's') + ' · weights totaling ' + fmt(sumW);
+      renderBar(valid.map(function (v) { return { label: v.label, pct: v.w / sumW * 100 }; }));
+      $('waCmpWrap').style.display = valid.length > 1 ? '' : 'none';
+      $('waSimple').textContent = fmt(simple);
+    }
+    solveAdvanced();
+  }
+
+  function solveAdvanced() {
+    var out = $('waAdvOut'); if (!out) return;
+    if (!advanced) { out.style.display = 'none'; return; }
+    out.style.display = '';
+    var msg = $('waSolveOut');
+    var target = num($('waTarget').value);
+    var solveId = $('waSolveRow').getAttribute('data-value');
+    if (!rows.length) { msg.innerHTML = 'Add at least one row first.'; return; }
+    if (!solveId) { msg.innerHTML = 'Pick which row to solve for.'; return; }
+    if (!isFinite(target)) { msg.innerHTML = 'Enter a target weighted average.'; return; }
+    var known = [], target_w = null, target_label = '';
+    var ok = true;
+    rows.forEach(function (r, i) {
+      var w = num(r.weight);
+      var lab = (r.label && r.label.trim()) ? r.label.trim() : ('Row ' + (i + 1));
+      if (('' + r._id) === solveId) {
+        target_w = w; target_label = lab;
+        if (!isFinite(w) || w <= 0) ok = false;
+        return;
+      }
+      var x = num(r.value);
+      if (!isFinite(x) || !isFinite(w) || w <= 0) { ok = false; return; }
+      known.push({ x: x, w: w });
+    });
+    if (!ok || target_w == null) {
+      msg.innerHTML = 'Enter a value and weight for every other row, and a weight for the row you’re solving for.';
+      return;
+    }
+    var sumWOther = 0, sumWXOther = 0;
+    known.forEach(function (k) { sumWOther += k.w; sumWXOther += k.w * k.x; });
+    var sumW = sumWOther + target_w;
+    var needed = (target * sumW - sumWXOther) / target_w;
+    msg.innerHTML = 'To reach a weighted average of <strong>' + fmt(target) + '</strong>, <strong>' + target_label + '</strong> needs a value of <strong>' + fmt(needed) + '</strong> (at its weight of ' + fmt(target_w) + ').';
+  }
+
+  var addBtn = $('waAddBtn');
+  if (addBtn) addBtn.addEventListener('click', function () { addRow(); solve(); });
+
+  var targetIn = $('waTarget');
+  if (targetIn) targetIn.addEventListener('input', solveAdvanced);
+  var solveRowBox = $('waSolveRow');
+  if (solveRowBox) solveRowBox.addEventListener('change', solveAdvanced);
+
+  var advBtn = $('waAdvBtn');
+  if (advBtn) advBtn.addEventListener('click', function () {
+    advanced = !advanced;
+    advBtn.classList.toggle('open', advanced);
+    $('waAdvBtnLab').textContent = advanced ? 'Go simple' : 'Go advanced';
+    $('waAdvIn').style.display = advanced ? '' : 'none';
+    solve();
+  });
+
+  addRow({ label: '', value: '', weight: '1' });
+  addRow({ label: '', value: '', weight: '1' });
+  addRow({ label: '', value: '', weight: '1' });
   solve();
 };
 

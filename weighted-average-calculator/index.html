@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Weighted Average Calculator — Live Contribution Breakdown | CalcThis</title>
+<meta name="description" content="Free weighted average calculator. Add any number of value + weight rows, see your weighted average update live, plus a contribution bar showing which entries pull it the most. Go advanced to solve for a missing value.">
+<link rel="canonical" href="https://calcthis.co/weighted-average-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Weighted Average Calculator — Live Contribution Breakdown">
+<meta property="og:description" content="Add any number of value + weight rows and see your weighted average update live, with a contribution bar showing which entries pull it the most. Go advanced to solve for a missing value.">
+<meta property="og:url" content="https://calcthis.co/weighted-average-calculator/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<meta name="theme-color" content="#B5761F">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css?v=116">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Weighted Average Calculator",
+  "url": "https://calcthis.co/weighted-average-calculator/",
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Add any number of value + weight rows and get your weighted average instantly, with a live contribution bar showing which entries pull it the most, and a reverse-solve mode for a missing value."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "How do you calculate a weighted average?", "acceptedAnswer": { "@type": "Answer", "text": "Multiply each value by its weight, add up all those products, then divide by the sum of the weights: (w1x1 + w2x2 + ... + wnxn) / (w1 + w2 + ... + wn). This calculator does that automatically as you type." } },
+    { "@type": "Question", "name": "What is the difference between a weighted average and a regular average?", "acceptedAnswer": { "@type": "Answer", "text": "A regular (simple) average treats every value equally. A weighted average lets some values count more than others by multiplying each by a weight before averaging — useful whenever items have different importance, size, or credit hours, like exam scores worth different percentages of a grade." } },
+    { "@type": "Question", "name": "What should I use as the weight?", "acceptedAnswer": { "@type": "Answer", "text": "Anything that represents relative importance or size: a percentage of a grade, credit hours, quantity purchased, time period, or sample size. The actual numbers don't need to add up to 100 or any specific total — the calculator divides by their sum automatically, so proportional weights (like 2 and 1) work exactly the same as percentages (67% and 33%)." } },
+    { "@type": "Question", "name": "Can I calculate a weighted average with more than 3 values?", "acceptedAnswer": { "@type": "Answer", "text": "Yes — use the Add Row button to add as many value and weight pairs as you need. There's no limit." } },
+    { "@type": "Question", "name": "How do I find the value I need to hit a target weighted average?", "acceptedAnswer": { "@type": "Answer", "text": "Enter all your known values and weights, then tap Go advanced, choose which row is the unknown, and enter your target weighted average. The calculator solves for the exact value that row needs, given its weight." } }
+  ]
+}
+</script>
+</head>
+<body class="p-wavg">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <a class="hdr-back" href="/blog/" aria-label="Back to blog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <span class="menu-col-head">Construction &amp; Gardening</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+          <a href="/square-footage-calculator/">Square Footage</a>
+          <a href="/tape-measure-fraction-calculator/">Tape Measure Fraction</a>
+          <a href="/stair-calculator/">Stair</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/vo2-max-calculator/">VO2 Max</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
+          <a href="/bmi-calculator/">BMI</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/ideal-weight-calculator/">Ideal Weight</a>
+          <a href="/lean-body-mass-calculator/">Lean Body Mass</a>
+          <a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio</a>
+          <a href="/calorie-calculator/">Calorie</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/water-intake-calculator/">Water Intake</a>
+          <a href="/macro-calculator/">Macro</a>
+          <a href="/protein-intake-calculator/">Protein Intake</a>
+          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
+          <a href="/steps-to-miles-calculator/">Steps to Miles</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/weighted-average-calculator/" class="current">Weighted Average</a>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+          <a href="/age-calculator/">Age</a>
+          <a href="/date-calculator/">Date</a>
+          <a href="/time-calculator/">Time</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">Weighted average, live</div>
+    <h1>Weighted Average Calculator</h1>
+    <p>Add any number of <strong>value</strong> + <strong>weight</strong> rows and your weighted average updates instantly — see a live <strong>contribution bar</strong> showing exactly which entries pull it the most, not just a bare number. Tap <em>Go advanced</em> to solve for a missing value given a target average.</p>
+  </section>
+
+  <div class="grid">
+    <div class="card">
+      <div class="card-pad">
+        <h2 class="card-h2">Your values</h2>
+
+        <div class="wa-head">
+          <span>Label</span>
+          <span>Value</span>
+          <span>Weight</span>
+          <span></span>
+        </div>
+        <div id="waRows"></div>
+
+        <div class="add-row" style="margin-top:12px">
+          <button class="btn" id="waAddBtn" type="button">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+            Add Row
+          </button>
+        </div>
+
+        <div id="waAdvIn" style="display:none">
+          <div class="proj-sep"></div>
+          <label class="fld" for="waTarget">
+            <span class="lab">Target weighted average</span>
+            <div class="inp"><input id="waTarget" type="number" inputmode="decimal" placeholder="90"></div>
+          </label>
+          <div class="fld" style="margin-bottom:0">
+            <span class="lab">Solve for</span>
+            <div class="csel" id="waSolveRow" data-value="">
+              <button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false">
+                <span class="csel-val">Add a row first</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="csel-panel" role="listbox"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="add-row split" style="margin-top:16px">
+          <span></span>
+          <button class="advbtn" id="waAdvBtn" type="button">
+            <span id="waAdvBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-pad">
+        <div class="wa-res">
+          <div class="res-lab">Weighted average</div>
+          <div class="res-big"><span id="waResBig">—</span></div>
+          <div class="res-sub" id="waResSub">Enter at least one value and weight.</div>
+        </div>
+
+        <div class="wavg-bar-wrap" id="waBarWrap" style="display:none">
+          <div class="wavg-bar" id="waBar"></div>
+          <div class="wavg-key" id="waKey"></div>
+        </div>
+
+        <div class="res-cost" id="waCmpWrap" style="display:none">
+          <span class="k">Simple average (equal weights)</span>
+          <span class="v" id="waSimple">—</span>
+        </div>
+
+        <div id="waAdvOut" style="display:none">
+          <p class="res-tip adv-tip" id="waSolveOut"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="related-calcs">
+    <p class="related-calcs-h">More math calculators that may interest you</p>
+    <div class="pills">
+      <a class="pill" href="/gpa-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5 9-5zM3 8v6c0 2 4 4 9 4s9-2 9-4V8"/></svg>
+        GPA Calculator
+      </a>
+      <a class="pill" href="/final-grade-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+        Final Grade Calculator
+      </a>
+      <a class="pill" href="/percentage-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7" cy="7" r="3"/><circle cx="17" cy="17" r="3"/><path d="M6 18L18 6"/></svg>
+        Percentage Calculator
+      </a>
+      <a class="pill" href="/ratio-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="12" r="4"/><circle cx="16" cy="12" r="4"/></svg>
+        Ratio Calculator
+      </a>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use the weighted average calculator</h2>
+        <p>Enter a <strong>value</strong> and its <strong>weight</strong> in each row — the weight can be a percentage, credit hours, quantity, or any number representing relative importance. Add as many rows as you need with <strong>Add Row</strong>. Your weighted average appears instantly, along with a contribution bar showing exactly how much each row is pulling the result.</p>
+        <p>Tap <strong>Go advanced</strong> to solve the formula backwards: pick which row is unknown, enter the weighted average you're targeting, and the calculator tells you the exact value that row needs.</p>
+
+        <h2>The formula</h2>
+        <div class="formula">
+          Weighted average = &Sigma;(value &times; weight) &divide; &Sigma;weight
+          <small>EVERY VALUE COUNTS IN PROPORTION TO ITS WEIGHT, NOT EQUALLY</small>
+        </div>
+        <p>Multiply each value by its weight, add up all those products, then divide by the sum of the weights. If every weight is equal, this collapses to the ordinary (simple) average — weighting only matters when some entries count more than others.</p>
+
+        <h2>Worked example</h2>
+        <p>Three exams worth different shares of a grade: 75 (worth 25%), 90 (worth 25%), and 88 (worth 50%):</p>
+        <div class="formula" style="font-size:16px">
+          (75&times;0.25 + 90&times;0.25 + 88&times;0.5) &divide; (0.25 + 0.25 + 0.5) = 85.25
+        </div>
+        <p>The simple average of the same three scores is (75 + 90 + 88) / 3 = 84.33 — close, but not identical, because the 50%-weighted score of 88 pulls the weighted result up slightly more than an equal-weight average would.</p>
+      </div>
+
+      <div>
+        <h2>What to use as a weight</h2>
+        <p>A weight can be anything that represents relative importance or size: a percentage of a grade, course credit hours, quantity purchased, a sample size, or a time period. The weights don't need to add up to 100 or any particular total — proportional weights like 2 and 1 produce the exact same result as 67% and 33%, because the calculator always divides by the sum of whatever weights you enter.</p>
+
+        <h2>Weighted vs. simple average</h2>
+        <p>A simple average treats every number equally. A weighted average lets some numbers count more than others. The two only differ when weights are unequal — if every row has the same weight, the weighted average and the simple average are identical, which is exactly what the comparison line under your result shows.</p>
+
+        <h2>Related tools</h2>
+        <p>If you're averaging letter grades and credit hours specifically, the <a href="/gpa-calculator/">GPA Calculator</a> handles the grade-to-point conversion for you. Need to know what score you need on a final exam to hit a target course grade? Try the <a href="/final-grade-calculator/">Final Grade Calculator</a> — it uses the same reverse-solve idea as this calculator's Go advanced mode.</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>How do you calculate a weighted average?</summary><p>Multiply each value by its weight, add up all those products, then divide by the sum of the weights: (w1x1 + w2x2 + ... + wnxn) / (w1 + w2 + ... + wn). This calculator does that automatically as you type.</p></details>
+    <details class="faq"><summary>What is the difference between a weighted average and a regular average?</summary><p>A regular (simple) average treats every value equally. A weighted average lets some values count more than others by multiplying each by a weight before averaging — useful whenever items have different importance, size, or credit hours, like exam scores worth different percentages of a grade.</p></details>
+    <details class="faq"><summary>What should I use as the weight?</summary><p>Anything that represents relative importance or size: a percentage of a grade, credit hours, quantity purchased, time period, or sample size. The actual numbers don't need to add up to 100 or any specific total — the calculator divides by their sum automatically, so proportional weights (like 2 and 1) work exactly the same as percentages (67% and 33%).</p></details>
+    <details class="faq"><summary>Can I calculate a weighted average with more than 3 values?</summary><p>Yes — use the Add Row button to add as many value and weight pairs as you need. There's no limit.</p></details>
+    <details class="faq"><summary>How do I find the value I need to hit a target weighted average?</summary><p>Enter all your known values and weights, then tap Go advanced, choose which row is the unknown, and enter your target weighted average. The calculator solves for the exact value that row needs, given its weight.</p></details>
+  </section>
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+          <li><a href="/square-footage-calculator/">Square Footage Calculator</a></li>
+          <li><a href="/tape-measure-fraction-calculator/">Tape Measure Fraction Calculator</a></li>
+          <li><a href="/stair-calculator/">Stair Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/vo2-max-calculator/">VO2 Max Calculator</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/bmi-calculator/">BMI Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/ideal-weight-calculator/">Ideal Weight Calculator</a></li>
+          <li><a href="/lean-body-mass-calculator/">Lean Body Mass Calculator</a></li>
+          <li><a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio Calculator</a></li>
+          <li><a href="/calorie-calculator/">Calorie Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/water-intake-calculator/">Water Intake Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/protein-intake-calculator/">Protein Intake Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
+          <li><a href="/steps-to-miles-calculator/">Steps to Miles Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/weighted-average-calculator/">Weighted Average Calculator</a></li>
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+          <li><a href="/age-calculator/">Age Calculator</a></li>
+          <li><a href="/date-calculator/">Date Calculator</a></li>
+          <li><a href="/time-calculator/">Time Calculator</a></li>
+        </ul>
+      </div>
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/blog/">Blog</a>
+      <span aria-hidden="true">·</span>
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+</div>
+
+<script src="/assets/app.js?v=116"></script>
+<script>CalcThis.initWavgCalc({});</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>
