@@ -80,6 +80,12 @@ left as-is; the tables below are the source of truth for those. Do not rename th
 |---|---|---|
 | What Is a Weighted Average? How to Calculate It (With Examples) | `blog-weighted-average-card.webp` | `blog-weighted-average-hero.webp` |
 
+### School & Grades — v118+ (first article in this category)
+
+| Article | Card image (`assets/images/`) | Header image (`assets/images/`) |
+|---|---|---|
+| How to Curve Grades: Every Method Explained | `blog-curve-grades-card.webp` | `blog-curve-grades-hero.webp` |
+
 ### In-article images
 
 | Article | In-article filenames (`assets/images/`) |
@@ -98,6 +104,7 @@ left as-is; the tables below are the source of truth for those. Do not rename th
 | What Is Lean Body Mass? How to Calculate and Track It | `blog-lean-body-mass-inArticle-1.webp` · `blog-lean-body-mass-inArticle-2.webp` |
 | What Is a Weighted Average? How to Calculate It (With Examples) | `blog-weighted-average-inArticle-1.webp` · `blog-weighted-average-inArticle-2.webp` |
 | What Is Waist-to-Hip Ratio? How to Measure and Interpret Your WHR | `blog-whr-inArticle-1.webp` · `blog-whr-inArticle-2.webp` |
+| How to Curve Grades: Every Method Explained | `blog-curve-grades-inArticle-1.webp` · `blog-curve-grades-inArticle-2.webp` |
 
 ### Rules
 - ❌ Never guess a filename. If it's not in this table, stop and check the actual file.

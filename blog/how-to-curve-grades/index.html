@@ -12,11 +12,11 @@
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>What Is a Weighted Average? How to Calculate It (With Examples) | CalcThis</title>
-<link rel="canonical" href="https://calcthis.co/blog/what-is-a-weighted-average/">
+<title>How to Curve Grades: Every Method Explained | CalcThis</title>
+<link rel="canonical" href="https://calcthis.co/blog/how-to-curve-grades/">
 <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
 <meta name="theme-color" content="#B5761F">
-<meta name="description" content="What a weighted average is, the formula, a full worked example with exam grades, what to use as a weight, and how it differs from a simple average — with real-world uses beyond school.">
+<meta name="description" content="Six ways to curve grades — add points, scale to the highest score, percentage boost, bell curve, square root, and target-mean — with the formula for each, a worked example, and which one to actually use.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -24,14 +24,27 @@
 {
   "@context": "https://schema.org",
   "@type": "BlogPosting",
-  "headline": "What Is a Weighted Average? How to Calculate It (With Examples)",
-  "url": "https://calcthis.co/blog/what-is-a-weighted-average/",
-  "datePublished": "2026-09-23",
-  "dateModified": "2026-09-23",
+  "headline": "How to Curve Grades: Every Method Explained",
+  "url": "https://calcthis.co/blog/how-to-curve-grades/",
+  "datePublished": "2026-09-24",
+  "dateModified": "2026-09-24",
   "author": { "@type": "Organization", "name": "CalcThis", "url": "https://calcthis.co" },
   "publisher": { "@type": "Organization", "name": "CalcThis", "url": "https://calcthis.co" },
-  "description": "What a weighted average is, the formula, a full worked example with exam grades, what to use as a weight, and how it differs from a simple average — with real-world uses beyond school.",
-  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://calcthis.co/blog/what-is-a-weighted-average/" }
+  "description": "Six ways to curve grades — add points, scale to the highest score, percentage boost, bell curve, square root, and target-mean — with the formula for each, a worked example, and which one to actually use.",
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://calcthis.co/blog/how-to-curve-grades/" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "What does it mean to grade on a curve?", "acceptedAnswer": { "@type": "Answer", "text": "It means adjusting a whole class's scores based on how the class performed as a group, instead of leaving every score exactly as raw-graded. It's usually applied when a test turns out harder than intended, so the grades reflect understanding relative to the exam's difficulty, not just the raw percentage." } },
+    { "@type": "Question", "name": "What is the most common way to curve grades?", "acceptedAnswer": { "@type": "Answer", "text": "Adding a flat number of points to every score, often enough to bring the highest score up to 100%. It's the most common method because it's the easiest to explain and it never changes the ranking between students." } },
+    { "@type": "Question", "name": "Is a bell curve the same thing as curving grades?", "acceptedAnswer": { "@type": "Answer", "text": "A bell curve is one specific curving method, not the only one. It forces the class's scores onto a normal (bell-shaped) distribution with a chosen mean and spread, which is a much stronger adjustment than simply adding points — and it's the one method that can lower an above-average score, not just raise weaker ones." } },
+    { "@type": "Question", "name": "Does curving grades help everyone equally?", "acceptedAnswer": { "@type": "Answer", "text": "No — it depends on the method. A flat-points curve helps every student by the same fixed amount. A square-root curve deliberately helps lower scores more than higher ones. A bell curve can help some students and hurt others, since it reshapes the whole distribution around a target average instead of just shifting it." } },
+    { "@type": "Question", "name": "How do you decide how many points to curve?", "acceptedAnswer": { "@type": "Answer", "text": "The simplest approach: find the highest score on the test and add enough points to bring it to 100%, then apply that same number of points to everyone. Other approaches target a specific class average instead of the top score — see the target-mean method below." } }
+  ]
 }
 </script>
 <link rel="stylesheet" href="/assets/style.css?v=120">
@@ -127,8 +140,8 @@
 
   <div class="hero" style="padding:4px 0 0">
     <div class="blog-hero-art">
-      <img src="/assets/images/blog-weighted-average-hero.webp"
-           alt="A young Filipino man at a study desk with a notebook and calculator, working out his exam grade weights"
+      <img src="/assets/images/blog-curve-grades-hero.webp"
+           alt="A teacher at her desk reviewing a laptop spreadsheet of class scores next to a stack of graded tests marked in red pen"
            width="1400" height="520" loading="eager">
     </div>
 
@@ -136,9 +149,9 @@
       <div class="bm-left">
         <a href="/blog/">Blog</a>
         <span class="bm-sep">·</span>
-        <span class="blog-meta-cat">Math &amp; Numbers</span>
+        <span class="blog-meta-cat">School &amp; Grades</span>
         <span class="bm-sep">·</span>
-        <span>5 min read</span>
+        <span>6 min read</span>
       </div>
       <div class="seg" id="unitToggle" role="group" aria-label="Unit system" style="display:none">
         <button class="on" data-unit="imp" type="button" aria-pressed="true">Imperial</button>
@@ -146,101 +159,137 @@
       </div>
     </div>
 
-    <h1>What Is a Weighted Average? How to Calculate It (With Examples)</h1>
-    <p class="blog-lede">A weighted average lets some numbers count more than others — instead of every value pulling equally, each one is scaled by how important it is before they're averaged together. Here's the formula, a full worked example, and how it's different from the average you learned in school.</p>
+    <h1>How to Curve Grades: Every Method Explained</h1>
+    <p class="blog-lede">A test came back harder than anyone expected, and now the raw scores don't reflect what the class actually understood. Curving grades fixes that — but there isn't just one way to do it. Here's every common method, the formula behind each, a worked example, and which one to actually reach for.</p>
   </div>
 
   <div class="blog-content">
 
-    <h2>What a weighted average actually is</h2>
-    <p>A regular average (the "mean" you learned in school) adds up a set of numbers and divides by how many there are. Every number counts exactly the same, no matter how it got there. A <strong>weighted average</strong> changes that: each number gets multiplied by a <strong>weight</strong> &mdash; a stand-in for its importance, size, or share of the total &mdash; before anything gets summed and divided.</p>
-    <p>The most familiar example is a course grade. If a final exam is worth half your grade and two quizzes are worth a quarter each, the exam should pull your grade more than either quiz. A simple average of the three scores can't do that &mdash; it treats all three as equally important. A weighted average can.</p>
+    <h2>Why teachers curve grades</h2>
+    <p>A curve exists to separate <strong>how hard the test was</strong> from <strong>how well the class understood the material</strong>. If an exam turns out to be poorly calibrated &mdash; a question was ambiguous, the pacing was too tight, a concept wasn't covered as thoroughly as the test assumed &mdash; the raw scores end up measuring the test's difficulty as much as anyone's actual knowledge. Curving adjusts for that, so a 62% on a brutal exam and a 62% on a fair one don't get treated identically.</p>
+    <p>It isn't the same as making a test easier after the fact, and it isn't grade inflation by default &mdash; most curves simply shift or reshape the scores that already exist, using a fixed, consistent rule applied to every student the same way.</p>
 
-    <h2>The formula</h2>
-    <div class="formula">
-      Weighted average = &Sigma;(value &times; weight) &divide; &Sigma;weight
-      <small>EVERY VALUE COUNTS IN PROPORTION TO ITS WEIGHT, NOT EQUALLY</small>
+    <div class="blog-stat">
+      <div class="stat-block">
+        <div class="stat-num">6</div>
+        <div class="stat-label">common curve methods, each with a different effect</div>
+      </div>
+      <div class="stat-sep"></div>
+      <div class="stat-block">
+        <div class="stat-num">1</div>
+        <div class="stat-label">of them can actually lower a score &mdash; the bell curve</div>
+      </div>
     </div>
-    <p>In words: multiply each value by its weight, add up all of those products, then divide by the total of the weights. If every weight happens to be equal, this collapses back into the ordinary average &mdash; weighting only changes anything when the weights actually differ.</p>
+
+    <h2>The 6 curve methods, side by side</h2>
+    <table class="dtable">
+      <thead><tr><th>Method</th><th>What it does</th><th>Can it lower a score?</th></tr></thead>
+      <tbody>
+        <tr><td>Add points (flat)</td><td>Adds the same fixed points to every score</td><td>No</td></tr>
+        <tr><td>Highest score &rarr; 100%</td><td>Scales every score up so the top score reaches 100%</td><td>No</td></tr>
+        <tr><td>Percentage boost</td><td>Increases every score by the same percentage of itself</td><td>No</td></tr>
+        <tr><td>Reach a target mean</td><td>Shifts every score by whatever amount brings the class average to a chosen number</td><td>No (if the target mean is above the original)</td></tr>
+        <tr><td>Square root</td><td>Boosts low scores far more than high scores</td><td>No</td></tr>
+        <tr><td>Bell curve</td><td>Reshapes the whole distribution around a new mean and spread</td><td>Yes</td></tr>
+      </tbody>
+    </table>
 
     <figure class="blog-figure">
-      <img src="/assets/images/blog-weighted-average-inArticle-1.webp" alt="Close-up of a notebook page with three exam scores and their percentage weights written next to a calculator"
+      <img src="/assets/images/blog-curve-grades-inArticle-1.webp" alt="A graded test paper with the original raw score circled in red pen and the curved score written beside it"
            width="800" height="320" loading="lazy">
-      <figcaption>Each score gets multiplied by its own weight before anything is added together.</figcaption>
+      <figcaption>Every curve method changes the number on the page differently &mdash; the raw score never gets erased, just adjusted.</figcaption>
+    </figure>
+
+    <h2>Add points (flat)</h2>
+    <div class="formula">
+      curved score = raw score + points
+      <small>THE SIMPLEST CURVE &mdash; SHIFTS EVERY SCORE BY THE SAME AMOUNT</small>
+    </div>
+    <p>This is the curve most people picture when they hear the word. Every student gets the same number of points added to their raw score, so the gap between any two students never changes &mdash; a student who scored 10 points ahead of a classmate before the curve is still exactly 10 points ahead after it. Because it's easy to explain and impossible to argue with, it's the default choice for most teachers.</p>
+
+    <h2>Highest score &rarr; 100%</h2>
+    <p>Instead of picking a number of points, this method finds whatever the top score in the class actually was and calculates the exact multiplier needed to bring that score up to 100%. Every other score gets multiplied by the same factor. It's a good fit when the highest-performing student clearly should have gotten a perfect score, but didn't &mdash; usually because a question was flawed or worth partial credit that wasn't awarded.</p>
+
+    <h2>Percentage boost</h2>
+    <p>This increases every score by the same percentage of its own value, rather than the same flat number of points. A 10% boost turns an 80% into 88% (+8 points) but only turns a 60% into 66% (+6 points) &mdash; higher scorers gain more raw points than lower scorers, which is the opposite direction from the square-root method below.</p>
+
+    <h2>Reach a target mean</h2>
+    <p>Here the teacher picks a target class average instead of a points value, and the calculator works backward: find the difference between the current average and the target, then add that difference to every score. If the class averaged 68% and the target is 78%, every student gets +10. It's functionally identical to the flat-points method &mdash; it just starts from the average you want instead of the points you want.</p>
+
+    <h2>Square root</h2>
+    <div class="formula">
+      curved score = &radic;(raw &divide; max) &times; max
+      <small>COMPRESSES THE SCALE, SO LOW SCORES GAIN THE MOST</small>
+    </div>
+    <p>Taking the square root of a score (expressed as a fraction of the maximum, then rescaled back up) has an effect that flat-points curves don't: it helps struggling students far more than it helps students who were already doing well. A raw 50% climbs to roughly 71% &mdash; a 21-point jump &mdash; while a raw 90% only reaches about 95%, a 5-point jump. It's the method to reach for when the goal is specifically to help the bottom of the class, not shift everyone by the same amount.</p>
+
+    <h2>Bell curve</h2>
+    <div class="formula">
+      curved score = target mean + z-score &times; target SD
+      <small>THE ONLY METHOD THAT CAN RAISE SOME SCORES AND LOWER OTHERS</small>
+    </div>
+    <p>A bell curve is a different kind of adjustment altogether. Instead of shifting or scaling every score by the same rule, it converts each score into a <strong>z-score</strong> &mdash; how many standard deviations it sits from the class average &mdash; and then maps that same relative position onto a brand-new average and spread that the teacher chooses. Because it forces the whole class onto a specific distribution shape, a student who was comfortably above the original average can end up with a <em>lower</em> curved score than their raw one, if the new target spread compresses the top of the range. It's the method to use when standardizing results across multiple sections of the same course, not for an everyday "the test was hard" curve.</p>
+
+    <figure class="blog-figure">
+      <img src="/assets/images/blog-curve-grades-inArticle-2.webp" alt="A school administrator reviewing a bar chart of a class's grade distribution before and after curving on a laptop screen"
+           width="800" height="320" loading="lazy">
+      <figcaption>A bell curve reshapes the whole distribution, not just the individual scores &mdash; worth checking before and after.</figcaption>
     </figure>
 
     <h2>Worked example</h2>
-    <p>Three exams worth different shares of a final grade: 75 (worth 25% of the grade), 90 (worth another 25%), and 88 (worth the remaining 50%).</p>
+    <p>Ten raw scores from the same quiz: 80, 80, 75, 60, 60, 55, 50, 50, 40, 25 &mdash; a class average of 57.5%.</p>
     <div class="formula" style="font-size:16px">
-      (75&times;0.25 + 90&times;0.25 + 88&times;0.5) &divide; (0.25 + 0.25 + 0.5) = 85.25
+      Flat +15: 25 &rarr; 40, 80 &rarr; 95
     </div>
-    <p>Compare that to the simple average of the same three scores: (75 + 90 + 88) &divide; 3 = 84.33. The two numbers are close, but not identical &mdash; the exam worth 50% pulls the weighted result up slightly more than an equal-weight average would, because it counts twice as much as either quiz.</p>
+    <p>A flat +15 curve (enough to bring the top score to 95) lifts every student by the same 15 points &mdash; the lowest score moves from 25 to 40, the highest from 80 to 95, and every gap in between stays exactly the same size.</p>
+    <div class="formula" style="font-size:16px">
+      Bell curve (mean 75, SD 12): 55 &rarr; 73.2, 80 &rarr; 91.1
+    </div>
+    <p>Targeting a new mean of 75 with a standard deviation of 12 tells a different story. The 55 &mdash; close to the original average &mdash; moves to about 73.2, while the 80 jumps further, to about 91.1, because it was already well above where most of the class landed. The ranking of students doesn't change, but the size of each move now depends on where a student sat relative to everyone else, not on a single flat number.</p>
 
-    <h2>What to use as a weight</h2>
-    <p>A weight can be almost anything that represents relative importance or size:</p>
-    <ul class="blog-checklist">
-      <li><strong>A percentage of a grade.</strong> Exams, quizzes, and homework each worth a stated share of a course grade.</li>
-      <li><strong>Credit hours.</strong> College GPA weights each course's grade by how many credits it's worth &mdash; a 4-credit class counts more than a 1-credit one.</li>
-      <li><strong>Quantity.</strong> The average price you paid across several purchases at different prices and amounts.</li>
-      <li><strong>Sample size.</strong> Combining results from several groups of different sizes into one overall figure.</li>
-    </ul>
-    <p>The weights don't need to add up to 100 or any specific total. Proportional weights like 2 and 1 give exactly the same result as 67% and 33%, because the formula always divides by whatever the weights add up to &mdash; there's no need to convert them to percentages first.</p>
+    <h2>Which method should I use?</h2>
+    <p>Reach for <strong>Add points</strong> or <strong>Highest score &rarr; 100%</strong> when a test was simply harder than intended and every student's ranking should stay exactly where it was &mdash; these two cover the overwhelming majority of real curving situations. Use <strong>Square root</strong> specifically when the goal is to help the weaker half of the class more than the stronger half. Save the <strong>Bell curve</strong> for standardizing results across multiple sections, TAs, or exam versions of the same course &mdash; it's the one method genuinely capable of moving a score in the wrong direction, so it needs a real reason, not a default habit.</p>
 
-    <h2>Weighted average vs. simple average</h2>
-    <p>The two are identical whenever every weight is equal &mdash; weighting a set of numbers that all count the same just reproduces the ordinary average. They diverge as soon as the weights differ, and the more unequal the weights, the bigger that gap can get. A course where one final exam is worth 70% of the grade will show a much larger difference between weighted and simple averages than a course with five roughly equal assignments.</p>
-
-    <figure class="blog-figure">
-      <img src="/assets/images/blog-weighted-average-inArticle-2.webp" alt="A woman at an office desk reviewing a spreadsheet of purchase quantities and unit prices"
-           width="800" height="320" loading="lazy">
-      <figcaption>Weighted averages show up outside the classroom too — like averaging a cost across purchases of different sizes.</figcaption>
-    </figure>
-
-    <h2>Where weighted averages show up beyond grades</h2>
-    <p>College and high school <strong>GPA</strong> is a weighted average of grade points by credit hours. Businesses use <strong>weighted average cost</strong> to track inventory pricing when the same item was bought at different prices over time. Finance uses <strong>WACC</strong> (weighted average cost of capital) to blend the cost of a company's debt and equity by how much of each it has. Statisticians use weighted averages to combine results from unequal-sized samples or surveys into one honest overall number. Any time some data point should count more than another, a weighted average &mdash; not a simple one &mdash; is the right tool.</p>
-
-    <h2>Solving it backwards: what value do you need?</h2>
-    <p>Sometimes the question runs the other way: you know your target weighted average, and you need to find out what one missing value has to be. This comes up constantly with grades &mdash; "what do I need on the final to end up with a B?" &mdash; and the math is just the formula rearranged to solve for the missing value instead of the average. The <a href="/weighted-average-calculator/">weighted average calculator</a>'s advanced mode does this automatically: enter your known values and weights, pick which one is unknown, enter your target, and it solves for the exact number that row needs.</p>
-
-    <a class="calc-cta" href="/weighted-average-calculator/">
+    <a class="calc-cta" href="/grade-curve-calculator/">
       <div class="calc-cta-text">
-        <div class="calc-cta-label">Free tool</div>
-        <div class="calc-cta-title">Weighted Average Calculator</div>
-        <div class="calc-cta-sub">Add any number of value and weight rows and get your weighted average instantly, with a live contribution bar and a reverse-solve mode for a missing value.</div>
+        <div class="calc-cta-label">Free Tool</div>
+        <div class="calc-cta-title">Grade Curve Calculator</div>
+        <div class="calc-cta-sub">Paste a whole class's raw scores, pick any of these six methods, and see a live before/after letter-grade distribution, class statistics, and every student's new score.</div>
       </div>
-      <div class="calc-cta-btn">
+      <span class="calc-cta-btn">
         Calculate now
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-      </div>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </span>
     </a>
 
     <h2>Common questions</h2>
 
     <details class="faq">
-      <summary>How do you calculate a weighted average?</summary>
-      <p>Multiply each value by its weight, add up all those products, then divide by the sum of the weights: (w1x1 + w2x2 + ... + wnxn) / (w1 + w2 + ... + wn). If every weight is equal, this gives the same result as a simple average.</p>
+      <summary>What does it mean to grade on a curve?</summary>
+      <p>It means adjusting a whole class's scores based on how the class performed as a group, instead of leaving every score exactly as raw-graded. It's usually applied when a test turns out harder than intended, so the grades reflect understanding relative to the exam's difficulty, not just the raw percentage.</p>
     </details>
     <details class="faq">
-      <summary>What is the difference between a weighted average and a regular average?</summary>
-      <p>A regular (simple) average treats every value equally. A weighted average lets some values count more than others by multiplying each by a weight before averaging — useful whenever items have different importance, size, or credit hours, like exam scores worth different percentages of a grade.</p>
+      <summary>What is the most common way to curve grades?</summary>
+      <p>Adding a flat number of points to every score, often enough to bring the highest score up to 100%. It's the most common method because it's the easiest to explain and it never changes the ranking between students.</p>
     </details>
     <details class="faq">
-      <summary>What should I use as the weight?</summary>
-      <p>Anything that represents relative importance or size: a percentage of a grade, credit hours, quantity purchased, time period, or sample size. The weights don't need to add up to 100 or any specific total — proportional weights like 2 and 1 work exactly the same as percentages (67% and 33%).</p>
+      <summary>Is a bell curve the same thing as curving grades?</summary>
+      <p>A bell curve is one specific curving method, not the only one. It forces the class's scores onto a normal (bell-shaped) distribution with a chosen mean and spread, which is a much stronger adjustment than simply adding points &mdash; and it's the one method that can lower an above-average score, not just raise weaker ones.</p>
     </details>
     <details class="faq">
-      <summary>Is GPA a weighted average?</summary>
-      <p>Yes. College GPA weights each course's grade points by its credit hours, so a 4-credit course counts more toward your GPA than a 1-credit course. High school "weighted GPA" adds an extra layer on top, bumping the grade value itself for honors or AP-level courses before averaging.</p>
+      <summary>Does curving grades help everyone equally?</summary>
+      <p>No &mdash; it depends on the method. A flat-points curve helps every student by the same fixed amount. A square-root curve deliberately helps lower scores more than higher ones. A bell curve can help some students and hurt others, since it reshapes the whole distribution around a target average instead of just shifting it.</p>
     </details>
     <details class="faq">
-      <summary>How do I find the value I need to hit a target weighted average?</summary>
-      <p>Rearrange the formula to solve for the unknown value instead of the average: multiply the target average by the total weight, subtract the known weighted values, then divide by the missing value's own weight. The <a href="/weighted-average-calculator/">weighted average calculator</a>'s Go advanced mode does this for you automatically.</p>
+      <summary>How do you decide how many points to curve?</summary>
+      <p>The simplest approach: find the highest score on the test and add enough points to bring it to 100%, then apply that same number of points to everyone. Other approaches target a specific class average instead of the top score &mdash; see the target-mean method above.</p>
     </details>
 
     <div class="blog-pills">
-      <a class="pill" href="/weighted-average-calculator/">Weighted Average Calculator</a>
+      <a class="pill" href="/grade-curve-calculator/">Grade Curve Calculator</a>
       <a class="pill" href="/gpa-calculator/">GPA Calculator</a>
       <a class="pill" href="/final-grade-calculator/">Final Grade Calculator</a>
-      <a class="pill" href="/percentage-calculator/">Percentage Calculator</a>
+      <a class="pill" href="/test-score-calculator/">Test Score Calculator</a>
     </div>
 
   </div><!-- /blog-content -->
@@ -347,6 +396,7 @@
 <script src="/assets/app.js?v=120"></script>
 <script src="/feedback.js" defer></script>
 <script>
+/* Lightbox — runs on any .diagram-zoomable */
 (function(){
   document.querySelectorAll('.diagram-zoomable').forEach(function(wrap){
     wrap.addEventListener('click',function(){
@@ -362,10 +412,10 @@
     });
   });
 })();
+/* Unit toggle — persists choice in localStorage. No .u spans on this article
+   (grade points/percentages aren't Imperial/Metric quantities), so this stays
+   hidden — matches the Weighted Average article's precedent. */
 (function(){
-  var toggle=document.getElementById('unitToggle');
-  if(!toggle||!document.querySelector('.u'))return;
-  toggle.style.display='';
   var S='calcthis-units';
   var cur=localStorage.getItem(S)||'imp';
   function apply(u){
@@ -374,6 +424,10 @@
     document.querySelectorAll('.blog-meta .seg button').forEach(function(btn){
       var on=btn.dataset.unit===u; btn.classList.toggle('on',on); btn.setAttribute('aria-pressed',String(on));
     });
+  }
+  if(document.querySelectorAll('.u').length){
+    var tog=document.getElementById('unitToggle');
+    if(tog) tog.style.display='';
   }
   document.querySelectorAll('.blog-meta .seg button').forEach(function(btn){
     btn.addEventListener('click',function(){apply(btn.dataset.unit);});

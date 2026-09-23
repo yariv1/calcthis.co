@@ -605,6 +605,43 @@
   .p-wavg .wavg-key i.c5{background:#A4795A}
 
   /* =========================================================
+     SCHOOL · GRADE CURVE CALCULATOR  (body.p-gradecurve)
+     Reuses .card-h2, .csel (curve method, grouped Simple/Advanced
+     via .csel-group once advanced is on), .linkbtn (CSV import),
+     .advbtn/.add-row.split, .dtable (stats), .stable (per-student
+     rows), .res-tip. Adds a live before/after letter-grade
+     distribution bar (stacked segments, same technique as
+     Weighted Average's contribution bar).
+     ========================================================= */
+  .p-gradecurve .gc-textarea{width:100%;font:inherit;font-size:15px;font-weight:500;color:var(--ink);background:#FCFAF6;border:1.5px solid var(--line);border-radius:10px;padding:11px 13px;resize:vertical;font-variant-numeric:tabular-nums;line-height:1.5}
+  .p-gradecurve .gc-textarea:focus{outline:none;border-color:var(--amber);background:#fff;box-shadow:0 0 0 3px rgba(181,118,31,.13)}
+  .p-gradecurve .gc-res{margin:2px 0 14px}
+  .p-gradecurve .gc-bar-wrap{margin:8px 0 4px}
+  .p-gradecurve .gc-bar-lab{font-size:11.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+  .p-gradecurve .gc-bar{display:flex;height:26px;border-radius:8px;overflow:hidden;background:#EFE7D8;margin-top:5px}
+  .p-gradecurve .gc-seg{display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;min-width:0}
+  .p-gradecurve .gc-seg.gA{background:var(--spruce)}
+  .p-gradecurve .gc-seg.gB{background:var(--spruce-soft)}
+  .p-gradecurve .gc-seg.gC{background:var(--amber)}
+  .p-gradecurve .gc-seg.gD{background:var(--amber-deep)}
+  .p-gradecurve .gc-seg.gF{background:#b23030}
+  .p-gradecurve .gc-legend{display:flex;flex-wrap:wrap;gap:5px 16px;margin:10px 0 0;font-size:12px;font-weight:500;color:var(--ink-soft)}
+  .p-gradecurve .gc-legend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+  .p-gradecurve .gc-legend i.gA{background:var(--spruce)}
+  .p-gradecurve .gc-legend i.gB{background:var(--spruce-soft)}
+  .p-gradecurve .gc-legend i.gC{background:var(--amber)}
+  .p-gradecurve .gc-legend i.gD{background:var(--amber-deep)}
+  .p-gradecurve .gc-legend i.gF{background:#b23030}
+  .p-gradecurve .dtable td:first-child{color:var(--ink);font-weight:600}
+  .p-gradecurve #gcRowsWrap{max-height:340px;overflow-y:auto}
+  .p-gradecurve .stable td:first-child,.p-gradecurve .stable th:first-child{color:var(--ink)}
+  .p-gradecurve #gcExtra .fld:last-child{margin-bottom:0}
+  .p-gradecurve #gcExtra .two{margin-top:0}
+  .p-gradecurve #gcMethodSeg{margin-bottom:2px}
+  .p-gradecurve #gcAdvExtra .fld:last-child{margin-bottom:0}
+  .p-gradecurve #gcAdvExtra .two{margin-top:0}
+
+  /* =========================================================
      FITNESS · HEART-RATE ZONES  (body.p-hrzone)
      ========================================================= */
   .p-hrzone .fld{margin-bottom:18px}

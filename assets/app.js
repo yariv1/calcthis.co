@@ -6107,6 +6107,266 @@ CalcThis.initWavgCalc = function (cfg) {
 };
 
 /* =========================================================
+   SCHOOL · GRADE CURVE CALCULATOR
+   Paste/CSV grade list + highest-possible-grade + a curve method.
+   Default view: a 3-button .modeseg (Add points / Highest→100% /
+   % boost) — always visible, no click-to-reveal. Go advanced opens
+   a real panel ABOVE the button (display:none -> '', the mandatory
+   pattern — never fold advanced-only choices into a closed dropdown
+   with no visible on-page change, that shipped broken once already)
+   containing a second .csel for the 4 deeper methods; picking one
+   there overrides the simple toggle until set back to "use the
+   simple method above". Differentiator: a live before/after
+   letter-grade distribution bar (same stacked-segment technique as
+   Weighted Average's contribution bar) plus a mean/median/std-dev
+   before/after table and a per-student breakdown.
+   ========================================================= */
+CalcThis.initGradeCurveCalc = function (cfg) {
+  cfg = cfg || {};
+  var $ = function (id) { return document.getElementById(id); };
+  var gradesEl = $('gcGrades');
+  if (!gradesEl) return;
+  var maxEl = $('gcMax'), simpleSeg = $('gcMethodSeg'), advBox = $('gcAdvMethod'),
+      advPanel = $('gcAdvPanel'), extraEl = $('gcExtra'), advExtraEl = $('gcAdvExtra');
+  var simpleMethod = 'add';
+  var advanced = false;
+
+  var LABELS = {
+    add: 'Add points', highest: 'Highest grade → 100%', percent: 'Percentage boost',
+    target: 'Reach a target mean', bell: 'Bell curve', sqrt: 'Square root', mult: 'Multiply by factor'
+  };
+
+  function activeMethod() {
+    var adv = advBox.getAttribute('data-value');
+    return adv ? adv : simpleMethod;
+  }
+
+  function num(v) { v = parseFloat(('' + v).trim()); return isNaN(v) ? NaN : v; }
+  function fmt(n) {
+    if (!isFinite(n)) return '—';
+    var r = Math.round(n * 100) / 100;
+    var s = '' + r;
+    if (s.indexOf('.') >= 0) s = s.replace(/0+$/, '').replace(/\.$/, '');
+    return s;
+  }
+  function signed(n) {
+    if (!isFinite(n)) return '—';
+    return (n > 0 ? '+' : '') + fmt(n);
+  }
+
+  // ---- extra fields per method ----
+  function fieldHtml(id) {
+    if (id === 'add') return '<label class="fld" for="gcPts"><span class="lab">Points to add</span><div class="inp"><input id="gcPts" type="number" inputmode="decimal" placeholder="5"></div></label>';
+    if (id === 'percent') return '<label class="fld" for="gcPct"><span class="lab">Boost percentage<span class="unit">%</span></span><div class="inp"><input id="gcPct" type="number" inputmode="decimal" placeholder="10"></div></label>';
+    if (id === 'target') return '<label class="fld" for="gcTargetMean"><span class="lab">Desired class mean</span><div class="inp"><input id="gcTargetMean" type="number" inputmode="decimal" placeholder="80"></div></label>';
+    if (id === 'bell') return '<div class="two">'
+      + '<label class="fld" for="gcBellMean"><span class="lab">Desired mean</span><div class="inp"><input id="gcBellMean" type="number" inputmode="decimal" placeholder="75"></div></label>'
+      + '<label class="fld" for="gcBellSd"><span class="lab">Desired std. dev.</span><div class="inp"><input id="gcBellSd" type="number" inputmode="decimal" placeholder="12"></div></label>'
+      + '</div>';
+    if (id === 'sqrt') return '<label class="fld" for="gcSqrtScale"><span class="lab">Scale factor<span class="unit">optional</span></span><div class="inp"><input id="gcSqrtScale" type="number" inputmode="decimal" placeholder="1"></div></label>';
+    if (id === 'mult') return '<label class="fld" for="gcMult"><span class="lab">Multiplier</span><div class="inp"><input id="gcMult" type="number" inputmode="decimal" placeholder="1.1"></div></label>';
+    return '';
+  }
+  function renderExtra() {
+    extraEl.innerHTML = fieldHtml(simpleMethod);
+    [].forEach.call(extraEl.querySelectorAll('input'), function (el) { el.addEventListener('input', solve); });
+  }
+  function renderAdvExtra() {
+    var adv = advBox.getAttribute('data-value');
+    advExtraEl.innerHTML = adv ? fieldHtml(adv) : '';
+    [].forEach.call(advExtraEl.querySelectorAll('input'), function (el) { el.addEventListener('input', solve); });
+  }
+
+  // ---- parsing ----
+  function parseGrades() {
+    var raw = gradesEl.value.split(/[\s,;]+/);
+    var out = [];
+    raw.forEach(function (tok) {
+      var n = num(tok);
+      if (isFinite(n)) out.push(n);
+    });
+    return out;
+  }
+
+  function stats(arr) {
+    if (!arr.length) return null;
+    var n = arr.length;
+    var sorted = arr.slice().sort(function (a, b) { return a - b; });
+    var mean = arr.reduce(function (a, b) { return a + b; }, 0) / n;
+    var median = n % 2 ? sorted[(n - 1) / 2] : (sorted[n / 2 - 1] + sorted[n / 2]) / 2;
+    var variance = arr.reduce(function (a, b) { return a + (b - mean) * (b - mean); }, 0) / n;
+    var sd = Math.sqrt(variance);
+    return { mean: mean, median: median, sd: sd, min: sorted[0], max: sorted[n - 1] };
+  }
+
+  function clamp(v, max) { return Math.max(0, Math.min(max, v)); }
+
+  function curveArr(arr, max, orig) {
+    var id = activeMethod();
+    if (id === 'add') {
+      var pts = num($('gcPts') ? $('gcPts').value : ''); if (!isFinite(pts)) pts = 0;
+      return arr.map(function (x) { return clamp(x + pts, max); });
+    }
+    if (id === 'highest') {
+      var top = orig.max;
+      var factor = top > 0 ? max / top : 1;
+      return arr.map(function (x) { return clamp(x * factor, max); });
+    }
+    if (id === 'percent') {
+      var pct = num($('gcPct') ? $('gcPct').value : ''); if (!isFinite(pct)) pct = 0;
+      return arr.map(function (x) { return clamp(x * (1 + pct / 100), max); });
+    }
+    if (id === 'target') {
+      var tm = num($('gcTargetMean') ? $('gcTargetMean').value : '');
+      if (!isFinite(tm)) return arr.map(function (x) { return clamp(x, max); });
+      var diff = tm - orig.mean;
+      return arr.map(function (x) { return clamp(x + diff, max); });
+    }
+    if (id === 'bell') {
+      var bm = num($('gcBellMean') ? $('gcBellMean').value : '');
+      var bs = num($('gcBellSd') ? $('gcBellSd').value : '');
+      if (!isFinite(bm) || !isFinite(bs) || orig.sd === 0) return arr.map(function (x) { return clamp(x, max); });
+      return arr.map(function (x) { var z = (x - orig.mean) / orig.sd; return clamp(bm + z * bs, max); });
+    }
+    if (id === 'sqrt') {
+      var sf = num($('gcSqrtScale') ? $('gcSqrtScale').value : ''); if (!isFinite(sf) || sf <= 0) sf = 1;
+      return arr.map(function (x) { return clamp(Math.sqrt(Math.max(0, x) / max) * max * sf, max); });
+    }
+    if (id === 'mult') {
+      var mu = num($('gcMult') ? $('gcMult').value : ''); if (!isFinite(mu)) mu = 1;
+      return arr.map(function (x) { return clamp(x * mu, max); });
+    }
+    return arr.map(function (x) { return clamp(x, max); });
+  }
+
+  function letterBuckets(arr, max) {
+    var edges = [0.9 * max, 0.8 * max, 0.7 * max, 0.6 * max];
+    var c = { gA: 0, gB: 0, gC: 0, gD: 0, gF: 0 };
+    arr.forEach(function (x) {
+      if (x >= edges[0]) c.gA++;
+      else if (x >= edges[1]) c.gB++;
+      else if (x >= edges[2]) c.gC++;
+      else if (x >= edges[3]) c.gD++;
+      else c.gF++;
+    });
+    return c;
+  }
+
+  function renderBar(el, counts, total) {
+    var order = ['gA', 'gB', 'gC', 'gD', 'gF'];
+    var html = '';
+    order.forEach(function (k) {
+      if (!counts[k]) return;
+      var pct = counts[k] / total * 100;
+      html += '<span class="gc-seg ' + k + '" style="width:' + pct + '%">' + (pct >= 8 ? counts[k] : '') + '</span>';
+    });
+    el.innerHTML = html;
+  }
+
+  function renderLegend(before, after) {
+    var order = [['gA', 'A'], ['gB', 'B'], ['gC', 'C'], ['gD', 'D'], ['gF', 'F']];
+    var html = '';
+    order.forEach(function (pair) {
+      var k = pair[0];
+      if (!before[k] && !after[k]) return;
+      html += '<span><i class="' + k + '"></i>' + pair[1] + ' — ' + before[k] + ' → ' + after[k] + '</span>';
+    });
+    $('gcLegend').innerHTML = html;
+  }
+
+  function solve() {
+    var grades = parseGrades();
+    var max = num(maxEl.value); if (!isFinite(max) || max <= 0) max = 100;
+
+    if (!grades.length) {
+      $('gcResBig').textContent = '—';
+      $('gcResSub').textContent = "Paste your class's grades to get started.";
+      $('gcEmpty').style.display = 'block';
+      $('gcResults').style.display = 'none';
+      return;
+    }
+    $('gcEmpty').style.display = 'none';
+    $('gcResults').style.display = '';
+
+    var orig = stats(grades);
+    var curved = curveArr(grades, max, orig);
+    var curvedStats = stats(curved);
+
+    $('gcResBig').textContent = fmt(curvedStats.mean);
+    $('gcResSub').textContent = 'was ' + fmt(orig.mean) + ', now ' + fmt(curvedStats.mean) + ' · ' + grades.length + ' student' + (grades.length === 1 ? '' : 's') + ' · ' + (LABELS[activeMethod()] || activeMethod());
+
+    var beforeB = letterBuckets(grades, max), afterB = letterBuckets(curved, max);
+    renderBar($('gcBarBefore'), beforeB, grades.length);
+    renderBar($('gcBarAfter'), afterB, grades.length);
+    renderLegend(beforeB, afterB);
+
+    var rows = [
+      ['Mean', orig.mean, curvedStats.mean],
+      ['Median', orig.median, curvedStats.median],
+      ['Std. deviation', orig.sd, curvedStats.sd],
+      ['Lowest score', orig.min, curvedStats.min],
+      ['Highest score', orig.max, curvedStats.max]
+    ];
+    $('gcStatsBody').innerHTML = rows.map(function (r) {
+      return '<tr><td>' + r[0] + '</td><td>' + fmt(r[1]) + '</td><td>' + fmt(r[2]) + '</td></tr>';
+    }).join('');
+
+    $('gcRowsBody').innerHTML = grades.map(function (x, i) {
+      var c = curved[i];
+      return '<tr><td>Student ' + (i + 1) + '</td><td>' + fmt(x) + '</td><td>' + fmt(c) + '</td><td>' + signed(c - x) + '</td></tr>';
+    }).join('');
+  }
+
+  // ---- CSV import: extract every number in the file, refill the same
+  // textarea (one entry surface, not a separate mode) ----
+  var csvBtn = $('gcImportBtn'), csvFile = $('gcCsvFile');
+  if (csvBtn && csvFile) {
+    csvBtn.addEventListener('click', function () { csvFile.click(); });
+    csvFile.addEventListener('change', function () {
+      var f = csvFile.files && csvFile.files[0]; if (!f) return;
+      var reader = new FileReader();
+      reader.onload = function () {
+        var text = '' + reader.result;
+        var nums = text.match(/-?\d+(\.\d+)?/g) || [];
+        gradesEl.value = nums.join(', ');
+        solve();
+      };
+      reader.readAsText(f);
+      csvFile.value = '';
+    });
+  }
+
+  gradesEl.addEventListener('input', solve);
+  maxEl.addEventListener('input', solve);
+
+  simpleSeg.addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    simpleMethod = b.dataset.m;
+    [].forEach.call(simpleSeg.children, function (c) { c.classList.toggle('on', c === b); c.setAttribute('aria-selected', c === b ? 'true' : 'false'); });
+    renderExtra();
+    solve();
+  });
+
+  advBox.addEventListener('change', function () { renderAdvExtra(); solve(); });
+
+  var advBtn = $('gcAdvBtn');
+  if (advBtn) advBtn.addEventListener('click', function () {
+    advanced = !advanced;
+    advBtn.classList.toggle('open', advanced);
+    $('gcAdvBtnLab').textContent = advanced ? 'Go simple' : 'Go advanced';
+    advPanel.style.display = advanced ? '' : 'none';
+    if (!advanced) {
+      advBox.value = '';   // revert to the simple toggle above when closing
+      renderAdvExtra();
+    }
+    solve();
+  });
+
+  renderExtra();
+  solve();
+};
+
+/* =========================================================
    SITE FOOTER — mobile accordion
    Multiple pillars can be open simultaneously.
    First pillar starts expanded (aria-expanded="true" in HTML).

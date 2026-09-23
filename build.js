@@ -49,6 +49,7 @@ const PAGES = [
   { file: 'gpa-calculator/index.html',         slug: '/gpa-calculator/' },
   { file: 'grade-calculator/index.html',       slug: '/grade-calculator/' },
   { file: 'test-score-calculator/index.html', slug: '/test-score-calculator/' },
+  { file: 'grade-curve-calculator/index.html', slug: '/grade-curve-calculator/' },
   // Legal & info pages
   { file: 'ratio-calculator/index.html', slug: '/ratio-calculator/' },
   { file: 'weighted-average-calculator/index.html', slug: '/weighted-average-calculator/' },
@@ -86,6 +87,7 @@ const PAGES = [
   { file: 'blog/what-is-lean-body-mass/index.html', slug: '/blog/what-is-lean-body-mass/' },
   { file: 'blog/what-is-waist-to-hip-ratio/index.html', slug: '/blog/what-is-waist-to-hip-ratio/' },
   { file: 'blog/what-is-a-weighted-average/index.html', slug: '/blog/what-is-a-weighted-average/' },
+  { file: 'blog/how-to-curve-grades/index.html', slug: '/blog/how-to-curve-grades/' },
   { file: 'about/index.html',           slug: '/about/' },
   { file: 'contact/index.html',         slug: '/contact/' },
   { file: 'privacy-policy/index.html',  slug: '/privacy-policy/' },

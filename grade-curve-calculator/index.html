@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Grade Curve Calculator — Live Before/After Distribution | CalcThis</title>
+<meta name="description" content="Free grade curve calculator. Paste your class's raw scores, pick a curve method (add points, highest-to-100%, percentage boost, bell curve, square root and more), and see the new grade distribution instantly — before/after mean, median, and how many students land in each letter grade.">
+<link rel="canonical" href="https://calcthis.co/grade-curve-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Grade Curve Calculator — Live Before/After Distribution">
+<meta property="og:description" content="Paste your class's raw scores, pick a curve method, and see the new grade distribution instantly — before/after mean, median, and how many students land in each letter grade.">
+<meta property="og:url" content="https://calcthis.co/grade-curve-calculator/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<meta name="theme-color" content="#B5761F">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css?v=120">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Grade Curve Calculator",
+  "url": "https://calcthis.co/grade-curve-calculator/",
+  "applicationCategory": "EducationApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Paste a class's raw scores, pick a curve method, and get the curved grades instantly, with a live before/after letter-grade distribution bar, class mean/median/standard-deviation comparison, and a per-student breakdown table."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "What is the easiest way to curve grades?", "acceptedAnswer": { "@type": "Answer", "text": "Add a fixed number of points to every student's score — usually enough to bring the highest score up to 100%. It's the simplest method because it shifts every grade by the same amount, so the ranking between students never changes." } },
+    { "@type": "Question", "name": "How does a bell curve grading work?", "acceptedAnswer": { "@type": "Answer", "text": "A bell curve recalculates every score using z-scores: it finds how many standard deviations each raw score is from the class average, then maps that same distance onto a new target mean and standard deviation that you choose. This can raise some grades and lower others, since it forces the whole class onto a normal distribution instead of just shifting everyone up." } },
+    { "@type": "Question", "name": "How does the square root curve work?", "acceptedAnswer": { "@type": "Answer", "text": "Take the square root of each score (as a fraction of the highest possible grade) and scale it back up. Because square roots compress large numbers less than small ones, this boosts low scores a lot more than high scores — a 50% can jump to roughly 71%, while a 90% only rises to about 95%." } },
+    { "@type": "Question", "name": "Can a curve lower a grade?", "acceptedAnswer": { "@type": "Answer", "text": "Flat-point, percentage-boost, square-root, and highest-to-100% curves only ever raise or hold scores steady. A bell curve is the exception — because it forces a specific target mean and spread, students well above the original average can end up with a lower curved score than their raw one." } },
+    { "@type": "Question", "name": "What is a normal grade curve distribution?", "acceptedAnswer": { "@type": "Answer", "text": "A commonly cited version assigns roughly the top 10-15% of a class an A, the next 20-25% a B, the middle 40-50% a C, the next 10-15% a D, and the bottom 5-10% an F — following a standard bell-shaped (normal) distribution. This calculator's letter-grade bar uses the more common straight 90/80/70/60 percentage bands so you can compare before and after on the same scale." } }
+  ]
+}
+</script>
+</head>
+<body class="p-gradecurve">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <a class="hdr-back" href="/blog/" aria-label="Back to blog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <span class="menu-col-head">Construction &amp; Gardening</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+          <a href="/square-footage-calculator/">Square Footage</a>
+          <a href="/tape-measure-fraction-calculator/">Tape Measure Fraction</a>
+          <a href="/stair-calculator/">Stair</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/vo2-max-calculator/">VO2 Max</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
+          <a href="/bmi-calculator/">BMI</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/ideal-weight-calculator/">Ideal Weight</a>
+          <a href="/lean-body-mass-calculator/">Lean Body Mass</a>
+          <a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio</a>
+          <a href="/calorie-calculator/">Calorie</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/water-intake-calculator/">Water Intake</a>
+          <a href="/macro-calculator/">Macro</a>
+          <a href="/protein-intake-calculator/">Protein Intake</a>
+          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
+          <a href="/steps-to-miles-calculator/">Steps to Miles</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+          <a href="/grade-curve-calculator/" class="current">Grade Curve</a>
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/weighted-average-calculator/">Weighted Average</a>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+          <a href="/age-calculator/">Age</a>
+          <a href="/date-calculator/">Date</a>
+          <a href="/time-calculator/">Time</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">Grade curving, live</div>
+    <h1>Grade Curve Calculator</h1>
+    <p>Paste your class's raw scores, pick a curve method, and see the new grade distribution instantly — a live <strong>before/after letter-grade bar</strong>, class mean/median/standard-deviation comparison, and a per-student breakdown. Tap <em>Go advanced</em> for bell curve, square root, and target-mean methods.</p>
+  </section>
+
+  <div class="grid">
+    <div class="card">
+      <div class="card-pad">
+        <h2 class="card-h2">Class scores</h2>
+
+        <label class="fld" for="gcGrades">
+          <span class="lab">Grades<button type="button" class="linkbtn" id="gcImportBtn">Import CSV</button></span>
+          <textarea id="gcGrades" class="gc-textarea" placeholder="85, 92, 78, 65, 88, 72, 95, 80, 68, 75&#10;or one grade per line" rows="5"></textarea>
+        </label>
+        <input type="file" id="gcCsvFile" accept=".csv,text/csv" style="display:none">
+
+        <label class="fld" for="gcMax">
+          <span class="lab">Highest possible grade<span class="unit">points</span></span>
+          <div class="inp"><input id="gcMax" type="number" inputmode="decimal" value="100" placeholder="100"></div>
+        </label>
+
+        <div class="fld" style="margin-bottom:10px">
+          <span class="lab">Curve method</span>
+          <div class="modeseg" id="gcMethodSeg" role="tablist">
+            <button class="on" data-m="add" role="tab" aria-selected="true">Add points</button>
+            <button data-m="highest" role="tab" aria-selected="false">Highest &rarr; 100%</button>
+            <button data-m="percent" role="tab" aria-selected="false">% boost</button>
+          </div>
+        </div>
+
+        <div id="gcExtra"></div>
+
+        <div id="gcAdvPanel" style="display:none">
+          <div class="proj-sep"></div>
+          <div class="fld" style="margin-bottom:10px">
+            <span class="lab">Advanced curve method</span>
+            <div class="csel" id="gcAdvMethod" data-value="">
+              <button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false">
+                <span class="csel-val">Use the simple method above</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="csel-panel" role="listbox">
+                <button type="button" class="csel-opt on" role="option" data-value="">Use the simple method above</button>
+                <button type="button" class="csel-opt" role="option" data-value="target">Reach a target mean</button>
+                <button type="button" class="csel-opt" role="option" data-value="bell">Bell curve (mean + SD)</button>
+                <button type="button" class="csel-opt" role="option" data-value="sqrt">Square root</button>
+                <button type="button" class="csel-opt" role="option" data-value="mult">Multiply by factor</button>
+              </div>
+            </div>
+          </div>
+          <div id="gcAdvExtra"></div>
+        </div>
+
+        <div class="add-row split" style="margin-top:6px">
+          <span></span>
+          <button class="advbtn" id="gcAdvBtn" type="button">
+            <span id="gcAdvBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-pad">
+        <div class="gc-res">
+          <div class="res-lab">Curved class average</div>
+          <div class="res-big"><span id="gcResBig">—</span></div>
+          <div class="res-sub" id="gcResSub">Paste your class's grades to get started.</div>
+        </div>
+
+        <div id="gcEmpty" class="tally-empty" style="display:none">Paste at least one grade above to see the curve.</div>
+
+        <div id="gcResults" style="display:none">
+          <div class="gc-bar-wrap">
+            <div class="gc-bar-lab">Before</div>
+            <div class="gc-bar" id="gcBarBefore"></div>
+            <div class="gc-bar-lab" style="margin-top:10px">After</div>
+            <div class="gc-bar" id="gcBarAfter"></div>
+            <div class="gc-legend" id="gcLegend"></div>
+          </div>
+          <p class="res-tip">Letter bands use the standard 90/80/70/60 scale of your highest possible grade.</p>
+
+          <div class="proj-sep"></div>
+          <table class="dtable">
+            <thead><tr><th>Metric</th><th>Original</th><th>Curved</th></tr></thead>
+            <tbody id="gcStatsBody"></tbody>
+          </table>
+
+          <div class="tally-head" style="margin-top:16px">
+            <h3>Per-student breakdown</h3>
+          </div>
+          <div class="stable-wrap" id="gcRowsWrap">
+            <table class="stable">
+              <thead><tr><th>Student</th><th>Original</th><th>Curved</th><th>Change</th></tr></thead>
+              <tbody id="gcRowsBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="related-calcs">
+    <p class="related-calcs-h">More school &amp; grades calculators that may interest you</p>
+    <div class="pills">
+      <a class="pill" href="/final-grade-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+        Final Grade Calculator
+      </a>
+      <a class="pill" href="/gpa-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5 9-5zM3 8v6c0 2 4 4 9 4s9-2 9-4V8"/></svg>
+        GPA Calculator
+      </a>
+      <a class="pill" href="/test-score-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2 2 5-5"/></svg>
+        Test Score Calculator
+      </a>
+      <a class="pill" href="/weighted-average-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="14" width="4" height="7"/><rect x="10" y="9" width="4" height="12"/><rect x="16" y="4" width="4" height="17"/></svg>
+        Weighted Average Calculator
+      </a>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use the grade curve calculator</h2>
+        <p>Paste your class's raw scores into the <strong>Grades</strong> box — separated by commas, spaces, or one per line — or click <strong>Import CSV</strong> to pull numbers straight from a spreadsheet export. Set the <strong>highest possible grade</strong> (100 by default), pick a curve method, and your curved results appear instantly: a before/after letter-grade bar, class-wide statistics, and every student's new score.</p>
+        <p>The default methods cover the three most common curves. Tap <strong>Go advanced</strong> for bell curve, square root, target-mean, and multiply-by-factor methods.</p>
+
+        <h2>Curve methods explained</h2>
+        <div class="formula">
+          Add points: curved = raw + points
+          <small>THE SIMPLEST CURVE — SHIFTS EVERY SCORE BY THE SAME AMOUNT</small>
+        </div>
+        <p><strong>Add points (flat):</strong> adds the same number of points to every score. The simplest and most common curve — it never changes the ranking between students.</p>
+        <p><strong>Highest grade → 100%:</strong> multiplies every score by whatever factor brings the top score in your list up to your highest possible grade.</p>
+        <p><strong>Percentage boost:</strong> increases every score by a fixed percentage of itself, so higher scores gain more raw points than lower ones.</p>
+        <p><strong>Reach a target mean:</strong> adds or subtracts a fixed number of points so the class average lands exactly on the mean you choose.</p>
+        <p><strong>Bell curve:</strong> converts every score to a z-score against the original mean and standard deviation, then maps it onto a new mean and standard deviation you set.</p>
+        <p><strong>Square root:</strong> takes the square root of each score (as a fraction of the max) and rescales it — this boosts low scores far more than high ones.</p>
+        <p><strong>Multiply by factor:</strong> multiplies every score by a fixed number you choose.</p>
+      </div>
+
+      <div>
+        <h2>Worked example</h2>
+        <p>Ten raw scores: 80, 80, 75, 60, 60, 55, 50, 50, 40, 25 (out of 100). The class average is 57.5%.</p>
+        <div class="formula" style="font-size:16px">
+          Add 10 points &rarr; highest score (80) reaches 90
+        </div>
+        <p>A flat +10 curve brings every score up by 10 points, so 25 becomes 35 and 80 becomes 90 — the gaps between students stay exactly the same. A bell curve targeting a mean of 75 with a standard deviation of 12 would instead reshape the whole spread: the same 80 becomes about 91, but a 55 becomes about 73 — a bigger jump for scores near the original average.</p>
+
+        <h2>Which method should I use?</h2>
+        <p>Use <strong>Add points</strong> or <strong>Highest → 100%</strong> when a test was simply harder than expected and you want to preserve everyone's exact ranking. Use <strong>Square root</strong> when you want to help struggling students more than top performers. Reach for <strong>Bell curve</strong> only when you need to standardize results across multiple sections or match an institutional grading policy — it's the one method that can lower an above-average score.</p>
+
+        <h2>Related tools</h2>
+        <p>Need to know what score you need on an upcoming exam instead? Try the <a href="/final-grade-calculator/">Final Grade Calculator</a>. Averaging category weights like homework, quizzes and a final? The <a href="/weighted-average-calculator/">Weighted Average Calculator</a> uses the same underlying math as this tool's weighted methods.</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>What is the easiest way to curve grades?</summary><p>Add a fixed number of points to every student's score — usually enough to bring the highest score up to 100%. It's the simplest method because it shifts every grade by the same amount, so the ranking between students never changes.</p></details>
+    <details class="faq"><summary>How does a bell curve grading work?</summary><p>A bell curve recalculates every score using z-scores: it finds how many standard deviations each raw score is from the class average, then maps that same distance onto a new target mean and standard deviation that you choose. This can raise some grades and lower others, since it forces the whole class onto a normal distribution instead of just shifting everyone up.</p></details>
+    <details class="faq"><summary>How does the square root curve work?</summary><p>Take the square root of each score (as a fraction of the highest possible grade) and scale it back up. Because square roots compress large numbers less than small ones, this boosts low scores a lot more than high scores — a 50% can jump to roughly 71%, while a 90% only rises to about 95%.</p></details>
+    <details class="faq"><summary>Can a curve lower a grade?</summary><p>Flat-point, percentage-boost, square-root, and highest-to-100% curves only ever raise or hold scores steady. A bell curve is the exception — because it forces a specific target mean and spread, students well above the original average can end up with a lower curved score than their raw one.</p></details>
+    <details class="faq"><summary>What is a normal grade curve distribution?</summary><p>A commonly cited version assigns roughly the top 10-15% of a class an A, the next 20-25% a B, the middle 40-50% a C, the next 10-15% a D, and the bottom 5-10% an F — following a standard bell-shaped (normal) distribution. This calculator's letter-grade bar uses the more common straight 90/80/70/60 percentage bands so you can compare before and after on the same scale.</p></details>
+  </section>
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+          <li><a href="/square-footage-calculator/">Square Footage Calculator</a></li>
+          <li><a href="/tape-measure-fraction-calculator/">Tape Measure Fraction Calculator</a></li>
+          <li><a href="/stair-calculator/">Stair Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/vo2-max-calculator/">VO2 Max Calculator</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/bmi-calculator/">BMI Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/ideal-weight-calculator/">Ideal Weight Calculator</a></li>
+          <li><a href="/lean-body-mass-calculator/">Lean Body Mass Calculator</a></li>
+          <li><a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio Calculator</a></li>
+          <li><a href="/calorie-calculator/">Calorie Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/water-intake-calculator/">Water Intake Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/protein-intake-calculator/">Protein Intake Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
+          <li><a href="/steps-to-miles-calculator/">Steps to Miles Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+          <li><a href="/grade-curve-calculator/">Grade Curve Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/weighted-average-calculator/">Weighted Average Calculator</a></li>
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+          <li><a href="/age-calculator/">Age Calculator</a></li>
+          <li><a href="/date-calculator/">Date Calculator</a></li>
+          <li><a href="/time-calculator/">Time Calculator</a></li>
+        </ul>
+      </div>
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/blog/">Blog</a>
+      <span aria-hidden="true">·</span>
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+</div>
+
+<script src="/assets/app.js?v=120"></script>
+<script>CalcThis.initGradeCurveCalc({});</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>

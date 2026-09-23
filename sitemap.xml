@@ -103,6 +103,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://calcthis.co/blog/how-to-curve-grades/</loc>
+    <lastmod>2026-09-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://calcthis.co/blog/what-is-waist-to-hip-ratio/</loc>
     <lastmod>2026-09-22</lastmod>
     <changefreq>monthly</changefreq>
@@ -150,6 +156,7 @@
   <url><loc>https://calcthis.co/gpa-calculator/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://calcthis.co/grade-calculator/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://calcthis.co/test-score-calculator/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://calcthis.co/grade-curve-calculator/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url>
     <loc>https://calcthis.co/weighted-average-calculator/</loc>
     <lastmod>2026-09-22</lastmod>
