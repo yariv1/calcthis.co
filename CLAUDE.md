@@ -129,8 +129,8 @@ must be built from the article's actual units, every time, not pasted from a tem
 
 ## Project state
 
-- **Asset version:** v116 (bumped, `node build.js` run and deployed this session)
-- **Total pages:** 72 live
+- **Asset version:** v120 (bumped, `node build.js` run and deployed this session)
+- **Total pages:** 74 live
 - **Model:** Sonnet 5
 
 ### New this session — global `.csel` custom-dropdown component
@@ -164,8 +164,9 @@ interactive features. Documented in `calcthis-design-system.md`.
 
 ---
 
-## Live blog articles (24)
+## Live blog articles (25)
 
+- How to Curve Grades: Every Method Explained
 - How Much Gravel Do I Need for a Driveway?
 - How Much Mulch Do I Need?
 - How Much Topsoil Do I Need?
@@ -194,7 +195,7 @@ interactive features. Documented in `calcthis-design-system.md`.
 
 ---
 
-## Live calculators (40)
+## Live calculators (41)
 
 ### Construction & Gardening (11)
 Board Foot · Gravel · Sand · Topsoil · Mulch · Concrete · Flooring · Tile · Square Footage · Tape Measure Fraction · Stair
@@ -202,17 +203,67 @@ Board Foot · Gravel · Sand · Topsoil · Mulch · Concrete · Flooring · Tile
 ### Health & Fitness (19)
 Pace · Race Time Predictor · VO2 Max · Heart Rate Zone · Zone 2 Heart Rate · BMI · Body Fat · Ideal Weight · Lean Body Mass · Waist-to-Hip Ratio · Calorie · TDEE · One Rep Max · Sleep · Water Intake · Macro · Protein Intake · Peptide Reconstitution · Steps to Miles
 
-### School & Grades (4)
-Final Grade · GPA · Grade · Test Score
+### School & Grades (5)
+Final Grade · GPA · Grade · Test Score · Grade Curve
 
 ### Math & Numbers (6)
 Weighted Average · Ratio · Percentage · Age · Date · Time
 
-Total live calculators: **40**
+Total live calculators: **41**
 
 ---
 
-## Last session (v111–v116)
+## Last session (v117–v120)
+
+- Researched, built and deployed **Grade Curve Calculator** (`/grade-curve-calculator/`,
+  roadmap #19 — Ahrefs-verified >1,000/mo, Easy KD, from the same 2026-09-22 Ahrefs pass as
+  Weighted Average). Research opened Omnicalculator, gradecurvecalculator.org, and
+  youcanedit.com live in the Browser tool (Rule 8.5) — union of methods across all three:
+  Linear/flat rescale, Ratios/multiply-by-factor, Bell curve, Square root, Highest→100%,
+  Percentage boost, Target mean, Custom Formula (youcanedit only), Custom Grade Boundaries
+  (gradecurvecalculator.org only). User approved building all of these except Custom Formula
+  (arbitrary eval — scope/security risk) and Custom Grade Boundaries (that's letter-cutoff
+  editing, a different job from curving) — and explicitly asked to KEEP CSV import
+  (gradecurvecalculator.org's differentiator) after it was proposed as a drop; kept.
+  **Differentiator (user-approved):** none of the three competitors render an actual
+  distribution chart despite one claiming to — built a live before/after letter-grade
+  distribution bar (stacked segments, same technique as Weighted Average's contribution bar)
+  plus a before/after mean/median/std-dev/min/max table and a per-student breakdown table.
+  Default view: 3-button `.modeseg` (Add points / Highest→100% / % boost). Go advanced opens
+  a real panel with a second `.csel` for Reach-a-target-mean / Bell curve / Square root /
+  Multiply-by-factor. CSV import extracts every number from the uploaded file and refills the
+  same paste textarea (one entry surface, not a separate mode).
+  **Two real process failures this session, both fixed before deploy:**
+  1. Shipped with the textarea pre-filled with demo numbers on load — deviates from every
+     other dynamic-row calculator's convention (Weighted Average, GPA, etc. all start
+     genuinely empty with an empty-state message). User caught it ("just for the demo?").
+     Removed; now starts blank.
+  2. **Shipped the 4 advanced-only methods folded into a closed `.csel` dropdown instead of
+     the mandatory documented pattern** (`calcthis-design-system.md` "Go Advanced Button" —
+     "Advanced panel sits ABOVE the button, hidden via `display:none`"). Clicking "Go
+     advanced" produced zero visible on-page change (only the button's own label flipped),
+     which the user correctly read as broken — "the second time we go over the exact
+     error." Root cause: substituted "more dropdown options behind a click-to-open panel"
+     for "a real visible panel," which is not the same mechanism and isn't documented
+     anywhere as a valid variant. Fixed by restructuring: default view is a plain 3-button
+     `.modeseg` (always visible, no click needed), and Go advanced now opens a real
+     `#gcAdvPanel` (`display:none` → `''`) containing its own `.csel` for the 4 deeper
+     methods — verified with real clicks + screenshots this time, not just DOM state checks.
+  Companion article **"How to Curve Grades: Every Method Explained"**
+  (`/blog/how-to-curve-grades/`) shipped same session — the first School & Grades article on
+  the site (previously only Math & Numbers had one). Matches Omni's own competitor precedent
+  of pairing this exact calculator with a "how to" methods article (found during research).
+  6-method comparison table, formula + explanation per method, a worked example reusing
+  Omni's own published dataset and z-score results (verified by hand with node, catching and
+  fixing two wrong bell-curve numbers — 55→73.2 not 72.5, 80→91.1 not 94.8 — before shipping),
+  guidance on which method to use, 5 FAQs, 2 in-article photos + hero + card (a classroom/
+  grading setting — new for this site, no measurements so the unit toggle correctly stayed
+  hidden, 0 `.u` spans). New "School & Grades" section added to the blog hub (4th section,
+  after Math & Numbers). WebApplication + FAQPage JSON-LD, `.related-calcs` (GPA / Final
+  Grade / Test Score / Weighted Average). Wired into nav, footer, homepage (card + hasPart +
+  prose count → 41), build.js, sitemap.xml, blog hub + registry. Deployed as v120.
+
+## Earlier (v111–v116)
 
 - Researched, built and deployed **Weighted Average Calculator**
   (`/weighted-average-calculator/`, roadmap #18 — Ahrefs-verified >1,000/mo, Easy KD, from a
