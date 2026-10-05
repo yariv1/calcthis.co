@@ -6,21 +6,16 @@ make the user re-explain anything in here._
 
 ## 1. Exactly where we are
 
-- **Live site:** asset **v137**, **43 calculators**, **25 blog articles**, **76 pages**.
-  `main` is clean and pushed (last code commit `df0d02c`, docs commit after it; nothing pending).
-- **Last two calculators shipped:** #20 Fraction (v129), #21 Standard Deviation (v137). Both
-  deployed on the user's explicit "deploy". Both are **article-less on purpose** (see §3).
-- **IN PROGRESS RIGHT NOW: #22 Paint Calculator.** The Rule 8 research report was delivered and
-  is **awaiting the user's approval and two decisions** (§4). **No code has been written for it.**
-  Do not re-research; the full report is in §4 and in memory `calcthis-paint-research`.
+- **Live site:** asset **v139**, **44 calculators**, **25 blog articles**, **77 pages**. `main` clean and pushed.
+- **Last calculators shipped:** #21 Standard Deviation (v137), **#22 Paint (v139)**. All article-less on purpose (§3).
+- **Next:** #23 Wallpaper (same area engine as Paint/Square Footage). Start with the Rule 8 research
+  report (open every competitor live, list every input, visual AND functional differentiator), wait for approval.
 
-## 2. What to do first in the next session (in this order)
+## 2. What to do first in the next session
 
-1. Reply in 2-3 lines: synced, v137 / 43 calcs, Paint report awaiting approval. No long recap.
-2. Re-state the Paint report's two open decisions (below) and ask for approval. **Do not start
-   building until the user says yes** (calculator build order: research report → approval → build →
-   preview → deploy on "deploy").
-3. After approval: build per §5, preview via the served site, wait for "deploy".
+1. Reply in 2-3 lines: synced, v139 / 44 calcs, Wallpaper next.
+2. Research Wallpaper per Rule 8, deliver a short report, wait for approval before any code.
+3. Build → preview via the served site → deploy only on the user's explicit "deploy".
 
 ## 3. What matters NOW vs what does NOT
 
@@ -58,7 +53,7 @@ make the user re-explain anything in here._
 - The user judges by screenshots and catches visual bugs fast — measure/verify in the browser, on
   mobile too, before presenting. Reply to questions directly; answer "did you…?" with proof.
 
-## 4. Paint Calculator — the pending research report (#22, Ahrefs >1K, Medium KD)
+## 4. Paint Calculator — SHIPPED v139 (kept for reference; research + approved build)
 
 Ahrefs: `paint calculator` >1K Medium · `exterior paint calculator` >100 Easy · `paint calculator
 square feet` >100 Medium · `sherwin williams paint calculator` >100 Medium · `paint calculator
@@ -74,7 +69,7 @@ Wallpaper (>1K Easy) — both Construction, same area engine.
 - PaintColorHQ: L, W, height, coats 1-3, doors, windows; 350 sq ft/gal; supplies checklist.
 - **Nobody has any visual, a real buy-list with leftover/cost, multi-room totals, primer, or per-surface coats/coverage.**
 
-**Proposed build (awaiting approval):**
+**Built as approved (+ user fixes: room name label above its row, no invented "Walls" label, grey sub-text, paired fields side by side on mobile):**
 - **Visual:** live room diagram — four walls laid flat + ceiling, doors/windows drawn and subtracted,
   per-wall areas, colour-coded by surface (walls/ceiling/trim). Reuse the Square Footage / Stair diagram technique.
 - **Functional:** (1) real buy-list "2 gal + 1 qt, ~0.3 gal left over" + optional price per can → total cost;

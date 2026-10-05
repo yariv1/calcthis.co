@@ -137,12 +137,10 @@ must be built from the article's actual units, every time, not pasted from a tem
 ## ⛔ SESSION HANDOFF — START HERE (written 2026-10-05; full detail in `HANDOFF.md`)
 
 **Read `HANDOFF.md` in full before replying.** Do not make the user re-explain anything in it.
-- **State:** v137 · 43 calculators · 25 articles · `main` clean and pushed.
-- **In progress:** **#22 Paint Calculator** — Rule 8 research report DELIVERED, **awaiting the user's
-  approval + 2 decisions** (include an Exterior mode? drop Sherwin-Williams Deck / Behr Stain / Floor
-  coatings tabs?). **No code written yet. Do not re-research** — report is in `HANDOFF.md` §4.
-- **First move next session:** 2-3 line "synced" reply, then ask for approval on the Paint report. Build
-  only after approval; deploy only on the user's explicit "deploy".
+- **State:** v139 · 44 calculators · 25 articles · `main` clean and pushed.
+- **Just shipped:** **#22 Paint Calculator** (v139). Next: #23 Wallpaper (same area engine, >1K Easy) — Rule 8
+  research report first, wait for approval, build, preview, deploy only on "deploy".
+- **First move next session:** 2-3 line "synced" reply, then start Wallpaper research.
 - **Articles are DEFERRED** — never write/propose/ask about one. Awaiting a future batch: Fraction,
   Standard Deviation. Priority = lots of calculators (backlog #22-29 in the roadmap md).
 - **Behaviour:** zero narration (Stop hook enforces it), terse replies, never invent, every report needs
@@ -153,8 +151,8 @@ must be built from the article's actual units, every time, not pasted from a tem
 
 ## Project state
 
-- **Asset version:** v137 (bumped, `node build.js` run and deployed this session)
-- **Total pages:** 76 live
+- **Asset version:** v139 (bumped, `node build.js` run and deployed this session)
+- **Total pages:** 77 live
 - **Model:** Sonnet 5
 
 ### New this session — global `.csel` custom-dropdown component
@@ -235,8 +233,8 @@ propose an article after shipping a calculator. **Calculators awaiting an articl
 
 ## Live calculators (43)
 
-### Construction & Gardening (11)
-Board Foot · Gravel · Sand · Topsoil · Mulch · Concrete · Flooring · Tile · Square Footage · Tape Measure Fraction · Stair
+### Construction & Gardening (12)
+Board Foot · Gravel · Sand · Topsoil · Mulch · Concrete · Flooring · Tile · Square Footage · Tape Measure Fraction · Stair · Paint
 
 ### Health & Fitness (19)
 Pace · Race Time Predictor · VO2 Max · Heart Rate Zone · Zone 2 Heart Rate · BMI · Body Fat · Ideal Weight · Lean Body Mass · Waist-to-Hip Ratio · Calorie · TDEE · One Rep Max · Sleep · Water Intake · Macro · Protein Intake · Peptide Reconstitution · Steps to Miles
@@ -247,14 +245,24 @@ Final Grade · GPA · Grade · Test Score · Grade Curve
 ### Math & Numbers (8)
 Fraction · Standard Deviation · Weighted Average · Ratio · Percentage · Age · Date · Time
 
-Total live calculators: **43**
+Total live calculators: **44**
 
 ---
 
-## Last session (v130–v137)
+## Last session (v138–v139)
 
-- **Ended mid-way through #22 Paint Calculator:** research report delivered, awaiting approval (see the
-  handoff block at the top of this file and `HANDOFF.md` §4). Nothing built yet.
+- Researched, built and deployed **Paint Calculator** (`/paint-calculator/`, roadmap #22). Differentiators
+  (user-approved): live room diagram (walls flat with areas, openings, gables, ceiling plan, trim) +
+  per-surface shopping list (cans to buy, leftover, cost) + multi-room project total with sticky `.mbar`.
+  Interior + Exterior; Go advanced = wall-by-wall mode (with peak/gable), texture/coverage, primer,
+  per-surface coats, door/window sizes, baseboard/crown, waste, price. `CalcThis.initPaintCalc`, `.p-paint`.
+  User corrections after preview, now permanent: the room name must show in the project list as a label
+  ABOVE its row; no invented "Walls" label when walls are the only surface (header says "Area"); tally row
+  keeps name | litres | area on one aligned line; sub-text keeps its grey 12px style; paired fields stay
+  side by side on mobile (`.p-paint .two`). Article deferred.
+
+## Earlier (v130–v137)
+
 
 - Researched, built and deployed **Standard Deviation Calculator** (`/standard-deviation-calculator/`,
   roadmap #21 — Ahrefs 2026-10-05: head >10K Medium, sample/population >1K Easy). Research opened
