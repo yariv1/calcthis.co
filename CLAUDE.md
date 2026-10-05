@@ -136,8 +136,8 @@ must be built from the article's actual units, every time, not pasted from a tem
 
 ## Project state
 
-- **Asset version:** v129 (bumped, `node build.js` run and deployed this session)
-- **Total pages:** 75 live
+- **Asset version:** v137 (bumped, `node build.js` run and deployed this session)
+- **Total pages:** 76 live
 - **Model:** Sonnet 5
 
 ### New this session — global `.csel` custom-dropdown component
@@ -181,7 +181,7 @@ is ever needed, and `build.js`'s `checkFldSpacing` gate protects it. See design-
 ## Articles are DEFERRED (user decision 2026-10-05)
 
 Build calculators first; companion articles get paired in a later batch. Do not write or
-propose an article after shipping a calculator. **Calculators awaiting an article:** Fraction.
+propose an article after shipping a calculator. **Calculators awaiting an article:** Fraction, Standard Deviation.
 
 ---
 
@@ -216,7 +216,7 @@ propose an article after shipping a calculator. **Calculators awaiting an articl
 
 ---
 
-## Live calculators (42)
+## Live calculators (43)
 
 ### Construction & Gardening (11)
 Board Foot · Gravel · Sand · Topsoil · Mulch · Concrete · Flooring · Tile · Square Footage · Tape Measure Fraction · Stair
@@ -227,14 +227,39 @@ Pace · Race Time Predictor · VO2 Max · Heart Rate Zone · Zone 2 Heart Rate �
 ### School & Grades (5)
 Final Grade · GPA · Grade · Test Score · Grade Curve
 
-### Math & Numbers (7)
-Fraction · Weighted Average · Ratio · Percentage · Age · Date · Time
+### Math & Numbers (8)
+Fraction · Standard Deviation · Weighted Average · Ratio · Percentage · Age · Date · Time
 
-Total live calculators: **42**
+Total live calculators: **43**
 
 ---
 
-## Last session (v121–v129)
+## Last session (v130–v137)
+
+- Researched, built and deployed **Standard Deviation Calculator** (`/standard-deviation-calculator/`,
+  roadmap #21 — Ahrefs 2026-10-05: head >10K Medium, sample/population >1K Easy). Research opened
+  calculator.net, CalculatorSoup, Omnicalculator and Statistics Kingdom live (Rule 8.5). All bare
+  numbers; only Statistics Kingdom has charts (heavy). **Visual differentiator:** live number-line dot
+  plot (every value a dot, mean marked, ±1/±2 SD bands, dots coloured by distance). **Functional
+  differentiators (the new rule — see below):** sample σ AND population s always shown side by side
+  (no re-run), quiet data cleaning with an "N ignored (…)" report, a plain-English reading, and under
+  Go advanced: value+count data mode, outlier threshold with one-click exclude & recalculate (shows how
+  the SD changed), z-score table, quartiles/IQR/mode/relative SD, confidence interval with a 90/95/99%
+  level (t-table), decimal places. `CalcThis.initSdCalc` in app.js, `.p-sdcalc` in style.css; all
+  statistics count-weighted. Verified against known values (2,4,4,4,5,5,7,9 → s 2.1381, σ 2;
+  calculator.net example; 1..10 quartiles + 95% CI). Sticky `.mbar` included from the start (Fraction
+  lesson). Deployed as v137. **Article deferred** (user decision).
+- **New hard rule (user, 2026-10-05): every research report must propose a FUNCTIONAL differentiator
+  as well as the visual one** — written verbatim into the Calculator Build Order rule above and
+  `calcthis-workflow-rules.md` Rule 8.
+- **Field spacing fixed structurally.** Standard Deviation shipped with zero gap between the Go-advanced
+  fields (`<div class="fld">` has no margin under the old `label.fld`-only rule) — a repeat of the VO2
+  Max bug, which the user had to point out again with red lines. Fix: base rule is now global
+  `.fld{margin-bottom:15px}` for any element, plus a sabotage-tested `build.js` gate
+  (`checkFldSpacing`), documented in `calcthis-design-system.md` → "Field spacing"; the per-page
+  `.p-X .fld` requirement is retired.
+
+## Earlier (v121–v129)
 
 - Researched, built and deployed **Fraction Calculator** (`/fraction-calculator/`, roadmap #20 —
   Ahrefs 2026-10-05: head term >100K Easy + 7 long-tails >1K). Research opened calculator.net,
