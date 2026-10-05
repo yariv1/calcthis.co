@@ -129,8 +129,8 @@ must be built from the article's actual units, every time, not pasted from a tem
 
 ## Project state
 
-- **Asset version:** v120 (bumped, `node build.js` run and deployed this session)
-- **Total pages:** 74 live
+- **Asset version:** v129 (bumped, `node build.js` run and deployed this session)
+- **Total pages:** 75 live
 - **Model:** Sonnet 5
 
 ### New this session — global `.csel` custom-dropdown component
@@ -195,7 +195,7 @@ interactive features. Documented in `calcthis-design-system.md`.
 
 ---
 
-## Live calculators (41)
+## Live calculators (42)
 
 ### Construction & Gardening (11)
 Board Foot · Gravel · Sand · Topsoil · Mulch · Concrete · Flooring · Tile · Square Footage · Tape Measure Fraction · Stair
@@ -206,14 +206,38 @@ Pace · Race Time Predictor · VO2 Max · Heart Rate Zone · Zone 2 Heart Rate �
 ### School & Grades (5)
 Final Grade · GPA · Grade · Test Score · Grade Curve
 
-### Math & Numbers (6)
-Weighted Average · Ratio · Percentage · Age · Date · Time
+### Math & Numbers (7)
+Fraction · Weighted Average · Ratio · Percentage · Age · Date · Time
 
-Total live calculators: **41**
+Total live calculators: **42**
 
 ---
 
-## Last session (v117–v120)
+## Last session (v121–v129)
+
+- Researched, built and deployed **Fraction Calculator** (`/fraction-calculator/`, roadmap #20 —
+  Ahrefs 2026-10-05: head term >100K Easy + 7 long-tails >1K). Research opened calculator.net,
+  CalculatorSoup, fractioncalculator.com, Omnicalculator and Pearson live (Rule 8.5). Only Pearson
+  has any visual (simple fraction bars); nobody handles 3+ fractions in one view (Omni sends you to
+  a separate tool — matches the Ahrefs term `3 fraction calculator`). **Differentiator
+  (user-approved):** a live bar diagram of the actual operation (operands, common-denominator
+  re-slice for pure add/subtract chains, result) + operand rows of any count with normal
+  precedence. calculator.net's "Big Number Fraction" mode was dropped as a mode (Ahrefs: <100/mo
+  for both variants) but the engine is exact BigInt so large numbers just work. `CalcThis.initFractionsCalc`
+  in app.js, `.p-fcalc` in style.css. Modes via 2-button `.modeseg` (Calculate / Simplify-convert);
+  per-row operator `.seg` (+ − × ÷ of); steps shown by default; **Go advanced** = real visible panel
+  (decimal places) + Compare / LCD table / formula-style working in the results.
+  **Three UX fixes after the user previewed it, all now permanent behaviour:** (1) mobile result was
+  off-screen while typing — added the standard sticky `.mbar` (same as Gravel/Ratio) showing the live
+  result; (2) placeholders read "3/4 or 1 3/4" so the whole-number-plus-fraction form is obvious;
+  (3) a half-typed entry ("2/", "1 3", "-", "0.") is skipped quietly instead of blanking the result
+  with an error. Then the result headline became the written-out action ("1/3 + 2 = 2 1/3", or
+  "0.125 = 1/8" for one value), with × ÷ groups bracketed when inside a longer + − expression
+  ("(1/3 × 2 3/4) + 2 1/2 + 3/4 = 4 1/6"). Wired into nav, footer, homepage (card + hasPart + prose
+  count → 42), build.js, sitemap.xml. Deployed as v129. **Companion article NOT yet written** —
+  needs its own approval of a slug/title first (see roadmap memory).
+
+## Earlier (v117–v120)
 
 - Researched, built and deployed **Grade Curve Calculator** (`/grade-curve-calculator/`,
   roadmap #19 — Ahrefs-verified >1,000/mo, Easy KD, from the same 2026-09-22 Ahrefs pass as
