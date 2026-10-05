@@ -1781,3 +1781,53 @@
   .p-lbm .iw-key .k-tick{width:3px;height:12px;border-radius:1px;background:var(--ink);opacity:.5;vertical-align:-2px}
   .p-lbm .iw-key .k-cur{width:3px;height:12px;border-radius:1px;background:var(--amber-deep);vertical-align:-2px}
   .p-lbm .dtable td:first-child{color:var(--ink)}
+
+  /* =========================================================
+     CONSTRUCTION · PAINT CALCULATOR  (body.p-paint)
+     Interior / exterior paint from room or wall-by-wall sizes.
+     Reuses .card-h2/.ctl-row/.seg (units + surface), .chips (coats,
+     also-paint), .win compact inputs + .x (wall rows, same look as
+     Weighted Average's rows), .advbtn/.add-row.split, .stable (shopping
+     list), .res-tip.adv-tip, the .trow/.tally-* project tally, the sticky
+     .mbar and the Square Footage diagram box (.sq-diagram). Adds a live
+     room diagram (walls laid flat, openings, ceiling plan, trim) and a
+     per-surface shopping list (cans to buy, leftover, cost).
+     ========================================================= */
+  .p-paint .sq-diagram{margin:14px 0 16px;background:#FCFAF6;border:1px solid var(--line);border-radius:12px;padding:14px 14px 12px}
+  .p-paint .sq-diagram svg{display:block;width:100%;height:auto;overflow:visible}
+  .p-paint .sq-diagram-empty{font-size:13px;color:var(--muted);text-align:center;padding:30px 10px;line-height:1.45}
+  .p-paint .sq-diagram-legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:8px;padding-top:10px;border-top:1px dashed var(--line);font-size:12.5px;color:var(--ink-soft)}
+  .p-paint .sq-diagram-legend b{color:var(--ink);font-weight:600}
+  .p-paint .sq-diagram-legend span{white-space:nowrap}
+  .p-paint .sq-diagram-legend .pt-note{white-space:normal;color:var(--muted)}
+  .p-paint .pt-keys{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:8px;font-size:12.5px;font-weight:500;color:var(--ink-soft)}
+  .p-paint .pt-key i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+  .p-paint .chips{margin-top:0}
+  .p-paint .two{grid-template-columns:1fr 1fr}
+  .p-paint .pt-fseg{display:flex;width:100%}
+  .p-paint .pt-fseg button{flex:1;text-align:center;padding:8px 6px}
+  .p-paint .pt-surf-note{font-size:12.5px;color:var(--muted);margin:-8px 0 14px;line-height:1.45}
+  .p-paint .pt-whead,.p-paint .pt-wrow{display:grid;grid-template-columns:20px repeat(5,minmax(0,1fr)) 24px;gap:6px;align-items:center}
+  .p-paint .pt-whead{padding:0 0 6px;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+  .p-paint .pt-whead b{font-weight:700}
+  .p-paint .pt-sm{display:none}
+  .p-paint .pt-wrow{padding:4px 0}
+  .p-paint .pt-wl{font-size:13px;font-weight:700;color:var(--ink-soft)}
+  .p-paint .pt-wrow .win{width:100%;min-width:0}
+  .p-paint .pt-wrow .x{background:none;border:0;color:var(--muted);cursor:pointer;font-size:16px;line-height:1;padding:2px 4px;border-radius:5px;justify-self:center}
+  .p-paint .pt-wrow .x:hover{color:#b23;background:#f7e9e9}
+  .p-paint .pt-addwall{margin:6px 0 14px}
+  .p-paint .pt-shop td,.p-paint .pt-shop th{white-space:normal}
+  .p-paint .pt-shop th:first-child,.p-paint .pt-shop td:first-child{min-width:104px}
+  .p-paint .pt-shop td{vertical-align:middle}
+  .p-paint .pt-shop tr.pt-lab td{text-align:left;font-weight:600;color:var(--ink);border-bottom:none;padding-bottom:0}
+  .p-paint .pt-sub{display:block;margin-top:1px;font-size:12px;font-weight:500;color:var(--muted)}
+  .p-paint .pt-shop td.pt-buy{color:var(--ink);font-weight:700}
+  @media(max-width:520px){
+    .p-paint .pt-shop{font-size:13px}
+    .p-paint .pt-shop th,.p-paint .pt-shop td{padding:7px 5px}
+    .p-paint .pt-whead{font-size:10px;letter-spacing:.02em}
+    .p-paint .pt-lg{display:none}
+    .p-paint .pt-sm{display:inline}
+    .p-paint .pt-whead,.p-paint .pt-wrow{gap:4px;grid-template-columns:16px repeat(5,minmax(0,1fr)) 20px}
+  }

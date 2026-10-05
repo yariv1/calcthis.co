@@ -1,0 +1,531 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Paint Calculator — How Much Paint Do I Need? | CalcThis</title>
+<meta name="description" content="Free paint calculator for interior and exterior walls, ceilings and trim. See a live room diagram, get a shopping list of exactly how many gallons and quarts to buy per surface, the leftover, the cost, and a project total across rooms.">
+<link rel="canonical" href="https://calcthis.co/paint-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Paint Calculator — How Much Paint Do I Need?">
+<meta property="og:description" content="A live room diagram and a real shopping list — cans to buy for walls, ceiling and trim, the leftover and the cost — across as many rooms as you like. Instant, no sign-up.">
+<meta property="og:url" content="https://calcthis.co/paint-calculator/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<meta name="theme-color" content="#B5761F">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css?v=139">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Paint Calculator",
+      "url": "https://calcthis.co/paint-calculator/",
+      "applicationCategory": "UtilityApplication",
+      "operatingSystem": "Any (web browser)",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "description": "Calculate how much paint you need for interior or exterior walls, ceilings and trim. Get a live room diagram, a per-surface shopping list of cans to buy with the leftover and cost, optional primer and waste, and a project total across multiple rooms.",
+      "featureList": [
+        "Interior and exterior paint",
+        "Live room diagram with every wall, door and window",
+        "Shopping list per surface: gallons and quarts to buy, leftover and cost",
+        "Walls, ceiling and trim & doors with their own coats",
+        "Texture-based coverage and optional primer",
+        "Wall-by-wall mode for odd rooms and gables",
+        "Project total across multiple rooms",
+        "US and metric units"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "How do I calculate how much paint I need?", "acceptedAnswer": { "@type": "Answer", "text": "Multiply the room's perimeter by the wall height to get the wall area, subtract doors and windows, multiply by the number of coats and divide by the paint's coverage (about 350 square feet per gallon). A 12 x 14 room with 8 ft ceilings, one door, two windows and two coats needs about 2.1 gallons of wall paint." } },
+        { "@type": "Question", "name": "How many square feet does a gallon of paint cover?", "acceptedAnswer": { "@type": "Answer", "text": "A gallon of paint covers roughly 350-400 square feet on a smooth surface for a single coat. Rough or textured surfaces soak up more paint, closer to 300 square feet per gallon. This calculator lets you pick the texture or type in the coverage printed on your can." } },
+        { "@type": "Question", "name": "Should I subtract doors and windows?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Standard doors and windows are not painted with wall paint, so their area is subtracted. This calculator assumes a 3 x 6.7 ft door and a 3 x 5 ft window by default and lets you change both sizes under Go advanced." } },
+        { "@type": "Question", "name": "How much paint do I need for a ceiling?", "acceptedAnswer": { "@type": "Answer", "text": "The ceiling area is simply length times width. Switch on Ceiling under Also paint and it gets its own line in the shopping list with its own coats, since ceilings are often painted with a different product." } },
+        { "@type": "Question", "name": "Do I need primer?", "acceptedAnswer": { "@type": "Answer", "text": "Use primer on bare drywall, stains, a dark-to-light colour change or glossy surfaces. Turn on Primer under Go advanced and the calculator adds a separate primer line, covering about 300 square feet per gallon in one coat." } }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body class="p-paint">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <a class="hdr-back" href="/blog/" aria-label="Back to blog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <span class="menu-col-head">Construction &amp; Gardening</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+          <a href="/paint-calculator/" class="current">Paint</a>
+          <a href="/square-footage-calculator/">Square Footage</a>
+          <a href="/tape-measure-fraction-calculator/">Tape Measure Fraction</a>
+          <a href="/stair-calculator/">Stair</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/vo2-max-calculator/">VO2 Max</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
+          <a href="/bmi-calculator/">BMI</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/ideal-weight-calculator/">Ideal Weight</a>
+          <a href="/lean-body-mass-calculator/">Lean Body Mass</a>
+          <a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio</a>
+          <a href="/calorie-calculator/">Calorie</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/water-intake-calculator/">Water Intake</a>
+          <a href="/macro-calculator/">Macro</a>
+          <a href="/protein-intake-calculator/">Protein Intake</a>
+          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
+          <a href="/steps-to-miles-calculator/">Steps to Miles</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+          <a href="/grade-curve-calculator/">Grade Curve</a>
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/fraction-calculator/">Fraction</a>
+          <a href="/standard-deviation-calculator/">Standard Deviation</a>
+          <a href="/weighted-average-calculator/">Weighted Average</a>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+          <a href="/age-calculator/">Age</a>
+          <a href="/date-calculator/">Date</a>
+          <a href="/time-calculator/">Time</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">Interior &amp; exterior · live room diagram</div>
+    <h1>Paint Calculator</h1>
+    <p>Enter your room and see every wall drawn with its area — then get a <strong>shopping list of exactly what to buy</strong> for walls, ceiling and trim: gallons and quarts, the leftover, and the cost. Add as many rooms as the job needs to one project total.</p>
+  </section>
+
+  <div class="grid">
+
+    <!-- INPUT -->
+    <div class="card" id="ptInCard">
+      <div class="card-pad">
+        <h2 class="card-h2">Your room</h2>
+
+        <div class="ctl-row">
+          <span class="ctl-lab">Units</span>
+          <div class="seg" id="ptUnitSeg">
+            <button class="on" type="button" data-sys="us">US</button>
+            <button type="button" data-sys="metric">Metric</button>
+          </div>
+        </div>
+        <div class="ctl-row">
+          <span class="ctl-lab">Painting the</span>
+          <div class="seg" id="ptSurfSeg">
+            <button class="on" type="button" data-v="interior">Interior</button>
+            <button type="button" data-v="exterior">Exterior</button>
+          </div>
+        </div>
+
+        <div id="ptRoomFields">
+          <div class="two">
+            <label class="fld"><span class="lab">Length <span class="unit" data-dim>ft</span></span><div class="inp"><input id="ptLen" type="number" inputmode="decimal" min="0" placeholder="0"><span class="suf" data-dim>ft</span></div></label>
+            <label class="fld"><span class="lab">Width <span class="unit" data-dim>ft</span></span><div class="inp"><input id="ptWid" type="number" inputmode="decimal" min="0" placeholder="0"><span class="suf" data-dim>ft</span></div></label>
+          </div>
+          <label class="fld"><span class="lab" id="ptHgtLab">Ceiling height <span class="unit" data-dim>ft</span></span><div class="inp"><input id="ptHgt" type="number" inputmode="decimal" min="0" placeholder="0"><span class="suf" data-dim>ft</span></div></label>
+          <div class="two">
+            <label class="fld"><span class="lab">Doors <span class="unit">count</span></span><div class="inp"><input id="ptDoors" type="number" inputmode="numeric" min="0" placeholder="0"></div></label>
+            <label class="fld"><span class="lab">Windows <span class="unit">count</span></span><div class="inp"><input id="ptWins" type="number" inputmode="numeric" min="0" placeholder="0"></div></label>
+          </div>
+        </div>
+
+        <div id="ptWallFields" style="display:none">
+          <div class="fld" style="margin-bottom:6px">
+            <span class="lab">Walls <span class="unit">lengths in <span data-dim>ft</span></span></span>
+            <div class="pt-whead"><span></span><span>Width</span><span>Height</span><span>Doors</span><span><b class="pt-lg">Windows</b><b class="pt-sm">Win.</b></span><span>Peak</span><span></span></div>
+            <div id="ptWallRows"></div>
+          </div>
+          <button class="linkbtn pt-addwall" id="ptAddWall" type="button">+ Add wall</button>
+          <label class="fld" id="ptCeilAreaFld" style="display:none"><span class="lab">Ceiling area <span class="unit" data-ptarea>area</span></span><div class="inp"><input id="ptCeilArea" type="number" inputmode="decimal" min="0" placeholder="0"></div></label>
+        </div>
+
+        <div class="fld">
+          <span class="lab">Coats</span>
+          <div class="chips" id="ptCoats">
+            <button type="button" data-v="1">1 coat</button>
+            <button type="button" class="on" data-v="2">2 coats</button>
+            <button type="button" data-v="3">3 coats</button>
+          </div>
+        </div>
+        <div class="fld">
+          <span class="lab">Also paint</span>
+          <div class="chips" id="ptAlso">
+            <button type="button" id="ptAlsoCeil" data-k="ceiling">Ceiling</button>
+            <button type="button" data-k="trim">Trim &amp; doors</button>
+          </div>
+        </div>
+
+        <label class="fld"><span class="lab">Name <span class="unit">optional</span></span><div class="inp"><input id="ptName" type="text" placeholder="e.g. Living room" maxlength="40"></div></label>
+
+        <div id="ptAdvIn" style="display:none">
+          <div class="proj-sep"></div>
+          <div class="fld">
+            <span class="lab">Measure by</span>
+            <div class="seg pt-fseg" id="ptMeasureSeg" role="group" aria-label="Measure by">
+              <button class="on" type="button" data-v="room">Room size</button>
+              <button type="button" data-v="walls">Wall by wall</button>
+            </div>
+          </div>
+          <div class="fld">
+            <span class="lab">Surface texture</span>
+            <div class="seg pt-fseg" id="ptTexSeg" role="group" aria-label="Surface texture">
+              <button type="button" data-v="smooth">Smooth</button>
+              <button class="on" type="button" data-v="medium">Medium</button>
+              <button type="button" data-v="rough">Rough</button>
+            </div>
+            <p class="add-note" id="ptTexNote" style="text-align:left;margin:6px 0 0"></p>
+          </div>
+          <label class="fld"><span class="lab">Coverage from your can <span class="unit">optional · <span data-cov>sq ft/gal</span></span></span><div class="inp"><input id="ptCov" type="number" inputmode="decimal" min="0" placeholder="350"><span class="suf" data-cov>sq ft/gal</span></div></label>
+          <div class="fld">
+            <span class="lab">Primer</span>
+            <div class="seg pt-fseg" id="ptPrimerSeg" role="group" aria-label="Primer">
+              <button class="on" type="button" data-v="no">No primer</button>
+              <button type="button" data-v="yes">Add primer</button>
+            </div>
+          </div>
+          <div class="fld" id="ptCeilCoatFld" style="display:none">
+            <span class="lab">Ceiling coats</span>
+            <div class="seg pt-fseg" id="ptCeilCoatSeg" role="group" aria-label="Ceiling coats">
+              <button class="on" type="button" data-v="0">Same</button>
+              <button type="button" data-v="1">1</button>
+              <button type="button" data-v="2">2</button>
+              <button type="button" data-v="3">3</button>
+            </div>
+          </div>
+          <div class="fld" id="ptTrimCoatFld" style="display:none">
+            <span class="lab">Trim &amp; doors coats</span>
+            <div class="seg pt-fseg" id="ptTrimCoatSeg" role="group" aria-label="Trim and doors coats">
+              <button class="on" type="button" data-v="0">Same</button>
+              <button type="button" data-v="1">1</button>
+              <button type="button" data-v="2">2</button>
+              <button type="button" data-v="3">3</button>
+            </div>
+          </div>
+          <div class="two">
+            <label class="fld"><span class="lab">Door width <span class="unit" data-dim>ft</span></span><div class="inp"><input id="ptDoorW" type="number" inputmode="decimal" min="0" placeholder="3"><span class="suf" data-dim>ft</span></div></label>
+            <label class="fld"><span class="lab">Door height <span class="unit" data-dim>ft</span></span><div class="inp"><input id="ptDoorH" type="number" inputmode="decimal" min="0" placeholder="6.7"><span class="suf" data-dim>ft</span></div></label>
+          </div>
+          <div class="two">
+            <label class="fld"><span class="lab">Window width <span class="unit" data-dim>ft</span></span><div class="inp"><input id="ptWinW" type="number" inputmode="decimal" min="0" placeholder="3"><span class="suf" data-dim>ft</span></div></label>
+            <label class="fld"><span class="lab">Window height <span class="unit" data-dim>ft</span></span><div class="inp"><input id="ptWinH" type="number" inputmode="decimal" min="0" placeholder="5"><span class="suf" data-dim>ft</span></div></label>
+          </div>
+          <div class="two" id="ptTrimDims">
+            <label class="fld"><span class="lab">Baseboard height <span class="unit" data-small>in</span></span><div class="inp"><input id="ptBase" type="number" inputmode="decimal" min="0" placeholder="5"><span class="suf" data-small>in</span></div></label>
+            <label class="fld"><span class="lab">Crown molding <span class="unit" data-small>in</span></span><div class="inp"><input id="ptCrown" type="number" inputmode="decimal" min="0" placeholder="0"><span class="suf" data-small>in</span></div></label>
+          </div>
+          <label class="fld" id="ptPeakFld"><span class="lab">Gable / peak height <span class="unit">optional · <span data-dim>ft</span></span></span><div class="inp"><input id="ptPeak" type="number" inputmode="decimal" min="0" placeholder="0"><span class="suf" data-dim>ft</span></div></label>
+          <label class="fld"><span class="lab">Extra for waste <span class="unit">optional</span></span><div class="inp"><input id="ptWaste" type="number" inputmode="decimal" min="0" placeholder="e.g. 10"><span class="suf">%</span></div></label>
+          <label class="fld" style="margin-bottom:0"><span class="lab"><span id="ptPriceLab">Price per gallon</span> <span class="unit">optional</span></span><div class="inp"><input id="ptPrice" type="number" inputmode="decimal" min="0" step="0.01" placeholder="0.00"><span class="suf" id="ptPriceSuf">$/gal</span></div></label>
+        </div>
+
+        <div class="add-row split" style="margin-top:16px">
+          <span></span>
+          <button class="advbtn" id="ptAdvBtn" type="button">
+            <span id="ptAdvBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+
+        <div class="add-wrap">
+          <div class="add-row">
+            <button class="btn" id="ptAddBtn" type="button">+ Add room to project</button>
+            <button class="linkbtn" id="ptClearFields" type="button">Clear fields</button>
+          </div>
+          <div class="res-hint" id="ptHint">Enter length, width and ceiling height</div>
+          <div class="add-note" id="ptAddNote">Painting more than one room? Add each to total the whole project.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT + PROJECT -->
+    <div class="card">
+      <div class="card-pad">
+        <div class="res-lab" id="ptResLab">Paint needed</div>
+        <div class="res-big"><span id="ptResQty">—</span> <span class="res-unit" id="ptResUnit">gal</span></div>
+        <div class="res-sub" id="ptResSub">Enter the room size to see how much paint you need.</div>
+
+        <div class="sq-diagram" id="ptDiagram"></div>
+
+        <div id="ptResBody" style="display:none">
+          <p class="res-tip adv-tip" id="ptPlain"></p>
+          <div class="fc-grp" style="margin-top:14px">Shopping list</div>
+          <div id="ptShop"></div>
+          <div class="res-cost hide" id="ptCostWrap"><span class="k">Estimated cost</span><span class="v" id="ptCost"></span></div>
+          <p class="res-tip" id="ptAssume"></p>
+        </div>
+
+        <div class="proj-sep"></div>
+
+        <div class="tally-head">
+          <h3>Project total</h3>
+          <button id="ptClearAll" type="button" style="display:none">Clear all</button>
+        </div>
+        <div id="ptTallyBody">
+          <div class="tally-empty">Painting more than one room? Add each above and they&rsquo;ll total here with one shopping list.</div>
+        </div>
+        <div id="ptProj" style="display:none">
+          <div class="fc-grp" style="margin-top:14px">Project shopping list</div>
+          <div id="ptProjShop"></div>
+        </div>
+        <div class="tally-total" id="ptProjTotal" style="display:none">
+          <span class="tl">Total paint <span class="sub" id="ptProjCount"></span></span>
+          <span class="tv"><span id="ptTotQty">0</span> <span id="ptTotUnit">gal</span></span>
+          <span class="tl sub" id="ptTotCostRow" style="display:none">Estimated cost</span>
+          <span class="tv" id="ptTotCost" style="display:none"></span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- mobile sticky bar -->
+  <div class="mbar" id="mbar">
+    <span class="mbar-lab" id="mLab">This room</span>
+    <div class="mbar-vals">
+      <span class="mbar-seg" id="mSeg"><b>—</b> gal</span>
+      <span class="mbar-cost hide" id="mCostWrap"><span class="mbar-eq">=</span> <b id="mCost"></b></span>
+    </div>
+  </div>
+
+  <div class="related-calcs">
+    <p class="related-calcs-h">More construction calculators that may interest you</p>
+    <div class="pills">
+      <a class="pill" href="/square-footage-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="12" rx="1"/><path d="M8 21h8"/></svg>
+        Square Footage Calculator
+      </a>
+      <a class="pill" href="/flooring-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>
+        Flooring Calculator
+      </a>
+      <a class="pill" href="/tile-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/><rect x="3" y="13" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/></svg>
+        Tile Calculator
+      </a>
+      <a class="pill" href="/concrete-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10l8-6 8 6v10H4z"/></svg>
+        Concrete Calculator
+      </a>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use the paint calculator</h2>
+        <p>Choose <strong>Interior</strong> or <strong>Exterior</strong>, then enter the room's <strong>length, width and height</strong> and how many doors and windows it has. Pick the number of <strong>coats</strong> and tick <strong>Ceiling</strong> or <strong>Trim &amp; doors</strong> if you're painting them too. The room is drawn wall by wall as you type, and the <strong>shopping list</strong> shows exactly how many gallons and quarts to buy for each surface, what you'll have left over, and what it costs. Painting several rooms? Add each one — the project total combines them into a single list, so you don't buy a quart too many per room.</p>
+
+        <h2>The paint formula</h2>
+        <div class="formula">
+          (Wall area − openings) × coats ÷ coverage = gallons
+          <small>WALL AREA = PERIMETER × HEIGHT · ONE GALLON COVERS ABOUT 350 SQ FT</small>
+        </div>
+        <p>The perimeter is twice the length plus the width. Subtract the area of every door and window, multiply by the number of coats, and divide by how far a gallon spreads. Ceilings are length × width. Trim and doors are worked out separately because they take a different paint and often a different number of coats.</p>
+
+        <h2>Worked example: a 12 × 14 room</h2>
+        <p>A 12 × 14 ft room with 8 ft ceilings, one door and two windows, painted with two coats of wall paint:</p>
+        <p style="color:var(--ink);font-weight:500">Walls: 2 × (12 + 14) × 8 = <strong>416 sq ft</strong>. Minus one 3 × 6.7 ft door (20 sq ft) and two 3 × 5 ft windows (30 sq ft) = <strong>366 sq ft</strong>. Two coats = 732 sq ft ÷ 350 = <strong>2.1 gallons</strong>, so buy <strong>2 gal + 1 qt</strong> and have about 0.2 gal left for touch-ups.</p>
+
+        <h2>Exterior painting</h2>
+        <p>Switch to <strong>Exterior</strong> and the same maths applies to the outside walls of a house. Use <strong>Wall by wall</strong> under Go advanced to enter each side separately, including a <strong>peak height</strong> for gable ends — the triangle above the wall is added automatically. Exterior surfaces are often rougher, so set the <strong>surface texture</strong> to Rough to lower the coverage to about 300 sq ft per gallon.</p>
+      </div>
+
+      <div>
+        <h2>How much paint for common room sizes</h2>
+        <p>Walls only, 8 ft ceilings, one door, two windows, two coats at 350 sq ft per gallon:</p>
+        <table class="dtable">
+          <thead><tr><th>Room</th><th>Wall area</th><th>Paint needed</th></tr></thead>
+          <tbody>
+            <tr><td>10 × 10 ft</td><td>270 sq ft</td><td>1 gal + 3 qt</td></tr>
+            <tr><td>12 × 12 ft</td><td>334 sq ft</td><td>2 gal</td></tr>
+            <tr><td>12 × 14 ft</td><td>366 sq ft</td><td>2 gal + 1 qt</td></tr>
+            <tr><td>14 × 16 ft</td><td>430 sq ft</td><td>2 gal + 2 qt</td></tr>
+            <tr><td>16 × 20 ft</td><td>526 sq ft</td><td>3 gal + 1 qt</td></tr>
+          </tbody>
+        </table>
+
+        <h2>How far does a gallon go?</h2>
+        <ul>
+          <li><strong>Smooth walls</strong> — about 400 sq ft per gallon</li>
+          <li><strong>Medium texture</strong> — about 350 sq ft per gallon</li>
+          <li><strong>Rough or porous</strong> — about 300 sq ft per gallon</li>
+          <li><strong>Primer</strong> — about 300 sq ft per gallon, one coat</li>
+        </ul>
+        <p>If your can states its own coverage, type it into <strong>Coverage from your can</strong> under Go advanced and it replaces the estimate.</p>
+
+        <h2>Primer, coats and waste</h2>
+        <p>Two coats of paint is the standard. Use a coat of <strong>primer</strong> on bare drywall, patched areas, stains, glossy surfaces or when covering a dark colour with a light one — turn it on under Go advanced and it gets its own line in the shopping list. Add a small <strong>extra for waste</strong> if you're cutting in around a lot of corners or painting rough surfaces.</p>
+
+        <h2>Trim, doors and ceilings</h2>
+        <p>Tick <strong>Trim &amp; doors</strong> to include both faces of every door, the baseboards, any crown molding and the window and door casing. The ceiling is a separate line because it's usually a flat white paint. Each can have its own number of coats under Go advanced. For the floor, see the <a href="/flooring-calculator/">Flooring Calculator</a>, and use the <a href="/square-footage-calculator/">Square Footage Calculator</a> for odd-shaped rooms.</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>How do I calculate how much paint I need?</summary><p>Multiply the room's perimeter by the wall height to get the wall area, subtract doors and windows, multiply by the number of coats and divide by the paint's coverage (about 350 square feet per gallon). A 12 × 14 room with 8 ft ceilings, one door, two windows and two coats needs about <strong>2.1 gallons</strong> of wall paint.</p></details>
+    <details class="faq"><summary>How many square feet does a gallon of paint cover?</summary><p>A gallon covers roughly <strong>350–400 square feet</strong> on a smooth surface for a single coat. Rough or textured surfaces soak up more paint, closer to 300 square feet per gallon. Pick the texture under Go advanced, or type in the coverage printed on your can.</p></details>
+    <details class="faq"><summary>Should I subtract doors and windows?</summary><p>Yes. Standard doors and windows aren't painted with wall paint, so their area is subtracted. This calculator assumes a 3 × 6.7 ft door and a 3 × 5 ft window by default and lets you change both sizes under Go advanced.</p></details>
+    <details class="faq"><summary>How much paint do I need for a ceiling?</summary><p>The ceiling area is simply length × width. Tick <strong>Ceiling</strong> under Also paint and it gets its own line in the shopping list with its own coats, since ceilings are often painted with a different product.</p></details>
+    <details class="faq"><summary>Do I need primer?</summary><p>Use primer on bare drywall, stains, a dark-to-light colour change or glossy surfaces. Turn on <strong>Add primer</strong> under Go advanced and the calculator adds a separate primer line, covering about 300 square feet per gallon in one coat.</p></details>
+  </section>
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+          <li><a href="/paint-calculator/">Paint Calculator</a></li>
+          <li><a href="/square-footage-calculator/">Square Footage Calculator</a></li>
+          <li><a href="/tape-measure-fraction-calculator/">Tape Measure Fraction Calculator</a></li>
+          <li><a href="/stair-calculator/">Stair Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/vo2-max-calculator/">VO2 Max Calculator</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/bmi-calculator/">BMI Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/ideal-weight-calculator/">Ideal Weight Calculator</a></li>
+          <li><a href="/lean-body-mass-calculator/">Lean Body Mass Calculator</a></li>
+          <li><a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio Calculator</a></li>
+          <li><a href="/calorie-calculator/">Calorie Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/water-intake-calculator/">Water Intake Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/protein-intake-calculator/">Protein Intake Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
+          <li><a href="/steps-to-miles-calculator/">Steps to Miles Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+          <li><a href="/grade-curve-calculator/">Grade Curve Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/fraction-calculator/">Fraction Calculator</a></li>
+          <li><a href="/standard-deviation-calculator/">Standard Deviation Calculator</a></li>
+          <li><a href="/weighted-average-calculator/">Weighted Average Calculator</a></li>
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+          <li><a href="/age-calculator/">Age Calculator</a></li>
+          <li><a href="/date-calculator/">Date Calculator</a></li>
+          <li><a href="/time-calculator/">Time Calculator</a></li>
+        </ul>
+      </div>
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/blog/">Blog</a>
+      <span aria-hidden="true">·</span>
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+</div>
+
+<script src="/assets/app.js?v=139"></script>
+<script>CalcThis.initPaintCalc();</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>

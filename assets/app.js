@@ -7096,6 +7096,454 @@ CalcThis.initSdCalc = function (cfg) {
   render();
 };
 
+/* ===== CalcThis Paint engine =====
+   CalcThis.initPaintCalc() — interior or exterior paint from room (or wall-by-wall)
+   dimensions: wall area minus doors/windows, optional ceiling and trim & doors, per-surface
+   coats and coverage, optional primer and waste. Differentiator vs. every competitor checked
+   (Omnicalculator, Sherwin-Williams, Behr, PaintColorHQ — all bare-number, one volume out):
+   a live room diagram (every wall drawn flat with its area, openings, ceiling plan, trim),
+   a real shopping list per surface (cans to buy + leftover + cost) and a multi-room project
+   total. Lengths are held internally in feet and paint in US gallons; the unit toggle only
+   changes what is read and shown. Independent engine, no shared state. */
+CalcThis.initPaintCalc = function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var FT_PER_M = 3.280839895, FT2_PER_M2 = 10.7639104, L_PER_GAL = 3.785411784;
+  var COV = { smooth: 400, medium: 350, rough: 300 };       // sq ft per US gallon
+  var PRIMER_COV = 300, CASING_FT = 0.25;
+  var SQFTGAL_TO_M2L = (1 / FT2_PER_M2) / L_PER_GAL;        // 0.024543
+  var M2L_TO_SQFTGAL = 1 / SQFTGAL_TO_M2L;                  // 40.746
+
+  var sys = 'us', surf = 'interior', measure = 'room', coats = 2, tex = 'medium', primer = false;
+  var ceilCoats = 0, trimCoats = 0;                          // 0 = same as walls
+  var also = { ceiling: false, trim: false };
+  var tally = [];
+  var advanced = false;
+  var wallRowCount = 0;
+
+  var NAME = { walls: 'Walls', ceiling: 'Ceiling', trim: 'Trim & doors', primer: 'Primer' };
+  var PAINT = { walls: 'wall paint', ceiling: 'ceiling paint', trim: 'trim paint', primer: 'primer' };
+  var ORDER = ['walls', 'ceiling', 'trim', 'primer'];
+
+  function num(id) { var el = typeof id === 'string' ? $(id) : id; if (!el) return NaN; var n = parseFloat((el.value || '').trim()); return isNaN(n) ? NaN : n; }
+  function pos(id) { var n = num(id); return (!isNaN(n) && n > 0) ? n : NaN; }
+  function cnt(id) { var n = num(id); return (!isNaN(n) && n > 0) ? Math.floor(n) : 0; }
+  function lenFt(v) { return sys === 'us' ? v : v * FT_PER_M; }
+  function smallFt(v) { return sys === 'us' ? v / 12 : v / 100 * FT_PER_M; }
+  function fmt(n) { if (n == null || isNaN(n)) return '—'; if (n >= 100) return Math.round(n).toString(); var r = Math.round(n * 10) / 10; return r.toString(); }
+  function fmtV(n) { var r = Math.round(n * 10) / 10; if (r === 0 && n > 0) return '<0.1'; return r.toString(); }
+  function money(n) { return '$' + n.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+  function joinList(a) { if (a.length < 2) return a.join(''); return a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1]; }
+  function vol(gal) { return sys === 'us' ? gal : gal * L_PER_GAL; }
+  function volUnit() { return sys === 'us' ? 'gal' : 'L'; }
+  function areaTxt(ft2) { return sys === 'us' ? fmt(ft2) + ' sq ft' : fmt(ft2 / FT2_PER_M2) + ' m²'; }
+  function covDisp(sqftGal) { return sys === 'us' ? fmt(sqftGal) : (Math.round(sqftGal * SQFTGAL_TO_M2L * 10) / 10).toString(); }
+  function sizes() { return sys === 'us' ? [1, 0.25] : [5, 2.5, 1]; }
+
+  /* ---------- buy list: fewest-waste combination of can sizes ---------- */
+  function bestBuy(need, sz) {
+    function zeros(k) { var a = []; for (var i = 0; i < k; i++) a.push(0); return a; }
+    if (need <= 1e-9) return { counts: zeros(sz.length), vol: 0, cans: 0 };
+    function go(n, i) {
+      var s = sz[i];
+      if (i === sz.length - 1) { var c = Math.max(0, Math.ceil(n / s - 1e-9)); return { counts: [c], vol: c * s, cans: c }; }
+      var f = Math.floor(n / s + 1e-9), rem = n - f * s;
+      var rest = go(rem, i + 1);
+      var a = { counts: [f].concat(rest.counts), vol: f * s + rest.vol, cans: f + rest.cans };
+      if (rem > 1e-9) {
+        var b = { counts: [f + 1].concat(zeros(sz.length - i - 1)), vol: (f + 1) * s, cans: f + 1 };
+        if (b.vol < a.vol - 1e-9 || (Math.abs(b.vol - a.vol) < 1e-9 && b.cans < a.cans)) return b;
+      }
+      return a;
+    }
+    return go(need, 0);
+  }
+  function buyLabel(b) {
+    var parts = [], i;
+    if (sys === 'us') {
+      if (b.counts[0] > 0) parts.push(b.counts[0] + ' gal');
+      if (b.counts[1] > 0) parts.push(b.counts[1] + ' qt');
+    } else {
+      var labs = ['5 L', '2.5 L', '1 L'];
+      for (i = 0; i < b.counts.length; i++) if (b.counts[i] > 0) parts.push(b.counts[i] > 1 ? b.counts[i] + ' × ' + labs[i] : labs[i]);
+    }
+    return parts.length ? parts.join(' + ') : '—';
+  }
+
+  /* ---------- read the inputs (lengths converted to feet) ---------- */
+  function wallRowEls() { return [].slice.call($('ptWallRows').querySelectorAll('.pt-wrow')); }
+  function readRoom() {
+    var r = { ok: false, missing: [], walls: [], perim: 0, ceilArea: null, doors: 0, wins: 0, plan: null };
+    if (measure === 'room') {
+      var L = pos('ptLen'), W = pos('ptWid'), H = pos('ptHgt');
+      if (isNaN(L)) r.missing.push('length');
+      if (isNaN(W)) r.missing.push('width');
+      if (isNaN(H)) r.missing.push(surf === 'interior' ? 'ceiling height' : 'wall height');
+      if (r.missing.length) return r;
+      L = lenFt(L); W = lenFt(W); H = lenFt(H);
+      var pk = pos('ptPeak'); pk = isNaN(pk) ? 0 : lenFt(pk);
+      r.walls = [{ w: L, h: H, d: 0, n: 0, p: 0 }, { w: W, h: H, d: 0, n: 0, p: pk }, { w: L, h: H, d: 0, n: 0, p: 0 }, { w: W, h: H, d: 0, n: 0, p: pk }];
+      r.doors = cnt('ptDoors'); r.wins = cnt('ptWins');
+      r.perim = 2 * (L + W); r.ceilArea = L * W; r.plan = { l: L, w: W };
+    } else {
+      wallRowEls().forEach(function (row) {
+        var g = function (f) { return row.querySelector('[data-f="' + f + '"]'); };
+        var w = pos(g('w')), h = pos(g('h'));
+        if (isNaN(w) || isNaN(h)) return;                    // half-typed row: skipped quietly
+        var d = cnt(g('d')), n = cnt(g('n')), p = pos(g('p'));
+        r.walls.push({ w: lenFt(w), h: lenFt(h), d: d, n: n, p: isNaN(p) ? 0 : lenFt(p) });
+        r.doors += d; r.wins += n; r.perim += lenFt(w);
+      });
+      if (!r.walls.length) { r.missing.push('width and height for at least one wall'); return r; }
+      if (also.ceiling && surf === 'interior') {
+        var ca = pos('ptCeilArea');
+        if (isNaN(ca)) { r.missing.push('ceiling area'); return r; }
+        r.ceilArea = sys === 'us' ? ca : ca * FT2_PER_M2;
+      }
+    }
+    r.ok = true;
+    return r;
+  }
+
+  /* ---------- the maths ---------- */
+  function dimFt(id, defUs, defMet) { var v = pos(id); if (isNaN(v)) v = sys === 'us' ? defUs : defMet; return lenFt(v); }
+  function compute(r) {
+    var dW = dimFt('ptDoorW', 3, 0.9), dH = dimFt('ptDoorH', 6.7, 2), wW = dimFt('ptWinW', 3, 0.9), wH = dimFt('ptWinH', 5, 1.5);
+    var doorA = dW * dH, winA = wW * wH;
+    var gross = 0, peakA = 0;
+    r.walls.forEach(function (w) { gross += w.w * w.h; peakA += 0.5 * w.w * w.p; });
+    var open = r.doors * doorA + r.wins * winA;
+    var wallsA = gross + peakA - open;
+    if (wallsA <= 0) return null;
+    var ceilA = (surf === 'interior' && also.ceiling && r.ceilArea) ? r.ceilArea : 0;
+    var trimA = 0, baseFt = 0, crownFt = 0;
+    if (also.trim) {
+      var casing = (r.doors * (2 * dH + dW) + r.wins * 2 * (wW + wH)) * CASING_FT;
+      if (surf === 'interior') {
+        var bv = pos('ptBase'), cv = num('ptCrown');
+        baseFt = smallFt(isNaN(bv) ? (sys === 'us' ? 5 : 12) : bv);
+        crownFt = smallFt((isNaN(cv) || cv < 0) ? 0 : cv);
+        trimA = r.doors * doorA * 2 + Math.max(0, r.perim - r.doors * dW) * baseFt + r.perim * crownFt + casing;
+      } else {
+        trimA = r.doors * doorA + casing;
+      }
+    }
+    var ov = pos('ptCov');
+    var cov = isNaN(ov) ? COV[tex] : (sys === 'us' ? ov : ov * M2L_TO_SQFTGAL);
+    var wv = num('ptWaste'), waste = (isNaN(wv) || wv < 0) ? 0 : wv, mult = 1 + waste / 100;
+    var cc = { walls: coats, ceiling: ceilCoats || coats, trim: trimCoats || coats };
+    var s = {};
+    s.walls = { area: wallsA, coats: cc.walls, gal: wallsA * cc.walls / cov * mult };
+    if (ceilA > 0) s.ceiling = { area: ceilA, coats: cc.ceiling, gal: ceilA * cc.ceiling / cov * mult };
+    if (trimA > 0) s.trim = { area: trimA, coats: cc.trim, gal: trimA * cc.trim / cov * mult };
+    if (primer) { var pa = wallsA + ceilA; s.primer = { area: pa, coats: 1, gal: pa / PRIMER_COV * mult }; }
+    var paintGal = 0, paintArea = 0;
+    ['walls', 'ceiling', 'trim'].forEach(function (k) { if (s[k]) { paintGal += s[k].gal; paintArea += s[k].area; } });
+    return { s: s, gross: gross, peakA: peakA, open: open, doors: r.doors, wins: r.wins, cov: cov, waste: waste, paintGal: paintGal, paintArea: paintArea, doorW: dW, doorH: dH, winW: wW, winH: wH, baseFt: baseFt };
+  }
+
+  /* ---------- shopping list table ---------- */
+  function priceVal() { var p = num('ptPrice'); return (!isNaN(p) && p > 0) ? p : null; }
+  function shopTable(rows, soleLabel) {
+    var sole = rows.length === 1 && rows[0].key === 'walls';
+    var html = '<div class="stable-wrap"><table class="stable pt-shop"><thead><tr><th>' + (sole ? 'Area' : 'Surface') + '</th><th>Need</th><th>Buy</th><th>Left</th></tr></thead><tbody>';
+    var bought = 0, left = 0, buys = [];
+    rows.forEach(function (row) {
+      var need = vol(row.gal), b = bestBuy(need, sizes()), l = Math.max(0, b.vol - need);
+      bought += b.vol; left += l;
+      buys.push({ key: row.key, label: buyLabel(b) });
+      var sub = areaTxt(row.area) + (row.coats ? ' × ' + row.coats + (row.coats > 1 ? ' coats' : ' coat') : '');
+      if (sole && soleLabel) html += '<tr class="pt-lab"><td colspan="4">' + soleLabel + '</td></tr>';
+      html += '<tr><td>' + (sole ? '' : NAME[row.key]) + '<span class="pt-sub">' + sub + '</span></td><td>' + fmtV(need) + ' ' + volUnit() + '</td><td class="pt-buy">' + buyLabel(b) + '</td><td>' + fmtV(l) + ' ' + volUnit() + '</td></tr>';
+    });
+    html += '</tbody></table></div>';
+    return { html: html, bought: bought, left: left, buys: buys };
+  }
+  function rowsFrom(s) { var out = []; ORDER.forEach(function (k) { if (s[k] && s[k].gal > 0) out.push({ key: k, area: s[k].area, coats: s[k].coats, gal: s[k].gal }); }); return out; }
+  function plainLine(shop, leftTxt) {
+    var parts = [], prim = '';
+    shop.buys.forEach(function (b) { if (b.key === 'primer') prim = b.label + ' of primer'; else parts.push(b.label + ' of ' + PAINT[b.key]); });
+    var txt = 'Buy ' + joinList(parts.concat(prim ? [prim] : [])) + '.';
+    if (shop.left > 0.04) txt += ' About ' + fmtV(shop.left) + ' ' + volUnit() + ' left over for touch-ups.';
+    return txt;
+  }
+
+  /* ---------- live diagram ---------- */
+  function renderDiagram(r, c) {
+    var box = $('ptDiagram');
+    if (!r || !r.ok || !c) { box.innerHTML = '<div class="sq-diagram-empty">Enter your room size and every wall will be drawn here, flat, with its area.</div>'; return; }
+    var walls = r.walls, n = walls.length, VW = 280, PAD = 8, GAP = 6, TOP = 8, i, k;
+    var totW = 0, maxH = 0;
+    walls.forEach(function (w) { totW += w.w; maxH = Math.max(maxH, w.h + w.p); });
+    var ws = Math.min((VW - 2 * PAD - GAP * (n - 1)) / totW, 96 / maxH);
+    var stripH = maxH * ws, base = TOP + stripH;
+    // openings per wall: real counts in wall-by-wall mode, spread evenly (illustration) in room mode
+    var dArr = [], nArr = [];
+    for (i = 0; i < n; i++) { dArr.push(measure === 'room' ? 0 : walls[i].d); nArr.push(measure === 'room' ? 0 : walls[i].n); }
+    if (measure === 'room') { for (k = 0; k < r.doors; k++) dArr[k % n]++; for (k = 0; k < r.wins; k++) nArr[(k + 1) % n]++; }
+    var trimOn = also.trim && surf === 'interior';
+    var WALL_F = 'rgba(181,118,31,.17)', STROKE = 'var(--ink)', TRIM = 'var(--spruce)';
+    var svg = '', x = PAD, letters = '';
+    for (i = 0; i < n; i++) {
+      var w = walls[i], wpx = w.w * ws, hpx = w.h * ws, top = base - hpx;
+      if (w.p > 0) svg += '<polygon points="' + x + ',' + top + ' ' + (x + wpx) + ',' + top + ' ' + (x + wpx / 2) + ',' + (top - w.p * ws) + '" fill="' + WALL_F + '" stroke="' + STROKE + '" stroke-width="1.4" stroke-linejoin="round"/>';
+      svg += '<rect x="' + x + '" y="' + top + '" width="' + wpx + '" height="' + hpx + '" fill="' + WALL_F + '" stroke="' + STROKE + '" stroke-width="1.4"/>';
+      if (trimOn && c.baseFt > 0) { var bh = Math.max(3, c.baseFt * ws); svg += '<rect x="' + x + '" y="' + (base - bh) + '" width="' + wpx + '" height="' + bh + '" fill="' + TRIM + '" opacity=".85"/>'; }
+      var slots = Math.min(6, dArr[i] + nArr[i]), si = 0, slotW = wpx / (slots + 1);
+      var stroke = also.trim ? TRIM : STROKE, dash = also.trim ? '' : ' stroke-dasharray="4 3"';
+      for (k = 0; k < Math.min(dArr[i], 6); k++) {
+        si++; var dw = Math.min(c.doorW * ws, slotW * 0.8), dh = Math.min(c.doorH * ws, hpx * 0.92);
+        svg += '<rect x="' + (x + slotW * si - dw / 2) + '" y="' + (base - dh) + '" width="' + dw + '" height="' + dh + '" fill="var(--paper)" stroke="' + stroke + '" stroke-width="1.3"' + dash + '/>';
+      }
+      for (k = 0; k < nArr[i] && si < 6; k++) {
+        si++; var ww = Math.min(c.winW * ws, slotW * 0.8), wh = Math.min(c.winH * ws, hpx * 0.6);
+        svg += '<rect x="' + (x + slotW * si - ww / 2) + '" y="' + (base - hpx * 0.55 - wh / 2) + '" width="' + ww + '" height="' + wh + '" fill="var(--paper)" stroke="' + stroke + '" stroke-width="1.3"' + dash + '/>';
+      }
+      var gA = w.w * w.h + 0.5 * w.w * w.p;
+      letters += '<text x="' + (x + wpx / 2) + '" y="' + (base + 15) + '" text-anchor="middle" font-size="12" font-weight="700" fill="var(--ink-soft)">' + String.fromCharCode(65 + (i % 26)) + '</text>';
+      if (wpx >= 50) letters += '<text x="' + (x + wpx / 2) + '" y="' + (base + 29) + '" text-anchor="middle" font-size="12" font-weight="500" fill="var(--ink)">' + areaTxt(gA) + '</text>';
+      x += wpx + GAP;
+    }
+    svg += letters;
+    var H = base + 34;
+    if (also.ceiling && surf === 'interior' && r.ceilArea) {
+      var py = base + 42, boxW = 110, boxH = 38, pw, ph, ar = r.plan ? r.plan.l / r.plan.w : 1.6;
+      ar = Math.max(0.4, Math.min(2.5, ar));
+      if (ar >= boxW / boxH) { pw = boxW; ph = boxW / ar; } else { ph = boxH; pw = boxH * ar; }
+      svg += '<rect x="' + PAD + '" y="' + (py + (boxH - ph) / 2) + '" width="' + pw + '" height="' + ph + '" fill="rgba(55,80,63,.16)" stroke="' + STROKE + '" stroke-width="1.4"/>';
+      svg += '<text x="' + (PAD + boxW + 12) + '" y="' + (py + boxH / 2 + 4) + '" font-size="12" font-weight="600" fill="var(--ink)">Ceiling · ' + areaTxt(r.ceilArea) + '</text>';
+      H = py + boxH + 6;
+    }
+    var key = '<span class="pt-key"><i style="background:rgba(181,118,31,.4)"></i>Walls</span>';
+    if (also.ceiling && surf === 'interior') key += '<span class="pt-key"><i style="background:rgba(55,80,63,.4)"></i>Ceiling</span>';
+    if (also.trim) key += '<span class="pt-key"><i style="background:var(--spruce)"></i>Trim &amp; doors</span>';
+    var leg = '<span><b>Walls to paint</b> ' + areaTxt(c.s.walls.area) + '</span>';
+    if (c.open > 0) leg += '<span><b>Openings</b> −' + areaTxt(c.open) + '</span>';
+    if (c.peakA > 0) leg += '<span><b>Gable / peak</b> +' + areaTxt(c.peakA) + '</span>';
+    if (measure === 'room' && (r.doors + r.wins) > 0) leg += '<span class="pt-note">Openings are placed for illustration.</span>';
+    box.innerHTML = '<svg viewBox="0 0 ' + VW + ' ' + H + '" xmlns="http://www.w3.org/2000/svg">' + svg + '</svg><div class="pt-keys">' + key + '</div><div class="sq-diagram-legend">' + leg + '</div>';
+  }
+
+  /* ---------- live room ---------- */
+  var live = null;                                         // {r, c} of the room being edited
+  function setAddEnabled(ok) { var b = $('ptAddBtn'); b.disabled = !ok; b.style.opacity = ok ? '1' : '.5'; b.style.cursor = ok ? 'pointer' : 'not-allowed'; }
+  function renderRoom() {
+    var r = readRoom(), c = r.ok ? compute(r) : null;
+    live = (r.ok && c) ? { r: r, c: c } : null;
+    setAddEnabled(!!live);
+    $('ptHint').style.display = live ? 'none' : 'block';
+    $('ptAddNote').style.display = live ? 'block' : 'none';
+    if (!r.ok) $('ptHint').textContent = 'Enter ' + joinList(r.missing);
+    else if (!c) $('ptHint').textContent = 'The openings are bigger than the walls — check the sizes';
+    renderDiagram(r, c);
+    $('ptResUnit').textContent = volUnit();
+    var res = $('ptResBody');
+    if (!live) {
+      $('ptResQty').textContent = '—';
+      $('ptResSub').textContent = 'Enter the room size to see how much paint you need.';
+      res.style.display = 'none';
+      return;
+    }
+    $('ptResQty').textContent = fmtV(vol(c.paintGal));
+    $('ptResSub').textContent = areaTxt(c.paintArea) + ' to paint' + (c.waste > 0 ? ' · incl. ' + fmt(c.waste) + '% extra' : '');
+    var shop = shopTable(rowsFrom(c.s));
+    $('ptShop').innerHTML = shop.html;
+    $('ptPlain').textContent = plainLine(shop);
+    var p = priceVal();
+    $('ptCostWrap').classList.toggle('hide', p == null);
+    if (p != null) $('ptCost').textContent = money(shop.bought * p);
+    var covTxt = covDisp(c.cov) + ' ' + (sys === 'us' ? 'sq ft per gallon' : 'm² per litre');
+    $('ptAssume').textContent = 'Assumes ' + covTxt + ', a ' + fmtDim(c.doorW) + ' × ' + fmtDim(c.doorH) + ' door and a ' + fmtDim(c.winW) + ' × ' + fmtDim(c.winH) + ' window' + (primer ? ', primer at ' + covDisp(PRIMER_COV) + ' ' + (sys === 'us' ? 'sq ft per gallon' : 'm² per litre') : '') + '.';
+    res.style.display = '';
+  }
+  function fmtDim(ft) { var v = sys === 'us' ? ft : ft / FT_PER_M; var u = sys === 'us' ? ' ft' : ' m'; return (Math.round(v * 10) / 10) + u; }
+
+  /* ---------- project tally ---------- */
+  function sumTally() {
+    var t = { gal: { walls: 0, ceiling: 0, trim: 0, primer: 0 }, area: { walls: 0, ceiling: 0, trim: 0, primer: 0 }, paintGal: 0 };
+    tally.forEach(function (row) { ORDER.forEach(function (k) { t.gal[k] += row.gal[k]; t.area[k] += row.area[k]; }); t.paintGal += row.paintGal; });
+    return t;
+  }
+  function renderTally() {
+    var body = $('ptTallyBody');
+    var t = sumTally(), shop = null;
+    if (!tally.length) {
+      body.innerHTML = '<div class="tally-empty">Painting more than one room? Add each above and they’ll total here with one shopping list.</div>';
+      $('ptProj').style.display = 'none'; $('ptProjTotal').style.display = 'none'; $('ptClearAll').style.display = 'none';
+    } else {
+      $('ptClearAll').style.display = 'inline';
+      var html = '';
+      tally.forEach(function (row, i) {
+        html += '<div class="trow"><span class="desc"><span class="d">' + row.label + '</span></span>'
+          + '<span class="qt">' + fmtV(vol(row.paintGal)) + ' ' + volUnit() + '</span>'
+          + '<span class="rc">' + areaTxt(row.paintArea) + '</span>'
+          + '<button class="x" data-i="' + i + '" aria-label="Remove">×</button></div>';
+      });
+      body.innerHTML = html;
+      var rows = [];
+      ORDER.forEach(function (k) { if (t.gal[k] > 0) rows.push({ key: k, area: t.area[k], coats: 0, gal: t.gal[k] }); });
+      shop = shopTable(rows, tally.length === 1 && tally[0].named ? tally[0].label : '');
+      $('ptProjShop').innerHTML = shop.html;
+      $('ptProj').style.display = '';
+      $('ptProjTotal').style.display = 'grid';
+      $('ptTotQty').textContent = fmtV(vol(t.paintGal));
+      $('ptTotUnit').textContent = volUnit();
+      $('ptProjCount').textContent = '(' + tally.length + (tally.length === 1 ? ' room)' : ' rooms)');
+      var p = priceVal();
+      $('ptTotCostRow').style.display = p == null ? 'none' : 'block';
+      $('ptTotCost').style.display = p == null ? 'none' : 'block';
+      if (p != null) $('ptTotCost').textContent = money(shop.bought * p);
+    }
+    updateMbar(t, shop);
+  }
+  function updateMbar(t, shop) {
+    var cw = $('mCostWrap'), p = priceVal();
+    if (tally.length) {
+      $('mLab').textContent = 'Project total';
+      $('mSeg').innerHTML = '<b>' + fmtV(vol(t.paintGal)) + '</b> ' + volUnit();
+      if (p != null && shop) { cw.classList.remove('hide'); $('mCost').textContent = money(shop.bought * p); } else cw.classList.add('hide');
+      return;
+    }
+    $('mLab').textContent = 'This room';
+    if (!live) { $('mSeg').innerHTML = '<b>—</b> ' + volUnit(); cw.classList.add('hide'); return; }
+    $('mSeg').innerHTML = '<b>' + fmtV(vol(live.c.paintGal)) + '</b> ' + volUnit();
+    if (p != null) { var sh = shopTable(rowsFrom(live.c.s)); cw.classList.remove('hide'); $('mCost').textContent = money(sh.bought * p); } else cw.classList.add('hide');
+  }
+  function renderAll() { renderRoom(); renderTally(); }
+
+  /* ---------- wall-by-wall rows ---------- */
+  function addWallRow() {
+    var row = document.createElement('div');
+    row.className = 'pt-wrow';
+    row.innerHTML = '<span class="pt-wl"></span>'
+      + ['w', 'h', 'd', 'n', 'p'].map(function (f) { return '<input class="win" data-f="' + f + '" type="number" inputmode="decimal" min="0" placeholder="0" aria-label="' + ({ w: 'Wall width', h: 'Wall height', d: 'Doors', n: 'Windows', p: 'Peak height' })[f] + '">'; }).join('')
+      + '<button class="x" type="button" aria-label="Remove wall">×</button>';
+    $('ptWallRows').appendChild(row);
+    renumber();
+  }
+  function renumber() { wallRowEls().forEach(function (row, i) { row.querySelector('.pt-wl').textContent = String.fromCharCode(65 + (i % 26)); }); }
+  function resetWallRows() { $('ptWallRows').innerHTML = ''; for (var i = 0; i < 4; i++) addWallRow(); }
+
+  /* ---------- labels / visibility ---------- */
+  function setSeg(id, v, attr) { [].forEach.call($(id).children, function (b) { b.classList.toggle('on', b.getAttribute(attr || 'data-v') === String(v)); }); }
+  function updateUnitLabels() {
+    var us = sys === 'us';
+    [].forEach.call(document.querySelectorAll('#ptInCard [data-dim]'), function (el) { el.textContent = us ? 'ft' : 'm'; });
+    [].forEach.call(document.querySelectorAll('#ptInCard [data-small]'), function (el) { el.textContent = us ? 'in' : 'cm'; });
+    [].forEach.call(document.querySelectorAll('#ptInCard [data-cov]'), function (el) { el.textContent = us ? 'sq ft/gal' : 'm²/L'; });
+    [].forEach.call(document.querySelectorAll('#ptInCard [data-ptarea]'), function (el) { el.textContent = us ? 'sq ft' : 'm²'; });
+    $('ptDoorW').placeholder = us ? '3' : '0.9'; $('ptDoorH').placeholder = us ? '6.7' : '2';
+    $('ptWinW').placeholder = us ? '3' : '0.9'; $('ptWinH').placeholder = us ? '5' : '1.5';
+    $('ptBase').placeholder = us ? '5' : '12';
+    $('ptCov').placeholder = covDisp(COV[tex]);
+    $('ptPriceLab').textContent = us ? 'Price per gallon' : 'Price per litre';
+    $('ptPriceSuf').textContent = us ? '$/gal' : '$/L';
+    $('ptTexNote').textContent = us
+      ? 'Smooth 400 · Medium 350 · Rough 300 sq ft per gallon'
+      : 'Smooth ' + covDisp(400) + ' · Medium ' + covDisp(350) + ' · Rough ' + covDisp(300) + ' m² per litre';
+  }
+  function applySurface() {
+    var ext = surf === 'exterior';
+    $('ptHgtLab').firstChild.nodeValue = ext ? 'Wall height ' : 'Ceiling height ';
+    $('ptAlsoCeil').style.display = ext ? 'none' : '';
+    if (ext && also.ceiling) { also.ceiling = false; $('ptAlsoCeil').classList.remove('on'); }
+    $('ptTrimDims').style.display = ext ? 'none' : '';
+    $('ptName').placeholder = ext ? 'e.g. Front of house' : 'e.g. Living room';
+    $('ptCeilAreaFld').style.display = (measure === 'walls' && also.ceiling && !ext) ? '' : 'none';
+    $('ptCeilCoatFld').style.display = (also.ceiling && !ext) ? '' : 'none';
+    $('ptTrimCoatFld').style.display = also.trim ? '' : 'none';
+  }
+  function applyMeasure() {
+    var rm = measure === 'room';
+    $('ptRoomFields').style.display = rm ? '' : 'none';
+    $('ptWallFields').style.display = rm ? 'none' : '';
+    $('ptPeakFld').style.display = rm ? '' : 'none';
+    applySurface();
+  }
+  function clearRoomFields(keepHeight) {
+    ['ptLen', 'ptWid', 'ptDoors', 'ptWins', 'ptCeilArea', 'ptName'].forEach(function (id) { $(id).value = ''; });
+    if (!keepHeight) $('ptHgt').value = '';
+    resetWallRows();
+  }
+
+  /* ---------- events ---------- */
+  $('ptInCard').addEventListener('input', renderAll);
+
+  $('ptUnitSeg').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b || b.dataset.sys === sys) return;
+    sys = b.dataset.sys; setSeg('ptUnitSeg', sys, 'data-sys');
+    [].forEach.call(document.querySelectorAll('#ptInCard input'), function (el) { if (el.id !== 'ptName' && el.id !== 'ptWaste') el.value = ''; });
+    resetWallRows(); updateUnitLabels(); renderAll();
+  });
+  $('ptSurfSeg').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b || b.dataset.v === surf) return;
+    surf = b.dataset.v; setSeg('ptSurfSeg', surf); applySurface(); renderAll();
+  });
+  $('ptCoats').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    coats = +b.dataset.v; [].forEach.call(this.children, function (c) { c.classList.toggle('on', c === b); }); renderAll();
+  });
+  $('ptAlso').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    also[b.dataset.k] = !also[b.dataset.k]; b.classList.toggle('on', also[b.dataset.k]); applySurface(); renderAll();
+  });
+  $('ptMeasureSeg').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b || b.dataset.v === measure) return;
+    measure = b.dataset.v; setSeg('ptMeasureSeg', measure); applyMeasure(); renderAll();
+  });
+  $('ptTexSeg').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    tex = b.dataset.v; setSeg('ptTexSeg', tex); $('ptCov').placeholder = covDisp(COV[tex]); renderAll();
+  });
+  $('ptPrimerSeg').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    primer = b.dataset.v === 'yes'; setSeg('ptPrimerSeg', b.dataset.v); renderAll();
+  });
+  $('ptCeilCoatSeg').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; ceilCoats = +b.dataset.v; setSeg('ptCeilCoatSeg', b.dataset.v); renderAll(); });
+  $('ptTrimCoatSeg').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; trimCoats = +b.dataset.v; setSeg('ptTrimCoatSeg', b.dataset.v); renderAll(); });
+
+  $('ptAddWall').addEventListener('click', function () { addWallRow(); var rows = wallRowEls(); rows[rows.length - 1].querySelector('input').focus(); });
+  $('ptWallRows').addEventListener('click', function (e) {
+    var x = e.target.closest('.x'); if (!x) return;
+    var rows = wallRowEls(); if (rows.length <= 1) { [].forEach.call(rows[0].querySelectorAll('input'), function (i) { i.value = ''; }); }
+    else x.closest('.pt-wrow').remove();
+    renumber(); renderAll();
+  });
+
+  $('ptAddBtn').addEventListener('click', function () {
+    if (!live) return;
+    var c = live.c, area = {}, gal = {};
+    ORDER.forEach(function (k) { area[k] = c.s[k] ? c.s[k].area : 0; gal[k] = c.s[k] ? c.s[k].gal : 0; });
+    var nm = $('ptName').value.trim();
+    tally.push({ label: nm || (surf === 'exterior' ? 'Exterior' : 'Room'), named: !!nm, area: area, gal: gal, paintGal: c.paintGal, paintArea: c.paintArea });
+    clearRoomFields(true);
+    renderAll();
+    var first = measure === 'room' ? $('ptLen') : $('ptWallRows').querySelector('input'); if (first) first.focus();
+  });
+  $('ptClearFields').addEventListener('click', function () { clearRoomFields(false); renderAll(); });
+  $('ptTallyBody').addEventListener('click', function (e) { var x = e.target.closest('.x'); if (!x) return; tally.splice(+x.dataset.i, 1); renderAll(); });
+  $('ptClearAll').addEventListener('click', function () { tally = []; renderAll(); });
+
+  function resetAdvanced() {
+    measure = 'room'; tex = 'medium'; primer = false; ceilCoats = 0; trimCoats = 0;
+    setSeg('ptMeasureSeg', 'room'); setSeg('ptTexSeg', 'medium'); setSeg('ptPrimerSeg', 'no'); setSeg('ptCeilCoatSeg', '0'); setSeg('ptTrimCoatSeg', '0');
+    ['ptCov', 'ptDoorW', 'ptDoorH', 'ptWinW', 'ptWinH', 'ptBase', 'ptCrown', 'ptPeak', 'ptWaste', 'ptPrice', 'ptCeilArea'].forEach(function (id) { $(id).value = ''; });
+    resetWallRows(); updateUnitLabels(); applyMeasure(); renderAll();
+  }
+  var advBtn = $('ptAdvBtn');
+  advBtn.addEventListener('click', function () {
+    advanced = !advanced;
+    advBtn.classList.toggle('open', advanced);
+    $('ptAdvBtnLab').textContent = advanced ? 'Go simple' : 'Go advanced';
+    $('ptAdvIn').style.display = advanced ? '' : 'none';
+    if (!advanced) resetAdvanced();
+  });
+
+  resetWallRows();
+  updateUnitLabels();
+  applyMeasure();
+  renderAll();
+};
+
 /* =========================================================
    SITE FOOTER — mobile accordion
    Multiple pillars can be open simultaneously.
