@@ -56,6 +56,13 @@ Every new calculator follows this exact order, no skipping or reordering:
    something a certain way doesn't mean it's the best way. Favor **visual aids** wherever
    relevant: people respond to seeing the result, not just a dry input form — a live diagram,
    gauge, bar, chart, or marker beats a bare number whenever the calculation supports one.
+   **The differentiator is not only visual — always also ask where CalcThis gives more
+   FUNCTIONAL value:** what makes it easier for the user to reach and understand the result
+   they are after (clearer input handling, showing both options at once, cleaning bad data,
+   explaining the number, extra outputs people commonly need next), and which extra
+   functions would come in handy. Every research report must propose at least one functional
+   differentiator alongside the visual one (user instruction, 2026-10-05).
+   User's own words, 2026-10-05: "our differentiator needs to be not only on the visual aids, which is great of course, but also on the functionality - always think where we give more functional value to the user, makes it easier for him to achieve and understand the results he is after, and support more functionalities that could come handy." Apply this to EVERY calculator, every time, fully — no skipping, no cutting corners.
    Power-user depth stays behind **Go advanced** — the default view stays minimal. Do not
    overcomplicate and do not add something the user is unlikely to actually need "just because."
    This is Rule 8 in `md-files/calcthis-workflow-rules.md` — read it in full before researching.
@@ -161,6 +168,20 @@ per-row select added by "+ Add course"), which needs the options built as `.csel
 buttons instead plus a `CalcThis.initCsel()`/`initAllCsel()` call on the newly-inserted node
 — more involved than a markup swap, and higher regression risk on already-live, more complex
 interactive features. Documented in `calcthis-design-system.md`.
+
+---
+
+## Field spacing is GLOBAL (2026-10-05)
+
+`.fld` (label OR div) gets 15px bottom spacing from one global rule in style.css; no per-page rule
+is ever needed, and `build.js`'s `checkFldSpacing` gate protects it. See design-system "Field spacing".
+
+---
+
+## Articles are DEFERRED (user decision 2026-10-05)
+
+Build calculators first; companion articles get paired in a later batch. Do not write or
+propose an article after shipping a calculator. **Calculators awaiting an article:** Fraction.
 
 ---
 

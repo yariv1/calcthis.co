@@ -1,0 +1,451 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Standard Deviation Calculator — Sample &amp; Population, With a Live Number Line | CalcThis</title>
+<meta name="description" content="Free standard deviation calculator. Paste your numbers and get the sample and population standard deviation side by side, plus mean, variance and step-by-step working — with a live number line showing the spread. Outliers, z-scores and confidence interval under Go advanced.">
+<link rel="canonical" href="https://calcthis.co/standard-deviation-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Standard Deviation Calculator — Sample &amp; Population, With a Live Number Line">
+<meta property="og:description" content="Paste your numbers and see the sample and population standard deviation side by side, with mean, variance, step-by-step working and a live number line of the spread.">
+<meta property="og:url" content="https://calcthis.co/standard-deviation-calculator/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<meta name="theme-color" content="#B5761F">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css?v=137">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Standard Deviation Calculator",
+  "url": "https://calcthis.co/standard-deviation-calculator/",
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Paste your numbers and get the sample and population standard deviation side by side, plus mean, variance and step-by-step working, with a live number line of the spread. Outlier flags, z-scores, frequency data and a confidence interval under Go advanced."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "What is the difference between sample and population standard deviation?", "acceptedAnswer": { "@type": "Answer", "text": "Population standard deviation (σ) divides the sum of squared deviations by n and is used when your numbers are the whole group. Sample standard deviation (s) divides by n − 1 (Bessel's correction) and is used when your numbers are only a sample of a larger group, because a sample tends to understate the true spread." } },
+    { "@type": "Question", "name": "How do you calculate standard deviation by hand?", "acceptedAnswer": { "@type": "Answer", "text": "Find the mean, subtract it from every value, square each difference, add the squares to get the sum of squares, divide by n (population) or n − 1 (sample) to get the variance, then take the square root." } },
+    { "@type": "Question", "name": "What does a high or low standard deviation mean?", "acceptedAnswer": { "@type": "Answer", "text": "A low standard deviation means the values sit close to the mean; a high one means they are spread out. Whether a value is high or low depends on the scale of your data, which is why the coefficient of variation (standard deviation divided by the mean) is useful for comparing different datasets." } },
+    { "@type": "Question", "name": "What is the 68-95-99.7 rule?", "acceptedAnswer": { "@type": "Answer", "text": "For bell-shaped (normal) data, about 68% of values fall within 1 standard deviation of the mean, about 95% within 2, and about 99.7% within 3. The number line on this calculator shows how many of your own values actually fall in each band." } },
+    { "@type": "Question", "name": "Can standard deviation be negative or zero?", "acceptedAnswer": { "@type": "Answer", "text": "It can never be negative, because it is a square root. It is exactly zero only when every value is identical, since there is then no spread at all." } }
+  ]
+}
+</script>
+</head>
+<body class="p-sdcalc">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <a class="hdr-back" href="/blog/" aria-label="Back to blog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <span class="menu-col-head">Construction &amp; Gardening</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+          <a href="/square-footage-calculator/">Square Footage</a>
+          <a href="/tape-measure-fraction-calculator/">Tape Measure Fraction</a>
+          <a href="/stair-calculator/">Stair</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/vo2-max-calculator/">VO2 Max</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
+          <a href="/bmi-calculator/">BMI</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/ideal-weight-calculator/">Ideal Weight</a>
+          <a href="/lean-body-mass-calculator/">Lean Body Mass</a>
+          <a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio</a>
+          <a href="/calorie-calculator/">Calorie</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/water-intake-calculator/">Water Intake</a>
+          <a href="/macro-calculator/">Macro</a>
+          <a href="/protein-intake-calculator/">Protein Intake</a>
+          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
+          <a href="/steps-to-miles-calculator/">Steps to Miles</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+          <a href="/grade-curve-calculator/">Grade Curve</a>
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/fraction-calculator/">Fraction</a>
+          <a href="/standard-deviation-calculator/" class="current">Standard Deviation</a>
+          <a href="/weighted-average-calculator/">Weighted Average</a>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+          <a href="/age-calculator/">Age</a>
+          <a href="/date-calculator/">Date</a>
+          <a href="/time-calculator/">Time</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">Spread, made visible</div>
+    <h1>Standard Deviation Calculator</h1>
+    <p>Paste your numbers and get the <strong>sample and population standard deviation side by side</strong> — plus mean, variance and step-by-step working — with a <strong>live number line</strong> showing exactly how your data spreads around the mean. Outliers, z-scores and a confidence interval are under <em>Go advanced</em>.</p>
+  </section>
+
+  <div class="grid">
+    <div class="card">
+      <div class="card-pad">
+        <h2 class="card-h2">Your data</h2>
+
+        <div class="ctl-row">
+          <span class="ctl-lab">My numbers are a</span>
+          <div class="seg" id="sdKindSeg" role="group" aria-label="Sample or population">
+            <button class="on" type="button" data-v="sample">Sample</button>
+            <button type="button" data-v="pop">Population</button>
+          </div>
+        </div>
+        <p class="add-note" style="text-align:left;margin:-6px 0 16px">Sample = part of a bigger group. Population = every value there is. Both results are always shown.</p>
+
+        <label class="fld" for="sdData">
+          <span class="lab"><span id="sdDataLab">Numbers</span><button type="button" class="linkbtn" id="sdImportBtn">Import CSV</button></span>
+          <textarea id="sdData" class="sd-textarea" rows="6" placeholder="e.g. 10, 12, 23, 23, 16, 23, 21, 16&#10;or paste a column from Excel" spellcheck="false"></textarea>
+        </label>
+        <input type="file" id="sdCsvFile" accept=".csv,text/csv,text/plain" style="display:none">
+        <p class="add-note" id="sdNote" style="text-align:left;margin:-4px 0 6px">Separate with commas, spaces or new lines.</p>
+
+        <div id="sdAdvIn" style="display:none">
+          <div class="proj-sep"></div>
+          <div class="fld">
+            <span class="lab">Data format</span>
+            <div class="seg sd-fseg" id="sdFormatSeg" role="group" aria-label="Data format">
+              <button class="on" type="button" data-v="list">List of values</button>
+              <button type="button" data-v="counts">Value + count</button>
+            </div>
+          </div>
+          <div class="fld">
+            <span class="lab">Flag outliers beyond</span>
+            <div class="seg sd-fseg" id="sdThrSeg" role="group" aria-label="Outlier threshold">
+              <button class="on" type="button" data-v="2">2 SD</button>
+              <button type="button" data-v="2.5">2.5 SD</button>
+              <button type="button" data-v="3">3 SD</button>
+            </div>
+          </div>
+          <div class="fld">
+            <span class="lab">Outliers</span>
+            <div class="seg sd-fseg" id="sdExclSeg" role="group" aria-label="Keep or exclude outliers">
+              <button class="on" type="button" data-v="keep">Keep them</button>
+              <button type="button" data-v="excl">Exclude &amp; recalculate</button>
+            </div>
+          </div>
+          <div class="fld">
+            <span class="lab">Confidence level</span>
+            <div class="seg sd-fseg" id="sdLvlSeg" role="group" aria-label="Confidence level">
+              <button type="button" data-v="0">90%</button>
+              <button class="on" type="button" data-v="1">95%</button>
+              <button type="button" data-v="2">99%</button>
+            </div>
+          </div>
+          <label class="fld" for="sdPlaces" style="margin-bottom:0">
+            <span class="lab">Decimal places<span class="unit">0–10</span></span>
+            <div class="inp"><input id="sdPlaces" type="number" inputmode="numeric" min="0" max="10" placeholder="4"></div>
+          </label>
+        </div>
+
+        <div class="add-row split" style="margin-top:16px">
+          <span></span>
+          <button class="advbtn" id="sdAdvBtn" type="button">
+            <span id="sdAdvBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-pad">
+        <div class="sd-tiles">
+          <div class="sd-tile on" id="sdTileS">
+            <div class="res-lab">Sample SD (<span class="sd-lc">s</span>)</div>
+            <div class="sd-val" id="sdValS">—</div>
+            <div class="sd-form" id="sdFormS">Paste your numbers to start.</div>
+          </div>
+          <div class="sd-tile" id="sdTileP">
+            <div class="res-lab">Population SD (<span class="sd-lc">σ</span>)</div>
+            <div class="sd-val" id="sdValP">—</div>
+            <div class="sd-form" id="sdFormP"></div>
+          </div>
+        </div>
+
+        <div id="sdResults" style="display:none">
+          <p class="res-tip adv-tip" id="sdPlain"></p>
+          <p class="res-tip" id="sdExcl" style="display:none"></p>
+
+          <div class="sd-plotwrap">
+            <div class="fc-grp sd-cap">Your data on a number line</div>
+            <div class="sd-plot" id="sdPlot"></div>
+            <div class="sd-ticks" id="sdTicks"></div>
+            <div class="sd-legend" id="sdLegend"></div>
+          </div>
+
+          <table class="dtable" style="margin-top:14px">
+            <tbody id="sdStatsBody"></tbody>
+          </table>
+
+          <div id="sdAdvOut" style="display:none">
+            <div class="proj-sep"></div>
+            <div class="sd-cap fc-grp">More statistics</div>
+            <table class="dtable"><tbody id="sdDescBody"></tbody></table>
+            <div class="sd-cap fc-grp">Z-scores &amp; outliers</div>
+            <p class="add-note" id="sdZNote" style="text-align:left;margin:0 0 8px"></p>
+            <div class="stable-wrap" id="sdZWrap">
+              <table class="stable">
+                <thead><tr><th>Value</th><th>Count</th><th>z-score</th><th>Status</th></tr></thead>
+                <tbody id="sdZBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="proj-sep"></div>
+          <div class="tally-head"><h3>How it's solved</h3></div>
+          <div id="sdSteps" class="sd-steps"></div>
+          <div class="stable-wrap" id="sdStepsWrap">
+            <table class="stable">
+              <thead id="sdStepsHead"></thead>
+              <tbody id="sdStepsBody"></tbody>
+            </table>
+          </div>
+          <div id="sdSteps2" class="sd-steps"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- mobile sticky bar -->
+  <div class="mbar" id="mbar">
+    <span class="mbar-lab" id="sdMLab">Standard deviation</span>
+    <div class="mbar-vals"><b id="sdMVal">—</b><span id="sdMDec"></span></div>
+  </div>
+
+  <div class="related-calcs">
+    <p class="related-calcs-h">More math calculators that may interest you</p>
+    <div class="pills">
+      <a class="pill" href="/weighted-average-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="14" width="4" height="7"/><rect x="10" y="9" width="4" height="12"/><rect x="16" y="4" width="4" height="17"/></svg>
+        Weighted Average Calculator
+      </a>
+      <a class="pill" href="/grade-curve-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 19c3-1 4-14 9-14s6 13 9 14"/></svg>
+        Grade Curve Calculator
+      </a>
+      <a class="pill" href="/percentage-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7" cy="7" r="3"/><circle cx="17" cy="17" r="3"/><path d="M6 18L18 6"/></svg>
+        Percentage Calculator
+      </a>
+      <a class="pill" href="/fraction-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 4v3M12 17v3"/></svg>
+        Fraction Calculator
+      </a>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use the standard deviation calculator</h2>
+        <p>Paste your numbers into the box — separated by commas, spaces or new lines, or straight from an Excel column — and the results appear instantly. Anything that isn't a number is ignored, and the calculator tells you how many entries it skipped. Both the <strong>sample standard deviation (s)</strong> and the <strong>population standard deviation (σ)</strong> are always shown; the Sample / Population switch simply picks which one drives the number line, the plain-English summary and the z-scores.</p>
+        <p>The number line plots every value as a dot, marks the mean, and shades the band within 1 and 2 standard deviations of it, so you can see the spread instead of just reading a number. Tap <strong>Go advanced</strong> for outlier flags with one-click exclusion, a z-score for every value, quartiles, a confidence interval for the mean, and a value + count mode for survey or grade data.</p>
+
+        <h2>Sample vs. population standard deviation</h2>
+        <div class="formula">
+          &sigma; = &radic;( &Sigma;(x &minus; &mu;)&sup2; &divide; n ) &nbsp;&nbsp;|&nbsp;&nbsp; s = &radic;( &Sigma;(x &minus; x&#772;)&sup2; &divide; (n &minus; 1) )
+          <small>POPULATION DIVIDES BY n &middot; SAMPLE DIVIDES BY n &minus; 1</small>
+        </div>
+        <p>Use the <strong>population</strong> formula when your numbers are every value in the group you care about — all the test scores in one class, say. Use the <strong>sample</strong> formula when your numbers are only a slice of a larger group: a survey of 200 people standing in for a whole city. Dividing by n &minus; 1 instead of n (Bessel's correction) makes up for a sample's tendency to understate the true spread. When in doubt, a sample is the safer assumption.</p>
+
+        <h2>How to calculate standard deviation step by step</h2>
+        <p>Take the data set 2, 4, 4, 4, 5, 5, 7, 9:</p>
+        <ul>
+          <li><strong>Mean.</strong> (2+4+4+4+5+5+7+9) &divide; 8 = 40 &divide; 8 = <strong>5</strong>.</li>
+          <li><strong>Deviations squared.</strong> (2&minus;5)&sup2; = 9, then 1, 1, 1, 0, 0, 4 and 16.</li>
+          <li><strong>Sum of squares.</strong> 9+1+1+1+0+0+4+16 = <strong>32</strong>.</li>
+          <li><strong>Variance.</strong> Population: 32 &divide; 8 = 4. Sample: 32 &divide; 7 = 4.5714.</li>
+          <li><strong>Square root.</strong> Population &sigma; = &radic;4 = <strong>2</strong>. Sample s = &radic;4.5714 = <strong>2.1381</strong>.</li>
+        </ul>
+      </div>
+
+      <div>
+        <h2>Mean and standard deviation together</h2>
+        <p>The mean says where the middle of your data is; the standard deviation says how far values typically stray from it. Two classes can both average 75 on a test, but one with a standard deviation of 3 is tightly clustered while one with a standard deviation of 15 is all over the place. Always read them as a pair.</p>
+
+        <h2>Relative standard deviation</h2>
+        <p>The <strong>relative standard deviation</strong> (also called the coefficient of variation) is the standard deviation divided by the mean, as a percentage. It lets you compare the spread of data on different scales — heights in centimetres against weights in kilograms — and it appears under Go advanced.</p>
+
+        <h2>What counts as a high or low standard deviation?</h2>
+        <p>There is no universal cut-off, because it depends on the scale of the data. A standard deviation of 5 is huge for heart-rate readings that average 70 &mdash; and tiny for house prices averaging $400,000. Compare it to the mean (the relative standard deviation) or to another dataset measured the same way.</p>
+
+        <h2>The 68-95-99.7 rule, outliers and z-scores</h2>
+        <p>For bell-shaped data, about 68% of values fall within 1 standard deviation of the mean, 95% within 2 and 99.7% within 3. A <strong>z-score</strong> is simply how many standard deviations a value sits from the mean, so a value with a z-score beyond 2 or 3 is unusual and worth checking. Go advanced lists the z-score of every value, flags the unusual ones, and can exclude them and recalculate in one click.</p>
+
+        <h2>Related tools</h2>
+        <p>Curving a class's scores with a bell curve uses exactly these numbers &mdash; try the <a href="/grade-curve-calculator/">Grade Curve Calculator</a>. For an average where some values count more than others, use the <a href="/weighted-average-calculator/">Weighted Average Calculator</a>.</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>What is the difference between sample and population standard deviation?</summary><p>Population standard deviation (σ) divides the sum of squared deviations by n and is used when your numbers are the whole group. Sample standard deviation (s) divides by n − 1 (Bessel's correction) and is used when your numbers are only a sample of a larger group, because a sample tends to understate the true spread.</p></details>
+    <details class="faq"><summary>How do you calculate standard deviation by hand?</summary><p>Find the mean, subtract it from every value, square each difference, add the squares to get the sum of squares, divide by n (population) or n − 1 (sample) to get the variance, then take the square root.</p></details>
+    <details class="faq"><summary>What does a high or low standard deviation mean?</summary><p>A low standard deviation means the values sit close to the mean; a high one means they are spread out. Whether a value is high or low depends on the scale of your data, which is why the coefficient of variation (standard deviation divided by the mean) is useful for comparing different datasets.</p></details>
+    <details class="faq"><summary>What is the 68-95-99.7 rule?</summary><p>For bell-shaped (normal) data, about 68% of values fall within 1 standard deviation of the mean, about 95% within 2, and about 99.7% within 3. The number line on this calculator shows how many of your own values actually fall in each band.</p></details>
+    <details class="faq"><summary>Can standard deviation be negative or zero?</summary><p>It can never be negative, because it is a square root. It is exactly zero only when every value is identical, since there is then no spread at all.</p></details>
+  </section>
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+          <li><a href="/square-footage-calculator/">Square Footage Calculator</a></li>
+          <li><a href="/tape-measure-fraction-calculator/">Tape Measure Fraction Calculator</a></li>
+          <li><a href="/stair-calculator/">Stair Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/vo2-max-calculator/">VO2 Max Calculator</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/bmi-calculator/">BMI Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/ideal-weight-calculator/">Ideal Weight Calculator</a></li>
+          <li><a href="/lean-body-mass-calculator/">Lean Body Mass Calculator</a></li>
+          <li><a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio Calculator</a></li>
+          <li><a href="/calorie-calculator/">Calorie Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/water-intake-calculator/">Water Intake Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/protein-intake-calculator/">Protein Intake Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
+          <li><a href="/steps-to-miles-calculator/">Steps to Miles Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+          <li><a href="/grade-curve-calculator/">Grade Curve Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/fraction-calculator/">Fraction Calculator</a></li>
+          <li><a href="/standard-deviation-calculator/">Standard Deviation Calculator</a></li>
+          <li><a href="/weighted-average-calculator/">Weighted Average Calculator</a></li>
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+          <li><a href="/age-calculator/">Age Calculator</a></li>
+          <li><a href="/date-calculator/">Date Calculator</a></li>
+          <li><a href="/time-calculator/">Time Calculator</a></li>
+        </ul>
+      </div>
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/blog/">Blog</a>
+      <span aria-hidden="true">·</span>
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+</div>
+
+<script src="/assets/app.js?v=137"></script>
+<script>CalcThis.initSdCalc({});</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>

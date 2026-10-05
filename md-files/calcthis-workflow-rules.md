@@ -132,7 +132,7 @@ No preamble. No process narration. No apology paragraphs.
 
 Before writing code: research the top-ranking calculators for the keyword, then decide the
 **one** thing we do better — usually a live visual aid (bar / gauge / marker / diagram) and/or
-a genuinely useful extra output. Power-user depth goes behind **Go advanced**; the default
+a genuinely useful extra output. **Functional value counts as much as the visual:** every research report must also propose where we make the job easier or more capable than competitors (smarter input handling, both variants shown at once, data cleaning, explaining the result, the extra outputs users need next, handy extra functions) — not visuals alone (user instruction, 2026-10-05). (User's own words, 2026-10-05: "our differentiator needs to be not only on the visual aids, which is great of course, but also on the functionality - always think where we give more functional value to the user, makes it easier for him to achieve and understand the results he is after, and support more functionalities that could come handy." Apply this to EVERY calculator, every time, fully — no skipping, no cutting corners.) Power-user depth goes behind **Go advanced**; the default
 view stays minimal. No bloat — nothing ships "just in case".
 Full checklist: `calcthis-design-system.md` → "PRODUCT PHILOSOPHY".
 

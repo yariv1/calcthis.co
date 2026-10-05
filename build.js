@@ -54,6 +54,7 @@ const PAGES = [
   { file: 'ratio-calculator/index.html', slug: '/ratio-calculator/' },
   { file: 'weighted-average-calculator/index.html', slug: '/weighted-average-calculator/' },
   { file: 'fraction-calculator/index.html', slug: '/fraction-calculator/' },
+  { file: 'standard-deviation-calculator/index.html', slug: '/standard-deviation-calculator/' },
   { file: 'percentage-calculator/index.html', slug: '/percentage-calculator/' },
   { file: 'age-calculator/index.html',         slug: '/age-calculator/' },
   { file: 'date-calculator/index.html',        slug: '/date-calculator/' },
@@ -326,6 +327,23 @@ const PAGES = [
     console.error('\n⛔ FIELD-HEIGHT GATE FAILED — build stopped, nothing was written.\n');
     failures.forEach(function (f) { console.error('  - ' + f); });
     console.error('\nFix every line above, then re-run node build.js.\n');
+    process.exit(1);
+  }
+})();
+
+// ---- MANDATORY field-spacing gate — runs before anything else touches disk ----
+// Every .fld (a <label> OR a <div>) must get its bottom spacing from ONE global rule in
+// style.css. It was once scoped to label.fld only, so any <div class="fld"> on a page without
+// its own page-level fld rule shipped with NO gap at all (VO2 Max, then Standard Deviation,
+// 2026-10-05, after the user had to point it out repeatedly). This gate fails the build if the
+// base rule is ever narrowed back to label.fld or removed.
+(function checkFldSpacing() {
+  const cssPath = path.join(ROOT, 'assets', 'style.css');
+  if (!fs.existsSync(cssPath)) return;
+  const css = fs.readFileSync(cssPath, 'utf8');
+  if (!/(^|\n)\s*\.fld\{[^}]*margin-bottom:\s*15px/.test(css)) {
+    console.error('\n\u26d4 FIELD-SPACING GATE FAILED \u2014 build stopped, nothing was written.\n');
+    console.error('  - style.css must contain the GLOBAL rule ".fld{display:block;margin-bottom:15px}" (not scoped to label.fld). See calcthis-design-system.md "Field spacing".\n');
     process.exit(1);
   }
 })();

@@ -160,11 +160,10 @@ Why each step is mandatory:
 
 ## AFTER CREATING THE FILE
 1. Serve the preview (`calcthis-static` on :8123), verify it in the browser pane, give the user the localhost + LAN Chrome links (RULE #1 — never ship before approved preview)
-1a. ⛔ **Spacing gate — if the page has ANY `<div class="fld">` (not `<label class="fld">`)**,
-    confirm `assets/style.css` has a `.p-PAGENAME .fld{margin-bottom:...px}` rule for this page,
-    then measure the actual gap in the browser (`getBoundingClientRect()` before/after, or the
-    `computed style` margin) — do not eyeball it. See `calcthis-design-system.md` → "Two-field
-    colon input" for why this is required and the exact bug it already caused once.
+1a. ✅ **Field spacing is global** — `.fld` (label or div) gets `margin-bottom:15px` from one
+    rule in `style.css`; nothing to add per page (see `calcthis-design-system.md` → "Field
+    spacing"). `build.js`'s `checkFldSpacing` gate protects it. Just eyeball the gap against
+    Gravel's and, for a last field in a card, use inline `margin-bottom:0`.
 2. Add page to `PAGES` array in `build.js` — `{ file: 'SLUG/index.html', slug: '/SLUG/' }`
 3. Add nav link in `partials/header.html` (correct column)
 4. Add footer link in `partials/footer.html` (correct pillar)
@@ -191,9 +190,8 @@ Why each step is mandatory:
 12. Shipping/delivering before a full styled preview is approved
 13. Letting the user believe a functional-only preview is the real styled result
 14. Asking the user to fix things caused by wrong class names or structure
-15. Using a `<div class="fld">` without adding a page-specific `.p-PAGENAME .fld{margin-bottom:...}`
-    rule in `style.css` — `label.fld` CSS does not cover divs, so this ships broken spacing
-    (happened once on VO2 Max Calculator's `.two-c` field, fixed after ship — don't repeat it)
+15. (Retired 2026-10-05) Field spacing used to need a per-page `.p-PAGENAME .fld{...}` rule for
+    every `<div class="fld">`; it is now ONE global `.fld` rule — do NOT add per-page ones.
 16. Reinventing a page-scoped CSS override for a pattern that already has a global class —
     check `calcthis-design-system.md` first. The advanced-mode explanatory line (16px amber)
     is `.adv-tip`, global in `style.css` — never write `.p-PAGENAME #advOut .res-tip{...}`

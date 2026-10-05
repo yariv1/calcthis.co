@@ -129,17 +129,32 @@ mobile at 430px, exactly wrong for a field pair that must stay joined). `.two-c`
 </div>
 ```
 
-⛔ **MANDATORY when the wrapper is a `<div class="fld">` (not a `<label class="fld">`):**
-`style.css` line ~76 scopes the default field spacing to `label.fld` ONLY —
-`label.fld{display:block;margin-bottom:15px}`. A `<div class="fld">` gets **zero**
-margin from that rule, which reads as broken/inconsistent spacing between fields
-(this shipped once on VO2 Max Calculator and had to be fixed after ship). Every page
-with ANY div-based `.fld` — which includes every page using `.two-c` or `.three`, since
-those examples all use `<div class="fld">` wrappers, not `<label>` — MUST add its own
-page rule in `style.css` (not inline in the page): `.p-PAGENAME .fld{margin-bottom:16px}`
-(16px is the standard used by nearly every calculator; a few use 18px — match whichever
-your page's other `.fld` elements already use). This is not optional and not a "looks
-fine to me" judgment call — check it by measuring the actual gap, don't eyeball it.
+## Field spacing — GLOBAL, SOLVED FOR GOOD (2026-10-05)
+
+Every `.fld` — a `<label class="fld">` **or** a `<div class="fld">` — gets its bottom
+spacing from ONE global rule in `style.css`:
+
+```css
+.fld{display:block;margin-bottom:15px}
+```
+
+**This is the whole spec. It needs nothing from the page.** No `.p-PAGENAME .fld{...}`
+rule is required any more, and none should be added for a new page (the standard gap is
+15px — identical to Gravel/Flooring/etc.). Existing pages that already have a 16/18px
+page rule keep it; that is the only reason such rules exist.
+
+Why this section exists: the rule used to be scoped to `label.fld` only, so any `<div
+class="fld">` on a page without its own page rule shipped with **zero** gap — VO2 Max, then
+Standard Deviation (2026-10-05, the user had to point it out repeatedly with red lines on
+screenshots). Fixed structurally:
+
+1. The base rule now matches `.fld` on any element (so it can never be forgotten).
+2. `build.js` has a `checkFldSpacing` gate that fails the build if the rule is ever narrowed
+   back to `label.fld` or removed (sabotage-tested).
+
+⛔ Never narrow it back to `label.fld`. ⛔ Never rely on a per-page rule for field spacing.
+⛔ A deliberately tight spot uses an inline `style="margin-bottom:0"` (e.g. the last field in a
+card) — that still works because inline wins.
 
 ## Go Advanced Button
 

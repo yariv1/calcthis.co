@@ -6770,6 +6770,333 @@ CalcThis.initFractionsCalc = function (cfg) {
 };
 
 /* =========================================================
+   MATH · STANDARD DEVIATION CALCULATOR
+   Paste anything (commas / spaces / lines / Excel column) -> sample s AND
+   population σ always shown side by side, mean, variance, sum of squares and
+   step-by-step working. Differentiators: a live number-line dot plot (mean,
+   ±1 / ±2 SD bands, dots coloured by distance), quiet "N ignored" cleaning,
+   a plain-English reading of the spread. Go advanced (real panel above the
+   button): value+count data, outlier threshold + one-click exclude &
+   recalculate, confidence level, decimals; results gain quartiles / mode /
+   relative SD / confidence interval and a z-score table. All statistics are
+   count-weighted so "value + count" data never has to be expanded.
+   ========================================================= */
+CalcThis.initSdCalc = function (cfg) {
+  cfg = cfg || {};
+  var $ = function (id) { return document.getElementById(id); };
+  var dataEl = $('sdData');
+  if (!dataEl) return;
+  var kind = 'sample', fmtMode = 'list', thr = 2, excl = false, lvl = 1, advanced = false, lastPlot = null;
+
+  // two-tailed t critical values, columns = 90% / 95% / 99%; df between rows uses the lower row (conservative)
+  var T = {
+    1: [6.314, 12.706, 63.657], 2: [2.920, 4.303, 9.925], 3: [2.353, 3.182, 5.841], 4: [2.132, 2.776, 4.604],
+    5: [2.015, 2.571, 4.032], 6: [1.943, 2.447, 3.707], 7: [1.895, 2.365, 3.499], 8: [1.860, 2.306, 3.355],
+    9: [1.833, 2.262, 3.250], 10: [1.812, 2.228, 3.169], 11: [1.796, 2.201, 3.106], 12: [1.782, 2.179, 3.055],
+    13: [1.771, 2.160, 3.012], 14: [1.761, 2.145, 2.977], 15: [1.753, 2.131, 2.947], 16: [1.746, 2.120, 2.921],
+    17: [1.740, 2.110, 2.898], 18: [1.734, 2.101, 2.878], 19: [1.729, 2.093, 2.861], 20: [1.725, 2.086, 2.845],
+    21: [1.721, 2.080, 2.831], 22: [1.717, 2.074, 2.819], 23: [1.714, 2.069, 2.807], 24: [1.711, 2.064, 2.797],
+    25: [1.708, 2.060, 2.787], 26: [1.706, 2.056, 2.779], 27: [1.703, 2.052, 2.771], 28: [1.701, 2.048, 2.763],
+    29: [1.699, 2.045, 2.756], 30: [1.697, 2.042, 2.750], 40: [1.684, 2.021, 2.704], 60: [1.671, 2.000, 2.660],
+    120: [1.658, 1.980, 2.617]
+  };
+  var TK = Object.keys(T).map(Number).sort(function (a, b) { return a - b; });
+  function tcrit(df, l) {
+    if (df >= 1000) return [1.645, 1.960, 2.576][l];
+    var k = TK[0];
+    for (var i = 0; i < TK.length; i++) if (TK[i] <= df) k = TK[i];
+    return T[k][l];
+  }
+
+  function esc(s) { return ('' + s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'); }
+  function places() { var v = parseInt($('sdPlaces').value, 10); return isNaN(v) ? 4 : Math.max(0, Math.min(10, v)); }
+  function fmt(x) {
+    if (!isFinite(x)) return '—';
+    var s = x.toFixed(places());
+    if (s.indexOf('.') >= 0) s = s.replace(/0+$/, '').replace(/\.$/, '');
+    if (s === '-0') s = '0';
+    return s.replace(/^-/, '−');
+  }
+  function fmtInt(x) { return Math.round(x).toLocaleString('en-US'); }
+
+  // ---------- parsing ----------
+  var NUM = /^[-+]?(\d+\.?\d*|\.\d+)(e[-+]?\d+)?$/i;
+  function tok(s) { s = s.replace(/−/g, '-'); return NUM.test(s) ? parseFloat(s) : NaN; }
+  function parse() {
+    var text = dataEl.value, entries = [], ignored = [];
+    if (fmtMode === 'list') {
+      text.split(/[\s,;]+/).forEach(function (t) {
+        if (!t) return;
+        var v = tok(t);
+        if (isFinite(v)) entries.push({ x: v, c: 1 }); else ignored.push(t);
+      });
+    } else {
+      text.split(/\r?\n/).forEach(function (line) {
+        line = line.trim();
+        if (!line) return;
+        var parts = line.replace(/[×*]/g, ' ').split(/[\s,;]+/).filter(function (p) { return p && !/^x$/i.test(p); });
+        var v = parts.length >= 2 ? tok(parts[0]) : NaN, c = parts.length >= 2 ? tok(parts[1]) : NaN;
+        if (isFinite(v) && isFinite(c) && c >= 1 && Math.floor(c) === c) entries.push({ x: v, c: c });
+        else ignored.push(line);
+      });
+    }
+    return { entries: entries, ignored: ignored };
+  }
+
+  // ---------- statistics (count-weighted) ----------
+  function compute(es) {
+    var n = 0, sum = 0, ss = 0, mn = Infinity, mx = -Infinity;
+    es.forEach(function (e) { n += e.c; sum += e.c * e.x; if (e.x < mn) mn = e.x; if (e.x > mx) mx = e.x; });
+    if (!n) return null;
+    var mean = sum / n;
+    es.forEach(function (e) { ss += e.c * (e.x - mean) * (e.x - mean); });
+    var varP = ss / n, varS = n > 1 ? ss / (n - 1) : NaN;
+    return { n: n, sum: sum, mean: mean, ss: ss, varP: varP, varS: varS, sdP: Math.sqrt(varP), sdS: Math.sqrt(varS), min: mn, max: mx };
+  }
+  function activeSd(st) { return kind === 'sample' ? st.sdS : st.sdP; }
+  function distinct(es) {
+    var m = {}, out = [];
+    es.forEach(function (e) { var k = '' + e.x; if (m[k] === undefined) { m[k] = out.length; out.push({ x: e.x, c: 0 }); } out[m[k]].c += e.c; });
+    return out.sort(function (a, b) { return a.x - b.x; });
+  }
+  function quantiles(es) {
+    var d = distinct(es), cum = [], N = 0;
+    d.forEach(function (e) { N += e.c; cum.push(N); });
+    function at(k) { var lo = 0, hi = cum.length - 1; while (lo < hi) { var mid = (lo + hi) >> 1; if (cum[mid] > k) hi = mid; else lo = mid + 1; } return d[lo].x; }
+    return function (p) {
+      var pos = (N - 1) * p, a = Math.floor(pos), b = Math.ceil(pos);
+      return at(a) + (pos - a) * (at(b) - at(a));
+    };
+  }
+  function modeText(es) {
+    var d = distinct(es), best = 0, vals = [];
+    d.forEach(function (e) { if (e.c > best) { best = e.c; vals = [e.x]; } else if (e.c === best) vals.push(e.x); });
+    if (best === 1 && d.length > 1) return 'none (every value appears once)';
+    return vals.slice(0, 4).map(fmt).join(', ') + (vals.length > 4 ? '…' : '') + ' (×' + best + ')';
+  }
+
+  // ---------- number-line plot ----------
+  function drawPlot(ctx) {
+    var box = $('sdPlot'), ticks = $('sdTicks'), W = box.clientWidth || 300;
+    var es = ctx.entries, mean = ctx.st.mean, sd = (isFinite(ctx.sd) && ctx.sd > 0) ? ctx.sd : 0;
+    var allMin = Infinity, allMax = -Infinity;
+    es.forEach(function (e) { if (e.x < allMin) allMin = e.x; if (e.x > allMax) allMax = e.x; });
+    var lo = Math.min(allMin, mean - 2 * sd), hi = Math.max(allMax, mean + 2 * sd);
+    if (hi - lo === 0) { lo -= 1; hi += 1; }
+    var pad = (hi - lo) * 0.04; lo -= pad; hi += pad;
+    function px(v) { return (v - lo) / (hi - lo) * W; }
+    function pc(v) { return Math.max(0, Math.min(100, (v - lo) / (hi - lo) * 100)); }
+    var html = '';
+    if (sd > 0) {
+      html += '<div class="sd-band2" style="left:' + pc(mean - 2 * sd) + '%;width:' + (pc(mean + 2 * sd) - pc(mean - 2 * sd)) + '%"></div>';
+      html += '<div class="sd-band1" style="left:' + pc(mean - sd) + '%;width:' + (pc(mean + sd) - pc(mean - sd)) + '%"></div>';
+    }
+    html += '<div class="sd-mean" style="left:' + pc(mean) + '%"></div>';
+    var DOT = 12, rows = [], maxRow = 0, sorted = es.slice().sort(function (a, b) { return a.x - b.x; });
+    sorted.forEach(function (e) {
+      var cls = e.out ? 'dx' : (sd > 0 ? (Math.abs(e.x - mean) / sd <= 1 + 1e-12 ? '' : (Math.abs(e.x - mean) / sd <= 2 + 1e-12 ? 'd1' : 'd2')) : '');
+      var units = Math.min(e.c, 10);
+      for (var u = 0; u < units; u++) {
+        var x = px(e.x), r = 0;
+        while (r < 9 && rows[r] !== undefined && x - rows[r] < DOT) r++;
+        rows[r] = x; if (r > maxRow) maxRow = r;
+        html += '<span class="sd-dot ' + cls + '" style="left:' + pc(e.x) + '%;bottom:' + (7 + r * DOT) + 'px"></span>';
+      }
+    });
+    box.style.height = (maxRow * DOT + 30) + 'px';
+    box.innerHTML = html;
+    var t = [], wide = W >= 420;
+    if (sd > 0) {
+      if (wide) t.push(mean - 2 * sd);
+      t.push(mean - sd, mean, mean + sd);
+      if (wide) t.push(mean + 2 * sd);
+    } else t.push(mean);
+    ticks.innerHTML = t.map(function (v) {
+      var p = Math.max(7, Math.min(93, pc(v)));
+      return '<span style="left:' + p + '%;transform:translateX(-50%)">' + fmt(v) + '</span>';
+    }).join('');
+    var lg = '';
+    if (sd > 0) {
+      lg = '<span><i style="background:var(--spruce)"></i>within 1 SD</span><span><i style="background:var(--amber)"></i>1–2 SD</span><span><i style="background:#b23030"></i>beyond 2 SD</span>';
+      if (es.some(function (e) { return e.out; })) lg += '<span><i style="border:1.5px solid var(--muted)"></i>excluded</span>';
+      lg += '<span><i style="background:var(--amber);border-radius:1px;width:3px;height:11px"></i>mean</span>';
+    }
+    $('sdLegend').innerHTML = lg;
+  }
+
+  // ---------- main render ----------
+  function setEmpty(P) {
+    $('sdValS').textContent = '—'; $('sdValP').textContent = '—';
+    $('sdFormS').textContent = 'Paste your numbers to start.'; $('sdFormP').textContent = '';
+    $('sdResults').style.display = 'none';
+    $('sdMVal').textContent = '—'; $('sdMDec').textContent = '';
+    lastPlot = null;
+  }
+  function render() {
+    var P = parse(), entries = P.entries, note = $('sdNote');
+    if (!dataEl.value.trim()) note.textContent = fmtMode === 'list' ? 'Separate with commas, spaces or new lines.' : 'One pair per line: the value, then how many times it occurs (e.g. 85, 3).';
+    else {
+      var nTot = entries.reduce(function (a, e) { return a + e.c; }, 0);
+      note.textContent = (fmtMode === 'list' ? entries.length + ' value' + (entries.length === 1 ? '' : 's') + ' read'
+        : entries.length + ' row' + (entries.length === 1 ? '' : 's') + ' read · n = ' + fmtInt(nTot))
+        + (P.ignored.length ? ' · ' + P.ignored.length + ' ignored (' + P.ignored.slice(0, 4).join(', ') + (P.ignored.length > 4 ? '…' : '') + ')' : '');
+    }
+    if (!entries.length) { setEmpty(P); return; }
+
+    var full = compute(entries), sd0 = activeSd(full), canFlag = isFinite(sd0) && sd0 > 0;
+    entries.forEach(function (e) { e.f = canFlag && Math.abs(e.x - full.mean) / sd0 > thr + 1e-12; e.out = false; });
+    var flagged = entries.filter(function (e) { return e.f; });
+    var data = entries;
+    if (excl && flagged.length && flagged.length < entries.length) {
+      data = entries.filter(function (e) { return !e.f; });
+      flagged.forEach(function (e) { e.out = true; });
+    }
+    var st = compute(data), sd = activeSd(st), n = st.n;
+
+    // tiles
+    $('sdTileS').classList.toggle('on', kind === 'sample');
+    $('sdTileP').classList.toggle('on', kind === 'pop');
+    $('sdValS').textContent = isFinite(st.sdS) ? fmt(st.sdS) : '—';
+    $('sdFormS').textContent = n > 1 ? 's = √(SS ÷ (n − 1)) = √(' + fmt(st.ss) + ' ÷ ' + fmtInt(n - 1) + ')' : 'Needs at least 2 values.';
+    $('sdValP').textContent = fmt(st.sdP);
+    $('sdFormP').textContent = 'σ = √(SS ÷ n) = √(' + fmt(st.ss) + ' ÷ ' + fmtInt(n) + ')';
+    $('sdMLab').textContent = kind === 'sample' ? 'Sample SD (s)' : 'Population SD (σ)';
+    $('sdMVal').textContent = isFinite(sd) ? fmt(sd) : '—';
+    $('sdMDec').textContent = ' · mean ' + fmt(st.mean);
+    $('sdResults').style.display = '';
+
+    // plain-English reading
+    var plain;
+    if (!isFinite(sd)) plain = 'Add at least 2 values to get a sample standard deviation — the population version is shown on the right.';
+    else if (sd === 0) plain = 'Every value is identical, so there is no spread — the standard deviation is 0.';
+    else {
+      var k = 0; data.forEach(function (e) { if (Math.abs(e.x - st.mean) <= sd + 1e-12) k += e.c; });
+      plain = fmtInt(k) + ' of ' + fmtInt(n) + ' values (' + Math.round(k / n * 100) + '%) fall within 1 SD of the mean, between ' + fmt(st.mean - sd) + ' and ' + fmt(st.mean + sd) + '. For bell-shaped data, about 68% is typical.';
+    }
+    $('sdPlain').textContent = plain;
+
+    // exclusion note
+    var ex = $('sdExcl');
+    if (excl && advanced) {
+      var cnt = flagged.reduce(function (a, e) { return a + e.c; }, 0);
+      if (!canFlag) ex.textContent = 'Outliers need a standard deviation above 0, so nothing was excluded.';
+      else if (!flagged.length) ex.textContent = 'No values are beyond ' + thr + ' SD of the mean, so nothing was excluded.';
+      else if (flagged.length >= entries.length) ex.textContent = 'Every value is beyond ' + thr + ' SD, so nothing was excluded.';
+      else ex.textContent = 'Excluded ' + fmtInt(cnt) + ' outlier' + (cnt === 1 ? '' : 's') + ' (' + flagged.slice(0, 6).map(function (e) { return fmt(e.x); }).join(', ') + (flagged.length > 6 ? '…' : '') + ') — the ' + (kind === 'sample' ? 'sample' : 'population') + ' standard deviation changed from ' + fmt(sd0) + ' to ' + fmt(sd) + '.';
+      ex.style.display = '';
+    } else ex.style.display = 'none';
+
+    // number line
+    lastPlot = { entries: entries, st: st, sd: sd };
+    drawPlot(lastPlot);
+
+    // stats table
+    $('sdStatsBody').innerHTML = [
+      ['Mean (x̄)', fmt(st.mean)], ['Count (n)', fmtInt(n)], ['Sum (Σx)', fmt(st.sum)],
+      ['Sum of squares (SS)', fmt(st.ss)], ['Sample variance (s²)', isFinite(st.varS) ? fmt(st.varS) : '—'],
+      ['Population variance (σ²)', fmt(st.varP)]
+    ].map(function (r) { return '<tr><td>' + r[0] + '</td><td>' + r[1] + '</td></tr>'; }).join('');
+
+    // advanced output
+    var adv = $('sdAdvOut');
+    adv.style.display = advanced ? '' : 'none';
+    if (advanced) {
+      var q = quantiles(data), q1 = q(0.25), med = q(0.5), q3 = q(0.75), rows = [
+        ['Minimum', fmt(st.min)], ['Maximum', fmt(st.max)], ['Range', fmt(st.max - st.min)],
+        ['Median', fmt(med)], ['Lower quartile (Q1)', fmt(q1)], ['Upper quartile (Q3)', fmt(q3)],
+        ['Interquartile range (IQR)', fmt(q3 - q1)], ['Mode', modeText(data)]
+      ];
+      if (isFinite(sd) && st.mean !== 0) rows.push(['Relative SD (coefficient of variation)', fmt(sd / Math.abs(st.mean) * 100) + '%']);
+      if (n > 1 && isFinite(st.sdS)) {
+        var se = st.sdS / Math.sqrt(n), tc = tcrit(n - 1, lvl), moe = tc * se, lv = ['90', '95', '99'][lvl];
+        rows.push(['Standard error of the mean', fmt(se)], ['t critical value (df ' + fmtInt(n - 1) + ', ' + lv + '%)', tc.toFixed(3)],
+          ['Margin of error (' + lv + '%)', '± ' + fmt(moe)], ['Confidence interval for the mean (' + lv + '%)', fmt(st.mean - moe) + ' to ' + fmt(st.mean + moe)]);
+      }
+      $('sdDescBody').innerHTML = rows.map(function (r) { return '<tr><td>' + r[0] + '</td><td>' + r[1] + '</td></tr>'; }).join('');
+
+      // z-scores (full data, active SD)
+      var zn = $('sdZNote'), zb = $('sdZBody');
+      if (!canFlag) { zn.textContent = 'z-scores need a standard deviation above 0.'; zb.innerHTML = ''; }
+      else {
+        var zr = distinct(entries).map(function (e) { return { x: e.x, c: e.c, z: (e.x - full.mean) / sd0 }; });
+        zr.sort(function (a, b) { return Math.abs(b.z) - Math.abs(a.z); });
+        var fcount = flagged.reduce(function (a, e) { return a + e.c; }, 0);
+        zn.textContent = 'Based on the full data: mean ' + fmt(full.mean) + ', ' + (kind === 'sample' ? 'sample' : 'population') + ' SD ' + fmt(sd0) + '. ' + (fcount ? fmtInt(fcount) + ' value' + (fcount === 1 ? ' is' : 's are') + ' beyond ' + thr + ' SD.' : 'No value is beyond ' + thr + ' SD.') + ' Sorted by distance from the mean.';
+        zb.innerHTML = zr.slice(0, 300).map(function (r) {
+          var isOut = Math.abs(r.z) > thr + 1e-12;
+          return '<tr' + (isOut && excl ? ' class="sd-xrow"' : '') + '><td>' + fmt(r.x) + '</td><td>' + fmtInt(r.c) + '</td><td>' + (r.z < 0 ? '−' : '') + Math.abs(r.z).toFixed(2) + '</td><td class="' + (isOut ? 'sd-flag' : 'sd-ok') + '">' + (isOut ? (excl ? 'Outlier — excluded' : 'Outlier') : 'Within range') + '</td></tr>';
+        }).join('');
+      }
+    }
+
+    // steps
+    var counts = fmtMode === 'counts';
+    $('sdSteps').innerHTML = '<ul><li>Count: n = ' + fmtInt(n) + '. Sum: Σx = ' + fmt(st.sum) + '.</li><li>Mean: x̄ = ' + fmt(st.sum) + ' ÷ ' + fmtInt(n) + ' = <b>' + fmt(st.mean) + '</b>.</li><li>Subtract the mean from each value and square the result:</li></ul>';
+    $('sdStepsHead').innerHTML = counts ? '<tr><th>Value</th><th>Count</th><th>x − mean</th><th>Count × (x − mean)²</th></tr>' : '<tr><th>Value</th><th>x − mean</th><th>(x − mean)²</th></tr>';
+    var cap = 1000;
+    $('sdStepsBody').innerHTML = data.slice(0, cap).map(function (e) {
+      var d = e.x - st.mean;
+      return counts ? '<tr><td>' + fmt(e.x) + '</td><td>' + fmtInt(e.c) + '</td><td>' + fmt(d) + '</td><td>' + fmt(e.c * d * d) + '</td></tr>'
+        : '<tr><td>' + fmt(e.x) + '</td><td>' + fmt(d) + '</td><td>' + fmt(d * d) + '</td></tr>';
+    }).join('') + (data.length > cap ? '<tr><td colspan="' + (counts ? 4 : 3) + '">… and ' + fmtInt(data.length - cap) + ' more rows (all included in the totals)</td></tr>' : '');
+    $('sdSteps2').innerHTML = '<ul><li>Add the squares: SS = <b>' + fmt(st.ss) + '</b>.</li>'
+      + (n > 1 ? '<li>Sample variance: s² = SS ÷ (n − 1) = ' + fmt(st.ss) + ' ÷ ' + fmtInt(n - 1) + ' = ' + fmt(st.varS) + ', so s = √' + fmt(st.varS) + ' = <b>' + fmt(st.sdS) + '</b>.</li>' : '<li>A sample standard deviation needs at least 2 values.</li>')
+      + '<li>Population variance: σ² = SS ÷ n = ' + fmt(st.ss) + ' ÷ ' + fmtInt(n) + ' = ' + fmt(st.varP) + ', so σ = √' + fmt(st.varP) + ' = <b>' + fmt(st.sdP) + '</b>.</li></ul>';
+  }
+
+  // ---------- controls ----------
+  function setSeg(id, v) {
+    [].forEach.call($(id).children, function (b) { b.classList.toggle('on', b.dataset.v === '' + v); });
+  }
+  function wireSeg(id, cb) {
+    $(id).addEventListener('click', function (e) {
+      var b = e.target.closest('button'); if (!b) return;
+      setSeg(id, b.dataset.v); cb(b.dataset.v); render();
+    });
+  }
+  wireSeg('sdKindSeg', function (v) { kind = v; });
+  wireSeg('sdThrSeg', function (v) { thr = parseFloat(v); });
+  wireSeg('sdExclSeg', function (v) { excl = v === 'excl'; });
+  wireSeg('sdLvlSeg', function (v) { lvl = parseInt(v, 10); });
+  wireSeg('sdFormatSeg', function (v) {
+    fmtMode = v;
+    $('sdDataLab').textContent = v === 'list' ? 'Numbers' : 'Value, count (one pair per line)';
+    dataEl.placeholder = v === 'list' ? 'e.g. 10, 12, 23, 23, 16, 23, 21, 16\nor paste a column from Excel' : 'value, count — one pair per line\n85, 3\n90, 5\n72, 2';
+  });
+  dataEl.addEventListener('input', render);
+  $('sdPlaces').addEventListener('input', render);
+
+  var csvBtn = $('sdImportBtn'), csvFile = $('sdCsvFile');
+  csvBtn.addEventListener('click', function () { csvFile.click(); });
+  csvFile.addEventListener('change', function () {
+    var f = csvFile.files && csvFile.files[0]; if (!f) return;
+    var reader = new FileReader();
+    reader.onload = function () {
+      var lines = ('' + reader.result).split(/\r?\n/).map(function (l) { return (l.match(/-?\d+(\.\d+)?(e[-+]?\d+)?/gi) || []).join(', '); }).filter(Boolean);
+      dataEl.value = fmtMode === 'list' ? lines.join(', ') : lines.join('\n');
+      render();
+    };
+    reader.readAsText(f);
+    csvFile.value = '';
+  });
+
+  var advBtn = $('sdAdvBtn');
+  advBtn.addEventListener('click', function () {
+    advanced = !advanced;
+    advBtn.classList.toggle('open', advanced);
+    $('sdAdvBtnLab').textContent = advanced ? 'Go simple' : 'Go advanced';
+    $('sdAdvIn').style.display = advanced ? '' : 'none';
+    if (!advanced) { excl = false; thr = 2; lvl = 1; setSeg('sdExclSeg', 'keep'); setSeg('sdThrSeg', '2'); setSeg('sdLvlSeg', '1'); }
+    render();
+  });
+
+  var rt;
+  window.addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(function () { if (lastPlot) drawPlot(lastPlot); }, 120); });
+
+  render();
+};
+
+/* =========================================================
    SITE FOOTER — mobile accordion
    Multiple pillars can be open simultaneously.
    First pillar starts expanded (aria-expanded="true" in HTML).

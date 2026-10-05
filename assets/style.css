@@ -77,7 +77,13 @@
   .ctl-row .ctl-lab{font-size:13px;font-weight:600;color:var(--ink-soft)}
   .ctl-row .seg{flex:none}
 
-  label.fld{display:block;margin-bottom:15px}
+  /* Field spacing — GLOBAL, applies to label.fld AND div.fld (and any element) alike.
+     This used to be scoped to label.fld only, so every <div class="fld"> shipped with ZERO
+     gap unless its page remembered its own .p-PAGE .fld rule — it bit VO2 Max, then repeatedly
+     later pages (Standard Deviation, 2026-10-05). Now one rule covers every element, so a new
+     page can never ship without field spacing. Page-scoped .p-X .fld rules (16/18px) still win
+     by specificity where a page wants more air. NEVER narrow this back to label.fld. */
+  .fld{display:block;margin-bottom:15px}
   .fld .lab{display:flex;justify-content:space-between;align-items:baseline;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
   .fld .lab .unit{font-weight:500;color:var(--muted);font-size:12px}
   .inp{position:relative}
@@ -688,6 +694,47 @@
   .p-fcalc .fc-steps ul{list-style:none;margin:0 0 6px;padding:0}
   .p-fcalc .fc-steps li{padding:5px 0 5px 14px;border-left:2px solid var(--line);margin-bottom:3px}
   .p-fcalc .dtable td:first-child{color:var(--ink);font-weight:600}
+
+  /* =========================================================
+     MATH · STANDARD DEVIATION  (body.p-sdcalc)
+     Reuses .card-h2/.ctl-row/.seg, .linkbtn (CSV import), .advbtn,
+     .dtable, .stable, .res-tip.adv-tip, the sticky .mbar. Adds twin
+     result tiles (sample s + population σ, always both shown) and a
+     live number-line dot plot: every value a dot, the mean marked,
+     bands shaded at ±1 and ±2 SD, dots coloured by distance.
+     ========================================================= */
+  .p-sdcalc .sd-textarea{width:100%;font:inherit;font-size:15px;font-weight:500;color:var(--ink);background:#FCFAF6;border:1.5px solid var(--line);border-radius:10px;padding:11px 13px;resize:vertical;font-variant-numeric:tabular-nums;line-height:1.5}
+  .p-sdcalc .sd-textarea:focus{outline:none;border-color:var(--amber);background:#fff;box-shadow:0 0 0 3px rgba(181,118,31,.13)}
+  .p-sdcalc .sd-fseg{display:flex;width:100%}
+  .p-sdcalc .sd-fseg button{flex:1;text-align:center;padding:8px 6px}
+  .p-sdcalc .sd-tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:2px 0 14px}
+  .p-sdcalc .sd-tile{border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;background:#FCFAF6;min-width:0;transition:.15s}
+  .p-sdcalc .sd-tile.on{border-color:var(--amber);background:#fff;box-shadow:0 0 0 3px rgba(181,118,31,.10)}
+  .p-sdcalc .sd-val{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(24px,5vw,34px);line-height:1.1;color:var(--ink);font-variant-numeric:tabular-nums;margin:5px 0 4px;overflow-wrap:anywhere}
+  .p-sdcalc .sd-lc{text-transform:none}
+  .p-sdcalc .sd-form{font-size:14px;line-height:1.4;color:var(--muted);overflow-wrap:anywhere}
+  .p-sdcalc .sd-cap{font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin:14px 0 7px}
+  .p-sdcalc .sd-plotwrap{margin:6px 0 4px}
+  .p-sdcalc .sd-plot{position:relative;background:#FCFAF6;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  .p-sdcalc .sd-band2{position:absolute;top:0;bottom:0;background:rgba(55,80,63,.08)}
+  .p-sdcalc .sd-band1{position:absolute;top:0;bottom:0;background:rgba(55,80,63,.16)}
+  .p-sdcalc .sd-mean{position:absolute;top:0;bottom:0;width:2px;margin-left:-1px;background:var(--amber)}
+  .p-sdcalc .sd-dot{position:absolute;width:10px;height:10px;margin-left:-5px;border-radius:50%;background:var(--spruce)}
+  .p-sdcalc .sd-dot.d1{background:var(--amber)}
+  .p-sdcalc .sd-dot.d2{background:#b23030}
+  .p-sdcalc .sd-dot.dx{background:transparent;border:1.5px solid var(--muted)}
+  .p-sdcalc .sd-ticks{position:relative;height:18px;margin-top:6px;font-size:12px;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums}
+  .p-sdcalc .sd-ticks span{position:absolute;white-space:nowrap}
+  .p-sdcalc .sd-legend{display:flex;flex-wrap:wrap;gap:5px 16px;margin:8px 0 0;font-size:12px;font-weight:500;color:var(--ink-soft)}
+  .p-sdcalc .sd-legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:-1px}
+  .p-sdcalc .dtable td:first-child{color:var(--ink);font-weight:600}
+  .p-sdcalc .sd-steps{font-size:14.5px;line-height:1.6;color:var(--ink-soft)}
+  .p-sdcalc .sd-steps ul{list-style:none;margin:0 0 8px;padding:0}
+  .p-sdcalc .sd-steps li{padding:5px 0 5px 14px;border-left:2px solid var(--line);margin-bottom:3px}
+  .p-sdcalc #sdStepsWrap,.p-sdcalc #sdZWrap{max-height:300px;overflow-y:auto;margin:8px 0 10px}
+  .p-sdcalc .stable td.sd-flag{color:#b23030;font-weight:700}
+  .p-sdcalc .stable td.sd-ok{color:var(--spruce);font-weight:600}
+  .p-sdcalc .stable tr.sd-xrow td{background:#FDF0EE}
 
   /* =========================================================
      FITNESS · HEART-RATE ZONES  (body.p-hrzone)
