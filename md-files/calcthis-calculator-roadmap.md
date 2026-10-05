@@ -42,6 +42,17 @@ Pregnancy + Ovulation immediately **after** AdSense approval.
 | 17 | **Waist-to-Hip Ratio Calculator** | Ahrefs-verified >1,000/mo, **Easy** KD. | Health & Fitness | Simple | ✅ Shipped v110 |
 | 18 | **Weighted Average Calculator** | Ahrefs-verified >1,000/mo, **Easy** KD. | Math & Numbers | Simple | ✅ Shipped v116 |
 | 19 | **Grade Curve Calculator** | Ahrefs-verified >1,000/mo, **Easy** KD. | School & Grades | Simple | ✅ Shipped v120 |
+| 20 | **Fraction Calculator** | Ahrefs 2026-10-05: head term **>100K, Easy**. Long-tail: decimal to fraction >1K Easy · mixed fraction >1K Easy · improper fraction >1K Easy · partial fraction >1K Easy · reduce fraction >1K Easy · simplify fraction >1K Medium · 3 fraction >1K Medium. (Distinct from the live Tape Measure Fraction Calculator.) | Math & Numbers | Medium | ⬜ NEXT — user flagged as the top lead; needs research report + approval |
+| 21 | **Standard Deviation Calculator** | >10K, Medium. Long-tail: sample >1K Easy · population >1K Easy · using mean >1K Medium · mean and SD >100 Medium. Natural pair with Grade Curve (bell curve uses SD). | Math & Numbers | Simple | ⬜ |
+| 22 | **Paint Calculator** | >1K, Medium (exterior >100 Easy). Reuses the area engine (Flooring/Square Footage). | Construction & Gardening | Simple–Medium | ⬜ |
+| 23 | **Wallpaper Calculator** | >1K, **Easy** (with repeat / sq ft / inches >100 Easy). Same area engine; pairs with Paint. | Construction & Gardening | Simple–Medium | ⬜ |
+| 24 | **Scientific Notation Calculator** | >10K, Medium. Long-tail all <100. | Math & Numbers | Simple | ⬜ |
+| 25 | **Recipe Converter** | >1K, Easy (129 keywords total — small). Opens a Cooking vertical. | Cooking (new) | Medium | ⬜ |
+| 26 | **Sales Tax Calculator** | >10K but **Hard**; state long-tails >1K (NJ/Missouri/Ohio Easy; CA/NYC Hard). Needs accurate per-state/local rate data. | Finance (new) | Medium–High | ⬜ lower priority |
+| 27 | **Unit Converter** | Head term >10K **Easy**, but every variant Hard and Google answers it inline. Large scope. | Math & Numbers | High | ⬜ lower priority |
+| 28 | **Paycheck Calculator** | Head >100K Hard; state variants (TX/CA/FL/IL, hourly, salary) >10K **Easy**. Needs accurate federal+state tax tables — YMYL, high risk. | Finance (new) | High | ⬜ lower priority |
+| 29 | **Tip Calculator** | Head >100K Hard; Google inline; Easy variants are tiny niches (tattoo/nail salon >100). | Finance (new) | Simple | ⬜ lowest priority |
+| — | ~~Cooking Measurement Calculator~~ | <100/mo, Medium (2 keywords total). | — | — | ❌ dropped |
 
 ### Companion articles to build alongside
 - Ideal Weight → "What's My Ideal Weight? Height, Frame, and the Formulas"

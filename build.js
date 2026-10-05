@@ -53,6 +53,7 @@ const PAGES = [
   // Legal & info pages
   { file: 'ratio-calculator/index.html', slug: '/ratio-calculator/' },
   { file: 'weighted-average-calculator/index.html', slug: '/weighted-average-calculator/' },
+  { file: 'fraction-calculator/index.html', slug: '/fraction-calculator/' },
   { file: 'percentage-calculator/index.html', slug: '/percentage-calculator/' },
   { file: 'age-calculator/index.html',         slug: '/age-calculator/' },
   { file: 'date-calculator/index.html',        slug: '/date-calculator/' },

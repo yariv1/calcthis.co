@@ -642,6 +642,54 @@
   .p-gradecurve #gcAdvExtra .two{margin-top:0}
 
   /* =========================================================
+     MATH · FRACTION CALCULATOR  (body.p-fcalc)
+     Reuses .card-h2, .modeseg (2 modes), .seg (per-row operator),
+     .inp, .btn/.add-row/.add-note (Weighted Average's add-row
+     pattern), .advbtn, .dtable, .tally-head, .res-tip.adv-tip.
+     Adds a stacked-fraction glyph (.fc-f) and a live bar diagram
+     (.fc-bar) that draws each operand, the common-denominator
+     re-slice for add/subtract, and the result on one scale.
+     ========================================================= */
+  .p-fcalc .modeseg{grid-template-columns:1fr 1fr}
+  .p-fcalc .fc-res{margin:2px 0 14px}
+  .p-fcalc .res-big{font-size:clamp(26px,5vw,38px);line-height:1.2}
+  .p-fcalc .fc-eqrow{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px}
+  .p-fcalc .fc-op{font-family:'Inter',sans-serif;font-size:.7em;font-weight:600;color:var(--amber)}
+  .p-fcalc .fc-ans{color:var(--ink)}
+  .p-fcalc .fc-grp2{display:inline-flex;align-items:center;gap:6px 12px;flex-wrap:wrap}
+  .p-fcalc .fc-par{font-family:'Inter',sans-serif;font-weight:300;font-size:1.7em;line-height:1;color:var(--muted)}
+  .p-fcalc .fc-row{display:grid;grid-template-columns:1fr 26px;gap:8px;align-items:center;margin-bottom:12px}
+  .p-fcalc .fc-opcell{grid-column:1/-1}
+  .p-fcalc .fc-opcell:empty{display:none}
+  .p-fcalc .fc-opcell .seg{display:flex;width:100%}
+  .p-fcalc .fc-opcell .seg button{flex:1;padding:9px 4px;text-align:center}
+  .p-fcalc .fc-row .inp{min-width:0}
+  .p-fcalc .fc-row.nox .inp{grid-column:1/-1}
+  .p-fcalc .fc-row .inp input{padding:11px 13px}
+  .p-fcalc .fc-row .x{background:none;border:0;color:var(--muted);cursor:pointer;font-size:18px;line-height:1;padding:2px 4px;border-radius:5px;justify-self:center}
+  .p-fcalc .fc-row .x:hover{color:#b23;background:#f7e9e9}
+  .p-fcalc .fc-err{grid-column:1/-1;font-size:14px;color:#b23030;line-height:1.4}
+  .p-fcalc .fc-f{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.15;margin:0 2px}
+  .p-fcalc .fc-f .fc-n{padding:0 5px 2px;border-bottom:.07em solid currentColor}
+  .p-fcalc .fc-f .fc-d{padding:2px 5px 0}
+  .p-fcalc .fc-w{margin-right:4px}
+  .p-fcalc .fc-grp{font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin:14px 0 7px}
+  .p-fcalc .fc-brow{display:grid;grid-template-columns:76px 1fr;gap:10px;align-items:center;margin-bottom:7px}
+  .p-fcalc .fc-blab{font-size:14px;font-weight:600;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .p-fcalc .fc-bar{position:relative;height:24px;border-radius:6px;background:#EFE7D8;overflow:hidden}
+  .p-fcalc .fc-fill{position:absolute;left:0;top:0;bottom:0;background:var(--spruce);opacity:.9;transition:width .25s ease}
+  .p-fcalc .fc-fill.neg{background:#b23030}
+  .p-fcalc .fc-fill.res{background:var(--amber)}
+  .p-fcalc .fc-t{position:absolute;top:0;bottom:0;width:1px;background:rgba(255,255,255,.75);box-shadow:1px 0 0 rgba(36,26,17,.18)}
+  .p-fcalc .fc-tw{width:2px;background:rgba(255,255,255,.95);box-shadow:1px 0 0 rgba(36,26,17,.4)}
+  .p-fcalc .fc-bnote{font-size:13px;color:var(--muted);margin:4px 0 0}
+  .p-fcalc .fc-steps{font-size:14.5px;line-height:1.6;color:var(--ink-soft)}
+  .p-fcalc .fc-steps h4{font-family:'Fraunces',serif;font-size:15.5px;font-weight:600;color:var(--ink);margin:12px 0 4px}
+  .p-fcalc .fc-steps ul{list-style:none;margin:0 0 6px;padding:0}
+  .p-fcalc .fc-steps li{padding:5px 0 5px 14px;border-left:2px solid var(--line);margin-bottom:3px}
+  .p-fcalc .dtable td:first-child{color:var(--ink);font-weight:600}
+
+  /* =========================================================
      FITNESS · HEART-RATE ZONES  (body.p-hrzone)
      ========================================================= */
   .p-hrzone .fld{margin-bottom:18px}

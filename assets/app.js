@@ -6367,6 +6367,409 @@ CalcThis.initGradeCurveCalc = function (cfg) {
 };
 
 /* =========================================================
+   MATH · FRACTION CALCULATOR
+   Operand rows (any count) joined by + − × ÷ of, evaluated with normal
+   precedence on exact BigInt fractions (so large numbers never lose
+   precision — no separate "big number" mode needed). Two modes via
+   .modeseg: Calculate, and Simplify / convert (one value in -> fraction,
+   mixed number, decimal, percent). Differentiator: a live bar diagram of
+   the operation — operands, the common-denominator re-slice for pure
+   add/subtract chains, and the result on one scale. Go advanced opens a
+   real panel (decimal places) and reveals Compare / LCD / formula output.
+   ========================================================= */
+CalcThis.initFractionsCalc = function (cfg) {
+  cfg = cfg || {};
+  var $ = function (id) { return document.getElementById(id); };
+  var rowsWrap = $('fcRows');
+  if (!rowsWrap) return;
+  var Z = BigInt(0), O = BigInt(1), TWO = BigInt(2), TEN = BigInt(10);
+  var mode = 'calc', advanced = false, rowId = 0, rows = [];
+  var OPS = [['add', '+'], ['sub', '−'], ['mul', '×'], ['div', '÷'], ['of', 'of']];
+  var SYM = { add: '+', sub: '−', mul: '×', div: '÷', of: '×' };
+
+  // ---------- exact fraction math ----------
+  function babs(x) { return x < Z ? -x : x; }
+  function gcd(a, b) { a = babs(a); b = babs(b); while (b !== Z) { var t = a % b; a = b; b = t; } return a; }
+  function lcm(a, b) { return a / gcd(a, b) * b; }
+  function mk(n, d) {
+    if (d === Z) throw new Error('A denominator can’t be 0.');
+    if (d < Z) { n = -n; d = -d; }
+    return { n: n, d: d };
+  }
+  function red(f) { var g = gcd(f.n, f.d); return (g === O) ? f : { n: f.n / g, d: f.d / g }; }
+  function decToFrac(s) {
+    var neg = s.charAt(0) === '-'; if (neg) s = s.slice(1);
+    var parts = s.split('.'), ip = parts[0] || '0', fp = parts[1] || '';
+    var n = BigInt(ip + fp), d = TEN ** BigInt(fp.length);
+    return mk(neg ? -n : n, d);
+  }
+  function parseVal(s) {
+    s = ('' + s).trim().replace(/−/g, '-');
+    var m;
+    if ((m = /^(-?)(\d+)\s+(\d+)\s*\/\s*(\d+)$/.exec(s))) {
+      var d = BigInt(m[4]);
+      if (d === Z) throw new Error('A denominator can’t be 0.');
+      var n = BigInt(m[2]) * d + BigInt(m[3]);
+      return { f: mk(m[1] ? -n : n, d), kind: 'mixed', raw: s };
+    }
+    if ((m = /^(-?\d*\.?\d+)\s*\/\s*(-?\d*\.?\d+)$/.exec(s))) {
+      var a = decToFrac(m[1]), b = decToFrac(m[2]);
+      if (b.n === Z) throw new Error('A denominator can’t be 0.');
+      var plain = !/\./.test(m[1]) && !/\./.test(m[2]);
+      return { f: mk(a.n * b.d, a.d * b.n), kind: plain ? 'frac' : 'dec', raw: s };
+    }
+    if (/^-?\d*\.?\d+$/.test(s)) return { f: decToFrac(s), kind: s.indexOf('.') >= 0 ? 'dec' : 'int', raw: s };
+    throw new Error('Can’t read “' + s + '” — try 3/4, 1 3/4, 0.125 or 7.');
+  }
+  function addF(a, b) { return mk(a.n * b.d + b.n * a.d, a.d * b.d); }
+  function cmp(a, b) { var x = a.n * b.d - b.n * a.d; return x < Z ? -1 : (x > Z ? 1 : 0); }
+
+  // ---------- formatting ----------
+  function t(f) { return f.d === O ? f.n.toString() : f.n.toString() + '/' + f.d.toString(); }
+  function mixedTxt(f) {
+    if (f.d === O) return f.n.toString();
+    var n = babs(f.n), w = n / f.d, r = n % f.d;
+    if (w === Z) return t(f);
+    return (f.n < Z ? '-' : '') + w + ' ' + r + '/' + f.d;
+  }
+  function stacked(n, d) { return '<span class="fc-f"><span class="fc-n">' + n + '</span><span class="fc-d">' + d + '</span></span>'; }
+  function bigHtml(f) {
+    var neg = f.n < Z ? '−' : '', n = babs(f.n);
+    if (f.d === O) return neg + n;
+    var w = n / f.d, r = n % f.d;
+    if (w === Z) return neg + stacked(n, f.d);
+    return neg + '<span class="fc-w">' + w + '</span>' + stacked(r, f.d);
+  }
+  function decStr(f, places) {
+    var neg = f.n < Z, n = babs(f.n), d = f.d;
+    var scale = TEN ** BigInt(places);
+    var exact = (n * scale) % d === Z;
+    var q = (n * scale * TWO + d) / (d * TWO);
+    var s = q.toString();
+    while (s.length <= places) s = '0' + s;
+    var ip = s.slice(0, s.length - places), fp = s.slice(s.length - places).replace(/0+$/, '');
+    var out = ip + (fp ? '.' + fp : '');
+    if (neg && q !== Z) out = '-' + out;
+    return { text: out, exact: exact };
+  }
+  function placesVal() {
+    var v = parseInt($('fcPlaces').value, 10);
+    if (isNaN(v)) return 4;
+    return Math.max(0, Math.min(12, v));
+  }
+  function esc(s) { return ('' + s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;'); }
+
+  // ---------- operation steps ----------
+  function finish(raw, lines) {
+    var r = red(raw);
+    if (raw.d !== O) {
+      if (r.n !== raw.n || r.d !== raw.d) lines.push('Simplify: divide the top and bottom by their greatest common factor (' + gcd(raw.n, raw.d) + ') → ' + t(r) + '.');
+      else lines.push(t(raw) + ' is already in lowest terms.');
+    }
+    if (r.d !== O && babs(r.n) > r.d) lines.push('As a mixed number: ' + mixedTxt(r) + '.');
+    return r;
+  }
+  function paren(x) { return x < Z ? '(' + x + ')' : '' + x; }
+  function addSubStep(a, b, sub) {
+    var lines = [], l = lcm(a.d, b.d), sg = sub ? '−' : '+';
+    var an = a.n * (l / a.d), bn = b.n * (l / b.d);
+    if (a.d === b.d) lines.push('Same denominator (' + a.d + ') — ' + (sub ? 'subtract' : 'add') + ' the numerators.');
+    else {
+      lines.push('Denominators ' + a.d + ' and ' + b.d + ' → least common denominator (LCD) = ' + l + '.');
+      lines.push('Rewrite over ' + l + ': ' + t(a) + ' = ' + an + '/' + l + ' and ' + t(b) + ' = ' + bn + '/' + l + '.');
+    }
+    var num = sub ? an - bn : an + bn;
+    lines.push((sub ? 'Subtract' : 'Add') + ' the numerators: ' + an + ' ' + sg + ' ' + paren(bn) + ' = ' + num + ' → ' + num + '/' + l + '.');
+    return { f: finish(mk(num, l), lines), lines: lines };
+  }
+  function mulStep(a, b) {
+    var lines = [], n = a.n * b.n, d = a.d * b.d;
+    lines.push('Multiply the numerators: ' + a.n + ' × ' + b.n + ' = ' + n + '. Multiply the denominators: ' + a.d + ' × ' + b.d + ' = ' + d + ' → ' + n + '/' + d + '.');
+    return { f: finish(mk(n, d), lines), lines: lines };
+  }
+  function divStep(a, b) {
+    if (b.n === Z) throw new Error('Can’t divide by zero.');
+    var rec = mk(b.d, b.n), lines = [];
+    lines.push('To divide, flip the second fraction (its reciprocal): ' + t(b) + ' → ' + t(rec) + ', then multiply.');
+    var n = a.n * rec.n, d = a.d * rec.d;
+    lines.push(t(a) + ' × ' + t(rec) + ' = ' + n + '/' + d + '.');
+    return { f: finish(mk(n, d), lines), lines: lines };
+  }
+  function convNote(p) {
+    if (p.kind === 'mixed') return p.raw + ' as an improper fraction = ' + t(p.f) + '.';
+    if (p.kind === 'dec') { var r = red(p.f); return p.raw + ' as a fraction = ' + t(p.f) + (r.n !== p.f.n || r.d !== p.f.d ? ' = ' + t(r) : '') + '.'; }
+    return null;
+  }
+  function evalChain(terms) {
+    var vs = [terms[0].f], ops = [], blocks = [], i, r, left;
+    for (i = 1; i < terms.length; i++) {
+      var op = terms[i].op, f = terms[i].f;
+      if (op === 'mul' || op === 'div' || op === 'of') {
+        left = vs.pop();
+        r = (op === 'div') ? divStep(left, f) : mulStep(left, f);
+        blocks.push({ title: t(left) + ' ' + SYM[op] + ' ' + t(f) + ' = ' + t(r.f), lines: r.lines });
+        vs.push(r.f);
+      } else { ops.push(op); vs.push(f); }
+    }
+    var acc = vs[0];
+    for (i = 0; i < ops.length; i++) {
+      var b = vs[i + 1];
+      r = addSubStep(acc, b, ops[i] === 'sub');
+      blocks.push({ title: t(acc) + ' ' + SYM[ops[i]] + ' ' + t(b) + ' = ' + t(r.f), lines: r.lines });
+      acc = r.f;
+    }
+    return { f: acc, blocks: blocks };
+  }
+
+  // ---------- bar diagram ----------
+  function num(f) { return Number(f.n) / Number(f.d); }
+  function barRow(label, f, S, den, cls) {
+    var pct = Math.min(100, Math.abs(num(f)) / S * 100), dn = Number(den), N = S * dn, ticks = '', i;
+    if (dn > 0 && N <= 48) {
+      for (i = 1; i < N; i++) ticks += '<span class="fc-t' + (i % dn === 0 ? ' fc-tw' : '') + '" style="left:' + (i / N * 100) + '%"></span>';
+    } else {
+      for (i = 1; i < S; i++) ticks += '<span class="fc-t fc-tw" style="left:' + (i / S * 100) + '%"></span>';
+    }
+    return '<div class="fc-brow"><div class="fc-blab">' + label + '</div><div class="fc-bar"><span class="fc-fill ' + cls + '" style="width:' + pct + '%"></span>' + ticks + '</div></div>';
+  }
+  function renderBars(terms, result) {
+    var vals = terms.map(function (x) { return x.f; }), maxAbs = Math.abs(num(result)), i;
+    vals.forEach(function (f) { maxAbs = Math.max(maxAbs, Math.abs(num(f))); });
+    if (!isFinite(maxAbs)) return '<p class="fc-bnote">Numbers this large are shown in the working below.</p>';
+    var S = Math.max(1, Math.ceil(maxAbs - 1e-9));
+    if (S > 6) return '<p class="fc-bnote">The bar diagram shows values up to 6 — this one is bigger, so see the working below.</p>';
+    var html = '';
+    if (vals.length > 1 || mode === 'calc') html += '<div class="fc-grp">' + (vals.length > 1 ? 'Your fractions' : 'Your fraction') + '</div>';
+    vals.forEach(function (f) { html += barRow(mixedTxt(f), f, S, f.d, f.n < Z ? 'neg' : ''); });
+    var additive = terms.length > 1 && terms.every(function (x, k) { return k === 0 || x.op === 'add' || x.op === 'sub'; });
+    if (additive) {
+      var L = vals.reduce(function (acc, f) { return lcm(acc, f.d); }, O);
+      if (vals.some(function (f) { return f.d !== L; })) {
+        html += '<div class="fc-grp">Sliced into equal pieces (LCD ' + L + ')</div>';
+        terms.forEach(function (x, k) {
+          var s = (k > 0 && x.op === 'sub') ? mk(-x.f.n, x.f.d) : x.f;
+          html += barRow(s.n * (L / s.d) + '/' + L, s, S, L, s.n < Z ? 'neg' : '');
+        });
+      }
+    }
+    if (terms.length > 1) {
+      html += '<div class="fc-grp">Result</div>' + barRow(mixedTxt(result), result, S, result.d, 'res');
+    }
+    return html;
+  }
+
+  // ---------- rendering ----------
+  function setEmpty(msg) {
+    $('fcResBig').textContent = '—';
+    $('fcResSub').textContent = msg;
+    $('fcResults').style.display = 'none';
+    $('fcMVal').textContent = '—';
+    $('fcMDec').textContent = '';
+  }
+  function stepsHtml(notes, blocks) {
+    var html = '';
+    if (notes.length) html += '<h4>Reading your numbers</h4><ul>' + notes.map(function (n) { return '<li>' + n + '</li>'; }).join('') + '</ul>';
+    blocks.forEach(function (b, k) {
+      if (blocks.length > 1) html += '<h4>Step ' + (k + 1) + ': ' + b.title + '</h4>';
+      html += '<ul>' + b.lines.map(function (l) { return '<li>' + l + '</li>'; }).join('') + '</ul>';
+    });
+    if (blocks.length > 1) html = '<p class="add-note" style="text-align:left;margin:0 0 4px">× and ÷ are done before + and −, like normal arithmetic.</p>' + html;
+    return html;
+  }
+  // the action, written out: '1/3 + 2 = 2 1/3' (or 'as typed = simplified' for one value)
+  function rawHtml(p) {
+    if (p.kind === 'frac') return (p.f.n < Z ? '−' : '') + stacked(babs(p.f.n), p.f.d);
+    if (p.kind === 'mixed') return bigHtml(p.f);
+    return esc(p.raw.replace(/^-/, '−'));
+  }
+  function eqHtml(f, terms) {
+    var ans = '<span class="fc-ans">' + bigHtml(f) + '</span>', left;
+    if (mode === 'single' || terms.length === 1) {
+      left = rawHtml(terms[0].p);
+      if (left === bigHtml(f)) return '<div class="fc-eqrow">' + ans + '</div>';
+      return '<div class="fc-eqrow"><span>' + left + '</span><span class="fc-op">=</span>' + ans + '</div>';
+    }
+    // × ÷ groups are done first, so when they sit inside a longer + / − expression, bracket them
+    var groups = [[terms[0]]];
+    terms.slice(1).forEach(function (x) {
+      if (x.op === 'mul' || x.op === 'div' || x.op === 'of') groups[groups.length - 1].push(x);
+      else groups.push([x]);
+    });
+    var bracket = groups.length > 1;
+    left = groups.map(function (g, gi) {
+      var inner = g.map(function (x, k) {
+        return (k > 0 ? '<span class="fc-op">' + SYM[x.op] + '</span>' : '') + '<span>' + bigHtml(x.f) + '</span>';
+      }).join('');
+      if (bracket && g.length > 1) inner = '<span class="fc-par">(</span>' + inner + '<span class="fc-par">)</span>';
+      return (gi > 0 ? '<span class="fc-op">' + SYM[g[0].op] + '</span>' : '') + '<span class="fc-grp2">' + inner + '</span>';
+    }).join('');
+    return '<div class="fc-eqrow">' + left + '<span class="fc-op">=</span>' + ans + '</div>';
+  }
+  function showResult(f, terms, blocks, notes) {
+    var places = placesVal(), dec = decStr(f, places), pct = decStr(mk(f.n * BigInt(100), f.d), places);
+    $('fcResLab').textContent = mode === 'single' ? 'Simplified' : 'Result';
+    $('fcResBig').innerHTML = eqHtml(f, terms);
+    var parts = [];
+    if (f.d !== O && babs(f.n) > f.d) parts.push(mixedTxt(f));
+    var minus = function (s) { return s.replace(/^-/, '−'); };
+    parts.push((dec.exact ? '' : '≈ ') + minus(dec.text));
+    parts.push((pct.exact ? '' : '≈ ') + minus(pct.text) + '%');
+    $('fcResSub').textContent = (parts[0].charAt(0) === '≈' ? '' : '= ') + parts.join(' · ');
+    $('fcResults').style.display = '';
+    $('fcMLab').textContent = mode === 'single' ? 'Simplified' : 'Result';
+    $('fcMVal').textContent = (f.d !== O && babs(f.n) > f.d) ? mixedTxt(f) : t(f);
+    $('fcMDec').textContent = f.d === O ? '' : ' = ' + minus(dec.text) + (dec.exact ? '' : '…');
+    $('fcBars').innerHTML = renderBars(terms, f);
+    $('fcSteps').innerHTML = stepsHtml(notes, blocks);
+
+    var advOut = $('fcAdvOut');
+    var show = advanced && mode === 'calc' && terms.length >= 2;
+    advOut.style.display = show ? '' : 'none';
+    if (!show) return;
+    var sorted = terms.map(function (x) { return x.f; }).sort(cmp), cm = '';
+    sorted.forEach(function (x, k) {
+      if (k > 0) cm += (cmp(sorted[k - 1], x) === 0) ? ' = ' : ' < ';
+      cm += mixedTxt(x);
+    });
+    $('fcCompare').textContent = 'Smallest to largest: ' + cm;
+    var fm = $('fcFormula');
+    if (terms.length === 2) {
+      var a = terms[0].f, b = terms[1].f, op = terms[1].op, ft;
+      if (op === 'add') ft = '(' + a.n + '×' + b.d + ' + ' + b.n + '×' + a.d + ') / (' + a.d + '×' + b.d + ')';
+      else if (op === 'sub') ft = '(' + a.n + '×' + b.d + ' − ' + b.n + '×' + a.d + ') / (' + a.d + '×' + b.d + ')';
+      else if (op === 'div') ft = '(' + a.n + '×' + b.d + ') / (' + a.d + '×' + b.n + ')';
+      else ft = '(' + a.n + '×' + b.n + ') / (' + a.d + '×' + b.d + ')';
+      fm.textContent = 'Formula: ' + ft + ' = ' + t(f);
+      fm.style.display = '';
+    } else fm.style.display = 'none';
+    var L = terms.reduce(function (acc, x) { return lcm(acc, x.f.d); }, O);
+    document.querySelector('#fcLcdWrap .fc-grp').textContent = 'Over the common denominator (LCD ' + L + ')';
+    $('fcLcdBody').innerHTML = terms.map(function (x) {
+      return '<tr><td>' + t(x.f) + '</td><td>' + x.f.n * (L / x.f.d) + '/' + L + '</td></tr>';
+    }).join('');
+    $('fcLcdWrap').style.display = '';
+  }
+
+  function clearErrors() {
+    [].forEach.call(rowsWrap.querySelectorAll('.fc-err'), function (e) { e.style.display = 'none'; e.textContent = ''; });
+  }
+  function rowErr(idx, msg) {
+    var rowEl = rowsWrap.querySelectorAll('.fc-row')[idx];
+    if (!rowEl) return;
+    var e = rowEl.querySelector('.fc-err');
+    e.textContent = msg; e.style.display = '';
+  }
+
+  function render() {
+    clearErrors();
+    var limit = mode === 'single' ? 1 : rows.length, terms = [], notes = [], hasErr = false;
+    var typing = false;
+    rows.slice(0, limit).forEach(function (r, idx) {
+      var s = r.text.trim();
+      if (!s) return;
+      // still mid-typing (e.g. '2/', '1 3', '-', '0.') -> skip quietly, no error, keep the rest of the result
+      if (/[\/.\-−]$/.test(s) || /^-?\d+\s+\d+$/.test(s)) { typing = true; return; }
+      try {
+        var p = parseVal(s), cn = convNote(p);
+        if (cn) notes.push(cn);
+        terms.push({ f: red(p.f), op: r.op, p: p, idx: idx });
+      } catch (e) { hasErr = true; rowErr(idx, e.message); }
+    });
+    if (hasErr) { setEmpty('Check the highlighted entry.'); return; }
+    if (!terms.length && typing) { setEmpty('Keep typing your fraction…'); return; }
+    if (!terms.length) { setEmpty(mode === 'single' ? 'Enter a fraction, mixed number or decimal.' : 'Enter at least two fractions to calculate.'); return; }
+    try {
+      if (mode === 'single' || terms.length === 1) {
+        var p0 = terms[0].p, f0 = terms[0].f, lines = [];
+        if (p0.kind === 'int') lines.push(p0.raw + ' is a whole number, so it equals ' + p0.raw + '/1.');
+        else finish(p0.f, lines);
+        var places = placesVal(), d0 = decStr(f0, places), p1 = decStr(mk(f0.n * BigInt(100), f0.d), places);
+        if (f0.d !== O) lines.push('As a decimal: ' + f0.n + ' ÷ ' + f0.d + ' = ' + (d0.exact ? '' : '≈ ') + d0.text + '.');
+        lines.push('As a percent: ' + d0.text + ' × 100 = ' + (p1.exact ? '' : '≈ ') + p1.text + '%.');
+        showResult(f0, terms.slice(0, 1), [{ title: '', lines: lines }], notes);
+        return;
+      }
+      var ev = evalChain(terms);
+      showResult(ev.f, terms, ev.blocks, notes);
+    } catch (e) { setEmpty(e.message); }
+  }
+
+  // ---------- rows ----------
+  function buildRow(r, i) {
+    var div = document.createElement('div');
+    div.className = 'fc-row';
+    var opHtml = '';
+    if (i > 0 && mode === 'calc') {
+      opHtml = '<div class="seg" role="group" aria-label="Operator">' + OPS.map(function (o) {
+        return '<button type="button" data-op="' + o[0] + '"' + (r.op === o[0] ? ' class="on"' : '') + '>' + o[1] + '</button>';
+      }).join('') + '</div>';
+    }
+    var ph = mode === 'single' ? '3/4, 1 3/4 or 0.125' : '3/4 or 1 3/4';
+    div.innerHTML = '<div class="fc-opcell">' + opHtml + '</div>'
+      + '<div class="inp"><input type="text" inputmode="text" autocomplete="off" placeholder="' + ph + '" value="' + esc(r.text) + '" aria-label="Fraction ' + (i + 1) + '"></div>'
+      + (i >= 2 && mode === 'calc' ? '<button class="x" type="button" aria-label="Remove">&#215;</button>' : '')
+      + '<div class="fc-err" style="display:none"></div>';
+    if (!(i >= 2 && mode === 'calc')) div.className += ' nox';
+    div.querySelector('input').addEventListener('input', function () { r.text = this.value; render(); });
+    var seg = div.querySelector('.seg');
+    if (seg) seg.addEventListener('click', function (e) {
+      var b = e.target.closest('button'); if (!b) return;
+      r.op = b.dataset.op;
+      [].forEach.call(seg.children, function (c) { c.classList.toggle('on', c === b); });
+      render();
+    });
+    var x = div.querySelector('.x');
+    if (x) x.addEventListener('click', function () {
+      rows = rows.filter(function (q) { return q !== r; });
+      buildRows(); render();
+    });
+    return div;
+  }
+  function buildRows() {
+    rowsWrap.innerHTML = '';
+    rows.forEach(function (r, i) {
+      if (mode === 'single' && i > 0) return;
+      rowsWrap.appendChild(buildRow(r, i));
+    });
+  }
+  function newRow() { return { id: ++rowId, op: 'add', text: '' }; }
+
+  $('fcAddBtn').addEventListener('click', function () {
+    rows.push(newRow());
+    buildRows(); render();
+    var ins = rowsWrap.querySelectorAll('input');
+    if (ins.length) ins[ins.length - 1].focus();
+  });
+
+  var modeSeg = $('fcModeSeg');
+  modeSeg.addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b || b.dataset.m === mode) return;
+    mode = b.dataset.m;
+    [].forEach.call(modeSeg.children, function (c) { c.classList.toggle('on', c === b); c.setAttribute('aria-selected', c === b ? 'true' : 'false'); });
+    $('fcAddWrap').style.display = mode === 'calc' ? '' : 'none';
+    $('fcInputNote').innerHTML = mode === 'calc'
+      ? 'Type fractions like <b>3/4</b>, mixed numbers like <b>1 3/4</b>, decimals like <b>0.125</b>, or whole numbers.'
+      : 'Enter one fraction, mixed number or decimal — you get it simplified, as a mixed number, a decimal and a percent.';
+    buildRows(); render();
+  });
+
+  $('fcPlaces').addEventListener('input', render);
+
+  var advBtn = $('fcAdvBtn');
+  advBtn.addEventListener('click', function () {
+    advanced = !advanced;
+    advBtn.classList.toggle('open', advanced);
+    $('fcAdvBtnLab').textContent = advanced ? 'Go simple' : 'Go advanced';
+    $('fcAdvIn').style.display = advanced ? '' : 'none';
+    render();
+  });
+
+  rows = [newRow(), newRow()];
+  buildRows();
+  render();
+};
+
+/* =========================================================
    SITE FOOTER — mobile accordion
    Multiple pillars can be open simultaneously.
    First pillar starts expanded (aria-expanded="true" in HTML).
