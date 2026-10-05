@@ -44,7 +44,7 @@ Pregnancy + Ovulation immediately **after** AdSense approval.
 | 19 | **Grade Curve Calculator** | Ahrefs-verified >1,000/mo, **Easy** KD. | School & Grades | Simple | ✅ Shipped v120 |
 | 20 | **Fraction Calculator** | Ahrefs 2026-10-05: head term **>100K, Easy**. Long-tail: decimal to fraction >1K Easy · mixed fraction >1K Easy · improper fraction >1K Easy · partial fraction >1K Easy · reduce fraction >1K Easy · simplify fraction >1K Medium · 3 fraction >1K Medium. (Distinct from the live Tape Measure Fraction Calculator.) | Math & Numbers | Medium | ✅ Shipped v129 (companion article pending) |
 | 21 | **Standard Deviation Calculator** | >10K, Medium. Long-tail: sample >1K Easy · population >1K Easy · using mean >1K Medium · mean and SD >100 Medium. Natural pair with Grade Curve (bell curve uses SD). | Math & Numbers | Simple | ✅ Shipped v137 (article deferred) |
-| 22 | **Paint Calculator** | >1K, Medium (exterior >100 Easy). Reuses the area engine (Flooring/Square Footage). | Construction & Gardening | Simple–Medium | ⬜ |
+| 22 | **Paint Calculator** | >1K, Medium (exterior >100 Easy). Reuses the area engine (Flooring/Square Footage). | Construction & Gardening | Simple–Medium | 🔶 Research report DELIVERED 2026-10-05, awaiting user approval + 2 decisions (Exterior mode? drop Deck/Stain/Floor?) — full report in HANDOFF.md §4; no code yet |
 | 23 | **Wallpaper Calculator** | >1K, **Easy** (with repeat / sq ft / inches >100 Easy). Same area engine; pairs with Paint. | Construction & Gardening | Simple–Medium | ⬜ |
 | 24 | **Scientific Notation Calculator** | >10K, Medium. Long-tail all <100. | Math & Numbers | Simple | ⬜ |
 | 25 | **Recipe Converter** | >1K, Easy (129 keywords total — small). Opens a Cooking vertical. | Cooking (new) | Medium | ⬜ |

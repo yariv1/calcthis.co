@@ -134,6 +134,23 @@ must be built from the article's actual units, every time, not pasted from a tem
 
 ---
 
+## ⛔ SESSION HANDOFF — START HERE (written 2026-10-05; full detail in `HANDOFF.md`)
+
+**Read `HANDOFF.md` in full before replying.** Do not make the user re-explain anything in it.
+- **State:** v137 · 43 calculators · 25 articles · `main` clean and pushed.
+- **In progress:** **#22 Paint Calculator** — Rule 8 research report DELIVERED, **awaiting the user's
+  approval + 2 decisions** (include an Exterior mode? drop Sherwin-Williams Deck / Behr Stain / Floor
+  coatings tabs?). **No code written yet. Do not re-research** — report is in `HANDOFF.md` §4.
+- **First move next session:** 2-3 line "synced" reply, then ask for approval on the Paint report. Build
+  only after approval; deploy only on the user's explicit "deploy".
+- **Articles are DEFERRED** — never write/propose/ask about one. Awaiting a future batch: Fraction,
+  Standard Deviation. Priority = lots of calculators (backlog #22-29 in the roadmap md).
+- **Behaviour:** zero narration (Stop hook enforces it), terse replies, never invent, every report needs
+  a visual AND functional differentiator, Go advanced = real visible panel, sticky `.mbar` on mobile,
+  start empty, field spacing is global (do nothing).
+
+---
+
 ## Project state
 
 - **Asset version:** v137 (bumped, `node build.js` run and deployed this session)
@@ -235,6 +252,9 @@ Total live calculators: **43**
 ---
 
 ## Last session (v130–v137)
+
+- **Ended mid-way through #22 Paint Calculator:** research report delivered, awaiting approval (see the
+  handoff block at the top of this file and `HANDOFF.md` §4). Nothing built yet.
 
 - Researched, built and deployed **Standard Deviation Calculator** (`/standard-deviation-calculator/`,
   roadmap #21 — Ahrefs 2026-10-05: head >10K Medium, sample/population >1K Easy). Research opened
