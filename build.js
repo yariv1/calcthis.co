@@ -57,6 +57,7 @@ const PAGES = [
   { file: 'weighted-average-calculator/index.html', slug: '/weighted-average-calculator/' },
   { file: 'fraction-calculator/index.html', slug: '/fraction-calculator/' },
   { file: 'standard-deviation-calculator/index.html', slug: '/standard-deviation-calculator/' },
+  { file: 'scientific-notation-calculator/index.html', slug: '/scientific-notation-calculator/' },
   { file: 'percentage-calculator/index.html', slug: '/percentage-calculator/' },
   { file: 'age-calculator/index.html',         slug: '/age-calculator/' },
   { file: 'date-calculator/index.html',        slug: '/date-calculator/' },

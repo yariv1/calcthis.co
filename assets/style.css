@@ -1872,3 +1872,38 @@
     .p-wall .wp-lg{display:none}
     .p-wall .wp-sm{display:inline}
   }
+
+  /* =========================================================
+     MATH · SCIENTIFIC NOTATION CALCULATOR  (body.p-sci)
+     One smart input (number or expression) -> every notation at once.
+     Reuses .card-h2, .chips (insert + example buttons), .seg (output
+     style, rounding), .advbtn/.add-row.split, .dtable (formats), the
+     Square Footage / Paint diagram box (.sq-diagram), .res-tip.adv-tip,
+     .tally-head and the sticky .mbar. Adds a decimal-point shift strip
+     and a power-of-ten / SI-prefix ruler (both inline SVG, 12px text floor).
+     ========================================================= */
+  .p-sci .sq-diagram{margin:8px 0 14px;background:#FCFAF6;border:1px solid var(--line);border-radius:12px;padding:12px 14px 10px}
+  .p-sci .sq-diagram svg{display:block;width:100%;height:auto;overflow:visible}
+  .p-sci .sq-diagram-empty{font-size:13px;color:var(--muted);text-align:center;padding:24px 10px;line-height:1.45}
+  .p-sci .sq-diagram-legend{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:6px;padding-top:8px;border-top:1px dashed var(--line);font-size:12.5px;color:var(--ink-soft)}
+  .p-sci .sq-diagram-legend b{color:var(--ink);font-weight:600}
+  .p-sci .chips{margin-top:0}
+  .p-sci .sci-fseg{display:flex;width:100%}
+  .p-sci .sci-fseg button{flex:1;text-align:center;padding:8px 6px}
+  .p-sci .sci-big{font-size:clamp(26px,5.2vw,40px);line-height:1.15;letter-spacing:-.01em;overflow-wrap:anywhere;margin:8px 0 4px}
+  .p-sci .res-sub{overflow-wrap:anywhere}
+  .p-sci .sci-table td{vertical-align:middle}
+  .p-sci .sci-table td:first-child{color:var(--ink);white-space:nowrap}
+  .p-sci .sci-val{text-align:right;font-weight:600;color:var(--ink);overflow-wrap:break-word}
+  .p-sci .sci-wide{display:block;margin-top:2px;font-weight:600;color:var(--ink);overflow-wrap:break-word;text-align:left}
+  .p-sci .sci-cp{text-align:right;width:54px;white-space:nowrap}
+  .p-sci .sci-cp .linkbtn{font-size:12.5px}
+  .p-sci .sci-sub{display:block;margin-top:1px;font-size:12px;font-weight:500;color:var(--muted)}
+  .p-sci .sci-steps{margin:0 0 4px 20px;padding:0;color:var(--ink-soft);font-size:14.5px;line-height:1.55}
+  .p-sci .sci-steps li{margin-bottom:7px;padding-left:2px;overflow-wrap:anywhere}
+  .p-sci .mbar-vals b{font-size:20px;overflow-wrap:anywhere}
+  .p-sci .hero code,.p-sci .content code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.92em;background:#F2EBDF;border-radius:5px;padding:1px 5px;color:var(--ink)}
+  @media(max-width:520px){
+    .p-sci .sci-table td:first-child{white-space:normal}
+    .p-sci .sci-cp{width:46px}
+  }

@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Scientific Notation Calculator — Convert &amp; Calculate | CalcThis</title>
+<meta name="description" content="Free scientific notation calculator: convert any number to and from scientific notation, E-notation and engineering notation, or calculate with expressions like (3×10^4)(2×10^6). See the decimal point move, with exact results, SI prefixes and step-by-step working.">
+<link rel="canonical" href="https://calcthis.co/scientific-notation-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Scientific Notation Calculator — Convert &amp; Calculate">
+<meta property="og:description" content="One box for any number or expression. Every notation at once, a live picture of the decimal point moving, exact decimal maths and step-by-step working. Instant, no sign-up.">
+<meta property="og:url" content="https://calcthis.co/scientific-notation-calculator/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<meta name="theme-color" content="#B5761F">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css?v=142">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Scientific Notation Calculator",
+      "url": "https://calcthis.co/scientific-notation-calculator/",
+      "applicationCategory": "UtilityApplication",
+      "operatingSystem": "Any (web browser)",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "description": "Convert any number to and from scientific notation, E-notation and engineering notation, or calculate with whole expressions such as (3×10^4)(2×10^6). Exact decimal results, a live picture of the decimal point moving, a power-of-ten ruler with SI prefixes and step-by-step working.",
+      "featureList": [
+        "One box that accepts decimals, E-notation, a × 10^b and whole expressions",
+        "Add, subtract, multiply, divide, powers and square roots in scientific notation",
+        "Scientific, E-notation, engineering, real number, order of magnitude, significant figures and words at once",
+        "Live picture of the decimal point moving",
+        "Power-of-ten ruler with SI prefixes",
+        "Exact decimal arithmetic (division and roots to 40 digits)",
+        "Round to significant figures or decimal places",
+        "Copy any result in plain text, LaTeX or superscript style",
+        "Step-by-step working"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "What is scientific notation?", "acceptedAnswer": { "@type": "Answer", "text": "Scientific notation writes a number as a coefficient between 1 and 10 multiplied by a power of 10, in the form a × 10^n. It is used for very large and very small numbers: 6,020,000 is 6.02 × 10^6 and 0.00042 is 4.2 × 10^-4." } },
+        { "@type": "Question", "name": "How do I convert a number to scientific notation?", "acceptedAnswer": { "@type": "Answer", "text": "Move the decimal point until there is exactly one non-zero digit to its left. The number of places you moved it is the exponent: positive if you moved it left, negative if you moved it right. For 4,500 you move it 3 places left, giving 4.5 × 10^3." } },
+        { "@type": "Question", "name": "How do I add numbers in scientific notation?", "acceptedAnswer": { "@type": "Answer", "text": "Rewrite both numbers with the same power of 10, add the coefficients, then normalise the result. For example 4 × 10^5 + 7 × 10^4 = 4 × 10^5 + 0.7 × 10^5 = 4.7 × 10^5. To multiply, multiply the coefficients and add the exponents." } },
+        { "@type": "Question", "name": "What is the difference between scientific notation and standard form?", "acceptedAnswer": { "@type": "Answer", "text": "In the UK and many other countries, standard form is simply another name for scientific notation. In the US, standard form usually means an ordinary number written out in full, such as 4,500. This calculator shows both the scientific notation and the real number." } },
+        { "@type": "Question", "name": "What is E notation?", "acceptedAnswer": { "@type": "Answer", "text": "E notation is the way calculators, spreadsheets and programming languages write scientific notation: the letter e stands for times 10 to the power of. So 1.5e6 means 1.5 × 10^6, which is 1,500,000." } }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body class="p-sci">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <a class="hdr-back" href="/blog/" aria-label="Back to blog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <span class="menu-col-head">Construction &amp; Gardening</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+          <a href="/paint-calculator/">Paint</a>
+          <a href="/wallpaper-calculator/">Wallpaper</a>
+          <a href="/square-footage-calculator/">Square Footage</a>
+          <a href="/tape-measure-fraction-calculator/">Tape Measure Fraction</a>
+          <a href="/stair-calculator/">Stair</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/vo2-max-calculator/">VO2 Max</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
+          <a href="/bmi-calculator/">BMI</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/ideal-weight-calculator/">Ideal Weight</a>
+          <a href="/lean-body-mass-calculator/">Lean Body Mass</a>
+          <a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio</a>
+          <a href="/calorie-calculator/">Calorie</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/water-intake-calculator/">Water Intake</a>
+          <a href="/macro-calculator/">Macro</a>
+          <a href="/protein-intake-calculator/">Protein Intake</a>
+          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
+          <a href="/steps-to-miles-calculator/">Steps to Miles</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+          <a href="/grade-curve-calculator/">Grade Curve</a>
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/fraction-calculator/">Fraction</a>
+          <a href="/standard-deviation-calculator/">Standard Deviation</a>
+          <a href="/scientific-notation-calculator/" class="current">Scientific Notation</a>
+          <a href="/weighted-average-calculator/">Weighted Average</a>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+          <a href="/age-calculator/">Age</a>
+          <a href="/date-calculator/">Date</a>
+          <a href="/time-calculator/">Time</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">Convert &amp; calculate</div>
+    <h1>Scientific Notation Calculator</h1>
+    <p>Type <strong>any number or a whole expression</strong> — <code>0.00042</code>, <code>6.022e23</code>, <code>(3×10^4)(2×10^6)</code> — and get it in <strong>every notation at once</strong>, with a live picture of the decimal point moving and step-by-step working. Adding, subtracting and multiplying are exact; dividing and roots go to 40 digits.</p>
+  </section>
+
+  <div class="grid">
+
+    <!-- INPUT -->
+    <div class="card" id="sciInCard">
+      <div class="card-pad">
+        <h2 class="card-h2">Your number</h2>
+
+        <label class="fld" for="sciIn" style="margin-bottom:8px">
+          <span class="lab">Number or expression</span>
+          <div class="inp"><input id="sciIn" type="text" inputmode="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="0.00042 · 6.022e23 · (3×10^4)(2×10^6)"></div>
+        </label>
+        <div class="res-hint" id="sciHint" style="display:none;text-align:left;margin:0 0 8px"></div>
+        <p class="add-note" id="sciNote" style="display:none;text-align:left;margin:0 0 8px"></p>
+
+        <div class="fld">
+          <span class="lab">Insert</span>
+          <div class="chips" id="sciInsert">
+            <button type="button" data-ins="×">×</button>
+            <button type="button" data-ins="÷">÷</button>
+            <button type="button" data-ins="^">^</button>
+            <button type="button" data-ins="e">e</button>
+            <button type="button" data-ins="(">(</button>
+            <button type="button" data-ins=")">)</button>
+            <button type="button" data-ins="√">√</button>
+          </div>
+        </div>
+        <div class="fld">
+          <span class="lab">Try an example</span>
+          <div class="chips" id="sciTry">
+            <button type="button" data-ex="0.00042">0.00042</button>
+            <button type="button" data-ex="6,020,000">6,020,000</button>
+            <button type="button" data-ex="32 × 10^4">32 × 10^4</button>
+            <button type="button" data-ex="(3×10^4)(2×10^6)">(3×10^4)(2×10^6)</button>
+            <button type="button" data-ex="4e5 + 7e4">4e5 + 7e4</button>
+          </div>
+        </div>
+        <p class="add-note" style="text-align:left;margin:-6px 0 6px">Accepts 3672.2, 2.3e11, 3.5 × 10^-12 and expressions with + − × ÷ ^ √ and brackets.</p>
+
+        <div id="sciAdvIn" style="display:none">
+          <div class="proj-sep"></div>
+          <div class="fld">
+            <span class="lab">Write it as</span>
+            <div class="seg sci-fseg" id="sciStyleSeg" role="group" aria-label="Output style">
+              <button class="on" type="button" data-v="sup">× 10ⁿ</button>
+              <button type="button" data-v="plain">x 10^n</button>
+              <button type="button" data-v="dot">· 10ⁿ</button>
+              <button type="button" data-v="latex">LaTeX</button>
+            </div>
+          </div>
+          <div class="fld">
+            <span class="lab">Round to</span>
+            <div class="seg sci-fseg" id="sciRoundSeg" role="group" aria-label="Rounding">
+              <button class="on" type="button" data-v="sig">Significant figures</button>
+              <button type="button" data-v="dec">Decimal places</button>
+            </div>
+          </div>
+          <label class="fld"><span class="lab">How many <span class="unit">blank = exact</span></span><div class="inp"><input id="sciRoundN" type="number" inputmode="numeric" min="1" max="100" placeholder="exact"></div></label>
+          <label class="fld" style="margin-bottom:0"><span class="lab">Engineering exponent <span class="unit">blank = automatic</span></span><div class="inp"><input id="sciEngN" type="number" inputmode="numeric" placeholder="auto (multiple of 3)"></div></label>
+        </div>
+
+        <div class="add-row split" style="margin-top:16px">
+          <span></span>
+          <button class="advbtn" id="sciAdvBtn" type="button">
+            <span id="sciAdvBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div class="card">
+      <div class="card-pad">
+        <div class="res-lab">Scientific notation</div>
+        <div class="res-big sci-big" id="sciBig">—</div>
+        <div class="res-sub" id="sciSub">Type a number or an expression to see it in every notation.</div>
+
+        <div id="sciResBody" style="display:none">
+          <p class="res-tip adv-tip" id="sciNorm" style="display:none"></p>
+          <p class="res-tip adv-tip" id="sciPlain"></p>
+
+          <table class="dtable sci-table" style="margin-top:12px"><tbody id="sciRows"></tbody></table>
+
+          <div class="fc-grp" style="margin-top:16px">Move the decimal point</div>
+          <div class="sq-diagram" id="sciStrip"></div>
+
+          <div class="fc-grp">Where it sits on the powers-of-ten scale</div>
+          <div class="sq-diagram" id="sciRuler"></div>
+
+          <div class="proj-sep"></div>
+          <div class="tally-head"><h3>How it&rsquo;s solved</h3></div>
+          <ol class="sci-steps" id="sciSteps"></ol>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- mobile sticky bar -->
+  <div class="mbar" id="mbar">
+    <span class="mbar-lab" id="sciMLab">Scientific notation</span>
+    <div class="mbar-vals"><b id="sciMVal">—</b></div>
+  </div>
+
+  <div class="related-calcs">
+    <p class="related-calcs-h">More math calculators that may interest you</p>
+    <div class="pills">
+      <a class="pill" href="/fraction-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 4v3M12 17v3"/></svg>
+        Fraction Calculator
+      </a>
+      <a class="pill" href="/standard-deviation-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 19c3-1 4-14 9-14s6 13 9 14"/></svg>
+        Standard Deviation Calculator
+      </a>
+      <a class="pill" href="/percentage-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7" cy="7" r="3"/><circle cx="17" cy="17" r="3"/><path d="M6 18L18 6"/></svg>
+        Percentage Calculator
+      </a>
+      <a class="pill" href="/ratio-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="12" r="1.5"/><circle cx="16" cy="12" r="1.5"/><path d="M12 5v14"/></svg>
+        Ratio Calculator
+      </a>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use the scientific notation calculator</h2>
+        <p>Type a number into the box in <strong>any format</strong> — an ordinary number like <code>4500</code>, E-notation like <code>2.3e11</code>, or <code>3.5 × 10^-12</code>. You can also type a whole <strong>expression</strong> such as <code>(3×10^4)(2×10^6)</code> or <code>4e5 + 7e4</code>. The result appears in every notation at once, a picture shows the decimal point moving, and the steps are written out underneath. Use the <strong>Insert</strong> buttons for × ÷ ^ and brackets on a phone.</p>
+
+        <h2>What is scientific notation?</h2>
+        <div class="formula">
+          a × 10ⁿ
+          <small>1 ≤ |a| &lt; 10 AND n IS A WHOLE NUMBER</small>
+        </div>
+        <p>Scientific notation writes a number as a <strong>coefficient</strong> <em>a</em> between 1 and 10, multiplied by a <strong>power of ten</strong>. It makes huge and tiny numbers short and easy to compare: 6,020,000 is 6.02 × 10⁶ and 0.00042 is 4.2 × 10⁻⁴.</p>
+
+        <h2>How to convert a number to scientific notation</h2>
+        <ul>
+          <li>Move the decimal point until there is <strong>one non-zero digit</strong> to its left.</li>
+          <li>Count the places you moved it — that is the exponent.</li>
+          <li>Moved <strong>left</strong> → the exponent is positive. Moved <strong>right</strong> → it is negative.</li>
+        </ul>
+        <p>Example: 4,500 → move the point 3 places left → <strong>4.5 × 10³</strong>. And 0.00042 → move it 4 places right → <strong>4.2 × 10⁻⁴</strong>.</p>
+
+        <h2>Calculating with scientific notation</h2>
+        <p><strong>Multiply:</strong> multiply the coefficients and add the exponents — (3 × 10⁴)(2 × 10⁶) = <strong>6 × 10¹⁰</strong>. <strong>Divide:</strong> divide the coefficients and subtract the exponents — (6 × 10⁸) ÷ (3 × 10³) = <strong>2 × 10⁵</strong>. <strong>Add or subtract:</strong> first give both numbers the same power of ten — 4 × 10⁵ + 7 × 10⁴ = 4 × 10⁵ + 0.7 × 10⁵ = <strong>4.7 × 10⁵</strong>. The calculator does all of this for you, exactly, and shows each step.</p>
+      </div>
+
+      <div>
+        <h2>Examples</h2>
+        <table class="dtable">
+          <thead><tr><th>Number</th><th>Scientific</th><th>Engineering</th></tr></thead>
+          <tbody>
+            <tr><td>5</td><td>5 × 10⁰</td><td>5 × 10⁰</td></tr>
+            <tr><td>700</td><td>7 × 10²</td><td>700 × 10⁰</td></tr>
+            <tr><td>1,000,000</td><td>1 × 10⁶</td><td>1 × 10⁶</td></tr>
+            <tr><td>0.0004212</td><td>4.212 × 10⁻⁴</td><td>421.2 × 10⁻⁶</td></tr>
+            <tr><td>−5,000,000,000</td><td>−5 × 10⁹</td><td>−5 × 10⁹</td></tr>
+          </tbody>
+        </table>
+
+        <h2>Engineering notation and SI prefixes</h2>
+        <p>Engineering notation is the same idea but the exponent is always a <strong>multiple of 3</strong>, so it lines up with the SI prefixes engineers and scientists use. The calculator names the prefix for you.</p>
+        <table class="dtable">
+          <thead><tr><th>Power of 10</th><th>Prefix</th><th>Symbol</th></tr></thead>
+          <tbody>
+            <tr><td>10¹²</td><td>tera</td><td>T</td></tr>
+            <tr><td>10⁹</td><td>giga</td><td>G</td></tr>
+            <tr><td>10⁶</td><td>mega</td><td>M</td></tr>
+            <tr><td>10³</td><td>kilo</td><td>k</td></tr>
+            <tr><td>10⁻³</td><td>milli</td><td>m</td></tr>
+            <tr><td>10⁻⁶</td><td>micro</td><td>µ</td></tr>
+            <tr><td>10⁻⁹</td><td>nano</td><td>n</td></tr>
+            <tr><td>10⁻¹²</td><td>pico</td><td>p</td></tr>
+          </tbody>
+        </table>
+
+        <h2>E-notation</h2>
+        <p>Calculators, spreadsheets and programming languages write scientific notation as <strong>E-notation</strong>: <code>1.5e6</code> means 1.5 × 10⁶ = 1,500,000. You can type it straight into the box, and every result shows its E-notation form with a Copy button.</p>
+
+        <h2>Scientific notation vs. standard form</h2>
+        <p>In the UK and many other countries, <strong>standard form</strong> is just another name for scientific notation. In the US it usually means an ordinary number written in full, like 4,500. This calculator shows both the scientific notation and the real number, so you can't mix them up.</p>
+
+        <h2>Significant figures and rounding</h2>
+        <p>If you type a single number, the calculator counts its <strong>significant figures</strong> — 0.00450 has three, 1500 has two. Under <strong>Go advanced</strong> you can round every result to a chosen number of significant figures or decimal places.</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>What is scientific notation?</summary><p>Scientific notation writes a number as a coefficient between 1 and 10 multiplied by a power of 10, in the form <strong>a × 10ⁿ</strong>. It is used for very large and very small numbers: 6,020,000 is 6.02 × 10⁶ and 0.00042 is 4.2 × 10⁻⁴.</p></details>
+    <details class="faq"><summary>How do I convert a number to scientific notation?</summary><p>Move the decimal point until there is exactly one non-zero digit to its left. The number of places you moved it is the exponent: positive if you moved it left, negative if you moved it right. For 4,500 you move it 3 places left, giving <strong>4.5 × 10³</strong>.</p></details>
+    <details class="faq"><summary>How do I add numbers in scientific notation?</summary><p>Rewrite both numbers with the same power of 10, add the coefficients, then normalise the result. For example 4 × 10⁵ + 7 × 10⁴ = 4 × 10⁵ + 0.7 × 10⁵ = <strong>4.7 × 10⁵</strong>. To multiply, multiply the coefficients and add the exponents.</p></details>
+    <details class="faq"><summary>What is the difference between scientific notation and standard form?</summary><p>In the UK and many other countries, standard form is simply another name for scientific notation. In the US, standard form usually means an ordinary number written out in full, such as 4,500. This calculator shows both the scientific notation and the real number.</p></details>
+    <details class="faq"><summary>What is E notation?</summary><p>E notation is the way calculators, spreadsheets and programming languages write scientific notation: the letter <em>e</em> stands for “times 10 to the power of”. So <strong>1.5e6</strong> means 1.5 × 10⁶, which is 1,500,000.</p></details>
+  </section>
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+          <li><a href="/paint-calculator/">Paint Calculator</a></li>
+          <li><a href="/wallpaper-calculator/">Wallpaper Calculator</a></li>
+          <li><a href="/square-footage-calculator/">Square Footage Calculator</a></li>
+          <li><a href="/tape-measure-fraction-calculator/">Tape Measure Fraction Calculator</a></li>
+          <li><a href="/stair-calculator/">Stair Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/vo2-max-calculator/">VO2 Max Calculator</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/bmi-calculator/">BMI Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/ideal-weight-calculator/">Ideal Weight Calculator</a></li>
+          <li><a href="/lean-body-mass-calculator/">Lean Body Mass Calculator</a></li>
+          <li><a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio Calculator</a></li>
+          <li><a href="/calorie-calculator/">Calorie Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/water-intake-calculator/">Water Intake Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/protein-intake-calculator/">Protein Intake Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
+          <li><a href="/steps-to-miles-calculator/">Steps to Miles Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+          <li><a href="/grade-curve-calculator/">Grade Curve Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/fraction-calculator/">Fraction Calculator</a></li>
+          <li><a href="/standard-deviation-calculator/">Standard Deviation Calculator</a></li>
+          <li><a href="/scientific-notation-calculator/">Scientific Notation Calculator</a></li>
+          <li><a href="/weighted-average-calculator/">Weighted Average Calculator</a></li>
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+          <li><a href="/age-calculator/">Age Calculator</a></li>
+          <li><a href="/date-calculator/">Date Calculator</a></li>
+          <li><a href="/time-calculator/">Time Calculator</a></li>
+        </ul>
+      </div>
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/blog/">Blog</a>
+      <span aria-hidden="true">·</span>
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+</div>
+
+<script src="/assets/app.js?v=142"></script>
+<script>CalcThis.initSciCalc();</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>

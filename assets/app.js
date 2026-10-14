@@ -7981,6 +7981,519 @@ CalcThis.initWallpaperCalc = function () {
   renderAll();
 };
 
+/* ===== CalcThis Scientific Notation engine =====
+   CalcThis.initSciCalc() — one smart box that converts any number format (3672.2, 2.3e11,
+   3.5 × 10^-12) AND evaluates whole expressions ((3×10^4)(2×10^6), 4e5 + 7e4, √(9e10)) into
+   every notation at once. Differentiator vs. every competitor checked (calculator.net,
+   CalculatorSoup, Omnicalculator, Pearson, Kanaries, DQYDJ — converter and calculator are
+   separate tools, or only Pearson draws anything behind toggles): a live decimal-point shift
+   strip, a power-of-ten / SI-prefix ruler, all formats with copy buttons, exact maths, an
+   auto-normalise note and plain-English steps shown by default. All numbers are exact decimals
+   held as BigInt coefficient × 10^exponent (+ − × exact; ÷ and √ to 40 digits, flagged).
+   Independent engine, no shared state. */
+CalcThis.initSciCalc = function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var P = 40;                                           // digits kept for ÷ and √
+  var SUP = { '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹', '-': '⁻' };
+  var SI = { '-30': ['quecto', 'q'], '-27': ['ronto', 'r'], '-24': ['yocto', 'y'], '-21': ['zepto', 'z'], '-18': ['atto', 'a'], '-15': ['femto', 'f'], '-12': ['pico', 'p'], '-9': ['nano', 'n'], '-6': ['micro', 'µ'], '-3': ['milli', 'm'], '0': ['', ''], '3': ['kilo', 'k'], '6': ['mega', 'M'], '9': ['giga', 'G'], '12': ['tera', 'T'], '15': ['peta', 'P'], '18': ['exa', 'E'], '21': ['zetta', 'Z'], '24': ['yotta', 'Y'], '27': ['ronna', 'R'], '30': ['quetta', 'Q'] };
+  var ONES = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
+  var TENS = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
+  var SCALE = ['', 'thousand', 'million', 'billion', 'trillion', 'quadrillion', 'quintillion', 'sextillion', 'septillion', 'octillion', 'nonillion', 'decillion', 'undecillion', 'duodecillion', 'tredecillion', 'quattuordecillion', 'quindecillion', 'sexdecillion', 'septendecillion', 'octodecillion', 'novemdecillion', 'vigintillion'];
+
+  var style = 'sup', rmode = 'sig';
+  var advanced = false;
+
+  /* ---------- exact decimal: {neg, c: BigInt >= 0, e: int} = ±c × 10^e ---------- */
+  function pow10(n) { return 10n ** BigInt(n); }
+  function mk(neg, c, e) {
+    if (c === 0n) return { neg: false, c: 0n, e: 0 };
+    while (c % 10n === 0n) { c /= 10n; e++; }
+    return { neg: neg, c: c, e: e };
+  }
+  function isZero(v) { return v.c === 0n; }
+  function fail(msg) { var x = new Error(msg); x.user = true; throw x; }
+  function add(a, b) {
+    if (isZero(a)) return b; if (isZero(b)) return a;
+    var e = Math.min(a.e, b.e);
+    if (Math.max(a.e, b.e) - e > 20000) fail('Those two numbers are too far apart in size to add exactly');
+    var x = a.c * pow10(a.e - e) * (a.neg ? -1n : 1n), y = b.c * pow10(b.e - e) * (b.neg ? -1n : 1n), s = x + y;
+    return mk(s < 0n, s < 0n ? -s : s, e);
+  }
+  function neg(a) { return isZero(a) ? a : { neg: !a.neg, c: a.c, e: a.e }; }
+  function mul(a, b) { return mk(a.neg !== b.neg, a.c * b.c, a.e + b.e); }
+  function roundSig(v, n) {
+    var D = v.c.toString().length;
+    if (D <= n) return v;
+    var drop = D - n, p = pow10(drop), q = v.c / p, r = v.c % p;
+    if (r * 2n >= p) q += 1n;
+    return mk(v.neg, q, v.e + drop);
+  }
+  function roundDec(v, n) {
+    if (-v.e <= n) return v;
+    var drop = -v.e - n, p = pow10(drop), q = v.c / p, r = v.c % p;
+    if (r * 2n >= p) q += 1n;
+    return mk(v.neg, q, -n);
+  }
+  function div(a, b, st) {
+    if (isZero(b)) fail('Can’t divide by zero');
+    if (isZero(a)) return a;
+    var sh = P + b.c.toString().length, num = a.c * pow10(sh), q = num / b.c, r = num % b.c;
+    var out = mk(a.neg !== b.neg, q, a.e - b.e - sh);
+    if (r !== 0n) { st.approx = true; out = roundSig(out, P); }
+    return out;
+  }
+  function isqrt(n) { if (n < 2n) return n; var x = n, y = (x + 1n) / 2n; while (y < x) { x = y; y = (x + n / x) / 2n; } return x; }
+  function sqrt(a, st) {
+    if (a.neg) fail('No real square root of a negative number');
+    if (isZero(a)) return a;
+    var c = a.c, e = a.e;
+    if (e % 2 !== 0) { c *= 10n; e -= 1; }
+    var extra = P + 2, scaled = c * pow10(2 * extra), s = isqrt(scaled);
+    if (s * s !== scaled) st.approx = true;
+    return roundSig(mk(false, s, e / 2 - extra), P);
+  }
+  function toInt(v) { if (v.e >= 0) return Number(v.c * pow10(v.e)) * (v.neg ? -1 : 1); return null; }
+  function log10v(v) { var D = v.c.toString(), m = parseFloat(D.slice(0, 15).replace(/^(\d)/, '$1.')); return (v.e + D.length - 1) + Math.log10(m); }
+  function fromFloat(x) {
+    if (!isFinite(x)) fail('That result is too large to show');
+    if (x === 0) return mk(false, 0n, 0);
+    var s = Math.abs(x).toExponential(14), m = s.split('e'), d = m[0].replace('.', ''), e = parseInt(m[1], 10) - 14;
+    return mk(x < 0, BigInt(d), e);
+  }
+  function pw(a, b, st) {
+    var k = toInt(b);
+    if (k !== null && Math.abs(k) <= 5000) {
+      if (isZero(a)) { if (k === 0) fail('0 to the power 0 is undefined'); if (k < 0) fail('Can’t divide by zero'); return a; }
+      if (Math.abs(k) * a.c.toString().length > 30000) fail('That power is too big to work out exactly');
+      var r = mk(a.neg && (Math.abs(k) % 2 === 1), a.c ** BigInt(Math.abs(k)), a.e * Math.abs(k));
+      return k < 0 ? div(mk(false, 1n, 0), r, st) : r;
+    }
+    if (a.neg) fail('Can’t raise a negative number to a fractional power');
+    if (isZero(a)) return a;
+    var L = log10v(a) * (b.neg ? -1 : 1) * Number(b.c) * Math.pow(10, b.e);
+    if (!isFinite(L) || Math.abs(L) > 100000) fail('That power is too big to show');
+    st.approx = true;
+    var ip = Math.floor(L), fp = L - ip;
+    return roundSig(mk(false, BigInt(Math.round(Math.pow(10, fp) * 1e14)), ip - 14), 14);
+  }
+
+  /* ---------- formatting ---------- */
+  function sup(n) { return ('' + n).split('').map(function (ch) { return SUP[ch] || ch; }).join(''); }
+  function commas(s) { return s.replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+  function digits(v) { return v.c.toString(); }
+  function expOf(v) { return v.e + digits(v).length - 1; }
+  function mdig(v) { var D = v.c.toString(); if (v.sf && v.sf > D.length) D += new Array(v.sf - D.length + 1).join('0'); return D; }
+  function mantissa(v) { var D = mdig(v); return D.length > 1 ? D[0] + '.' + D.slice(1) : D; }
+  function styled(m, b, st) {
+    if (st === 'plain') return m + ' x 10^' + b;
+    if (st === 'latex') return m + ' \\times 10^{' + b + '}';
+    if (st === 'dot') return m + ' · 10' + sup(b);
+    return m + ' × 10' + sup(b);
+  }
+  function sciStr(v, st) {
+    if (isZero(v)) return '0';
+    return (v.neg ? '-' : '') + styled(mantissa(v), expOf(v), st || style);
+  }
+  function eStr(v) { if (isZero(v)) return '0'; return (v.neg ? '-' : '') + mantissa(v) + 'e' + expOf(v); }
+  function engParts(v, force) {
+    if (isZero(v)) return { m: '0', b: 0 };
+    var b = expOf(v), bE = (force !== null && !isNaN(force)) ? force : Math.floor(b / 3) * 3;
+    var D = mdig(v), pos = b - bE + 1, m;
+    if (pos <= 0) m = '0.' + new Array(-pos + 1).join('0') + D;
+    else if (pos >= D.length) m = D + new Array(pos - D.length + 1).join('0');
+    else m = D.slice(0, pos) + '.' + D.slice(pos);
+    return { m: (v.neg ? '-' : '') + m, b: bE };
+  }
+  function plainStr(v) {
+    if (isZero(v)) return '0';
+    var D = digits(v), s;
+    if (v.e >= 0) { if (D.length + v.e > 120) return null; s = D + new Array(v.e + 1).join('0'); return (v.neg ? '-' : '') + commas(s); }
+    var pos = D.length + v.e;
+    if (pos > 0) s = commas(D.slice(0, pos)) + '.' + D.slice(pos);
+    else { if (-pos > 120) return null; s = '0.' + new Array(-pos + 1).join('0') + D; }
+    return (v.neg ? '-' : '') + s;
+  }
+  function below1000(n) {
+    var out = [];
+    if (n >= 100) { out.push(ONES[Math.floor(n / 100)] + ' hundred'); n %= 100; }
+    if (n > 0) { if (n < 20) out.push(ONES[n]); else out.push(TENS[Math.floor(n / 10)] + (n % 10 ? '-' + ONES[n % 10] : '')); }
+    return out.join(' ');
+  }
+  function words(v) {
+    if (isZero(v)) return 'zero';
+    var D = digits(v), ip, fp = '';
+    if (v.e >= 0) { ip = D + new Array(v.e + 1).join('0'); }
+    else { var pos = D.length + v.e; if (pos > 0) { ip = D.slice(0, pos); fp = D.slice(pos); } else { ip = '0'; fp = new Array(-pos + 1).join('0') + D; } }
+    if (ip.length > 66 || fp.length > 24) return null;
+    var parts = [], g = 0, s = ip;
+    if (/^0+$/.test(ip)) parts.push('zero');
+    else {
+      var groups = [];
+      while (s.length) { groups.unshift(parseInt(s.slice(-3), 10)); s = s.slice(0, -3); }
+      groups.forEach(function (n, i) { if (n > 0) parts.push(below1000(n) + (SCALE[groups.length - 1 - i] ? ' ' + SCALE[groups.length - 1 - i] : '')); });
+    }
+    var out = parts.join(' ');
+    if (fp) out += ' point ' + fp.split('').map(function (d) { return ONES[+d]; }).join(' ');
+    return (v.neg ? 'negative ' : '') + out;
+  }
+  function siName(b) { var p = SI[String(b)]; return p ? (p[0] ? p[0] + ' (' + p[1] + ')' : '') : ''; }
+
+  /* ---------- parsing ---------- */
+  function normalizeText(s) {
+    return s.replace(/[−–—]/g, '-').replace(/[×·⋅∙✕]/g, '*').replace(/÷/g, '/').replace(/\*\*/g, '^').replace(/\r?\n/g, ' ')
+      .replace(/\d{1,3}(?:,\d{3})+(?!\d)/g, function (m) { return m.replace(/,/g, ''); }).replace(/(\d),(?=\d)/g, '$1.').replace(/,/g, '').replace(/(\d) (?=\d{3}(\D|$))/g, '$1');
+  }
+  var NUM_RE = /^(\d+\.?\d*|\.\d+)/;
+  var EXP_RE = /^(?:[eE]([+-]?\d+)|\s*[xX*]\s*10\s*\^\s*(?:\(\s*([+-]?\d+)\s*\)|([+-]?\d+))|\s*[xX*]?\s*10([⁺⁻]?[⁰¹²³⁴⁵⁶⁷⁸⁹]+))/;
+  var SUPREV = { '⁰': '0', '¹': '1', '²': '2', '³': '3', '⁴': '4', '⁵': '5', '⁶': '6', '⁷': '7', '⁸': '8', '⁹': '9', '⁻': '-', '⁺': '' };
+  function tokenize(s) {
+    var toks = [], i = 0, m;
+    while (i < s.length) {
+      var ch = s[i];
+      if (ch === ' ') { i++; continue; }
+      if ((m = NUM_RE.exec(s.slice(i)))) {
+        var txt = m[0], rest = s.slice(i + txt.length), ex = EXP_RE.exec(rest), exp = 0, src = txt, sci = false;
+        if (ex) {
+          sci = true;
+          if (ex[1] !== undefined) exp = parseInt(ex[1], 10);
+          else if (ex[2] !== undefined) exp = parseInt(ex[2], 10);
+          else if (ex[3] !== undefined) exp = parseInt(ex[3], 10);
+          else exp = parseInt(ex[4].split('').map(function (c) { return SUPREV[c]; }).join(''), 10);
+          src = txt + ex[0];
+        }
+        var dot = txt.indexOf('.'), d = txt.replace('.', ''), e = (dot >= 0 ? -(txt.length - dot - 1) : 0) + exp;
+        if (Math.abs(exp) > 100000) fail('Exponent too large (limit ±100,000)');
+        toks.push({ t: 'num', v: mk(false, BigInt(d || '0'), e), src: src, mant: txt, sci: sci, e: /^[0-9.]+[eE]/.test(src) });
+        i += src.length; continue;
+      }
+      if (SUPREV[ch] !== undefined) {
+        var j = i, ds = '';
+        while (j < s.length && SUPREV[s[j]] !== undefined) { ds += SUPREV[s[j]]; j++; }
+        if (ds === '' || ds === '-') fail('bad');
+        toks.push({ t: '^' }); toks.push({ t: 'num', v: mk(ds[0] === '-', BigInt(ds.replace('-', '')), 0), src: ds, mant: ds, sci: false, e: false });
+        i = j; continue;
+      }
+      if (ch === '√') { toks.push({ t: 'sqrt' }); i++; continue; }
+      if (/^sqrt/i.test(s.slice(i))) { toks.push({ t: 'sqrt' }); i += 4; continue; }
+      if (ch === '+' || ch === '-' || ch === '*' || ch === '/' || ch === '^' || ch === '(' || ch === ')') { toks.push({ t: ch }); i++; continue; }
+      if (ch === 'x' || ch === 'X') { toks.push({ t: '*' }); i++; continue; }
+      fail('bad');
+    }
+    return toks;
+  }
+  function parse(toks) {
+    var p = 0;
+    function peek() { return toks[p]; }
+    function expr() {
+      var a = term();
+      while (peek() && (peek().t === '+' || peek().t === '-')) { var op = toks[p++].t; a = { t: op, a: a, b: term() }; }
+      return a;
+    }
+    function term() {
+      var a = unary();
+      for (;;) {
+        var k = peek();
+        if (k && (k.t === '*' || k.t === '/')) { p++; a = { t: k.t, a: a, b: unary() }; }
+        else if (k && (k.t === '(' || k.t === 'sqrt')) { a = { t: '*', a: a, b: unary() }; }
+        else break;
+      }
+      return a;
+    }
+    function unary() {
+      var k = peek();
+      if (k && k.t === '-') { p++; return { t: 'neg', a: unary() }; }
+      if (k && k.t === '+') { p++; return unary(); }
+      return power();
+    }
+    function power() {
+      var a = atom();
+      if (peek() && peek().t === '^') { p++; return { t: '^', a: a, b: unary() }; }
+      return a;
+    }
+    function atom() {
+      var k = toks[p++];
+      if (!k) fail('bad');
+      if (k.t === 'num') return k;
+      if (k.t === '(') { var e = expr(); if (!peek() || peek().t !== ')') fail('bad'); p++; return { t: 'group', a: e }; }
+      if (k.t === 'sqrt') { var n = peek(); if (n && n.t === '(') { p++; var e2 = expr(); if (!peek() || peek().t !== ')') fail('bad'); p++; return { t: 'sqrt', a: e2 }; } return { t: 'sqrt', a: atom() }; }
+      fail('bad');
+    }
+    var tree = expr();
+    if (p < toks.length) fail('bad');
+    return tree;
+  }
+  function stepNum(v, st, operand) {
+    if (st.approx) v = roundSig(v, 15);
+    var b = isZero(v) ? 0 : expOf(v);
+    if (operand && b >= -3 && b <= 3) { var p = plainStr(v); if (p) return p; }
+    return operand ? '(' + sciStr(v, st.style) + ')' : sciStr(v, st.style);
+  }
+  function evalTree(n, st) {
+    var a, b, r, line;
+    switch (n.t) {
+      case 'num': return n.v;
+      case 'group': return evalTree(n.a, st);
+      case 'neg': return neg(evalTree(n.a, st));
+      case 'sqrt': a = evalTree(n.a, st); r = sqrt(a, st); var sa = stepNum(a, st, true); if (sa[0] !== '(') sa = '(' + sa + ')'; st.steps.push('√' + sa + ' = ' + stepNum(r, st, false) + (st.approx ? ' (rounded)' : '')); return r;
+      default:
+        a = evalTree(n.a, st); b = evalTree(n.b, st);
+        if (n.t === '+') r = add(a, b);
+        else if (n.t === '-') r = add(a, neg(b));
+        else if (n.t === '*') r = mul(a, b);
+        else if (n.t === '/') r = div(a, b, st);
+        else r = pw(a, b, st);
+        var sym = { '+': '+', '-': '−', '*': '×', '/': '÷', '^': '^' }[n.t];
+        if ((n.t === '+' || n.t === '-') && !isZero(a) && !isZero(b) && expOf(a) !== expOf(b)) {
+          var mx = Math.max(expOf(a), expOf(b)), pa = engParts(a, mx), pb = engParts(b, mx);
+          st.steps.push('Give both numbers the same power of 10: ' + styled(pa.m, mx, st.style) + ' and ' + styled(pb.m, mx, st.style) + '.');
+        }
+        var bs2 = stepNum(b, st, true); if (b.neg && bs2[0] !== '(') bs2 = '(' + bs2 + ')';
+        st.steps.push(stepNum(a, st, true) + ' ' + sym + ' ' + bs2 + ' = ' + stepNum(r, st, false) + (st.approx ? ' (rounded)' : ''));
+        return r;
+    }
+  }
+  function evaluate(raw) {
+    var text = normalizeText(raw), tries = [text], cur = text, k, tail = text.replace(/\s*[xX*]\s*10\s*(\^\s*\(?\s*[+-]?)?$/, '');
+    if (tail !== text && tail) { tries.push(tail); cur = tail; }
+    for (k = 0; k < 6; k++) {
+      var t2 = cur.replace(/[\s+\-*\/^(xX√eE.]+$/, '');
+      if (t2 === cur || !t2) break;
+      tries.push(t2); cur = t2;
+    }
+    for (k = 0; k < tries.length; k++) {
+      var tx = tries[k], open = (tx.match(/\(/g) || []).length - (tx.match(/\)/g) || []).length;
+      if (open > 0) tx += new Array(open + 1).join(')');
+      var st = { approx: false, steps: [], style: style };
+      try {
+        var toks = tokenize(tx), tree = parse(toks), v = evalTree(tree, st);
+        var lit = tree.t === 'num' ? tree : (tree.t === 'neg' && tree.a.t === 'num' ? tree.a : null);
+        return { v: v, st: st, lit: lit, neg: tree.t === 'neg', partial: k > 0, shown: tx };
+      } catch (err) {
+        if (err.user && err.message !== 'bad') return { error: err.message };
+      }
+    }
+    return { error: 'Can’t read that yet — try 3.2e5, 3.2 × 10^5 or (3×10^4)(2×10^6)' };
+  }
+  function dispSrc(s) { return s.replace(/\s+/g, ' ').replace(/\*/g, '×'); }
+  function sigFigs(lit) {
+    var m = lit.mant.replace('.', '').replace(/^0+/, '');
+    if (!m) return null;
+    if (lit.mant.indexOf('.') < 0 && !lit.sci) m = m.replace(/0+$/, '');
+    return m.length || 1;
+  }
+
+  /* ---------- picture 1: the decimal-point shift ---------- */
+  function renderStrip(v) {
+    var box = $('sciStrip');
+    if (isZero(v)) { box.innerHTML = '<div class="sq-diagram-empty">Zero is just 0 — there is no decimal point to move.</div>'; return; }
+    var D = digits(v), full, p0;
+    var extraTrail = 0, extraLead = 0;
+    if (v.e >= 0) { full = D.split('').concat(new Array(v.e > 400 ? 400 : v.e).fill('0')); p0 = full.length; extraTrail = v.e > 400 ? v.e - 400 : 0; }
+    else {
+      var pos = D.length + v.e;
+      if (pos > 0) { full = D.split(''); p0 = pos; }
+      else { full = ['0'].concat(new Array(Math.min(-pos, 400)).fill('0'), D.split('')); p0 = 1; extraLead = -pos > 400 ? -pos - 400 : 0; }
+    }
+    var firstNZ = 0; while (full[firstNZ] === '0') firstNZ++;
+    var p1 = firstNZ + 1, b = expOf(v), moved = b;
+    // build tiles, collapsing long zero runs and long digit strings
+    var tiles = [], i = 0;
+    while (i < full.length) {
+      if (full[i] === '0' && i !== 0) {
+        var j = i; while (j < full.length && full[j] === '0') j++;
+        if (j - i >= 6) { tiles.push({ k: 'run', n: (j - i) + (j === full.length ? extraTrail : 0) + (i === 1 ? extraLead : 0), s: i, en: j - 1 }); i = j; continue; }
+      }
+      tiles.push({ k: 'd', ch: full[i], s: i, en: i }); i++;
+    }
+    var nTiles = tiles.length;
+    if (nTiles > 14) {
+      var keepL = 6, keepR = 6, mid = tiles.slice(keepL, nTiles - keepR);
+      // keep the tiles that hold either decimal point
+      var hold = mid.filter(function (t) { return (t.s <= p0 && p0 <= t.en + 1) || (t.s <= p1 && p1 <= t.en + 1); });
+      if (!hold.length) tiles = tiles.slice(0, keepL).concat([{ k: 'gap', s: mid[0].s, en: mid[mid.length - 1].en, n: mid[mid.length - 1].en - mid[0].s + 1 }], tiles.slice(nTiles - keepR));
+    }
+    var units = 0; tiles.forEach(function (t) { units += t.k === 'd' ? 1 : (t.k === 'run' ? 3 : 1.6); });
+    var VW = 280, PAD = 10, tw = Math.min(22, (VW - 2 * PAD) / units), x = PAD + ((VW - 2 * PAD) - units * tw) / 2, svg = '';
+    tiles.forEach(function (t) {
+      var w = (t.k === 'd' ? 1 : (t.k === 'run' ? 3 : 1.6)) * tw; t.x = x; t.w = w;
+      var lead = t.k === 'd' && t.s < firstNZ, fill = lead || t.k === 'run' ? 'rgba(55,80,63,.10)' : 'rgba(181,118,31,.20)';
+      svg += '<rect x="' + (x + 1) + '" y="44" width="' + (w - 2) + '" height="30" rx="4" fill="' + fill + '" stroke="var(--line)" stroke-width="1"/>';
+      var label = t.k === 'd' ? t.ch : (t.k === 'run' ? '⋯ ' + t.n + '×0' : '⋯');
+      svg += '<text x="' + (x + w / 2) + '" y="64" text-anchor="middle" font-size="' + (t.k === 'd' ? 15 : 12) + '" font-weight="600" fill="var(--ink)">' + label + '</text>';
+      x += w;
+    });
+    function bx(idx) { for (var q = 0; q < tiles.length; q++) { var t = tiles[q]; if (idx <= t.s) return t.x; if (idx <= t.en + 1) return idx === t.en + 1 ? t.x + t.w : t.x; } var l = tiles[tiles.length - 1]; return l.x + l.w; }
+    var x0 = bx(p0), x1 = bx(p1);
+    svg += '<circle cx="' + x0 + '" cy="80" r="4" fill="var(--ink)"/>';
+    var label2;
+    if (moved === 0) { svg += '<text x="' + (VW / 2) + '" y="18" text-anchor="middle" font-size="12" font-weight="600" fill="var(--ink-soft)">Already in place — exponent 0</text>'; svg += '<circle cx="' + x1 + '" cy="80" r="4.5" fill="var(--amber)"/>'; }
+    else {
+      svg += '<circle cx="' + x1 + '" cy="80" r="4.5" fill="var(--amber)"/>';
+      var mid2 = (x0 + x1) / 2, up = 30;
+      svg += '<path d="M' + x0 + ' 40 Q' + mid2 + ' ' + (40 - up) + ' ' + x1 + ' 40" fill="none" stroke="var(--amber)" stroke-width="1.8"/>';
+      svg += '<path d="M' + x1 + ' 41 l-5 -7 M' + x1 + ' 41 l5 -7" stroke="var(--amber)" stroke-width="1.8" fill="none" stroke-linecap="round"/>';
+      label2 = 'moved ' + Math.abs(moved) + (Math.abs(moved) === 1 ? ' place ' : ' places ') + (moved > 0 ? 'left' : 'right');
+      svg += '<text x="' + Math.max(60, Math.min(VW - 60, mid2)) + '" y="12" text-anchor="middle" font-size="12" font-weight="600" fill="var(--ink-soft)">' + label2 + '</text>';
+    }
+    box.innerHTML = '<svg viewBox="0 0 ' + VW + ' 92" xmlns="http://www.w3.org/2000/svg">' + svg + '</svg>'
+      + '<div class="sq-diagram-legend"><span><b>●</b> where the decimal point is</span><span><b style="color:var(--amber)">●</b> where it has to go (one non-zero digit to its left)</span></div>';
+  }
+
+  /* ---------- picture 2: power-of-ten ruler with SI prefixes ---------- */
+  function renderRuler(v) {
+    var box = $('sciRuler');
+    if (isZero(v)) { box.innerHTML = ''; return; }
+    var VW = 280, X0 = 14, X1 = 266, LO = -12, HI = 12, per = (X1 - X0) / (HI - LO), svg = '', t;
+    svg += '<line x1="' + X0 + '" y1="40" x2="' + X1 + '" y2="40" stroke="var(--line)" stroke-width="3" stroke-linecap="round"/>';
+    for (t = LO; t <= HI; t += 3) {
+      var tx = X0 + (t - LO) * per, sy = SI[String(t)][1] || '1';
+      svg += '<line x1="' + tx + '" y1="34" x2="' + tx + '" y2="46" stroke="var(--ink)" stroke-width="1.4" opacity=".55"/>';
+      svg += '<text x="' + tx + '" y="62" text-anchor="middle" font-size="12" font-weight="600" fill="var(--muted)">' + sy + '</text>';
+    }
+    var L = log10v(v), pin = L < LO ? LO : (L > HI ? HI : L), mx = X0 + (pin - LO) * per, off = L < LO || L > HI;
+    svg += '<polygon points="' + mx + ',38 ' + (mx - 6) + ',24 ' + (mx + 6) + ',24" fill="var(--amber)"/>';
+    var lab = '10' + sup(Math.round(expOf(v))) + (off ? (L > HI ? ' →' : ' ←') : '');
+    svg += '<text x="' + Math.max(26, Math.min(VW - 26, mx)) + '" y="16" text-anchor="middle" font-size="12" font-weight="700" fill="var(--amber-deep)">≈ ' + lab + '</text>';
+    box.innerHTML = '<svg viewBox="0 0 ' + VW + ' 70" xmlns="http://www.w3.org/2000/svg">' + svg + '</svg>'
+      + '<div class="sq-diagram-legend"><span>Ticks are SI prefixes: <b>p</b> pico · <b>n</b> nano · <b>µ</b> micro · <b>m</b> milli · <b>k</b> kilo · <b>M</b> mega · <b>G</b> giga · <b>T</b> tera</span></div>';
+  }
+
+  /* ---------- steps ---------- */
+  function buildSteps(res, v) {
+    var st = res.st, out = [], lit = res.lit;
+    if (lit) {
+      var b = expOf(v), plain = plainStr(v), sciS = sciStr(v), sg = res.neg ? '-' : '';
+      if (isZero(v)) return ['Zero is written 0 in every notation — there is no decimal point to move.'];
+      if (lit.sci) {
+        var frac = lit.mant.indexOf('.') >= 0 ? lit.mant.length - lit.mant.indexOf('.') - 1 : 0;
+        var cv = mk(false, BigInt(lit.mant.replace('.', '')), -frac), cb = expOf(cv);
+        out.push('Start with ' + sg + dispSrc(lit.src) + '.');
+        if (cb === 0) out.push('The coefficient ' + lit.mant + ' is already between 1 and 10, so it is in proper scientific notation.');
+        else {
+          out.push('The coefficient ' + lit.mant + ' is not between 1 and 10, so move its decimal point ' + Math.abs(cb) + (Math.abs(cb) === 1 ? ' place ' : ' places ') + (cb > 0 ? 'left' : 'right') + ' and change the exponent by ' + (cb > 0 ? '+' : '−') + Math.abs(cb) + '. That gives ' + sciS + '.');
+        }
+        if (plain && b !== 0) out.push('To write it as an ordinary number, move the decimal point ' + Math.abs(b) + (Math.abs(b) === 1 ? ' place ' : ' places ') + (b > 0 ? 'right' : 'left') + ': ' + plain + '.');
+      } else {
+        out.push('Start with the number ' + (plain || sg + lit.src) + '.');
+        out.push('Move the decimal point until there is one non-zero digit to its left: ' + mantissa(v) + '.');
+        if (b === 0) out.push('You did not need to move it, so the exponent is 0.');
+        else out.push('You moved it ' + Math.abs(b) + (Math.abs(b) === 1 ? ' place ' : ' places ') + (b > 0 ? 'to the left, so the exponent is +' + b : 'to the right, so the exponent is −' + Math.abs(b)) + '.');
+        out.push('Write it as ' + sciS + '.');
+      }
+      return out;
+    }
+    st.steps.forEach(function (s) { out.push(s); });
+    out.push('Written in proper scientific notation: ' + sciStr(v) + '.');
+    return out;
+  }
+
+  /* ---------- render ---------- */
+  function dispVal(res) {
+    var v = res.v, n = parseInt($('sciRoundN').value, 10);
+    res.long = false;
+    if (!isNaN(n) && n > 0) return rmode === 'sig' ? roundSig(v, n) : roundDec(v, Math.min(n, 100));
+    if (res.st.approx) return roundSig(v, 15);
+    if (digits(v).length > 60) { res.long = true; return roundSig(v, 60); }
+    return v;
+  }
+  function row(k, val, copy, sub, wide) {
+    if (wide) return '<tr><td colspan="2">' + k + '<span class="sci-wide">' + val + '</span></td><td class="sci-cp">' + (copy != null ? '<button type="button" class="linkbtn" data-copy="' + String(copy).replace(/"/g, '&quot;') + '">Copy</button>' : '') + '</td></tr>';
+    return '<tr><td>' + k + (sub ? '<span class="sci-sub">' + sub + '</span>' : '') + '</td><td class="sci-val">' + val + '</td><td class="sci-cp">' + (copy != null ? '<button type="button" class="linkbtn" data-copy="' + String(copy).replace(/"/g, '&quot;') + '">Copy</button>' : '') + '</td></tr>';
+  }
+  function setEmpty(msg) {
+    $('sciBig').textContent = '—'; $('sciSub').textContent = 'Type a number or an expression to see it in every notation.';
+    $('sciResBody').style.display = 'none';
+    $('sciHint').textContent = msg || ''; $('sciHint').style.display = msg ? 'block' : 'none';
+    $('sciNote').style.display = 'none';
+    $('sciMVal').textContent = '—';
+  }
+  function render() {
+    var raw = $('sciIn').value.trim();
+    if (!raw) { setEmpty(''); return; }
+    var res = evaluate(raw);
+    if (res.error) { setEmpty(res.error); return; }
+    $('sciHint').style.display = 'none';
+    var v = dispVal(res);
+    if (res.lit && !res.st.approx && isNaN(parseInt($('sciRoundN').value, 10))) { var sfn = sigFigs(res.lit); if (sfn) v = { neg: v.neg, c: v.c, e: v.e, sf: sfn }; }
+    var engN = parseInt($('sciEngN').value, 10), eng = engParts(v, isNaN(engN) ? null : engN);
+    var plain = plainStr(v), b = expOf(v), wd = words(v);
+    $('sciNote').style.display = res.partial ? 'block' : 'none';
+    if (res.partial) $('sciNote').textContent = 'Showing the result for “' + res.shown + '” so far…';
+    $('sciBig').textContent = sciStr(v);
+    $('sciSub').textContent = plain ? '= ' + plain : '= a number too long to write out (about 10' + sup(b) + ')';
+    var tip;
+    if (isZero(v)) tip = 'Zero stays 0 in every notation.';
+    else if (b === 0) tip = sciStr(v, 'sup') + ' — the exponent is 0, so the number is already between 1 and 10 and the decimal point does not move.';
+    else tip = 'In ' + sciStr(v, 'sup') + ', the decimal point ' + (b > 0 ? 'moves ' + b + (b === 1 ? ' place to the right' : ' places to the right') : 'moves ' + (-b) + (b === -1 ? ' place to the left' : ' places to the left')) + ' to give the ordinary number.';
+    if (res.long) tip += ' The exact value has more than 60 digits, so it is shown to 60 significant figures.';
+    if (res.st.approx && isNaN(parseInt($('sciRoundN').value, 10))) tip += ' The exact value never ends, so it is rounded to 15 significant figures.';
+    $('sciPlain').textContent = tip;
+    var rows = '';
+    rows += row('Scientific notation', sciStr(v), sciStr(v));
+    rows += row('E-notation', eStr(v), eStr(v));
+    rows += row('Engineering notation', isZero(v) ? '0' : styled(eng.m, eng.b, style).replace(/^/, ''), isZero(v) ? '0' : styled(eng.m, eng.b, style), isZero(v) ? '' : siName(eng.b));
+    rows += row('Real number', plain ? plain.replace(/,/g, ',<wbr>') : '—', plain ? plain.replace(/,/g, '') : null);
+    rows += row('Order of magnitude', isZero(v) ? '—' : b, isZero(v) ? null : b);
+    if (res.lit) { var sf = sigFigs(res.lit); if (sf) rows += row('Significant figures', sf, sf); }
+    rows += row('In words', wd || '—', wd, null, true);
+    $('sciRows').innerHTML = rows;
+    renderStrip(v); renderRuler(v);
+    var steps = buildSteps(res, v);
+    $('sciSteps').innerHTML = steps.map(function (s) { return '<li>' + s.replace(/&/g, '&amp;').replace(/</g, '&lt;') + '</li>'; }).join('');
+    // normalise note
+    var nn = '';
+    if (res.lit && res.lit.sci) { var mval = parseFloat(res.lit.mant); if (!(mval >= 1 && mval < 10) && mval !== 0) nn = 'Your input ' + dispSrc(res.lit.src) + ' wasn’t in proper form (the coefficient must be at least 1 and under 10) — it’s normalised to ' + sciStr(v, 'sup') + '.'; }
+    $('sciNorm').textContent = nn; $('sciNorm').style.display = nn ? 'block' : 'none';
+    $('sciResBody').style.display = '';
+    $('sciMVal').textContent = sciStr(v, style === 'latex' ? 'sup' : style);
+  }
+
+  /* ---------- events ---------- */
+  var inp = $('sciIn');
+  inp.addEventListener('input', render);
+  function setSeg(id, v) { [].forEach.call($(id).children, function (b) { b.classList.toggle('on', b.getAttribute('data-v') === String(v)); }); }
+  $('sciInsert').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    var t = b.getAttribute('data-ins'), s = inp.selectionStart == null ? inp.value.length : inp.selectionStart, en = inp.selectionEnd == null ? s : inp.selectionEnd;
+    inp.value = inp.value.slice(0, s) + t + inp.value.slice(en);
+    var pos = s + t.length; inp.focus(); try { inp.setSelectionRange(pos, pos); } catch (x) {}
+    render();
+  });
+  $('sciTry').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    inp.value = b.getAttribute('data-ex'); render();
+  });
+  $('sciStyleSeg').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; style = b.getAttribute('data-v'); setSeg('sciStyleSeg', style); render(); });
+  $('sciRoundSeg').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; rmode = b.getAttribute('data-v'); setSeg('sciRoundSeg', rmode); render(); });
+  $('sciRoundN').addEventListener('input', render);
+  $('sciEngN').addEventListener('input', render);
+  $('sciRows').addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-copy]'); if (!b) return;
+    var txt = b.getAttribute('data-copy');
+    var orig = b.getAttribute('data-orig') || b.textContent; b.setAttribute('data-orig', orig);
+    function show(msg) { b.textContent = msg; clearTimeout(b._t); b._t = setTimeout(function () { b.textContent = orig; }, 1300); }
+    function legacy() {
+      var ta = document.createElement('textarea'), ok = false;
+      ta.value = txt; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select();
+      try { ok = document.execCommand('copy'); } catch (x) { ok = false; }
+      document.body.removeChild(ta);
+      show(ok ? 'Copied' : 'Press Ctrl+C');
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(function () { show('Copied'); }, legacy);
+    else legacy();
+  });
+  var advBtn = $('sciAdvBtn');
+  advBtn.addEventListener('click', function () {
+    advanced = !advanced;
+    advBtn.classList.toggle('open', advanced);
+    $('sciAdvBtnLab').textContent = advanced ? 'Go simple' : 'Go advanced';
+    $('sciAdvIn').style.display = advanced ? '' : 'none';
+    if (!advanced) { style = 'sup'; rmode = 'sig'; setSeg('sciStyleSeg', 'sup'); setSeg('sciRoundSeg', 'sig'); $('sciRoundN').value = ''; $('sciEngN').value = ''; render(); }
+  });
+
+  render();
+};
+
 /* =========================================================
    SITE FOOTER — mobile accordion
    Multiple pillars can be open simultaneously.
