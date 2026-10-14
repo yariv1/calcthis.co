@@ -161,10 +161,10 @@ must be built from the article's actual units, every time, not pasted from a tem
 ## ⛔ SESSION HANDOFF — START HERE (written 2026-10-05; full detail in `HANDOFF.md`)
 
 **Read `HANDOFF.md` in full before replying.** Do not make the user re-explain anything in it.
-- **State:** v139 · 44 calculators · 25 articles · `main` clean and pushed.
-- **Just shipped:** **#22 Paint Calculator** (v139). Next: #23 Wallpaper (same area engine, >1K Easy) — Rule 8
-  research report first, wait for approval, build, preview, deploy only on "deploy".
-- **First move next session:** 2-3 line "synced" reply, then start Wallpaper research.
+- **State:** v140 · 45 calculators · 25 articles · `main` clean and pushed.
+- **Just shipped:** **#23 Wallpaper Calculator** (v140). Next: #24 Scientific Notation (>10K Medium) — Rule 8
+  research report first, wait for approval, build, **deep QA (hard rule above)**, preview, deploy only on "deploy".
+- **First move next session:** 2-3 line "synced" reply, then start Scientific Notation research.
 - **Articles are DEFERRED** — never write/propose/ask about one. Awaiting a future batch: Fraction,
   Standard Deviation. Priority = lots of calculators (backlog #22-29 in the roadmap md).
 - **Behaviour:** zero narration (Stop hook enforces it), terse replies, never invent, every report needs
@@ -175,8 +175,8 @@ must be built from the article's actual units, every time, not pasted from a tem
 
 ## Project state
 
-- **Asset version:** v139 (bumped, `node build.js` run and deployed this session)
-- **Total pages:** 77 live
+- **Asset version:** v140 (bumped, `node build.js` run and deployed this session)
+- **Total pages:** 78 live
 - **Model:** Sonnet 5
 
 ### New this session — global `.csel` custom-dropdown component
@@ -255,10 +255,10 @@ propose an article after shipping a calculator. **Calculators awaiting an articl
 
 ---
 
-## Live calculators (43)
+## Live calculators (45)
 
-### Construction & Gardening (12)
-Board Foot · Gravel · Sand · Topsoil · Mulch · Concrete · Flooring · Tile · Square Footage · Tape Measure Fraction · Stair · Paint
+### Construction & Gardening (13)
+Board Foot · Gravel · Sand · Topsoil · Mulch · Concrete · Flooring · Tile · Square Footage · Tape Measure Fraction · Stair · Paint · Wallpaper
 
 ### Health & Fitness (19)
 Pace · Race Time Predictor · VO2 Max · Heart Rate Zone · Zone 2 Heart Rate · BMI · Body Fat · Ideal Weight · Lean Body Mass · Waist-to-Hip Ratio · Calorie · TDEE · One Rep Max · Sleep · Water Intake · Macro · Protein Intake · Peptide Reconstitution · Steps to Miles
@@ -269,11 +269,29 @@ Final Grade · GPA · Grade · Test Score · Grade Curve
 ### Math & Numbers (8)
 Fraction · Standard Deviation · Weighted Average · Ratio · Percentage · Age · Date · Time
 
-Total live calculators: **44**
+Total live calculators: **45**
 
 ---
 
-## Last session (v138–v139)
+## Last session (v140)
+
+- Researched, built and deployed **Wallpaper Calculator** (`/wallpaper-calculator/`, roadmap #23). Research opened
+  Omnicalculator, Inch Calculator, Kalk.pro, Materio (wizard not drivable past step 1 — inputs from its page text),
+  Laurel Mercantile (static chart); Boråstapeter 404. Differentiators (user-approved, all 3 decisions as
+  recommended): **strip-method engine** (whole drops, cut length = height + trim rounded up to the pattern repeat,
+  half-drop alternate strips +1 repeat, strips cut from rolls in order) shown next to the naive area answer; live
+  strip diagram (walls in a 2-column grid, strips coloured by roll); roll presets (US double 20.5 in × 33 ft, Euro
+  53 cm × 10.05 m, custom) or sold by the yard/metre; match type; spare strips + waste %; wall-by-wall mode;
+  multi-room project total packing strips across rooms. Doors/windows deliberately don't change the roll count
+  (only the area comparison). Dropped by user sign-off: Materio photo upload, Kalk "shift the pattern", Omni's
+  single-wall/room switch. `CalcThis.initWallpaperCalc`, `.p-wall`. Article deferred.
+- **New hard rule (user, 2026-10-14): deep QA after EVERY build, automatically, before any preview** — in this
+  file's top rules, workflow Rule 10 and memory. Wallpaper's own QA pass found a real bug (single named room not
+  shown as a label above its project row) and a text/tool mismatch (worked example said 7 rolls, tool said 8 —
+  the area figure was without the door/windows the text didn't mention).
+- The Stop hook caught narration again; user re-stated: write ONLY a question or the final result.
+
+## Earlier (v138–v139)
 
 - Researched, built and deployed **Paint Calculator** (`/paint-calculator/`, roadmap #22). Differentiators
   (user-approved): live room diagram (walls flat with areas, openings, gables, ceiling plan, trim) +
