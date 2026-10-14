@@ -161,10 +161,10 @@ must be built from the article's actual units, every time, not pasted from a tem
 ## ⛔ SESSION HANDOFF — START HERE (written 2026-10-05; full detail in `HANDOFF.md`)
 
 **Read `HANDOFF.md` in full before replying.** Do not make the user re-explain anything in it.
-- **State:** v140 · 45 calculators · 25 articles · `main` clean and pushed.
-- **Just shipped:** **#23 Wallpaper Calculator** (v140). Next: #24 Scientific Notation (>10K Medium) — Rule 8
+- **State:** v142 · 46 calculators · 25 articles · `main` clean and pushed.
+- **Just shipped:** **#24 Scientific Notation Calculator** (v142). Next: #25 Recipe Converter (new Cooking vertical) — Rule 8
   research report first, wait for approval, build, **deep QA (hard rule above)**, preview, deploy only on "deploy".
-- **First move next session:** 2-3 line "synced" reply, then start Scientific Notation research.
+- **First move next session:** 2-3 line "synced" reply, then start Recipe Converter research.
 - **Articles are DEFERRED** — never write/propose/ask about one. Awaiting a future batch: Fraction,
   Standard Deviation. Priority = lots of calculators (backlog #22-29 in the roadmap md).
 - **Behaviour:** zero narration (Stop hook enforces it), terse replies, never invent, every report needs
@@ -175,8 +175,8 @@ must be built from the article's actual units, every time, not pasted from a tem
 
 ## Project state
 
-- **Asset version:** v140 (bumped, `node build.js` run and deployed this session)
-- **Total pages:** 78 live
+- **Asset version:** v142 (bumped, `node build.js` run and deployed this session)
+- **Total pages:** 79 live
 - **Model:** Sonnet 5
 
 ### New this session — global `.csel` custom-dropdown component
@@ -255,7 +255,7 @@ propose an article after shipping a calculator. **Calculators awaiting an articl
 
 ---
 
-## Live calculators (45)
+## Live calculators (46)
 
 ### Construction & Gardening (13)
 Board Foot · Gravel · Sand · Topsoil · Mulch · Concrete · Flooring · Tile · Square Footage · Tape Measure Fraction · Stair · Paint · Wallpaper
@@ -266,14 +266,33 @@ Pace · Race Time Predictor · VO2 Max · Heart Rate Zone · Zone 2 Heart Rate �
 ### School & Grades (5)
 Final Grade · GPA · Grade · Test Score · Grade Curve
 
-### Math & Numbers (8)
-Fraction · Standard Deviation · Weighted Average · Ratio · Percentage · Age · Date · Time
+### Math & Numbers (9)
+Fraction · Standard Deviation · Scientific Notation · Weighted Average · Ratio · Percentage · Age · Date · Time
 
-Total live calculators: **45**
+Total live calculators: **46**
 
 ---
 
-## Last session (v140)
+## Last session (v141–v142)
+
+- Researched, built and deployed **Scientific Notation Calculator** (`/scientific-notation-calculator/`, roadmap #24,
+  Ahrefs >10K Medium). Research opened calculator.net, CalculatorSoup, Omnicalculator, Pearson, Kanaries, DQYDJ live
+  (converter and calculator are separate tools everywhere; only Pearson draws anything, behind toggles).
+  User approved all 3 decisions as recommended (arithmetic in the same box; drop Pearson's Normalize mode + common-
+  mistakes toggles; include word form up to 10^66). **Differentiators:** ONE smart box (any format or whole expression
+  with + − × ÷ ^ √ and brackets), every notation at once with Copy buttons, a live decimal-point shift strip and a
+  power-of-ten/SI-prefix ruler (inline SVG), exact BigInt decimal arithmetic (÷ and √ to 40 digits, flagged),
+  auto-normalise note, plain-English steps shown by default; Go advanced = output style (×/x/·/LaTeX), round to
+  sig figs or decimal places, forced engineering exponent. Typing 0.00450 keeps 3 significant figures. `CalcThis.initSciCalc`,
+  `.p-sci`. Article deferred.
+- **Deep QA hard rule applied for the first time, and it paid off:** found and fixed brackets not parsing, steps showing
+  "*", 40-digit intermediates, dropped trailing zeros, decimal commas misread, half-typed "x 10^", a 1,500-digit
+  headline, and a Copy button that said "Copied" even when the copy failed. Also verified in the user's real Chrome
+  and by running the build with the IndexNow ping removed (a temp copy of build.js) to prove the gates pass first.
+- **New working method:** to check the build gates before deploy without pinging IndexNow, run a temp copy of
+  build.js with the INDEXNOW block removed, then delete it.
+
+## Earlier (v140)
 
 - Researched, built and deployed **Wallpaper Calculator** (`/wallpaper-calculator/`, roadmap #23). Research opened
   Omnicalculator, Inch Calculator, Kalk.pro, Materio (wizard not drivable past step 1 — inputs from its page text),

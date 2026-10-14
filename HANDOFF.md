@@ -6,14 +6,14 @@ make the user re-explain anything in here._
 
 ## 1. Exactly where we are
 
-- **Live site:** asset **v140**, **45 calculators**, **25 blog articles**, **78 pages**. `main` clean and pushed.
-- **Last calculators shipped:** #21 Standard Deviation (v137), #22 Paint (v139), **#23 Wallpaper (v140)**. All article-less on purpose (§3).
-- **Next:** #24 Scientific Notation (>10K Medium KD). Start with the Rule 8 research report (open every competitor live,
-  list every input, visual AND functional differentiator), wait for approval.
+- **Live site:** asset **v142**, **46 calculators**, **25 blog articles**, **79 pages**. `main` clean and pushed.
+- **Last calculators shipped:** #22 Paint (v139), #23 Wallpaper (v140), **#24 Scientific Notation (v142)**. All article-less on purpose (§3).
+- **Next:** #25 Recipe Converter (new Cooking vertical). Start with the Rule 8 research report (open every competitor
+  live, list every input, visual AND functional differentiator), wait for approval.
 
 ## 2. What to do first in the next session
 
-1. Reply in 2-3 lines: synced, v140 / 45 calcs, Scientific Notation next.
+1. Reply in 2-3 lines: synced, v142 / 46 calcs, Recipe Converter next.
 2. Research per Rule 8, deliver a short report, wait for approval before any code.
 3. Build → **deep QA (CLAUDE.md hard rule / workflow Rule 10, automatic, before any preview)** → preview via the
    served site → deploy only on the user's explicit "deploy".

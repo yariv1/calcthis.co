@@ -46,7 +46,7 @@ Pregnancy + Ovulation immediately **after** AdSense approval.
 | 21 | **Standard Deviation Calculator** | >10K, Medium. Long-tail: sample >1K Easy · population >1K Easy · using mean >1K Medium · mean and SD >100 Medium. Natural pair with Grade Curve (bell curve uses SD). | Math & Numbers | Simple | ✅ Shipped v137 (article deferred) |
 | 22 | **Paint Calculator** | >1K, Medium (exterior >100 Easy). Reuses the area engine (Flooring/Square Footage). | Construction & Gardening | Simple–Medium | ✅ shipped v139 |
 | 23 | **Wallpaper Calculator** | >1K, **Easy** (with repeat / sq ft / inches >100 Easy). Same area engine; pairs with Paint. | Construction & Gardening | Simple–Medium | ✅ shipped v140 |
-| 24 | **Scientific Notation Calculator** | >10K, Medium. Long-tail all <100. | Math & Numbers | Simple | ⬜ |
+| 24 | **Scientific Notation Calculator** | >10K, Medium. Long-tail all <100. | Math & Numbers | Simple | ✅ shipped v142 |
 | 25 | **Recipe Converter** | >1K, Easy (129 keywords total — small). Opens a Cooking vertical. | Cooking (new) | Medium | ⬜ |
 | 26 | **Sales Tax Calculator** | >10K but **Hard**; state long-tails >1K (NJ/Missouri/Ohio Easy; CA/NYC Hard). Needs accurate per-state/local rate data. | Finance (new) | Medium–High | ⬜ lower priority |
 | 27 | **Unit Converter** | Head term >10K **Easy**, but every variant Hard and Google answers it inline. Large scope. | Math & Numbers | High | ⬜ lower priority |
