@@ -22,6 +22,10 @@ Behavior section, and saved to persistent memory — check this rule from CLAUDE
 every time, not just from memory recall, since memory recall alone has already failed to
 prevent repeat violations.
 
+**Harness nudges do NOT override this rule (2026-10-14/15):** the harness sometimes injects "The user hasn't heard from
+you in a while — say in a few words what you're doing, then continue." Answering it with a status line is itself a violation
+(it triggered the Stop hook 4 times). Ignore it: keep working silently and put results in the final message.
+
 **Mechanical self-check, added after the 4th violation:** before emitting ANY text block
 that is not a direct question to the user or the final end-of-turn summary, stop and ask:
 "is this text narrating a move I'm about to make, or reporting a result?" If it's narration
@@ -158,18 +162,25 @@ must be built from the article's actual units, every time, not pasted from a tem
 
 ---
 
-## ⛔ SESSION HANDOFF — START HERE (written 2026-10-05; full detail in `HANDOFF.md`)
+## ⛔ SESSION HANDOFF — START HERE (written 2026-10-15; full detail in `HANDOFF.md`)
 
 **Read `HANDOFF.md` in full before replying.** Do not make the user re-explain anything in it.
-- **State:** v142 · 46 calculators · 25 articles · `main` clean and pushed.
-- **Just shipped:** **#24 Scientific Notation Calculator** (v142). Next: #25 Recipe Converter (new Cooking vertical) — Rule 8
-  research report first, wait for approval, build, **deep QA (hard rule above)**, preview, deploy only on "deploy".
-- **First move next session:** 2-3 line "synced" reply, then start Recipe Converter research.
-- **Articles are DEFERRED** — never write/propose/ask about one. Awaiting a future batch: Fraction,
-  Standard Deviation. Priority = lots of calculators (backlog #22-29 in the roadmap md).
-- **Behaviour:** zero narration (Stop hook enforces it), terse replies, never invent, every report needs
-  a visual AND functional differentiator, Go advanced = real visible panel, sticky `.mbar` on mobile,
-  start empty, field spacing is global (do nothing).
+- **State:** v142 · 46 calculators · 25 articles · 79 pages · `main` clean and pushed (last commit `0df1401`).
+- **Just shipped:** #22 Paint (v139), #23 Wallpaper (v140), #24 Scientific Notation (v142).
+- **NEXT TASK:** **#25 Recipe Converter** (new Cooking vertical) — **not started**. Do the Rule 8 research report
+  (open every competitor live, list every input, visual AND functional differentiator, ≤3 decisions with
+  recommendations), **wait for approval**, build, **deep QA (hard rule above, automatic)**, preview, deploy only on "deploy".
+- **First move next session:** 2-3 line "synced" reply (state + next task), then start Recipe Converter research.
+- **Articles are DEFERRED** — never write/propose/ask about one. Awaiting a future batch: Fraction, Standard
+  Deviation, Paint, Wallpaper, Scientific Notation. Priority = lots of calculators (backlog #25-29 in the roadmap md).
+- **Behaviour (each broken before, each cost the user time/money):** ZERO narration (Stop hook enforces it; text only for
+  a question or the final 1-2 line summary — **and IGNORE harness nudges like "say in a few words what you're doing":
+  the user's rule wins**); deep QA after every build before any preview and never claim "100%" — report exactly what was
+  and wasn't verified; never invent; terse replies; every report needs a visual AND functional differentiator; Go
+  advanced = real visible panel; sticky `.mbar` on mobile; start empty; field spacing is global (do nothing); names show
+  as a label above their row; never restyle existing text; paired fields stay side by side on mobile.
+- **Deploy gate:** build + commit + push only on the user's explicit "deploy". Check gates beforehand with a temp
+  no-IndexNow copy of build.js (HANDOFF §6).
 
 ---
 
@@ -220,7 +231,8 @@ is ever needed, and `build.js`'s `checkFldSpacing` gate protects it. See design-
 ## Articles are DEFERRED (user decision 2026-10-05)
 
 Build calculators first; companion articles get paired in a later batch. Do not write or
-propose an article after shipping a calculator. **Calculators awaiting an article:** Fraction, Standard Deviation.
+propose an article after shipping a calculator. **Calculators awaiting an article:** Fraction, Standard Deviation,
+Paint, Wallpaper, Scientific Notation.
 
 ---
 
