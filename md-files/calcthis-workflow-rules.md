@@ -198,4 +198,22 @@ Chrome links in the final message. Details: `calcthis-working-rules.md` → "Pre
    implied by the summary. Fixed by making a Browser-tool visual pass mandatory for every
    competitor, every time, not just when something looks off — Rule 8.5.
 
-Follow Rules 1–9 (4, 4.5 and 8.5 especially) and none of this happens again.
+## RULE 10 — DEEP QA AFTER EVERY BUILD, AUTOMATICALLY (user, 2026-10-14)
+
+After every build or change to a calculator/article, run the full QA below **yourself, before any preview
+is presented, without being asked**. The Wallpaper calculator reached preview with a bug that only a
+second, explicitly requested QA pass found — it would have shipped with it.
+
+1. **Start state:** page loads empty (no demo values), result blank, add button disabled, no console errors, no duplicate element IDs.
+2. **Math:** every output checked against hand-computed / known values, in every mode and both unit systems.
+3. **Inputs:** partial / half-typed, zero, negative, non-numeric, huge values, and every "impossible" combination — must fail quietly with a clear hint, never blank or throw.
+4. **Every control:** every mode, chip, toggle, dropdown and every **Go advanced** option; Go simple must reset them; the Go advanced panel must be a real visible panel above the button.
+5. **Units:** US and Metric — labels, placeholders, results, and switching mid-entry.
+6. **Project / tally flows:** add, add several, remove one, clear all, names shown, mixed settings, totals, sticky mbar.
+7. **Mobile 375px:** no horizontal scroll, text readable (12px floor in SVG), fields that sit side by side on desktop stay side by side, sticky mbar shows the live result.
+8. **Page content:** every number in the SEO text / table / worked example / FAQ / JSON-LD re-computed with the calculator itself — text and tool must agree to the digit.
+9. **Registration:** nav, footer, homepage (card, hasPart, prose count + word count), sitemap, build.js PAGES.
+10. **Every past user correction** listed in CLAUDE.md "Last session" entries and memory (e.g. names as a label above the row, no invented labels, never restyle existing text, aligned numeric columns).
+Then: fix every bug found, re-run the affected checks, and state in the final summary what was tested and what was fixed.
+
+Follow Rules 1–10 (4, 4.5, 8.5 and 10 especially) and none of this happens again.

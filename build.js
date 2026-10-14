@@ -31,6 +31,7 @@ const PAGES = [
   { file: 'tape-measure-fraction-calculator/index.html', slug: '/tape-measure-fraction-calculator/' },
   { file: 'stair-calculator/index.html', slug: '/stair-calculator/' },
   { file: 'paint-calculator/index.html', slug: '/paint-calculator/' },
+  { file: 'wallpaper-calculator/index.html', slug: '/wallpaper-calculator/' },
   { file: 'pace-calculator/index.html',        slug: '/pace-calculator/' },
   { file: 'race-time-predictor/index.html',    slug: '/race-time-predictor/' },
   { file: 'vo2-max-calculator/index.html',     slug: '/vo2-max-calculator/' },

@@ -7544,6 +7544,443 @@ CalcThis.initPaintCalc = function () {
   renderAll();
 };
 
+/* ===== CalcThis Wallpaper engine =====
+   CalcThis.initWallpaperCalc() — rolls of wallpaper by the STRIP method (how paperhangers
+   count): each wall is hung in whole vertical strips, each cut to wall height + trim, rounded
+   up to the pattern repeat (half-drop: alternate strips need one extra repeat), and strips are
+   cut from rolls in order. Differentiator vs. every competitor checked (Omnicalculator, Inch
+   Calculator, Kalk.pro, Materio — all bare numbers or an area ÷ roll-area guess): a live strip
+   diagram (every wall with its strips colour-coded by the roll they are cut from), the plain
+   area answer shown next to the true strip answer, roll presets, match type, a spare-strips
+   line, a shopping list with leftover and cost, and a multi-room project total. Lengths are
+   held internally in centimetres; the unit toggle only changes what is read and shown.
+   Independent engine, no shared state. */
+CalcThis.initWallpaperCalc = function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var IN = 2.54, FT = 30.48, YD = 91.44, CM2_PER_FT2 = 929.0304;
+  var PRESET = { us: { w: 20.5 * IN, l: 33 * FT }, eu: { w: 53, l: 1005 } };
+  var PALETTE = ['#37503F', '#B5761F', '#6B7A9E', '#A4795A', '#5E8C7B', '#8F5C13'];
+
+  var sys = 'us', preset = 'us', measure = 'room', match = 'straight', soldBy = 'roll';
+  var tally = [], advanced = false;
+
+  function num(id) { var el = typeof id === 'string' ? $(id) : id; if (!el) return NaN; var n = parseFloat((el.value || '').trim()); return isNaN(n) ? NaN : n; }
+  function pos(id) { var n = num(id); return (!isNaN(n) && n > 0) ? n : NaN; }
+  function cnt(id) { var n = num(id); return (!isNaN(n) && n > 0) ? Math.floor(n) : 0; }
+  function lenCm(v) { return sys === 'us' ? v * FT : v * 100; }
+  function smallCm(v) { return sys === 'us' ? v * IN : v; }
+  function fmtN(n, d) { var r = Math.round(n * Math.pow(10, d)) / Math.pow(10, d); return r.toString(); }
+  function fmtLen(cm) {
+    if (sys === 'us') {
+      var inch = Math.round(cm / IN), ft = Math.floor(inch / 12), i = inch % 12;
+      if (ft === 0) return i + ' in';
+      return ft + ' ft' + (i ? ' ' + i + ' in' : '');
+    }
+    return fmtN(cm / 100, 2) + ' m';
+  }
+  function fmtSmall(cm) { return sys === 'us' ? fmtN(cm / IN, 1) + ' in' : fmtN(cm, 1) + ' cm'; }
+  function fmtArea(cm2) { return sys === 'us' ? fmtN(cm2 / CM2_PER_FT2, cm2 / CM2_PER_FT2 >= 100 ? 0 : 1) + ' sq ft' : fmtN(cm2 / 10000, cm2 / 10000 >= 100 ? 0 : 1) + ' m²'; }
+  function money(n) { return '$' + n.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+  function joinList(a) { if (a.length < 2) return a.join(''); return a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1]; }
+  function priceVal() { var p = num('wpPrice'); return (!isNaN(p) && p > 0) ? p : null; }
+  function yardUnitCm() { return sys === 'us' ? YD : 100; }
+  function yardName() { return sys === 'us' ? 'yd' : 'm'; }
+
+  /* ---------- read inputs ---------- */
+  function wallRowEls() { return [].slice.call($('wpWallRows').querySelectorAll('.wp-wrow')); }
+  function readRoom() {
+    var r = { ok: false, missing: [], walls: [], doors: 0, wins: 0 };
+    if (measure === 'room') {
+      var L = pos('wpLen'), W = pos('wpWid'), H = pos('wpHgt');
+      if (isNaN(L)) r.missing.push('length');
+      if (isNaN(W)) r.missing.push('width');
+      if (isNaN(H)) r.missing.push('ceiling height');
+      if (r.missing.length) return r;
+      L = lenCm(L); W = lenCm(W); H = lenCm(H);
+      r.walls = [{ w: L, h: H }, { w: W, h: H }, { w: L, h: H }, { w: W, h: H }];
+      r.doors = cnt('wpDoors'); r.wins = cnt('wpWins');
+    } else {
+      wallRowEls().forEach(function (row) {
+        var g = function (f) { return row.querySelector('[data-f="' + f + '"]'); };
+        var w = pos(g('w')), h = pos(g('h'));
+        if (isNaN(w) || isNaN(h)) return;                    // half-typed row: skipped quietly
+        var d = cnt(g('d')), n = cnt(g('n'));
+        r.walls.push({ w: lenCm(w), h: lenCm(h), d: d, n: n });
+        r.doors += d; r.wins += n;
+      });
+      if (!r.walls.length) { r.missing.push('width and height for at least one wall'); return r; }
+    }
+    r.ok = true;
+    return r;
+  }
+  function readSettings() {
+    var s = { missing: [] };
+    if (preset === 'custom') {
+      var rw = pos('wpRollW'), rl = pos('wpRollL');
+      if (isNaN(rw)) s.missing.push('roll width');
+      if (isNaN(rl) && soldBy === 'roll') s.missing.push('roll length');
+      s.rollW = isNaN(rw) ? 0 : smallCm(rw); s.rollL = isNaN(rl) ? 0 : lenCm(rl);
+    } else { s.rollW = PRESET[preset].w; s.rollL = PRESET[preset].l; }
+    var rep = pos('wpRepeat'); s.repeat = isNaN(rep) ? 0 : smallCm(rep);
+    s.match = match;
+    var tv = num('wpTrim'); s.trim = (!isNaN(tv) && tv >= 0) ? smallCm(tv) : (sys === 'us' ? 4 * IN : 10);
+    var ov = num('wpOverlap'); s.overlap = (!isNaN(ov) && ov > 0) ? smallCm(ov) : 0;
+    s.spare = cnt('wpSpare');
+    var wv = num('wpWaste'); s.waste = (!isNaN(wv) && wv > 0) ? wv : 0;
+    s.yard = soldBy === 'yard';
+    return s;
+  }
+
+  /* ---------- the strip maths ---------- */
+  function plan(r, s) {
+    var stripW = s.rollW - s.overlap;
+    if (stripW <= 0) return null;
+    var R = (s.match !== 'random' && s.repeat > 0) ? s.repeat : 0;
+    var cuts = [], per = [], seq = 0, maxH = 0, i, k;
+    r.walls.forEach(function (w) {
+      var n = Math.ceil(w.w / stripW - 1e-9), base = w.h + s.trim;
+      var L1 = R ? Math.ceil(base / R - 1e-9) * R : base;
+      for (k = 0; k < n; k++) { cuts.push((s.match === 'half' && R && seq % 2 === 1) ? L1 + R : L1); seq++; }
+      per.push({ n: n, cut: L1 });
+      maxH = Math.max(maxH, L1);
+    });
+    var baseN = cuts.length, all = cuts.slice();
+    var extra = 0;
+    if (s.waste > 0) extra += Math.ceil(baseN * s.waste / 100 - 1e-9);
+    extra += s.spare;
+    var avg = cuts.reduce(function (a, b) { return a + b; }, 0) / baseN;
+    for (i = 0; i < extra; i++) all.push(avg);
+    return { cuts: cuts, all: all, per: per, baseN: baseN, extra: extra, stripW: stripW, R: R, maxCut: Math.max.apply(null, all), half: s.match === 'half' && R > 0 };
+  }
+  function pack(cuts, rollL) {
+    var rolls = 0, rem = 0, idx = [], used = 0;
+    cuts.forEach(function (c) {
+      if (c > rem + 1e-6) { rolls++; rem = rollL; }
+      rem -= c; used += c; idx.push(rolls - 1);
+    });
+    return { rolls: rolls, idx: idx, left: rolls * rollL - used };
+  }
+
+  /* ---------- diagram ---------- */
+  var openA = null;
+  function renderDiagram(r, p, pk, s) {
+    var box = $('wpDiagram');
+    if (!r || !r.ok || !p) { box.innerHTML = '<div class="sq-diagram-empty">Enter your room size and every wall will be drawn here with its strips.</div>'; return; }
+    var walls = r.walls, n = walls.length, VW = 280, PAD = 8, GAP = 6, TOP = 8, i, k;
+    var maxW = 0, maxH = 0;
+    walls.forEach(function (w) { maxW = Math.max(maxW, w.w); maxH = Math.max(maxH, w.h); });
+    var cols = n === 1 ? 1 : 2, rowsN = Math.ceil(n / cols), cw = (VW - 2 * PAD - GAP * (cols - 1)) / cols;
+    var ws = Math.min(cw / maxW, 84 / maxH), rowH = maxH * ws + 42;
+    var svg = '', caps = '', ci = 0;
+    var dArr = [], nArr = [];
+    for (i = 0; i < n; i++) { dArr.push(measure === 'room' ? 0 : walls[i].d); nArr.push(measure === 'room' ? 0 : walls[i].n); }
+    if (measure === 'room') { for (k = 0; k < r.doors; k++) dArr[k % n]++; for (k = 0; k < r.wins; k++) nArr[(k + 1) % n]++; }
+    var dW = openA.doorW, dH = openA.doorH, wW = openA.winW, wH = openA.winH;
+    for (i = 0; i < n; i++) {
+      var w = walls[i], wpx = w.w * ws, hpx = w.h * ws, sp = p.per[i].n;
+      var x = PAD + (i % cols) * (cw + GAP) + (cw - wpx) / 2, base = TOP + Math.floor(i / cols) * rowH + maxH * ws, top = base - hpx;
+      for (k = 0; k < sp; k++) {
+        var sx = x + k * p.stripW * ws, sw = (k === sp - 1) ? (w.w - k * p.stripW) * ws : p.stripW * ws;
+        var col = pk ? PALETTE[pk.idx[ci] % PALETTE.length] : PALETTE[0];
+        ci++;
+        svg += '<rect x="' + sx + '" y="' + top + '" width="' + Math.max(sw, 0.5) + '" height="' + hpx + '" fill="' + col + '" fill-opacity=".5" stroke="var(--paper)" stroke-width="0.8"/>';
+      }
+      svg += '<rect x="' + x + '" y="' + top + '" width="' + wpx + '" height="' + hpx + '" fill="none" stroke="var(--ink)" stroke-width="1.4"/>';
+      var slots = Math.min(6, dArr[i] + nArr[i]), si = 0, slotW = wpx / (slots + 1);
+      for (k = 0; k < Math.min(dArr[i], 6); k++) {
+        si++; var dw = Math.min(dW * ws, slotW * 0.8), dh = Math.min(dH * ws, hpx * 0.92);
+        svg += '<rect x="' + (x + slotW * si - dw / 2) + '" y="' + (base - dh) + '" width="' + dw + '" height="' + dh + '" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.3" stroke-dasharray="4 3"/>';
+      }
+      for (k = 0; k < nArr[i] && si < 6; k++) {
+        si++; var ww = Math.min(wW * ws, slotW * 0.8), wh = Math.min(wH * ws, hpx * 0.6);
+        svg += '<rect x="' + (x + slotW * si - ww / 2) + '" y="' + (base - hpx * 0.55 - wh / 2) + '" width="' + ww + '" height="' + wh + '" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.3" stroke-dasharray="4 3"/>';
+      }
+      caps += '<text x="' + (x + wpx / 2) + '" y="' + (base + 15) + '" text-anchor="middle" font-size="12" font-weight="700" fill="var(--ink-soft)">' + String.fromCharCode(65 + (i % 26)) + '</text>';
+      if (wpx >= 44) caps += '<text x="' + (x + wpx / 2) + '" y="' + (base + 29) + '" text-anchor="middle" font-size="12" font-weight="500" fill="var(--ink)">' + sp + (sp === 1 ? ' strip' : ' strips') + '</text>';
+    }
+    var H = TOP + rowsN * rowH - 6;
+    var key = '';
+    if (pk && !s.yard) {
+      var nk = Math.min(pk.rolls, PALETTE.length);
+      for (i = 0; i < nk; i++) key += '<span class="wp-key"><i style="background:' + PALETTE[i] + ';opacity:.6"></i>Roll ' + (i + 1) + '</span>';
+      if (pk.rolls > PALETTE.length) key += '<span class="wp-note">Colours repeat after ' + PALETTE.length + ' rolls.</span>';
+    }
+    var leg = '';
+    if (measure === 'room' && (r.doors + r.wins) > 0) leg = '<span class="wp-note">Openings are placed for illustration.</span>';
+    box.innerHTML = '<svg viewBox="0 0 ' + VW + ' ' + H + '" xmlns="http://www.w3.org/2000/svg">' + svg + caps + '</svg>'
+      + (key ? '<div class="wp-keys">' + key + '</div>' : '')
+      + '<div class="sq-diagram-legend"><span><b>Each coloured strip</b> is one drop of paper' + (key ? ', coloured by the roll it is cut from' : '') + '</span>' + leg + '</div>';
+  }
+
+  /* ---------- live room ---------- */
+  var live = null;
+  function setAddEnabled(ok) { var b = $('wpAddBtn'); b.disabled = !ok; b.style.opacity = ok ? '1' : '.5'; b.style.cursor = ok ? 'pointer' : 'not-allowed'; }
+  function row(k, v, strong) { return '<tr' + (strong ? ' class="cur"' : '') + '><td>' + k + '</td><td>' + v + '</td></tr>'; }
+  function compute() {
+    var r = readRoom(), s = readSettings();
+    var o = { r: r, s: s, p: null, pk: null, err: null };
+    if (!r.ok) { o.err = 'Enter ' + joinList(r.missing); return o; }
+    if (s.missing.length) { o.err = 'Enter ' + joinList(s.missing); return o; }
+    o.p = plan(r, s);
+    if (!o.p) { o.err = 'The side overlap is bigger than the roll width'; return o; }
+    if (!s.yard) {
+      if (o.p.maxCut > s.rollL + 1e-6) { o.err = 'A strip (' + fmtLen(o.p.maxCut) + ') is longer than the roll (' + fmtLen(s.rollL) + ') — check the roll length'; o.p = null; return o; }
+      o.pk = pack(o.p.all, s.rollL);
+    }
+    return o;
+  }
+  function openings() {
+    var us = sys === 'us';
+    var dw = pos('wpDoorW'), dh = pos('wpDoorH'), ww = pos('wpWinW'), wh = pos('wpWinH');
+    return {
+      doorW: lenCm(isNaN(dw) ? (us ? 3 : 0.9) : dw), doorH: lenCm(isNaN(dh) ? (us ? 6.7 : 2) : dh),
+      winW: lenCm(isNaN(ww) ? (us ? 3 : 0.9) : ww), winH: lenCm(isNaN(wh) ? (us ? 5 : 1.5) : wh)
+    };
+  }
+  function grossArea(r) { var a = 0; r.walls.forEach(function (w) { a += w.w * w.h; }); return a; }
+  function netArea(r) { var a = grossArea(r) - r.doors * openA.doorW * openA.doorH - r.wins * openA.winW * openA.winH; return a; }
+  function result(o) {
+    var s = o.s, p = o.p, out = { rows: '', qty: 0, unit: '', cost: null, plain: '', sub: '' };
+    var price = priceVal();
+    var area = netArea(o.r);
+    if (s.yard) {
+      var tot = p.all.reduce(function (a, b) { return a + b; }, 0);
+      var buy = Math.ceil(tot / yardUnitCm() * 2 - 1e-9) / 2;
+      out.qty = buy; out.unit = yardName();
+      out.rows = row('Strips to hang', p.baseN) + row('Cut length per strip', fmtLen(p.per[0].cut)) + (p.extra ? row('Spare / waste strips', '+' + p.extra) : '') + row('Total length', fmtN(tot / yardUnitCm(), 1) + ' ' + yardName()) + row('To buy', fmtN(buy, 1) + ' ' + yardName(), true);
+      if (price != null) out.cost = buy * price;
+      out.plain = 'Order ' + fmtN(buy, 1) + ' ' + (sys === 'us' ? 'yards' : 'metres') + ' of wallpaper for ' + p.baseN + ' strips' + (p.extra ? ' plus ' + p.extra + ' spare' : '') + '.';
+      out.sub = p.baseN + ' strips · ' + fmtLen(p.per[0].cut) + ' each';
+      return out;
+    }
+    var rolls = o.pk.rolls, naive = Math.max(1, Math.ceil(area / (s.rollW * s.rollL) - 1e-9));
+    var perRoll = Math.floor(s.rollL / p.per[0].cut + 1e-9);
+    out.qty = rolls; out.unit = rolls === 1 ? 'roll' : 'rolls';
+    out.rows = row('Strips to hang', p.baseN)
+      + row('Cut length per strip', fmtLen(p.per[0].cut) + (p.half ? ' <span class="wp-sub">(+ ' + fmtSmall(p.R) + ' on alternate strips)</span>' : ''))
+      + row('Strips per roll', p.half ? '≈ ' + fmtN(p.all.length / rolls, 1) : perRoll)
+      + (p.extra ? row('Spare / waste strips', '+' + p.extra) : '')
+      + row('Rolls to buy', rolls, true)
+      + row('Left over', fmtLen(o.pk.left))
+      + row('By area only', naive + (naive === 1 ? ' roll' : ' rolls'));
+    if (price != null) out.cost = rolls * price;
+    out.sub = p.baseN + ' strips · ' + fmtLen(p.per[0].cut) + ' each' + (p.extra ? ' · incl. ' + p.extra + ' spare' : '');
+    if (rolls > naive) out.plain = 'Buy ' + rolls + ' rolls. By area it looks like ' + naive + ' — but wallpaper is hung in whole strips, so you need ' + rolls + '.';
+    else if (rolls === naive) out.plain = 'Buy ' + rolls + (rolls === 1 ? ' roll' : ' rolls') + ' — the same as a plain area estimate, so little is lost to strips.';
+    else out.plain = 'Buy ' + rolls + (rolls === 1 ? ' roll' : ' rolls') + '.';
+    return out;
+  }
+  function renderRoom() {
+    openA = openings();
+    var o = compute();
+    live = (o.p && !o.err) ? o : null;
+    setAddEnabled(!!live);
+    $('wpHint').style.display = live ? 'none' : 'block';
+    $('wpAddNote').style.display = live ? 'block' : 'none';
+    if (o.err) $('wpHint').textContent = o.err;
+    renderDiagram(o.r, live ? o.p : null, live ? o.pk : null, o.s);
+    var body = $('wpResBody');
+    if (!live) {
+      $('wpResQty').textContent = '—'; $('wpResUnit').textContent = soldBy === 'yard' ? yardName() : 'rolls';
+      $('wpResSub').textContent = 'Enter the room size to see how many rolls you need.';
+      body.style.display = 'none';
+      return;
+    }
+    var out = result(o);
+    $('wpResQty').textContent = fmtN(out.qty, 1);
+    $('wpResUnit').textContent = out.unit;
+    $('wpResSub').textContent = out.sub;
+    $('wpPlain').textContent = out.plain;
+    $('wpRows').innerHTML = out.rows;
+    $('wpCostWrap').classList.toggle('hide', out.cost == null);
+    if (out.cost != null) $('wpCost').textContent = money(out.cost);
+    $('wpAssume').textContent = 'Roll ' + fmtSmall(o.s.rollW) + ' wide' + (o.s.yard ? '' : ' × ' + fmtLen(o.s.rollL) + ' long') + ', ' + (o.p.R ? 'pattern repeat ' + fmtSmall(o.p.R) + (o.p.half ? ' (half-drop)' : ' (straight match)') : 'no pattern repeat') + ', ' + fmtSmall(o.s.trim) + ' trim allowance.';
+    body.style.display = '';
+  }
+
+  /* ---------- project tally ---------- */
+  function groups() {
+    var g = {}, order = [];
+    tally.forEach(function (t) {
+      var key = (t.yard ? 'y' : 'r') + '|' + Math.round(t.rollW * 10) + '|' + Math.round(t.rollL);
+      if (!g[key]) { g[key] = { yard: t.yard, rollW: t.rollW, rollL: t.rollL, cuts: [] }; order.push(key); }
+      g[key].cuts = g[key].cuts.concat(t.cuts);
+    });
+    return order.map(function (k) { return g[k]; });
+  }
+  function projTotals() {
+    var gs = groups(), rolls = 0, yard = 0, left = 0, rows = '', strips = 0;
+    gs.forEach(function (g) {
+      var spec = fmtSmall(g.rollW) + ' wide' + (g.yard ? '' : ' × ' + fmtLen(g.rollL));
+      strips += g.cuts.length;
+      if (g.yard) {
+        var tot = g.cuts.reduce(function (a, b) { return a + b; }, 0), buy = Math.ceil(tot / yardUnitCm() * 2 - 1e-9) / 2;
+        yard += buy; rows += row(spec + ' (by the ' + (sys === 'us' ? 'yard' : 'metre') + ')', fmtN(buy, 1) + ' ' + yardName(), true);
+      } else {
+        var pk = pack(g.cuts, g.rollL); rolls += pk.rolls; left += pk.left;
+        rows += row(spec, pk.rolls + (pk.rolls === 1 ? ' roll' : ' rolls'), true);
+      }
+    });
+    return { rolls: rolls, yard: yard, left: left, rows: rows, strips: strips, multi: gs.length > 1, onlyYard: rolls === 0 && yard > 0 };
+  }
+  function renderTally() {
+    var body = $('wpTallyBody'), t = null;
+    if (!tally.length) {
+      body.innerHTML = '<div class="tally-empty">Papering more than one room? Add each above and they’ll total here with one order.</div>';
+      $('wpProj').style.display = 'none'; $('wpProjTotal').style.display = 'none'; $('wpClearAll').style.display = 'none';
+    } else {
+      $('wpClearAll').style.display = 'inline';
+      var html = '';
+      tally.forEach(function (r, i) {
+        html += '<div class="trow"><span class="desc"><span class="d">' + r.label + '</span></span>'
+          + '<span class="qt">' + r.strips + (r.strips === 1 ? ' strip' : ' strips') + '</span>'
+          + '<span class="rc">' + fmtArea(r.area) + '</span>'
+          + '<button class="x" data-i="' + i + '" aria-label="Remove">×</button></div>';
+      });
+      body.innerHTML = html;
+      t = projTotals();
+      var price = priceVal();
+      var lab = (tally.length === 1 && tally[0].named) ? '<tr class="wp-lab"><td colspan="2">' + tally[0].label + '</td></tr>' : '';
+      $('wpProjRows').innerHTML = lab + t.rows + (t.rolls > 0 ? row('Left over', fmtLen(t.left)) : '');
+      $('wpProj').style.display = '';
+      $('wpProjTotal').style.display = 'grid';
+      $('wpTotQty').textContent = t.onlyYard ? fmtN(t.yard, 1) : t.rolls;
+      $('wpTotUnit').textContent = t.onlyYard ? yardName() : (t.rolls === 1 ? 'roll' : 'rolls');
+      $('wpProjCount').textContent = '(' + tally.length + (tally.length === 1 ? ' room)' : ' rooms)');
+      var cost = price == null ? null : (t.rolls + t.yard) * price;
+      $('wpTotCostRow').style.display = cost == null ? 'none' : 'block';
+      $('wpTotCost').style.display = cost == null ? 'none' : 'block';
+      if (cost != null) $('wpTotCost').textContent = money(cost);
+    }
+    updateMbar(t);
+  }
+  function updateMbar(t) {
+    var cw = $('mCostWrap'), p = priceVal();
+    if (tally.length && t) {
+      $('mLab').textContent = 'Project total';
+      $('mSeg').innerHTML = '<b>' + (t.onlyYard ? fmtN(t.yard, 1) : t.rolls) + '</b> ' + (t.onlyYard ? yardName() : (t.rolls === 1 ? 'roll' : 'rolls'));
+      if (p != null) { cw.classList.remove('hide'); $('mCost').textContent = money((t.rolls + t.yard) * p); } else cw.classList.add('hide');
+      return;
+    }
+    $('mLab').textContent = 'This room';
+    if (!live) { $('mSeg').innerHTML = '<b>—</b> ' + (soldBy === 'yard' ? yardName() : 'rolls'); cw.classList.add('hide'); return; }
+    var out = result(live);
+    $('mSeg').innerHTML = '<b>' + fmtN(out.qty, 1) + '</b> ' + out.unit;
+    if (out.cost != null) { cw.classList.remove('hide'); $('mCost').textContent = money(out.cost); } else cw.classList.add('hide');
+  }
+  function renderAll() { renderRoom(); renderTally(); }
+
+  /* ---------- wall-by-wall rows ---------- */
+  function addWallRow() {
+    var row = document.createElement('div');
+    row.className = 'wp-wrow';
+    row.innerHTML = '<span class="wp-wl"></span>'
+      + ['w', 'h', 'd', 'n'].map(function (f) { return '<input class="win" data-f="' + f + '" type="number" inputmode="decimal" min="0" placeholder="0" aria-label="' + ({ w: 'Wall width', h: 'Wall height', d: 'Doors', n: 'Windows' })[f] + '">'; }).join('')
+      + '<button class="x" type="button" aria-label="Remove wall">×</button>';
+    $('wpWallRows').appendChild(row);
+    renumber();
+  }
+  function renumber() { wallRowEls().forEach(function (row, i) { row.querySelector('.wp-wl').textContent = String.fromCharCode(65 + (i % 26)); }); }
+  function resetWallRows() { $('wpWallRows').innerHTML = ''; for (var i = 0; i < 4; i++) addWallRow(); }
+
+  /* ---------- labels / visibility ---------- */
+  function setSeg(id, v, attr) { [].forEach.call($(id).children, function (b) { b.classList.toggle('on', b.getAttribute(attr || 'data-v') === String(v)); }); }
+  function updateUnitLabels() {
+    var us = sys === 'us';
+    [].forEach.call(document.querySelectorAll('#wpInCard [data-dim]'), function (el) { el.textContent = us ? 'ft' : 'm'; });
+    [].forEach.call(document.querySelectorAll('#wpInCard [data-small]'), function (el) { el.textContent = us ? 'in' : 'cm'; });
+    $('wpDoorW').placeholder = us ? '3' : '0.9'; $('wpDoorH').placeholder = us ? '6.7' : '2';
+    $('wpWinW').placeholder = us ? '3' : '0.9'; $('wpWinH').placeholder = us ? '5' : '1.5';
+    $('wpTrim').placeholder = us ? '4' : '10';
+    var yd = soldBy === 'yard';
+    $('wpPriceLab').textContent = yd ? 'Price per ' + (us ? 'yard' : 'metre') : 'Price per roll';
+    $('wpPriceSuf').textContent = yd ? '$/' + yardName() : '$/roll';
+    var p = preset === 'custom' ? null : PRESET[preset];
+    $('wpRollNote').textContent = p ? fmtSmall(p.w) + ' wide × ' + fmtLen(p.l) + ' long' : 'Enter the width and length printed on your roll.';
+    $('wpRollLenFld').style.display = yd ? 'none' : '';
+  }
+  function applyMeasure() {
+    var rm = measure === 'room';
+    $('wpRoomFields').style.display = rm ? '' : 'none';
+    $('wpWallFields').style.display = rm ? 'none' : '';
+  }
+  function applyRoll() {
+    $('wpRollCustom').style.display = preset === 'custom' ? '' : 'none';
+    updateUnitLabels();
+  }
+  function clearRoomFields(keepHeight) {
+    ['wpLen', 'wpWid', 'wpDoors', 'wpWins', 'wpName'].forEach(function (id) { $(id).value = ''; });
+    if (!keepHeight) $('wpHgt').value = '';
+    resetWallRows();
+  }
+
+  /* ---------- events ---------- */
+  $('wpInCard').addEventListener('input', renderAll);
+
+  $('wpUnitSeg').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b || b.dataset.sys === sys) return;
+    sys = b.dataset.sys; setSeg('wpUnitSeg', sys, 'data-sys');
+    [].forEach.call(document.querySelectorAll('#wpInCard input'), function (el) { if (el.id !== 'wpName' && el.id !== 'wpWaste' && el.id !== 'wpSpare') el.value = ''; });
+    resetWallRows(); updateUnitLabels(); renderAll();
+  });
+  $('wpRoll').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b || b.dataset.v === preset) return;
+    preset = b.dataset.v; setSeg('wpRoll', preset); applyRoll(); renderAll();
+  });
+  $('wpMeasureSeg').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b || b.dataset.v === measure) return;
+    measure = b.dataset.v; setSeg('wpMeasureSeg', measure); applyMeasure(); renderAll();
+  });
+  $('wpMatchSeg').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    match = b.dataset.v; setSeg('wpMatchSeg', match); renderAll();
+  });
+  $('wpSoldSeg').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    soldBy = b.dataset.v; setSeg('wpSoldSeg', soldBy); updateUnitLabels(); renderAll();
+  });
+
+  $('wpAddWall').addEventListener('click', function () { addWallRow(); var rows = wallRowEls(); rows[rows.length - 1].querySelector('input').focus(); });
+  $('wpWallRows').addEventListener('click', function (e) {
+    var x = e.target.closest('.x'); if (!x) return;
+    var rows = wallRowEls(); if (rows.length <= 1) { [].forEach.call(rows[0].querySelectorAll('input'), function (i) { i.value = ''; }); }
+    else x.closest('.wp-wrow').remove();
+    renumber(); renderAll();
+  });
+
+  $('wpAddBtn').addEventListener('click', function () {
+    if (!live) return;
+    var nm = $('wpName').value.trim();
+    tally.push({ label: nm || 'Room', named: !!nm, cuts: live.p.all.slice(), strips: live.p.baseN, area: grossArea(live.r), rollW: live.s.rollW, rollL: live.s.yard ? 0 : live.s.rollL, yard: live.s.yard });
+    clearRoomFields(true);
+    renderAll();
+    var first = measure === 'room' ? $('wpLen') : $('wpWallRows').querySelector('input'); if (first) first.focus();
+  });
+  $('wpClearFields').addEventListener('click', function () { clearRoomFields(false); renderAll(); });
+  $('wpTallyBody').addEventListener('click', function (e) { var x = e.target.closest('.x'); if (!x) return; tally.splice(+x.dataset.i, 1); renderAll(); });
+  $('wpClearAll').addEventListener('click', function () { tally = []; renderAll(); });
+
+  function resetAdvanced() {
+    measure = 'room'; match = 'straight'; soldBy = 'roll';
+    setSeg('wpMeasureSeg', 'room'); setSeg('wpMatchSeg', 'straight'); setSeg('wpSoldSeg', 'roll');
+    ['wpDoorW', 'wpDoorH', 'wpWinW', 'wpWinH', 'wpTrim', 'wpOverlap', 'wpSpare', 'wpWaste'].forEach(function (id) { $(id).value = ''; });
+    resetWallRows(); updateUnitLabels(); applyMeasure(); renderAll();
+  }
+  var advBtn = $('wpAdvBtn');
+  advBtn.addEventListener('click', function () {
+    advanced = !advanced;
+    advBtn.classList.toggle('open', advanced);
+    $('wpAdvBtnLab').textContent = advanced ? 'Go simple' : 'Go advanced';
+    $('wpAdvIn').style.display = advanced ? '' : 'none';
+    if (!advanced) resetAdvanced();
+  });
+
+  resetWallRows();
+  applyRoll();
+  applyMeasure();
+  renderAll();
+};
+
 /* =========================================================
    SITE FOOTER — mobile accordion
    Multiple pillars can be open simultaneously.

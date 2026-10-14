@@ -1831,3 +1831,44 @@
     .p-paint .pt-sm{display:inline}
     .p-paint .pt-whead,.p-paint .pt-wrow{gap:4px;grid-template-columns:16px repeat(5,minmax(0,1fr)) 20px}
   }
+
+  /* =========================================================
+     CONSTRUCTION · WALLPAPER CALCULATOR  (body.p-wall)
+     Strip-method roll count. Reuses .card-h2/.ctl-row/.seg, .chips (roll
+     presets), .win compact inputs + .x (wall rows, same look as Paint's),
+     .advbtn/.add-row.split, .dtable (result rows), .res-tip.adv-tip, the
+     .trow/.tally-* project tally, the sticky .mbar and the Square Footage /
+     Paint diagram box (.sq-diagram). Adds a live strip diagram: every wall
+     drawn with its strips colour-coded by the roll each is cut from.
+     ========================================================= */
+  .p-wall .sq-diagram{margin:14px 0 16px;background:#FCFAF6;border:1px solid var(--line);border-radius:12px;padding:14px 14px 12px}
+  .p-wall .sq-diagram svg{display:block;width:100%;height:auto;overflow:visible}
+  .p-wall .sq-diagram-empty{font-size:13px;color:var(--muted);text-align:center;padding:30px 10px;line-height:1.45}
+  .p-wall .sq-diagram-legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:8px;padding-top:10px;border-top:1px dashed var(--line);font-size:12.5px;color:var(--ink-soft)}
+  .p-wall .sq-diagram-legend b{color:var(--ink);font-weight:600}
+  .p-wall .wp-note{color:var(--muted)}
+  .p-wall .wp-keys{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:8px;font-size:12.5px;font-weight:500;color:var(--ink-soft)}
+  .p-wall .wp-key i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+  .p-wall .chips{margin-top:0}
+  .p-wall .two{grid-template-columns:1fr 1fr}
+  .p-wall .wp-fseg{display:flex;width:100%}
+  .p-wall .wp-fseg button{flex:1;text-align:center;padding:8px 6px}
+  .p-wall .wp-whead,.p-wall .wp-wrow{display:grid;grid-template-columns:20px repeat(4,minmax(0,1fr)) 24px;gap:6px;align-items:center}
+  .p-wall .wp-whead{padding:0 0 6px;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+  .p-wall .wp-whead b{font-weight:700}
+  .p-wall .wp-sm{display:none}
+  .p-wall .wp-wrow{padding:4px 0}
+  .p-wall .wp-wl{font-size:13px;font-weight:700;color:var(--ink-soft)}
+  .p-wall .wp-wrow .win{width:100%;min-width:0}
+  .p-wall .wp-wrow .x{background:none;border:0;color:var(--muted);cursor:pointer;font-size:16px;line-height:1;padding:2px 4px;border-radius:5px;justify-self:center}
+  .p-wall .wp-wrow .x:hover{color:#b23;background:#f7e9e9}
+  .p-wall .wp-addwall{margin:6px 0 14px}
+  .p-wall .dtable td:first-child{color:var(--ink)}
+  .p-wall tr.wp-lab td{text-align:left!important;font-weight:600;color:var(--ink);border-bottom:none;padding-bottom:0}
+  .p-wall .wp-sub{display:block;margin-top:1px;font-size:12px;font-weight:500;color:var(--muted)}
+  @media(max-width:520px){
+    .p-wall .wp-whead{font-size:10px;letter-spacing:.02em}
+    .p-wall .wp-whead,.p-wall .wp-wrow{gap:4px;grid-template-columns:16px repeat(4,minmax(0,1fr)) 20px}
+    .p-wall .wp-lg{display:none}
+    .p-wall .wp-sm{display:inline}
+  }

@@ -1,0 +1,504 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Wallpaper Calculator — How Many Rolls Do I Need? | CalcThis</title>
+<meta name="description" content="Free wallpaper calculator that counts rolls the way paperhangers do — in whole strips, with pattern repeat and match type. See a live strip diagram of every wall, the leftover, the cost, and a project total across rooms.">
+<link rel="canonical" href="https://calcthis.co/wallpaper-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Wallpaper Calculator — How Many Rolls Do I Need?">
+<meta property="og:description" content="Strip-accurate roll count with pattern repeat, a live strip diagram of every wall, the plain area answer next to the real one, and a project total across rooms. Instant, no sign-up.">
+<meta property="og:url" content="https://calcthis.co/wallpaper-calculator/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<meta name="theme-color" content="#B5761F">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css?v=140">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Wallpaper Calculator",
+      "url": "https://calcthis.co/wallpaper-calculator/",
+      "applicationCategory": "UtilityApplication",
+      "operatingSystem": "Any (web browser)",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "description": "Calculate how many rolls of wallpaper you need by the strip method used by paperhangers, with pattern repeat, straight or half-drop match, a live strip diagram of every wall, the leftover and cost, and a project total across multiple rooms.",
+      "featureList": [
+        "Strip-method roll count (whole drops, not area divided by roll size)",
+        "Pattern repeat with straight, half-drop and random match",
+        "Live strip diagram colour-coded by the roll each strip is cut from",
+        "Plain area answer shown next to the real strip answer",
+        "US double roll, Euro roll or custom roll size, or sold by the yard or metre",
+        "Wall-by-wall mode for accent walls and odd rooms",
+        "Spare strips, leftover and cost",
+        "Project total across multiple rooms",
+        "US and metric units"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "How many rolls of wallpaper do I need for a 12 x 14 room?", "acceptedAnswer": { "@type": "Answer", "text": "With 8 ft ceilings, a 20.5 in x 33 ft double roll and no pattern repeat, a 12 x 14 ft room needs 34 strips, which at 3 strips per roll is 12 rolls. A plain area estimate (minus one door and two windows) says about 7, which is why papering by area runs short." } },
+        { "@type": "Question", "name": "How do I calculate wallpaper with a pattern repeat?", "acceptedAnswer": { "@type": "Answer", "text": "Take the wall height, add a trim allowance of about 4 inches, then round up to the next full multiple of the vertical pattern repeat. That is the cut length of every strip. Divide the roll length by the cut length to see how many strips each roll gives." } },
+        { "@type": "Question", "name": "What is the difference between a straight match and a half-drop?", "acceptedAnswer": { "@type": "Answer", "text": "A straight match lines the pattern up at the same height on every strip. A half-drop offsets alternate strips by half the repeat, so every other strip needs one extra repeat of paper and the roll count rises." } },
+        { "@type": "Question", "name": "How much extra wallpaper should I order?", "acceptedAnswer": { "@type": "Answer", "text": "Pattern waste is already counted in the strip cut length, so add one to three spare strips rather than a flat percentage. Spares cover cutting mistakes, print defects and future repairs. Always buy every roll from the same dye lot." } },
+        { "@type": "Question", "name": "Do I subtract doors and windows?", "acceptedAnswer": { "@type": "Answer", "text": "Not for the roll count. A standard door or window does not remove a strip, because you still hang a full drop on either side and the short pieces above and below come from offcuts. Doors and windows only matter for the plain area comparison." } }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body class="p-wall">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <a class="hdr-back" href="/blog/" aria-label="Back to blog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <span class="menu-col-head">Construction &amp; Gardening</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+          <a href="/paint-calculator/">Paint</a>
+          <a href="/wallpaper-calculator/" class="current">Wallpaper</a>
+          <a href="/square-footage-calculator/">Square Footage</a>
+          <a href="/tape-measure-fraction-calculator/">Tape Measure Fraction</a>
+          <a href="/stair-calculator/">Stair</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/vo2-max-calculator/">VO2 Max</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
+          <a href="/bmi-calculator/">BMI</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/ideal-weight-calculator/">Ideal Weight</a>
+          <a href="/lean-body-mass-calculator/">Lean Body Mass</a>
+          <a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio</a>
+          <a href="/calorie-calculator/">Calorie</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/water-intake-calculator/">Water Intake</a>
+          <a href="/macro-calculator/">Macro</a>
+          <a href="/protein-intake-calculator/">Protein Intake</a>
+          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
+          <a href="/steps-to-miles-calculator/">Steps to Miles</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+          <a href="/grade-curve-calculator/">Grade Curve</a>
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/fraction-calculator/">Fraction</a>
+          <a href="/standard-deviation-calculator/">Standard Deviation</a>
+          <a href="/weighted-average-calculator/">Weighted Average</a>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+          <a href="/age-calculator/">Age</a>
+          <a href="/date-calculator/">Date</a>
+          <a href="/time-calculator/">Time</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">Strip-accurate · live wall layout</div>
+    <h1>Wallpaper Calculator</h1>
+    <p>Wallpaper is hung in whole strips, not by the square foot. Enter your room and roll and see <strong>every strip drawn on every wall</strong>, coloured by the roll it&rsquo;s cut from — with the true roll count next to the plain area guess, the leftover, the cost, and a project total across rooms.</p>
+  </section>
+
+  <div class="grid">
+
+    <!-- INPUT -->
+    <div class="card" id="wpInCard">
+      <div class="card-pad">
+        <h2 class="card-h2">Your room</h2>
+
+        <div class="ctl-row">
+          <span class="ctl-lab">Units</span>
+          <div class="seg" id="wpUnitSeg">
+            <button class="on" type="button" data-sys="us">US</button>
+            <button type="button" data-sys="metric">Metric</button>
+          </div>
+        </div>
+
+        <div class="fld">
+          <span class="lab">Wallpaper roll</span>
+          <div class="chips" id="wpRoll">
+            <button type="button" class="on" data-v="us">US double roll</button>
+            <button type="button" data-v="eu">Euro roll</button>
+            <button type="button" data-v="custom">Custom</button>
+          </div>
+          <p class="add-note" id="wpRollNote" style="text-align:left;margin:8px 0 0"></p>
+        </div>
+        <div id="wpRollCustom" style="display:none">
+          <div class="two">
+            <label class="fld"><span class="lab">Roll width <span class="unit" data-small>in</span></span><div class="inp"><input id="wpRollW" type="number" inputmode="decimal" min="0" placeholder="0"><span class="suf" data-small>in</span></div></label>
+            <label class="fld" id="wpRollLenFld"><span class="lab">Roll length <span class="unit" data-dim>ft</span></span><div class="inp"><input id="wpRollL" type="number" inputmode="decimal" min="0" placeholder="0"><span class="suf" data-dim>ft</span></div></label>
+          </div>
+        </div>
+
+        <div id="wpRoomFields">
+          <div class="two">
+            <label class="fld"><span class="lab">Length <span class="unit" data-dim>ft</span></span><div class="inp"><input id="wpLen" type="number" inputmode="decimal" min="0" placeholder="0"><span class="suf" data-dim>ft</span></div></label>
+            <label class="fld"><span class="lab">Width <span class="unit" data-dim>ft</span></span><div class="inp"><input id="wpWid" type="number" inputmode="decimal" min="0" placeholder="0"><span class="suf" data-dim>ft</span></div></label>
+          </div>
+          <label class="fld"><span class="lab">Ceiling height <span class="unit" data-dim>ft</span></span><div class="inp"><input id="wpHgt" type="number" inputmode="decimal" min="0" placeholder="0"><span class="suf" data-dim>ft</span></div></label>
+          <div class="two">
+            <label class="fld"><span class="lab">Doors <span class="unit">count</span></span><div class="inp"><input id="wpDoors" type="number" inputmode="numeric" min="0" placeholder="0"></div></label>
+            <label class="fld"><span class="lab">Windows <span class="unit">count</span></span><div class="inp"><input id="wpWins" type="number" inputmode="numeric" min="0" placeholder="0"></div></label>
+          </div>
+        </div>
+
+        <div id="wpWallFields" style="display:none">
+          <div class="fld" style="margin-bottom:6px">
+            <span class="lab">Walls <span class="unit">lengths in <span data-dim>ft</span></span></span>
+            <div class="wp-whead"><span></span><span>Width</span><span>Height</span><span>Doors</span><span><b class="wp-lg">Windows</b><b class="wp-sm">Win.</b></span><span></span></div>
+            <div id="wpWallRows"></div>
+          </div>
+          <button class="linkbtn wp-addwall" id="wpAddWall" type="button">+ Add wall</button>
+        </div>
+
+        <label class="fld"><span class="lab">Pattern repeat <span class="unit">optional · <span data-small>in</span></span></span><div class="inp"><input id="wpRepeat" type="number" inputmode="decimal" min="0" placeholder="0 = no pattern"><span class="suf" data-small>in</span></div></label>
+
+        <label class="fld"><span class="lab"><span id="wpPriceLab">Price per roll</span> <span class="unit">optional</span></span><div class="inp"><input id="wpPrice" type="number" inputmode="decimal" min="0" step="0.01" placeholder="0.00"><span class="suf" id="wpPriceSuf">$/roll</span></div></label>
+
+        <label class="fld"><span class="lab">Name <span class="unit">optional</span></span><div class="inp"><input id="wpName" type="text" placeholder="e.g. Living room" maxlength="40"></div></label>
+
+        <div id="wpAdvIn" style="display:none">
+          <div class="proj-sep"></div>
+          <div class="fld">
+            <span class="lab">Measure by</span>
+            <div class="seg wp-fseg" id="wpMeasureSeg" role="group" aria-label="Measure by">
+              <button class="on" type="button" data-v="room">Room size</button>
+              <button type="button" data-v="walls">Wall by wall</button>
+            </div>
+          </div>
+          <div class="fld">
+            <span class="lab">Pattern match</span>
+            <div class="seg wp-fseg" id="wpMatchSeg" role="group" aria-label="Pattern match">
+              <button class="on" type="button" data-v="straight">Straight</button>
+              <button type="button" data-v="half">Half-drop</button>
+              <button type="button" data-v="random">Random</button>
+            </div>
+            <p class="add-note" style="text-align:left;margin:6px 0 0">Only matters when you enter a pattern repeat.</p>
+          </div>
+          <div class="fld">
+            <span class="lab">Sold by</span>
+            <div class="seg wp-fseg" id="wpSoldSeg" role="group" aria-label="Sold by">
+              <button class="on" type="button" data-v="roll">The roll</button>
+              <button type="button" data-v="yard">The yard / metre</button>
+            </div>
+          </div>
+          <div class="two">
+            <label class="fld"><span class="lab">Door width <span class="unit" data-dim>ft</span></span><div class="inp"><input id="wpDoorW" type="number" inputmode="decimal" min="0" placeholder="3"><span class="suf" data-dim>ft</span></div></label>
+            <label class="fld"><span class="lab">Door height <span class="unit" data-dim>ft</span></span><div class="inp"><input id="wpDoorH" type="number" inputmode="decimal" min="0" placeholder="6.7"><span class="suf" data-dim>ft</span></div></label>
+          </div>
+          <div class="two">
+            <label class="fld"><span class="lab">Window width <span class="unit" data-dim>ft</span></span><div class="inp"><input id="wpWinW" type="number" inputmode="decimal" min="0" placeholder="3"><span class="suf" data-dim>ft</span></div></label>
+            <label class="fld"><span class="lab">Window height <span class="unit" data-dim>ft</span></span><div class="inp"><input id="wpWinH" type="number" inputmode="decimal" min="0" placeholder="5"><span class="suf" data-dim>ft</span></div></label>
+          </div>
+          <div class="two">
+            <label class="fld"><span class="lab">Trim allowance <span class="unit" data-small>in</span></span><div class="inp"><input id="wpTrim" type="number" inputmode="decimal" min="0" placeholder="4"><span class="suf" data-small>in</span></div></label>
+            <label class="fld"><span class="lab">Side overlap <span class="unit" data-small>in</span></span><div class="inp"><input id="wpOverlap" type="number" inputmode="decimal" min="0" placeholder="0"><span class="suf" data-small>in</span></div></label>
+          </div>
+          <div class="two">
+            <label class="fld" style="margin-bottom:0"><span class="lab">Spare strips <span class="unit">suggest 1–3</span></span><div class="inp"><input id="wpSpare" type="number" inputmode="numeric" min="0" placeholder="0"></div></label>
+            <label class="fld" style="margin-bottom:0"><span class="lab">Extra for waste <span class="unit">optional</span></span><div class="inp"><input id="wpWaste" type="number" inputmode="decimal" min="0" placeholder="e.g. 10"><span class="suf">%</span></div></label>
+          </div>
+        </div>
+
+        <div class="add-row split" style="margin-top:16px">
+          <span></span>
+          <button class="advbtn" id="wpAdvBtn" type="button">
+            <span id="wpAdvBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+
+        <div class="add-wrap">
+          <div class="add-row">
+            <button class="btn" id="wpAddBtn" type="button">+ Add room to project</button>
+            <button class="linkbtn" id="wpClearFields" type="button">Clear fields</button>
+          </div>
+          <div class="res-hint" id="wpHint">Enter length, width and ceiling height</div>
+          <div class="add-note" id="wpAddNote">Papering more than one room? Add each to total the whole project.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT + PROJECT -->
+    <div class="card">
+      <div class="card-pad">
+        <div class="res-lab">Wallpaper needed</div>
+        <div class="res-big"><span id="wpResQty">—</span> <span class="res-unit" id="wpResUnit">rolls</span></div>
+        <div class="res-sub" id="wpResSub">Enter the room size to see how many rolls you need.</div>
+
+        <div class="sq-diagram" id="wpDiagram"></div>
+
+        <div id="wpResBody" style="display:none">
+          <p class="res-tip adv-tip" id="wpPlain"></p>
+          <table class="dtable" style="margin-top:14px"><tbody id="wpRows"></tbody></table>
+          <div class="res-cost hide" id="wpCostWrap"><span class="k">Estimated cost</span><span class="v" id="wpCost"></span></div>
+          <p class="res-tip" id="wpAssume"></p>
+        </div>
+
+        <div class="proj-sep"></div>
+
+        <div class="tally-head">
+          <h3>Project total</h3>
+          <button id="wpClearAll" type="button" style="display:none">Clear all</button>
+        </div>
+        <div id="wpTallyBody">
+          <div class="tally-empty">Papering more than one room? Add each above and they&rsquo;ll total here with one order.</div>
+        </div>
+        <div id="wpProj" style="display:none">
+          <table class="dtable" style="margin-top:14px"><tbody id="wpProjRows"></tbody></table>
+        </div>
+        <div class="tally-total" id="wpProjTotal" style="display:none">
+          <span class="tl">Wallpaper to buy <span class="sub" id="wpProjCount"></span></span>
+          <span class="tv"><span id="wpTotQty">0</span> <span id="wpTotUnit">rolls</span></span>
+          <span class="tl sub" id="wpTotCostRow" style="display:none">Estimated cost</span>
+          <span class="tv" id="wpTotCost" style="display:none"></span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- mobile sticky bar -->
+  <div class="mbar" id="mbar">
+    <span class="mbar-lab" id="mLab">This room</span>
+    <div class="mbar-vals">
+      <span class="mbar-seg" id="mSeg"><b>—</b> rolls</span>
+      <span class="mbar-cost hide" id="mCostWrap"><span class="mbar-eq">=</span> <b id="mCost"></b></span>
+    </div>
+  </div>
+
+  <div class="related-calcs">
+    <p class="related-calcs-h">More construction calculators that may interest you</p>
+    <div class="pills">
+      <a class="pill" href="/paint-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="14" height="6" rx="1"/><path d="M18 6h2v5H11v3"/><rect x="9" y="14" width="4" height="7" rx="1"/></svg>
+        Paint Calculator
+      </a>
+      <a class="pill" href="/square-footage-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="12" rx="1"/><path d="M8 21h8"/></svg>
+        Square Footage Calculator
+      </a>
+      <a class="pill" href="/flooring-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>
+        Flooring Calculator
+      </a>
+      <a class="pill" href="/tile-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/><rect x="3" y="13" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/></svg>
+        Tile Calculator
+      </a>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use the wallpaper calculator</h2>
+        <p>Pick your <strong>roll</strong> — a US double roll, a Euro roll, or type in the width and length printed on yours — then enter the room's <strong>length, width and ceiling height</strong>. If your paper has a pattern, add the <strong>pattern repeat</strong> from the label. The walls are drawn as you type, each strip coloured by the roll it's cut from, and the result shows how many rolls to buy, what's left over, and what it costs. Papering several rooms? Add each one and the project total combines them into one order.</p>
+
+        <h2>Why wallpaper isn't counted by area</h2>
+        <p>Paint is spread over an area; wallpaper is hung in <strong>whole vertical strips</strong>. Each strip is cut to the wall height plus a trim allowance, and the offcut from the bottom of a roll is usually too short to use. Dividing wall area by roll area ignores that, so it quietly undercounts. This calculator counts strips the way a paperhanger does, then shows the plain area answer next to the real one so you can see the difference.</p>
+        <div class="formula">
+          Strips = wall width ÷ roll width · Rolls = strips ÷ strips per roll
+          <small>CUT LENGTH = WALL HEIGHT + TRIM, ROUNDED UP TO THE PATTERN REPEAT</small>
+        </div>
+
+        <h2>Worked example: a 12 × 14 room</h2>
+        <p>A 12 × 14 ft room with 8 ft ceilings, one door and two windows, papered with a 20.5 in × 33 ft double roll and no pattern repeat:</p>
+        <p style="color:var(--ink);font-weight:500">The walls take 8 + 9 + 8 + 9 = <strong>34 strips</strong>. Each strip is 96 in + 4 in trim = <strong>100 in</strong>, so a 396 in roll gives <strong>3 strips</strong>. 34 ÷ 3 = <strong>12 rolls</strong>, leaving about 96 in of offcuts per roll. A plain area estimate (subtracting the door and windows) would have said 7.</p>
+
+        <h2>Pattern repeat and match type</h2>
+        <p>The <strong>pattern repeat</strong> is the vertical distance before the design repeats. To line strips up, each one is cut to a whole number of repeats, so a bigger repeat wastes more paper. With a <strong>straight match</strong> every strip is the same length. With a <strong>half-drop</strong>, alternate strips are offset by half a repeat, so every other strip needs one extra repeat — the roll count rises noticeably. A <strong>random match</strong> (textures, grasscloth) needs no matching.</p>
+      </div>
+
+      <div>
+        <h2>How many rolls for common room sizes</h2>
+        <p>8 ft ceilings, 20.5 in × 33 ft double rolls, 4 in trim allowance:</p>
+        <table class="dtable">
+          <thead><tr><th>Room</th><th>Strips</th><th>Rolls</th><th>Half-drop 24 in</th></tr></thead>
+          <tbody>
+            <tr><td>10 × 10 ft</td><td>24</td><td>8</td><td>12</td></tr>
+            <tr><td>12 × 12 ft</td><td>32</td><td>11</td><td>16</td></tr>
+            <tr><td>12 × 14 ft</td><td>34</td><td>12</td><td>17</td></tr>
+            <tr><td>14 × 16 ft</td><td>38</td><td>13</td><td>19</td></tr>
+            <tr><td>16 × 20 ft</td><td>44</td><td>15</td><td>22</td></tr>
+          </tbody>
+        </table>
+
+        <h2>Doors and windows</h2>
+        <p>A standard door or window <strong>doesn't remove a strip</strong>: you still hang a full drop on either side, and the short pieces above and below come from offcuts. That's why the roll count ignores them. They only change the <strong>plain area comparison</strong>, which is why their sizes are under Go advanced.</p>
+
+        <h2>Spare strips, not a percentage</h2>
+        <p>Matching waste is already counted in the strip cut length, so a flat percentage on top counts it twice. Add <strong>one to three spare strips</strong> under Go advanced instead — they cover cutting mistakes, print defects and future repairs. Buy every roll in one order so they share a dye lot.</p>
+
+        <h2>Wallpaper sold by the yard</h2>
+        <p>Trade wallcoverings, grasscloth and commercial vinyl are often sold by the yard or metre on a continuous roll. Switch <strong>Sold by</strong> to <em>The yard / metre</em> under Go advanced and you get the total length to order, rounded up to the next half. For paint, see the <a href="/paint-calculator/">Paint Calculator</a>.</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>How many rolls of wallpaper do I need for a 12 × 14 room?</summary><p>With 8 ft ceilings, a 20.5 in × 33 ft double roll and no pattern repeat, a 12 × 14 ft room needs <strong>34 strips</strong>, which at 3 strips per roll is <strong>12 rolls</strong>. A plain area estimate (minus one door and two windows) says about 7, which is why papering by area runs short.</p></details>
+    <details class="faq"><summary>How do I calculate wallpaper with a pattern repeat?</summary><p>Take the wall height, add a trim allowance of about 4 inches, then round up to the next full multiple of the vertical pattern repeat. That is the cut length of every strip. Divide the roll length by the cut length to see how many strips each roll gives.</p></details>
+    <details class="faq"><summary>What is the difference between a straight match and a half-drop?</summary><p>A straight match lines the pattern up at the same height on every strip. A half-drop offsets alternate strips by half the repeat, so every other strip needs one extra repeat of paper and the roll count rises.</p></details>
+    <details class="faq"><summary>How much extra wallpaper should I order?</summary><p>Pattern waste is already counted in the strip cut length, so add <strong>one to three spare strips</strong> rather than a flat percentage. Spares cover cutting mistakes, print defects and future repairs. Always buy every roll from the same dye lot.</p></details>
+    <details class="faq"><summary>Do I subtract doors and windows?</summary><p>Not for the roll count. A standard door or window doesn't remove a strip, because you still hang a full drop on either side and the short pieces above and below come from offcuts. Doors and windows only matter for the plain area comparison.</p></details>
+  </section>
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+          <li><a href="/paint-calculator/">Paint Calculator</a></li>
+          <li><a href="/wallpaper-calculator/">Wallpaper Calculator</a></li>
+          <li><a href="/square-footage-calculator/">Square Footage Calculator</a></li>
+          <li><a href="/tape-measure-fraction-calculator/">Tape Measure Fraction Calculator</a></li>
+          <li><a href="/stair-calculator/">Stair Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/vo2-max-calculator/">VO2 Max Calculator</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/bmi-calculator/">BMI Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/ideal-weight-calculator/">Ideal Weight Calculator</a></li>
+          <li><a href="/lean-body-mass-calculator/">Lean Body Mass Calculator</a></li>
+          <li><a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio Calculator</a></li>
+          <li><a href="/calorie-calculator/">Calorie Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/water-intake-calculator/">Water Intake Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/protein-intake-calculator/">Protein Intake Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
+          <li><a href="/steps-to-miles-calculator/">Steps to Miles Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+          <li><a href="/grade-curve-calculator/">Grade Curve Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/fraction-calculator/">Fraction Calculator</a></li>
+          <li><a href="/standard-deviation-calculator/">Standard Deviation Calculator</a></li>
+          <li><a href="/weighted-average-calculator/">Weighted Average Calculator</a></li>
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+          <li><a href="/age-calculator/">Age Calculator</a></li>
+          <li><a href="/date-calculator/">Date Calculator</a></li>
+          <li><a href="/time-calculator/">Time Calculator</a></li>
+        </ul>
+      </div>
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/blog/">Blog</a>
+      <span aria-hidden="true">·</span>
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+</div>
+
+<script src="/assets/app.js?v=140"></script>
+<script>CalcThis.initWallpaperCalc();</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>

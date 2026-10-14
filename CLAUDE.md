@@ -30,6 +30,30 @@ next tool call instead. This check applies every single time text is about to be
 not just once at session start; a rule read once at the top of a long session is exactly
 what has failed three times running.
 
+## ⛔ HARD RULE — DEEP QA AFTER EVERY BUILD, AUTOMATICALLY, BEFORE ANY PREVIEW
+
+(User, 2026-10-14: "the deep QA needs to be done after every build — I don't even need to say anything —
+this needs to be a hard rule." Wallpaper shipped to preview with a real bug that only a second, explicit
+"QA it properly" pass found. That must never depend on being asked.)
+
+After building or changing ANY calculator or article, run this full QA yourself, silently, **before**
+presenting a preview link — never wait to be asked, never present a preview that has not been through it:
+
+1. **Start state:** page loads empty (no demo values), result blank, add button disabled, no console errors, no duplicate element IDs.
+2. **Math:** every output checked against hand-computed / known values, in every mode and both unit systems.
+3. **Inputs:** partial / half-typed, zero, negative, non-numeric, huge values, and every "impossible" combination — must fail quietly with a clear hint, never blank or throw.
+4. **Every control:** every mode, chip, toggle, dropdown and every **Go advanced** option; Go simple must reset them; the Go advanced panel must be a real visible panel above the button.
+5. **Units:** US and Metric — labels, placeholders, results, and switching mid-entry.
+6. **Project / tally flows:** add, add several, remove one, clear all, names shown, mixed settings, totals, sticky mbar.
+7. **Mobile 375px:** no horizontal scroll, text readable (12px floor in SVG), fields that sit side by side on desktop stay side by side, sticky mbar shows the live result.
+8. **Page content:** every number in the SEO text / table / worked example / FAQ / JSON-LD re-computed with the calculator itself — text and tool must agree to the digit.
+9. **Registration:** nav, footer, homepage (card, hasPart, prose count + word count), sitemap, build.js PAGES.
+10. **Every past user correction** listed in CLAUDE.md "Last session" entries and memory (e.g. names as a label above the row, no invented labels, never restyle existing text, aligned numeric columns).
+Then: fix every bug found, re-run the affected checks, and state in the final summary what was tested and what was fixed.
+
+A preview sent without this QA having been done is a violation of the same weight as narrating.
+Also in `md-files/calcthis-workflow-rules.md` Rule 10.
+
 ## ⛔ HARD RULE — NEVER INVENT. FOLLOW THE EXISTING WORKFLOW 100%.
 
 Never invent a new approach, exception, or interpretation for anything this project already
