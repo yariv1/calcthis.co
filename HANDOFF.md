@@ -1,6 +1,7 @@
 # SESSION HANDOFF — read this FIRST, then CLAUDE.md hard rules
 
-_Written 2026-10-15 at the end of the Paint / Wallpaper / Scientific Notation session (v137 → v142).
+_Updated 2026-10-25 after Recipe Converter shipped (v144); written 2026-10-15 for the Paint / Wallpaper / Scientific Notation session (v137 → v142)._
+_(Sections 0-2 below are current; deeper sections still describe the v142 workflow, which is unchanged.)
 The next session must start FULLY synced from this file + CLAUDE.md + the memory files. The user
 must NOT have to re-explain anything in here — that is the whole purpose of this file._
 
@@ -8,8 +9,15 @@ must NOT have to re-explain anything in here — that is the whole purpose of th
 
 ## 0. THE 60-SECOND VERSION (read this if nothing else)
 
-- **Live:** asset **v142** · **46 calculators** · **25 blog articles** · **79 pages**. `main` is clean and
-  pushed (last commit `0df1401`). Nothing is half-built, nothing is waiting on the user.
+- **Live:** asset **v144** · **47 calculators** · **25 blog articles** · **79 pages**. `main` is clean and
+  pushed (last code commit `6ee59ab`). Nothing is half-built, nothing is waiting on the user.
+- **Just finished (2026-10-25): #25 Recipe Converter** — new **Cooking & Kitchen** vertical (nav col 3, 5th footer pillar,
+  homepage `#grp-cooking` + tab). Engine `CalcThis.recipeEngine` (pure, `RECIPE-ENGINE:START/END` in app.js) + `initRecipeCalc`.
+  **NEXT:** no calculator is in progress — ask the user which of #26-29 (Sales Tax / Unit Converter / Paycheck / Tip, all
+  lower priority) or a new idea; Rule 8 research report first. AdSense eval not re-requested yet (user, 2026-10-25) —
+  Pregnancy/Ovulation stay parked; strategy = more calculators for traffic.
+  **Final summary of every build must include: findings (how we beat competitors) + QA list + preview links.**
+- (Below is the older v142 text — superseded by the two bullets above where they conflict.)
 - **Just finished:** #22 Paint (v139), #23 Wallpaper (v140), #24 Scientific Notation (v142) — all deployed.
 - **NEXT TASK:** **#25 Recipe Converter** (new "Cooking" vertical). Not started — no research, no code.
 - **First move next session:** a 2–3 line "synced" reply (state + next task), then do the **Rule 8 research

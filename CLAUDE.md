@@ -165,12 +165,15 @@ must be built from the article's actual units, every time, not pasted from a tem
 ## ⛔ SESSION HANDOFF — START HERE (written 2026-10-15; full detail in `HANDOFF.md`)
 
 **Read `HANDOFF.md` in full before replying.** Do not make the user re-explain anything in it.
-- **State:** v142 · 46 calculators · 25 articles · 79 pages · `main` clean and pushed (last commit `0df1401`).
-- **Just shipped:** #22 Paint (v139), #23 Wallpaper (v140), #24 Scientific Notation (v142).
-- **NEXT TASK:** **#25 Recipe Converter** (new Cooking vertical) — **not started**. Do the Rule 8 research report
-  (open every competitor live, list every input, visual AND functional differentiator, ≤3 decisions with
+- **State:** v144 · 47 calculators · 25 articles · 79 pages · `main` clean and pushed (last code commit `6ee59ab`).
+- **Just shipped:** #25 Recipe Converter (v144, new Cooking & Kitchen vertical).
+- **NEXT TASK:** pick from the backlog in `md-files/calcthis-calculator-roadmap.md` (#26 Sales Tax, #27 Unit Converter,
+  #28 Paycheck, #29 Tip — all lower priority/hard) — **ask the user which** or propose new high-traffic ideas via the
+  Rule 8 research report (open every competitor live, visual AND functional differentiator, ≤3 decisions with
   recommendations), **wait for approval**, build, **deep QA (hard rule above, automatic)**, preview, deploy only on "deploy".
-- **First move next session:** 2-3 line "synced" reply (state + next task), then start Recipe Converter research.
+- **Final summary of every build must contain:** (1) the findings — how we differ/beat competitors, (2) the QA list incl.
+  what was NOT verified, (3) preview links (localhost + LAN). User flagged both omissions on 2026-10-25.
+- **First move next session:** 2-3 line "synced" reply (state + next task).
 - **Articles are DEFERRED** — never write/propose/ask about one. Awaiting a future batch: Fraction, Standard
   Deviation, Paint, Wallpaper, Scientific Notation. Priority = lots of calculators (backlog #25-29 in the roadmap md).
 - **Behaviour (each broken before, each cost the user time/money):** ZERO narration (Stop hook enforces it; text only for
@@ -186,7 +189,7 @@ must be built from the article's actual units, every time, not pasted from a tem
 
 ## Project state
 
-- **Asset version:** v142 (bumped, `node build.js` run and deployed this session)
+- **Asset version:** v144 (bumped, `node build.js` run and deployed this session)
 - **Total pages:** 79 live
 - **Model:** Sonnet 5
 
@@ -267,7 +270,7 @@ Paint, Wallpaper, Scientific Notation.
 
 ---
 
-## Live calculators (46)
+## Live calculators (47)
 
 ### Construction & Gardening (13)
 Board Foot · Gravel · Sand · Topsoil · Mulch · Concrete · Flooring · Tile · Square Footage · Tape Measure Fraction · Stair · Paint · Wallpaper
@@ -281,11 +284,33 @@ Final Grade · GPA · Grade · Test Score · Grade Curve
 ### Math & Numbers (9)
 Fraction · Standard Deviation · Scientific Notation · Weighted Average · Ratio · Percentage · Age · Date · Time
 
-Total live calculators: **46**
+### Cooking & Kitchen (1)
+Recipe Converter
+
+Total live calculators: **47**
 
 ---
 
-## Last session (v141–v142)
+## Last session (v143–v144)
+
+- Researched, built and deployed **Recipe Converter** (`/recipe-converter/`, roadmap #25, Ahrefs >1K Easy) — opens the new
+  **Cooking & Kitchen** vertical (header column in col 3, 5th footer pillar — `.footer-cols` is now `repeat(5,1fr)` — homepage
+  `#grp-cooking` section + tab). Research opened Gigacalculator, Instacart, CalculateQuick (typed a test recipe, read its
+  dropdowns) and Omnicalculator grams-to-cups live; user approved all 3 decisions as recommended (pillar "Cooking & Kitchen",
+  drop load-from-URL, pan-size scaling under Go advanced only). **Differentiators:** kitchen-ready rounding (real cup/spoon
+  fractions, whole eggs, whole grams, exact value shown beside anything rounded), cups<->grams per ingredient (~40-ingredient
+  density table, US/UK/AU cup standard), As written / US / Metric, per-line scale warnings (salt/spices/leavening/part egg),
+  what's-in-it-by-weight bar; Go advanced = pan-size scaling with a to-scale pan diagram, cup standard, both systems side by
+  side, oven temp (F/C, fan, gas mark), per-ingredient cost, Copy + Print. `CalcThis.recipeEngine` (pure, no DOM — marked
+  `RECIPE-ENGINE:START/END` in app.js, unit-testable by eval) + `CalcThis.initRecipeCalc`, `.p-recipe`. Oven-time adjustment
+  was reduced to a "check early" note (no grounded formula). Densities are typical values (~5%), disclosed on the page.
+  Not verified: print layout, a real phone. Article deferred.
+- Deep QA caught and fixed: awkward cup fractions (3/8, 7/8), "1 lb 4 oz" misparse, bracketed amounts ("2 cups (240 g)") not
+  scaling, bare numbers scaled as ingredients, "Convert to" label wrapping on mobile (now "Units").
+- Stop hook caught narration again (twice); user also called out that the final message must present the findings (how we
+  beat competitors) AND the preview links — both now mandatory in the final summary, in addition to the QA list.
+
+## Earlier (v141–v142)
 
 - Researched, built and deployed **Scientific Notation Calculator** (`/scientific-notation-calculator/`, roadmap #24,
   Ahrefs >10K Medium). Research opened calculator.net, CalculatorSoup, Omnicalculator, Pearson, Kanaries, DQYDJ live
