@@ -268,7 +268,7 @@
   body{overflow-x:hidden}
   .footer-cols{
     display:grid;
-    grid-template-columns:repeat(4,1fr);
+    grid-template-columns:repeat(5,1fr);
     gap:24px;
     max-width:1040px;
     margin:0 auto;
@@ -1906,4 +1906,69 @@
   @media(max-width:520px){
     .p-sci .sci-table td:first-child{white-space:normal}
     .p-sci .sci-cp{width:46px}
+  }
+
+  /* =========================================================
+     COOKING · RECIPE CONVERTER  (body.p-recipe)
+     Reuses .card-h2/.ctl-row, .seg, .modeseg (2 modes), .chips, .csel
+     (pan shape + cup standard), .advbtn / .add-row.split, .res-tip.adv-tip,
+     .tally-head, .proj-sep, .dtable, the sticky .mbar. Adds the paste
+     textarea, the ingredient result rows, a to-scale pan diagram (same
+     diagram box as Scientific Notation) and the by-weight composition bar
+     (same technique as Weighted Average). */
+  .p-recipe .modeseg{grid-template-columns:1fr 1fr}
+  .p-recipe .two{grid-template-columns:1fr 1fr}
+  .p-recipe .rc-textarea{width:100%;font:inherit;font-size:15px;font-weight:500;color:var(--ink);background:#FCFAF6;border:1.5px solid var(--line);border-radius:10px;padding:11px 13px;resize:vertical;font-variant-numeric:tabular-nums;line-height:1.5}
+  .p-recipe .rc-textarea:focus{outline:none;border-color:var(--amber);background:#fff;box-shadow:0 0 0 3px rgba(181,118,31,.13)}
+  .p-recipe .chips{margin-top:0}
+  .p-recipe .rc-fseg{display:flex;width:100%}
+  .p-recipe .rc-fseg button{flex:1;text-align:center;padding:8px 6px}
+  .p-recipe .rc-temp{display:flex;align-items:center;gap:10px}
+  .p-recipe .rc-temp .inp{flex:1;min-width:0}
+  .p-recipe .res-big{font-size:clamp(34px,7vw,52px)}
+  .p-recipe .fc-grp{font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin:16px 0 7px}
+  .p-recipe .tally-head .rc-acts{display:inline-flex;gap:14px}
+  .p-recipe .rc-row{display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);gap:12px;padding:10px 2px;border-bottom:1px solid var(--line);align-items:start}
+  .p-recipe .rc-row:last-child{border-bottom:none}
+  .p-recipe .rc-amt b{display:block;font-size:16px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+  .p-recipe .rc-alt{display:block;font-size:13px;font-weight:500;color:var(--muted);font-variant-numeric:tabular-nums}
+  .p-recipe .rc-name{font-size:15px;font-weight:500;color:var(--ink-soft);min-width:0;overflow-wrap:anywhere}
+  .p-recipe .rc-sub{display:block;font-size:12px;font-weight:500;color:var(--muted);margin-top:1px}
+  .p-recipe .rc-warn{display:block;font-size:12.5px;font-weight:500;color:var(--amber-deep);margin-top:3px;line-height:1.4}
+  .p-recipe .rc-na .rc-name{color:var(--muted)}
+  .p-recipe .sq-diagram{margin:8px 0 14px;background:#FCFAF6;border:1px solid var(--line);border-radius:12px;padding:12px 14px 10px}
+  .p-recipe .sq-diagram svg{display:block;width:100%;height:auto;overflow:visible}
+  .p-recipe .sq-diagram-legend{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:6px;padding-top:8px;border-top:1px dashed var(--line);font-size:12.5px;color:var(--ink-soft)}
+  .p-recipe .sq-diagram-legend b{color:var(--ink);font-weight:600}
+  .p-recipe .rc-bar{display:flex;height:26px;border-radius:8px;overflow:hidden;background:#EFE7D8}
+  .p-recipe .rc-seg{display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;min-width:0}
+  .p-recipe .rc-seg.c0{background:var(--spruce)}
+  .p-recipe .rc-seg.c1{background:var(--amber)}
+  .p-recipe .rc-seg.c2{background:var(--spruce-soft)}
+  .p-recipe .rc-seg.c3{background:var(--amber-deep)}
+  .p-recipe .rc-seg.c4{background:#6B7A9E}
+  .p-recipe .rc-seg.c5{background:#A4795A}
+  .p-recipe .rc-seg.c6{background:#B9AD98}
+  .p-recipe .rc-key{display:flex;flex-wrap:wrap;gap:5px 16px;margin:8px 0 0;font-size:12.5px;font-weight:500;color:var(--ink-soft)}
+  .p-recipe .rc-key i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+  .p-recipe .rc-key i.c0{background:var(--spruce)}
+  .p-recipe .rc-key i.c1{background:var(--amber)}
+  .p-recipe .rc-key i.c2{background:var(--spruce-soft)}
+  .p-recipe .rc-key i.c3{background:var(--amber-deep)}
+  .p-recipe .rc-key i.c4{background:#6B7A9E}
+  .p-recipe .rc-key i.c5{background:#A4795A}
+  .p-recipe .rc-key i.c6{background:#B9AD98}
+  .p-recipe .rc-crow{display:grid;grid-template-columns:minmax(0,1fr) 104px;gap:10px;align-items:center;padding:4px 0}
+  .p-recipe .rc-cname{font-size:14px;font-weight:500;color:var(--ink-soft);overflow-wrap:anywhere}
+  .p-recipe .rc-ctot{font-size:14.5px;font-weight:600;color:var(--ink);margin-top:10px;line-height:1.45}
+  .p-recipe .mbar-vals b{font-size:20px;overflow-wrap:anywhere}
+  .p-recipe .hero code,.p-recipe .content code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.92em;background:#F2EBDF;border-radius:5px;padding:1px 5px;color:var(--ink)}
+  @media(max-width:520px){
+    .p-recipe .rc-row{grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:10px}
+    .p-recipe .rc-crow{grid-template-columns:minmax(0,1fr) 104px}
+  }
+  @media print{
+    body.p-recipe header,body.p-recipe .site-footer,body.p-recipe .mbar,body.p-recipe .related-calcs,body.p-recipe .content,body.p-recipe .hero,body.p-recipe #rcInCard,body.p-recipe .rc-acts,body.p-recipe #rcCostWrap{display:none!important}
+    body.p-recipe .grid{display:block}
+    body.p-recipe{padding-bottom:0}
   }

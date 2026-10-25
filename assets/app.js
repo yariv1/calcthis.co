@@ -8495,6 +8495,653 @@ CalcThis.initSciCalc = function () {
 };
 
 /* =========================================================
+   RECIPE CONVERTER — pure engine (no DOM). Parses pasted ingredient lines
+   (quantity / unit / name, fractions, ranges, "200g butter", "butter – 250g"),
+   scales them and re-expresses every amount the way a kitchen measures:
+   measuring-cup and spoon fractions in US mode, whole grams / tens of ml in
+   Metric mode, whole eggs, plus a density table (about 40 ingredients) so
+   cups <-> grams works per ingredient. Independent engine, no shared state.
+   ========================================================= */
+/* RECIPE-ENGINE:START */
+CalcThis.recipeEngine = (function () {
+  var UF = { '½': '1/2', '⅓': '1/3', '⅔': '2/3', '¼': '1/4', '¾': '3/4', '⅛': '1/8', '⅜': '3/8', '⅝': '5/8', '⅞': '7/8' };
+  var GLY = { '0.125': '⅛', '0.25': '¼', '0.333': '⅓', '0.375': '⅜', '0.5': '½', '0.625': '⅝', '0.667': '⅔', '0.75': '¾', '0.875': '⅞' };
+  var S_CUP = [0, 1 / 4, 1 / 3, 1 / 2, 2 / 3, 3 / 4, 1];
+  var S_TSP = [0, 1 / 8, 1 / 4, 1 / 2, 3 / 4, 1];
+  var S_CNT = [0, 1 / 4, 1 / 3, 1 / 2, 2 / 3, 3 / 4, 1];
+  var S_HALF = [0, 1 / 2, 1];
+  var S_OZ = [0, 1 / 8, 1 / 4, 1 / 2, 3 / 4, 1];
+
+  var CFG = {
+    us: { cup: 236.588, tbsp: 14.7868, tsp: 4.92892, floz: 29.5735, pint: 473.176, quart: 946.353, gallon: 3785.41 },
+    uk: { cup: 250, tbsp: 15, tsp: 5, floz: 28.4131, pint: 568.261, quart: 1136.52, gallon: 4546.09 },
+    au: { cup: 250, tbsp: 20, tsp: 5, floz: 28.4131, pint: 568.261, quart: 1136.52, gallon: 4546.09 }
+  };
+  var US_CUP_ML = 236.588;
+  var WT = { g: 1, kg: 1000, oz: 28.3495, lb: 453.592 };
+  var VOLML = { ml: 1, l: 1000, dl: 100, cl: 10, stick: 118.294 };       // fixed-size volume units
+  var CFGVOL = { cup: 1, tbsp: 1, tsp: 1, floz: 1, pint: 1, quart: 1, gallon: 1 };  // sizes depend on the cup standard
+
+  var ALIAS = {};
+  function al(canon, words) { words.split(' ').forEach(function (w) { ALIAS[w] = canon; }); }
+  al('cup', 'cup cups c');
+  al('tbsp', 'tbsp tbsps tbs tbl tb tablespoon tablespoons');
+  al('tsp', 'tsp tsps teaspoon teaspoons');
+  al('pint', 'pint pints pt pts');
+  al('quart', 'quart quarts qt qts');
+  al('gallon', 'gallon gallons gal');
+  al('ml', 'ml mls milliliter milliliters millilitre millilitres');
+  al('l', 'l liter liters litre litres');
+  al('dl', 'dl deciliter deciliters decilitre decilitres');
+  al('cl', 'cl centiliter centiliters centilitre centilitres');
+  al('g', 'g gm gms gram grams');
+  al('kg', 'kg kgs kilo kilos kilogram kilograms');
+  al('oz', 'oz ounce ounces');
+  al('lb', 'lb lbs pound pounds');
+  al('stick', 'stick sticks');
+  al('clove', 'clove cloves'); al('can', 'can cans tin tins'); al('jar', 'jar jars');
+  al('package', 'package packages pkg pkgs packet packets'); al('bunch', 'bunch bunches');
+  al('sprig', 'sprig sprigs'); al('slice', 'slice slices'); al('piece', 'piece pieces');
+  al('head', 'head heads'); al('stalk', 'stalk stalks'); al('bottle', 'bottle bottles');
+  al('pinch', 'pinch pinches'); al('dash', 'dash dashes'); al('handful', 'handful handfuls');
+  al('fillet', 'fillet fillets'); al('ear', 'ear ears'); al('sheet', 'sheet sheets');
+  var PLURAL = { clove: 'cloves', can: 'cans', jar: 'jars', package: 'packages', bunch: 'bunches', sprig: 'sprigs', slice: 'slices', piece: 'pieces', head: 'heads', stalk: 'stalks', bottle: 'bottles', pinch: 'pinches', dash: 'dashes', handful: 'handfuls', stick: 'sticks', fillet: 'fillets', ear: 'ears', sheet: 'sheets', cup: 'cups', pint: 'pints', quart: 'quarts', gallon: 'gallons' };
+
+  /* ---------- density table: [pattern, grams per US cup, type] — s = measured by weight, l = a liquid ---------- */
+  var DENS_SRC = [
+    ['all[- ]purpose flour|plain flour|ap flour|white flour', 120, 's'], ['bread flour|strong flour', 120, 's'],
+    ['cake flour|pastry flour', 114, 's'], ['whole[- ]?wheat flour|wholemeal flour|whole[- ]grain flour', 113, 's'],
+    ['self[- ](?:rising|raising) flour', 120, 's'], ['almond flour|almond meal|ground almonds', 96, 's'],
+    ['rye flour', 102, 's'], ['flour', 120, 's'],
+    ['cornmeal|polenta', 138, 's'], ['cornstarch|corn starch|cornflour|corn flour', 128, 's'],
+    ['powdered sugar|confectioners\'? sugar|icing sugar', 120, 's'], ['brown sugar', 213, 's'],
+    ['caster sugar|superfine sugar|granulated sugar|white sugar|sugar', 200, 's'],
+    ['butter|margarine', 226.8, 's'], ['shortening|lard', 205, 's'],
+    ['honey', 340, 's'], ['maple syrup', 322, 's'], ['molasses', 340, 's'], ['corn syrup|golden syrup', 340, 's'],
+    ['water', 237, 'l'], ['milk|buttermilk', 245, 'l'], ['heavy cream|whipping cream|double cream|single cream|cream', 238, 'l'],
+    ['olive oil', 216, 'l'], ['oil', 218, 'l'],
+    ['yogurt|yoghurt', 245, 's'], ['sour cream', 240, 's'], ['cream cheese', 232, 's'],
+    ['peanut butter|almond butter|nut butter', 256, 's'], ['jam|jelly|marmalade|preserves', 320, 's'],
+    ['applesauce', 244, 's'], ['pumpkin pur[eé]e|canned pumpkin', 245, 's'], ['mashed bananas?', 225, 's'],
+    ['rolled oats|old[- ]fashioned oats|quick oats|oats|oatmeal', 90, 's'],
+    ['cooked rice', 158, 's'], ['rice', 185, 's'],
+    ['cocoa powder|cocoa|cacao powder', 85, 's'], ['chocolate chips|chocolate chunks', 170, 's'],
+    ['salt', 288, 's'], ['baking powder', 192, 's'], ['baking soda|bicarbonate of soda', 220, 's'], ['cream of tartar', 144, 's'],
+    ['walnuts|pecans', 113, 's'], ['almonds', 142, 's'],
+    ['raisins', 149, 's'], ['dried cranberries|craisins', 120, 's'], ['shredded coconut|coconut flakes|desiccated coconut|flaked coconut', 85, 's'],
+    ['cheddar|mozzarella|shredded cheese|grated cheese', 113, 's'], ['parmesan|parmigiano|pecorino', 100, 's'],
+    ['breadcrumbs|bread crumbs', 108, 's'], ['panko', 60, 's'],
+    ['vanilla extract', 208, 'l'], ['lemon juice|lime juice|orange juice|apple juice|juice', 244, 'l'],
+    ['broth|stock', 240, 'l'], ['vinegar', 239, 'l']
+  ];
+  var DENS = DENS_SRC.map(function (d) { return { re: new RegExp('\\b(?:' + d[0] + ')s?\\b', 'i'), g: d[1], t: d[2] }; });
+  var EGG_G = 50;
+
+  function lookup(name) {
+    var best = null, bl = 0;
+    for (var i = 0; i < DENS.length; i++) {
+      var m = DENS[i].re.exec(name);
+      if (m && m[0].length > bl) { bl = m[0].length; best = DENS[i]; }
+    }
+    return best ? { gpm: best.g / US_CUP_ML, t: best.t } : null;
+  }
+  function isEgg(name, unit) { return !unit && /\begg(?!plant|\s*noodle)s?\b/i.test(name); }
+
+  /* ---------- number helpers ---------- */
+  function commas(s) { return String(s).replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+  function dec(x, dp) { var s = String(+x.toFixed(dp)).split('.'); return commas(s[0]) + (s[1] ? '.' + s[1] : ''); }
+  function nice(x, set) {
+    var w = Math.floor(x + 1e-9), p = x - w, best = 0, bd = 9;
+    for (var i = 0; i < set.length; i++) { var d = Math.abs(p - set[i]); if (d < bd - 1e-12) { bd = d; best = set[i]; } }
+    if (best >= 1 - 1e-9) { w += 1; best = 0; }
+    var g = best ? (GLY[String(Math.round(best * 1000) / 1000)] || '') : '';
+    return { w: w, f: best, val: w + best, txt: (w ? commas(w) : '') + g, zero: (w + best) === 0 };
+  }
+  function normFr(s) {
+    return s.replace(/(\d)\s*([½⅓⅔¼¾⅛⅜⅝⅞])/g, '$1 $2').replace(/[½⅓⅔¼¾⅛⅜⅝⅞]/g, function (c) { return UF[c]; });
+  }
+  function toNum(s) {
+    s = s.trim();
+    var m;
+    if ((m = /^(\d+)[\s-]+(\d+)\/(\d+)$/.exec(s))) { return +m[3] ? +m[1] + (+m[2]) / (+m[3]) : NaN; }
+    if ((m = /^(\d+)\/(\d+)$/.exec(s))) { return +m[2] ? (+m[1]) / (+m[2]) : NaN; }
+    if (/^\d+,\d{1,2}$/.test(s)) return parseFloat(s.replace(',', '.'));
+    if (/^\d{1,3}(,\d{3})+(\.\d+)?$/.test(s)) return parseFloat(s.replace(/,/g, ''));
+    if (/^(\d+\.?\d*|\.\d+)$/.test(s)) return parseFloat(s);
+    return NaN;
+  }
+  function parseAmount(s) { return toNum(normFr(String(s == null ? '' : s))); }
+
+  var NUM = '(?:\\d+[\\s-]+\\d+\\/\\d+|\\d+\\/\\d+|\\d+,\\d{1,2}(?!\\d)|\\d{1,3}(?:,\\d{3})+(?:\\.\\d+)?|\\d*\\.\\d+|\\d+)';
+  var RANGE_RX = new RegExp('^(' + NUM + ')(?:\\s*(?:-|\\u2013|\\u2014|to)\\s*(' + NUM + '))?');
+
+  function takeUnit(rest) {
+    var unit = '', raw = '', note = '', m;
+    rest = rest.replace(/^\s+/, '');
+    function paren() { if (rest.charAt(0) === '(') { var i = rest.indexOf(')'); if (i > 0) { note += (note ? ' ' : '') + rest.slice(1, i).trim(); rest = rest.slice(i + 1).replace(/^\s+/, ''); } } }
+    paren();
+    m = /^(fl\.?\s*oz\.?|fluid\s+ounces?)(?![A-Za-z])/i.exec(rest);
+    if (m) { unit = 'floz'; raw = m[0].replace(/\.$/, ''); rest = rest.slice(m[0].length); }
+    else {
+      m = /^([A-Za-zµ]+)\.?/.exec(rest);
+      if (m && ALIAS[m[1].toLowerCase()]) { unit = ALIAS[m[1].toLowerCase()]; raw = m[1]; rest = rest.slice(m[0].length); }
+    }
+    rest = rest.replace(/^\s+/, '');
+    paren();
+    rest = rest.replace(/^of\s+/i, '').replace(/^[\s,.:;–—-]+/, '');
+    return { unit: unit, raw: raw, note: note, rest: rest.trim() };
+  }
+  function kindOf(u) { return (CFGVOL[u] || VOLML[u]) ? 'v' : (WT[u] ? 'w' : 'c'); }
+
+  function parseQty(s) {
+    var m = RANGE_RX.exec(s);
+    if (!m) return null;
+    var lo = toNum(m[1]), hi = m[2] ? toNum(m[2]) : lo;
+    if (isNaN(lo) || isNaN(hi)) return null;
+    if (hi < lo) { var t = lo; lo = hi; hi = t; }
+    var after = s.slice(m[0].length), extra = '', mm;
+    if (lo === hi) {                              // '100g-150g butter', '100 g to 150 g butter'
+      mm = new RegExp('^\\s*([A-Za-z\\u00b5]+)\\.?\\s*(?:-|\\u2013|\\u2014|to)\\s*(' + NUM + ')\\s*([A-Za-z\\u00b5]+)\\.?\\s*(.*)$', 'i').exec(after);
+      if (mm && ALIAS[mm[1].toLowerCase()] && ALIAS[mm[1].toLowerCase()] === ALIAS[mm[3].toLowerCase()] && toNum(mm[2]) > lo) { hi = toNum(mm[2]); extra = '–' + mm[2] + ' ' + mm[3]; after = mm[1] + ' ' + mm[4]; }
+    }
+    var u = takeUnit(after);
+    if (u.unit === 'lb' && lo === hi) {          // '1 lb 4 oz' is one quantity
+      var mo = /^(\d+(?:\.\d+)?(?:\s+\d+\/\d+|\/\d+)?)\s*(?:oz|ounces?)\b\.?\s*(.*)$/i.exec(u.rest);
+      if (mo && !isNaN(toNum(mo[1]))) { lo = hi = lo + toNum(mo[1]) / 16; extra = ' ' + mo[1] + ' oz'; u.rest = mo[2].replace(/^of\s+/i, ''); }
+    }
+    return { lo: lo, hi: hi, qtxt: m[0].trim(), unit: u.unit, raw: u.raw + extra, note: u.note, name: u.rest };
+  }
+
+  function parseLine(line) {
+    var s = normFr(String(line).replace(/^\s*[-*•·–]\s+/, '')).replace(/\s+/g, ' ').trim();
+    var q = parseQty(s), row;
+    if (q && q.lo > 0 && q.hi < 1e7 && (q.unit || q.name)) {
+      row = { ok: true, src: line, lo: q.lo, hi: q.hi, unit: q.unit, kind: kindOf(q.unit), note: q.note, name: q.name, qtxt: q.qtxt + (q.raw ? ' ' + q.raw : '') };
+      return row;
+    }
+    var t = /^(.+?)\s*[,:–—-]\s*(\d.*)$/.exec(s);
+    if (t) {
+      var q2 = parseQty(t[2]);
+      if (q2 && q2.lo > 0 && q2.unit && !q2.name) {
+        return { ok: true, src: line, lo: q2.lo, hi: q2.hi, unit: q2.unit, kind: kindOf(q2.unit), note: q2.note, name: t[1].trim(), qtxt: q2.qtxt + (q2.raw ? ' ' + q2.raw : '') };
+      }
+    }
+    return { ok: false, src: line, name: s };
+  }
+
+  /* ---------- formatters: each returns { n, u, err, ex, comp } ---------- */
+  function mkR(n, u, err, ex, comp) { return { n: n, u: u, err: err || 0, ex: (err || 0) > 0.02 ? ex : '', comp: !!comp }; }
+
+  function fmtVolUS(ml, cfg) {
+    var cups = ml / cfg.cup, r;
+    if (cups >= 0.22) {
+      r = nice(cups, S_CUP);
+      if (!r.zero && Math.abs(r.val - cups) / cups <= 0.04) return mkR(r.txt, r.val > 1 ? 'cups' : 'cup', Math.abs(r.val - cups) / cups, dec(cups, 2) + ' cups');
+      // not a real measuring-cup fraction: say it as cups + tablespoons instead
+      var qml = cfg.cup / 4, wc = Math.floor(cups + 1e-9), rem = ml - wc * cfg.cup, q = Math.floor(rem / qml + 1e-9), lt;
+      lt = nice((rem - q * qml) / cfg.tbsp, S_HALF);
+      if (lt.val * cfg.tbsp >= qml * 0.999) { q += 1; lt = nice(0, S_HALF); }
+      if (q >= 4) { wc += 1; q -= 4; }
+      if (wc === 0 && ml / cfg.tbsp <= 8.25) {
+        var tb2 = nice(ml / cfg.tbsp, S_HALF);
+        return mkR(tb2.txt, 'tbsp', Math.abs(tb2.val * cfg.tbsp - ml) / ml, dec(ml / cfg.tbsp, 2) + ' tbsp');
+      }
+      var cv = nice(wc + q / 4, S_CUP), tot = (wc + q / 4) * cfg.cup + lt.val * cfg.tbsp;
+      return mkR(cv.txt + (cv.val > 1 ? ' cups' : ' cup') + (lt.val ? ' + ' + lt.txt : ''), lt.val ? 'tbsp' : '', Math.abs(tot - ml) / ml, dec(cups, 2) + ' cups', !!lt.val);
+    }
+    var per = Math.round(cfg.tbsp / cfg.tsp), S = Math.round(ml / cfg.tsp * 2) / 2;
+    if (S >= per) {
+      var tb = Math.floor(S / per), rem = S - tb * per, err = Math.abs(S * cfg.tsp - ml) / ml;
+      var exTb = dec(ml / cfg.tbsp, 2) + ' tbsp';
+      if (rem) { r = nice(rem, S_TSP); return mkR(tb + ' tbsp + ' + r.txt, 'tsp', err, exTb, true); }
+      return mkR(String(tb), 'tbsp', err, exTb);
+    }
+    var x = ml / cfg.tsp;
+    if (x < 0.0625) return mkR('a pinch', '', 0, '');
+    r = nice(x, S_TSP);
+    if (r.zero) return mkR('a pinch', '', 0, '');
+    return mkR(r.txt, 'tsp', Math.abs(r.val - x) / x, dec(x, 2) + ' tsp');
+  }
+  function fmtMl(ml) {
+    var v, e;
+    if (ml >= 1000) { v = Math.round(ml / 10) / 100; return mkR(dec(v, 2), 'L', Math.abs(v * 1000 - ml) / ml, dec(ml / 1000, 3) + ' L'); }
+    if (ml >= 100) v = Math.round(ml / 10) * 10;
+    else if (ml >= 15) v = Math.round(ml / 5) * 5;
+    else v = Math.round(ml / 1.25) * 1.25;
+    if (v === 0) return mkR('a pinch', '', 0, '');
+    e = Math.abs(v - ml) / ml;
+    return mkR(dec(v, 2), 'ml', e, dec(ml, 1) + ' ml');
+  }
+  function fmtG(g) {
+    var v;
+    if (g >= 1000) { v = Math.round(g / 10) / 100; return mkR(dec(v, 2), 'kg', Math.abs(v * 1000 - g) / g, dec(g / 1000, 3) + ' kg'); }
+    if (g >= 10) v = Math.round(g);
+    else if (g >= 1) v = Math.round(g * 2) / 2;
+    else v = Math.round(g * 10) / 10;
+    if (v === 0) return mkR('a pinch', '', 0, '');
+    return mkR(dec(v, 1), 'g', Math.abs(v - g) / g, dec(g, 2) + ' g');
+  }
+  function fmtOz(oz) {
+    var r;
+    if (oz >= 16) {
+      var tot = Math.round(oz * 2) / 2, lb = Math.floor(tot / 16), rem = tot - lb * 16, err = Math.abs(tot - oz) / oz;
+      if (rem) { r = nice(rem, S_OZ); return mkR(lb + ' lb ' + r.txt, 'oz', err, dec(oz / 16, 2) + ' lb', true); }
+      return mkR(String(lb), 'lb', err, dec(oz / 16, 2) + ' lb');
+    }
+    r = nice(oz, S_OZ);
+    if (r.zero) return mkR('under ⅛', 'oz', 0, '');
+    return mkR(r.txt, 'oz', Math.abs(r.val - oz) / oz, dec(oz, 2) + ' oz');
+  }
+  function fmtKeep(val, unit) {          // keep a fl oz / pint / quart / gallon in its own unit, to a sensible fraction
+    var r = nice(val, val < 3 ? S_CNT : S_HALF);
+    if (r.zero) r = nice(val, S_OZ);
+    var label = unit === 'floz' ? 'fl oz' : (r.val > 1 && PLURAL[unit] ? PLURAL[unit] : unit);
+    return mkR(r.zero ? dec(val, 2) : r.txt, label, r.zero ? 0 : Math.abs(r.val - val) / val, dec(val, 2) + ' ' + label);
+  }
+  function fmtCount(val, unit, name) {
+    var r, word;
+    if (isEgg(name, unit)) {
+      if (val < 0.75) { r = nice(val, S_CNT); return mkR(r.zero ? dec(val, 2) : r.txt, '', 0, ''); }
+      var n = Math.round(val + 1e-9);
+      var res = mkR(String(n), '', 0, '');
+      var fr = val - Math.floor(val);
+      if (Math.abs(fr - 0.5) < 0.15 || Math.abs(fr - 0.25) < 0.1 || Math.abs(fr - 0.75) < 0.1) res.egg = 'exactly ' + nice(val, S_CNT).txt + ' — round to ' + (Math.abs(fr - 0.5) < 0.15 ? Math.floor(val) + ' or ' + (Math.floor(val) + 1) : n) + ', or beat one and measure out the part you need (a large egg is about 3 tbsp)';
+      return res;
+    }
+    r = nice(val, val < 2 ? S_CNT : S_HALF);
+    if (r.zero) r = nice(val, [0, 1 / 8, 1 / 4, 1]);
+    word = unit ? (r.val > 1 && PLURAL[unit] ? PLURAL[unit] : unit) : '';
+    return mkR(r.zero ? dec(val, 2) : r.txt, word, r.zero ? 0 : Math.abs(r.val - val) / val, dec(val, 2) + (word ? ' ' + word : ''));
+  }
+  function full(r) { return r.n + (r.u ? ' ' + r.u : ''); }
+
+  /* ---------- base quantities ---------- */
+  function unitMl(u, cfg) { return CFGVOL[u] ? cfg[u] : VOLML[u]; }
+  function baseOf(row, val, cfg) {     // { ml } or { g } or null
+    if (row.kind === 'v') return { ml: val * unitMl(row.unit, cfg) };
+    if (row.kind === 'w') return { g: val * WT[row.unit] };
+    return null;
+  }
+  function usForm(b, d, cfg) {
+    if (b.ml != null) return fmtVolUS(b.ml, cfg);
+    if (d) return fmtVolUS(b.g / d.gpm, cfg);
+    return fmtOz(b.g / WT.oz);
+  }
+  function metForm(b, d) {
+    if (b.ml != null) return (d && d.t === 's') ? fmtG(b.ml * d.gpm) : fmtMl(b.ml);
+    return fmtG(b.g);
+  }
+  function asIsForm(row, val, b, d, cfg) {
+    var u = row.unit;
+    if (u === 'cup' || u === 'tbsp' || u === 'tsp') return fmtVolUS(b.ml, cfg);
+    if (u === 'ml' || u === 'l' || u === 'dl' || u === 'cl') return fmtMl(b.ml);
+    if (u === 'stick') return fmtCount(val, 'stick', '');
+    if (row.kind === 'v') return fmtKeep(val, u);
+    if (u === 'g' || u === 'kg') return fmtG(b.g);
+    return fmtOz(b.g / WT.oz);
+  }
+  function altIsUS(row) { return !!(CFGVOL[row.unit] || row.unit === 'stick' || row.unit === 'oz' || row.unit === 'lb'); }
+
+  var SPICE = /\b(salt|pepper|cayenne|chil[il]e?|chili powder|paprika|cumin|cinnamon|nutmeg|ginger|curry|oregano|thyme|turmeric|cardamom|allspice|mustard powder|garlic powder|onion powder|clove powder|ground cloves|vanilla)\b/i;
+  var LEAVEN = /\b(baking powder|baking soda|bicarbonate|yeast)\b/i;
+
+  /* the scaled, converted form of one parsed row */
+  function convert(row, f, mode, cfg, dual) {
+    var d = lookup(row.name), out = { name: row.name, note: row.note, alt: '', ex: '', egg: '', warn: '' };
+    if (row.note && row.kind !== 'c') {
+      var nm = /^(about|approx\.?|approximately|around|~)\s*/i.exec(row.note), nq = parseQty(normFr(row.note.slice(nm ? nm[0].length : 0)));
+      if (nq && nq.unit && !nq.name && kindOf(nq.unit) !== 'c' && nq.lo > 0) {
+        var nr = { ok: true, lo: nq.lo, hi: nq.hi, unit: nq.unit, kind: kindOf(nq.unit), name: row.name, note: '' };
+        var no = convert(nr, f, mode, cfg, false);
+        out.note = (nm ? 'about ' : '') + no.full;
+      }
+    }
+    function one(val) {
+      var b = baseOf(row, val, cfg), r;
+      if (row.kind === 'c') return { r: fmtCount(val, row.unit, row.name), b: null };
+      if (mode === 'us') r = usForm(b, d, cfg);
+      else if (mode === 'metric') r = metForm(b, d);
+      else r = asIsForm(row, val, b, d, cfg);
+      return { r: r, b: b };
+    }
+    var A = one(row.lo * f), B = row.hi > row.lo ? one(row.hi * f) : null, p = A.r;
+    if (B) {
+      if (A.r.u === B.r.u && !A.r.comp && !B.r.comp) p = { n: A.r.n + '–' + B.r.n, u: A.r.u, ex: '' };
+      else p = { n: full(A.r) + ' – ' + full(B.r), u: '', ex: '' };
+    } else out.egg = A.r.egg || '';
+    out.p = p; out.full = full(p); out.ex = B ? '' : (p.ex || '');
+    if (dual && A.b) {
+      var mid = (row.lo + row.hi) / 2 * f, b = baseOf(row, mid, cfg), ar;
+      var primaryUS = mode === 'us' || (mode === 'asis' && altIsUS(row));
+      ar = primaryUS ? metForm(b, d) : usForm(b, d, cfg);
+      out.alt = (B ? (function () { var a2 = primaryUS ? metForm(baseOf(row, row.lo * f, cfg), d) : usForm(baseOf(row, row.lo * f, cfg), d, cfg), a3 = primaryUS ? metForm(baseOf(row, row.hi * f, cfg), d) : usForm(baseOf(row, row.hi * f, cfg), d, cfg); return a2.u === a3.u ? a2.n + '–' + a3.n + ' ' + a2.u : full(a2) + ' – ' + full(a3); })() : full(ar));
+      if (out.alt === out.full) out.alt = '';
+    }
+    var small = row.kind === 'v' && (row.unit === 'tsp' || row.unit === 'tbsp') || row.unit === 'pinch' || row.unit === 'dash';
+    if (SPICE.test(row.name) && small && f >= 3) out.warn = 'At ×' + fx(f) + ', add this gradually and taste — salt and strong spices don’t need to scale in full.';
+    else if (LEAVEN.test(row.name) && (f >= 3 || f <= 1 / 3)) out.warn = 'Leavening doesn’t scale perfectly this far — measure carefully and expect to adjust.';
+    return out;
+  }
+  function fx(f) {
+    if (Math.abs(f - Math.round(f)) < 0.005) return String(Math.round(f));
+    var r = nice(f, S_CNT);
+    if (!r.zero && Math.abs(r.val - f) / f < 0.004 && r.val < 20) return r.txt;
+    return dec(f, f < 10 ? 2 : 1);
+  }
+  function massOf(row, f, cfg) {          // grams of this row once scaled, or null when unknown
+    var mid = (row.lo + row.hi) / 2 * f, d = lookup(row.name);
+    if (row.kind === 'w') return mid * WT[row.unit];
+    if (row.kind === 'v') return d ? mid * unitMl(row.unit, cfg) * d.gpm : null;
+    if (isEgg(row.name, row.unit)) return mid * EGG_G;
+    return null;
+  }
+
+  /* ---------- oven temperatures ---------- */
+  var GAS = [[225, '¼'], [250, '½'], [275, '1'], [300, '2'], [325, '3'], [350, '4'], [375, '5'], [400, '6'], [425, '7'], [450, '8'], [475, '9']];
+  var F2C = { 250: 120, 275: 135, 300: 150, 325: 165, 350: 175, 375: 190, 400: 200, 425: 220, 450: 230, 475: 245, 500: 260 };
+  function oven(val, unit) {
+    var F = unit === 'F' ? val : Math.round((val * 9 / 5 + 32) / 25) * 25;
+    var C = unit === 'C' ? val : (F2C[F] != null ? F2C[F] : Math.round((val - 32) * 5 / 9 / 5) * 5);
+    var gas = null, bd = 99;
+    GAS.forEach(function (g) { var d = Math.abs(g[0] - F); if (d < bd) { bd = d; gas = g[1]; } });
+    return { F: F, C: C, fan: C - 20, gas: bd <= 13 ? gas : null };
+  }
+
+  return { CFG: CFG, parseLine: parseLine, parseAmount: parseAmount, convert: convert, massOf: massOf, lookup: lookup, fx: fx, nice: nice, dec: dec, fmtG: fmtG, fmtVolUS: fmtVolUS, fmtMl: fmtMl, fmtOz: fmtOz, full: full, oven: oven, S_CNT: S_CNT };
+})();
+/* RECIPE-ENGINE:END */
+
+/* =========================================================
+   CalcThis.initRecipeCalc() — paste a recipe, set the servings, get every amount
+   scaled AND kitchen-ready (cup/spoon fractions, whole grams, whole eggs), with
+   cups <-> grams per ingredient. Differentiator vs. every competitor checked
+   (Gigacalculator, Instacart, CalculateQuick, Omnicalculator — all give raw math
+   such as "5 1/2 eggs" or "3/4 cup + 2 tbsp + 2 tsp"; none draws anything): kitchen
+   rounding with the exact value shown alongside, per-line scale warnings, a
+   what's-in-it-by-weight bar, and (Go advanced) a to-scale pan diagram with
+   pan-size scaling, cup standard, both systems side by side, oven temperature
+   and per-ingredient cost. Engine: CalcThis.recipeEngine. No shared state. */
+CalcThis.initRecipeCalc = function () {
+  var E = CalcThis.recipeEngine;
+  var $ = function (id) { return document.getElementById(id); };
+  var st = { out: 'asis', mode: 'serv', adv: false, pan: false, dual: false, cup: 'us', pu: 'in', tu: 'F' };
+  var prices = {}, costSig = '', lastText = '';
+  var EXAMPLES = {
+    pancakes: { orig: '4', text: '1 1/2 cups all-purpose flour\n3 1/2 tsp baking powder\n1 tsp salt\n1 tbsp white sugar\n1 1/4 cups milk\n1 egg\n3 tbsp butter, melted' },
+    cookies: { orig: '24', text: '2 1/4 cups all-purpose flour\n1 tsp baking soda\n1 tsp salt\n1 cup butter\n3/4 cup granulated sugar\n3/4 cup packed brown sugar\n2 large eggs\n2 tsp vanilla extract\n2 cups chocolate chips' },
+    bread: { orig: '8', text: '500 g bread flour\n10 g salt\n7 g dried yeast\n320 ml water\n1 tbsp olive oil' }
+  };
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+  function setSeg(id, v) { [].forEach.call($(id).children, function (b) { b.classList.toggle('on', b.getAttribute('data-v') === String(v)); }); }
+  function setHint(msg) { var h = $('rcHint'); h.textContent = msg || ''; h.style.display = msg ? 'block' : 'none'; }
+  function pos(id) { var v = E.parseAmount($(id).value); return v > 0 ? v : NaN; }
+
+  /* ---------- scale factor ---------- */
+  function area(shape, w, l) { return shape === 'round' ? Math.PI * w * w / 4 : w * l; }
+  function panSizes() {
+    var os = $('rcOpShape').value, ts = $('rcTpShape').value;
+    var ow = pos('rcOpW'), ol = os === 'round' ? ow : pos('rcOpL'), tw = pos('rcTpW'), tl = ts === 'round' ? tw : pos('rcTpL');
+    return { os: os, ts: ts, ow: ow, ol: ol, tw: tw, tl: tl, ok: ow > 0 && ol > 0 && tw > 0 && tl > 0 };
+  }
+  function factor() {
+    var typed, f;
+    if (st.adv && st.pan) {
+      var P = panSizes();
+      if (!P.ok) return { f: 1, kind: 'none', hint: 'Enter both pan sizes to scale by pan. Showing the recipe at ×1 for now.' };
+      var a1 = area(P.os, P.ow, P.ol), a2 = area(P.ts, P.tw, P.tl);
+      return { f: a2 / a1, kind: 'pan', P: P, a1: a1, a2: a2 };
+    }
+    if (st.mode === 'serv') {
+      var oText = $('rcOrig').value.trim(), wText = $('rcWant').value.trim();
+      if (!oText && !wText) return { f: 1, kind: 'none' };
+      var o = pos('rcOrig'), w = pos('rcWant');
+      if (!(o > 0) || !(w > 0)) return { f: 1, kind: 'none', hint: (oText && !(o > 0)) || (wText && !(w > 0)) ? 'Servings must be a number above 0.' : 'Enter both servings to scale the recipe. Showing it at ×1 for now.' };
+      f = w / o;
+      if (f > 1000 || f < 0.001) return { f: 1, kind: 'none', hint: 'That is an extreme change (×' + E.fx(f) + ') — check the two serving numbers.' };
+      return { f: f, kind: 'serv', o: o, w: w };
+    }
+    typed = $('rcMult').value.trim();
+    if (!typed) return { f: 1, kind: 'none' };
+    f = E.parseAmount(typed);
+    if (!(f > 0)) return { f: 1, kind: 'none', hint: 'Type a number above 0, like 2 or 1/2.' };
+    if (f > 1000 || f < 0.001) return { f: 1, kind: 'none', hint: 'That is an extreme multiplier — check the number.' };
+    return { f: f, kind: 'mult' };
+  }
+
+  /* ---------- pan diagram ---------- */
+  function renderPan(F) {
+    var wrap = $('rcPanWrap');
+    if (F.kind !== 'pan') { wrap.style.display = 'none'; return; }
+    var P = F.P, u = st.pu === 'in' ? 'in' : 'cm', sq = st.pu === 'in' ? 'sq in' : 'sq cm';
+    var mx = Math.max(P.ow, P.ol, P.tw, P.tl), k = 92 / mx, svg = '', cy = 66;
+    function shape(cx, shp, w, l, cls) {
+      var W = w * k, H = l * k;
+      if (shp === 'round') return '<circle cx="' + cx + '" cy="' + cy + '" r="' + (W / 2) + '" fill="' + cls + '" stroke="var(--amber-deep)" stroke-width="1.6"/>';
+      return '<rect x="' + (cx - W / 2) + '" y="' + (cy - H / 2) + '" width="' + W + '" height="' + H + '" rx="5" fill="' + cls + '" stroke="var(--amber-deep)" stroke-width="1.6"/>';
+    }
+    function dims(shp, w, l) { return shp === 'round' ? E.dec(w, 1) + ' ' + u + ' round' : E.dec(w, 1) + ' × ' + E.dec(l, 1) + ' ' + u; }
+    svg += '<text x="64" y="14" text-anchor="middle" font-size="12" font-weight="700" fill="var(--ink-soft)">Original pan</text>';
+    svg += '<text x="216" y="14" text-anchor="middle" font-size="12" font-weight="700" fill="var(--ink-soft)">Your pan</text>';
+    svg += shape(64, P.os, P.ow, P.ol, 'rgba(55,80,63,.14)') + shape(216, P.ts, P.tw, P.tl, 'rgba(181,118,31,.24)');
+    svg += '<text x="140" y="62" text-anchor="middle" font-size="14" font-weight="700" fill="var(--amber-deep)">×' + E.fx(F.f) + '</text>';
+    svg += '<path d="M118 70h44M154 64l8 6-8 6" stroke="var(--amber)" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>';
+    svg += '<text x="64" y="132" text-anchor="middle" font-size="12" font-weight="600" fill="var(--ink)">' + esc(dims(P.os, P.ow, P.ol)) + '</text>';
+    svg += '<text x="216" y="132" text-anchor="middle" font-size="12" font-weight="600" fill="var(--ink)">' + esc(dims(P.ts, P.tw, P.tl)) + '</text>';
+    svg += '<text x="64" y="148" text-anchor="middle" font-size="12" font-weight="500" fill="var(--muted)">' + E.dec(F.a1, 1) + ' ' + sq + '</text>';
+    svg += '<text x="216" y="148" text-anchor="middle" font-size="12" font-weight="500" fill="var(--muted)">' + E.dec(F.a2, 1) + ' ' + sq + '</text>';
+    $('rcPan').innerHTML = '<svg viewBox="0 0 280 156" xmlns="http://www.w3.org/2000/svg">' + svg + '</svg><div class="sq-diagram-legend"><span>Drawn to scale. Amounts scale with the pan <b>area</b>, so the batter keeps the same depth.</span></div>';
+    wrap.style.display = '';
+  }
+
+  /* ---------- composition by weight ---------- */
+  function renderComp(rows, f, cfg, F) {
+    var items = [], total = 0, n = 0, tot = rows.filter(function (r) { return r.ok; }).length;
+    rows.forEach(function (r) {
+      if (!r.ok) return;
+      var g = E.massOf(r, f, cfg);
+      if (g > 0) { items.push({ name: r.name.replace(/,.*$/, '').trim() || 'ingredient', g: g }); total += g; n++; }
+    });
+    var wrap = $('rcCompWrap');
+    if (items.length < 2) { wrap.style.display = 'none'; return; }
+    items.sort(function (a, b) { return b.g - a.g; });
+    var top = items.slice(0, 6), rest = items.slice(6), other = 0; rest.forEach(function (i) { other += i.g; });
+    if (other > 0) top.push({ name: 'Other', g: other, other: true });
+    var bar = '', key = '';
+    top.forEach(function (it, i) {
+      var pct = it.g / total * 100, c = it.other ? 'c6' : 'c' + i;
+      bar += '<div class="rc-seg ' + c + '" style="width:' + pct + '%" title="' + esc(it.name) + ' ' + Math.round(pct) + '%">' + (pct >= 13 ? Math.round(pct) + '%' : '') + '</div>';
+      key += '<span><i class="' + c + '"></i>' + esc(it.name) + ' ' + (pct < 1 ? '<1' : Math.round(pct)) + '%</span>';
+    });
+    var per = '';
+    if (F.kind === 'serv') per = ' · about ' + E.full(E.fmtG(total / F.w)) + ' per serving';
+    $('rcComp').innerHTML = '<div class="rc-bar">' + bar + '</div><div class="rc-key">' + key + '</div>';
+    $('rcCompNote').textContent = 'Total about ' + E.full(E.fmtG(total)) + per + '. Based on ' + n + ' of ' + tot + ' ingredients with a known weight (an egg counts as 50 g).';
+    wrap.style.display = '';
+  }
+
+  /* ---------- cost ---------- */
+  function keyOf(r) { return r.src.trim().toLowerCase(); }
+  function updateCost(rows, f, F) {
+    var orig = 0, any = false;
+    rows.forEach(function (r) { if (!r.ok) return; var v = parseFloat(prices[keyOf(r)]); if (v >= 0) { orig += v; any = true; } });
+    var el = $('rcCostTot');
+    if (!any) { el.textContent = 'Enter the price of each original amount to see the cost of the scaled recipe.'; return; }
+    var sc = orig * f, txt = 'Original recipe ' + money(orig) + ' · scaled ' + money(sc);
+    if (F.kind === 'serv') txt += ' · ' + money(sc / F.w) + ' per serving';
+    el.textContent = txt;
+  }
+  function buildCost(rows, f, F) {
+    var okRows = rows.filter(function (r) { return r.ok; });
+    var sig = okRows.map(keyOf).join('\n');
+    if (sig !== costSig) {
+      costSig = sig;
+      $('rcCostRows').innerHTML = okRows.map(function (r, i) {
+        var k = keyOf(r), v = prices[k] == null ? '' : prices[k];
+        return '<div class="rc-crow"><span class="rc-cname">' + esc((r.qtxt + ' ' + r.name).trim()) + '</span><div class="inp"><input type="text" inputmode="decimal" data-k="' + esc(k) + '" value="' + esc(v) + '" placeholder="0.00" aria-label="Price of ' + esc(r.name) + '"></div></div>';
+      }).join('');
+    }
+    updateCost(rows, f, F);
+  }
+
+  /* ---------- oven ---------- */
+  function renderOven() {
+    var el = $('rcOven'), v = parseFloat($('rcTemp').value);
+    if (!st.adv || !(v > 0) || v > 700) { el.style.display = 'none'; return; }
+    var o = E.oven(v, st.tu);
+    el.textContent = st.tu === 'F'
+      ? v + ' °F = ' + o.C + ' °C (fan ' + o.fan + ' °C)' + (o.gas ? ' · gas mark ' + o.gas : '')
+      : v + ' °C = ' + o.F + ' °F · fan ' + o.fan + ' °C' + (o.gas ? ' · gas mark ' + o.gas : '');
+    el.style.display = '';
+  }
+
+  /* ---------- main render ---------- */
+  var current = [];
+  function empty() {
+    $('rcBig').textContent = '—';
+    $('rcSub').textContent = 'Paste your ingredients, then set the servings or a multiplier.';
+    $('rcBody').style.display = 'none'; $('rcMVal').textContent = '—'; setHint('');
+    current = []; costSig = '';
+  }
+  function render() {
+    var text = $('rcText').value, lines = text.split(/\r?\n/).map(function (s) { return s.trim(); }).filter(Boolean);
+    if (!lines.length) { empty(); return; }
+    var F = factor(), cfg = E.CFG[st.cup], f = F.f;
+    setHint(F.hint || '');
+    var rows = lines.map(function (l) {
+      var p = E.parseLine(l);
+      if (p.ok) p.out = E.convert(p, f, st.out, cfg, st.dual);
+      return p;
+    });
+    current = rows;
+    var big = F.kind === 'none' ? '×1' : '×' + E.fx(f);
+    $('rcBig').textContent = big;
+    var sub;
+    if (F.kind === 'serv') sub = 'Serves ' + E.dec(F.w, 2) + ' · scaled from ' + E.dec(F.o, 2) + ' — every amount × ' + E.fx(f);
+    else if (F.kind === 'mult') sub = 'Every amount × ' + E.fx(f);
+    else if (F.kind === 'pan') sub = 'Pan area ' + E.dec(F.a1, 1) + ' → ' + E.dec(F.a2, 1) + ' ' + (st.pu === 'in' ? 'sq in' : 'sq cm');
+    else sub = 'No scaling yet — set the servings or a multiplier to resize it.';
+    $('rcSub').textContent = sub;
+
+    var tip = '';
+    if (F.kind === 'pan') tip = 'The amounts scale with the pan area, so the batter keeps the same depth and the bake time should stay close to the original. Start checking a few minutes early.';
+    else if (f >= 1.5) tip = 'Bigger batch: use a bigger pan or pot (or bake in two), and start checking doneness a little early — cooking time rarely scales with the amounts.';
+    else if (f <= 0.67) tip = 'Smaller batch: use a smaller pan so it keeps its depth, and check for doneness early — it will usually be done sooner.';
+    $('rcTip').textContent = tip; $('rcTip').style.display = tip ? '' : 'none';
+
+    var html = '', plain = [], noAmt = 0;
+    rows.forEach(function (r) {
+      if (!r.ok) {
+        noAmt++; plain.push(r.src.trim());
+        html += '<div class="rc-row rc-na"><div class="rc-amt"><span class="rc-alt">no amount</span></div><div class="rc-name">' + esc(r.src) + '</div></div>';
+        return;
+      }
+      var o = r.out, name = o.name + (o.note ? ' (' + o.note + ')' : '');
+      var subs = ['was ' + r.qtxt];
+      if (o.ex) subs.push('exactly ' + o.ex);
+      html += '<div class="rc-row"><div class="rc-amt"><b>' + esc(o.full) + '</b>' + (o.alt ? '<span class="rc-alt">(' + esc(o.alt) + ')</span>' : '') + '</div>'
+        + '<div class="rc-name">' + esc(name) + '<span class="rc-sub">' + esc(subs.join(' · ')) + '</span>'
+        + (o.egg ? '<span class="rc-warn">' + esc(o.egg) + '</span>' : '') + (o.warn ? '<span class="rc-warn">' + esc(o.warn) + '</span>' : '') + '</div></div>';
+      plain.push(o.full + (o.alt ? ' (' + o.alt + ')' : '') + ' ' + name);
+    });
+    $('rcList').innerHTML = html;
+    lastText = plain.join('\n');
+    var note = noAmt ? noAmt + (noAmt === 1 ? ' line has' : ' lines have') + ' no amount, so ' + (noAmt === 1 ? 'it is' : 'they are') + ' shown as written.' : '';
+    $('rcListNote').textContent = note; $('rcListNote').style.display = note ? '' : 'none';
+
+    renderPan(F);
+    renderComp(rows, f, cfg, F);
+    $('rcCostWrap').style.display = st.adv ? '' : 'none';
+    if (st.adv) buildCost(rows, f, F);
+    renderOven();
+    $('rcBody').style.display = '';
+    $('rcMVal').textContent = F.kind === 'none' ? '×1' : '×' + E.fx(f) + (F.kind === 'serv' ? ' · serves ' + E.dec(F.w, 2) : '');
+  }
+
+  /* ---------- events ---------- */
+  ['rcText', 'rcOrig', 'rcWant', 'rcMult', 'rcOpW', 'rcOpL', 'rcTpW', 'rcTpL', 'rcTemp'].forEach(function (id) { $(id).addEventListener('input', render); });
+  $('rcOutSeg').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; st.out = b.getAttribute('data-v'); setSeg('rcOutSeg', st.out); render(); });
+  $('rcModeSeg').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    st.mode = b.getAttribute('data-v'); setSeg('rcModeSeg', st.mode);
+    $('rcServBox').style.display = st.mode === 'serv' ? '' : 'none';
+    $('rcMultBox').style.display = st.mode === 'mult' ? '' : 'none';
+    render();
+  });
+  $('rcQuick').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    var k = parseFloat(b.getAttribute('data-k'));
+    if (st.adv && st.pan) { setHint('Scaling by pan size is on — switch it off under Go advanced to use the quick multipliers.'); return; }
+    if (st.mode === 'serv') {
+      var o = pos('rcOrig');
+      if (!(o > 0)) { setHint('Enter how many servings the recipe makes first, then pick a multiplier.'); return; }
+      $('rcWant').value = String(Math.round(o * k * 100) / 100);
+    } else $('rcMult').value = String(k);
+    render();
+  });
+  $('rcTry').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    var ex = EXAMPLES[b.getAttribute('data-ex')]; if (!ex) return;
+    $('rcText').value = ex.text; $('rcOrig').value = ex.orig; $('rcWant').value = '';
+    st.mode = 'serv'; setSeg('rcModeSeg', 'serv'); $('rcServBox').style.display = ''; $('rcMultBox').style.display = 'none';
+    render();
+  });
+  $('rcScaleSeg').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    st.pan = b.getAttribute('data-v') === 'pan'; setSeg('rcScaleSeg', st.pan ? 'pan' : 'size');
+    $('rcPanBox').style.display = st.pan ? '' : 'none'; render();
+  });
+  $('rcPanUnitSeg').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; st.pu = b.getAttribute('data-v'); setSeg('rcPanUnitSeg', st.pu); render(); });
+  function shapeUI() {
+    var os = $('rcOpShape').value === 'round', ts = $('rcTpShape').value === 'round';
+    $('rcOpLWrap').style.display = os ? 'none' : ''; $('rcTpLWrap').style.display = ts ? 'none' : '';
+    $('rcOpWLab').textContent = os ? 'Diameter' : 'Width'; $('rcTpWLab').textContent = ts ? 'Diameter' : 'Width';
+  }
+  $('rcOpShape').addEventListener('change', function () { shapeUI(); render(); });
+  $('rcTpShape').addEventListener('change', function () { shapeUI(); render(); });
+  $('rcCup').addEventListener('change', function () { st.cup = this.value; render(); });
+  $('rcDualSeg').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; st.dual = b.getAttribute('data-v') === 'both'; setSeg('rcDualSeg', st.dual ? 'both' : 'one'); render(); });
+  $('rcTempSeg').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; st.tu = b.getAttribute('data-v'); setSeg('rcTempSeg', st.tu); render(); });
+  $('rcCostRows').addEventListener('input', function (e) {
+    var t = e.target; if (!t.getAttribute || !t.getAttribute('data-k')) return;
+    prices[t.getAttribute('data-k')] = t.value;
+    var F = factor(); updateCost(current, F.f, F);
+  });
+  $('rcCopy').addEventListener('click', function () {
+    var b = this, txt = lastText; if (!txt) return;
+    var orig = b.getAttribute('data-orig') || b.textContent; b.setAttribute('data-orig', orig);
+    function show(msg) { b.textContent = msg; clearTimeout(b._t); b._t = setTimeout(function () { b.textContent = orig; }, 1300); }
+    function legacy() {
+      var ta = document.createElement('textarea'), ok = false;
+      ta.value = txt; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select();
+      try { ok = document.execCommand('copy'); } catch (x) { ok = false; }
+      document.body.removeChild(ta);
+      show(ok ? 'Copied' : 'Press Ctrl+C');
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(function () { show('Copied'); }, legacy);
+    else legacy();
+  });
+  $('rcPrint').addEventListener('click', function () { window.print(); });
+  var advBtn = $('rcAdvBtn');
+  advBtn.addEventListener('click', function () {
+    st.adv = !st.adv;
+    advBtn.classList.toggle('open', st.adv);
+    $('rcAdvBtnLab').textContent = st.adv ? 'Go simple' : 'Go advanced';
+    $('rcAdvIn').style.display = st.adv ? '' : 'none';
+    if (!st.adv) {
+      st.pan = false; st.dual = false; st.cup = 'us'; st.pu = 'in'; st.tu = 'F'; prices = {}; costSig = '';
+      setSeg('rcScaleSeg', 'size'); setSeg('rcDualSeg', 'one'); setSeg('rcPanUnitSeg', 'in'); setSeg('rcTempSeg', 'F');
+      $('rcPanBox').style.display = 'none'; $('rcCup').value = 'us'; $('rcOpShape').value = 'rect'; $('rcTpShape').value = 'rect';
+      ['rcOpW', 'rcOpL', 'rcTpW', 'rcTpL', 'rcTemp'].forEach(function (id) { $(id).value = ''; });
+      shapeUI();
+    }
+    render();
+  });
+
+  shapeUI();
+  render();
+};
+
+/* =========================================================
    SITE FOOTER — mobile accordion
    Multiple pillars can be open simultaneously.
    First pillar starts expanded (aria-expanded="true" in HTML).

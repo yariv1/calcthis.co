@@ -62,6 +62,7 @@ const PAGES = [
   { file: 'age-calculator/index.html',         slug: '/age-calculator/' },
   { file: 'date-calculator/index.html',        slug: '/date-calculator/' },
   { file: 'time-calculator/index.html',        slug: '/time-calculator/' },
+  { file: 'recipe-converter/index.html',       slug: '/recipe-converter/' },
   { file: 'macro-calculator/index.html',      slug: '/macro-calculator/' },
   { file: 'peptide-reconstitution-calculator/index.html', slug: '/peptide-reconstitution-calculator/' },
   { file: 'steps-to-miles-calculator/index.html', slug: '/steps-to-miles-calculator/' },

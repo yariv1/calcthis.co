@@ -1,0 +1,596 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Recipe Converter — Scale a Recipe &amp; Convert Cups to Grams | CalcThis</title>
+<meta name="description" content="Free recipe converter: paste any ingredient list, scale it to the servings you need and get kitchen-ready amounts — cup and spoon fractions, whole eggs, cups to grams per ingredient, US or metric. Pan-size scaling, oven temperatures and cost under Go advanced.">
+<link rel="canonical" href="https://calcthis.co/recipe-converter/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Recipe Converter — Scale a Recipe &amp; Convert Cups to Grams">
+<meta property="og:description" content="Paste a recipe, set the servings, and get amounts you can actually measure — cups and spoons, whole eggs, cups to grams per ingredient. Instant, no sign-up.">
+<meta property="og:url" content="https://calcthis.co/recipe-converter/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<meta name="theme-color" content="#B5761F">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css?v=144">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Recipe Converter",
+      "url": "https://calcthis.co/recipe-converter/",
+      "applicationCategory": "UtilityApplication",
+      "operatingSystem": "Any (web browser)",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "description": "Paste any ingredient list, scale it to the servings you need and get kitchen-ready amounts: measuring-cup and spoon fractions in US mode, whole grams and millilitres in metric mode, whole eggs, and cups to grams per ingredient. Scale by pan size, set the cup standard, see both systems side by side, convert oven temperatures and price the recipe under Go advanced.",
+      "featureList": [
+        "Paste ingredients in any format: 2 cups flour, 200g butter, butter – 250g, 1 1/2 tbsp, ½ tsp, ranges",
+        "Scale by servings or by a multiplier (½, 2, 3 or any number)",
+        "Kitchen-ready rounding with the exact value shown alongside",
+        "Cups to grams and grams to cups per ingredient (about 40 ingredients)",
+        "US, metric or as written, with both systems side by side",
+        "Whole-egg rounding and per-line scaling warnings for salt, spices and leavening",
+        "What's in it by weight bar",
+        "Scale by pan size with a to-scale pan diagram",
+        "US, UK/metric and Australian cup standards",
+        "Oven temperature converter with fan and gas mark",
+        "Per-ingredient cost and cost per serving",
+        "Copy or print the scaled recipe"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "How do I scale a recipe up or down?", "acceptedAnswer": { "@type": "Answer", "text": "Divide the servings you want by the servings the recipe makes to get a scale factor, then multiply every ingredient by it. A recipe for 4 that you need for 6 has a factor of 6 ÷ 4 = 1.5, so 2 cups of flour becomes 3 cups. This converter does the multiplication for every line and rounds each result to an amount you can measure." } },
+        { "@type": "Question", "name": "How many cups is 250 grams of flour?", "acceptedAnswer": { "@type": "Answer", "text": "About 2 cups plus 1½ tablespoons. All-purpose flour weighs roughly 120 grams per US cup, so 250 g is 250 ÷ 120 = 2.08 cups. The exact figure depends on how the flour is scooped, which is why weighing is more accurate than cups for baking." } },
+        { "@type": "Question", "name": "What do I do when a scaled recipe needs part of an egg?", "acceptedAnswer": { "@type": "Answer", "text": "Round to the nearest whole egg, or beat one egg and measure out the part you need — a large egg is about 3 tablespoons, so half an egg is about 1½ tablespoons. The converter rounds to a whole egg and shows the exact figure, for example 4½ eggs, so you can choose." } },
+        { "@type": "Question", "name": "How do I convert a recipe from US cups to metric?", "acceptedAnswer": { "@type": "Answer", "text": "Choose Metric under Units. Dry and solid ingredients become grams using a per-ingredient density (1 cup of all-purpose flour is 120 g, 1 cup of granulated sugar 200 g, 1 cup of butter 227 g) and liquids become millilitres (1 US cup is about 240 ml). Ingredients the converter doesn't know are converted by volume only." } },
+        { "@type": "Question", "name": "Should I change the baking time when I scale a recipe?", "acceptedAnswer": { "@type": "Answer", "text": "Cooking time depends on depth, not on the amount. If you scale by pan area, the batter keeps the same depth and the time should stay close to the original. If you make a bigger batch in the same pan it will be deeper and need longer; a smaller batch in the same pan is shallower and cooks sooner. Check for doneness a few minutes early either way." } }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body class="p-recipe">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <a class="hdr-back" href="/blog/" aria-label="Back to blog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <span class="menu-col-head">Construction &amp; Gardening</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+          <a href="/paint-calculator/">Paint</a>
+          <a href="/wallpaper-calculator/">Wallpaper</a>
+          <a href="/square-footage-calculator/">Square Footage</a>
+          <a href="/tape-measure-fraction-calculator/">Tape Measure Fraction</a>
+          <a href="/stair-calculator/">Stair</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/vo2-max-calculator/">VO2 Max</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
+          <a href="/bmi-calculator/">BMI</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/ideal-weight-calculator/">Ideal Weight</a>
+          <a href="/lean-body-mass-calculator/">Lean Body Mass</a>
+          <a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio</a>
+          <a href="/calorie-calculator/">Calorie</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/water-intake-calculator/">Water Intake</a>
+          <a href="/macro-calculator/">Macro</a>
+          <a href="/protein-intake-calculator/">Protein Intake</a>
+          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
+          <a href="/steps-to-miles-calculator/">Steps to Miles</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+          <a href="/grade-curve-calculator/">Grade Curve</a>
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/fraction-calculator/">Fraction</a>
+          <a href="/standard-deviation-calculator/">Standard Deviation</a>
+          <a href="/scientific-notation-calculator/">Scientific Notation</a>
+          <a href="/weighted-average-calculator/">Weighted Average</a>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+          <a href="/age-calculator/">Age</a>
+          <a href="/date-calculator/">Date</a>
+          <a href="/time-calculator/">Time</a>
+          <span class="menu-col-head">Cooking &amp; Kitchen</span>
+          <a href="/recipe-converter/" class="current">Recipe Converter</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">Scale &amp; convert</div>
+    <h1>Recipe Converter</h1>
+    <p>Paste your ingredients, set the servings, and get <strong>amounts you can actually measure</strong> — cups and spoons, whole eggs, grams — instead of &ldquo;5½ eggs&rdquo; and &ldquo;¾ cup + 2 tbsp + 2 tsp&rdquo;. Switch between <strong>US and metric</strong> in one click, with cups to grams worked out ingredient by ingredient.</p>
+  </section>
+
+  <div class="grid">
+
+    <!-- INPUT -->
+    <div class="card" id="rcInCard">
+      <div class="card-pad">
+        <h2 class="card-h2">Your recipe</h2>
+
+        <div class="ctl-row">
+          <span class="ctl-lab">Units</span>
+          <div class="seg" id="rcOutSeg" role="group" aria-label="Units">
+            <button class="on" type="button" data-v="asis">As written</button>
+            <button type="button" data-v="us">US</button>
+            <button type="button" data-v="metric">Metric</button>
+          </div>
+        </div>
+
+        <label class="fld" for="rcText">
+          <span class="lab">Ingredients <span class="unit">one per line</span></span>
+          <textarea id="rcText" class="rc-textarea" rows="7" placeholder="2 cups all-purpose flour&#10;1/2 cup sugar&#10;3 large eggs&#10;1 tsp vanilla extract&#10;250 ml milk" spellcheck="false" autocapitalize="off"></textarea>
+        </label>
+
+        <div class="fld">
+          <span class="lab">Try an example</span>
+          <div class="chips" id="rcTry">
+            <button type="button" data-ex="pancakes">Pancakes</button>
+            <button type="button" data-ex="cookies">Cookies</button>
+            <button type="button" data-ex="bread">Bread (metric)</button>
+          </div>
+        </div>
+
+        <div class="fld">
+          <div class="modeseg" id="rcModeSeg" role="group" aria-label="Scale by">
+            <button class="on" type="button" data-v="serv">By servings</button>
+            <button type="button" data-v="mult">By multiplier</button>
+          </div>
+        </div>
+
+        <div id="rcServBox">
+          <div class="two">
+            <label class="fld"><span class="lab">Recipe makes <span class="unit">servings</span></span><div class="inp"><input id="rcOrig" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g. 4"></div></label>
+            <label class="fld"><span class="lab">I want <span class="unit">servings</span></span><div class="inp"><input id="rcWant" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g. 6"></div></label>
+          </div>
+        </div>
+        <div id="rcMultBox" style="display:none">
+          <label class="fld"><span class="lab">Multiply every amount by</span><div class="inp"><input id="rcMult" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 2 or 1/2"></div></label>
+        </div>
+
+        <div class="fld" style="margin-bottom:6px">
+          <span class="lab">Quick multiplier</span>
+          <div class="chips" id="rcQuick">
+            <button type="button" data-k="0.5">½×</button>
+            <button type="button" data-k="2">2×</button>
+            <button type="button" data-k="3">3×</button>
+          </div>
+        </div>
+        <div class="res-hint" id="rcHint" style="display:none;text-align:left;margin:0 0 8px"></div>
+        <p class="add-note" style="text-align:left;margin:4px 0 6px">Reads 2 cups flour, 1 1/2 tbsp, ½ tsp, 200g butter, butter – 250g, 2–3 cloves and more.</p>
+
+        <div id="rcAdvIn" style="display:none">
+          <div class="proj-sep"></div>
+          <div class="fld">
+            <span class="lab">Scale by</span>
+            <div class="seg rc-fseg" id="rcScaleSeg" role="group" aria-label="Scale by">
+              <button class="on" type="button" data-v="size">Servings or multiplier</button>
+              <button type="button" data-v="pan">Pan size</button>
+            </div>
+          </div>
+          <div id="rcPanBox" style="display:none">
+            <div class="ctl-row" style="margin-bottom:12px">
+              <span class="ctl-lab">Pan units</span>
+              <div class="seg" id="rcPanUnitSeg" role="group" aria-label="Pan units">
+                <button class="on" type="button" data-v="in">inches</button>
+                <button type="button" data-v="cm">cm</button>
+              </div>
+            </div>
+            <label class="fld">
+              <span class="lab">Original pan</span>
+              <div class="csel" id="rcOpShape" data-value="rect">
+                <button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false">
+                  <span class="csel-val">Rectangle / square</span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+                <div class="csel-panel" role="listbox">
+                  <button type="button" class="csel-opt on" role="option" aria-selected="true" data-value="rect">Rectangle / square</button>
+                  <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="round">Round</button>
+                </div>
+              </div>
+            </label>
+            <div class="two" id="rcOpRow">
+              <label class="fld"><span class="lab" id="rcOpWLab">Width</span><div class="inp"><input id="rcOpW" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g. 8"></div></label>
+              <label class="fld" id="rcOpLWrap"><span class="lab">Length</span><div class="inp"><input id="rcOpL" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g. 8"></div></label>
+            </div>
+            <label class="fld">
+              <span class="lab">Your pan</span>
+              <div class="csel" id="rcTpShape" data-value="rect">
+                <button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false">
+                  <span class="csel-val">Rectangle / square</span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+                <div class="csel-panel" role="listbox">
+                  <button type="button" class="csel-opt on" role="option" aria-selected="true" data-value="rect">Rectangle / square</button>
+                  <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="round">Round</button>
+                </div>
+              </div>
+            </label>
+            <div class="two" id="rcTpRow">
+              <label class="fld"><span class="lab" id="rcTpWLab">Width</span><div class="inp"><input id="rcTpW" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g. 9"></div></label>
+              <label class="fld" id="rcTpLWrap"><span class="lab">Length</span><div class="inp"><input id="rcTpL" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g. 13"></div></label>
+            </div>
+          </div>
+          <label class="fld">
+            <span class="lab">Cup standard</span>
+            <div class="csel" id="rcCup" data-value="us">
+              <button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false">
+                <span class="csel-val">US (1 cup = 237 ml)</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="csel-panel" role="listbox">
+                <button type="button" class="csel-opt on" role="option" aria-selected="true" data-value="us">US (1 cup = 237 ml)</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="uk">UK &amp; metric (1 cup = 250 ml)</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="au">Australian (1 tbsp = 20 ml)</button>
+              </div>
+            </div>
+          </label>
+          <div class="fld">
+            <span class="lab">Show amounts in</span>
+            <div class="seg rc-fseg" id="rcDualSeg" role="group" aria-label="Show amounts in">
+              <button class="on" type="button" data-v="one">One system</button>
+              <button type="button" data-v="both">Both systems</button>
+            </div>
+          </div>
+          <label class="fld" style="margin-bottom:0">
+            <span class="lab">Oven temperature <span class="unit">optional</span></span>
+            <div class="rc-temp">
+              <div class="inp"><input id="rcTemp" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g. 350"></div>
+              <div class="seg" id="rcTempSeg" role="group" aria-label="Oven temperature unit">
+                <button class="on" type="button" data-v="F">°F</button>
+                <button type="button" data-v="C">°C</button>
+              </div>
+            </div>
+          </label>
+        </div>
+
+        <div class="add-row split" style="margin-top:16px">
+          <span></span>
+          <button class="advbtn" id="rcAdvBtn" type="button">
+            <span id="rcAdvBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div class="card" id="rcOutCard">
+      <div class="card-pad">
+        <div class="res-lab">Scale factor</div>
+        <div class="res-big" id="rcBig">—</div>
+        <div class="res-sub" id="rcSub">Paste your ingredients, then set the servings or a multiplier.</div>
+
+        <div id="rcBody" style="display:none">
+          <p class="res-tip adv-tip" id="rcTip" style="display:none"></p>
+          <p class="res-tip adv-tip" id="rcOven" style="display:none"></p>
+
+          <div class="tally-head" style="margin-top:14px">
+            <h3>Ingredients</h3>
+            <span class="rc-acts"><button type="button" id="rcCopy">Copy</button><button type="button" id="rcPrint">Print</button></span>
+          </div>
+          <div id="rcList"></div>
+          <p class="add-note" id="rcListNote" style="display:none;text-align:left"></p>
+
+          <div id="rcPanWrap" style="display:none">
+            <div class="fc-grp">Your pans, drawn to scale</div>
+            <div class="sq-diagram" id="rcPan"></div>
+          </div>
+
+          <div id="rcCompWrap" style="display:none">
+            <div class="fc-grp">What&rsquo;s in it, by weight</div>
+            <div id="rcComp"></div>
+            <p class="add-note" id="rcCompNote" style="text-align:left;margin-top:8px"></p>
+          </div>
+
+          <div id="rcCostWrap" style="display:none">
+            <div class="proj-sep"></div>
+            <div class="tally-head"><h3>Cost</h3></div>
+            <p class="add-note" style="text-align:left;margin:-6px 0 8px">Optional — what the original amount of each ingredient costs you.</p>
+            <div id="rcCostRows"></div>
+            <p class="rc-ctot" id="rcCostTot"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- mobile sticky bar -->
+  <div class="mbar" id="mbar">
+    <span class="mbar-lab" id="rcMLab">Scale factor</span>
+    <div class="mbar-vals"><b id="rcMVal">—</b></div>
+  </div>
+
+  <div class="related-calcs">
+    <p class="related-calcs-h">More calculators that may interest you</p>
+    <div class="pills">
+      <a class="pill" href="/fraction-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 4v3M12 17v3"/></svg>
+        Fraction Calculator
+      </a>
+      <a class="pill" href="/ratio-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="12" r="1.5"/><circle cx="16" cy="12" r="1.5"/><path d="M12 5v14"/></svg>
+        Ratio Calculator
+      </a>
+      <a class="pill" href="/percentage-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7" cy="7" r="3"/><circle cx="17" cy="17" r="3"/><path d="M6 18L18 6"/></svg>
+        Percentage Calculator
+      </a>
+      <a class="pill" href="/macro-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 3"/></svg>
+        Macro Calculator
+      </a>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use the recipe converter</h2>
+        <p>Paste your ingredients into the box, <strong>one per line</strong>, in any common format — <code>2 cups flour</code>, <code>1 1/2 tbsp butter</code>, <code>200g sugar</code>, <code>butter – 250g</code>. Type how many servings the recipe makes and how many you want, or switch to <strong>By multiplier</strong> and type 2, 3 or 1/2. Every amount is scaled and shown the way you would measure it. Pick <strong>US</strong> or <strong>Metric</strong> under Units if you want the whole recipe in one system, or leave it on As written to keep your units.</p>
+
+        <h2>How to scale a recipe</h2>
+        <div class="formula">
+          new amount = old amount × (servings wanted ÷ servings in the recipe)
+          <small>THE SAME FACTOR GOES ON EVERY INGREDIENT</small>
+        </div>
+        <p>A recipe for 4 that you need for 6 has a factor of 6 ÷ 4 = <strong>1.5</strong>. Multiply every ingredient by it. The hard part is not the multiplication — it is that the answer is rarely something you can measure. Here is that recipe at 1.5×:</p>
+        <table class="dtable">
+          <thead><tr><th>Ingredient</th><th>Original</th><th>At 1.5×</th></tr></thead>
+          <tbody>
+            <tr><td>All-purpose flour</td><td>2 cups</td><td>3 cups</td></tr>
+            <tr><td>Sugar</td><td>½ cup</td><td>¾ cup</td></tr>
+            <tr><td>Large eggs</td><td>3</td><td>5 (exactly 4½)</td></tr>
+            <tr><td>Vanilla extract</td><td>1 tsp</td><td>1½ tsp</td></tr>
+            <tr><td>Butter</td><td>1½ tbsp</td><td>2 tbsp + 1 tsp (exactly 2¼ tbsp)</td></tr>
+          </tbody>
+        </table>
+        <p>The converter shows the exact value next to anything it had to round, so you always know how far the kitchen-friendly amount is from the maths.</p>
+
+        <h2>Scaling by pan size</h2>
+        <p>When a recipe is written for one pan and you only have another, scale by <strong>area</strong>, not by the length of the sides. Open <strong>Go advanced</strong>, choose Pan size, and enter both pans. An 8 × 8 inch pan holds 64 square inches and a 9 × 13 inch pan holds 117, so the 9 × 13 needs <strong>1.83×</strong> the recipe. A 9-inch round pan (63.6 square inches) to an 8-inch round pan (50.3) is <strong>0.79×</strong>. Scaling by area keeps the batter at the same depth, so the baking time stays close to the original.</p>
+
+        <h2>What doesn&rsquo;t scale in a straight line</h2>
+        <ul>
+          <li><strong>Salt and strong spices</strong> — past about 3× add them gradually and taste. The converter flags these lines.</li>
+          <li><strong>Baking powder, baking soda and yeast</strong> — fine for doubling or halving, but unreliable at much larger or smaller factors.</li>
+          <li><strong>Eggs</strong> — you can&rsquo;t use 4½ eggs, so round to a whole egg or beat one and measure part of it (a large egg is about 3 tablespoons).</li>
+          <li><strong>Time and heat</strong> — these depend on the depth of food in the pan, not the amount. Check for doneness early.</li>
+        </ul>
+      </div>
+
+      <div>
+        <h2>Cups to grams</h2>
+        <p>A cup measures volume and a gram measures weight, so converting between them needs the density of the ingredient. The converter has about 40 built in. Typical weight of 1 US cup (±5%, depending on how it is scooped):</p>
+        <table class="dtable">
+          <thead><tr><th>Ingredient</th><th>1 US cup</th></tr></thead>
+          <tbody>
+            <tr><td>All-purpose or bread flour</td><td>120 g</td></tr>
+            <tr><td>Cake flour</td><td>114 g</td></tr>
+            <tr><td>Almond flour</td><td>96 g</td></tr>
+            <tr><td>Granulated sugar</td><td>200 g</td></tr>
+            <tr><td>Brown sugar (packed)</td><td>213 g</td></tr>
+            <tr><td>Powdered sugar</td><td>120 g</td></tr>
+            <tr><td>Butter</td><td>227 g</td></tr>
+            <tr><td>Honey</td><td>340 g</td></tr>
+            <tr><td>Rolled oats</td><td>90 g</td></tr>
+            <tr><td>Cocoa powder</td><td>85 g</td></tr>
+            <tr><td>Cornstarch</td><td>128 g</td></tr>
+            <tr><td>Chocolate chips</td><td>170 g</td></tr>
+            <tr><td>White rice, uncooked</td><td>185 g</td></tr>
+            <tr><td>Peanut butter</td><td>256 g</td></tr>
+          </tbody>
+        </table>
+        <p>Liquids such as water and milk are shown in millilitres: 1 US cup is about 240 ml. Ingredients that are not in the table are converted by volume only, and the converter tells you when it has no weight for one.</p>
+
+        <h2>Cups, tablespoons and teaspoons around the world</h2>
+        <p>A cup is not the same size everywhere. Choose the standard under <strong>Go advanced</strong> so the conversions match your recipe.</p>
+        <table class="dtable">
+          <thead><tr><th>Standard</th><th>Cup</th><th>Tbsp</th><th>Tsp</th></tr></thead>
+          <tbody>
+            <tr><td>US</td><td>236.6 ml</td><td>14.8 ml</td><td>4.9 ml</td></tr>
+            <tr><td>UK &amp; metric</td><td>250 ml</td><td>15 ml</td><td>5 ml</td></tr>
+            <tr><td>Australian</td><td>250 ml</td><td>20 ml</td><td>5 ml</td></tr>
+          </tbody>
+        </table>
+
+        <h2>Oven temperatures</h2>
+        <p>Enter an oven temperature under Go advanced to see it in both scales, with the fan-oven setting (20 °C lower) and the gas mark.</p>
+        <table class="dtable">
+          <thead><tr><th>°F</th><th>°C</th><th>Fan °C</th><th>Gas mark</th></tr></thead>
+          <tbody>
+            <tr><td>300</td><td>150</td><td>130</td><td>2</td></tr>
+            <tr><td>325</td><td>165</td><td>145</td><td>3</td></tr>
+            <tr><td>350</td><td>175</td><td>155</td><td>4</td></tr>
+            <tr><td>375</td><td>190</td><td>170</td><td>5</td></tr>
+            <tr><td>400</td><td>200</td><td>180</td><td>6</td></tr>
+            <tr><td>425</td><td>220</td><td>200</td><td>7</td></tr>
+            <tr><td>450</td><td>230</td><td>210</td><td>8</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>How do I scale a recipe up or down?</summary><p>Divide the servings you want by the servings the recipe makes to get a scale factor, then multiply every ingredient by it. A recipe for 4 that you need for 6 has a factor of 6 ÷ 4 = <strong>1.5</strong>, so 2 cups of flour becomes 3 cups. This converter does the multiplication for every line and rounds each result to an amount you can measure.</p></details>
+    <details class="faq"><summary>How many cups is 250 grams of flour?</summary><p>About <strong>2 cups plus 1½ tablespoons</strong>. All-purpose flour weighs roughly 120 grams per US cup, so 250 g is 250 ÷ 120 = 2.08 cups. The exact figure depends on how the flour is scooped, which is why weighing is more accurate than cups for baking.</p></details>
+    <details class="faq"><summary>What do I do when a scaled recipe needs part of an egg?</summary><p>Round to the nearest whole egg, or beat one egg and measure out the part you need — a large egg is about 3 tablespoons, so half an egg is about 1½ tablespoons. The converter rounds to a whole egg and shows the exact figure, for example 4½ eggs, so you can choose.</p></details>
+    <details class="faq"><summary>How do I convert a recipe from US cups to metric?</summary><p>Choose <strong>Metric</strong> under Units. Dry and solid ingredients become grams using a per-ingredient density (1 cup of all-purpose flour is 120 g, 1 cup of granulated sugar 200 g, 1 cup of butter 227 g) and liquids become millilitres (1 US cup is about 240 ml). Ingredients the converter doesn&rsquo;t know are converted by volume only.</p></details>
+    <details class="faq"><summary>Should I change the baking time when I scale a recipe?</summary><p>Cooking time depends on depth, not on the amount. If you scale by pan area, the batter keeps the same depth and the time should stay close to the original. If you make a bigger batch in the same pan it will be deeper and need longer; a smaller batch in the same pan is shallower and cooks sooner. Check for doneness a few minutes early either way.</p></details>
+  </section>
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+          <li><a href="/paint-calculator/">Paint Calculator</a></li>
+          <li><a href="/wallpaper-calculator/">Wallpaper Calculator</a></li>
+          <li><a href="/square-footage-calculator/">Square Footage Calculator</a></li>
+          <li><a href="/tape-measure-fraction-calculator/">Tape Measure Fraction Calculator</a></li>
+          <li><a href="/stair-calculator/">Stair Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/vo2-max-calculator/">VO2 Max Calculator</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/bmi-calculator/">BMI Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/ideal-weight-calculator/">Ideal Weight Calculator</a></li>
+          <li><a href="/lean-body-mass-calculator/">Lean Body Mass Calculator</a></li>
+          <li><a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio Calculator</a></li>
+          <li><a href="/calorie-calculator/">Calorie Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/water-intake-calculator/">Water Intake Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/protein-intake-calculator/">Protein Intake Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
+          <li><a href="/steps-to-miles-calculator/">Steps to Miles Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+          <li><a href="/grade-curve-calculator/">Grade Curve Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/fraction-calculator/">Fraction Calculator</a></li>
+          <li><a href="/standard-deviation-calculator/">Standard Deviation Calculator</a></li>
+          <li><a href="/scientific-notation-calculator/">Scientific Notation Calculator</a></li>
+          <li><a href="/weighted-average-calculator/">Weighted Average Calculator</a></li>
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+          <li><a href="/age-calculator/">Age Calculator</a></li>
+          <li><a href="/date-calculator/">Date Calculator</a></li>
+          <li><a href="/time-calculator/">Time Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Cooking &amp;</span> <span class="ft2">Kitchen</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/recipe-converter/">Recipe Converter</a></li>
+        </ul>
+      </div>
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/blog/">Blog</a>
+      <span aria-hidden="true">·</span>
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+</div>
+
+<script src="/assets/app.js?v=144"></script>
+<script>CalcThis.initRecipeCalc();</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>
