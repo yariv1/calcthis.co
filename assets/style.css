@@ -2026,9 +2026,8 @@
      .linkbtn, .res-hint, the sticky .mbar. The clock-time fields are the
      Time Calculator's own components, copied page-scoped exactly as the
      design system prescribes: .time-field > .time-box (.time-ghost +
-     .time-digits) + .ap-seg (full size, shift + dates) and .tf + .ap-mini
-     with the .tc-day row grid (weekly rows). Adds the 24-hour ribbon, week
-     chart, span bar and decimal-hour ruler SVG boxes. */
+     .time-digits) + .ap-seg, identical in Shift, Week and Dates. Adds the
+     24-hour ribbon, week chart, span bar and decimal-hour ruler SVG boxes. */
   .p-hours .modeseg{grid-template-columns:repeat(4,1fr);margin-bottom:18px}
   .p-hours .two{grid-template-columns:1fr 1fr}
   .p-hours .bf-res{margin:2px 0 14px}
@@ -2057,41 +2056,13 @@
   .p-hours .hr-add{display:block;margin:0 0 16px;padding:4px 0}
   .p-hours .hr-solo .fld{margin-bottom:14px}
   /* 24-hour mode hides the AM/PM toggles */
-  .p-hours.c24 .ap-seg,.p-hours.c24 .ap-mini{display:none}
+  .p-hours.c24 .ap-seg{display:none}
 
-  /* weekly rows — compact clock-time field (Start / End) + AM/PM mini-toggle */
-  .p-hours .tf{display:flex;align-items:center;gap:6px}
-  .p-hours .tf .time-box{width:52px;height:32px}
-  .p-hours .tf .time-ghost,.p-hours .tf .time-digits{font-size:14.5px;line-height:32px;padding-left:2px}
-  .p-hours .ap-mini{display:inline-flex;flex:none;background:#F2EBDF;border:1px solid var(--line);border-radius:7px;padding:2px}
-  .p-hours .ap-mini button{font:inherit;font-size:10.5px;font-weight:700;color:var(--muted);background:none;border:0;border-radius:5px;padding:5px 6px;cursor:pointer;transition:.12s}
-  .p-hours .ap-mini button.on{background:#fff;color:var(--ink);box-shadow:0 1px 1px rgba(0,0,0,.06)}
-  .p-hours .tc-day{display:grid;grid-template-columns:34px 1fr 1fr 84px;gap:9px;align-items:center;margin-bottom:13px}
-  .p-hours .tc-day .tc-dlab{font-size:14px;font-weight:600;color:var(--ink-soft)}
-  .p-hours .tc-day .fld{margin-bottom:0}
-  .p-hours .tc-day .tc-brk .lab{font-size:11.5px}
-  .p-hours .tc-head{display:none}
-  @media(min-width:521px){
-    .p-hours .tc-head{display:grid;margin-bottom:8px}
-    .p-hours .tc-colcap{font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
-    .p-hours .tc-head .tc-colcap:first-child{grid-column:1/3}
-    .p-hours .tc-day:not(.tc-head) .tc-brk .lab{display:none}
-  }
-  @media(max-width:520px){
-    .p-hours .tc-day{
-      grid-template-columns:30px 1fr 1fr;
-      grid-template-areas:"lab in out" "brk brk brk";
-      row-gap:12px;column-gap:9px;
-      padding:12px 0;border-bottom:1px solid var(--line);
-    }
-    .p-hours .tc-day .tc-dlab{grid-area:lab}
-    .p-hours .tc-day .tc-in{grid-area:in}
-    .p-hours .tc-day .tc-out{grid-area:out}
-    .p-hours .tc-day .tc-brk{grid-area:brk}
-    .p-hours .tf{justify-content:space-between}
-    .p-hours .tf .time-box{flex:1;min-width:0}
-  }
-
+  /* weekly day blocks — the day is the label, then the very same Start / End / Break fields as Shift mode */
+  .p-hours .hr-day{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));column-gap:12px;padding-top:12px;border-top:1px solid var(--line)}
+  .p-hours .hr-day:first-child{border-top:0;padding-top:0}
+  .p-hours .hr-daylab{grid-column:1/-1;font-family:'Fraunces',serif;font-size:15px;font-weight:600;color:var(--ink);margin-bottom:8px}
+  .p-hours .hr-day .fld{min-width:0;margin-bottom:12px}
   .p-hours .hr-cap2{font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin:14px 0 8px}
   .p-hours .hr-viz{margin:2px 0 12px;background:#FCFAF6;border:1px solid var(--line);border-radius:12px;padding:12px 14px 10px}
   .p-hours .hr-viz svg{display:block;width:100%;height:auto;overflow:visible}

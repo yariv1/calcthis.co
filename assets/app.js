@@ -9538,8 +9538,8 @@ CalcThis.hoursEngine = (function () {
    24-hour shift ribbon with the breaks cut out (overnight wraps), every format at once (h:mm,
    decimal, minutes) with payroll rounding shown before/after, and a Convert mode with a
    decimal-hour ruler. Go advanced = 24-hour clock, rounding (5 / 6 / 15 min), hourly rate,
-   daily/weekly overtime. Time fields are the Time Calculator's .time-field / .ap-seg /
-   .ap-mini components. Engine: CalcThis.hoursEngine. No shared state. */
+   daily/weekly overtime. Time fields are the Time Calculator's .time-field / .ap-seg
+   component, identical in every mode. Engine: CalcThis.hoursEngine. No shared state. */
 CalcThis.initHoursCalc = function () {
   var E = CalcThis.hoursEngine;
   var $ = function (id) { return document.getElementById(id); };
@@ -9596,14 +9596,8 @@ CalcThis.initHoursCalc = function () {
       '<input class="time-digits" type="text" inputmode="numeric" autocomplete="off" maxlength="5" aria-label="' + label.replace(/<[^>]*>/g, '') + '"></div>' +
       '<div class="seg ap-seg">' + APBTNS + '</div></div><div class="hr-info"></div></div>';
   }
-  /* compact field for the weekly rows (Time Calculator's time-card look) */
-  function tfMini(defAp, aria) {
-    return '<div class="tf hr-tf" data-ap="' + defAp + '"><div class="time-box"><div class="time-ghost" aria-hidden="true">' + GHOST + '</div>' +
-      '<input class="time-digits" type="text" inputmode="numeric" autocomplete="off" maxlength="5" aria-label="' + aria + '"></div>' +
-      '<div class="ap-mini">' + APBTNS + '</div></div>';
-  }
   function wire(tf) {
-    var seg = tf.querySelector('.ap-seg, .ap-mini');
+    var seg = tf.querySelector('.ap-seg');
     tf._f = { input: tf.querySelector('.time-digits'), ghost: tf.querySelector('.time-ghost'), seg: seg, ap: tf.getAttribute('data-ap'), info: tf.querySelector('.hr-info') };
     paintAp(tf._f); return tf._f;
   }
@@ -9673,6 +9667,17 @@ CalcThis.initHoursCalc = function () {
   function show(big, sub, mlab) {
     $('hrBig').textContent = big; $('hrUnit').textContent = '';
     $('hrSub').textContent = sub; $('hrMVal').textContent = big; $('hrMLab').textContent = mlab; $('hrResLab').textContent = mlab;
+    $('hrMVal').style.fontSize = '';
+  }
+  function plain(n) { return String(Math.round(n * 1000) / 1000); }
+  function cash(n) { return '$' + (Math.abs(n - Math.round(n)) < 0.005 ? Math.round(n).toLocaleString('en-US') : n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })); }
+  /* with an hourly rate, the sticky bar shows the sum: 40h × $22 = $880 */
+  function mbarPay(regMin, otMin, mult) {
+    var rate = numOf('hrRate'); if (!(st.adv && rate > 0)) return;
+    var total = regMin + otMin, pay = regMin / 60 * rate + otMin / 60 * rate * mult;
+    var val = plain(total / 60) + 'h × ' + cash(rate) + ' = ' + cash(pay);
+    $('hrMLab').textContent = otMin > 0 ? 'Hourly rate (+ overtime ×' + mult + ')' : 'Hourly rate';
+    $('hrMVal').textContent = val; $('hrMVal').style.fontSize = val.length > 22 ? '16px' : '';
   }
   function payRow(rows, minutes, label) {
     var rate = numOf('hrRate');
@@ -9700,7 +9705,7 @@ CalcThis.initHoursCalc = function () {
     t.push(['Decimal hours', E.dec(net)]);
     t.push(['Total minutes', E.commas(Math.round(net))]);
     if (st.round > 0) t.push(['Rounded to ' + st.round + ' min', E.colon(rounded) + ' · ' + E.dec(rounded) + ' h']);
-    payRow(t, rounded);
+    payRow(t, rounded); mbarPay(rounded, 0, 1);
     $('hrShiftTbl').innerHTML = trows(t);
     $('hrRibbon').innerHTML = ribbon(shifts, b.items) +
       '<div class="hr-key"><span><i class="k-w"></i>Worked</span>' + (b.items.some(function (x) { return x.from != null; }) ? '<span><i class="k-b"></i>Break</span>' : '') +
@@ -9717,8 +9722,8 @@ CalcThis.initHoursCalc = function () {
   function buildWeek() {
     var h = '';
     DAYS.forEach(function (d) {
-      h += '<div class="tc-day"><div class="tc-dlab">' + d + '</div><div class="tc-in">' + tfMini('am', d + ' start time') + '</div><div class="tc-out">' + tfMini('pm', d + ' end time') + '</div>' +
-        '<label class="fld tc-brk"><span class="lab">Break</span><div class="inp"><input class="hr-bin" type="text" inputmode="numeric" autocomplete="off" placeholder="0" aria-label="' + d + ' break"><span class="suf">min</span></div></label></div>';
+      h += '<div class="hr-day"><div class="hr-daylab">' + d + '</div>' + tfFull('Start time', 'am', false) + tfFull('End time', 'pm', false) +
+        '<label class="fld"><span class="lab">Unpaid break</span><div class="inp"><input class="hr-bin" type="text" inputmode="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="e.g. 30" aria-label="' + d + ' break"></div></label></div>';
     });
     $('hrWeekRows').innerHTML = h; wireAll($('hrWeekRows'));
   }
@@ -9746,6 +9751,7 @@ CalcThis.initHoursCalc = function () {
     if (st.adv && (otw > 0 || otd > 0)) { t.push(['Regular hours', E.hmFull(ot.reg)]); t.push(['Overtime hours (×' + mult + ')', E.hmFull(ot.ot)]); }
     var rate = numOf('hrRate');
     if (st.adv && rate > 0) t.push(['Gross pay', money(ot.reg / 60 * rate + ot.ot / 60 * rate * mult), true]);
+    mbarPay(ot.reg, ot.ot, mult);
     $('hrWeekTbl').innerHTML = trows(t);
     var maxH = Math.max(10, Math.ceil(Math.max.apply(null, mins) / 60)), X0 = 14, BW = 30, GAP = 12, Y0 = 118, HH = 90, svg = '';
     function y(h) { return Y0 - h / maxH * HH; }
@@ -9790,7 +9796,7 @@ CalcThis.initHoursCalc = function () {
     var wall = Math.round((Date.UTC(ed.getFullYear(), ed.getMonth(), ed.getDate(), 0, e) - Date.UTC(sd.getFullYear(), sd.getMonth(), sd.getDate(), 0, s)) / 60000);
     if (wall !== mins) t.push(['Daylight-saving change', (mins - wall > 0 ? '+' : '−') + E.hm(Math.abs(mins - wall)) + ' included']);
     if (st.round > 0) t.push(['Rounded to ' + st.round + ' min', E.colon(rounded)]);
-    payRow(t, rounded);
+    payRow(t, rounded); mbarPay(rounded, 0, 1);
     $('hrDatesTbl').innerHTML = trows(t);
     var n = Math.round((ed - sd) / 86400000) + 1, svg = '', CW = 296;
     if (n <= 45) {
@@ -9862,7 +9868,7 @@ CalcThis.initHoursCalc = function () {
   });
   document.addEventListener('click', function (e) {
     var t = e.target; if (!t.closest || !t.closest('.p-hours')) return;
-    var apb = t.closest('.ap-seg button, .ap-mini button');
+    var apb = t.closest('.ap-seg button');
     if (apb) { var tf = apb.closest('.hr-tf'); if (tf && tf._f && apb.getAttribute('data-ap') !== tf._f.ap) { tf._f.ap = apb.getAttribute('data-ap'); paintAp(tf._f); render(); } return; }
     var now = t.closest('.hr-now');
     if (now) { var tf2 = now.closest('.hr-tf'), np = nowParts(); setField(tf2, np.t, np.ap); render(); }
