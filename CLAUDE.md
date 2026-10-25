@@ -165,12 +165,15 @@ must be built from the article's actual units, every time, not pasted from a tem
 ## ⛔ SESSION HANDOFF — START HERE (written 2026-10-15; full detail in `HANDOFF.md`)
 
 **Read `HANDOFF.md` in full before replying.** Do not make the user re-explain anything in it.
-- **State:** v146 · 48 calculators · 25 articles · 80 pages · `main` clean and pushed (last code commit `9f0dfc8`).
-- **Just shipped:** #25 Recipe Converter (v144, Cooking & Kitchen vertical), BMR Calculator (v146).
-- **NEXT TASK:** **Hours Calculator** (then Triangle/Pythagorean, Loan/Mortgage engine, Paycheck, Sales Tax, Unit Converter, Tip, Random
+- **State:** v150 · 49 calculators · 25 articles · 81 pages · `main` clean and pushed (last code commit `e7863d0`).
+- **Just shipped:** Recipe Converter (v144, Cooking & Kitchen vertical), BMR Calculator (v146), Hours Calculator (v150).
+- **NEXT TASK:** **Triangle / Pythagorean Calculator** (then Loan/Mortgage engine, Paycheck, Sales Tax, Unit Converter, Tip, Random
   Number Generator — the user decided 2026-10-25 to build ALL the Hard high-traffic ones, taking the Easy long-tails; full ranked plan in the
   roadmap md). Start with the Rule 8 research report (open every competitor live, visual AND functional differentiator, ≤3 decisions with
   recommendations), **wait for approval**, build, **deep QA (hard rule above, automatic)**, preview, deploy only on "deploy".
+- **A bare "preview" request = ONLY the localhost link, nothing else** (user, 2026-10-25). **Reuse design-system components** — grep
+  `md-files/calcthis-design-system.md` + the nearest live page for any input widget BEFORE building (Hours calc time field was rebuilt after I
+  invented an AM/PM selector when `.time-field > .ap-seg` already existed).
 - **Final summary of every build must contain:** (1) the findings — how we differ/beat competitors, (2) the QA list incl.
   what was NOT verified, (3) preview links (localhost + LAN). User flagged both omissions on 2026-10-25.
 - **First move next session:** 2-3 line "synced" reply (state + next task).
@@ -189,7 +192,7 @@ must be built from the article's actual units, every time, not pasted from a tem
 
 ## Project state
 
-- **Asset version:** v146 (bumped, `node build.js` run and deployed this session)
+- **Asset version:** v150 (bumped, `node build.js` run and deployed this session)
 - **Total pages:** 79 live
 - **Model:** Sonnet 5
 
@@ -270,7 +273,7 @@ Paint, Wallpaper, Scientific Notation.
 
 ---
 
-## Live calculators (48)
+## Live calculators (49)
 
 ### Construction & Gardening (13)
 Board Foot · Gravel · Sand · Topsoil · Mulch · Concrete · Flooring · Tile · Square Footage · Tape Measure Fraction · Stair · Paint · Wallpaper
@@ -281,17 +284,27 @@ Pace · Race Time Predictor · VO2 Max · Heart Rate Zone · Zone 2 Heart Rate �
 ### School & Grades (5)
 Final Grade · GPA · Grade · Test Score · Grade Curve
 
-### Math & Numbers (9)
-Fraction · Standard Deviation · Scientific Notation · Weighted Average · Ratio · Percentage · Age · Date · Time
+### Math & Numbers (10)
+Fraction · Standard Deviation · Scientific Notation · Weighted Average · Ratio · Percentage · Age · Date · Time · Hours
 
 ### Cooking & Kitchen (1)
 Recipe Converter
 
-Total live calculators: **48**
+Total live calculators: **49**
 
 ---
 
-## Last session (v143–v146)
+## Last session (v143–v150)
+
+- Researched, built and deployed **Hours Calculator** (`/hours-calculator/`, v150; Ahrefs >10K Hard ×2 for hours / work hours calculator,
+  "minutes to hours" >1K Easy). Research opened calculator.net, CalculatorSoup, Gigacalculator, Inch Calculator, Clockify live; user approved all 3
+  decisions (separate page from Time Calculator with cross-links; Week tab included; simple overtime under Go advanced). 4 tabs: Shift (split +
+  overnight shifts, breaks as minutes/hours/clock range), Week (overtime + pay), Dates (real elapsed hours, DST note), Convert (min/decimal/h:mm +
+  decimal-hour ruler). Live 24-hour shift ribbon, payroll rounding 5/6/15 shown before/after. Clock 12/24 switch sits under the mode tabs (user
+  correction: NOT inside Go advanced). **Time fields are the Time Calculator's own DS components** (masked `.time-field` + `.ap-seg`, `.tf` +
+  `.ap-mini` in week rows) after a user correction. `CalcThis.hoursEngine` (pure; `HOURS-ENGINE:START/END`) + `CalcThis.initHoursCalc`, `.p-hours`.
+  Not verified: real phone; Dates picker in real Chrome. Article deferred.
+- Process: user wants a bare "preview" answered with only the link; Stop hook caught narration several more times.
 
 - Researched, built and deployed **BMR Calculator** (`/bmr-calculator/`, v146). The user ran Ahrefs on 11 head terms (BMR, Hours, Triangle,
   Pythagorean, Random Number, Unit Converter, Sales Tax, Mortgage, Loan, Paycheck, Tip) — all Hard heads — and decided to build them all
