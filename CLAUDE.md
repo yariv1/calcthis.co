@@ -165,11 +165,11 @@ must be built from the article's actual units, every time, not pasted from a tem
 ## ⛔ SESSION HANDOFF — START HERE (written 2026-10-15; full detail in `HANDOFF.md`)
 
 **Read `HANDOFF.md` in full before replying.** Do not make the user re-explain anything in it.
-- **State:** v144 · 47 calculators · 25 articles · 79 pages · `main` clean and pushed (last code commit `6ee59ab`).
-- **Just shipped:** #25 Recipe Converter (v144, new Cooking & Kitchen vertical).
-- **NEXT TASK:** pick from the backlog in `md-files/calcthis-calculator-roadmap.md` (#26 Sales Tax, #27 Unit Converter,
-  #28 Paycheck, #29 Tip — all lower priority/hard) — **ask the user which** or propose new high-traffic ideas via the
-  Rule 8 research report (open every competitor live, visual AND functional differentiator, ≤3 decisions with
+- **State:** v146 · 48 calculators · 25 articles · 80 pages · `main` clean and pushed (last code commit `9f0dfc8`).
+- **Just shipped:** #25 Recipe Converter (v144, Cooking & Kitchen vertical), BMR Calculator (v146).
+- **NEXT TASK:** **Hours Calculator** (then Triangle/Pythagorean, Loan/Mortgage engine, Paycheck, Sales Tax, Unit Converter, Tip, Random
+  Number Generator — the user decided 2026-10-25 to build ALL the Hard high-traffic ones, taking the Easy long-tails; full ranked plan in the
+  roadmap md). Start with the Rule 8 research report (open every competitor live, visual AND functional differentiator, ≤3 decisions with
   recommendations), **wait for approval**, build, **deep QA (hard rule above, automatic)**, preview, deploy only on "deploy".
 - **Final summary of every build must contain:** (1) the findings — how we differ/beat competitors, (2) the QA list incl.
   what was NOT verified, (3) preview links (localhost + LAN). User flagged both omissions on 2026-10-25.
@@ -189,7 +189,7 @@ must be built from the article's actual units, every time, not pasted from a tem
 
 ## Project state
 
-- **Asset version:** v144 (bumped, `node build.js` run and deployed this session)
+- **Asset version:** v146 (bumped, `node build.js` run and deployed this session)
 - **Total pages:** 79 live
 - **Model:** Sonnet 5
 
@@ -270,13 +270,13 @@ Paint, Wallpaper, Scientific Notation.
 
 ---
 
-## Live calculators (47)
+## Live calculators (48)
 
 ### Construction & Gardening (13)
 Board Foot · Gravel · Sand · Topsoil · Mulch · Concrete · Flooring · Tile · Square Footage · Tape Measure Fraction · Stair · Paint · Wallpaper
 
-### Health & Fitness (19)
-Pace · Race Time Predictor · VO2 Max · Heart Rate Zone · Zone 2 Heart Rate · BMI · Body Fat · Ideal Weight · Lean Body Mass · Waist-to-Hip Ratio · Calorie · TDEE · One Rep Max · Sleep · Water Intake · Macro · Protein Intake · Peptide Reconstitution · Steps to Miles
+### Health & Fitness (20)
+Pace · Race Time Predictor · VO2 Max · Heart Rate Zone · Zone 2 Heart Rate · BMI · Body Fat · Ideal Weight · Lean Body Mass · Waist-to-Hip Ratio · Calorie · BMR · TDEE · One Rep Max · Sleep · Water Intake · Macro · Protein Intake · Peptide Reconstitution · Steps to Miles
 
 ### School & Grades (5)
 Final Grade · GPA · Grade · Test Score · Grade Curve
@@ -287,11 +287,20 @@ Fraction · Standard Deviation · Scientific Notation · Weighted Average · Rat
 ### Cooking & Kitchen (1)
 Recipe Converter
 
-Total live calculators: **47**
+Total live calculators: **48**
 
 ---
 
-## Last session (v143–v144)
+## Last session (v143–v146)
+
+- Researched, built and deployed **BMR Calculator** (`/bmr-calculator/`, v146). The user ran Ahrefs on 11 head terms (BMR, Hours, Triangle,
+  Pythagorean, Random Number, Unit Converter, Sales Tax, Mortgage, Loan, Paycheck, Tip) — all Hard heads — and decided to build them all
+  (ranked plan in the roadmap md). BMR research opened calculator.net, Omnicalculator, Gigacalculator, bmrcalculator.org live; user approved
+  all 3 decisions as recommended (RMR in text only; ages 10-100 with Schofield under 18; Mifflin headline). **Differentiators:** five formulas
+  at once (Mifflin-St Jeor, Revised H-B, H-B, Schofield, Katch-McArdle with body fat) on one scale with a ±10% realistic range, kcal + kJ + per
+  hour, clickable activity table driving a where-your-calories-go bar and lose/maintain/gain targets with a below-BMR flag, Metric/US/UK(stones)
+  units that carry the exact value across a switch. Go advanced = body fat %, headline formula, per-kg/per-minute, RMR note. `CalcThis.bmrEngine`
+  (pure; `BMR-ENGINE:START/END` in app.js) + `CalcThis.initBmrCalc`, `.p-bmr`. Not verified: real phone, real Chrome (this build). Article deferred.
 
 - Researched, built and deployed **Recipe Converter** (`/recipe-converter/`, roadmap #25, Ahrefs >1K Easy) — opens the new
   **Cooking & Kitchen** vertical (header column in col 3, 5th footer pillar — `.footer-cols` is now `repeat(5,1fr)` — homepage

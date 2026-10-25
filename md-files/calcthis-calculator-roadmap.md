@@ -48,11 +48,19 @@ Pregnancy + Ovulation immediately **after** AdSense approval.
 | 23 | **Wallpaper Calculator** | >1K, **Easy** (with repeat / sq ft / inches >100 Easy). Same area engine; pairs with Paint. | Construction & Gardening | Simple–Medium | ✅ shipped v140 |
 | 24 | **Scientific Notation Calculator** | >10K, Medium. Long-tail all <100. | Math & Numbers | Simple | ✅ shipped v142 |
 | 25 | **Recipe Converter** | >1K, Easy (129 keywords total — small). Opens a Cooking vertical. | Cooking (new) | Medium | ✅ shipped v144 |
+| — | **BMR Calculator** | >100K Hard (for women/to lose weight >1K Hard). 5 formulas on one scale, kcal+kJ, activity table → targets. | Health & Fitness | Simple | ✅ shipped v146 |
 | 26 | **Sales Tax Calculator** | >10K but **Hard**; state long-tails >1K (NJ/Missouri/Ohio Easy; CA/NYC Hard). Needs accurate per-state/local rate data. | Finance (new) | Medium–High | ⬜ lower priority |
 | 27 | **Unit Converter** | Head term >10K **Easy**, but every variant Hard and Google answers it inline. Large scope. | Math & Numbers | High | ⬜ lower priority |
 | 28 | **Paycheck Calculator** | Head >100K Hard; state variants (TX/CA/FL/IL, hourly, salary) >10K **Easy**. Needs accurate federal+state tax tables — YMYL, high risk. | Finance (new) | High | ⬜ lower priority |
 | 29 | **Tip Calculator** | Head >100K Hard; Google inline; Easy variants are tiny niches (tattoo/nail salon >100). | Finance (new) | Simple | ⬜ lowest priority |
 | — | ~~Cooking Measurement Calculator~~ | <100/mo, Medium (2 keywords total). | — | — | ❌ dropped |
+
+**BUILD PLAN (user decision 2026-10-25, after sending Ahrefs screenshots — ALL of these are Hard head terms but we build them anyway,
+winning the Easy long-tails and doing each better):** in order → ~~BMR~~ ✅ v146 · **Hours Calculator** (>10K Hard ×2, "minutes to hours" >1K Easy; cousin of Time) ·
+**Triangle / Pythagorean** (>10K Hard ×2; 30-60-90, 45-45-90, area, isosceles, special right >1K Easy; Pythagorean folded in; live diagram) ·
+**Loan / Auto-loan / Mortgage engine** (>100K / >1M Hard; one amortization engine + chart) · **Paycheck** (>100K Hard; state pages TX/FL/IL/hourly >10K Easy;
+fetch current IRS tables first) · **Sales Tax** (>10K Hard; NJ/MO/OH/MN/reverse >1K Easy) · **Unit Converter** (>10K Medium, the only non-Hard head) ·
+**Tip** (>100K Hard) · **Random Number Generator** (>100K Hard; cheap) — Tip/RNG can slot in anywhere as cheap wins. Pythagorean alone is tiny (29 kws).
 
 ### Companion articles to build alongside
 - Ideal Weight → "What's My Ideal Weight? Height, Frame, and the Formulas"

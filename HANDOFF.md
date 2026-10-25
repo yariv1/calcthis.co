@@ -9,8 +9,10 @@ must NOT have to re-explain anything in here — that is the whole purpose of th
 
 ## 0. THE 60-SECOND VERSION (read this if nothing else)
 
-- **Live:** asset **v144** · **47 calculators** · **25 blog articles** · **79 pages**. `main` is clean and
-  pushed (last code commit `6ee59ab`). Nothing is half-built, nothing is waiting on the user.
+- **Live:** asset **v146** · **48 calculators** · **25 blog articles** · **80 pages**. `main` is clean and
+  pushed (last code commit `9f0dfc8`).
+- **Also shipped 2026-10-25: BMR Calculator (v146).** Plan for the rest (user: build ALL the Hard high-traffic ones): Hours → Triangle/Pythagorean →
+  Loan/Mortgage → Paycheck → Sales Tax → Unit Converter → Tip → Random Number — ranked in `md-files/calcthis-calculator-roadmap.md`. **NEXT: Hours Calculator research report.** Nothing is half-built, nothing is waiting on the user.
 - **Just finished (2026-10-25): #25 Recipe Converter** — new **Cooking & Kitchen** vertical (nav col 3, 5th footer pillar,
   homepage `#grp-cooking` + tab). Engine `CalcThis.recipeEngine` (pure, `RECIPE-ENGINE:START/END` in app.js) + `initRecipeCalc`.
   **NEXT:** no calculator is in progress — ask the user which of #26-29 (Sales Tax / Unit Converter / Paycheck / Tip, all
