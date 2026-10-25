@@ -9392,6 +9392,546 @@ CalcThis.initBmrCalc = function () {
 };
 
 /* =========================================================
+   HOURS CALCULATOR — pure engine (no DOM). Loose clock parsing ("9", "915", "9:15a",
+   "5p", "1730", "0830", noon, midnight), end-after-start resolution with overnight
+   shifts, break parsing (minutes, "1h", "0:30", or a clock range such as "12-12:30"),
+   payroll rounding, overtime (daily threshold + weekly threshold, no pyramiding) and
+   minutes <-> decimal-hours <-> h:mm conversion.
+   ========================================================= */
+/* HOURS-ENGINE:START */
+CalcThis.hoursEngine = (function () {
+  /* ---------- clock parsing ---------- */
+  /* -> null | { kind: 'am'|'pm'|'24'|'amb', min (kind != amb), h, m } ; amb = 1-12 with no marker */
+  function parseClock(txt, c24) {
+    var t = String(txt == null ? '' : txt).toLowerCase().replace(/\./g, '').replace(/\s+/g, '');
+    if (!t) return null;
+    if (t === 'noon') return { kind: 'pm', min: 720, h: 12, m: 0 };
+    if (t === 'midnight') return { kind: 'am', min: 0, h: 12, m: 0 };
+    var m = /^(\d{1,2}):(\d{2})(a|am|p|pm)?$/.exec(t) || /^(\d{1,2})(\d{2})(a|am|p|pm)?$/.exec(t) || /^(\d{1,2})()(a|am|p|pm)?$/.exec(t);
+    if (!m) return null;
+    var hs = m[1], h = parseInt(hs, 10), mi = m[2] ? parseInt(m[2], 10) : 0, mk = m[3] ? m[3].charAt(0) : '';
+    if (mi > 59) return null;
+    if (mk) {
+      if (h < 1 || h > 12) return null;
+      return { kind: mk === 'p' ? 'pm' : 'am', min: (h % 12) * 60 + (mk === 'p' ? 720 : 0) + mi, h: h, m: mi };
+    }
+    var lead = /^0\d/.test(hs);
+    if (c24 || h >= 13 || lead || h === 0) {
+      if (h > 24 || (h === 24 && mi > 0)) return null;
+      return { kind: '24', min: h * 60 + mi, h: h, m: mi };
+    }
+    if (h < 1 || h > 12) return null;
+    return { kind: 'amb', h: h, m: mi };
+  }
+  function fmtClock(min, c24) {
+    var d = ((min % 1440) + 1440) % 1440, h = Math.floor(d / 60), m = d % 60, mm = (m < 10 ? '0' : '') + m;
+    if (c24) return (h < 10 ? '0' : '') + h + ':' + mm;
+    return ((h % 12) || 12) + ':' + mm + ' ' + (h < 12 ? 'AM' : 'PM');
+  }
+  function ambHalf(p) { return (p.h === 12 || p.h <= 4) ? 1 : 0; }           // workday guess: 12 and 1-4 are afternoon, 5-11 morning
+
+  /* a single clock time -> minutes in the day (for the dates mode) */
+  function single(txt, c24, half) {
+    var p = parseClock(txt, c24); if (!p) return null;
+    if (p.kind !== 'amb') return { min: p.min % 1440, label: fmtClock(p.min, c24), amb: false };
+    if (half == null) half = ambHalf(p);
+    var min = (p.h % 12) * 60 + p.m + half * 720;
+    return { min: min, label: fmtClock(min, c24), amb: true };
+  }
+
+  /* start + end text -> { ok, sMin, eMin, dur, sLabel, eLabel, sAmb, eAmb, next } ; an end that is not later than the start belongs to the next day */
+  function resolve(sTxt, eTxt, o) {
+    o = o || {};
+    var s = parseClock(sTxt, o.c24), e = parseClock(eTxt, o.c24);
+    if (!s || !e) return { ok: false, s: s, e: e };
+    var sMin, eMin, sAmb = s.kind === 'amb', eAmb = e.kind === 'amb';
+    if (sAmb) { var half = o.sHalf != null ? o.sHalf : ambHalf(s); sMin = (s.h % 12) * 60 + s.m + half * 720; } else sMin = s.min;
+    if (eAmb) {
+      var base = (e.h % 12) * 60 + e.m;
+      if (o.eHalf != null) { eMin = base + o.eHalf * 720; while (eMin < sMin) eMin += 1440; }
+      else { var c = [base, base + 720, base + 1440, base + 2160], i = 0; while (i < c.length - 1 && c[i] <= sMin) i++; eMin = c[i]; }
+    } else {
+      eMin = e.min;
+      if (eMin < sMin) eMin += 1440;
+    }
+    return { ok: true, sMin: sMin, eMin: eMin, dur: eMin - sMin, sLabel: fmtClock(sMin, o.c24), eLabel: fmtClock(eMin, o.c24), sAmb: sAmb, eAmb: eAmb, next: eMin >= 1440 };
+  }
+
+  /* ---------- breaks ---------- */
+  /* "30", "30 min", "1h", "0:30", "15, 15", "12-12:30", "12:00 to 12:30" -> { total, items:[{min, from, to}], err } */
+  function parseBreaks(txt, o) {
+    var out = { total: 0, items: [], err: '' };
+    var t = String(txt == null ? '' : txt).trim();
+    if (!t) return out;
+    var parts = t.split(/\s*(?:,|;|\+|\band\b)\s*/i);
+    for (var i = 0; i < parts.length; i++) {
+      var p = parts[i].trim(); if (!p) continue;
+      var m, min = null, from = null, to = null;
+      if ((m = /^(.+?)\s*(?:-|–|—|\bto\b)\s*(.+)$/i.exec(p))) {
+        var r = resolve(m[1], m[2], o);
+        if (r.ok) { min = r.dur; from = r.sMin % 1440; to = r.eMin; }
+      }
+      if (min === null && (m = /^(\d+(?:\.\d+)?)\s*(?:m|min|mins|minute|minutes)?$/i.exec(p))) min = parseFloat(m[1]);
+      else if (min === null && (m = /^(\d+(?:\.\d+)?)\s*(?:h|hr|hrs|hour|hours)$/i.exec(p))) min = parseFloat(m[1]) * 60;
+      else if (min === null && (m = /^(\d+):(\d{2})$/.exec(p)) && +m[2] < 60) min = +m[1] * 60 + +m[2];
+      if (min === null || !isFinite(min) || min < 0) { out.err = p; return out; }
+      out.items.push({ min: min, from: from, to: to });
+      out.total += min;
+    }
+    return out;
+  }
+
+  /* ---------- rounding / formatting ---------- */
+  function roundMin(min, rule) { return rule > 0 ? Math.round(min / rule) * rule : min; }
+  function hm(min) {
+    var r = Math.round(min), h = Math.floor(r / 60), m = r % 60;
+    if (h === 0) return m + ' min';
+    return commas(h) + ' h' + (m ? ' ' + m + ' min' : '');
+  }
+  function hmFull(min) { var r = Math.round(min), h = Math.floor(r / 60); return h === 0 ? (r % 60) + ' min' : commas(h) + ' h ' + (r % 60) + ' min'; }
+  function colon(min) { var r = Math.round(min), m = r % 60; return Math.floor(r / 60) + ':' + (m < 10 ? '0' : '') + m; }
+  function dec(min, dp) { return (min / 60).toFixed(dp == null ? 2 : dp); }
+  function commas(s) { return String(s).replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+
+  /* ---------- overtime ---------- */
+  /* dayMins: array of worked minutes per day. opts: { weekly (hours or 0), daily (hours or 0) } -> { reg, ot } in minutes.
+     Daily overtime comes off first; weekly overtime applies to what is left, so no hour is counted twice. */
+  function overtime(dayMins, o) {
+    var tot = 0, dayOT = 0, i;
+    for (i = 0; i < dayMins.length; i++) {
+      var d = dayMins[i] || 0; tot += d;
+      if (o.daily > 0) dayOT += Math.max(0, d - o.daily * 60);
+    }
+    var regAfterDaily = tot - dayOT, wkOT = o.weekly > 0 ? Math.max(0, regAfterDaily - o.weekly * 60) : 0;
+    var ot = dayOT + wkOT;
+    return { total: tot, ot: ot, reg: tot - ot };
+  }
+
+  /* ---------- converting a duration ---------- */
+  /* from: 'min' | 'dec' | 'hm' -> minutes (float) or null */
+  function parseDuration(txt, from) {
+    var t = String(txt == null ? '' : txt).trim().toLowerCase();
+    t = /^\d+,\d{1,2}$/.test(t) ? t.replace(',', '.') : t.replace(/,/g, '');   // 7,75 is a decimal comma; 1,500 is a thousand
+    if (!t) return null;
+    var m;
+    if (from === 'hm') {
+      if ((m = /^(\d+):(\d{1,2})$/.exec(t))) return +m[2] < 60 ? +m[1] * 60 + +m[2] : null;
+      if ((m = /^(\d+(?:\.\d+)?)\s*h(?:ours?|rs?)?\s*(?:(\d+(?:\.\d+)?)\s*m(?:in(?:ute)?s?)?)?$/.exec(t))) return parseFloat(m[1]) * 60 + (m[2] ? parseFloat(m[2]) : 0);
+      if ((m = /^(\d+(?:\.\d+)?)\s*m(?:in(?:ute)?s?)?$/.exec(t))) return parseFloat(m[1]);
+      return null;
+    }
+    if (!/^\d+(?:\.\d+)?$|^\.\d+$/.test(t)) return null;
+    var v = parseFloat(t);
+    return from === 'dec' ? v * 60 : v;
+  }
+
+  return { parseClock: parseClock, fmtClock: fmtClock, single: single, resolve: resolve, parseBreaks: parseBreaks, roundMin: roundMin, hm: hm, hmFull: hmFull, colon: colon, dec: dec, commas: commas, overtime: overtime, parseDuration: parseDuration };
+})();
+/* HOURS-ENGINE:END */
+
+/* =========================================================
+   CalcThis.initHoursCalc() — hours worked / hours between / weekly hours / minutes<->hours.
+   Differentiator vs. calculator.net, CalculatorSoup, Gigacalculator, Inch Calculator and
+   Clockify's time card (all checked live: bare numbers, AM/PM dropdowns, no picture of the
+   shift): the site's own masked digit time field with the AM/PM toggle inside it (type 9 or
+   915 — the colon fills itself), split shifts, breaks as minutes or as a clock range, a
+   24-hour shift ribbon with the breaks cut out (overnight wraps), every format at once (h:mm,
+   decimal, minutes) with payroll rounding shown before/after, and a Convert mode with a
+   decimal-hour ruler. Go advanced = 24-hour clock, rounding (5 / 6 / 15 min), hourly rate,
+   daily/weekly overtime. Time fields are the Time Calculator's .time-field / .ap-seg /
+   .ap-mini components. Engine: CalcThis.hoursEngine. No shared state. */
+CalcThis.initHoursCalc = function () {
+  var E = CalcThis.hoursEngine;
+  var $ = function (id) { return document.getElementById(id); };
+  var st = { mode: 'shift', adv: false, c24: false, round: 0, conv: 'min' };
+  var DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  var DOW = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  var MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  var dpS = null, dpE = null;
+
+  function setHint(m) { var h = $('hrHint'); h.textContent = m || ''; h.style.display = m ? 'block' : 'none'; }
+  function numOf(id) { var v = parseFloat(($(id).value + '').trim()); return isNaN(v) || v < 0 ? 0 : v; }
+  function money(n) { return '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+
+  /* ---------- masked h:mm digit field + AM/PM toggle (same logic as the Time Calculator; 24-hour variant added) ---------- */
+  function splitDigits(raw) {
+    var d = ('' + raw).replace(/\D/g, '').slice(0, 4);
+    if (!d) return { empty: true };
+    var lim = st.c24 ? '2' : '1';
+    if (d[0] > lim) return { hDig: '0' + d[0], mDig: d.slice(1, 3), hourDone: true };
+    if (st.c24 && d[0] === '2' && d.length >= 2 && d[1] > '3') return { hDig: '02', mDig: d.slice(1, 3), hourDone: true };
+    if (d.length === 1) return { hDig: d, mDig: '', hourDone: false };
+    return { hDig: d.slice(0, 2), mDig: d.slice(2, 4), hourDone: true };
+  }
+  function refreshGhost(f) {
+    var s = splitDigits(f.input.value);
+    var val = s.empty ? '' : (s.hourDone ? s.hDig + ':' + s.mDig : s.hDig);
+    if (val !== f.input.value) f.input.value = val;
+    var hc = s.empty ? '' : s.hDig, mc = s.empty ? '' : s.mDig, cells = [hc[0], hc[1], ':', mc[0], mc[1]], html = '';
+    for (var i = 0; i < 5; i++) {
+      if (i === 2) html += '<span class="g-sep">:</span>';
+      else if (cells[i] != null) html += '<span class="g-on">' + cells[i] + '</span>';
+      else html += '<span class="g-off">-</span>';
+    }
+    f.ghost.innerHTML = html;
+  }
+  /* minutes after midnight, or null while the field is empty / not a valid time */
+  function fieldMin(f) {
+    var s = splitDigits(f.input.value);
+    if (s.empty) return null;
+    var h = +s.hDig, md = s.mDig, m = md.length === 0 ? 0 : (md.length === 1 ? (+md) * 10 : +md);
+    if (m > 59) return null;
+    if (st.c24) return h > 23 ? null : h * 60 + m;
+    if (h < 1 || h > 12) return null;
+    var base = h % 12; if (f.ap === 'pm') base += 12;
+    return base * 60 + m;
+  }
+  function paintAp(f) { [].forEach.call(f.seg.children, function (b) { b.classList.toggle('on', b.getAttribute('data-ap') === f.ap); }); }
+  var GHOST = '<span class="g-off">-</span><span class="g-off">-</span><span class="g-sep">:</span><span class="g-off">-</span><span class="g-off">-</span>';
+  var APBTNS = '<button type="button" data-ap="am">AM</button><button type="button" data-ap="pm">PM</button>';
+  /* full-size field (Time Calculator's elapsed-time look) */
+  function tfFull(label, defAp, withNow) {
+    return '<div class="fld hr-tf" data-ap="' + defAp + '"><span class="lab">' + label + (withNow ? '<button type="button" class="linkbtn hr-now">Now</button>' : '') + '</span>' +
+      '<div class="time-field"><div class="time-box"><div class="time-ghost" aria-hidden="true">' + GHOST + '</div>' +
+      '<input class="time-digits" type="text" inputmode="numeric" autocomplete="off" maxlength="5" aria-label="' + label.replace(/<[^>]*>/g, '') + '"></div>' +
+      '<div class="seg ap-seg">' + APBTNS + '</div></div><div class="hr-info"></div></div>';
+  }
+  /* compact field for the weekly rows (Time Calculator's time-card look) */
+  function tfMini(defAp, aria) {
+    return '<div class="tf hr-tf" data-ap="' + defAp + '"><div class="time-box"><div class="time-ghost" aria-hidden="true">' + GHOST + '</div>' +
+      '<input class="time-digits" type="text" inputmode="numeric" autocomplete="off" maxlength="5" aria-label="' + aria + '"></div>' +
+      '<div class="ap-mini">' + APBTNS + '</div></div>';
+  }
+  function wire(tf) {
+    var seg = tf.querySelector('.ap-seg, .ap-mini');
+    tf._f = { input: tf.querySelector('.time-digits'), ghost: tf.querySelector('.time-ghost'), seg: seg, ap: tf.getAttribute('data-ap'), info: tf.querySelector('.hr-info') };
+    paintAp(tf._f); return tf._f;
+  }
+  function wireAll(root) { [].forEach.call(root.querySelectorAll('.hr-tf'), function (tf) { if (!tf._f) wire(tf); }); }
+  function setField(tf, text, ap) { var f = tf._f; f.input.value = text; if (ap) f.ap = ap; refreshGhost(f); paintAp(f); }
+  function clearField(tf) { setField(tf, '', tf.getAttribute('data-ap')); }
+  function nowParts() {
+    var d = new Date(), h = d.getHours(), m = d.getMinutes(), mm = (m < 10 ? '0' : '') + m;
+    var h12 = (h % 12) || 12;
+    return st.c24 ? { t: (h < 10 ? '0' : '') + h + ':' + mm, ap: h < 12 ? 'am' : 'pm' } : { t: (h12 < 10 ? '0' : '') + h12 + ':' + mm, ap: h < 12 ? 'am' : 'pm' };
+  }
+  function setInfo(tf, txt) { if (tf._f.info) tf._f.info.textContent = txt || ''; }
+
+  /* start + end fields -> { sMin, eMin, dur, next, sLabel, eLabel } (an end earlier than the start is the next day) */
+  function pairOf(sTf, eTf) {
+    var s = fieldMin(sTf._f), e = fieldMin(eTf._f);
+    if (s == null || e == null) { setInfo(eTf, ''); return null; }
+    var next = e < s; if (next) e += 1440;
+    setInfo(eTf, next ? 'Ends the next day' : '');
+    return { sMin: s, eMin: e, dur: e - s, next: next, sLabel: E.fmtClock(s, st.c24), eLabel: E.fmtClock(e, st.c24) };
+  }
+
+  /* ---------- shift mode ---------- */
+  function addShift(sv, sap, ev, eap) {
+    var n = $('hrShifts').children.length, row = document.createElement('div'); row.className = 'hr-shift';
+    row.innerHTML = (n ? '<div class="hr-shifthead"><span>Shift ' + (n + 1) + '</span><button type="button" class="linkbtn hr-x">Remove</button></div>' : '') +
+      tfFull('Start time' + (n ? '' : ''), 'am', n === 0) + tfFull('End time', 'pm', n === 0);
+    $('hrShifts').appendChild(row);
+    wireAll(row);
+    var tfs = row.querySelectorAll('.hr-tf');
+    if (sv != null) setField(tfs[0], sv, sap); if (ev != null) setField(tfs[1], ev, eap);
+  }
+  function renumber() { [].forEach.call($('hrShifts').children, function (row, i) { var h = row.querySelector('.hr-shifthead span'); if (h) h.textContent = 'Shift ' + (i + 1); }); }
+  function clearShifts() { $('hrShifts').innerHTML = ''; }
+
+  function ribbon(shifts, breaks) {
+    var X0 = 12, W = 296, svg = '';
+    function x(min) { return X0 + Math.max(0, Math.min(1440, min)) / 1440 * W; }
+    svg += '<rect x="' + X0 + '" y="26" width="' + W + '" height="24" rx="6" fill="#EFE7D8"/>';
+    [0, 6, 12, 18, 24].forEach(function (h) {
+      var tx = x(h * 60), lab = h === 0 || h === 24 ? '12a' : (h === 12 ? '12p' : (h < 12 ? h + 'a' : (h - 12) + 'p'));
+      svg += '<line x1="' + tx + '" y1="52" x2="' + tx + '" y2="58" stroke="var(--muted)" stroke-width="1.2"/>';
+      svg += '<text x="' + tx + '" y="72" text-anchor="middle" font-size="12" font-weight="600" fill="var(--muted)">' + lab + '</text>';
+    });
+    function seg(a, b, fill, extra) { if (b > a) svg += '<rect x="' + x(a) + '" y="26" width="' + Math.max(1.5, x(b) - x(a)) + '" height="24" fill="' + fill + '"' + (extra || '') + '/>'; }
+    shifts.forEach(function (r) {
+      if (r.eMin - r.sMin >= 1440) { seg(0, 1440, 'var(--amber)'); return; }
+      var s = r.sMin % 1440, e = r.eMin - (r.sMin - s);
+      if (e <= 1440) seg(s, e, 'var(--amber)'); else { seg(s, 1440, 'var(--amber)'); seg(0, e - 1440, 'var(--amber)'); }
+    });
+    breaks.forEach(function (b) {
+      if (b.from == null) return;
+      var f = b.from, t = b.to;
+      if (t <= 1440) seg(f, t, '#FCFAF6', ' stroke="var(--amber-deep)" stroke-width="1" stroke-dasharray="3 2"'); else { seg(f, 1440, '#FCFAF6'); seg(0, t - 1440, '#FCFAF6'); }
+    });
+    return '<svg viewBox="0 18 320 60" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="24-hour ribbon of the shift">' + svg + '</svg>';
+  }
+  function trows(rows) { return '<tbody>' + rows.map(function (r) { return '<tr' + (r[2] ? ' class="cur"' : '') + '><td>' + r[0] + '</td><td>' + r[1] + '</td></tr>'; }).join('') + '</tbody>'; }
+
+  function empty(label) {
+    $('hrBig').textContent = '—'; $('hrUnit').textContent = '';
+    $('hrSub').textContent = label || 'Enter a start and an end time.';
+    ['hrShiftOut', 'hrWeekOut', 'hrDatesOut', 'hrConvOut'].forEach(function (id) { $(id).style.display = 'none'; });
+    var ml = { shift: 'Hours worked', week: 'Week total', dates: 'Hours between', convert: 'Duration' }[st.mode];
+    $('hrMVal').textContent = '—'; $('hrResLab').textContent = ml; $('hrMLab').textContent = ml;
+  }
+  function show(big, sub, mlab) {
+    $('hrBig').textContent = big; $('hrUnit').textContent = '';
+    $('hrSub').textContent = sub; $('hrMVal').textContent = big; $('hrMLab').textContent = mlab; $('hrResLab').textContent = mlab;
+  }
+  function payRow(rows, minutes, label) {
+    var rate = numOf('hrRate');
+    if (st.adv && rate > 0) rows.push([label || 'Pay at ' + money(rate) + '/h', money(minutes / 60 * rate), true]);
+  }
+
+  function solveShift() {
+    var rows = [].slice.call($('hrShifts').children), shifts = [], total = 0;
+    rows.forEach(function (row) {
+      var tfs = row.querySelectorAll('.hr-tf'), r = pairOf(tfs[0], tfs[1]);
+      if (r) { shifts.push(r); total += r.dur; }
+    });
+    var b = E.parseBreaks($('hrBreak').value, { c24: st.c24 }), hint = '';
+    if (b.err) { hint = 'Couldn’t read the break “' + b.err + '” — try 30, 1h or 12:00-12:30.'; b = { total: 0, items: [] }; }
+    if (!shifts.length) { empty('Enter a start and an end time.'); setHint(hint); return; }
+    var brk = b.total, net = total - brk;
+    if (net < 0) { hint = hint || 'Your breaks are longer than the shift.'; net = 0; brk = total; }
+    setHint(hint);
+    var rounded = E.roundMin(net, st.round);
+    show(E.hm(rounded), '= ' + E.dec(rounded) + ' decimal hours · ' + E.commas(Math.round(rounded)) + ' minutes', 'Hours worked');
+    var t = [];
+    shifts.forEach(function (r, i) { t.push([(shifts.length > 1 ? 'Shift ' + (i + 1) + ' · ' : '') + r.sLabel + ' → ' + r.eLabel + (r.next ? ' (next day)' : ''), E.hmFull(r.dur)]); });
+    if (brk > 0) t.push(['Breaks', '− ' + E.hmFull(brk)]);
+    t.push(['Hours and minutes', E.hmFull(net), true]);
+    t.push(['Decimal hours', E.dec(net)]);
+    t.push(['Total minutes', E.commas(Math.round(net))]);
+    if (st.round > 0) t.push(['Rounded to ' + st.round + ' min', E.colon(rounded) + ' · ' + E.dec(rounded) + ' h']);
+    payRow(t, rounded);
+    $('hrShiftTbl').innerHTML = trows(t);
+    $('hrRibbon').innerHTML = ribbon(shifts, b.items) +
+      '<div class="hr-key"><span><i class="k-w"></i>Worked</span>' + (b.items.some(function (x) { return x.from != null; }) ? '<span><i class="k-b"></i>Break</span>' : '') +
+      (b.items.some(function (x) { return x.from == null; }) ? '<span>− ' + E.hm(b.items.filter(function (x) { return x.from == null; }).reduce(function (a, x) { return a + x.min; }, 0)) + ' of breaks (no clock time given)</span>' : '') + '</div>';
+    var tip = '';
+    if (total >= 1440) tip = 'That’s a span of a day or more — for dates use the “Dates” tab.';
+    else if (rounded >= 12 * 60) tip = 'A shift of ' + E.hm(rounded) + ' — double-check the AM/PM on the times above.';
+    $('hrShiftTip').textContent = tip; $('hrShiftTip').style.display = tip ? '' : 'none';
+    ['hrWeekOut', 'hrDatesOut', 'hrConvOut'].forEach(function (id) { $(id).style.display = 'none'; });
+    $('hrShiftOut').style.display = '';
+  }
+
+  /* ---------- week mode ---------- */
+  function buildWeek() {
+    var h = '';
+    DAYS.forEach(function (d) {
+      h += '<div class="tc-day"><div class="tc-dlab">' + d + '</div><div class="tc-in">' + tfMini('am', d + ' start time') + '</div><div class="tc-out">' + tfMini('pm', d + ' end time') + '</div>' +
+        '<label class="fld tc-brk"><span class="lab">Break</span><div class="inp"><input class="hr-bin" type="text" inputmode="numeric" autocomplete="off" placeholder="0" aria-label="' + d + ' break"><span class="suf">min</span></div></label></div>';
+    });
+    $('hrWeekRows').innerHTML = h; wireAll($('hrWeekRows'));
+  }
+  function solveWeek() {
+    var days = [], mins = [], nDays = 0, hint = '', rows = [].slice.call($('hrWeekRows').children);
+    rows.forEach(function (row, i) {
+      var tfs = row.querySelectorAll('.hr-tf'), r = pairOf(tfs[0], tfs[1]), net = 0, worked = false;
+      if (r) {
+        var b = E.parseBreaks(row.querySelector('.hr-bin').value, { c24: st.c24 }), brk = b.err ? 0 : b.total;
+        if (b.err && !hint) hint = 'Couldn’t read the break on ' + DAYS[i] + ' (“' + b.err + '”).';
+        net = Math.max(0, r.dur - brk); if (brk > r.dur && !hint) hint = 'The break on ' + DAYS[i] + ' is longer than the shift.';
+        net = E.roundMin(net, st.round); worked = true; nDays++;
+      }
+      days.push({ d: DAYS[i], net: net, worked: worked, r: r }); mins.push(net);
+    });
+    setHint(hint);
+    if (!nDays) { empty('Enter a start and an end time for at least one day.'); return; }
+    var otw = st.adv ? numOf('hrOtW') : 0, otd = st.adv ? numOf('hrOtD') : 0, mult = st.adv && numOf('hrOtM') > 0 ? numOf('hrOtM') : 1.5;
+    var ot = E.overtime(mins, { weekly: otw, daily: otd });
+    show(E.hm(ot.total), '= ' + E.dec(ot.total) + ' decimal hours · ' + nDays + (nDays === 1 ? ' day' : ' days') + ' worked', 'Week total');
+    var t = [];
+    days.forEach(function (d) { if (d.worked) t.push([d.d + ' · ' + d.r.sLabel + ' → ' + d.r.eLabel, E.colon(d.net) + ' · ' + E.dec(d.net)]); });
+    t.push(['Total hours', E.hmFull(ot.total), true]);
+    t.push(['Decimal hours', E.dec(ot.total)]);
+    if (st.adv && (otw > 0 || otd > 0)) { t.push(['Regular hours', E.hmFull(ot.reg)]); t.push(['Overtime hours (×' + mult + ')', E.hmFull(ot.ot)]); }
+    var rate = numOf('hrRate');
+    if (st.adv && rate > 0) t.push(['Gross pay', money(ot.reg / 60 * rate + ot.ot / 60 * rate * mult), true]);
+    $('hrWeekTbl').innerHTML = trows(t);
+    var maxH = Math.max(10, Math.ceil(Math.max.apply(null, mins) / 60)), X0 = 14, BW = 30, GAP = 12, Y0 = 118, HH = 90, svg = '';
+    function y(h) { return Y0 - h / maxH * HH; }
+    svg += '<line x1="8" y1="' + y(8) + '" x2="312" y2="' + y(8) + '" stroke="var(--muted)" stroke-width="1" stroke-dasharray="4 3"/>';
+    svg += '<text x="312" y="' + (y(8) - 4) + '" text-anchor="end" font-size="12" font-weight="600" fill="var(--muted)">8 h</text>';
+    days.forEach(function (d, i) {
+      var bx = X0 + i * (BW + GAP), h = d.net / 60;
+      if (h > 0) {
+        var base = Math.min(h, 8); svg += '<rect x="' + bx + '" y="' + y(base) + '" width="' + BW + '" height="' + (Y0 - y(base)) + '" rx="3" fill="var(--spruce)"/>';
+        if (h > 8) svg += '<rect x="' + bx + '" y="' + y(h) + '" width="' + BW + '" height="' + (y(8) - y(h)) + '" rx="3" fill="var(--amber)"/>';
+        svg += '<text x="' + (bx + BW / 2) + '" y="' + (y(h) - 5) + '" text-anchor="middle" font-size="12" font-weight="700" fill="var(--ink)">' + (Math.round(h * 100) / 100) + '</text>';
+      }
+      svg += '<text x="' + (bx + BW / 2) + '" y="136" text-anchor="middle" font-size="12" font-weight="600" fill="var(--muted)">' + d.d + '</text>';
+    });
+    $('hrWeekChart').innerHTML = '<svg viewBox="0 0 320 142" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hours worked each day">' + svg + '</svg><div class="hr-key"><span><i class="k-reg"></i>Up to 8 h</span><span><i class="k-o"></i>Over 8 h</span></div>';
+    var tip = '';
+    if (st.adv && otw > 0 && ot.ot > 0) tip = 'Overtime starts after ' + otw + ' h in the week' + (otd > 0 ? ' or ' + otd + ' h in a day' : '') + '. Rules differ by employer and place — check yours.';
+    $('hrWeekTip').textContent = tip; $('hrWeekTip').style.display = tip ? '' : 'none';
+    ['hrShiftOut', 'hrDatesOut', 'hrConvOut'].forEach(function (id) { $(id).style.display = 'none'; });
+    $('hrWeekOut').style.display = '';
+  }
+
+  /* ---------- dates mode ---------- */
+  function midnight(d) { return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
+  function pickDate(dp) { if (dp) { var d = dp.getDate(); return d ? midnight(d) : null; } return null; }
+  function dateTime(day, min) { return new Date(day.getFullYear(), day.getMonth(), day.getDate(), Math.floor(min / 60), min % 60); }
+  function fmtDT(day, min) { return DOW[day.getDay()] + ' ' + day.getDate() + ' ' + MON[day.getMonth()] + ' ' + day.getFullYear() + ', ' + E.fmtClock(min, st.c24); }
+  function solveDates() {
+    var sTf = $('hrDST').querySelector('.hr-tf'), eTf = $('hrDET').querySelector('.hr-tf');
+    var sd = pickDate(dpS), ed = pickDate(dpE);
+    if (!sd || !ed) { empty('Pick a start date and an end date.'); setHint(''); return; }
+    var sBlank = !sTf._f.input.value.trim(), eBlank = !eTf._f.input.value.trim();
+    var s = sBlank ? 0 : fieldMin(sTf._f), e = eBlank ? 0 : fieldMin(eTf._f);
+    if (s == null || e == null) { empty('Enter the times like 9:00 and pick AM or PM.'); setHint(''); return; }
+    var a = dateTime(sd, s), b = dateTime(ed, e), mins = Math.round((b - a) / 60000);
+    if (mins < 0) { empty('The end is before the start.'); setHint('The end is before the start — check the dates and times.'); return; }
+    setHint('');
+    var rounded = E.roundMin(mins, st.round), dd = Math.floor(rounded / 1440), rem = rounded % 1440;
+    show(E.hm(rounded), '= ' + E.dec(rounded) + ' decimal hours · ' + E.commas(Math.round(rounded)) + ' minutes', 'Hours between');
+    var t = [[fmtDT(sd, s) + ' → ' + fmtDT(ed, e), E.hmFull(mins)], ['Hours and minutes', E.hmFull(rounded), true], ['Decimal hours', E.dec(rounded)], ['Total minutes', E.commas(Math.round(rounded))]];
+    if (dd > 0) t.push(['Days and hours', dd + (dd === 1 ? ' day' : ' days') + (rem ? ' ' + E.hm(rem) : '')]);
+    var wall = Math.round((Date.UTC(ed.getFullYear(), ed.getMonth(), ed.getDate(), 0, e) - Date.UTC(sd.getFullYear(), sd.getMonth(), sd.getDate(), 0, s)) / 60000);
+    if (wall !== mins) t.push(['Daylight-saving change', (mins - wall > 0 ? '+' : '−') + E.hm(Math.abs(mins - wall)) + ' included']);
+    if (st.round > 0) t.push(['Rounded to ' + st.round + ' min', E.colon(rounded)]);
+    payRow(t, rounded);
+    $('hrDatesTbl').innerHTML = trows(t);
+    var n = Math.round((ed - sd) / 86400000) + 1, svg = '', CW = 296;
+    if (n <= 45) {
+      var cw = CW / n;
+      for (var i = 0; i < n; i++) {
+        var from = i === 0 ? s : 0, to = i === n - 1 ? e : 1440;
+        svg += '<rect x="' + (12 + i * cw + 0.5) + '" y="14" width="' + (cw - 1) + '" height="30" rx="3" fill="#EFE7D8"/>';
+        if (to > from) svg += '<rect x="' + (12 + i * cw + 0.5 + from / 1440 * (cw - 1)) + '" y="14" width="' + Math.max(1.5, (to - from) / 1440 * (cw - 1)) + '" height="30" rx="3" fill="var(--amber)"/>';
+      }
+    } else svg += '<rect x="12" y="14" width="' + CW + '" height="30" rx="6" fill="var(--amber)"/>';
+    svg += '<text x="12" y="62" font-size="12" font-weight="600" fill="var(--muted)">' + sd.getDate() + ' ' + MON[sd.getMonth()] + '</text><text x="308" y="62" text-anchor="end" font-size="12" font-weight="600" fill="var(--muted)">' + ed.getDate() + ' ' + MON[ed.getMonth()] + '</text>';
+    svg += '<text x="160" y="62" text-anchor="middle" font-size="12" font-weight="600" fill="var(--ink-soft)">' + n + (n === 1 ? ' calendar day' : ' calendar days') + '</text>';
+    $('hrDatesBar').innerHTML = '<svg viewBox="0 0 320 68" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Span between the two date-times">' + svg + '</svg>';
+    ['hrShiftOut', 'hrWeekOut', 'hrConvOut'].forEach(function (id) { $(id).style.display = 'none'; });
+    $('hrDatesOut').style.display = '';
+  }
+
+  /* ---------- convert mode ---------- */
+  function solveConv() {
+    setHint('');
+    var raw = $('hrConvVal').value.trim();
+    if (!raw) { empty('Type a number of minutes, decimal hours or h:mm.'); return; }
+    var mins = E.parseDuration(raw, st.conv);
+    if (mins === null) { empty('Couldn’t read that.'); setHint(st.conv === 'hm' ? 'Type it like 7:45 or 7h 45m.' : 'Type a plain number, like ' + (st.conv === 'dec' ? '7.75' : '465') + '.'); return; }
+    if (mins > 1e7) { empty('That’s too large.'); setHint('Try a smaller number.'); return; }
+    show(E.hm(mins), '= ' + E.dec(mins) + ' decimal hours · ' + E.commas(Math.round(mins * 100) / 100) + ' minutes', 'Duration');
+    var t = [['Hours and minutes', E.hmFull(mins), true], ['As h:mm', E.colon(mins)], ['Decimal hours', (mins / 60).toFixed(4).replace(/0{1,2}$/, '')], ['Minutes', E.commas(Math.round(mins * 100) / 100)], ['Seconds', E.commas(Math.round(mins * 60))]];
+    if (mins >= 1440) t.push(['Days and hours', Math.floor(mins / 1440) + ' d' + (Math.round(mins % 1440) ? ' ' + E.hm(mins % 1440) : '')]);
+    $('hrConvTbl').innerHTML = trows(t);
+    var frac = (mins % 60) / 60, whole = Math.floor(mins / 60), svg = '', X0 = 14, W = 292, mx = X0 + frac * W;
+    svg += '<rect x="' + X0 + '" y="26" width="' + W + '" height="14" rx="7" fill="#EFE7D8"/><rect x="' + X0 + '" y="26" width="' + Math.max(0, frac * W) + '" height="14" rx="7" fill="var(--spruce)" opacity=".85"/>';
+    [[0, '0', '0'], [15, '15', '.25'], [30, '30', '.5'], [45, '45', '.75'], [60, '60', '1']].forEach(function (k) {
+      var tx = X0 + k[0] / 60 * W;
+      svg += '<line x1="' + tx + '" y1="22" x2="' + tx + '" y2="44" stroke="var(--ink)" stroke-width="1.2" opacity=".45"/>';
+      svg += '<text x="' + tx + '" y="58" text-anchor="middle" font-size="12" font-weight="600" fill="var(--muted)">' + k[1] + ' min</text>';
+      svg += '<text x="' + tx + '" y="74" text-anchor="middle" font-size="12" font-weight="600" fill="var(--ink-soft)">' + k[2] + ' h</text>';
+    });
+    svg += '<polygon points="' + mx + ',24 ' + (mx - 6) + ',10 ' + (mx + 6) + ',10" fill="var(--amber)"/>';
+    $('hrRuler').innerHTML = '<svg viewBox="0 0 320 82" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Position within the hour">' + svg + '</svg><div class="hr-key"><span>' + whole + ' whole ' + (whole === 1 ? 'hour' : 'hours') + ' + the marked part of the next hour</span></div>';
+    ['hrShiftOut', 'hrWeekOut', 'hrDatesOut'].forEach(function (id) { $(id).style.display = 'none'; });
+    $('hrConvOut').style.display = '';
+  }
+
+  function render() {
+    if (st.mode === 'shift') solveShift();
+    else if (st.mode === 'week') solveWeek();
+    else if (st.mode === 'dates') solveDates();
+    else solveConv();
+  }
+
+  /* ---------- events ---------- */
+  function setSeg(id, v) { [].forEach.call($(id).children, function (b) { b.classList.toggle('on', b.getAttribute('data-v') === String(v)); }); }
+  function setMode(m) {
+    st.mode = m; setSeg('hrModeSeg', m);
+    $('hrShiftIn').style.display = m === 'shift' ? '' : 'none'; $('hrWeekIn').style.display = m === 'week' ? '' : 'none';
+    $('hrDatesIn').style.display = m === 'dates' ? '' : 'none'; $('hrConvIn').style.display = m === 'convert' ? '' : 'none';
+    $('hrAdvRow').style.display = m === 'convert' ? 'none' : '';
+    $('hrAdvIn').style.display = st.adv && m !== 'convert' ? '' : 'none';
+    $('hrOtBox').style.display = m === 'week' ? '' : 'none';
+    $('hrClockFld').style.display = m === 'convert' ? 'none' : '';
+    $('hrCardH').textContent = { shift: 'Hours worked', week: 'Weekly hours', dates: 'Hours between dates', convert: 'Convert hours and minutes' }[m];
+    setHint(''); render();
+  }
+  document.addEventListener('input', function (e) {
+    var t = e.target;
+    if (!t.closest || !t.closest('.p-hours')) return;
+    if (t.classList.contains('time-digits')) { var tf = t.closest('.hr-tf'); if (tf && tf._f) refreshGhost(tf._f); render(); return; }
+    if (t.classList.contains('hr-bin') || /^hr(Break|Rate|OtW|OtD|OtM|ConvVal)$/.test(t.id)) render();
+  });
+  document.addEventListener('click', function (e) {
+    var t = e.target; if (!t.closest || !t.closest('.p-hours')) return;
+    var apb = t.closest('.ap-seg button, .ap-mini button');
+    if (apb) { var tf = apb.closest('.hr-tf'); if (tf && tf._f && apb.getAttribute('data-ap') !== tf._f.ap) { tf._f.ap = apb.getAttribute('data-ap'); paintAp(tf._f); render(); } return; }
+    var now = t.closest('.hr-now');
+    if (now) { var tf2 = now.closest('.hr-tf'), np = nowParts(); setField(tf2, np.t, np.ap); render(); }
+  });
+  $('hrModeSeg').addEventListener('click', function (e) { var b = e.target.closest('button'); if (b) setMode(b.getAttribute('data-v')); });
+  $('hrConvSeg').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; st.conv = b.getAttribute('data-v'); setSeg('hrConvSeg', st.conv); $('hrConvVal').placeholder = { min: 'e.g. 465', dec: 'e.g. 7.75', hm: 'e.g. 7:45' }[st.conv]; render(); });
+  $('hrClockSeg').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    var to24 = b.getAttribute('data-v') === '24'; if (to24 === st.c24) return;
+    var all = [].slice.call(document.querySelectorAll('.hr-tf')), old = all.map(function (tf) { return fieldMin(tf._f); });   // read in the old mode
+    st.c24 = to24; setSeg('hrClockSeg', to24 ? '24' : '12'); document.body.classList.toggle('c24', to24);
+    all.forEach(function (tf, i) {
+      var m = old[i]; if (m == null) { refreshGhost(tf._f); return; }
+      var h = Math.floor(m / 60), mi = m % 60, mm = (mi < 10 ? '0' : '') + mi;
+      if (to24) setField(tf, (h < 10 ? '0' : '') + h + ':' + mm, tf._f.ap); else { var h12 = (h % 12) || 12; setField(tf, (h12 < 10 ? '0' : '') + h12 + ':' + mm, h < 12 ? 'am' : 'pm'); }
+    });
+    render();
+  });
+  $('hrRound').addEventListener('change', function () { st.round = parseInt(this.value, 10) || 0; render(); });
+  $('hrAddShift').addEventListener('click', function () { addShift(); var ins = $('hrShifts').querySelectorAll('.time-digits'); ins[ins.length - 2].focus(); });
+  $('hrShifts').addEventListener('click', function (e) { var x = e.target.closest('.hr-x'); if (!x) return; var row = x.closest('.hr-shift'); row.parentNode.removeChild(row); renumber(); render(); });
+  $('hrTry').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    var k = b.getAttribute('data-ex'), rows = { day: [['09:00', 'am', '05:00', 'pm']], night: [['10:00', 'pm', '06:00', 'am']], split: [['08:00', 'am', '12:00', 'pm'], ['01:30', 'pm', '05:30', 'pm']] }[k], br = { day: '30', night: '30', split: '' }[k];
+    if (st.c24) { st.c24 = false; document.body.classList.remove('c24'); setSeg('hrClockSeg', '12'); }
+    clearShifts(); rows.forEach(function (r) { addShift(r[0], r[1], r[2], r[3]); }); $('hrBreak').value = br;
+    render();
+  });
+  $('hrWeekFill').addEventListener('click', function () {
+    if (st.c24) { st.c24 = false; document.body.classList.remove('c24'); setSeg('hrClockSeg', '12'); }
+    [].forEach.call($('hrWeekRows').children, function (row, i) {
+      var tfs = row.querySelectorAll('.hr-tf'), on = i < 5;
+      if (on) { setField(tfs[0], '09:00', 'am'); setField(tfs[1], '05:30', 'pm'); } else { clearField(tfs[0]); clearField(tfs[1]); }
+      row.querySelector('.hr-bin').value = on ? '30' : '';
+    });
+    render();
+  });
+  $('hrWeekClear').addEventListener('click', function () {
+    [].forEach.call($('hrWeekRows').querySelectorAll('.hr-tf'), clearField);
+    [].forEach.call($('hrWeekRows').querySelectorAll('.hr-bin'), function (i) { i.value = ''; });
+    render();
+  });
+  $('hrAdvBtn').addEventListener('click', function () {
+    st.adv = !st.adv;
+    $('hrAdvBtn').classList.toggle('open', st.adv);
+    $('hrAdvBtnLab').textContent = st.adv ? 'Go simple' : 'Go advanced';
+    $('hrAdvIn').style.display = st.adv ? '' : 'none';
+    if (!st.adv) {
+      st.round = 0; $('hrRound').value = '0';
+      ['hrRate', 'hrOtW', 'hrOtD', 'hrOtM'].forEach(function (id) { $(id).value = ''; });
+    }
+    setMode(st.mode);
+  });
+
+  /* ---------- init ---------- */
+  $('hrDST').innerHTML = tfFull('Start time <span class="unit">12:00 AM if blank</span>', 'am', false);
+  $('hrDET').innerHTML = tfFull('End time <span class="unit">12:00 AM if blank</span>', 'pm', false);
+  wireAll($('hrDST')); wireAll($('hrDET'));
+  addShift(); buildWeek();
+  if (window.Datepicker) {
+    var opt = { format: 'd MM yyyy', autohide: true, weekStart: 0, todayHighlight: true };
+    dpS = new Datepicker($('hrDS'), opt); dpE = new Datepicker($('hrDE'), opt);
+    [$('hrDS'), $('hrDE')].forEach(function (el) { el.addEventListener('changeDate', render); });
+  }
+  ['input', 'change'].forEach(function (ev) { [$('hrDS'), $('hrDE')].forEach(function (el) { el.addEventListener(ev, render); }); });
+  setMode('shift');
+};
+
+/* =========================================================
    SITE FOOTER — mobile accordion
    Multiple pillars can be open simultaneously.
    First pillar starts expanded (aria-expanded="true" in HTML).

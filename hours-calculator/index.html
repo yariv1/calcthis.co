@@ -1,0 +1,531 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hours Calculator — Hours Worked, Breaks &amp; Overtime | CalcThis</title>
+<meta name="description" content="Free hours calculator: type the digits and get hours worked with breaks, split and overnight shifts, weekly overtime and pay, hours between dates and minutes to decimal hours.">
+<link rel="canonical" href="https://calcthis.co/hours-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Hours Calculator — Hours Worked, Breaks &amp; Overtime">
+<meta property="og:description" content="Type the digits, pick AM or PM, get the answer. Breaks, split and overnight shifts, a live shift ribbon, weekly overtime and pay, and minutes to decimal hours. Instant, no sign-up.">
+<meta property="og:url" content="https://calcthis.co/hours-calculator/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<meta name="theme-color" content="#B5761F">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/datepicker.min.css">
+<link rel="stylesheet" href="/assets/style.css?v=150">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Hours Calculator",
+      "url": "https://calcthis.co/hours-calculator/",
+      "applicationCategory": "UtilityApplication",
+      "operatingSystem": "Any (web browser)",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "description": "Calculate hours worked between a start and end time with breaks, split shifts and overnight shifts, total a week of hours with overtime and pay, find the hours between two dates, and convert minutes to decimal hours. Type times as digits with an AM/PM toggle and see a live 24-hour shift ribbon with payroll rounding shown before and after.",
+      "featureList": [
+        "Digit-only time fields with an AM/PM toggle inside the field",
+        "Split shifts and overnight shifts",
+        "Breaks as minutes or as a clock range",
+        "Live 24-hour shift ribbon with breaks cut out",
+        "Hours and minutes, decimal hours and minutes at once",
+        "Payroll rounding to 5, 6 or 15 minutes, shown before and after",
+        "Weekly hours with daily and weekly overtime and gross pay",
+        "Hours between two dates and times",
+        "Minutes, decimal hours and h:mm converter with a decimal-hour ruler",
+        "12-hour or 24-hour clock"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "How do I calculate hours worked between two times?", "acceptedAnswer": { "@type": "Answer", "text": "Subtract the start time from the end time, then subtract any unpaid break. For 9:00 AM to 5:30 PM with a 30-minute lunch, the span is 8 hours 30 minutes and the hours worked are 8 hours. If the end time is earlier on the clock than the start time, the shift runs overnight and ends the next day, so 10 PM to 6 AM is 8 hours." } },
+        { "@type": "Question", "name": "How do I convert minutes to decimal hours?", "acceptedAnswer": { "@type": "Answer", "text": "Divide the minutes by 60. 15 minutes is 0.25 hours, 30 minutes is 0.5, 45 minutes is 0.75, and 20 minutes is 0.33. Add the whole hours in front: 7 hours 45 minutes is 7.75 hours. To go back, multiply the decimal part by 60, so 0.2 hours is 12 minutes." } },
+        { "@type": "Question", "name": "How do I add up my hours for the week?", "acceptedAnswer": { "@type": "Answer", "text": "Use the Week tab: enter a start time, end time and break for each day and the calculator adds the days into a weekly total in hours and minutes and in decimal hours. Nine hours a day for five days is 45 hours." } },
+        { "@type": "Question", "name": "How is overtime calculated?", "acceptedAnswer": { "@type": "Answer", "text": "Under Go advanced you can set a weekly threshold (commonly 40 hours), an optional daily threshold and a multiplier (commonly 1.5). Hours over the threshold are overtime. At 45 hours in a week with a 40-hour threshold and a $20 rate, 40 hours pay $800 and 5 overtime hours pay 5 × $20 × 1.5 = $150, for $950. Overtime rules differ by employer and location, so check yours." } },
+        { "@type": "Question", "name": "What is the 7-minute rule?", "acceptedAnswer": { "@type": "Answer", "text": "It is a payroll rounding rule that rounds time to the nearest 15 minutes: 1 to 7 minutes round down to the previous quarter-hour and 8 to 14 minutes round up to the next. A worked time of 7 hours 52 minutes becomes 7:45, and 7 hours 53 minutes becomes 8:00. Choose 15 minutes under Round to in Go advanced." } }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body class="p-hours">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <a class="hdr-back" href="/blog/" aria-label="Back to blog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <span class="menu-col-head">Construction &amp; Gardening</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+          <a href="/paint-calculator/">Paint</a>
+          <a href="/wallpaper-calculator/">Wallpaper</a>
+          <a href="/square-footage-calculator/">Square Footage</a>
+          <a href="/tape-measure-fraction-calculator/">Tape Measure Fraction</a>
+          <a href="/stair-calculator/">Stair</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/vo2-max-calculator/">VO2 Max</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
+          <a href="/bmi-calculator/">BMI</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/ideal-weight-calculator/">Ideal Weight</a>
+          <a href="/lean-body-mass-calculator/">Lean Body Mass</a>
+          <a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio</a>
+          <a href="/calorie-calculator/">Calorie</a>
+          <a href="/bmr-calculator/">BMR</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/water-intake-calculator/">Water Intake</a>
+          <a href="/macro-calculator/">Macro</a>
+          <a href="/protein-intake-calculator/">Protein Intake</a>
+          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
+          <a href="/steps-to-miles-calculator/">Steps to Miles</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+          <a href="/grade-curve-calculator/">Grade Curve</a>
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/fraction-calculator/">Fraction</a>
+          <a href="/standard-deviation-calculator/">Standard Deviation</a>
+          <a href="/scientific-notation-calculator/">Scientific Notation</a>
+          <a href="/weighted-average-calculator/">Weighted Average</a>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+          <a href="/age-calculator/">Age</a>
+          <a href="/date-calculator/">Date</a>
+          <a href="/time-calculator/">Time</a>
+          <a href="/hours-calculator/" class="current">Hours</a>
+          <span class="menu-col-head">Cooking &amp; Kitchen</span>
+          <a href="/recipe-converter/">Recipe Converter</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">Type 9, pick PM — get the answer</div>
+    <h1>Hours Calculator</h1>
+    <p>Find the <strong>hours worked</strong> between two times with breaks, split shifts and overnight shifts — just type the digits, <code>9</code> or <code>915</code>, and pick AM or PM. Add up a <strong>week with overtime and pay</strong>, count the <strong>hours between two dates</strong>, or turn <strong>minutes into decimal hours</strong>.</p>
+  </section>
+
+  <div class="grid">
+
+    <!-- INPUT -->
+    <div class="card">
+      <div class="card-pad">
+        <h2 class="card-h2" id="hrCardH">Hours worked</h2>
+
+        <div class="modeseg" id="hrModeSeg" role="group" aria-label="Mode">
+          <button class="on" type="button" data-v="shift">Shift</button>
+          <button type="button" data-v="week">Week</button>
+          <button type="button" data-v="dates">Dates</button>
+          <button type="button" data-v="convert">Convert</button>
+        </div>
+
+        <div class="ctl-row" id="hrClockFld">
+          <span class="ctl-lab">Clock</span>
+          <div class="seg" id="hrClockSeg" role="group" aria-label="Clock">
+            <button class="on" type="button" data-v="12">12-hour</button>
+            <button type="button" data-v="24">24-hour</button>
+          </div>
+        </div>
+
+        <!-- SHIFT -->
+        <div id="hrShiftIn">
+          <div id="hrShifts"></div>
+          <button class="linkbtn hr-add" id="hrAddShift" type="button">+ Add a split shift</button>
+          <label class="fld" for="hrBreak">
+            <span class="lab">Unpaid breaks <span class="unit">minutes or a time range</span></span>
+            <div class="inp"><input id="hrBreak" type="text" inputmode="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="e.g. 30 or 12:00-12:30"></div>
+          </label>
+          <div class="fld">
+            <span class="lab">Try an example</span>
+            <div class="chips" id="hrTry">
+              <button type="button" data-ex="day">9 to 5</button>
+              <button type="button" data-ex="night">Night shift</button>
+              <button type="button" data-ex="split">Split shift</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- WEEK -->
+        <div id="hrWeekIn" style="display:none">
+          <div class="tc-day tc-head" aria-hidden="true"><div class="tc-colcap">Start time / End time</div><div class="tc-colcap">Break</div></div>
+          <div id="hrWeekRows"></div>
+          <div class="add-row" style="margin-top:6px">
+            <button class="linkbtn" id="hrWeekFill" type="button">Fill a typical week</button>
+            <button class="linkbtn" id="hrWeekClear" type="button">Clear week</button>
+          </div>
+        </div>
+
+        <!-- DATES -->
+        <div id="hrDatesIn" style="display:none">
+          <label class="fld" for="hrDS"><span class="lab">Start date</span><div class="inp"><input id="hrDS" type="text" inputmode="numeric" placeholder="e.g. 25 October 2026" autocomplete="off"></div></label>
+          <div id="hrDST" class="hr-solo"></div>
+          <label class="fld" for="hrDE"><span class="lab">End date</span><div class="inp"><input id="hrDE" type="text" inputmode="numeric" placeholder="e.g. 27 October 2026" autocomplete="off"></div></label>
+          <div id="hrDET" class="hr-solo"></div>
+        </div>
+
+        <!-- CONVERT -->
+        <div id="hrConvIn" style="display:none">
+          <div class="fld">
+            <span class="lab">Convert from</span>
+            <div class="seg hr-fseg" id="hrConvSeg" role="group" aria-label="Convert from">
+              <button class="on" type="button" data-v="min">Minutes</button>
+              <button type="button" data-v="dec">Decimal hours</button>
+              <button type="button" data-v="hm">h:mm</button>
+            </div>
+          </div>
+          <label class="fld" for="hrConvVal">
+            <span class="lab">Amount</span>
+            <div class="inp"><input id="hrConvVal" type="text" inputmode="text" autocomplete="off" spellcheck="false" placeholder="e.g. 465"></div>
+          </label>
+        </div>
+
+        <div class="res-hint" id="hrHint" style="display:none;text-align:left;margin:0 0 8px"></div>
+
+        <div id="hrAdvIn" style="display:none">
+          <div class="proj-sep"></div>
+          <label class="fld">
+            <span class="lab">Round each total to</span>
+            <div class="csel" id="hrRound" data-value="0">
+              <button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false">
+                <span class="csel-val">No rounding</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="csel-panel" role="listbox">
+                <button type="button" class="csel-opt on" role="option" aria-selected="true" data-value="0">No rounding</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="5">5 minutes</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="6">6 minutes (a tenth of an hour)</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="15">15 minutes (7-minute rule)</button>
+              </div>
+            </div>
+          </label>
+          <label class="fld" for="hrRate">
+            <span class="lab">Hourly rate <span class="unit">optional</span></span>
+            <div class="inp"><input id="hrRate" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 20"></div>
+          </label>
+          <div id="hrOtBox" style="display:none">
+            <div class="two">
+              <label class="fld" for="hrOtW"><span class="lab">Weekly overtime after <span class="unit">hours</span></span><div class="inp"><input id="hrOtW" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 40"></div></label>
+              <label class="fld" for="hrOtD"><span class="lab">Daily overtime after <span class="unit">hours</span></span><div class="inp"><input id="hrOtD" type="text" inputmode="decimal" autocomplete="off" placeholder="optional"></div></label>
+            </div>
+            <label class="fld" for="hrOtM" style="margin-bottom:0"><span class="lab">Overtime multiplier <span class="unit">blank = 1.5</span></span><div class="inp"><input id="hrOtM" type="text" inputmode="decimal" autocomplete="off" placeholder="1.5"></div></label>
+          </div>
+        </div>
+
+        <div class="add-row split" id="hrAdvRow" style="margin-top:16px">
+          <span></span>
+          <button class="advbtn" id="hrAdvBtn" type="button">
+            <span id="hrAdvBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div class="card">
+      <div class="card-pad">
+        <div class="bf-res">
+          <div class="res-lab" id="hrResLab">Result</div>
+          <div class="res-big"><span id="hrBig">—</span> <span class="res-unit" id="hrUnit"></span></div>
+          <div class="res-sub" id="hrSub">Enter a start and an end time.</div>
+        </div>
+
+        <div id="hrShiftOut" style="display:none">
+          <div class="hr-cap2">The day</div>
+          <div class="hr-viz" id="hrRibbon"></div>
+          <table class="dtable" id="hrShiftTbl"></table>
+          <p class="res-tip adv-tip" id="hrShiftTip" style="display:none"></p>
+        </div>
+
+        <div id="hrWeekOut" style="display:none">
+          <div class="hr-cap2">Week at a glance</div>
+          <div class="hr-viz" id="hrWeekChart"></div>
+          <table class="dtable" id="hrWeekTbl"></table>
+          <p class="res-tip adv-tip" id="hrWeekTip" style="display:none"></p>
+        </div>
+
+        <div id="hrDatesOut" style="display:none">
+          <div class="hr-cap2">The span</div>
+          <div class="hr-viz" id="hrDatesBar"></div>
+          <table class="dtable" id="hrDatesTbl"></table>
+        </div>
+
+        <div id="hrConvOut" style="display:none">
+          <div class="hr-cap2">Where it sits in the hour</div>
+          <div class="hr-viz" id="hrRuler"></div>
+          <table class="dtable" id="hrConvTbl"></table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- mobile sticky bar -->
+  <div class="mbar" id="mbar">
+    <span class="mbar-lab" id="hrMLab">Hours worked</span>
+    <div class="mbar-vals"><b id="hrMVal">—</b></div>
+  </div>
+
+  <div class="related-calcs">
+    <p class="related-calcs-h">More math &amp; date calculators that may interest you</p>
+    <div class="pills">
+      <a class="pill" href="/time-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+        Time Calculator
+      </a>
+      <a class="pill" href="/date-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></svg>
+        Date Calculator
+      </a>
+      <a class="pill" href="/percentage-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 5 5 19M6.5 6.5h.01M17.5 17.5h.01"/></svg>
+        Percentage Calculator
+      </a>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use the hours calculator</h2>
+        <p>On the <strong>Shift</strong> tab, type a start time and an end time as digits — <code>9</code> or <code>915</code>, the colon fills itself — and use the <strong>AM / PM</strong> toggle inside each field. The start starts on AM and the end on PM, so <code>9</code> to <code>5</code> is 9:00 AM to 5:00 PM. Add an <strong>unpaid break</strong> as minutes (<code>30</code>), hours (<code>1h</code>) or a clock range (<code>12:00-12:30</code>), and tap <strong>Add a split shift</strong> if you worked two stretches in a day. The <strong>Week</strong> tab does the same for Monday to Sunday and totals the week; <strong>Dates</strong> counts the hours between two dates and times; <strong>Convert</strong> turns minutes, decimal hours and h:mm into each other.</p>
+
+        <h2>How hours worked are calculated</h2>
+        <div class="formula">
+          hours worked = end time &minus; start time &minus; unpaid breaks
+          <small>IF THE END IS EARLIER ON THE CLOCK THAN THE START, IT FALLS ON THE NEXT DAY</small>
+        </div>
+        <p>For <strong>9:00 AM to 5:30 PM</strong> with a <strong>30-minute</strong> lunch, the span is 8 hours 30 minutes and the hours worked are <strong>8 hours</strong> — 8.00 in decimal hours. An overnight shift works the same way: <strong>10:00 PM to 6:00 AM</strong> is <strong>8 hours</strong>, ending the next morning.</p>
+
+        <h2>Rounding to the 7-minute rule</h2>
+        <p>Many employers round time to the nearest 5, 6 or 15 minutes. Under <strong>Go advanced</strong>, pick a rounding rule and the result shows both the exact and the rounded time. With the <strong>15-minute (7-minute) rule</strong>, 1&ndash;7 minutes round down and 8&ndash;14 round up:</p>
+        <table class="dtable">
+          <thead><tr><th>Worked</th><th>5 min</th><th>6 min</th><th>15 min</th></tr></thead>
+          <tbody>
+            <tr><td>7 h 52 min</td><td>7:50</td><td>7:54</td><td>7:45</td></tr>
+            <tr><td>7 h 53 min</td><td>7:55</td><td>7:54</td><td>8:00</td></tr>
+          </tbody>
+        </table>
+
+        <h2>Overtime and pay</h2>
+        <p>On the Week tab, <strong>Go advanced</strong> lets you set a weekly overtime threshold (commonly 40 hours), an optional daily threshold and a multiplier (commonly 1.5). Daily overtime comes off first and weekly overtime applies to what is left, so no hour is counted twice. Nine hours a day for five days is 45 hours; at a $20 rate with overtime after 40 hours that is <strong>$800</strong> for the regular hours plus <strong>$150</strong> for 5 overtime hours at 1.5×, or <strong>$950</strong>. Overtime rules vary by employer and place — check yours.</p>
+      </div>
+
+      <div>
+        <h2>Minutes to decimal hours</h2>
+        <p>Payroll systems usually want decimal hours. Divide the minutes by 60 and add the whole hours: <strong>7 hours 45 minutes</strong> is <strong>7.75</strong>. To go back, multiply the decimal by 60 — <strong>0.2 hours</strong> is <strong>12 minutes</strong>.</p>
+        <table class="dtable">
+          <thead><tr><th>Minutes</th><th>Decimal hours</th></tr></thead>
+          <tbody>
+            <tr><td>5</td><td>0.08</td></tr>
+            <tr><td>6</td><td>0.10</td></tr>
+            <tr><td>10</td><td>0.17</td></tr>
+            <tr><td>15</td><td>0.25</td></tr>
+            <tr><td>20</td><td>0.33</td></tr>
+            <tr><td>30</td><td>0.50</td></tr>
+            <tr><td>40</td><td>0.67</td></tr>
+            <tr><td>45</td><td>0.75</td></tr>
+            <tr><td>50</td><td>0.83</td></tr>
+            <tr><td>60</td><td>1.00</td></tr>
+          </tbody>
+        </table>
+
+        <h2>Hours between two dates</h2>
+        <p>The <strong>Dates</strong> tab counts the real elapsed hours between a start and an end date and time, including any daylight-saving change in between. Leave a time blank to use midnight.</p>
+
+        <h2>Hours in common periods</h2>
+        <table class="dtable">
+          <thead><tr><th>Period</th><th>Hours</th></tr></thead>
+          <tbody>
+            <tr><td>1 day</td><td>24</td></tr>
+            <tr><td>1 week</td><td>168</td></tr>
+            <tr><td>1 average month</td><td>730</td></tr>
+            <tr><td>1 year (365 days)</td><td>8,760</td></tr>
+          </tbody>
+        </table>
+        <p>Need elapsed time, adding durations or a printable time card? The <a href="/time-calculator/">time calculator</a> covers those, and the <a href="/date-calculator/">date calculator</a> counts days between dates.</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>How do I calculate hours worked between two times?</summary><p>Subtract the start time from the end time, then subtract any unpaid break. For 9:00 AM to 5:30 PM with a 30-minute lunch, the span is 8 hours 30 minutes and the hours worked are <strong>8 hours</strong>. If the end time is earlier on the clock than the start time, the shift runs overnight and ends the next day, so 10 PM to 6 AM is <strong>8 hours</strong>.</p></details>
+    <details class="faq"><summary>How do I convert minutes to decimal hours?</summary><p>Divide the minutes by 60. 15 minutes is <strong>0.25</strong> hours, 30 minutes is 0.5, 45 minutes is 0.75, and 20 minutes is 0.33. Add the whole hours in front: 7 hours 45 minutes is <strong>7.75</strong> hours. To go back, multiply the decimal part by 60, so 0.2 hours is 12 minutes.</p></details>
+    <details class="faq"><summary>How do I add up my hours for the week?</summary><p>Use the Week tab: enter a start time, end time and break for each day and the calculator adds the days into a weekly total in hours and minutes and in decimal hours. Nine hours a day for five days is <strong>45 hours</strong>.</p></details>
+    <details class="faq"><summary>How is overtime calculated?</summary><p>Under Go advanced you can set a weekly threshold (commonly 40 hours), an optional daily threshold and a multiplier (commonly 1.5). Hours over the threshold are overtime. At 45 hours in a week with a 40-hour threshold and a $20 rate, 40 hours pay $800 and 5 overtime hours pay 5 &times; $20 &times; 1.5 = $150, for <strong>$950</strong>. Overtime rules differ by employer and location, so check yours.</p></details>
+    <details class="faq"><summary>What is the 7-minute rule?</summary><p>It is a payroll rounding rule that rounds time to the nearest 15 minutes: 1 to 7 minutes round down to the previous quarter-hour and 8 to 14 minutes round up to the next. A worked time of 7 hours 52 minutes becomes <strong>7:45</strong>, and 7 hours 53 minutes becomes <strong>8:00</strong>. Choose 15 minutes under Round to in Go advanced.</p></details>
+  </section>
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+          <li><a href="/paint-calculator/">Paint Calculator</a></li>
+          <li><a href="/wallpaper-calculator/">Wallpaper Calculator</a></li>
+          <li><a href="/square-footage-calculator/">Square Footage Calculator</a></li>
+          <li><a href="/tape-measure-fraction-calculator/">Tape Measure Fraction Calculator</a></li>
+          <li><a href="/stair-calculator/">Stair Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/vo2-max-calculator/">VO2 Max Calculator</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/bmi-calculator/">BMI Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/ideal-weight-calculator/">Ideal Weight Calculator</a></li>
+          <li><a href="/lean-body-mass-calculator/">Lean Body Mass Calculator</a></li>
+          <li><a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio Calculator</a></li>
+          <li><a href="/calorie-calculator/">Calorie Calculator</a></li>
+          <li><a href="/bmr-calculator/">BMR Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/water-intake-calculator/">Water Intake Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/protein-intake-calculator/">Protein Intake Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
+          <li><a href="/steps-to-miles-calculator/">Steps to Miles Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+          <li><a href="/grade-curve-calculator/">Grade Curve Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/fraction-calculator/">Fraction Calculator</a></li>
+          <li><a href="/standard-deviation-calculator/">Standard Deviation Calculator</a></li>
+          <li><a href="/scientific-notation-calculator/">Scientific Notation Calculator</a></li>
+          <li><a href="/weighted-average-calculator/">Weighted Average Calculator</a></li>
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+          <li><a href="/age-calculator/">Age Calculator</a></li>
+          <li><a href="/date-calculator/">Date Calculator</a></li>
+          <li><a href="/time-calculator/">Time Calculator</a></li>
+          <li><a href="/hours-calculator/">Hours Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Cooking &amp;</span> <span class="ft2">Kitchen</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/recipe-converter/">Recipe Converter</a></li>
+        </ul>
+      </div>
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/blog/">Blog</a>
+      <span aria-hidden="true">·</span>
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+</div>
+
+<script src="/assets/datepicker.min.js"></script>
+<script src="/assets/app.js?v=150"></script>
+<script>CalcThis.initHoursCalc();</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>
