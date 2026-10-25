@@ -42,6 +42,7 @@ const PAGES = [
   { file: 'ideal-weight-calculator/index.html', slug: '/ideal-weight-calculator/' },
   { file: 'lean-body-mass-calculator/index.html', slug: '/lean-body-mass-calculator/' },
   { file: 'waist-to-hip-ratio-calculator/index.html', slug: '/waist-to-hip-ratio-calculator/' },
+  { file: 'bmr-calculator/index.html',          slug: '/bmr-calculator/' },
   { file: 'calorie-calculator/index.html',      slug: '/calorie-calculator/' },
   { file: 'tdee-calculator/index.html',        slug: '/tdee-calculator/' },
   { file: 'one-rep-max-calculator/index.html', slug: '/one-rep-max-calculator/' },

@@ -1,0 +1,516 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BMR Calculator — Basal Metabolic Rate, 5 Formulas | CalcThis</title>
+<meta name="description" content="Free BMR calculator: your basal metabolic rate in kcal and kJ from five formulas on one scale, plus daily calories by activity level and lose, maintain and gain targets.">
+<link rel="canonical" href="https://calcthis.co/bmr-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="BMR Calculator — Basal Metabolic Rate, Every Formula on One Scale">
+<meta property="og:description" content="See your BMR from five formulas side by side with an honest range, plus the calories you burn at every activity level. Instant, no sign-up.">
+<meta property="og:url" content="https://calcthis.co/bmr-calculator/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<meta name="theme-color" content="#B5761F">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css?v=146">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "BMR Calculator",
+      "url": "https://calcthis.co/bmr-calculator/",
+      "applicationCategory": "HealthApplication",
+      "operatingSystem": "Any (web browser)",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "description": "Calculate your basal metabolic rate from age, sex, height and weight with five formulas at once — Mifflin-St Jeor, Harris-Benedict, revised Harris-Benedict, Schofield and Katch-McArdle — plotted on one scale with an honest range, in kcal, kJ and per hour. Includes daily calories at every activity level, a where-your-calories-go bar and lose, maintain and gain targets.",
+      "featureList": [
+        "Five BMR formulas side by side on one scale",
+        "kcal, kJ and kcal per hour together",
+        "Metric, US and UK (stones) units",
+        "Schofield equation for ages 10 to 17",
+        "Clickable activity table with daily calories",
+        "Where-your-calories-go bar",
+        "Lose, maintain and gain targets with a below-BMR flag",
+        "Katch-McArdle with body fat percentage under Go advanced"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "What is BMR and how is it calculated?", "acceptedAnswer": { "@type": "Answer", "text": "BMR (basal metabolic rate) is the energy your body burns at complete rest to keep you alive — breathing, circulation, temperature and cell repair. The most widely used equation is Mifflin-St Jeor: 10 × weight in kg + 6.25 × height in cm − 5 × age, then + 5 for men or − 161 for women. A 30-year-old woman who is 165 cm and 65 kg has a BMR of about 1,370 kcal a day." } },
+        { "@type": "Question", "name": "What is the difference between BMR and TDEE?", "acceptedAnswer": { "@type": "Answer", "text": "BMR is what you burn at rest. TDEE (total daily energy expenditure) is what you burn in a whole day, which adds digestion and movement. You get TDEE by multiplying BMR by an activity factor from 1.2 for a sedentary day to 1.9 for hard training or a physical job." } },
+        { "@type": "Question", "name": "Which BMR formula is the most accurate?", "acceptedAnswer": { "@type": "Answer", "text": "Mifflin-St Jeor is generally the best of the common equations for most adults, and it is the headline formula here. Katch-McArdle can be more accurate if you know your body fat percentage, especially for lean or muscular people. The formulas often differ by 50 to 150 kcal for the same person, so treat any result as a range of roughly 10% either side." } },
+        { "@type": "Question", "name": "Should I eat less than my BMR to lose weight?", "acceptedAnswer": { "@type": "Answer", "text": "Not for long. Your BMR is the energy your body needs at rest, so eating well below it for weeks makes it harder to get enough nutrients and to keep muscle. A deficit is normally taken from your TDEE instead, for example 500 kcal below it for about half a kilo (1 lb) a week. If you are considering a very low intake, talk to a doctor or dietitian first." } },
+        { "@type": "Question", "name": "Is BMR the same as RMR?", "acceptedAnswer": { "@type": "Answer", "text": "They are very close. BMR is measured fasted, fully rested and warm; RMR (resting metabolic rate) is measured under looser conditions and usually reads 5 to 10% higher. The prediction equations are built from measurements of both and are used for either in practice." } }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body class="p-bmr">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <a class="hdr-back" href="/blog/" aria-label="Back to blog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <span class="menu-col-head">Construction &amp; Gardening</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+          <a href="/paint-calculator/">Paint</a>
+          <a href="/wallpaper-calculator/">Wallpaper</a>
+          <a href="/square-footage-calculator/">Square Footage</a>
+          <a href="/tape-measure-fraction-calculator/">Tape Measure Fraction</a>
+          <a href="/stair-calculator/">Stair</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/vo2-max-calculator/">VO2 Max</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
+          <a href="/bmi-calculator/">BMI</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/ideal-weight-calculator/">Ideal Weight</a>
+          <a href="/lean-body-mass-calculator/">Lean Body Mass</a>
+          <a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio</a>
+          <a href="/calorie-calculator/">Calorie</a>
+          <a href="/bmr-calculator/" class="current">BMR</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/water-intake-calculator/">Water Intake</a>
+          <a href="/macro-calculator/">Macro</a>
+          <a href="/protein-intake-calculator/">Protein Intake</a>
+          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
+          <a href="/steps-to-miles-calculator/">Steps to Miles</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+          <a href="/grade-curve-calculator/">Grade Curve</a>
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/fraction-calculator/">Fraction</a>
+          <a href="/standard-deviation-calculator/">Standard Deviation</a>
+          <a href="/scientific-notation-calculator/">Scientific Notation</a>
+          <a href="/weighted-average-calculator/">Weighted Average</a>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+          <a href="/age-calculator/">Age</a>
+          <a href="/date-calculator/">Date</a>
+          <a href="/time-calculator/">Time</a>
+          <span class="menu-col-head">Cooking &amp; Kitchen</span>
+          <a href="/recipe-converter/">Recipe Converter</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">Every formula, on one scale</div>
+    <h1>BMR Calculator</h1>
+    <p>Your <strong>basal metabolic rate</strong> in kcal, kJ and per hour — from <strong>five formulas at once</strong> plotted on one scale, so you see the honest range instead of one false-precision number. Then pick an activity level to see your daily calories and <strong>lose, maintain and gain</strong> targets.</p>
+  </section>
+
+  <div class="grid">
+
+    <!-- INPUT -->
+    <div class="card">
+      <div class="card-pad">
+        <h2 class="card-h2">About you</h2>
+
+        <div class="ctl-row">
+          <span class="ctl-lab">Units</span>
+          <div class="seg" id="bmUnitSeg" role="group" aria-label="Units">
+            <button class="on" type="button" data-v="met">Metric</button>
+            <button type="button" data-v="imp">US</button>
+            <button type="button" data-v="uk">UK</button>
+          </div>
+        </div>
+
+        <div class="ctl-row">
+          <span class="ctl-lab">Sex</span>
+          <div class="seg" id="bmSexSeg" role="group" aria-label="Sex">
+            <button class="on" type="button" data-v="female">Female</button>
+            <button type="button" data-v="male">Male</button>
+          </div>
+        </div>
+
+        <label class="fld" for="bmAge">
+          <span class="lab">Age <span class="unit">years</span></span>
+          <div class="inp"><input id="bmAge" type="number" inputmode="numeric" min="10" max="100" placeholder="30"></div>
+        </label>
+
+        <div id="bmHmet">
+          <label class="fld" for="bmHcm">
+            <span class="lab">Height <span class="unit">cm</span></span>
+            <div class="inp"><input id="bmHcm" type="number" inputmode="decimal" min="100" max="250" step="any" placeholder="170"></div>
+          </label>
+        </div>
+        <div id="bmHimp" style="display:none">
+          <div class="two">
+            <label class="fld" for="bmHft"><span class="lab">Height <span class="unit">ft</span></span><div class="inp"><input id="bmHft" type="number" inputmode="numeric" min="0" max="8" step="any" placeholder="5"></div></label>
+            <label class="fld" for="bmHin"><span class="lab">&nbsp; <span class="unit">in</span></span><div class="inp"><input id="bmHin" type="number" inputmode="decimal" min="0" max="11.9" step="any" placeholder="7"></div></label>
+          </div>
+        </div>
+
+        <div id="bmWmet">
+          <label class="fld" for="bmWkg">
+            <span class="lab">Weight <span class="unit">kg</span></span>
+            <div class="inp"><input id="bmWkg" type="number" inputmode="decimal" min="20" max="400" step="any" placeholder="65"></div>
+          </label>
+        </div>
+        <div id="bmWimp" style="display:none">
+          <label class="fld" for="bmWlb">
+            <span class="lab">Weight <span class="unit">lb</span></span>
+            <div class="inp"><input id="bmWlb" type="number" inputmode="decimal" min="44" max="880" step="any" placeholder="145"></div>
+          </label>
+        </div>
+        <div id="bmWuk" style="display:none">
+          <div class="two">
+            <label class="fld" for="bmWst"><span class="lab">Weight <span class="unit">st</span></span><div class="inp"><input id="bmWst" type="number" inputmode="numeric" min="0" max="63" step="any" placeholder="10"></div></label>
+            <label class="fld" for="bmWlb2"><span class="lab">&nbsp; <span class="unit">lb</span></span><div class="inp"><input id="bmWlb2" type="number" inputmode="decimal" min="0" max="13.9" step="any" placeholder="5"></div></label>
+          </div>
+        </div>
+
+        <div class="res-hint" id="bmHint" style="display:none;text-align:left;margin:0 0 8px"></div>
+
+        <div id="bmAdvIn" style="display:none">
+          <div class="proj-sep"></div>
+          <label class="fld">
+            <span class="lab">Headline formula</span>
+            <div class="csel" id="bmFormula" data-value="mifflin">
+              <button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false">
+                <span class="csel-val">Mifflin-St Jeor (recommended)</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="csel-panel" role="listbox">
+                <button type="button" class="csel-opt on" role="option" aria-selected="true" data-value="mifflin">Mifflin-St Jeor (recommended)</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="hbrev">Revised Harris-Benedict</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="hb">Harris-Benedict</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="schofield">Schofield</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="katch">Katch-McArdle (needs body fat %)</button>
+              </div>
+            </div>
+          </label>
+          <label class="fld" for="bmBf" style="margin-bottom:0">
+            <span class="lab">Body fat <span class="unit">% · optional, enables Katch-McArdle</span></span>
+            <div class="inp"><input id="bmBf" type="number" inputmode="decimal" min="3" max="70" step="any" placeholder="e.g. 22"></div>
+          </label>
+        </div>
+
+        <div class="add-row split" style="margin-top:16px">
+          <span></span>
+          <button class="advbtn" id="bmAdvBtn" type="button">
+            <span id="bmAdvBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div class="card">
+      <div class="card-pad">
+        <div class="bf-res">
+          <div class="res-lab">Basal metabolic rate</div>
+          <div class="res-big"><span id="bmBig">—</span> <span class="res-unit" id="bmUnitTxt"></span></div>
+          <div class="res-sub" id="bmSub">Enter your age, height and weight to see your BMR.</div>
+        </div>
+
+        <div id="bmBody" style="display:none">
+          <p class="res-tip adv-tip" id="bmTip"></p>
+
+          <table class="dtable" id="bmTable"></table>
+
+          <div id="bmScaleWrap">
+            <p class="bm-h">All the formulas on one scale</p>
+            <div class="iw-viz">
+              <div class="iw-bar">
+                <span class="iw-band" id="bmBand"></span>
+                <span class="iw-tick-layer" id="bmTickLayer"></span>
+                <span class="iw-cur" id="bmCur"></span>
+              </div>
+              <div class="iw-ticks" id="bmScaleTicks"></div>
+              <div class="iw-key">
+                <span><i class="k-band"></i>Realistic range (±10%)</span>
+                <span><i class="k-tick"></i>Other formulas</span>
+                <span><i class="k-cur"></i>Your headline</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="proj-sep"></div>
+          <div class="tally-head"><h3>Calories by activity level</h3></div>
+          <p class="add-note" style="text-align:left;margin:-6px 0 6px">Tap a row to use it below.</p>
+          <table class="dtable bm-act" id="bmAct"></table>
+
+          <p class="bm-h" id="bmSplitH">Where your calories go</p>
+          <div id="bmSplit"></div>
+
+          <p class="bm-h" id="bmTargetsH" style="margin-top:18px">Daily targets</p>
+          <div id="bmTargets"></div>
+
+          <div id="bmAdvOut" style="display:none"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- mobile sticky bar -->
+  <div class="mbar" id="mbar">
+    <span class="mbar-lab">BMR</span>
+    <div class="mbar-vals"><b id="bmMVal">—</b></div>
+  </div>
+
+  <div class="related-calcs">
+    <p class="related-calcs-h">More health calculators that may interest you</p>
+    <div class="pills">
+      <a class="pill" href="/tdee-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg>
+        TDEE Calculator
+      </a>
+      <a class="pill" href="/calorie-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c3 4 6 6 6 10a6 6 0 0 1-12 0c0-2 1-3 2-4 .5 1.5 1.5 2 2 2 0-3 0-5 2-8z"/></svg>
+        Calorie Calculator
+      </a>
+      <a class="pill" href="/macro-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 3"/></svg>
+        Macro Calculator
+      </a>
+      <a class="pill" href="/body-fat-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18"/></svg>
+        Body Fat Calculator
+      </a>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use the BMR calculator</h2>
+        <p>Choose your <strong>units</strong> (metric, US or UK stones), pick <strong>female</strong> or <strong>male</strong>, and enter your <strong>age</strong>, <strong>height</strong> and <strong>weight</strong>. The result updates as you type. The big number is the <strong>Mifflin-St Jeor</strong> estimate; the table and the scale underneath show what the other formulas say for the same body, so you can see the honest range. Tap a row of the activity table to see your daily calories and your lose, maintain and gain targets at that level. Under <strong>Go advanced</strong>, add your body fat % to unlock Katch-McArdle.</p>
+
+        <h2>What is BMR?</h2>
+        <p>Your <strong>basal metabolic rate</strong> is the energy your body burns at complete rest — breathing, pumping blood, keeping warm, repairing cells. It is usually the biggest part of the calories you burn in a day, roughly 60–70% for most people.</p>
+
+        <h2>The Mifflin-St Jeor formula</h2>
+        <div class="formula">
+          BMR = 10 × kg + 6.25 × cm − 5 × age + 5 (men) or − 161 (women)
+          <small>THE MOST WIDELY RECOMMENDED EQUATION FOR ADULTS</small>
+        </div>
+        <p>A 30-year-old woman who is 165 cm and 65 kg: 10 × 65 = 650, plus 6.25 × 165 = 1,031.25, minus 5 × 30 = 150, minus 161 = <strong>1,370 kcal a day</strong>. The same figure in kilojoules is 1,370 × 4.184 = <strong>5,733 kJ</strong>, or 57 kcal an hour.</p>
+
+        <h2>The five formulas compared</h2>
+        <table class="dtable">
+          <thead><tr><th>Formula</th><th>Year</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr class="cur"><td>Mifflin-St Jeor</td><td>1990</td><td>Headline; best for most adults</td></tr>
+            <tr><td>Revised Harris-Benedict</td><td>1984</td><td>Updated 1919 equation; tends to read higher</td></tr>
+            <tr><td>Harris-Benedict</td><td>1919</td><td>The original; tends to read highest</td></tr>
+            <tr><td>Schofield</td><td>1985</td><td>WHO/FAO; the only one for ages under 18</td></tr>
+            <tr><td>Katch-McArdle</td><td>1975</td><td>Uses lean mass, so needs your body fat %</td></tr>
+          </tbody>
+        </table>
+        <p>They were built from different groups of people decades apart, so they routinely differ by 50–150 kcal for the same person. That spread is the honest uncertainty in any estimate.</p>
+      </div>
+
+      <div>
+        <h2>BMR, RMR and TDEE</h2>
+        <p><strong>BMR</strong> is what you burn at rest. <strong>RMR</strong> is measured under looser conditions and reads a little higher (5–10%); in practice the same equations are used for both. <strong>TDEE</strong> — total daily energy expenditure — is BMR plus digestion and movement, which is the number that decides whether you gain or lose weight.</p>
+
+        <h2>Activity multipliers</h2>
+        <p>Multiply your BMR by the factor that matches your week. For the woman in the example above (BMR 1,370):</p>
+        <table class="dtable">
+          <thead><tr><th>Activity</th><th>× BMR</th><th>Calories/day</th></tr></thead>
+          <tbody>
+            <tr><td>Sedentary — little or no exercise</td><td>1.2</td><td>1,644</td></tr>
+            <tr><td>Light — 1–3 days a week</td><td>1.375</td><td>1,884</td></tr>
+            <tr><td>Moderate — 3–5 days a week</td><td>1.55</td><td>2,124</td></tr>
+            <tr><td>Active — 6–7 days a week</td><td>1.725</td><td>2,364</td></tr>
+            <tr><td>Very active — hard training or a physical job</td><td>1.9</td><td>2,603</td></tr>
+          </tbody>
+        </table>
+        <p>To lose about half a kilo (1 lb) a week, eat roughly 500 kcal under your TDEE; to gain slowly, about 300 above. The calculator flags any target that falls below your BMR. For a full plan with a safe pace and a projected curve, use the <a href="/calorie-calculator/">calorie calculator</a>, or the <a href="/tdee-calculator/">TDEE calculator</a> for maintenance calories and macros.</p>
+
+        <h2>What changes your BMR?</h2>
+        <ul>
+          <li><strong>Lean mass.</strong> Muscle burns more than fat at rest, which is why Katch-McArdle uses it.</li>
+          <li><strong>Body size.</strong> Bigger bodies burn more, which is why weight and height are in every formula.</li>
+          <li><strong>Age.</strong> BMR drifts down with age, mostly from losing lean mass.</li>
+          <li><strong>Sex.</strong> Men tend to burn more at the same weight because they carry more lean mass.</li>
+          <li><strong>Hormones, illness and genetics.</strong> Thyroid problems, pregnancy and your own biology can move it either way — a formula can't see these.</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>What is BMR and how is it calculated?</summary><p>BMR (basal metabolic rate) is the energy your body burns at complete rest to keep you alive — breathing, circulation, temperature and cell repair. The most widely used equation is <strong>Mifflin-St Jeor</strong>: 10 × weight in kg + 6.25 × height in cm − 5 × age, then + 5 for men or − 161 for women. A 30-year-old woman who is 165 cm and 65 kg has a BMR of about <strong>1,370 kcal a day</strong>.</p></details>
+    <details class="faq"><summary>What is the difference between BMR and TDEE?</summary><p>BMR is what you burn at rest. TDEE (total daily energy expenditure) is what you burn in a whole day, which adds digestion and movement. You get TDEE by multiplying BMR by an activity factor from <strong>1.2</strong> for a sedentary day to <strong>1.9</strong> for hard training or a physical job.</p></details>
+    <details class="faq"><summary>Which BMR formula is the most accurate?</summary><p>Mifflin-St Jeor is generally the best of the common equations for most adults, and it is the headline formula here. Katch-McArdle can be more accurate if you know your body fat percentage, especially for lean or muscular people. The formulas often differ by 50 to 150 kcal for the same person, so treat any result as a range of roughly <strong>10% either side</strong>.</p></details>
+    <details class="faq"><summary>Should I eat less than my BMR to lose weight?</summary><p>Not for long. Your BMR is the energy your body needs at rest, so eating well below it for weeks makes it harder to get enough nutrients and to keep muscle. A deficit is normally taken from your TDEE instead, for example 500 kcal below it for about half a kilo (1 lb) a week. If you are considering a very low intake, talk to a doctor or dietitian first.</p></details>
+    <details class="faq"><summary>Is BMR the same as RMR?</summary><p>They are very close. BMR is measured fasted, fully rested and warm; RMR (resting metabolic rate) is measured under looser conditions and usually reads <strong>5 to 10% higher</strong>. The prediction equations are built from measurements of both and are used for either in practice.</p></details>
+  </section>
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+          <li><a href="/paint-calculator/">Paint Calculator</a></li>
+          <li><a href="/wallpaper-calculator/">Wallpaper Calculator</a></li>
+          <li><a href="/square-footage-calculator/">Square Footage Calculator</a></li>
+          <li><a href="/tape-measure-fraction-calculator/">Tape Measure Fraction Calculator</a></li>
+          <li><a href="/stair-calculator/">Stair Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/vo2-max-calculator/">VO2 Max Calculator</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/bmi-calculator/">BMI Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/ideal-weight-calculator/">Ideal Weight Calculator</a></li>
+          <li><a href="/lean-body-mass-calculator/">Lean Body Mass Calculator</a></li>
+          <li><a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio Calculator</a></li>
+          <li><a href="/calorie-calculator/">Calorie Calculator</a></li>
+          <li><a href="/bmr-calculator/">BMR Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/water-intake-calculator/">Water Intake Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/protein-intake-calculator/">Protein Intake Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
+          <li><a href="/steps-to-miles-calculator/">Steps to Miles Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+          <li><a href="/grade-curve-calculator/">Grade Curve Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/fraction-calculator/">Fraction Calculator</a></li>
+          <li><a href="/standard-deviation-calculator/">Standard Deviation Calculator</a></li>
+          <li><a href="/scientific-notation-calculator/">Scientific Notation Calculator</a></li>
+          <li><a href="/weighted-average-calculator/">Weighted Average Calculator</a></li>
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+          <li><a href="/age-calculator/">Age Calculator</a></li>
+          <li><a href="/date-calculator/">Date Calculator</a></li>
+          <li><a href="/time-calculator/">Time Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Cooking &amp;</span> <span class="ft2">Kitchen</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/recipe-converter/">Recipe Converter</a></li>
+        </ul>
+      </div>
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/blog/">Blog</a>
+      <span aria-hidden="true">·</span>
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+</div>
+
+<script src="/assets/app.js?v=146"></script>
+<script>CalcThis.initBmrCalc();</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>

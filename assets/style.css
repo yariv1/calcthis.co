@@ -1972,3 +1972,49 @@
     body.p-recipe .grid{display:block}
     body.p-recipe{padding-bottom:0}
   }
+
+  /* =========================================================
+     HEALTH · BMR CALCULATOR  (body.p-bmr)
+     Reuses .card-h2/.ctl-row, .seg (units + sex), .csel (headline formula),
+     .advbtn / .add-row.split, .res-tip.adv-tip, .bf-res/.bf-cmp, .dtable
+     (formula + activity tables; the activity table is clickable like the
+     Calorie pace table), .tally-head, .proj-sep, the sticky .mbar. The
+     multiple-formulas-as-ticks scale reuses the Ideal Weight / Lean Body
+     Mass .iw-bar pattern as-is; the where-your-calories-go bar reuses the
+     stacked-segment technique from Weighted Average. */
+  .p-bmr .two{grid-template-columns:1fr 1fr}
+  .p-bmr .bf-res{margin:2px 0 14px}
+  .p-bmr .bf-cmp{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:9px 0;border-bottom:1px dashed var(--line)}
+  .p-bmr .bf-cmp .k{font-size:13.5px;font-weight:500;color:var(--ink-soft)}
+  .p-bmr .bf-cmp .v{font-family:'Fraunces',serif;font-size:18px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--ink);text-align:right;white-space:nowrap}
+  .p-bmr .dtable td:first-child{color:var(--ink)}
+  .p-bmr .bm-h{font-family:'Fraunces',serif;font-size:16px;font-weight:700;margin:16px 0 10px;color:var(--ink)}
+  .p-bmr .bm-sub{display:block;margin-top:1px;font-size:12px;font-weight:500;color:var(--muted)}
+  .p-bmr .bm-flag{font-size:13px;font-weight:500;color:var(--amber-deep);margin:2px 0 6px;line-height:1.4}
+  .p-bmr .bm-act tr[data-l]{cursor:pointer}
+  .p-bmr .bm-act tr[data-l]:hover td{background:#FCF7EE}
+  .p-bmr .bm-act tr[data-l]:focus-visible{outline:2px solid var(--amber);outline-offset:-2px}
+  .p-bmr .iw-viz{margin:8px 0 16px}
+  .p-bmr .iw-bar{position:relative;height:14px;border-radius:7px;background:#EFE7D8}
+  .p-bmr .iw-band{position:absolute;top:0;height:100%;background:var(--spruce);border-radius:7px;opacity:.85}
+  .p-bmr .iw-tick-layer{position:absolute;inset:0}
+  .p-bmr .iw-tick{position:absolute;top:-4px;width:2px;height:22px;background:var(--ink);opacity:.5;transform:translateX(-50%);border-radius:1px}
+  .p-bmr .iw-cur{position:absolute;top:-7px;width:3px;height:28px;background:var(--amber-deep);transform:translateX(-50%);border-radius:2px;box-shadow:0 0 0 2px var(--card)}
+  .p-bmr .iw-ticks{position:relative;height:16px;margin-top:8px;font-size:12px;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums}
+  .p-bmr .iw-ticks span{position:absolute;transform:translateX(-50%)}
+  .p-bmr .iw-key{display:flex;flex-wrap:wrap;gap:5px 16px;margin-top:12px;font-size:12px;font-weight:500;color:var(--ink-soft)}
+  .p-bmr .iw-key i{display:inline-block;margin-right:5px;vertical-align:-1px}
+  .p-bmr .iw-key .k-band{width:11px;height:11px;border-radius:3px;background:var(--spruce);opacity:.85}
+  .p-bmr .iw-key .k-tick{width:3px;height:12px;border-radius:1px;background:var(--ink);opacity:.5;vertical-align:-2px}
+  .p-bmr .iw-key .k-cur{width:3px;height:12px;border-radius:1px;background:var(--amber-deep);vertical-align:-2px}
+  .p-bmr .bm-bar{display:flex;height:26px;border-radius:8px;overflow:hidden;background:#EFE7D8}
+  .p-bmr .bm-seg{display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;min-width:0}
+  .p-bmr .bm-seg.c0{background:var(--spruce)}
+  .p-bmr .bm-seg.c1{background:var(--amber)}
+  .p-bmr .bm-seg.c3{background:var(--amber-deep)}
+  .p-bmr .bm-key{display:flex;flex-wrap:wrap;gap:5px 16px;margin:8px 0 4px;font-size:12.5px;font-weight:500;color:var(--ink-soft)}
+  .p-bmr .bm-key i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+  .p-bmr .bm-key i.c0{background:var(--spruce)}
+  .p-bmr .bm-key i.c1{background:var(--amber)}
+  .p-bmr .bm-key i.c3{background:var(--amber-deep)}
+  .p-bmr .mbar-vals b{font-size:20px;overflow-wrap:anywhere}

@@ -9142,6 +9142,256 @@ CalcThis.initRecipeCalc = function () {
 };
 
 /* =========================================================
+   BMR CALCULATOR — pure engine (no DOM). Five published equations for basal
+   metabolic rate in kcal/day: Mifflin-St Jeor (1990), Harris-Benedict (1919),
+   revised Harris-Benedict (Roza & Shizgal 1984), Schofield (WHO/FAO 1985, the only
+   one that covers children and teenagers) and Katch-McArdle (needs body fat %).
+   ========================================================= */
+/* BMR-ENGINE:START */
+CalcThis.bmrEngine = (function () {
+  var KJ = 4.184;                                   // kJ per kcal
+  var LEVELS = [
+    { id: 'sed', f: 1.2, name: 'Sedentary', desc: 'little or no exercise' },
+    { id: 'light', f: 1.375, name: 'Light', desc: '1–3 days a week' },
+    { id: 'mod', f: 1.55, name: 'Moderate', desc: '3–5 days a week' },
+    { id: 'act', f: 1.725, name: 'Active', desc: '6–7 days a week' },
+    { id: 'very', f: 1.9, name: 'Very active', desc: 'hard training or a physical job' }
+  ];
+  var NAMES = {
+    mifflin: 'Mifflin-St Jeor', hbrev: 'Revised Harris-Benedict', hb: 'Harris-Benedict', schofield: 'Schofield', katch: 'Katch-McArdle'
+  };
+  // Schofield, MJ/day = a x kg + b, by age band
+  var SCH = {
+    m: [[3, 0.249, -0.127], [10, 0.095, 2.110], [18, 0.074, 2.754], [30, 0.063, 2.896], [60.0001, 0.048, 3.653], [999, 0.049, 2.459]],
+    f: [[3, 0.244, -0.130], [10, 0.085, 2.033], [18, 0.056, 2.898], [30, 0.062, 2.036], [60.0001, 0.034, 3.538], [999, 0.038, 2.755]]
+  };
+
+  function mifflin(m, W, H, A) { return 10 * W + 6.25 * H - 5 * A + (m ? 5 : -161); }
+  function hb(m, W, H, A) { return m ? 66.5 + 13.75 * W + 5.003 * H - 6.755 * A : 655.1 + 9.563 * W + 1.850 * H - 4.676 * A; }
+  function hbrev(m, W, H, A) { return m ? 88.362 + 13.397 * W + 4.799 * H - 5.677 * A : 447.593 + 9.247 * W + 3.098 * H - 4.330 * A; }
+  function schofield(m, W, A) {
+    var t = SCH[m ? 'm' : 'f'];
+    for (var i = 0; i < t.length; i++) if (A < t[i][0]) return (t[i][1] * W + t[i][2]) * 1000 / KJ;
+    return NaN;
+  }
+  function katch(lbm) { return 370 + 21.6 * lbm; }
+
+  /* o = { male, W (kg), H (cm), A (years), bf (% or null) } -> list of { id, name, kcal } for the formulas that apply */
+  function all(o) {
+    var out = [], adult = o.A >= 18;
+    if (adult) {
+      out.push({ id: 'mifflin', name: NAMES.mifflin, kcal: mifflin(o.male, o.W, o.H, o.A) });
+      out.push({ id: 'hbrev', name: NAMES.hbrev, kcal: hbrev(o.male, o.W, o.H, o.A) });
+      out.push({ id: 'hb', name: NAMES.hb, kcal: hb(o.male, o.W, o.H, o.A) });
+    }
+    out.push({ id: 'schofield', name: NAMES.schofield, kcal: schofield(o.male, o.W, o.A) });
+    if (adult && o.bf > 0 && o.bf < 100) out.push({ id: 'katch', name: NAMES.katch, kcal: katch(o.W * (1 - o.bf / 100)) });
+    return out;
+  }
+  /* which formula is the headline: the user's pick if it applies, else Mifflin (adults) / Schofield (under 18) */
+  function pick(list, want, A) {
+    var def = A >= 18 ? 'mifflin' : 'schofield', i;
+    for (i = 0; i < list.length; i++) if (list[i].id === want) return list[i];
+    for (i = 0; i < list.length; i++) if (list[i].id === def) return list[i];
+    return list[0];
+  }
+  /* typical split of a day's energy at one activity factor: digestion ~10% of the total, the rest above BMR is movement */
+  function split(bmr, f) {
+    var tdee = bmr * f, dig = tdee * 0.10, act = Math.max(0, tdee - bmr - dig);
+    return { tdee: tdee, bmr: bmr, dig: dig, act: act, total: bmr + dig + act };
+  }
+  return { KJ: KJ, LEVELS: LEVELS, NAMES: NAMES, mifflin: mifflin, hb: hb, hbrev: hbrev, schofield: schofield, katch: katch, all: all, pick: pick, split: split };
+})();
+/* BMR-ENGINE:END */
+
+/* =========================================================
+   CalcThis.initBmrCalc() — basal metabolic rate. Differentiator vs. calculator.net,
+   Omnicalculator, Gigacalculator and bmrcalculator.org (all checked live; one bare
+   number, a formula dropdown, or two formulas side by side — none plots the spread):
+   every published formula at once on one scale with a plain-English spread, kcal AND
+   kJ AND per hour together, a clickable activity table that drives a "where your
+   calories go" bar and lose / maintain / gain targets with a below-BMR flag, and
+   Schofield for ages 10-17. Go advanced = body fat % (Katch-McArdle), choose the
+   headline formula, per-kg figures. Engine: CalcThis.bmrEngine. No shared state. */
+CalcThis.initBmrCalc = function () {
+  var E = CalcThis.bmrEngine;
+  var $ = function (id) { return document.getElementById(id); };
+  var st = { unit: 'met', sex: 'female', adv: false, level: 'mod', want: 'mifflin' };
+  var LB = 0.45359237, IN = 2.54;
+  var keep = { H: null, W: null };          // exact values carried across a unit switch until the user edits that field
+  var PH = { met: ['170', '65'], imp: ['5', '7', '145'], uk: ['5', '7', '10', '5'] };
+
+  function num(id) { var v = parseFloat(($(id).value + '').trim()); return isNaN(v) ? NaN : v; }
+  function blank(id) { return !($(id).value + '').trim(); }
+  function commas(n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+  function r0(x) { return Math.round(x); }
+  function setHint(m) { var h = $('bmHint'); h.textContent = m || ''; h.style.display = m ? 'block' : 'none'; }
+  function level() { for (var i = 0; i < E.LEVELS.length; i++) if (E.LEVELS[i].id === st.level) return E.LEVELS[i]; return E.LEVELS[2]; }
+
+  /* ---------- read / write height + weight in the chosen units ---------- */
+  function readH() {
+    if (keep.H != null) return keep.H;
+    if (st.unit === 'met') return blank('bmHcm') ? NaN : num('bmHcm');
+    if (blank('bmHft') && blank('bmHin')) return NaN;
+    var ft = blank('bmHft') ? 0 : num('bmHft'), inch = blank('bmHin') ? 0 : num('bmHin');
+    return (ft * 12 + inch) * IN;
+  }
+  function readW() {
+    if (keep.W != null) return keep.W;
+    if (st.unit === 'met') return blank('bmWkg') ? NaN : num('bmWkg');
+    if (st.unit === 'imp') return blank('bmWlb') ? NaN : num('bmWlb') * LB;
+    if (blank('bmWst') && blank('bmWlb2')) return NaN;
+    var s = blank('bmWst') ? 0 : num('bmWst'), l = blank('bmWlb2') ? 0 : num('bmWlb2');
+    return (s * 14 + l) * LB;
+  }
+  function writeH(cm) {
+    if (!(cm > 0)) return;
+    if (st.unit === 'met') { $('bmHcm').value = String(Math.round(cm * 10) / 10); return; }
+    var tot = cm / IN, ft = Math.floor(tot / 12), inch = Math.round((tot - ft * 12) * 10) / 10;
+    if (inch >= 12) { ft += 1; inch = 0; }
+    $('bmHft').value = String(ft); $('bmHin').value = String(inch);
+  }
+  function writeW(kg) {
+    if (!(kg > 0)) return;
+    if (st.unit === 'met') { $('bmWkg').value = String(Math.round(kg * 10) / 10); return; }
+    var lb = kg / LB;
+    if (st.unit === 'imp') { $('bmWlb').value = String(Math.round(lb * 10) / 10); return; }
+    var s = Math.floor(lb / 14), l = Math.round((lb - s * 14) * 10) / 10;
+    if (l >= 14) { s += 1; l = 0; }
+    $('bmWst').value = String(s); $('bmWlb2').value = String(l);
+  }
+  function showUnit() {
+    $('bmHmet').style.display = st.unit === 'met' ? '' : 'none';
+    $('bmHimp').style.display = st.unit === 'met' ? 'none' : '';
+    $('bmWmet').style.display = st.unit === 'met' ? '' : 'none';
+    $('bmWimp').style.display = st.unit === 'imp' ? '' : 'none';
+    $('bmWuk').style.display = st.unit === 'uk' ? '' : 'none';
+    $('bmHcm').placeholder = PH.met[0]; $('bmWkg').placeholder = PH.met[1];
+    $('bmHft').placeholder = PH.imp[0]; $('bmHin').placeholder = PH.imp[1]; $('bmWlb').placeholder = PH.imp[2];
+    $('bmWst').placeholder = PH.uk[2]; $('bmWlb2').placeholder = PH.uk[3];
+    [].forEach.call($('bmUnitSeg').children, function (b) { b.classList.toggle('on', b.getAttribute('data-v') === st.unit); });
+  }
+
+  /* ---------- pictures ---------- */
+  function renderScale(list, head) {
+    var vals = list.map(function (x) { return x.kcal; }), lo = head.kcal * 0.9, hi = head.kcal * 1.1;
+    var min = Math.min.apply(null, vals.concat([lo])) * 0.97, max = Math.max.apply(null, vals.concat([hi])) * 1.03;
+    function pct(v) { return Math.max(0, Math.min(100, (v - min) / (max - min) * 100)); }
+    $('bmBand').style.left = pct(lo) + '%'; $('bmBand').style.width = (pct(hi) - pct(lo)) + '%';
+    var t = '';
+    list.forEach(function (x) { if (x.id !== head.id) t += '<span class="iw-tick" style="left:' + pct(x.kcal) + '%" title="' + x.name + ' ' + commas(r0(x.kcal)) + '"></span>'; });
+    $('bmTickLayer').innerHTML = t;
+    var c = $('bmCur'); c.style.display = ''; c.style.left = pct(head.kcal) + '%';
+    $('bmScaleTicks').innerHTML = '<span style="left:' + pct(lo) + '%">' + commas(r0(lo)) + '</span><span style="left:' + pct(hi) + '%">' + commas(r0(hi)) + '</span>';
+  }
+  function renderSplit(bmr) {
+    var s = E.split(bmr, level().f), parts = [['Resting (BMR)', s.bmr, 'c0'], ['Digestion', s.dig, 'c3'], ['Movement', s.act, 'c1']], bar = '', key = '';
+    parts.forEach(function (p) {
+      var pc = p[1] / s.total * 100;
+      bar += '<div class="bm-seg ' + p[2] + '" style="width:' + pc + '%">' + (pc >= 12 ? r0(pc) + '%' : '') + '</div>';
+      key += '<span><i class="' + p[2] + '"></i>' + p[0] + ' ' + commas(r0(p[1])) + ' kcal</span>';
+    });
+    $('bmSplit').innerHTML = '<div class="bm-bar">' + bar + '</div><div class="bm-key">' + key + '</div>';
+    $('bmSplitH').textContent = 'Where your ' + commas(r0(s.tdee)) + ' calories go (' + level().name.toLowerCase() + ')';
+  }
+
+  /* ---------- main ---------- */
+  function empty(msg) {
+    $('bmBig').textContent = '—'; $('bmUnitTxt').textContent = '';
+    $('bmSub').textContent = 'Enter your age, height and weight to see your BMR.';
+    $('bmBody').style.display = 'none'; $('bmMVal').textContent = '—';
+    setHint(msg || '');
+  }
+  function solve() {
+    var A = num('bmAge'), H = readH(), W = readW();
+    if (blank('bmAge') && isNaN(H) && isNaN(W)) { empty(''); return; }
+    if (isNaN(A) || isNaN(H) || isNaN(W)) { empty(''); return; }
+    if (A < 10 || A > 100) { empty('Enter an age from 10 to 100.'); return; }
+    if (H < 100 || H > 250) { empty('Height should be between 100 and 250 cm (3 ft 3 in to 8 ft 2 in).'); return; }
+    if (W < 20 || W > 400) { empty('Weight should be between 20 and 400 kg (44 to 880 lb).'); return; }
+    setHint('');
+    var bfRaw = $('bmBf').value.trim() ? parseFloat($('bmBf').value) : NaN;
+    var bf = (st.adv && bfRaw >= 3 && bfRaw <= 70) ? bfRaw : null;
+    var list = E.all({ male: st.sex === 'male', W: W, H: H, A: A, bf: bf });
+    var head = E.pick(list, st.adv ? st.want : 'mifflin', A), bmr = head.kcal;
+    var fellBack = st.adv && st.want !== 'mifflin' && st.want !== head.id;
+
+    $('bmBig').textContent = commas(r0(bmr)); $('bmUnitTxt').textContent = 'kcal/day';
+    $('bmSub').textContent = head.name + ' · ' + commas(r0(bmr * E.KJ)) + ' kJ/day · ' + r0(bmr / 24) + ' kcal an hour';
+    $('bmMVal').textContent = commas(r0(bmr)) + ' kcal/day';
+
+    var mn = Math.min.apply(null, list.map(function (x) { return x.kcal; })), mx = Math.max.apply(null, list.map(function (x) { return x.kcal; }));
+    var tip;
+    if (list.length === 1) tip = 'For ages under 18 only the <strong>Schofield</strong> equation applies — the Mifflin and Harris-Benedict equations were built from adults.';
+    else tip = 'The formulas span <strong>' + commas(r0(mn)) + '–' + commas(r0(mx)) + ' kcal</strong> for you. Estimates like these usually land within about 10% of a lab measurement, so treat <strong>' + commas(r0(bmr * 0.9)) + '–' + commas(r0(bmr * 1.1)) + '</strong> as your realistic range.';
+    if (fellBack) tip += ' ' + (st.want === 'katch' ? 'Katch-McArdle needs a body fat % — showing ' + head.name + ' instead.' : E.NAMES[st.want] + ' doesn’t apply at this age — showing ' + head.name + ' instead.');
+    $('bmTip').innerHTML = tip;
+
+    var rows = '';
+    list.forEach(function (x) {
+      var d = x.kcal - bmr;
+      rows += '<tr' + (x.id === head.id ? ' class="cur"' : '') + '><td>' + x.name + '</td><td>' + commas(r0(x.kcal)) + '</td><td>' + (x.id === head.id ? '—' : (d > 0 ? '+' : '−') + Math.abs(r0(d))) + '</td></tr>';
+    });
+    $('bmTable').innerHTML = '<thead><tr><th>Formula</th><th>kcal/day</th><th>vs. headline</th></tr></thead><tbody>' + rows + '</tbody>';
+
+    if (list.length > 1) { $('bmScaleWrap').style.display = ''; renderScale(list, head); } else $('bmScaleWrap').style.display = 'none';
+
+    var act = '';
+    E.LEVELS.forEach(function (lv) {
+      act += '<tr data-l="' + lv.id + '" tabindex="0"' + (lv.id === st.level ? ' class="cur"' : '') + '><td>' + lv.name + '<span class="bm-sub">' + lv.desc + '</span></td><td>×' + lv.f + '</td><td>' + commas(r0(bmr * lv.f)) + '</td></tr>';
+    });
+    $('bmAct').innerHTML = '<thead><tr><th>Activity level</th><th>× BMR</th><th>kcal/day</th></tr></thead><tbody>' + act + '</tbody>';
+    renderSplit(bmr);
+
+    var tdee = bmr * level().f, imp = st.unit !== 'met';
+    var T = [['Lose weight', tdee - 500, imp ? 'about 1 lb a week' : 'about 0.45 kg a week'], ['Maintain', tdee, 'hold your weight'], ['Gain slowly', tdee + 300, 'a small surplus']], th = '';
+    T.forEach(function (t) {
+      var low = t[1] < bmr;
+      th += '<div class="bf-cmp"><span class="k">' + t[0] + '<span class="bm-sub">' + t[2] + (low ? '' : '') + '</span></span><span class="v">' + commas(r0(t[1])) + ' kcal</span></div>' + (low ? '<p class="bm-flag">Below your BMR — too aggressive to sustain. Try the <a href="/calorie-calculator/">calorie calculator</a> for a safe pace.</p>' : '');
+    });
+    $('bmTargets').innerHTML = th;
+    $('bmTargetsH').textContent = 'Daily targets at ' + level().name.toLowerCase() + ' activity';
+
+    if (st.adv) {
+      var adv = '<div class="bf-cmp"><span class="k">Per kg of body weight</span><span class="v">' + (Math.round(bmr / W * 10) / 10) + ' kcal</span></div>';
+      if (bf != null) adv += '<div class="bf-cmp"><span class="k">Per kg of lean mass</span><span class="v">' + (Math.round(bmr / (W * (1 - bf / 100)) * 10) / 10) + ' kcal</span></div>';
+      adv += '<div class="bf-cmp"><span class="k">Per minute</span><span class="v">' + (Math.round(bmr / 1440 * 100) / 100) + ' kcal</span></div>';
+      adv += '<p class="res-tip adv-tip">BMR is measured fasted, rested and warm. <strong>RMR</strong> (resting metabolic rate) is measured under looser conditions and usually reads 5–10% higher — the equations above estimate BMR, and are normally used as RMR too.</p>';
+      $('bmAdvOut').innerHTML = adv; $('bmAdvOut').style.display = '';
+    } else $('bmAdvOut').style.display = 'none';
+    $('bmBody').style.display = '';
+  }
+
+  /* ---------- events ---------- */
+  ['bmAge', 'bmBf'].forEach(function (id) { $(id).addEventListener('input', solve); });
+  ['bmHcm', 'bmHft', 'bmHin'].forEach(function (id) { $(id).addEventListener('input', function () { keep.H = null; solve(); }); });
+  ['bmWkg', 'bmWlb', 'bmWst', 'bmWlb2'].forEach(function (id) { $(id).addEventListener('input', function () { keep.W = null; solve(); }); });
+  $('bmSexSeg').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; st.sex = b.getAttribute('data-v'); [].forEach.call($('bmSexSeg').children, function (x) { x.classList.toggle('on', x === b); }); solve(); });
+  $('bmUnitSeg').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    var v = b.getAttribute('data-v'); if (v === st.unit) return;
+    var H = readH(), W = readW();
+    st.unit = v; showUnit();
+    ['bmHcm', 'bmHft', 'bmHin', 'bmWkg', 'bmWlb', 'bmWst', 'bmWlb2'].forEach(function (id) { $(id).value = ''; });
+    writeH(H); writeW(W); keep.H = H > 0 ? H : null; keep.W = W > 0 ? W : null; solve();
+  });
+  $('bmAct').addEventListener('click', function (e) { var tr = e.target.closest('tr[data-l]'); if (!tr) return; st.level = tr.getAttribute('data-l'); solve(); });
+  $('bmAct').addEventListener('keydown', function (e) { if (e.key !== 'Enter' && e.key !== ' ') return; var tr = e.target.closest('tr[data-l]'); if (!tr) return; e.preventDefault(); st.level = tr.getAttribute('data-l'); solve(); var n = $('bmAct').querySelector('tr[data-l="' + st.level + '"]'); if (n) n.focus(); });
+  $('bmFormula').addEventListener('change', function () { st.want = this.value; solve(); });
+  $('bmAdvBtn').addEventListener('click', function () {
+    st.adv = !st.adv;
+    $('bmAdvBtn').classList.toggle('open', st.adv);
+    $('bmAdvBtnLab').textContent = st.adv ? 'Go simple' : 'Go advanced';
+    $('bmAdvIn').style.display = st.adv ? '' : 'none';
+    if (!st.adv) { st.want = 'mifflin'; $('bmFormula').value = 'mifflin'; $('bmBf').value = ''; }
+    solve();
+  });
+
+  showUnit();
+  solve();
+};
+
+/* =========================================================
    SITE FOOTER — mobile accordion
    Multiple pillars can be open simultaneously.
    First pillar starts expanded (aria-expanded="true" in HTML).
