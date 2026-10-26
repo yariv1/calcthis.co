@@ -9,10 +9,12 @@ must NOT have to re-explain anything in here — that is the whole purpose of th
 
 ## 0. THE 60-SECOND VERSION (read this if nothing else)
 
-- **Live:** asset **v150** · **49 calculators** · **25 blog articles** · **81 pages**. `main` is clean and
-  pushed (last code commit `e7863d0`). **Hours Calculator shipped v150 — NEXT: Triangle / Pythagorean research report.**
+- **Live:** asset **v152** · **49 calculators** · **25 blog articles** · **81 pages**. `main` is clean and
+  pushed (last code commit `ffb5342`). **Hours Calculator shipped v150, layout fixes deployed v152. NEXT: Triangle / Pythagorean research report — NOT started.**
+  **TRIANGLE / PYTHAGOREAN — research report not started yet (no research, no code).** Ahrefs (2026-10-25): triangle >10K Hard x2; 30-60-90, 45-45-90, area of a triangle, isosceles, special right triangles >1K Easy; Pythagorean folded in. Rule 8: open EVERY competitor live in the Browser tool (calculator.net, CalculatorSoup, Omnicalculator, Symbolab/others), list every input/output, one visual + one functional differentiator (a live labelled triangle diagram is the obvious visual; solve-any-triangle from any 3 known values SSS/SAS/ASA/AAS/SSA incl. the ambiguous case is the obvious functional), at most 3 decisions with recommendations, then WAIT for approval.
+  **First move next session: a 2-3 line "synced" reply (v152 / 49 calcs / next = Triangle research), then do the research report. No recap.**
 - **Also shipped 2026-10-25: BMR Calculator (v146).** Plan for the rest (user: build ALL the Hard high-traffic ones): Hours → Triangle/Pythagorean →
-  Loan/Mortgage → Paycheck → Sales Tax → Unit Converter → Tip → Random Number — ranked in `md-files/calcthis-calculator-roadmap.md`. **NEXT: Hours Calculator research report.** Nothing is half-built, nothing is waiting on the user.
+  Loan/Mortgage → Paycheck → Sales Tax → Unit Converter → Tip → Random Number — ranked in `md-files/calcthis-calculator-roadmap.md`. (Hours is done.) Nothing is half-built, nothing is waiting on the user.
 - **Just finished (2026-10-25): #25 Recipe Converter** — new **Cooking & Kitchen** vertical (nav col 3, 5th footer pillar,
   homepage `#grp-cooking` + tab). Engine `CalcThis.recipeEngine` (pure, `RECIPE-ENGINE:START/END` in app.js) + `initRecipeCalc`.
   **NEXT:** no calculator is in progress — ask the user which of #26-29 (Sales Tax / Unit Converter / Paycheck / Tip, all

@@ -165,8 +165,8 @@ must be built from the article's actual units, every time, not pasted from a tem
 ## ⛔ SESSION HANDOFF — START HERE (written 2026-10-15; full detail in `HANDOFF.md`)
 
 **Read `HANDOFF.md` in full before replying.** Do not make the user re-explain anything in it.
-- **State:** v150 · 49 calculators · 25 articles · 81 pages · `main` clean and pushed (last code commit `e7863d0`).
-- **Just shipped:** Recipe Converter (v144, Cooking & Kitchen vertical), BMR Calculator (v146), Hours Calculator (v150).
+- **State:** v152 · 49 calculators · 25 articles · 81 pages · `main` clean and pushed (last code commit `ffb5342`; Hours fixes deployed as v152, nothing half-built, nothing waiting on the user).
+- **Just shipped:** Recipe Converter (v144, Cooking & Kitchen vertical), BMR Calculator (v146), Hours Calculator (v150, layout fixes v152).
 - **NEXT TASK:** **Triangle / Pythagorean Calculator** (then Loan/Mortgage engine, Paycheck, Sales Tax, Unit Converter, Tip, Random
   Number Generator — the user decided 2026-10-25 to build ALL the Hard high-traffic ones, taking the Easy long-tails; full ranked plan in the
   roadmap md). Start with the Rule 8 research report (open every competitor live, visual AND functional differentiator, ≤3 decisions with
@@ -192,7 +192,7 @@ must be built from the article's actual units, every time, not pasted from a tem
 
 ## Project state
 
-- **Asset version:** v150 (bumped, `node build.js` run and deployed this session)
+- **Asset version:** v152 (bumped, `node build.js` run and deployed this session)
 - **Total pages:** 79 live
 - **Model:** Sonnet 5
 
@@ -294,15 +294,21 @@ Total live calculators: **49**
 
 ---
 
-## Last session (v143–v150)
+## Last session (v143–v152)
+
+- **Hours Calculator fixes, deployed v152 (commit `ffb5342`)** after three user corrections on the v150 build, all now permanent: (1) **Week mode uses the EXACT
+  Shift-mode fields** — each day is an `.hr-day` block: day name as the label above, then two full `.time-field` (Start time / End time, AM/PM inside the
+  field) and an "Unpaid break" text input; `.ap-mini` was removed entirely; fields wrap via an auto-fill grid and stack on mobile. **Never change the input
+  way or look inside one calculator, in any mode.** (2) The 12/24-hour switch sits directly under the Shift/Week/Dates/Convert tabs (`#hrClockSeg`), hidden
+  in Convert, NOT inside Go advanced. (3) With an hourly rate (Go advanced) the mobile sticky bar shows the sum, e.g. label "Hourly rate" (or "Hourly rate
+  (+ overtime ×1.5)") and value "40h × $22 = $880" (`mbarPay()` in `initHoursCalc`). Not verified: real phone; Dates picker in real Chrome; Recipe print layout.
 
 - Researched, built and deployed **Hours Calculator** (`/hours-calculator/`, v150; Ahrefs >10K Hard ×2 for hours / work hours calculator,
   "minutes to hours" >1K Easy). Research opened calculator.net, CalculatorSoup, Gigacalculator, Inch Calculator, Clockify live; user approved all 3
   decisions (separate page from Time Calculator with cross-links; Week tab included; simple overtime under Go advanced). 4 tabs: Shift (split +
   overnight shifts, breaks as minutes/hours/clock range), Week (overtime + pay), Dates (real elapsed hours, DST note), Convert (min/decimal/h:mm +
   decimal-hour ruler). Live 24-hour shift ribbon, payroll rounding 5/6/15 shown before/after. Clock 12/24 switch sits under the mode tabs (user
-  correction: NOT inside Go advanced). **Time fields are the Time Calculator's own DS components** (masked `.time-field` + `.ap-seg`, `.tf` +
-  `.ap-mini` in week rows) after a user correction. `CalcThis.hoursEngine` (pure; `HOURS-ENGINE:START/END`) + `CalcThis.initHoursCalc`, `.p-hours`.
+  correction: NOT inside Go advanced). **Time fields are the Time Calculator's own DS components** (masked `.time-field` + `.ap-seg`, identical in Shift, Week and Dates) after a user correction. `CalcThis.hoursEngine` (pure; `HOURS-ENGINE:START/END`) + `CalcThis.initHoursCalc`, `.p-hours`.
   Not verified: real phone; Dates picker in real Chrome. Article deferred.
 - Process: user wants a bare "preview" answered with only the link; Stop hook caught narration several more times.
 
