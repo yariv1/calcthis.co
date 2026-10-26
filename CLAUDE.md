@@ -169,10 +169,10 @@ must be built from the article's actual units, every time, not pasted from a tem
 ## ⛔ SESSION HANDOFF — START HERE (rewritten 2026-10-26; full detail in `HANDOFF.md`)
 
 **Read `HANDOFF.md` in full before replying.** Do not make the user re-explain anything in it (user, 2026-10-26: "do not dare to start the new session confused").
-- **State:** v159 · 51 calculators · 25 articles · 83 pages · `main` clean and pushed (last code commit `9b18285` Mortgage; later commits are docs). Nothing half-built, nothing waiting on the user.
-- **Just shipped:** Triangle Calculator (v154), Mortgage Calculator (v159, opens **Money & Finance**; engine `CalcThis.loanEngine` in app.js). Earlier: Recipe Converter, BMR, Hours.
-- **NEXT TASK:** **Loan Calculator, then Auto Loan Calculator, on the SAME `CalcThis.loanEngine`** (research done + user-approved 2026-10-26, findings saved in HANDOFF §4 — don't redo it). I told the user each page gets its own approval: short Rule-8 plan for Loan (what's new vs Mortgage, ≤3 decisions with recommendations) → **wait for approval** → build → **QA items 1-14** → preview → deploy only on "deploy". After those: Paycheck (fetch IRS tables), Sales Tax, Unit Converter, Tip, Random Number Generator (user decided 2026-10-25 to build ALL the Hard high-traffic ones).
-- **First move next session:** 2-3 line "synced" reply (v159 / 51 calcs / next = Loan Calculator), then the short Loan plan. No recap.
+- **State:** v163 · 52 calculators · 25 articles · 84 pages · `main` clean and pushed (last code commit `5343023` Loan; later commits are docs). Nothing half-built, nothing waiting on the user.
+- **Just shipped:** Loan Calculator (v163, `CalcThis.initLoanCalc` on the shared `loanEngine`, extended with `prate/runP/borrowable/aprFromCash`). Earlier: Mortgage (v159), Triangle (v154), Recipe Converter, BMR, Hours.
+- **NEXT TASK:** **Auto Loan Calculator on the SAME `CalcThis.loanEngine`** (research done + approved, HANDOFF §4; inputs to match from calculator.net: price, term months, rate, cash incentives, down payment, trade-in value, amount owed on trade-in, state/sales tax %, title/registration/fees, include taxes+fees in loan, Total-price vs Monthly-payment tabs). Short Rule-8 plan (≤3 decisions) → **wait for approval** → build → **QA items 1-14** → preview → deploy only on "deploy". After: Paycheck (fetch IRS tables), Sales Tax, Unit Converter, Tip, Random Number Generator.
+- **First move next session:** 2-3 line "synced" reply (v163 / 52 calcs / next = Auto Loan Calculator), then the short Auto Loan plan. No recap.
 - **QA is EXHAUSTIVE and automatic before any preview (user, 2026-10-26: "QA and debug it 100%! don't waste my time or usage money ever again!!")** — the Mortgage calc reached preview after a happy-path QA and a % ↔ $ toggle turned an out-of-range 500 into a $210,000,000 down payment. Items 11-14 below (control × value matrix, hostile pass + randomized fuzz with invariants, screenshot every state, no preview with a known bug). Never write "100%": report exactly what was and wasn't verified.
 - **A bare "preview" request = ONLY the localhost link, nothing else.** **Reuse design-system components** — grep `md-files/calcthis-design-system.md` + the nearest live page for any input widget BEFORE building.
 - **Final summary of every build must contain:** (1) the findings — how we differ/beat competitors, (2) the QA list incl. what was NOT verified, (3) preview links (localhost + LAN).
@@ -185,8 +185,8 @@ must be built from the article's actual units, every time, not pasted from a tem
 
 ## Project state
 
-- **Asset version:** v159 (bumped, `node build.js` run and deployed this session)
-- **Total pages:** 83 live
+- **Asset version:** v163 (bumped, `node build.js` run and deployed this session)
+- **Total pages:** 84 live
 - **Model:** Sonnet 5
 
 ### New this session — global `.csel` custom-dropdown component
@@ -266,7 +266,7 @@ Paint, Wallpaper, Scientific Notation.
 
 ---
 
-## Live calculators (51)
+## Live calculators (52)
 
 ### Construction & Gardening (13)
 Board Foot · Gravel · Sand · Topsoil · Mulch · Concrete · Flooring · Tile · Square Footage · Tape Measure Fraction · Stair · Paint · Wallpaper
@@ -283,14 +283,16 @@ Fraction · Standard Deviation · Scientific Notation · Weighted Average · Rat
 ### Cooking & Kitchen (1)
 Recipe Converter
 
-### Money & Finance (1)
-Mortgage
+### Money & Finance (2)
+Mortgage · Loan
 
-Total live calculators: **51**
+Total live calculators: **52**
 
 ---
 
-## Last session (v143–v159)
+## Last session (v143–v163)
+
+- **Loan Calculator deployed v163 (commit `5343023`)** (`/loan-calculator/`). Two modes: Find my payment / What can I borrow? (payment → loan size). Rate + term (yr/mo toggle, 1/3/5/7/10-yr chips), extra payment per period, live balance chart, interest/principal strip, term comparison table, yearly or per-payment schedule, Copy. Go advanced: payment frequency (monthly…daily, every 2 weeks), compounding (monthly…continuous), origination fee (% or $; taken out / added / paid upfront → true APR via `aprFromCash`), start date. Engine extended without changing Mortgage results (anchors $2,022.62 / $408,142 / payment 233 hold). QA: 72 frequency×compounding combos vs independent formula, hostile inputs, toggle matrix, ~800-run fuzz with invariants, desktop+375px screenshots. Fixes: -0 display, tiny-amount floor, afford-mode empty-rows crash, 22px horizontal scroll at 375px (also fixed Mortgage). Not verified: real phone, Copy in real Chrome, print. Article deferred.
 
 - **Mortgage Calculator deployed v159 (commit `9b18285`)** (`/mortgage-calculator/`, opens the **Money & Finance** category: header col 3, 6th footer pillar, homepage tab `grp-finance`). Research opened calculator.net (mortgage/loan/auto loan), NerdWallet, Omnicalculator, mortgagecalculator.org; Bankrate blocked. User approved all 3 decisions (Mortgage first then Loan + Auto Loan on one engine; drops: live rates/ZIP/FHA-VA-USDA/currency picker/Bond+Deferred; Loan freq/compounding behind Go advanced). **Differentiators:** live balance chart with the month principal overtakes interest, per-year interest/principal strip, visible extra-payment box with live savings + faster curve, 10/15/20/30 terms side by side, PMI auto-ends at 80%, line-by-line monthly total; Go advanced = start date, tax(%/$)/insurance/PMI/HOA/other + yearly increase, yearly + one-time extras, bi-weekly, Canadian semi-annual, Copy. `CalcThis.loanEngine` (pure; `LOAN-ENGINE:START/END`, `run`/`pmt`/`mrate`/`biweekly`, matches calculator.net to the cent) + `CalcThis.initMortgageCalc`, `.p-loan`. **QA failure, now a rule:** shipped to preview after a happy-path-only QA — the % ↔ $ toggle turned an out-of-range 500 into a $210,000,000 down payment and 500% property tax gave a $3.3-billion payment. Fixed (invalid values cleared on toggle; cost sanity limits) and QA rule items 11-14 added (control × value matrix, hostile pass + random fuzz with invariants, screenshot every state, no preview with any known bug). Not verified: real phone, real Chrome (Copy), footer visually, print. Article deferred.
 

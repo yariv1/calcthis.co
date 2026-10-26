@@ -58,7 +58,7 @@ Pregnancy + Ovulation immediately **after** AdSense approval.
 **BUILD PLAN (user decision 2026-10-25, after sending Ahrefs screenshots — ALL of these are Hard head terms but we build them anyway,
 winning the Easy long-tails and doing each better):** in order → ~~BMR~~ ✅ v146 · ~~Hours Calculator~~ ✅ v150/v152 (>10K Hard ×2, "minutes to hours" >1K Easy; cousin of Time) ·
 ~~Triangle / Pythagorean~~ ✅ v154 (>10K Hard ×2; 30-60-90, 45-45-90, area, isosceles, special right >1K Easy; Pythagorean folded in; live diagram) ·
-~~Mortgage~~ ✅ v159 · **Loan + Auto-loan (same engine)** (>100K / >1M Hard; one amortization engine + chart) · **Paycheck** (>100K Hard; state pages TX/FL/IL/hourly >10K Easy;
+~~Mortgage~~ ✅ v159 · ~~Loan~~ ✅ v163 · **Auto-loan (same engine)** (>100K / >1M Hard; one amortization engine + chart) · **Paycheck** (>100K Hard; state pages TX/FL/IL/hourly >10K Easy;
 fetch current IRS tables first) · **Sales Tax** (>10K Hard; NJ/MO/OH/MN/reverse >1K Easy) · **Unit Converter** (>10K Medium, the only non-Hard head) ·
 **Tip** (>100K Hard) · **Random Number Generator** (>100K Hard; cheap) — Tip/RNG can slot in anywhere as cheap wins. Pythagorean alone is tiny (29 kws).
 

@@ -1,5 +1,7 @@
 # SESSION HANDOFF — read this FIRST, then CLAUDE.md hard rules
 
+> **UPDATE 2026-10-26 (late): Loan Calculator SHIPPED v163 (commit 5343023, 52 calcs, 84 pages). NEXT = Auto Loan Calculator on the same `loanEngine` (engine now also has `prate, runP, borrowable, aprFromCash`; UI in `CalcThis.initLoanCalc`, ids `ln*`, shares `.p-loan`). Everything below that says "next = Loan" is stale; read it as Auto Loan.**
+
 _Rewritten 2026-10-26 at the end of the Triangle + Mortgage session (v154 → v159). Everything below is current.
 The next session must start FULLY synced from this file + CLAUDE.md + the memory files. The user must NOT have to
 re-explain anything in here — that is the whole purpose of this file. (User, 2026-10-26: "do not dare to start the new
@@ -9,8 +11,8 @@ session confused … a smooth and seamless continuation without me explaining ag
 
 ## 0. THE 60-SECOND VERSION (read this if nothing else)
 
-- **Live:** asset **v159** · **51 calculators** · **25 blog articles** · **83 pages**. `main` clean and pushed
-  (last code commit `9b18285` Mortgage; docs commits after it). Nothing is half-built. Nothing is waiting on the user.
+- **Live:** asset **v163** · **52 calculators** · **25 blog articles** · **84 pages**. `main` clean and pushed
+  (last code commit `5343023` Loan Calculator v163, shipped after this handoff was written; docs commits after it). Nothing is half-built. Nothing is waiting on the user.
 - **Shipped this session:** **Triangle Calculator** (v154) and **Mortgage Calculator** (v159 — opens the new
   **Money & Finance** category). Earlier this week: Recipe Converter (v144), BMR (v146), Hours (v150, fixes v152).
 - **NEXT TASK: Loan Calculator, then Auto Loan Calculator — both on the SAME engine `CalcThis.loanEngine`** (already in
