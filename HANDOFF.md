@@ -1,6 +1,6 @@
 # SESSION HANDOFF — read this FIRST, then CLAUDE.md hard rules
 
-> **UPDATE 2026-10-26 (late): Loan Calculator SHIPPED v163 (commit 5343023, 52 calcs, 84 pages). NEXT = Auto Loan Calculator on the same `loanEngine` (engine now also has `prate, runP, borrowable, aprFromCash`; UI in `CalcThis.initLoanCalc`, ids `ln*`, shares `.p-loan`). Everything below that says "next = Loan" is stale; read it as Auto Loan.**
+> **UPDATE 2026-10-26 (late): Loan v163 AND Auto Loan v169 SHIPPED (commit 19c81bc; 53 calcs, 85 pages). NEXT = Paycheck Calculator (fetch current IRS tables first), then Sales Tax, Unit Converter, Tip, RNG. Auto Loan = `CalcThis.initAutoCalc` (ids `au*`), engine `autoDeal`/`autoMaxPrice`. Anything below saying "next = Loan/Auto Loan" is stale.**
 
 _Rewritten 2026-10-26 at the end of the Triangle + Mortgage session (v154 → v159). Everything below is current.
 The next session must start FULLY synced from this file + CLAUDE.md + the memory files. The user must NOT have to

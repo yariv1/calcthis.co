@@ -169,10 +169,10 @@ must be built from the article's actual units, every time, not pasted from a tem
 ## ⛔ SESSION HANDOFF — START HERE (rewritten 2026-10-26; full detail in `HANDOFF.md`)
 
 **Read `HANDOFF.md` in full before replying.** Do not make the user re-explain anything in it (user, 2026-10-26: "do not dare to start the new session confused").
-- **State:** v163 · 52 calculators · 25 articles · 84 pages · `main` clean and pushed (last code commit `5343023` Loan; later commits are docs). Nothing half-built, nothing waiting on the user.
-- **Just shipped:** Loan Calculator (v163, `CalcThis.initLoanCalc` on the shared `loanEngine`, extended with `prate/runP/borrowable/aprFromCash`). Earlier: Mortgage (v159), Triangle (v154), Recipe Converter, BMR, Hours.
-- **NEXT TASK:** **Auto Loan Calculator on the SAME `CalcThis.loanEngine`** (research done + approved, HANDOFF §4; inputs to match from calculator.net: price, term months, rate, cash incentives, down payment, trade-in value, amount owed on trade-in, state/sales tax %, title/registration/fees, include taxes+fees in loan, Total-price vs Monthly-payment tabs). Short Rule-8 plan (≤3 decisions) → **wait for approval** → build → **QA items 1-14** → preview → deploy only on "deploy". After: Paycheck (fetch IRS tables), Sales Tax, Unit Converter, Tip, Random Number Generator.
-- **First move next session:** 2-3 line "synced" reply (v163 / 52 calcs / next = Auto Loan Calculator), then the short Auto Loan plan. No recap.
+- **State:** v169 · 53 calculators · 25 articles · 85 pages · `main` clean and pushed (last code commit `19c81bc` Auto Loan; later commits are docs). Nothing half-built, nothing waiting on the user.
+- **Just shipped:** Auto Loan Calculator (v169, `CalcThis.initAutoCalc`, ids `au*`, engine adds `autoDeal`/`autoMaxPrice`). Earlier: Loan (v163), Mortgage (v159), Triangle (v154).
+- **NEXT TASK:** **Paycheck Calculator** (fetch current IRS tables first), then Sales Tax, Unit Converter, Tip, Random Number Generator. Each: short Rule-8 plan (≤3 decisions) → **wait for approval** → build → **QA items 1-14** → preview → deploy only on "deploy".
+- **First move next session:** 2-3 line "synced" reply (v169 / 53 calcs / next = Paycheck Calculator), then the short Paycheck plan. No recap.
 - **QA is EXHAUSTIVE and automatic before any preview (user, 2026-10-26: "QA and debug it 100%! don't waste my time or usage money ever again!!")** — the Mortgage calc reached preview after a happy-path QA and a % ↔ $ toggle turned an out-of-range 500 into a $210,000,000 down payment. Items 11-14 below (control × value matrix, hostile pass + randomized fuzz with invariants, screenshot every state, no preview with a known bug). Never write "100%": report exactly what was and wasn't verified.
 - **A bare "preview" request = ONLY the localhost link, nothing else.** **Reuse design-system components** — grep `md-files/calcthis-design-system.md` + the nearest live page for any input widget BEFORE building.
 - **Final summary of every build must contain:** (1) the findings — how we differ/beat competitors, (2) the QA list incl. what was NOT verified, (3) preview links (localhost + LAN).
@@ -186,8 +186,8 @@ must be built from the article's actual units, every time, not pasted from a tem
 
 ## Project state
 
-- **Asset version:** v163 (bumped, `node build.js` run and deployed this session)
-- **Total pages:** 84 live
+- **Asset version:** v169 (bumped, `node build.js` run and deployed this session)
+- **Total pages:** 85 live
 - **Model:** Sonnet 5
 
 ### New this session — global `.csel` custom-dropdown component
@@ -267,7 +267,7 @@ Paint, Wallpaper, Scientific Notation.
 
 ---
 
-## Live calculators (52)
+## Live calculators (53)
 
 ### Construction & Gardening (13)
 Board Foot · Gravel · Sand · Topsoil · Mulch · Concrete · Flooring · Tile · Square Footage · Tape Measure Fraction · Stair · Paint · Wallpaper
@@ -284,14 +284,16 @@ Fraction · Standard Deviation · Scientific Notation · Weighted Average · Rat
 ### Cooking & Kitchen (1)
 Recipe Converter
 
-### Money & Finance (2)
-Mortgage · Loan
+### Money & Finance (3)
+Mortgage · Loan · Auto Loan
 
-Total live calculators: **52**
+Total live calculators: **53**
 
 ---
 
-## Last session (v143–v163)
+## Last session (v143–v169)
+
+- **Auto Loan Calculator deployed v169 (commit `19c81bc`)** (`/auto-loan-calculator/`). Matches calculator.net to the cent ($50k car/5%/60 mo with trade-in, incentives, fees → $679.36, $36,000 financed, $3,150 tax, $15,150 upfront, $58,912 total cost; tax base = price − trade-in, incentives do not reduce tax). Modes: Find my payment / Max car price. Default fields: price, rate, term (months + 36/48/60/72/84 chips), down, incentives, trade-in, owed on trade-in, sales tax %, fees, "include taxes and fees in the loan". Differentiators: negative-equity flag (shortfall added to loan), "where your money goes" bar, terms side by side, what you pay at signing, balance chart + optional car-value line (Go advanced, yearly value loss %, shows how long you owe more than it is worth). Go advanced: extra monthly payment, tax on price−trade-in vs full price, value loss, start date. Dropped vs plan: **state tax picker** (calculator.net own state select does not fill a rate; vehicle tax rules too varied to hardcode) — tax stays a plain %. `.p-loan` body class shared; checkbox reuses `.dc-check` CSS copied under `.p-loan`. QA: calculator.net anchors, 40+ payment↔price round trips, garbage grid (19 values × 9 fields × 2 modes), ~100 randomized runs + 400 random-control steps with invariants, desktop+375px screenshots. Not verified: real phone, Copy in real Chrome, print. Cosmetic: chart y-labels repeat at a $1 car. Article deferred.
 
 - **Loan Calculator deployed v163 (commit `5343023`)** (`/loan-calculator/`). Two modes: Find my payment / What can I borrow? (payment → loan size). Rate + term (yr/mo toggle, 1/3/5/7/10-yr chips), extra payment per period, live balance chart, interest/principal strip, term comparison table, yearly or per-payment schedule, Copy. Go advanced: payment frequency (monthly…daily, every 2 weeks), compounding (monthly…continuous), origination fee (% or $; taken out / added / paid upfront → true APR via `aprFromCash`), start date. Engine extended without changing Mortgage results (anchors $2,022.62 / $408,142 / payment 233 hold). QA: 72 frequency×compounding combos vs independent formula, hostile inputs, toggle matrix, ~800-run fuzz with invariants, desktop+375px screenshots. Fixes: -0 display, tiny-amount floor, afford-mode empty-rows crash, 22px horizontal scroll at 375px (also fixed Mortgage). Not verified: real phone, Copy in real Chrome, print. Article deferred.
 

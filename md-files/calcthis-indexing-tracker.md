@@ -37,3 +37,4 @@ GSC snapshot 2026-10-26: 69 indexed, 13 not indexed (8 Discovered, 1 Crawled, 1 
 ## Newly deployed (add here at every deploy)
 | URL | Deployed | Indexing requested |
 |---|---|---|
+| /auto-loan-calculator/ | 2026-10-26 (v169) | not yet |
