@@ -10598,7 +10598,24 @@ CalcThis.loanEngine = (function () {
     for (i = 0; i < 200; i++) { var mid = (lo + hi) / 2; if (pmt(net, mid, n) < pay) lo = mid; else hi = mid; }
     return (lo + hi) / 2 * ppy * 100;
   }
-  return { mrate: mrate, pmt: pmt, run: run, biweekly: biweekly, prate: prate, runP: runP, borrowable: borrowable, aprFromCash: aprFromCash };
+  // ---- vehicle purchase math (Auto Loan page) ----
+  // o: { price, inc, down, trade, owed, taxPct, fees, inLoan, taxFull }
+  // sales tax is charged on price minus trade-in (or the full price when taxFull); cash incentives do not lower the taxed amount
+  function autoDeal(o) {
+    var tb = o.taxFull ? o.price : Math.max(0, o.price - o.trade);
+    var tax = tb * (o.taxPct || 0) / 100, net = o.trade - o.owed, tf = tax + o.fees;
+    var L = o.price - o.inc - o.down - net + (o.inLoan ? tf : 0);
+    return { tax: tax, taxBase: tb, net: net, negEq: net < 0 ? -net : 0, L: L, upfront: o.down + (o.inLoan ? 0 : tf), tf: tf };
+  }
+  // the vehicle price a given loan amount supports (inverse of autoDeal)
+  function autoMaxPrice(o, L) {
+    var t = (o.taxPct || 0) / 100, net = o.trade - o.owed, a = o.taxFull ? 0 : o.trade;
+    if (!o.inLoan) return L + o.inc + o.down + net;
+    var p = (L + o.inc + o.down + net - o.fees + t * a) / (1 + t);
+    if (p < a) p = L + o.inc + o.down + net - o.fees;
+    return p;
+  }
+  return { mrate: mrate, pmt: pmt, run: run, biweekly: biweekly, prate: prate, runP: runP, borrowable: borrowable, aprFromCash: aprFromCash, autoDeal: autoDeal, autoMaxPrice: autoMaxPrice };
 })();
 /* LOAN-ENGINE:END */
 
@@ -11274,6 +11291,324 @@ CalcThis.initLoanCalc = function () {
 
   $('lnStartM').value = String(now.getMonth());
   $('lnStartY').placeholder = 'e.g. ' + now.getFullYear();
+  render();
+};
+
+/* =========================================================
+   FINANCE · AUTO LOAN CALCULATOR  (body.p-loan)
+   Shares CalcThis.loanEngine (runP / borrowable / autoDeal / autoMaxPrice).
+   ========================================================= */
+CalcThis.initAutoCalc = function () {
+  var E = CalcThis.loanEngine;
+  var $ = function (id) { return document.getElementById(id); };
+  if (!$('auPrice')) return;
+  var MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  var now = new Date();
+  var st = { mode: 'pay', adv: false, sched: 'yearly' };
+  var last = null;
+
+  function comma(x) { return x.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 }); }
+  function mon(x) { if (Math.abs(x) < 0.005) x = 0; return '$' + x.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+  function mon0(x) { return '$' + comma(Math.round(x) || 0); }
+  function kfmt(x) { return x >= 1e6 ? '$' + (Math.round(x / 1e5) / 10) + 'M' : x >= 1e4 ? '$' + Math.round(x / 1e3) + 'k' : x >= 1e3 ? '$' + (Math.round(x / 100) / 10) + 'k' : '$' + Math.round(x); }
+  function plural(n, w) { return n + ' ' + w + (n === 1 ? '' : 's'); }
+  function span(m) {
+    var y = Math.floor(m / 12), mo = Math.round(m - y * 12);
+    if (mo === 12) { y++; mo = 0; }
+    if (!y && !mo) return '0 months';
+    return (y ? plural(y, 'year') : '') + (y && mo ? ' ' : '') + (mo ? plural(mo, 'month') : '');
+  }
+  function dateTxt(sm, sy, k) { var t = sm + k; return MON[((t % 12) + 12) % 12] + ' ' + (sy + Math.floor(t / 12)); }
+
+  function read(id) {
+    var el = $(id); if (!el) return { e: true };
+    var s = (el.value || '').trim(); if (!s) return { e: true };
+    var t = s.replace(/[$,%\s]/g, '');
+    if (/^[-+.]*$/.test(t)) return { e: true, partial: true };
+    var v = Number(t);
+    return isNaN(v) || !isFinite(v) ? { bad: true } : { v: v };
+  }
+  var LABELS = { auPrice: 'Vehicle price', auPay: 'Payment', auRate: 'Interest rate', auTerm: 'Loan term', auInc: 'Cash incentives', auDown: 'Down payment', auTrade: 'Trade-in value', auOwed: 'Amount owed on trade-in', auTax: 'Sales tax', auFees: 'Title, registration and fees', auExtra: 'Extra payment', auDep: 'Yearly value loss', auStartY: 'Start year' };
+  var EXS = { auPrice: '35000', auPay: '500', auRate: '6.5', auTerm: '60', auInc: '1000', auDown: '5000', auTrade: '8000', auOwed: '3000', auTax: '7', auFees: '500', auExtra: '50', auDep: '15', auStartY: '2026' };
+  function baseMsg() { return st.mode === 'pay' ? 'Enter the vehicle price, interest rate and loan term to see your monthly payment.' : 'Enter the monthly payment you can afford, the interest rate and the loan term to see the car price it covers.'; }
+
+  function setEmpty(msg, hint) {
+    var afford = st.mode === 'afford', lab = afford ? 'Car price you can afford' : 'Monthly payment';
+    $('auResLab').textContent = lab; $('auResBig').textContent = '—'; $('auResSub').textContent = msg;
+    $('auResults').style.display = 'none';
+    $('auMLab').textContent = lab; $('auMVal').textContent = '—'; $('auMDec').textContent = '';
+    var h = $('auHint'); h.textContent = hint || ''; h.style.display = hint ? 'block' : 'none';
+    last = null;
+  }
+
+  function calc() {
+    var afford = st.mode === 'afford', BASE = baseMsg(), mainId = afford ? 'auPay' : 'auPrice';
+    var ids = [mainId, 'auRate', 'auTerm', 'auInc', 'auDown', 'auTrade', 'auOwed', 'auTax', 'auFees'];
+    if (st.adv) { ids.push('auDep', 'auStartY'); if (!afford) ids.push('auExtra'); }
+    var f = {}, i;
+    for (i = 0; i < ids.length; i++) {
+      f[ids[i]] = read(ids[i]);
+      if (f[ids[i]].bad) return { hint: 'Can’t read “' + LABELS[ids[i]] + '” yet — type a plain number like ' + EXS[ids[i]] + '.' };
+    }
+    var val = function (id, d) { return f[id] && f[id].v != null ? f[id].v : d; };
+    if (f[mainId].e || f.auRate.e || f.auTerm.e) return { msg: BASE };
+    var main = f[mainId].v, apr = f.auRate.v, term = f.auTerm.v;
+    if (afford) {
+      if (!(main >= 0.01)) return { msg: BASE, hint: 'The payment must be at least $0.01.' };
+      if (main > 1e7) return { msg: BASE, hint: 'That payment is too large to calculate — enter it in dollars, like 500.' };
+    } else {
+      if (!(main >= 1)) return { msg: BASE, hint: 'The vehicle price must be at least $1.' };
+      if (main > 1e9) return { msg: BASE, hint: 'That price is too large to calculate — enter it in dollars, like 35000.' };
+    }
+    if (apr < 0 || apr > 100) return { msg: BASE, hint: 'Enter the yearly interest rate as a percentage between 0 and 100, like 6.5.' };
+    if (!(term > 0)) return { msg: BASE, hint: 'The loan term must be more than 0 months.' };
+    if (term > 120) return { msg: BASE, hint: 'The loan term can be at most 120 months (10 years).' };
+    var n = Math.round(term);
+    if (n < 1) return { msg: BASE, hint: 'The loan term must be at least 1 month.' };
+    var o = { price: main, inc: val('auInc', 0), down: val('auDown', 0), trade: val('auTrade', 0), owed: val('auOwed', 0), taxPct: val('auTax', 0), fees: val('auFees', 0), inLoan: $('auInLoan').checked, taxFull: st.adv && $('auTaxBase').value === 'full' };
+    var chk = [['inc', 'auInc'], ['down', 'auDown'], ['trade', 'auTrade'], ['owed', 'auOwed'], ['fees', 'auFees']];
+    for (i = 0; i < chk.length; i++) {
+      if (o[chk[i][0]] < 0) return { msg: BASE, hint: '“' + LABELS[chk[i][1]] + '” can’t be negative.' };
+      if (o[chk[i][0]] > 1e9) return { msg: BASE, hint: '“' + LABELS[chk[i][1]] + '” is too large to calculate — enter it in dollars.' };
+    }
+    if (o.taxPct < 0 || o.taxPct > 30) return { msg: BASE, hint: 'Enter sales tax as a percentage, usually between 0 and 10 — for example 7.' };
+    var dep = st.adv ? val('auDep', 0) : 0;
+    if (dep < 0 || dep > 90) return { msg: BASE, hint: 'Enter the yearly value loss as a percentage between 0 and 90 — for example 15.' };
+    var extra = !afford && st.adv ? val('auExtra', 0) : 0;
+    if (extra < 0) return { msg: BASE, hint: 'The extra payment can’t be negative.' };
+    var sm = parseInt($('auStartM').value, 10) || 0;
+    var sy = f.auStartY && f.auStartY.v != null ? Math.round(f.auStartY.v) : now.getFullYear();
+    if (sy < 1900 || sy > 2200) return { msg: BASE, hint: 'Enter the start year as four digits, like ' + now.getFullYear() + '.' };
+    var r = apr / 1200, L, price;
+    if (afford) {
+      L = E.borrowable(main, r, n);
+      if (!(L >= 1)) return { msg: BASE, hint: 'That payment is too small to borrow anything at this rate and term — try a larger payment.' };
+      price = E.autoMaxPrice(o, L);
+      if (!(price >= 1)) return { msg: BASE, hint: 'That payment is too small once your fees and trade-in debt are covered — try a larger payment.' };
+      if (price > 1e10) return { msg: BASE, hint: 'That result is too large to calculate — check the numbers.' };
+      if (o.inc > price || o.down > price || o.trade > price || o.fees > price) return { msg: BASE, hint: 'With these amounts that payment is too small to buy a car — try a larger payment, or lower the down payment, trade-in debt or fees.' };
+      o.price = price;
+    } else {
+      price = main;
+      if (o.inc > price) return { msg: BASE, hint: 'The cash incentives are larger than the vehicle price — check the amount.' };
+      if (o.down > price) return { msg: BASE, hint: 'The down payment is larger than the vehicle price — check the amount.' };
+      if (o.trade > price) return { msg: BASE, hint: 'The trade-in is worth more than the vehicle you are buying — check the amount.' };
+      if (o.fees > price) return { msg: BASE, hint: 'The fees are larger than the vehicle price — check the amount.' };
+      if (extra > price) return { msg: BASE, hint: 'The extra payment is larger than the vehicle price — check the amount.' };
+    }
+    var dl = E.autoDeal(o);
+    if (!afford) { L = dl.L; if (!(L >= 1)) return { msg: BASE, hint: 'Your down payment, trade-in and incentives already cover the whole price — there is nothing to finance.' }; }
+    var d = { afford: afford, apr: apr, n: n, r: r, sm: sm, sy: sy, o: o, deal: dl, L: L, price: price, pay: afford ? main : null, extra: extra, dep: dep };
+    d.base = E.runP({ P: L, apr: apr, ppy: 12, comp: 12, n: n });
+    d.hasExtra = extra > 0;
+    d.real = d.hasExtra ? E.runP({ P: L, apr: apr, ppy: 12, comp: 12, n: n, extra: extra }) : d.base;
+    d.totCost = price - o.inc + dl.tax + o.fees + d.real.totInt;
+    return d;
+  }
+
+  /* ---------- charts ---------- */
+  function valueAt(d, k) { return d.price * Math.pow(1 - d.dep / 100, k / 12); }
+  function balanceChart(d) {
+    var W = 300, H = 190, ml = 46, mr = 8, mt = 10, mb = 26, pw = W - ml - mr, ph = H - mt - mb;
+    var n = d.base.count, hasDep = d.dep > 0, top = hasDep ? Math.max(d.L, d.price) : d.L, inMonths = n <= 24, tot = inMonths ? n : n / 12;
+    var X = function (k) { return ml + pw * k / n; }, Y = function (b) { return mt + ph * (1 - b / top); };
+    function path(rows) { var p = 'M' + X(0).toFixed(1) + ',' + Y(d.L).toFixed(1); rows.forEach(function (r) { p += ' L' + X(r.k).toFixed(1) + ',' + Y(r.bal).toFixed(1); }); return p; }
+    var s = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Loan balance over time">';
+    [0, 0.5, 1].forEach(function (t) { var y = Y(top * t); s += '<line x1="' + ml + '" x2="' + (W - mr) + '" y1="' + y.toFixed(1) + '" y2="' + y.toFixed(1) + '" stroke="#E7DCC8" stroke-width="1"/><text x="' + (ml - 6) + '" y="' + (y + 4).toFixed(1) + '" text-anchor="end" font-size="14" fill="#6B5B4A">' + kfmt(top * t) + '</text>'; });
+    var step = inMonths ? (tot <= 6 ? 1 : tot <= 12 ? 2 : 4) : (tot <= 6 ? 1 : tot <= 12 ? 2 : 5);
+    for (var u = 0; u <= tot + 1e-9; u += step) {
+      var x = ml + pw * u / tot;
+      s += '<line x1="' + x.toFixed(1) + '" x2="' + x.toFixed(1) + '" y1="' + (mt + ph) + '" y2="' + (mt + ph + 4) + '" stroke="#9A8870"/><text x="' + x.toFixed(1) + '" y="' + (H - 6) + '" text-anchor="middle" font-size="14" fill="#6B5B4A">' + (u === 0 ? (inMonths ? 'Mo 0' : 'Yr 0') : u) + '</text>';
+    }
+    s += '<path d="' + path(d.base.rows) + ' L' + X(n).toFixed(1) + ',' + Y(0).toFixed(1) + ' L' + X(0).toFixed(1) + ',' + Y(0).toFixed(1) + ' Z" fill="#37503F" fill-opacity=".12"/>';
+    if (hasDep) {
+      var vp = ''; for (var k = 0; k <= n; k++) vp += (k ? ' L' : 'M') + X(k).toFixed(1) + ',' + Y(valueAt(d, k)).toFixed(1);
+      s += '<path d="' + vp + '" fill="none" stroke="#B5761F" stroke-width="2" stroke-dasharray="5 4"/>';
+    }
+    s += '<path d="' + path(d.base.rows) + '" fill="none" stroke="#37503F" stroke-width="2" stroke-linejoin="round"/>';
+    if (d.hasExtra) s += '<path d="' + path(d.real.rows) + '" fill="none" stroke="#B5761F" stroke-width="2.4" stroke-linejoin="round"/>';
+    if (hasDep && d.cross != null && d.cross > 0 && d.cross < n) {
+      var cr = d.base.rows[d.cross - 1], cx = X(cr.k), cy = Y(cr.bal);
+      s += '<line x1="' + cx.toFixed(1) + '" x2="' + cx.toFixed(1) + '" y1="' + cy.toFixed(1) + '" y2="' + (mt + ph) + '" stroke="#B5761F" stroke-width="1.2" stroke-dasharray="3 3"/><circle cx="' + cx.toFixed(1) + '" cy="' + cy.toFixed(1) + '" r="4.5" fill="#B5761F" stroke="#fff" stroke-width="1.5"/>';
+    }
+    return s + '</svg>';
+  }
+
+  /* ---------- schedule ---------- */
+  var CAP = 600;
+  function schedHtml(d) {
+    var rows = d.real.rows, s = '';
+    if (st.sched === 'yearly') {
+      s = '<thead><tr><th>Year</th><th>Interest</th><th>Principal</th><th>Balance</th></tr></thead><tbody>';
+      for (var y = 0; y * 12 < rows.length; y++) {
+        var it = 0, pr = 0, lastRow = null;
+        for (var m = y * 12; m < Math.min(rows.length, y * 12 + 12); m++) { it += rows[m].intr; pr += rows[m].pr; lastRow = rows[m]; }
+        s += '<tr><td>' + (y + 1) + '</td><td>' + mon0(it) + '</td><td>' + mon0(pr) + '</td><td>' + mon0(lastRow.bal) + '</td></tr>';
+      }
+    } else {
+      s = '<thead><tr><th>#</th><th>Date</th><th>Interest</th><th>Principal</th><th>Balance</th></tr></thead><tbody>';
+      rows.slice(0, CAP).forEach(function (r) { s += '<tr><td>' + r.k + '</td><td>' + dateTxt(d.sm, d.sy, r.k) + '</td><td>' + mon(r.intr) + '</td><td>' + mon(r.pr) + '</td><td>' + mon(r.bal) + '</td></tr>'; });
+    }
+    return s + '</tbody>';
+  }
+  function schedNote(d) { return d.hasExtra ? 'Schedule includes your extra payments.' : ''; }
+
+  /* ---------- render ---------- */
+  function render() {
+    var d = calc();
+    $('auAfUnit').textContent = '$ per month';
+    if (d.hint != null || d.msg != null) { setEmpty(d.msg || baseMsg(), d.hint || ''); return; }
+    var h = $('auHint'); h.style.display = 'none'; h.textContent = '';
+    var o = d.o, dl = d.deal, pay = d.base.pay, rateTxt = (Math.round(d.apr * 1000) / 1000) + '%', tt = plural(d.n, 'month');
+    last = { d: d };
+    if (d.afford) {
+      $('auResLab').textContent = 'Car price you can afford'; $('auResBig').textContent = mon0(d.price);
+      $('auResSub').textContent = 'paying ' + mon(d.pay) + ' a month at ' + rateTxt + ' for ' + tt + ' · loan ' + mon0(d.L);
+      $('auMLab').textContent = 'Car price you can afford'; $('auMVal').textContent = mon0(d.price); $('auMDec').textContent = ' · ' + mon(d.pay) + '/mo';
+    } else {
+      $('auResLab').textContent = 'Monthly payment'; $('auResBig').textContent = mon(pay);
+      $('auResSub').textContent = 'financing ' + mon0(d.L) + ' at ' + rateTxt + ' for ' + tt + (d.hasExtra ? ' · plus ' + mon(d.extra) + ' extra each month' : '');
+      $('auMLab').textContent = 'Monthly payment'; $('auMVal').textContent = mon(pay); $('auMDec').textContent = ' · ' + tt + ' @ ' + rateTxt;
+    }
+    $('auResults').style.display = '';
+
+    // takeaways
+    var tips = [], up = [];
+    if (Math.round(o.down) > 0) up.push(mon0(o.down) + ' down');
+    if (!o.inLoan && Math.round(dl.tf) > 0) up.push(mon0(dl.tf) + ' of sales tax and fees');
+    tips.push('You pay ' + mon0(dl.upfront) + ' at signing' + (up.length ? ' — ' + up.join(' plus ') : '') + '.');
+    if (Math.round(dl.negEq) > 0) tips.push('You owe ' + mon0(dl.negEq) + ' more on your trade-in than it is worth, and that shortfall is added to this loan.');
+    $('auTip').textContent = tips.join(' ');
+    var sv = $('auSave');
+    if (d.hasExtra) {
+      var saved = d.base.totInt - d.real.totInt, sooner = d.base.count - d.real.count;
+      sv.style.display = ''; sv.textContent = 'Your extra ' + mon(d.extra) + ' a month saves ' + mon0(saved) + ' in interest and finishes ' + (sooner > 0 ? span(sooner) + ' sooner' : 'on schedule') + ' — paid off ' + dateTxt(d.sm, d.sy, d.real.count) + ' instead of ' + dateTxt(d.sm, d.sy, d.base.count) + '.';
+    } else sv.style.display = 'none';
+
+    // value vs balance
+    d.cross = null;
+    var dv = $('auDepTip');
+    if (d.dep > 0) {
+      var lastUnder = 0, dtxt = (Math.round(d.dep * 100) / 100) + '% a year';
+      for (var k = 0; k <= d.base.count; k++) { var bal = k === 0 ? d.L : d.base.rows[k - 1].bal; if (bal > valueAt(d, k) + 0.005) lastUnder = k; }
+      dv.style.display = '';
+      if (lastUnder === 0) dv.textContent = 'At ' + dtxt + ', the car stays worth more than you owe for the whole loan.';
+      else if (lastUnder >= d.base.count) dv.textContent = 'At ' + dtxt + ', you owe more than the car is worth for the entire loan.';
+      else { d.cross = lastUnder + 1; dv.textContent = 'At ' + dtxt + ', you owe more than the car is worth until payment ' + d.cross + ' (' + dateTxt(d.sm, d.sy, d.cross) + ').'; }
+    } else dv.style.display = 'none';
+
+    $('auChartTtl').textContent = d.dep > 0 ? 'Your balance vs what the car is worth' : 'Your balance over the loan';
+    $('auChart').innerHTML = balanceChart(d);
+    $('auChartLeg').innerHTML = '<span><i style="background:#37503F"></i>Loan balance</span>' + (d.dep > 0 ? '<span><i style="background:#B5761F;opacity:.7"></i>Car value (' + (Math.round(d.dep * 100) / 100) + '% a year)</span>' : '') + (d.hasExtra ? '<span><i style="background:#B5761F"></i>Balance with extra payments</span>' : '') + (d.cross ? '<span><i class="ln-dot"></i>You owe less than it is worth</span>' : '');
+
+    // where the money goes
+    var credits = Math.max(0, dl.net) + o.inc, seg = [
+      ['Paid upfront', dl.upfront, '#8F5C13'], ['Trade-in & incentives', credits, '#6E8A74'], ['Loan principal', d.L, '#37503F'], ['Interest', d.real.totInt, '#B5761F']
+    ], tot = 0; seg.forEach(function (x) { tot += x[1]; });
+    var bar = '', leg = '';
+    seg.forEach(function (x) {
+      if (x[1] <= 0) return;
+      var p = x[1] / tot * 100;
+      bar += '<div class="ln-seg" style="width:' + p.toFixed(2) + '%;background:' + x[2] + '">' + (p >= 12 ? Math.round(p) + '%' : '') + '</div>';
+      leg += '<span><i style="background:' + x[2] + '"></i>' + x[0] + ' ' + mon0(x[1]) + '</span>';
+    });
+    $('auLife').innerHTML = bar; $('auLifeLeg').innerHTML = leg;
+
+    var sm = '<tbody><tr><td>' + (d.afford ? 'Car price you can afford' : 'Vehicle price') + '</td><td>' + mon0(d.price) + '</td></tr>';
+    if (Math.round(o.inc) > 0) sm += '<tr><td>Cash incentives</td><td>−' + mon0(o.inc) + '</td></tr>';
+    sm += '<tr><td>Sales tax' + (o.taxPct > 0 ? ' (' + (Math.round(o.taxPct * 1000) / 1000) + '%)' : '') + '</td><td>' + mon0(dl.tax) + '</td></tr>';
+    if (Math.round(o.fees) > 0) sm += '<tr><td>Title, registration &amp; fees</td><td>' + mon0(o.fees) + '</td></tr>';
+    if (Math.round(Math.abs(dl.net)) > 0) sm += '<tr><td>Trade-in ' + (dl.net >= 0 ? 'equity' : 'shortfall (added to loan)') + '</td><td>' + (dl.net >= 0 ? '−' : '') + mon0(Math.abs(dl.net)) + '</td></tr>';
+    if (Math.round(o.down) > 0) sm += '<tr><td>Down payment</td><td>−' + mon0(o.down) + '</td></tr>';
+    sm += '<tr><td>Amount financed</td><td>' + mon0(d.L) + '</td></tr><tr><td>Upfront payment</td><td>' + mon0(dl.upfront) + '</td></tr>';
+    sm += '<tr><td>Total interest</td><td>' + mon0(d.real.totInt) + '</td></tr><tr><td>Total of ' + comma(d.real.count) + ' payments</td><td>' + mon0(d.real.totPaid) + '</td></tr>';
+    sm += '<tr><td>Total cost (price, interest, tax, fees)</td><td>' + mon0(d.totCost) + '</td></tr><tr><td>Paid off</td><td>' + dateTxt(d.sm, d.sy, d.real.count) + '</td></tr>';
+    if (d.hasExtra) sm += '<tr><td>Interest saved by extra payments</td><td>' + mon0(d.base.totInt - d.real.totInt) + '</td></tr>';
+    $('auSum').innerHTML = sm + '</tbody>';
+
+    // compare terms
+    var termList = [36, 48, 60, 72, 84];
+    if (termList.indexOf(d.n) < 0) { termList.push(d.n); termList.sort(function (a, b) { return a - b; }); }
+    $('auTermsTtl').textContent = d.afford ? 'What the same payment buys over other terms' : 'Compare loan terms — same price and rate';
+    var tbl = '<thead><tr><th>Term</th><th>' + (d.afford ? 'Car price' : 'Payment') + '</th><th>Total interest</th></tr></thead><tbody>';
+    termList.forEach(function (nn) {
+      var cur = nn === d.n;
+      if (d.afford) { var Lb = E.borrowable(d.pay, d.r, nn), pr = E.autoMaxPrice(o, Lb); tbl += '<tr' + (cur ? ' class="cur"' : '') + '><td>' + nn + ' months</td><td>' + (pr >= 1 ? mon0(pr) : '—') + '</td><td>' + (Lb >= 1 ? mon0(d.pay * nn - Lb) : '—') + '</td></tr>'; }
+      else { var p = E.pmt(d.L, d.r, nn); tbl += '<tr' + (cur ? ' class="cur"' : '') + '><td>' + nn + ' months</td><td>' + mon(p) + '</td><td>' + mon0(p * nn - d.L) + '</td></tr>'; }
+    });
+    $('auTerms').innerHTML = tbl + '</tbody>';
+
+    $('auCopyWrap').style.display = st.adv ? '' : 'none';
+    $('auSched').innerHTML = schedHtml(d);
+    var cm = $('auSchedNote'), nt = schedNote(d);
+    cm.textContent = nt; cm.style.display = nt ? '' : 'none';
+  }
+
+  /* ---------- controls ---------- */
+  function seg(id, attr, fn) {
+    var el = $(id);
+    [].forEach.call(el.querySelectorAll('button'), function (b) {
+      b.addEventListener('click', function () {
+        [].forEach.call(el.querySelectorAll('button'), function (x) { x.classList.toggle('on', x === b); x.setAttribute('aria-selected', x === b ? 'true' : 'false'); });
+        fn(b.getAttribute(attr));
+      });
+    });
+  }
+  seg('auModeSeg', 'data-v', function (v) {
+    st.mode = v;
+    var afford = v === 'afford';
+    $('auPriceFld').style.display = afford ? 'none' : '';
+    $('auPayFld').style.display = afford ? '' : 'none';
+    $('auExtraFld').style.display = afford ? 'none' : '';
+    $('auEx').textContent = afford ? 'See an example: $500 a month, $5,000 down, 7% tax' : 'See an example: $35,000 car, $5,000 down, $8,000 trade-in';
+    render();
+  });
+  seg('auSchedSeg', 'data-v', function (v) { st.sched = v; if (last) { $('auSched').innerHTML = schedHtml(last.d); var nt = schedNote(last.d); $('auSchedNote').textContent = nt; $('auSchedNote').style.display = nt ? '' : 'none'; } });
+  ['auPrice', 'auPay', 'auRate', 'auTerm', 'auInc', 'auDown', 'auTrade', 'auOwed', 'auTax', 'auFees', 'auExtra', 'auDep', 'auStartY'].forEach(function (id) {
+    $(id).addEventListener('input', function () { if (id === 'auTerm') markTerm(); render(); });
+  });
+  $('auInLoan').addEventListener('change', render);
+  ['auTaxBase', 'auStartM'].forEach(function (id) { $(id).addEventListener('change', render); });
+  function markTerm() {
+    var v = read('auTerm').v;
+    [].forEach.call($('auTermChips').querySelectorAll('button'), function (b) { b.classList.toggle('on', v != null && Number(b.getAttribute('data-t')) === v); });
+  }
+  [].forEach.call($('auTermChips').querySelectorAll('button'), function (b) {
+    b.addEventListener('click', function () { $('auTerm').value = b.getAttribute('data-t'); markTerm(); render(); });
+  });
+  $('auEx').addEventListener('click', function () {
+    var afford = st.mode === 'afford';
+    $('auPay').value = afford ? '500' : ''; $('auPrice').value = afford ? '' : '35000';
+    $('auRate').value = '6.5'; $('auTerm').value = '60'; $('auDown').value = '5000'; $('auInc').value = '';
+    $('auTrade').value = afford ? '' : '8000'; $('auOwed').value = afford ? '' : '3000'; $('auTax').value = '7'; $('auFees').value = '500';
+    markTerm(); render();
+  });
+  $('auAdvBtn').addEventListener('click', function () {
+    st.adv = !st.adv;
+    $('auAdvBtn').classList.toggle('open', st.adv);
+    $('auAdvBtnLab').textContent = st.adv ? 'Go simple' : 'Go advanced';
+    $('auAdvIn').style.display = st.adv ? '' : 'none';
+    if (!st.adv) {
+      ['auExtra', 'auDep', 'auStartY'].forEach(function (id) { $(id).value = ''; });
+      $('auTaxBase').value = 'diff'; $('auStartM').value = String(now.getMonth());
+    }
+    render();
+  });
+  $('auCopy').addEventListener('click', function () {
+    if (!last) return;
+    var d = last.d, dl = d.deal, lines = [];
+    if (d.afford) lines.push('Car price I can afford: ' + mon0(d.price) + ' (paying ' + mon(d.pay) + ' a month at ' + d.apr + '% for ' + d.n + ' months)');
+    else lines.push('Vehicle price: ' + mon0(d.price), 'Monthly payment: ' + mon(d.base.pay) + ' (' + d.n + ' months at ' + d.apr + '%)');
+    lines.push('Amount financed: ' + mon0(d.L), 'Sales tax: ' + mon0(dl.tax), 'Upfront payment: ' + mon0(dl.upfront), 'Total interest: ' + mon0(d.real.totInt), 'Total cost (price, interest, tax, fees): ' + mon0(d.totCost), 'Paid off: ' + dateTxt(d.sm, d.sy, d.real.count));
+    if (d.hasExtra) lines.push('Interest saved by extra payments: ' + mon0(d.base.totInt - d.real.totInt));
+    var btn = $('auCopy'), txt = lines.join('\n');
+    var done = function (ok) { btn.textContent = ok ? 'Copied' : 'Copy failed'; setTimeout(function () { btn.textContent = 'Copy results'; }, 1600); };
+    var legacy = function () { try { var ta = document.createElement('textarea'); ta.value = txt; ta.setAttribute('readonly', ''); ta.style.cssText = 'position:fixed;left:-9999px;top:0'; document.body.appendChild(ta); ta.select(); var ok = document.execCommand('copy'); document.body.removeChild(ta); done(ok); } catch (e) { done(false); } };
+    try { navigator.clipboard.writeText(txt).then(function () { done(true); }, legacy); } catch (e) { legacy(); }
+  });
+
+  $('auStartM').value = String(now.getMonth());
+  $('auStartY').placeholder = 'e.g. ' + now.getFullYear();
   render();
 };
 

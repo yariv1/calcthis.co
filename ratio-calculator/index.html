@@ -52,7 +52,7 @@
   ]
 }
 </script>
-<link rel="stylesheet" href="/assets/style.css?v=163">
+<link rel="stylesheet" href="/assets/style.css?v=169">
 <style>
 .presets-label{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
 .presets{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px}
@@ -186,6 +186,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
           <span class="menu-col-head">Money &amp; Finance</span>
           <a href="/mortgage-calculator/">Mortgage</a>
           <a href="/loan-calculator/">Loan</a>
+          <a href="/auto-loan-calculator/">Auto Loan</a>
         </div>
       </div>
     </nav>
@@ -570,6 +571,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
         <ul class="footer-links">
           <li><a href="/mortgage-calculator/">Mortgage Calculator</a></li>
           <li><a href="/loan-calculator/">Loan Calculator</a></li>
+          <li><a href="/auto-loan-calculator/">Auto Loan Calculator</a></li>
         </ul>
       </div>
 
@@ -589,7 +591,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
   </footer>
 <!--FOOTER:END-->
 
-<script src="/assets/app.js?v=163"></script>
+<script src="/assets/app.js?v=169"></script>
 <script>
 function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){var t=b;b=a%b;a=t;}return a;}
 function toInts(a,b){var sa=(''+a).split('.')[1]||'',sb=(''+b).split('.')[1]||'';var s=Math.pow(10,Math.max(sa.length,sb.length));var ai=Math.round(a*s),bi=Math.round(b*s);var g=gcd(ai,bi);return[ai/g,bi/g];}
