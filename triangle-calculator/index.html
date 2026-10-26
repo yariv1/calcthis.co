@@ -1,0 +1,466 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Triangle Calculator — Solve Any Triangle, Right Triangle &amp; Pythagorean Theorem | CalcThis</title>
+<meta name="description" content="Free triangle calculator. Enter any 3 values (SSS, SAS, ASA, AAS, SSA) or any 2 for a right triangle and get every side, angle, area, perimeter and height — with a live to-scale diagram, the two-triangle ambiguous case and step-by-step working.">
+<link rel="canonical" href="https://calcthis.co/triangle-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Triangle Calculator — Solve Any Triangle, Right Triangle &amp; Pythagorean Theorem">
+<meta property="og:description" content="Solve any triangle from any 3 values, or a right triangle from any 2 — see it drawn to scale with every side, angle, area and height, plus step-by-step working.">
+<meta property="og:url" content="https://calcthis.co/triangle-calculator/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<meta name="theme-color" content="#B5761F">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css?v=154">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Triangle Calculator",
+  "url": "https://calcthis.co/triangle-calculator/",
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Solve any triangle from any 3 values (SSS, SAS, ASA, AAS, SSA) or a right triangle from any 2 — every side, angle, area, perimeter, height, median and radius, with a live to-scale diagram and step-by-step working."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "How do you find the missing side of a right triangle?", "acceptedAnswer": { "@type": "Answer", "text": "Use the Pythagorean theorem, a² + b² = c², where c is the hypotenuse (the side opposite the 90° angle). To find the hypotenuse, c = √(a² + b²). To find a leg, subtract: a = √(c² − b²). For legs of 3 and 4, c = √(9 + 16) = 5." } },
+    { "@type": "Question", "name": "What do I need to know to solve any triangle?", "acceptedAnswer": { "@type": "Answer", "text": "Any three values that include at least one side: three sides (SSS), two sides and the angle between them (SAS), two angles and a side (ASA or AAS), or two sides and an angle that is not between them (SSA). Three angles alone only give the shape, not the size, because every size of triangle can have the same angles." } },
+    { "@type": "Question", "name": "What is the ambiguous case (SSA)?", "acceptedAnswer": { "@type": "Answer", "text": "When you know two sides and an angle that is not between them, the data can fit two different triangles, one with an acute angle and one with an obtuse angle, or only one, or none. With a = 8, b = 10 and A = 40° there are two triangles: c ≈ 12.42 with B ≈ 53.46°, and c ≈ 2.90 with B ≈ 126.54°. The calculator shows both and lets you switch between them." } },
+    { "@type": "Question", "name": "What are the 30-60-90 and 45-45-90 triangles?", "acceptedAnswer": { "@type": "Answer", "text": "They are special right triangles with fixed side ratios. In a 30-60-90 triangle the sides are in the ratio 1 : √3 : 2, so a short leg of 5 gives a long leg of 5√3 ≈ 8.66 and a hypotenuse of 10. In a 45-45-90 triangle the sides are 1 : 1 : √2, so legs of 7 give a hypotenuse of 7√2 ≈ 9.90." } },
+    { "@type": "Question", "name": "How do you find the area of a triangle?", "acceptedAnswer": { "@type": "Answer", "text": "Half the base times the height: A = ½ × b × h. If you only know the three sides, use Heron’s formula, A = √(s(s − a)(s − b)(s − c)) where s is half the perimeter. For sides 5, 6 and 7, s = 9 and the area is √(9 × 4 × 3 × 2) = √216 ≈ 14.70. With two sides and the angle between them, the area is ½ × a × b × sin C." } }
+  ]
+}
+</script>
+</head>
+<body class="p-tri">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <a class="hdr-back" href="/blog/" aria-label="Back to blog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <span class="menu-col-head">Construction &amp; Gardening</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+          <a href="/paint-calculator/">Paint</a>
+          <a href="/wallpaper-calculator/">Wallpaper</a>
+          <a href="/square-footage-calculator/">Square Footage</a>
+          <a href="/tape-measure-fraction-calculator/">Tape Measure Fraction</a>
+          <a href="/stair-calculator/">Stair</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/vo2-max-calculator/">VO2 Max</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
+          <a href="/bmi-calculator/">BMI</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/ideal-weight-calculator/">Ideal Weight</a>
+          <a href="/lean-body-mass-calculator/">Lean Body Mass</a>
+          <a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio</a>
+          <a href="/calorie-calculator/">Calorie</a>
+          <a href="/bmr-calculator/">BMR</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/water-intake-calculator/">Water Intake</a>
+          <a href="/macro-calculator/">Macro</a>
+          <a href="/protein-intake-calculator/">Protein Intake</a>
+          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
+          <a href="/steps-to-miles-calculator/">Steps to Miles</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+          <a href="/grade-curve-calculator/">Grade Curve</a>
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/fraction-calculator/">Fraction</a>
+          <a href="/standard-deviation-calculator/">Standard Deviation</a>
+          <a href="/scientific-notation-calculator/">Scientific Notation</a>
+          <a href="/weighted-average-calculator/">Weighted Average</a>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+          <a href="/age-calculator/">Age</a>
+          <a href="/date-calculator/">Date</a>
+          <a href="/time-calculator/">Time</a>
+          <a href="/hours-calculator/">Hours</a>
+          <a href="/triangle-calculator/" class="current">Triangle</a>
+          <span class="menu-col-head">Cooking &amp; Kitchen</span>
+          <a href="/recipe-converter/">Recipe Converter</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">Triangles, drawn to scale</div>
+    <h1>Triangle Calculator</h1>
+    <p>Solve <strong>any triangle</strong> from any three values, or a <strong>right triangle</strong> from any two — Pythagorean theorem included. <strong>See it drawn to scale</strong> with every side, angle, area and height, and the second triangle when the data fits two.</p>
+  </section>
+
+  <div class="grid">
+    <div class="card">
+      <div class="card-pad">
+        <h2 class="card-h2">Your triangle</h2>
+
+        <div class="modeseg" id="triModeSeg" role="tablist" style="margin-bottom:16px">
+          <button class="on" data-m="right" role="tab" aria-selected="true">Right triangle</button>
+          <button data-m="any" role="tab" aria-selected="false">Any triangle</button>
+        </div>
+
+        <div class="ctl-row">
+          <span class="ctl-lab">Length unit</span>
+          <div class="csel" id="triUnit" data-value="none">
+            <button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false">
+              <span class="csel-val">No unit</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <div class="csel-panel" role="listbox">
+              <button type="button" class="csel-opt on" role="option" aria-selected="true" data-value="none">No unit</button>
+              <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="mm">Millimeters (mm)</button>
+              <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="cm">Centimeters (cm)</button>
+              <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="m">Meters (m)</button>
+              <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="km">Kilometers (km)</button>
+              <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="in">Inches (in)</button>
+              <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="ft">Feet (ft)</button>
+              <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="yd">Yards (yd)</button>
+              <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="mi">Miles (mi)</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="ctl-row">
+          <span class="ctl-lab">Angles</span>
+          <div class="seg" id="triAngSeg" role="group" aria-label="Angle unit">
+            <button class="on" type="button" data-v="deg">Degrees</button>
+            <button type="button" data-v="rad">Radians</button>
+          </div>
+        </div>
+
+        <div class="tri-g" id="triFields"></div>
+
+        <p class="add-note" id="triInputNote">Type plain numbers like <b>3</b> or <b>2.5</b>. Exact roots also work, e.g. <b>sqrt(5)</b> or <b>√5</b>. Any 2 values for a right triangle; any 3 (with a side) for any triangle.</p>
+        <p class="add-note tri-hint" id="triHint" style="display:none"></p>
+
+        <div class="chips" id="triEx" aria-label="Try an example">
+          <button type="button" data-ex="345">3-4-5</button>
+          <button type="button" data-ex="369">30-60-90</button>
+          <button type="button" data-ex="454">45-45-90</button>
+          <button type="button" data-ex="ssa">Two triangles (SSA)</button>
+          <button type="button" data-ex="sss">5-6-7 (SSS)</button>
+        </div>
+
+        <div id="triAdvIn" style="display:none">
+          <div class="proj-sep"></div>
+          <div class="fld">
+            <span class="lab">Show on the diagram</span>
+            <div class="chips" id="triOn" style="margin-top:0">
+              <button type="button" data-k="h" aria-pressed="false">Heights</button>
+              <button type="button" data-k="m" aria-pressed="false">Medians</button>
+              <button type="button" data-k="i" aria-pressed="false">Incircle</button>
+              <button type="button" data-k="c" aria-pressed="false">Circumcircle</button>
+            </div>
+          </div>
+          <div class="fld" style="margin-bottom:0">
+            <span class="lab">Round to <span class="unit" id="triPlacesLab">decimal places</span></span>
+            <div class="tri-round">
+              <div class="seg" id="triRoundSeg" role="group" aria-label="Rounding">
+                <button class="on" type="button" data-v="dp">Decimals</button>
+                <button type="button" data-v="sig">Sig. figs</button>
+              </div>
+              <div class="inp"><input id="triPlaces" type="number" inputmode="numeric" min="0" max="10" placeholder="4"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="add-row split" style="margin-top:16px">
+          <span></span>
+          <button class="advbtn" id="triAdvBtn" type="button">
+            <span id="triAdvBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-pad">
+        <div class="tri-res">
+          <div class="res-lab" id="triResLab">Area</div>
+          <div class="res-big" id="triResBig">—</div>
+          <div class="res-sub" id="triResSub">Enter any 2 values: two lengths, a length and an angle, or the area with one more.</div>
+        </div>
+
+        <div id="triResults" style="display:none">
+          <div class="modeseg" id="triSwitch" style="display:none;margin:0 0 10px;grid-template-columns:1fr 1fr"></div>
+          <div class="tri-dia" id="triDia"></div>
+          <p class="res-tip adv-tip" id="triTip"></p>
+
+          <table class="dtable" id="triTbl"></table>
+          <table class="dtable tri-two" id="triMeas"></table>
+
+          <div id="triSqWrap" style="display:none">
+            <div class="fc-grp">Pythagoras in squares — the two small areas add up to the big one</div>
+            <div class="tri-dia" id="triSq"></div>
+          </div>
+
+          <div id="triAdvOut" style="display:none">
+            <div class="proj-sep"></div>
+            <div class="fc-grp">Angles in every form</div>
+            <table class="dtable tri-four" id="triAngTbl"></table>
+            <div class="fc-grp">More measurements</div>
+            <table class="dtable tri-two" id="triAdvTbl"></table>
+            <button class="btn" id="triCopy" type="button">Copy results</button>
+          </div>
+
+          <div class="proj-sep"></div>
+          <div class="tally-head"><h3>How it's solved</h3></div>
+          <div id="triSteps" class="fc-steps"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- mobile sticky bar -->
+  <div class="mbar" id="mbar">
+    <span class="mbar-lab" id="triMLab">Area</span>
+    <div class="mbar-vals"><b id="triMVal">—</b><span id="triMDec"></span></div>
+  </div>
+
+  <div class="related-calcs">
+    <p class="related-calcs-h">More math calculators that may interest you</p>
+    <div class="pills">
+      <a class="pill" href="/stair-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 20h5v-5h5v-5h5V5h3"/></svg>
+        Stair Calculator
+      </a>
+      <a class="pill" href="/square-footage-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="1.5"/><path d="M4 12h16M12 4v16"/></svg>
+        Square Footage Calculator
+      </a>
+      <a class="pill" href="/fraction-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 12h12"/><circle cx="12" cy="6" r="1.2"/><circle cx="12" cy="18" r="1.2"/></svg>
+        Fraction Calculator
+      </a>
+      <a class="pill" href="/ratio-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="12" r="4"/><circle cx="16" cy="12" r="4"/></svg>
+        Ratio Calculator
+      </a>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use the triangle calculator</h2>
+        <p>Pick <strong>Right triangle</strong> if one angle is 90°, and enter any <strong>two</strong> values — two sides, a side and an angle, or the area with one more value. Pick <strong>Any triangle</strong> and enter any <strong>three</strong> of the six boxes (sides a, b, c and angles A, B, C), as long as at least one is a side. The calculator works out which case you have — SSS, SAS, ASA, AAS or SSA — and fills in every side, angle, the area, perimeter and heights, with a to-scale drawing and the working underneath.</p>
+        <p>Side <strong>a</strong> is opposite angle <strong>A</strong>, side <strong>b</strong> opposite <strong>B</strong>, and side <strong>c</strong> opposite <strong>C</strong>. Lengths are plain numbers like <strong>3</strong> or <strong>2.5</strong>; exact roots such as <strong>sqrt(5)</strong> also work.</p>
+
+        <h2>The Pythagorean theorem</h2>
+        <div class="formula">
+          a&sup2; + b&sup2; = c&sup2;
+          <small>FOR A RIGHT TRIANGLE, c IS THE HYPOTENUSE</small>
+        </div>
+        <p>The square of the hypotenuse equals the sum of the squares of the two legs. With legs <strong>3</strong> and <strong>4</strong>: c = √(9 + 16) = <strong>5</strong>. With a hypotenuse of 5 and one leg of 3, the other leg is √(25 − 9) = <strong>4</strong>. The <em>Pythagoras in squares</em> picture under every right-triangle result draws the three squares at true relative size, so you can see the two small areas fill the big one.</p>
+
+        <h2>Solve a triangle: SSS, SAS, ASA, AAS and SSA</h2>
+        <p>Every case reduces to two laws. The <strong>law of cosines</strong>, c² = a² + b² − 2ab·cos C, handles three sides (SSS) and two sides with the angle between them (SAS). The <strong>law of sines</strong>, a ÷ sin A = b ÷ sin B = c ÷ sin C, handles two angles and a side (ASA, AAS) and two sides with an angle that is not between them (SSA). The three angles always add up to 180°. Three angles alone (AAA) only fix the shape, not the size, so at least one side is needed.</p>
+
+        <h2>The ambiguous case (SSA)</h2>
+        <p>Two sides and a non-included angle can describe <strong>two</strong> triangles, one, or none. With a = 8, b = 10 and A = 40° the sine of B is 10 × sin 40° ÷ 8 = 0.8035, which matches both B = 53.46° (c = 12.42) and B = 126.54° (c = 2.90). The calculator shows <strong>Triangle 1</strong> and <strong>Triangle 2</strong> and lets you switch between them.</p>
+      </div>
+
+      <div>
+        <h2>Special right triangles</h2>
+        <p>A <strong>30-60-90</strong> triangle has sides in the ratio 1 : √3 : 2 — a short leg of 5 gives a long leg of 5√3 ≈ 8.66 and a hypotenuse of 10. A <strong>45-45-90</strong> triangle has sides 1 : 1 : √2 — legs of 7 give a hypotenuse of 7√2 ≈ 9.90. Whole-number right triangles such as <strong>3-4-5</strong>, 5-12-13 and 8-15-17 are Pythagorean triples. The calculator names these automatically when your numbers match.</p>
+
+        <h2>Area, perimeter and height</h2>
+        <p>The area is ½ × base × height. From three sides it uses <strong>Heron’s formula</strong>, √(s(s − a)(s − b)(s − c)), where s is the semiperimeter. For sides 5, 6 and 7, s = 9 and the area is √216 ≈ <strong>14.70</strong>. The perimeter is a + b + c, and each height is twice the area divided by the side it stands on.</p>
+
+        <h2>Triangle types</h2>
+        <p>By sides, a triangle is <strong>equilateral</strong> (three equal sides, all angles 60°), <strong>isosceles</strong> (two equal sides) or <strong>scalene</strong> (none equal). By angles it is <strong>acute</strong> (all under 90°), <strong>right</strong> (one angle is exactly 90°) or <strong>obtuse</strong> (one angle over 90°). Any two sides must add up to more than the third, or no triangle exists.</p>
+
+        <h2>More with Go advanced</h2>
+        <p>Go advanced adds the medians, the inradius and circumradius, exterior angles, vertex coordinates, centroid, incenter and circumcenter, every angle in degrees, degrees-minutes-seconds and radians, rounding to decimals or significant figures, a copy button, and diagram overlays for the heights, medians, incircle and circumcircle.</p>
+
+        <h2>Related tools</h2>
+        <p>Building stairs? The <a href="/stair-calculator/">Stair Calculator</a> uses the same right-triangle geometry for stringer length. For flat areas of any shape, use the <a href="/square-footage-calculator/">Square Footage Calculator</a>.</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>How do you find the missing side of a right triangle?</summary><p>Use the Pythagorean theorem, a² + b² = c², where c is the hypotenuse (the side opposite the 90° angle). To find the hypotenuse, c = √(a² + b²). To find a leg, subtract: a = √(c² − b²). For legs of 3 and 4, c = √(9 + 16) = 5.</p></details>
+    <details class="faq"><summary>What do I need to know to solve any triangle?</summary><p>Any three values that include at least one side: three sides (SSS), two sides and the angle between them (SAS), two angles and a side (ASA or AAS), or two sides and an angle that is not between them (SSA). Three angles alone only give the shape, not the size, because every size of triangle can have the same angles.</p></details>
+    <details class="faq"><summary>What is the ambiguous case (SSA)?</summary><p>When you know two sides and an angle that is not between them, the data can fit two different triangles, one with an acute angle and one with an obtuse angle, or only one, or none. With a = 8, b = 10 and A = 40° there are two triangles: c ≈ 12.42 with B ≈ 53.46°, and c ≈ 2.90 with B ≈ 126.54°. The calculator shows both and lets you switch between them.</p></details>
+    <details class="faq"><summary>What are the 30-60-90 and 45-45-90 triangles?</summary><p>They are special right triangles with fixed side ratios. In a 30-60-90 triangle the sides are in the ratio 1 : √3 : 2, so a short leg of 5 gives a long leg of 5√3 ≈ 8.66 and a hypotenuse of 10. In a 45-45-90 triangle the sides are 1 : 1 : √2, so legs of 7 give a hypotenuse of 7√2 ≈ 9.90.</p></details>
+    <details class="faq"><summary>How do you find the area of a triangle?</summary><p>Half the base times the height: A = ½ × b × h. If you only know the three sides, use Heron’s formula, A = √(s(s − a)(s − b)(s − c)) where s is half the perimeter. For sides 5, 6 and 7, s = 9 and the area is √(9 × 4 × 3 × 2) = √216 ≈ 14.70. With two sides and the angle between them, the area is ½ × a × b × sin C.</p></details>
+  </section>
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+          <li><a href="/paint-calculator/">Paint Calculator</a></li>
+          <li><a href="/wallpaper-calculator/">Wallpaper Calculator</a></li>
+          <li><a href="/square-footage-calculator/">Square Footage Calculator</a></li>
+          <li><a href="/tape-measure-fraction-calculator/">Tape Measure Fraction Calculator</a></li>
+          <li><a href="/stair-calculator/">Stair Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/vo2-max-calculator/">VO2 Max Calculator</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/bmi-calculator/">BMI Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/ideal-weight-calculator/">Ideal Weight Calculator</a></li>
+          <li><a href="/lean-body-mass-calculator/">Lean Body Mass Calculator</a></li>
+          <li><a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio Calculator</a></li>
+          <li><a href="/calorie-calculator/">Calorie Calculator</a></li>
+          <li><a href="/bmr-calculator/">BMR Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/water-intake-calculator/">Water Intake Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/protein-intake-calculator/">Protein Intake Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
+          <li><a href="/steps-to-miles-calculator/">Steps to Miles Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+          <li><a href="/grade-curve-calculator/">Grade Curve Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/fraction-calculator/">Fraction Calculator</a></li>
+          <li><a href="/standard-deviation-calculator/">Standard Deviation Calculator</a></li>
+          <li><a href="/scientific-notation-calculator/">Scientific Notation Calculator</a></li>
+          <li><a href="/weighted-average-calculator/">Weighted Average Calculator</a></li>
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+          <li><a href="/age-calculator/">Age Calculator</a></li>
+          <li><a href="/date-calculator/">Date Calculator</a></li>
+          <li><a href="/time-calculator/">Time Calculator</a></li>
+          <li><a href="/hours-calculator/">Hours Calculator</a></li>
+          <li><a href="/triangle-calculator/">Triangle Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Cooking &amp;</span> <span class="ft2">Kitchen</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/recipe-converter/">Recipe Converter</a></li>
+        </ul>
+      </div>
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/blog/">Blog</a>
+      <span aria-hidden="true">·</span>
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+</div>
+
+<script src="/assets/app.js?v=154"></script>
+<script>CalcThis.initTriangleCalc();</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>

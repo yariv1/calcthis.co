@@ -52,7 +52,7 @@
   ]
 }
 </script>
-<link rel="stylesheet" href="/assets/style.css?v=152">
+<link rel="stylesheet" href="/assets/style.css?v=154">
 <style>
 .presets-label{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
 .presets{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px}
@@ -180,6 +180,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
           <a href="/date-calculator/">Date</a>
           <a href="/time-calculator/">Time</a>
           <a href="/hours-calculator/">Hours</a>
+          <a href="/triangle-calculator/">Triangle</a>
           <span class="menu-col-head">Cooking &amp; Kitchen</span>
           <a href="/recipe-converter/">Recipe Converter</a>
         </div>
@@ -544,6 +545,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
           <li><a href="/date-calculator/">Date Calculator</a></li>
           <li><a href="/time-calculator/">Time Calculator</a></li>
           <li><a href="/hours-calculator/">Hours Calculator</a></li>
+          <li><a href="/triangle-calculator/">Triangle Calculator</a></li>
         </ul>
       </div>
 
@@ -573,7 +575,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
   </footer>
 <!--FOOTER:END-->
 
-<script src="/assets/app.js?v=152"></script>
+<script src="/assets/app.js?v=154"></script>
 <script>
 function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){var t=b;b=a%b;a=t;}return a;}
 function toInts(a,b){var sa=(''+a).split('.')[1]||'',sb=(''+b).split('.')[1]||'';var s=Math.pow(10,Math.max(sa.length,sb.length));var ai=Math.round(a*s),bi=Math.round(b*s);var g=gcd(ai,bi);return[ai/g,bi/g];}

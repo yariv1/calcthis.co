@@ -2076,3 +2076,32 @@
   .p-hours .dtable td:last-child{font-variant-numeric:tabular-nums}
   .p-hours .mbar-vals b{font-size:20px;overflow-wrap:anywhere}
   .p-hours .hero code,.p-hours .content code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.92em;background:#F2EBDF;border-radius:5px;padding:1px 5px;color:var(--ink)}
+
+/* =========================================================
+   MATH · TRIANGLE CALCULATOR  (body.p-tri)
+   Reuses .modeseg, .ctl-row/.csel, .seg, .chips, .fld/.inp, .dtable,
+   .res-tip.adv-tip, .advbtn, the sticky .mbar and the .fc-steps pattern.
+   ========================================================= */
+  .p-tri .modeseg{grid-template-columns:1fr 1fr}
+  .p-tri .ctl-row .csel{width:190px;flex:none}
+  .p-tri .tri-g{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 10px}
+  .p-tri .tri-g .inp{min-width:0}
+  .p-tri .tri-g .inp input{padding:11px 10px;min-width:0}
+  .p-tri .tri-g .fld .lab{display:block;white-space:nowrap}
+  .p-tri .tri-lock{grid-column:1/-1;margin:0 0 4px;font-size:14px;line-height:1.5;color:var(--muted,#6b6459)}
+  .p-tri .tri-hint{color:#8a5a12;font-weight:500}
+  .p-tri .tri-res{margin:2px 0 14px}
+  .p-tri .res-big{font-size:clamp(28px,6vw,42px);line-height:1.15}
+  .p-tri .tri-dia{background:#FCFAF6;border:1px solid var(--line);border-radius:12px;padding:10px;margin:0 0 14px}
+  .p-tri .tri-dia svg{display:block;width:100%;height:auto;overflow:visible}
+  .p-tri .tri-round{display:flex;align-items:center;gap:10px}
+  .p-tri .tri-round .inp{flex:1;min-width:0}
+  .p-tri .tri-two td:last-child{text-align:right}
+  .p-tri .dtable td:first-child{color:var(--ink);font-weight:600}
+  .p-tri .tri-four th,.p-tri .tri-four td{padding:8px 6px;font-size:13.5px}
+  .p-tri .tri-four td:nth-child(n+2),.p-tri .tri-four th:nth-child(n+2){text-align:right}
+  .p-tri .fc-grp{font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin:14px 0 7px}
+  .p-tri .fc-steps{font-size:14.5px;line-height:1.6;color:var(--ink-soft)}
+  .p-tri .fc-steps ul{list-style:none;margin:0 0 6px;padding:0}
+  .p-tri .fc-steps li{padding:5px 0 5px 14px;border-left:2px solid var(--line);margin-bottom:3px}
+  .p-tri #triOn button[aria-pressed="true"]{background:var(--amber);border-color:var(--amber);color:#fff}

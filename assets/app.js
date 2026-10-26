@@ -9938,6 +9938,593 @@ CalcThis.initHoursCalc = function () {
 };
 
 /* =========================================================
+   MATH · TRIANGLE CALCULATOR
+   Right-triangle / Pythagorean mode (any 2 values) and any-triangle mode (any 3
+   of a, b, c, A, B, C — SSS / SAS / ASA / AAS / SSA incl. the ambiguous case),
+   all from ONE set of boxes (no mode dropdown). Inputs accept numbers, √5, 2√3,
+   sqrt(5), pi/4. Differentiators: a live to-scale triangle diagram (optional
+   heights / medians / incircle / circumcircle), both triangles of an SSA
+   ambiguity, special-triangle recognition (30-60-90, 45-45-90, Pythagorean
+   triples), a "squares on the sides" picture for right triangles, plain-English
+   steps shown by default. Go advanced (real panel above the button): diagram
+   overlays, rounding (decimals / significant figures); results gain medians,
+   in/circumradius, exterior angles, coordinates, centres, DMS / radians, Copy.
+   ========================================================= */
+/* TRIANGLE-ENGINE:START */
+CalcThis.triEngine = (function () {
+  var PI = Math.PI;
+  function cl(x) { return Math.max(-1, Math.min(1, x)); }
+  function gcd(a, b) { while (b) { var t = a % b; a = b; b = t; } return a; }
+
+  function fromSides(a, b, c) {
+    var m = Math.max(a, b, c), e = 1e-9 * m;
+    if (a + b - c <= e || a + c - b <= e || b + c - a <= e) return null;
+    var A = Math.acos(cl((b * b + c * c - a * a) / (2 * b * c)));
+    var B = Math.acos(cl((a * a + c * c - b * b) / (2 * a * c)));
+    return { a: a, b: b, c: c, A: A, B: B, C: PI - A - B };
+  }
+  function up(k) { return k.toUpperCase(); }
+  function lo(k) { return k.toLowerCase(); }
+
+  // g: any of a b c A B C (angles in radians), all > 0. Needs exactly the keys of one 3-value set.
+  function solve3(g) {
+    var sides = ['a', 'b', 'c'].filter(function (k) { return g[k] != null; });
+    var angs = ['A', 'B', 'C'].filter(function (k) { return g[k] != null; });
+    if (!sides.length) return { err: 'needside' };
+    if (sides.length === 3) {
+      var t = fromSides(g.a, g.b, g.c);
+      return t ? { sols: [t], method: 'SSS' } : { err: 'ineq' };
+    }
+    var i;
+    if (angs.length >= 2) {
+      var X = angs[0], Y = angs[1];
+      var T = ['A', 'B', 'C'].filter(function (k) { return k !== X && k !== Y; })[0];
+      var third = PI - g[X] - g[Y];
+      if (third <= 1e-9) return { err: 'angsum' };
+      var ang = {}; ang[X] = g[X]; ang[Y] = g[Y]; ang[T] = third;
+      var s = sides[0], r = g[s] / Math.sin(ang[up(s)]);
+      var res = {};
+      ['A', 'B', 'C'].forEach(function (k) { res[k] = ang[k]; res[lo(k)] = r * Math.sin(ang[k]); });
+      return { sols: [res], method: (s === lo(T)) ? 'ASA' : 'AAS' };
+    }
+    var s1 = sides[0], s2 = sides[1], Ag = angs[0];
+    var thirdSide = ['a', 'b', 'c'].filter(function (k) { return k !== s1 && k !== s2; })[0];
+    if (lo(Ag) === thirdSide) { // SAS
+      var x = Math.sqrt(g[s1] * g[s1] + g[s2] * g[s2] - 2 * g[s1] * g[s2] * Math.cos(g[Ag]));
+      var o = {}; o[s1] = g[s1]; o[s2] = g[s2]; o[thirdSide] = x;
+      var t2 = fromSides(o.a, o.b, o.c);
+      return t2 ? { sols: [t2], method: 'SAS' } : { err: 'ineq' };
+    }
+    // SSA: Ag is opposite one of the two known sides
+    var p = g[lo(Ag)], qk = (lo(Ag) === s1) ? s2 : s1, q = g[qk];
+    var sq = q * Math.sin(g[Ag]) / p;
+    if (sq > 1 + 1e-9) return { err: 'ssa' };
+    sq = (Math.abs(sq - 1) < 1e-9) ? 1 : Math.min(1, sq);
+    var Q1 = Math.asin(sq), cands = [Q1];
+    if (Math.abs(sq - 1) > 1e-9 && Math.abs(Q1 - PI / 2) > 1e-9) cands.push(PI - Q1);
+    var sols = [];
+    cands.forEach(function (Q) {
+      var thd = PI - g[Ag] - Q;
+      if (thd <= 1e-9) return;
+      var Tk = ['A', 'B', 'C'].filter(function (k) { return k !== Ag && k !== up(qk); })[0];
+      var rr = p / Math.sin(g[Ag]);
+      var o2 = {}; o2[Ag] = g[Ag]; o2[up(qk)] = Q; o2[Tk] = thd;
+      o2[lo(Ag)] = p; o2[qk] = q; o2[lo(Tk)] = rr * Math.sin(thd);
+      sols.push(o2);
+    });
+    if (!sols.length) return { err: 'ssa' };
+    return { sols: sols, method: 'SSA' };
+  }
+
+  function consistent(sol, g, K) {
+    var ok = true;
+    ['a', 'b', 'c'].forEach(function (k) { if (g[k] != null && Math.abs(sol[k] - g[k]) > 0.002 * Math.max(g[k], sol[k])) ok = false; });
+    ['A', 'B', 'C'].forEach(function (k) { if (g[k] != null && Math.abs(sol[k] - g[k]) > 0.05 * PI / 180) ok = false; });
+    if (K != null) { var ar = 0.5 * sol.a * sol.b * Math.sin(sol.C); if (Math.abs(ar - K) > 0.002 * Math.max(ar, K)) ok = false; }
+    return ok;
+  }
+
+  // g: given values (sides >0, angles rad). opts.right: C = 90 deg is implied; g.K = area (right mode only).
+  function solve(g, opts) {
+    opts = opts || {};
+    var K = (g.K != null) ? g.K : null;
+    var h = {}; ['a', 'b', 'c', 'A', 'B', 'C'].forEach(function (k) { if (g[k] != null) h[k] = g[k]; });
+    var derived = null;
+    if (opts.right) {
+      if (h.C != null && Math.abs(h.C - PI / 2) > 1e-9) return { err: 'rightC' };
+      h.C = PI / 2;
+      if (K != null) {
+        var first = ['a', 'b', 'c', 'A', 'B'].filter(function (k) { return h[k] != null; })[0];
+        if (!first) return { err: 'need2' };
+        var la = null, lb = null;
+        if (first === 'a') { la = h.a; lb = 2 * K / h.a; }
+        else if (first === 'b') { lb = h.b; la = 2 * K / h.b; }
+        else if (first === 'c') {
+          var d = h.c * h.c - 4 * K;
+          if (d < -1e-9 * h.c * h.c) return { err: 'areaHyp' };
+          d = Math.sqrt(Math.max(0, d));
+          var sm = Math.sqrt(h.c * h.c + 4 * K);
+          la = (sm - d) / 2; lb = (sm + d) / 2;
+        } else if (first === 'A') {
+          if (h.A >= PI / 2 - 1e-9) return { err: 'angsum' };
+          lb = Math.sqrt(2 * K / Math.tan(h.A)); la = lb * Math.tan(h.A);
+        } else {
+          if (h.B >= PI / 2 - 1e-9) return { err: 'angsum' };
+          la = Math.sqrt(2 * K / Math.tan(h.B)); lb = la * Math.tan(h.B);
+        }
+        derived = { a: la, b: lb };
+        if (h.a == null) h.a = la;
+        if (h.b == null) h.b = lb;
+      }
+    }
+    var keys = ['a', 'b', 'c', 'A', 'B', 'C'].filter(function (k) { return h[k] != null; });
+    if (keys.length < 3) return { err: 'few' };
+    var combos = [], i, j, l;
+    for (i = 0; i < keys.length; i++) for (j = i + 1; j < keys.length; j++) for (l = j + 1; l < keys.length; l++) {
+      var c3 = [keys[i], keys[j], keys[l]];
+      if (c3.some(function (k) { return k === lo(k); })) combos.push(c3);
+    }
+    if (!combos.length) return { err: 'needside' };
+    var best = null, firstErr = null;
+    for (i = 0; i < combos.length; i++) {
+      var sub = {}; combos[i].forEach(function (k) { sub[k] = h[k]; });
+      var r = solve3(sub);
+      if (r.sols) { best = r; break; }
+      if (!firstErr) firstErr = r;
+    }
+    if (!best) return firstErr;
+    var sols = best.sols.filter(function (s) { return consistent(s, h, K); });
+    if (!sols.length) return { err: 'inconsistent' };
+    sols = sols.filter(function (s) { return Math.min(s.a, s.b, s.c) / Math.max(s.a, s.b, s.c) > 1e-7; });
+    if (!sols.length) return { err: 'extreme' };
+    return { sols: sols, method: best.method, derived: derived };
+  }
+
+  function metrics(t) {
+    var a = t.a, b = t.b, c = t.c, A = t.A, B = t.B, C = t.C;
+    var K = 0.5 * a * b * Math.sin(C), p = a + b + c, s = p / 2;
+    var m = {
+      a: a, b: b, c: c, A: A, B: B, C: C, K: K, p: p, s: s,
+      ha: 2 * K / a, hb: 2 * K / b, hc: 2 * K / c,
+      ma: 0.5 * Math.sqrt(2 * b * b + 2 * c * c - a * a),
+      mb: 0.5 * Math.sqrt(2 * a * a + 2 * c * c - b * b),
+      mc: 0.5 * Math.sqrt(2 * a * a + 2 * b * b - c * c),
+      r: K / s, R: a * b * c / (4 * K)
+    };
+    var PA = { x: 0, y: 0 }, PB = { x: c, y: 0 }, PC = { x: b * Math.cos(A), y: b * Math.sin(A) };
+    m.PA = PA; m.PB = PB; m.PC = PC;
+    m.cen = { x: (PA.x + PB.x + PC.x) / 3, y: (PA.y + PB.y + PC.y) / 3 };
+    m.inc = { x: (a * PA.x + b * PB.x + c * PC.x) / p, y: (a * PA.y + b * PB.y + c * PC.y) / p };
+    var D = 2 * (PA.x * (PB.y - PC.y) + PB.x * (PC.y - PA.y) + PC.x * (PA.y - PB.y));
+    var sa = PA.x * PA.x + PA.y * PA.y, sb = PB.x * PB.x + PB.y * PB.y, sc = PC.x * PC.x + PC.y * PC.y;
+    m.cir = { x: (sa * (PB.y - PC.y) + sb * (PC.y - PA.y) + sc * (PA.y - PB.y)) / D, y: (sa * (PC.x - PB.x) + sb * (PA.x - PC.x) + sc * (PB.x - PA.x)) / D };
+    // classification
+    var mx = Math.max(a, b, c), mn = Math.min(a, b, c), e = 1e-9 * mx;
+    var eq = function (x, y) { return Math.abs(x - y) <= e; };
+    m.sideType = (eq(a, b) && eq(b, c)) ? 'equilateral' : (eq(a, b) || eq(b, c) || eq(a, c)) ? 'isosceles' : 'scalene';
+    var s2 = [a * a, b * b, c * c].sort(function (x, y) { return x - y; });
+    var dd = s2[0] + s2[1] - s2[2];
+    m.angType = Math.abs(dd) <= 1e-9 * s2[2] ? 'right' : (dd > 0 ? 'acute' : 'obtuse');
+    var deg = [A, B, C].map(function (x) { return x * 180 / PI; }).sort(function (x, y) { return x - y; });
+    m.special = null;
+    if (m.angType === 'right' && Math.abs(deg[0] - 30) < 1e-6 && Math.abs(deg[1] - 60) < 1e-6) m.special = '30-60-90';
+    else if (m.angType === 'right' && Math.abs(deg[0] - 45) < 1e-6) m.special = '45-45-90';
+    var sd = [a, b, c].sort(function (x, y) { return x - y; });
+    m.triple = null;
+    if (m.angType === 'right' && sd.every(function (x) { return x >= 1 && Math.abs(x - Math.round(x)) < 1e-9 * Math.max(1, x); })) {
+      var ia = Math.round(sd[0]), ib = Math.round(sd[1]), ic = Math.round(sd[2]);
+      var g = gcd(gcd(ia, ib), ic);
+      m.triple = { base: [ia / g, ib / g, ic / g], k: g, ints: [ia, ib, ic] };
+    }
+    return m;
+  }
+  return { solve: solve, metrics: metrics };
+})();
+/* TRIANGLE-ENGINE:END */
+
+CalcThis.initTriangleCalc = function () {
+  var E = CalcThis.triEngine;
+  var $ = function (id) { return document.getElementById(id); };
+  if (!$('triFields')) return;
+  var PI = Math.PI;
+  var st = { mode: 'right', ang: 'deg', adv: false, sig: false, n: 4, sol: 0, show: { h: false, m: false, i: false, c: false } };
+  var vals = { a: '', b: '', c: '', A: '', B: '', C: '', K: '' };
+  var DEFS = {
+    right: [['a', 'Leg a', 's'], ['b', 'Leg b', 's'], ['c', 'Hypotenuse c', 's'], ['A', 'Angle A', 'g'], ['B', 'Angle B', 'g'], ['K', 'Area', 'k']],
+    any: [['a', 'Side a', 's'], ['b', 'Side b', 's'], ['c', 'Side c', 's'], ['A', 'Angle A', 'g'], ['B', 'Angle B', 'g'], ['C', 'Angle C', 'g']]
+  };
+  var ERR = {
+    needside: 'Add at least one side length — angles alone can’t fix the size of a triangle.',
+    ineq: 'No triangle has these sides: the two shorter sides must add up to more than the longest.',
+    angsum: 'The angles must add up to less than 180° (90° in a right triangle, so A and B must each be under 90°).',
+    ssa: 'No triangle fits these values — the side opposite the angle is too short to reach.',
+    inconsistent: 'These values don’t all fit the same triangle. Clear one of the boxes and try again.',
+    rightC: 'In a right triangle C is always 90°.',
+    areaHyp: 'That area is too large for a right triangle with this hypotenuse.',
+    need2: 'Enter any 2 values: two lengths, a length and an angle, or the area with one more value.',
+    extreme: 'These values are too far apart to solve reliably — the longest side is over ten million times the shortest.',
+    few: ''
+  };
+
+  function setHint(m) { var h = $('triHint'); h.textContent = m || ''; h.style.display = m ? 'block' : 'none'; }
+  function unitTxt() { var u = $('triUnit').value; return (u && u !== 'none') ? u : ''; }
+
+  /* ---------- tiny safe expression parser: numbers, pi, √x, sqrt(x), + - * / ^, brackets, implicit × ---------- */
+  function parse(raw) {
+    var s = String(raw).trim().toLowerCase().replace(/\s+/g, '').replace(/°/g, '').replace(/π/g, 'pi').replace(/×/g, '*').replace(/÷/g, '/').replace(/−/g, '-');
+    if (!s) return { empty: true };
+    if (s.indexOf('.') < 0) s = s.replace(/,/g, '.');
+    var toks = [], re = /(\d+\.?\d*(?:e[+\-]?\d+)?|\.\d+(?:e[+\-]?\d+)?)|(pi)|(sqrt)|(√)|([()+\-*\/^])/g, m, last = 0;
+    while ((m = re.exec(s))) { if (m.index !== last) return { bad: true }; toks.push(m[1] ? { n: parseFloat(m[1]) } : { o: m[0] }); last = re.lastIndex; }
+    if (last !== s.length || !toks.length) return { bad: true };
+    var pos = 0;
+    function peek() { return toks[pos]; }
+    function isOp(t, o) { return t && t.o === o; }
+    function startsAtom(t) { return t && (t.n != null || t.o === 'pi' || t.o === 'sqrt' || t.o === '√' || t.o === '('); }
+    function expr() { var v = term(); while (peek() && (isOp(peek(), '+') || isOp(peek(), '-'))) { var o = toks[pos++].o; var r = term(); v = o === '+' ? v + r : v - r; } return v; }
+    function term() {
+      var v = unary();
+      for (;;) {
+        var t = peek();
+        if (isOp(t, '*') || isOp(t, '/')) { pos++; var r = unary(); v = t.o === '*' ? v * r : v / r; }
+        else if (startsAtom(t)) { v = v * pow(); }
+        else break;
+      }
+      return v;
+    }
+    function unary() { if (isOp(peek(), '-')) { pos++; return -unary(); } if (isOp(peek(), '+')) { pos++; return unary(); } return pow(); }
+    function pow() { var b = atom(); if (isOp(peek(), '^')) { pos++; return Math.pow(b, unary()); } return b; }
+    function atom() {
+      var t = toks[pos++];
+      if (!t) throw 0;
+      if (t.n != null) return t.n;
+      if (t.o === 'pi') return PI;
+      if (t.o === '(') { var v = expr(); if (!isOp(toks[pos], ')')) throw 0; pos++; return v; }
+      if (t.o === 'sqrt' || t.o === '√') {
+        var inner;
+        if (isOp(peek(), '(')) { pos++; inner = expr(); if (!isOp(toks[pos], ')')) throw 0; pos++; }
+        else { var n = toks[pos++]; if (!n) throw 0; if (n.n != null) inner = n.n; else if (n.o === 'pi') inner = PI; else throw 0; }
+        if (inner < 0) throw 0;
+        return Math.sqrt(inner);
+      }
+      throw 0;
+    }
+    try { var v = expr(); if (pos !== toks.length || !isFinite(v)) return { bad: true }; return { v: v }; } catch (e) { return { bad: true }; }
+  }
+
+  /* ---------- number formatting ---------- */
+  function trim(s) { return s.indexOf('.') >= 0 ? s.replace(/0+$/, '').replace(/\.$/, '') : s; }
+  function fmt(x) {
+    if (!isFinite(x)) return '—';
+    if (Math.abs(x) < 1e-12) x = 0;
+    var s;
+    if (st.sig) {
+      var v = Number(x.toPrecision(st.n));
+      var mag = v === 0 ? 0 : Math.floor(Math.log10(Math.abs(v)));
+      s = trim(v.toFixed(Math.max(0, st.n - 1 - mag)));
+    } else s = trim(x.toFixed(st.n));
+    if (s === '-0') s = '0';
+    return s.replace('-', '−');
+  }
+  function degOf(r) { return r * 180 / PI; }
+  function piForm(r) {
+    var k = r / PI;
+    for (var d = 1; d <= 12; d++) { var nn = k * d; if (Math.abs(nn - Math.round(nn)) < 1e-9 && Math.round(nn) !== 0) { var n = Math.round(nn); var top = (n === 1 ? '' : (n === -1 ? '−' : String(n).replace('-', '−'))) + 'π'; return d === 1 ? top : top + '/' + d; } }
+    return null;
+  }
+  function angTxt(r) { return st.ang === 'deg' ? fmt(degOf(r)) + '°' : fmt(r) + ' rad'; }
+  function dms(r) {
+    var d = degOf(r), D = Math.floor(d + 1e-9), mm = (d - D) * 60, M = Math.floor(mm + 1e-9), S = Math.round((mm - M) * 60 * 100) / 100;
+    if (S >= 60) { S -= 60; M++; } if (M >= 60) { M -= 60; D++; }
+    return D + '° ' + M + '′ ' + trim(S.toFixed(2)) + '″';
+  }
+  function radTxt(r) { var p = piForm(r); return fmt(r) + ' rad' + (p ? ' = ' + p : ''); }
+  function lenTxt(x) { return fmt(x) + (unitTxt() ? ' ' + unitTxt() : ''); }
+  function areaTxt(x) { return fmt(x) + (unitTxt() ? ' ' + unitTxt() + '²' : ''); }
+  function pt(p) { return '(' + fmt(p.x) + ', ' + fmt(p.y) + ')'; }
+
+  /* ---------- fields ---------- */
+  function buildFields() {
+    var html = '';
+    DEFS[st.mode].forEach(function (d) {
+      var key = d[0], lab = d[1], kind = d[2], unit = kind === 's' ? unitTxt() : kind === 'k' ? (unitTxt() ? unitTxt() + '²' : '') : (st.ang === 'deg' ? '°' : 'rad');
+      var ph = kind === 's' ? 'e.g. 3' : kind === 'k' ? 'e.g. 6' : (st.ang === 'deg' ? 'e.g. 45' : 'e.g. 0.785');
+      html += '<div class="fld"><label class="lab" for="tri_' + key + '">' + lab + (unit ? ' <span class="unit">' + unit + '</span>' : '') + '</label>' +
+        '<div class="inp"><input id="tri_' + key + '" data-k="' + key + '" type="text" inputmode="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="' + ph + '" value="' + (vals[key] || '').replace(/"/g, '&quot;') + '"></div></div>';
+    });
+    if (st.mode === 'right') html += '<p class="tri-lock"><b>Angle C = ' + (st.ang === 'deg' ? '90°' : '1.5708 rad (π/2)') + '</b> — the right angle, always fixed. Legs a and b meet at C; c is the hypotenuse, opposite C.</p>';
+    $('triFields').innerHTML = html;
+    [].forEach.call($('triFields').querySelectorAll('input'), function (el) {
+      el.addEventListener('input', function () { vals[el.getAttribute('data-k')] = el.value; render(); });
+    });
+  }
+  function setVals(o) {
+    Object.keys(vals).forEach(function (k) { vals[k] = o[k] != null ? String(o[k]) : ''; });
+    buildFields(); render();
+  }
+
+  /* ---------- diagram ---------- */
+  function diagram(m) {
+    var W = 300, H = 250, padX = 40, padT = 30, padB = 30;
+    var P = [m.PA, m.PB, m.PC];
+    var minx = Math.min(P[0].x, P[1].x, P[2].x), maxx = Math.max(P[0].x, P[1].x, P[2].x), miny = Math.min(P[0].y, P[1].y, P[2].y), maxy = Math.max(P[0].y, P[1].y, P[2].y);
+    if (st.show.c) { minx = Math.min(minx, m.cir.x - m.R); maxx = Math.max(maxx, m.cir.x + m.R); miny = Math.min(miny, m.cir.y - m.R); maxy = Math.max(maxy, m.cir.y + m.R); }
+    var sc = Math.min((W - 2 * padX) / (maxx - minx || 1), (H - padT - padB) / (maxy - miny || 1));
+    var ox = (W - (maxx - minx) * sc) / 2 - minx * sc, oy = H - padB - (H - padT - padB - (maxy - miny) * sc) / 2 + miny * sc;
+    var X = function (p) { return ox + p.x * sc; }, Y = function (p) { return oy - p.y * sc; };
+    var f1 = function (v) { return (Math.round(v * 10) / 10); };
+    var A = { x: X(m.PA), y: Y(m.PA) }, B = { x: X(m.PB), y: Y(m.PB) }, C = { x: X(m.PC), y: Y(m.PC) };
+    var G = { x: X(m.cen), y: Y(m.cen) };
+    var s = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Triangle drawn to scale">';
+    var halo = 'paint-order="stroke" stroke="#FCFAF6" stroke-width="3.5" stroke-linejoin="round"';
+    if (st.show.c) s += '<circle cx="' + f1(X(m.cir)) + '" cy="' + f1(Y(m.cir)) + '" r="' + f1(m.R * sc) + '" fill="none" stroke="#7A8F7B" stroke-width="1.5" stroke-dasharray="5 4"/>';
+    if (st.show.i) s += '<circle cx="' + f1(X(m.inc)) + '" cy="' + f1(Y(m.inc)) + '" r="' + f1(m.r * sc) + '" fill="rgba(181,118,31,.10)" stroke="#B5761F" stroke-width="1.5"/>';
+    s += '<polygon points="' + f1(A.x) + ',' + f1(A.y) + ' ' + f1(B.x) + ',' + f1(B.y) + ' ' + f1(C.x) + ',' + f1(C.y) + '" fill="rgba(31,77,63,.10)" stroke="#1F4D3F" stroke-width="2.4" stroke-linejoin="round"/>';
+    function foot(p, q, r) { var dx = r.x - q.x, dy = r.y - q.y, t = ((p.x - q.x) * dx + (p.y - q.y) * dy) / (dx * dx + dy * dy); return { x: q.x + t * dx, y: q.y + t * dy }; }
+    if (st.show.h) {
+      [[A, B, C], [B, A, C], [C, A, B]].forEach(function (v) { var ft = foot(v[0], v[1], v[2]); s += '<line x1="' + f1(v[0].x) + '" y1="' + f1(v[0].y) + '" x2="' + f1(ft.x) + '" y2="' + f1(ft.y) + '" stroke="#B5761F" stroke-width="1.5" stroke-dasharray="4 3"/>'; });
+    }
+    if (st.show.m) {
+      [[A, B, C], [B, A, C], [C, A, B]].forEach(function (v) { var mx = (v[1].x + v[2].x) / 2, my = (v[1].y + v[2].y) / 2; s += '<line x1="' + f1(v[0].x) + '" y1="' + f1(v[0].y) + '" x2="' + f1(mx) + '" y2="' + f1(my) + '" stroke="#7A8F7B" stroke-width="1.5" stroke-dasharray="2 3"/>'; });
+    }
+    // right-angle marker(s) + angle labels
+    var V = [[A, B, C, 'A', m.A], [B, A, C, 'B', m.B], [C, A, B, 'C', m.C]];
+    V.forEach(function (v) {
+      var p = v[0], u1 = unitVec(p, v[1]), u2 = unitVec(p, v[2]);
+      if (Math.abs(v[4] - PI / 2) < 1e-6) {
+        var q = 11;
+        s += '<path d="M' + f1(p.x + u1.x * q) + ' ' + f1(p.y + u1.y * q) + ' L' + f1(p.x + (u1.x + u2.x) * q) + ' ' + f1(p.y + (u1.y + u2.y) * q) + ' L' + f1(p.x + u2.x * q) + ' ' + f1(p.y + u2.y * q) + '" fill="none" stroke="#1F4D3F" stroke-width="1.6"/>';
+      }
+      var bis = { x: u1.x + u2.x, y: u1.y + u2.y }, bl = Math.hypot(bis.x, bis.y) || 1; bis = { x: bis.x / bl, y: bis.y / bl };
+      var dist = Math.min(34, 14 + 26 / Math.max(0.35, Math.sin(v[4] / 2) * 1.6));
+      var tx = p.x + bis.x * dist, ty = p.y + bis.y * dist;
+      s += '<text x="' + f1(tx) + '" y="' + f1(ty + 4) + '" text-anchor="middle" font-size="12" fill="#6B5A44" ' + halo + '>' + (st.ang === 'deg' ? trim(degOf(v[4]).toFixed(2)) + '°' : trim(v[4].toFixed(3))) + '</text>';
+      var out = { x: -bis.x, y: -bis.y };
+      s += '<text x="' + f1(p.x + out.x * 15) + '" y="' + f1(p.y + out.y * 15 + 5) + '" text-anchor="middle" font-size="14" font-weight="700" fill="#241A11">' + v[3] + '</text>';
+    });
+    function unitVec(p, q) { var dx = q.x - p.x, dy = q.y - p.y, l = Math.hypot(dx, dy) || 1; return { x: dx / l, y: dy / l }; }
+    // side labels (outside)
+    [[B, C, 'a', m.a, A], [A, C, 'b', m.b, B], [A, B, 'c', m.c, C]].forEach(function (e) {
+      var mx = (e[0].x + e[1].x) / 2, my = (e[0].y + e[1].y) / 2, nx = -(e[1].y - e[0].y), ny = e[1].x - e[0].x, nl = Math.hypot(nx, ny) || 1;
+      nx /= nl; ny /= nl;
+      var vx = e[4].x - mx, vy = e[4].y - my;
+      if (nx * vx + ny * vy > 0) { nx = -nx; ny = -ny; }
+      var anchor = Math.abs(nx) > 0.55 ? (nx > 0 ? 'start' : 'end') : 'middle';
+      s += '<text x="' + f1(mx + nx * 11) + '" y="' + f1(my + ny * 11 + 4) + '" text-anchor="' + anchor + '" font-size="12" font-weight="600" fill="#B5761F" ' + halo + '>' + e[2] + ' = ' + fmt(e[3]) + '</text>';
+    });
+    s += '</svg>';
+    return s;
+  }
+
+  function squares(m) {
+    if (m.angType !== 'right') return '';
+    var q = [m.a, m.b, m.c].sort(function (x, y) { return x - y; });
+    var legs = [q[0], q[1]], hyp = q[2], S = 84, base = 98;
+    var sa = legs[0] / hyp * S, sb = legs[1] / hyp * S, sc = S, gap = 28, x = 6;
+    var s = '<svg viewBox="0 0 300 124" role="img" aria-label="Squares on the three sides">';
+    function sq(x0, size, fill, lab) {
+      return '<rect x="' + x0.toFixed(1) + '" y="' + (base - size).toFixed(1) + '" width="' + size.toFixed(1) + '" height="' + size.toFixed(1) + '" fill="' + fill + '" stroke="#241A11" stroke-opacity=".35"/>' +
+        '<text x="' + (x0 + size / 2).toFixed(1) + '" y="118" text-anchor="middle" font-size="12" font-weight="600" fill="#241A11">' + lab + '</text>';
+    }
+    var tot = sa + sb + sc + 2 * gap; x = (300 - tot) / 2;
+    s += sq(x, sa, 'rgba(181,118,31,.55)', fmt(legs[0] * legs[0]));
+    s += '<text x="' + (x + sa + gap / 2).toFixed(1) + '" y="' + (base - 6) + '" text-anchor="middle" font-size="18" font-weight="700" fill="#6B5A44">+</text>';
+    x += sa + gap; s += sq(x, sb, 'rgba(31,77,63,.55)', fmt(legs[1] * legs[1]));
+    s += '<text x="' + (x + sb + gap / 2).toFixed(1) + '" y="' + (base - 6) + '" text-anchor="middle" font-size="18" font-weight="700" fill="#6B5A44">=</text>';
+    x += sb + gap; s += sq(x, sc, 'rgba(36,26,17,.28)', fmt(hyp * hyp));
+    return s + '</svg>';
+  }
+
+  /* ---------- steps ---------- */
+  function stepsFor(sol, res, rightMode, m, gv) {
+    var a = m.a, b = m.b, c = m.c, A = m.A, B = m.B, C = m.C, L = [], d = function (r) { return fmt(degOf(r)) + '°'; };
+    var sq = function (x) { return fmt(x) + '²'; };
+    if (rightMode) {
+      if (gv.K != null && res.derived) L.push('Area = ½ × a × b, so the two legs are a = ' + fmt(res.derived.a) + ' and b = ' + fmt(res.derived.b) + '.');
+      var legs = (gv.a != null || (res.derived)) && (gv.b != null || res.derived);
+      if (legs) { L.push('Pythagorean theorem: c² = a² + b², so c = √(' + sq(a) + ' + ' + sq(b) + ') = √' + fmt(a * a + b * b) + ' = ' + fmt(c) + '.'); }
+      else if (gv.c != null && (gv.a != null || gv.b != null)) {
+        var kn = gv.a != null ? 'a' : 'b', ot = gv.a != null ? 'b' : 'a';
+        L.push('Pythagorean theorem: ' + ot + '² = c² − ' + kn + '², so ' + ot + ' = √(' + sq(c) + ' − ' + sq(gv.a != null ? a : b) + ') = √' + fmt(c * c - (gv.a != null ? a * a : b * b)) + ' = ' + fmt(gv.a != null ? b : a) + '.');
+      } else {
+        var knA = gv.A != null ? 'A' : 'B';
+        L.push((knA === 'A' ? 'B' : 'A') + ' = 90° − ' + knA + ' = ' + d(knA === 'A' ? B : A) + '.');
+        L.push('Use sine, cosine and tangent: opposite = hypotenuse × sin(angle), adjacent = hypotenuse × cos(angle), opposite = adjacent × tan(angle). This gives a = ' + fmt(a) + ', b = ' + fmt(b) + ', c = ' + fmt(c) + '.');
+      }
+      if (legs || gv.c != null) {
+        L.push('A = tan⁻¹(a ÷ b) = tan⁻¹(' + fmt(a) + ' ÷ ' + fmt(b) + ') = ' + d(A) + '.');
+        L.push('B = 90° − A = ' + d(B) + '.');
+      }
+      L.push('Area = ½ × a × b = ½ × ' + fmt(a) + ' × ' + fmt(b) + ' = ' + fmt(m.K) + '.');
+      return L;
+    }
+    var meth = res.method;
+    if (meth === 'SSS') {
+      L.push('Three sides known (SSS). Law of cosines: A = cos⁻¹((b² + c² − a²) ÷ 2bc) = ' + d(A) + '.');
+      L.push('B = cos⁻¹((a² + c² − b²) ÷ 2ac) = ' + d(B) + '.');
+      L.push('C = 180° − A − B = ' + d(C) + '.');
+    } else if (meth === 'SAS') {
+      L.push('Two sides and the angle between them (SAS). Law of cosines gives the third side from the other two and that angle.');
+      L.push('Sides a, b, c = ' + fmt(a) + ', ' + fmt(b) + ', ' + fmt(c) + '.');
+      L.push('The other angles come from the law of cosines: A = ' + d(A) + ', B = ' + d(B) + ', C = ' + d(C) + '.');
+    } else if (meth === 'ASA' || meth === 'AAS') {
+      L.push('Two angles and a side (' + meth + '). The third angle is 180° minus the other two: A = ' + d(A) + ', B = ' + d(B) + ', C = ' + d(C) + '.');
+      L.push('Law of sines: a ÷ sin A = b ÷ sin B = c ÷ sin C. That gives a = ' + fmt(a) + ', b = ' + fmt(b) + ', c = ' + fmt(c) + '.');
+    } else {
+      L.push('Two sides and an angle not between them (SSA). Law of sines: sin(second angle) = other side × sin(known angle) ÷ side opposite it.');
+      L.push('Angles A, B, C = ' + d(A) + ', ' + d(B) + ', ' + d(C) + '; sides a, b, c = ' + fmt(a) + ', ' + fmt(b) + ', ' + fmt(c) + '.');
+      if (res.sols.length > 1) L.push('The sine matches two different angles (one acute, one obtuse), so there are two valid triangles — use the switch above the diagram.');
+    }
+    L.push('Area = ½ × a × b × sin C = ' + fmt(m.K) + '. Perimeter = a + b + c = ' + fmt(m.p) + '.');
+    return L;
+  }
+
+  /* ---------- rendering ---------- */
+  var last = null;
+  function setEmpty(msg, hint) {
+    $('triResBig').textContent = '—';
+    $('triResSub').textContent = msg;
+    $('triResLab').textContent = 'Area';
+    $('triResults').style.display = 'none';
+    $('triMLab').textContent = 'Area'; $('triMVal').textContent = '—'; $('triMDec').textContent = '';
+    setHint(hint || '');
+    last = null;
+  }
+  function render() {
+    var right = st.mode === 'right', g = {}, filled = 0, firstBad = null, badKey = null, needBase = right ? 'Enter any 2 values: two lengths, a length and an angle, or the area with one more.' : 'Enter any 3 values (at least one side) — sides, angles, or a mix.';
+    DEFS[st.mode].forEach(function (d) {
+      var k = d[0], kind = d[2], p = parse(vals[k] || '');
+      if (p.empty) return;
+      if (p.bad) { if (!firstBad) { firstBad = d[1]; badKey = k; } return; }
+      var v = p.v;
+      if (kind === 'g') { if (st.ang === 'deg') v = v * PI / 180; }
+      if (!(v > 0)) { if (!firstBad) { firstBad = d[1]; badKey = k; } return; }
+      if (kind === 'g' && v >= PI - 1e-12) { if (!firstBad) { firstBad = d[1]; badKey = k; } return; }
+      g[k] = v; filled++;
+    });
+    if (firstBad) { setEmpty(needBase, 'Can’t read “' + firstBad + '” yet — type a positive number like 3 or 2.5; angles must be under ' + (st.ang === 'rad' ? '3.14 rad' : '180°') + '.'); return; }
+    var minVals = right ? 2 : 3;
+    if (filled < minVals) { setEmpty(needBase, ''); return; }
+    var res = E.solve(g, { right: right });
+    if (res.err) { setEmpty(needBase, ERR[res.err] || 'These values don’t make a triangle.'); return; }
+    setHint('');
+    if (st.sol >= res.sols.length) st.sol = 0;
+    var m = E.metrics(res.sols[st.sol]);
+    last = { m: m, res: res, g: g };
+    var typeTxt = (m.sideType === 'equilateral') ? 'equilateral' : m.angType + ' ' + m.sideType;
+    var typeCap = typeTxt.charAt(0).toUpperCase() + typeTxt.slice(1) + ' triangle';
+    $('triResLab').textContent = 'Area';
+    $('triResBig').textContent = areaTxt(m.K);
+    $('triResSub').textContent = typeCap + ' · perimeter ' + lenTxt(m.p);
+    $('triMLab').textContent = 'Area'; $('triMVal').textContent = areaTxt(m.K); $('triMDec').textContent = ' · ' + typeTxt;
+    $('triResults').style.display = '';
+
+    // solution switch
+    var sw = $('triSwitch');
+    if (res.sols.length > 1) {
+      sw.style.display = '';
+      sw.innerHTML = '<button type="button" data-i="0" class="' + (st.sol === 0 ? 'on' : '') + '">Triangle 1</button><button type="button" data-i="1" class="' + (st.sol === 1 ? 'on' : '') + '">Triangle 2</button>';
+    } else sw.style.display = 'none';
+
+    $('triDia').innerHTML = diagram(m);
+
+    // takeaway
+    var tip = '', t = m.triple;
+    if (m.special === '30-60-90') {
+      var sh = Math.min(m.a, m.b, m.c);
+      tip = 'A 30-60-90 triangle: sides are in the ratio 1 : √3 : 2 — short leg ' + fmt(sh) + ', long leg ' + fmt(sh * Math.sqrt(3)) + ', hypotenuse ' + fmt(sh * 2) + '.';
+    } else if (m.special === '45-45-90') {
+      var lg = Math.min(m.a, m.b, m.c);
+      tip = 'A 45-45-90 triangle: sides are in the ratio 1 : 1 : √2 — both legs ' + fmt(lg) + ', hypotenuse ' + fmt(lg * Math.SQRT2) + '.';
+    } else if (t) {
+      var sd = t.ints;
+      tip = t.k === 1 ? 'A ' + t.base.join('-') + ' right triangle — a Pythagorean triple (' + sd[0] + '² + ' + sd[1] + '² = ' + sd[2] + '²).' : 'A right triangle in the ' + t.base.join('-') + ' ratio (×' + t.k + ') — a multiple of a Pythagorean triple.';
+    } else if (m.sideType === 'equilateral') tip = 'Equilateral: all three sides are equal and every angle is 60°.';
+    else if (m.angType === 'right') { var qq = [m.a, m.b, m.c].sort(function (x, y) { return x - y; }); tip = 'A right triangle: ' + fmt(qq[0]) + '² + ' + fmt(qq[1]) + '² = ' + fmt(qq[0] * qq[0] + qq[1] * qq[1]) + ' = ' + fmt(qq[2]) + '².'; }
+    else if (m.angType === 'obtuse') tip = 'Obtuse: one angle is more than 90°' + (m.sideType === 'isosceles' ? ', and two sides are equal.' : '.');
+    else tip = 'Acute: all three angles are less than 90°' + (m.sideType === 'isosceles' ? ', and two sides are equal.' : '.');
+    if (res.sols.length > 1) tip += ' These values fit two different triangles (the ambiguous SSA case) — switch between them above.';
+    $('triTip').textContent = tip;
+
+    // sides & angles
+    var tb = '<thead><tr><th>Vertex</th><th>Angle</th><th>Opposite side</th></tr></thead><tbody>';
+    [['A', m.A, 'a', m.a], ['B', m.B, 'b', m.b], ['C', m.C, 'c', m.c]].forEach(function (r) { tb += '<tr><td>' + r[0] + '</td><td>' + angTxt(r[1]) + '</td><td>' + r[2] + ' = ' + lenTxt(r[3]) + '</td></tr>'; });
+    $('triTbl').innerHTML = tb + '</tbody>';
+    var ms = '<tbody><tr><td>Area</td><td>' + areaTxt(m.K) + '</td></tr><tr><td>Perimeter p</td><td>' + lenTxt(m.p) + '</td></tr><tr><td>Semiperimeter s</td><td>' + lenTxt(m.s) + '</td></tr>' +
+      '<tr><td>Height to side a (h<sub>a</sub>)</td><td>' + lenTxt(m.ha) + '</td></tr><tr><td>Height to side b (h<sub>b</sub>)</td><td>' + lenTxt(m.hb) + '</td></tr><tr><td>Height to side c (h<sub>c</sub>)</td><td>' + lenTxt(m.hc) + '</td></tr></tbody>';
+    $('triMeas').innerHTML = ms;
+
+    var sqs = squares(m);
+    $('triSqWrap').style.display = sqs ? '' : 'none';
+    $('triSq').innerHTML = sqs;
+
+    $('triAdvOut').style.display = st.adv ? '' : 'none';
+    if (st.adv) {
+      var ex = '<tbody>' +
+        '<tr><td>Median to a (m<sub>a</sub>)</td><td>' + lenTxt(m.ma) + '</td></tr><tr><td>Median to b (m<sub>b</sub>)</td><td>' + lenTxt(m.mb) + '</td></tr><tr><td>Median to c (m<sub>c</sub>)</td><td>' + lenTxt(m.mc) + '</td></tr>' +
+        '<tr><td>Inradius r</td><td>' + lenTxt(m.r) + '</td></tr><tr><td>Circumradius R</td><td>' + lenTxt(m.R) + '</td></tr>' +
+        '<tr><td>Exterior angle at A</td><td>' + angTxt(PI - m.A) + '</td></tr><tr><td>Exterior angle at B</td><td>' + angTxt(PI - m.B) + '</td></tr><tr><td>Exterior angle at C</td><td>' + angTxt(PI - m.C) + '</td></tr>' +
+        '<tr><td>Vertices A · B · C</td><td>' + pt(m.PA) + ' · ' + pt(m.PB) + ' · ' + pt(m.PC) + '</td></tr>' +
+        '<tr><td>Centroid</td><td>' + pt(m.cen) + '</td></tr><tr><td>Incenter</td><td>' + pt(m.inc) + '</td></tr><tr><td>Circumcenter</td><td>' + pt(m.cir) + '</td></tr></tbody>';
+      $('triAdvTbl').innerHTML = ex;
+      var an = '<thead><tr><th>Angle</th><th>Degrees</th><th>DMS</th><th>Radians</th></tr></thead><tbody>';
+      [['A', m.A], ['B', m.B], ['C', m.C]].forEach(function (r) { an += '<tr><td>' + r[0] + '</td><td>' + fmt(degOf(r[1])) + '°</td><td>' + dms(r[1]) + '</td><td>' + radTxt(r[1]) + '</td></tr>'; });
+      $('triAngTbl').innerHTML = an + '</tbody>';
+    }
+    var steps = stepsFor(res.sols[st.sol], res, right, m, g);
+    $('triSteps').innerHTML = '<ul>' + steps.map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ul>';
+  }
+
+  /* ---------- controls ---------- */
+  function seg(id, attr, fn) {
+    var el = $(id);
+    [].forEach.call(el.querySelectorAll('button'), function (b) {
+      b.addEventListener('click', function () {
+        [].forEach.call(el.querySelectorAll('button'), function (x) { x.classList.toggle('on', x === b); x.setAttribute('aria-selected', x === b ? 'true' : 'false'); });
+        fn(b.getAttribute(attr));
+      });
+    });
+  }
+  seg('triModeSeg', 'data-m', function (v) { st.mode = v; st.sol = 0; buildFields(); render(); });
+  seg('triAngSeg', 'data-v', function (v) {
+    st.ang = v;
+    ['A', 'B', 'C'].forEach(function (k) {
+      if (!vals[k]) return;
+      var p = parse(vals[k]);
+      if (p.v == null) return;
+      var nv = v === 'rad' ? p.v * PI / 180 : p.v * 180 / PI;
+      vals[k] = String(Number(nv.toPrecision(12)));
+    });
+    buildFields(); render();
+  });
+  $('triUnit').addEventListener('change', function () { buildFields(); render(); });
+  $('triSwitch').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; st.sol = parseInt(b.getAttribute('data-i'), 10); render(); });
+  [].forEach.call($('triOn').querySelectorAll('button'), function (b) {
+    b.addEventListener('click', function () { var k = b.getAttribute('data-k'); st.show[k] = !st.show[k]; b.classList.toggle('on', st.show[k]); b.setAttribute('aria-pressed', st.show[k] ? 'true' : 'false'); render(); });
+  });
+  seg('triRoundSeg', 'data-v', function (v) { st.sig = v === 'sig'; $('triPlacesLab').textContent = st.sig ? 'significant figures' : 'decimal places'; $('triPlaces').setAttribute('max', st.sig ? '12' : '10'); readRound(); render(); });
+  function readRound() {
+    var v = parseInt($('triPlaces').value, 10);
+    var lim = st.sig ? [1, 12] : [0, 10];
+    st.n = isNaN(v) ? 4 : Math.max(lim[0], Math.min(lim[1], v));
+  }
+  $('triPlaces').addEventListener('input', function () { readRound(); render(); });
+  [].forEach.call($('triEx').querySelectorAll('button'), function (b) {
+    b.addEventListener('click', function () {
+      var ex = b.getAttribute('data-ex');
+      st.ang = 'deg'; st.sol = 0;
+      [].forEach.call($('triAngSeg').querySelectorAll('button'), function (x) { x.classList.toggle('on', x.getAttribute('data-v') === 'deg'); });
+      var setMode = function (m) { st.mode = m; [].forEach.call($('triModeSeg').querySelectorAll('button'), function (x) { x.classList.toggle('on', x.getAttribute('data-m') === m); }); };
+      if (ex === '345') { setMode('right'); setVals({ a: 3, b: 4 }); }
+      else if (ex === '369') { setMode('right'); setVals({ a: 5, A: 30 }); }
+      else if (ex === '454') { setMode('right'); setVals({ a: 7, A: 45 }); }
+      else if (ex === 'ssa') { setMode('any'); setVals({ a: 8, b: 10, A: 40 }); }
+      else { setMode('any'); setVals({ a: 5, b: 6, c: 7 }); }
+    });
+  });
+  $('triAdvBtn').addEventListener('click', function () {
+    st.adv = !st.adv;
+    $('triAdvBtn').classList.toggle('open', st.adv);
+    $('triAdvBtnLab').textContent = st.adv ? 'Go simple' : 'Go advanced';
+    $('triAdvIn').style.display = st.adv ? '' : 'none';
+    if (!st.adv) { st.show = { h: false, m: false, i: false, c: false }; st.sig = false; st.n = 4; $('triPlaces').value = ''; [].forEach.call($('triOn').querySelectorAll('button'), function (b) { b.classList.remove('on'); b.setAttribute('aria-pressed', 'false'); }); [].forEach.call($('triRoundSeg').querySelectorAll('button'), function (b) { b.classList.toggle('on', b.getAttribute('data-v') === 'dp'); }); $('triPlacesLab').textContent = 'decimal places'; }
+    render();
+  });
+  $('triCopy').addEventListener('click', function () {
+    if (!last) return;
+    var m = last.m, lines = ['Triangle: a = ' + lenTxt(m.a) + ', b = ' + lenTxt(m.b) + ', c = ' + lenTxt(m.c), 'Angles: A = ' + angTxt(m.A) + ', B = ' + angTxt(m.B) + ', C = ' + angTxt(m.C),
+      'Area = ' + areaTxt(m.K), 'Perimeter = ' + lenTxt(m.p), 'Heights: ha = ' + lenTxt(m.ha) + ', hb = ' + lenTxt(m.hb) + ', hc = ' + lenTxt(m.hc),
+      'Medians: ma = ' + lenTxt(m.ma) + ', mb = ' + lenTxt(m.mb) + ', mc = ' + lenTxt(m.mc), 'Inradius = ' + lenTxt(m.r) + ', Circumradius = ' + lenTxt(m.R)];
+    var btn = $('triCopy'), txt = lines.join('\n');
+    var done = function (ok) { btn.textContent = ok ? 'Copied' : 'Copy failed'; setTimeout(function () { btn.textContent = 'Copy results'; }, 1600); };
+    try { navigator.clipboard.writeText(txt).then(function () { done(true); }, function () { done(false); }); } catch (e) { done(false); }
+  });
+
+  buildFields();
+  render();
+};
+
+/* =========================================================
    SITE FOOTER — mobile accordion
    Multiple pillars can be open simultaneously.
    First pillar starts expanded (aria-expanded="true" in HTML).
