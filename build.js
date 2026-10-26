@@ -66,6 +66,7 @@ const PAGES = [
   { file: 'hours-calculator/index.html',       slug: '/hours-calculator/' },
   { file: 'triangle-calculator/index.html',    slug: '/triangle-calculator/' },
   { file: 'mortgage-calculator/index.html',    slug: '/mortgage-calculator/' },
+  { file: 'loan-calculator/index.html',        slug: '/loan-calculator/' },
   { file: 'recipe-converter/index.html',       slug: '/recipe-converter/' },
   { file: 'macro-calculator/index.html',      slug: '/macro-calculator/' },
   { file: 'peptide-reconstitution-calculator/index.html', slug: '/peptide-reconstitution-calculator/' },

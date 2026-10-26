@@ -10564,7 +10564,41 @@ CalcThis.loanEngine = (function () {
     }
     return { periods: k, months: k * 12 / 26, interest: tot };
   }
-  return { mrate: mrate, pmt: pmt, run: run, biweekly: biweekly };
+  // ---- generic periodic engine (Loan / Auto Loan pages) ----
+  // ppy = payments per year; comp = compounding periods per year (number) or 'c' for continuous.
+  // Per-payment rate = (1 + effective annual rate)^(1/ppy) - 1, where the effective rate comes from the compounding rule.
+  function prate(apr, ppy, comp) {
+    var a = apr / 100;
+    if (comp === ppy) return a / ppy;
+    var eff = comp === 'c' ? Math.exp(a) - 1 : Math.pow(1 + a / comp, comp) - 1;
+    return Math.pow(1 + eff, 1 / ppy) - 1;
+  }
+  // o: { P, apr, ppy, comp, n, extra } — extra is added to every payment
+  function runP(o) {
+    var r = prate(o.apr, o.ppy, o.comp), pay = pmt(o.P, r, o.n), bal = o.P, rows = [], tot = 0, k = 0, cross = 0, ex = o.extra || 0;
+    while (bal > 0.005 && k < o.n) {
+      k++;
+      var start = bal, intr = start * r, sp = pay - intr, pr = sp + ex;
+      if (pr >= start - 0.005 || k === o.n) pr = start;
+      bal = start - pr;
+      if (!cross && sp > intr) cross = k;
+      tot += intr;
+      rows.push({ k: k, start: start, intr: intr, sp: sp, pr: pr, pay: intr + pr, bal: bal < 0.005 ? 0 : bal });
+    }
+    return { pay: pay, r: r, rows: rows, count: k, totInt: tot, totPaid: tot + o.P, cross: cross };
+  }
+  // the loan a given payment can carry
+  function borrowable(pay, r, n) { return r === 0 ? pay * n : pay * (1 - Math.pow(1 + r, -n)) / r; }
+  // nominal yearly rate (%) at which `net` cash received equals n level payments of `pay`
+  function aprFromCash(net, pay, n, ppy) {
+    if (!(net > 0) || !(pay > 0)) return 0;
+    if (net / n >= pay) return 0;
+    var lo = 0, hi = 1, i;
+    while (pmt(net, hi, n) < pay && hi < 1e6) hi *= 2;
+    for (i = 0; i < 200; i++) { var mid = (lo + hi) / 2; if (pmt(net, mid, n) < pay) lo = mid; else hi = mid; }
+    return (lo + hi) / 2 * ppy * 100;
+  }
+  return { mrate: mrate, pmt: pmt, run: run, biweekly: biweekly, prate: prate, runP: runP, borrowable: borrowable, aprFromCash: aprFromCash };
 })();
 /* LOAN-ENGINE:END */
 
@@ -10886,6 +10920,360 @@ CalcThis.initMortgageCalc = function () {
   $('lnOM').value = String(now.getMonth());
   $('lnStartY').placeholder = 'e.g. ' + now.getFullYear();
   $('lnOY').placeholder = 'e.g. ' + (now.getFullYear() + 1);
+  render();
+};
+
+/* =========================================================
+   FINANCE · LOAN CALCULATOR  (body.p-loan)
+   Same engine as the Mortgage page (CalcThis.loanEngine.runP) with any
+   payment frequency, any compounding rule, an origination fee that shows
+   the true APR, and a reverse "what can I borrow?" mode.
+   ========================================================= */
+CalcThis.initLoanCalc = function () {
+  var E = CalcThis.loanEngine;
+  var $ = function (id) { return document.getElementById(id); };
+  if (!$('lnAmount')) return;
+  var MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  var ADJ = { 365: 'Daily', 52: 'Weekly', 26: 'Bi-weekly', 24: 'Semi-monthly', 12: 'Monthly', 4: 'Quarterly', 2: 'Semi-annual', 1: 'Yearly' };
+  var PER = { 365: 'day', 52: 'week', 26: '2 weeks', 24: 'half month', 12: 'month', 4: 'quarter', 2: '6 months', 1: 'year' };
+  var CNAME = { 1: 'yearly', 2: 'semi-annually', 4: 'quarterly', 12: 'monthly', 24: 'semi-monthly', 26: 'bi-weekly', 52: 'weekly', 365: 'daily', c: 'continuously' };
+  var HOW = { out: 'taken out of the loan', 'in': 'added to the loan', up: 'paid upfront' };
+  var now = new Date();
+  var st = { mode: 'pay', termU: 'yr', feeU: 'pct', adv: false, sched: 'yearly' };
+  var last = null;
+
+  function comma(x) { return x.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 }); }
+  function mon(x) { if (Math.abs(x) < 0.005) x = 0; return '$' + x.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+  function mon0(x) { return '$' + comma(Math.round(x) || 0); }
+  function kfmt(x) { return x >= 1e6 ? '$' + (Math.round(x / 1e5) / 10) + 'M' : x >= 1e4 ? '$' + Math.round(x / 1e3) + 'k' : x >= 1e3 ? '$' + (Math.round(x / 100) / 10) + 'k' : '$' + Math.round(x); }
+  function pct(x) { return (Math.round(x * 100) / 100) + '%'; }
+  function plural(n, w) { return n + ' ' + w + (n === 1 ? '' : 's'); }
+  function span(m) {
+    var y = Math.floor(m / 12), mo = Math.round(m - y * 12);
+    if (mo === 12) { y++; mo = 0; }
+    if (!y && !mo) return '0 months';
+    return (y ? plural(y, 'year') : '') + (y && mo ? ' ' : '') + (mo ? plural(mo, 'month') : '');
+  }
+  function ppyNow() { return parseInt($('lnFreq').value, 10) || 12; }
+  function compNow() { var v = $('lnComp').value; return v === 'c' ? 'c' : (parseInt(v, 10) || 12); }
+  function dateTxt(sm, sy, k, ppy) {
+    if (12 % ppy === 0) { var t = sm + k * 12 / ppy; return MON[((t % 12) + 12) % 12] + ' ' + (sy + Math.floor(t / 12)); }
+    var dt = new Date(sy, sm, 1); dt.setDate(dt.getDate() + Math.round(k * 365 / ppy));
+    return MON[dt.getMonth()] + ' ' + dt.getDate() + ', ' + dt.getFullYear();
+  }
+  function termTxt(d) { var m = d.termY * 12; return m >= 0.95 ? span(Math.round(m)) : plural(d.n, 'payment'); }
+
+  /* ---------- reading fields ---------- */
+  function read(id) {
+    var el = $(id); if (!el) return { e: true };
+    var s = (el.value || '').trim(); if (!s) return { e: true };
+    var t = s.replace(/[$,%\s]/g, '');
+    if (/^[-+.]*$/.test(t)) return { e: true, partial: true };
+    var v = Number(t);
+    return isNaN(v) || !isFinite(v) ? { bad: true } : { v: v };
+  }
+  var LABELS = { lnAmount: 'Loan amount', lnAfford: 'Payment', lnRate: 'Interest rate', lnTerm: 'Loan term', lnExtra: 'Extra payment', lnFee: 'Origination fee', lnStartY: 'Start year' };
+  var EXS = { lnAmount: '15000', lnAfford: '300', lnRate: '8.5', lnTerm: '5', lnExtra: '25', lnFee: '2', lnStartY: '2026' };
+  function baseMsg() { return st.mode === 'pay' ? 'Enter the loan amount, interest rate and loan term to see your payment.' : 'Enter the payment you can afford, the interest rate and the loan term to see how much you can borrow.'; }
+
+  function setEmpty(msg, hint) {
+    var afford = st.mode === 'afford';
+    $('lnResLab').textContent = afford ? 'You can borrow' : ADJ[ppyNow()] + ' payment';
+    $('lnResBig').textContent = '—';
+    $('lnResSub').textContent = msg;
+    $('lnResults').style.display = 'none';
+    $('lnMLab').textContent = afford ? 'You can borrow' : ADJ[ppyNow()] + ' payment'; $('lnMVal').textContent = '—'; $('lnMDec').textContent = '';
+    var h = $('lnHint'); h.textContent = hint || ''; h.style.display = hint ? 'block' : 'none';
+    last = null;
+  }
+
+  function calc() {
+    var afford = st.mode === 'afford', BASE = baseMsg();
+    var ids = afford ? ['lnAfford', 'lnRate', 'lnTerm'] : ['lnAmount', 'lnRate', 'lnTerm', 'lnExtra'];
+    if (st.adv) { ids.push('lnStartY'); if (!afford) ids.push('lnFee'); }
+    var f = {}, i;
+    for (i = 0; i < ids.length; i++) {
+      f[ids[i]] = read(ids[i]);
+      if (f[ids[i]].bad) return { hint: 'Can’t read “' + LABELS[ids[i]] + '” yet — type a plain number like ' + EXS[ids[i]] + '.' };
+    }
+    var val = function (id, d) { return f[id] && f[id].v != null ? f[id].v : d; };
+    var mainId = afford ? 'lnAfford' : 'lnAmount';
+    if (f[mainId].e || f.lnRate.e || f.lnTerm.e) return { msg: BASE };
+    var main = f[mainId].v, apr = f.lnRate.v, term = f.lnTerm.v;
+    if (!(main >= (afford ? 0.01 : 1))) return { msg: BASE, hint: afford ? 'The payment must be at least $0.01.' : 'The loan amount must be at least $1.' };
+    if (main > 1e9) return { msg: BASE, hint: afford ? 'That payment is too large to calculate — enter it in dollars, like 300.' : 'That loan amount is too large to calculate — enter it in dollars, like 15000.' };
+    if (apr < 0 || apr > 100) return { msg: BASE, hint: 'Enter the yearly interest rate as a percentage between 0 and 100, like 8.5.' };
+    if (!(term > 0)) return { msg: BASE, hint: 'The loan term must be more than 0.' };
+    var termY = st.termU === 'yr' ? term : term / 12;
+    if (termY > 50) return { msg: BASE, hint: 'The loan term can be at most 50 years (600 months).' };
+    var ppy = ppyNow(), comp = compNow(), n = Math.round(termY * ppy);
+    if (n < 1) return { msg: BASE, hint: 'That term is shorter than one payment — lengthen the term or pay more often.' };
+    if (n > 20000) return { msg: BASE, hint: 'That many payments is too many to calculate — shorten the term or pay less often.' };
+    var sm = parseInt($('lnStartM').value, 10) || 0;
+    var sy = f.lnStartY && f.lnStartY.v != null ? Math.round(f.lnStartY.v) : now.getFullYear();
+    if (sy < 1900 || sy > 2200) return { msg: BASE, hint: 'Enter the start year as four digits, like ' + now.getFullYear() + '.' };
+    var d = { afford: afford, apr: apr, term: term, termY: termY, ppy: ppy, comp: comp, n: n, sm: sm, sy: sy, extra: 0, F: 0, how: 'out', A: main };
+    if (afford) {
+      var r0 = E.prate(apr, ppy, comp), Pb = E.borrowable(main, r0, n);
+      if (!(Pb >= 1)) return { msg: BASE, hint: 'That payment is too small to borrow anything at this rate and term — try a larger payment.' };
+      d.P = Pb; d.A = Pb; d.Q = main; d.N = Pb;
+    } else {
+      var extra = val('lnExtra', 0);
+      if (extra < 0) return { msg: BASE, hint: 'The extra payment can’t be negative.' };
+      if (extra > main) return { msg: BASE, hint: 'The extra payment is larger than the whole loan — check the amount.' };
+      var fv = val('lnFee', 0), F = 0;
+      if (fv < 0) return { msg: BASE, hint: 'The fee can’t be negative.' };
+      if (st.feeU === 'pct') { if (fv > 50) return { msg: BASE, hint: 'The origination fee is a percentage of the loan, usually between 1 and 8 — for example 2.' }; F = main * fv / 100; }
+      else { if (fv >= main) return { msg: BASE, hint: 'The fee can’t be as large as the loan itself.' }; F = fv; }
+      var how = $('lnFeeHow').value || 'out';
+      d.how = how; d.F = F; d.extra = extra; d.P = how === 'in' ? main + F : main; d.N = how === 'in' ? main : main - F;
+    }
+    d.base = E.runP({ P: d.P, apr: apr, ppy: ppy, comp: comp, n: n });
+    d.hasExtra = d.extra > 0;
+    d.real = d.hasExtra ? E.runP({ P: d.P, apr: apr, ppy: ppy, comp: comp, n: n, extra: d.extra }) : d.base;
+    d.trueApr = d.F > 0 ? E.aprFromCash(d.N, d.base.pay, n, ppy) : null;
+    return d;
+  }
+
+  /* ---------- charts ---------- */
+  function balanceChart(d) {
+    var W = 300, H = 190, ml = 46, mr = 8, mt = 10, mb = 26, pw = W - ml - mr, ph = H - mt - mb;
+    var n = d.base.count, P = d.P, yrs = n / d.ppy, inMonths = yrs <= 2, tot = inMonths ? yrs * 12 : yrs;
+    var X = function (k) { return ml + pw * k / n; }, Y = function (b) { return mt + ph * (1 - b / P); };
+    function path(rows) { var p = 'M' + X(0).toFixed(1) + ',' + Y(P).toFixed(1); var sk = Math.max(1, Math.ceil(rows.length / 400)); rows.forEach(function (r, ix) { if (ix % sk === 0 || ix === rows.length - 1) p += ' L' + X(r.k).toFixed(1) + ',' + Y(r.bal).toFixed(1); }); return p; }
+    var s = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Loan balance over time">';
+    [0, 0.5, 1].forEach(function (t) { var y = Y(P * t); s += '<line x1="' + ml + '" x2="' + (W - mr) + '" y1="' + y.toFixed(1) + '" y2="' + y.toFixed(1) + '" stroke="#E7DCC8" stroke-width="1"/><text x="' + (ml - 6) + '" y="' + (y + 4).toFixed(1) + '" text-anchor="end" font-size="13" fill="#6B5B4A">' + kfmt(P * t) + '</text>'; });
+    var step = inMonths ? (tot <= 6 ? 1 : tot <= 12 ? 2 : 4) : (tot <= 6 ? 1 : tot <= 12 ? 2 : tot <= 30 ? 5 : 10);
+    for (var u = 0; u <= tot + 1e-9; u += step) {
+      var x = ml + pw * u / tot;
+      s += '<line x1="' + x.toFixed(1) + '" x2="' + x.toFixed(1) + '" y1="' + (mt + ph) + '" y2="' + (mt + ph + 4) + '" stroke="#9A8870"/><text x="' + x.toFixed(1) + '" y="' + (H - 6) + '" text-anchor="middle" font-size="13" fill="#6B5B4A">' + (u === 0 ? (inMonths ? 'Mo 0' : 'Yr 0') : u) + '</text>';
+    }
+    s += '<path d="' + path(d.base.rows) + ' L' + X(n).toFixed(1) + ',' + Y(0).toFixed(1) + ' L' + X(0).toFixed(1) + ',' + Y(0).toFixed(1) + ' Z" fill="#37503F" fill-opacity=".12"/>';
+    s += '<path d="' + path(d.base.rows) + '" fill="none" stroke="#37503F" stroke-width="2" stroke-linejoin="round"/>';
+    if (d.hasExtra) s += '<path d="' + path(d.real.rows) + '" fill="none" stroke="#B5761F" stroke-width="2.4" stroke-linejoin="round"/>';
+    if (d.base.cross && d.base.cross > 1) {
+      var cr = d.base.rows[d.base.cross - 1], cx = X(cr.k), cy = Y(cr.bal);
+      s += '<line x1="' + cx.toFixed(1) + '" x2="' + cx.toFixed(1) + '" y1="' + cy.toFixed(1) + '" y2="' + (mt + ph) + '" stroke="#B5761F" stroke-width="1.2" stroke-dasharray="3 3"/><circle cx="' + cx.toFixed(1) + '" cy="' + cy.toFixed(1) + '" r="4.5" fill="#B5761F" stroke="#fff" stroke-width="1.5"/>';
+    }
+    return s + '</svg>';
+  }
+  function groupSize(d) { return d.base.count / d.ppy > 3 ? d.ppy : Math.max(1, Math.ceil(d.base.count / 36)); }
+  function shareStrip(d) {
+    var W = 300, H = 84, top = 6, bh = 56, rows = d.base.rows, gs = groupSize(d), groups = Math.ceil(rows.length / gs), bw = (W - 2) / groups, byYear = gs === d.ppy && d.base.count / d.ppy > 3;
+    var s = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Share of each period’s payments going to interest and principal">';
+    for (var g = 0; g < groups; g++) {
+      var it = 0, sp = 0;
+      for (var m = g * gs; m < Math.min(rows.length, g * gs + gs); m++) { it += rows[m].intr; sp += rows[m].sp; }
+      var tot = it + sp, ish = tot > 0 ? it / tot : 0, ih = bh * ish, x = 1 + g * bw, w = Math.max(1, bw - 1);
+      s += '<rect x="' + x.toFixed(1) + '" y="' + top + '" width="' + w.toFixed(1) + '" height="' + ih.toFixed(1) + '" fill="#B5761F"/><rect x="' + x.toFixed(1) + '" y="' + (top + ih).toFixed(1) + '" width="' + w.toFixed(1) + '" height="' + (bh - ih).toFixed(1) + '" fill="#37503F"/>';
+    }
+    s += '<line x1="0" x2="' + W + '" y1="' + (top + bh / 2) + '" y2="' + (top + bh / 2) + '" stroke="#fff" stroke-width="1.4" stroke-dasharray="4 3"/>';
+    s += '<text x="1" y="' + (H - 6) + '" font-size="13" fill="#6B5B4A">' + (byYear ? 'Year 1' : 'Start') + '</text><text x="' + (W - 1) + '" y="' + (H - 6) + '" text-anchor="end" font-size="13" fill="#6B5B4A">' + (byYear ? 'Year ' + groups : 'Payoff') + '</text>';
+    return s + '</svg>';
+  }
+
+  /* ---------- schedule ---------- */
+  var CAP = 600;
+  function schedHtml(d) {
+    var rows = d.real.rows, s = '', ppy = d.ppy;
+    if (st.sched === 'yearly') {
+      s = '<thead><tr><th>Year</th><th>Interest</th><th>Principal</th><th>Balance</th></tr></thead><tbody>';
+      for (var y = 0; y * ppy < rows.length; y++) {
+        var it = 0, pr = 0, lastRow = null;
+        for (var m = y * ppy; m < Math.min(rows.length, y * ppy + ppy); m++) { it += rows[m].intr; pr += rows[m].pr; lastRow = rows[m]; }
+        s += '<tr><td>' + (y + 1) + '</td><td>' + mon0(it) + '</td><td>' + mon0(pr) + '</td><td>' + mon0(lastRow.bal) + '</td></tr>';
+      }
+    } else {
+      s = '<thead><tr><th>#</th><th>Date</th><th>Interest</th><th>Principal</th><th>Balance</th></tr></thead><tbody>';
+      rows.slice(0, CAP).forEach(function (r) { s += '<tr><td>' + r.k + '</td><td>' + dateTxt(d.sm, d.sy, r.k, ppy) + '</td><td>' + mon(r.intr) + '</td><td>' + mon(r.pr) + '</td><td>' + mon(r.bal) + '</td></tr>'; });
+    }
+    return s + '</tbody>';
+  }
+  function schedNote(d) {
+    var t = [];
+    if (d.hasExtra) t.push('Schedule includes your extra payments.');
+    if (st.sched !== 'yearly' && d.real.rows.length > CAP) t.push('Showing the first ' + CAP + ' of ' + comma(d.real.rows.length) + ' payments — the yearly view covers them all.');
+    return t.join(' ');
+  }
+
+  /* ---------- render ---------- */
+  function render() {
+    var d = calc(), ppy = ppyNow();
+    $('lnAfUnit').textContent = '$ per ' + PER[ppy];
+    if (d.hint != null || d.msg != null) { setEmpty(d.msg || baseMsg(), d.hint || ''); return; }
+    var h = $('lnHint'); h.style.display = 'none'; h.textContent = '';
+    var pay = d.base.pay, rateTxt = (Math.round(d.apr * 1000) / 1000) + '%', adj = ADJ[d.ppy];
+    last = { d: d };
+    var tt = termTxt(d);
+    if (d.afford) {
+      $('lnResLab').textContent = 'You can borrow';
+      $('lnResBig').textContent = mon0(d.P);
+      $('lnResSub').textContent = 'paying ' + mon(d.Q) + ' every ' + PER[d.ppy] + ' at ' + rateTxt + ' for ' + tt;
+      $('lnMLab').textContent = 'You can borrow'; $('lnMVal').textContent = mon0(d.P);
+    } else {
+      $('lnResLab').textContent = adj + ' payment';
+      $('lnResBig').textContent = mon(pay);
+      $('lnResSub').textContent = 'loan ' + mon0(d.A) + ' at ' + rateTxt + ' for ' + tt + (d.hasExtra ? ' · plus ' + mon(d.extra) + ' extra each time' : '');
+      $('lnMLab').textContent = adj + ' payment'; $('lnMVal').textContent = mon(pay);
+    }
+    $('lnMDec').textContent = ' · ' + tt + ' @ ' + rateTxt;
+    $('lnResults').style.display = '';
+
+    // takeaway
+    var r1 = d.base.rows[0], tip = 'In your first payment, ' + mon(r1.intr) + ' goes to interest and ' + mon(r1.sp) + ' to the loan. ';
+    if (d.base.cross === 1) tip = 'From your very first payment more goes to the loan than to interest (' + mon(r1.sp) + ' vs ' + mon(r1.intr) + '). ';
+    else if (d.base.cross) tip += 'Principal first outweighs interest in payment ' + d.base.cross + ' (' + (d.base.count / d.ppy > 3 ? 'year ' + Math.ceil(d.base.cross / d.ppy) : 'about ' + Math.round(d.base.cross / d.base.count * 100) + '% of the way through') + ').';
+    else tip += 'Interest outweighs principal for the whole loan.';
+    $('lnTip').textContent = tip.trim();
+
+    var ft = $('lnFeeTip');
+    if (d.F > 0) { ft.style.display = ''; ft.textContent = 'With the ' + mon(d.F) + ' fee ' + HOW[d.how] + ', your ' + rateTxt + ' loan really costs ' + (Math.round(d.trueApr * 100) / 100) + '% APR.'; }
+    else ft.style.display = 'none';
+
+    var sv = $('lnSave');
+    if (d.hasExtra) {
+      var saved = d.base.totInt - d.real.totInt, sooner = d.base.count - d.real.count;
+      sv.style.display = '';
+      sv.textContent = 'Your extra ' + mon(d.extra) + ' each payment saves ' + mon0(saved) + ' in interest and finishes ' + (sooner > 0 ? (sooner / d.ppy >= 0.2 ? span(sooner / d.ppy * 12) : plural(sooner, 'payment')) + ' sooner' : 'on schedule') + ' — paid off ' + dateTxt(d.sm, d.sy, d.real.count, d.ppy) + ' instead of ' + dateTxt(d.sm, d.sy, d.base.count, d.ppy) + '.';
+    } else sv.style.display = 'none';
+
+    $('lnChartTtl').textContent = 'Your balance over the loan (' + (d.base.count / d.ppy <= 2 ? 'months' : 'years') + ')';
+    $('lnChart').innerHTML = balanceChart(d);
+    $('lnChartLeg').innerHTML = '<span><i style="background:#37503F"></i>Balance</span>' + (d.hasExtra ? '<span><i style="background:#B5761F"></i>Balance with extra payments</span>' : '') + (d.base.cross > 1 ? '<span><i class="ln-dot"></i>Principal overtakes interest</span>' : '');
+    $('lnStripTtl').textContent = groupSize(d) === d.ppy && d.base.count / d.ppy > 3 ? 'Interest vs principal in each year’s payments' : 'Interest vs principal across your payments';
+    $('lnStrip').innerHTML = shareStrip(d);
+
+    var totP = d.real.totInt + d.P, pP = d.P / totP * 100, pI = 100 - pP;
+    $('lnLife').innerHTML = '<div class="ln-seg ln-p" style="width:' + pP.toFixed(2) + '%">' + (pP >= 14 ? Math.round(pP) + '%' : '') + '</div><div class="ln-seg ln-i" style="width:' + pI.toFixed(2) + '%">' + (pI >= 14 ? Math.round(pI) + '%' : '') + '</div>';
+    $('lnLifeLeg').innerHTML = '<span><i style="background:#37503F"></i>Principal ' + mon0(d.P) + '</span><span><i style="background:#B5761F"></i>Interest ' + mon0(d.real.totInt) + '</span>';
+
+    var sm = '<tbody>';
+    if (d.afford) sm += '<tr><td>You can borrow</td><td>' + mon0(d.P) + '</td></tr><tr><td>Payment</td><td>' + mon(d.Q) + ' every ' + PER[d.ppy] + '</td></tr>';
+    else {
+      sm += '<tr><td>Loan amount</td><td>' + mon0(d.A) + '</td></tr>';
+      if (d.F > 0) {
+        sm += '<tr><td>Origination fee</td><td>' + mon(d.F) + '</td></tr>';
+        if (d.how === 'in') sm += '<tr><td>Amount financed</td><td>' + mon0(d.P) + '</td></tr>';
+        else if (d.how === 'out') sm += '<tr><td>You receive</td><td>' + mon0(d.N) + '</td></tr>';
+      }
+    }
+    sm += '<tr><td>Total interest</td><td>' + mon0(d.real.totInt) + '</td></tr><tr><td>Total of ' + comma(d.real.count) + ' payments</td><td>' + mon0(d.real.totPaid) + '</td></tr>';
+    if (d.F > 0) sm += '<tr><td>Interest + fee</td><td>' + mon0(d.real.totInt + d.F) + '</td></tr><tr><td>True APR with the fee</td><td>' + (Math.round(d.trueApr * 100) / 100) + '%</td></tr>';
+    sm += '<tr><td>Paid off</td><td>' + dateTxt(d.sm, d.sy, d.real.count, d.ppy) + '</td></tr>';
+    if (d.hasExtra) sm += '<tr><td>Interest saved by extra payments</td><td>' + mon0(d.base.totInt - d.real.totInt) + '</td></tr>';
+    if (st.adv) sm += '<tr><td>Effective yearly rate</td><td>' + (Math.round((Math.pow(1 + d.base.r, d.ppy) - 1) * 10000) / 100) + '%</td></tr>';
+    $('lnSum').innerHTML = sm + '</tbody>';
+
+    // compare terms
+    var termList = [1, 3, 5, 7, 10], ty = d.n / d.ppy;
+    if (!termList.some(function (t) { return Math.abs(t - ty) < 1e-9; })) { termList.push(ty); termList.sort(function (a, b) { return a - b; }); }
+    var r = E.prate(d.apr, d.ppy, d.comp);
+    $('lnTermsTtl').textContent = d.afford ? 'What that payment borrows over other terms — same payment and rate' : 'Compare loan terms — same amount and rate';
+    var tbl = '<thead><tr><th>Term</th><th>' + (d.afford ? 'You can borrow' : adj + ' payment') + '</th><th>Total interest</th></tr></thead><tbody>';
+    termList.forEach(function (t) {
+      var nn = Math.round(t * d.ppy); if (nn < 1) return;
+      var cur = Math.abs(t - ty) < 1e-9, lab = t >= 1 && Math.abs(t * 12 - Math.round(t * 12)) < 1e-6 ? span(Math.round(t * 12)) : plural(nn, 'payment');
+      if (d.afford) { var pb = E.borrowable(d.Q, r, nn); tbl += '<tr' + (cur ? ' class="cur"' : '') + '><td>' + lab + '</td><td>' + mon0(pb) + '</td><td>' + mon0(d.Q * nn - pb) + '</td></tr>'; }
+      else { var p = E.pmt(d.P, r, nn); tbl += '<tr' + (cur ? ' class="cur"' : '') + '><td>' + lab + '</td><td>' + mon(p) + '</td><td>' + mon0(p * nn - d.P) + '</td></tr>'; }
+    });
+    $('lnTerms').innerHTML = tbl + '</tbody>';
+
+    $('lnCopyWrap').style.display = st.adv ? '' : 'none';
+    $('lnSched').innerHTML = schedHtml(d);
+    var cm = $('lnSchedNote'), nt = schedNote(d);
+    cm.textContent = nt; cm.style.display = nt ? '' : 'none';
+  }
+
+  /* ---------- controls ---------- */
+  function seg(id, attr, fn) {
+    var el = $(id);
+    [].forEach.call(el.querySelectorAll('button'), function (b) {
+      b.addEventListener('click', function () {
+        [].forEach.call(el.querySelectorAll('button'), function (x) { x.classList.toggle('on', x === b); x.setAttribute('aria-selected', x === b ? 'true' : 'false'); });
+        fn(b.getAttribute(attr));
+      });
+    });
+  }
+  function fmtPlain(x, dp) { return String(Number(x.toFixed(dp == null ? 4 : dp))); }
+  seg('lnTermSeg', 'data-u', function (u) {
+    var prev = st.termU; st.termU = u;
+    var el = $('lnTerm'), v = read('lnTerm');
+    if (prev !== u && v.v != null) {
+      var cv = u === 'mo' ? v.v * 12 : v.v / 12, lim = u === 'mo' ? 600 : 50;
+      el.value = v.v > 0 && cv > 0 && cv <= lim ? fmtPlain(cv, u === 'mo' ? 2 : 4) : '';
+    }
+    el.placeholder = u === 'yr' ? 'e.g. 5' : 'e.g. 60';
+    $('lnTermUnit').textContent = u === 'yr' ? 'years' : 'months';
+    markTerm(); render();
+  });
+  seg('lnFeeSeg', 'data-u', function (u) {
+    var prev = st.feeU; st.feeU = u;
+    var el = $('lnFee'), v = read('lnFee'), p = read('lnAmount');
+    if (prev !== u && v.v != null && p.v > 0) {
+      var cv = u === 'usd' ? p.v * v.v / 100 : v.v / p.v * 100, okIn = u === 'usd' ? (v.v >= 0 && v.v <= 50) : (v.v >= 0 && cv <= 50);
+      el.value = okIn ? fmtPlain(cv, 4) : '';
+    }
+    el.placeholder = u === 'pct' ? 'e.g. 2' : 'e.g. 300';
+    render();
+  });
+  seg('lnModeSeg', 'data-v', function (v) {
+    st.mode = v;
+    var afford = v === 'afford';
+    $('lnAmtFld').style.display = afford ? 'none' : '';
+    $('lnAfFld').style.display = afford ? '' : 'none';
+    $('lnExtraFld').style.display = afford ? 'none' : '';
+    $('lnFeeGrp').style.display = afford ? 'none' : '';
+    $('lnEx').textContent = afford ? 'See an example: pay $300 every month, 8.5%, 5 years' : 'See an example: $15,000 loan, 8.5%, 5 years';
+    render();
+  });
+  seg('lnSchedSeg', 'data-v', function (v) { st.sched = v; if (last) { $('lnSched').innerHTML = schedHtml(last.d); var nt = schedNote(last.d); $('lnSchedNote').textContent = nt; $('lnSchedNote').style.display = nt ? '' : 'none'; } });
+  ['lnAmount', 'lnAfford', 'lnRate', 'lnTerm', 'lnExtra', 'lnFee', 'lnStartY'].forEach(function (id) {
+    $(id).addEventListener('input', function () { if (id === 'lnTerm') markTerm(); render(); });
+  });
+  ['lnFreq', 'lnComp', 'lnFeeHow', 'lnStartM'].forEach(function (id) { $(id).addEventListener('change', function () { markTerm(); render(); }); });
+  function markTerm() {
+    var v = read('lnTerm').v, y = v != null ? (st.termU === 'yr' ? v : v / 12) : null;
+    [].forEach.call($('lnTermChips').querySelectorAll('button'), function (b) { b.classList.toggle('on', y != null && Math.abs(Number(b.getAttribute('data-t')) - y) < 1e-9); });
+  }
+  [].forEach.call($('lnTermChips').querySelectorAll('button'), function (b) {
+    b.addEventListener('click', function () { var t = Number(b.getAttribute('data-t')); $('lnTerm').value = st.termU === 'yr' ? String(t) : String(t * 12); markTerm(); render(); });
+  });
+  $('lnEx').addEventListener('click', function () {
+    st.termU = 'yr';
+    [].forEach.call($('lnTermSeg').querySelectorAll('button'), function (x) { x.classList.toggle('on', x.getAttribute('data-u') === 'yr'); });
+    $('lnTerm').placeholder = 'e.g. 5'; $('lnTermUnit').textContent = 'years';
+    if (st.mode === 'afford') $('lnAfford').value = '300'; else $('lnAmount').value = '15000';
+    $('lnRate').value = '8.5'; $('lnTerm').value = '5'; markTerm(); render();
+  });
+  $('lnAdvBtn').addEventListener('click', function () {
+    st.adv = !st.adv;
+    $('lnAdvBtn').classList.toggle('open', st.adv);
+    $('lnAdvBtnLab').textContent = st.adv ? 'Go simple' : 'Go advanced';
+    $('lnAdvIn').style.display = st.adv ? '' : 'none';
+    if (!st.adv) {
+      ['lnFee', 'lnStartY'].forEach(function (id) { $(id).value = ''; });
+      $('lnStartM').value = String(now.getMonth()); $('lnFreq').value = '12'; $('lnComp').value = '12'; $('lnFeeHow').value = 'out';
+      st.feeU = 'pct'; $('lnFee').placeholder = 'e.g. 2';
+      [].forEach.call($('lnFeeSeg').querySelectorAll('button'), function (b) { b.classList.toggle('on', b.getAttribute('data-u') === 'pct'); });
+    }
+    render();
+  });
+  $('lnCopy').addEventListener('click', function () {
+    if (!last) return;
+    var d = last.d, lines = [];
+    if (d.afford) lines.push('Loan I can afford: ' + mon0(d.P) + ' at ' + d.apr + '% for ' + termTxt(d) + ', paying ' + mon(d.Q) + ' every ' + PER[d.ppy]);
+    else lines.push('Loan: ' + mon0(d.A) + ' at ' + d.apr + '% for ' + termTxt(d) + ', compounding ' + CNAME[d.comp], ADJ[d.ppy] + ' payment: ' + mon(d.base.pay));
+    lines.push('Total interest: ' + mon0(d.real.totInt), 'Total of ' + comma(d.real.count) + ' payments: ' + mon0(d.real.totPaid), 'Paid off: ' + dateTxt(d.sm, d.sy, d.real.count, d.ppy));
+    if (d.F > 0) lines.push('Origination fee: ' + mon(d.F) + ' (' + HOW[d.how] + ')', 'True APR with the fee: ' + (Math.round(d.trueApr * 100) / 100) + '%');
+    if (d.hasExtra) lines.push('Interest saved by extra payments: ' + mon0(d.base.totInt - d.real.totInt));
+    var btn = $('lnCopy'), txt = lines.join('\n');
+    var done = function (ok) { btn.textContent = ok ? 'Copied' : 'Copy failed'; setTimeout(function () { btn.textContent = 'Copy results'; }, 1600); };
+    var legacy = function () { try { var ta = document.createElement('textarea'); ta.value = txt; ta.setAttribute('readonly', ''); ta.style.cssText = 'position:fixed;left:-9999px;top:0'; document.body.appendChild(ta); ta.select(); var ok = document.execCommand('copy'); document.body.removeChild(ta); done(ok); } catch (e) { done(false); } };
+    try { navigator.clipboard.writeText(txt).then(function () { done(true); }, legacy); } catch (e) { legacy(); }
+  });
+
+  $('lnStartM').value = String(now.getMonth());
+  $('lnStartY').placeholder = 'e.g. ' + now.getFullYear();
   render();
 };
 

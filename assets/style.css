@@ -2112,6 +2112,8 @@
    .stable, .res-tip.adv-tip, .advbtn, the sticky .mbar. Adds a balance
    chart, a per-year interest/principal strip and stacked bars.
    ========================================================= */
+  .p-loan .card{min-width:0}
+  .p-loan .inp input{min-width:0}
   .p-loan .ln-two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 10px}
   .p-loan .ln-two .inp{min-width:0}
   .p-loan .ln-two .fld .lab{display:block;white-space:nowrap}
@@ -2139,3 +2141,9 @@
   .p-loan .ln-sched thead th{position:sticky;top:0;background:#F5EFE4;z-index:1}
   .p-loan .ln-tabs{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
   .p-loan .ln-tabs h3{font-family:'Fraunces',serif;font-size:20px;font-weight:700;letter-spacing:-.01em}
+  .p-loan .ln-terms td:first-child{white-space:nowrap}
+  .p-loan .ln-tabs .seg button{white-space:nowrap}
+  .p-loan .ln-tabs{flex-wrap:wrap}
+  .p-loan .modeseg{grid-template-columns:1fr 1fr;margin-bottom:15px}
+  .p-loan .modeseg button{white-space:nowrap;font-size:13px;padding-left:4px;padding-right:4px}
+  .p-loan #lnTerm,.p-loan #lnFee{padding-right:78px}

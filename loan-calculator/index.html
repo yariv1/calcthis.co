@@ -1,0 +1,528 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Loan Calculator — Monthly Payment, True APR &amp; Amortization | CalcThis</title>
+<meta name="description" content="Free loan calculator. Enter the amount, rate and term to get your payment, a live balance chart, the month principal overtakes interest and what extra payments save. Or flip to “What can I borrow?” to work backwards from a payment. Any payment frequency, compounding and the true APR with a fee under Go advanced.">
+<link rel="canonical" href="https://calcthis.co/loan-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Loan Calculator — Monthly Payment, True APR &amp; Amortization">
+<meta property="og:description" content="See your loan payment, how your balance falls, what extra payments save and how much you can borrow for a payment you can afford — with a full amortization schedule.">
+<meta property="og:url" content="https://calcthis.co/loan-calculator/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<meta name="theme-color" content="#B5761F">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css?v=163">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Loan Calculator",
+  "url": "https://calcthis.co/loan-calculator/",
+  "applicationCategory": "FinanceApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Loan payment calculator with a live balance chart, extra-payment savings, a reverse mode that finds how much you can borrow for a payment, loan terms side by side and a full amortization schedule. Payment frequency, compounding and an origination fee with the true APR under Go advanced."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "How is a loan payment calculated?", "acceptedAnswer": { "@type": "Answer", "text": "The payment is M = P × r ÷ (1 − (1 + r)⁻ⁿ), where P is the loan amount, r is the interest rate for one payment period (the yearly rate ÷ 12 for monthly payments) and n is the number of payments. For $15,000 at 8.5% over 5 years, r = 0.0070833, n = 60 and the payment is $307.75 a month. At a 0% rate the payment is simply the amount divided by the number of payments: $15,000 ÷ 60 = $250.00." } },
+    { "@type": "Question", "name": "What is the difference between the interest rate and the APR?", "acceptedAnswer": { "@type": "Answer", "text": "The interest rate is what the lender charges on the balance. The APR also counts fees, so it shows the real cost. On the $15,000 loan at 8.5% with a 2% origination fee taken out of the loan, you pay $307.75 a month but receive only $14,700. Measured against the money you actually receive, the loan costs 9.36% APR. Add the fee under Go advanced and the calculator shows the true APR automatically." } },
+    { "@type": "Question", "name": "How much do extra payments save on a loan?", "acceptedAnswer": { "@type": "Answer", "text": "On the same $15,000 loan, adding $50 to every monthly payment ends the loan after 50 payments instead of 60 — 10 months sooner — and saves $604 in interest. Every extra dollar goes straight to principal, so it stops accruing interest for the rest of the loan. Type an amount in the extra payment box to see your own savings and the faster balance curve." } },
+    { "@type": "Question", "name": "How much can I borrow for a payment I can afford?", "acceptedAnswer": { "@type": "Answer", "text": "Switch to “What can I borrow?” and enter your payment. A payment of $300 a month at 8.5% carries a loan of $14,622 over 5 years, $18,944 over 7 years and $24,196 over 10 years. The longer the term, the more a given payment borrows — but the more interest you pay in total, so the table under the result shows both." } },
+    { "@type": "Question", "name": "Is a shorter loan better?", "acceptedAnswer": { "@type": "Answer", "text": "A shorter loan has a higher payment but costs far less interest. On $15,000 at 8.5%, 3 years is $473.51 a month with $2,046 of interest, 5 years is $307.75 with $3,465, and 7 years is $237.55 with $4,954. The comparison table under every result shows 1, 3, 5, 7 and 10 years for your own numbers." } }
+  ]
+}
+</script>
+</head>
+<body class="p-loan">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <a class="hdr-back" href="/blog/" aria-label="Back to blog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <span class="menu-col-head">Construction &amp; Gardening</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+          <a href="/paint-calculator/">Paint</a>
+          <a href="/wallpaper-calculator/">Wallpaper</a>
+          <a href="/square-footage-calculator/">Square Footage</a>
+          <a href="/tape-measure-fraction-calculator/">Tape Measure Fraction</a>
+          <a href="/stair-calculator/">Stair</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/vo2-max-calculator/">VO2 Max</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
+          <a href="/bmi-calculator/">BMI</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/ideal-weight-calculator/">Ideal Weight</a>
+          <a href="/lean-body-mass-calculator/">Lean Body Mass</a>
+          <a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio</a>
+          <a href="/calorie-calculator/">Calorie</a>
+          <a href="/bmr-calculator/">BMR</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/water-intake-calculator/">Water Intake</a>
+          <a href="/macro-calculator/">Macro</a>
+          <a href="/protein-intake-calculator/">Protein Intake</a>
+          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
+          <a href="/steps-to-miles-calculator/">Steps to Miles</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+          <a href="/grade-curve-calculator/">Grade Curve</a>
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/fraction-calculator/">Fraction</a>
+          <a href="/standard-deviation-calculator/">Standard Deviation</a>
+          <a href="/scientific-notation-calculator/">Scientific Notation</a>
+          <a href="/weighted-average-calculator/">Weighted Average</a>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+          <a href="/age-calculator/">Age</a>
+          <a href="/date-calculator/">Date</a>
+          <a href="/time-calculator/">Time</a>
+          <a href="/hours-calculator/">Hours</a>
+          <a href="/triangle-calculator/">Triangle</a>
+          <span class="menu-col-head">Cooking &amp; Kitchen</span>
+          <a href="/recipe-converter/">Recipe Converter</a>
+          <span class="menu-col-head">Money &amp; Finance</span>
+          <a href="/mortgage-calculator/">Mortgage</a>
+          <a href="/loan-calculator/" class="current">Loan</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">Loan payments, mapped</div>
+    <h1>Loan Calculator</h1>
+    <p>Get your <strong>loan payment</strong> from the amount, rate and term — or flip it around and see <strong>how much you can borrow</strong> for a payment you can afford. <strong>See how your balance falls</strong>, what <strong>extra payments</strong> save and what a fee does to your <strong>true APR</strong>.</p>
+  </section>
+
+  <div class="grid">
+    <div class="card">
+      <div class="card-pad">
+        <h2 class="card-h2">Your loan</h2>
+
+        <div class="modeseg" id="lnModeSeg" role="group" aria-label="What do you want to find?">
+          <button class="on" type="button" data-v="pay">Find my payment</button>
+          <button type="button" data-v="afford">What can I borrow?</button>
+        </div>
+
+        <div class="fld" id="lnAmtFld"><label class="lab" for="lnAmount">Loan amount <span class="unit">$</span></label><div class="inp"><input id="lnAmount" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 15000"></div></div>
+
+        <div class="fld" id="lnAfFld" style="display:none"><label class="lab" for="lnAfford">Payment I can afford <span class="unit" id="lnAfUnit">$ per month</span></label><div class="inp"><input id="lnAfford" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 300"></div></div>
+
+        <div class="ln-two">
+          <div class="fld"><label class="lab" for="lnRate">Interest rate <span class="unit">%</span></label><div class="inp"><input id="lnRate" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 8.5"></div></div>
+          <div class="fld"><label class="lab" for="lnTerm">Loan term <span class="unit" id="lnTermUnit">years</span></label><div class="inp"><input id="lnTerm" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 5"><span class="len-toggle" id="lnTermSeg"><button type="button" class="on" data-u="yr">yr</button><button type="button" data-u="mo">mo</button></span></div></div>
+        </div>
+        <div class="chips" id="lnTermChips" aria-label="Common loan terms" style="margin-top:-6px;margin-bottom:15px">
+          <button type="button" data-t="1">1 year</button>
+          <button type="button" data-t="3">3 years</button>
+          <button type="button" data-t="5">5 years</button>
+          <button type="button" data-t="7">7 years</button>
+          <button type="button" data-t="10">10 years</button>
+        </div>
+
+        <div class="fld" id="lnExtraFld"><label class="lab" for="lnExtra">Extra payment each time <span class="unit">$ optional</span></label><div class="inp"><input id="lnExtra" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 50"></div></div>
+
+        <p class="add-note ln-hint" id="lnHint" style="display:none"></p>
+
+        <div class="chips" aria-label="Try an example">
+          <button type="button" id="lnEx">See an example: $15,000 loan, 8.5%, 5 years</button>
+        </div>
+
+        <div id="lnAdvIn" style="display:none">
+          <div class="proj-sep"></div>
+          <div class="fc-grp" style="margin-top:0">How you pay</div>
+          <div class="ln-two">
+            <div class="fld"><span class="lab">Payment frequency</span><div class="csel" id="lnFreq" data-value="12">
+              <button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false">
+                <span class="csel-val">Monthly</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="csel-panel" role="listbox">
+                <button type="button" class="csel-opt on" role="option" aria-selected="true" data-value="12">Monthly</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="24">Twice a month</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="26">Every 2 weeks</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="52">Weekly</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="365">Daily</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="4">Quarterly</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="2">Twice a year</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="1">Yearly</button>
+              </div>
+            </div></div>
+            <div class="fld"><span class="lab">Interest compounds</span><div class="csel" id="lnComp" data-value="12">
+              <button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false">
+                <span class="csel-val">Monthly</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="csel-panel" role="listbox">
+                <button type="button" class="csel-opt on" role="option" aria-selected="true" data-value="12">Monthly</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="1">Yearly</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="2">Twice a year</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="4">Quarterly</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="24">Twice a month</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="26">Every 2 weeks</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="52">Weekly</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="365">Daily</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="c">Continuous</button>
+              </div>
+            </div></div>
+          </div>
+
+          <div id="lnFeeGrp">
+            <div class="fc-grp">Origination fee</div>
+            <div class="fld"><label class="lab" for="lnFee">Fee <span class="unit">optional</span></label><div class="inp"><input id="lnFee" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 2"><span class="len-toggle" id="lnFeeSeg"><button type="button" class="on" data-u="pct">%</button><button type="button" data-u="usd">$</button></span></div></div>
+            <div class="fld"><span class="lab">How the fee is paid</span><div class="csel" id="lnFeeHow" data-value="out">
+              <button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false">
+                <span class="csel-val">Taken out of the loan</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="csel-panel" role="listbox">
+                <button type="button" class="csel-opt on" role="option" aria-selected="true" data-value="out">Taken out of the loan</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="in">Added to the loan</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="up">Paid upfront</button>
+              </div>
+            </div></div>
+          </div>
+
+          <div class="fc-grp">Loan start</div>
+          <div class="ln-two">
+            <div class="fld"><span class="lab">Start month</span><div class="csel" id="lnStartM" data-value="0">
+              <button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false">
+                <span class="csel-val">January</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="csel-panel" role="listbox">
+                <button type="button" class="csel-opt on" role="option" aria-selected="true" data-value="0">January</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="1">February</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="2">March</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="3">April</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="4">May</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="5">June</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="6">July</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="7">August</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="8">September</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="9">October</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="10">November</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="11">December</button>
+              </div>
+            </div></div>
+            <div class="fld"><label class="lab" for="lnStartY">Start year</label><div class="inp"><input id="lnStartY" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 2026"></div></div>
+          </div>
+        </div>
+
+        <div class="add-row split" style="margin-top:16px">
+          <span></span>
+          <button class="advbtn" id="lnAdvBtn" type="button">
+            <span id="lnAdvBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-pad">
+        <div class="ln-res">
+          <div class="res-lab" id="lnResLab">Monthly payment</div>
+          <div class="res-big" id="lnResBig">—</div>
+          <div class="res-sub" id="lnResSub">Enter the loan amount, interest rate and loan term to see your payment.</div>
+        </div>
+
+        <div id="lnResults" style="display:none">
+          <p class="res-tip adv-tip" id="lnTip"></p>
+          <p class="res-tip adv-tip" id="lnFeeTip" style="display:none"></p>
+          <p class="res-tip adv-tip" id="lnSave" style="display:none"></p>
+
+          <div class="fc-grp" id="lnChartTtl">Your balance over the loan</div>
+          <div class="ln-box" id="lnChart"></div>
+          <div class="ln-leg" id="lnChartLeg"></div>
+
+          <div class="fc-grp" id="lnStripTtl">Interest vs principal in each year’s payments</div>
+          <div class="ln-box" id="lnStrip"></div>
+          <div class="ln-leg"><span><i style="background:#B5761F"></i>Interest</span><span><i style="background:#37503F"></i>Principal</span><span>Dashed line = half and half</span></div>
+
+          <div class="fc-grp">Over the whole loan</div>
+          <div class="ln-bar" id="lnLife"></div>
+          <div class="ln-leg" id="lnLifeLeg"></div>
+          <table class="dtable" id="lnSum"></table>
+
+          <div class="fc-grp" id="lnTermsTtl">Compare loan terms — same amount and rate</div>
+          <table class="dtable ln-terms" id="lnTerms"></table>
+
+          <div id="lnCopyWrap" style="display:none"><button class="btn" id="lnCopy" type="button" style="margin-top:6px">Copy results</button></div>
+
+          <div class="proj-sep"></div>
+          <div class="ln-tabs">
+            <h3>Amortization schedule</h3>
+            <div class="seg" id="lnSchedSeg" role="group" aria-label="Schedule view">
+              <button class="on" type="button" data-v="yearly">Yearly</button>
+              <button type="button" data-v="monthly">Each payment</button>
+            </div>
+          </div>
+          <p class="res-tip" id="lnSchedNote" style="display:none"></p>
+          <div class="ln-sched"><table class="stable" id="lnSched"></table></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- mobile sticky bar -->
+  <div class="mbar" id="mbar">
+    <span class="mbar-lab" id="lnMLab">Monthly payment</span>
+    <div class="mbar-vals"><b id="lnMVal">—</b><span id="lnMDec"></span></div>
+  </div>
+
+  <div class="related-calcs">
+    <p class="related-calcs-h">More calculators that may interest you</p>
+    <div class="pills">
+      <a class="pill" href="/mortgage-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-7 8 7v9H4z"/><path d="M10 20v-6h4v6"/></svg>
+        Mortgage Calculator
+      </a>
+      <a class="pill" href="/percentage-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 5L5 19"/><circle cx="7" cy="7" r="2.5"/><circle cx="17" cy="17" r="2.5"/></svg>
+        Percentage Calculator
+      </a>
+      <a class="pill" href="/date-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>
+        Date Calculator
+      </a>
+      <a class="pill" href="/ratio-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="12" r="4"/><circle cx="16" cy="12" r="4"/></svg>
+        Ratio Calculator
+      </a>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use the loan calculator</h2>
+        <p>Enter the <strong>loan amount</strong>, the <strong>interest rate</strong> and the <strong>loan term</strong> — in years, or switch the box to months — or tap 1, 3, 5, 7 or 10 years. The result updates as you type: your payment, a chart of how the balance falls, how much of the loan is principal and how much is interest, and a full amortization schedule. Type an amount in <strong>Extra payment each time</strong> to see how much interest it saves and how much sooner the loan ends.</p>
+        <p>Not sure what to ask for? Switch to <strong>What can I borrow?</strong>, enter the payment that fits your budget, and the calculator works backwards to the loan that payment carries.</p>
+
+        <h2>The loan payment formula</h2>
+        <div class="formula">
+          M = P · r ÷ (1 − (1 + r)<sup>−n</sup>)
+          <small>P = LOAN AMOUNT · r = RATE PER PAYMENT · n = NUMBER OF PAYMENTS</small>
+        </div>
+        <p>For a <strong>$15,000</strong> loan at <strong>8.5%</strong> over 5 years: r = 8.5% ÷ 12 = 0.0070833 and n = 60, so (1 + r)<sup>60</sup> = 1.5273. Then M = $15,000 × 0.0070833 ÷ (1 − 1 ÷ 1.5273) = <strong>$307.75</strong> a month. Over 60 payments you pay $3,464.88 in interest on top of the $15,000 you borrowed.</p>
+
+        <h2>Why early payments are mostly interest</h2>
+        <p>Interest is charged on what you still owe, and you owe the most at the start. On that loan the first payment is $106.25 in interest and $201.50 in principal. Each payment shrinks the balance a little, so the interest share falls and the principal share rises. The calculator shows each year’s split in the strip under your balance chart.</p>
+
+        <h2>What extra payments do</h2>
+        <p>Extra money goes straight to principal, so the interest it would have earned the lender is never charged. Adding <strong>$50 a month</strong> to the loan above ends it after 50 payments — 10 months sooner — and saves <strong>$604</strong> in interest.</p>
+      </div>
+
+      <div>
+        <h2>The rate is not the cost: fees and APR</h2>
+        <p>Many loans charge an <strong>origination fee</strong>, a percentage of the loan paid to the lender. Under Go advanced you can enter it as a percentage or a dollar amount and say how it is paid: taken out of the loan, added to the loan, or paid upfront. On the $15,000 loan, a 2% fee taken out of the loan is $300 — you receive $14,700 but repay as if you had borrowed $15,000. The calculator then shows the <strong>true APR</strong>, 9.36% in this case, against the 8.5% rate.</p>
+
+        <h2>How much can I borrow?</h2>
+        <p>Start from your budget instead of the loan. A payment of $300 a month at 8.5% carries $14,622 over 5 years, $18,944 over 7 years and $24,196 over 10 years. A longer term lets the same payment borrow more, but you pay interest for longer, which is why the comparison table lists the total interest for every term.</p>
+
+        <h2>Shorter or longer?</h2>
+        <p>A shorter loan costs more each month but far less in total. On $15,000 at 8.5%, 3 years is $473.51 a month with $2,046 of interest; 7 years is $237.55 a month with $4,954. The table in every result shows 1, 3, 5, 7 and 10 years for your own numbers.</p>
+
+        <h2>Payment frequency and compounding</h2>
+        <p>Go advanced lets you pay daily, weekly, every two weeks, twice a month, monthly, quarterly, twice a year or yearly, and choose how often interest compounds — yearly, twice a year, quarterly, monthly, twice a month, every two weeks, weekly, daily or continuously. Most US loans compound monthly and are paid monthly, which is the default. Switching the $15,000 loan to daily compounding makes the monthly payment $307.96; at 0% interest the payment is just $15,000 ÷ 60 = $250.00. You can also set the start month and year for the payoff date and the schedule.</p>
+
+        <h2>Related tools</h2>
+        <p>Buying a home? Use the <a href="/mortgage-calculator/">Mortgage Calculator</a>. Need a percentage of an amount? Use the <a href="/percentage-calculator/">Percentage Calculator</a>. To count the days to a payoff date, use the <a href="/date-calculator/">Date Calculator</a>. Results are estimates, not a loan offer or financial advice — your lender’s figures are the ones that count.</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>How is a loan payment calculated?</summary><p>The payment is M = P × r ÷ (1 − (1 + r)⁻ⁿ), where P is the loan amount, r is the interest rate for one payment period (the yearly rate ÷ 12 for monthly payments) and n is the number of payments. For $15,000 at 8.5% over 5 years, r = 0.0070833, n = 60 and the payment is $307.75 a month. At a 0% rate the payment is simply the amount divided by the number of payments: $15,000 ÷ 60 = $250.00.</p></details>
+    <details class="faq"><summary>What is the difference between the interest rate and the APR?</summary><p>The interest rate is what the lender charges on the balance. The APR also counts fees, so it shows the real cost. On the $15,000 loan at 8.5% with a 2% origination fee taken out of the loan, you pay $307.75 a month but receive only $14,700. Measured against the money you actually receive, the loan costs 9.36% APR. Add the fee under Go advanced and the calculator shows the true APR automatically.</p></details>
+    <details class="faq"><summary>How much do extra payments save on a loan?</summary><p>On the same $15,000 loan, adding $50 to every monthly payment ends the loan after 50 payments instead of 60 — 10 months sooner — and saves $604 in interest. Every extra dollar goes straight to principal, so it stops accruing interest for the rest of the loan. Type an amount in the extra payment box to see your own savings and the faster balance curve.</p></details>
+    <details class="faq"><summary>How much can I borrow for a payment I can afford?</summary><p>Switch to “What can I borrow?” and enter your payment. A payment of $300 a month at 8.5% carries a loan of $14,622 over 5 years, $18,944 over 7 years and $24,196 over 10 years. The longer the term, the more a given payment borrows — but the more interest you pay in total, so the table under the result shows both.</p></details>
+    <details class="faq"><summary>Is a shorter loan better?</summary><p>A shorter loan has a higher payment but costs far less interest. On $15,000 at 8.5%, 3 years is $473.51 a month with $2,046 of interest, 5 years is $307.75 with $3,465, and 7 years is $237.55 with $4,954. The comparison table under every result shows 1, 3, 5, 7 and 10 years for your own numbers.</p></details>
+  </section>
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+          <li><a href="/paint-calculator/">Paint Calculator</a></li>
+          <li><a href="/wallpaper-calculator/">Wallpaper Calculator</a></li>
+          <li><a href="/square-footage-calculator/">Square Footage Calculator</a></li>
+          <li><a href="/tape-measure-fraction-calculator/">Tape Measure Fraction Calculator</a></li>
+          <li><a href="/stair-calculator/">Stair Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/vo2-max-calculator/">VO2 Max Calculator</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/bmi-calculator/">BMI Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/ideal-weight-calculator/">Ideal Weight Calculator</a></li>
+          <li><a href="/lean-body-mass-calculator/">Lean Body Mass Calculator</a></li>
+          <li><a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio Calculator</a></li>
+          <li><a href="/calorie-calculator/">Calorie Calculator</a></li>
+          <li><a href="/bmr-calculator/">BMR Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/water-intake-calculator/">Water Intake Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/protein-intake-calculator/">Protein Intake Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
+          <li><a href="/steps-to-miles-calculator/">Steps to Miles Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+          <li><a href="/grade-curve-calculator/">Grade Curve Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/fraction-calculator/">Fraction Calculator</a></li>
+          <li><a href="/standard-deviation-calculator/">Standard Deviation Calculator</a></li>
+          <li><a href="/scientific-notation-calculator/">Scientific Notation Calculator</a></li>
+          <li><a href="/weighted-average-calculator/">Weighted Average Calculator</a></li>
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+          <li><a href="/age-calculator/">Age Calculator</a></li>
+          <li><a href="/date-calculator/">Date Calculator</a></li>
+          <li><a href="/time-calculator/">Time Calculator</a></li>
+          <li><a href="/hours-calculator/">Hours Calculator</a></li>
+          <li><a href="/triangle-calculator/">Triangle Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Cooking &amp;</span> <span class="ft2">Kitchen</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/recipe-converter/">Recipe Converter</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Money &amp;</span> <span class="ft2">Finance</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/mortgage-calculator/">Mortgage Calculator</a></li>
+          <li><a href="/loan-calculator/">Loan Calculator</a></li>
+        </ul>
+      </div>
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/blog/">Blog</a>
+      <span aria-hidden="true">·</span>
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+</div>
+
+<script src="/assets/app.js?v=163"></script>
+<script>CalcThis.initLoanCalc();</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>
