@@ -1,0 +1,39 @@
+# Indexing tracker (Google Search Console, property `sc-domain:calcthis.co`)
+
+**Rule:** every new calculator/article is added to the table below the moment it deploys (status `Not requested`).
+Request indexing in GSC → URL Inspection → Request indexing. **Quota is per property (~10/day, shared by the whole domain), not per user.**
+Requesting only queues a crawl; re-check status ~1–2 weeks later and update the table.
+
+GSC snapshot 2026-10-26: 69 indexed, 13 not indexed (8 Discovered, 1 Crawled, 1 alternate-canonical, 1 404, 2 redirect error).
+
+## Calculators — not indexed yet
+| URL | GSC status (2026-10-26) | Indexing requested | Verified indexed |
+|---|---|---|---|
+| /ideal-weight-calculator/ | Discovered – not indexed | 2026-10-26 | |
+| /vo2-max-calculator/ | Discovered – not indexed | 2026-10-26 | |
+| /wallpaper-calculator/ | Discovered – not indexed | 2026-10-26 | |
+| /water-intake-calculator/ | Discovered – not indexed | 2026-10-26 | |
+| /scientific-notation-calculator/ | Discovered – not indexed | 2026-10-26 | |
+| /loan-calculator/ | URL unknown to Google (new, v163) | 2026-10-26 | |
+| /mortgage-calculator/ | URL unknown to Google | 2026-10-26 | |
+| /triangle-calculator/ | URL unknown to Google | 2026-10-26 | |
+| /hours-calculator/ | URL unknown to Google | 2026-10-26 | |
+| /bmr-calculator/ | URL unknown to Google | 2026-10-26 | |
+
+## Calculators — status not checked yet (check + request next, ~10/day)
+/recipe-converter/ · /paint-calculator/ · /standard-deviation-calculator/ · /fraction-calculator/ · /weighted-average-calculator/ · /grade-curve-calculator/ · /waist-to-hip-ratio-calculator/ · /lean-body-mass-calculator/ · /stair-calculator/ · /square-footage-calculator/ · /protein-intake-calculator/ · /steps-to-miles-calculator/ · /time-calculator/ · /date-calculator/
+
+## Other pages not indexed
+| URL | GSC status | Requested |
+|---|---|---|
+| /blog/how-much-flooring-do-i-need/ | Discovered – not indexed | no |
+| /blog/how-to-calculate-the-number-of-days-between-two-dates/ | Discovered – not indexed | no |
+| /contact/ | Discovered – not indexed | no |
+| (1 page) | Crawled – currently not indexed | not opened yet |
+| (1 page) | Alternate page with proper canonical | not opened yet |
+| (1 page) | Not found (404) | not opened yet — fix or remove |
+| (2 pages) | Redirect error | not opened yet — investigate |
+
+## Newly deployed (add here at every deploy)
+| URL | Deployed | Indexing requested |
+|---|---|---|
