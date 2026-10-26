@@ -169,9 +169,9 @@ must be built from the article's actual units, every time, not pasted from a tem
 ## ⛔ SESSION HANDOFF — START HERE (written 2026-10-15; full detail in `HANDOFF.md`)
 
 **Read `HANDOFF.md` in full before replying.** Do not make the user re-explain anything in it.
-- **State:** v154 · 50 calculators · 25 articles · 82 pages · `main` clean and pushed (last code commit `8067ce0`; Triangle Calculator deployed as v154, nothing half-built, nothing waiting on the user).
-- **Just shipped:** Recipe Converter (v144, Cooking & Kitchen vertical), BMR Calculator (v146), Hours Calculator (v150, layout fixes v152), Triangle Calculator (v154).
-- **NEXT TASK:** **Loan/Mortgage engine** (then Paycheck, Sales Tax, Unit Converter, Tip, Random
+- **State:** v159 · 51 calculators · 25 articles · 83 pages · `main` clean and pushed (last code commit `9b18285`; Mortgage Calculator deployed as v159, nothing half-built, nothing waiting on the user).
+- **Just shipped:** Recipe Converter (v144, Cooking & Kitchen vertical), BMR Calculator (v146), Hours Calculator (v150, layout fixes v152), Triangle Calculator (v154), Mortgage Calculator (v159, opens Money & Finance).
+- **NEXT TASK:** **Loan Calculator + Auto Loan Calculator on the SAME `CalcThis.loanEngine`** (then Paycheck, Sales Tax, Unit Converter, Tip, Random
   Number Generator — the user decided 2026-10-25 to build ALL the Hard high-traffic ones, taking the Easy long-tails; full ranked plan in the
   roadmap md). Start with the Rule 8 research report (open every competitor live, visual AND functional differentiator, ≤3 decisions with
   recommendations), **wait for approval**, build, **deep QA (hard rule above, automatic)**, preview, deploy only on "deploy".
@@ -196,8 +196,8 @@ must be built from the article's actual units, every time, not pasted from a tem
 
 ## Project state
 
-- **Asset version:** v154 (bumped, `node build.js` run and deployed this session)
-- **Total pages:** 82 live
+- **Asset version:** v159 (bumped, `node build.js` run and deployed this session)
+- **Total pages:** 83 live
 - **Model:** Sonnet 5
 
 ### New this session — global `.csel` custom-dropdown component
@@ -277,7 +277,7 @@ Paint, Wallpaper, Scientific Notation.
 
 ---
 
-## Live calculators (50)
+## Live calculators (51)
 
 ### Construction & Gardening (13)
 Board Foot · Gravel · Sand · Topsoil · Mulch · Concrete · Flooring · Tile · Square Footage · Tape Measure Fraction · Stair · Paint · Wallpaper
@@ -294,11 +294,16 @@ Fraction · Standard Deviation · Scientific Notation · Weighted Average · Rat
 ### Cooking & Kitchen (1)
 Recipe Converter
 
-Total live calculators: **50**
+### Money & Finance (1)
+Mortgage
+
+Total live calculators: **51**
 
 ---
 
-## Last session (v143–v154)
+## Last session (v143–v159)
+
+- **Mortgage Calculator deployed v159 (commit `9b18285`)** (`/mortgage-calculator/`, opens the **Money & Finance** category: header col 3, 6th footer pillar, homepage tab `grp-finance`). Research opened calculator.net (mortgage/loan/auto loan), NerdWallet, Omnicalculator, mortgagecalculator.org; Bankrate blocked. User approved all 3 decisions (Mortgage first then Loan + Auto Loan on one engine; drops: live rates/ZIP/FHA-VA-USDA/currency picker/Bond+Deferred; Loan freq/compounding behind Go advanced). **Differentiators:** live balance chart with the month principal overtakes interest, per-year interest/principal strip, visible extra-payment box with live savings + faster curve, 10/15/20/30 terms side by side, PMI auto-ends at 80%, line-by-line monthly total; Go advanced = start date, tax(%/$)/insurance/PMI/HOA/other + yearly increase, yearly + one-time extras, bi-weekly, Canadian semi-annual, Copy. `CalcThis.loanEngine` (pure; `LOAN-ENGINE:START/END`, `run`/`pmt`/`mrate`/`biweekly`, matches calculator.net to the cent) + `CalcThis.initMortgageCalc`, `.p-loan`. **QA failure, now a rule:** shipped to preview after a happy-path-only QA — the % ↔ $ toggle turned an out-of-range 500 into a $210,000,000 down payment and 500% property tax gave a $3.3-billion payment. Fixed (invalid values cleared on toggle; cost sanity limits) and QA rule items 11-14 added (control × value matrix, hostile pass + random fuzz with invariants, screenshot every state, no preview with any known bug). Not verified: real phone, real Chrome (Copy), footer visually, print. Article deferred.
 
 - **Triangle Calculator deployed v154 (commit `8067ce0`)** (`/triangle-calculator/`, Ahrefs >10K Hard ×2). Right triangle (any 2 values, Pythagorean) + Any triangle (SSS/SAS/ASA/AAS/SSA incl. the ambiguous case with BOTH triangles), live to-scale diagram, special-triangle + Pythagorean-triple recognition, steps, Pythagoras-in-squares picture. `CalcThis.triEngine` (pure, `TRIANGLE-ENGINE:START/END`) + `CalcThis.initTriangleCalc`, `.p-tri`. User corrections after preview, now permanent: **placeholders are plain numbers ("e.g. 3"), never √/π symbols** — roots/pi/sqrt still parse but are only mentioned in the helper note; **Right-triangle mode shows an explicit locked "Angle C = 90°" line** (C is the right angle, not an input). Not built vs approved report: heights ruler (heights are in the table + diagram), length unit is a label only. Not verified: real phone, real Chrome (Copy button). Article deferred.
 

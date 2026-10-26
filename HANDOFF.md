@@ -9,10 +9,10 @@ must NOT have to re-explain anything in here — that is the whole purpose of th
 
 ## 0. THE 60-SECOND VERSION (read this if nothing else)
 
-- **Live:** asset **v154** · **50 calculators** · **25 blog articles** · **82 pages**. `main` is clean and
-  pushed (last code commit `8067ce0`). **Triangle Calculator shipped v154. NEXT: Loan/Mortgage research report — NOT started.**
+- **Live:** asset **v159** · **51 calculators** · **25 blog articles** · **83 pages**. `main` is clean and
+  pushed (last code commit `9b18285`). **Mortgage Calculator shipped v159. NEXT: Loan + Auto Loan on the same `CalcThis.loanEngine` (research already done for both, user approved; build Loan then Auto Loan, each with full QA rule items 1-14).**
   **TRIANGLE / PYTHAGOREAN — research report not started yet (no research, no code).** Ahrefs (2026-10-25): triangle >10K Hard x2; 30-60-90, 45-45-90, area of a triangle, isosceles, special right triangles >1K Easy; Pythagorean folded in. Rule 8: open EVERY competitor live in the Browser tool (calculator.net, CalculatorSoup, Omnicalculator, Symbolab/others), list every input/output, one visual + one functional differentiator (a live labelled triangle diagram is the obvious visual; solve-any-triangle from any 3 known values SSS/SAS/ASA/AAS/SSA incl. the ambiguous case is the obvious functional), at most 3 decisions with recommendations, then WAIT for approval.
-  **First move next session: a 2-3 line "synced" reply (v154 / 50 calcs / next = Loan/Mortgage research), then do the research report. No recap.**
+  **First move next session: a 2-3 line "synced" reply (v159 / 51 calcs / next = Loan + Auto Loan), then do the research report. No recap.**
 - **Also shipped 2026-10-25: BMR Calculator (v146).** Plan for the rest (user: build ALL the Hard high-traffic ones): Hours → Triangle/Pythagorean →
   Loan/Mortgage → Paycheck → Sales Tax → Unit Converter → Tip → Random Number — ranked in `md-files/calcthis-calculator-roadmap.md`. (Hours is done.) Nothing is half-built, nothing is waiting on the user.
 - **Just finished (2026-10-25): #25 Recipe Converter** — new **Cooking & Kitchen** vertical (nav col 3, 5th footer pillar,
