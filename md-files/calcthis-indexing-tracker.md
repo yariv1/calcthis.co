@@ -40,3 +40,4 @@ GSC snapshot 2026-10-26: 69 indexed, 13 not indexed (8 Discovered, 1 Crawled, 1 
 | URL | Deployed | Indexing requested |
 |---|---|---|
 | /auto-loan-calculator/ | 2026-10-26 (v169) | not yet |
+| /paycheck-calculator/ | 2026-10-27 (v175) | not yet (Bing: submitted via sitemap + IndexNow) |
