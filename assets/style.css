@@ -268,7 +268,7 @@
   body{overflow-x:hidden}
   .footer-cols{
     display:grid;
-    grid-template-columns:repeat(5,1fr);
+    grid-template-columns:repeat(6,1fr);
     gap:24px;
     max-width:1040px;
     margin:0 auto;
@@ -2105,3 +2105,37 @@
   .p-tri .fc-steps ul{list-style:none;margin:0 0 6px;padding:0}
   .p-tri .fc-steps li{padding:5px 0 5px 14px;border-left:2px solid var(--line);margin-bottom:3px}
   .p-tri #triOn button[aria-pressed="true"]{background:var(--amber);border-color:var(--amber);color:#fff}
+
+/* =========================================================
+   FINANCE · MORTGAGE CALCULATOR  (body.p-loan)
+   Reuses .card-h2, .seg, .len-toggle, .csel, .chips, .fld/.inp, .dtable,
+   .stable, .res-tip.adv-tip, .advbtn, the sticky .mbar. Adds a balance
+   chart, a per-year interest/principal strip and stacked bars.
+   ========================================================= */
+  .p-loan .ln-two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 10px}
+  .p-loan .ln-two .inp{min-width:0}
+  .p-loan .ln-two .fld .lab{display:block;white-space:nowrap}
+  .p-loan .ln-two .csel{min-width:0}
+  .p-loan #lnDown,.p-loan #lnTax{padding-right:78px}
+  .p-loan .ln-hint{color:#8a5a12;font-weight:500}
+  .p-loan .ln-res{margin:2px 0 14px}
+  .p-loan .res-big{font-size:clamp(34px,7vw,50px);line-height:1.1}
+  .p-loan .ln-box{background:#FCFAF6;border:1px solid var(--line);border-radius:12px;padding:10px;margin:0 0 8px}
+  .p-loan .ln-box svg{display:block;width:100%;height:auto;overflow:visible}
+  .p-loan .ln-leg{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12.5px;color:var(--ink-soft);margin:0 0 14px}
+  .p-loan .ln-leg span{display:inline-flex;align-items:center;gap:6px}
+  .p-loan .ln-leg i{display:inline-block;width:10px;height:10px;border-radius:3px}
+  .p-loan .ln-leg i.ln-dot{background:#B5761F;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px #B5761F}
+  .p-loan .ln-bar{display:flex;height:30px;border-radius:9px;overflow:hidden;border:1px solid var(--line);margin:0 0 8px;background:#F2EBDF}
+  .p-loan .ln-seg{display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;min-width:0}
+  .p-loan .ln-seg.ln-p{background:var(--spruce)}
+  .p-loan .ln-seg.ln-i{background:var(--amber)}
+  .p-loan .ln-dotc{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:8px;vertical-align:baseline}
+  .p-loan .dtable td:first-child{color:var(--ink);font-weight:600}
+  .p-loan .ln-terms td:nth-child(n+2),.p-loan .ln-terms th:nth-child(n+2){text-align:right}
+  .p-loan .fc-grp{font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin:14px 0 7px}
+  .p-loan .ln-sched{max-height:340px;overflow:auto;border:1px solid var(--line);border-radius:10px}
+  .p-loan .ln-sched .stable{margin:0}
+  .p-loan .ln-sched thead th{position:sticky;top:0;background:#F5EFE4;z-index:1}
+  .p-loan .ln-tabs{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+  .p-loan .ln-tabs h3{font-family:'Fraunces',serif;font-size:20px;font-weight:700;letter-spacing:-.01em}

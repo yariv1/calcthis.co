@@ -1,0 +1,548 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mortgage Calculator — Monthly Payment, Extra Payments &amp; Amortization | CalcThis</title>
+<meta name="description" content="Free mortgage calculator. Enter the home price, down payment, rate and term to get your monthly payment, a live balance chart, the month principal overtakes interest, what extra payments save, and 10/15/20/30-year terms side by side. Taxes, insurance and PMI under Go advanced.">
+<link rel="canonical" href="https://calcthis.co/mortgage-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Mortgage Calculator — Monthly Payment, Extra Payments &amp; Amortization">
+<meta property="og:description" content="See your monthly mortgage payment, how your balance falls, when principal overtakes interest and what extra payments save — with a full amortization schedule.">
+<meta property="og:url" content="https://calcthis.co/mortgage-calculator/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<meta name="theme-color" content="#B5761F">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css?v=159">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Mortgage Calculator",
+  "url": "https://calcthis.co/mortgage-calculator/",
+  "applicationCategory": "FinanceApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Mortgage payment calculator with a live balance chart, the month principal overtakes interest, extra-payment savings, 10/15/20/30-year terms side by side and a full amortization schedule. Property tax, insurance, PMI and HOA under Go advanced."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "How is a monthly mortgage payment calculated?", "acceptedAnswer": { "@type": "Answer", "text": "The principal-and-interest payment is M = P × r × (1 + r)ⁿ ÷ ((1 + r)ⁿ − 1), where P is the loan amount, r is the monthly interest rate (the yearly rate ÷ 12) and n is the number of monthly payments. For a $320,000 loan at 6.5% over 30 years, r = 0.0054167, n = 360 and the payment is $2,022.62. Property tax, insurance, PMI and HOA fees are added on top." } },
+    { "@type": "Question", "name": "Why is so much of my early payment interest?", "acceptedAnswer": { "@type": "Answer", "text": "Interest is charged on the balance you still owe, and the balance is highest at the start. On the $320,000 loan at 6.5%, the first payment of $2,022.62 is $1,733.33 interest and only $289.28 principal. Because each payment lowers the balance, the interest share shrinks and the principal share grows — here principal first outweighs interest in payment 233, in year 20." } },
+    { "@type": "Question", "name": "How much do extra payments save?", "acceptedAnswer": { "@type": "Answer", "text": "On the same loan, adding $200 a month cuts the loan from 360 payments to 281 — paid off 6 years 7 months sooner — and saves $105,429 in interest. Every extra dollar goes straight to principal, so it stops accruing interest for the rest of the loan. Enter an amount in the extra payment box to see your own savings and the faster balance curve." } },
+    { "@type": "Question", "name": "What is PMI and when does it end?", "acceptedAnswer": { "@type": "Answer", "text": "Private mortgage insurance is a monthly charge lenders add when you put down less than 20%. It is usually charged until your balance falls to 80% of the home price. On a $400,000 home with 5% down (a $380,000 loan at 6.5%), the balance falls to $320,000 after payment 124 (year 11), so PMI stops from payment 125. If PMI costs 0.8% of the loan a year, that is $253.33 a month until then. Add PMI under Go advanced to see the exact date." } },
+    { "@type": "Question", "name": "Is a 15-year or 30-year mortgage better?", "acceptedAnswer": { "@type": "Answer", "text": "A 15-year loan has a higher payment but costs far less interest. On $320,000 at 6.5%, the 30-year payment is $2,022.62 with $408,142 of total interest; the 15-year payment is $2,787.54 with $181,758. The comparison table under every result shows 10, 15, 20 and 30 years side by side for your own numbers." } }
+  ]
+}
+</script>
+</head>
+<body class="p-loan">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <a class="hdr-back" href="/blog/" aria-label="Back to blog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <span class="menu-col-head">Construction &amp; Gardening</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+          <a href="/paint-calculator/">Paint</a>
+          <a href="/wallpaper-calculator/">Wallpaper</a>
+          <a href="/square-footage-calculator/">Square Footage</a>
+          <a href="/tape-measure-fraction-calculator/">Tape Measure Fraction</a>
+          <a href="/stair-calculator/">Stair</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/vo2-max-calculator/">VO2 Max</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
+          <a href="/bmi-calculator/">BMI</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/ideal-weight-calculator/">Ideal Weight</a>
+          <a href="/lean-body-mass-calculator/">Lean Body Mass</a>
+          <a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio</a>
+          <a href="/calorie-calculator/">Calorie</a>
+          <a href="/bmr-calculator/">BMR</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/water-intake-calculator/">Water Intake</a>
+          <a href="/macro-calculator/">Macro</a>
+          <a href="/protein-intake-calculator/">Protein Intake</a>
+          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
+          <a href="/steps-to-miles-calculator/">Steps to Miles</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+          <a href="/grade-curve-calculator/">Grade Curve</a>
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/fraction-calculator/">Fraction</a>
+          <a href="/standard-deviation-calculator/">Standard Deviation</a>
+          <a href="/scientific-notation-calculator/">Scientific Notation</a>
+          <a href="/weighted-average-calculator/">Weighted Average</a>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+          <a href="/age-calculator/">Age</a>
+          <a href="/date-calculator/">Date</a>
+          <a href="/time-calculator/">Time</a>
+          <a href="/hours-calculator/">Hours</a>
+          <a href="/triangle-calculator/">Triangle</a>
+          <span class="menu-col-head">Cooking &amp; Kitchen</span>
+          <a href="/recipe-converter/">Recipe Converter</a>
+          <span class="menu-col-head">Money &amp; Finance</span>
+          <a href="/mortgage-calculator/" class="current">Mortgage</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">Mortgage payments, mapped</div>
+    <h1>Mortgage Calculator</h1>
+    <p>Get your <strong>monthly payment</strong> from the home price, down payment, rate and term. <strong>See how your balance falls</strong>, when principal finally overtakes interest, and what <strong>extra payments</strong> save — with 10-, 15-, 20- and 30-year terms side by side.</p>
+  </section>
+
+  <div class="grid">
+    <div class="card">
+      <div class="card-pad">
+        <h2 class="card-h2">Your mortgage</h2>
+
+        <div class="fld"><label class="lab" for="lnPrice">Home price <span class="unit">$</span></label><div class="inp"><input id="lnPrice" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 400000"></div></div>
+
+        <div class="fld"><label class="lab" for="lnDown">Down payment <span class="unit">optional</span></label><div class="inp"><input id="lnDown" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 20"><span class="len-toggle" id="lnDownSeg"><button type="button" class="on" data-u="pct">%</button><button type="button" data-u="usd">$</button></span></div></div>
+
+        <div class="ln-two">
+          <div class="fld"><label class="lab" for="lnRate">Interest rate <span class="unit">%</span></label><div class="inp"><input id="lnRate" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 6.5"></div></div>
+          <div class="fld"><label class="lab" for="lnTerm">Loan term <span class="unit">years</span></label><div class="inp"><input id="lnTerm" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 30"></div></div>
+        </div>
+        <div class="chips" id="lnTermChips" aria-label="Common loan terms" style="margin-top:-6px;margin-bottom:15px">
+          <button type="button" data-t="10">10 years</button>
+          <button type="button" data-t="15">15 years</button>
+          <button type="button" data-t="20">20 years</button>
+          <button type="button" data-t="30">30 years</button>
+        </div>
+
+        <div class="fld"><label class="lab" for="lnExtra">Extra payment per month <span class="unit">$ optional</span></label><div class="inp"><input id="lnExtra" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 200"></div></div>
+
+        <p class="add-note ln-hint" id="lnHint" style="display:none"></p>
+
+        <div class="chips" aria-label="Try an example">
+          <button type="button" id="lnEx">See an example: $400,000 home, 20% down, 6.5%, 30 years</button>
+        </div>
+
+        <div id="lnAdvIn" style="display:none">
+          <div class="proj-sep"></div>
+          <div class="fc-grp" style="margin-top:0">Loan start</div>
+          <div class="ln-two">
+            <div class="fld"><span class="lab">Start month</span><div class="csel" id="lnStartM" data-value="0">
+              <button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false">
+                <span class="csel-val">January</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="csel-panel" role="listbox">
+                <button type="button" class="csel-opt on" role="option" aria-selected="true" data-value="0">January</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="1">February</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="2">March</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="3">April</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="4">May</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="5">June</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="6">July</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="7">August</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="8">September</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="9">October</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="10">November</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="11">December</button>
+              </div>
+            </div></div>
+            <div class="fld"><label class="lab" for="lnStartY">Start year</label><div class="inp"><input id="lnStartY" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 2026"></div></div>
+          </div>
+
+          <div class="fc-grp">Yearly costs of owning</div>
+          <div class="fld"><label class="lab" for="lnTax">Property tax <span class="unit">per year</span></label><div class="inp"><input id="lnTax" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 1.2"><span class="len-toggle" id="lnTaxSeg"><button type="button" class="on" data-u="pct">%</button><button type="button" data-u="usd">$</button></span></div></div>
+          <div class="ln-two">
+            <div class="fld"><label class="lab" for="lnIns">Home insurance <span class="unit">$ / year</span></label><div class="inp"><input id="lnIns" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 1500"></div></div>
+            <div class="fld"><label class="lab" for="lnPmi">PMI <span class="unit">% of loan / yr</span></label><div class="inp"><input id="lnPmi" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 0.8"></div></div>
+          </div>
+          <div class="ln-two">
+            <div class="fld"><label class="lab" for="lnHoa">HOA fee <span class="unit">$ / month</span></label><div class="inp"><input id="lnHoa" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 0"></div></div>
+            <div class="fld"><label class="lab" for="lnOther">Other costs <span class="unit">$ / year</span></label><div class="inp"><input id="lnOther" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 0"></div></div>
+          </div>
+          <div class="fld"><label class="lab" for="lnGrow">Costs rise each year <span class="unit">% a year</span></label><div class="inp"><input id="lnGrow" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 3"></div></div>
+
+          <div class="fc-grp">More extra payments</div>
+          <div class="ln-two">
+            <div class="fld"><label class="lab" for="lnYAmt">Extra once a year <span class="unit">$</span></label><div class="inp"><input id="lnYAmt" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 5000"></div></div>
+            <div class="fld"><span class="lab">In month</span><div class="csel" id="lnYM" data-value="0">
+              <button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false">
+                <span class="csel-val">January</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="csel-panel" role="listbox">
+                <button type="button" class="csel-opt on" role="option" aria-selected="true" data-value="0">January</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="1">February</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="2">March</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="3">April</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="4">May</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="5">June</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="6">July</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="7">August</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="8">September</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="9">October</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="10">November</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="11">December</button>
+              </div>
+            </div></div>
+          </div>
+          <div class="ln-two">
+            <div class="fld"><label class="lab" for="lnOAmt">One-time extra <span class="unit">$</span></label><div class="inp"><input id="lnOAmt" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 20000"></div></div>
+            <div class="fld"><span class="lab">In month</span><div class="csel" id="lnOM" data-value="0">
+              <button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false">
+                <span class="csel-val">January</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="csel-panel" role="listbox">
+                <button type="button" class="csel-opt on" role="option" aria-selected="true" data-value="0">January</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="1">February</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="2">March</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="3">April</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="4">May</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="5">June</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="6">July</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="7">August</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="8">September</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="9">October</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="10">November</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="11">December</button>
+              </div>
+            </div></div>
+          </div>
+          <div class="fld"><label class="lab" for="lnOY">One-time extra — year</label><div class="inp"><input id="lnOY" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 2027"></div></div>
+
+          <div class="fc-grp">Interest compounding</div>
+          <div class="fld" style="margin-bottom:0">
+            <div class="seg" id="lnCompSeg" role="group" aria-label="Interest compounding">
+              <button class="on" type="button" data-v="us">Monthly (US, UK)</button>
+              <button type="button" data-v="semi">Semi-annual (Canada)</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="add-row split" style="margin-top:16px">
+          <span></span>
+          <button class="advbtn" id="lnAdvBtn" type="button">
+            <span id="lnAdvBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-pad">
+        <div class="ln-res">
+          <div class="res-lab" id="lnResLab">Monthly payment</div>
+          <div class="res-big" id="lnResBig">—</div>
+          <div class="res-sub" id="lnResSub">Enter the home price, interest rate and loan term to see your payment.</div>
+        </div>
+
+        <div id="lnResults" style="display:none">
+          <p class="res-tip adv-tip" id="lnTip"></p>
+          <p class="res-tip adv-tip" id="lnSave" style="display:none"></p>
+          <p class="res-tip" id="lnPmiNote" style="display:none"></p>
+
+          <div class="fc-grp">Your balance over the loan</div>
+          <div class="ln-box" id="lnChart"></div>
+          <div class="ln-leg" id="lnChartLeg"></div>
+
+          <div class="fc-grp">Interest vs principal in each year’s payments</div>
+          <div class="ln-box" id="lnStrip"></div>
+          <div class="ln-leg"><span><i style="background:#B5761F"></i>Interest</span><span><i style="background:#37503F"></i>Principal</span><span>Dashed line = half and half</span></div>
+
+          <div class="fc-grp">Over the whole loan</div>
+          <div class="ln-bar" id="lnLife"></div>
+          <div class="ln-leg" id="lnLifeLeg"></div>
+          <table class="dtable" id="lnSum"></table>
+
+          <div id="lnCostWrap" style="display:none">
+            <div class="fc-grp">Your monthly payment, line by line</div>
+            <div class="ln-bar" id="lnCostBar"></div>
+            <table class="dtable" id="lnCostTbl"></table>
+            <p class="res-tip" id="lnCostNote" style="display:none"></p>
+          </div>
+
+          <div class="fc-grp">Compare loan terms — same price, down payment and rate</div>
+          <table class="dtable ln-terms" id="lnTerms"></table>
+
+          <div id="lnBiWrap" style="display:none">
+            <div class="fc-grp">Bi-weekly payments</div>
+            <table class="dtable" id="lnBiTbl"></table>
+            <p class="res-tip" id="lnBiNote"></p>
+            <button class="btn" id="lnCopy" type="button" style="margin-top:6px">Copy results</button>
+          </div>
+
+          <div class="proj-sep"></div>
+          <div class="ln-tabs">
+            <h3>Amortization schedule</h3>
+            <div class="seg" id="lnSchedSeg" role="group" aria-label="Schedule view">
+              <button class="on" type="button" data-v="yearly">Yearly</button>
+              <button type="button" data-v="monthly">Monthly</button>
+            </div>
+          </div>
+          <p class="res-tip" id="lnSchedNote" style="display:none"></p>
+          <div class="ln-sched"><table class="stable" id="lnSched"></table></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- mobile sticky bar -->
+  <div class="mbar" id="mbar">
+    <span class="mbar-lab" id="lnMLab">Monthly payment</span>
+    <div class="mbar-vals"><b id="lnMVal">—</b><span id="lnMDec"></span></div>
+  </div>
+
+  <div class="related-calcs">
+    <p class="related-calcs-h">More calculators that may interest you</p>
+    <div class="pills">
+      <a class="pill" href="/percentage-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 5L5 19"/><circle cx="7" cy="7" r="2.5"/><circle cx="17" cy="17" r="2.5"/></svg>
+        Percentage Calculator
+      </a>
+      <a class="pill" href="/date-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>
+        Date Calculator
+      </a>
+      <a class="pill" href="/ratio-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="12" r="4"/><circle cx="16" cy="12" r="4"/></svg>
+        Ratio Calculator
+      </a>
+      <a class="pill" href="/weighted-average-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v16M5 20h14M5 9l-2 6h6zM19 9l-2 6h6z"/></svg>
+        Weighted Average Calculator
+      </a>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use the mortgage calculator</h2>
+        <p>Enter the <strong>home price</strong>, your <strong>down payment</strong> (as a percentage, or switch the box to dollars), the <strong>interest rate</strong> and the <strong>loan term</strong> in years — or tap 10, 15, 20 or 30 years. The result updates as you type: your monthly payment, a chart of how the balance falls, how much of the loan is principal and how much is interest, and a full amortization schedule. Type an amount in <strong>Extra payment per month</strong> to see how much interest it saves and how much sooner the loan ends.</p>
+        <p>This calculator covers fixed-rate loans. The payment is principal and interest only until you add property tax, insurance, PMI or HOA fees under Go advanced, which then show as a line-by-line total.</p>
+
+        <h2>The mortgage payment formula</h2>
+        <div class="formula">
+          M = P · r(1 + r)<sup>n</sup> ÷ ((1 + r)<sup>n</sup> − 1)
+          <small>P = LOAN AMOUNT · r = MONTHLY RATE · n = NUMBER OF PAYMENTS</small>
+        </div>
+        <p>For a <strong>$320,000</strong> loan (a $400,000 home with 20% down) at <strong>6.5%</strong> over 30 years: r = 6.5% ÷ 12 = 0.0054167 and n = 360, so (1 + r)<sup>360</sup> = 6.9918. Then M = $320,000 × 0.0054167 × 6.9918 ÷ (6.9918 − 1) = <strong>$2,022.62</strong> a month. Over 360 payments you pay $408,142 in interest on top of the $320,000 you borrowed.</p>
+
+        <h2>Why early payments are mostly interest</h2>
+        <p>Interest is charged on what you still owe, and you owe the most at the start. On that loan the first payment is $1,733.33 in interest and only $289.28 in principal. Each payment shrinks the balance a little, so the interest share falls and the principal share rises. Here principal first outweighs interest in <strong>payment 233</strong>, in year 20. The calculator marks that month on your balance chart and shows each year’s split in the strip below it.</p>
+
+        <h2>What extra payments do</h2>
+        <p>Extra money goes straight to principal, so the interest it would have earned the lender is never charged. Adding <strong>$200 a month</strong> to the loan above ends it after 281 payments — 6 years 7 months sooner — and saves <strong>$105,429</strong> in interest. Go advanced adds a yearly extra payment, a one-time lump sum, and the bi-weekly option (half a payment every two weeks, which is one extra monthly payment a year).</p>
+      </div>
+
+      <div>
+        <h2>PMI and the 20% down payment</h2>
+        <p>Lenders usually add <strong>private mortgage insurance</strong> when you put down less than 20%. It is typically charged until your balance falls to 80% of the home price. On a $400,000 home with 5% down — a $380,000 loan at 6.5% — the balance falls to $320,000 after payment 124, in year 11, so PMI stops from payment 125. At 0.8% of the loan a year, PMI would be $253.33 a month until then. Enter the PMI rate under Go advanced and the calculator finds the exact month it ends.</p>
+
+        <h2>Taxes, insurance and HOA fees</h2>
+        <p>Your real monthly cost is more than principal and interest. Property tax is a yearly percentage of the home’s value that varies a lot by location; insurance and HOA fees are fixed amounts you can find on your quote. Under Go advanced, a 1.2% property tax ($4,800 a year, $400 a month) and $1,500 of insurance ($125 a month) take the loan above to <strong>$2,547.62</strong> a month. You can also set how fast these costs rise each year.</p>
+
+        <h2>15-year or 30-year?</h2>
+        <p>A shorter term costs more each month but far less in total. On $320,000 at 6.5%, 30 years is $2,022.62 a month with $408,142 of interest; 15 years is $2,787.54 a month with $181,758. The comparison table in every result shows 10, 15, 20 and 30 years for your own numbers, so you can see the trade-off at a glance.</p>
+
+        <h2>More with Go advanced</h2>
+        <p>Go advanced adds the loan start date (for the payoff date and schedule dates), property tax as a percentage or a dollar amount, home insurance, PMI with its automatic end date, HOA fees and other costs with a yearly increase, a once-a-year extra payment, a one-time extra payment, the bi-weekly comparison, Canadian semi-annual compounding, and a copy button.</p>
+
+        <h2>Related tools</h2>
+        <p>Need a percentage of a price? Use the <a href="/percentage-calculator/">Percentage Calculator</a>. To count the days to a closing or payoff date, use the <a href="/date-calculator/">Date Calculator</a>. Results are estimates, not a loan offer or financial advice — your lender’s figures are the ones that count.</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>How is a monthly mortgage payment calculated?</summary><p>The principal-and-interest payment is M = P × r × (1 + r)ⁿ ÷ ((1 + r)ⁿ − 1), where P is the loan amount, r is the monthly interest rate (the yearly rate ÷ 12) and n is the number of monthly payments. For a $320,000 loan at 6.5% over 30 years, r = 0.0054167, n = 360 and the payment is $2,022.62. Property tax, insurance, PMI and HOA fees are added on top.</p></details>
+    <details class="faq"><summary>Why is so much of my early payment interest?</summary><p>Interest is charged on the balance you still owe, and the balance is highest at the start. On the $320,000 loan at 6.5%, the first payment of $2,022.62 is $1,733.33 interest and only $289.28 principal. Because each payment lowers the balance, the interest share shrinks and the principal share grows — here principal first outweighs interest in payment 233, in year 20.</p></details>
+    <details class="faq"><summary>How much do extra payments save?</summary><p>On the same loan, adding $200 a month cuts the loan from 360 payments to 281 — paid off 6 years 7 months sooner — and saves $105,429 in interest. Every extra dollar goes straight to principal, so it stops accruing interest for the rest of the loan. Enter an amount in the extra payment box to see your own savings and the faster balance curve.</p></details>
+    <details class="faq"><summary>What is PMI and when does it end?</summary><p>Private mortgage insurance is a monthly charge lenders add when you put down less than 20%. It is usually charged until your balance falls to 80% of the home price. On a $400,000 home with 5% down (a $380,000 loan at 6.5%), the balance falls to $320,000 after payment 124 (year 11), so PMI stops from payment 125. If PMI costs 0.8% of the loan a year, that is $253.33 a month until then. Add PMI under Go advanced to see the exact date.</p></details>
+    <details class="faq"><summary>Is a 15-year or 30-year mortgage better?</summary><p>A 15-year loan has a higher payment but costs far less interest. On $320,000 at 6.5%, the 30-year payment is $2,022.62 with $408,142 of total interest; the 15-year payment is $2,787.54 with $181,758. The comparison table under every result shows 10, 15, 20 and 30 years side by side for your own numbers.</p></details>
+  </section>
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+          <li><a href="/paint-calculator/">Paint Calculator</a></li>
+          <li><a href="/wallpaper-calculator/">Wallpaper Calculator</a></li>
+          <li><a href="/square-footage-calculator/">Square Footage Calculator</a></li>
+          <li><a href="/tape-measure-fraction-calculator/">Tape Measure Fraction Calculator</a></li>
+          <li><a href="/stair-calculator/">Stair Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/vo2-max-calculator/">VO2 Max Calculator</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/bmi-calculator/">BMI Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/ideal-weight-calculator/">Ideal Weight Calculator</a></li>
+          <li><a href="/lean-body-mass-calculator/">Lean Body Mass Calculator</a></li>
+          <li><a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio Calculator</a></li>
+          <li><a href="/calorie-calculator/">Calorie Calculator</a></li>
+          <li><a href="/bmr-calculator/">BMR Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/water-intake-calculator/">Water Intake Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/protein-intake-calculator/">Protein Intake Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
+          <li><a href="/steps-to-miles-calculator/">Steps to Miles Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+          <li><a href="/grade-curve-calculator/">Grade Curve Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/fraction-calculator/">Fraction Calculator</a></li>
+          <li><a href="/standard-deviation-calculator/">Standard Deviation Calculator</a></li>
+          <li><a href="/scientific-notation-calculator/">Scientific Notation Calculator</a></li>
+          <li><a href="/weighted-average-calculator/">Weighted Average Calculator</a></li>
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+          <li><a href="/age-calculator/">Age Calculator</a></li>
+          <li><a href="/date-calculator/">Date Calculator</a></li>
+          <li><a href="/time-calculator/">Time Calculator</a></li>
+          <li><a href="/hours-calculator/">Hours Calculator</a></li>
+          <li><a href="/triangle-calculator/">Triangle Calculator</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Cooking &amp;</span> <span class="ft2">Kitchen</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/recipe-converter/">Recipe Converter</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Money &amp;</span> <span class="ft2">Finance</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/mortgage-calculator/">Mortgage Calculator</a></li>
+        </ul>
+      </div>
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/blog/">Blog</a>
+      <span aria-hidden="true">·</span>
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+</div>
+
+<script src="/assets/app.js?v=159"></script>
+<script>CalcThis.initMortgageCalc();</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>

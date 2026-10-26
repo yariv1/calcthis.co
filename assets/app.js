@@ -10525,6 +10525,371 @@ CalcThis.initTriangleCalc = function () {
 };
 
 /* =========================================================
+   FINANCE · MORTGAGE CALCULATOR  (body.p-loan)
+   One amortization engine (CalcThis.loanEngine, pure — no DOM) plus the
+   page code. The same engine will drive the Loan and Auto Loan pages.
+   ========================================================= */
+/* LOAN-ENGINE:START */
+CalcThis.loanEngine = (function () {
+  // monthly interest rate from a yearly percentage; 'semi' = Canadian semi-annual compounding
+  function mrate(apr, comp) { var a = apr / 100; return comp === 'semi' ? Math.pow(1 + a / 2, 1 / 6) - 1 : a / 12; }
+  function pmt(P, r, n) { if (n <= 0) return 0; if (r === 0) return P / n; return P * r / (1 - Math.pow(1 + r, -n)); }
+  // o: { P, apr, n, comp, extra, yAmt, yMonth, oAmt, oAt, startMonth }
+  // Payment k falls in calendar month (startMonth + k) % 12; the first payment is one month after the start.
+  function run(o) {
+    var r = mrate(o.apr, o.comp), pay = pmt(o.P, r, o.n), bal = o.P, rows = [], tot = 0, k = 0, cross = 0, sm = o.startMonth || 0;
+    while (bal > 0.005 && k < o.n) {
+      k++;
+      var start = bal, intr = start * r, sp = pay - intr, ex = o.extra || 0;
+      if (o.yAmt && ((sm + k) % 12) === (o.yMonth % 12)) ex += o.yAmt;
+      if (o.oAmt && k === o.oAt) ex += o.oAmt;
+      var pr = sp + ex;
+      if (pr >= start - 0.005 || k === o.n) pr = start;
+      bal = start - pr;
+      if (!cross && sp > intr) cross = k;
+      tot += intr;
+      rows.push({ k: k, start: start, intr: intr, sp: sp, pr: pr, pay: intr + pr, bal: bal < 0.005 ? 0 : bal });
+    }
+    return { pay: pay, r: r, rows: rows, count: k, totInt: tot, totPaid: tot + o.P, cross: cross };
+  }
+  // half a monthly payment every 2 weeks, interest accruing at apr/26
+  function biweekly(P, apr, pay) {
+    var rr = apr / 100 / 26, bal = P, tot = 0, k = 0, half = pay / 2;
+    while (bal > 0.005 && k < 5000) {
+      k++;
+      var i = bal * rr; tot += i;
+      var pr = half - i; if (pr <= 0) return null;
+      if (pr >= bal) pr = bal;
+      bal -= pr;
+    }
+    return { periods: k, months: k * 12 / 26, interest: tot };
+  }
+  return { mrate: mrate, pmt: pmt, run: run, biweekly: biweekly };
+})();
+/* LOAN-ENGINE:END */
+
+CalcThis.initMortgageCalc = function () {
+  var E = CalcThis.loanEngine;
+  var $ = function (id) { return document.getElementById(id); };
+  if (!$('lnPrice')) return;
+  var MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  var now = new Date();
+  var st = { downU: 'pct', taxU: 'pct', comp: 'us', adv: false, sched: 'yearly' };
+  var last = null;
+
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+  function comma(x) { return x.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 }); }
+  function mon(x) { return '$' + x.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+  function mon0(x) { return '$' + comma(Math.round(x)); }
+  function kfmt(x) { return x >= 1e6 ? '$' + (Math.round(x / 1e5) / 10) + 'M' : x >= 1e3 ? '$' + Math.round(x / 1e3) + 'k' : '$' + Math.round(x); }
+  function pct(x) { return (Math.round(x * 100) / 100) + '%'; }
+  function plural(n, w) { return n + ' ' + w + (n === 1 ? '' : 's'); }
+  function span(m) {
+    var y = Math.floor(m / 12), mo = Math.round(m - y * 12);
+    if (mo === 12) { y++; mo = 0; }
+    if (!y && !mo) return '0 months';
+    return (y ? plural(y, 'year') : '') + (y && mo ? ' ' : '') + (mo ? plural(mo, 'month') : '');
+  }
+  function dateTxt(sm, sy, k) { var t = sm + k; return MON[t % 12] + ' ' + (sy + Math.floor(t / 12)); }
+
+  /* ---------- reading fields ---------- */
+  function read(id) {
+    var el = $(id); if (!el) return { e: true };
+    var s = (el.value || '').trim(); if (!s) return { e: true };
+    var t = s.replace(/[$,%\s]/g, '');
+    if (/^[-+.]*$/.test(t)) return { e: true, partial: true };
+    var v = Number(t);
+    return isNaN(v) || !isFinite(v) ? { bad: true } : { v: v };
+  }
+  var LABELS = { lnPrice: 'Home price', lnDown: 'Down payment', lnRate: 'Interest rate', lnTerm: 'Loan term', lnExtra: 'Extra payment', lnStartY: 'Start year', lnTax: 'Property tax', lnIns: 'Home insurance', lnPmi: 'PMI', lnHoa: 'HOA', lnOther: 'Other costs', lnGrow: 'Yearly cost increase', lnYAmt: 'Yearly extra', lnOAmt: 'One-time extra', lnOY: 'One-time year' };
+  var EXS = { lnPrice: '400000', lnDown: '20', lnRate: '6.5', lnTerm: '30', lnExtra: '200', lnStartY: '2026', lnTax: '1.2', lnIns: '1500', lnPmi: '0.8', lnHoa: '50', lnOther: '600', lnGrow: '3', lnYAmt: '5000', lnOAmt: '20000', lnOY: '2027' };
+  var BASE = 'Enter the home price, interest rate and loan term to see your payment.';
+
+  function setEmpty(msg, hint) {
+    $('lnResLab').textContent = 'Monthly payment';
+    $('lnResBig').textContent = '—';
+    $('lnResSub').textContent = msg;
+    $('lnResults').style.display = 'none';
+    $('lnMLab').textContent = 'Monthly payment'; $('lnMVal').textContent = '—'; $('lnMDec').textContent = '';
+    var h = $('lnHint'); h.textContent = hint || ''; h.style.display = hint ? 'block' : 'none';
+    last = null;
+  }
+
+  function calc() {
+    var ids = ['lnPrice', 'lnDown', 'lnRate', 'lnTerm', 'lnExtra'];
+    if (st.adv) ids = ids.concat(['lnStartY', 'lnTax', 'lnIns', 'lnPmi', 'lnHoa', 'lnOther', 'lnGrow', 'lnYAmt', 'lnOAmt', 'lnOY']);
+    var f = {}, i;
+    for (i = 0; i < ids.length; i++) {
+      f[ids[i]] = read(ids[i]);
+      if (f[ids[i]].bad) return { hint: 'Can’t read “' + LABELS[ids[i]] + '” yet — type a plain number like ' + EXS[ids[i]] + '.' };
+    }
+    var val = function (id, d) { return f[id] && f[id].v != null ? f[id].v : d; };
+    if (f.lnPrice.e || f.lnRate.e || f.lnTerm.e) return { msg: BASE };
+    var price = f.lnPrice.v, apr = f.lnRate.v, term = f.lnTerm.v;
+    if (!(price > 0)) return { msg: BASE, hint: 'The home price must be more than 0.' };
+    if (price > 1e9) return { msg: BASE, hint: 'That home price is too large to calculate — enter it in dollars, like 400000.' };
+    if (apr < 0 || apr > 30) return { msg: BASE, hint: 'Enter the yearly interest rate as a percentage between 0 and 30, like 6.5.' };
+    if (!(term > 0) || term > 50) return { msg: BASE, hint: 'The loan term must be between 1 and 50 years.' };
+    var dv = val('lnDown', 0), downD;
+    if (dv < 0) return { msg: BASE, hint: 'The down payment can’t be negative.' };
+    if (st.downU === 'pct') { if (dv >= 100) return { msg: BASE, hint: 'A down payment of 100% or more covers the whole price — there is no loan to pay off.' }; downD = price * dv / 100; }
+    else { if (dv >= price) return { msg: BASE, hint: 'That down payment covers the whole price — there is no loan to pay off.' }; downD = dv; }
+    var extra = val('lnExtra', 0);
+    if (extra < 0) return { msg: BASE, hint: 'The extra payment can’t be negative.' };
+    var P = price - downD, n = Math.max(1, Math.round(term * 12));
+    var sm = parseInt($('lnStartM').value, 10) || 0;
+    var sy = f.lnStartY && f.lnStartY.v != null ? Math.round(f.lnStartY.v) : now.getFullYear();
+    var yAmt = val('lnYAmt', 0), oAmt = val('lnOAmt', 0), oAt = 0;
+    if (yAmt < 0 || oAmt < 0) return { msg: BASE, hint: 'Extra payments can’t be negative.' };
+    if (oAmt > 0) {
+      var oy = f.lnOY && f.lnOY.v != null ? Math.round(f.lnOY.v) : sy;
+      oAt = (oy * 12 + parseInt($('lnOM').value, 10)) - (sy * 12 + sm);
+      if (oAt < 1 || oAt > n) return { msg: BASE, hint: 'The one-time extra payment must fall after the loan starts and before it ends.' };
+    }
+    var comp = st.comp;
+    var o = { P: P, apr: apr, n: n, comp: comp, extra: extra, yAmt: yAmt, yMonth: parseInt($('lnYM').value, 10), oAmt: oAmt, oAt: oAt, startMonth: sm };
+    var base = E.run({ P: P, apr: apr, n: n, comp: comp, startMonth: sm });
+    var hasExtra = extra > 0 || yAmt > 0 || oAmt > 0;
+    var real = hasExtra ? E.run(o) : base;
+    // monthly costs
+    var tv = val('lnTax', 0), taxY = st.taxU === 'pct' ? price * tv / 100 : tv;
+    var costs = { tax: taxY / 12, ins: val('lnIns', 0) / 12, hoa: val('lnHoa', 0), other: val('lnOther', 0) / 12, grow: val('lnGrow', 0), pmiRate: val('lnPmi', 0) };
+    if (tv < 0 || costs.ins < 0 || costs.hoa < 0 || costs.other < 0 || costs.pmiRate < 0 || costs.grow < 0) return { msg: BASE, hint: 'Costs can’t be negative.' };
+    if (st.taxU === 'pct' && tv > 100) return { msg: BASE, hint: 'Property tax as a percentage must be between 0 and 100 — typically around 1 or 2.' };
+    if (costs.pmiRate > 10) return { msg: BASE, hint: 'PMI is a yearly percentage of the loan, usually under 2 — for example 0.8.' };
+    if (costs.grow > 50) return { msg: BASE, hint: 'Costs rise each year by a percentage — for example 3.' };
+    if (taxY > price || costs.ins * 12 > price || costs.hoa * 12 > price || costs.other * 12 > price) return { msg: BASE, hint: 'One of the yearly costs is larger than the home price — check the amounts.' };
+    var needsPmi = P > 0.8 * price + 0.005;
+    return { price: price, downD: downD, downP: downD / price * 100, apr: apr, term: term, P: P, n: n, sm: sm, sy: sy, extra: extra, yAmt: yAmt, oAmt: oAmt, base: base, real: real, hasExtra: hasExtra, costs: costs, needsPmi: needsPmi, comp: comp };
+  }
+
+  /* ---------- costs per month ---------- */
+  function costAt(c, k, d) { // k = payment number (1-based)
+    var g = Math.pow(1 + c.grow / 100, Math.floor((k - 1) / 12));
+    var pmi = 0;
+    if (c.pmiRate > 0 && d.needsPmi) { var row = d.real.rows[k - 1] || d.base.rows[k - 1]; if (row && row.start > 0.8 * d.price) pmi = d.P * c.pmiRate / 100 / 12; }
+    return { tax: c.tax * g, ins: c.ins * g, hoa: c.hoa * g, other: c.other * g, pmi: pmi };
+  }
+
+  /* ---------- charts ---------- */
+  function balanceChart(d) {
+    var W = 300, H = 190, ml = 46, mr = 8, mt = 10, mb = 26, pw = W - ml - mr, ph = H - mt - mb;
+    var n = d.base.count, P = d.P;
+    var X = function (k) { return ml + pw * k / n; }, Y = function (b) { return mt + ph * (1 - b / P); };
+    function path(rows) { var p = 'M' + X(0).toFixed(1) + ',' + Y(P).toFixed(1); rows.forEach(function (r) { p += ' L' + X(r.k).toFixed(1) + ',' + Y(r.bal).toFixed(1); }); return p; }
+    var s = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Loan balance over time">';
+    [0, 0.5, 1].forEach(function (t) { var y = Y(P * t); s += '<line x1="' + ml + '" x2="' + (W - mr) + '" y1="' + y.toFixed(1) + '" y2="' + y.toFixed(1) + '" stroke="#E7DCC8" stroke-width="1"/><text x="' + (ml - 6) + '" y="' + (y + 4).toFixed(1) + '" text-anchor="end" font-size="13" fill="#6B5B4A">' + kfmt(P * t) + '</text>'; });
+    var yrs = n / 12, step = yrs <= 6 ? 1 : yrs <= 12 ? 2 : yrs <= 30 ? 5 : 10;
+    for (var y = 0; y <= yrs + 1e-9; y += step) { var x = X(y * 12); s += '<line x1="' + x.toFixed(1) + '" x2="' + x.toFixed(1) + '" y1="' + (mt + ph) + '" y2="' + (mt + ph + 4) + '" stroke="#9A8870"/><text x="' + x.toFixed(1) + '" y="' + (H - 6) + '" text-anchor="middle" font-size="13" fill="#6B5B4A">' + (y === 0 ? 'Yr 0' : y) + '</text>'; }
+    s += '<path d="' + path(d.base.rows) + ' L' + X(n).toFixed(1) + ',' + Y(0).toFixed(1) + ' L' + X(0).toFixed(1) + ',' + Y(0).toFixed(1) + ' Z" fill="#37503F" fill-opacity=".12"/>';
+    s += '<path d="' + path(d.base.rows) + '" fill="none" stroke="#37503F" stroke-width="2" stroke-linejoin="round"/>';
+    if (d.hasExtra) s += '<path d="' + path(d.real.rows) + '" fill="none" stroke="#B5761F" stroke-width="2.4" stroke-linejoin="round"/>';
+    if (d.base.cross) {
+      var cr = d.base.rows[d.base.cross - 1], cx = X(cr.k), cy = Y(cr.bal);
+      s += '<line x1="' + cx.toFixed(1) + '" x2="' + cx.toFixed(1) + '" y1="' + cy.toFixed(1) + '" y2="' + (mt + ph) + '" stroke="#B5761F" stroke-width="1.2" stroke-dasharray="3 3"/><circle cx="' + cx.toFixed(1) + '" cy="' + cy.toFixed(1) + '" r="4.5" fill="#B5761F" stroke="#fff" stroke-width="1.5"/>';
+    }
+    return s + '</svg>';
+  }
+  function shareStrip(d) {
+    var W = 300, H = 84, top = 6, bh = 56, rows = d.base.rows, years = Math.ceil(d.base.count / 12), bw = (W - 2) / years;
+    var s = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Share of each year’s payments going to interest and principal">';
+    for (var y = 0; y < years; y++) {
+      var it = 0, sp = 0;
+      for (var m = y * 12; m < Math.min(rows.length, y * 12 + 12); m++) { it += rows[m].intr; sp += rows[m].sp; }
+      var tot = it + sp, ish = tot > 0 ? it / tot : 0, ih = bh * ish, x = 1 + y * bw, w = Math.max(1, bw - 1);
+      s += '<rect x="' + x.toFixed(1) + '" y="' + top + '" width="' + w.toFixed(1) + '" height="' + ih.toFixed(1) + '" fill="#B5761F"/><rect x="' + x.toFixed(1) + '" y="' + (top + ih).toFixed(1) + '" width="' + w.toFixed(1) + '" height="' + (bh - ih).toFixed(1) + '" fill="#37503F"/>';
+    }
+    s += '<line x1="0" x2="' + W + '" y1="' + (top + bh / 2) + '" y2="' + (top + bh / 2) + '" stroke="#fff" stroke-width="1.4" stroke-dasharray="4 3"/>';
+    s += '<text x="1" y="' + (H - 6) + '" font-size="13" fill="#6B5B4A">Year 1</text><text x="' + (W - 1) + '" y="' + (H - 6) + '" text-anchor="end" font-size="13" fill="#6B5B4A">Year ' + years + '</text>';
+    return s + '</svg>';
+  }
+
+  /* ---------- schedule ---------- */
+  function schedHtml(d) {
+    var rows = d.real.rows, hasX = d.hasExtra, s = '';
+    if (st.sched === 'yearly') {
+      s = '<thead><tr><th>Year</th><th>Interest</th><th>Principal</th><th>Balance</th></tr></thead><tbody>';
+      for (var y = 0; y * 12 < rows.length; y++) {
+        var it = 0, pr = 0, lastRow = null;
+        for (var m = y * 12; m < Math.min(rows.length, y * 12 + 12); m++) { it += rows[m].intr; pr += rows[m].pr; lastRow = rows[m]; }
+        s += '<tr><td>' + (y + 1) + '</td><td>' + mon0(it) + '</td><td>' + mon0(pr) + '</td><td>' + mon0(lastRow.bal) + '</td></tr>';
+      }
+    } else {
+      s = '<thead><tr><th>#</th><th>Date</th><th>Interest</th><th>Principal</th><th>Balance</th></tr></thead><tbody>';
+      rows.forEach(function (r) { s += '<tr><td>' + r.k + '</td><td>' + dateTxt(d.sm, d.sy, r.k) + '</td><td>' + mon(r.intr) + '</td><td>' + mon(r.pr) + '</td><td>' + mon(r.bal) + '</td></tr>'; });
+    }
+    return s + '</tbody>';
+  }
+
+  /* ---------- render ---------- */
+  function render() {
+    var d = calc();
+    if (d.hint != null || d.msg != null) { setEmpty(d.msg || BASE, d.hint || ''); return; }
+    var h = $('lnHint'); h.style.display = 'none'; h.textContent = '';
+    var c = d.costs, pay = d.base.pay, c1 = costAt(c, 1, d), costSum1 = c1.tax + c1.ins + c1.hoa + c1.other + c1.pmi, total1 = pay + costSum1;
+    var anyCost = costSum1 > 0;
+    last = { d: d, total1: total1 };
+    var rateTxt = (Math.round(d.apr * 1000) / 1000) + '%', termTxt = (Math.round(d.term * 100) / 100) + (d.term === 1 ? ' year' : ' years');
+    $('lnResLab').textContent = anyCost ? 'Total monthly payment' : 'Monthly payment';
+    $('lnResBig').textContent = mon(total1);
+    $('lnResSub').textContent = (anyCost ? 'Principal & interest ' + mon(pay) + ' · ' : '') + 'loan ' + mon0(d.P) + ' at ' + rateTxt + ' for ' + termTxt;
+    $('lnMLab').textContent = anyCost ? 'Total monthly' : 'Monthly payment'; $('lnMVal').textContent = mon(total1);
+    $('lnMDec').textContent = ' · ' + (Math.round(d.term * 100) / 100) + ' yr @ ' + rateTxt;
+    $('lnResults').style.display = '';
+
+    // takeaway
+    var r1 = d.base.rows[0], tip = 'In your first payment, ' + mon(r1.intr) + ' goes to interest and ' + mon(r1.sp) + ' to the loan. ';
+    if (d.base.cross === 1) tip = 'From your very first payment more goes to the loan than to interest (' + mon(r1.sp) + ' vs ' + mon(r1.intr) + '). ';
+    else if (d.base.cross) tip += 'Principal first outweighs interest in payment ' + d.base.cross + ' (year ' + Math.ceil(d.base.cross / 12) + ').';
+    else tip += 'Interest outweighs principal for the whole loan.';
+    $('lnTip').textContent = tip.trim();
+
+    // extra-payment savings
+    var sv = $('lnSave');
+    if (d.hasExtra) {
+      var saved = d.base.totInt - d.real.totInt, sooner = d.base.count - d.real.count;
+      sv.style.display = '';
+      sv.textContent = 'Your extra payments save ' + mon0(saved) + ' in interest and finish ' + (sooner > 0 ? span(sooner) + ' sooner' : 'on schedule') + ' — paid off ' + dateTxt(d.sm, d.sy, d.real.count) + ' instead of ' + dateTxt(d.sm, d.sy, d.base.count) + '.';
+    } else sv.style.display = 'none';
+
+    // PMI note
+    var pn = $('lnPmiNote');
+    if (d.needsPmi && !(c.pmiRate > 0)) { pn.style.display = ''; pn.textContent = 'With less than 20% down, lenders usually add private mortgage insurance (PMI). Add its yearly rate under Go advanced to include it.'; }
+    else pn.style.display = 'none';
+
+    $('lnChart').innerHTML = balanceChart(d);
+    $('lnChartLeg').innerHTML = '<span><i style="background:#37503F"></i>Balance</span>' + (d.hasExtra ? '<span><i style="background:#B5761F"></i>Balance with extra payments</span>' : '') + (d.base.cross ? '<span><i class="ln-dot"></i>Principal overtakes interest (year ' + Math.ceil(d.base.cross / 12) + ')</span>' : '');
+    $('lnStrip').innerHTML = shareStrip(d);
+
+    // lifetime bar
+    var totP = d.real.totInt + d.P, pP = d.P / totP * 100, pI = 100 - pP;
+    $('lnLife').innerHTML = '<div class="ln-seg ln-p" style="width:' + pP.toFixed(2) + '%">' + (pP >= 14 ? Math.round(pP) + '%' : '') + '</div><div class="ln-seg ln-i" style="width:' + pI.toFixed(2) + '%">' + (pI >= 14 ? Math.round(pI) + '%' : '') + '</div>';
+    $('lnLifeLeg').innerHTML = '<span><i style="background:#37503F"></i>Principal ' + mon0(d.P) + '</span><span><i style="background:#B5761F"></i>Interest ' + mon0(d.real.totInt) + '</span>';
+
+    // summary
+    var sm = '<tbody><tr><td>Loan amount</td><td>' + mon0(d.P) + '</td></tr><tr><td>Down payment</td><td>' + mon0(d.downD) + ' (' + pct(d.downP) + ')</td></tr>' +
+      '<tr><td>Total interest</td><td>' + mon0(d.real.totInt) + '</td></tr><tr><td>Total of ' + d.real.count + ' payments</td><td>' + mon0(d.real.totPaid) + '</td></tr>' +
+      '<tr><td>Paid off</td><td>' + dateTxt(d.sm, d.sy, d.real.count) + '</td></tr>';
+    if (d.hasExtra) sm += '<tr><td>Interest saved by extra payments</td><td>' + mon0(d.base.totInt - d.real.totInt) + '</td></tr>';
+    $('lnSum').innerHTML = sm + '</tbody>';
+
+    // monthly cost breakdown
+    var cw = $('lnCostWrap');
+    if (anyCost) {
+      cw.style.display = '';
+      var items = [['Principal & interest', pay, '#37503F'], ['Property tax', c1.tax, '#6F8F78'], ['Home insurance', c1.ins, '#B5761F'], ['PMI', c1.pmi, '#8F5C13'], ['HOA', c1.hoa, '#CBBBA0'], ['Other costs', c1.other, '#9A8870']].filter(function (x) { return x[1] > 0.004; });
+      var bar = '', rows = '';
+      items.forEach(function (x) { bar += '<div class="ln-seg" style="width:' + (x[1] / total1 * 100).toFixed(2) + '%;background:' + x[2] + '"></div>'; rows += '<tr><td><i class="ln-dotc" style="background:' + x[2] + '"></i>' + x[0] + '</td><td>' + mon(x[1]) + '</td></tr>'; });
+      rows += '<tr class="cur"><td>Total</td><td>' + mon(total1) + '</td></tr>';
+      $('lnCostBar').innerHTML = bar; $('lnCostTbl').innerHTML = '<tbody>' + rows + '</tbody>';
+      var pmiNote = '';
+      if (c1.pmi > 0) { var kEnd = 0; for (var q = 0; q < d.real.rows.length; q++) { if (d.real.rows[q].start <= 0.8 * d.price) { kEnd = q + 1; break; } } pmiNote = kEnd ? 'PMI is charged until your balance falls to 80% of the home price — it drops off from payment ' + kEnd + ' (' + dateTxt(d.sm, d.sy, kEnd) + ').' : 'PMI would be charged for the whole loan.'; }
+      if (c.grow > 0) pmiNote += (pmiNote ? ' ' : '') + 'Taxes, insurance, HOA and other costs are shown for year 1; they rise ' + pct(c.grow) + ' a year after that.';
+      $('lnCostNote').textContent = pmiNote; $('lnCostNote').style.display = pmiNote ? '' : 'none';
+    } else cw.style.display = 'none';
+
+    // compare terms
+    var termList = [10, 15, 20, 30]; var ty = d.n / 12;
+    if (termList.indexOf(ty) < 0) { termList.push(ty); termList.sort(function (a, b) { return a - b; }); }
+    var r = E.mrate(d.apr, d.comp), tt = '<thead><tr><th>Term</th><th>Monthly P&amp;I</th><th>Total interest</th></tr></thead><tbody>';
+    termList.forEach(function (t) { var nn = Math.round(t * 12), p = E.pmt(d.P, r, nn), ti = p * nn - d.P; tt += '<tr' + (Math.abs(t - ty) < 1e-9 ? ' class="cur"' : '') + '><td>' + (Math.round(t * 100) / 100) + ' years</td><td>' + mon(p) + '</td><td>' + mon0(ti) + '</td></tr>'; });
+    $('lnTerms').innerHTML = tt + '</tbody>';
+
+    // advanced: biweekly
+    var bw = $('lnBiWrap');
+    if (st.adv) {
+      bw.style.display = '';
+      var b = E.biweekly(d.P, d.apr, pay);
+      if (b) {
+        var bs = d.base.totInt - b.interest, bm = d.base.count - b.months;
+        $('lnBiTbl').innerHTML = '<tbody><tr><td>Payment every 2 weeks</td><td>' + mon(pay / 2) + '</td></tr><tr><td>Paid off after</td><td>' + span(b.months) + ' (instead of ' + span(d.base.count) + ')</td></tr><tr><td>Total interest</td><td>' + mon0(b.interest) + '</td></tr><tr><td>Interest saved vs monthly</td><td>' + mon0(bs) + '</td></tr></tbody>';
+        $('lnBiNote').textContent = 'Half the monthly payment every two weeks adds up to 26 half-payments — one extra monthly payment a year' + (bm > 0.5 ? ', finishing ' + span(bm) + ' sooner.' : '.');
+      } else { $('lnBiTbl').innerHTML = ''; $('lnBiNote').textContent = ''; }
+    } else bw.style.display = 'none';
+
+    $('lnSched').innerHTML = schedHtml(d);
+    var cm = $('lnSchedNote');
+    cm.textContent = d.hasExtra ? 'Schedule includes your extra payments.' : '';
+    cm.style.display = d.hasExtra ? '' : 'none';
+  }
+
+  /* ---------- controls ---------- */
+  function seg(id, attr, fn) {
+    var el = $(id);
+    [].forEach.call(el.querySelectorAll('button'), function (b) {
+      b.addEventListener('click', function () {
+        [].forEach.call(el.querySelectorAll('button'), function (x) { x.classList.toggle('on', x === b); x.setAttribute('aria-selected', x === b ? 'true' : 'false'); });
+        fn(b.getAttribute(attr));
+      });
+    });
+  }
+  function fmtPlain(x) { return String(Number(x.toFixed(4))); }
+  // %/$ toggle that carries the exact value across when the price is known
+  function unitToggle(segId, fieldId, key, base) {
+    seg(segId, 'data-u', function (u) {
+      var prev = st[key]; st[key] = u;
+      var el = $(fieldId), v = read(fieldId), p = read('lnPrice');
+      if (prev !== u && v.v != null && p.v > 0) {
+        var cv = u === 'usd' ? p.v * v.v / (base || 100) : v.v / p.v * 100, okIn = u === 'usd' ? (v.v >= 0 && v.v <= 100) : (v.v >= 0 && cv <= 100);
+        el.value = okIn ? fmtPlain(cv) : '';
+      }
+      el.placeholder = u === 'pct' ? (key === 'downU' ? 'e.g. 20' : 'e.g. 1.2') : (key === 'downU' ? 'e.g. 80000' : 'e.g. 4800');
+      render();
+    });
+  }
+  unitToggle('lnDownSeg', 'lnDown', 'downU');
+  unitToggle('lnTaxSeg', 'lnTax', 'taxU');
+  seg('lnCompSeg', 'data-v', function (v) { st.comp = v; render(); });
+  seg('lnSchedSeg', 'data-v', function (v) { st.sched = v; if (last) $('lnSched').innerHTML = schedHtml(last.d); });
+  ['lnPrice', 'lnDown', 'lnRate', 'lnTerm', 'lnExtra', 'lnStartY', 'lnTax', 'lnIns', 'lnPmi', 'lnHoa', 'lnOther', 'lnGrow', 'lnYAmt', 'lnOAmt', 'lnOY'].forEach(function (id) {
+    $(id).addEventListener('input', function () { if (id === 'lnTerm') markTerm(); render(); });
+  });
+  ['lnStartM', 'lnYM', 'lnOM'].forEach(function (id) { $(id).addEventListener('change', render); });
+  function markTerm() {
+    var v = read('lnTerm').v;
+    [].forEach.call($('lnTermChips').querySelectorAll('button'), function (b) { b.classList.toggle('on', v != null && Number(b.getAttribute('data-t')) === v); });
+  }
+  [].forEach.call($('lnTermChips').querySelectorAll('button'), function (b) { b.addEventListener('click', function () { $('lnTerm').value = b.getAttribute('data-t'); markTerm(); render(); }); });
+  $('lnEx').addEventListener('click', function () {
+    st.downU = 'pct';
+    [].forEach.call($('lnDownSeg').querySelectorAll('button'), function (x) { x.classList.toggle('on', x.getAttribute('data-u') === 'pct'); });
+    $('lnDown').placeholder = 'e.g. 20';
+    $('lnPrice').value = '400000'; $('lnDown').value = '20'; $('lnRate').value = '6.5'; $('lnTerm').value = '30'; markTerm(); render();
+  });
+  $('lnAdvBtn').addEventListener('click', function () {
+    st.adv = !st.adv;
+    $('lnAdvBtn').classList.toggle('open', st.adv);
+    $('lnAdvBtnLab').textContent = st.adv ? 'Go simple' : 'Go advanced';
+    $('lnAdvIn').style.display = st.adv ? '' : 'none';
+    if (!st.adv) {
+      ['lnStartY', 'lnTax', 'lnIns', 'lnPmi', 'lnHoa', 'lnOther', 'lnGrow', 'lnYAmt', 'lnOAmt', 'lnOY'].forEach(function (id) { $(id).value = ''; });
+      $('lnStartM').value = String(now.getMonth()); $('lnYM').value = '0'; $('lnOM').value = String(now.getMonth());
+      st.comp = 'us'; st.taxU = 'pct'; $('lnTax').placeholder = 'e.g. 1.2';
+      [].forEach.call($('lnCompSeg').querySelectorAll('button'), function (b) { b.classList.toggle('on', b.getAttribute('data-v') === 'us'); });
+      [].forEach.call($('lnTaxSeg').querySelectorAll('button'), function (b) { b.classList.toggle('on', b.getAttribute('data-u') === 'pct'); });
+    }
+    render();
+  });
+  $('lnCopy').addEventListener('click', function () {
+    if (!last) return;
+    var d = last.d, lines = ['Mortgage: ' + mon0(d.price) + ' home, ' + mon0(d.downD) + ' down (' + pct(d.downP) + '), loan ' + mon0(d.P) + ' at ' + d.apr + '% for ' + d.term + ' years',
+      'Principal & interest: ' + mon(d.base.pay) + ' a month', 'Total monthly payment: ' + mon(last.total1),
+      'Total interest: ' + mon0(d.real.totInt), 'Total of ' + d.real.count + ' payments: ' + mon0(d.real.totPaid), 'Paid off: ' + dateTxt(d.sm, d.sy, d.real.count)];
+    if (d.hasExtra) lines.push('Interest saved by extra payments: ' + mon0(d.base.totInt - d.real.totInt));
+    var btn = $('lnCopy'), txt = lines.join('\n');
+    var done = function (ok) { btn.textContent = ok ? 'Copied' : 'Copy failed'; setTimeout(function () { btn.textContent = 'Copy results'; }, 1600); };
+    try { navigator.clipboard.writeText(txt).then(function () { done(true); }, function () { done(false); }); } catch (e) { done(false); }
+  });
+
+  $('lnStartM').value = String(now.getMonth());
+  $('lnYM').value = '0';
+  $('lnOM').value = String(now.getMonth());
+  $('lnStartY').placeholder = 'e.g. ' + now.getFullYear();
+  $('lnOY').placeholder = 'e.g. ' + (now.getFullYear() + 1);
+  render();
+};
+
+/* =========================================================
    SITE FOOTER — mobile accordion
    Multiple pillars can be open simultaneously.
    First pillar starts expanded (aria-expanded="true" in HTML).
