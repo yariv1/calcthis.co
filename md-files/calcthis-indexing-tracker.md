@@ -1,5 +1,7 @@
 # Indexing tracker (Google Search Console, property `sc-domain:calcthis.co`)
 
+_How-to for requesting indexing with Claude in Chrome + the next batch: HANDOFF.md §10. Next batch = /auto-loan-calculator/ + the "not checked yet" list below, ~10 per day._
+
 **Rule:** every new calculator/article is added to the table below the moment it deploys (status `Not requested`).
 Request indexing in GSC → URL Inspection → Request indexing. **Quota is per property (~10/day, shared by the whole domain), not per user.**
 Requesting only queues a crawl; re-check status ~1–2 weeks later and update the table.
