@@ -2160,3 +2160,7 @@
   .p-pay .inp .len-toggle button{white-space:nowrap}
   .p-pay #pcGross{padding-right:150px}
   @media (max-width:430px){.p-pay #pcGross{padding-right:140px}}
+  .p-pay .ln-terms td:first-child{white-space:normal}
+  .p-pay .ln-terms td:nth-child(n+2),.p-pay .ln-terms th:nth-child(n+2){white-space:nowrap}
+  .p-pay .dtable{table-layout:auto;width:100%}
+  @media (max-width:430px){.p-pay .ln-terms td,.p-pay .ln-terms th{padding-left:6px;padding-right:6px}}

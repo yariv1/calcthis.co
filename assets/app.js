@@ -11692,6 +11692,16 @@ CalcThis.payEngine = (function () {
       var rows = S.tab[o.status === 'married' ? 'married' : 'single'];
       return { tax: Math.max(0, tab(rows, Math.max(0, a - ded))) / o.ppy };
     },
+    // Arizona: wages x the percentage chosen on Form A-4 (default 2.0%)
+    pct: function (S, o) {
+      var p = o.allowances === undefined || o.allowances === null || o.allowances === '' ? S.defaultPct : num(o.allowances);
+      return { tax: o.wages * p / 100 };
+    },
+    // Iowa: (annual wages - deduction) x rate, less the allowance amount from the IA W-4
+    ia: function (S, o) {
+      var a = o.wages * o.ppy, d = S.ded[o.status] || S.ded.single;
+      return { tax: Math.max(0, (Math.max(0, a - d) * S.rate - num(o.allowances))) / o.ppy };
+    },
     ca: function (S, o) {
       var a = o.wages * o.ppy, st = o.status, al = num(o.allowances), ex = num(o.allowances2);
       var key = st === 'hoh' ? 'hoh' : (st === 'married' ? (al >= 2 ? 'married2' : 'married0') : 'single');
@@ -11817,7 +11827,12 @@ CalcThis.payEngine = (function () {
   S.MN = { name: 'Minnesota', method: 'ann', programs: [{ name: 'MN Paid Leave', rate: .0044, base: 184500 }], src: 'https://www.revenue.state.mn.us/sites/default/files/2025-12/wh-inst-26.pdf', allow: 5300,
     tab: { single: [[0, 0, 0], [4700, 0, .0535], [38010, 1782.09, .068], [114130, 6958.25, .0785], [207850, 14315.27, .0985]], married: [[0, 0, 0], [14700, 0, .0535], [63400, 2605.45, .068], [208180, 12450.49, .0785], [352630, 23789.82, .0985]] } };
   S.AL = { name: 'Alabama', method: 'al', src: 'https://revenue.alabama.gov/wp-content/uploads/2026/01/whbooklet_0126.pdf' };
-  S.PA = { name: 'Pennsylvania', method: 'flatann', src: 'https://www.pa.gov/agencies/revenue', rate: .0307, taxes401k: true };
+  S.AZ = { name: 'Arizona', method: 'pct', src: 'https://azdor.gov/forms/withholding', defaultPct: 2.0 };
+  S.CO = { name: 'Colorado', method: 'flatann', src: 'https://tax.colorado.gov/sites/default/files/documents/DR_1098_Colorado_Withholding_Worksheet_for_Employees.pdf', rate: .044, stdDed: { single: 5500, married: 11000, hoh: 5500 },
+    programs: [{ name: 'CO Paid Family & Medical Leave', rate: .0044, base: 184500 }] };
+  S.KY = { name: 'Kentucky', method: 'flatann', src: 'https://revenue.ky.gov/Forms/2026%20Withholding%20Formula.pdf', rate: .035, stdDed: { single: 3360, married: 3360, hoh: 3360 } };
+  S.IA = { name: 'Iowa', method: 'ia', src: 'https://revenue.iowa.gov/media/53/download', rate: .038, ded: { single: 13000, married: 26000, hoh: 19500 } };
+  S.PA = { name: 'Pennsylvania', method: 'flatann', src: 'https://www.pa.gov/agencies/dli/resources/for-employers-and-educators/how-to-file/uc-tax', rate: .0307, taxes401k: true, programs: [{ name: 'PA Unemployment (employee)', rate: .0007 }] };
 })(CalcThis.payEngine.STATES);
 /* PAY-STATES:END */
 
@@ -11832,16 +11847,17 @@ CalcThis.initPayCalc = function () {
   var NAMES = { AL: 'Alabama', AK: 'Alaska', AZ: 'Arizona', AR: 'Arkansas', CA: 'California', CO: 'Colorado', CT: 'Connecticut', DE: 'Delaware', DC: 'District of Columbia', FL: 'Florida', GA: 'Georgia', HI: 'Hawaii', ID: 'Idaho', IL: 'Illinois', IN: 'Indiana', IA: 'Iowa', KS: 'Kansas', KY: 'Kentucky', LA: 'Louisiana', ME: 'Maine', MD: 'Maryland', MA: 'Massachusetts', MI: 'Michigan', MN: 'Minnesota', MS: 'Mississippi', MO: 'Missouri', MT: 'Montana', NE: 'Nebraska', NV: 'Nevada', NH: 'New Hampshire', NJ: 'New Jersey', NM: 'New Mexico', NY: 'New York', NC: 'North Carolina', ND: 'North Dakota', OH: 'Ohio', OK: 'Oklahoma', OR: 'Oregon', PA: 'Pennsylvania', RI: 'Rhode Island', SC: 'South Carolina', SD: 'South Dakota', TN: 'Tennessee', TX: 'Texas', UT: 'Utah', VT: 'Vermont', VA: 'Virginia', WA: 'Washington', WV: 'West Virginia', WI: 'Wisconsin', WY: 'Wyoming' };
   // Labels for each state's own withholding form fields (the tax data itself lives in CalcThis.payEngine.STATES).
   var SFIELDS = {
-    AL: ['Dependents (Form A-4)'], CA: ['Allowances (DE 4)', 'Extra allowances for deductions (DE 4)'], GA: ['Dependents (Form G-4)'],
+    AL: ['Dependents (Form A-4)'], AZ: ['Withholding percentage (Form A-4, default 2)'], IA: ['Total allowance amount (IA W-4)'], CA: ['Allowances (DE 4)', 'Extra allowances for deductions (DE 4)'], GA: ['Dependents (Form G-4)'],
     IL: ['Basic allowances (IL-W-4, line 1)', 'Additional allowances (IL-W-4, line 2)'], MI: ['Exemptions (MI-W4)'], MN: ['Allowances (W-4MN)'],
     NC: ['Allowances (NC-4)'], NY: ['Exemptions (IT-2104)'], VA: ['Exemptions (VA-4)']
   };
 
   function comma(x) { return x.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 }); }
   function mon(x) { if (Math.abs(x) < 0.005) x = 0; return (x < 0 ? '−$' : '$') + Math.abs(x).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+  function monS(x) { return Math.abs(x) >= 1e5 ? mon0(x) : mon(x); }
   function mon0(x) { x = Math.round(x) || 0; return (x < 0 ? '−$' : '$') + comma(Math.abs(x)); }
   function pct(x) { return (Math.round(x * 10) / 10) + '%'; }
-  function kfmt(x) { return x >= 1e6 ? '$' + (Math.round(x / 1e5) / 10) + 'M' : x >= 1e4 ? '$' + Math.round(x / 1e3) + 'k' : x >= 1e3 ? '$' + (Math.round(x / 100) / 10) + 'k' : '$' + Math.round(x); }
+  function kfmt(x) { return x >= 1e6 ? '$' + (Math.round(x / 1e5) / 10) + 'M' : x >= 1e3 ? '$' + (Math.round(x / 100) / 10) + 'k' : '$' + Math.round(x); }
 
   function read(id) {
     var el = $(id); if (!el) return { e: true };
@@ -11852,7 +11868,7 @@ CalcThis.initPayCalc = function () {
     var v = Number(t);
     return isNaN(v) || !isFinite(v) || t === '' ? { bad: true } : { v: v, pct: isPct };
   }
-  var LABELS = { pcGross: 'Pay', pcRate: 'Hourly rate', pcHours: 'Hours per week', pcOtHours: 'Overtime hours', pcOtMult: 'Overtime multiplier', pcYtd: 'Year-to-date pay', pcCredit: 'Step 3 amount', pc4a: 'Step 4(a) other income', pc4b: 'Step 4(b) deductions', pcFedExtra: 'Extra federal withholding', pcAllow: 'Allowances', pcStAllow: 'State allowances', pcStAllow2: 'Additional state allowances', pcStExtra: 'Extra state withholding', pc401k: '401(k) contribution', pcHealth: 'Health insurance', pcHsa: 'HSA / FSA / commuter', pcPreOther: 'Other before-tax deduction', pcRoth: 'Roth contribution', pcPostOther: 'Other after-tax deduction' };
+  var LABELS = { pcGross: 'Pay', pcRate: 'Hourly rate', pcHours: 'Hours per week', pcOtHours: 'Overtime hours', pcOtMult: 'Overtime multiplier', pcYtd: 'Year-to-date pay', pcCredit: 'Step 3 amount', pc4a: 'Step 4(a) other income', pc4b: 'Step 4(b) deductions', pcFedExtra: 'Extra federal withholding', pcAllow: 'Allowances', pcStAllow: 'State allowances or amount', pcStAllow2: 'Additional state allowances', pcStExtra: 'Extra state withholding', pc401k: '401(k) contribution', pcHealth: 'Health insurance', pcHsa: 'HSA / FSA / commuter', pcPreOther: 'Other before-tax deduction', pcRoth: 'Roth contribution', pcPostOther: 'Other after-tax deduction' };
   var EXS = { pcGross: '65000', pcRate: '22', pcHours: '40', pcOtHours: '5', pcOtMult: '1.5', pcYtd: '30000', pcCredit: '2000', pc4a: '1000', pc4b: '5000', pcFedExtra: '25', pcAllow: '2', pcStAllow: '2', pcStAllow2: '1', pcStExtra: '10', pc401k: '6%', pcHealth: '150', pcHsa: '50', pcPreOther: '25', pcRoth: '100', pcPostOther: '30' };
   var BASE = 'Enter your pay to see your take-home pay.';
 
@@ -11914,13 +11930,16 @@ CalcThis.initPayCalc = function () {
     if (annual > 1e9) return { msg: BASE, hint: 'That amount is too large to calculate — check the numbers.' };
     var c = { w4: st.w4, status: statusKey(), step2: adv && st.w4 === 'new' && $('pcStep2').checked, credit: adv ? val('pcCredit', 0) : 0, other4a: adv ? val('pc4a', 0) : 0, ded4b: adv ? val('pc4b', 0) : 0, fedExtra: adv ? val('pcFedExtra', 0) : 0, allow: adv ? val('pcAllow', 0) : 0,
       round: adv && $('pcRound').checked, exFed: adv && $('pcExFed').checked, exSS: adv && $('pcExSS').checked, exMed: adv && $('pcExMed').checked, exState: adv && $('pcExState').checked,
-      state: stateCode(), stAllow: adv ? val('pcStAllow', 0) : 0, stAllow2: adv ? val('pcStAllow2', 0) : 0, stExtra: adv ? val('pcStExtra', 0) : 0 };
+      state: stateCode(), stAllow: adv && f.pcStAllow && f.pcStAllow.v != null ? f.pcStAllow.v : (adv && stateCode() === 'AZ' ? null : 0), stAllow2: adv ? val('pcStAllow2', 0) : 0, stExtra: adv ? val('pcStExtra', 0) : 0 };
     var nn = ['credit', 'other4a', 'ded4b', 'fedExtra', 'allow', 'stAllow', 'stAllow2', 'stExtra'], nl = ['pcCredit', 'pc4a', 'pc4b', 'pcFedExtra', 'pcAllow', 'pcStAllow', 'pcStAllow2', 'pcStExtra'];
     for (i = 0; i < nn.length; i++) {
       if (c[nn[i]] < 0) return { msg: BASE, hint: '“' + LABELS[nl[i]] + '” can’t be negative.' };
       if (c[nn[i]] > 1e9) return { msg: BASE, hint: '“' + LABELS[nl[i]] + '” is too large to calculate — enter it in dollars.' };
     }
-    if (c.allow > 99 || c.stAllow > 99 || c.stAllow2 > 99) return { msg: BASE, hint: 'Enter the number of allowances as a small whole number, like 2.' };
+    var sc = c.state;
+    if (sc === 'AZ' && c.stAllow != null && c.stAllow > 3.5) return { msg: BASE, hint: 'Enter the Form A-4 withholding percentage — 0.5, 1, 1.5, 2, 2.5, 3 or 3.5.' };
+    if (sc !== 'IA' && sc !== 'AZ' && (c.stAllow > 99 || c.stAllow2 > 99)) return { msg: BASE, hint: 'Enter the number of allowances as a small whole number, like 2.' };
+    if (c.allow > 99) return { msg: BASE, hint: 'Enter the number of allowances as a small whole number, like 2.' };
     var ytd = adv ? val('pcYtd', 0) : 0;
     if (ytd < 0) return { msg: BASE, hint: 'Year-to-date pay can’t be negative.' };
     if (ytd > 1e9) return { msg: BASE, hint: 'Year-to-date pay is too large to calculate — enter it in dollars.' };
@@ -12029,9 +12048,9 @@ CalcThis.initPayCalc = function () {
     var tb = '<thead><tr><th></th><th>Per paycheck</th><th>Per year</th></tr></thead><tbody>';
     rows.forEach(function (r) {
       var yr = r[3] === 'prog' ? -(progYear[r[0]] || 0) : r[2];
-      tb += '<tr><td>' + r[0] + '</td><td>' + mon(r[1]) + '</td><td>' + mon0(yr) + '</td></tr>';
+      tb += '<tr><td>' + r[0] + '</td><td>' + monS(r[1]) + '</td><td>' + mon0(yr) + '</td></tr>';
     });
-    tb += '<tr class="cur"><td>Take-home pay</td><td>' + mon(p.net) + '</td><td>' + mon0(T.net) + '</td></tr></tbody>';
+    tb += '<tr class="cur"><td>Take-home pay</td><td>' + monS(p.net) + '</td><td>' + mon0(T.net) + '</td></tr></tbody>';
     $('pcTable').innerHTML = tb;
 
     // what-if
@@ -12041,7 +12060,7 @@ CalcThis.initPayCalc = function () {
     var ft = '<thead><tr><th>Paid</th><th>Paycheck</th><th>Take-home</th></tr></thead><tbody>';
     FREQ.forEach(function (fr) {
       var pp = E.PPY[fr[0]], g2 = d.annual / pp, dd = scaleDed(d.ded, ppy, pp), q = E.paycheck(buildInput(c, g2, pp, 0, dd));
-      ft += '<tr' + (fr[0] === freqKey() ? ' class="cur"' : '') + '><td>' + fr[1] + '</td><td>' + mon(g2) + '</td><td>' + mon(q.net) + '</td></tr>';
+      ft += '<tr' + (fr[0] === freqKey() ? ' class="cur"' : '') + '><td>' + fr[1] + '</td><td>' + monS(g2) + '</td><td>' + monS(q.net) + '</td></tr>';
     });
     $('pcFreq2').innerHTML = ft + '</tbody>';
 
@@ -12132,7 +12151,7 @@ CalcThis.initPayCalc = function () {
   ['pcGross', 'pcRate', 'pcHours', 'pcOtHours', 'pcOtMult', 'pcYtd', 'pcCredit', 'pc4a', 'pc4b', 'pcFedExtra', 'pcAllow', 'pcStAllow', 'pcStAllow2', 'pcStExtra', 'pc401k', 'pcHealth', 'pcHsa', 'pcPreOther', 'pcRoth', 'pcPostOther', 'pcWiRaise', 'pcWiK'].forEach(function (id) { $(id).addEventListener('input', render); });
   ['pcStep2', 'pcRound', 'pcExFed', 'pcExSS', 'pcExMed', 'pcExState'].forEach(function (id) { $(id).addEventListener('change', render); });
   ['pcFreq', 'pcStatus'].forEach(function (id) { $(id).addEventListener('change', render); });
-  $('pcState').addEventListener('change', function () { syncStateFields(); render(); });
+  $('pcState').addEventListener('change', function () { $('pcStAllow').value = ''; $('pcStAllow2').value = ''; syncStateFields(); render(); });
 
   $('pcEx').addEventListener('click', function () {
     if (st.mode === 'hourly') { $('pcRate').value = '22'; $('pcHours').value = '40'; } else { $('pcGross').value = '65000'; }

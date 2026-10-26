@@ -1,8 +1,11 @@
 const fs = require('fs'), path = require('path');
-const ROOT = 'C:/Users/yariv/Utility Website/calcthis/';
-const SP = process.env.TEMP + '/claude/C--Users-yariv-Utility-Website-calcthis/90288540-1669-47cc-92e0-b36514a122a3/scratchpad/'.replace('122a3', '122a3');
+const ROOT = path.resolve(__dirname, '..') + '/';
+/* Regenerates paycheck-calculator/index.html (SEO text and FAQ numbers are computed from the engine in assets/app.js).
+   Run: node md-files/gen-paycheck-page.js   then   node build.js */
 global.CalcThis = {};
-eval(fs.readFileSync(path.join(__dirname, 'payengine.js'), 'utf8'));
+const app = fs.readFileSync(ROOT + 'assets/app.js', 'utf8');
+const eng = app.slice(app.indexOf('/* PAY-ENGINE:START */'), app.indexOf('/* PAY-STATES:END */') + '/* PAY-STATES:END */'.length);
+eval(eng);
 const E = CalcThis.payEngine;
 const nl = (s) => s.replace(/\r\n/g, '\n');
 const auto = nl(fs.readFileSync(ROOT + 'auto-loan-calculator/index.html', 'utf8'));
@@ -122,11 +125,12 @@ ${hdr}
           <div class="fld"><span class="lab">Which W-4 form</span><span class="seg" id="pcW4Seg" role="group" aria-label="Form W-4 version"><button class="on" type="button" data-v="new">2020 or later</button><button type="button" data-v="old">2019 or earlier</button></span></div>
           <div id="pcW4New">
             ${chk('pcStep2', 'Step 2: two jobs, or spouse also works (box checked)')}
-            ${fld('pcCredit', 'Step 3: dependents and credits', '$ a year', 'e.g. 2000')}
+            ${fld('pcCredit', 'Step 3 dependents amount', '$', 'e.g. 2000')}
             <div class="ln-two">
-              ${fld('pc4a', 'Step 4(a): other income', '$ a year', 'e.g. 1000')}
-              ${fld('pc4b', 'Step 4(b): deductions', '$ a year', 'e.g. 5000')}
+              ${fld('pc4a', 'Step 4(a) other income', '$', 'e.g. 1000')}
+              ${fld('pc4b', 'Step 4(b) deductions', '$', 'e.g. 5000')}
             </div>
+            <p class="add-note" style="margin:-4px 0 12px">Steps 3, 4(a) and 4(b) are yearly amounts from your Form W-4.</p>
           </div>
           <div id="pcW4Old" style="display:none">
             ${fld('pcAllow', 'Allowances (line 5 of the old form)', '', 'e.g. 2')}

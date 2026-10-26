@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=172">
+<link rel="stylesheet" href="/assets/style.css?v=174">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
 <script>
@@ -174,8 +174,8 @@
           <span class="menu-col-head">Money &amp; Finance</span>
           <a href="/mortgage-calculator/">Mortgage</a>
           <a href="/loan-calculator/">Loan</a>
-          <a href="/auto-loan-calculator/" class="current">Auto Loan</a>
-          <a href="/paycheck-calculator/">Paycheck</a>
+          <a href="/auto-loan-calculator/">Auto Loan</a>
+          <a href="/paycheck-calculator/" class="current">Paycheck</a>
         </div>
       </div>
     </nav>
@@ -257,11 +257,12 @@
           <div class="fld"><span class="lab">Which W-4 form</span><span class="seg" id="pcW4Seg" role="group" aria-label="Form W-4 version"><button class="on" type="button" data-v="new">2020 or later</button><button type="button" data-v="old">2019 or earlier</button></span></div>
           <div id="pcW4New">
             <label class="dc-check" for="pcStep2"><input type="checkbox" id="pcStep2"><span>Step 2: two jobs, or spouse also works (box checked)</span></label>
-            <div class="fld"><label class="lab" for="pcCredit">Step 3: dependents and credits <span class="unit">$ a year</span></label><div class="inp"><input id="pcCredit" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 2000"></div></div>
+            <div class="fld"><label class="lab" for="pcCredit">Step 3 dependents amount <span class="unit">$</span></label><div class="inp"><input id="pcCredit" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 2000"></div></div>
             <div class="ln-two">
-              <div class="fld"><label class="lab" for="pc4a">Step 4(a): other income <span class="unit">$ a year</span></label><div class="inp"><input id="pc4a" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 1000"></div></div>
-              <div class="fld"><label class="lab" for="pc4b">Step 4(b): deductions <span class="unit">$ a year</span></label><div class="inp"><input id="pc4b" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 5000"></div></div>
+              <div class="fld"><label class="lab" for="pc4a">Step 4(a) other income <span class="unit">$</span></label><div class="inp"><input id="pc4a" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 1000"></div></div>
+              <div class="fld"><label class="lab" for="pc4b">Step 4(b) deductions <span class="unit">$</span></label><div class="inp"><input id="pc4b" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 5000"></div></div>
             </div>
+            <p class="add-note" style="margin:-4px 0 12px">Steps 3, 4(a) and 4(b) are yearly amounts from your Form W-4.</p>
           </div>
           <div id="pcW4Old" style="display:none">
             <div class="fld"><label class="lab" for="pcAllow">Allowances (line 5 of the old form)</label><div class="inp"><input id="pcAllow" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 2"></div></div>
@@ -408,7 +409,7 @@
 
       <div>
         <h2>State income tax</h2>
-        <p>Alaska, Florida, Nevada, New Hampshire, South Dakota, Tennessee, Texas, Washington and Wyoming have no state income tax on wages, so only federal tax and FICA apply (Washington still has employee-paid paid-family-leave and long-term-care premiums, which the calculator includes). This calculator computes state withholding from each state’s official 2026 formula for <strong>Alabama, California, Georgia, Illinois, Michigan, Minnesota, New York, North Carolina, Pennsylvania and Virginia</strong>. For the other states the result shows federal tax and FICA only and says so — it never guesses a state rate. We are adding more states as each official formula is checked: Arizona, Arkansas, Colorado, Connecticut, Delaware, District of Columbia, Hawaii, Idaho, Indiana, Iowa, Kansas, Kentucky, Louisiana, Maine, Maryland, Massachusetts, Mississippi, Missouri, Montana, Nebraska, New Jersey, New Mexico, North Dakota, Ohio, Oklahoma, Oregon, Rhode Island, South Carolina, Utah, Vermont, West Virginia and Wisconsin.</p>
+        <p>Alaska, Florida, Nevada, New Hampshire, South Dakota, Tennessee, Texas, Washington and Wyoming have no state income tax on wages, so only federal tax and FICA apply (Washington still has employee-paid paid-family-leave and long-term-care premiums, which the calculator includes). This calculator computes state withholding from each state’s official 2026 formula for <strong>Alabama, Arizona, California, Colorado, Georgia, Illinois, Iowa, Kentucky, Michigan, Minnesota, New York, North Carolina, Pennsylvania and Virginia</strong>. For the other states the result shows federal tax and FICA only and says so — it never guesses a state rate. We are adding more states as each official formula is checked: Arkansas, Connecticut, Delaware, District of Columbia, Hawaii, Idaho, Indiana, Kansas, Louisiana, Maine, Maryland, Massachusetts, Mississippi, Missouri, Montana, Nebraska, New Jersey, New Mexico, North Dakota, Ohio, Oklahoma, Oregon, Rhode Island, South Carolina, Utah, Vermont, West Virginia and Wisconsin.</p>
         <p>City, county and school-district taxes are not included.</p>
 
         <h2>Before-tax and after-tax deductions</h2>
@@ -563,7 +564,7 @@
 
 </div>
 
-<script src="/assets/app.js?v=170"></script>
+<script src="/assets/app.js?v=174"></script>
 <script>CalcThis.initPayCalc();</script>
 <script src="/feedback.js" defer></script>
 </body>
