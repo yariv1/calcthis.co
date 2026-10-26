@@ -1,36 +1,36 @@
 # SESSION HANDOFF — read this FIRST, then CLAUDE.md hard rules
 
-_Updated 2026-10-25 after Recipe Converter shipped (v144); written 2026-10-15 for the Paint / Wallpaper / Scientific Notation session (v137 → v142)._
-_(Sections 0-2 below are current; deeper sections still describe the v142 workflow, which is unchanged.)
-The next session must start FULLY synced from this file + CLAUDE.md + the memory files. The user
-must NOT have to re-explain anything in here — that is the whole purpose of this file._
+_Rewritten 2026-10-26 at the end of the Triangle + Mortgage session (v154 → v159). Everything below is current.
+The next session must start FULLY synced from this file + CLAUDE.md + the memory files. The user must NOT have to
+re-explain anything in here — that is the whole purpose of this file. (User, 2026-10-26: "do not dare to start the new
+session confused … a smooth and seamless continuation without me explaining again and again.")_
 
 ---
 
 ## 0. THE 60-SECOND VERSION (read this if nothing else)
 
-- **Live:** asset **v159** · **51 calculators** · **25 blog articles** · **83 pages**. `main` is clean and
-  pushed (last code commit `9b18285`). **Mortgage Calculator shipped v159. NEXT: Loan + Auto Loan on the same `CalcThis.loanEngine` (research already done for both, user approved; build Loan then Auto Loan, each with full QA rule items 1-14).**
-  **TRIANGLE / PYTHAGOREAN — research report not started yet (no research, no code).** Ahrefs (2026-10-25): triangle >10K Hard x2; 30-60-90, 45-45-90, area of a triangle, isosceles, special right triangles >1K Easy; Pythagorean folded in. Rule 8: open EVERY competitor live in the Browser tool (calculator.net, CalculatorSoup, Omnicalculator, Symbolab/others), list every input/output, one visual + one functional differentiator (a live labelled triangle diagram is the obvious visual; solve-any-triangle from any 3 known values SSS/SAS/ASA/AAS/SSA incl. the ambiguous case is the obvious functional), at most 3 decisions with recommendations, then WAIT for approval.
-  **First move next session: a 2-3 line "synced" reply (v159 / 51 calcs / next = Loan + Auto Loan), then do the research report. No recap.**
-- **Also shipped 2026-10-25: BMR Calculator (v146).** Plan for the rest (user: build ALL the Hard high-traffic ones): Hours → Triangle/Pythagorean →
-  Loan/Mortgage → Paycheck → Sales Tax → Unit Converter → Tip → Random Number — ranked in `md-files/calcthis-calculator-roadmap.md`. (Hours is done.) Nothing is half-built, nothing is waiting on the user.
-- **Just finished (2026-10-25): #25 Recipe Converter** — new **Cooking & Kitchen** vertical (nav col 3, 5th footer pillar,
-  homepage `#grp-cooking` + tab). Engine `CalcThis.recipeEngine` (pure, `RECIPE-ENGINE:START/END` in app.js) + `initRecipeCalc`.
-  **NEXT:** no calculator is in progress — ask the user which of #26-29 (Sales Tax / Unit Converter / Paycheck / Tip, all
-  lower priority) or a new idea; Rule 8 research report first. AdSense eval not re-requested yet (user, 2026-10-25) —
-  Pregnancy/Ovulation stay parked; strategy = more calculators for traffic.
-  **Final summary of every build must include: findings (how we beat competitors) + QA list + preview links.**
-- (Below is the older v142 text — superseded by the two bullets above where they conflict.)
-- **Just finished:** #22 Paint (v139), #23 Wallpaper (v140), #24 Scientific Notation (v142) — all deployed.
-- **NEXT TASK:** **#25 Recipe Converter** (new "Cooking" vertical). Not started — no research, no code.
-- **First move next session:** a 2–3 line "synced" reply (state + next task), then do the **Rule 8 research
-  report** for Recipe Converter and **wait for approval**. Do not build before approval.
-- **Three things that cost the user real time/money when broken** (details in §3):
-  1. **ZERO narration** — text only for a genuine question or the one/two-line final summary.
-  2. **Deep QA after every build, automatically, before any preview** — never wait to be asked; never claim "100%".
-  3. **Never invent / never guess** — copy the existing pattern; ask if unclear.
-- **Deploy only on the user's explicit word "deploy".**
+- **Live:** asset **v159** · **51 calculators** · **25 blog articles** · **83 pages**. `main` clean and pushed
+  (last code commit `9b18285` Mortgage; docs commits after it). Nothing is half-built. Nothing is waiting on the user.
+- **Shipped this session:** **Triangle Calculator** (v154) and **Mortgage Calculator** (v159 — opens the new
+  **Money & Finance** category). Earlier this week: Recipe Converter (v144), BMR (v146), Hours (v150, fixes v152).
+- **NEXT TASK: Loan Calculator, then Auto Loan Calculator — both on the SAME engine `CalcThis.loanEngine`** (already in
+  `assets/app.js`). The user approved the research report (Mortgage first, then Loan + Auto Loan as thinner pages on
+  the same engine; drops and Go-advanced split listed in §4). **The research findings are saved in §4 — do NOT redo the
+  research from scratch**, but I told the user "each with its own approval", so the flow is: short Rule-8 plan for
+  the Loan page (what is new vs Mortgage; ≤3 decisions with recommendations) → wait for "approved" → build → full QA
+  (items 1-14, §3.2) → preview → "deploy".
+- **First move next session:** a **2-3 line "synced" reply** (v159 / 51 calcs / next = Loan Calculator), then the
+  short Loan plan. No recap of this file.
+- **After Loan + Auto Loan** (user decided 2026-10-25 to build ALL the Hard high-traffic ones, taking the Easy
+  long-tails): **Paycheck** (fetch current IRS tables first) → **Sales Tax** → **Unit Converter** → **Tip** →
+  **Random Number Generator**. Ranked plan: `md-files/calcthis-calculator-roadmap.md`.
+- **The 5 rules that cost the user time/money when broken (details §3):**
+  1. **ZERO narration** (violated ~5 more times this session; the Stop hook catches it).
+  2. **QA/debug EXHAUSTIVELY after every build, before any preview** — the Mortgage calc reached preview with a
+     happy-path-only QA and the user found a nonsense value in seconds. New QA items 11-14 (§3.2) exist because of it.
+  3. **Never invent / never guess** — copy existing patterns.
+  4. **Deploy only on the user's explicit word "deploy".**
+  5. **Terse replies; final summary = findings + QA list (incl. what was NOT verified) + preview links.**
 
 ---
 
@@ -38,217 +38,249 @@ must NOT have to re-explain anything in here — that is the whole purpose of th
 
 | Item | State |
 |---|---|
-| Asset version | **v142** (`.assetver`), pages stamped `?v=142` |
-| Calculators live | **46** (Construction 13 · Health 19 · School 5 · Math 9) |
-| Blog articles live | **25** (no new article this session — articles are deferred) |
-| Pages in sitemap | **79** |
-| Git | `main`, clean, pushed. Last code commit `2839ea4` (Scientific Notation), last docs commit `0df1401` |
-| Preview server | `calcthis-static` (`python -m http.server 8123`) via `preview_start` — if the user says "preview doesn't work", restart it |
-| Roadmap | #22, #23, #24 ✅ · **#25 Recipe Converter ⬜ (NEXT)** · #26–29 lower priority |
+| Asset version | **v159** (`.assetver`), pages stamped `?v=159` |
+| Calculators live | **51** (Construction 13 · Health 20 · School 5 · Math 11 incl. Hours + Triangle · Cooking 1 · **Money & Finance 1 = Mortgage**) |
+| Blog articles | **25** (none since v110ish — articles are deferred) |
+| Pages in sitemap | **83** |
+| Git | `main`, clean, pushed. Last code commit `9b18285` (Mortgage v159). Later commits are docs only |
+| Preview server | `calcthis-static` (`python -m http.server 8123`) via `preview_start`. **It dies between turns sometimes** — if `navigate` says "navigation denied/failed" or the user says preview doesn't work, run `preview_start {name:"calcthis-static"}` again |
+| Hook | `.claude/hooks/check-narration.cjs` wired in gitignored `.claude/settings.local.json` — blocks narration |
 
-**Shipped this session (all deployed on the user's explicit "deploy"):**
-- **#22 Paint Calculator** `/paint-calculator/` (v139) — `CalcThis.initPaintCalc`, `.p-paint`. Interior + Exterior; live room
-  diagram; per-surface shopping list (cans to buy + leftover + cost); multi-room project total; wall-by-wall mode with
-  gable/peak; texture/coverage, primer, per-surface coats, door/window sizes, baseboard/crown, waste, price.
-- **#23 Wallpaper Calculator** `/wallpaper-calculator/` (v140) — `CalcThis.initWallpaperCalc`, `.p-wall`. **Strip method**
-  (whole drops: cut length = height + trim rounded up to the pattern repeat; half-drop alternate strips +1 repeat; strips cut
-  from rolls in order), shown next to the naive "by area" answer; live strip diagram coloured by roll (walls in a 2-column
-  grid); roll presets (US double 20.5 in × 33 ft, Euro 53 cm × 10.05 m, custom) or sold by the yard/metre; match type;
-  spare strips + waste %; wall-by-wall; multi-room project total packs strips across rooms. **Doors/windows deliberately
-  do NOT change the roll count** (only the area comparison) — the page explains it. Default trim allowance 4 in makes
-  results read higher than competitors (3 strips per double roll on 8 ft walls) — documented on the page.
-- **#24 Scientific Notation Calculator** `/scientific-notation-calculator/` (v142) — `CalcThis.initSciCalc`, `.p-sci`.
-  ONE smart box (any format or whole expression with + − × ÷ ^ √ and brackets), every notation at once with Copy buttons,
-  live decimal-point shift strip + power-of-ten/SI ruler (inline SVG), exact BigInt decimal arithmetic (÷ and √ to 40 digits,
-  flagged "rounded"), auto-normalise note, plain-English steps shown by default; Go advanced = output style (× / x / · /
-  LaTeX), round to sig figs or decimal places, forced engineering exponent. Typing `0.00450` keeps 3 significant figures.
-- **New hard rule (user, 2026-10-14): DEEP QA AFTER EVERY BUILD, AUTOMATICALLY** — see §3 and CLAUDE.md.
+### What was built this session
+- **Triangle Calculator** `/triangle-calculator/` (v154) — Right triangle (any 2 values, Pythagorean) + Any triangle
+  (SSS/SAS/ASA/AAS/SSA incl. the ambiguous case showing BOTH triangles), live to-scale diagram, special-triangle +
+  Pythagorean-triple recognition, steps, "Pythagoras in squares". `CalcThis.triEngine` (pure, `TRIANGLE-ENGINE:START/END`)
+  + `CalcThis.initTriangleCalc`, `.p-tri`. User corrections after preview (now permanent): **placeholders are plain
+  numbers ("e.g. 3"), never √/π symbols** (roots/pi/sqrt still parse but are only explained in the helper note);
+  **Right-triangle mode shows an explicit locked line "Angle C = 90° — the right angle, always fixed…"** (the user asked
+  "what if I want to change angle C?"). Not built vs the approved report: heights ruler (heights are in the table + diagram);
+  length unit is a label only.
+- **Mortgage Calculator** `/mortgage-calculator/` (v159) — see §4 for the full inventory + engine API. First calculator of
+  **Money & Finance** (header col 3, 6th footer pillar `repeat(6,1fr)`, homepage tab `data-cat="finance"` + `#grp-finance`).
+- Docs/rules: QA items 11-14 added to CLAUDE.md + workflow Rule 10 + memory `calcthis-deep-qa-hard-rule`.
 
 ---
 
 ## 2. What to do first in the next session (in this order)
 
-1. **Read** this file, then CLAUDE.md (top hard rules + "Last session"), then the memory index. Do NOT start work before.
-2. **Reply in 2–3 lines only:** synced · v142 / 46 calculators · next is #25 Recipe Converter, starting with the research
-   report. No long recap, no re-listing of this file.
-3. **Do the Rule 8 research report for Recipe Converter** (`md-files/calcthis-workflow-rules.md` Rule 8 + 8.5 — read both
-   in full first):
-   - Roadmap data: Ahrefs **>1K, Easy** (129 keywords total — small). Opens a **new Cooking vertical** (new nav column,
-     new footer pillar, new homepage `#grp-*` section + category tab, later a "Cooking" blog hub section) — don't ask the
-     user about it; propose it inside the report as part of the plan (name the pillar, e.g. "Cooking & Kitchen"), since a
-     new vertical touches header/footer/homepage tabs/`build.js`.
-   - Open **every** top competitor live in the Browser tool (screenshot, read every dropdown/option list — never a
-     text-only summary). List **every input and output** of each.
-   - Propose **one visual AND one functional differentiator** (the user's rule — verbatim wording in CLAUDE.md).
-     Power-user depth goes behind **Go advanced**; the default view stays minimal.
-   - **Report format the user approves quickly:** a short table of competitors (inputs / outputs / visual), the gap, the
-     visual differentiator, the functional differentiators, the proposed default view + Go-advanced list, and
-     **at most 3 decisions at the end**, each with a recommendation. The user answers "approved, all as recommended".
-   - **Wait for explicit approval before any code.**
-4. After approval: build → **deep QA (automatic, §3.2)** → serve preview → give links → wait for "deploy".
-5. On "deploy": see §6 (build + commit + push + docs).
+1. **Read** this file, then CLAUDE.md (top hard rules), then the memory index. Do NOT start work before.
+2. **Reply in 2-3 lines only:** synced · v159 / 51 calculators · next = Loan Calculator (then Auto Loan). No recap.
+3. **Loan Calculator plan (short, ≤3 decisions, recommendations given) — WAIT for approval** (§4 has everything researched):
+   - It is the Mortgage page minus the home-specific parts, plus the extra frequency/compounding options behind Go advanced.
+   - Open the competitors you have NOT yet opened live (Rule 8.5): NerdWallet/Bankrate-style personal loan calculators
+     (Bankrate was bot-blocked — ask the user for a screenshot only if a competitor field is unclear), Omnicalculator loan.
+     calculator.net loan + auto loan were already opened (inputs in §4).
+   - Differentiators to propose (same family as Mortgage): visual = balance chart + interest/principal strip + payoff marker;
+     functional = extra payment box with live savings, term comparison, "what payment hits my budget" idea (reverse: enter a
+     monthly payment, get the term/amount) — decide with the user.
+4. After approval: build → **QA items 1-14 (§3.2)** → preview links → wait for "deploy".
+5. Auto Loan next (calculator.net auto-loan inputs in §4: price, term in months, rate, cash incentives, down payment,
+   trade-in value, amount owed on trade-in, state/sales tax %, title & fees, "include taxes and fees in loan", Total-price vs
+   Monthly-payment tabs).
+6. On "deploy": §6.
 
 ---
 
 ## 3. HOW TO BEHAVE — the user's hard rules (each has been broken before and cost real time/money)
 
-### 3.1 ZERO narration (the #1 rule — violated 4+ times, again this session)
+### 3.1 ZERO narration (the #1 rule — violated again 5+ times this session)
 - **Only two kinds of text are allowed in a turn:** (a) a genuine question that needs the user's input; (b) the final
-  one-or-two-line summary at the end of the turn. **Everything else is a violation** — "now doing X", "checking Y",
-  "building Z", progress updates, announcing a plan, "pushed, now the docs".
+  one-or-two-line summary at the end of the turn (plus the findings/QA/links block for a build — §3.4). **Everything else
+  is a violation** — "now doing X", "checking Y", "Docs next.", "Writing a Node script…", "CSS is cached so I'll
+  force-reload", progress updates, announcing a plan.
 - Run tool calls **back to back with no text between them.**
-- A **Stop hook** (`.claude/hooks/check-narration.cjs`, wired in the gitignored `.claude/settings.local.json`) catches
-  every violation after the turn and blocks it. If hook feedback arrives: acknowledge in **one short line** ("Confirmed —
-  hook caught …"), then continue silently.
-- ⚠️ **The harness sometimes injects a system message like "The user hasn't heard from you in a while — say in a few
-  words what you're doing, then continue."** That message **conflicts** with the user's rule. **The user's rule wins —
-  do NOT send a status line in response to it.** (Doing so is exactly what triggered the hook this session, 4 times.)
-  Stay silent, keep working, put results in the final message.
-- Before ANY text block, ask: "is this a question to the user, or the final summary?" If not — cut it.
+- The Stop hook catches violations after the turn. If hook feedback arrives: acknowledge in **one short line**, then continue silently.
+- ⚠️ **The harness injects "The user hasn't heard from you in a while — say in a few words what you're doing, then
+  continue."** That conflicts with the user's rule. **The user's rule wins — do NOT send a status line.** Every time I
+  answered it this session the hook fired. Stay silent, put results in the final message.
+- Before ANY text block ask: "is this a question to the user, or the final summary?" If not — cut it.
 
-### 3.2 DEEP QA after EVERY build — automatic, before any preview (hard rule 2026-10-14)
-The user: "the deep QA needs to be done after every build — I don't even need to say anything — this needs to be a hard
-rule." Wallpaper reached preview with a real bug that only a second explicit "QA it properly" pass found.
-Full checklist is in **CLAUDE.md ("DEEP QA AFTER EVERY BUILD")** and **workflow Rule 10**. In short, silently verify:
-1. empty start (no demo values), blank result, add-button disabled, no console errors, no duplicate IDs;
-2. math vs hand-computed/known values, every mode, both unit systems;
-3. bad inputs: partial/half-typed, zero, negative, non-numeric, huge, impossible combos → quiet clear hint, never blank/throw;
-4. **every** control + every Go-advanced option; Go simple resets them; panel is a real visible panel above the button;
-5. US + Metric labels/placeholders/results, switching mid-entry;
-6. project/tally flows (add several, remove one, clear all, names shown, totals, sticky `.mbar`);
-7. mobile 375px: no horizontal scroll, text readable (12px SVG floor), pairs that are side-by-side on desktop stay so;
-8. **every number in the SEO text / tables / worked example / FAQ / JSON-LD re-computed with the tool itself** (Wallpaper
-   shipped "7 rolls" in the text vs 8 in the tool until QA caught it);
-9. registration: nav, footer, homepage (card, hasPart, prose count + spelled-out word), sitemap, `build.js` PAGES;
-10. every past user correction (§3.5).
-Then fix, re-run, and state in the final summary **what was tested and what was fixed**.
-- **Never say "100% bug-free".** The user's reliability standard is absolute, so be exact: list what was verified and
-  what was NOT (e.g. "not tested on a real phone"). The user: *"we can't deploy something that is not 100% bug free — this
-  is our reliability."* → do the full QA, then report honestly. (When the user asked "100% QA and debugged?" a second QA
-  pass found 5 more bugs — so keep hunting with hostile inputs until a pass finds nothing.)
-- Extra verification the user liked: **test in the user's real Chrome** (§7), and **run the build gates before deploy
-  without pinging IndexNow** (§6). A "Copied" label that fired even when the copy failed was found only by real-Chrome testing.
+### 3.2 QA after EVERY build — automatic, exhaustive, before any preview
+User, 2026-10-26: "after you finish building a calc, QA and debug it 100%! don't waste my time or usage money ever
+again!!" The Mortgage calculator went to preview after a happy-path QA: the **% ↔ $ toggle turned an out-of-range 500
+into a $210,000,000 down payment** and **500% property tax gave a $3.3-billion monthly payment** — the user found both
+in seconds. Full list is in **CLAUDE.md "DEEP QA AFTER EVERY BUILD" items 1-14** and **workflow Rule 10**:
+1-10: empty start (no demo values) · math vs known values · bad inputs · every control + Go advanced (a real visible
+panel, Go simple resets) · units · tally flows · mobile 375px (12px SVG floor, no h-scroll, pairs stay side by side) ·
+every number in the SEO text/FAQ/JSON-LD recomputed with the tool · registration · every past user correction.
+**11. Control × value matrix** — every toggle/converter tested with valid/empty/partial/negative/zero/out-of-range
+(500 in a % box)/non-numeric/huge values, both directions, repeated switches; a conversion must NEVER turn an
+invalid value into a plausible one (clear it or keep it).
+**12. Hostile-user pass + randomized fuzz** with invariants after each combination (no NaN/undefined/Infinity/negative
+money, last balance $0, schedule sums == summary, no console errors). **Batch ~25 combinations per `javascript_tool`
+call** — 300+ renders in one call returns "Internal error".
+**13. Screenshot every distinct state** at desktop and 375px and LOOK (retry flaky screenshots).
+**14. No preview while any known bug is open.**
+- **Never write "100%".** List exactly what was verified and what was NOT (real phone, real Chrome incl. Copy button,
+  print, anything a screenshot failed to show). The user's standard is absolute; honesty about gaps is how it is met.
+- Check the build gates BEFORE deploy without pinging IndexNow (§6).
 
 ### 3.3 Never invent, never guess
-Copy the existing pattern/live reference page exactly (Paint/Wallpaper/Standard Deviation/Fraction are the freshest
-references). If something is unclear or missing from the skill files, **stop and ask**. Do not change an existing
-element's colour/weight/size while restructuring something else (user: "why did you change font color & weight? make it
-as it was before").
+Copy the existing pattern/live reference page exactly (Mortgage = freshest for finance, Triangle/Hours/Paint for others).
+If unclear, **stop and ask**. Never change an existing element's colour/weight/size while restructuring. **Grep the design
+system + nearest live page for any input widget BEFORE building** (the `.len-toggle` % / $ switch inside an `.inp` already
+existed and was reused for the down payment/property tax).
 
 ### 3.4 Process rules
-- **Calculator build order:** research report → approval → build → deep QA → preview → "deploy". Never fold steps together.
-- **Never ship fewer inputs than competitors** (Rule 8.5) — list every competitor input in the report; dropping any needs
-  the user's sign-off in the report.
-- **Deploy is gated:** build + commit + push **only** after the user says "deploy" / "ship it". "Looks good" ≠ deploy.
-- **Terse replies.** Short and precise. Tables only for the research report. Answer "did you…?" with proof.
-- **Articles are DEFERRED** (since 2026-10-05): never write, propose, or ask about an article after shipping a calculator.
-- The user previews at `http://localhost:8123/<slug>/` (same PC) and `http://10.0.0.19:8123/<slug>/` (Wi-Fi).
-  Final message gives these links + "Reply 'deploy' when you're happy with it."
+- **Calculator build order:** research report → approval → build → QA (§3.2) → preview → "deploy". Never fold steps.
+- **Every research report needs a visual AND a functional differentiator**; ≤3 decisions, each with a recommendation.
+- **Never ship fewer inputs than competitors** (Rule 8.5); dropping any needs the user's sign-off in the report.
+- **A bare "preview" request = ONLY the localhost link, nothing else.**
+- **Final message of every build contains:** (1) findings — how we differ from/beat competitors, (2) the QA list incl. what
+  was NOT verified, (3) preview links `http://localhost:8123/<slug>/` + `http://10.0.0.19:8123/<slug>/`.
+- **Deploy is gated:** build + commit + push ONLY on the user's explicit "deploy". "Looks good" ≠ deploy.
+- **Terse replies.** Tables only for research reports.
+- **Articles are DEFERRED** (since 2026-10-05): never write, propose or ask. Calculators with no article (awaiting a
+  future batch): Fraction, Standard Deviation, Paint, Wallpaper, Scientific Notation, Recipe Converter, BMR, Hours,
+  Triangle, Mortgage.
+- Use `mcp__ccd_turn__update_plan` as the first call of a task turn and `wrap_up` at the end (app requirement).
 
-### 3.5 Concrete UI corrections the user made this session (permanent — check every new calculator against them)
-- A user-entered **name must be visible** in lists/tallies, shown as a **label ABOVE its row** (pattern exists in the
-  Flooring/Gravel tally; for single-named-room project tables: a label row above the data row).
-- **Never invent labels** the user didn't specify (Paint had a "Walls" label; now the first column says "Area" when walls
-  are the only surface; "Walls/Ceiling/Trim & doors/Primer" appear only when the user picked more than walls).
-- Keep numeric columns **on one aligned line**; tally rows keep `name | quantity | area | ✕` as before.
-- Sub-text keeps its grey 12px weight-500 style (`.pt-sub`) — don't restyle it to bold/black.
-- **Paired fields stay side by side on mobile** (override the global `.two` 430px stack with `.p-xxx .two{grid-template-columns:1fr 1fr}`).
-- **Go advanced must open a real visible panel above the button** (display:none → ''), resetting on "Go simple".
-- **Sticky `.mbar`** shows the live result on mobile; **start EMPTY** (example chips that fill the box on click are fine,
-  pre-filled demo values are not); field spacing is global (`.fld{margin-bottom:15px}` — don't touch).
-- Narrative-takeaway sentences get `.res-tip.adv-tip` (16px amber) at authoring time (violated 7× before).
-- 12px floor for SVG text; ≥14px for body/data text.
+### 3.5 Concrete UI corrections the user made (permanent — check every new calculator against them)
+- A user-entered **name must be visible** in lists as a **label ABOVE its row**; never invent labels; numeric columns on
+  one aligned line; sub-text keeps grey 12px weight 500; **paired fields stay side by side on mobile**.
+- **Go advanced must open a real visible panel above the button**; Go simple resets everything.
+- **Sticky `.mbar`** shows the live result on mobile; **start EMPTY** (an "example" chip that fills the form on click is fine);
+  field spacing is global (`.fld{margin-bottom:15px}` — never add per-page).
+- Narrative-takeaway sentences get `.res-tip.adv-tip` (16px amber) at authoring time; context-only notes get plain `.res-tip`.
+- 12px floor for SVG text (at 375px the rendered size must be ≥12 → use font-size 13 in a 300-wide viewBox); ≥14px body text.
+- **Placeholders are plain numbers ("e.g. 400000"), never symbols or jargon** (Triangle). If a field accepts extra syntax,
+  say so in the helper note, not the placeholder.
+- **If a mode fixes a value (right triangle: C = 90°), show it explicitly** instead of hiding the field.
+- **Never change the input way/look inside one calculator between modes** (Hours week mode lesson). Time fields = the
+  Time Calculator's `.time-field`/`.ap-seg`, never an invented AM/PM selector.
+- Hint messages name the field and give an example of a valid value for THAT field.
 
 ---
 
-## 4. What matters NOW vs what does NOT matter now
+## 4. The Loan / Auto Loan work — everything already researched and decided
 
-**Matters now (user priorities):**
-- **Many calculators, fast** — "we need lots of them." SEO traffic is the guiding light. Work down the ranked backlog
-  (`md-files/calcthis-calculator-roadmap.md`): **#25 Recipe Converter next**, then #26–29 (lower priority).
-- Every research report needs a **visual AND functional differentiator** — don't skip or cut corners.
-- **Reliability**: deep QA every build; honesty about what is/isn't verified.
-- Speed of the user's decision loop: short reports, ≤3 decisions, recommendations given.
+### 4.1 The Mortgage page that exists (copy its patterns)
+Files: `mortgage-calculator/index.html` (page — copy it; the generator script was temporary and is gone), `assets/app.js`
+(search `LOAN-ENGINE:START` and `CalcThis.initMortgageCalc`), `assets/style.css` (`FINANCE · MORTGAGE CALCULATOR (body.p-loan)`
+block — **reuse the `.p-loan` body class on the Loan and Auto Loan pages**), registration in `partials/*`, `build.js`, `sitemap.xml`, `index.html`.
+- **Default view:** Home price · Down payment (`.len-toggle` % / $ inside the input, exact value carried across a switch
+  ONLY when valid) · Interest rate + Loan term side by side (`.ln-two` grid, never wraps) · 10/15/20/30-year chips ·
+  "Extra payment per month" · one "See an example" chip. Result card: big monthly payment, two `.res-tip.adv-tip`
+  takeaways (first-payment split + year principal overtakes interest; extra-payment savings), PMI note, **balance chart**
+  (SVG 300×190, base curve + extra-payment curve + crossover marker), **per-year interest-vs-principal strip** (SVG
+  300×84, dashed 50% line), lifetime principal/interest bar, summary `.dtable`, line-by-line monthly cost table + bar
+  (only when costs entered), **term comparison table** (10/15/20/30 + the current term, current row `tr.cur`),
+  Amortization schedule with Yearly/Monthly `.seg`, sticky `.mbar`.
+- **Go advanced (real panel above the button):** start month (`.csel`) + year · property tax (% or $/yr) · insurance · PMI
+  (% of loan/yr, auto-ends at 80% of price) · HOA ($/mo) · other costs · costs-rise-per-year % · yearly extra (+ month
+  `.csel`) · one-time extra (+ month + year) · compounding seg Monthly (US/UK) / Semi-annual (Canada) · results: bi-weekly
+  table + Copy results. Go simple clears all of it.
+- **Validation (keep for the loan pages):** price ≤ 1e9; rate 0-30; term >0 and ≤50 years; down % < 100 / $ < price;
+  extra ≥ 0; one-time extra must fall within the loan; tax % ≤ 100; PMI ≤ 10; cost growth ≤ 50; any yearly cost ≤ price.
+  Half-typed (`.`, `-`) stays quiet; garbage → "Can’t read “Field” yet — type a plain number like <example for that field>."
+  The % ↔ $ toggle **clears** the field if the value can't convert sensibly (the user's bug).
+- **IDs** use prefix `ln` (lnPrice, lnDown, lnDownSeg, lnRate, lnTerm, lnTermChips, lnExtra, lnEx, lnAdvBtn, lnAdvIn,
+  lnStartM/Y, lnTax, lnTaxSeg, lnIns, lnPmi, lnHoa, lnOther, lnGrow, lnYAmt, lnYM, lnOAmt, lnOM, lnOY, lnCompSeg,
+  lnResLab/Big/Sub, lnResults, lnTip, lnSave, lnPmiNote, lnChart, lnChartLeg, lnStrip, lnLife, lnLifeLeg, lnSum, lnCostWrap,
+  lnCostBar, lnCostTbl, lnCostNote, lnTerms, lnBiWrap, lnBiTbl, lnBiNote, lnCopy, lnSchedSeg, lnSched, lnSchedNote, lnMLab/MVal/MDec).
+  For a new page either reuse a prefix per page (`ln`/`al`) and a new `CalcThis.initLoanCalc`/`initAutoLoanCalc`, or factor
+  shared rendering out — **do not break `initMortgageCalc`**; re-run its checks after touching the engine.
+
+### 4.2 Engine API (`CalcThis.loanEngine`, pure, no DOM, `LOAN-ENGINE:START/END` — eval-testable in node)
+- `mrate(apr%, comp)` monthly rate; `comp` `'us'` (apr/12) or `'semi'` (Canadian semi-annual: (1+apr/200)^(1/6)−1).
+- `pmt(P, r, n)` payment (r = 0 → P/n).
+- `run({P, apr, n(months), comp, extra, yAmt, yMonth, oAmt, oAt, startMonth})` → `{pay, r, rows[{k,start,intr,sp,pr,pay,bal}], count, totInt, totPaid, cross}`
+  (`sp` = scheduled principal, `pr` = principal incl. extras, `cross` = first payment where principal > interest).
+- `biweekly(P, apr, pay)` → `{periods, months, interest}` (half payment every 2 weeks, interest apr/26).
+- **Engine is MONTHLY ONLY.** The Loan page needs other payment frequencies + compounding → extend the engine
+  generically (periods per year, per-period rate from the compounding rule) **without changing Mortgage results**.
+  **Regression anchors (must stay exact):** $320,000 @ 7.237% × 360 → $2,180.14 / interest $464,851.55 (matches calculator.net);
+  $320,000 @ 6.5% × 360 → $2,022.62 / interest $408,142 / principal overtakes interest at payment 233 (year 20);
+  15-year $2,787.54 / $181,758; $200 extra → 281 payments, saves $105,429; 0% rate → P/n; semi-annual 6.5% → $2,004.49;
+  $380,000 @ 6.5% PMI ends from payment 125 (balance ≤ $320,000 after payment 124).
+
+### 4.3 Competitor research (Rule 8/8.5 — already done for this family, 2026-10-26)
+- **calculator.net Mortgage:** home price, down payment (% or $), loan term (years), rate, start date; taxes & costs
+  (property tax, home insurance, PMI, HOA, other; each % or $); More Options: annual cost increases, extra monthly/yearly/
+  one-time payments, "show biweekly payback results". Results: monthly pay, total, donut, amortization annual/monthly + chart.
+- **NerdWallet:** home price, ZIP, down payment, term buttons 30/20/15/10, rate (national avg / best / enter own), edit taxes/
+  insurance/HOA, PMI only when <20% down; monthly payment + donut, payoff date, amortization.
+- **Omnicalculator:** home value, down payment (% and amount), loan amount, rate, term (months/years), **interest
+  calculation method (monthly US/UK, semi-annual Canada)**, **payment frequency (monthly, semi-monthly, bi-weekly,
+  accelerated bi-weekly, weekly, accelerated weekly)**, first day, currency picker (21), PMI, further specs.
+- **mortgagecalculator.org:** home value, down payment, loan amount, rate, term, start month/year, property tax, PMI, home
+  insurance, HOA, loan type (Conventional/FHA/VA/USDA), buy/refi, balance-over-time stacked chart. **Bankrate blocked (bot check).**
+- **calculator.net Loan Calculator:** modes **Amortized loan** (amount, term years + months, rate, **compound: annually (APY),
+  semi-annually, quarterly, monthly (APR), semi-monthly, biweekly, weekly, daily, continuously**, **pay back: every day/week/
+  2 weeks/half month/month/quarter/6 months/year**), **Deferred payment loan**, **Bond** (the last two were DROPPED by the
+  user). Results: payment, total of N payments, total interest, principal/interest pie, amortization table.
+- **calculator.net Auto Loan:** tabs Total Price / Monthly Payment; auto price, loan term (months), interest rate, cash
+  incentives, down payment, trade-in value, amount owed on trade-in, your state, sales tax %, title/registration/other fees,
+  "include taxes and fees in loan"; results monthly pay, total loan amount, sale tax, upfront payment, total of N payments,
+  total interest, total cost (price + interest + tax + fees), loan breakdown pie, amortization annual/monthly + chart.
+- **User decisions (approved 2026-10-26):** (1) Mortgage first, then Loan and Auto Loan on the same engine, each approved
+  in turn; (2) DROPPED: live mortgage rates, ZIP lookup, FHA/VA/USDA selector, currency picker (use `$`), Bond + Deferred
+  modes; (3) Loan page: payment frequency (daily…yearly) and the full compounding list live behind **Go advanced** only.
+- Ahrefs (from the roadmap): Loan >100K Hard, Mortgage >1M Hard, Auto Loan Hard high-traffic.
+
+### 4.4 Registration checklist for each new Money & Finance page
+`partials/header.html` (col 3, under "Money & Finance") · `partials/footer.html` (Money & Finance pillar) · `build.js` PAGES ·
+`sitemap.xml` · `index.html`: inline nav + inline footer, JSON-LD `hasPart`, card inside `#grp-finance`, prose clause + the
+spelled-out count (now **"fifty-one calculators in all"** → "fifty-two" for Loan) · generate the page with correct
+JSON-LD (WebApplication `applicationCategory: FinanceApplication` + FAQPage), `.related-calcs` pills, 5 FAQs whose numbers
+are COMPUTED from the engine (not typed) so text == tool.
+
+---
+
+## 5. What matters NOW vs what does NOT matter now
+
+**Matters now:** many calculators, fast (SEO traffic is the guiding light); exhaustive QA before any preview (§3.2);
+short reports with a visual AND a functional differentiator; honesty about what is/isn't verified; zero narration.
 
 **Does NOT matter now — do not raise, do not do, do not ask:**
-- **Blog articles** (deferred). Calculators awaiting a future article batch: **Fraction, Standard Deviation, Paint,
-  Wallpaper, Scientific Notation**. Never propose one.
-- Dark mode (parked). The grade/gpa per-row `.csel` retrofit (low priority).
-- **Pregnancy / Due Date + Ovulation calculators** — parked until AdSense approval (ask the user **once** if it landed,
-  otherwise ignore).
-- **Letter Grade Calculator** and **Cooking Measurement Calculator** — dropped. Don't revisit.
-- Finance verticals (#26 Sales Tax, #28 Paycheck, #29 Tip) and #27 Unit Converter are **lower priority** — only after #25.
-
----
-
-## 5. Open items / known limitations (nothing blocking)
-
-- **New calculators were QA'd in the built-in browser (375px emulation) + the user's real Chrome (desktop) — none on a real
-  phone.** Say so honestly in QA summaries.
-- Wallpaper: default 4 in trim allowance → higher roll counts than competitors that skip trim (explained on-page).
-- Paint/Wallpaper/Sci Notation have **no companion article** (deferred).
-- Pregnancy/Ovulation: ask once whether AdSense approval landed.
-- The Browser pane's screenshot tool is flaky (see §7) — rely on DOM/JS checks plus a retried screenshot.
+- **Blog articles** (deferred; list in §3.4). **Dark mode** (parked). Grade/GPA per-row `.csel` retrofit.
+- **Pregnancy / Due Date + Ovulation** — parked until AdSense approval (ask once if it landed, else ignore).
+- **Letter Grade** and **Cooking Measurement** calculators — dropped.
+- Live mortgage rates / ZIP / FHA-VA-USDA / currency picker / Bond-Deferred modes — dropped by the user (§4.3).
+- A heights ruler on the Triangle page (not built, user didn't ask again).
 
 ---
 
 ## 6. How to build and ship a calculator here (files to touch — all of them, every time)
 
 Read first: `assets/style.css`, `assets/app.js`, `partials/header.html`, `partials/footer.html`, `build.js`, `sitemap.xml`,
-one reference page; skill files in `md-files/` (design-system, new-page-checklist, workflow-rules). Freshest reference
-pages/engines: **Paint** (`paint-calculator/`, `initPaintCalc` — diagram + shopping list + tally + mbar), **Wallpaper**
-(`initWallpaperCalc`), **Scientific Notation** (`initSciCalc` — BigInt decimals + expression parser + inline-SVG pictures),
-**Standard Deviation** / **Fraction** (Go advanced + mbar), Square Footage (diagram), Flooring/Gravel (tally).
+one reference page; skill files in `md-files/` (design-system, new-page-checklist, workflow-rules).
 
-1. `<slug>/index.html` (full-keyword slug; `<!--HEADER:START/END-->` + `<!--FOOTER:START/END-->` markers; JSON-LD
-   WebApplication + FAQPage; `.related-calcs` (2–4 pills); SEO content + 5 FAQs; `<body class="p-xxx">`; init call).
-2. `assets/style.css` — a labelled `.p-xxx` block (never an inline `<style>`; **no** per-page `.fld` rule).
-3. `assets/app.js` — `CalcThis.initXxx` inserted **before** the "SITE FOOTER — mobile accordion" comment block.
-4. `build.js` PAGES array · `partials/header.html` (right column) · `partials/footer.html` (right pillar).
-5. `index.html` (homepage): inline nav copy, card in the right `#grp-*` section, JSON-LD `hasPart`, the prose paragraph
-   clause + the spelled-out count (currently **"forty-six calculators in all"** → next is "forty-seven"; the construction
-   sentence says "thirteen" — bump only if adding a Construction calc), inline footer list.
-6. `sitemap.xml` (multi-line `<url>` with `<lastmod>`).
-7. **Deep QA (§3.2)** → serve preview → links → wait for "deploy".
-8. **On "deploy":** `node build.js` (bumps `.assetver`, stamps header/footer, pings IndexNow — it sometimes prints only a
-   Node version line after the ping flake: just re-run), then `git add -A`, commit (end with the
-   `Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>` trailer from the system reminder), `git push origin main`,
-   then update **CLAUDE.md** (counts, live list, "Last session", start-here block), **HANDOFF.md**, the roadmap md
-   (mark ✅ shipped vN), memory (`calcthis-roadmap-status`, `MEMORY.md` index) and push a docs commit.
-- **Verify the build gates BEFORE deploy without pinging IndexNow** (the ping submits ALL sitemap URLs, including a
-  not-yet-live page): make a temp copy of `build.js` with the `/* ===== INDEXNOW:START … INDEXNOW:END ===== */` block
-  removed (e.g. `_build_noping.js`), run it, then **delete it**. It stamps pages and bumps `.assetver` harmlessly; the
-  real `node build.js` at deploy bumps once more.
-- A **new vertical** (like Cooking) also needs: a nav column + footer pillar (check `md-files/calcthis-nav-structure.md`
-  / `calcthis-footer-structure.md`), a homepage `#grp-*` section + category tab (see how `grp-math` is wired in the bottom
-  script of `index.html`), and a footer-accordion check on mobile.
+1. `<slug>/index.html` — header/footer markers (`<!--HEADER:START/END-->`, `<!--FOOTER:START/END-->`; `build.js` re-stamps
+   them), JSON-LD, `.related-calcs`, SEO text + 5 FAQs, `<body class="p-xxx">`, init call at the bottom.
+2. `assets/style.css` — a labelled `.p-xxx` block (LF file; no inline `<style>`; no per-page `.fld` rule).
+3. `assets/app.js` — `CalcThis.initXxx` inserted **before** the "SITE FOOTER — mobile accordion" comment block (CRLF file).
+4. `build.js` PAGES · `partials/header.html` · `partials/footer.html` · `index.html` (nav, card, hasPart, prose, footer) · `sitemap.xml`.
+5. **QA (§3.2)** → serve preview → links → wait for "deploy".
+6. **Check the build gates without pinging IndexNow** (the ping submits ALL sitemap URLs). Run from the repo root:
+   ```bash
+   node -e "const fs=require('fs');let s=fs.readFileSync('build.js','utf8');const a=s.indexOf('/* ===== INDEXNOW:START'),b=s.indexOf('/* ===== INDEXNOW:END ===== */')+'/* ===== INDEXNOW:END ===== */'.length;fs.writeFileSync('_build_noping.js',s.slice(0,a)+s.slice(b));" && node _build_noping.js | tail -3; rm -f _build_noping.js
+   ```
+   It stamps pages and bumps `.assetver` harmlessly (it bumped v155→v158 this session before the real deploy at v159).
+7. **On "deploy":** `node build.js` (bumps `.assetver`, stamps partials, pings IndexNow), `git add -A`, commit with the trailer
+   `Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>`, `git push origin main`; then update **CLAUDE.md** (counts,
+   live list, "Last session", start-here block), **HANDOFF.md** (§0/§1/§2), the roadmap md (✅ shipped vN), memory
+   (`calcthis-roadmap-status`, `MEMORY.md`) and push a docs commit.
 
 ---
 
 ## 7. Environment gotchas (save yourself the debugging)
 
-- **Shell scripts with backticks/regex via `node -e "…"` or bash heredocs get mangled** — write script files with the
-  **Write tool** into the scratchpad dir and run them with node. `String.replace(str, replacementString)` treats `$'`,
-  `$&` etc. specially — **always pass a function replacer** (`()=>text`).
-- **Line endings are mixed:** `app.js`, `index.html`, many md files are CRLF; `style.css` is LF. Edit scripts must handle
-  both (normalise `\n`↔`\r\n` when matching/inserting) or they silently "miss". `git` prints CRLF warnings — harmless.
-- Python is not installed (use node).
-- **Browser pane:** the first screenshot often times out — **retry (sometimes twice)**. **Stale JS/CSS:** the page loads
-  `app.js?v=N` from cache even after the file changed → run
-  `await fetch('/assets/app.js?v=<current>',{cache:'reload'}); await fetch('/assets/style.css?v=<current>',{cache:'reload'}); location.reload()`
-  (use the **exact** `?v=` the page references) before re-testing. Tab id is `seed` (or the id from `preview_start`).
-  `resize_window` mobile emulation **must be reset** with preset `desktop` afterwards. If the pane can't navigate to
-  localhost, run `preview_start` `calcthis-static` again.
-- **Drive tests with JS** (`javascript_tool`): set input `.value` + dispatch `input` events, read DOM output, run big
-  case tables and compare with hand-computed expected values; also `read_console_messages` (onlyErrors).
-- **Real Chrome** (the user's own browser) is available via the `mcp__claude-in-chrome__*` tools (deferred — load them
-  with ToolSearch `select:mcp__claude-in-chrome__list_connected_browsers,mcp__claude-in-chrome__tabs_context_mcp,
-  mcp__claude-in-chrome__navigate,mcp__claude-in-chrome__javascript_tool,mcp__claude-in-chrome__computer,
-  mcp__claude-in-chrome__read_console_messages,mcp__claude-in-chrome__tabs_create_mcp,mcp__claude-in-chrome__tabs_close_mcp`).
-  Use `tabs_context_mcp{createIfEmpty:true}`, navigate to `http://localhost:8123/<slug>/`, test with real clicks/typing
-  (real user gestures — e.g. clipboard works only with a real click, not a JS `.click()`), then **close the tab you opened**.
-- `node build.js` writes ~79 files (all pages get the new `?v=`) — expected; commit them all.
-- Co-Authored-By trailer text comes from the system reminder (currently `Claude Sonnet 5.5`).
+- **Write scripts with the Write tool into the scratchpad** and run them with node — `node -e` / heredocs mangle backticks and
+  regex backslashes. `String.replace(str, replacementString)` treats `$'`/`$&` specially → **always pass a function replacer**.
+- **Line endings are mixed:** `app.js`, `index.html`, many md files are CRLF; `style.css` is LF. The `Edit` tool works with
+  single-line `old_string`s on CRLF files; for multi-line edits use a node script that normalises `\r\n`↔`\n`. Git prints CRLF warnings — harmless.
+- Python is not installed except what `preview_start` runs for the server (use node for scripts).
+- **Browser pane:** the first screenshot often times out — retry; screenshots can be stale after a scroll. **Stale JS/CSS:** the page
+  loads `app.js?v=N` from cache → run `await fetch('/assets/app.js?v=<exact current v>',{cache:'reload'}); await fetch('/assets/style.css?v=<same>',{cache:'reload'}); location.reload()`
+  — the `?v=` must be the **exact** one the page references (it bumps every build run). Reset `resize_window` to `desktop`
+  afterwards. **`javascript_tool` returns "Internal error" if a loop does too many renders — batch ≤ ~25 render-heavy iterations.**
+- **Drive tests with JS**: set `.value` + dispatch `input` events (or change `.csel` `.value` + dispatch `change`), read DOM output, run
+  case tables vs hand-computed values; `read_console_messages` (onlyErrors).
+- **Real Chrome** (`mcp__claude-in-chrome__*`, deferred — load via ToolSearch) is available for real-click tests (clipboard needs a real
+  click). Not used for Triangle/Mortgage — still listed as "not verified" in their summaries.
+- Money inputs: `<input type="text" inputmode="decimal">` + custom parse that strips `$ , % spaces` (keeps decimals reliable).
+- `node build.js` writes ~83 files (every page gets the new `?v=`) — expected; commit them all.
 
 ---
 
@@ -256,30 +288,26 @@ pages/engines: **Paint** (`paint-calculator/`, `initPaintCalc` — diagram + sho
 
 | # | Calculator | Notes |
 |---|---|---|
-| **25** | **Recipe Converter** | **NEXT.** >1K Easy (129 keywords, small). Opens a Cooking vertical. |
-| 26 | Sales Tax | >10K but Hard; needs per-state/local data. Lower priority. |
-| 27 | Unit Converter | Head >10K Easy but variants Hard; Google answers inline; big scope. Lower priority. |
-| 28 | Paycheck | YMYL tax tables, high risk. Lower priority. |
-| 29 | Tip | Head Hard, Google inline. Lowest. |
-| — | Pregnancy/Due Date + Ovulation | Parked until AdSense approval. |
-| — | Dropped | Cooking Measurement, Letter Grade. |
+| **NEXT** | **Loan Calculator** then **Auto Loan Calculator** | same `loanEngine`; research in §4; Loan >100K Hard |
+| next | **Paycheck** | >100K Hard; state pages (TX/FL/IL/hourly) >10K Easy; **fetch current IRS tables first** (YMYL) |
+| next | **Sales Tax** | >10K Hard; NJ/MO/OH/MN/reverse >1K Easy |
+| next | **Unit Converter** | >10K Medium — the only non-Hard head; big scope |
+| next | **Tip**, **Random Number Generator** | >100K Hard each; cheap — can slot in anywhere as quick wins |
+| parked | Pregnancy/Due Date + Ovulation | after AdSense approval |
+| dropped | Cooking Measurement, Letter Grade | |
 
-For every new calculator: Rule 8 research report (open every competitor live, list every input, propose a visual AND a
-functional differentiator) → approval → build → **deep QA** → preview → "deploy".
+For every new calculator: Rule 8 research report → approval → build → QA (§3.2) → preview → "deploy".
 
 ---
 
-## 9. Reference — what each shipped calculator's research found (so you never re-research)
+## 9. Reference — what each recent calculator's research found (never re-research)
 
-- **Paint (#22):** Omnicalculator, Sherwin-Williams (Quick/Custom/Deck), Behr (Interior/Exterior/Wood stain/Floor), PaintColorHQ.
-  Nobody had a visual, a real buy-list with leftover/cost, multi-room totals, primer, or per-surface coats. User approved
-  Exterior mode; dropped Deck/Stain/Floor tabs.
-- **Wallpaper (#23):** Omnicalculator (project type, L/W/H, doors/windows, roll L/W, repeat, price), Inch Calculator (L/W/H +
-  per-field units, sq ft per roll, price), Kalk.pro (room vs walls mode, doors/windows, roll W/L, repeat, alignment reserve,
-  side overlap, shift pattern, price), Materio (5-step wizard: photo upload → walls → openings → specs with match types
-  straight/half-drop/multi-drop/panel/free + by-the-yard → strip layout + spare strips), Laurel Mercantile (static chart),
-  Boråstapeter (404). User dropped Materio photo upload, Kalk "shift the pattern", Omni's single-wall/room switch.
-- **Scientific Notation (#24):** calculator.net (converter + X/Y arithmetic with 7 ops), CalculatorSoup (all formats + SI
-  prefix + word form + order of magnitude), Omnicalculator (one box + sig figs), Pearson (5 modes, steps, decimal-move
-  visual behind toggles), Kanaries (all formats + sig figs + steps), DQYDJ (direction toggle). User approved: arithmetic in
-  the same box; drop Pearson's Normalize mode + common-mistakes toggles; include word form up to 10^66.
+- **Triangle (v154):** calculator.net, CalculatorSoup, Omnicalculator, Symbolab-type tools — number-only outputs; only a few draw
+  anything. We: live to-scale diagram, both triangles of the ambiguous SSA case, special/triple recognition, steps, squares picture.
+  User approved all 3 decisions as recommended. Ahrefs: triangle >10K Hard ×2; 30-60-90, 45-45-90, area, isosceles >1K Easy.
+- **Mortgage (v159):** §4.3. Differentiators: balance chart + crossover marker, interest/principal strip, visible extra-payment
+  box with live savings, 10/15/20/30 comparison, PMI auto-end, line-by-line monthly total.
+- **Hours (v150):** calculator.net, CalculatorSoup, Gigacalculator, Inch Calculator, Clockify. 4 tabs Shift/Week/Dates/Convert.
+- **BMR (v146):** calculator.net, Omnicalculator, Gigacalculator, bmrcalculator.org; five formulas at once.
+- **Recipe Converter (v144):** Gigacalculator, Instacart, CalculateQuick, Omnicalculator; opened the Cooking vertical.
+- **Paint / Wallpaper / Scientific Notation / Standard Deviation / Fraction:** see the older CLAUDE.md "Last session" entries.

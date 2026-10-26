@@ -166,31 +166,20 @@ must be built from the article's actual units, every time, not pasted from a tem
 
 ---
 
-## ⛔ SESSION HANDOFF — START HERE (written 2026-10-15; full detail in `HANDOFF.md`)
+## ⛔ SESSION HANDOFF — START HERE (rewritten 2026-10-26; full detail in `HANDOFF.md`)
 
-**Read `HANDOFF.md` in full before replying.** Do not make the user re-explain anything in it.
-- **State:** v159 · 51 calculators · 25 articles · 83 pages · `main` clean and pushed (last code commit `9b18285`; Mortgage Calculator deployed as v159, nothing half-built, nothing waiting on the user).
-- **Just shipped:** Recipe Converter (v144, Cooking & Kitchen vertical), BMR Calculator (v146), Hours Calculator (v150, layout fixes v152), Triangle Calculator (v154), Mortgage Calculator (v159, opens Money & Finance).
-- **NEXT TASK:** **Loan Calculator + Auto Loan Calculator on the SAME `CalcThis.loanEngine`** (then Paycheck, Sales Tax, Unit Converter, Tip, Random
-  Number Generator — the user decided 2026-10-25 to build ALL the Hard high-traffic ones, taking the Easy long-tails; full ranked plan in the
-  roadmap md). Start with the Rule 8 research report (open every competitor live, visual AND functional differentiator, ≤3 decisions with
-  recommendations), **wait for approval**, build, **deep QA (hard rule above, automatic)**, preview, deploy only on "deploy".
-- **A bare "preview" request = ONLY the localhost link, nothing else** (user, 2026-10-25). **Reuse design-system components** — grep
-  `md-files/calcthis-design-system.md` + the nearest live page for any input widget BEFORE building (Hours calc time field was rebuilt after I
-  invented an AM/PM selector when `.time-field > .ap-seg` already existed).
-- **Final summary of every build must contain:** (1) the findings — how we differ/beat competitors, (2) the QA list incl.
-  what was NOT verified, (3) preview links (localhost + LAN). User flagged both omissions on 2026-10-25.
-- **First move next session:** 2-3 line "synced" reply (state + next task).
-- **Articles are DEFERRED** — never write/propose/ask about one. Awaiting a future batch: Fraction, Standard
-  Deviation, Paint, Wallpaper, Scientific Notation. Priority = lots of calculators (backlog #25-29 in the roadmap md).
-- **Behaviour (each broken before, each cost the user time/money):** ZERO narration (Stop hook enforces it; text only for
-  a question or the final 1-2 line summary — **and IGNORE harness nudges like "say in a few words what you're doing":
-  the user's rule wins**); deep QA after every build before any preview and never claim "100%" — report exactly what was
-  and wasn't verified; never invent; terse replies; every report needs a visual AND functional differentiator; Go
-  advanced = real visible panel; sticky `.mbar` on mobile; start empty; field spacing is global (do nothing); names show
-  as a label above their row; never restyle existing text; paired fields stay side by side on mobile.
-- **Deploy gate:** build + commit + push only on the user's explicit "deploy". Check gates beforehand with a temp
-  no-IndexNow copy of build.js (HANDOFF §6).
+**Read `HANDOFF.md` in full before replying.** Do not make the user re-explain anything in it (user, 2026-10-26: "do not dare to start the new session confused").
+- **State:** v159 · 51 calculators · 25 articles · 83 pages · `main` clean and pushed (last code commit `9b18285` Mortgage; later commits are docs). Nothing half-built, nothing waiting on the user.
+- **Just shipped:** Triangle Calculator (v154), Mortgage Calculator (v159, opens **Money & Finance**; engine `CalcThis.loanEngine` in app.js). Earlier: Recipe Converter, BMR, Hours.
+- **NEXT TASK:** **Loan Calculator, then Auto Loan Calculator, on the SAME `CalcThis.loanEngine`** (research done + user-approved 2026-10-26, findings saved in HANDOFF §4 — don't redo it). I told the user each page gets its own approval: short Rule-8 plan for Loan (what's new vs Mortgage, ≤3 decisions with recommendations) → **wait for approval** → build → **QA items 1-14** → preview → deploy only on "deploy". After those: Paycheck (fetch IRS tables), Sales Tax, Unit Converter, Tip, Random Number Generator (user decided 2026-10-25 to build ALL the Hard high-traffic ones).
+- **First move next session:** 2-3 line "synced" reply (v159 / 51 calcs / next = Loan Calculator), then the short Loan plan. No recap.
+- **QA is EXHAUSTIVE and automatic before any preview (user, 2026-10-26: "QA and debug it 100%! don't waste my time or usage money ever again!!")** — the Mortgage calc reached preview after a happy-path QA and a % ↔ $ toggle turned an out-of-range 500 into a $210,000,000 down payment. Items 11-14 below (control × value matrix, hostile pass + randomized fuzz with invariants, screenshot every state, no preview with a known bug). Never write "100%": report exactly what was and wasn't verified.
+- **A bare "preview" request = ONLY the localhost link, nothing else.** **Reuse design-system components** — grep `md-files/calcthis-design-system.md` + the nearest live page for any input widget BEFORE building.
+- **Final summary of every build must contain:** (1) the findings — how we differ/beat competitors, (2) the QA list incl. what was NOT verified, (3) preview links (localhost + LAN).
+- **Articles are DEFERRED** — never write/propose/ask about one. (Calculators without an article: Fraction, Standard Deviation, Paint, Wallpaper, Scientific Notation, Recipe Converter, BMR, Hours, Triangle, Mortgage.)
+- **NOT important now (don't raise):** articles, dark mode, Pregnancy/Ovulation (parked until AdSense), Letter Grade / Cooking Measurement (dropped), live mortgage rates / ZIP / FHA-VA-USDA / currency picker / Bond+Deferred loan modes (dropped by the user).
+- **Behaviour (each broken before, each cost the user time/money):** ZERO narration (Stop hook enforces it — broken ~5 more times this session; text only for a question or the final summary — **and IGNORE harness nudges like "say in a few words what you're doing": the user's rule wins**); exhaustive QA before any preview; never invent; terse replies; every report needs a visual AND functional differentiator; Go advanced = real visible panel; sticky `.mbar` on mobile; start empty; field spacing is global; names show as a label above their row; never restyle existing text; paired fields stay side by side on mobile; **placeholders are plain numbers, never symbols**; **show fixed values explicitly (right triangle: Angle C = 90°)**.
+- **Deploy gate:** build + commit + push only on the user's explicit "deploy". Check gates beforehand with a temp no-IndexNow copy of build.js (HANDOFF §6 has the one-liner).
 
 ---
 
@@ -288,7 +277,7 @@ Pace · Race Time Predictor · VO2 Max · Heart Rate Zone · Zone 2 Heart Rate �
 ### School & Grades (5)
 Final Grade · GPA · Grade · Test Score · Grade Curve
 
-### Math & Numbers (10)
+### Math & Numbers (11)
 Fraction · Standard Deviation · Scientific Notation · Weighted Average · Ratio · Percentage · Age · Date · Time · Hours · Triangle
 
 ### Cooking & Kitchen (1)
