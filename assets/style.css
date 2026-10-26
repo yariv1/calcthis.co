@@ -2150,3 +2150,13 @@
   .p-loan .dc-check{display:flex;align-items:flex-start;gap:9px;font-size:14px;font-weight:600;color:var(--ink-soft);margin:2px 0 12px;cursor:pointer;line-height:1.45}
   .p-loan .dc-check input{width:16px;height:16px;accent-color:var(--amber);flex:none;margin-top:2px}
   .p-loan .ln-seg{min-width:0}
+
+  /* ============================================================
+     FINANCE · PAYCHECK CALCULATOR  (body.p-pay, shares .p-loan)
+     ============================================================ */
+  .p-pay .pc-assume{margin:0 0 6px;padding-left:18px;color:var(--ink-soft);font-size:14px;line-height:1.55}
+  .p-pay .pc-assume li{margin:0 0 4px}
+  .p-pay .pc-assume a{color:var(--amber-deep);text-decoration:underline}
+  .p-pay .inp .len-toggle button{white-space:nowrap}
+  .p-pay #pcGross{padding-right:150px}
+  @media (max-width:430px){.p-pay #pcGross{padding-right:140px}}

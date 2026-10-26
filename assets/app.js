@@ -11613,6 +11613,563 @@ CalcThis.initAutoCalc = function () {
 };
 
 /* =========================================================
+   FINANCE · PAYCHECK CALCULATOR  (body.p-pay)
+   One pure engine (CalcThis.payEngine — no DOM): IRS Pub 15-T federal withholding,
+   FICA, and each state's official withholding formula; page code follows.
+   ========================================================= */
+/* PAY-ENGINE:START */
+CalcThis.payEngine = (function () {
+  var YEAR = 2026;
+  var PPY = { daily: 260, weekly: 52, weekly53: 53, biweekly: 26, biweekly27: 27, semimonthly: 24, monthly: 12, quarterly: 4, semiannual: 2, annual: 1 };
+  var SS_RATE = 0.062, SS_BASE = 184500, MED_RATE = 0.0145, ADDL_RATE = 0.009, ADDL_THR = 200000;
+  var ALLOWANCE_OLD = 4300, STEP2_MFJ = 12900, STEP2_OTHER = 8600;
+  // IRS Pub 15-T (2026), annual percentage method, checked against the IRS PDF. Rows: [floor, base, rate].
+  var STD = {
+    married: [[0, 0, 0], [19300, 0, .10], [44100, 2480, .12], [120100, 11600, .22], [230700, 35932, .24], [422850, 82048, .32], [531750, 116896, .35], [788000, 206583.50, .37]],
+    single: [[0, 0, 0], [7500, 0, .10], [19900, 1240, .12], [57900, 5800, .22], [113200, 17966, .24], [209275, 41024, .32], [263725, 58448, .35], [648100, 192979.25, .37]],
+    hoh: [[0, 0, 0], [15550, 0, .10], [33250, 1770, .12], [83000, 7740, .22], [121250, 16155, .24], [217300, 39207, .32], [271750, 56631, .35], [656150, 191171, .37]]
+  };
+  var CHK = {
+    married: [[0, 0, 0], [16100, 0, .10], [28500, 1240, .12], [66500, 5800, .22], [121800, 17966, .24], [217875, 41024, .32], [272325, 58448, .35], [400450, 103291.75, .37]],
+    single: [[0, 0, 0], [8050, 0, .10], [14250, 620, .12], [33250, 2900, .22], [60900, 8983, .24], [108938, 20512, .32], [136163, 29224, .35], [328350, 96489.63, .37]],
+    hoh: [[0, 0, 0], [12075, 0, .10], [20925, 885, .12], [45800, 3870, .22], [64925, 8077.50, .24], [112950, 19603.50, .32], [140175, 28315.50, .35], [332375, 95585.50, .37]]
+  };
+  function tab(rows, x) {
+    if (!(x > 0)) return 0;
+    var r = rows[0];
+    for (var i = 1; i < rows.length; i++) if (x >= rows[i][0]) r = rows[i]; else break;
+    return r[1] + r[2] * (x - r[0]);
+  }
+  function whole(x) { return Math.floor(x + 0.5); }
+  function num(v) { v = +v; return isFinite(v) ? v : 0; }
+
+  // Federal income tax withheld for one pay period (Pub 15-T Worksheet 1A).
+  function federal(o) {
+    var ppy = o.ppy, annual = o.wages * ppy, aaw, rows, st = o.status;
+    if (o.w4 === 'old') {
+      aaw = annual - num(o.allowances) * ALLOWANCE_OLD;
+      rows = STD[st === 'married' ? 'married' : 'single'];
+    } else {
+      var s2 = o.step2 ? 0 : (st === 'married' ? STEP2_MFJ : STEP2_OTHER);
+      aaw = annual + num(o.other4a) - (num(o.ded4b) + s2);
+      rows = (o.step2 ? CHK : STD)[st];
+    }
+    if (aaw < 0) aaw = 0;
+    var tent = tab(rows, aaw) / ppy;
+    var cr = o.w4 === 'old' ? 0 : num(o.credit) / ppy;
+    var t = Math.max(0, tent - cr);
+    return { aaw: aaw, tentative: tent, tax: t + num(o.extra) };
+  }
+
+  // Social Security / Medicare for one pay period. ytd = gross wages already paid this year (before this check).
+  function fica(o) {
+    var w = o.wages, ytd = o.ytd || 0, ss = 0, med = 0, add = 0;
+    if (!o.exemptSS) ss = Math.max(0, Math.min(w, SS_BASE - ytd)) * SS_RATE;
+    if (!o.exemptMed) {
+      med = w * MED_RATE;
+      add = Math.max(0, ytd + w - Math.max(ytd, ADDL_THR)) * ADDL_RATE;
+    }
+    return { ss: ss, med: med, addl: add };
+  }
+
+  // ---------- State income tax ----------
+  // Every record is copied from the official state publication named in src (see md-files/paycheck-state-data.js).
+  var STATES = {};
+  var METHODS = {
+    none: function () { return { tax: 0 }; },
+    // annualize, subtract standard deduction + dependents/allowances, flat rate
+    flatann: function (S, o) {
+      var a = o.wages * o.ppy, sd = S.stdDed ? (S.stdDed[o.status] || 0) : 0;
+      var ded = sd + (S.dep || 0) * num(o.allowances) + (S.allow2 || 0) * num(o.allowances2);
+      var t = Math.max(0, a - ded) * S.rate / o.ppy;
+      if (S.roundWhole) t = whole(t);
+      return { tax: t };
+    },
+    // annualize, subtract standard deduction + per-allowance amount, progressive rows
+    ann: function (S, o) {
+      var a = o.wages * o.ppy, sd = S.stdDed ? (S.stdDed[o.status] || 0) : 0;
+      var ded = sd + (S.allow || 0) * num(o.allowances) + (S.allow2 || 0) * num(o.allowances2);
+      var rows = S.tab[o.status === 'married' ? 'married' : 'single'];
+      return { tax: Math.max(0, tab(rows, Math.max(0, a - ded))) / o.ppy };
+    },
+    ca: function (S, o) {
+      var a = o.wages * o.ppy, st = o.status, al = num(o.allowances), ex = num(o.allowances2);
+      var key = st === 'hoh' ? 'hoh' : (st === 'married' ? (al >= 2 ? 'married2' : 'married0') : 'single');
+      if (a <= S.lowIncome[key]) return { tax: 0 };
+      var tx = Math.max(0, a - ex * S.estDed - S.stdDed[key]);
+      var tb = st === 'hoh' ? 'hoh' : (st === 'married' ? 'married' : 'single');
+      return { tax: Math.max(0, tab(S.tab[tb], tx) - al * S.credit) / o.ppy };
+    },
+    ny: function (S, o) {
+      var a = o.wages * o.ppy, st = o.status === 'married' ? 'married' : 'single';
+      var net = a - (S.ded[st] + S.exemption * num(o.allowances));
+      if (net <= 0) return { tax: 0 };
+      var T = S.top[st], t;
+      if (net >= T.from) { var rr = T.rows[0]; for (var i = 0; i < T.rows.length; i++) if (net >= T.rows[i][0]) rr = T.rows[i]; t = net * rr[1]; }
+      else t = tab(S.tab[st], net);
+      return { tax: t / o.ppy };
+    },
+    // Alabama: Form A-4 exemption code (S / M / H) + dependents; the annual federal tax withheld is deducted
+    al: function (S, o) {
+      var gi = o.wages * o.ppy, st = o.status, ceil = Math.ceil;
+      var sd;
+      if (st === 'married') sd = gi <= 25999 ? 8500 : (gi < 35500 ? 8500 - 175 * ceil((gi - 25999) / 500) : 5000);
+      else if (st === 'hoh') sd = gi <= 25999 ? 5200 : (gi < 35500 ? 5200 - 135 * ceil((gi - 25999) / 500) : 2500);
+      else sd = gi <= 25999 ? 3000 : (gi < 35500 ? 3000 - 25 * ceil((gi - 25999) / 500) : 2500);
+      var pe = st === 'married' || st === 'hoh' ? 3000 : 1500;
+      var dp = gi <= 50000 ? 1000 : (gi <= 100000 ? 500 : 300);
+      var taxable = gi - sd - o.fedTax * o.ppy - pe - dp * num(o.allowances);
+      if (taxable <= 0) return { tax: 0 };
+      var t = st === 'married' ? Math.min(taxable, 1000) * .02 + Math.max(0, Math.min(taxable, 6000) - 1000) * .04 + Math.max(0, taxable - 6000) * .05
+        : Math.min(taxable, 500) * .02 + Math.max(0, Math.min(taxable, 3000) - 500) * .04 + Math.max(0, taxable - 3000) * .05;
+      return { tax: t / o.ppy };
+    }
+  };
+  function stateTax(code, o) {
+    var S = STATES[code];
+    if (!S || S.method === 'pending') return null;
+    return METHODS[S.method](S, o);
+  }
+  // Employee-paid state payroll programs: rate on wages up to an annual wage base, using year-to-date wages.
+  function programs(code, wages, ytd, ppy) {
+    var S = STATES[code], out = [];
+    if (!S || !S.programs) return out;
+    for (var i = 0; i < S.programs.length; i++) {
+      var p = S.programs[i], base = p.base || 1e12;
+      var w = Math.max(0, Math.min(ytd + wages, base) - Math.min(ytd, base));
+      var amt = w * p.rate;
+      if (p.capAnnual) amt = Math.min(amt, p.capAnnual / ppy);   // e.g. NY disability: 0.5% of wages, at most $0.60 a week
+      out.push({ name: p.name, amt: amt });
+    }
+    return out;
+  }
+
+  // ---------- Whole paycheck ----------
+  // inp: { gross, ppy, ytd, preTax:[{amt, inc, fica, kind}], postTax:[{amt}], fed:{...}, ficaX:{exemptSS, exemptMed}, state:{code, status, allowances, allowances2, extra, exempt}, roundFed }
+  function paycheck(inp) {
+    var ppy = inp.ppy, g = num(inp.gross), i, pre = inp.preTax || [], post = inp.postTax || [];
+    var preInc = 0, preFica = 0, preAll = 0;
+    for (i = 0; i < pre.length; i++) {
+      var a = num(pre[i].amt); preAll += a;
+      if (pre[i].inc !== false) preInc += a;
+      if (pre[i].fica) preFica += a;
+    }
+    var incWages = Math.max(0, g - preInc), ficaWages = Math.max(0, g - preFica);
+    var fx = inp.fed || {};
+    var fedR = fx.exempt ? { tax: 0, aaw: 0, tentative: 0 } : federal({
+      wages: incWages, ppy: ppy, w4: fx.w4 || 'new', status: fx.status || 'single', step2: !!fx.step2, credit: fx.credit,
+      other4a: fx.other4a, ded4b: fx.ded4b, extra: fx.extra, allowances: fx.allowances
+    });
+    var fedTax = inp.roundFed ? whole(fedR.tax) : fedR.tax;
+    var fc = fica({ wages: ficaWages, ytd: inp.ytd, exemptSS: inp.ficaX && inp.ficaX.exemptSS, exemptMed: inp.ficaX && inp.ficaX.exemptMed });
+    var st = inp.state || {}, stateAmt = 0, stateKnown = true, progs = [];
+    if (st.code) {
+      var S = STATES[st.code], stW = Math.max(0, g - preStateInc(pre, S));
+      var r = stateTax(st.code, { wages: stW, ppy: ppy, status: st.status || fx.status || 'single', allowances: st.allowances, allowances2: st.allowances2, fedTax: fedTax });
+      if (r === null) stateKnown = false;
+      else if (!st.exempt) stateAmt = r.tax + num(st.extra);
+      if (r !== null) progs = programs(st.code, ficaWages, inp.ytd || 0, ppy);
+    }
+    var progAll = 0; for (i = 0; i < progs.length; i++) progAll += progs[i].amt;
+    var postAll = 0; for (i = 0; i < post.length; i++) postAll += num(post[i].amt);
+    var net = g - preAll - fedTax - fc.ss - fc.med - fc.addl - stateAmt - progAll - postAll;
+    return { gross: g, preTax: preAll, fed: fedTax, ss: fc.ss, med: fc.med, addl: fc.addl, state: stateAmt, programs: progs, programTotal: progAll, stateKnown: stateKnown, post: postAll, net: net, aaw: fedR.aaw, incWages: incWages, ficaWages: ficaWages };
+  }
+  function preStateInc(pre, S) {
+    var s = 0;
+    for (var i = 0; i < pre.length; i++) {
+      if (pre[i].inc === false) continue;
+      if (S && S.taxes401k && pre[i].kind === '401k') continue;
+      s += num(pre[i].amt);
+    }
+    return s;
+  }
+
+  return { YEAR: YEAR, PPY: PPY, SS_BASE: SS_BASE, STD: STD, CHK: CHK, tab: tab, federal: federal, fica: fica, paycheck: paycheck, STATES: STATES, METHODS: METHODS, stateTax: stateTax, programs: programs, whole: whole };
+})();
+/* PAY-ENGINE:END */
+/* PAY-STATES:START */
+(function (S) {
+  function none(n, extra) { var o = { name: n, method: 'none', src: 'No state tax on wages' }; if (extra) for (var k in extra) o[k] = extra[k]; return o; }
+  S.AK = none('Alaska'); S.FL = none('Florida'); S.NV = none('Nevada'); S.NH = none('New Hampshire'); S.SD = none('South Dakota');
+  S.TN = none('Tennessee'); S.TX = none('Texas'); S.WY = none('Wyoming');
+  S.WA = none('Washington', { programs: [{ name: 'WA Paid Family & Medical Leave', rate: .0113 * .7143, base: 184500 }, { name: 'WA Cares Fund', rate: .0058 }] });
+  S.CA = { name: 'California', method: 'ca', src: 'https://edd.ca.gov/siteassets/files/pdf_pub_ctr/26methb.pdf', stdDed: { single: 5706, married0: 5706, married2: 11412, hoh: 11412 },
+    lowIncome: { single: 18896, married0: 18896, married2: 37791, hoh: 37791 }, credit: 168.30, estDed: 1000,
+    tab: {
+      single: [[0, 0, .011], [11079, 121.87, .022], [26264, 455.94, .044], [41452, 1124.21, .066], [57542, 2186.15, .088], [72724, 3522.17, .1023], [371479, 34084.81, .1133], [445771, 42502.09, .1243], [742953, 79441.81, .1353], [1000000, 114220.27, .1463]],
+      married: [[0, 0, .011], [22158, 243.74, .022], [52528, 911.88, .044], [82904, 2248.42, .066], [115084, 4372.30, .088], [145448, 7044.33, .1023], [742958, 68169.60, .1133], [891542, 85004.17, .1243], [1000000, 98485.50, .1353], [1485906, 164228.58, .1463]],
+      hoh: [[0, 0, .011], [22173, 243.90, .022], [52530, 911.75, .044], [67716, 1579.93, .066], [83805, 2641.80, .088], [98990, 3978.08, .1023], [505208, 45534.18, .1133], [606251, 56982.35, .1243], [1000000, 105925.35, .1353], [1010417, 107334.77, .1463]]
+    }, programs: [{ name: 'CA State Disability Insurance', rate: .013 }] };
+  S.GA = { name: 'Georgia', method: 'flatann', src: 'https://dor.georgia.gov/document/document/2026-employers-tax-guide-updated-june-2026/download', rate: .0499, stdDed: { married: 30000, single: 15000, hoh: 15000 }, dep: 5000 };
+  S.NY = { name: 'New York', method: 'ny', src: 'https://www.tax.ny.gov/pdf/publications/withholding/nys50_t_nys.pdf', ded: { single: 7400, married: 7950 }, exemption: 1000,
+    tab: {
+      single: [[0, 0, .039], [8500, 332, .044], [11700, 472, .0515], [13900, 586, .054], [80650, 4190, .059], [96800, 5143, .0703], [107650, 5906, .0753], [157650, 9673, .064], [215400, 13369, .1144], [265400, 19091, .0735]],
+      married: [[0, 0, .039], [8500, 332, .044], [11700, 472, .0515], [13900, 586, .054], [80650, 4190, .059], [96800, 5143, .0657], [107650, 5855, .0707], [157650, 9388, .0801], [211550, 13708, .064], [323200, 20854, .1349], [373200, 27600, .0735], [1077550, 79369, .0765]]
+    },
+    top: { single: { from: 1077550, rows: [[1077550, .1045], [5000000, .111], [25000000, .117]] }, married: { from: 2155350, rows: [[2155350, .1045], [5000000, .111], [25000000, .117]] } },
+    programs: [{ name: 'NY State Disability (SDI)', rate: .005, capAnnual: 31.20 }, { name: 'NY Paid Family Leave', rate: .00432, base: 95350 }] };
+  S.IL = { name: 'Illinois', method: 'flatann', src: 'https://tax.illinois.gov/forms/withholding/currentyear/il-700-t-withholding-guide-tables.html', rate: .0495, dep: 2925, allow2: 1000 };
+  S.MI = { name: 'Michigan', method: 'flatann', src: 'https://www.michigan.gov/taxes/business-taxes/withholding/calendar-year-tax-information', rate: .0425, dep: 5900 };
+  S.NC = { name: 'North Carolina', method: 'flatann', src: 'https://www.ncdor.gov/income-tax-withholding-tables-and-instructions-employers/open', rate: .0409, stdDed: { single: 12750, married: 12750, hoh: 19125 }, dep: 2500, roundWhole: true };
+  S.VA = { name: 'Virginia', method: 'ann', src: 'https://www.tax.virginia.gov/sites/default/files/vatax-pdf/employer-withholding-instructions.pdf', stdDed: { single: 8750, married: 8750, hoh: 8750 }, allow: 930,
+    tab: { single: [[0, 0, .02], [3000, 60, .03], [5000, 120, .05], [17000, 720, .0575]], married: [[0, 0, .02], [3000, 60, .03], [5000, 120, .05], [17000, 720, .0575]] } };
+  S.MN = { name: 'Minnesota', method: 'ann', programs: [{ name: 'MN Paid Leave', rate: .0044, base: 184500 }], src: 'https://www.revenue.state.mn.us/sites/default/files/2025-12/wh-inst-26.pdf', allow: 5300,
+    tab: { single: [[0, 0, 0], [4700, 0, .0535], [38010, 1782.09, .068], [114130, 6958.25, .0785], [207850, 14315.27, .0985]], married: [[0, 0, 0], [14700, 0, .0535], [63400, 2605.45, .068], [208180, 12450.49, .0785], [352630, 23789.82, .0985]] } };
+  S.AL = { name: 'Alabama', method: 'al', src: 'https://revenue.alabama.gov/wp-content/uploads/2026/01/whbooklet_0126.pdf' };
+  S.PA = { name: 'Pennsylvania', method: 'flatann', src: 'https://www.pa.gov/agencies/revenue', rate: .0307, taxes401k: true };
+})(CalcThis.payEngine.STATES);
+/* PAY-STATES:END */
+
+CalcThis.initPayCalc = function () {
+  var E = CalcThis.payEngine;
+  var $ = function (id) { return document.getElementById(id); };
+  if (!$('pcGross')) return;
+  var st = { mode: 'salary', unit: 'year', w4: 'new', adv: false };
+  var last = null;
+  var FREQ = [['daily', 'Daily'], ['weekly', 'Weekly'], ['weekly53', 'Weekly (53 paychecks)'], ['biweekly', 'Bi-weekly'], ['biweekly27', 'Bi-weekly (27 paychecks)'], ['semimonthly', 'Semi-monthly'], ['monthly', 'Monthly'], ['quarterly', 'Quarterly'], ['semiannual', 'Semi-annually'], ['annual', 'Annually']];
+  var FREQ_WORD = { daily: 'daily', weekly: 'weekly', weekly53: 'weekly', biweekly: 'bi-weekly', biweekly27: 'bi-weekly', semimonthly: 'semi-monthly', monthly: 'monthly', quarterly: 'quarterly', semiannual: 'semi-annual', annual: 'annual' };
+  var NAMES = { AL: 'Alabama', AK: 'Alaska', AZ: 'Arizona', AR: 'Arkansas', CA: 'California', CO: 'Colorado', CT: 'Connecticut', DE: 'Delaware', DC: 'District of Columbia', FL: 'Florida', GA: 'Georgia', HI: 'Hawaii', ID: 'Idaho', IL: 'Illinois', IN: 'Indiana', IA: 'Iowa', KS: 'Kansas', KY: 'Kentucky', LA: 'Louisiana', ME: 'Maine', MD: 'Maryland', MA: 'Massachusetts', MI: 'Michigan', MN: 'Minnesota', MS: 'Mississippi', MO: 'Missouri', MT: 'Montana', NE: 'Nebraska', NV: 'Nevada', NH: 'New Hampshire', NJ: 'New Jersey', NM: 'New Mexico', NY: 'New York', NC: 'North Carolina', ND: 'North Dakota', OH: 'Ohio', OK: 'Oklahoma', OR: 'Oregon', PA: 'Pennsylvania', RI: 'Rhode Island', SC: 'South Carolina', SD: 'South Dakota', TN: 'Tennessee', TX: 'Texas', UT: 'Utah', VT: 'Vermont', VA: 'Virginia', WA: 'Washington', WV: 'West Virginia', WI: 'Wisconsin', WY: 'Wyoming' };
+  // Labels for each state's own withholding form fields (the tax data itself lives in CalcThis.payEngine.STATES).
+  var SFIELDS = {
+    AL: ['Dependents (Form A-4)'], CA: ['Allowances (DE 4)', 'Extra allowances for deductions (DE 4)'], GA: ['Dependents (Form G-4)'],
+    IL: ['Basic allowances (IL-W-4, line 1)', 'Additional allowances (IL-W-4, line 2)'], MI: ['Exemptions (MI-W4)'], MN: ['Allowances (W-4MN)'],
+    NC: ['Allowances (NC-4)'], NY: ['Exemptions (IT-2104)'], VA: ['Exemptions (VA-4)']
+  };
+
+  function comma(x) { return x.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 }); }
+  function mon(x) { if (Math.abs(x) < 0.005) x = 0; return (x < 0 ? '−$' : '$') + Math.abs(x).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+  function mon0(x) { x = Math.round(x) || 0; return (x < 0 ? '−$' : '$') + comma(Math.abs(x)); }
+  function pct(x) { return (Math.round(x * 10) / 10) + '%'; }
+  function kfmt(x) { return x >= 1e6 ? '$' + (Math.round(x / 1e5) / 10) + 'M' : x >= 1e4 ? '$' + Math.round(x / 1e3) + 'k' : x >= 1e3 ? '$' + (Math.round(x / 100) / 10) + 'k' : '$' + Math.round(x); }
+
+  function read(id) {
+    var el = $(id); if (!el) return { e: true };
+    var s = (el.value || '').trim(); if (!s) return { e: true };
+    var t = s.replace(/[$,\s]/g, '');
+    if (/^[-+.]*$/.test(t)) return { e: true, partial: true };
+    var isPct = /%$/.test(t); t = t.replace(/%$/, '');
+    var v = Number(t);
+    return isNaN(v) || !isFinite(v) || t === '' ? { bad: true } : { v: v, pct: isPct };
+  }
+  var LABELS = { pcGross: 'Pay', pcRate: 'Hourly rate', pcHours: 'Hours per week', pcOtHours: 'Overtime hours', pcOtMult: 'Overtime multiplier', pcYtd: 'Year-to-date pay', pcCredit: 'Step 3 amount', pc4a: 'Step 4(a) other income', pc4b: 'Step 4(b) deductions', pcFedExtra: 'Extra federal withholding', pcAllow: 'Allowances', pcStAllow: 'State allowances', pcStAllow2: 'Additional state allowances', pcStExtra: 'Extra state withholding', pc401k: '401(k) contribution', pcHealth: 'Health insurance', pcHsa: 'HSA / FSA / commuter', pcPreOther: 'Other before-tax deduction', pcRoth: 'Roth contribution', pcPostOther: 'Other after-tax deduction' };
+  var EXS = { pcGross: '65000', pcRate: '22', pcHours: '40', pcOtHours: '5', pcOtMult: '1.5', pcYtd: '30000', pcCredit: '2000', pc4a: '1000', pc4b: '5000', pcFedExtra: '25', pcAllow: '2', pcStAllow: '2', pcStAllow2: '1', pcStExtra: '10', pc401k: '6%', pcHealth: '150', pcHsa: '50', pcPreOther: '25', pcRoth: '100', pcPostOther: '30' };
+  var BASE = 'Enter your pay to see your take-home pay.';
+
+  function setEmpty(msg, hint) {
+    $('pcResLab').textContent = 'Take-home pay'; $('pcResBig').textContent = '—'; $('pcResSub').textContent = msg;
+    $('pcResults').style.display = 'none';
+    $('pcMLab').textContent = 'Take-home pay'; $('pcMVal').textContent = '—'; $('pcMDec').textContent = '';
+    var h = $('pcHint'); h.textContent = hint || ''; h.style.display = hint ? 'block' : 'none';
+    last = null;
+  }
+
+  function stateCode() { return $('pcState').value || ''; }
+  function freqKey() { return $('pcFreq').value || 'biweekly'; }
+  function statusKey() { return $('pcStatus').value || 'single'; }
+
+  // one paycheck for a given annual pay + settings (used for the table, all-frequencies, what-if and the yearly chart)
+  function buildInput(c, gross, ppy, ytd, ded) {
+    var pre = [
+      { amt: ded.k401, inc: true, fica: false, kind: '401k' }, { amt: ded.health, inc: true, fica: true }, { amt: ded.hsa, inc: true, fica: true }, { amt: ded.preOther, inc: true, fica: false }
+    ];
+    return {
+      gross: gross, ppy: ppy, ytd: ytd, preTax: pre, postTax: [{ amt: ded.roth }, { amt: ded.postOther }], roundFed: c.round,
+      fed: { w4: c.w4, status: c.status, step2: c.step2, credit: c.credit, other4a: c.other4a, ded4b: c.ded4b, extra: c.fedExtra, allowances: c.allow, exempt: c.exFed },
+      ficaX: { exemptSS: c.exSS, exemptMed: c.exMed },
+      state: c.state ? { code: c.state, status: c.status, allowances: c.stAllow, allowances2: c.stAllow2, extra: c.stExtra, exempt: c.exState } : null
+    };
+  }
+
+  function calc() {
+    var ids = [];
+    var hourly = st.mode === 'hourly';
+    ids.push(hourly ? 'pcRate' : 'pcGross'); if (hourly) ids.push('pcHours');
+    if (st.adv) { ids.push('pcYtd', 'pc401k', 'pcHealth', 'pcHsa', 'pcPreOther', 'pcRoth', 'pcPostOther', 'pcStAllow', 'pcStAllow2', 'pcStExtra'); if (st.w4 === 'new') ids.push('pcCredit', 'pc4a', 'pc4b', 'pcFedExtra'); else ids.push('pcAllow', 'pcFedExtra'); if (hourly) ids.push('pcOtHours', 'pcOtMult'); }
+    var f = {}, i;
+    for (i = 0; i < ids.length; i++) {
+      f[ids[i]] = read(ids[i]);
+      if (f[ids[i]].bad) return { hint: 'Can’t read “' + LABELS[ids[i]] + '” yet — type a plain number like ' + EXS[ids[i]] + '.' };
+    }
+    var val = function (id, d) { return f[id] && f[id].v != null ? f[id].v : d; };
+    var main = hourly ? f.pcRate : f.pcGross;
+    if (main.e || (hourly && f.pcHours.e)) return { msg: BASE };
+    var ppy = E.PPY[freqKey()], adv = st.adv, gross, annual, weekly = null;
+    if (hourly) {
+      var rate = f.pcRate.v, hrs = f.pcHours.v, ot = adv ? val('pcOtHours', 0) : 0, mult = adv && f.pcOtMult && f.pcOtMult.v != null ? f.pcOtMult.v : 1.5;
+      if (!(rate > 0)) return { msg: BASE, hint: 'The hourly rate must be more than $0.' };
+      if (rate > 10000) return { msg: BASE, hint: 'That hourly rate is too large to calculate — enter it in dollars, like 22.' };
+      if (hrs < 0 || hrs > 168) return { msg: BASE, hint: 'Hours per week must be between 0 and 168.' };
+      if (ot < 0 || hrs + ot > 168) return { msg: BASE, hint: 'Regular plus overtime hours can’t be more than 168 a week.' };
+      if (mult < 1 || mult > 5) return { msg: BASE, hint: 'The overtime multiplier is usually 1.5 — enter a value between 1 and 5.' };
+      weekly = rate * hrs + rate * mult * ot;
+      annual = weekly * 52; gross = annual / ppy;
+      if (!(gross > 0)) return { msg: BASE, hint: 'Enter more than 0 hours a week.' };
+    } else {
+      var g = f.pcGross.v;
+      if (!(g > 0)) return { msg: BASE, hint: 'Pay must be more than $0.' };
+      if (g > 1e9) return { msg: BASE, hint: 'That amount is too large to calculate — enter it in dollars, like 65000.' };
+      if (st.unit === 'year') { annual = g; gross = g / ppy; } else { gross = g; annual = g * ppy; }
+    }
+    if (annual > 1e9) return { msg: BASE, hint: 'That amount is too large to calculate — check the numbers.' };
+    var c = { w4: st.w4, status: statusKey(), step2: adv && st.w4 === 'new' && $('pcStep2').checked, credit: adv ? val('pcCredit', 0) : 0, other4a: adv ? val('pc4a', 0) : 0, ded4b: adv ? val('pc4b', 0) : 0, fedExtra: adv ? val('pcFedExtra', 0) : 0, allow: adv ? val('pcAllow', 0) : 0,
+      round: adv && $('pcRound').checked, exFed: adv && $('pcExFed').checked, exSS: adv && $('pcExSS').checked, exMed: adv && $('pcExMed').checked, exState: adv && $('pcExState').checked,
+      state: stateCode(), stAllow: adv ? val('pcStAllow', 0) : 0, stAllow2: adv ? val('pcStAllow2', 0) : 0, stExtra: adv ? val('pcStExtra', 0) : 0 };
+    var nn = ['credit', 'other4a', 'ded4b', 'fedExtra', 'allow', 'stAllow', 'stAllow2', 'stExtra'], nl = ['pcCredit', 'pc4a', 'pc4b', 'pcFedExtra', 'pcAllow', 'pcStAllow', 'pcStAllow2', 'pcStExtra'];
+    for (i = 0; i < nn.length; i++) {
+      if (c[nn[i]] < 0) return { msg: BASE, hint: '“' + LABELS[nl[i]] + '” can’t be negative.' };
+      if (c[nn[i]] > 1e9) return { msg: BASE, hint: '“' + LABELS[nl[i]] + '” is too large to calculate — enter it in dollars.' };
+    }
+    if (c.allow > 99 || c.stAllow > 99 || c.stAllow2 > 99) return { msg: BASE, hint: 'Enter the number of allowances as a small whole number, like 2.' };
+    var ytd = adv ? val('pcYtd', 0) : 0;
+    if (ytd < 0) return { msg: BASE, hint: 'Year-to-date pay can’t be negative.' };
+    if (ytd > 1e9) return { msg: BASE, hint: 'Year-to-date pay is too large to calculate — enter it in dollars.' };
+    // deductions: "6%" means a percentage of the paycheck, anything else is dollars per paycheck
+    var ded = {}, dk = { k401: 'pc401k', health: 'pcHealth', hsa: 'pcHsa', preOther: 'pcPreOther', roth: 'pcRoth', postOther: 'pcPostOther' }, dpct = {};
+    for (var key in dk) {
+      var r = adv ? f[dk[key]] : { e: true };
+      if (r.e) { ded[key] = 0; continue; }
+      if (r.v < 0) return { msg: BASE, hint: '“' + LABELS[dk[key]] + '” can’t be negative.' };
+      if (r.pct && r.v > 100) return { msg: BASE, hint: '“' + LABELS[dk[key]] + '” can’t be more than 100% of your pay.' };
+      ded[key] = r.pct ? gross * r.v / 100 : r.v; dpct[key] = r.pct ? r.v : null;
+      if (ded[key] > 1e9) return { msg: BASE, hint: '“' + LABELS[dk[key]] + '” is too large to calculate — enter it in dollars.' };
+    }
+    var totDed = ded.k401 + ded.health + ded.hsa + ded.preOther + ded.roth + ded.postOther;
+    if (totDed > gross) return { msg: BASE, hint: 'Your deductions are more than your pay for one paycheck — check the amounts.' };
+    var p = E.paycheck(buildInput(c, gross, ppy, ytd, ded));
+    if (!(p.net > -1e-9)) return { msg: BASE, hint: 'Taxes and deductions come to more than your pay — check the amounts.' };
+    return { c: c, ded: ded, dpct: dpct, gross: gross, annual: annual, ppy: ppy, ytd: ytd, p: p, hourly: hourly, weekly: weekly };
+  }
+
+  /* ---------- helpers on a calc result ---------- */
+  function yearSim(d, gross, ppy, ded) {
+    var tot = { gross: 0, pre: 0, fed: 0, ss: 0, med: 0, addl: 0, state: 0, prog: 0, post: 0, net: 0 }, rows = [], ssStop = -1, addlStart = -1;
+    for (var k = 0; k < ppy; k++) {
+      var y = gross * k;
+      var q = E.paycheck(buildInput(d.c, gross, ppy, y, ded));
+      tot.gross += q.gross; tot.pre += q.preTax; tot.fed += q.fed; tot.ss += q.ss; tot.med += q.med; tot.addl += q.addl; tot.state += q.state; tot.prog += q.programTotal; tot.post += q.post; tot.net += q.net;
+      rows.push(q.net);
+      if (ssStop < 0 && q.ss < q.ficaWages * 0.062 - 0.005 && !d.c.exSS) ssStop = k;
+      if (addlStart < 0 && q.addl > 0.005) addlStart = k;
+    }
+    return { t: tot, rows: rows, ssStop: ssStop, addlStart: addlStart };
+  }
+  function scaleDed(ded, from, to) { var o = {}; for (var k in ded) o[k] = ded[k] * from / to; return o; }
+
+  /* ---------- rendering ---------- */
+  function capChart(d, ys) {
+    var n = ys.rows.length, W = 300, H = 170, ml = 44, mr = 8, mt = 12, mb = 28, pw = W - ml - mr, ph = H - mt - mb;
+    var lo = Infinity, hi = -Infinity; ys.rows.forEach(function (v) { if (v < lo) lo = v; if (v > hi) hi = v; });
+    var pad = (hi - lo) * 0.25 || hi * 0.1 || 1; lo = Math.max(0, lo - pad); hi = hi + pad * 0.5;
+    var X = function (k) { return ml + pw * (n === 1 ? 0.5 : k / (n - 1)); }, Y = function (v) { return mt + ph * (1 - (v - lo) / (hi - lo)); };
+    var s = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Take-home pay for each paycheck of the year">';
+    [0, 0.5, 1].forEach(function (t) { var v = lo + (hi - lo) * t, y = Y(v); s += '<line x1="' + ml + '" x2="' + (W - mr) + '" y1="' + y.toFixed(1) + '" y2="' + y.toFixed(1) + '" stroke="#E7DCC8" stroke-width="1"/><text x="' + (ml - 6) + '" y="' + (y + 4).toFixed(1) + '" text-anchor="end" font-size="14" fill="#6B5B4A">' + kfmt(v) + '</text>'; });
+    var path = ''; ys.rows.forEach(function (v, k) { if (k) path += ' L' + X(k).toFixed(1) + ',' + Y(ys.rows[k - 1]).toFixed(1); path += (k ? ' L' : 'M') + X(k).toFixed(1) + ',' + Y(v).toFixed(1); });
+    s += '<path d="' + path + '" fill="none" stroke="#37503F" stroke-width="2.2" stroke-linejoin="round"/>';
+    [[ys.ssStop, '#B5761F'], [ys.addlStart, '#8F5C13']].forEach(function (m) {
+      if (m[0] < 0 || m[0] >= n) return;
+      var x = X(m[0]), y = Y(ys.rows[m[0]]);
+      s += '<line x1="' + x.toFixed(1) + '" x2="' + x.toFixed(1) + '" y1="' + y.toFixed(1) + '" y2="' + (mt + ph) + '" stroke="' + m[1] + '" stroke-width="1.2" stroke-dasharray="3 3"/><circle cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="4.5" fill="' + m[1] + '" stroke="#fff" stroke-width="1.5"/>';
+    });
+    s += '<text x="' + ml + '" y="' + (H - 6) + '" font-size="14" fill="#6B5B4A">Paycheck 1</text><text x="' + (W - mr) + '" y="' + (H - 6) + '" text-anchor="end" font-size="14" fill="#6B5B4A">' + n + '</text>';
+    return s + '</svg>';
+  }
+
+  var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  function monthOf(k, n) { return MONTHS[Math.min(11, Math.floor(k / n * 12))]; }
+
+  function render() {
+    var d = calc();
+    if (d.hint != null || d.msg != null) { setEmpty(d.msg || BASE, d.hint || ''); return; }
+    var h = $('pcHint'); h.style.display = 'none'; h.textContent = '';
+    var p = d.p, c = d.c, ppy = d.ppy, code = c.state, S = code ? E.STATES[code] : null, sname = code ? NAMES[code] : '';
+    var fw = FREQ_WORD[freqKey()];
+    last = { d: d };
+    $('pcResLab').textContent = 'Take-home pay per paycheck';
+    $('pcResBig').textContent = mon(p.net);
+    $('pcResSub').textContent = mon(p.gross) + ' gross · ' + fw + (code ? ' · ' + sname : ' · federal taxes only') + ' · ' + mon0(p.net * ppy) + ' a year';
+    $('pcMLab').textContent = 'Take-home per paycheck'; $('pcMVal').textContent = mon(p.net); $('pcMDec').textContent = ' · ' + mon0(p.gross) + ' gross';
+    $('pcResults').style.display = '';
+
+    // full-year projection (exact Social Security cap)
+    var ys = yearSim(d, p.gross, ppy, d.ded), T = ys.t;
+    var taxTot = p.fed + p.ss + p.med + p.addl + p.state + p.programTotal;
+    var tip = 'Of every $1 you earn, you keep about ' + Math.round(p.net / p.gross * 100) + '¢' + (p.gross > 0 ? ' — ' + pct(taxTot / p.gross * 100) + ' goes to taxes' : '') + '.';
+    $('pcTip').textContent = tip;
+    var sn = $('pcStateNote');
+    if (code && !p.stateKnown) { sn.style.display = ''; sn.textContent = sname + ' state income tax isn’t in this calculator yet — the result shows federal tax and FICA only, so your real take-home will be lower by what ' + sname + ' withholds. Locals are also not included.'; }
+    else if (!code) { sn.style.display = ''; sn.textContent = 'Pick your state to include state income tax. Federal taxes only are shown now.'; }
+    else sn.style.display = 'none';
+
+    // where each paycheck dollar goes
+    var seg = [['Take-home', Math.max(0, p.net), '#37503F'], ['Federal tax', p.fed, '#B5761F'], ['Social Security', p.ss, '#8F5C13'], ['Medicare', p.med + p.addl, '#C99A55'], ['State & local', p.state + p.programTotal, '#6B7A9E'], ['Before-tax deductions', p.preTax, '#6E8A74'], ['After-tax deductions', p.post, '#A4795A']], bar = '', leg = '';
+    seg.forEach(function (x) {
+      var q = x[1] / p.gross * 100;
+      if (!(q > 0.05)) return;
+      bar += '<div class="ln-seg" style="width:' + q.toFixed(2) + '%;background:' + x[2] + '">' + (q >= 12 ? Math.round(q) + '%' : '') + '</div>';
+      leg += '<span><i style="background:' + x[2] + '"></i>' + x[0] + ' ' + mon0(x[1]) + ' (' + pct(q) + ')</span>';
+    });
+    $('pcBar').innerHTML = bar; $('pcBarLeg').innerHTML = leg;
+
+    // table: per paycheck | per year
+    var rows = [['Gross pay', p.gross, T.gross, '']];
+    if (p.preTax > 0.005) rows.push(['Before-tax deductions', -p.preTax, -T.pre, '']);
+    rows.push(['Federal income tax', -p.fed, -T.fed, '']);
+    rows.push(['Social Security (6.2%)', -p.ss, -T.ss, '']);
+    rows.push(['Medicare (1.45%)', -p.med, -T.med, '']);
+    if (p.addl > 0.005 || T.addl > 0.005) rows.push(['Additional Medicare (0.9%)', -p.addl, -T.addl, '']);
+    if (code && p.stateKnown && !c.exState) rows.push([sname + ' income tax', -p.state, -T.state, '']);
+    if (p.programs.length) p.programs.forEach(function (q) { rows.push([q.name, -q.amt, null, 'prog']); });
+    if (p.post > 0.005) rows.push(['After-tax deductions', -p.post, -T.post, '']);
+    var progYear = {};
+    // yearly figures for state payroll programs
+    if (p.programs.length) {
+      for (var k = 0; k < ppy; k++) { var qq = E.paycheck(buildInput(c, p.gross, ppy, p.gross * k, d.ded)); qq.programs.forEach(function (z) { progYear[z.name] = (progYear[z.name] || 0) + z.amt; }); }
+    }
+    var tb = '<thead><tr><th></th><th>Per paycheck</th><th>Per year</th></tr></thead><tbody>';
+    rows.forEach(function (r) {
+      var yr = r[3] === 'prog' ? -(progYear[r[0]] || 0) : r[2];
+      tb += '<tr><td>' + r[0] + '</td><td>' + mon(r[1]) + '</td><td>' + mon0(yr) + '</td></tr>';
+    });
+    tb += '<tr class="cur"><td>Take-home pay</td><td>' + mon(p.net) + '</td><td>' + mon0(T.net) + '</td></tr></tbody>';
+    $('pcTable').innerHTML = tb;
+
+    // what-if
+    renderWhatIf(d, ys);
+
+    // all pay frequencies
+    var ft = '<thead><tr><th>Paid</th><th>Paycheck</th><th>Take-home</th></tr></thead><tbody>';
+    FREQ.forEach(function (fr) {
+      var pp = E.PPY[fr[0]], g2 = d.annual / pp, dd = scaleDed(d.ded, ppy, pp), q = E.paycheck(buildInput(c, g2, pp, 0, dd));
+      ft += '<tr' + (fr[0] === freqKey() ? ' class="cur"' : '') + '><td>' + fr[1] + '</td><td>' + mon(g2) + '</td><td>' + mon(q.net) + '</td></tr>';
+    });
+    $('pcFreq2').innerHTML = ft + '</tbody>';
+
+    // Social Security cap chart
+    var cw = $('pcCapWrap');
+    if (ys.ssStop >= 0 || ys.addlStart >= 0) {
+      cw.style.display = '';
+      $('pcCapBox').innerHTML = capChart(d, ys);
+      var cl = '<span><i style="background:#37503F"></i>Take-home each paycheck</span>';
+      if (ys.ssStop >= 0) cl += '<span><i class="ln-dot"></i>Social Security stops at ' + mon0(E.SS_BASE) + ' — paycheck ' + (ys.ssStop + 1) + ' (' + monthOf(ys.ssStop, ppy) + ')</span>';
+      if (ys.addlStart >= 0) cl += '<span><i style="background:#8F5C13"></i>Additional Medicare starts above $200,000 — paycheck ' + (ys.addlStart + 1) + '</span>';
+      $('pcCapLeg').innerHTML = cl;
+    } else {
+      cw.style.display = 'none';
+    }
+
+    // assumptions
+    var as = [];
+    as.push('Tax year ' + E.YEAR + ' — federal income tax by the IRS Publication 15-T percentage method (' + (c.w4 === 'old' ? 'Form W-4 from 2019 or earlier, ' + c.allow + ' allowance' + (c.allow === 1 ? '' : 's') : 'Form W-4 from 2020 or later') + ').');
+    as.push('Social Security 6.2% up to ' + mon0(E.SS_BASE) + ' of wages in the year; Medicare 1.45%; Additional Medicare 0.9% on wages above $200,000.');
+    if (d.ytd > 0) as.push('Year-to-date pay of ' + mon0(d.ytd) + ' is counted toward the Social Security limit.');
+    if (code && p.stateKnown) as.push(sname + ' income tax by the state’s official ' + E.YEAR + ' withholding formula' + (S.src && /^https?:/.test(S.src) ? ' (<a href="' + S.src + '" target="_blank" rel="noopener">source</a>)' : '') + '.');
+    if (code && p.stateKnown && S.programs) as.push('Includes ' + S.programs.map(function (q) { return q.name; }).join(' and ') + ' (employee-paid).');
+    as.push('City, county and school-district taxes are not included.');
+    as.push('Amounts are not rounded' + (c.round ? ' except federal withholding, rounded to the nearest dollar' : '') + '. Employer taxes are not part of your paycheck and are not included.');
+    $('pcAssume').innerHTML = as.map(function (x) { return '<li>' + x + '</li>'; }).join('');
+    $('pcCopyWrap').style.display = st.adv ? '' : 'none';
+  }
+
+  function renderWhatIf(d, ys) {
+    var rs = read('pcWiRaise'), ks = read('pcWiK'), out = $('pcWiOut'), c = d.c, ppy = d.ppy, p = d.p;
+    if (rs.bad || ks.bad) { out.textContent = 'Type plain numbers, like 5 and 6.'; return; }
+    var raise = rs.e ? 0 : rs.v, kp = ks.e ? 0 : ks.v;
+    if (raise < 0 || raise > 1000 || kp < 0 || kp > 100) { out.textContent = 'Use a raise between 0 and 1000%, and a 401(k) between 0 and 100%.'; return; }
+    if (!raise && !kp) { out.textContent = 'Type a raise or a 401(k) percentage to see how your take-home changes.'; return; }
+    var txt = [], k;
+    if (raise) {
+      var g2 = p.gross * (1 + raise / 100), q = E.paycheck(buildInput(c, g2, ppy, d.ytd, d.ded)), y2 = yearSim(d, g2, ppy, d.ded).t.net;
+      txt.push('A ' + pct(raise) + ' raise lifts your gross to ' + mon(g2) + ' and your take-home by ' + mon(q.net - p.net) + ' a paycheck (' + mon0(y2 - ys.t.net) + ' a year) to ' + mon(q.net) + '.');
+    }
+    if (kp) {
+      var ded2 = {}; for (k in d.ded) ded2[k] = d.ded[k];
+      var add = p.gross * kp / 100; ded2.k401 = d.ded.k401 + add;
+      if (ded2.k401 + ded2.health + ded2.hsa + ded2.preOther + ded2.roth + ded2.postOther > p.gross) { out.textContent = 'Those deductions would be more than your pay.'; return; }
+      var q2 = E.paycheck(buildInput(c, p.gross, ppy, d.ytd, ded2)), y3 = yearSim(d, p.gross, ppy, ded2).t.net;
+      txt.push('Putting another ' + pct(kp) + ' of pay (' + mon(add) + ') into a traditional 401(k) lowers your take-home by only ' + mon(p.net - q2.net) + ' a paycheck (' + mon0(ys.t.net - y3) + ' a year), because it cuts your income tax by ' + mon((p.fed + p.state) - (q2.fed + q2.state)) + '.');
+    }
+    out.textContent = txt.join(' ');
+  }
+
+  /* ---------- state-specific fields ---------- */
+  function syncStateFields() {
+    var code = stateCode(), lab = SFIELDS[code], live = code && E.STATES[code] && E.STATES[code].method !== 'pending';
+    $('pcStAllowFld').style.display = lab ? '' : 'none';
+    $('pcStAllow2Fld').style.display = lab && lab[1] ? '' : 'none';
+    if (lab) { $('pcStAllowLab').firstChild.nodeValue = lab[0] + ' '; if (lab[1]) $('pcStAllow2Lab').firstChild.nodeValue = lab[1] + ' '; }
+    $('pcStExtraFld').style.display = live && E.STATES[code].method !== 'none' ? '' : 'none';
+    $('pcExStateFld').style.display = live && E.STATES[code].method !== 'none' ? '' : 'none';
+    $('pcStGrp').style.display = live && E.STATES[code].method !== 'none' ? '' : 'none';
+  }
+
+  /* ---------- controls ---------- */
+  function seg(id, attr, fn) {
+    var el = $(id);
+    [].forEach.call(el.querySelectorAll('button'), function (b) {
+      b.addEventListener('click', function () {
+        [].forEach.call(el.querySelectorAll('button'), function (x) { x.classList.toggle('on', x === b); x.setAttribute('aria-selected', x === b ? 'true' : 'false'); });
+        fn(b.getAttribute(attr));
+      });
+    });
+  }
+  seg('pcModeSeg', 'data-v', function (v) {
+    st.mode = v; var hr = v === 'hourly';
+    $('pcSalBox').style.display = hr ? 'none' : ''; $('pcHourBox').style.display = hr ? '' : 'none'; $('pcOtGrp').style.display = hr && st.adv ? '' : 'none';
+    $('pcEx').textContent = hr ? 'See an example: $22 an hour, 40 hours a week' : 'See an example: $65,000 a year, bi-weekly';
+    render();
+  });
+  seg('pcUnitSeg', 'data-v', function (v) { st.unit = v; render(); });
+  seg('pcW4Seg', 'data-v', function (v) { st.w4 = v; $('pcW4New').style.display = v === 'new' ? '' : 'none'; $('pcW4Old').style.display = v === 'old' ? '' : 'none'; render(); });
+
+  var panel = $('pcState').querySelector('.csel-panel'), ph = '<button type="button" class="csel-opt on" role="option" aria-selected="true" data-value="">Federal taxes only</button>';
+  Object.keys(NAMES).sort(function (a, b) { return NAMES[a] < NAMES[b] ? -1 : 1; }).forEach(function (cd) {
+    var s = E.STATES[cd], ok = s && s.method !== 'pending';
+    ph += '<button type="button" class="csel-opt" role="option" aria-selected="false" data-value="' + cd + '">' + NAMES[cd] + (ok ? '' : ' · federal only') + '</button>';
+  });
+  panel.innerHTML = ph; CalcThis.initCsel($('pcState'));
+
+  ['pcGross', 'pcRate', 'pcHours', 'pcOtHours', 'pcOtMult', 'pcYtd', 'pcCredit', 'pc4a', 'pc4b', 'pcFedExtra', 'pcAllow', 'pcStAllow', 'pcStAllow2', 'pcStExtra', 'pc401k', 'pcHealth', 'pcHsa', 'pcPreOther', 'pcRoth', 'pcPostOther', 'pcWiRaise', 'pcWiK'].forEach(function (id) { $(id).addEventListener('input', render); });
+  ['pcStep2', 'pcRound', 'pcExFed', 'pcExSS', 'pcExMed', 'pcExState'].forEach(function (id) { $(id).addEventListener('change', render); });
+  ['pcFreq', 'pcStatus'].forEach(function (id) { $(id).addEventListener('change', render); });
+  $('pcState').addEventListener('change', function () { syncStateFields(); render(); });
+
+  $('pcEx').addEventListener('click', function () {
+    if (st.mode === 'hourly') { $('pcRate').value = '22'; $('pcHours').value = '40'; } else { $('pcGross').value = '65000'; }
+    render();
+  });
+  $('pcAdvBtn').addEventListener('click', function () {
+    st.adv = !st.adv;
+    $('pcAdvBtn').classList.toggle('open', st.adv);
+    $('pcAdvBtnLab').textContent = st.adv ? 'Go simple' : 'Go advanced';
+    $('pcAdvIn').style.display = st.adv ? '' : 'none';
+    $('pcOtGrp').style.display = st.adv && st.mode === 'hourly' ? '' : 'none';
+    if (!st.adv) {
+      ['pcOtHours', 'pcOtMult', 'pcYtd', 'pcCredit', 'pc4a', 'pc4b', 'pcFedExtra', 'pcAllow', 'pcStAllow', 'pcStAllow2', 'pcStExtra', 'pc401k', 'pcHealth', 'pcHsa', 'pcPreOther', 'pcRoth', 'pcPostOther'].forEach(function (id) { $(id).value = ''; });
+      ['pcStep2', 'pcRound', 'pcExFed', 'pcExSS', 'pcExMed', 'pcExState'].forEach(function (id) { $(id).checked = false; });
+      st.w4 = 'new'; $('pcW4New').style.display = ''; $('pcW4Old').style.display = 'none';
+      [].forEach.call($('pcW4Seg').querySelectorAll('button'), function (b) { b.classList.toggle('on', b.getAttribute('data-v') === 'new'); });
+    }
+    render();
+  });
+  $('pcCopy').addEventListener('click', function () {
+    if (!last) return;
+    var d = last.d, p = d.p, lines = ['Gross pay: ' + mon(p.gross) + ' (' + FREQ_WORD[freqKey()] + ')', 'Federal income tax: ' + mon(p.fed), 'Social Security: ' + mon(p.ss), 'Medicare: ' + mon(p.med + p.addl)];
+    if (d.c.state && p.stateKnown) lines.push(NAMES[d.c.state] + ' tax and programs: ' + mon(p.state + p.programTotal));
+    if (p.preTax > 0.005) lines.push('Before-tax deductions: ' + mon(p.preTax));
+    if (p.post > 0.005) lines.push('After-tax deductions: ' + mon(p.post));
+    lines.push('Take-home pay: ' + mon(p.net) + ' per paycheck (' + mon0(p.net * d.ppy) + ' a year)');
+    var btn = $('pcCopy'), txt = lines.join('\n');
+    var done = function (ok) { btn.textContent = ok ? 'Copied' : 'Copy failed'; setTimeout(function () { btn.textContent = 'Copy results'; }, 1600); };
+    var legacy = function () { try { var ta = document.createElement('textarea'); ta.value = txt; ta.setAttribute('readonly', ''); ta.style.cssText = 'position:fixed;left:-9999px;top:0'; document.body.appendChild(ta); ta.select(); var ok = document.execCommand('copy'); document.body.removeChild(ta); done(ok); } catch (e) { done(false); } };
+    try { navigator.clipboard.writeText(txt).then(function () { done(true); }, legacy); } catch (e) { legacy(); }
+  });
+
+  syncStateFields();
+  render();
+};
+
+/* =========================================================
    SITE FOOTER — mobile accordion
    Multiple pillars can be open simultaneously.
    First pillar starts expanded (aria-expanded="true" in HTML).

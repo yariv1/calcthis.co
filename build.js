@@ -68,6 +68,7 @@ const PAGES = [
   { file: 'mortgage-calculator/index.html',    slug: '/mortgage-calculator/' },
   { file: 'loan-calculator/index.html',        slug: '/loan-calculator/' },
   { file: 'auto-loan-calculator/index.html',   slug: '/auto-loan-calculator/' },
+  { file: 'paycheck-calculator/index.html',   slug: '/paycheck-calculator/' },
   { file: 'recipe-converter/index.html',       slug: '/recipe-converter/' },
   { file: 'macro-calculator/index.html',      slug: '/macro-calculator/' },
   { file: 'peptide-reconstitution-calculator/index.html', slug: '/peptide-reconstitution-calculator/' },
