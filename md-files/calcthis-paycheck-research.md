@@ -22,3 +22,10 @@ Other 2026 numbers (third-party search, VERIFY): Social Security wage base $184,
 
 ## Open questions for the plan
 State income tax scope (50 states + DC x tables), local taxes, hourly vs salary in one page, overtime, pre/post-tax deductions.
+
+## VERIFIED 2026-10-26 against the IRS PDFs themselves (https://www.irs.gov/pub/irs-pdf/p15t.pdf and p15.pdf, downloaded + pdftotext)
+- All STANDARD + Step-2-CHECKBOX annual schedules above match Pub 15-T (2026) p.12 exactly (checkbox single bases 20,512.00 / 29,224.00 / 96,489.63).
+- **Old (2019-or-earlier) W-4 uses the SAME STANDARD schedules**: Adjusted Annual Wage = wages x periods - allowances x $4,300 (Worksheet 1A lines 1j-1l); Married -> MFJ schedule, Single -> Single schedule; **no Head of Household for old W-4**; no Step-3 credit (0).
+- Worksheet 1A: periods = 2, 4, 12, 24, 26, 52, 260 (semiannual, quarterly, monthly, semimonthly, biweekly, weekly, daily). New W-4: AAW = max(0, wages x periods + 4a - (4b + (box2 ? 0 : MFJ 12,900 : 8,600))); tentative = (base + rate x (AAW - floor)) / periods; minus Step 3 / periods (floor 0); plus 4(c) extra.
+- Rounding rule (Pub 15-T p.9): round tax to nearest whole dollar (50c up) if used consistently.
+- Pub 15 (2026): Social Security 6.2% employee, wage base $184,500; Medicare 1.45%; Additional Medicare 0.9% withheld on wages over $200,000 in the calendar year.
