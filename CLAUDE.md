@@ -165,9 +165,9 @@ must be built from the article's actual units, every time, not pasted from a tem
 ## ⛔ SESSION HANDOFF — START HERE (written 2026-10-15; full detail in `HANDOFF.md`)
 
 **Read `HANDOFF.md` in full before replying.** Do not make the user re-explain anything in it.
-- **State:** v152 · 49 calculators · 25 articles · 81 pages · `main` clean and pushed (last code commit `ffb5342`; Hours fixes deployed as v152, nothing half-built, nothing waiting on the user).
-- **Just shipped:** Recipe Converter (v144, Cooking & Kitchen vertical), BMR Calculator (v146), Hours Calculator (v150, layout fixes v152).
-- **NEXT TASK:** **Triangle / Pythagorean Calculator** (then Loan/Mortgage engine, Paycheck, Sales Tax, Unit Converter, Tip, Random
+- **State:** v154 · 50 calculators · 25 articles · 82 pages · `main` clean and pushed (last code commit `8067ce0`; Triangle Calculator deployed as v154, nothing half-built, nothing waiting on the user).
+- **Just shipped:** Recipe Converter (v144, Cooking & Kitchen vertical), BMR Calculator (v146), Hours Calculator (v150, layout fixes v152), Triangle Calculator (v154).
+- **NEXT TASK:** **Loan/Mortgage engine** (then Paycheck, Sales Tax, Unit Converter, Tip, Random
   Number Generator — the user decided 2026-10-25 to build ALL the Hard high-traffic ones, taking the Easy long-tails; full ranked plan in the
   roadmap md). Start with the Rule 8 research report (open every competitor live, visual AND functional differentiator, ≤3 decisions with
   recommendations), **wait for approval**, build, **deep QA (hard rule above, automatic)**, preview, deploy only on "deploy".
@@ -192,8 +192,8 @@ must be built from the article's actual units, every time, not pasted from a tem
 
 ## Project state
 
-- **Asset version:** v152 (bumped, `node build.js` run and deployed this session)
-- **Total pages:** 79 live
+- **Asset version:** v154 (bumped, `node build.js` run and deployed this session)
+- **Total pages:** 82 live
 - **Model:** Sonnet 5
 
 ### New this session — global `.csel` custom-dropdown component
@@ -273,7 +273,7 @@ Paint, Wallpaper, Scientific Notation.
 
 ---
 
-## Live calculators (49)
+## Live calculators (50)
 
 ### Construction & Gardening (13)
 Board Foot · Gravel · Sand · Topsoil · Mulch · Concrete · Flooring · Tile · Square Footage · Tape Measure Fraction · Stair · Paint · Wallpaper
@@ -285,16 +285,18 @@ Pace · Race Time Predictor · VO2 Max · Heart Rate Zone · Zone 2 Heart Rate �
 Final Grade · GPA · Grade · Test Score · Grade Curve
 
 ### Math & Numbers (10)
-Fraction · Standard Deviation · Scientific Notation · Weighted Average · Ratio · Percentage · Age · Date · Time · Hours
+Fraction · Standard Deviation · Scientific Notation · Weighted Average · Ratio · Percentage · Age · Date · Time · Hours · Triangle
 
 ### Cooking & Kitchen (1)
 Recipe Converter
 
-Total live calculators: **49**
+Total live calculators: **50**
 
 ---
 
-## Last session (v143–v152)
+## Last session (v143–v154)
+
+- **Triangle Calculator deployed v154 (commit `8067ce0`)** (`/triangle-calculator/`, Ahrefs >10K Hard ×2). Right triangle (any 2 values, Pythagorean) + Any triangle (SSS/SAS/ASA/AAS/SSA incl. the ambiguous case with BOTH triangles), live to-scale diagram, special-triangle + Pythagorean-triple recognition, steps, Pythagoras-in-squares picture. `CalcThis.triEngine` (pure, `TRIANGLE-ENGINE:START/END`) + `CalcThis.initTriangleCalc`, `.p-tri`. User corrections after preview, now permanent: **placeholders are plain numbers ("e.g. 3"), never √/π symbols** — roots/pi/sqrt still parse but are only mentioned in the helper note; **Right-triangle mode shows an explicit locked "Angle C = 90°" line** (C is the right angle, not an input). Not built vs approved report: heights ruler (heights are in the table + diagram), length unit is a label only. Not verified: real phone, real Chrome (Copy button). Article deferred.
 
 - **Hours Calculator fixes, deployed v152 (commit `ffb5342`)** after three user corrections on the v150 build, all now permanent: (1) **Week mode uses the EXACT
   Shift-mode fields** — each day is an `.hr-day` block: day name as the label above, then two full `.time-field` (Start time / End time, AM/PM inside the
