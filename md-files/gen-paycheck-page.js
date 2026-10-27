@@ -474,3 +474,29 @@ console.log('state pages written', nState);
   fs.writeFileSync(lf, lcrlf ? lt.replace(/\n/g, '\r\n') : lt);
 })();
 console.log(JSON.stringify({ ex1: ex1.net, ex2: ex2.net, ex3: ex3.net, exM: exM.fed, ex401: ex401.net, ssStop, jan: big[0].net, dec: big[11].net, exH: exH.net, exOT: exOT.net }));
+
+// ---------------- nav + footer: "Paycheck Calculators" section (partials) ----------------
+(function () {
+  function edit(rel, fn) { const f = ROOT + rel; let s = fs.readFileSync(f, 'utf8'); const crlf = s.includes('\r\n'); s = s.replace(/\r\n/g, '\n'); const o = s; s = fn(s); if (s !== o) { fs.writeFileSync(f, crlf ? s.replace(/\n/g, '\r\n') : s); console.log('partial updated', rel); } }
+  const hdrLinks = '          <a href="/paycheck-calculator/">All states (federal + FICA)</a>\n' + liveSorted.map((c) => '          <a href="/paycheck-calculator/' + SLUG[c] + '/">' + NAMES[c] + '</a>').join('\n') + '\n';
+  const hdrBlock = '<!--PAYNAV:START-->\n        <div class="menu-col">\n          <span class="menu-col-head">Paycheck Calculators</span>\n' + hdrLinks + '        </div>\n        <!--PAYNAV:END-->';
+  edit('partials/header.html', (s) => {
+    if (s.includes('<!--PAYNAV:START-->')) return s.replace(/<!--PAYNAV:START-->[\s\S]*?<!--PAYNAV:END-->/, () => hdrBlock);
+    s = s.replace('          <a href="/paycheck-calculator/">Paycheck</a>\n        </div>\n', () => '        </div>\n        ' + hdrBlock + '\n');
+    return s;
+  });
+  const ftrLinks = '          <li><a href="/paycheck-calculator/">All states</a></li>\n' + liveSorted.map((c) => '          <li><a href="/paycheck-calculator/' + SLUG[c] + '/">' + NAMES[c] + '</a></li>').join('\n') + '\n';
+  const ftrBlock = '<!--PAYFOOT:START-->\n      <div class="footer-col">\n        <button class="footer-col-btn" aria-expanded="false" type="button">\n          <span class="fttl"><span class="ft1">Paycheck</span> <span class="ft2">Calculators</span></span>\n          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>\n        </button>\n        <ul class="footer-links">\n' + ftrLinks + '        </ul>\n      </div>\n      <!--PAYFOOT:END-->';
+  edit('partials/footer.html', (s) => {
+    if (s.includes('<!--PAYFOOT:START-->')) return s.replace(/<!--PAYFOOT:START-->[\s\S]*?<!--PAYFOOT:END-->/, () => ftrBlock);
+    s = s.replace('          <li><a href="/paycheck-calculator/">Paycheck Calculator</a></li>\n        </ul>\n      </div>\n', () => '        </ul>\n      </div>\n\n      ' + ftrBlock + '\n');
+    return s;
+  });
+  edit('assets/style.css', (s) => {
+    if (s.includes('/* PAYNAV */')) return s;
+    s = s.replace('.menu-cols{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0 4px;min-width:560px}', () => '.menu-cols{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:0 4px;min-width:760px}');
+    s = s.replace('  @media(max-width:520px){\n    .menu-cols{grid-template-columns:1fr;min-width:220px}', () => '  /* PAYNAV */\n  @media(max-width:880px){.menu-cols{grid-template-columns:1fr 1fr;min-width:440px}}\n  @media(max-width:520px){\n    .menu-cols{grid-template-columns:1fr;min-width:220px}');
+    s = s.replace('    grid-template-columns:repeat(6,1fr);\n    gap:24px;\n    max-width:1040px;', () => '    grid-template-columns:repeat(7,1fr);\n    gap:18px;\n    max-width:1120px;');
+    return s;
+  });
+})();
