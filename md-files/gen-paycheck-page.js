@@ -336,7 +336,9 @@ function write(rel, html) {
 const SLUG = {}; liveCodes.forEach((c) => { if (E.STATES[c].slug) SLUG[c] = E.STATES[c].slug; });
 const liveSorted = liveCodes.filter((c) => SLUG[c]).sort((a, b) => (NAMES[a] < NAMES[b] ? -1 : 1));
 const stateLinks = (except) => '<ul class="pc-statelist">' + liveSorted.filter((c) => c !== except).map((c) => '<li><a href="/paycheck-calculator/' + SLUG[c] + '/">' + NAMES[c] + ' Paycheck Calculator</a></li>').join('') + '</ul>';
-const byState = '\n    <h2 style="margin-top:36px">Paycheck calculator by state</h2>\n    ' + stateLinks() + '\n';
+const cmpRows = liveSorted.map((c) => ({ c, r: stateExamples(c)[1] })).sort((x, y) => y.r.net - x.r.net);
+const cmpTable = '<p>Take-home pay on a ' + m0(65000) + ' salary, single filer, paid bi-weekly in 2026, no deductions — ranked from highest to lowest across the states with a live calculator:</p>\n    <div class="pc-tblwrap"><table class="dtable"><thead><tr><th>State</th><th>Net per paycheck</th><th>Net per year</th><th>State tax per paycheck</th></tr></thead><tbody>' + cmpRows.map((o) => '<tr><td><a href="/paycheck-calculator/' + SLUG[o.c] + '/">' + NAMES[o.c] + '</a></td><td>' + m(o.r.net) + '</td><td>' + m0(o.r.net * 26) + '</td><td>' + m(o.r.state + o.r.prog) + '</td></tr>').join('') + '</tbody></table></div>';
+const byState = '\n    <h2 style="margin-top:36px">Take-home pay on ' + m0(65000) + ' by state</h2>\n    ' + cmpTable + '\n    <h2 style="margin-top:36px">Paycheck calculator by state</h2>\n    ' + stateLinks() + '\n';
 const contentMain = CONTENT_MAIN.replace('\n    <h2 style="margin-top:36px">Common questions</h2>', () => byState + '\n    <h2 style="margin-top:36px">Common questions</h2>');
 
 write('paycheck-calculator/index.html', pageHtml({
@@ -389,7 +391,7 @@ function fact(c) {
 }
 function stateExamples(c) {
   const S = E.STATES[c], rows = [];
-  [[40000, 'single'], [65000, 'single'], [100000, 'single'], [65000, 'married']].forEach(([a, st]) => {
+  [[40000, 'single'], [65000, 'single'], [100000, 'single'], [65000, 'married'], [30000, 'single'], [50000, 'single'], [75000, 'single'], [150000, 'single'], [100000, 'married']].forEach(([a, st]) => {
     const inp = base(a / 26, 26, { fed: { w4: 'new', status: st }, state: { code: c, status: st, allowances: c === 'AZ' ? null : 0, allowances2: 0 } });
     const p = pc(inp);
     rows.push({ a, st, gross: a / 26, fed: p.fed, ss: p.ss, med: p.med + p.addl, state: p.state, prog: p.programTotal, net: p.net });
@@ -408,19 +410,24 @@ function stateFaqs(c) {
   f.push([`Does this ${n} calculator include local taxes?`, (LOCALS[c] || 'City, county and school-district taxes are not included.') + ' State and federal figures follow the 2026 official withholding methods.']);
   f.push([`What is my take-home pay on $40,000 or $100,000 in ${n}?`,
     `Single filer, paid bi-weekly: ${m0(40000)} a year gives ${m(ex[0].net)} a paycheck; ${m0(100000)} a year gives ${m(ex[2].net)} a paycheck.`]);
+  const byA = (a, st) => ex.find((r) => r.a === a && r.st === st);
+  [30000, 50000, 75000, 150000].forEach((a) => { const r = byA(a, 'single'); f.push([`What is ${m0(a)} a year after taxes in ${n}?`, `A single filer paid bi-weekly in ${n} on ${m0(a)} a year takes home about ${m(r.net)} a paycheck, roughly ${m0(r.net * 26)} a year after federal income tax${none && !r.prog ? '' : ', ' + n + ' tax'}, Social Security and Medicare. That is an effective total tax rate of about ${((1 - r.net * 26 / a) * 100).toFixed(1)}%.`]); });
   return f;
 }
 function stateContent(c, faqs2) {
   const n = NAMES[c], S = E.STATES[c], ex = stateExamples(c);
-  const rowsHtml = ex.map((r) => `<tr><td>${m0(r.a)}${r.st === 'single' ? '' : ' married'}</td><td>${m(r.fed)}</td><td>${m(r.ss + r.med)}</td><td>${S.method === 'none' && !r.prog ? '$0.00' : m(r.state + r.prog)}</td><td>${m(r.net)}</td></tr>`).join('');
+  const exSorted = ex.slice().sort((x, y) => (x.st === y.st ? x.a - y.a : (x.st === 'single' ? -1 : 1)));
+  const rowsHtml = exSorted.map((r) => `<tr><td>${m0(r.a)}${r.st === 'single' ? '' : ' married'}</td><td>${m(r.fed)}</td><td>${m(r.ss + r.med)}</td><td>${S.method === 'none' && !r.prog ? '$0.00' : m(r.state + r.prog)}</td><td>${m(r.net)}</td></tr>`).join('');
   return `  <section class="content">
     <div class="grid2">
       <div>
+        <h2>${n} take-home pay at a glance</h2>
+        <p><strong>${m0(65000)} a year in ${n}</strong> (single, bi-weekly, 2026) is <strong>${m(ex[1].net)} a paycheck</strong>, about ${m0(ex[1].net * 26)} a year. <strong>${m0(100000)}</strong> is <strong>${m(ex[2].net)}</strong> a paycheck. Updated for the 2026 tax year using the IRS Publication 15-T method${S.method === 'none' ? '' : ' and the official ' + n + ' withholding formula'}.</p>
         <h2>How ${n} paycheck tax works</h2>
         <p>${fact(c)}</p>
         <p>${LOCALS[c] || 'City, county and school-district taxes are not included.'}</p>
         <h2>${n} paycheck examples</h2>
-        <p>Single filer unless marked, paid bi-weekly in 2026, no extra withholding, no deductions:</p>
+        <p>Single filer unless marked, paid bi-weekly in 2026, no extra withholding, no deductions. Amounts are per paycheck:</p>
         <div class="pc-tblwrap"><table class="dtable"><thead><tr><th>Pay</th><th>Federal</th><th>FICA</th><th>${n}</th><th>Net pay</th></tr></thead><tbody>${rowsHtml}</tbody></table></div>
         <p>FICA is Social Security plus Medicare.</p>
       </div>
@@ -441,7 +448,7 @@ ${faqs2.map((q) => `    <details class="faq"><summary>${q[0]}</summary><p>${q[1]
 let nState = 0;
 liveSorted.forEach((c) => {
   const n = NAMES[c], url = 'https://calcthis.co/paycheck-calculator/' + SLUG[c] + '/', f2 = stateFaqs(c), e65 = stateExamples(c)[1];
-  const app = Object.assign({}, jsonLdApp, { name: n + ' Paycheck Calculator', url, description: n + ' paycheck calculator for salary and hourly pay: federal income tax, Social Security, Medicare' + (E.STATES[c].method === 'none' ? '' : ', ' + n + ' state tax') + ', deductions and overtime.' });
+  const app = Object.assign({}, jsonLdApp, { dateModified: '2026-10-27', name: n + ' Paycheck Calculator', url, description: n + ' paycheck calculator for salary and hourly pay: federal income tax, Social Security, Medicare' + (E.STATES[c].method === 'none' ? '' : ', ' + n + ' state tax') + ', deductions and overtime.' });
   const faq = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: f2.map((q) => ({ '@type': 'Question', name: q[0], acceptedAnswer: { '@type': 'Answer', text: q[1] } })) };
   const crumbs = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'CalcThis', item: 'https://calcthis.co/' },
@@ -454,7 +461,7 @@ liveSorted.forEach((c) => {
   </section>`;
   write('paycheck-calculator/' + SLUG[c] + '/index.html', pageHtml({
     title: n + ' Paycheck Calculator 2026 — Take-Home Pay After Tax | CalcThis',
-    desc: 'Free ' + n + ' paycheck calculator. Salary or hourly take-home pay after federal tax, Social Security, Medicare' + (E.STATES[c].method === 'none' ? '' : ' and ' + n + ' state tax') + ', with 401(k) deductions, overtime and every pay schedule.',
+    desc: n + ' paycheck calculator: ' + m0(65000) + ' a year is ' + m(e65.net) + ' take-home bi-weekly after federal tax, Social Security, Medicare' + (E.STATES[c].method === 'none' ? '' : ' and ' + n + ' tax') + '. Salary or hourly, 401(k), overtime, 2026 rates.',
     ogTitle: n + ' Paycheck Calculator 2026', url, app, faq, extraLd: [crumbs], hero, content: stateContent(c, f2), bodyAttr: ' data-state="' + c + '"'
   }));
   nState++;

@@ -2224,3 +2224,5 @@
   @media(max-width:700px){.footer-stack,.footer-right,.footer-sub{display:contents}.footer-col--two .footer-links{display:flex}}
   .footer-col--wide{order:7}
   @media(min-width:701px){.footer-stack .footer-col,.footer-right .footer-col,.footer-sub .footer-col{order:0!important}}
+
+  .p-pay .dtable a{color:var(--amber-deep);text-decoration:underline}
