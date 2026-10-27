@@ -1080,7 +1080,7 @@
        permanent bottom margin so the panel never touches the viewport edge, at any
        screen height — this margin must stay even as the panel grows/shrinks with
        content, not just be a one-off max-height guess. */
-    max-height:calc(100dvh - 70px - 24px);overflow-y:auto;
+    max-height:calc(100dvh - 70px - 24px);overflow-y:auto;scrollbar-color:var(--amber) transparent;scrollbar-width:thin;
     /* override old single-column min-width */
     min-width:0;
   }
@@ -2205,3 +2205,22 @@
   @media(max-width:700px){.footer-cols{grid-template-columns:1fr;gap:0}.footer-col--wide .footer-links{display:none;grid-template-columns:1fr}.footer-col-btn[aria-expanded="true"] + .footer-links{display:grid}.p-pay .pc-statelist{columns:1}}
   @media(min-width:701px) and (max-width:900px){.footer-cols{grid-template-columns:repeat(2,1fr)}.footer-col--wide .footer-links{grid-template-columns:repeat(2,1fr)}.p-pay .pc-statelist{columns:2}}
   .st-cube .st-sub{font-family:'Inter',system-ui,sans-serif;font-size:11.5px;font-weight:500;color:var(--muted);margin-top:-6px;text-align:center}
+
+  /* MENU scrollbar = design-system amber scrollbar (same as .csel-panel) */
+  .menu::-webkit-scrollbar{width:14px}
+  .menu::-webkit-scrollbar-track{background:transparent}
+  .menu::-webkit-scrollbar-thumb{background-color:var(--amber);border-radius:8px;border:3px solid transparent;background-clip:padding-box}
+  .menu::-webkit-scrollbar-thumb:hover{background-color:var(--amber-deep);background-clip:padding-box}
+  .menu::-webkit-scrollbar-button{background-color:transparent;display:block;height:14px}
+  .menu::-webkit-scrollbar-button:vertical:start:decrement{background:transparent url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"><polygon points="5,2 9,8 1,8" fill="%23B5761F"/></svg>') no-repeat center}
+  .menu::-webkit-scrollbar-button:vertical:end:increment{background:transparent url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"><polygon points="1,2 9,2 5,8" fill="%23B5761F"/></svg>') no-repeat center}
+  /* FOOTER-STACKS: sections flow under each other (no row alignment gaps) */
+  .footer-cols{align-items:start}
+  .footer-stack,.footer-right{display:flex;flex-direction:column;gap:34px;min-width:0}
+  .footer-right{grid-column:2/4}
+  .footer-sub{display:grid;grid-template-columns:1fr 1fr;gap:0 40px;align-items:start}
+  .footer-col--two .footer-links{display:grid;grid-template-columns:1fr 1fr;gap:9px 40px}
+  @media(min-width:701px) and (max-width:900px){.footer-right{grid-column:2/3}.footer-sub{grid-template-columns:1fr}.footer-col--two .footer-links{grid-template-columns:1fr}}
+  @media(max-width:700px){.footer-stack,.footer-right,.footer-sub{display:contents}.footer-col--two .footer-links{display:flex}}
+  .footer-col--wide{order:7}
+  @media(min-width:701px){.footer-stack .footer-col,.footer-right .footer-col,.footer-sub .footer-col{order:0!important}}
