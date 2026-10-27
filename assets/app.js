@@ -11689,8 +11689,9 @@ CalcThis.payEngine = (function () {
     ann: function (S, o) {
       var a = o.wages * o.ppy, sd = S.stdDed ? (S.stdDed[o.status] || 0) : 0;
       var ded = sd + (S.allow || 0) * num(o.allowances) + (S.allow2 || 0) * num(o.allowances2);
-      var rows = S.tab[o.status === 'married' ? 'married' : 'single'];
+      var rows = S.tab[o.status === 'hoh' && S.tab.hoh ? 'hoh' : (o.status === 'married' ? 'married' : 'single')];
       var t = Math.max(0, tab(rows, Math.max(0, a - ded))) / o.ppy;
+      if (S.roundUp) t = Math.ceil(t - 1e-9);
       return { tax: S.roundWhole ? whole(t) : t };
     },
     // Arizona: wages x the percentage chosen on Form A-4 (default 2.0%)
@@ -11835,6 +11836,9 @@ CalcThis.payEngine = (function () {
   S.IA = { name: 'Iowa', method: 'ia', src: 'https://revenue.iowa.gov/media/53/download', rate: .038, ded: { single: 13000, married: 26000, hoh: 19500 } };
   S.MO = { name: 'Missouri', method: 'ann', note: 'Missouri “married” assumes the spouse does not work (full $32,200 deduction); if your spouse works, choose Single. Withholding is rounded to the dollar, as Missouri requires.', src: 'https://dor.mo.gov/forms/Withholding%20Formula_2026.pdf', roundWhole: true, stdDed: { single: 16100, married: 32200, hoh: 24150 },
     tab: { single: [[0, 0, 0], [1348, 0, 0.02], [2696, 26.96, 0.025], [4044, 60.66, 0.03], [5392, 101.1, 0.035], [6740, 148.28, 0.04], [8088, 202.2, 0.045], [9436, 262.86, 0.047]], married: [[0, 0, 0], [1348, 0, 0.02], [2696, 26.96, 0.025], [4044, 60.66, 0.03], [5392, 101.1, 0.035], [6740, 148.28, 0.04], [8088, 202.2, 0.045], [9436, 262.86, 0.047]] } };
+  S.MT = { name: 'Montana', method: 'ann', src: 'https://revenuefiles.mt.gov/files/Forms/Montana_Employer_and_Information_Agent_Guide_with_Tax_Tables.pdf', roundUp: true,
+    note: 'Montana “married” assumes only one spouse works (the Form MW-4 line 1b table); if both spouses work, choose Single. Withholding is rounded up to the next dollar, as Montana requires.',
+    tab: { single: [[0, 0, 0], [16100, 0, .047], [63600, 2232.5, .0565]], married: [[0, 0, 0], [32200, 0, .047], [127200, 4465, .0565]], hoh: [[0, 0, 0], [24150, 0, .047], [95400, 3348.75, .0565]] } };
   S.PA = { name: 'Pennsylvania', method: 'flatann', src: 'https://www.pa.gov/agencies/dli/resources/for-employers-and-educators/how-to-file/uc-tax', rate: .0307, taxes401k: true, programs: [{ name: 'PA Unemployment (employee)', rate: .0007 }] };
 })(CalcThis.payEngine.STATES);
 /* PAY-STATES:END */
