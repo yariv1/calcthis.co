@@ -335,8 +335,8 @@ function write(rel, html) {
 // ---------------- main page: add the by-state link list ----------------
 const SLUG = {}; liveCodes.forEach((c) => { if (E.STATES[c].slug) SLUG[c] = E.STATES[c].slug; });
 const liveSorted = liveCodes.filter((c) => SLUG[c]).sort((a, b) => (NAMES[a] < NAMES[b] ? -1 : 1));
-const stateLinks = (except) => liveSorted.filter((c) => c !== except).map((c) => '<a href="/paycheck-calculator/' + SLUG[c] + '/">' + NAMES[c] + '</a>').join(' · ');
-const byState = '\n    <h2 style="margin-top:36px">Paycheck calculator by state</h2>\n    <p class="pc-states">' + stateLinks() + '</p>\n';
+const stateLinks = (except) => '<ul class="pc-statelist">' + liveSorted.filter((c) => c !== except).map((c) => '<li><a href="/paycheck-calculator/' + SLUG[c] + '/">' + NAMES[c] + ' Paycheck Calculator</a></li>').join('') + '</ul>';
+const byState = '\n    <h2 style="margin-top:36px">Paycheck calculator by state</h2>\n    ' + stateLinks() + '\n';
 const contentMain = CONTENT_MAIN.replace('\n    <h2 style="margin-top:36px">Common questions</h2>', () => byState + '\n    <h2 style="margin-top:36px">Common questions</h2>');
 
 write('paycheck-calculator/index.html', pageHtml({
@@ -429,7 +429,7 @@ function stateContent(c, faqs2) {
         <p>The state is already set to <strong>${n}</strong> above. Enter your salary or hourly rate, your pay frequency and filing status, and the result appears as you type. Under <strong>Go advanced</strong> you can match your Form W-4 (new or 2019-or-earlier), add 401(k), insurance and other deductions, enter year-to-date pay and add overtime.</p>
         <p>You also get a bar showing where each paycheck dollar goes, a what-if for a raise or a bigger 401(k), and your pay on all ten schedules. This is an estimate of withholding, not payroll or tax advice.</p>
         <h2>Other states</h2>
-        <p class="pc-states">${stateLinks(c)}</p>
+        ${stateLinks(c)}
         <p>More states are being added as each official formula is checked. For any other state, the <a href="/paycheck-calculator/">main paycheck calculator</a> shows federal tax and FICA.</p>
       </div>
     </div>
@@ -478,15 +478,15 @@ console.log(JSON.stringify({ ex1: ex1.net, ex2: ex2.net, ex3: ex3.net, exM: exM.
 // ---------------- nav + footer: "Paycheck Calculators" section (partials) ----------------
 (function () {
   function edit(rel, fn) { const f = ROOT + rel; let s = fs.readFileSync(f, 'utf8'); const crlf = s.includes('\r\n'); s = s.replace(/\r\n/g, '\n'); const o = s; s = fn(s); if (s !== o) { fs.writeFileSync(f, crlf ? s.replace(/\n/g, '\r\n') : s); console.log('partial updated', rel); } }
-  const hdrLinks = '          <a href="/paycheck-calculator/">All states (federal + FICA)</a>\n' + liveSorted.map((c) => '          <a href="/paycheck-calculator/' + SLUG[c] + '/">' + NAMES[c] + '</a>').join('\n') + '\n';
+  const hdrLinks = '          <a href="/paycheck-calculator/">Paycheck Calculator (all states)</a>\n' + liveSorted.map((c) => '          <a href="/paycheck-calculator/' + SLUG[c] + '/">' + NAMES[c] + ' Paycheck Calculator</a>').join('\n') + '\n';
   const hdrBlock = '<!--PAYNAV:START-->\n        <div class="menu-col">\n          <span class="menu-col-head">Paycheck Calculators</span>\n' + hdrLinks + '        </div>\n        <!--PAYNAV:END-->';
   edit('partials/header.html', (s) => {
     if (s.includes('<!--PAYNAV:START-->')) return s.replace(/<!--PAYNAV:START-->[\s\S]*?<!--PAYNAV:END-->/, () => hdrBlock);
     s = s.replace('          <a href="/paycheck-calculator/">Paycheck</a>\n        </div>\n', () => '        </div>\n        ' + hdrBlock + '\n');
     return s;
   });
-  const ftrLinks = '          <li><a href="/paycheck-calculator/">All states</a></li>\n' + liveSorted.map((c) => '          <li><a href="/paycheck-calculator/' + SLUG[c] + '/">' + NAMES[c] + '</a></li>').join('\n') + '\n';
-  const ftrBlock = '<!--PAYFOOT:START-->\n      <div class="footer-col">\n        <button class="footer-col-btn" aria-expanded="false" type="button">\n          <span class="fttl"><span class="ft1">Paycheck</span> <span class="ft2">Calculators</span></span>\n          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>\n        </button>\n        <ul class="footer-links">\n' + ftrLinks + '        </ul>\n      </div>\n      <!--PAYFOOT:END-->';
+  const ftrLinks = '          <li><a href="/paycheck-calculator/">Paycheck Calculator (all states)</a></li>\n' + liveSorted.map((c) => '          <li><a href="/paycheck-calculator/' + SLUG[c] + '/">' + NAMES[c] + ' Paycheck Calculator</a></li>').join('\n') + '\n';
+  const ftrBlock = '<!--PAYFOOT:START-->\n      <div class="footer-col footer-col--wide">\n        <button class="footer-col-btn" aria-expanded="false" type="button">\n          <span class="fttl"><span class="ft1">Paycheck</span> <span class="ft2">Calculators</span></span>\n          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>\n        </button>\n        <ul class="footer-links">\n' + ftrLinks + '        </ul>\n      </div>\n      <!--PAYFOOT:END-->';
   edit('partials/footer.html', (s) => {
     if (s.includes('<!--PAYFOOT:START-->')) return s.replace(/<!--PAYFOOT:START-->[\s\S]*?<!--PAYFOOT:END-->/, () => ftrBlock);
     s = s.replace('          <li><a href="/paycheck-calculator/">Paycheck Calculator</a></li>\n        </ul>\n      </div>\n', () => '        </ul>\n      </div>\n\n      ' + ftrBlock + '\n');
@@ -505,8 +505,8 @@ console.log(JSON.stringify({ ex1: ex1.net, ex2: ex2.net, ex3: ex3.net, exM: exM.
 (function () {
   const f = ROOT + 'index.html'; let h = fs.readFileSync(f, 'utf8'); const crlf = h.includes('\r\n'); h = h.replace(/\r\n/g, '\n'); const o = h;
   const allIco = '<svg width="30" height="30" viewBox="0 0 32 32" fill="none"><rect x="4" y="8" width="24" height="16" rx="2.5" fill="#EFE7D8" stroke="#8F5C13" stroke-width="1.4"/><circle cx="16" cy="16" r="3.6" fill="#B5761F"/><path d="M8 12h3M21 20h3" stroke="#37503F" stroke-width="1.5" stroke-linecap="round"/></svg>';
-  const cubes = '<!--PAYCUBES:START-->\n    <div class="st-cubes">\n      <a class="st-cube st-all" href="/paycheck-calculator/"><span class="st-ico" aria-hidden="true">' + allIco + '</span><span class="st-name">All states</span></a>\n'
-    + liveSorted.map((c) => '      <a class="st-cube" href="/paycheck-calculator/' + SLUG[c] + '/"><img src="/assets/flags/' + c.toLowerCase() + '.webp" width="60" height="40" alt="Flag of ' + NAMES[c] + '" loading="lazy"><span class="st-name">' + NAMES[c] + '</span></a>').join('\n')
+  const cubes = '<!--PAYCUBES:START-->\n    <div class="st-cubes">\n      <a class="st-cube st-all" href="/paycheck-calculator/"><span class="st-ico" aria-hidden="true">' + allIco + '</span><span class="st-name">All states</span><span class="st-sub">Paycheck Calculator</span></a>\n'
+    + liveSorted.map((c) => '      <a class="st-cube" href="/paycheck-calculator/' + SLUG[c] + '/"><img src="/assets/flags/' + c.toLowerCase() + '.webp" width="60" height="40" alt="' + NAMES[c] + ' paycheck calculator — flag of ' + NAMES[c] + '" loading="lazy"><span class="st-name">' + NAMES[c] + '</span><span class="st-sub">Paycheck Calculator</span></a>').join('\n')
     + '\n    </div>\n    <!--PAYCUBES:END-->';
   if (h.includes('<!--PAYCUBES:START-->')) h = h.replace(/<!--PAYCUBES:START-->[\s\S]*?<!--PAYCUBES:END-->/, () => cubes);
   else {

@@ -11,6 +11,46 @@
     btn.addEventListener('click',function(e){e.stopPropagation();menu.hidden?open():close();});
     document.addEventListener('click',function(e){if(!menu.hidden&&!menu.contains(e.target)&&!btn.contains(e.target))close();});
     document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!menu.hidden)close();});
+    // ---- typeahead over every menu link ----
+    var inp = document.getElementById('menuSearch'), res = document.getElementById('menuResults'), cols = menu.querySelector('.menu-cols'), idx = null;
+    function build() {
+      idx = []; var head = '';
+      [].forEach.call(menu.querySelectorAll('.menu-col > *'), function (n) {
+        if (n.classList.contains('menu-col-head')) { head = n.textContent.trim(); return; }
+        if (n.tagName === 'A') idx.push({ t: n.textContent.trim(), h: n.getAttribute('href'), g: head, k: (n.textContent + ' calculator').toLowerCase() });
+      });
+      menu.querySelectorAll('.menu-col').forEach(function () {});
+    }
+    function esc(t) { return t.replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+    function search() {
+      var q = inp.value.trim().toLowerCase();
+      if (!q) { res.hidden = true; res.innerHTML = ''; if (cols) cols.hidden = false; return; }
+      if (!idx) build();
+      var toks = q.split(/\s+/), out = [];
+      idx.forEach(function (it) {
+        var ok = toks.every(function (t) { return it.k.indexOf(t) >= 0; }); if (!ok) return;
+        var score = it.k.indexOf(toks[0]) === 0 ? 0 : (it.k.indexOf(' ' + toks[0]) >= 0 ? 1 : 2);
+        out.push({ it: it, s: score });
+      });
+      out.sort(function (a, b) { return a.s - b.s; });
+      if (cols) cols.hidden = true; res.hidden = false;
+      res.innerHTML = out.length ? out.slice(0, 12).map(function (o) { return '<a href="' + o.it.h + '"><span>' + esc(o.it.t) + '</span><small>' + esc(o.it.g) + '</small></a>'; }).join('') : '<p class="menu-none">No calculator found for “' + esc(inp.value.trim()) + '”.</p>';
+    }
+    if (inp && res) {
+      inp.addEventListener('input', search);
+      inp.addEventListener('keydown', function (e) {
+        var links = [].slice.call(res.querySelectorAll('a'));
+        if (e.key === 'Enter' && links[0]) { e.preventDefault(); location.href = links[0].getAttribute('href'); }
+        else if (e.key === 'ArrowDown' && links[0]) { e.preventDefault(); links[0].focus(); }
+        else if (e.key === 'Escape' && inp.value) { e.stopPropagation(); inp.value = ''; search(); }
+      });
+      res.addEventListener('keydown', function (e) {
+        var links = [].slice.call(res.querySelectorAll('a')), i = links.indexOf(document.activeElement);
+        if (e.key === 'ArrowDown' && links[i + 1]) { e.preventDefault(); links[i + 1].focus(); }
+        else if (e.key === 'ArrowUp') { e.preventDefault(); (i > 0 ? links[i - 1] : inp).focus(); }
+      });
+      btn.addEventListener('click', function () { if (!menu.hidden && window.matchMedia('(hover:hover) and (pointer:fine)').matches) setTimeout(function () { inp.focus(); }, 30); else if (menu.hidden) { inp.value = ''; search(); } });
+    }
   }
   // ---- auto year (footer copyright) ----
   var y=document.getElementById('yr'); if(y) y.textContent=new Date().getFullYear();
