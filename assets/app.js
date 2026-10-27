@@ -11690,7 +11690,8 @@ CalcThis.payEngine = (function () {
       var a = o.wages * o.ppy, sd = S.stdDed ? (S.stdDed[o.status] || 0) : 0;
       var ded = sd + (S.allow || 0) * num(o.allowances) + (S.allow2 || 0) * num(o.allowances2);
       var rows = S.tab[o.status === 'married' ? 'married' : 'single'];
-      return { tax: Math.max(0, tab(rows, Math.max(0, a - ded))) / o.ppy };
+      var t = Math.max(0, tab(rows, Math.max(0, a - ded))) / o.ppy;
+      return { tax: S.roundWhole ? whole(t) : t };
     },
     // Arizona: wages x the percentage chosen on Form A-4 (default 2.0%)
     pct: function (S, o) {
@@ -11832,6 +11833,8 @@ CalcThis.payEngine = (function () {
     programs: [{ name: 'CO Paid Family & Medical Leave', rate: .0044, base: 184500 }] };
   S.KY = { name: 'Kentucky', method: 'flatann', src: 'https://revenue.ky.gov/Forms/2026%20Withholding%20Formula.pdf', rate: .035, stdDed: { single: 3360, married: 3360, hoh: 3360 } };
   S.IA = { name: 'Iowa', method: 'ia', src: 'https://revenue.iowa.gov/media/53/download', rate: .038, ded: { single: 13000, married: 26000, hoh: 19500 } };
+  S.MO = { name: 'Missouri', method: 'ann', note: 'Missouri “married” assumes the spouse does not work (full $32,200 deduction); if your spouse works, choose Single. Withholding is rounded to the dollar, as Missouri requires.', src: 'https://dor.mo.gov/forms/Withholding%20Formula_2026.pdf', roundWhole: true, stdDed: { single: 16100, married: 32200, hoh: 24150 },
+    tab: { single: [[0, 0, 0], [1348, 0, 0.02], [2696, 26.96, 0.025], [4044, 60.66, 0.03], [5392, 101.1, 0.035], [6740, 148.28, 0.04], [8088, 202.2, 0.045], [9436, 262.86, 0.047]], married: [[0, 0, 0], [1348, 0, 0.02], [2696, 26.96, 0.025], [4044, 60.66, 0.03], [5392, 101.1, 0.035], [6740, 148.28, 0.04], [8088, 202.2, 0.045], [9436, 262.86, 0.047]] } };
   S.PA = { name: 'Pennsylvania', method: 'flatann', src: 'https://www.pa.gov/agencies/dli/resources/for-employers-and-educators/how-to-file/uc-tax', rate: .0307, taxes401k: true, programs: [{ name: 'PA Unemployment (employee)', rate: .0007 }] };
 })(CalcThis.payEngine.STATES);
 /* PAY-STATES:END */
@@ -12084,6 +12087,7 @@ CalcThis.initPayCalc = function () {
     if (d.ytd > 0) as.push('Year-to-date pay of ' + mon0(d.ytd) + ' is counted toward the Social Security limit.');
     if (code && p.stateKnown) as.push(sname + ' income tax by the state’s official ' + E.YEAR + ' withholding formula' + (S.src && /^https?:/.test(S.src) ? ' (<a href="' + S.src + '" target="_blank" rel="noopener">source</a>)' : '') + '.');
     if (code && p.stateKnown && S.programs) as.push('Includes ' + S.programs.map(function (q) { return q.name; }).join(' and ') + ' (employee-paid).');
+    if (code && p.stateKnown && S.note) as.push(S.note);
     as.push('City, county and school-district taxes are not included.');
     as.push('Amounts are not rounded' + (c.round ? ' except federal withholding, rounded to the nearest dollar' : '') + '. Employer taxes are not part of your paycheck and are not included.');
     $('pcAssume').innerHTML = as.map(function (x) { return '<li>' + x + '</li>'; }).join('');
