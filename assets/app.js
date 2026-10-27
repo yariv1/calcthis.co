@@ -11937,7 +11937,7 @@ CalcThis.initPayCalc = function () {
     if (annual > 1e9) return { msg: BASE, hint: 'That amount is too large to calculate — check the numbers.' };
     var c = { w4: st.w4, status: statusKey(), step2: adv && st.w4 === 'new' && $('pcStep2').checked, credit: adv ? val('pcCredit', 0) : 0, other4a: adv ? val('pc4a', 0) : 0, ded4b: adv ? val('pc4b', 0) : 0, fedExtra: adv ? val('pcFedExtra', 0) : 0, allow: adv ? val('pcAllow', 0) : 0,
       round: adv && $('pcRound').checked, exFed: adv && $('pcExFed').checked, exSS: adv && $('pcExSS').checked, exMed: adv && $('pcExMed').checked, exState: adv && $('pcExState').checked,
-      state: stateCode(), stAllow: adv && f.pcStAllow && f.pcStAllow.v != null ? f.pcStAllow.v : (adv && stateCode() === 'AZ' ? null : 0), stAllow2: adv ? val('pcStAllow2', 0) : 0, stExtra: adv ? val('pcStExtra', 0) : 0 };
+      state: stateCode(), stAllow: adv && f.pcStAllow && f.pcStAllow.v != null ? f.pcStAllow.v : (stateCode() === 'AZ' ? null : 0), stAllow2: adv ? val('pcStAllow2', 0) : 0, stExtra: adv ? val('pcStExtra', 0) : 0 };
     var nn = ['credit', 'other4a', 'ded4b', 'fedExtra', 'allow', 'stAllow', 'stAllow2', 'stExtra'], nl = ['pcCredit', 'pc4a', 'pc4b', 'pcFedExtra', 'pcAllow', 'pcStAllow', 'pcStAllow2', 'pcStExtra'];
     for (i = 0; i < nn.length; i++) {
       if (c[nn[i]] < 0) return { msg: BASE, hint: '“' + LABELS[nl[i]] + '” can’t be negative.' };
@@ -12192,6 +12192,8 @@ CalcThis.initPayCalc = function () {
     try { navigator.clipboard.writeText(txt).then(function () { done(true); }, legacy); } catch (e) { legacy(); }
   });
 
+  var pre = document.body.getAttribute('data-state');
+  if (pre && NAMES[pre]) { $('pcState').value = pre; }
   syncStateFields();
   render();
 };

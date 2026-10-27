@@ -92,3 +92,30 @@
 - [Contact](https://calcthis.co/contact/): Get in touch with CalcThis. Questions, corrections, or a calculator you'd like us to build — send a message and a real person will read it.
 - [Privacy Policy](https://calcthis.co/privacy-policy/): CalcThis privacy policy. We don't collect personal data. Learn how we use cookies and third-party services.
 - [Terms of Use](https://calcthis.co/terms-of-use/): Terms of use for CalcThis. Free calculators for informational purposes — please verify results with a qualified professional.
+
+## Paycheck calculators by state
+- [Alabama Paycheck Calculator](https://calcthis.co/paycheck-calculator/alabama/): take-home pay after federal tax, FICA and Alabama state tax.
+- [Alaska Paycheck Calculator](https://calcthis.co/paycheck-calculator/alaska/): take-home pay after federal tax, FICA.
+- [Arizona Paycheck Calculator](https://calcthis.co/paycheck-calculator/arizona/): take-home pay after federal tax, FICA and Arizona state tax.
+- [California Paycheck Calculator](https://calcthis.co/paycheck-calculator/california/): take-home pay after federal tax, FICA and California state tax.
+- [Colorado Paycheck Calculator](https://calcthis.co/paycheck-calculator/colorado/): take-home pay after federal tax, FICA and Colorado state tax.
+- [Florida Paycheck Calculator](https://calcthis.co/paycheck-calculator/florida/): take-home pay after federal tax, FICA.
+- [Georgia Paycheck Calculator](https://calcthis.co/paycheck-calculator/georgia/): take-home pay after federal tax, FICA and Georgia state tax.
+- [Illinois Paycheck Calculator](https://calcthis.co/paycheck-calculator/illinois/): take-home pay after federal tax, FICA and Illinois state tax.
+- [Iowa Paycheck Calculator](https://calcthis.co/paycheck-calculator/iowa/): take-home pay after federal tax, FICA and Iowa state tax.
+- [Kentucky Paycheck Calculator](https://calcthis.co/paycheck-calculator/kentucky/): take-home pay after federal tax, FICA and Kentucky state tax.
+- [Michigan Paycheck Calculator](https://calcthis.co/paycheck-calculator/michigan/): take-home pay after federal tax, FICA and Michigan state tax.
+- [Minnesota Paycheck Calculator](https://calcthis.co/paycheck-calculator/minnesota/): take-home pay after federal tax, FICA and Minnesota state tax.
+- [Missouri Paycheck Calculator](https://calcthis.co/paycheck-calculator/missouri/): take-home pay after federal tax, FICA and Missouri state tax.
+- [Montana Paycheck Calculator](https://calcthis.co/paycheck-calculator/montana/): take-home pay after federal tax, FICA and Montana state tax.
+- [Nevada Paycheck Calculator](https://calcthis.co/paycheck-calculator/nevada/): take-home pay after federal tax, FICA.
+- [New Hampshire Paycheck Calculator](https://calcthis.co/paycheck-calculator/new-hampshire/): take-home pay after federal tax, FICA.
+- [New York Paycheck Calculator](https://calcthis.co/paycheck-calculator/new-york/): take-home pay after federal tax, FICA and New York state tax.
+- [North Carolina Paycheck Calculator](https://calcthis.co/paycheck-calculator/north-carolina/): take-home pay after federal tax, FICA and North Carolina state tax.
+- [Pennsylvania Paycheck Calculator](https://calcthis.co/paycheck-calculator/pennsylvania/): take-home pay after federal tax, FICA and Pennsylvania state tax.
+- [South Dakota Paycheck Calculator](https://calcthis.co/paycheck-calculator/south-dakota/): take-home pay after federal tax, FICA.
+- [Tennessee Paycheck Calculator](https://calcthis.co/paycheck-calculator/tennessee/): take-home pay after federal tax, FICA.
+- [Texas Paycheck Calculator](https://calcthis.co/paycheck-calculator/texas/): take-home pay after federal tax, FICA.
+- [Virginia Paycheck Calculator](https://calcthis.co/paycheck-calculator/virginia/): take-home pay after federal tax, FICA and Virginia state tax.
+- [Washington Paycheck Calculator](https://calcthis.co/paycheck-calculator/washington/): take-home pay after federal tax, FICA.
+- [Wyoming Paycheck Calculator](https://calcthis.co/paycheck-calculator/wyoming/): take-home pay after federal tax, FICA.

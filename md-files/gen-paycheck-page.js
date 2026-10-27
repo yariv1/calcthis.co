@@ -72,16 +72,60 @@ ${opts.map((o) => `                <button type="button" class="csel-opt${o[0] =
 const fld = (id, label, unit, ph) => `<div class="fld"><label class="lab" for="${id}">${label}${unit ? ' <span class="unit">' + unit + '</span>' : ''}</label><div class="inp"><input id="${id}" type="text" inputmode="decimal" autocomplete="off" placeholder="${ph}"></div></div>`;
 const chk = (id, text) => `<label class="dc-check" for="${id}"><input type="checkbox" id="${id}"><span>${text}</span></label>`;
 
-const body = `<body class="p-loan p-pay">
+const HERO_MAIN = `  <section class="hero">
+    <div class="eyebrow">Gross to net, itemized</div>
+    <h1>Paycheck Calculator</h1>
+    <p>Enter your salary or hourly pay and see your <strong>take-home pay</strong> after <strong>federal income tax, Social Security, Medicare</strong> and your <strong>state tax</strong>. See where every dollar of each paycheck goes, how a raise or a 401(k) changes it, and your pay on every pay schedule at once.</p>
+  </section>`;
+const CONTENT_MAIN = `  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use the paycheck calculator</h2>
+        <p>Choose <strong>Salary</strong> or <strong>Hourly</strong>, type your pay, pick your <strong>pay frequency</strong>, <strong>state</strong> and <strong>filing status</strong>, and your take-home pay appears as you type. For a salary you can enter the yearly amount or the amount of one paycheck. Under <strong>Go advanced</strong> you can match your Form W-4 exactly, add 401(k), insurance and other deductions, enter year-to-date pay and exempt yourself from individual taxes.</p>
+        <p>The result shows each paycheck dollar as a bar, an itemized table per paycheck and per year, what a raise or a bigger 401(k) would change, your take-home on all ten pay schedules, and a list of the assumptions behind the numbers.</p>
+
+        <h2>How your paycheck is worked out</h2>
+        <div class="formula">
+          Take-home = gross − before-tax deductions − federal tax − Social Security − Medicare − state tax − after-tax deductions
+          <small>2026 TAX RATES</small>
+        </div>
+        <p>On a <strong>${m0(65000)}</strong> salary paid bi-weekly (<strong>${m(65000 / 26)}</strong> gross) for a single filer with no state income tax: federal income tax <strong>${m(ex1.fed)}</strong>, Social Security <strong>${m(ex1.ss)}</strong>, Medicare <strong>${m(ex1.med)}</strong> — a take-home of <strong>${m(ex1.net)}</strong> a paycheck, or ${m0(ex1.net * 26)} a year.</p>
+
+        <h2>Federal income tax and your W-4</h2>
+        <p>Your employer withholds federal income tax from the IRS percentage method in Publication 15-T. It takes your paycheck, scales it to a year, subtracts the standard-deduction-style amount built into the W-4 (${m0(8600)} for most filers, ${m0(12900)} for married filing jointly), looks up the tax bracket and divides back to one paycheck. A married filer on the same salary has ${m(exM.fed)} withheld instead of ${m(ex1.fed)}. If your W-4 is from 2019 or earlier, switch to “2019 or earlier” under Go advanced and enter your allowances — each one is worth ${m0(4300)} of wages.</p>
+
+        <h2>Social Security and Medicare</h2>
+        <p>Social Security takes 6.2% of wages up to ${m0(E.SS_BASE)} in 2026 and Medicare takes 1.45% of everything, plus an extra 0.9% on wages above $200,000. On a ${m0(250000)} salary paid monthly, Social Security stops after ${MONTHS[ssStop - 1]} and part of ${MONTHS[ssStop]}, so take-home jumps from ${m(big[0].net)} in January to ${m(big[11].net)} in December. The chart under your result marks that paycheck.</p>
+      </div>
+
+      <div>
+        <h2>State income tax</h2>
+        <p>${listAnd(noTax)} have no state income tax on wages, so only federal tax and FICA apply${noTax.indexOf('Washington') >= 0 ? ' (Washington still has employee-paid paid-family-leave and long-term-care premiums, which the calculator includes)' : ''}. This calculator computes state withholding from each state’s official 2026 formula for <strong>${listAnd(liveWithTax)}</strong>. For the other states the result shows federal tax and FICA only and says so — it never guesses a state rate. We are adding more states as each official formula is checked: ${listAnd(pending)}.</p>
+        <p>City, county and school-district taxes are not included.</p>
+
+        <h2>Before-tax and after-tax deductions</h2>
+        <p>A traditional 401(k) lowers your federal and most state income tax but not Social Security or Medicare. Health, dental and vision premiums and HSA or FSA contributions through payroll lower both. Roth contributions and union dues come out after tax and change nothing about your taxes. With 6% of the ${m0(65000)} salary going into a 401(k), take-home falls only ${m(ex1.net - ex401.net)} a paycheck because federal tax drops by ${m(ex1.fed - ex401.fed)}. Type <strong>6%</strong> instead of a dollar amount to enter a share of pay.</p>
+
+        <h2>Hourly pay and overtime</h2>
+        <p>Switch to Hourly, enter your rate and hours per week and pick how often you are paid. At $22 an hour for 40 hours your gross is ${m(hourWeekly)} a week. Under Go advanced, add overtime hours and the pay multiplier: 5 hours a week at 1.5× lifts gross to ${m(otWeekly)} and take-home to ${m(exOT.net)}.</p>
+
+        <h2>What it does not include</h2>
+        <p>This is an estimate of withholding for 2026, not payroll or tax advice. Your employer’s payroll system, local taxes, other withholdings and your final tax return can differ. Employer-paid taxes are not part of your paycheck.</p>
+
+        <h2>Related tools</h2>
+        <p>Working out pay from hours? Use the <a href="/hours-calculator/">Hours Calculator</a>. Planning a big purchase? Try the <a href="/mortgage-calculator/">Mortgage</a>, <a href="/loan-calculator/">Loan</a> or <a href="/auto-loan-calculator/">Auto Loan</a> calculators.</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+${faqs.map((q) => `    <details class="faq"><summary>${q[0]}</summary><p>${q[1]}</p></details>`).join('\n')}
+  </section>`;
+function bodyFor(o) { return `<body class="p-loan p-pay"${o.bodyAttr || ''}>
 <div class="wrap">
 
 ${hdr}
 
-  <section class="hero">
-    <div class="eyebrow">Gross to net, itemized</div>
-    <h1>Paycheck Calculator</h1>
-    <p>Enter your salary or hourly pay and see your <strong>take-home pay</strong> after <strong>federal income tax, Social Security, Medicare</strong> and your <strong>state tax</strong>. See where every dollar of each paycheck goes, how a raise or a 401(k) changes it, and your pay on every pay schedule at once.</p>
-  </section>
+${o.hero}
 
   <div class="grid">
     <div class="card">
@@ -254,49 +298,7 @@ ${hdr}
     </div>
   </div>
 
-  <section class="content">
-    <div class="grid2">
-      <div>
-        <h2>How to use the paycheck calculator</h2>
-        <p>Choose <strong>Salary</strong> or <strong>Hourly</strong>, type your pay, pick your <strong>pay frequency</strong>, <strong>state</strong> and <strong>filing status</strong>, and your take-home pay appears as you type. For a salary you can enter the yearly amount or the amount of one paycheck. Under <strong>Go advanced</strong> you can match your Form W-4 exactly, add 401(k), insurance and other deductions, enter year-to-date pay and exempt yourself from individual taxes.</p>
-        <p>The result shows each paycheck dollar as a bar, an itemized table per paycheck and per year, what a raise or a bigger 401(k) would change, your take-home on all ten pay schedules, and a list of the assumptions behind the numbers.</p>
-
-        <h2>How your paycheck is worked out</h2>
-        <div class="formula">
-          Take-home = gross − before-tax deductions − federal tax − Social Security − Medicare − state tax − after-tax deductions
-          <small>2026 TAX RATES</small>
-        </div>
-        <p>On a <strong>${m0(65000)}</strong> salary paid bi-weekly (<strong>${m(65000 / 26)}</strong> gross) for a single filer with no state income tax: federal income tax <strong>${m(ex1.fed)}</strong>, Social Security <strong>${m(ex1.ss)}</strong>, Medicare <strong>${m(ex1.med)}</strong> — a take-home of <strong>${m(ex1.net)}</strong> a paycheck, or ${m0(ex1.net * 26)} a year.</p>
-
-        <h2>Federal income tax and your W-4</h2>
-        <p>Your employer withholds federal income tax from the IRS percentage method in Publication 15-T. It takes your paycheck, scales it to a year, subtracts the standard-deduction-style amount built into the W-4 (${m0(8600)} for most filers, ${m0(12900)} for married filing jointly), looks up the tax bracket and divides back to one paycheck. A married filer on the same salary has ${m(exM.fed)} withheld instead of ${m(ex1.fed)}. If your W-4 is from 2019 or earlier, switch to “2019 or earlier” under Go advanced and enter your allowances — each one is worth ${m0(4300)} of wages.</p>
-
-        <h2>Social Security and Medicare</h2>
-        <p>Social Security takes 6.2% of wages up to ${m0(E.SS_BASE)} in 2026 and Medicare takes 1.45% of everything, plus an extra 0.9% on wages above $200,000. On a ${m0(250000)} salary paid monthly, Social Security stops after ${MONTHS[ssStop - 1]} and part of ${MONTHS[ssStop]}, so take-home jumps from ${m(big[0].net)} in January to ${m(big[11].net)} in December. The chart under your result marks that paycheck.</p>
-      </div>
-
-      <div>
-        <h2>State income tax</h2>
-        <p>${listAnd(noTax)} have no state income tax on wages, so only federal tax and FICA apply${noTax.indexOf('Washington') >= 0 ? ' (Washington still has employee-paid paid-family-leave and long-term-care premiums, which the calculator includes)' : ''}. This calculator computes state withholding from each state’s official 2026 formula for <strong>${listAnd(liveWithTax)}</strong>. For the other states the result shows federal tax and FICA only and says so — it never guesses a state rate. We are adding more states as each official formula is checked: ${listAnd(pending)}.</p>
-        <p>City, county and school-district taxes are not included.</p>
-
-        <h2>Before-tax and after-tax deductions</h2>
-        <p>A traditional 401(k) lowers your federal and most state income tax but not Social Security or Medicare. Health, dental and vision premiums and HSA or FSA contributions through payroll lower both. Roth contributions and union dues come out after tax and change nothing about your taxes. With 6% of the ${m0(65000)} salary going into a 401(k), take-home falls only ${m(ex1.net - ex401.net)} a paycheck because federal tax drops by ${m(ex1.fed - ex401.fed)}. Type <strong>6%</strong> instead of a dollar amount to enter a share of pay.</p>
-
-        <h2>Hourly pay and overtime</h2>
-        <p>Switch to Hourly, enter your rate and hours per week and pick how often you are paid. At $22 an hour for 40 hours your gross is ${m(hourWeekly)} a week. Under Go advanced, add overtime hours and the pay multiplier: 5 hours a week at 1.5× lifts gross to ${m(otWeekly)} and take-home to ${m(exOT.net)}.</p>
-
-        <h2>What it does not include</h2>
-        <p>This is an estimate of withholding for 2026, not payroll or tax advice. Your employer’s payroll system, local taxes, other withholdings and your final tax return can differ. Employer-paid taxes are not part of your paycheck.</p>
-
-        <h2>Related tools</h2>
-        <p>Working out pay from hours? Use the <a href="/hours-calculator/">Hours Calculator</a>. Planning a big purchase? Try the <a href="/mortgage-calculator/">Mortgage</a>, <a href="/loan-calculator/">Loan</a> or <a href="/auto-loan-calculator/">Auto Loan</a> calculators.</p>
-      </div>
-    </div>
-
-    <h2 style="margin-top:36px">Common questions</h2>
-${faqs.map((q) => `    <details class="faq"><summary>${q[0]}</summary><p>${q[1]}</p></details>`).join('\n')}
-  </section>
+${o.content}
 
 ${ftr}
 
@@ -307,17 +309,168 @@ ${ftr}
 <script src="/feedback.js" defer></script>
 </body>
 </html>
-`;
+`; }
 
-const head = headTop
-  .replace(/<title>[^<]*<\/title>/, '<title>Paycheck Calculator — Take-Home Pay After Taxes | CalcThis</title>')
-  .replace(/<meta name="description" content="[^"]*">/, '<meta name="description" content="Free paycheck calculator for salary and hourly pay. See take-home pay after federal income tax, Social Security, Medicare and state tax, with 401(k) and other deductions, overtime, a what-if raise and every pay schedule.">')
-  .replace(/<link rel="canonical" href="[^"]*">/, '<link rel="canonical" href="https://calcthis.co/paycheck-calculator/">')
-  .replace(/<meta property="og:title" content="[^"]*">/, '<meta property="og:title" content="Paycheck Calculator — Take-Home Pay After Taxes">')
-  .replace(/<meta property="og:description" content="[^"]*">/, '<meta property="og:description" content="See your take-home pay after federal, Social Security, Medicare and state tax — salary or hourly, with deductions, overtime and a what-if raise.">')
-  .replace(/<meta property="og:url" content="[^"]*">/, '<meta property="og:url" content="https://calcthis.co/paycheck-calculator/">');
-const out = head + '<script type="application/ld+json">\n' + JSON.stringify(jsonLdApp, null, 2) + '\n</script>\n<script type="application/ld+json">\n' + JSON.stringify(jsonLdFaq, null, 2) + '\n</script>\n</head>\n' + body;
-fs.mkdirSync(ROOT + 'paycheck-calculator', { recursive: true });
-fs.writeFileSync(ROOT + 'paycheck-calculator/index.html', out.replace(/\n/g, '\r\n'));
-console.log('page written', out.length, 'live states', nLive, 'pending', pending.length);
+// ---------------- page assembly ----------------
+const esc = (t) => t.replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+function headFor(o) {
+  return headTop
+    .replace(/<title>[^<]*<\/title>/, () => '<title>' + o.title + '</title>')
+    .replace(/<meta name="description" content="[^"]*">/, () => '<meta name="description" content="' + esc(o.desc) + '">')
+    .replace(/<link rel="canonical" href="[^"]*">/, () => '<link rel="canonical" href="' + o.url + '">')
+    .replace(/<meta property="og:title" content="[^"]*">/, () => '<meta property="og:title" content="' + esc(o.ogTitle || o.title) + '">')
+    .replace(/<meta property="og:description" content="[^"]*">/, () => '<meta property="og:description" content="' + esc(o.ogDesc || o.desc) + '">')
+    .replace(/<meta property="og:url" content="[^"]*">/, () => '<meta property="og:url" content="' + o.url + '">');
+}
+function pageHtml(o) {
+  const ld = [o.app, o.faq].concat(o.extraLd || []).map((j) => '<script type="application/ld+json">\n' + JSON.stringify(j, null, 2) + '\n</script>\n').join('');
+  return headFor(o) + ld + '</head>\n' + bodyFor(o);
+}
+function write(rel, html) {
+  const dir = ROOT + rel.replace(/index\.html$/, '');
+  fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(ROOT + rel, html.replace(/\n/g, '\r\n'));
+}
+
+// ---------------- main page: add the by-state link list ----------------
+const SLUG = { AL: 'alabama', AK: 'alaska', AZ: 'arizona', CA: 'california', CO: 'colorado', FL: 'florida', GA: 'georgia', IL: 'illinois', IA: 'iowa', KY: 'kentucky', MI: 'michigan', MN: 'minnesota', MO: 'missouri', MT: 'montana', NV: 'nevada', NH: 'new-hampshire', NY: 'new-york', NC: 'north-carolina', PA: 'pennsylvania', SD: 'south-dakota', TN: 'tennessee', TX: 'texas', VA: 'virginia', WA: 'washington', WY: 'wyoming' };
+const liveSorted = liveCodes.filter((c) => SLUG[c]).sort((a, b) => (NAMES[a] < NAMES[b] ? -1 : 1));
+const stateLinks = (except) => liveSorted.filter((c) => c !== except).map((c) => '<a href="/paycheck-calculator/' + SLUG[c] + '/">' + NAMES[c] + '</a>').join(' · ');
+const byState = '\n    <h2 style="margin-top:36px">Paycheck calculator by state</h2>\n    <p class="pc-states">' + stateLinks() + '</p>\n';
+const contentMain = CONTENT_MAIN.replace('\n    <h2 style="margin-top:36px">Common questions</h2>', () => byState + '\n    <h2 style="margin-top:36px">Common questions</h2>');
+
+write('paycheck-calculator/index.html', pageHtml({
+  title: 'Paycheck Calculator — Take-Home Pay After Taxes | CalcThis',
+  desc: 'Free paycheck calculator for salary and hourly pay. See take-home pay after federal income tax, Social Security, Medicare and state tax, with 401(k) and other deductions, overtime, a what-if raise and every pay schedule.',
+  ogTitle: 'Paycheck Calculator — Take-Home Pay After Taxes',
+  ogDesc: 'See your take-home pay after federal, Social Security, Medicare and state tax — salary or hourly, with deductions, overtime and a what-if raise.',
+  url: 'https://calcthis.co/paycheck-calculator/', app: jsonLdApp, faq: jsonLdFaq, hero: HERO_MAIN, content: contentMain
+}));
+console.log('main page written; live states', nLive, 'pending', pending.length);
+
+// ---------------- state pages ----------------
+const FORM = { AL: 'Form A-4', AZ: 'Form A-4', CA: 'Form DE 4', CO: 'Form DR 0004 (optional — without it your federal W-4 is used)', GA: 'Form G-4', IA: 'the IA W-4', IL: 'Form IL-W-4', KY: 'Form K-4', MI: 'Form MI-W4', MN: 'Form W-4MN', MO: 'Form MO W-4', MT: 'Form MW-4', NC: 'Form NC-4', NY: 'Form IT-2104', PA: '', VA: 'Form VA-4' };
+const LOCALS = {
+  NY: 'New York City and Yonkers residents also pay a local income tax, which this calculator does not include.',
+  PA: 'Most Pennsylvania workers also pay a local earned income tax (commonly about 1%) and Philadelphia has its own wage tax; none of these are included here.',
+  MI: 'Detroit and some other Michigan cities charge a city income tax, which is not included here.',
+  MO: 'St. Louis and Kansas City charge a 1% earnings tax, which is not included here.',
+  KY: 'Many Kentucky cities and counties charge an occupational license tax, which is not included here.',
+  AL: 'Some Alabama cities and counties charge an occupational tax, which is not included here.',
+  CO: 'Denver and a few other Colorado cities charge an occupational privilege tax, which is not included here.'
+};
+function programsText(S) {
+  if (!S.programs || !S.programs.length) return '';
+  return S.programs.map((p) => p.name).join(' and ');
+}
+function fact(c) {
+  const S = E.STATES[c], n = NAMES[c];
+  const prog = programsText(S);
+  switch (c) {
+    case 'GA': return 'Georgia withholds a flat 4.99% of annual wages above a standard deduction of $15,000 ($30,000 for married filing jointly), minus $5,000 for each dependent claimed on Form G-4.';
+    case 'IL': return 'Illinois withholds a flat 4.95% after subtracting $2,925 for each basic allowance and $1,000 for each additional allowance claimed on Form IL-W-4.';
+    case 'MI': return 'Michigan withholds a flat 4.25% after subtracting $5,900 for each exemption claimed on Form MI-W4. There is no standard deduction.';
+    case 'NC': return 'North Carolina withholds 4.09% (the 3.99% income tax rate plus 0.1%) of annual wages above a $12,750 standard deduction ($19,125 for head of household), minus $2,500 for each allowance, rounded to the whole dollar.';
+    case 'PA': return 'Pennsylvania taxes wages at a flat 3.07% with no standard deduction and no allowances, and employees also pay 0.07% of gross wages toward unemployment compensation. Unlike most states, Pennsylvania does not exempt 401(k) contributions from state income tax.';
+    case 'CO': return 'Colorado withholds a flat 4.4% of annual wages above an allowance of $5,500 ($11,000 for married filing jointly), and employees also pay 0.44% of wages toward the state paid family and medical leave program (FAMLI) up to the Social Security wage limit.';
+    case 'KY': return 'Kentucky withholds a flat 3.5% of annual wages above a $3,360 standard deduction.';
+    case 'IA': return 'Iowa withholds a flat 3.8% of annual wages above $13,000 ($19,500 for head of household, $26,000 for married filing jointly with a spouse who has no earned income), less the allowance amount from the IA W-4.';
+    case 'AZ': return 'Arizona withholds the percentage you choose on Form A-4 — 0%, 0.5%, 1%, 1.5%, 2%, 2.5%, 3% or 3.5% of your gross pay — and uses 2.0% if you have not filed one.';
+    case 'CA': return 'California uses graduated rates from 1.1% to 14.63% (EDD Method B) after a standard deduction of $5,706 ($11,412 for head of household or married with two or more allowances), less a $168.30 credit for each allowance on Form DE 4. Employees also pay State Disability Insurance of 1.3% of all wages with no wage limit.';
+    case 'NY': return 'New York uses graduated annual schedules starting at 3.9% after a $7,400 deduction ($7,950 if married) plus $1,000 for each exemption on Form IT-2104. Employees also pay State Disability Insurance (0.5%, capped at $0.60 a week) and Paid Family Leave (0.432% up to a yearly maximum).';
+    case 'VA': return 'Virginia withholds 2%, 3%, 5% and 5.75% on annual wages above an $8,750 standard deduction and $930 for each exemption on Form VA-4.';
+    case 'MN': return 'Minnesota withholds 5.35%, 6.8%, 7.85% and 9.85% after subtracting $5,300 for each allowance on Form W-4MN, using separate single and married tables. Employees also pay 0.44% toward Minnesota Paid Leave up to the Social Security wage limit.';
+    case 'AL': return 'Alabama withholds 2%, 4% and 5% after a standard deduction that phases down with income, a personal exemption, dependent amounts and — uniquely — the federal income tax already withheld from the paycheck.';
+    case 'MO': return 'Missouri withholds 0% up to $1,348 of taxable wages rising to 4.7% above $9,436, after a standard deduction of $16,100 ($24,150 for head of household, $32,200 for married with a spouse who does not work), rounded to the whole dollar.';
+    case 'MT': return 'Montana withholds 4.7% on wages above the standard deduction ($16,100 single, $24,150 head of household, $32,200 married with one earner) and 5.65% on wages above $63,600, $95,400 or $127,200 respectively, rounded up to the next dollar.';
+    case 'WA': return 'Washington has no state income tax, but employees pay for the state’s Paid Family & Medical Leave program (about 0.81% of wages up to the Social Security limit) and the WA Cares long-term-care fund (0.58% of all wages).';
+    default: return n + ' does not tax wages, so your paycheck has only federal income tax, Social Security and Medicare.';
+  }
+}
+function stateExamples(c) {
+  const S = E.STATES[c], rows = [];
+  [[40000, 'single'], [65000, 'single'], [100000, 'single'], [65000, 'married']].forEach(([a, st]) => {
+    const inp = base(a / 26, 26, { fed: { w4: 'new', status: st }, state: { code: c, status: st, allowances: c === 'AZ' ? null : 0, allowances2: 0 } });
+    const p = pc(inp);
+    rows.push({ a, st, gross: a / 26, fed: p.fed, ss: p.ss, med: p.med + p.addl, state: p.state, prog: p.programTotal, net: p.net });
+  });
+  return rows;
+}
+function stateFaqs(c) {
+  const n = NAMES[c], S = E.STATES[c], ex = stateExamples(c), e65 = ex[1], none = S.method === 'none', prog = programsText(S);
+  const f = [];
+  f.push([`How much is taken out of a $65,000 salary in ${n}?`,
+    `On a ${m0(65000)} salary paid bi-weekly (${m(65000 / 26)} gross) for a single filer with no allowances, ${n} ${none && !prog ? 'withholds no state income tax' : 'withholds ' + m(e65.state) + ' of state income tax' + (e65.prog > 0 ? ' plus ' + m(e65.prog) + ' of ' + prog : '')}, federal income tax is ${m(e65.fed)}, Social Security ${m(e65.ss)} and Medicare ${m(e65.med)}. Take-home pay is ${m(e65.net)} a paycheck, about ${m0(e65.net * 26)} a year.`]);
+  f.push([`Does ${n} tax paychecks differently for married workers?`,
+    `Federal withholding does, and ${none ? n + ' has no state income tax to change' : n + ' uses its own married tables or deductions'}. For a ${m0(65000)} salary paid bi-weekly, a married filer in ${n} takes home ${m(ex[3].net)} a paycheck versus ${m(e65.net)} for a single filer.`]);
+  f.push([`Which form do I fill out for ${n} withholding?`,
+    FORM[c] ? `${n} uses ${FORM[c]}. Under Go advanced the calculator asks for the same details, so your result matches what your employer would withhold.` : (none ? `${n} has no state income tax form because it does not tax wages — only your federal Form W-4 matters.` : `${n} withholding is a flat rate with no state allowance form — only your federal Form W-4 matters for federal tax.`)]);
+  f.push([`Does this ${n} calculator include local taxes?`, (LOCALS[c] || 'City, county and school-district taxes are not included.') + ' State and federal figures follow the 2026 official withholding methods.']);
+  f.push([`What is my take-home pay on $40,000 or $100,000 in ${n}?`,
+    `Single filer, paid bi-weekly: ${m0(40000)} a year gives ${m(ex[0].net)} a paycheck; ${m0(100000)} a year gives ${m(ex[2].net)} a paycheck.`]);
+  return f;
+}
+function stateContent(c, faqs2) {
+  const n = NAMES[c], S = E.STATES[c], ex = stateExamples(c);
+  const rowsHtml = ex.map((r) => `<tr><td>${m0(r.a)}${r.st === 'single' ? '' : ' married'}</td><td>${m(r.fed)}</td><td>${m(r.ss + r.med)}</td><td>${S.method === 'none' && !r.prog ? '$0.00' : m(r.state + r.prog)}</td><td>${m(r.net)}</td></tr>`).join('');
+  return `  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How ${n} paycheck tax works</h2>
+        <p>${fact(c)}</p>
+        <p>${LOCALS[c] || 'City, county and school-district taxes are not included.'}</p>
+        <h2>${n} paycheck examples</h2>
+        <p>Single filer unless marked, paid bi-weekly in 2026, no extra withholding, no deductions:</p>
+        <div class="pc-tblwrap"><table class="dtable"><thead><tr><th>Pay</th><th>Federal</th><th>FICA</th><th>${n}</th><th>Net pay</th></tr></thead><tbody>${rowsHtml}</tbody></table></div>
+        <p>FICA is Social Security plus Medicare.</p>
+      </div>
+      <div>
+        <h2>Use the ${n} calculator</h2>
+        <p>The state is already set to <strong>${n}</strong> above. Enter your salary or hourly rate, your pay frequency and filing status, and the result appears as you type. Under <strong>Go advanced</strong> you can match your Form W-4 (new or 2019-or-earlier), add 401(k), insurance and other deductions, enter year-to-date pay and add overtime.</p>
+        <p>You also get a bar showing where each paycheck dollar goes, a what-if for a raise or a bigger 401(k), and your pay on all ten schedules. This is an estimate of withholding, not payroll or tax advice.</p>
+        <h2>Other states</h2>
+        <p class="pc-states">${stateLinks(c)}</p>
+        <p>More states are being added as each official formula is checked. For any other state, the <a href="/paycheck-calculator/">main paycheck calculator</a> shows federal tax and FICA.</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions about ${n} paychecks</h2>
+${faqs2.map((q) => `    <details class="faq"><summary>${q[0]}</summary><p>${q[1]}</p></details>`).join('\n')}
+  </section>`;
+}
+let nState = 0;
+liveSorted.forEach((c) => {
+  const n = NAMES[c], url = 'https://calcthis.co/paycheck-calculator/' + SLUG[c] + '/', f2 = stateFaqs(c), e65 = stateExamples(c)[1];
+  const app = Object.assign({}, jsonLdApp, { name: n + ' Paycheck Calculator', url, description: n + ' paycheck calculator for salary and hourly pay: federal income tax, Social Security, Medicare' + (E.STATES[c].method === 'none' ? '' : ', ' + n + ' state tax') + ', deductions and overtime.' });
+  const faq = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: f2.map((q) => ({ '@type': 'Question', name: q[0], acceptedAnswer: { '@type': 'Answer', text: q[1] } })) };
+  const crumbs = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'CalcThis', item: 'https://calcthis.co/' },
+    { '@type': 'ListItem', position: 2, name: 'Paycheck Calculator', item: 'https://calcthis.co/paycheck-calculator/' },
+    { '@type': 'ListItem', position: 3, name: n, item: url }] };
+  const hero = `  <section class="hero">
+    <div class="eyebrow">${n} · 2026 tax rates</div>
+    <h1>${n} Paycheck Calculator</h1>
+    <p>See your <strong>${n} take-home pay</strong> after <strong>federal income tax, Social Security, Medicare</strong>${E.STATES[c].method === 'none' ? (E.STATES[c].programs ? ' and the state’s employee-paid programs' : ' — ' + n + ' has no state income tax') : ' and <strong>' + n + ' state tax</strong>'}. On a ${m0(65000)} salary paid bi-weekly a single filer takes home about <strong>${m(e65.net)}</strong> a paycheck.</p>
+  </section>`;
+  write('paycheck-calculator/' + SLUG[c] + '/index.html', pageHtml({
+    title: n + ' Paycheck Calculator 2026 — Take-Home Pay After Tax | CalcThis',
+    desc: 'Free ' + n + ' paycheck calculator. Salary or hourly take-home pay after federal tax, Social Security, Medicare' + (E.STATES[c].method === 'none' ? '' : ' and ' + n + ' state tax') + ', with 401(k) deductions, overtime and every pay schedule.',
+    ogTitle: n + ' Paycheck Calculator 2026', url, app, faq, extraLd: [crumbs], hero, content: stateContent(c, f2), bodyAttr: ' data-state="' + c + '"'
+  }));
+  nState++;
+});
+console.log('state pages written', nState);
+
+// ---------------- sitemap (idempotent) ----------------
+(function () {
+  const f = ROOT + 'sitemap.xml'; let sm = fs.readFileSync(f, 'utf8'); const crlf = sm.includes('\r\n'); sm = sm.replace(/\r\n/g, '\n');
+  const today = new Date().toISOString().slice(0, 10); let add = '';
+  liveSorted.forEach((c) => { const u = 'https://calcthis.co/paycheck-calculator/' + SLUG[c] + '/'; if (!sm.includes('<loc>' + u + '</loc>')) add += '  <url>\n    <loc>' + u + '</loc>\n    <lastmod>' + today + '</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.7</priority>\n  </url>\n'; });
+  if (add) { sm = sm.replace('</urlset>', () => add + '</urlset>'); fs.writeFileSync(f, crlf ? sm.replace(/\n/g, '\r\n') : sm); console.log('sitemap: added', (add.match(/<url>/g) || []).length); }
+  // llms.txt: keep a "Paycheck calculators by state" section current
+  const lf = ROOT + 'llms.txt'; let lt = fs.readFileSync(lf, 'utf8'); const lcrlf = lt.includes('\r\n'); lt = lt.replace(/\r\n/g, '\n');
+  lt = lt.replace(/\n## Paycheck calculators by state\n[\s\S]*?(?=\n## |$)/, '');
+  lt = lt.trimEnd() + '\n\n## Paycheck calculators by state\n' + liveSorted.map((c) => '- [' + NAMES[c] + ' Paycheck Calculator](https://calcthis.co/paycheck-calculator/' + SLUG[c] + '/): take-home pay after federal tax, FICA' + (E.STATES[c].method === 'none' ? '' : ' and ' + NAMES[c] + ' state tax') + '.').join('\n') + '\n';
+  fs.writeFileSync(lf, lcrlf ? lt.replace(/\n/g, '\r\n') : lt);
+})();
 console.log(JSON.stringify({ ex1: ex1.net, ex2: ex2.net, ex3: ex3.net, exM: exM.fed, ex401: ex401.net, ssStop, jan: big[0].net, dec: big[11].net, exH: exH.net, exOT: exOT.net }));
