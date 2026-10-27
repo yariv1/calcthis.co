@@ -39,16 +39,16 @@ GSC snapshot 2026-10-26: 69 indexed, 13 not indexed (8 Discovered, 1 Crawled, 1 
 ## Newly deployed (add here at every deploy)
 | URL | Deployed | Indexing requested |
 |---|---|---|
-| /auto-loan-calculator/ | 2026-10-26 (v169) | not yet |
-| /paycheck-calculator/ | 2026-10-27 (v175) | not yet (Bing: submitted via sitemap + IndexNow) |
+| /auto-loan-calculator/ | 2026-10-26 (v169) | 2026-10-27 (GSC) |
+| /paycheck-calculator/ | 2026-10-27 (v175) | 2026-10-27 (GSC) (Bing: submitted via sitemap + IndexNow) |
 | /paycheck-calculator/alabama/ | 2026-10-27 (v185) | not yet (Bing: sitemap + IndexNow) |
 | /paycheck-calculator/alaska/ | 2026-10-27 (v185) | not yet (Bing: sitemap + IndexNow) |
 | /paycheck-calculator/arizona/ | 2026-10-27 (v185) | not yet (Bing: sitemap + IndexNow) |
-| /paycheck-calculator/california/ | 2026-10-27 (v185) | not yet (Bing: sitemap + IndexNow) |
+| /paycheck-calculator/california/ | 2026-10-27 (v185) | 2026-10-27 (GSC) (Bing: sitemap + IndexNow) |
 | /paycheck-calculator/colorado/ | 2026-10-27 (v185) | not yet (Bing: sitemap + IndexNow) |
-| /paycheck-calculator/florida/ | 2026-10-27 (v185) | not yet (Bing: sitemap + IndexNow) |
-| /paycheck-calculator/georgia/ | 2026-10-27 (v185) | not yet (Bing: sitemap + IndexNow) |
-| /paycheck-calculator/illinois/ | 2026-10-27 (v185) | not yet (Bing: sitemap + IndexNow) |
+| /paycheck-calculator/florida/ | 2026-10-27 (v185) | 2026-10-27 (GSC) (Bing: sitemap + IndexNow) |
+| /paycheck-calculator/georgia/ | 2026-10-27 (v185) | 2026-10-27 (GSC) (Bing: sitemap + IndexNow) |
+| /paycheck-calculator/illinois/ | 2026-10-27 (v185) | 2026-10-27 (GSC) (Bing: sitemap + IndexNow) |
 | /paycheck-calculator/iowa/ | 2026-10-27 (v185) | not yet (Bing: sitemap + IndexNow) |
 | /paycheck-calculator/kentucky/ | 2026-10-27 (v185) | not yet (Bing: sitemap + IndexNow) |
 | /paycheck-calculator/michigan/ | 2026-10-27 (v185) | not yet (Bing: sitemap + IndexNow) |
@@ -57,12 +57,12 @@ GSC snapshot 2026-10-26: 69 indexed, 13 not indexed (8 Discovered, 1 Crawled, 1 
 | /paycheck-calculator/montana/ | 2026-10-27 (v185) | not yet (Bing: sitemap + IndexNow) |
 | /paycheck-calculator/nevada/ | 2026-10-27 (v185) | not yet (Bing: sitemap + IndexNow) |
 | /paycheck-calculator/new-hampshire/ | 2026-10-27 (v185) | not yet (Bing: sitemap + IndexNow) |
-| /paycheck-calculator/new-york/ | 2026-10-27 (v185) | not yet (Bing: sitemap + IndexNow) |
-| /paycheck-calculator/north-carolina/ | 2026-10-27 (v185) | not yet (Bing: sitemap + IndexNow) |
-| /paycheck-calculator/pennsylvania/ | 2026-10-27 (v185) | not yet (Bing: sitemap + IndexNow) |
+| /paycheck-calculator/new-york/ | 2026-10-27 (v185) | 2026-10-27 (GSC) (Bing: sitemap + IndexNow) |
+| /paycheck-calculator/north-carolina/ | 2026-10-27 (v185) | 2026-10-27 (GSC) (Bing: sitemap + IndexNow) |
+| /paycheck-calculator/pennsylvania/ | 2026-10-27 (v185) | 2026-10-27 (GSC) (Bing: sitemap + IndexNow) |
 | /paycheck-calculator/south-dakota/ | 2026-10-27 (v185) | not yet (Bing: sitemap + IndexNow) |
 | /paycheck-calculator/tennessee/ | 2026-10-27 (v185) | not yet (Bing: sitemap + IndexNow) |
-| /paycheck-calculator/texas/ | 2026-10-27 (v185) | not yet (Bing: sitemap + IndexNow) |
+| /paycheck-calculator/texas/ | 2026-10-27 (v185) | 2026-10-27 (GSC) (Bing: sitemap + IndexNow) |
 | /paycheck-calculator/virginia/ | 2026-10-27 (v185) | not yet (Bing: sitemap + IndexNow) |
 | /paycheck-calculator/washington/ | 2026-10-27 (v185) | not yet (Bing: sitemap + IndexNow) |
 | /paycheck-calculator/wyoming/ | 2026-10-27 (v185) | not yet (Bing: sitemap + IndexNow) |
