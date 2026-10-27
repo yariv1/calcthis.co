@@ -11840,6 +11840,8 @@ CalcThis.payEngine = (function () {
     note: 'Montana “married” assumes only one spouse works (the Form MW-4 line 1b table); if both spouses work, choose Single. Withholding is rounded up to the next dollar, as Montana requires.',
     tab: { single: [[0, 0, 0], [16100, 0, .047], [63600, 2232.5, .0565]], married: [[0, 0, 0], [32200, 0, .047], [127200, 4465, .0565]], hoh: [[0, 0, 0], [24150, 0, .047], [95400, 3348.75, .0565]] } };
   S.PA = { name: 'Pennsylvania', method: 'flatann', src: 'https://www.pa.gov/agencies/dli/resources/for-employers-and-educators/how-to-file/uc-tax', rate: .0307, taxes401k: true, programs: [{ name: 'PA Unemployment (employee)', rate: .0007 }] };
+  var SL = { AL: 'alabama', AK: 'alaska', AZ: 'arizona', CA: 'california', CO: 'colorado', FL: 'florida', GA: 'georgia', IL: 'illinois', IA: 'iowa', KY: 'kentucky', MI: 'michigan', MN: 'minnesota', MO: 'missouri', MT: 'montana', NV: 'nevada', NH: 'new-hampshire', NY: 'new-york', NC: 'north-carolina', PA: 'pennsylvania', SD: 'south-dakota', TN: 'tennessee', TX: 'texas', VA: 'virginia', WA: 'washington', WY: 'wyoming' };
+  for (var k in SL) if (S[k]) S[k].slug = SL[k];
 })(CalcThis.payEngine.STATES);
 /* PAY-STATES:END */
 
@@ -12159,7 +12161,40 @@ CalcThis.initPayCalc = function () {
   ['pcGross', 'pcRate', 'pcHours', 'pcOtHours', 'pcOtMult', 'pcYtd', 'pcCredit', 'pc4a', 'pc4b', 'pcFedExtra', 'pcAllow', 'pcStAllow', 'pcStAllow2', 'pcStExtra', 'pc401k', 'pcHealth', 'pcHsa', 'pcPreOther', 'pcRoth', 'pcPostOther', 'pcWiRaise', 'pcWiK'].forEach(function (id) { $(id).addEventListener('input', render); });
   ['pcStep2', 'pcRound', 'pcExFed', 'pcExSS', 'pcExMed', 'pcExState'].forEach(function (id) { $(id).addEventListener('change', render); });
   ['pcFreq', 'pcStatus'].forEach(function (id) { $(id).addEventListener('change', render); });
-  $('pcState').addEventListener('change', function () { $('pcStAllow').value = ''; $('pcStAllow2').value = ''; syncStateFields(); render(); });
+  var FORM_IDS = ['pcGross', 'pcRate', 'pcHours', 'pcOtHours', 'pcOtMult', 'pcYtd', 'pcCredit', 'pc4a', 'pc4b', 'pcFedExtra', 'pcAllow', 'pcStExtra', 'pc401k', 'pcHealth', 'pcHsa', 'pcPreOther', 'pcRoth', 'pcPostOther', 'pcWiRaise', 'pcWiK'];
+  var CHECK_IDS = ['pcStep2', 'pcRound', 'pcExFed', 'pcExSS', 'pcExMed', 'pcExState'];
+  function activeBtn(id) { var b = $(id).querySelector('button.on'); return b ? b.getAttribute('data-v') : null; }
+  function saveForm(target) {
+    try {
+      var o = { t: Date.now(), state: stateCode(), freq: freqKey(), status: statusKey(), mode: st.mode, unit: st.unit, w4: st.w4, adv: st.adv, f: {}, c: {} };
+      FORM_IDS.forEach(function (id) { o.f[id] = $(id).value; });
+      CHECK_IDS.forEach(function (id) { o.c[id] = $(id).checked; });
+      sessionStorage.setItem('pcForm', JSON.stringify(o));
+    } catch (e) {}
+  }
+  function restoreForm() {
+    try {
+      var raw = sessionStorage.getItem('pcForm'); if (!raw) return;
+      sessionStorage.removeItem('pcForm');
+      var o = JSON.parse(raw); if (!o || Date.now() - o.t > 15000) return;
+      var click = function (id, v) { var b = $(id).querySelector('button[data-v="' + v + '"]'); if (b && !b.classList.contains('on')) b.click(); };
+      if (o.mode) click('pcModeSeg', o.mode);
+      if (o.unit) click('pcUnitSeg', o.unit);
+      if (o.adv && !st.adv) $('pcAdvBtn').click();
+      if (o.w4) click('pcW4Seg', o.w4);
+      if (o.freq) $('pcFreq').value = o.freq;
+      if (o.status) $('pcStatus').value = o.status;
+      if (o.state !== undefined && (o.state === '' || NAMES[o.state])) $('pcState').value = o.state;
+      for (var id in o.f) if ($(id) && o.f[id]) $(id).value = o.f[id];
+      for (var cid in o.c) if ($(cid)) $(cid).checked = !!o.c[cid];
+    } catch (e) {}
+  }
+  $('pcState').addEventListener('change', function () {
+    var code = stateCode(), S = code ? E.STATES[code] : null;
+    var target = S && S.slug ? '/paycheck-calculator/' + S.slug + '/' : '/paycheck-calculator/';
+    if (location.pathname !== target && !window.__pcNoNav) { saveForm(); location.href = target; return; }  // __pcNoNav: test hook so fuzz tests can switch states without leaving the page
+    $('pcStAllow').value = ''; $('pcStAllow2').value = ''; syncStateFields(); render();
+  });
 
   $('pcEx').addEventListener('click', function () {
     if (st.mode === 'hourly') { $('pcRate').value = '22'; $('pcHours').value = '40'; } else { $('pcGross').value = '65000'; }
@@ -12194,6 +12229,7 @@ CalcThis.initPayCalc = function () {
 
   var pre = document.body.getAttribute('data-state');
   if (pre && NAMES[pre]) { $('pcState').value = pre; }
+  restoreForm();
   syncStateFields();
   render();
 };

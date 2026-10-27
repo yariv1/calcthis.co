@@ -333,7 +333,7 @@ function write(rel, html) {
 }
 
 // ---------------- main page: add the by-state link list ----------------
-const SLUG = { AL: 'alabama', AK: 'alaska', AZ: 'arizona', CA: 'california', CO: 'colorado', FL: 'florida', GA: 'georgia', IL: 'illinois', IA: 'iowa', KY: 'kentucky', MI: 'michigan', MN: 'minnesota', MO: 'missouri', MT: 'montana', NV: 'nevada', NH: 'new-hampshire', NY: 'new-york', NC: 'north-carolina', PA: 'pennsylvania', SD: 'south-dakota', TN: 'tennessee', TX: 'texas', VA: 'virginia', WA: 'washington', WY: 'wyoming' };
+const SLUG = {}; liveCodes.forEach((c) => { if (E.STATES[c].slug) SLUG[c] = E.STATES[c].slug; });
 const liveSorted = liveCodes.filter((c) => SLUG[c]).sort((a, b) => (NAMES[a] < NAMES[b] ? -1 : 1));
 const stateLinks = (except) => liveSorted.filter((c) => c !== except).map((c) => '<a href="/paycheck-calculator/' + SLUG[c] + '/">' + NAMES[c] + '</a>').join(' · ');
 const byState = '\n    <h2 style="margin-top:36px">Paycheck calculator by state</h2>\n    <p class="pc-states">' + stateLinks() + '</p>\n';
@@ -499,4 +499,32 @@ console.log(JSON.stringify({ ex1: ex1.net, ex2: ex2.net, ex3: ex3.net, exM: exM.
     s = s.replace('    grid-template-columns:repeat(6,1fr);\n    gap:24px;\n    max-width:1040px;', () => '    grid-template-columns:repeat(7,1fr);\n    gap:18px;\n    max-width:1120px;');
     return s;
   });
+})();
+
+// ---------------- homepage: "Paycheck" tab with one cube (flag) per live state ----------------
+(function () {
+  const f = ROOT + 'index.html'; let h = fs.readFileSync(f, 'utf8'); const crlf = h.includes('\r\n'); h = h.replace(/\r\n/g, '\n'); const o = h;
+  const allIco = '<svg width="30" height="30" viewBox="0 0 32 32" fill="none"><rect x="4" y="8" width="24" height="16" rx="2.5" fill="#EFE7D8" stroke="#8F5C13" stroke-width="1.4"/><circle cx="16" cy="16" r="3.6" fill="#B5761F"/><path d="M8 12h3M21 20h3" stroke="#37503F" stroke-width="1.5" stroke-linecap="round"/></svg>';
+  const cubes = '<!--PAYCUBES:START-->\n    <div class="st-cubes">\n      <a class="st-cube st-all" href="/paycheck-calculator/"><span class="st-ico" aria-hidden="true">' + allIco + '</span><span class="st-name">All states</span></a>\n'
+    + liveSorted.map((c) => '      <a class="st-cube" href="/paycheck-calculator/' + SLUG[c] + '/"><img src="/assets/flags/' + c.toLowerCase() + '.webp" width="60" height="40" alt="Flag of ' + NAMES[c] + '" loading="lazy"><span class="st-name">' + NAMES[c] + '</span></a>').join('\n')
+    + '\n    </div>\n    <!--PAYCUBES:END-->';
+  if (h.includes('<!--PAYCUBES:START-->')) h = h.replace(/<!--PAYCUBES:START-->[\s\S]*?<!--PAYCUBES:END-->/, () => cubes);
+  else {
+    h = h.replace(/(<button class="cat-tab" type="button" data-cat="finance"[^>]*>[^<]*<br>[^<]*<\/button>)/, (m) => m + '\n    <button class="cat-tab" type="button" data-cat="paycheck" role="tab" aria-selected="false">Paycheck<br>Calculators</button>');
+    const a = h.indexOf('<section id="grp-finance"'); const b = h.indexOf('</section>', a) + '</section>'.length;
+    const sec = '\n\n  <section id="grp-paycheck" class="cat-grp cat-grp--hidden" aria-label="Paycheck calculators by state">\n    <p class="st-lead">Pick your state for a paycheck calculator with its own tax rules — take-home pay after federal tax, Social Security, Medicare and state tax.</p>\n    ' + cubes + '\n  </section>';
+    h = h.slice(0, b) + sec + h.slice(b);
+    h = h.replace("finance:document.getElementById('grp-finance')", () => "finance:document.getElementById('grp-finance'),paycheck:document.getElementById('grp-paycheck')");
+  }
+  if (h !== o) { fs.writeFileSync(f, crlf ? h.replace(/\n/g, '\r\n') : h); console.log('homepage updated'); }
+  const C = ROOT + 'assets/style.css'; let c = fs.readFileSync(C, 'utf8');
+  if (!c.includes('.st-cubes')) fs.appendFileSync(C, [
+    "  .st-lead{color:var(--ink-soft);font-size:15px;line-height:1.55;margin:0 0 16px;max-width:720px}",
+    "  .st-cubes{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px}",
+    "  .st-cube{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;min-height:118px;padding:14px 10px;background:var(--card);border:1px solid var(--line);border-radius:14px;text-decoration:none;color:var(--ink);transition:.14s}",
+    "  .st-cube:hover{border-color:var(--amber);box-shadow:0 4px 14px rgba(36,26,17,.08);transform:translateY(-1px)}",
+    "  .st-cube img{display:block;width:60px;height:40px;border-radius:4px;box-shadow:0 0 0 1px rgba(36,26,17,.12)}",
+    "  .st-cube .st-ico{display:flex;align-items:center;justify-content:center;width:60px;height:40px}",
+    "  .st-cube .st-name{font-family:'Fraunces',serif;font-weight:600;font-size:15px;text-align:center;line-height:1.25}",
+    "  @media(max-width:430px){.st-cubes{grid-template-columns:repeat(2,minmax(0,1fr))}}", ''].join('\n'));
 })();
