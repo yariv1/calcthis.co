@@ -375,3 +375,17 @@ edit('index.html', (h) => {
   }
   return h;
 });
+
+// ---------------- homepage: "Sales Tax" tab with one cube (flag) per live state (same as the Paycheck tab) ----------------
+edit('index.html', (h) => {
+  const allIco = '<svg width="30" height="30" viewBox="0 0 32 32" fill="none"><rect x="6" y="4" width="20" height="24" rx="2.5" fill="#EFE7D8" stroke="#8F5C13" stroke-width="1.4"/><path d="M11 20l10-9" stroke="#37503F" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="12" r="2" fill="#B5761F"/><circle cx="20" cy="20" r="2" fill="#B5761F"/></svg>';
+  const cubes = '<!--STAXCUBES:START-->\n    <div class="st-cubes">\n      <a class="st-cube st-all" href="/sales-tax-calculator/"><span class="st-ico" aria-hidden="true">' + allIco + '</span><span class="st-name">All states</span><span class="st-sub">Sales Tax Calculator</span></a>\n'
+    + live.map((c) => '      <a class="st-cube" href="/sales-tax-calculator/' + E.STATES[c].slug + '/"><img src="/assets/flags/' + c.toLowerCase() + '.webp" width="60" height="40" alt="' + E.STATES[c].name + ' sales tax calculator — flag of ' + E.STATES[c].name + '" loading="lazy"><span class="st-name">' + E.STATES[c].name + '</span><span class="st-sub">Sales Tax Calculator</span></a>').join('\n')
+    + '\n    </div>\n    <!--STAXCUBES:END-->';
+  if (h.includes('<!--STAXCUBES:START-->')) return h.replace(/<!--STAXCUBES:START-->[\s\S]*?<!--STAXCUBES:END-->/, () => cubes);
+  h = h.replace(/(<button class="cat-tab" type="button" data-cat="paycheck"[^>]*>[^<]*<br>[^<]*<\/button>)/, (m) => m + '\n    <button class="cat-tab" type="button" data-cat="salestax" role="tab" aria-selected="false">Sales<br>Tax</button>');
+  const a = h.indexOf('<section id="grp-paycheck"'); const b = h.indexOf('</section>', a) + '</section>'.length;
+  const sec = '\n\n  <section id="grp-salestax" class="cat-grp cat-grp--hidden" aria-label="Sales tax calculators by state">\n    <p class="st-lead">Pick your state for a sales tax calculator with its own rules — exempt items, shipping, special zones and local add-ons shown, not hidden.</p>\n    ' + cubes + '\n  </section>';
+  h = h.slice(0, b) + sec + h.slice(b);
+  return h.replace("paycheck:document.getElementById('grp-paycheck')", () => "paycheck:document.getElementById('grp-paycheck'),salestax:document.getElementById('grp-salestax')");
+});

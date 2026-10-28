@@ -9,7 +9,7 @@ session confused … a smooth and seamless continuation without me explaining ag
 
 ## 0. THE 60-SECOND VERSION
 
-- **Live:** asset **v208** · **58 calculators** · **25 blog articles** · **116 pages** (Sales Tax hub + NJ deployed 2026-10-28, see §0.5). `main` clean + pushed (last deploy commit
+- **Live:** asset **v212** · **58 calculators** · **25 blog articles** · **116 pages** (Sales Tax hub + NJ deployed 2026-10-28, see §0.5). `main` clean + pushed (last deploy commit
   `8e62c1e` v204; later docs commit `dea46ee` indexing tracker; this handoff commit follows). **Nothing half-built. Nothing waiting on the user.**
 - **Shipped this session (all deployed):** menu/footer visual upgrade (v191) · paycheck SEO round (v194) · **3 Turkey calculators (v204):**
   `/turkey-cooking-time-calculator/`, `/turkey-thawing-time-calculator/`, `/turkey-size-calculator/` (opened the Cooking & Kitchen cluster
@@ -38,7 +38,7 @@ session confused … a smooth and seamless continuation without me explaining ag
 
 | Item | State |
 |---|---|
-| Asset version | **v208** (`.assetver`) |
+| Asset version | **v212** (`.assetver`) |
 | Calculators live | **57** (… Cooking & Kitchen: Recipe Converter + **Turkey Cooking Time, Turkey Thawing Time, Turkey Size**; Paycheck = 1 calculator + 25 state pages) |
 | Pages in sitemap | **114** |
 | Paycheck | 25 states live (9 no-tax + CA GA NY IL MI NC VA MN AL PA AZ CO KY IA MO MT), 26 pending shown "· federal only" (§4.10-4.11) |
@@ -55,7 +55,7 @@ session confused … a smooth and seamless continuation without me explaining ag
 ---
 
 ## 2. What to do first in the next session
-1. Read this file, CLAUDE.md top rules, memory index. 2. Reply 2-3 lines: synced · v208 / 58 calcs / 116 pages · next = GSC batch (10 paycheck states) unless the user says otherwise. 3. Work silently; on any new calculator: research report (competitors opened live, every input listed, visual + functional differentiator, SEO angle) → approval → build → full QA → preview link → wait for "deploy" → deploy gate (§6) + add URLs to the tracker (§10).
+1. Read this file, CLAUDE.md top rules, memory index. 2. Reply 2-3 lines: synced · v212 / 58 calcs / 116 pages · next = GSC batch (10 paycheck states) unless the user says otherwise. 3. Work silently; on any new calculator: research report (competitors opened live, every input listed, visual + functional differentiator, SEO angle) → approval → build → full QA → preview link → wait for "deploy" → deploy gate (§6) + add URLs to the tracker (§10).
 
 ---
 

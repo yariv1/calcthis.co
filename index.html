@@ -102,7 +102,7 @@
   ]
 }
 </script>
-<link rel="stylesheet" href="/assets/style.css?v=208">
+<link rel="stylesheet" href="/assets/style.css?v=212">
 <style>
   .cat-tabs{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
   .cat-grp--hidden{display:none}
@@ -260,6 +260,7 @@
     <button class="cat-tab" type="button" data-cat="cooking" role="tab" aria-selected="false">Cooking &amp;<br>Kitchen</button>
     <button class="cat-tab" type="button" data-cat="finance" role="tab" aria-selected="false">Money &amp;<br>Finance</button>
     <button class="cat-tab" type="button" data-cat="paycheck" role="tab" aria-selected="false">Paycheck<br>Calculators</button>
+    <button class="cat-tab" type="button" data-cat="salestax" role="tab" aria-selected="false">Sales<br>Tax</button>
   </div>
 
   <section id="grp-construction" class="cat-grp" aria-label="Construction &amp; Gardening calculators">
@@ -1233,6 +1234,16 @@
     <!--PAYCUBES:END-->
   </section>
 
+  <section id="grp-salestax" class="cat-grp cat-grp--hidden" aria-label="Sales tax calculators by state">
+    <p class="st-lead">Pick your state for a sales tax calculator with its own rules — exempt items, shipping, special zones and local add-ons shown, not hidden.</p>
+    <!--STAXCUBES:START-->
+    <div class="st-cubes">
+      <a class="st-cube st-all" href="/sales-tax-calculator/"><span class="st-ico" aria-hidden="true"><svg width="30" height="30" viewBox="0 0 32 32" fill="none"><rect x="6" y="4" width="20" height="24" rx="2.5" fill="#EFE7D8" stroke="#8F5C13" stroke-width="1.4"/><path d="M11 20l10-9" stroke="#37503F" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="12" r="2" fill="#B5761F"/><circle cx="20" cy="20" r="2" fill="#B5761F"/></svg></span><span class="st-name">All states</span><span class="st-sub">Sales Tax Calculator</span></a>
+      <a class="st-cube" href="/sales-tax-calculator/new-jersey/"><img src="/assets/flags/nj.webp" width="60" height="40" alt="New Jersey sales tax calculator — flag of New Jersey" loading="lazy"><span class="st-name">New Jersey</span><span class="st-sub">Sales Tax Calculator</span></a>
+    </div>
+    <!--STAXCUBES:END-->
+  </section>
+
   <section class="prose">
     <h2>Calculators that do one thing well</h2>
     <p>Most calculator sites are enormous libraries where every tool is a compromise — a generic form bolted onto a shared template. <strong>CalcThis takes the opposite approach.</strong> Each calculator here is designed around a single real-world task, so the inputs match how you actually measure, the results come out in the units your supplier sells by, and the whole thing works the instant you type — no compute button, no account, no clutter.</p>
@@ -1426,7 +1437,7 @@
 <script>
 (function(){
   var tabs=document.getElementById('catTabs'); if(!tabs) return;
-  var grp={construction:document.getElementById('grp-construction'),health:document.getElementById('grp-health'),academic:document.getElementById('grp-academic'),math:document.getElementById('grp-math'),cooking:document.getElementById('grp-cooking'),finance:document.getElementById('grp-finance'),paycheck:document.getElementById('grp-paycheck')};
+  var grp={construction:document.getElementById('grp-construction'),health:document.getElementById('grp-health'),academic:document.getElementById('grp-academic'),math:document.getElementById('grp-math'),cooking:document.getElementById('grp-cooking'),finance:document.getElementById('grp-finance'),paycheck:document.getElementById('grp-paycheck'),salestax:document.getElementById('grp-salestax')};
   tabs.addEventListener('click',function(e){
     var b=e.target.closest('.cat-tab'); if(!b) return;
     [].forEach.call(tabs.querySelectorAll('.cat-tab'),function(x){x.classList.remove('on');x.setAttribute('aria-selected','false');});
@@ -1437,7 +1448,7 @@
   });
 })();
 </script>
-<script src="/assets/app.js?v=208"></script>
+<script src="/assets/app.js?v=212"></script>
 <script src="/feedback.js" defer></script>
 </body>
 </html>
