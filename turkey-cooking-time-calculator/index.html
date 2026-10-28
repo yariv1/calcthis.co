@@ -17,7 +17,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/datepicker.min.css">
-<link rel="stylesheet" href="/assets/style.css?v=198">
+<link rel="stylesheet" href="/assets/style.css?v=201">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
 <script>
@@ -44,7 +44,10 @@
       },
       "description": "Turkey cooking time by USDA chart, whole turkey or breast, stuffed or unstuffed, with a dinner-time plan.",
       "featureList": [
-        "USDA roasting times by weight, stuffed or unstuffed",
+        "USDA roasting times by weight, stuffed, partly stuffed or unstuffed",
+        "Oven, electric roaster, grill, smoker, deep fryer or microwave",
+        "Cook from frozen (+50%)",
+        "Pounds, kilograms, ounces or grams",
         "Whole turkey or turkey breast",
         "Refrigerator and cold-water thaw times side by side",
         "Enter the dinner date and time to get the whole plan backwards",
@@ -103,6 +106,38 @@
           "acceptedAnswer": {
             "@type": "Answer",
             "text": "About 20 minutes. The USDA recommends letting the bird stand 20 minutes before removing the stuffing and carving so the juices set and the turkey carves more easily. The calculator uses 20 minutes unless you change it under Go advanced."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How long does it take to deep fry a turkey?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The USDA suggests 3 to 5 minutes per pound for a turkey of 8 to 12 lb, with the oil kept at 350 °F — a 12 lb turkey is 36 min to 1 h. Do not stuff a fried turkey."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How long does it take to grill or smoke a turkey?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "On a covered grill (gas or charcoal) the USDA suggests 15 to 18 minutes per pound for 8 to 16 lb turkeys — a 12 lb turkey is 3 h to 3 h 36 min — with the air at 225 to 300 °F. A smoker takes 20 to 30 minutes per pound for 8 to 12 lb, so a 10 lb turkey is 3 h 20 min to 5 h. Do not stuff either."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I cook a turkey from frozen, and how long does it take?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes — an unstuffed turkey of 8 to 24 lb can go into the oven or an electric roaster frozen, and the USDA adds 50% to the cooking time. A 15 lb turkey that takes 3¾–4¼ hours thawed takes about 5 h 38 min to 6 h 23 min from frozen. Do not use an oven cooking bag, and take the giblets out as it thaws."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How long does a partly stuffed turkey take?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The USDA only publishes unstuffed and stuffed times, so partly stuffed is the midpoint: a 12 lb turkey takes about 2 h 53 min to 3 h 15 min. Check the thermometer in the thigh, wing, breast and the center of the stuffing."
           }
         },
         {
@@ -219,6 +254,7 @@
           <a href="/recipe-converter/">Recipe Converter</a>
           <a href="/turkey-cooking-time-calculator/" class="current">Turkey Cooking Time</a>
           <a href="/turkey-thawing-time-calculator/">Turkey Thawing Time</a>
+          <a href="/turkey-size-calculator/">Turkey Size</a>
           <span class="menu-col-head">Money &amp; Finance</span>
           <a href="/mortgage-calculator/">Mortgage</a>
           <a href="/loan-calculator/">Loan</a>
@@ -283,7 +319,7 @@
 
         <label class="fld" for="tkW">
           <span class="lab">Turkey weight <span class="unit" id="tkWUnit">lb</span></span>
-          <div class="inp"><input id="tkW" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 15"></div>
+          <div class="inp"><input id="tkW" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 15 or 15 lb 8 oz"></div>
         </label>
 
         <div class="fld">
@@ -294,19 +330,39 @@
           </div>
         </div>
 
+        <label class="fld" for="tkCookBtn">
+          <span class="lab">Cooking method</span>
+          <div class="csel" id="tkCook" data-value="oven">
+            <button type="button" class="csel-btn" id="tkCookBtn" aria-haspopup="listbox" aria-expanded="false">
+              <span class="csel-val">Oven</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <div class="csel-panel" role="listbox">
+                <button type="button" class="csel-opt on" role="option" aria-selected="true" data-value="oven">Oven</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="roaster">Electric roaster oven</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="grill">Covered grill (gas or charcoal)</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="smoker">Smoker</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="fry">Deep fryer</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="micro">Microwave</button>
+            </div>
+          </div>
+        </label>
+
         <div class="fld" id="tkStuffFld">
           <span class="lab">Cavity</span>
           <div class="seg tk-seg" id="tkStuff" role="group" aria-label="Stuffed or unstuffed">
-            <button class="on" type="button" data-v="unstuffed">Unstuffed</button>
-            <button type="button" data-v="stuffed">Stuffed</button>
+            <button class="on" type="button" data-v="un">Unstuffed</button>
+            <button type="button" data-v="part">Partly stuffed</button>
+            <button type="button" data-v="st">Stuffed</button>
           </div>
         </div>
 
         <div class="fld">
           <span class="lab">The turkey is</span>
           <div class="seg tk-seg" id="tkState" role="group" aria-label="Frozen or fresh">
-            <button class="on" type="button" data-v="frozen">Frozen</button>
-            <button type="button" data-v="fresh">Fresh or thawed</button>
+            <button class="on" type="button" data-v="thaw">Frozen</button>
+            <button type="button" data-v="fresh">Not frozen</button>
+            <button type="button" data-v="frozen">Cook frozen</button>
           </div>
         </div>
 
@@ -365,14 +421,14 @@
     <div class="card">
       <div class="card-pad">
         <div class="bf-res">
-          <div class="res-lab" id="tkResLab">Roasting time</div>
+          <div class="res-lab" id="tkResLab">Cooking time</div>
           <div class="res-big"><span id="tkBig">—</span> <span class="res-unit" id="tkUnitLab"></span></div>
           <div class="res-sub" id="tkSub">Enter your turkey’s weight.</div>
         </div>
 
         <div id="tkOut" style="display:none">
         <div id="tkCookBox">
-          <div class="tk-cap">Roasting</div>
+          <div class="tk-cap">Cooking</div>
           <table class="dtable" id="tkCookTbl"></table>
           <p class="tk-none" id="tkCookNone" style="display:none">There is no USDA roasting time for this weight — see the note above the result.</p>
           <p class="res-tip adv-tip" id="tkCookTip">Done when a food thermometer reads <strong>165 °F (74 °C)</strong> in the innermost part of the thigh, the innermost part of the wing and the thickest part of the breast. Let it stand about 20 minutes before carving.</p>
@@ -399,7 +455,7 @@
 
   <!-- mobile sticky bar -->
   <div class="mbar" id="mbar">
-    <span class="mbar-lab" id="tkMLab">Roasting time</span>
+    <span class="mbar-lab" id="tkMLab">Cooking time</span>
     <div class="mbar-vals"><b id="tkMVal">—</b></div>
   </div>
 
@@ -410,13 +466,13 @@
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
         Turkey Thawing Time Calculator
       </a>
+      <a class="pill" href="/turkey-size-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 13h14l-1.5 7h-11L5 13z"/><path d="M4 13h16M9 8c0-2 2-2 2-4M14 8c0-2 2-2 2-4"/></svg>
+        Turkey Size Calculator
+      </a>
       <a class="pill" href="/recipe-converter/">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 13h14l-1.5 7h-11L5 13z"/><path d="M4 13h16M9 8c0-2 2-2 2-4M14 8c0-2 2-2 2-4"/></svg>
         Recipe Converter
-      </a>
-      <a class="pill" href="/time-calculator/">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
-        Time Calculator
       </a>
       <a class="pill" href="/date-calculator/">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></svg>
@@ -435,6 +491,18 @@
         <h2>Turkey cooking time by weight</h2>
         <p>These are the USDA FSIS roasting times for a fresh or thawed turkey in a 325 °F oven:</p>
         <table class="dtable"><thead><tr><th>Turkey weight</th><th>Unstuffed</th><th>Stuffed</th></tr></thead><tbody><tr><td>4 to 6 lb (breast)</td><td>1½ to 2¼ hours</td><td>—</td></tr><tr><td>6 to 8 lb (breast)</td><td>2¼ to 3¼ hours</td><td>—</td></tr><tr><td>8 to 12 lb</td><td>2¾ to 3 hours</td><td>3 to 3½ hours</td></tr><tr><td>12 to 14 lb</td><td>3 to 3¾ hours</td><td>3½ to 4 hours</td></tr><tr><td>14 to 18 lb</td><td>3¾ to 4¼ hours</td><td>4 to 4¼ hours</td></tr><tr><td>18 to 20 lb</td><td>4¼ to 4½ hours</td><td>4¼ to 4¾ hours</td></tr><tr><td>20 to 24 lb</td><td>4½ to 5 hours</td><td>4¾ to 5¼ hours</td></tr></tbody></table>
+
+        <h2>Turkey cooking time by method (USDA)</h2>
+        <p>The USDA publishes times for other ways to cook a whole turkey. Always check 165 °F in the thigh, wing and breast:</p>
+        <table class="dtable"><thead><tr><th>Method</th><th>Size</th><th>Time</th></tr></thead><tbody>
+          <tr><td>Oven</td><td>8 to 24 lb</td><td>see the chart above</td></tr>
+          <tr><td>Electric roaster oven</td><td>8 to 24 lb</td><td>same as the oven</td></tr>
+          <tr><td>Covered grill</td><td>8 to 16 lb</td><td>15 to 18 min per lb</td></tr>
+          <tr><td>Smoker</td><td>8 to 12 lb</td><td>20 to 30 min per lb</td></tr>
+          <tr><td>Deep fryer</td><td>8 to 12 lb</td><td>3 to 5 min per lb</td></tr>
+          <tr><td>Microwave</td><td>8 to 14 lb</td><td>9 to 10 min per lb</td></tr>
+          <tr><td>From frozen (oven)</td><td>8 to 24 lb</td><td>+50% to the oven time</td></tr>
+        </tbody></table>
 
         <h2>How long to cook a 12, 15 or 20 lb turkey</h2>
         <p>A <strong>12 lb turkey</strong> takes 2¾–3 hours unstuffed (3–3½ stuffed). A <strong>15 lb turkey</strong> takes <strong>3¾–4¼ hours</strong> unstuffed (4–4¼ stuffed), and a <strong>20 lb turkey</strong> takes 4¼–4½ hours unstuffed (4¼–4¾ stuffed). Times are a guide; the thermometer decides when the turkey is done.</p>
@@ -458,6 +526,10 @@
     <details class="faq"><summary>What temperature should the oven be, and when is the turkey done?</summary><p>Set the oven to no lower than 325 °F. The turkey is done when a food thermometer reads at least 165 °F (74 °C) in the innermost part of the thigh, the innermost part of the wing and the thickest part of the breast.</p></details>
     <details class="faq"><summary>Do I need to preheat the oven for a turkey?</summary><p>No. The USDA says preheating is not necessary for roasting a turkey. Put it in a shallow roasting pan 2 to 2½ inches deep, breast side up on a flat wire rack, and set the oven to 325 °F or higher.</p></details>
     <details class="faq"><summary>How long should a turkey rest before carving?</summary><p>About 20 minutes. The USDA recommends letting the bird stand 20 minutes before removing the stuffing and carving so the juices set and the turkey carves more easily. The calculator uses 20 minutes unless you change it under Go advanced.</p></details>
+    <details class="faq"><summary>How long does it take to deep fry a turkey?</summary><p>The USDA suggests 3 to 5 minutes per pound for a turkey of 8 to 12 lb, with the oil kept at 350 °F — a 12 lb turkey is 36 min to 1 h. Do not stuff a fried turkey.</p></details>
+    <details class="faq"><summary>How long does it take to grill or smoke a turkey?</summary><p>On a covered grill (gas or charcoal) the USDA suggests 15 to 18 minutes per pound for 8 to 16 lb turkeys — a 12 lb turkey is 3 h to 3 h 36 min — with the air at 225 to 300 °F. A smoker takes 20 to 30 minutes per pound for 8 to 12 lb, so a 10 lb turkey is 3 h 20 min to 5 h. Do not stuff either.</p></details>
+    <details class="faq"><summary>Can I cook a turkey from frozen, and how long does it take?</summary><p>Yes — an unstuffed turkey of 8 to 24 lb can go into the oven or an electric roaster frozen, and the USDA adds 50% to the cooking time. A 15 lb turkey that takes 3¾–4¼ hours thawed takes about 5 h 38 min to 6 h 23 min from frozen. Do not use an oven cooking bag, and take the giblets out as it thaws.</p></details>
+    <details class="faq"><summary>How long does a partly stuffed turkey take?</summary><p>The USDA only publishes unstuffed and stuffed times, so partly stuffed is the midpoint: a 12 lb turkey takes about 2 h 53 min to 3 h 15 min. Check the thermometer in the thigh, wing, breast and the center of the stuffing.</p></details>
     <details class="faq"><summary>How long should I thaw a frozen turkey first?</summary><p>In the refrigerator allow roughly 24 hours for every 4 to 5 pounds — a 15 lb turkey needs 3 to 3.8 days. In cold water allow about 30 minutes per pound. The <a href="/turkey-thawing-time-calculator/">turkey thawing time calculator</a> plans it for you.</p></details>
   </section>
 
@@ -496,6 +568,7 @@
           <li><a href="/recipe-converter/">Recipe Converter</a></li>
           <li><a href="/turkey-cooking-time-calculator/">Turkey Cooking Time Calculator</a></li>
           <li><a href="/turkey-thawing-time-calculator/">Turkey Thawing Time Calculator</a></li>
+          <li><a href="/turkey-size-calculator/">Turkey Size Calculator</a></li>
         </ul>
       </div>
 
@@ -635,7 +708,7 @@
 </div>
 
 <script src="/assets/datepicker.min.js"></script>
-<script src="/assets/app.js?v=198"></script>
+<script src="/assets/app.js?v=201"></script>
 <script>CalcThis.initTurkeyCalc();</script>
 <script src="/feedback.js" defer></script>
 </body>

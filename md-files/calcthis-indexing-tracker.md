@@ -68,3 +68,4 @@ GSC snapshot 2026-10-26: 69 indexed, 13 not indexed (8 Discovered, 1 Crawled, 1 
 | /paycheck-calculator/wyoming/ | 2026-10-27 (v185) | not yet (Bing: sitemap + IndexNow) |
 | /turkey-cooking-time-calculator/ | 2026-10-28 | not yet |
 | /turkey-thawing-time-calculator/ | 2026-10-28 | not yet |
+| /turkey-size-calculator/ | 2026-10-28 | not yet |

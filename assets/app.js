@@ -12275,15 +12275,16 @@ CalcThis.initPayCalc = function () {
 };
 
 /* =========================================================
-   COOKING · TURKEY CALCULATORS — cooking time (/turkey-cooking-time-calculator/)
-   and thawing time (/turkey-thawing-time-calculator/), ONE shared engine + UI
-   (body data-tk="cook" | "thaw" only changes which result leads).
-   Every number is the USDA FSIS "Turkey Basics: Safe Cooking" / "Safe Thawing"
-   chart (325 F roasting; fridge ~24 h per 4-5 lb; cold water ~30 min per lb).
-   Differentiator: enter the dinner date + time and get the whole plan backwards
-   (thaw start -> oven in -> check -> out of the oven -> serve), with a late flag
-   when the fridge can no longer finish in time. Dates/time reuse the Hours
-   calculator's masked h:mm field + AM/PM and the vendored datepicker.
+   COOKING · TURKEY CALCULATORS — cooking time (/turkey-cooking-time-calculator/),
+   thawing time (/turkey-thawing-time-calculator/) and size (/turkey-size-calculator/).
+   Cooking + thawing share ONE engine + UI (body data-tk="cook" | "thaw" only changes
+   which result leads). Every number is USDA FSIS: "Turkey Basics: Safe Cooking" (325 F
+   roasting chart), "Safe Thawing" (fridge ~24 h per 4-5 lb, cold water ~30 min per lb)
+   and "Turkey: Alternate Routes to the Table" (electric roaster, grill, smoker, deep fryer,
+   microwave, cooking from frozen = +50%). Differentiator: enter the dinner date + time and
+   get the whole plan backwards (thaw start -> oven in -> check -> out -> serve) with a late
+   flag when the fridge cannot finish. Dates/time reuse the Hours calculator's masked h:mm
+   field + AM/PM and the vendored datepicker.
    ========================================================= */
 /* TURKEY-ENGINE:START */
 CalcThis.turkeyEngine = (function () {
@@ -12296,12 +12297,21 @@ CalcThis.turkeyEngine = (function () {
     },
     breast: { unstuffed: [[4, 6, 1.5, 2.25], [6, 8, 2.25, 3.25]] }
   };
+  /* USDA "Alternate Routes": minutes per pound, size range, temperature */
+  var METHODS = {
+    oven: { label: 'Oven', chart: true, short: '325 °F (163 °C)', temp: '325 °F (163 °C) or higher; no preheating needed.' },
+    roaster: { label: 'Electric roaster oven', chart: true, short: '325 °F (163 °C)', temp: '325 °F (163 °C) at least — check the appliance manual.' },
+    grill: { label: 'Covered grill (gas or charcoal)', from: 8, to: 16, lo: 15, hi: 18, nostuff: true, short: 'grill at 225–300 °F', temp: 'Keep the air in the grill at 225–300 °F (107–149 °C) and use a drip pan. Do not stuff.' },
+    smoker: { label: 'Smoker', from: 8, to: 12, lo: 20, hi: 30, nostuff: true, short: 'smoker at 225–300 °F', temp: 'Keep the smoker at 225–300 °F (107–149 °C) and use a drip pan. Do not stuff.' },
+    fry: { label: 'Deep fryer', from: 8, to: 12, lo: 3, hi: 5, nostuff: true, short: 'oil at 350 °F (177 °C)', temp: 'Keep the oil at 350 °F (177 °C). Do not stuff.' },
+    micro: { label: 'Microwave', from: 8, to: 14, lo: 9, hi: 10, nostuff: true, short: 'medium (50%) power', temp: 'Medium (50%) power in an oven cooking bag; rotate during cooking. Do not stuff.' }
+  };
   var DOW = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   var MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   var FR = { 0: '', 0.25: '¼', 0.5: '½', 0.75: '¾' };
 
   function rows(cut, stuffed) { var c = CHART[cut] || CHART.whole; return (stuffed && cut === 'whole') ? c.stuffed : c.unstuffed; }
-  /* the USDA row for this weight, or null (outside the chart) */
+  /* the USDA oven row for this weight, or null (outside the chart) */
   function cook(lb, cut, stuffed) {
     if (!(lb > 0)) return null;
     var r = rows(cut, stuffed);
@@ -12309,6 +12319,32 @@ CalcThis.turkeyEngine = (function () {
     return null;
   }
   function range(cut, stuffed) { var r = rows(cut, stuffed); return { min: r[0][0], max: r[r.length - 1][1] }; }
+  /* cooking time for any method / cavity / frozen state.
+     o: { lb, cut, method, cav:'un'|'part'|'st', frozen:boolean }  ->  { c } or { err:{k,..} }
+     c: { from, to, lo, hi (hours), chart:boolean, mixed, frozen, est, fb } */
+  function cookX(o) {
+    var M = METHODS[o.method] || METHODS.oven, lb = o.lb, cut = o.cut, cav = o.cav || 'un', c = null;
+    if (M.chart) {
+      if (cav === 'part' && cut === 'whole') {
+        var u = cook(lb, 'whole', false), s = cook(lb, 'whole', true);
+        if (u && s) c = { from: u.from, to: u.to, lo: (u.lo + s.lo) / 2, hi: (u.hi + s.hi) / 2, mixed: true };
+      } else c = cook(lb, cut, cav === 'st');
+      if (!c && cut === 'whole' && lb >= 4 && lb < 8) { c = cook(lb, 'breast', false); if (c) c.fb = true; }
+      if (!c && lb >= 1 && lb < 4) { var h = lb * 0.375; c = { from: lb, to: lb, lo: h, hi: h, est: true }; }
+      if (c) c.chart = true;
+    } else {
+      if (cut === 'breast') return { err: { k: 'methodcut', M: M } };
+      if (lb >= M.from && lb <= M.to) c = { from: M.from, to: M.to, lo: lb * M.lo / 60, hi: lb * M.hi / 60, chart: false };
+      else return { err: { k: 'method', M: M } };
+    }
+    if (!c) return { err: { k: 'chart', cut: cut, cav: cav } };
+    if (o.frozen) {
+      if (!(M.chart && cut === 'whole' && cav === 'un' && lb >= 8 && lb <= 24)) return { err: { k: 'frozen' } };
+      c = { from: c.from, to: c.to, lo: c.lo * 1.5, hi: c.hi * 1.5, chart: true, frozen: true };
+    }
+    c.method = o.method;
+    return { c: c };
+  }
   /* thaw hours: fridge 24 h per 5 lb (fast end) to 24 h per 4 lb (plan on this), cold water 30 min per lb */
   function thaw(lb) {
     return { fridgeLo: lb * 24 / 5, fridgeHi: lb * 24 / 4, cold: lb * 0.5, inTable: lb >= 4 && lb <= 24 };
@@ -12330,11 +12366,29 @@ CalcThis.turkeyEngine = (function () {
   function clock(d) { var h = d.getHours(), m = d.getMinutes(); return ((h % 12) || 12) + ':' + (m < 10 ? '0' : '') + m + ' ' + (h < 12 ? 'AM' : 'PM'); }
   function day(d) { return DOW[d.getDay()] + ', ' + MON[d.getMonth()] + ' ' + d.getDate(); }
   function when(d) { return day(d) + ' · ' + clock(d); }
+  /* "15", "15.5", "15 lb 8 oz", "240 oz", "6.8 kg", "6800 g" -> pounds. unit = default for a bare number */
+  function parseWeight(raw, unit) {
+    var t = String(raw).toLowerCase().trim();
+    t = /^\d+,\d{1,2}(?!\d)/.test(t) && t.indexOf(',') === t.lastIndexOf(',') ? t.replace(',', '.') : t.replace(/,/g, '');
+    if (!t) return { none: true };
+    var full = /^(?:\s*(?:\d+(?:\.\d+)?|\.\d+)\s*(?:pounds?|lbs?|ounces?|oz|kilograms?|kgs?|grams?|kg|lb|g)?\s*)+$/;
+    if (!full.test(t)) return { err: true };
+    var re = /(\d+(?:\.\d+)?|\.\d+)\s*(pounds?|lbs?|ounces?|oz|kilograms?|kgs?|grams?|kg|lb|g)?/g, m, toks = [];
+    while ((m = re.exec(t))) { if (m[0] === '') { re.lastIndex++; continue; } toks.push({ n: parseFloat(m[1]), u: m[2] ? (/^(pound|lb)/.test(m[2]) ? 'lb' : /^(ounce|oz)/.test(m[2]) ? 'oz' : /^(kilo|kg)/.test(m[2]) ? 'kg' : 'g') : '' }); }
+    if (!toks.length) return { err: true };
+    if (toks.length > 1 && toks.some(function (x) { return !x.u; })) return { err: true };
+    var seen = {}, lb = 0;
+    for (var i = 0; i < toks.length; i++) {
+      var k = toks[i].u || unit; if (seen[k]) return { err: true }; seen[k] = 1;
+      lb += k === 'lb' ? toks[i].n : k === 'oz' ? toks[i].n / 16 : k === 'kg' ? toks[i].n * LB_PER_KG : toks[i].n / 1000 * LB_PER_KG;
+    }
+    return { lb: lb };
+  }
 
   /* the whole plan, worked backwards from the serving time
-     o: { serve:Date, now:Date, lb, cut, stuffed, frozen, method:'fridge'|'cold', restMin, brineH } */
+     o: { serve:Date, now:Date, lb, c (cook result), frozen:boolean (needs thawing), method:'fridge'|'cold', restMin, brineH } */
   function plan(o) {
-    var c = o.c || cook(o.lb, o.cut, o.stuffed), th = thaw(o.lb);
+    var c = o.c, th = thaw(o.lb);
     if (!c) return null;
     var HR = 3600000, rest = o.restMin, notes = [], steps = [];
     var oven = new Date(o.serve.getTime() - rest * 60000 - c.hi * HR);
@@ -12348,16 +12402,23 @@ CalcThis.turkeyEngine = (function () {
       late = true;
       if (o.method === 'fridge') coldOk = new Date(prepEnd.getTime() - th.cold * HR).getTime() >= o.now.getTime();
     }
+    var M = METHODS[c.method] || METHODS.oven;
+    var dur0 = c.est ? 'about ' + hm(c.lo) : (c.chart ? q(c.lo) + (c.lo === c.hi ? '' : '–' + q(c.hi)) + ' hours' : hm(c.lo) + ' to ' + hm(c.hi));
     if (thawStart) steps.push({ t: thawStart, k: 'thaw', what: o.method === 'cold' ? 'Start thawing in cold water' : 'Start thawing in the refrigerator',
       det: o.method === 'cold' ? 'About ' + hm(th.cold) + '. Leak-proof bag, cold tap water, change the water every 30 minutes.' : 'Plan on ' + dur(th.fridgeHi) + ' at 40 °F (4 °C) or below. A thawed turkey keeps 1–2 days, so a day early is fine.' });
-    if (brineH > 0) steps.push({ t: prepEnd, k: 'prep', what: 'Start brining', det: brineH + ' hour' + (brineH === 1 ? '' : 's') + ' in the refrigerator before roasting.' });
-    steps.push({ t: oven, k: 'oven', what: 'Turkey goes in the oven', det: '325 °F (163 °C) or higher; no preheating needed. Roasting takes ' + (c.est ? 'about ' + hm(c.lo) : q(c.lo) + (c.lo === c.hi ? '' : '–' + q(c.hi)) + ' hours') + '.' });
+    if (brineH > 0) steps.push({ t: prepEnd, k: 'prep', what: 'Start brining', det: brineH + ' hour' + (brineH === 1 ? '' : 's') + ' in the refrigerator before cooking.' });
+    steps.push({ t: oven, k: 'oven', what: 'Turkey goes in' + (c.method === 'fry' ? ' the fryer' : c.method === 'grill' ? ' the grill' : c.method === 'smoker' ? ' the smoker' : c.method === 'micro' ? ' the microwave' : ' the oven'), det: M.temp + (c.frozen ? ' Cooking from frozen: no oven bag, and take the giblets out as it thaws.' : '') + ' Cooking takes ' + dur0 + '.' });
     steps.push({ t: new Date(oven.getTime() + c.lo * HR), k: 'check', what: 'Start checking the temperature', det: 'Thigh, wing and thickest part of the breast must reach 165 °F (74 °C).' });
-    steps.push({ t: new Date(oven.getTime() + c.hi * HR), k: 'out', what: 'Out of the oven, latest', det: 'Let it stand ' + rest + ' minutes so the juices set.' });
+    steps.push({ t: new Date(oven.getTime() + c.hi * HR), k: 'out', what: 'Done, latest', det: 'Let it stand ' + rest + ' minutes so the juices set.' });
     steps.push({ t: o.serve, k: 'serve', what: 'Carve and serve', det: '' });
     return { steps: steps, oven: oven, thawStart: thawStart, c: c, th: th, late: late, coldOk: coldOk, ovenLate: ovenLate, notes: notes };
   }
-  return { LB_PER_KG: LB_PER_KG, CHART: CHART, cook: cook, range: range, thaw: thaw, q: q, hm: hm, dur: dur, days: days, clock: clock, day: day, when: when, plan: plan };
+  /* turkey size to buy: pounds from adults / children / leftovers */
+  function size(o) {
+    var adults = Math.max(0, o.adults - (o.veg || 0)), need = adults * o.adultP + o.kids * o.kidP, total = need * (o.leftovers ? o.leftX : 1);
+    return { adultLb: adults * o.adultP, kidLb: o.kids * o.kidP, baseLb: need, totalLb: total, leftLb: total - need, buy: Math.ceil(total - 1e-9) };
+  }
+  return { LB_PER_KG: LB_PER_KG, CHART: CHART, METHODS: METHODS, cook: cook, cookX: cookX, range: range, thaw: thaw, q: q, hm: hm, dur: dur, days: days, clock: clock, day: day, when: when, parseWeight: parseWeight, plan: plan, size: size };
 })();
 /* TURKEY-ENGINE:END */
 
@@ -12365,7 +12426,8 @@ CalcThis.initTurkeyCalc = function () {
   var E = CalcThis.turkeyEngine;
   var $ = function (id) { return document.getElementById(id); };
   var PAGE = document.body.getAttribute('data-tk') === 'thaw' ? 'thaw' : 'cook';
-  var st = { unit: 'lb', frozen: true, cut: 'whole', stuffed: false, method: 'fridge', adv: false, ap: 'pm' };
+  /* state: 'thaw' = frozen, thaw first · 'fresh' = fresh or thawed · 'frozen' = cook from frozen */
+  var st = { unit: 'lb', state: 'thaw', cut: 'whole', cav: 'un', method: 'fridge', cook: 'oven', adv: false, ap: 'pm' };
   var dp = null;
   var tf = null;
 
@@ -12397,7 +12459,6 @@ CalcThis.initTurkeyCalc = function () {
     }
     tf.ghost.innerHTML = html;
   }
-  /* minutes after midnight, null while empty / not a valid time */
   function fieldMin() {
     var s = splitDigits(tf.input.value);
     if (s.empty) return null;
@@ -12411,12 +12472,12 @@ CalcThis.initTurkeyCalc = function () {
   function readWeight() {
     var raw = $('tkW').value.trim();
     if (!raw) return { none: true };
-    var n = num(raw);
-    if (!(n > 0)) return { err: 'Enter the turkey’s weight as a number, like 15.' };
-    var lb = st.unit === 'kg' ? n * E.LB_PER_KG : n;
+    var p = E.parseWeight(raw, st.unit);
+    if (p.err || !(p.lb > 0)) return { err: (st.unit === 'lb' ? 'Enter the turkey’s weight as a number, like 15 — or 15 lb 8 oz.' : 'Enter the turkey’s weight as a number, like 7 — or 6800 g.') };
+    var lb = p.lb;
     if (lb > 60) return { err: 'That’s heavier than any turkey sold — check the weight and the unit.' };
     if (lb < 1) return { err: 'That’s too small for a turkey — check the weight and the unit.' };
-    return { n: n, lb: lb };
+    return { n: st.unit === 'lb' ? lb : lb / E.LB_PER_KG, lb: lb };
   }
   function wl(lb) { return st.unit === 'lb' ? fmtN(lb) + ' lb' : fmtN(lb / E.LB_PER_KG) + ' kg (' + fmtN(lb) + ' lb)'; }
   function wr(a, b) { return st.unit === 'lb' ? a + ' to ' + b + ' lb' : fmtN(a / E.LB_PER_KG) + ' to ' + fmtN(b / E.LB_PER_KG) + ' kg (' + a + ' to ' + b + ' lb)'; }
@@ -12437,37 +12498,50 @@ CalcThis.initTurkeyCalc = function () {
     $('tkMLab').textContent = mlab; $('tkMVal').textContent = mval;
   }
   function blank(msg, hint) {
-    var lab = PAGE === 'cook' ? 'Roasting time' : 'Thawing time';
+    var lab = PAGE === 'cook' ? 'Cooking time' : 'Thawing time';
     setPrimary(lab, '—', msg, lab, '—');
     $('tkUnitLab').textContent = '';
     show('tkOut', false); setHint(hint || '');
   }
+  function rangeTxt(c) {
+    if (c.hi < 1.5) return { big: Math.round(c.lo * 60) + (c.lo === c.hi ? '' : '–' + Math.round(c.hi * 60)) + ' min', unit: '' };
+    return { big: E.q(c.lo) + (c.lo === c.hi ? '' : '–' + E.q(c.hi)), unit: 'hours' };
+  }
+  function cookHint(err, lb) {
+    var M = E.METHODS[st.cook];
+    if (!err) return '';
+    if (err.k === 'methodcut') return 'The USDA gives ' + M.label.toLowerCase() + ' times for whole turkeys of ' + wr(M.from, M.to) + ' — switch the cut to Whole turkey.';
+    if (err.k === 'method') return 'The USDA gives ' + M.label.toLowerCase() + ' times for turkeys of ' + wr(M.from, M.to) + '.';
+    if (err.k === 'frozen') return 'The USDA gives a cook-from-frozen time only for an unstuffed whole turkey of ' + wr(8, 24) + ' in an oven or electric roaster.';
+    if (err.cut === 'breast') return lb > 8 ? 'The USDA chart for a turkey breast stops at ' + wl(8) + ' — for a bigger bird choose Whole turkey.' : 'The USDA has no roasting time for this weight.';
+    return 'The USDA chart stops at ' + wl(24) + ', so there is no official roasting time for a bigger bird.';
+  }
 
   function render() {
     var w = readWeight();
+    var M = E.METHODS[st.cook], ovenLike = !!M.chart;
     var cutName = st.cut === 'breast' ? 'turkey breast' : 'whole turkey';
-    var stuffed = st.cut === 'whole' && st.stuffed;
-    $('tkStuffFld').style.display = st.cut === 'whole' ? '' : 'none';
-    $('tkMethFld').style.display = st.frozen ? '' : 'none';
+    var needsThaw = st.state === 'thaw', fromFrozen = st.state === 'frozen';
+    var noStuff = st.cut === 'breast' || M.nostuff || fromFrozen;
+    var cav = noStuff ? 'un' : st.cav;
+    $('tkStuffFld').style.display = noStuff ? 'none' : '';
+    $('tkMethFld').style.display = needsThaw ? '' : 'none';
     if (w.none) { blank('Enter your turkey’s weight.', ''); return; }
     if (w.err) { blank('Enter your turkey’s weight.', w.err); return; }
-    var hints = [], cookHint = '';
-    var lb = w.lb, c = E.cook(lb, st.cut, stuffed), th = E.thaw(lb), rg = E.range(st.cut, stuffed), fb = false;
-    if (!c && st.cut === 'whole' && lb >= 4 && lb < rg.min) { c = E.cook(lb, 'breast', false); fb = !!c; }
-    var est = false;
-    if (!c && lb >= 1 && lb < 4) { var eh = lb * 0.375; c = { from: lb, to: lb, lo: eh, hi: eh, est: true }; est = true; }
-    var cutLab = est ? cutName + ', estimate' : fb ? 'whole turkey, USDA turkey-breast row' : cutName + (st.cut === 'whole' ? (stuffed ? ', stuffed' : ', unstuffed') : '');
-    if (!c) {
-      if (st.cut === 'breast') cookHint = (lb < rg.min ? 'The USDA chart for a turkey breast starts at ' + wl(4) + '.' : 'The USDA chart for a turkey breast stops at ' + wl(8) + ' — for a bigger bird choose Whole turkey.');
-      else cookHint = (lb < rg.min ? 'The USDA has no roasting time for a turkey under ' + wl(4) + '.' : 'The USDA chart stops at ' + wl(24) + ', so there is no official roasting time for a bigger bird.');
-      if (PAGE === 'cook') hints.push(cookHint);
-    }
+    var hints = [];
+    var lb = w.lb, th = E.thaw(lb);
+    var cx = E.cookX({ lb: lb, cut: st.cut, method: st.cook, cav: cav, frozen: fromFrozen }), c = cx.c || null, chint = cookHint(cx.err, lb);
+    if (!c && PAGE === 'cook') hints.push(chint);
     var rest = readOpt('tkRest', 20, 0, 240, 'Rest time must be 0 to 240 minutes — using 20.'), brine = readOpt('tkBrine', 0, 0, 72, 'Brining time must be 0 to 72 hours.');
     if (rest.err) hints.push(rest.err);
     if (brine.err) hints.push(brine.err);
+    var cavName = cav === 'st' ? ', stuffed' : cav === 'part' ? ', partly stuffed' : ', unstuffed';
+    var cutLab = (c && c.est) ? cutName + ', estimate' : (c && c.fb) ? 'whole turkey, USDA turkey-breast row' : cutName + (st.cut === 'whole' ? cavName : '');
+    if (c && !ovenLike) cutLab = cutName + ' · ' + M.label.toLowerCase();
+    if (c && c.frozen) cutLab += ' · from frozen';
+    var verb = ovenLike ? 'Roasting' : 'Cooking';
 
     /* thaw box */
-    var thawOn = st.frozen;
     var thawRows = [];
     thawRows.push(['Refrigerator', (th.fridgeHi >= 24 ? E.days(th.fridgeLo) + ' to ' + E.dur(th.fridgeHi) : E.dur(th.fridgeLo) + ' to ' + E.dur(th.fridgeHi)) + (th.fridgeHi >= 24 ? ' <small>(' + E.hm(th.fridgeLo) + ' to ' + E.hm(th.fridgeHi) + ')</small>' : ''), st.method === 'fridge']);
     thawRows.push(['Cold water', E.hm(th.cold) + ' <small>(' + (st.unit === 'lb' ? '30 min per lb' : '66 min per kg') + ')</small>', st.method === 'cold']);
@@ -12477,23 +12551,32 @@ CalcThis.initTurkeyCalc = function () {
       : 'Refrigerator: plan on the long end — ' + E.dur(th.fridgeHi) + ' at 40 °F (4 °C) or below. A thawed turkey keeps in the fridge 1–2 days before cooking.';
     if (!th.inTable) tt += ' (Outside the USDA table of ' + wr(4, 24) + ', so this extends the same rule: 24 hours per ' + wr(4, 5) + '.)';
     $('tkThawTip').textContent = tt;
-    $('tkThawFresh').style.display = thawOn ? 'none' : '';
-    $('tkThawTbl').style.display = thawOn ? '' : 'none';
-    $('tkThawTip').style.display = thawOn ? '' : 'none';
+    $('tkThawFresh').textContent = fromFrozen ? 'You are cooking from frozen, so there is no thawing step — the USDA adds 50% to the cooking time instead.' : 'A fresh or already-thawed turkey needs no thawing — it goes straight to the oven.';
+    $('tkThawFresh').style.display = needsThaw ? 'none' : '';
+    $('tkThawTbl').style.display = needsThaw ? '' : 'none';
+    $('tkThawTip').style.display = needsThaw ? '' : 'none';
 
     /* cook box */
     if (c) {
-      var cr = [
-        ['Turkey', wTxt(w) + ' · ' + cutLab],
-        est ? ['USDA chart row', 'Below the chart — it starts at ' + wl(4)] : ['USDA chart row', wr(c.from, c.to) + (fb ? ' (turkey breast)' : '')],
-        est ? ['Estimated roasting time at 325 °F (163 °C)', 'about ' + E.hm(c.lo), true] : ['Roasting time at 325 °F (163 °C)', E.q(c.lo) + (c.lo === c.hi ? '' : '–' + E.q(c.hi)) + ' hours', true]
-      ];
-      if (!est) cr.push(['In hours and minutes', E.hm(c.lo) + (c.lo === c.hi ? '' : ' to ' + E.hm(c.hi))], ['Start checking the temperature after', E.hm(c.lo)], ['Plan on', E.hm(c.hi) + ' in the oven']);
-      if (est) cr.push(['Note', 'Estimate only: the USDA chart starts at ' + wl(4) + ', so this extends its ' + wr(4, 6) + ' turkey-breast rate (about ' + (st.unit === 'lb' ? '22½ minutes per pound' : '50 minutes per kg') + '). Go by the 165 °F thermometer reading.']);
-      if (fb) cr.push(['Note', 'The USDA lists no whole turkey under ' + wl(8) + ' — this is its ' + wr(4, 8) + ' turkey-breast time.']);
+      var rt = rangeTxt(c), cr = [['Turkey', wTxt(w) + ' · ' + cutLab]];
+      if (c.est) cr.push(['USDA chart row', 'Below the chart — it starts at ' + wl(4)]);
+      else cr.push([ovenLike ? 'USDA chart row' : 'USDA range', wr(c.from, c.to) + (c.fb ? ' (turkey breast)' : '') + (c.mixed ? ' (between unstuffed and stuffed)' : '')]);
+      if (c.est) cr.push(['Estimated ' + verb.toLowerCase() + ' time at ' + M.short, 'about ' + E.hm(c.lo), true]);
+      else {
+        cr.push([verb + ' time at ' + M.short, (c.chart ? rt.big + (rt.unit ? ' ' + rt.unit : '') : E.hm(c.lo) + ' to ' + E.hm(c.hi)), true]);
+        cr.push(['In hours and minutes', E.hm(c.lo) + (c.lo === c.hi ? '' : ' to ' + E.hm(c.hi))]);
+        cr.push(['Start checking the temperature after', E.hm(c.lo)]);
+        cr.push(['Plan on', E.hm(c.hi) + ' to cook']);
+      }
+      if (c.est) cr.push(['Note', 'Estimate only: the USDA chart starts at ' + wl(4) + ', so this extends its ' + wr(4, 6) + ' turkey-breast rate (about ' + (st.unit === 'lb' ? '22½ minutes per pound' : '50 minutes per kg') + '). Go by the 165 °F thermometer reading.']);
+      else if (c.fb) cr.push(['Note', 'The USDA lists no whole turkey under ' + wl(8) + ' — this is its ' + wr(4, 8) + ' turkey-breast time.']);
+      else if (c.mixed) cr.push(['Note', 'Partly stuffed is the midpoint of the USDA unstuffed and stuffed times.']);
+      else if (c.frozen) cr.push(['Note', 'Cooking from frozen adds 50% to the USDA time. Do not use an oven cooking bag, and take the giblets out as it thaws.']);
+      else if (!ovenLike) cr.push(['Note', M.temp]);
       $('tkCookTbl').innerHTML = rowsHtml(cr);
       show('tkCookTbl', true); show('tkCookTip', true); $('tkCookNone').style.display = 'none';
     } else {
+      $('tkCookNone').textContent = chint || 'There is no USDA time for this weight.';
       show('tkCookTbl', false); show('tkCookTip', false); $('tkCookNone').style.display = '';
     }
 
@@ -12502,18 +12585,18 @@ CalcThis.initTurkeyCalc = function () {
     var sub1 = wTxt(w) + ' · feeds about ' + feeds;
     if (PAGE === 'cook') {
       if (c) {
-        $('tkUnitLab').textContent = est ? '' : 'hours';
-        var big = est ? '~' + E.hm(c.lo) : E.q(c.lo) + (c.lo === c.hi ? '' : '–' + E.q(c.hi));
-        setPrimary('Roasting time', big, 'at 325 °F (163 °C) · ' + cutLab + ' · ' + wTxt(w), 'Roasting time', est ? big : big + ' h');
-      } else { $('tkUnitLab').textContent = ''; setPrimary('Roasting time', '—', cookHint || 'No USDA time for this weight.', 'Roasting time', '—'); }
+        var rb = rangeTxt(c), big = c.est ? '~' + E.hm(c.lo) : rb.big;
+        $('tkUnitLab').textContent = c.est ? '' : rb.unit;
+        setPrimary(verb + ' time', big, 'at ' + (c.chart ? M.short : M.label.toLowerCase() + ', ' + M.short) + ' · ' + cutLab + ' · ' + wTxt(w), verb + ' time', c.est ? big : big + (rb.unit ? ' h' : ''));
+      } else { $('tkUnitLab').textContent = ''; setPrimary('Cooking time', '—', chint || 'No USDA time for this weight.', 'Cooking time', '—'); }
     } else {
-      if (thawOn) {
+      if (needsThaw) {
         var tb = st.method === 'cold' ? E.hm(th.cold) : E.days(th.fridgeLo) + '–' + E.days(th.fridgeHi);
         $('tkUnitLab').textContent = st.method === 'cold' ? '' : 'days';
         setPrimary('Thawing time', tb, (st.method === 'cold' ? 'in cold water · change the water every 30 min · ' : 'in the refrigerator · plan on ' + E.dur(th.fridgeHi) + ' · ') + sub1, 'Thawing time', st.method === 'cold' ? E.hm(th.cold) : E.days(th.fridgeLo) + '–' + E.days(th.fridgeHi) + ' days');
       } else {
         $('tkUnitLab').textContent = '';
-        setPrimary('Thawing time', 'None', 'A fresh or already-thawed turkey goes straight to the oven · ' + sub1, 'Thawing time', 'None');
+        setPrimary('Thawing time', 'None', (fromFrozen ? 'Cooking from frozen — no thawing step · ' : 'A fresh or already-thawed turkey goes straight to the oven · ') + sub1, 'Thawing time', 'None');
       }
     }
     show('tkOut', true);
@@ -12527,9 +12610,9 @@ CalcThis.initTurkeyCalc = function () {
     else if (dd && mins != null) {
       var serve = new Date(dd.getFullYear(), dd.getMonth(), dd.getDate(), Math.floor(mins / 60), mins % 60), now = nowDate();
       if (serve.getTime() <= now.getTime()) hints.push('That dinner time has already passed — pick a later date or time.');
-      else if (!c) hints.push('The schedule needs a USDA roasting time. ' + cookHint);
+      else if (!c) hints.push('The schedule needs a USDA cooking time. ' + chint);
       else {
-        var p = E.plan({ serve: serve, now: now, lb: lb, c: est ? c : null, cut: fb ? 'breast' : st.cut, stuffed: fb ? false : stuffed, frozen: st.frozen, method: st.method, restMin: rest.v, brineH: brine.v });
+        var p = E.plan({ serve: serve, now: now, lb: lb, c: c, frozen: needsThaw, method: st.method, restMin: rest.v, brineH: brine.v });
         planOn = true;
         var items = [];
         p.steps.forEach(function (s, i) {
@@ -12557,19 +12640,19 @@ CalcThis.initTurkeyCalc = function () {
     var gu = readOpt('tkGuests', 0, 1, 200, 'Guests must be a number from 1 to 200.');
     if (gu.err) hints.push(gu.err);
     var gn = '';
-    if (gu.v > 0) gn = 'For ' + gu.v + (gu.v === 1 ? ' guest' : ' guests') + ' buy about ' + (st.unit === 'lb' ? fmtN(gu.v) + '–' + fmtN(gu.v * 1.5) + ' lb' : fmtN(gu.v / E.LB_PER_KG) + '–' + fmtN(gu.v * 1.5 / E.LB_PER_KG) + ' kg') + ' of whole turkey (1–1.5 lb per person; the higher end leaves leftovers).';
-    $('tkGuestNote').textContent = gn; $('tkGuestNote').style.display = gn ? '' : 'none';
+    if (gu.v > 0) gn = 'For ' + gu.v + (gu.v === 1 ? ' guest' : ' guests') + ' buy about ' + (st.unit === 'lb' ? fmtN(gu.v) + '–' + fmtN(gu.v * 1.5) + ' lb' : fmtN(gu.v / E.LB_PER_KG) + '–' + fmtN(gu.v * 1.5 / E.LB_PER_KG) + ' kg') + ' of whole turkey (1–1.5 lb per person; the higher end leaves leftovers). The <a href="/turkey-size-calculator/">turkey size calculator</a> adds children and leftovers.';
+    $('tkGuestNote').innerHTML = gn; $('tkGuestNote').style.display = gn ? '' : 'none';
     setHint(hints.length ? hints[0] : '');
   }
 
   /* ---------- events ---------- */
   function readUnitSwitch(to) {
     if (to === st.unit) return;
-    var raw = $('tkW').value.trim(), n = num(raw);
+    var raw = $('tkW').value.trim(), p = E.parseWeight(raw, st.unit);
     st.unit = to; setSeg('tkUnit', to);
-    $('tkWUnit').textContent = to; $('tkW').placeholder = to === 'lb' ? 'e.g. 15' : 'e.g. 7';
-    if (raw && n > 0 && n <= (to === 'kg' ? 60 : 60 / E.LB_PER_KG)) {
-      var conv = to === 'kg' ? n / E.LB_PER_KG : n * E.LB_PER_KG;
+    $('tkWUnit').textContent = to; $('tkW').placeholder = to === 'lb' ? 'e.g. 15 or 15 lb 8 oz' : 'e.g. 7 or 6800 g';
+    if (raw && !p.err && p.lb > 0 && p.lb <= 60) {
+      var conv = to === 'kg' ? p.lb / E.LB_PER_KG : p.lb;
       $('tkW').value = String(Math.round(conv * 10) / 10);
     }
     render();
@@ -12579,11 +12662,10 @@ CalcThis.initTurkeyCalc = function () {
     function mk(yr) { if (kind === 'tg') { var f = new Date(yr, 10, 1); return new Date(yr, 10, 1 + (4 - f.getDay() + 7) % 7 + 21); } return new Date(yr, 11, 25); }
     var d = mk(y); if (d < midnight(now)) d = mk(y + 1); return d;
   }
+  function bind(id, key, map) { $(id).addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; st[key] = b.getAttribute('data-v'); setSeg(id, st[key]); render(); }); }
   $('tkUnit').addEventListener('click', function (e) { var b = e.target.closest('button'); if (b) readUnitSwitch(b.getAttribute('data-v')); });
-  $('tkState').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; st.frozen = b.getAttribute('data-v') === 'frozen'; setSeg('tkState', b.getAttribute('data-v')); render(); });
-  $('tkCut').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; st.cut = b.getAttribute('data-v'); setSeg('tkCut', st.cut); render(); });
-  $('tkStuff').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; st.stuffed = b.getAttribute('data-v') === 'stuffed'; setSeg('tkStuff', b.getAttribute('data-v')); render(); });
-  $('tkMethod').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; st.method = b.getAttribute('data-v'); setSeg('tkMethod', st.method); render(); });
+  bind('tkState', 'state'); bind('tkCut', 'cut'); bind('tkStuff', 'cav'); bind('tkMethod', 'method');
+  $('tkCook').addEventListener('change', function () { st.cook = this.value || 'oven'; render(); });
   $('tkDay').addEventListener('click', function (e) {
     var b = e.target.closest('button'); if (!b) return;
     var d = nextHoliday(b.getAttribute('data-v'));
@@ -12618,6 +12700,108 @@ CalcThis.initTurkeyCalc = function () {
     $('tkDate').addEventListener('changeDate', render);
   }
   ['change'].forEach(function (ev) { $('tkDate').addEventListener(ev, render); });
+  /* ?w=15&u=lb from the size calculator */
+  try {
+    var qs = new URLSearchParams(location.search), qw = qs.get('w'), qu = qs.get('u');
+    if (qu === 'kg') readUnitSwitch('kg');
+    if (qw && /^\d+(\.\d+)?$/.test(qw)) $('tkW').value = qw;
+  } catch (e) {}
+  render();
+};
+
+/* =========================================================
+   COOKING · TURKEY SIZE CALCULATOR (/turkey-size-calculator/) — adults, children, leftovers
+   -> the size to buy, plus the thaw and cook times for it (USDA, same engine) and a one-click
+   hand-off to the cooking calculator. Visual: a stacked bar of who eats what.
+   ========================================================= */
+CalcThis.initTurkeySizeCalc = function () {
+  var E = CalcThis.turkeyEngine;
+  var $ = function (id) { return document.getElementById(id); };
+  var st = { unit: 'lb', left: false, adv: false };
+  function num(v) { var t = String(v).replace(/,/g, '').trim(); var n = t === '' ? NaN : Number(t); return isFinite(n) ? n : NaN; }
+  function fmtN(n) { return String(Math.round(n * 10) / 10); }
+  function setSeg(id, v) { [].forEach.call($(id).querySelectorAll('button'), function (b) { b.classList.toggle('on', b.getAttribute('data-v') === v); }); }
+  function setHint(m) { var h = $('tsHint'); h.textContent = m || ''; h.style.display = m ? 'block' : 'none'; }
+  function W(lb) { return st.unit === 'lb' ? fmtN(lb) + ' lb' : fmtN(lb / E.LB_PER_KG) + ' kg'; }
+  function opt(id, def, min, max, msg, hints) {
+    var raw = $(id).value.trim(); if (!raw) return def;
+    var n = num(raw); if (!isFinite(n) || n < min || n > max) { hints.push(msg); return def; } return n;
+  }
+  /* a portion typed in the shown unit -> pounds; the range is checked in pounds */
+  function optU(id, defLb, minLb, maxLb, msg, hints) {
+    var raw = $(id).value.trim(); if (!raw) return defLb;
+    var n = num(raw), lb = st.unit === 'kg' ? n * E.LB_PER_KG : n;
+    if (!isFinite(n) || lb < minLb - 1e-9 || lb > maxLb + 1e-9) { hints.push(msg); return defLb; }
+    return lb;
+  }
+  function cnt(id, label, hints) {
+    var raw = $(id).value.trim(); if (!raw) return 0;
+    var n = num(raw);
+    if (!/^\d+$/.test(raw) || n > 500) { hints.push(label + ' must be a whole number from 0 to 500.'); return null; }
+    return n;
+  }
+  function setPrimary(lab, big, unit, sub, mval) { $('tsResLab').textContent = lab; $('tsBig').textContent = big; $('tsUnitLab').textContent = unit; $('tsSub').textContent = sub; $('tsMVal').textContent = mval; }
+  function rowsHtml(rows) { return '<tbody>' + rows.map(function (r) { return '<tr' + (r[2] ? ' class="cur"' : '') + '><td>' + r[0] + '</td><td>' + r[1] + '</td></tr>'; }).join('') + '</tbody>'; }
+  function times(lb) {
+    var th = E.thaw(lb), un = E.cookX({ lb: lb, cut: 'whole', method: 'oven', cav: 'un' }), sf = E.cookX({ lb: lb, cut: 'whole', method: 'oven', cav: 'st' });
+    var br = E.cookX({ lb: lb, cut: 'breast', method: 'oven', cav: 'un' });
+    var rg = function (r) { return r.c ? (r.c.est ? 'about ' + E.hm(r.c.lo) : E.q(r.c.lo) + (r.c.lo === r.c.hi ? '' : '–' + E.q(r.c.hi)) + ' hours') : '—'; };
+    return { th: th, un: rg(un), sf: rg(sf), br: rg(br) };
+  }
+  function render() {
+    var hints = [];
+    var a = cnt('tsAdults', 'Adults', hints), k = cnt('tsKids', 'Children', hints);
+    if (a === null || k === null) { $('tsOut').style.display = 'none'; setPrimary('Turkey to buy', '—', '', 'Enter the number of adults.', '—'); setHint(hints[0]); return; }
+    if (!a && !k) { $('tsOut').style.display = 'none'; setPrimary('Turkey to buy', '—', '', 'Enter the number of adults and children.', '—'); setHint(''); return; }
+    var veg = cnt('tsVeg', 'Adults not eating turkey', hints); if (veg === null) veg = 0;
+    if (veg > a) { hints.push('Adults not eating turkey can’t be more than the adults.'); veg = 0; }
+    var aP = optU('tsAdultP', 1, 0.25, 5, 'Portion per adult must be ' + W(0.25) + ' to ' + W(5) + ' — using ' + W(1) + '.', hints);
+    var kP = optU('tsKidP', 0.5, 0.1, 5, 'Portion per child must be ' + W(0.1) + ' to ' + W(5) + ' — using ' + W(0.5) + '.', hints);
+    var lX = opt('tsLeftX', 1.5, 1, 4, 'Leftover multiplier must be 1 to 4 — using 1.5.', hints);
+    var r = E.size({ adults: a, kids: k, veg: veg, adultP: aP, kidP: kP, leftovers: st.left, leftX: lX });
+    if (!(r.totalLb > 0)) { $('tsOut').style.display = 'none'; setPrimary('Turkey to buy', '—', '', 'Everyone is skipping the turkey.', '—'); setHint(hints[0] || ''); return; }
+    var guests = a + k, who = (a ? a + (a === 1 ? ' adult' : ' adults') : '') + (a && k ? ' and ' : '') + (k ? k + (k === 1 ? ' child' : ' children') : '') + (st.left ? ' · with leftovers' : '');
+    var buy = r.buy, k2 = 1, each = buy, note = '';
+    if (buy > 24) { k2 = Math.ceil(buy / 24); each = Math.ceil(buy / k2); note = 'That is bigger than most ovens and the USDA chart (' + W(24) + ') allow — buy ' + k2 + ' turkeys of about ' + W(each) + ' each.'; }
+    else if (buy < 8) note = 'A whole turkey this small is hard to find — buy a turkey breast of about ' + W(Math.max(buy, 1)) + ', or the smallest whole turkey (' + W(8) + ') and enjoy the leftovers.';
+    var mult = k2 > 1 ? k2 + ' × ' : '';
+    setPrimary('Turkey to buy', mult + (st.unit === 'lb' ? String(each) : fmtN(each / E.LB_PER_KG)), st.unit === 'lb' ? 'lb' : 'kg', who, mult + W(each));
+    $('tsOut').style.display = '';
+    /* stacked bar */
+    var tot = r.totalLb, seg = [['ts-a', r.adultLb, 'Adults'], ['ts-k', r.kidLb, 'Children'], ['ts-l', r.leftLb, 'Leftovers']].filter(function (s) { return s[1] > 0.0001; });
+    $('tsBar').innerHTML = '<div class="ts-bar">' + seg.map(function (s) { return '<span class="' + s[0] + '" style="width:' + (s[1] / tot * 100) + '%"></span>'; }).join('') + '</div><div class="ts-key">' + seg.map(function (s) { return '<span><i class="' + s[0] + '"></i>' + s[2] + ' ' + W(s[1]) + '</span>'; }).join('') + '</div>';
+    var rows = [['Guests', String(guests) + (veg ? ' (' + veg + ' skipping turkey)' : '')], ['Meat needed', W(r.totalLb) + (st.left ? ' (' + W(r.baseLb) + ' + leftovers)' : '')], ['Turkey to buy', mult + W(each) + (each < 8 ? ' turkey breast' : ' whole turkey'), true]];
+    $('tsTbl').innerHTML = rowsHtml(rows);
+    var T = times(Math.max(1, each)), breast = each < 8;
+    $('tsTimesH').textContent = 'Thaw and cook a ' + W(each) + (breast ? ' turkey breast' : ' turkey');
+    var cr = [['Thaw in the refrigerator', E.days(T.th.fridgeLo) + ' to ' + E.dur(T.th.fridgeHi)], ['Thaw in cold water', E.hm(T.th.cold)]];
+    if (breast) cr.push(['Roast the breast at 325 °F (163 °C)', T.br]);
+    else { cr.push(['Roast unstuffed at 325 °F (163 °C)', T.un]); cr.push(['Roast stuffed at 325 °F (163 °C)', T.sf]); }
+    $('tsTimesTbl').innerHTML = rowsHtml(cr);
+    var link = '/turkey-cooking-time-calculator/?w=' + (st.unit === 'lb' ? each : fmtN(each / E.LB_PER_KG)) + '&u=' + st.unit;
+    $('tsPlan').setAttribute('href', link);
+    $('tsNote').textContent = note; $('tsNote').style.display = note ? '' : 'none';
+    setHint(hints[0] || '');
+  }
+  document.addEventListener('input', function (e) { var t = e.target; if (t.closest && t.closest('.p-turksize') && /^ts[A-Z]/.test(t.id)) render(); });
+  $('tsUnit').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    var to = b.getAttribute('data-v'); if (to === st.unit) return;
+    ['tsAdultP', 'tsKidP'].forEach(function (id) { var raw = $(id).value.trim(), n = num(raw); if (raw && isFinite(n) && n > 0) $(id).value = String(Math.round((to === 'kg' ? n / E.LB_PER_KG : n * E.LB_PER_KG) * 100) / 100); });
+    st.unit = to; setSeg('tsUnit', st.unit);
+    $('tsPUnitA').textContent = to === 'lb' ? 'lb — blank = 1' : 'kg — blank = 0.45'; $('tsPUnitK').textContent = to === 'lb' ? 'lb — blank = 0.5' : 'kg — blank = 0.23';
+    $('tsAdultP').placeholder = to === 'lb' ? '1' : '0.45'; $('tsKidP').placeholder = to === 'lb' ? '0.5' : '0.23';
+    render();
+  });
+  $('tsLeft').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; st.left = b.getAttribute('data-v') === 'yes'; setSeg('tsLeft', st.left ? 'yes' : 'no'); render(); });
+  $('tsAdvBtn').addEventListener('click', function () {
+    st.adv = !st.adv;
+    $('tsAdvBtn').classList.toggle('open', st.adv);
+    $('tsAdvBtnLab').textContent = st.adv ? 'Go simple' : 'Go advanced';
+    $('tsAdv').style.display = st.adv ? '' : 'none';
+    if (!st.adv) ['tsVeg', 'tsAdultP', 'tsKidP', 'tsLeftX'].forEach(function (id) { $(id).value = ''; });
+    render();
+  });
   render();
 };
 

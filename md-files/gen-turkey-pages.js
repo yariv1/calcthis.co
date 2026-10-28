@@ -20,13 +20,16 @@ const fr = (t) => E.days(t.fridgeLo) + ' to ' + E.days(t.fridgeHi) + ' days';
 // Thanksgiving 2026 (Thu Nov 26): when must a fridge thaw start for an 11:00 AM oven?
 function thawStartFor(lb) { const oven = new Date(2026, 10, 26, 11, 0); return E.when(new Date(oven.getTime() - E.thaw(lb).fridgeHi * 3600000)); }
 
-const FEAT = ['USDA roasting times by weight, stuffed or unstuffed', 'Whole turkey or turkey breast', 'Refrigerator and cold-water thaw times side by side',
+const MM = E.METHODS;
+const pl = (m, lb) => { const x = E.cookX({ lb, cut: 'whole', method: m, cav: 'un' }).c; return E.hm(x.lo) + ' to ' + E.hm(x.hi); };
+const fz15 = E.cookX({ lb: 15, cut: 'whole', method: 'oven', cav: 'un', frozen: true }).c, pt12 = E.cookX({ lb: 12, cut: 'whole', method: 'oven', cav: 'part' }).c;
+const FEAT = ['USDA roasting times by weight, stuffed, partly stuffed or unstuffed', 'Oven, electric roaster, grill, smoker, deep fryer or microwave', 'Cook from frozen (+50%)', 'Pounds, kilograms, ounces or grams', 'Whole turkey or turkey breast', 'Refrigerator and cold-water thaw times side by side',
   'Enter the dinner date and time to get the whole plan backwards', 'Warns when the refrigerator can no longer finish in time', 'Brining, rest time and guest count under Go advanced', 'Pounds or kilograms'];
 
 function widget(page) {
   const GHOST = '<span class="g-off">-</span><span class="g-off">-</span><span class="g-sep">:</span><span class="g-off">-</span><span class="g-off">-</span>';
   const cookBox = `        <div id="tkCookBox">
-          <div class="tk-cap">Roasting</div>
+          <div class="tk-cap">Cooking</div>
           <table class="dtable" id="tkCookTbl"></table>
           <p class="tk-none" id="tkCookNone" style="display:none">There is no USDA roasting time for this weight — see the note above the result.</p>
           <p class="res-tip adv-tip" id="tkCookTip">Done when a food thermometer reads <strong>165 °F (74 °C)</strong> in the innermost part of the thigh, the innermost part of the wing and the thickest part of the breast. Let it stand about 20 minutes before carving.</p>
@@ -60,7 +63,7 @@ function widget(page) {
 
         <label class="fld" for="tkW">
           <span class="lab">Turkey weight <span class="unit" id="tkWUnit">lb</span></span>
-          <div class="inp"><input id="tkW" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 15"></div>
+          <div class="inp"><input id="tkW" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 15 or 15 lb 8 oz"></div>
         </label>
 
         <div class="fld">
@@ -71,19 +74,34 @@ function widget(page) {
           </div>
         </div>
 
+        <label class="fld" for="tkCookBtn">
+          <span class="lab">Cooking method</span>
+          <div class="csel" id="tkCook" data-value="oven">
+            <button type="button" class="csel-btn" id="tkCookBtn" aria-haspopup="listbox" aria-expanded="false">
+              <span class="csel-val">Oven</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <div class="csel-panel" role="listbox">
+${[['oven','Oven',1],['roaster','Electric roaster oven'],['grill','Covered grill (gas or charcoal)'],['smoker','Smoker'],['fry','Deep fryer'],['micro','Microwave']].map(function (m) { return '                <button type="button" class="csel-opt' + (m[2] ? ' on' : '') + '" role="option" aria-selected="' + (m[2] ? 'true' : 'false') + '" data-value="' + m[0] + '">' + m[1] + '</button>'; }).join('\n')}
+            </div>
+          </div>
+        </label>
+
         <div class="fld" id="tkStuffFld">
           <span class="lab">Cavity</span>
           <div class="seg tk-seg" id="tkStuff" role="group" aria-label="Stuffed or unstuffed">
-            <button class="on" type="button" data-v="unstuffed">Unstuffed</button>
-            <button type="button" data-v="stuffed">Stuffed</button>
+            <button class="on" type="button" data-v="un">Unstuffed</button>
+            <button type="button" data-v="part">Partly stuffed</button>
+            <button type="button" data-v="st">Stuffed</button>
           </div>
         </div>
 
         <div class="fld">
           <span class="lab">The turkey is</span>
           <div class="seg tk-seg" id="tkState" role="group" aria-label="Frozen or fresh">
-            <button class="on" type="button" data-v="frozen">Frozen</button>
-            <button type="button" data-v="fresh">Fresh or thawed</button>
+            <button class="on" type="button" data-v="thaw">Frozen</button>
+            <button type="button" data-v="fresh">Not frozen</button>
+            <button type="button" data-v="frozen">Cook frozen</button>
           </div>
         </div>
 
@@ -142,7 +160,7 @@ function widget(page) {
     <div class="card">
       <div class="card-pad">
         <div class="bf-res">
-          <div class="res-lab" id="tkResLab">${page === 'cook' ? 'Roasting time' : 'Thawing time'}</div>
+          <div class="res-lab" id="tkResLab">${page === 'cook' ? 'Cooking time' : 'Thawing time'}</div>
           <div class="res-big"><span id="tkBig">—</span> <span class="res-unit" id="tkUnitLab"></span></div>
           <div class="res-sub" id="tkSub">Enter your turkey’s weight.</div>
         </div>
@@ -158,7 +176,7 @@ ${order.join('\n\n')}
 
   <!-- mobile sticky bar -->
   <div class="mbar" id="mbar">
-    <span class="mbar-lab" id="tkMLab">${page === 'cook' ? 'Roasting time' : 'Thawing time'}</span>
+    <span class="mbar-lab" id="tkMLab">${page === 'cook' ? 'Cooking time' : 'Thawing time'}</span>
     <div class="mbar-vals"><b id="tkMVal">—</b></div>
   </div>
 `;
@@ -171,8 +189,8 @@ const PILL = (href, label, icon) => `      <a class="pill" href="${href}">
 const IC = { clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/>', cal: '<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/>', pot: '<path d="M5 13h14l-1.5 7h-11L5 13z"/><path d="M4 13h16M9 8c0-2 2-2 2-4M14 8c0-2 2-2 2-4"/>', frac: '<path d="M7 5v14M17 5v14M3 9h18M3 15h18"/>' };
 function related(page) {
   const pills = page === 'cook'
-    ? [PILL('/turkey-thawing-time-calculator/', 'Turkey Thawing Time Calculator', IC.clock), PILL('/recipe-converter/', 'Recipe Converter', IC.pot), PILL('/time-calculator/', 'Time Calculator', IC.clock), PILL('/date-calculator/', 'Date Calculator', IC.cal)]
-    : [PILL('/turkey-cooking-time-calculator/', 'Turkey Cooking Time Calculator', IC.pot), PILL('/recipe-converter/', 'Recipe Converter', IC.pot), PILL('/date-calculator/', 'Date Calculator', IC.cal), PILL('/time-calculator/', 'Time Calculator', IC.clock)];
+    ? [PILL('/turkey-thawing-time-calculator/', 'Turkey Thawing Time Calculator', IC.clock), PILL('/turkey-size-calculator/', 'Turkey Size Calculator', IC.pot), PILL('/recipe-converter/', 'Recipe Converter', IC.pot), PILL('/date-calculator/', 'Date Calculator', IC.cal)]
+    : [PILL('/turkey-cooking-time-calculator/', 'Turkey Cooking Time Calculator', IC.pot), PILL('/turkey-size-calculator/', 'Turkey Size Calculator', IC.pot), PILL('/recipe-converter/', 'Recipe Converter', IC.pot), PILL('/date-calculator/', 'Date Calculator', IC.cal)];
   return `  <div class="related-calcs">
     <p class="related-calcs-h">More cooking, date and time calculators that may interest you</p>
     <div class="pills">
@@ -200,6 +218,10 @@ const cookFaqs = [
   ['What temperature should the oven be, and when is the turkey done?', 'Set the oven to no lower than 325 °F. The turkey is done when a food thermometer reads at least 165 °F (74 °C) in the innermost part of the thigh, the innermost part of the wing and the thickest part of the breast.'],
   ['Do I need to preheat the oven for a turkey?', 'No. The USDA says preheating is not necessary for roasting a turkey. Put it in a shallow roasting pan 2 to 2½ inches deep, breast side up on a flat wire rack, and set the oven to 325 °F or higher.'],
   ['How long should a turkey rest before carving?', 'About 20 minutes. The USDA recommends letting the bird stand 20 minutes before removing the stuffing and carving so the juices set and the turkey carves more easily. The calculator uses 20 minutes unless you change it under Go advanced.'],
+  ['How long does it take to deep fry a turkey?', `The USDA suggests 3 to 5 minutes per pound for a turkey of 8 to 12 lb, with the oil kept at 350 °F — a 12 lb turkey is ${pl('fry', 12)}. Do not stuff a fried turkey.`],
+  ['How long does it take to grill or smoke a turkey?', `On a covered grill (gas or charcoal) the USDA suggests 15 to 18 minutes per pound for 8 to 16 lb turkeys — a 12 lb turkey is ${pl('grill', 12)} — with the air at 225 to 300 °F. A smoker takes 20 to 30 minutes per pound for 8 to 12 lb, so a 10 lb turkey is ${pl('smoker', 10)}. Do not stuff either.`],
+  ['Can I cook a turkey from frozen, and how long does it take?', `Yes — an unstuffed turkey of 8 to 24 lb can go into the oven or an electric roaster frozen, and the USDA adds 50% to the cooking time. A 15 lb turkey that takes ${rng(c15)} hours thawed takes about ${E.hm(fz15.lo)} to ${E.hm(fz15.hi)} from frozen. Do not use an oven cooking bag, and take the giblets out as it thaws.`],
+  ['How long does a partly stuffed turkey take?', `The USDA only publishes unstuffed and stuffed times, so partly stuffed is the midpoint: a 12 lb turkey takes about ${E.hm(pt12.lo)} to ${E.hm(pt12.hi)}. Check the thermometer in the thigh, wing, breast and the center of the stuffing.`],
   ['How long should I thaw a frozen turkey first?', `In the refrigerator allow roughly 24 hours for every 4 to 5 pounds — a 15 lb turkey needs ${fr(t15)}. In cold water allow about 30 minutes per pound. The <a href="/turkey-thawing-time-calculator/">turkey thawing time calculator</a> plans it for you.`]
 ];
 const thawFaqs = [
@@ -222,6 +244,18 @@ function contentCook() {
         <h2>Turkey cooking time by weight</h2>
         <p>These are the USDA FSIS roasting times for a fresh or thawed turkey in a 325 °F oven:</p>
         ${chartTable}
+
+        <h2>Turkey cooking time by method (USDA)</h2>
+        <p>The USDA publishes times for other ways to cook a whole turkey. Always check 165 °F in the thigh, wing and breast:</p>
+        <table class="dtable"><thead><tr><th>Method</th><th>Size</th><th>Time</th></tr></thead><tbody>
+          <tr><td>Oven</td><td>8 to 24 lb</td><td>see the chart above</td></tr>
+          <tr><td>Electric roaster oven</td><td>8 to 24 lb</td><td>same as the oven</td></tr>
+          <tr><td>Covered grill</td><td>8 to 16 lb</td><td>15 to 18 min per lb</td></tr>
+          <tr><td>Smoker</td><td>8 to 12 lb</td><td>20 to 30 min per lb</td></tr>
+          <tr><td>Deep fryer</td><td>8 to 12 lb</td><td>3 to 5 min per lb</td></tr>
+          <tr><td>Microwave</td><td>8 to 14 lb</td><td>9 to 10 min per lb</td></tr>
+          <tr><td>From frozen (oven)</td><td>8 to 24 lb</td><td>+50% to the oven time</td></tr>
+        </tbody></table>
 
         <h2>How long to cook a 12, 15 or 20 lb turkey</h2>
         <p>A <strong>12 lb turkey</strong> takes ${rng(c12)} hours unstuffed (${rng(c12s)} stuffed). A <strong>15 lb turkey</strong> takes <strong>${rng(c15)} hours</strong> unstuffed (${rng(c15s)} stuffed), and a <strong>20 lb turkey</strong> takes ${rng(c20)} hours unstuffed (${rng(c20s)} stuffed). Times are a guide; the thermometer decides when the turkey is done.</p>
@@ -356,3 +390,166 @@ ${p.content()}
   fs.writeFileSync(dir + 'index.html', html.replace(/\n/g, '\r\n'));
   console.log('written', p.slug);
 });
+
+// ---------------- turkey SIZE page ----------------
+{
+  const sz = (adults, kids, left) => E.size({ adults, kids, veg: 0, adultP: 1, kidP: 0.5, leftovers: left, leftX: 1.5 });
+  const T = (lb) => { const un = E.cookX({ lb, cut: 'whole', method: 'oven', cav: 'un' }).c, th = E.thaw(lb); return { un, th }; };
+  const t12 = T(12), t15s = T(15);
+  const tbl = [2, 4, 6, 8, 10, 12, 15, 20, 25, 30].map((n) => '<tr><td>' + n + '</td><td>' + (sz(n, 0, false).buy > 24 ? '2 × ' + Math.ceil(sz(n, 0, false).buy / 2) : sz(n, 0, false).buy) + ' lb</td><td>' + (sz(n, 0, true).buy > 24 ? '2 × ' + Math.ceil(sz(n, 0, true).buy / 2) : sz(n, 0, true).buy) + ' lb</td></tr>').join('');
+  const faqs = [
+    ['How big a turkey do I need for 10 people?', `For 10 adults buy a ${sz(10, 0, false).buy} lb turkey (1 lb per adult), or ${sz(10, 0, true).buy} lb if you want leftovers. Count each child as half an adult: 8 adults and 4 children need ${sz(8, 4, false).buy} lb, or ${sz(8, 4, true).buy} lb with leftovers.`],
+    ['How big a turkey do I need for 8 people?', `A ${sz(8, 0, false).buy} lb turkey feeds 8 adults, and ${sz(8, 0, true).buy} lb leaves enough for leftovers.`],
+    ['How big a turkey do I need for 12 people?', `${sz(12, 0, false).buy} lb for 12 adults, or ${sz(12, 0, true).buy} lb with leftovers.`],
+    ['How much turkey per person?', 'A common guideline is 1 pound of whole turkey per adult and half a pound per child, because bones, skin and fat make up much of the weight. For leftovers multiply by 1.5.'],
+    ['What if I need more than 24 lb?', `Buy two smaller turkeys. They roast faster, fit a normal oven and the USDA roasting chart stops at 24 lb. For 25 adults with leftovers that is 2 × ${Math.ceil(sz(25, 0, true).buy / 2)} lb.`],
+    ['How long does it take to thaw and cook the turkey?', `A 12 lb turkey takes ${E.days(t12.th.fridgeLo)} to ${E.dur(t12.th.fridgeHi)} to thaw in the refrigerator and ${rng(t12.un)} hours to roast unstuffed at 325 °F; a 15 lb turkey takes ${E.days(t15s.th.fridgeLo)} to ${E.dur(t15s.th.fridgeHi)} and ${rng(t15s.un)} hours. The calculator shows both for the size you buy.`]
+  ];
+  const p = { slug: 'turkey-size-calculator', name: 'Turkey Size Calculator',
+    title: 'Turkey Size Calculator — How Big a Turkey Do I Need? | CalcThis',
+    desc: `Turkey size calculator: 10 adults need a ${sz(10, 0, false).buy} lb turkey, ${sz(10, 0, true).buy} lb with leftovers. Enter adults and children to get the size to buy, plus thaw and cook times.`,
+    ogTitle: 'Turkey Size Calculator — How Big a Turkey for Your Guests', ogDesc: 'Adults, children and leftovers in, the turkey size to buy out — with the thaw and cook time for that size.',
+    faqs, ld: 'Turkey size to buy from adults, children and leftovers, with the thaw and cook times for that size.' };
+  const adv = `        <div id="tsAdv" style="display:none">
+          <div class="proj-sep"></div>
+          <label class="fld" for="tsVeg"><span class="lab">Adults not eating turkey <span class="unit">optional</span></span><div class="inp"><input id="tsVeg" type="text" inputmode="numeric" autocomplete="off" placeholder="e.g. 2"></div></label>
+          <div class="two">
+            <label class="fld" for="tsAdultP"><span class="lab">Per adult <span class="unit" id="tsPUnitA">lb — blank = 1</span></span><div class="inp"><input id="tsAdultP" type="text" inputmode="decimal" autocomplete="off" placeholder="1"></div></label>
+            <label class="fld" for="tsKidP"><span class="lab">Per child <span class="unit" id="tsPUnitK">lb — blank = 0.5</span></span><div class="inp"><input id="tsKidP" type="text" inputmode="decimal" autocomplete="off" placeholder="0.5"></div></label>
+          </div>
+          <label class="fld" for="tsLeftX" style="margin-bottom:0"><span class="lab">Leftover multiplier <span class="unit">blank = 1.5</span></span><div class="inp"><input id="tsLeftX" type="text" inputmode="decimal" autocomplete="off" placeholder="1.5"></div></label>
+        </div>`;
+  const widgetS = `  <div class="grid">
+
+    <!-- INPUT -->
+    <div class="card">
+      <div class="card-pad">
+        <h2 class="card-h2">Turkey size</h2>
+
+        <div class="ctl-row">
+          <span class="ctl-lab">Show weights in</span>
+          <div class="seg" id="tsUnit" role="group" aria-label="Weight units">
+            <button class="on" type="button" data-v="lb">Pounds</button>
+            <button type="button" data-v="kg">Kilograms</button>
+          </div>
+        </div>
+
+        <div class="two">
+          <label class="fld" for="tsAdults"><span class="lab">Adults</span><div class="inp"><input id="tsAdults" type="text" inputmode="numeric" autocomplete="off" placeholder="e.g. 8"></div></label>
+          <label class="fld" for="tsKids"><span class="lab">Children</span><div class="inp"><input id="tsKids" type="text" inputmode="numeric" autocomplete="off" placeholder="e.g. 2"></div></label>
+        </div>
+
+        <div class="fld">
+          <span class="lab">Any leftovers?</span>
+          <div class="seg tk-seg" id="tsLeft" role="group" aria-label="Leftovers">
+            <button class="on" type="button" data-v="no">No</button>
+            <button type="button" data-v="yes">Yes, plenty</button>
+          </div>
+        </div>
+
+        <div class="res-hint" id="tsHint" style="display:none;text-align:left;margin:0 0 8px"></div>
+
+${adv}
+
+        <div class="add-row split" style="margin-top:16px">
+          <span></span>
+          <button class="advbtn" id="tsAdvBtn" type="button">
+            <span id="tsAdvBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div class="card">
+      <div class="card-pad">
+        <div class="bf-res">
+          <div class="res-lab" id="tsResLab">Turkey to buy</div>
+          <div class="res-big"><span id="tsBig">—</span> <span class="res-unit" id="tsUnitLab"></span></div>
+          <div class="res-sub" id="tsSub">Enter the number of adults and children.</div>
+        </div>
+
+        <div id="tsOut" style="display:none">
+          <div class="tk-cap">Who eats what</div>
+          <div id="tsBar"></div>
+          <table class="dtable" id="tsTbl"></table>
+          <p class="res-tip adv-tip" id="tsNote" style="display:none"></p>
+          <div class="tk-cap" id="tsTimesH">Thaw and cook</div>
+          <table class="dtable" id="tsTimesTbl"></table>
+          <a class="btn ts-go" id="tsPlan" href="/turkey-cooking-time-calculator/">Plan the dinner with this turkey</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- mobile sticky bar -->
+  <div class="mbar" id="mbar">
+    <span class="mbar-lab">Turkey to buy</span>
+    <div class="mbar-vals"><b id="tsMVal">—</b></div>
+  </div>
+`;
+  const relS = `  <div class="related-calcs">
+    <p class="related-calcs-h">More turkey and cooking calculators that may interest you</p>
+    <div class="pills">
+${[PILL('/turkey-cooking-time-calculator/', 'Turkey Cooking Time Calculator', IC.pot), PILL('/turkey-thawing-time-calculator/', 'Turkey Thawing Time Calculator', IC.clock), PILL('/recipe-converter/', 'Recipe Converter', IC.pot), PILL('/percentage-calculator/', 'Percentage Calculator', IC.frac)].join('\n')}
+    </div>
+  </div>
+`;
+  const contentS = `  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use the turkey size calculator</h2>
+        <p>Enter the number of <strong>adults</strong> and <strong>children</strong> and say whether you want <strong>leftovers</strong>. The calculator plans 1 pound of whole turkey per adult and half a pound per child, multiplies by 1.5 for leftovers, and rounds up to the size to buy. Under <strong>Go advanced</strong> you can take out guests who are not eating turkey and change the portion sizes.</p>
+        <p>You also get the thaw and roasting times for that size, and one click carries the weight into the <a href="/turkey-cooking-time-calculator/">turkey cooking time calculator</a> to plan the whole dinner.</p>
+
+        <h2>How big a turkey for how many adults</h2>
+        <table class="dtable"><thead><tr><th>Adults</th><th>No leftovers</th><th>With leftovers</th></tr></thead><tbody>${tbl}</tbody></table>
+      </div>
+      <div>
+        <h2>Why a pound per person</h2>
+        <p>A whole turkey is a lot of bone, skin and fat, so a pound of turkey gives each adult a generous serving of meat — about half a pound — with a little left over. Children eat roughly half an adult portion. For turkey sandwiches and casserole the next day, plan on 1.5 pounds per person.</p>
+
+        <h2>What if the turkey is over 24 lb?</h2>
+        <p>Buy two. Two 14 lb turkeys roast faster than one 28 lb bird, fit in a normal oven, and the USDA roasting and thawing charts stop at 24 lb. The calculator splits large orders into two equal turkeys for you.</p>
+
+        <h2>Next: thaw it and cook it</h2>
+        <p>A frozen turkey needs days in the refrigerator — the <a href="/turkey-thawing-time-calculator/">turkey thawing time calculator</a> tells you the day and hour to start — and then roasting time by weight and stuffing in the <a href="/turkey-cooking-time-calculator/">turkey cooking time calculator</a>.</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+${faqs.map((q) => `    <details class="faq"><summary>${q[0]}</summary><p>${q[1]}</p></details>`).join('\n')}
+  </section>`;
+  const html = headFor(p) + `<body class="p-turksize">
+<div class="wrap">
+
+<!--HEADER:START-->
+<!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">Adults, children, leftovers</div>
+    <h1>Turkey Size Calculator</h1>
+    <p>Find out <strong>how big a turkey to buy</strong> for your guests — 1 lb per adult, half a pound per child, more if you want leftovers — then see how long it takes to thaw and roast, and plan the whole dinner in one click.</p>
+  </section>
+
+${widgetS}
+${relS}
+${contentS}
+
+<!--FOOTER:START-->
+<!--FOOTER:END-->
+
+</div>
+
+<script src="/assets/app.js?v=194"></script>
+<script>CalcThis.initTurkeySizeCalc();</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>
+`;
+  fs.mkdirSync(ROOT + p.slug + '/', { recursive: true });
+  fs.writeFileSync(ROOT + p.slug + '/index.html', html.replace(/\n/g, '\r\n'));
+  console.log('written', p.slug);
+}

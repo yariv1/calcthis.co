@@ -17,7 +17,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/datepicker.min.css">
-<link rel="stylesheet" href="/assets/style.css?v=198">
+<link rel="stylesheet" href="/assets/style.css?v=201">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
 <script>
@@ -44,7 +44,10 @@
       },
       "description": "Turkey thawing time by USDA chart, refrigerator and cold water, with the day and hour to start.",
       "featureList": [
-        "USDA roasting times by weight, stuffed or unstuffed",
+        "USDA roasting times by weight, stuffed, partly stuffed or unstuffed",
+        "Oven, electric roaster, grill, smoker, deep fryer or microwave",
+        "Cook from frozen (+50%)",
+        "Pounds, kilograms, ounces or grams",
         "Whole turkey or turkey breast",
         "Refrigerator and cold-water thaw times side by side",
         "Enter the dinner date and time to get the whole plan backwards",
@@ -211,6 +214,7 @@
           <a href="/recipe-converter/">Recipe Converter</a>
           <a href="/turkey-cooking-time-calculator/">Turkey Cooking Time</a>
           <a href="/turkey-thawing-time-calculator/" class="current">Turkey Thawing Time</a>
+          <a href="/turkey-size-calculator/">Turkey Size</a>
           <span class="menu-col-head">Money &amp; Finance</span>
           <a href="/mortgage-calculator/">Mortgage</a>
           <a href="/loan-calculator/">Loan</a>
@@ -275,7 +279,7 @@
 
         <label class="fld" for="tkW">
           <span class="lab">Turkey weight <span class="unit" id="tkWUnit">lb</span></span>
-          <div class="inp"><input id="tkW" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 15"></div>
+          <div class="inp"><input id="tkW" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 15 or 15 lb 8 oz"></div>
         </label>
 
         <div class="fld">
@@ -286,19 +290,39 @@
           </div>
         </div>
 
+        <label class="fld" for="tkCookBtn">
+          <span class="lab">Cooking method</span>
+          <div class="csel" id="tkCook" data-value="oven">
+            <button type="button" class="csel-btn" id="tkCookBtn" aria-haspopup="listbox" aria-expanded="false">
+              <span class="csel-val">Oven</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <div class="csel-panel" role="listbox">
+                <button type="button" class="csel-opt on" role="option" aria-selected="true" data-value="oven">Oven</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="roaster">Electric roaster oven</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="grill">Covered grill (gas or charcoal)</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="smoker">Smoker</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="fry">Deep fryer</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="micro">Microwave</button>
+            </div>
+          </div>
+        </label>
+
         <div class="fld" id="tkStuffFld">
           <span class="lab">Cavity</span>
           <div class="seg tk-seg" id="tkStuff" role="group" aria-label="Stuffed or unstuffed">
-            <button class="on" type="button" data-v="unstuffed">Unstuffed</button>
-            <button type="button" data-v="stuffed">Stuffed</button>
+            <button class="on" type="button" data-v="un">Unstuffed</button>
+            <button type="button" data-v="part">Partly stuffed</button>
+            <button type="button" data-v="st">Stuffed</button>
           </div>
         </div>
 
         <div class="fld">
           <span class="lab">The turkey is</span>
           <div class="seg tk-seg" id="tkState" role="group" aria-label="Frozen or fresh">
-            <button class="on" type="button" data-v="frozen">Frozen</button>
-            <button type="button" data-v="fresh">Fresh or thawed</button>
+            <button class="on" type="button" data-v="thaw">Frozen</button>
+            <button type="button" data-v="fresh">Not frozen</button>
+            <button type="button" data-v="frozen">Cook frozen</button>
           </div>
         </div>
 
@@ -377,7 +401,7 @@
         </div>
 
         <div id="tkCookBox">
-          <div class="tk-cap">Roasting</div>
+          <div class="tk-cap">Cooking</div>
           <table class="dtable" id="tkCookTbl"></table>
           <p class="tk-none" id="tkCookNone" style="display:none">There is no USDA roasting time for this weight — see the note above the result.</p>
           <p class="res-tip adv-tip" id="tkCookTip">Done when a food thermometer reads <strong>165 °F (74 °C)</strong> in the innermost part of the thigh, the innermost part of the wing and the thickest part of the breast. Let it stand about 20 minutes before carving.</p>
@@ -402,6 +426,10 @@
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 13h14l-1.5 7h-11L5 13z"/><path d="M4 13h16M9 8c0-2 2-2 2-4M14 8c0-2 2-2 2-4"/></svg>
         Turkey Cooking Time Calculator
       </a>
+      <a class="pill" href="/turkey-size-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 13h14l-1.5 7h-11L5 13z"/><path d="M4 13h16M9 8c0-2 2-2 2-4M14 8c0-2 2-2 2-4"/></svg>
+        Turkey Size Calculator
+      </a>
       <a class="pill" href="/recipe-converter/">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 13h14l-1.5 7h-11L5 13z"/><path d="M4 13h16M9 8c0-2 2-2 2-4M14 8c0-2 2-2 2-4"/></svg>
         Recipe Converter
@@ -409,10 +437,6 @@
       <a class="pill" href="/date-calculator/">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></svg>
         Date Calculator
-      </a>
-      <a class="pill" href="/time-calculator/">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
-        Time Calculator
       </a>
     </div>
   </div>
@@ -497,6 +521,7 @@
           <li><a href="/recipe-converter/">Recipe Converter</a></li>
           <li><a href="/turkey-cooking-time-calculator/">Turkey Cooking Time Calculator</a></li>
           <li><a href="/turkey-thawing-time-calculator/">Turkey Thawing Time Calculator</a></li>
+          <li><a href="/turkey-size-calculator/">Turkey Size Calculator</a></li>
         </ul>
       </div>
 
@@ -636,7 +661,7 @@
 </div>
 
 <script src="/assets/datepicker.min.js"></script>
-<script src="/assets/app.js?v=198"></script>
+<script src="/assets/app.js?v=201"></script>
 <script>CalcThis.initTurkeyCalc();</script>
 <script src="/feedback.js" defer></script>
 </body>
