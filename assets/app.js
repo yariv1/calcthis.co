@@ -12872,6 +12872,33 @@ CalcThis.saleTaxEngine = (function () {
       { t: 'Bought online or out of state', d: 'If the seller did not charge New Jersey tax, you owe 6.625% use tax on the price plus delivery. If you paid a lower rate elsewhere, you owe the difference — enter that rate under Go advanced.' }
     ]
   });
+  /* Missouri: the rate depends on the exact place (city, county and special districts) — every row of the Missouri Department of
+     Revenue rate table (October–December 2026, run 8/25/2026) is in /assets/data/mo-rates.json and picked with a typeahead. */
+  var MO_DOR = { t: 'Missouri Department of Revenue — Sales/Use Tax', u: 'https://dor.mo.gov/taxation/business/tax-types/sales-use/' };
+  Object.assign(S.MO, {
+    live: true, slug: 'missouri', eff: 'the October–December 2026 rate table (updated August 25, 2026)',
+    src: [MO_DOR, { t: 'Missouri DOR — Sales and Use Tax Rate Tables, Oct–Dec 2026', u: 'https://dor.mo.gov/pdf/rates/2026/october2026.pdf' }, { t: 'Missouri DOR — Sales Tax Reduction on Food', u: 'https://dor.mo.gov/taxation/business/tax-types/sales-use/reduction-on-food.html' }, { t: 'Missouri DOR — Sales Tax Taxability and Exemptions FAQ', u: 'https://dor.mo.gov/faq/taxation/business/sales-use-tax-exemptions.html' }, { t: 'Missouri DOR — Letter Ruling 8387 on delivery charges (March 24, 2026)', u: 'https://dor.mo.gov/rulings/show/8387' }, { t: 'Missouri DOR — Back-to-School Sales Tax Holiday', u: 'https://dor.mo.gov/taxation/business/tax-types/sales-use/holidays/back-to-school/consumers.html' }],
+    places: { url: '/assets/data/mo-rates.json', n: 2597, lo: 5.225, hi: 13.238, baseHi: 11.488, foodLo: 2.225, foodHi: 9.85 },
+    cats: [
+      { id: 'general', label: 'Other goods', long: 'Most other goods', taxable: true, note: 'Taxable at the full combined rate. Over-the-counter medicine is taxable unless it is prescribed or bought by a person with a disability.' },
+      { id: 'grocery', label: 'Groceries', long: 'Groceries (food for home)', taxable: true, rate: 'food', note: 'The state rate on food for home use is cut to 1.225%, but local taxes still apply to food — so the rate is the “food” rate listed for your place.' },
+      { id: 'prepared', label: 'Restaurant', long: 'Restaurant and prepared food', taxable: true, note: 'Full rate. A seller whose prepared food is more than 80% of its gross receipts charges the full rate on all its food, and food sold at places of amusement is taxed at the full rate.' },
+      { id: 'drugs', label: 'Prescription', long: 'Prescription drugs, insulin and hearing aids', taxable: false, note: 'Prescription drugs, insulin and hearing aids are exempt. Over-the-counter medicine is taxable unless prescribed or bought by a person with a disability.' }
+    ],
+    shipOpt: true, shipOptLabel: 'Shipping and handling are billed as one charge',
+    shipNote: 'A delivery charge that is usual, customary and listed separately on the bill is not taxed. If shipping and handling are billed as one charge, the whole charge is taxed — use the shipping box in the calculator.',
+    others: [
+      { t: 'Local tax everywhere', d: 'Every place in Missouri adds city, county or district tax to the 4.225% state rate. In the October–December 2026 table the combined rate runs from 5.225% to 11.488%, and up to 13.238% inside some special districts. Search your place above.' },
+      { t: 'Shopping-center districts (CID, TDD)', d: 'A Community Improvement District or Transportation Development District adds its own tax inside its boundaries. Each one is a separate line in the place search — pick it if the store is inside one.' },
+      { t: 'Groceries', d: 'The state rate on food for home use is 1.225% (down from 4.225%). Local taxes still apply to food and drink, and a few places leave some of them off food — the calculator uses the food rate listed for your place.' },
+      { t: 'Restaurants and amusement places', d: 'The reduced food rate does not apply when more than 80% of a seller’s gross receipts are prepared food, or to food sold at places of amusement, entertainment or recreation. Food trucks charge the full rate of the place where they sell.' },
+      { t: 'Delivery charges', d: 'Separately stated, usual and customary delivery charges are not taxed (RSMo 144.010; DOR letter ruling 8387). A combined “shipping and handling” charge is taxed in full.' },
+      { t: 'Back-to-school sales tax holiday', d: 'From 12:01 a.m. on the first Friday in August until midnight on Sunday, clothing of $100 or less, school supplies up to $50, software up to $350, computers and peripherals up to $1,500 and graphing calculators up to $150 are free of state and local sales tax. The calculator does not apply the holiday — outside those days all of these are taxed at your place’s rate.' },
+      { t: 'Adult-use marijuana', d: 'Some places add a separate local tax on adult-use marijuana. It is not included in this calculator.' },
+      { t: 'Bought online or out of state', d: 'If the seller did not charge Missouri tax you owe use tax at the state rate of 4.225% plus the local use tax where you use the item. Pick your place and enter any tax the seller charged under Go advanced. A use tax return is required once your untaxed purchases pass $2,000 in a year.' },
+      { t: 'Rates change every quarter', d: 'Local rates change in January, April, July and October. The rates here are from the October–December 2026 table.' }
+    ]
+  });
   function r2(x) { return Math.round(x * 100 + 1e-9) / 100; }
   function cat(st, id) { var l = st && st.cats ? st.cats : []; for (var i = 0; i < l.length; i++) if (l[i].id === id) return l[i]; return null; }
   function zone(st, id) { var l = st && st.zones ? st.zones : []; for (var i = 0; i < l.length; i++) if (l[i].id === id) return l[i]; return null; }
@@ -12882,6 +12909,11 @@ CalcThis.saleTaxEngine = (function () {
     var c = cat(st, o.cat);
     if (c && !c.taxable) return { rate: 0, taxable: false, ignored: '', cat: c };
     if (o.own != null) return { rate: o.own, taxable: true, ignored: '', cat: c };
+    if (st.places) {
+      if (!o.place) return { rate: null, taxable: true, ignored: '', cat: c, needsPlace: true };
+      var fd = !!(c && c.rate === 'food');
+      return { rate: fd ? o.place.food : o.place.sales, useRate: fd ? o.place.foodUse : o.place.use, taxable: true, ignored: '', cat: c, place: o.place };
+    }
     var z = zone(st, o.zone);
     if (!z || z.std) return { rate: st.base, taxable: true, ignored: '', cat: c };
     if (z.cats && z.cats.indexOf(o.cat) < 0) return { rate: st.base, taxable: true, ignored: z.ignore || '', cat: c };
@@ -12892,13 +12924,13 @@ CalcThis.saleTaxEngine = (function () {
     var items = o.items || [], ship = o.ship || 0, sum = 0, i;
     items.forEach(function (it) { sum += it.amt; });
     var lines = [], taxSum = 0, shipTax = 0, owedRaw = 0, paid = o.paid == null ? null : o.paid;
-    var stt = o.state ? S[o.state] : null, shipTaxed = (stt && stt.live) ? true : !!o.shipTaxed;
+    var stt = o.state ? S[o.state] : null, shipTaxed = (stt && stt.live && !stt.shipOpt) ? true : !!o.shipTaxed;
     for (i = 0; i < items.length; i++) {
-      var it = items[i], rf = rateFor({ state: o.state, cat: it.cat, zone: o.zone, own: o.own });
+      var it = items[i], rf = rateFor({ state: o.state, cat: it.cat, zone: o.zone, own: o.own, place: o.place });
       var tax = r2(it.amt * rf.rate / 100);
       var share = sum > 0 ? ship * it.amt / sum : 0;
       if (shipTaxed) shipTax += share * rf.rate / 100;
-      if (paid != null && rf.taxable) owedRaw += (it.amt + (shipTaxed ? share : 0)) * Math.max(0, rf.rate - paid) / 100;
+      if (paid != null && rf.taxable) owedRaw += (it.amt + (shipTaxed ? share : 0)) * Math.max(0, (rf.useRate != null ? rf.useRate : rf.rate) - paid) / 100;
       lines.push({ amt: it.amt, cat: it.cat, rate: rf.rate, taxable: rf.taxable, tax: tax, ignored: rf.ignored, catObj: rf.cat });
       taxSum += tax;
     }
@@ -12911,7 +12943,7 @@ CalcThis.saleTaxEngine = (function () {
   }
   /* tax-inclusive total -> price before tax and the tax inside it */
   function reverse(o) {
-    var rf = rateFor({ state: o.state, cat: o.cat, zone: o.zone, own: o.own }), tot = r2(o.total);
+    var rf = rateFor({ state: o.state, cat: o.cat, zone: o.zone, own: o.own, place: o.place }), tot = r2(o.total);
     var pre = rf.rate > 0 ? r2(tot / (1 + rf.rate / 100)) : tot;
     return { total: tot, pre: pre, tax: r2(tot - pre), rate: rf.rate, taxable: rf.taxable, ignored: rf.ignored, catObj: rf.cat };
   }
@@ -12927,8 +12959,9 @@ CalcThis.saleTaxEngine = (function () {
 
 CalcThis.initSalesTaxCalc = function () {
   var E = CalcThis.saleTaxEngine, $ = function (id) { return document.getElementById(id); };
-  var st = { mode: 'add', adv: false, rows: [{ amt: '', cat: 'general' }] }, last = null;
+  var st = { mode: 'add', adv: false, rows: [{ amt: '', cat: 'general' }], place: null }, last = null;
   var MAX = 1e9;
+  var placeData = null, placeState = 'idle', placeHits = [], placeAct = -1;
   function num(v) { var t = String(v).replace(/[$,\s%]/g, ''); var n = t === '' ? NaN : Number(t); return isFinite(n) ? n : NaN; }
   function mon(x) { return (x < 0 ? '−' : '') + '$' + Math.abs(x).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
   function pct(x) { return String(Math.round(x * 10000) / 10000) + '%'; }
@@ -12938,6 +12971,35 @@ CalcThis.initSalesTaxCalc = function () {
   function code() { return $('stState').value || ''; }
   function S() { return code() ? E.STATES[code()] : null; }
   function live() { var s = S(); return !!(s && s.live); }
+  function placed() { var s = S(); return !!(s && s.live && s.places); }
+  /* ---- place search (states whose rate depends on the exact city / county / district) ---- */
+  function norm(t) { return String(t).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/['’]/g, '').replace(/\bsaint\b/g, 'st').replace(/[^a-z0-9 ]+/g, ' ').replace(/\s+/g, ' ').trim(); }
+  function loadPlaces() {
+    var s = S(); if (!placed() || placeData || placeState === 'loading') return;
+    placeState = 'loading';
+    var done = function (ok, d) { if (ok) { placeData = d.map(function (r) { return { label: r[0], sales: r[1], use: r[2], food: r[3], foodUse: r[4], key: ' ' + norm(r[0]) }; }); placeState = 'ok'; } else placeState = 'err'; placeNote(); render(); };
+    try { fetch(s.places.url).then(function (r) { if (!r.ok) throw new Error('x'); return r.json(); }).then(function (d) { done(true, d); }, function () { done(false); }); } catch (e) { done(false); }
+  }
+  function closePlaceList() { $('stPlaceList').style.display = 'none'; $('stPlace').setAttribute('aria-expanded', 'false'); placeAct = -1; }
+  function showPlaceList() {
+    var box = $('stPlaceList'), q = norm($('stPlace').value);
+    if (!placeData || !q) { closePlaceList(); return; }
+    var toks = q.split(' '), hits = placeData.filter(function (p) { return toks.every(function (t) { return p.key.indexOf(' ' + t) >= 0; }); });
+    var starts = hits.filter(function (p) { return p.key.indexOf(' ' + q) === 0; }), rest = hits.filter(function (p) { return p.key.indexOf(' ' + q) !== 0; });
+    var all = starts.concat(rest); placeHits = all.slice(0, 60); placeAct = -1;
+    if (!all.length) { box.innerHTML = '<div class="st-ta-none">No place matches “' + esc($('stPlace').value.trim()) + '”. Try the city or county name only.</div>'; }
+    else box.innerHTML = placeHits.map(function (p, i) { return '<button type="button" class="st-ta-opt" role="option" data-i="' + i + '"><span>' + esc(p.label) + '</span><b>' + pct(p.sales) + '</b></button>'; }).join('') + (all.length > 60 ? '<div class="st-ta-none">Showing 60 of ' + all.length + ' — keep typing to narrow it down.</div>' : '');
+    box.style.display = 'block'; $('stPlace').setAttribute('aria-expanded', 'true');
+  }
+  function pickPlace(p) {
+    if (!p) return;
+    st.place = p; $('stPlace').value = p.label; closePlaceList(); placeNote(); render();
+  }
+  function placeNote() {
+    var n = $('stPlaceNote'), p = st.place, s = S();
+    if (!p) { n.textContent = placeState === 'loading' ? 'Loading the official rate table…' : (placeState === 'err' ? 'The rate table could not be loaded. Enter your combined rate under Go advanced instead.' : 'Every place in ' + (s ? s.name : '') + ' adds local tax. Type your city or county and pick the line that matches where the seller is. Lines with CID or TDD are shopping-center districts that add tax.'); return; }
+    n.textContent = pct(p.sales) + ' combined on most goods (' + pct(s.base) + ' state + ' + pct(Math.round((p.sales - s.base) * 1000) / 1000) + ' local) · ' + pct(p.food) + ' on groceries.';
+  }
   var CHEV = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
   function setPanel(root, opts, val) {
     var panel = root.querySelector('.csel-panel');
@@ -12971,7 +13033,12 @@ CalcThis.initSalesTaxCalc = function () {
     $('stRateFld').style.display = s ? 'none' : '';
     $('stOwnFld').style.display = s ? '' : 'none';
     $('stOther').style.display = lv ? '' : 'none';
-    $('stShipTaxFld').style.display = !lv && st.mode === 'add' ? '' : 'none';
+    $('stShipTaxFld').style.display = (!lv || (s && s.shipOpt)) && st.mode === 'add' ? '' : 'none';
+    $('stShipTaxFld').querySelector('span').textContent = lv && s.shipOpt ? s.shipOptLabel : 'My state charges sales tax on shipping';
+    $('stShipTaxed').checked = false;
+    st.place = null; $('stPlace').value = ''; closePlaceList();
+    $('stPlaceFld').style.display = placed() && st.mode !== 'find' ? '' : 'none';
+    if (placed()) { placeNote(); loadPlaces(); }
     $('stShipNote').textContent = lv && s.shipNote ? s.shipNote : '';
     $('stShipNote').style.display = lv && s.shipNote ? '' : 'none';
     if (lv) {
@@ -12987,7 +13054,8 @@ CalcThis.initSalesTaxCalc = function () {
     $('stZoneFld').style.display = live() && S().zones && m !== 'find' ? '' : 'none';
     $('stRevCatFld').style.display = live() && m === 'rev' ? '' : 'none';
     $('stPaidFld').style.display = m === 'add' ? '' : 'none';
-    $('stShipTaxFld').style.display = !live() && m === 'add' ? '' : 'none';
+    $('stShipTaxFld').style.display = (!live() || (s && s.shipOpt)) && m === 'add' ? '' : 'none';
+    $('stPlaceFld').style.display = placed() && m !== 'find' ? '' : 'none';
     $('stOwnFld').style.display = s && m !== 'find' ? '' : 'none';
     $('stRateFld').style.display = !s && m !== 'find' ? '' : 'none';
     var hasAdv = m === 'add' || (m === 'rev' && !!s);
@@ -13007,7 +13075,7 @@ CalcThis.initSalesTaxCalc = function () {
   }
   function neighbours(base) {
     var s = S(); if (!live() || !s.nearby) return '';
-    var rows = [['New Jersey', mon(E.r2(base * (1 + s.base / 100))), pct(s.base) + ', no local tax']].concat(s.nearby.map(function (c) {
+    var rows = [[s.name, mon(E.r2(base * (1 + s.base / 100))), pct(s.base) + ', no local tax']].concat(s.nearby.map(function (c) {
       var o = E.STATES[c], r = E.range(c, base);
       return [o.name, o.maxLocal ? mon(r.lo) + ' – ' + mon(r.hi) : mon(r.lo), pct(o.base) + (o.maxLocal ? ' plus up to ' + pct(o.maxLocal) + ' local' : (o.base ? ', no local tax' : ', no sales tax'))];
     }));
@@ -13030,6 +13098,15 @@ CalcThis.initSalesTaxCalc = function () {
     if (r.none) return s.name + (s.base ? ' has no local sales tax, so the state rate of ' + pct(s.base) + ' is the full rate.' : ' has no state sales tax and no local sales tax.');
     return 'This is the ' + s.name + ' state rate (' + pct(s.base) + ') only. Cities and counties may add up to ' + pct(s.maxLocal) + ' more, which would make the total between ' + mon(r.lo) + ' and ' + mon(r.hi) + '. Enter your exact combined rate under Go advanced to get one number.';
   }
+  /* a state whose rate depends on the place, with no place picked yet: show the official range instead of a guess */
+  function needPlace(items, ship, shipChk, hints) {
+    var s = S(), P = s.places, loT = 0, hiT = 0, sum = 0, taxable = 0;
+    items.forEach(function (it) { var c = E.cat(s, it.cat); sum += it.amt; if (c && !c.taxable) return; taxable += it.amt; var f = c && c.rate === 'food'; loT += it.amt * (f ? P.foodLo : P.lo) / 100; hiT += it.amt * (f ? P.foodHi : P.hi) / 100; });
+    var shT = shipChk && taxable > 0 ? ship : 0, lo = E.r2(sum + ship + loT + shT * P.lo / 100), hi = E.r2(sum + ship + hiT + shT * P.hi / 100);
+    $('stResLab').textContent = 'Total with tax'; $('stBig').textContent = '—'; $('stMVal').textContent = placeState === 'err' ? '—' : 'Pick your place';
+    $('stSub').textContent = placeState === 'err' ? 'The rate table could not be loaded — enter your combined rate under Go advanced.' : (taxable > 0 ? 'Pick your place above for the exact total. It runs from ' + mon(lo) + ' to ' + mon(hi) + ' depending on where you are in ' + s.name + '.' : 'No sales tax on this purchase');
+    $('stResults').style.display = 'none'; last = null; setHint(hints[0] || '');
+  }
   function renderAdd(hints) {
     var s = S(), own = getOwn(hints), items = [], bad = false;
     st.rows.forEach(function (r) {
@@ -13046,8 +13123,11 @@ CalcThis.initSalesTaxCalc = function () {
     if (!items.length) { empty('Total', 'Enter an item price to see the tax.', hints[0]); return; }
     if (!s && own == null) { empty('Total', 'Enter the sales tax rate for your area.', hints[0]); return; }
     var zone = live() && $('stZoneFld').style.display !== 'none' ? $('stZone').value : null;
-    var shipChk = !live() && $('stShipTaxed').checked;
-    var r = E.add({ state: code() || null, items: items, ship: ship, zone: zone, own: own, paid: paid, shipTaxed: shipChk });
+    var shipChk = (!live() || (s && s.shipOpt)) && $('stShipTaxed').checked;
+    var shipApplies = live() && !s.shipOpt ? true : shipChk;
+    if (placed() && own == null && !st.place) { needPlace(items, ship, shipChk, hints); return; }
+    var pl = placed() && own == null ? st.place : null;
+    var r = E.add({ state: code() || null, items: items, ship: ship, zone: zone, own: own, paid: paid, shipTaxed: shipChk, place: pl });
     var rate = r.rate != null ? pct(r.rate) : 'mixed rates';
     $('stResLab').textContent = 'Total with tax'; $('stBig').textContent = mon(r.total);
     $('stSub').textContent = r.tax > 0 ? mon(r.tax) + ' of sales tax' + (r.rate != null ? ' at ' + rate : '') : 'No sales tax on this purchase';
@@ -13056,7 +13136,7 @@ CalcThis.initSalesTaxCalc = function () {
       var nm = (items.length > 1 ? 'Item ' + (i + 1) : 'Item') + (l.catObj && live() ? ' · ' + esc(l.catObj.label) : '');
       return [nm, mon(l.amt), l.taxable ? mon(l.tax) + ' <small>' + pct(l.rate) + '</small>' : 'exempt'];
     });
-    if (r.ship > 0) rows.push(['Shipping', mon(r.ship), r.shipTax > 0 ? mon(r.shipTax) : (r.lines.some(function (l) { return l.taxable; }) && (live() || shipChk) ? '$0.00' : 'not taxed')]);
+    if (r.ship > 0) rows.push(['Shipping', mon(r.ship), r.shipTax > 0 ? mon(r.shipTax) : (r.lines.some(function (l) { return l.taxable; }) && shipApplies ? '$0.00' : 'not taxed')]);
     rows.push(['Total', mon(r.total), mon(r.tax) + ' tax', true]);
     $('stTable').innerHTML = table(['', 'Price', 'Tax'], rows);
     var b = bar([['ln-p', r.subtotal, 'Items'], ['ln-s', r.ship, 'Shipping'], ['ln-i', r.tax, 'Sales tax']]);
@@ -13064,7 +13144,12 @@ CalcThis.initSalesTaxCalc = function () {
     var tip = '';
     if (!s) tip = 'Using your sales tax rate of ' + pct(own) + '.';
     else if (own != null) tip = 'Using your own rate of ' + pct(own) + ' on the taxable items.';
-    else if (s.live) {
+    else if (s.live && s.places) {
+      var exm2 = r.lines.filter(function (l) { return !l.taxable; });
+      tip = 'Rates for ' + pl.label + ': ' + pct(pl.sales) + ' on most goods and restaurant food, ' + pct(pl.food) + ' on groceries.';
+      if (exm2.length) tip += ' ' + exm2.map(function (l) { return l.catObj.label + ': ' + l.catObj.note; }).filter(function (v, k, a) { return a.indexOf(v) === k; }).join(' ');
+      if (r.ship > 0) tip += shipChk ? ' Shipping is taxed because it is billed with handling as one charge.' : ' Shipping is not taxed because it is listed separately.';
+    } else if (s.live) {
       var exm = r.lines.filter(function (l) { return !l.taxable; });
       tip = (r.rate === s.base && !r.mixed ? s.name + ' has one statewide rate of ' + pct(s.base) + ' and no city or county sales tax, so this total is exact.' : (r.rate != null && r.rate !== s.base ? 'Rate used: ' + pct(r.rate) + ' (' + E.zone(s, $('stZone').value).label + ').' : (r.mixed ? 'Different items have different rates.' : '')));
       if (exm.length) tip += ' ' + exm.map(function (l) { return l.catObj.label + ': ' + l.catObj.note; }).filter(function (v, k, a) { return a.indexOf(v) === k; }).join(' ');
@@ -13073,11 +13158,11 @@ CalcThis.initSalesTaxCalc = function () {
     $('stTip').textContent = tip.trim(); $('stTip').style.display = tip.trim() ? '' : 'none';
     var extra = '';
     if (r.owed != null && (s || own != null)) extra = '<div class="fc-grp">Bought out of state or online?</div><p class="res-tip">The seller charged ' + pct(r.paid) + '. ' + (!r.lines.some(function (l) { return l.taxable; }) ? 'These items are exempt, so no use tax is owed.' : r.owed > 0 ? 'You still owe about <b>' + mon(r.owed) + '</b> in use tax' + (s ? ' to ' + s.name : '') + ' to make up the difference.' : 'That already covers the tax rate here, so no use tax is owed.') + '</p>';
-    var plain = s && s.live && own == null && r.lines.every(function (l) { return l.cat === 'general' && l.rate === s.base; });
+    var plain = s && s.live && !s.places && own == null && r.lines.every(function (l) { return l.cat === 'general' && l.rate === s.base; });
     $('stExtra').innerHTML = extra + (plain ? neighbours(r.subtotal) : '');
     $('stResults').style.display = '';
     $('stCopyWrap').style.display = '';
-    last = { mode: 'add', r: r, s: s, rate: rate };
+    last = { mode: 'add', r: r, s: s, rate: rate, place: pl && pl.label };
     setHint(hints[0] || '');
   }
   function renderRev(hints) {
@@ -13087,7 +13172,13 @@ CalcThis.initSalesTaxCalc = function () {
     if (!isFinite(n) || n < 0 || n > MAX) { empty('Price before tax', 'Enter the total you paid, tax included.', 'Total must be a number like 106.63 — only dollars and cents.'); return; }
     if (!s && own == null) { empty('Price before tax', 'Enter the sales tax rate for your area.', hints[0]); return; }
     var zone = live() && $('stZoneFld').style.display !== 'none' ? $('stZone').value : null;
-    var r = E.reverse({ state: code() || null, total: n, cat: live() ? $('stRevCat').value : 'general', zone: zone, own: own });
+    if (placed() && own == null && !st.place) {
+      var rc = E.cat(s, $('stRevCat').value), P = s.places, f = rc && rc.rate === 'food';
+      var a = E.r2(n / (1 + (f ? P.foodHi : P.hi) / 100)), b = E.r2(n / (1 + (f ? P.foodLo : P.lo) / 100));
+      empty('Price before tax', placeState === 'err' ? 'The rate table could not be loaded — enter your combined rate under Go advanced.' : (rc && !rc.taxable ? 'No sales tax is included — this kind of item is exempt.' : 'Pick your place above for the exact price. Before tax it is between ' + mon(a) + ' and ' + mon(b) + ' depending on where you are in ' + s.name + '.'), hints[0]); if (placeState !== 'err') $('stMVal').textContent = 'Pick your place'; return;
+    }
+    var pl = placed() && own == null ? st.place : null;
+    var r = E.reverse({ state: code() || null, total: n, cat: live() ? $('stRevCat').value : 'general', zone: zone, own: own, place: pl });
     $('stResLab').textContent = 'Price before tax'; $('stBig').textContent = mon(r.pre);
     $('stSub').textContent = r.tax > 0 ? 'Includes ' + mon(r.tax) + ' of sales tax at ' + pct(r.rate) : (r.taxable ? 'No tax is included at a 0% rate' : 'No sales tax is included — this kind of item is exempt');
     $('stMLab').textContent = 'Price before tax'; $('stMVal').textContent = mon(r.pre);
@@ -13096,13 +13187,13 @@ CalcThis.initSalesTaxCalc = function () {
     var tip = '';
     if (!s) tip = 'Using your sales tax rate of ' + pct(own) + '.';
     else if (own != null) tip = 'Using your own rate of ' + pct(own) + ' on this item.';
-    else if (s.live) { tip = r.taxable ? (r.rate === s.base ? s.name + ' has one statewide rate of ' + pct(s.base) + ' and no city or county sales tax, so this is exact.' : 'Rate used: ' + pct(r.rate) + '.') : r.catObj.note; if (r.ignored) tip += ' ' + r.ignored; }
+    else if (s.live) { tip = r.taxable ? (r.rate === s.base ? s.name + ' has one statewide rate of ' + pct(s.base) + ' and no city or county sales tax, so this is exact.' : 'Rate used: ' + pct(r.rate) + (pl ? ' for ' + pl.label : '') + '.') : r.catObj.note; if (r.ignored) tip += ' ' + r.ignored; }
     else if (own == null && s.maxLocal > 0) { var lowPre = E.r2(n / (1 + (s.base + s.maxLocal) / 100)); tip = 'This uses the ' + s.name + ' state rate (' + pct(s.base) + ') only. If your city or county adds up to ' + pct(s.maxLocal) + ', the price before tax would be between ' + mon(lowPre) + ' and ' + mon(r.pre) + '. Enter your exact combined rate under Go advanced to get one number.'; }
     else tip = rangeLine(s, r.pre, own, 0);
     $('stTip').textContent = tip.trim(); $('stTip').style.display = tip.trim() ? '' : 'none';
     $('stExtra').innerHTML = '';
     $('stResults').style.display = ''; $('stCopyWrap').style.display = '';
-    last = { mode: 'rev', r: r, s: s };
+    last = { mode: 'rev', r: r, s: s, place: pl && pl.label };
     setHint(hints[0] || '');
   }
   function renderFind(hints) {
@@ -13119,7 +13210,8 @@ CalcThis.initSalesTaxCalc = function () {
     $('stTable').innerHTML = table(['', 'Amount', ''], [['Price before tax', mon(nb), ''], ['Sales tax', mon(tax), pct(rate)], ['Price after tax', mon(na), '', true]]);
     var bb = bar([['ln-p', nb, 'Price'], ['ln-i', tax, 'Sales tax']]); $('stBar').innerHTML = bb[0]; $('stBarLeg').innerHTML = bb[1];
     var tip = 'Prices rounded to the cent can move the rate by a few thousandths of a percent.';
-    if (s && s.live) tip = Math.abs(rate - s.base) < 0.02 ? 'That matches ' + s.name + '’s statewide rate of ' + pct(s.base) + '. ' + tip : s.name + '’s statewide rate is ' + pct(s.base) + ' — this rate is ' + (rate > s.base ? 'higher' : 'lower') + ', so a different rate, a zone rate or a fee may be involved. ' + tip;
+    if (s && s.live && s.places) tip = rate < s.places.lo - 0.02 ? 'That is lower than any combined ' + s.name + ' rate (the lowest is ' + pct(s.places.lo) + '), so some of the tax may be missing from the price. ' + tip : (rate > s.places.hi + 0.02 ? 'That is higher than any combined ' + s.name + ' rate (the highest is ' + pct(s.places.hi) + '), so it may include other charges. ' + tip : 'Combined ' + s.name + ' rates run from ' + pct(s.places.lo) + ' to ' + pct(s.places.hi) + ' (' + pct(s.base) + ' state plus local tax). ' + tip);
+    else if (s && s.live) tip = Math.abs(rate - s.base) < 0.02 ? 'That matches ' + s.name + '’s statewide rate of ' + pct(s.base) + '. ' + tip : s.name + '’s statewide rate is ' + pct(s.base) + ' — this rate is ' + (rate > s.base ? 'higher' : 'lower') + ', so a different rate, a zone rate or a fee may be involved. ' + tip;
     else if (s) tip = Math.abs(rate - s.base) < 0.02 ? 'That matches ' + s.name + '’s state rate of ' + pct(s.base) + '. ' + tip : s.name + '’s state rate is ' + pct(s.base) + (s.maxLocal ? ', and cities and counties may add up to ' + pct(s.maxLocal) + '.' : '.') + ' ' + tip;
     $('stTip').textContent = tip; $('stTip').style.display = '';
     $('stExtra').innerHTML = '';
@@ -13142,6 +13234,17 @@ CalcThis.initSalesTaxCalc = function () {
   ['stShip', 'stTotal', 'stBefore', 'stAfter', 'stRate', 'stOwn', 'stPaid'].forEach(function (id) { $(id).addEventListener('input', render); });
   ['stZone', 'stRevCat'].forEach(function (id) { $(id).addEventListener('change', render); });
   $('stShipTaxed').addEventListener('change', render);
+  var pi = $('stPlace');
+  pi.addEventListener('input', function () { st.place = null; placeNote(); showPlaceList(); render(); });
+  pi.addEventListener('focus', function () { loadPlaces(); showPlaceList(); });
+  pi.addEventListener('blur', function () { setTimeout(closePlaceList, 150); });
+  pi.addEventListener('keydown', function (e) {
+    var opts = $('stPlaceList').querySelectorAll('.st-ta-opt'); if (!opts.length) return;
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); placeAct = e.key === 'ArrowDown' ? Math.min(opts.length - 1, placeAct + 1) : Math.max(0, placeAct - 1); [].forEach.call(opts, function (o, i) { o.classList.toggle('on', i === placeAct); }); opts[placeAct].scrollIntoView({ block: 'nearest' }); }
+    else if (e.key === 'Enter') { e.preventDefault(); pickPlace(placeHits[placeAct >= 0 ? placeAct : 0]); }
+    else if (e.key === 'Escape') closePlaceList();
+  });
+  $('stPlaceList').addEventListener('mousedown', function (e) { var b = e.target.closest('.st-ta-opt'); if (!b) return; e.preventDefault(); pickPlace(placeHits[+b.getAttribute('data-i')]); });
   $('stModeSeg').addEventListener('click', function (e) {
     var b = e.target.closest('button'); if (!b) return; st.mode = b.getAttribute('data-v'); setSeg('stModeSeg', st.mode); showMode(); render();
   });
@@ -13188,6 +13291,7 @@ CalcThis.initSalesTaxCalc = function () {
       lines.push('Sales tax' + (r.rate != null ? ' (' + pct(r.rate) + ')' : '') + ': ' + mon(r.tax)); lines.push('Total: ' + mon(r.total));
     } else if (last.mode === 'rev') { var q = last.r; lines.push('Total paid: ' + mon(q.total)); lines.push('Sales tax (' + pct(q.rate) + '): ' + mon(q.tax)); lines.push('Price before tax: ' + mon(q.pre)); }
     else { lines.push('Price before tax: ' + mon(last.nb)); lines.push('Price after tax: ' + mon(last.na)); lines.push('Sales tax rate: ' + pct(last.rate)); }
+    if (last.place) lines.unshift('Place: ' + last.place);
     if (s) lines.unshift(s.name + ' sales tax');
     var btn = $('stCopy'), txt = lines.join('\n');
     var done = function (ok) { btn.textContent = ok ? 'Copied' : 'Copy failed'; setTimeout(function () { btn.textContent = 'Copy results'; }, 1600); };
@@ -13197,7 +13301,7 @@ CalcThis.initSalesTaxCalc = function () {
 
   /* ---- init ---- */
   var names = Object.keys(E.STATES).sort(function (a, b) { return E.STATES[a].name < E.STATES[b].name ? -1 : 1; });
-  var opts = [['', 'Any state — enter my own rate']].concat(names.map(function (c) { return [c, E.STATES[c].name + (E.STATES[c].live ? '' : ' · state rate only')]; }));
+  var opts = [['', 'Any state — enter my own rate']].concat(names.filter(function (c) { return E.STATES[c].live; }).map(function (c) { return [c, E.STATES[c].name]; }));
   var pre = document.body.getAttribute('data-state'), carried = '';
   try { carried = sessionStorage.getItem('stState') || ''; sessionStorage.removeItem('stState'); } catch (e) {}
   var startState = pre && E.STATES[pre] ? pre : (carried && E.STATES[carried] && !E.STATES[carried].live ? carried : '');

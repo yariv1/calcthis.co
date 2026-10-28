@@ -71,3 +71,4 @@ GSC snapshot 2026-10-26: 69 indexed, 13 not indexed (8 Discovered, 1 Crawled, 1 
 | /turkey-size-calculator/ | 2026-10-28 | 2026-10-28 (GSC + Bing) |
 | /sales-tax-calculator/ | 2026-10-28 (v208) | not yet (Bing: sitemap + IndexNow) |
 | /sales-tax-calculator/new-jersey/ | 2026-10-28 (v208) | not yet (Bing: sitemap + IndexNow) |
+| /sales-tax-calculator/missouri/ | 2026-10-28 (v224) | not yet (Bing: sitemap + IndexNow) |

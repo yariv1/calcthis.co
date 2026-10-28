@@ -2296,7 +2296,7 @@
   .p-stax .st-lab{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
   .p-stax .st-lab .lab{display:block;white-space:nowrap}
   .p-stax .st-rm{font:inherit;font-size:12.5px;font-weight:600;color:var(--amber-deep);background:none;border:0;padding:0 0 4px;cursor:pointer;text-decoration:underline}
-  .p-stax .st-row.ln-two{grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr)}
+  .p-stax .st-row.ln-two{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
   .p-stax .st-row.ln-two .fld{min-width:0}
   .p-stax .csel-val{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
   .p-stax .st-addwrap{margin:-4px 0 15px}
@@ -2325,3 +2325,12 @@
   .p-stax .pc-statelist li{break-inside:avoid}
   .p-stax .pc-statelist a{color:var(--amber-deep);text-decoration:underline}
   @media (max-width:430px){.p-stax .ln-terms td,.p-stax .ln-terms th{padding-left:6px;padding-right:6px}.p-stax .pc-statelist{columns:1}}
+
+  /* Sales tax — place typeahead (states whose rate depends on the city / county / district) */
+  .p-stax .st-ta{position:relative}
+  .p-stax .st-ta-list{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:40;max-height:320px;overflow-y:auto;background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:7px;scrollbar-color:var(--amber) transparent;scrollbar-width:thin}
+  .p-stax .st-ta-opt{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;width:100%;text-align:left;font:inherit;font-size:14.5px;font-weight:500;color:var(--ink-soft);background:none;border:0;border-radius:8px;padding:9px 11px;cursor:pointer;transition:.12s}
+  .p-stax .st-ta-opt b{flex:none;font-weight:700;color:var(--ink)}
+  .p-stax .st-ta-opt:hover,.p-stax .st-ta-opt.on{background:#F5EFE4;color:var(--ink)}
+  .p-stax .st-ta-none{font-size:13.5px;color:var(--muted);padding:9px 11px;line-height:1.45}
+  .p-stax .st-pnote{margin:8px 0 0}

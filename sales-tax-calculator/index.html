@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=212">
+<link rel="stylesheet" href="/assets/style.css?v=224">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
 <script>
@@ -92,7 +92,7 @@
       "name": "Is the result exact?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "On a state page the result is exact for the cases the page lists, with the source and date shown. On other states the calculator uses the state rate only and shows the highest local add-on as a range — it never guesses your local rate. You can always type your own combined rate."
+        "text": "On a state page the result is exact for the cases the page lists, with the source and date shown. For a state without its own page yet, type your own combined rate — the calculator never guesses a local rate."
       }
     }
   ]
@@ -189,6 +189,7 @@
           <a href="/auto-loan-calculator/">Auto Loan</a>
           <!--STAXNAV:START-->
           <a href="/sales-tax-calculator/" class="current">Sales Tax</a>
+          <a href="/sales-tax-calculator/missouri/">Missouri Sales Tax</a>
           <a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax</a>
           <!--STAXNAV:END-->
         </div>
@@ -246,6 +247,7 @@
         </div>
 
         <div class="fld"><span class="lab">State</span><div class="csel" id="stState" data-value=""><button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false"><span class="csel-val"></span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="csel-panel" role="listbox"></div></div></div>
+        <div class="fld" id="stPlaceFld" style="display:none"><span class="lab">Where are you buying?</span><div class="st-ta"><div class="inp"><input id="stPlace" type="text" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="stPlaceList" placeholder="Type your city, e.g. Springfield"></div><div class="st-ta-list" id="stPlaceList" role="listbox" style="display:none"></div></div><p class="st-note st-pnote" id="stPlaceNote"></p></div>
         <div id="stRateFld"><div class="fld"><label class="lab" for="stRate">Sales tax rate <span class="unit">%</span></label><div class="inp"><input id="stRate" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 8.25"></div></div></div>
 
         <div id="stAddBox">
@@ -361,15 +363,15 @@
         </div>
         <p>At 8.25%, a $100 purchase has $8.25 of tax and costs $108.25. Going the other way, a $108.25 total is $100.00 before tax.</p>
         <h2>State rate plus local rate</h2>
-        <p>Forty-five states charge a state sales tax and 38 allow cities, counties or districts to add their own. For a state without its own page, the calculator uses the state rate and shows the highest local add-on as a range — it never guesses your local rate. Type your own combined rate to get a single number.</p>
+        <p>Forty-five states charge a state sales tax and 38 allow cities, counties or districts to add their own. A state is added to the list only when its rules have been checked against official guidance. For any other state, type your own combined rate — the calculator never guesses a local rate. The table below lists every state’s rate.</p>
         <h2>States with their own calculator</h2>
-        <ul class="pc-statelist"><li><a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax Calculator</a></li></ul>
+        <ul class="pc-statelist"><li><a href="/sales-tax-calculator/missouri/">Missouri Sales Tax Calculator</a></li><li><a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax Calculator</a></li></ul>
         <p>More states are added as each state’s rules are checked against its official guidance.</p>
       </div>
       <div>
         <h2>Sales tax rates by state</h2>
-        <p>State rates, the population-weighted average local rate and the highest local rate as of July 1, 2026 (Tax Foundation). New Jersey has no local sales tax; its reduced-rate zones are explained on its own page.</p>
-        <div class="pc-tblwrap"><table class="dtable"><thead><tr><th>State</th><th>State rate</th><th>Average local</th><th>Highest local</th></tr></thead><tbody><tr><td>Alabama</td><td>4%</td><td>5.46%</td><td>8%</td></tr><tr><td>Alaska</td><td>0%</td><td>1.82%</td><td>7.85%</td></tr><tr><td>Arizona</td><td>5.6%</td><td>2.94%</td><td>5.3%</td></tr><tr><td>Arkansas</td><td>6.5%</td><td>2.98%</td><td>6.13%</td></tr><tr><td>California</td><td>7.25%</td><td>1.78%</td><td>5.25%</td></tr><tr><td>Colorado</td><td>2.9%</td><td>4.99%</td><td>9.1%</td></tr><tr><td>Connecticut</td><td>6.35%</td><td>0%</td><td>0%</td></tr><tr><td>Delaware</td><td>0%</td><td>0%</td><td>0%</td></tr><tr><td>District of Columbia</td><td>6%</td><td>0%</td><td>0%</td></tr><tr><td>Florida</td><td>6%</td><td>0.98%</td><td>2%</td></tr><tr><td>Georgia</td><td>4%</td><td>3.56%</td><td>5%</td></tr><tr><td>Hawaii</td><td>4%</td><td>0.5%</td><td>0.5%</td></tr><tr><td>Idaho</td><td>6%</td><td>0.03%</td><td>3%</td></tr><tr><td>Illinois</td><td>6.25%</td><td>2.73%</td><td>4.75%</td></tr><tr><td>Indiana</td><td>7%</td><td>0%</td><td>0%</td></tr><tr><td>Iowa</td><td>6%</td><td>0.94%</td><td>1%</td></tr><tr><td>Kansas</td><td>6.5%</td><td>2.21%</td><td>4.25%</td></tr><tr><td>Kentucky</td><td>6%</td><td>0%</td><td>0%</td></tr><tr><td>Louisiana</td><td>5%</td><td>5.13%</td><td>7%</td></tr><tr><td>Maine</td><td>5.5%</td><td>0%</td><td>0%</td></tr><tr><td>Maryland</td><td>6%</td><td>0%</td><td>0%</td></tr><tr><td>Massachusetts</td><td>6.25%</td><td>0%</td><td>0%</td></tr><tr><td>Michigan</td><td>6%</td><td>0%</td><td>0%</td></tr><tr><td>Minnesota</td><td>6.875%</td><td>1.26%</td><td>3%</td></tr><tr><td>Mississippi</td><td>7%</td><td>0.06%</td><td>1%</td></tr><tr><td>Missouri</td><td>4.225%</td><td>4.22%</td><td>6.25%</td></tr><tr><td>Montana</td><td>0%</td><td>0%</td><td>0%</td></tr><tr><td>Nebraska</td><td>5.5%</td><td>1.48%</td><td>2%</td></tr><tr><td>Nevada</td><td>6.85%</td><td>1.39%</td><td>1.53%</td></tr><tr><td>New Hampshire</td><td>0%</td><td>0%</td><td>0%</td></tr><tr><td><a href="/sales-tax-calculator/new-jersey/">New Jersey</a></td><td>6.625%</td><td>none</td><td>none</td></tr><tr><td>New Mexico</td><td>4.875%</td><td>2.8%</td><td>4.56%</td></tr><tr><td>New York</td><td>4%</td><td>4.54%</td><td>4.88%</td></tr><tr><td>North Carolina</td><td>4.75%</td><td>2.35%</td><td>3.5%</td></tr><tr><td>North Dakota</td><td>5%</td><td>2.09%</td><td>3.75%</td></tr><tr><td>Ohio</td><td>5.75%</td><td>1.54%</td><td>2.25%</td></tr><tr><td>Oklahoma</td><td>4.5%</td><td>4.56%</td><td>7%</td></tr><tr><td>Oregon</td><td>0%</td><td>0%</td><td>0%</td></tr><tr><td>Pennsylvania</td><td>6%</td><td>0.34%</td><td>2%</td></tr><tr><td>Rhode Island</td><td>7%</td><td>0%</td><td>0%</td></tr><tr><td>South Carolina</td><td>6%</td><td>1.49%</td><td>3%</td></tr><tr><td>South Dakota</td><td>4.2%</td><td>1.91%</td><td>4.5%</td></tr><tr><td>Tennessee</td><td>7%</td><td>2.61%</td><td>2.75%</td></tr><tr><td>Texas</td><td>6.25%</td><td>1.95%</td><td>2%</td></tr><tr><td>Utah</td><td>6.1%</td><td>1.32%</td><td>4.7%</td></tr><tr><td>Vermont</td><td>6%</td><td>0.43%</td><td>1%</td></tr><tr><td>Virginia</td><td>5.3%</td><td>0.47%</td><td>2.7%</td></tr><tr><td>Washington</td><td>6.5%</td><td>3.07%</td><td>4.2%</td></tr><tr><td>West Virginia</td><td>6%</td><td>0.6%</td><td>1.4%</td></tr><tr><td>Wisconsin</td><td>5%</td><td>0.72%</td><td>2.9%</td></tr><tr><td>Wyoming</td><td>4%</td><td>1.39%</td><td>3%</td></tr></tbody></table></div>
+        <p>State rates, the population-weighted average local rate and the highest local rate as of July 1, 2026 (Tax Foundation). On a state with its own page the local rate is exact: New Jersey has none, and Missouri’s is looked up by city, county and district from the official table.</p>
+        <div class="pc-tblwrap"><table class="dtable"><thead><tr><th>State</th><th>State rate</th><th>Average local</th><th>Highest local</th></tr></thead><tbody><tr><td>Alabama</td><td>4%</td><td>5.46%</td><td>8%</td></tr><tr><td>Alaska</td><td>0%</td><td>1.82%</td><td>7.85%</td></tr><tr><td>Arizona</td><td>5.6%</td><td>2.94%</td><td>5.3%</td></tr><tr><td>Arkansas</td><td>6.5%</td><td>2.98%</td><td>6.13%</td></tr><tr><td>California</td><td>7.25%</td><td>1.78%</td><td>5.25%</td></tr><tr><td>Colorado</td><td>2.9%</td><td>4.99%</td><td>9.1%</td></tr><tr><td>Connecticut</td><td>6.35%</td><td>0%</td><td>0%</td></tr><tr><td>Delaware</td><td>0%</td><td>0%</td><td>0%</td></tr><tr><td>District of Columbia</td><td>6%</td><td>0%</td><td>0%</td></tr><tr><td>Florida</td><td>6%</td><td>0.98%</td><td>2%</td></tr><tr><td>Georgia</td><td>4%</td><td>3.56%</td><td>5%</td></tr><tr><td>Hawaii</td><td>4%</td><td>0.5%</td><td>0.5%</td></tr><tr><td>Idaho</td><td>6%</td><td>0.03%</td><td>3%</td></tr><tr><td>Illinois</td><td>6.25%</td><td>2.73%</td><td>4.75%</td></tr><tr><td>Indiana</td><td>7%</td><td>0%</td><td>0%</td></tr><tr><td>Iowa</td><td>6%</td><td>0.94%</td><td>1%</td></tr><tr><td>Kansas</td><td>6.5%</td><td>2.21%</td><td>4.25%</td></tr><tr><td>Kentucky</td><td>6%</td><td>0%</td><td>0%</td></tr><tr><td>Louisiana</td><td>5%</td><td>5.13%</td><td>7%</td></tr><tr><td>Maine</td><td>5.5%</td><td>0%</td><td>0%</td></tr><tr><td>Maryland</td><td>6%</td><td>0%</td><td>0%</td></tr><tr><td>Massachusetts</td><td>6.25%</td><td>0%</td><td>0%</td></tr><tr><td>Michigan</td><td>6%</td><td>0%</td><td>0%</td></tr><tr><td>Minnesota</td><td>6.875%</td><td>1.26%</td><td>3%</td></tr><tr><td>Mississippi</td><td>7%</td><td>0.06%</td><td>1%</td></tr><tr><td><a href="/sales-tax-calculator/missouri/">Missouri</a></td><td>4.225%</td><td>varies by place</td><td>7.263% (more in districts)</td></tr><tr><td>Montana</td><td>0%</td><td>0%</td><td>0%</td></tr><tr><td>Nebraska</td><td>5.5%</td><td>1.48%</td><td>2%</td></tr><tr><td>Nevada</td><td>6.85%</td><td>1.39%</td><td>1.53%</td></tr><tr><td>New Hampshire</td><td>0%</td><td>0%</td><td>0%</td></tr><tr><td><a href="/sales-tax-calculator/new-jersey/">New Jersey</a></td><td>6.625%</td><td>none</td><td>none</td></tr><tr><td>New Mexico</td><td>4.875%</td><td>2.8%</td><td>4.56%</td></tr><tr><td>New York</td><td>4%</td><td>4.54%</td><td>4.88%</td></tr><tr><td>North Carolina</td><td>4.75%</td><td>2.35%</td><td>3.5%</td></tr><tr><td>North Dakota</td><td>5%</td><td>2.09%</td><td>3.75%</td></tr><tr><td>Ohio</td><td>5.75%</td><td>1.54%</td><td>2.25%</td></tr><tr><td>Oklahoma</td><td>4.5%</td><td>4.56%</td><td>7%</td></tr><tr><td>Oregon</td><td>0%</td><td>0%</td><td>0%</td></tr><tr><td>Pennsylvania</td><td>6%</td><td>0.34%</td><td>2%</td></tr><tr><td>Rhode Island</td><td>7%</td><td>0%</td><td>0%</td></tr><tr><td>South Carolina</td><td>6%</td><td>1.49%</td><td>3%</td></tr><tr><td>South Dakota</td><td>4.2%</td><td>1.91%</td><td>4.5%</td></tr><tr><td>Tennessee</td><td>7%</td><td>2.61%</td><td>2.75%</td></tr><tr><td>Texas</td><td>6.25%</td><td>1.95%</td><td>2%</td></tr><tr><td>Utah</td><td>6.1%</td><td>1.32%</td><td>4.7%</td></tr><tr><td>Vermont</td><td>6%</td><td>0.43%</td><td>1%</td></tr><tr><td>Virginia</td><td>5.3%</td><td>0.47%</td><td>2.7%</td></tr><tr><td>Washington</td><td>6.5%</td><td>3.07%</td><td>4.2%</td></tr><tr><td>West Virginia</td><td>6%</td><td>0.6%</td><td>1.4%</td></tr><tr><td>Wisconsin</td><td>5%</td><td>0.72%</td><td>2.9%</td></tr><tr><td>Wyoming</td><td>4%</td><td>1.39%</td><td>3%</td></tr></tbody></table></div>
         <p class="st-src">Source: <a href="https://taxfoundation.org/data/all/state/2026-sales-tax-rates-midyear/" rel="noopener">Tax Foundation — 2026 sales tax rates, midyear update</a>. Alaska, Delaware, Montana, New Hampshire and Oregon have no statewide sales tax; Alaska allows local sales taxes.</p>
       </div>
     </div>
@@ -380,7 +382,7 @@
     <details class="faq"><summary>How do I find the sales tax rate from two prices?</summary><p>Subtract the price before tax from the price after tax, divide by the price before tax and multiply by 100. A purchase that costs $100 before tax and $108.25 after tax was taxed at 8.25%. The “Find the rate” tab does it for you and compares the result with the state’s own rate.</p></details>
     <details class="faq"><summary>Why does the total depend on where I live?</summary><p>Most states add a state rate, and many allow cities and counties to add their own. Texas, for example, charges 6.25% at the state level and allows up to 2% more, so $100 costs between $106.25 and $108.25. New Jersey has no local sales tax at all. Pick your state to see its rate and, for states with their own page, the exact rules.</p></details>
     <details class="faq"><summary>Which states have no sales tax?</summary><p>Alaska, Delaware, Montana, New Hampshire and Oregon have no statewide sales tax. Alaska is the only one that allows local sales taxes. All other states and the District of Columbia have one.</p></details>
-    <details class="faq"><summary>Is the result exact?</summary><p>On a state page the result is exact for the cases the page lists, with the source and date shown. On other states the calculator uses the state rate only and shows the highest local add-on as a range — it never guesses your local rate. You can always type your own combined rate.</p></details>
+    <details class="faq"><summary>Is the result exact?</summary><p>On a state page the result is exact for the cases the page lists, with the source and date shown. For a state without its own page yet, type your own combined rate — the calculator never guesses a local rate.</p></details>
   </section>
 
 <!--FOOTER:START-->
@@ -433,6 +435,7 @@
           <li><a href="/auto-loan-calculator/">Auto Loan Calculator</a></li>
           <!--STAXFOOT:START-->
           <li><a href="/sales-tax-calculator/">Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/missouri/">Missouri Sales Tax Calculator</a></li>
           <li><a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax Calculator</a></li>
           <!--STAXFOOT:END-->
         </ul>
@@ -561,7 +564,7 @@
 
 </div>
 
-<script src="/assets/app.js?v=212"></script>
+<script src="/assets/app.js?v=224"></script>
 <script>CalcThis.initSalesTaxCalc();</script>
 <script src="/feedback.js" defer></script>
 </body>
