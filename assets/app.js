@@ -12878,7 +12878,7 @@ CalcThis.saleTaxEngine = (function () {
   Object.assign(S.MO, {
     live: true, slug: 'missouri', eff: 'the October–December 2026 rate table (updated August 25, 2026)',
     src: [MO_DOR, { t: 'Missouri DOR — Sales and Use Tax Rate Tables, Oct–Dec 2026', u: 'https://dor.mo.gov/pdf/rates/2026/october2026.pdf' }, { t: 'Missouri DOR — Sales Tax Reduction on Food', u: 'https://dor.mo.gov/taxation/business/tax-types/sales-use/reduction-on-food.html' }, { t: 'Missouri DOR — Sales Tax Taxability and Exemptions FAQ', u: 'https://dor.mo.gov/faq/taxation/business/sales-use-tax-exemptions.html' }, { t: 'Missouri DOR — Letter Ruling 8387 on delivery charges (March 24, 2026)', u: 'https://dor.mo.gov/rulings/show/8387' }, { t: 'Missouri DOR — Back-to-School Sales Tax Holiday', u: 'https://dor.mo.gov/taxation/business/tax-types/sales-use/holidays/back-to-school/consumers.html' }],
-    places: { url: '/assets/data/mo-rates.json', n: 2597, lo: 5.225, hi: 13.238, baseHi: 11.488, foodLo: 2.225, foodHi: 9.85 },
+    places: { url: '/assets/data/mo-rates.json', n: 2597, lo: 5.225, hi: 13.238, baseHi: 11.488, foodLo: 2.225, foodHi: 9.85, hubNote: ' (more in districts)', ph: 'Type your city, e.g. Springfield', hint: 'Every place in Missouri adds local tax. Type your city or county and pick the line that matches where the seller is. Lines with CID or TDD are shopping-center districts that add tax.' },
     cats: [
       { id: 'general', label: 'Other goods', long: 'Most other goods', taxable: true, note: 'Taxable at the full combined rate. Over-the-counter medicine is taxable unless it is prescribed or bought by a person with a disability.' },
       { id: 'grocery', label: 'Groceries', long: 'Groceries (food for home)', taxable: true, rate: 'food', note: 'The state rate on food for home use is cut to 1.225%, but local taxes still apply to food — so the rate is the “food” rate listed for your place.' },
@@ -12897,6 +12897,31 @@ CalcThis.saleTaxEngine = (function () {
       { t: 'Adult-use marijuana', d: 'Some places add a separate local tax on adult-use marijuana. It is not included in this calculator.' },
       { t: 'Bought online or out of state', d: 'If the seller did not charge Missouri tax you owe use tax at the state rate of 4.225% plus the local use tax where you use the item. Pick your place and enter any tax the seller charged under Go advanced. A use tax return is required once your untaxed purchases pass $2,000 in a year.' },
       { t: 'Rates change every quarter', d: 'Local rates change in January, April, July and October. The rates here are from the October–December 2026 table.' }
+    ]
+  });
+  /* Ohio: the rate is the county rate (plus a few transit-area portions of cities) from the Department of Taxation table, October 1 - December 31, 2026 */
+  Object.assign(S.OH, {
+    live: true, slug: 'ohio', eff: 'the October 1 – December 31, 2026 county rate table',
+    src: [{ t: 'Ohio Department of Taxation — Sales and Use Tax', u: 'https://tax.ohio.gov/business/sales-and-use-tax' }, { t: 'Ohio DOR — Sales and Use Tax Rates by County, Q4 2026', u: 'https://tax.ohio.gov/business/sales-and-use-tax/rate-tables/by-county-q4-2026' }, { t: 'Ohio DOR — Sales and Use Taxability', u: 'https://tax.ohio.gov/business/sales-and-use-tax/taxability' }, { t: 'Ohio DOR — Information Release ST 2004-01, Food Definition', u: 'https://dam.assets.ohio.gov/image/upload/tax.ohio.gov/sales_and_use/information_releases/st200401.pdf' }, { t: 'Ohio Admin. Code 5703-9-52 — Delivery charges', u: 'https://codes.ohio.gov/ohio-administrative-code/rule-5703-9-52' }, { t: 'Ohio DOR — Sales Tax Holiday 2026', u: 'https://tax.ohio.gov/business/sales-and-use-tax/sales-tax-holiday' }],
+    places: { url: '/assets/data/oh-rates.json', n: 93, lo: 6.5, hi: 8.25, baseHi: 8, noFood: true, short: true, hubNote: ' (up to 2.5% in transit areas)', ph: 'Type your county or city, e.g. Franklin', hint: 'Every county in Ohio adds its own tax. Type your county or a big city and pick where you receive the item. A few city areas on a transit line have their own rate and are listed separately.' },
+    cats: [
+      { id: 'general', label: 'Other goods', long: 'Most goods, including clothing and medicine without a prescription', taxable: true, note: 'Clothing, electronics, furniture, over-the-counter medicine, vitamins and supplements, soft drinks, alcohol and tobacco are taxable.' },
+      { id: 'grocery', label: 'Food to go', long: 'Groceries and takeout food (eaten off the premises)', taxable: false, note: 'Food bought to eat off the premises is exempt, takeout included. Soft drinks, alcohol, dietary supplements and tobacco are taxable — choose “Other goods” for those.' },
+      { id: 'prepared', label: 'Eat-in meal', long: 'Restaurant meals and food eaten on the premises', taxable: true, note: 'Food eaten on the premises, restaurant meals and catered food are taxable.' },
+      { id: 'drugs', label: 'Prescription', long: 'Prescription medicine and supplies', taxable: false, note: 'Prescription medicine and supplies (insulin, test strips, syringes), doctor-prescribed equipment and prescription glasses and contacts are exempt. Over-the-counter medicine, vitamins and supplements are taxable.' },
+      { id: 'baby', label: 'Baby & period', long: 'Baby products and feminine hygiene products', taxable: false, note: 'Children’s diapers, cribs, strollers and car seats that meet safety standards, and pads, tampons and period underwear are exempt.' }
+    ],
+    shipNote: 'A delivery charge from the seller is part of the price: it is taxed with a taxable item, not taxed with an exempt one, and a mixed shipment is split by price or weight. A carrier you pay directly is not taxed.',
+    others: [
+      { t: 'County and transit taxes', d: 'Every county adds its own tax, and some add a transit tax, to the 5.75% state rate. In the October–December 2026 table the combined rate runs from 6.5% to 8%, and the law caps it at 8.75%. Search your county above.' },
+      { t: 'Transit-area city portions', d: 'The parts of Columbus, Dublin, Westerville and Reynoldsburg that lie in Delaware, Fairfield, Licking or Union County, and the part of Rossford in Wood County, pay the Central Ohio Transit Authority (COTA) or Toledo Area Regional Transit Authority (TARTA) rate, up to 8.25%. They are separate lines in the search.' },
+      { t: 'Food', d: 'Food bought to eat off the premises is exempt, takeout included. Soft drinks, alcohol, dietary supplements and tobacco are taxable, and so is food eaten on the premises.' },
+      { t: 'Medicine and medical items', d: 'Prescription medicine and supplies, doctor-prescribed equipment and prescription glasses and contacts are exempt. Over-the-counter medicine, vitamins and supplements are taxable.' },
+      { t: 'Baby and period products', d: 'Children’s diapers, cribs, strollers, car seats and feminine hygiene products are exempt.' },
+      { t: 'Back-to-school sales tax holiday', d: 'In 2026 it ran from 12:00 a.m. Friday, August 7 to 11:59 p.m. Sunday, August 9: clothing of $75 or less, school supplies of $20 or less and school instructional materials of $20 or less per item were exempt. The dates and limits are set each year. The calculator does not apply the holiday.' },
+      { t: 'Delivery charges', d: 'A delivery charge the seller adds is taxed when the item is taxable. If a shipment mixes taxable and exempt items the charge is split by price or weight; if the seller does not split it, the whole charge is taxed.' },
+      { t: 'Bought online or out of state', d: 'If the seller did not charge Ohio tax you owe Ohio use tax at your county’s rate. Pick your county and enter any tax the seller charged under Go advanced.' },
+      { t: 'Rates change every quarter', d: 'County and transit rates can only change on January 1, April 1, July 1 or October 1. Warren County rose from 6.75% to 7.25% on October 1, 2026; the rates here are from the October–December 2026 table.' }
     ]
   });
   function r2(x) { return Math.round(x * 100 + 1e-9) / 100; }
@@ -12961,7 +12986,7 @@ CalcThis.initSalesTaxCalc = function () {
   var E = CalcThis.saleTaxEngine, $ = function (id) { return document.getElementById(id); };
   var st = { mode: 'add', adv: false, rows: [{ amt: '', cat: 'general' }], place: null }, last = null;
   var MAX = 1e9;
-  var placeData = null, placeState = 'idle', placeHits = [], placeAct = -1;
+  var placeData = null, placeState = 'idle', placeHits = [], placeAct = -1, placeShown = 0;
   function num(v) { var t = String(v).replace(/[$,\s%]/g, ''); var n = t === '' ? NaN : Number(t); return isFinite(n) ? n : NaN; }
   function mon(x) { return (x < 0 ? '−' : '') + '$' + Math.abs(x).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
   function pct(x) { return String(Math.round(x * 10000) / 10000) + '%'; }
@@ -12974,31 +12999,46 @@ CalcThis.initSalesTaxCalc = function () {
   function placed() { var s = S(); return !!(s && s.live && s.places); }
   /* ---- place search (states whose rate depends on the exact city / county / district) ---- */
   function norm(t) { return String(t).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/['’]/g, '').replace(/\bsaint\b/g, 'st').replace(/[^a-z0-9 ]+/g, ' ').replace(/\s+/g, ' ').trim(); }
+  /* the input shows a short name when the full label is long (Ohio: county + its cities, transit-area portions); the full label is shown under the field */
+  function shortLabel(l, on) {
+    if (!on) return l;
+    var tr = l.match(/^(.*?) — .*\(([^)]*)\)$/); if (tr) return tr[1] + ' — ' + tr[2];
+    return l.replace(/ \([^)]*\)$/, '');
+  }
   function loadPlaces() {
     var s = S(); if (!placed() || placeData || placeState === 'loading') return;
     placeState = 'loading';
-    var done = function (ok, d) { if (ok) { placeData = d.map(function (r) { return { label: r[0], sales: r[1], use: r[2], food: r[3], foodUse: r[4], key: ' ' + norm(r[0]) }; }); placeState = 'ok'; } else placeState = 'err'; placeNote(); render(); };
+    var done = function (ok, d) { if (ok) { placeData = d.map(function (r) { return { label: r[0], short: shortLabel(r[0], s.places.short), sales: r[1], use: r[2], food: r[3], foodUse: r[4], key: ' ' + norm(r[0]) }; }); placeState = 'ok'; } else placeState = 'err'; placeNote(); render(); if (document.activeElement === $('stPlace')) showPlaceList(!!st.place); };
     try { fetch(s.places.url).then(function (r) { if (!r.ok) throw new Error('x'); return r.json(); }).then(function (d) { done(true, d); }, function () { done(false); }); } catch (e) { done(false); }
   }
   function closePlaceList() { $('stPlaceList').style.display = 'none'; $('stPlace').setAttribute('aria-expanded', 'false'); placeAct = -1; }
-  function showPlaceList() {
-    var box = $('stPlaceList'), q = norm($('stPlace').value);
-    if (!placeData || !q) { closePlaceList(); return; }
-    var toks = q.split(' '), hits = placeData.filter(function (p) { return toks.every(function (t) { return p.key.indexOf(' ' + t) >= 0; }); });
+  /* the full list is drawn in chunks (Missouri has 2,597 rows): the next chunk is added when the list is scrolled near its end */
+  function optHtml(p, i) { return '<button type="button" class="st-ta-opt' + (st.place === p ? ' on' : '') + '" role="option" data-i="' + i + '"><span>' + esc(p.label) + '</span><b>' + pct(p.sales) + '</b></button>'; }
+  function moreOpts() {
+    var box = $('stPlaceList'); if (placeShown >= placeHits.length || box.scrollTop + box.clientHeight < box.scrollHeight - 120) return;
+    var end = Math.min(placeHits.length, placeShown + 120), h = ''; for (var i = placeShown; i < end; i++) h += optHtml(placeHits[i], i);
+    box.insertAdjacentHTML('beforeend', h); placeShown = end;
+  }
+  function showPlaceList(full) {
+    var box = $('stPlaceList'), q = full ? '' : norm($('stPlace').value);
+    if (!placeData) { closePlaceList(); return; }
+    var toks = q ? q.split(' ') : [], hits = placeData.filter(function (p) { return toks.every(function (t) { return p.key.indexOf(' ' + t) >= 0; }); });
     var starts = hits.filter(function (p) { return p.key.indexOf(' ' + q) === 0; }), rest = hits.filter(function (p) { return p.key.indexOf(' ' + q) !== 0; });
-    var all = starts.concat(rest); placeHits = all.slice(0, 60); placeAct = -1;
+    var part = function (a, b) { return (a.label.indexOf(' — ') >= 0 ? 1 : 0) - (b.label.indexOf(' — ') >= 0 ? 1 : 0); };
+    var all = starts.slice().sort(part).concat(rest.slice().sort(part)); var cap = q ? 60 : all.length; placeHits = all.slice(0, cap); placeAct = -1;
     if (!all.length) { box.innerHTML = '<div class="st-ta-none">No place matches “' + esc($('stPlace').value.trim()) + '”. Try the city or county name only.</div>'; }
-    else box.innerHTML = placeHits.map(function (p, i) { return '<button type="button" class="st-ta-opt" role="option" data-i="' + i + '"><span>' + esc(p.label) + '</span><b>' + pct(p.sales) + '</b></button>'; }).join('') + (all.length > 60 ? '<div class="st-ta-none">Showing 60 of ' + all.length + ' — keep typing to narrow it down.</div>' : '');
+    else { var selI = q ? -1 : placeHits.indexOf(st.place); placeShown = q ? placeHits.length : Math.min(placeHits.length, Math.max(120, selI + 40)); box.innerHTML = placeHits.slice(0, placeShown).map(optHtml).join('') + (q && all.length > 60 ? '<div class="st-ta-none">Showing 60 of ' + all.length + ' — keep typing to narrow it down.</div>' : ''); }
     box.style.display = 'block'; $('stPlace').setAttribute('aria-expanded', 'true');
+    var cur = box.querySelector('.st-ta-opt.on'); if (cur) box.scrollTop = Math.max(0, cur.offsetTop - 60); else box.scrollTop = 0;
   }
   function pickPlace(p) {
     if (!p) return;
-    st.place = p; $('stPlace').value = p.label; closePlaceList(); placeNote(); render();
+    st.place = p; $('stPlace').value = p.short; $('stPlace').title = p.label; closePlaceList(); placeNote(); render();
   }
   function placeNote() {
     var n = $('stPlaceNote'), p = st.place, s = S();
-    if (!p) { n.textContent = placeState === 'loading' ? 'Loading the official rate table…' : (placeState === 'err' ? 'The rate table could not be loaded. Enter your combined rate under Go advanced instead.' : 'Every place in ' + (s ? s.name : '') + ' adds local tax. Type your city or county and pick the line that matches where the seller is. Lines with CID or TDD are shopping-center districts that add tax.'); return; }
-    n.textContent = pct(p.sales) + ' combined on most goods (' + pct(s.base) + ' state + ' + pct(Math.round((p.sales - s.base) * 1000) / 1000) + ' local) · ' + pct(p.food) + ' on groceries.';
+    if (!p) { n.textContent = placeState === 'loading' ? 'Loading the official rate table…' : (placeState === 'err' ? 'The rate table could not be loaded. Enter your combined rate under Go advanced instead.' : (s && s.places ? s.places.hint : '')); return; }
+    n.textContent = (p.short !== p.label ? p.label + ': ' : '') + pct(p.sales) + ' combined' + (s.places.noFood ? '' : ' on most goods') + ' (' + pct(s.base) + ' state + ' + pct(Math.round((p.sales - s.base) * 1000) / 1000) + ' local)' + (s.places.noFood ? '.' : ' · ' + pct(p.food) + ' on groceries.');
   }
   var CHEV = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
   function setPanel(root, opts, val) {
@@ -13038,7 +13078,7 @@ CalcThis.initSalesTaxCalc = function () {
     $('stShipTaxed').checked = false;
     st.place = null; $('stPlace').value = ''; closePlaceList();
     $('stPlaceFld').style.display = placed() && st.mode !== 'find' ? '' : 'none';
-    if (placed()) { placeNote(); loadPlaces(); }
+    if (placed()) { $('stPlace').placeholder = s.places.ph || 'Type your city or county'; placeNote(); loadPlaces(); }
     $('stShipNote').textContent = lv && s.shipNote ? s.shipNote : '';
     $('stShipNote').style.display = lv && s.shipNote ? '' : 'none';
     if (lv) {
@@ -13146,7 +13186,7 @@ CalcThis.initSalesTaxCalc = function () {
     else if (own != null) tip = 'Using your own rate of ' + pct(own) + ' on the taxable items.';
     else if (s.live && s.places) {
       var exm2 = r.lines.filter(function (l) { return !l.taxable; });
-      tip = 'Rates for ' + pl.label + ': ' + pct(pl.sales) + ' on most goods and restaurant food, ' + pct(pl.food) + ' on groceries.';
+      tip = 'Rate for ' + pl.label + ': ' + pct(pl.sales) + (s.places.noFood ? ' on taxable items.' : ' on most goods and restaurant food, ' + pct(pl.food) + ' on groceries.');
       if (exm2.length) tip += ' ' + exm2.map(function (l) { return l.catObj.label + ': ' + l.catObj.note; }).filter(function (v, k, a) { return a.indexOf(v) === k; }).join(' ');
       if (r.ship > 0) tip += shipChk ? ' Shipping is taxed because it is billed with handling as one charge.' : ' Shipping is not taxed because it is listed separately.';
     } else if (s.live) {
@@ -13235,8 +13275,8 @@ CalcThis.initSalesTaxCalc = function () {
   ['stZone', 'stRevCat'].forEach(function (id) { $(id).addEventListener('change', render); });
   $('stShipTaxed').addEventListener('change', render);
   var pi = $('stPlace');
-  pi.addEventListener('input', function () { st.place = null; placeNote(); showPlaceList(); render(); });
-  pi.addEventListener('focus', function () { loadPlaces(); showPlaceList(); });
+  pi.addEventListener('input', function () { st.place = null; pi.title = ''; placeNote(); showPlaceList(); render(); });
+  pi.addEventListener('focus', function () { loadPlaces(); if (st.place) { pi.select(); showPlaceList(true); } else showPlaceList(); });
   pi.addEventListener('blur', function () { setTimeout(closePlaceList, 150); });
   pi.addEventListener('keydown', function (e) {
     var opts = $('stPlaceList').querySelectorAll('.st-ta-opt'); if (!opts.length) return;
@@ -13244,7 +13284,8 @@ CalcThis.initSalesTaxCalc = function () {
     else if (e.key === 'Enter') { e.preventDefault(); pickPlace(placeHits[placeAct >= 0 ? placeAct : 0]); }
     else if (e.key === 'Escape') closePlaceList();
   });
-  $('stPlaceList').addEventListener('mousedown', function (e) { var b = e.target.closest('.st-ta-opt'); if (!b) return; e.preventDefault(); pickPlace(placeHits[+b.getAttribute('data-i')]); });
+  $('stPlaceList').addEventListener('scroll', moreOpts);
+  $('stPlaceList').addEventListener('mousedown', function (e) { e.preventDefault(); var b = e.target.closest('.st-ta-opt'); if (!b) return; pickPlace(placeHits[+b.getAttribute('data-i')]); });
   $('stModeSeg').addEventListener('click', function (e) {
     var b = e.target.closest('button'); if (!b) return; st.mode = b.getAttribute('data-v'); setSeg('stModeSeg', st.mode); showMode(); render();
   });

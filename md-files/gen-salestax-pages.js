@@ -91,7 +91,7 @@ ${o.hero}
         </div>
 
         <div class="fld"><span class="lab">State</span>${cselEmpty('stState')}</div>
-        <div class="fld" id="stPlaceFld" style="display:none"><span class="lab">Where are you buying?</span><div class="st-ta"><div class="inp"><input id="stPlace" type="text" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="stPlaceList" placeholder="Type your city, e.g. Springfield"></div><div class="st-ta-list" id="stPlaceList" role="listbox" style="display:none"></div></div><p class="st-note st-pnote" id="stPlaceNote"></p></div>
+        <div class="fld" id="stPlaceFld" style="display:none"><span class="lab">Where are you buying?</span><div class="st-ta"><div class="inp"><input id="stPlace" type="search" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="stPlaceList" placeholder="Type your city, e.g. Springfield"></div><div class="st-ta-list" id="stPlaceList" role="listbox" style="display:none"></div></div><p class="st-note st-pnote" id="stPlaceNote"></p></div>
         <div id="stRateFld">${fld('stRate', 'Sales tax rate', '%', 'e.g. 8.25')}</div>
 
         <div id="stAddBox">
@@ -226,7 +226,7 @@ function write(rel, html) { const dir = ROOT + rel.replace(/index\.html$/, ''); 
 
 /* ---------- hub ---------- */
 const hubF = hubFaqs();
-const stateTable = '<div class="pc-tblwrap"><table class="dtable"><thead><tr><th>State</th><th>State rate</th><th>Average local</th><th>Highest local</th></tr></thead><tbody>' + all.map((c) => { const s = E.STATES[c]; return '<tr><td>' + (s.live ? '<a href="/sales-tax-calculator/' + s.slug + '/">' + s.name + '</a>' : s.name) + '</td><td>' + pct(s.base) + '</td><td>' + (s.places ? 'varies by place' : (s.live ? 'none' : pct(s.avgLocal))) + '</td><td>' + (s.places ? pct(Math.round((s.places.baseHi - s.base) * 1000) / 1000) + ' (more in districts)' : (s.live ? 'none' : pct(s.maxLocal))) + '</td></tr>'; }).join('') + '</tbody></table></div>';
+const stateTable = '<div class="pc-tblwrap"><table class="dtable"><thead><tr><th>State</th><th>State rate</th><th>Average local</th><th>Highest local</th></tr></thead><tbody>' + all.map((c) => { const s = E.STATES[c]; return '<tr><td>' + (s.live ? '<a href="/sales-tax-calculator/' + s.slug + '/">' + s.name + '</a>' : s.name) + '</td><td>' + pct(s.base) + '</td><td>' + (s.places ? 'varies by place' : (s.live ? 'none' : pct(s.avgLocal))) + '</td><td>' + (s.places ? pct(Math.round((s.places.baseHi - s.base) * 1000) / 1000) + (s.places.hubNote || '') : (s.live ? 'none' : pct(s.maxLocal))) + '</td></tr>'; }).join('') + '</tbody></table></div>';
 const hubContent = `  <section class="content">
     <div class="grid2">
       <div>
@@ -247,7 +247,7 @@ const hubContent = `  <section class="content">
       </div>
       <div>
         <h2>Sales tax rates by state</h2>
-        <p>State rates, the population-weighted average local rate and the highest local rate as of July 1, 2026 (Tax Foundation). On a state with its own page the local rate is exact: New Jersey has none, and Missouri’s is looked up by city, county and district from the official table.</p>
+        <p>State rates, the population-weighted average local rate and the highest local rate as of July 1, 2026 (Tax Foundation). On a state with its own page the local rate is exact: New Jersey has none, and ${live.filter((c) => E.STATES[c].places).map((c) => E.STATES[c].name).join(' and ')} ${live.filter((c) => E.STATES[c].places).length > 1 ? 'are' : 'is'} looked up by place from the official table.</p>
         ${stateTable}
         <p class="st-src">Source: <a href="${E.SRC_TF}" rel="noopener">Tax Foundation — 2026 sales tax rates, midyear update</a>. Alaska, Delaware, Montana, New Hampshire and Oregon have no statewide sales tax; Alaska allows local sales taxes.</p>
       </div>
@@ -272,64 +272,112 @@ write('sales-tax-calculator/index.html', pageHtml({
   content: hubContent
 }));
 
-/* ---------- states whose rate depends on the place (Missouri): rates come from the official table in assets/data/<xx>-rates.json ---------- */
+/* ---------- states whose rate depends on the place (Missouri, Ohio): rates come from the official table in assets/data/<xx>-rates.json ---------- */
 const PLACES = {};
 function placeRows(c) { if (!PLACES[c]) PLACES[c] = JSON.parse(fs.readFileSync(ROOT + 'assets/data/' + c.toLowerCase() + '-rates.json', 'utf8')).map((r) => ({ label: r[0], sales: r[1], use: r[2], food: r[3], foodUse: r[4] })); return PLACES[c]; }
 function placeBy(c, label) { const p = placeRows(c).find((x) => x.label === label); if (!p) throw new Error('place not found: ' + label); return p; }
+function placeLike(c, prefix) { const p = placeRows(c).find((x) => x.label.indexOf(prefix) === 0); if (!p) throw new Error('place not found: ' + prefix); return p; }
 const MO_CITIES = [['St. Louis', 'St. Louis (city)'], ['Kansas City (Jackson County)', 'Kansas City, Jackson County — Kansas City Zoological District'], ['Kansas City (Clay County)', 'Kansas City, Clay County — Kansas City Zoological District'], ['Kansas City (Platte County)', 'Kansas City, Platte County'], ['Kansas City (Cass County)', 'Kansas City, Cass County'], ['Springfield', 'Springfield, Greene County'], ['Columbia', 'Columbia, Boone County'], ['Independence', 'Independence, Jackson County — Kansas City Zoological District'], ['Lee’s Summit', "Lee's Summit, Jackson County — Kansas City Zoological District"], ['St. Joseph', 'St. Joseph, Buchanan County'], ['St. Charles', 'St. Charles, St. Charles County'], ['St. Peters', 'St. Peters, St. Charles County'], ['Jefferson City', 'Jefferson City, Cole County'], ['Joplin', 'Joplin, Jasper County'], ['Chesterfield', 'Chesterfield, St. Louis County'], ['Florissant', 'Florissant, St. Louis County'], ['Cape Girardeau', 'Cape Girardeau, Cape Girardeau County']];
+const OH_PREFIXES = ['Franklin County', 'Cuyahoga County', 'Hamilton County', 'Lucas County', 'Summit County', 'Montgomery County', 'Stark County', 'Mahoning County', 'Butler County', 'Lorain County', 'Lake County', 'Warren County', 'Delaware County (', 'Licking County (', 'Clark County', 'Medina County', 'Greene County', 'Fairfield County ('];
+
+const ar = (c, p, cat, amt, extra) => E.add(Object.assign({ state: c, items: [{ amt: amt || 100, cat: cat || 'general' }], ship: 0, place: p }, extra || {}));
 
 function moFaqs(c) {
   const s = E.STATES[c], n = s.name, P = s.places;
   const sp = placeBy(c, 'Springfield, Greene County'), kcj = placeBy(c, MO_CITIES[1][1]), kcc = placeBy(c, MO_CITIES[2][1]), kcp = placeBy(c, MO_CITIES[3][1]), kcs = placeBy(c, MO_CITIES[4][1]), sl = placeBy(c, 'St. Louis (city)'), col = placeBy(c, 'Columbia, Boone County');
-  const a = (p, cat, amt) => E.add({ state: c, items: [{ amt: amt || 100, cat: cat || 'general' }], ship: 0, place: p });
-  const spF = a(sp, 'grocery'), slG = a(sl), slF = a(sl, 'grocery');
+  const spF = ar(c, sp, 'grocery'), slG = ar(c, sl), slF = ar(c, sl, 'grocery');
   const ship = E.add({ state: c, items: [{ amt: 100, cat: 'general' }], ship: 10, place: sp }), shipC = E.add({ state: c, items: [{ amt: 100, cat: 'general' }], ship: 10, place: sp, shipTaxed: true });
-  const use = E.add({ state: c, items: [{ amt: 3000, cat: 'general' }], ship: 0, place: sp, paid: 0 }), use2 = E.add({ state: c, items: [{ amt: 3000, cat: 'general' }], ship: 0, place: sp, paid: 4 });
+  const use = ar(c, sp, 'general', 3000, { paid: 0 }), use2 = ar(c, sp, 'general', 3000, { paid: 4 });
   const rev = E.reverse({ state: c, total: 108.1, cat: 'general', place: sp });
   return [
     [`What is the sales tax rate in ${n}?`, `${n}’s state sales tax rate is ${pct(s.base)}, and every city, county and district adds its own tax on top. In the October–December 2026 rate table the combined rate runs from ${pct(P.lo)} to ${pct(P.baseHi)} by city and county, and up to ${pct(P.hi)} inside some shopping-center districts. Springfield is ${pct(sp.sales)}, Columbia ${pct(col.sales)} and St. Louis city ${pct(sl.sales)}. Search your place in the calculator above for your exact rate.`],
-    [`Why is ${n} sales tax different in every city?`, `Cities, counties and special districts can each add a local sales tax to the ${pct(s.base)} state rate, and the seller collects the combined rate for where the store is. Even one city can have several rates: Kansas City is ${pct(kcc.sales)} in Clay County, ${pct(kcj.sales)} in Jackson County, ${pct(kcp.sales)} in Platte County and ${pct(kcs.sales)} in Cass County. A $100 purchase costs ${m(a(sp).total)} in Springfield but ${m(a(sl).total)} in St. Louis city.`],
+    [`Why is ${n} sales tax different in every city?`, `Cities, counties and special districts can each add a local sales tax to the ${pct(s.base)} state rate, and the seller collects the combined rate for where the store is. Even one city can have several rates: Kansas City is ${pct(kcc.sales)} in Clay County, ${pct(kcj.sales)} in Jackson County, ${pct(kcp.sales)} in Platte County and ${pct(kcs.sales)} in Cass County. A $100 purchase costs ${m(ar(c, sp).total)} in Springfield but ${m(ar(c, sl).total)} in St. Louis city.`],
     [`Is food taxed in ${n}?`, `Yes, but at a lower rate. The state rate on food for home use is cut to 1.225%, and local taxes still apply, so groceries are taxed at the “food” rate listed for your place: ${pct(sp.food)} in Springfield (${m(spF.tax)} on $100) and ${pct(sl.food)} in St. Louis city (${m(slF.tax)} on $100). Restaurant food is taxed at the full rate, and so is all food at a seller whose prepared food is more than 80% of its sales.`],
     [`Is clothing taxed in ${n}?`, `Yes. Clothing is taxed at the full combined rate for your place — ${m(slG.tax)} on $100 in St. Louis city. The exception is the back-to-school sales tax holiday, from 12:01 a.m. on the first Friday in August through Sunday, when clothing of $100 or less is free of state and local sales tax.`],
-    [`Are prescription drugs taxed in ${n}?`, `No. Prescription drugs, insulin and hearing aids are exempt. Over-the-counter medicine is taxable unless it is prescribed or bought by a person with a disability. Choose “Prescription drugs” as the item type to see the tax removed.`],
+    [`Are prescription drugs taxed in ${n}?`, `No. Prescription drugs, insulin and hearing aids are exempt. Over-the-counter medicine is taxable unless it is prescribed or bought by a person with a disability. Choose “Prescription” as the item type to see the tax removed.`],
     [`Is shipping taxed in ${n}?`, `Not when the delivery charge is usual, customary and listed separately on the bill (RSMo 144.010; DOR letter ruling 8387, March 24, 2026). A combined “shipping and handling” charge is taxed in full. On a $100 item in Springfield with $10 shipping listed separately the tax is ${m(ship.tax)}; billed as one charge it is ${m(shipC.tax)}. Tick the box in the calculator for the combined case.`],
     [`How do I take sales tax out of a total in ${n}?`, `Divide the total by 1 plus your combined rate. In Springfield (${pct(sp.sales)}) a total of $108.10 is ${m(rev.pre)} before tax, with ${m(rev.tax)} of tax inside it. Switch the calculator to “Remove tax”, pick your place and enter the total.`],
     [`Do I owe ${n} tax on things I buy online?`, `Yes, when the seller does not charge ${n} tax you owe use tax at the state rate of ${pct(s.base)} plus the local use tax where you use the item. A $3,000 item bought for use in Springfield with no tax charged means ${m(use.owed)} of use tax; if the seller charged 4% you still owe ${m(use2.owed)}. A use tax return is required once your untaxed purchases pass $2,000 in a year. Enter the tax the seller charged under Go advanced.`]
   ];
 }
 
+function ohFaqs(c) {
+  const s = E.STATES[c], n = s.name, P = s.places;
+  const fr = placeLike(c, 'Franklin County'), cu = placeLike(c, 'Cuyahoga County'), ha = placeLike(c, 'Hamilton County'), lu = placeLike(c, 'Lucas County'), su = placeLike(c, 'Summit County'), bu = placeLike(c, 'Butler County'), wa = placeLike(c, 'Warren County'), cota = placeLike(c, 'Licking County — Reynoldsburg');
+  const shipT = E.add({ state: c, items: [{ amt: 100, cat: 'general' }], ship: 10, place: fr }), shipX = E.add({ state: c, items: [{ amt: 100, cat: 'grocery' }], ship: 10, place: fr });
+  const use = ar(c, fr, 'general', 3000, { paid: 0 }), use2 = ar(c, fr, 'general', 3000, { paid: 5 });
+  const rev = E.reverse({ state: c, total: 108, cat: 'general', place: fr });
+  return [
+    [`What is the sales tax rate in ${n}?`, `${n}’s state sales tax rate is ${pct(s.base)} and every county adds its own tax, and some add a transit tax. In the October–December 2026 table the combined rate runs from ${pct(P.lo)} (Butler, Lorain, Stark and Wayne counties) to ${pct(P.baseHi)} (Cuyahoga and Franklin) — up to ${pct(P.hi)} in the Reynoldsburg part of Licking County. Hamilton County is ${pct(ha.sales)}, Lucas ${pct(lu.sales)} and Summit ${pct(su.sales)}. State law caps the combined rate at 8.75%. Search your county in the calculator above.`],
+    [`Why is ${n} sales tax different in every county?`, `Counties and regional transit authorities can add tax in steps of 0.05%, so each county ends up with its own rate. A $100 purchase costs ${m(ar(c, fr).total)} in Franklin County (Columbus) but ${m(ar(c, bu).total)} in Butler County. Rates can only change on January 1, April 1, July 1 or October 1 — Warren County went from 6.75% to ${pct(wa.sales)} on October 1, 2026.`],
+    [`Is food taxed in ${n}?`, `Food you eat off the premises is exempt, takeout included: a $100 grocery bill has $0.00 of tax. Soft drinks, alcohol, dietary supplements and tobacco are taxable even in a grocery store, and food eaten on the premises is taxable — $100 of restaurant food in Franklin County has ${m(ar(c, fr, 'prepared').tax)} of tax. Choose the item type in the calculator to see the difference.`],
+    [`Is clothing taxed in ${n}?`, `Yes. Clothing is taxed at your county’s rate — ${m(ar(c, fr).tax)} on $100 in Franklin County. The exception is the back-to-school sales tax holiday: in 2026 it ran from Friday, August 7 to Sunday, August 9 and exempted clothing of $75 or less per item. The dates and limits are set each year.`],
+    [`Are prescription drugs taxed in ${n}?`, `No. Prescription medicine and supplies, doctor-prescribed equipment and prescription glasses and contacts are exempt. Over-the-counter medicine, vitamins and supplements are taxable. Choose “Prescription” as the item type to see the tax removed.`],
+    [`Is shipping taxed in ${n}?`, `A delivery charge the seller adds is part of the price, so it is taxed with a taxable item and not taxed with an exempt one. On a $100 taxable item in Franklin County with $10 shipping the tax is ${m(shipT.tax)}; on $100 of exempt groceries it is ${m(shipX.tax)}. A mixed shipment is split by price or weight, and a carrier you pay directly is not taxed.`],
+    [`How do I take sales tax out of a total in ${n}?`, `Divide the total by 1 plus your county’s rate. In Franklin County (${pct(fr.sales)}) a total of $108.00 is ${m(rev.pre)} before tax, with ${m(rev.tax)} of tax inside it. Switch the calculator to “Remove tax”, pick your county and enter the total.`],
+    [`Do I owe ${n} tax on things I buy online?`, `Yes, when the seller does not charge ${n} tax you owe use tax at your county’s rate. A $3,000 item delivered to Franklin County with no tax charged means ${m(use.owed)} of use tax; if the seller charged 5% you still owe ${m(use2.owed)}. Enter the tax the seller charged under Go advanced.`]
+  ];
+}
+
+const PF = {
+  MO: {
+    unit: 'city', sampleLabel: 'Springfield, Greene County', sampleName: 'Springfield', faqs: moFaqs,
+    cityRows: () => MO_CITIES.map((x) => [x[0], placeBy('MO', x[1])]), cityHead: 'Sales tax by city', cityLead: 'Place',
+    heroP: (s, P, a) => `${s.name} charges a ${pct(s.base)} state sales tax and <strong>every city, county and district adds its own</strong> — combined rates run from ${pct(P.lo)} to ${pct(P.baseHi)}. Search your city to see yours: on <strong>$100</strong> it is <strong>${m(a.total)}</strong> in Springfield with <strong>${m(a.tax)}</strong> of tax.`,
+    glance: (s, P) => `<p>${s.name}’s state rate is <strong>${pct(s.base)}</strong>. Cities, counties and special districts add their own tax, and the seller collects the combined rate for the store’s location. In the October–December 2026 table the combined rate runs from <strong>${pct(P.lo)}</strong> to <strong>${pct(P.baseHi)}</strong> by city and county, and up to <strong>${pct(P.hi)}</strong> inside some Community Improvement Districts and Transportation Development Districts. Local rates change in January, April, July and October.</p>
+        <p>Even one city can have several rates — Kansas City is ${pct(placeBy('MO', MO_CITIES[2][1]).sales)} in Clay County, ${pct(placeBy('MO', MO_CITIES[1][1]).sales)} in Jackson County, ${pct(placeBy('MO', MO_CITIES[3][1]).sales)} in Platte County and ${pct(placeBy('MO', MO_CITIES[4][1]).sales)} in Cass County — so the calculator looks up your exact place instead of guessing.</p>`,
+    cityNote: (s, P) => `City and county rates from the Missouri Department of Revenue table for October–December 2026, including any district the DOR lists for the whole place. Search the calculator for any of the ${P.n.toLocaleString('en-US')} places and districts in the table.`,
+    shipLine: (c, s, p) => `On a $100 item in Springfield with $10 shipping listed separately the tax is ${m(E.add({ state: c, items: [{ amt: 100, cat: 'general' }], ship: 10, place: p }).tax)}; billed as one shipping-and-handling charge it is ${m(E.add({ state: c, items: [{ amt: 100, cat: 'general' }], ship: 10, place: p, shipTaxed: true }).tax)}.`,
+    use: 'Search your city or county, pick the line that matches where the seller is, add one item or several, choose what each one is and add shipping.',
+    title: (s) => s.name + ' Sales Tax Calculator 2026 — ' + pct(s.base) + ' State Rate + Local, by City | CalcThis',
+    desc: (s) => s.name + ' sales tax calculator by city and county: ' + pct(s.base) + ' state tax plus local, official Oct–Dec 2026 rates, groceries at the reduced rate, prescription drugs exempt, delivery rule, reverse tax.',
+    ogTitle: (s) => s.name + ' Sales Tax Calculator 2026 — by City', source: 'Missouri Department of Revenue', sampleOf: 'in Springfield'
+  },
+  OH: {
+    unit: 'county', sampleLabel: 'Franklin County', sampleName: 'Franklin County', faqs: ohFaqs,
+    cityRows: () => OH_PREFIXES.map((x) => { const p = placeLike('OH', x); return [p.label, p]; }), cityHead: 'Sales tax by county', cityLead: 'County',
+    heroP: (s, P, a) => `${s.name} charges a ${pct(s.base)} state sales tax and <strong>every county adds its own</strong> — combined rates run from ${pct(P.lo)} to ${pct(P.baseHi)}. Search your county or city to see yours: on <strong>$100</strong> it is <strong>${m(a.total)}</strong> in Franklin County (Columbus) with <strong>${m(a.tax)}</strong> of tax.`,
+    glance: (s, P) => `<p>${s.name}’s state rate is <strong>${pct(s.base)}</strong>. Every county adds its own tax and some add a transit tax, and the rate that applies depends on where the sale is sourced — usually the county where you receive the item. In the October 1 – December 31, 2026 table the combined rate runs from <strong>${pct(P.lo)}</strong> to <strong>${pct(P.baseHi)}</strong> by county, and up to <strong>${pct(P.hi)}</strong> in the Reynoldsburg part of Licking County. State law caps the combined rate at 8.75%, and rates can only change on January 1, April 1, July 1 or October 1.</p>
+        <p>A few city areas on a transit line pay a different rate from the rest of their county — the parts of Columbus, Dublin, Westerville and Reynoldsburg in Delaware, Fairfield, Licking and Union counties (COTA) and the part of Rossford in Wood County (TARTA) — so they are listed as separate lines in the search.</p>`,
+    cityNote: (s, P) => `County rates from the Ohio Department of Taxation table for October 1 – December 31, 2026. The city names in brackets are only there to help you find your county — the rate is always the county’s. Search the calculator for any of the ${P.n} county and transit-area rates in the table.`,
+    shipLine: (c, s, p) => `On a $100 taxable item in Franklin County with $10 shipping the tax is ${m(E.add({ state: c, items: [{ amt: 100, cat: 'general' }], ship: 10, place: p }).tax)}; on $100 of exempt groceries with $10 shipping it is ${m(E.add({ state: c, items: [{ amt: 100, cat: 'grocery' }], ship: 10, place: p }).tax)}.`,
+    use: 'Search your county or city, pick where you receive the item, add one item or several, choose what each one is and add shipping.',
+    title: (s) => s.name + ' Sales Tax Calculator 2026 — ' + pct(s.base) + ' State Rate + County, by County | CalcThis',
+    desc: (s) => s.name + ' sales tax calculator by county: ' + pct(s.base) + ' state tax plus county and transit, official Oct–Dec 2026 rates, groceries and prescriptions exempt, delivery rule, reverse tax.',
+    ogTitle: (s) => s.name + ' Sales Tax Calculator 2026 — by County', source: 'Ohio Department of Taxation', sampleOf: 'in Franklin County'
+  }
+};
+
 function writePlaceState(c) {
-  const s = E.STATES[c], n = s.name, P = s.places, url = 'https://calcthis.co/sales-tax-calculator/' + s.slug + '/', f = moFaqs(c);
-  const sp = placeBy(c, 'Springfield, Greene County'), a100 = E.add({ state: c, items: [{ amt: 100, cat: 'general' }], ship: 0, place: sp });
-  const kc = (i) => pct(placeBy(c, MO_CITIES[i][1]).sales);
-  const cityRows = MO_CITIES.map((x) => { const p = placeBy(c, x[1]), t = E.add({ state: c, items: [{ amt: 100, cat: 'general' }], ship: 0, place: p }); return '<tr><td>' + x[0] + '</td><td>' + pct(p.sales) + '</td><td>' + pct(p.food) + '</td><td>' + m(t.tax) + '</td></tr>'; }).join('');
+  const s = E.STATES[c], n = s.name, P = s.places, F = PF[c], url = 'https://calcthis.co/sales-tax-calculator/' + s.slug + '/', f = F.faqs(c);
+  const sp = placeLike(c, F.sampleLabel), a100 = E.add({ state: c, items: [{ amt: 100, cat: 'general' }], ship: 0, place: sp });
+  const cityRows = F.cityRows().map((x) => { const p = x[1], t = E.add({ state: c, items: [{ amt: 100, cat: 'general' }], ship: 0, place: p }); return '<tr><td>' + x[0] + '</td><td>' + pct(p.sales) + '</td>' + (P.noFood ? '' : '<td>' + pct(p.food) + '</td>') + '<td>' + m(t.tax) + '</td></tr>'; }).join('');
+  const cityTh = '<th>' + F.cityLead + '</th><th>' + (P.noFood ? 'Rate' : 'Most goods') + '</th>' + (P.noFood ? '' : '<th>Groceries</th>') + '<th>Tax on $100</th>';
   const catRows = s.cats.map((k) => '<tr><td>' + (k.long || k.label) + '</td><td>' + (k.taxable ? 'Taxable' : 'Exempt') + '</td><td>' + k.note + '</td></tr>').join('');
-  const shipSep = E.add({ state: c, items: [{ amt: 100, cat: 'general' }], ship: 10, place: sp }).tax, shipCom = E.add({ state: c, items: [{ amt: 100, cat: 'general' }], ship: 10, place: sp, shipTaxed: true }).tax;
   const hero = `  <section class="hero">
-    <div class="eyebrow">${n} · 2026 rates by city</div>
+    <div class="eyebrow">${n} · 2026 rates by ${F.unit}</div>
     <h1>${n} Sales Tax Calculator</h1>
-    <p>${n} charges a ${pct(s.base)} state sales tax and <strong>every city, county and district adds its own</strong> — combined rates run from ${pct(P.lo)} to ${pct(P.baseHi)}. Search your city to see yours: on <strong>$100</strong> it is <strong>${m(a100.total)}</strong> in Springfield with <strong>${m(a100.tax)}</strong> of tax.</p>
+    <p>${F.heroP(s, P, a100)}</p>
   </section>`;
   const content = `  <section class="content">
     <div class="grid2">
       <div>
         <h2>${n} sales tax at a glance</h2>
-        <p>${n}’s state rate is <strong>${pct(s.base)}</strong>. Cities, counties and special districts add their own tax, and the seller collects the combined rate for the store’s location. In the October–December 2026 table the combined rate runs from <strong>${pct(P.lo)}</strong> to <strong>${pct(P.baseHi)}</strong> by city and county, and up to <strong>${pct(P.hi)}</strong> inside some Community Improvement Districts and Transportation Development Districts. Local rates change in January, April, July and October.</p>
-        <p>Even one city can have several rates — Kansas City is ${kc(2)} in Clay County, ${kc(1)} in Jackson County, ${kc(3)} in Platte County and ${kc(4)} in Cass County — so the calculator looks up your exact place instead of guessing.</p>
+        ${F.glance(s, P)}
         <h2>What is taxed and what is exempt</h2>
         <div class="pc-tblwrap"><table class="dtable st-cattbl"><thead><tr><th>Item type</th><th>Sales tax</th><th>Details</th></tr></thead><tbody>${catRows}</tbody></table></div>
         <h2>Shipping and delivery</h2>
-        <p>${s.shipNote} On a $100 item in Springfield with $10 shipping listed separately the tax is ${m(shipSep)}; billed as one shipping-and-handling charge it is ${m(shipCom)}.</p>
-        <h2>Sales tax by city</h2>
-        <div class="pc-tblwrap"><table class="dtable"><thead><tr><th>Place</th><th>Most goods</th><th>Groceries</th><th>Tax on $100</th></tr></thead><tbody>${cityRows}</tbody></table></div>
-        <p>City and county rates from the Missouri Department of Revenue table for October–December 2026, including any district the DOR lists for the whole place. Search the calculator for any of the ${P.n.toLocaleString('en-US')} places and districts in the table.</p>
+        <p>${s.shipNote} ${F.shipLine(c, s, sp)}</p>
+        <h2>${F.cityHead}</h2>
+        <div class="pc-tblwrap"><table class="dtable"><thead><tr>${cityTh}</tr></thead><tbody>${cityRows}</tbody></table></div>
+        <p>${F.cityNote(s, P)}</p>
       </div>
       <div>
         <h2>Local taxes, special districts and fees</h2>
         <ul class="st-otherlist">${s.others.map((x) => '<li><b>' + x.t + '.</b> ' + x.d + '</li>').join('')}</ul>
         <h2>Use the ${n} calculator</h2>
-        <p>The state is already set to <strong>${n}</strong>. Search your city or county, pick the line that matches where the seller is, add one item or several, choose what each one is and add shipping. <strong>Remove tax</strong> works out the price before tax from a total, and <strong>Find the rate</strong> compares a price before and after tax with ${n}’s combined rates. Under <strong>Go advanced</strong> you can use your own rate or work out the use tax on something bought online.</p>
-        <p>This is an estimate based on the Department of Revenue’s published rates — the register can differ by a cent, and the seller’s own system decides what is taxable.</p>
+        <p>The state is already set to <strong>${n}</strong>. ${F.use} <strong>Remove tax</strong> works out the price before tax from a total, and <strong>Find the rate</strong> compares a price before and after tax with ${n}’s combined rates. Under <strong>Go advanced</strong> you can use your own rate or work out the use tax on something bought online.</p>
+        <p>This is an estimate based on the ${F.source}’s published rates — the register can differ by a cent, and the seller’s own system decides what is taxable.</p>
         <h2>Other states</h2>
         ${stateLinks(c)}
         <p>For any other state, the <a href="/sales-tax-calculator/">main sales tax calculator</a> uses your own combined rate.</p>
@@ -344,10 +392,8 @@ ${f.map((q) => `    <details class="faq"><summary>${q[0]}</summary><p>${q[1]}</p
     { '@type': 'ListItem', position: 2, name: 'Sales Tax Calculator', item: 'https://calcthis.co/sales-tax-calculator/' },
     { '@type': 'ListItem', position: 3, name: n, item: url }] };
   write('sales-tax-calculator/' + s.slug + '/index.html', pageHtml({
-    title: n + ' Sales Tax Calculator 2026 — ' + pct(s.base) + ' State Rate + Local, by City | CalcThis',
-    desc: n + ' sales tax calculator by city and county: ' + pct(s.base) + ' state tax plus local, official Oct–Dec 2026 rates, groceries at the reduced rate, prescription drugs exempt, delivery rule, reverse tax.',
-    ogTitle: n + ' Sales Tax Calculator 2026 — by City', url,
-    app: Object.assign(jsonApp(n + ' Sales Tax Calculator', url, n + ' sales tax calculator by city and county: add tax, remove tax or find the rate, with the exact local rate, groceries, exempt items and delivery rule.'), { dateModified: new Date().toISOString().slice(0, 10) }),
+    title: F.title(s), desc: F.desc(s), ogTitle: F.ogTitle(s), url,
+    app: Object.assign(jsonApp(n + ' Sales Tax Calculator', url, n + ' sales tax calculator by ' + F.unit + ': add tax, remove tax or find the rate, with the exact local rate, exempt items and delivery rule.'), { dateModified: new Date().toISOString().slice(0, 10) }),
     faq: jsonFaq(f), extraLd: [crumbs], hero, content, bodyAttr: ' data-state="' + c + '"', srcHtml: srcHtml(c)
   }));
 }

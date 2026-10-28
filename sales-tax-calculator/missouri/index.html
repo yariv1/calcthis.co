@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=224">
+<link rel="stylesheet" href="/assets/style.css?v=233">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
 <script>
@@ -39,7 +39,7 @@
     "price": "0",
     "priceCurrency": "USD"
   },
-  "description": "Missouri sales tax calculator by city and county: add tax, remove tax or find the rate, with the exact local rate, groceries, exempt items and delivery rule.",
+  "description": "Missouri sales tax calculator by city: add tax, remove tax or find the rate, with the exact local rate, exempt items and delivery rule.",
   "dateModified": "2026-10-28"
 }
 </script>
@@ -85,7 +85,7 @@
       "name": "Are prescription drugs taxed in Missouri?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "No. Prescription drugs, insulin and hearing aids are exempt. Over-the-counter medicine is taxable unless it is prescribed or bought by a person with a disability. Choose “Prescription drugs” as the item type to see the tax removed."
+        "text": "No. Prescription drugs, insulin and hearing aids are exempt. Over-the-counter medicine is taxable unless it is prescribed or bought by a person with a disability. Choose “Prescription” as the item type to see the tax removed."
       }
     },
     {
@@ -234,6 +234,7 @@
           <a href="/sales-tax-calculator/">Sales Tax</a>
           <a href="/sales-tax-calculator/missouri/" class="current">Missouri Sales Tax</a>
           <a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax</a>
+          <a href="/sales-tax-calculator/ohio/">Ohio Sales Tax</a>
           <!--STAXNAV:END-->
         </div>
         <!--PAYNAV:START-->
@@ -290,7 +291,7 @@
         </div>
 
         <div class="fld"><span class="lab">State</span><div class="csel" id="stState" data-value=""><button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false"><span class="csel-val"></span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="csel-panel" role="listbox"></div></div></div>
-        <div class="fld" id="stPlaceFld" style="display:none"><span class="lab">Where are you buying?</span><div class="st-ta"><div class="inp"><input id="stPlace" type="text" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="stPlaceList" placeholder="Type your city, e.g. Springfield"></div><div class="st-ta-list" id="stPlaceList" role="listbox" style="display:none"></div></div><p class="st-note st-pnote" id="stPlaceNote"></p></div>
+        <div class="fld" id="stPlaceFld" style="display:none"><span class="lab">Where are you buying?</span><div class="st-ta"><div class="inp"><input id="stPlace" type="search" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="stPlaceList" placeholder="Type your city, e.g. Springfield"></div><div class="st-ta-list" id="stPlaceList" role="listbox" style="display:none"></div></div><p class="st-note st-pnote" id="stPlaceNote"></p></div>
         <div id="stRateFld"><div class="fld"><label class="lab" for="stRate">Sales tax rate <span class="unit">%</span></label><div class="inp"><input id="stRate" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 8.25"></div></div></div>
 
         <div id="stAddBox">
@@ -412,9 +413,9 @@
         <ul class="st-otherlist"><li><b>Local tax everywhere.</b> Every place in Missouri adds city, county or district tax to the 4.225% state rate. In the October–December 2026 table the combined rate runs from 5.225% to 11.488%, and up to 13.238% inside some special districts. Search your place above.</li><li><b>Shopping-center districts (CID, TDD).</b> A Community Improvement District or Transportation Development District adds its own tax inside its boundaries. Each one is a separate line in the place search — pick it if the store is inside one.</li><li><b>Groceries.</b> The state rate on food for home use is 1.225% (down from 4.225%). Local taxes still apply to food and drink, and a few places leave some of them off food — the calculator uses the food rate listed for your place.</li><li><b>Restaurants and amusement places.</b> The reduced food rate does not apply when more than 80% of a seller’s gross receipts are prepared food, or to food sold at places of amusement, entertainment or recreation. Food trucks charge the full rate of the place where they sell.</li><li><b>Delivery charges.</b> Separately stated, usual and customary delivery charges are not taxed (RSMo 144.010; DOR letter ruling 8387). A combined “shipping and handling” charge is taxed in full.</li><li><b>Back-to-school sales tax holiday.</b> From 12:01 a.m. on the first Friday in August until midnight on Sunday, clothing of $100 or less, school supplies up to $50, software up to $350, computers and peripherals up to $1,500 and graphing calculators up to $150 are free of state and local sales tax. The calculator does not apply the holiday — outside those days all of these are taxed at your place’s rate.</li><li><b>Adult-use marijuana.</b> Some places add a separate local tax on adult-use marijuana. It is not included in this calculator.</li><li><b>Bought online or out of state.</b> If the seller did not charge Missouri tax you owe use tax at the state rate of 4.225% plus the local use tax where you use the item. Pick your place and enter any tax the seller charged under Go advanced. A use tax return is required once your untaxed purchases pass $2,000 in a year.</li><li><b>Rates change every quarter.</b> Local rates change in January, April, July and October. The rates here are from the October–December 2026 table.</li></ul>
         <h2>Use the Missouri calculator</h2>
         <p>The state is already set to <strong>Missouri</strong>. Search your city or county, pick the line that matches where the seller is, add one item or several, choose what each one is and add shipping. <strong>Remove tax</strong> works out the price before tax from a total, and <strong>Find the rate</strong> compares a price before and after tax with Missouri’s combined rates. Under <strong>Go advanced</strong> you can use your own rate or work out the use tax on something bought online.</p>
-        <p>This is an estimate based on the Department of Revenue’s published rates — the register can differ by a cent, and the seller’s own system decides what is taxable.</p>
+        <p>This is an estimate based on the Missouri Department of Revenue’s published rates — the register can differ by a cent, and the seller’s own system decides what is taxable.</p>
         <h2>Other states</h2>
-        <ul class="pc-statelist"><li><a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax Calculator</a></li></ul>
+        <ul class="pc-statelist"><li><a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax Calculator</a></li><li><a href="/sales-tax-calculator/ohio/">Ohio Sales Tax Calculator</a></li></ul>
         <p>For any other state, the <a href="/sales-tax-calculator/">main sales tax calculator</a> uses your own combined rate.</p>
       </div>
     </div>
@@ -424,7 +425,7 @@
     <details class="faq"><summary>Why is Missouri sales tax different in every city?</summary><p>Cities, counties and special districts can each add a local sales tax to the 4.225% state rate, and the seller collects the combined rate for where the store is. Even one city can have several rates: Kansas City is 8.725% in Clay County, 8.975% in Jackson County, 8.725% in Platte County and 9.1% in Cass County. A $100 purchase costs $108.10 in Springfield but $109.68 in St. Louis city.</p></details>
     <details class="faq"><summary>Is food taxed in Missouri?</summary><p>Yes, but at a lower rate. The state rate on food for home use is cut to 1.225%, and local taxes still apply, so groceries are taxed at the “food” rate listed for your place: 5.1% in Springfield ($5.10 on $100) and 6.391% in St. Louis city ($6.39 on $100). Restaurant food is taxed at the full rate, and so is all food at a seller whose prepared food is more than 80% of its sales.</p></details>
     <details class="faq"><summary>Is clothing taxed in Missouri?</summary><p>Yes. Clothing is taxed at the full combined rate for your place — $9.68 on $100 in St. Louis city. The exception is the back-to-school sales tax holiday, from 12:01 a.m. on the first Friday in August through Sunday, when clothing of $100 or less is free of state and local sales tax.</p></details>
-    <details class="faq"><summary>Are prescription drugs taxed in Missouri?</summary><p>No. Prescription drugs, insulin and hearing aids are exempt. Over-the-counter medicine is taxable unless it is prescribed or bought by a person with a disability. Choose “Prescription drugs” as the item type to see the tax removed.</p></details>
+    <details class="faq"><summary>Are prescription drugs taxed in Missouri?</summary><p>No. Prescription drugs, insulin and hearing aids are exempt. Over-the-counter medicine is taxable unless it is prescribed or bought by a person with a disability. Choose “Prescription” as the item type to see the tax removed.</p></details>
     <details class="faq"><summary>Is shipping taxed in Missouri?</summary><p>Not when the delivery charge is usual, customary and listed separately on the bill (RSMo 144.010; DOR letter ruling 8387, March 24, 2026). A combined “shipping and handling” charge is taxed in full. On a $100 item in Springfield with $10 shipping listed separately the tax is $8.10; billed as one charge it is $8.91. Tick the box in the calculator for the combined case.</p></details>
     <details class="faq"><summary>How do I take sales tax out of a total in Missouri?</summary><p>Divide the total by 1 plus your combined rate. In Springfield (8.1%) a total of $108.10 is $100.00 before tax, with $8.10 of tax inside it. Switch the calculator to “Remove tax”, pick your place and enter the total.</p></details>
     <details class="faq"><summary>Do I owe Missouri tax on things I buy online?</summary><p>Yes, when the seller does not charge Missouri tax you owe use tax at the state rate of 4.225% plus the local use tax where you use the item. A $3,000 item bought for use in Springfield with no tax charged means $190.50 of use tax; if the seller charged 4% you still owe $70.50. A use tax return is required once your untaxed purchases pass $2,000 in a year. Enter the tax the seller charged under Go advanced.</p></details>
@@ -482,6 +483,7 @@
           <li><a href="/sales-tax-calculator/">Sales Tax Calculator</a></li>
           <li><a href="/sales-tax-calculator/missouri/">Missouri Sales Tax Calculator</a></li>
           <li><a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/ohio/">Ohio Sales Tax Calculator</a></li>
           <!--STAXFOOT:END-->
         </ul>
       </div>
@@ -609,7 +611,7 @@
 
 </div>
 
-<script src="/assets/app.js?v=224"></script>
+<script src="/assets/app.js?v=233"></script>
 <script>CalcThis.initSalesTaxCalc();</script>
 <script src="/feedback.js" defer></script>
 </body>

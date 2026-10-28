@@ -127,3 +127,4 @@
 - [Sales Tax Calculator](https://calcthis.co/sales-tax-calculator/): add sales tax, remove it from a total or find the rate; state rates for every state.
 - [Missouri Sales Tax Calculator](https://calcthis.co/sales-tax-calculator/missouri/): Missouri sales tax with exempt items, shipping rule and special zones.
 - [New Jersey Sales Tax Calculator](https://calcthis.co/sales-tax-calculator/new-jersey/): New Jersey sales tax with exempt items, shipping rule and special zones.
+- [Ohio Sales Tax Calculator](https://calcthis.co/sales-tax-calculator/ohio/): Ohio sales tax with exempt items, shipping rule and special zones.
