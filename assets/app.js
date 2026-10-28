@@ -12817,6 +12817,397 @@ CalcThis.initTurkeySizeCalc = function () {
 };
 
 /* =========================================================
+   FINANCE · SALES TAX CALCULATOR — hub (/sales-tax-calculator/) + one page per state
+   (/sales-tax-calculator/new-jersey/ …). One engine + one UI. A state page is "live" only when
+   its rate, exempt categories, special zones and shipping rule come from the state's own
+   published guidance (source + date shown on the page); every other state still calculates
+   from its STATE rate and is labelled "state rate only" with the sourced maximum local add-on
+   shown as a range — never a guessed local rate. State pages: <body data-state="NJ">.
+   State rates + local ranges: Tax Foundation, "2026 Sales Tax Rates, Midyear Update"
+   (rates as of July 1, 2026). NJ rules: NJ Division of Taxation bulletins S&U-4 and S&U-5.
+   ========================================================= */
+/* SALESTAX-ENGINE:START */
+CalcThis.saleTaxEngine = (function () {
+  var SRC_TF = 'https://taxfoundation.org/data/all/state/2026-sales-tax-rates-midyear/';
+  /* code: [name, state rate %, average local %, maximum local %] */
+  var T = {
+    AL: ['Alabama', 4, 5.46, 8], AK: ['Alaska', 0, 1.82, 7.85], AZ: ['Arizona', 5.6, 2.94, 5.3], AR: ['Arkansas', 6.5, 2.98, 6.13], CA: ['California', 7.25, 1.78, 5.25],
+    CO: ['Colorado', 2.9, 4.99, 9.1], CT: ['Connecticut', 6.35, 0, 0], DE: ['Delaware', 0, 0, 0], DC: ['District of Columbia', 6, 0, 0], FL: ['Florida', 6, 0.98, 2],
+    GA: ['Georgia', 4, 3.56, 5], HI: ['Hawaii', 4, 0.5, 0.5], ID: ['Idaho', 6, 0.03, 3], IL: ['Illinois', 6.25, 2.73, 4.75], IN: ['Indiana', 7, 0, 0],
+    IA: ['Iowa', 6, 0.94, 1], KS: ['Kansas', 6.5, 2.21, 4.25], KY: ['Kentucky', 6, 0, 0], LA: ['Louisiana', 5, 5.13, 7], ME: ['Maine', 5.5, 0, 0],
+    MD: ['Maryland', 6, 0, 0], MA: ['Massachusetts', 6.25, 0, 0], MI: ['Michigan', 6, 0, 0], MN: ['Minnesota', 6.875, 1.26, 3], MS: ['Mississippi', 7, 0.06, 1],
+    MO: ['Missouri', 4.225, 4.22, 6.25], MT: ['Montana', 0, 0, 0], NE: ['Nebraska', 5.5, 1.48, 2], NV: ['Nevada', 6.85, 1.39, 1.53], NH: ['New Hampshire', 0, 0, 0],
+    NJ: ['New Jersey', 6.625, 0, 0], NM: ['New Mexico', 4.875, 2.8, 4.56], NY: ['New York', 4, 4.54, 4.88], NC: ['North Carolina', 4.75, 2.35, 3.5], ND: ['North Dakota', 5, 2.09, 3.75],
+    OH: ['Ohio', 5.75, 1.54, 2.25], OK: ['Oklahoma', 4.5, 4.56, 7], OR: ['Oregon', 0, 0, 0], PA: ['Pennsylvania', 6, 0.34, 2], RI: ['Rhode Island', 7, 0, 0],
+    SC: ['South Carolina', 6, 1.49, 3], SD: ['South Dakota', 4.2, 1.91, 4.5], TN: ['Tennessee', 7, 2.61, 2.75], TX: ['Texas', 6.25, 1.95, 2], UT: ['Utah', 6.1, 1.32, 4.7],
+    VT: ['Vermont', 6, 0.43, 1], VA: ['Virginia', 5.3, 0.47, 2.7], WA: ['Washington', 6.5, 3.07, 4.2], WV: ['West Virginia', 6, 0.6, 1.4], WI: ['Wisconsin', 5, 0.72, 2.9], WY: ['Wyoming', 4, 1.39, 3]
+  };
+  var S = {};
+  Object.keys(T).forEach(function (c) { S[c] = { code: c, name: T[c][0], base: T[c][1], avgLocal: T[c][2], maxLocal: T[c][3], live: false, src: [{ t: 'Tax Foundation — 2026 sales tax rates (July 1, 2026)', u: SRC_TF }] }; });
+  var NJ_GUIDE = { t: 'NJ Division of Taxation — New Jersey Sales Tax Guide (S&U-4)', u: 'https://www.nj.gov/treasury/taxation/pdf/pubs/sales/su4.pdf' };
+  var NJ_MAIL = { t: 'NJ Division of Taxation — Making Mail-Order and Internet Sales (S&U-5)', u: 'https://www.nj.gov/treasury/taxation/pdf/pubs/sales/su5.pdf' };
+  Object.assign(S.NJ, {
+    live: true, slug: 'new-jersey', eff: 'July 1, 2026', nearby: ['NY', 'PA', 'DE'],
+    src: [NJ_GUIDE, NJ_MAIL, { t: 'Tax Foundation — 2026 sales tax rates (July 1, 2026)', u: SRC_TF }],
+    cats: [
+      { id: 'general', label: 'Other goods', long: 'Most other goods', taxable: true, note: 'Most goods are taxable.' },
+      { id: 'grocery', label: 'Groceries', long: 'Groceries (food for home)', taxable: false, note: 'Food bought for home use is exempt. Candy, soft drinks, alcohol, tobacco and prepared food are taxable.' },
+      { id: 'clothing', label: 'Clothing', long: 'Clothing and shoes', taxable: false, note: 'Exempt at any price. Fur clothing, accessories, and sports, recreational or protective equipment are taxable.' },
+      { id: 'drugs', label: 'Medicine', long: 'Prescription and over-the-counter drugs', taxable: false, note: 'Prescription and over-the-counter drugs are exempt.' },
+      { id: 'prepared', label: 'Restaurant', long: 'Restaurant and prepared food', taxable: true, note: 'Food heated by the seller, combined by the seller, or sold with utensils is taxable.' },
+      { id: 'candy', label: 'Candy & soda', long: 'Candy and soft drinks', taxable: true, note: 'Taxable, even in a grocery store (exempt when paid with SNAP benefits).' }
+    ],
+    zones: [
+      { id: 'std', std: true, label: 'Anywhere in New Jersey', rate: 6.625 },
+      { id: 'uez', label: 'Urban Enterprise Zone store, in person', rate: 3.3125, cats: ['general'], ignore: 'The half-rate Urban Enterprise Zone price covers most goods bought in person from a certified seller — the standard rate is used for this item. Ask the store.' },
+      { id: 'salem', label: 'Salem County store, in person', rate: 3.3125, cats: ['general', 'candy'], ignore: 'Salem County’s half rate does not cover prepared food — the standard rate is used for this item.' },
+      { id: 'wild', label: 'Wildwood, Wildwood Crest or North Wildwood', rate: 8.625, cats: ['prepared'], ignore: 'The extra 2% Cape May tourism tax applies to restaurant food and drink, lodging and admissions — the standard rate is used for this item.' }
+    ],
+    shipNote: 'Delivery charges are taxed when the item is taxable and not taxed when it is exempt. A mixed shipment is split by price.',
+    others: [
+      { t: 'Urban Enterprise Zones and Salem County', d: 'In-person sales by certified sellers in an Urban Enterprise Zone, and most in-person goods sales in Salem County, are taxed at half the rate: 3.3125%. Online, mail-order, services, prepared food, alcohol and motor vehicles in Salem County pay the full rate. Pick your location above.' },
+      { t: 'Atlantic City', d: 'A luxury tax of 9% applies to certain sales, rentals and services (3% on alcohol sold by the drink). The state rate is reduced so the combined rate never passes 12.625%.' },
+      { t: 'Wildwood, Wildwood Crest and North Wildwood', d: 'A 2% tourism tax is added to restaurant food and drink, lodging and admissions: 8.625% in total. Pick your location above.' },
+      { t: 'Hotels and short-term rentals', d: 'Sales tax plus a state occupancy fee of 5% (1% in Newark, Jersey City and Atlantic City; 3.15% in the three Wildwoods) and up to 3% municipal occupancy tax. These fees are not included in the calculator.' },
+      { t: 'Bought online or out of state', d: 'If the seller did not charge New Jersey tax, you owe 6.625% use tax on the price plus delivery. If you paid a lower rate elsewhere, you owe the difference — enter that rate under Go advanced.' }
+    ]
+  });
+  function r2(x) { return Math.round(x * 100 + 1e-9) / 100; }
+  function cat(st, id) { var l = st && st.cats ? st.cats : []; for (var i = 0; i < l.length; i++) if (l[i].id === id) return l[i]; return null; }
+  function zone(st, id) { var l = st && st.zones ? st.zones : []; for (var i = 0; i < l.length; i++) if (l[i].id === id) return l[i]; return null; }
+  /* the rate that applies to one purchase */
+  function rateFor(o) {
+    var st = o.state ? S[o.state] : null;
+    if (!st) return { rate: o.own == null ? 0 : o.own, taxable: true, ignored: '' };
+    var c = cat(st, o.cat);
+    if (c && !c.taxable) return { rate: 0, taxable: false, ignored: '', cat: c };
+    if (o.own != null) return { rate: o.own, taxable: true, ignored: '', cat: c };
+    var z = zone(st, o.zone);
+    if (!z || z.std) return { rate: st.base, taxable: true, ignored: '', cat: c };
+    if (z.cats && z.cats.indexOf(o.cat) < 0) return { rate: st.base, taxable: true, ignored: z.ignore || '', cat: c };
+    return { rate: z.rate, taxable: true, ignored: '', zone: z, cat: c };
+  }
+  /* add tax: items [{amt, cat}], ship, zone, own (rate % or null), paid (rate % already charged or null), shipTaxed (only used when the state's own shipping rule is not on file) */
+  function add(o) {
+    var items = o.items || [], ship = o.ship || 0, sum = 0, i;
+    items.forEach(function (it) { sum += it.amt; });
+    var lines = [], taxSum = 0, shipTax = 0, owedRaw = 0, paid = o.paid == null ? null : o.paid;
+    var stt = o.state ? S[o.state] : null, shipTaxed = (stt && stt.live) ? true : !!o.shipTaxed;
+    for (i = 0; i < items.length; i++) {
+      var it = items[i], rf = rateFor({ state: o.state, cat: it.cat, zone: o.zone, own: o.own });
+      var tax = r2(it.amt * rf.rate / 100);
+      var share = sum > 0 ? ship * it.amt / sum : 0;
+      if (shipTaxed) shipTax += share * rf.rate / 100;
+      if (paid != null && rf.taxable) owedRaw += (it.amt + (shipTaxed ? share : 0)) * Math.max(0, rf.rate - paid) / 100;
+      lines.push({ amt: it.amt, cat: it.cat, rate: rf.rate, taxable: rf.taxable, tax: tax, ignored: rf.ignored, catObj: rf.cat });
+      taxSum += tax;
+    }
+    shipTax = r2(shipTax);
+    var tax2 = r2(taxSum + shipTax), subtotal = r2(sum), total = r2(subtotal + ship + tax2);
+    var base = subtotal + ship;
+    var rates = lines.filter(function (l) { return l.taxable; }).map(function (l) { return l.rate; });
+    var same = rates.length > 0 && rates.every(function (x) { return x === rates[0]; });
+    return { lines: lines, subtotal: subtotal, ship: r2(ship), shipTax: shipTax, tax: tax2, total: total, effective: base > 0 ? tax2 / base * 100 : 0, rate: same ? rates[0] : null, mixed: rates.length > 0 && !same, ignored: lines.map(function (l) { return l.ignored; }).filter(Boolean).filter(function (v, k, a) { return a.indexOf(v) === k; }), owed: paid == null ? null : r2(owedRaw), paid: paid };
+  }
+  /* tax-inclusive total -> price before tax and the tax inside it */
+  function reverse(o) {
+    var rf = rateFor({ state: o.state, cat: o.cat, zone: o.zone, own: o.own }), tot = r2(o.total);
+    var pre = rf.rate > 0 ? r2(tot / (1 + rf.rate / 100)) : tot;
+    return { total: tot, pre: pre, tax: r2(tot - pre), rate: rf.rate, taxable: rf.taxable, ignored: rf.ignored, catObj: rf.cat };
+  }
+  function findRate(before, after) { return before > 0 ? (after - before) / before * 100 : NaN; }
+  /* state rate only: the total at the state rate and at the state rate plus the maximum local add-on */
+  function range(code, base) {
+    var st = S[code]; if (!st) return null;
+    return { lo: r2(base * (1 + st.base / 100)), hi: r2(base * (1 + (st.base + st.maxLocal) / 100)), none: st.maxLocal === 0 };
+  }
+  return { STATES: S, SRC_TF: SRC_TF, r2: r2, cat: cat, zone: zone, rateFor: rateFor, add: add, reverse: reverse, findRate: findRate, range: range };
+})();
+/* SALESTAX-ENGINE:END */
+
+CalcThis.initSalesTaxCalc = function () {
+  var E = CalcThis.saleTaxEngine, $ = function (id) { return document.getElementById(id); };
+  var st = { mode: 'add', adv: false, rows: [{ amt: '', cat: 'general' }] }, last = null;
+  var MAX = 1e9;
+  function num(v) { var t = String(v).replace(/[$,\s%]/g, ''); var n = t === '' ? NaN : Number(t); return isFinite(n) ? n : NaN; }
+  function mon(x) { return (x < 0 ? '−' : '') + '$' + Math.abs(x).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+  function pct(x) { return String(Math.round(x * 10000) / 10000) + '%'; }
+  function esc(t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'); }
+  function setSeg(id, v) { [].forEach.call($(id).querySelectorAll('button'), function (b) { b.classList.toggle('on', b.getAttribute('data-v') === v); }); }
+  function setHint(m) { var h = $('stHint'); h.textContent = m || ''; h.style.display = m ? 'block' : 'none'; }
+  function code() { return $('stState').value || ''; }
+  function S() { return code() ? E.STATES[code()] : null; }
+  function live() { var s = S(); return !!(s && s.live); }
+  var CHEV = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
+  function setPanel(root, opts, val) {
+    var panel = root.querySelector('.csel-panel');
+    panel.innerHTML = opts.map(function (o) { return '<button type="button" class="csel-opt' + (o[0] === val ? ' on' : '') + '" role="option" aria-selected="' + (o[0] === val) + '" data-value="' + esc(o[0]) + '">' + esc(o[1]) + '</button>'; }).join('');
+    root.setAttribute('data-value', val);
+    root.querySelector('.csel-val').textContent = (opts.filter(function (o) { return o[0] === val; })[0] || opts[0])[1];
+    CalcThis.initCsel(root);
+  }
+  function catOpts() { var s = S(); return s && s.cats ? s.cats.map(function (c) { return [c.id, c.label]; }) : []; }
+
+  /* ---- item rows ---- */
+  function buildRows() {
+    var cats = live() ? catOpts() : [], box = $('stItems');
+    box.innerHTML = st.rows.map(function (r, i) {
+      var lab = i === 0 ? 'Item price' : 'Item ' + (i + 1) + ' price';
+      var amt = '<div class="fld"><div class="st-lab"><label class="lab" for="stAmt' + i + '">' + lab + ' <span class="unit">$</span></label>' + (i > 0 ? '<button type="button" class="st-rm" data-i="' + i + '">Remove</button>' : '') + '</div><div class="inp"><input id="stAmt' + i + '" class="st-amt" data-i="' + i + '" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. ' + (i === 0 ? '100' : '25.99') + '" value="' + esc(r.amt) + '"></div></div>';
+      if (!cats.length) return '<div class="st-row">' + amt + '</div>';
+      return '<div class="st-row ln-two">' + amt + '<div class="fld"><div class="st-lab"><span class="lab">Type</span></div><div class="csel st-cat" data-i="' + i + '" data-value="' + esc(r.cat) + '"><button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false"><span class="csel-val"></span>' + CHEV + '</button><div class="csel-panel" role="listbox"></div></div></div></div>';
+    }).join('');
+    [].forEach.call(box.querySelectorAll('.st-cat'), function (el) { setPanel(el, cats, el.getAttribute('data-value')); });
+  }
+  function syncState() {
+    var s = S(), lv = live();
+    st.rows.forEach(function (r) { if (!lv || !E.cat(s, r.cat)) r.cat = 'general'; });
+    buildRows();
+    var zs = lv && s.zones ? s.zones.map(function (z) { return [z.id, z.label]; }) : [];
+    $('stZoneFld').style.display = zs.length && st.mode !== 'find' ? '' : 'none';
+    if (zs.length) setPanel($('stZone'), zs, zs[0][0]);
+    $('stRevCatFld').style.display = lv && st.mode === 'rev' ? '' : 'none';
+    if (lv) setPanel($('stRevCat'), catOpts(), 'general');
+    $('stRateFld').style.display = s ? 'none' : '';
+    $('stOwnFld').style.display = s ? '' : 'none';
+    $('stOther').style.display = lv ? '' : 'none';
+    $('stShipTaxFld').style.display = !lv && st.mode === 'add' ? '' : 'none';
+    $('stShipNote').textContent = lv && s.shipNote ? s.shipNote : '';
+    $('stShipNote').style.display = lv && s.shipNote ? '' : 'none';
+    if (lv) {
+      $('stOtherList').innerHTML = s.others.map(function (x) { return '<li><b>' + esc(x.t) + '.</b> ' + esc(x.d) + '</li>'; }).join('');
+      $('stOtherH').textContent = 'Other taxes and fees in ' + s.name;
+    }
+  }
+  function showMode() {
+    var m = st.mode, s = S();
+    $('stAddBox').style.display = m === 'add' ? '' : 'none';
+    $('stRevBox').style.display = m === 'rev' ? '' : 'none';
+    $('stFindBox').style.display = m === 'find' ? '' : 'none';
+    $('stZoneFld').style.display = live() && S().zones && m !== 'find' ? '' : 'none';
+    $('stRevCatFld').style.display = live() && m === 'rev' ? '' : 'none';
+    $('stPaidFld').style.display = m === 'add' ? '' : 'none';
+    $('stShipTaxFld').style.display = !live() && m === 'add' ? '' : 'none';
+    $('stOwnFld').style.display = s && m !== 'find' ? '' : 'none';
+    $('stRateFld').style.display = !s && m !== 'find' ? '' : 'none';
+    var hasAdv = m === 'add' || (m === 'rev' && !!s);
+    $('stAdvBtn').parentNode.style.display = hasAdv ? '' : 'none';
+    $('stAdvIn').style.display = hasAdv && st.adv ? '' : 'none';
+    $('stEx').textContent = m === 'find' ? 'See an example: $100 before tax, $108.25 after' : (m === 'rev' ? 'See an example: a $106.63 total with tax included' : 'See an example: a $100 purchase');
+  }
+
+  /* ---- results ---- */
+  function table(head, rows) {
+    return '<thead><tr>' + head.map(function (h) { return '<th>' + h + '</th>'; }).join('') + '</tr></thead><tbody>' + rows.map(function (r) { return '<tr' + (r[3] ? ' class="cur"' : '') + '><td>' + r[0] + '</td><td>' + r[1] + '</td><td>' + r[2] + '</td></tr>'; }).join('') + '</tbody>';
+  }
+  function bar(segs) {
+    var tot = segs.reduce(function (a, s) { return a + s[1]; }, 0); if (!(tot > 0)) return ['', ''];
+    var k = segs.filter(function (s) { return s[1] > 0.0049; });
+    return ['<div class="ln-bar">' + k.map(function (s) { return '<span class="ln-seg ' + s[0] + '" style="width:' + (s[1] / tot * 100) + '%"></span>'; }).join('') + '</div>', k.map(function (s) { return '<span><i class="ln-dotc ' + s[0] + '"></i>' + s[2] + ' ' + mon(s[1]) + '</span>'; }).join('')];
+  }
+  function neighbours(base) {
+    var s = S(); if (!live() || !s.nearby) return '';
+    var rows = [['New Jersey', mon(E.r2(base * (1 + s.base / 100))), pct(s.base) + ', no local tax']].concat(s.nearby.map(function (c) {
+      var o = E.STATES[c], r = E.range(c, base);
+      return [o.name, o.maxLocal ? mon(r.lo) + ' – ' + mon(r.hi) : mon(r.lo), pct(o.base) + (o.maxLocal ? ' plus up to ' + pct(o.maxLocal) + ' local' : (o.base ? ', no local tax' : ', no sales tax'))];
+    }));
+    return '<div class="fc-grp">The same purchase next door</div><table class="dtable ln-terms st-near">' + table(['State', 'Total', 'Rate'], rows) + '</table><p class="res-tip">Price only (no shipping), general goods, state rate and the highest local add-on. Source: Tax Foundation, rates as of July 1, 2026.</p>';
+  }
+  function empty(lab, msg, hint) {
+    $('stResLab').textContent = lab; $('stBig').textContent = '—'; $('stSub').textContent = msg; $('stMVal').textContent = '—';
+    $('stResults').style.display = 'none'; last = null; setHint(hint || '');
+  }
+  function getOwn(hints) {
+    var s = S(), id = s ? 'stOwn' : 'stRate', raw = $(id).value.trim();
+    if (!raw) return null;
+    var n = num(raw);
+    if (!isFinite(n) || n < 0 || n > 30) { hints.push('Sales tax rate must be a number from 0 to 30, like 6.625.'); return null; }
+    return n;
+  }
+  function rangeLine(s, base, own, plus) {
+    if (own != null || !s || s.live) return '';
+    var r = E.range(s.code, base); r.lo = E.r2(r.lo + plus); r.hi = E.r2(r.hi + plus);
+    if (r.none) return s.name + (s.base ? ' has no local sales tax, so the state rate of ' + pct(s.base) + ' is the full rate.' : ' has no state sales tax and no local sales tax.');
+    return 'This is the ' + s.name + ' state rate (' + pct(s.base) + ') only. Cities and counties may add up to ' + pct(s.maxLocal) + ' more, which would make the total between ' + mon(r.lo) + ' and ' + mon(r.hi) + '. Enter your exact combined rate under Go advanced to get one number.';
+  }
+  function renderAdd(hints) {
+    var s = S(), own = getOwn(hints), items = [], bad = false;
+    st.rows.forEach(function (r) {
+      var raw = String(r.amt).trim(); if (!raw) return;
+      var n = num(raw);
+      if (!isFinite(n) || n < 0 || n > MAX) { bad = true; return; }
+      items.push({ amt: n, cat: r.cat });
+    });
+    if (bad) hints.push('Item price must be a number like 49.99 — only dollars and cents.');
+    var shipRaw = $('stShip').value.trim(), ship = 0;
+    if (shipRaw) { var sn = num(shipRaw); if (!isFinite(sn) || sn < 0 || sn > MAX) hints.push('Shipping must be a number like 7.50.'); else ship = sn; }
+    var paid = null, pr = $('stPaid').value.trim();
+    if (pr) { var pn = num(pr); if (!isFinite(pn) || pn < 0 || pn > 30) hints.push('Tax already charged must be a rate from 0 to 30, like 4.'); else paid = pn; }
+    if (!items.length) { empty('Total', 'Enter an item price to see the tax.', hints[0]); return; }
+    if (!s && own == null) { empty('Total', 'Enter the sales tax rate for your area.', hints[0]); return; }
+    var zone = live() && $('stZoneFld').style.display !== 'none' ? $('stZone').value : null;
+    var shipChk = !live() && $('stShipTaxed').checked;
+    var r = E.add({ state: code() || null, items: items, ship: ship, zone: zone, own: own, paid: paid, shipTaxed: shipChk });
+    var rate = r.rate != null ? pct(r.rate) : 'mixed rates';
+    $('stResLab').textContent = 'Total with tax'; $('stBig').textContent = mon(r.total);
+    $('stSub').textContent = r.tax > 0 ? mon(r.tax) + ' of sales tax' + (r.rate != null ? ' at ' + rate : '') : 'No sales tax on this purchase';
+    $('stMLab').textContent = 'Total with tax'; $('stMVal').textContent = mon(r.total);
+    var rows = r.lines.map(function (l, i) {
+      var nm = (items.length > 1 ? 'Item ' + (i + 1) : 'Item') + (l.catObj && live() ? ' · ' + esc(l.catObj.label) : '');
+      return [nm, mon(l.amt), l.taxable ? mon(l.tax) + ' <small>' + pct(l.rate) + '</small>' : 'exempt'];
+    });
+    if (r.ship > 0) rows.push(['Shipping', mon(r.ship), r.shipTax > 0 ? mon(r.shipTax) : (r.lines.some(function (l) { return l.taxable; }) && (live() || shipChk) ? '$0.00' : 'not taxed')]);
+    rows.push(['Total', mon(r.total), mon(r.tax) + ' tax', true]);
+    $('stTable').innerHTML = table(['', 'Price', 'Tax'], rows);
+    var b = bar([['ln-p', r.subtotal, 'Items'], ['ln-s', r.ship, 'Shipping'], ['ln-i', r.tax, 'Sales tax']]);
+    $('stBar').innerHTML = b[0]; $('stBarLeg').innerHTML = b[1];
+    var tip = '';
+    if (!s) tip = 'Using your sales tax rate of ' + pct(own) + '.';
+    else if (own != null) tip = 'Using your own rate of ' + pct(own) + ' on the taxable items.';
+    else if (s.live) {
+      var exm = r.lines.filter(function (l) { return !l.taxable; });
+      tip = (r.rate === s.base && !r.mixed ? s.name + ' has one statewide rate of ' + pct(s.base) + ' and no city or county sales tax, so this total is exact.' : (r.rate != null && r.rate !== s.base ? 'Rate used: ' + pct(r.rate) + ' (' + E.zone(s, $('stZone').value).label + ').' : (r.mixed ? 'Different items have different rates.' : '')));
+      if (exm.length) tip += ' ' + exm.map(function (l) { return l.catObj.label + ': ' + l.catObj.note; }).filter(function (v, k, a) { return a.indexOf(v) === k; }).join(' ');
+      if (r.ignored.length) tip += ' ' + r.ignored.join(' ');
+    } else tip = rangeLine(s, r.subtotal + (shipChk ? r.ship : 0), own, shipChk ? 0 : r.ship);
+    $('stTip').textContent = tip.trim(); $('stTip').style.display = tip.trim() ? '' : 'none';
+    var extra = '';
+    if (r.owed != null && (s || own != null)) extra = '<div class="fc-grp">Bought out of state or online?</div><p class="res-tip">The seller charged ' + pct(r.paid) + '. ' + (!r.lines.some(function (l) { return l.taxable; }) ? 'These items are exempt, so no use tax is owed.' : r.owed > 0 ? 'You still owe about <b>' + mon(r.owed) + '</b> in use tax' + (s ? ' to ' + s.name : '') + ' to make up the difference.' : 'That already covers the tax rate here, so no use tax is owed.') + '</p>';
+    var plain = s && s.live && own == null && r.lines.every(function (l) { return l.cat === 'general' && l.rate === s.base; });
+    $('stExtra').innerHTML = extra + (plain ? neighbours(r.subtotal) : '');
+    $('stResults').style.display = '';
+    $('stCopyWrap').style.display = '';
+    last = { mode: 'add', r: r, s: s, rate: rate };
+    setHint(hints[0] || '');
+  }
+  function renderRev(hints) {
+    var s = S(), own = getOwn(hints), raw = $('stTotal').value.trim();
+    if (!raw) { empty('Price before tax', 'Enter the total you paid, tax included.', hints[0]); return; }
+    var n = num(raw);
+    if (!isFinite(n) || n < 0 || n > MAX) { empty('Price before tax', 'Enter the total you paid, tax included.', 'Total must be a number like 106.63 — only dollars and cents.'); return; }
+    if (!s && own == null) { empty('Price before tax', 'Enter the sales tax rate for your area.', hints[0]); return; }
+    var zone = live() && $('stZoneFld').style.display !== 'none' ? $('stZone').value : null;
+    var r = E.reverse({ state: code() || null, total: n, cat: live() ? $('stRevCat').value : 'general', zone: zone, own: own });
+    $('stResLab').textContent = 'Price before tax'; $('stBig').textContent = mon(r.pre);
+    $('stSub').textContent = r.tax > 0 ? 'Includes ' + mon(r.tax) + ' of sales tax at ' + pct(r.rate) : (r.taxable ? 'No tax is included at a 0% rate' : 'No sales tax is included — this kind of item is exempt');
+    $('stMLab').textContent = 'Price before tax'; $('stMVal').textContent = mon(r.pre);
+    $('stTable').innerHTML = table(['', 'Amount', ''], [['Price before tax', mon(r.pre), ''], ['Sales tax ' + pct(r.rate), mon(r.tax), ''], ['Total paid', mon(r.total), '', true]]);
+    var b = bar([['ln-p', r.pre, 'Price'], ['ln-i', r.tax, 'Sales tax']]); $('stBar').innerHTML = b[0]; $('stBarLeg').innerHTML = b[1];
+    var tip = '';
+    if (!s) tip = 'Using your sales tax rate of ' + pct(own) + '.';
+    else if (own != null) tip = 'Using your own rate of ' + pct(own) + ' on this item.';
+    else if (s.live) { tip = r.taxable ? (r.rate === s.base ? s.name + ' has one statewide rate of ' + pct(s.base) + ' and no city or county sales tax, so this is exact.' : 'Rate used: ' + pct(r.rate) + '.') : r.catObj.note; if (r.ignored) tip += ' ' + r.ignored; }
+    else if (own == null && s.maxLocal > 0) { var lowPre = E.r2(n / (1 + (s.base + s.maxLocal) / 100)); tip = 'This uses the ' + s.name + ' state rate (' + pct(s.base) + ') only. If your city or county adds up to ' + pct(s.maxLocal) + ', the price before tax would be between ' + mon(lowPre) + ' and ' + mon(r.pre) + '. Enter your exact combined rate under Go advanced to get one number.'; }
+    else tip = rangeLine(s, r.pre, own, 0);
+    $('stTip').textContent = tip.trim(); $('stTip').style.display = tip.trim() ? '' : 'none';
+    $('stExtra').innerHTML = '';
+    $('stResults').style.display = ''; $('stCopyWrap').style.display = '';
+    last = { mode: 'rev', r: r, s: s };
+    setHint(hints[0] || '');
+  }
+  function renderFind(hints) {
+    var s = S(), b = $('stBefore').value.trim(), a = $('stAfter').value.trim();
+    if (!b || !a) { empty('Sales tax rate', 'Enter the price before tax and the price after tax.', ''); return; }
+    var nb = num(b), na = num(a);
+    if (!isFinite(nb) || nb <= 0 || nb > MAX) { empty('Sales tax rate', 'Enter the price before tax and the price after tax.', 'Price before tax must be a number above 0, like 100.'); return; }
+    if (!isFinite(na) || na < 0 || na > MAX) { empty('Sales tax rate', 'Enter the price before tax and the price after tax.', 'Price after tax must be a number like 108.25.'); return; }
+    if (na < nb) { empty('Sales tax rate', 'The price after tax can’t be lower than the price before tax.', 'Price after tax must be at least the price before tax.'); return; }
+    var rate = E.findRate(nb, na), tax = E.r2(na - nb);
+    $('stResLab').textContent = 'Sales tax rate'; $('stBig').textContent = pct(rate);
+    $('stSub').textContent = mon(tax) + ' of tax on ' + mon(nb);
+    $('stMLab').textContent = 'Sales tax rate'; $('stMVal').textContent = pct(rate);
+    $('stTable').innerHTML = table(['', 'Amount', ''], [['Price before tax', mon(nb), ''], ['Sales tax', mon(tax), pct(rate)], ['Price after tax', mon(na), '', true]]);
+    var bb = bar([['ln-p', nb, 'Price'], ['ln-i', tax, 'Sales tax']]); $('stBar').innerHTML = bb[0]; $('stBarLeg').innerHTML = bb[1];
+    var tip = 'Prices rounded to the cent can move the rate by a few thousandths of a percent.';
+    if (s && s.live) tip = Math.abs(rate - s.base) < 0.02 ? 'That matches ' + s.name + '’s statewide rate of ' + pct(s.base) + '. ' + tip : s.name + '’s statewide rate is ' + pct(s.base) + ' — this rate is ' + (rate > s.base ? 'higher' : 'lower') + ', so a different rate, a zone rate or a fee may be involved. ' + tip;
+    else if (s) tip = Math.abs(rate - s.base) < 0.02 ? 'That matches ' + s.name + '’s state rate of ' + pct(s.base) + '. ' + tip : s.name + '’s state rate is ' + pct(s.base) + (s.maxLocal ? ', and cities and counties may add up to ' + pct(s.maxLocal) + '.' : '.') + ' ' + tip;
+    $('stTip').textContent = tip; $('stTip').style.display = '';
+    $('stExtra').innerHTML = '';
+    $('stResults').style.display = ''; $('stCopyWrap').style.display = '';
+    last = { mode: 'find', rate: rate, tax: tax, nb: nb, na: na, s: s };
+    setHint('');
+  }
+  function render() {
+    var hints = [];
+    var typed = st.mode === 'add' ? (st.rows.some(function (r) { return String(r.amt).trim() !== ''; }) || $('stShip').value.trim() !== '') : (st.mode === 'rev' ? $('stTotal').value.trim() !== '' : ($('stBefore').value.trim() !== '' || $('stAfter').value.trim() !== ''));
+    $('stEx').parentNode.style.display = typed ? 'none' : '';
+    if (st.mode === 'add') renderAdd(hints); else if (st.mode === 'rev') renderRev(hints); else renderFind(hints);
+  }
+
+  /* ---- events ---- */
+  $('stItems').addEventListener('input', function (e) { var t = e.target; if (t.classList.contains('st-amt')) { st.rows[+t.getAttribute('data-i')].amt = t.value; render(); } });
+  $('stItems').addEventListener('change', function (e) { var t = e.target; if (t.classList && t.classList.contains('st-cat')) { st.rows[+t.getAttribute('data-i')].cat = t.value; render(); } });
+  $('stItems').addEventListener('click', function (e) { var b = e.target.closest && e.target.closest('.st-rm'); if (!b) return; st.rows.splice(+b.getAttribute('data-i'), 1); if (!st.rows.length) st.rows.push({ amt: '', cat: 'general' }); buildRows(); render(); });
+  $('stAddItem').addEventListener('click', function () { if (st.rows.length >= 30) return; st.rows.push({ amt: '', cat: 'general' }); buildRows(); var i = $('stAmt' + (st.rows.length - 1)); if (i) i.focus(); render(); });
+  ['stShip', 'stTotal', 'stBefore', 'stAfter', 'stRate', 'stOwn', 'stPaid'].forEach(function (id) { $(id).addEventListener('input', render); });
+  ['stZone', 'stRevCat'].forEach(function (id) { $(id).addEventListener('change', render); });
+  $('stShipTaxed').addEventListener('change', render);
+  $('stModeSeg').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return; st.mode = b.getAttribute('data-v'); setSeg('stModeSeg', st.mode); showMode(); render();
+  });
+  /* state dropdown = navigation: a state with its own page opens it, carrying the form over */
+  var FORM = ['stShip', 'stTotal', 'stBefore', 'stAfter', 'stRate'];
+  function saveForm() {
+    try { sessionStorage.setItem('stForm', JSON.stringify({ t: Date.now(), mode: st.mode, rows: st.rows.map(function (r) { return { amt: r.amt, cat: 'general' }; }), f: FORM.reduce(function (o, id) { o[id] = $(id).value; return o; }, {}), state: code() })); } catch (e) {}
+  }
+  function restoreForm() {
+    try {
+      var raw = sessionStorage.getItem('stForm'); if (!raw) return; sessionStorage.removeItem('stForm');
+      var o = JSON.parse(raw); if (!o || Date.now() - o.t > 15000) return;
+      if (o.mode && o.mode !== st.mode) { st.mode = o.mode; setSeg('stModeSeg', st.mode); }
+      if (o.rows && o.rows.length) st.rows = o.rows.slice(0, 30);
+      for (var id in o.f) if ($(id) && o.f[id]) $(id).value = o.f[id];
+    } catch (e) {}
+  }
+  $('stState').addEventListener('change', function () {
+    var c = code(), s = c ? E.STATES[c] : null;
+    var target = s && s.live ? '/sales-tax-calculator/' + s.slug + '/' : '/sales-tax-calculator/';
+    if (location.pathname !== target && !window.__stNoNav) { saveForm(); try { sessionStorage.setItem('stState', c); } catch (e) {} location.href = target; return; }
+    $('stOwn').value = ''; $('stPaid').value = ''; $('stRate').value = '';
+    syncState(); showMode(); render();
+  });
+  $('stEx').addEventListener('click', function () {
+    var s = S(), rate = s ? s.base : 8.25;
+    if (st.mode === 'find') { $('stBefore').value = '100'; $('stAfter').value = String(E.r2(100 * (1 + rate / 100))); }
+    else if (st.mode === 'rev') { $('stTotal').value = String(E.r2(100 * (1 + rate / 100))); }
+    else { st.rows = [{ amt: '100', cat: 'general' }]; buildRows(); $('stShip').value = ''; }
+    if (!s) { $('stRate').value = '8.25'; }
+    render();
+  });
+  $('stAdvBtn').addEventListener('click', function () {
+    st.adv = !st.adv;
+    $('stAdvBtn').classList.toggle('open', st.adv);
+    $('stAdvBtnLab').textContent = st.adv ? 'Go simple' : 'Go advanced';
+    if (!st.adv) { $('stOwn').value = ''; $('stPaid').value = ''; }
+    showMode(); render();
+  });
+  $('stCopy').addEventListener('click', function () {
+    if (!last) return; var lines = [], s = last.s;
+    if (last.mode === 'add') {
+      var r = last.r; lines.push('Price: ' + mon(r.subtotal)); if (r.ship > 0) lines.push('Shipping: ' + mon(r.ship));
+      lines.push('Sales tax' + (r.rate != null ? ' (' + pct(r.rate) + ')' : '') + ': ' + mon(r.tax)); lines.push('Total: ' + mon(r.total));
+    } else if (last.mode === 'rev') { var q = last.r; lines.push('Total paid: ' + mon(q.total)); lines.push('Sales tax (' + pct(q.rate) + '): ' + mon(q.tax)); lines.push('Price before tax: ' + mon(q.pre)); }
+    else { lines.push('Price before tax: ' + mon(last.nb)); lines.push('Price after tax: ' + mon(last.na)); lines.push('Sales tax rate: ' + pct(last.rate)); }
+    if (s) lines.unshift(s.name + ' sales tax');
+    var btn = $('stCopy'), txt = lines.join('\n');
+    var done = function (ok) { btn.textContent = ok ? 'Copied' : 'Copy failed'; setTimeout(function () { btn.textContent = 'Copy results'; }, 1600); };
+    var legacy = function () { try { var ta = document.createElement('textarea'); ta.value = txt; ta.setAttribute('readonly', ''); ta.style.cssText = 'position:fixed;left:-9999px;top:0'; document.body.appendChild(ta); ta.select(); var ok = document.execCommand('copy'); document.body.removeChild(ta); done(ok); } catch (e) { done(false); } };
+    try { navigator.clipboard.writeText(txt).then(function () { done(true); }, legacy); } catch (e) { legacy(); }
+  });
+
+  /* ---- init ---- */
+  var names = Object.keys(E.STATES).sort(function (a, b) { return E.STATES[a].name < E.STATES[b].name ? -1 : 1; });
+  var opts = [['', 'Any state — enter my own rate']].concat(names.map(function (c) { return [c, E.STATES[c].name + (E.STATES[c].live ? '' : ' · state rate only')]; }));
+  var pre = document.body.getAttribute('data-state'), carried = '';
+  try { carried = sessionStorage.getItem('stState') || ''; sessionStorage.removeItem('stState'); } catch (e) {}
+  var startState = pre && E.STATES[pre] ? pre : (carried && E.STATES[carried] && !E.STATES[carried].live ? carried : '');
+  setPanel($('stState'), opts, startState);
+  restoreForm();
+  syncState(); showMode();
+  render();
+};
+
+/* =========================================================
    SITE FOOTER — mobile accordion
    Multiple pillars can be open simultaneously.
    First pillar starts expanded (aria-expanded="true" in HTML).

@@ -122,3 +122,7 @@
 - [Virginia Paycheck Calculator](https://calcthis.co/paycheck-calculator/virginia/): take-home pay after federal tax, FICA and Virginia state tax.
 - [Washington Paycheck Calculator](https://calcthis.co/paycheck-calculator/washington/): take-home pay after federal tax, FICA.
 - [Wyoming Paycheck Calculator](https://calcthis.co/paycheck-calculator/wyoming/): take-home pay after federal tax, FICA.
+
+## Sales tax calculators
+- [Sales Tax Calculator](https://calcthis.co/sales-tax-calculator/): add sales tax, remove it from a total or find the rate; state rates for every state.
+- [New Jersey Sales Tax Calculator](https://calcthis.co/sales-tax-calculator/new-jersey/): New Jersey sales tax with exempt items, shipping rule and special zones.

@@ -1,0 +1,568 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sales Tax Calculator — Add, Remove or Find the Rate by State | CalcThis</title>
+<meta name="description" content="Free sales tax calculator: add tax to a price, take it out of a total or find the rate. Pick your state for its rate, exempt items, shipping rule and special zones, with every state’s rate listed.">
+<link rel="canonical" href="https://calcthis.co/sales-tax-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Sales Tax Calculator — Add, Remove or Find the Rate">
+<meta property="og:description" content="Add sales tax, remove it from a total, or find the rate — by state, with exempt items, shipping and special zones shown.">
+<meta property="og:url" content="https://calcthis.co/sales-tax-calculator/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<meta name="theme-color" content="#B5761F">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css?v=208">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Sales Tax Calculator",
+  "url": "https://calcthis.co/sales-tax-calculator/",
+  "applicationCategory": "FinanceApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "Sales tax calculator: add tax to a price, remove it from a total or find the rate, by state, with exempt items, shipping and special zones."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I calculate sales tax?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Multiply the price by the sales tax rate and add the result to the price. At 8.25% a $100 purchase has $8.25 of tax and costs $108.25. In New Jersey, which charges 6.625%, $100 plus tax is $106.63."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I take sales tax out of a total?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Divide the total by 1 plus the rate. A $108.25 total at 8.25% is $100.00 before tax, with $8.25 of tax inside it. Use the “Remove tax” tab and enter the total you paid."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I find the sales tax rate from two prices?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Subtract the price before tax from the price after tax, divide by the price before tax and multiply by 100. A purchase that costs $100 before tax and $108.25 after tax was taxed at 8.25%. The “Find the rate” tab does it for you and compares the result with the state’s own rate."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why does the total depend on where I live?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Most states add a state rate, and many allow cities and counties to add their own. Texas, for example, charges 6.25% at the state level and allows up to 2% more, so $100 costs between $106.25 and $108.25. New Jersey has no local sales tax at all. Pick your state to see its rate and, for states with their own page, the exact rules."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which states have no sales tax?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Alaska, Delaware, Montana, New Hampshire and Oregon have no statewide sales tax. Alaska is the only one that allows local sales taxes. All other states and the District of Columbia have one."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is the result exact?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "On a state page the result is exact for the cases the page lists, with the source and date shown. On other states the calculator uses the state rate only and shows the highest local add-on as a range — it never guesses your local rate. You can always type your own combined rate."
+      }
+    }
+  ]
+}
+</script>
+</head>
+<body class="p-loan p-stax">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <a class="hdr-back" href="/blog/" aria-label="Back to blog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-search"><input id="menuSearch" type="search" placeholder="Search calculators or states…" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Search calculators"><div class="menu-results" id="menuResults" hidden></div></div>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <span class="menu-col-head">Construction &amp; Gardening</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+          <a href="/paint-calculator/">Paint</a>
+          <a href="/wallpaper-calculator/">Wallpaper</a>
+          <a href="/square-footage-calculator/">Square Footage</a>
+          <a href="/tape-measure-fraction-calculator/">Tape Measure Fraction</a>
+          <a href="/stair-calculator/">Stair</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/vo2-max-calculator/">VO2 Max</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
+          <a href="/bmi-calculator/">BMI</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/ideal-weight-calculator/">Ideal Weight</a>
+          <a href="/lean-body-mass-calculator/">Lean Body Mass</a>
+          <a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio</a>
+          <a href="/calorie-calculator/">Calorie</a>
+          <a href="/bmr-calculator/">BMR</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/water-intake-calculator/">Water Intake</a>
+          <a href="/macro-calculator/">Macro</a>
+          <a href="/protein-intake-calculator/">Protein Intake</a>
+          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
+          <a href="/steps-to-miles-calculator/">Steps to Miles</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+          <a href="/grade-curve-calculator/">Grade Curve</a>
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/fraction-calculator/">Fraction</a>
+          <a href="/standard-deviation-calculator/">Standard Deviation</a>
+          <a href="/scientific-notation-calculator/">Scientific Notation</a>
+          <a href="/weighted-average-calculator/">Weighted Average</a>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+          <a href="/age-calculator/">Age</a>
+          <a href="/date-calculator/">Date</a>
+          <a href="/time-calculator/">Time</a>
+          <a href="/hours-calculator/">Hours</a>
+          <a href="/triangle-calculator/">Triangle</a>
+          <span class="menu-col-head">Cooking &amp; Kitchen</span>
+          <a href="/recipe-converter/">Recipe Converter</a>
+          <a href="/turkey-cooking-time-calculator/">Turkey Cooking Time</a>
+          <a href="/turkey-thawing-time-calculator/">Turkey Thawing Time</a>
+          <a href="/turkey-size-calculator/">Turkey Size</a>
+          <span class="menu-col-head">Money &amp; Finance</span>
+          <a href="/mortgage-calculator/">Mortgage</a>
+          <a href="/loan-calculator/">Loan</a>
+          <a href="/auto-loan-calculator/">Auto Loan</a>
+          <!--STAXNAV:START-->
+          <a href="/sales-tax-calculator/" class="current">Sales Tax</a>
+          <a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax</a>
+          <!--STAXNAV:END-->
+        </div>
+        <!--PAYNAV:START-->
+        <div class="menu-col">
+          <span class="menu-col-head">Paycheck Calculators</span>
+          <a href="/paycheck-calculator/">Paycheck Calculator (all states)</a>
+          <a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a>
+          <a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a>
+          <a href="/paycheck-calculator/california/">California Paycheck Calculator</a>
+          <a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a>
+          <a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a>
+          <a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a>
+          <a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a>
+          <a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a>
+          <a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a>
+          <a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a>
+          <a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a>
+          <a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a>
+          <a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a>
+          <a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a>
+          <a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a>
+        </div>
+        <!--PAYNAV:END-->
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">Add it, remove it, or find the rate</div>
+    <h1>Sales Tax Calculator</h1>
+    <p>Add <strong>sales tax</strong> to a price, take it out of a total, or find the rate from two prices. Pick your state to see its rate — and on a state page, what is exempt, how shipping is taxed and every special zone or fee.</p>
+  </section>
+
+  <div class="grid">
+    <div class="card">
+      <div class="card-pad">
+        <h2 class="card-h2">Your purchase</h2>
+
+        <div class="modeseg" id="stModeSeg" role="group" aria-label="What to calculate">
+          <button class="on" type="button" data-v="add">Add tax</button>
+          <button type="button" data-v="rev">Remove tax</button>
+          <button type="button" data-v="find">Find the rate</button>
+        </div>
+
+        <div class="fld"><span class="lab">State</span><div class="csel" id="stState" data-value=""><button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false"><span class="csel-val"></span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="csel-panel" role="listbox"></div></div></div>
+        <div id="stRateFld"><div class="fld"><label class="lab" for="stRate">Sales tax rate <span class="unit">%</span></label><div class="inp"><input id="stRate" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 8.25"></div></div></div>
+
+        <div id="stAddBox">
+          <div id="stItems"></div>
+          <div class="st-addwrap"><button type="button" class="st-add" id="stAddItem">+ Add another item</button></div>
+          <div class="fld"><label class="lab" for="stShip">Shipping or delivery <span class="unit">$ optional</span></label><div class="inp"><input id="stShip" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 7.50"></div></div>
+          <p class="st-note" id="stShipNote" style="display:none"></p>
+          <label class="dc-check" id="stShipTaxFld" for="stShipTaxed" style="display:none"><input type="checkbox" id="stShipTaxed"><span>My state charges sales tax on shipping</span></label>
+        </div>
+
+        <div id="stRevBox" style="display:none">
+          <div class="fld"><label class="lab" for="stTotal">Total paid, tax included <span class="unit">$</span></label><div class="inp"><input id="stTotal" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 106.63"></div></div>
+          <div class="fld" id="stRevCatFld" style="display:none"><span class="lab">Type</span><div class="csel" id="stRevCat" data-value=""><button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false"><span class="csel-val"></span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="csel-panel" role="listbox"></div></div></div>
+        </div>
+
+        <div id="stFindBox" style="display:none">
+          <div class="ln-two">
+            <div class="fld"><label class="lab" for="stBefore">Price before tax <span class="unit">$</span></label><div class="inp"><input id="stBefore" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 100"></div></div>
+            <div class="fld"><label class="lab" for="stAfter">Price after tax <span class="unit">$</span></label><div class="inp"><input id="stAfter" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 108.25"></div></div>
+          </div>
+        </div>
+
+        <div class="fld" id="stZoneFld" style="display:none"><span class="lab">Where are you buying?</span><div class="csel" id="stZone" data-value=""><button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false"><span class="csel-val"></span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="csel-panel" role="listbox"></div></div></div>
+
+        <p class="add-note ln-hint" id="stHint" style="display:none"></p>
+
+        <div class="chips" aria-label="Try an example">
+          <button type="button" id="stEx">See an example: a $100 purchase</button>
+        </div>
+
+        <div id="stAdvIn" style="display:none">
+          <div class="proj-sep"></div>
+          <div id="stOwnFld" style="display:none"><div class="fld"><label class="lab" for="stOwn">Use my own rate <span class="unit">% on taxable items</span></label><div class="inp"><input id="stOwn" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 6.625"></div></div></div>
+          <div id="stPaidFld"><div class="fld"><label class="lab" for="stPaid">Sales tax the seller already charged <span class="unit">% — bought online or out of state</span></label><div class="inp"><input id="stPaid" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 4"></div></div></div>
+        </div>
+
+        <div class="add-row split" style="margin-top:16px">
+          <span></span>
+          <button class="advbtn" id="stAdvBtn" type="button">
+            <span id="stAdvBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-pad">
+        <div class="ln-res">
+          <div class="res-lab" id="stResLab">Total with tax</div>
+          <div class="res-big" id="stBig">—</div>
+          <div class="res-sub" id="stSub">Enter an item price to see the tax.</div>
+        </div>
+
+        <div id="stResults" style="display:none">
+          <p class="res-tip adv-tip" id="stTip"></p>
+          <div class="fc-grp">Where your money goes</div>
+          <div id="stBar"></div>
+          <div class="ln-leg" id="stBarLeg"></div>
+          <table class="dtable ln-terms" id="stTable"></table>
+          <div id="stExtra"></div>
+          <div id="stCopyWrap" style="display:none"><button class="btn" id="stCopy" type="button" style="margin-top:6px">Copy results</button></div>
+        </div>
+
+        <div id="stOther" style="display:none">
+          <div class="proj-sep"></div>
+          <div class="fc-grp" id="stOtherH">Other taxes and fees</div>
+          <ul class="st-otherlist" id="stOtherList"></ul>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- mobile sticky bar -->
+  <div class="mbar" id="mbar">
+    <span class="mbar-lab" id="stMLab">Total with tax</span>
+    <div class="mbar-vals"><b id="stMVal">—</b><span id="stMDec"></span></div>
+  </div>
+
+  <div class="related-calcs">
+    <p class="related-calcs-h">More calculators that may interest you</p>
+    <div class="pills">
+      <a class="pill" href="/percentage-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 5L5 19"/><circle cx="7" cy="7" r="2.5"/><circle cx="17" cy="17" r="2.5"/></svg>
+        Percentage Calculator
+      </a>
+      <a class="pill" href="/paycheck-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="18" height="11" rx="2"/><circle cx="12" cy="12.5" r="2.5"/></svg>
+        Paycheck Calculator
+      </a>
+      <a class="pill" href="/auto-loan-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 17l1.5-5A2 2 0 0 1 8.4 10.6h7.2a2 2 0 0 1 1.9 1.4L19 17z"/><circle cx="8" cy="17.5" r="1.5"/><circle cx="16" cy="17.5" r="1.5"/></svg>
+        Auto Loan Calculator
+      </a>
+      <a class="pill" href="/mortgage-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-7 8 7v9H4z"/><path d="M10 20v-6h4v6"/></svg>
+        Mortgage Calculator
+      </a>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use the sales tax calculator</h2>
+        <p>Pick your <strong>state</strong>, type the price and the total appears with the tax split out. Add as many items as you like, add shipping, and on a state with its own page choose the type of item — groceries, clothing and medicine, for example, can be exempt. Use <strong>Remove tax</strong> to find the price before tax from a total, and <strong>Find the rate</strong> to work out the rate from a price before and after tax.</p>
+        <p>The state page shows every extra that can apply in that state — special zones, local taxes and fees — instead of leaving you to find out at the register.</p>
+        <h2>The sales tax formula</h2>
+        <div class="formula">
+          Total = price × (1 + rate ÷ 100)
+          <small>REVERSE: PRICE = TOTAL ÷ (1 + RATE ÷ 100)</small>
+        </div>
+        <p>At 8.25%, a $100 purchase has $8.25 of tax and costs $108.25. Going the other way, a $108.25 total is $100.00 before tax.</p>
+        <h2>State rate plus local rate</h2>
+        <p>Forty-five states charge a state sales tax and 38 allow cities, counties or districts to add their own. For a state without its own page, the calculator uses the state rate and shows the highest local add-on as a range — it never guesses your local rate. Type your own combined rate to get a single number.</p>
+        <h2>States with their own calculator</h2>
+        <ul class="pc-statelist"><li><a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax Calculator</a></li></ul>
+        <p>More states are added as each state’s rules are checked against its official guidance.</p>
+      </div>
+      <div>
+        <h2>Sales tax rates by state</h2>
+        <p>State rates, the population-weighted average local rate and the highest local rate as of July 1, 2026 (Tax Foundation). New Jersey has no local sales tax; its reduced-rate zones are explained on its own page.</p>
+        <div class="pc-tblwrap"><table class="dtable"><thead><tr><th>State</th><th>State rate</th><th>Average local</th><th>Highest local</th></tr></thead><tbody><tr><td>Alabama</td><td>4%</td><td>5.46%</td><td>8%</td></tr><tr><td>Alaska</td><td>0%</td><td>1.82%</td><td>7.85%</td></tr><tr><td>Arizona</td><td>5.6%</td><td>2.94%</td><td>5.3%</td></tr><tr><td>Arkansas</td><td>6.5%</td><td>2.98%</td><td>6.13%</td></tr><tr><td>California</td><td>7.25%</td><td>1.78%</td><td>5.25%</td></tr><tr><td>Colorado</td><td>2.9%</td><td>4.99%</td><td>9.1%</td></tr><tr><td>Connecticut</td><td>6.35%</td><td>0%</td><td>0%</td></tr><tr><td>Delaware</td><td>0%</td><td>0%</td><td>0%</td></tr><tr><td>District of Columbia</td><td>6%</td><td>0%</td><td>0%</td></tr><tr><td>Florida</td><td>6%</td><td>0.98%</td><td>2%</td></tr><tr><td>Georgia</td><td>4%</td><td>3.56%</td><td>5%</td></tr><tr><td>Hawaii</td><td>4%</td><td>0.5%</td><td>0.5%</td></tr><tr><td>Idaho</td><td>6%</td><td>0.03%</td><td>3%</td></tr><tr><td>Illinois</td><td>6.25%</td><td>2.73%</td><td>4.75%</td></tr><tr><td>Indiana</td><td>7%</td><td>0%</td><td>0%</td></tr><tr><td>Iowa</td><td>6%</td><td>0.94%</td><td>1%</td></tr><tr><td>Kansas</td><td>6.5%</td><td>2.21%</td><td>4.25%</td></tr><tr><td>Kentucky</td><td>6%</td><td>0%</td><td>0%</td></tr><tr><td>Louisiana</td><td>5%</td><td>5.13%</td><td>7%</td></tr><tr><td>Maine</td><td>5.5%</td><td>0%</td><td>0%</td></tr><tr><td>Maryland</td><td>6%</td><td>0%</td><td>0%</td></tr><tr><td>Massachusetts</td><td>6.25%</td><td>0%</td><td>0%</td></tr><tr><td>Michigan</td><td>6%</td><td>0%</td><td>0%</td></tr><tr><td>Minnesota</td><td>6.875%</td><td>1.26%</td><td>3%</td></tr><tr><td>Mississippi</td><td>7%</td><td>0.06%</td><td>1%</td></tr><tr><td>Missouri</td><td>4.225%</td><td>4.22%</td><td>6.25%</td></tr><tr><td>Montana</td><td>0%</td><td>0%</td><td>0%</td></tr><tr><td>Nebraska</td><td>5.5%</td><td>1.48%</td><td>2%</td></tr><tr><td>Nevada</td><td>6.85%</td><td>1.39%</td><td>1.53%</td></tr><tr><td>New Hampshire</td><td>0%</td><td>0%</td><td>0%</td></tr><tr><td><a href="/sales-tax-calculator/new-jersey/">New Jersey</a></td><td>6.625%</td><td>none</td><td>none</td></tr><tr><td>New Mexico</td><td>4.875%</td><td>2.8%</td><td>4.56%</td></tr><tr><td>New York</td><td>4%</td><td>4.54%</td><td>4.88%</td></tr><tr><td>North Carolina</td><td>4.75%</td><td>2.35%</td><td>3.5%</td></tr><tr><td>North Dakota</td><td>5%</td><td>2.09%</td><td>3.75%</td></tr><tr><td>Ohio</td><td>5.75%</td><td>1.54%</td><td>2.25%</td></tr><tr><td>Oklahoma</td><td>4.5%</td><td>4.56%</td><td>7%</td></tr><tr><td>Oregon</td><td>0%</td><td>0%</td><td>0%</td></tr><tr><td>Pennsylvania</td><td>6%</td><td>0.34%</td><td>2%</td></tr><tr><td>Rhode Island</td><td>7%</td><td>0%</td><td>0%</td></tr><tr><td>South Carolina</td><td>6%</td><td>1.49%</td><td>3%</td></tr><tr><td>South Dakota</td><td>4.2%</td><td>1.91%</td><td>4.5%</td></tr><tr><td>Tennessee</td><td>7%</td><td>2.61%</td><td>2.75%</td></tr><tr><td>Texas</td><td>6.25%</td><td>1.95%</td><td>2%</td></tr><tr><td>Utah</td><td>6.1%</td><td>1.32%</td><td>4.7%</td></tr><tr><td>Vermont</td><td>6%</td><td>0.43%</td><td>1%</td></tr><tr><td>Virginia</td><td>5.3%</td><td>0.47%</td><td>2.7%</td></tr><tr><td>Washington</td><td>6.5%</td><td>3.07%</td><td>4.2%</td></tr><tr><td>West Virginia</td><td>6%</td><td>0.6%</td><td>1.4%</td></tr><tr><td>Wisconsin</td><td>5%</td><td>0.72%</td><td>2.9%</td></tr><tr><td>Wyoming</td><td>4%</td><td>1.39%</td><td>3%</td></tr></tbody></table></div>
+        <p class="st-src">Source: <a href="https://taxfoundation.org/data/all/state/2026-sales-tax-rates-midyear/" rel="noopener">Tax Foundation — 2026 sales tax rates, midyear update</a>. Alaska, Delaware, Montana, New Hampshire and Oregon have no statewide sales tax; Alaska allows local sales taxes.</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>How do I calculate sales tax?</summary><p>Multiply the price by the sales tax rate and add the result to the price. At 8.25% a $100 purchase has $8.25 of tax and costs $108.25. In New Jersey, which charges 6.625%, $100 plus tax is $106.63.</p></details>
+    <details class="faq"><summary>How do I take sales tax out of a total?</summary><p>Divide the total by 1 plus the rate. A $108.25 total at 8.25% is $100.00 before tax, with $8.25 of tax inside it. Use the “Remove tax” tab and enter the total you paid.</p></details>
+    <details class="faq"><summary>How do I find the sales tax rate from two prices?</summary><p>Subtract the price before tax from the price after tax, divide by the price before tax and multiply by 100. A purchase that costs $100 before tax and $108.25 after tax was taxed at 8.25%. The “Find the rate” tab does it for you and compares the result with the state’s own rate.</p></details>
+    <details class="faq"><summary>Why does the total depend on where I live?</summary><p>Most states add a state rate, and many allow cities and counties to add their own. Texas, for example, charges 6.25% at the state level and allows up to 2% more, so $100 costs between $106.25 and $108.25. New Jersey has no local sales tax at all. Pick your state to see its rate and, for states with their own page, the exact rules.</p></details>
+    <details class="faq"><summary>Which states have no sales tax?</summary><p>Alaska, Delaware, Montana, New Hampshire and Oregon have no statewide sales tax. Alaska is the only one that allows local sales taxes. All other states and the District of Columbia have one.</p></details>
+    <details class="faq"><summary>Is the result exact?</summary><p>On a state page the result is exact for the cases the page lists, with the source and date shown. On other states the calculator uses the state rate only and shows the highest local add-on as a range — it never guesses your local rate. You can always type your own combined rate.</p></details>
+  </section>
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+      <div class="footer-stack">
+<div class="footer-col" style="order:1">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+          <li><a href="/paint-calculator/">Paint Calculator</a></li>
+          <li><a href="/wallpaper-calculator/">Wallpaper Calculator</a></li>
+          <li><a href="/square-footage-calculator/">Square Footage Calculator</a></li>
+          <li><a href="/tape-measure-fraction-calculator/">Tape Measure Fraction Calculator</a></li>
+          <li><a href="/stair-calculator/">Stair Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:5">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Cooking &amp;</span> <span class="ft2">Kitchen</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/recipe-converter/">Recipe Converter</a></li>
+          <li><a href="/turkey-cooking-time-calculator/">Turkey Cooking Time Calculator</a></li>
+          <li><a href="/turkey-thawing-time-calculator/">Turkey Thawing Time Calculator</a></li>
+          <li><a href="/turkey-size-calculator/">Turkey Size Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:6">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Money &amp;</span> <span class="ft2">Finance</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/mortgage-calculator/">Mortgage Calculator</a></li>
+          <li><a href="/loan-calculator/">Loan Calculator</a></li>
+          <li><a href="/auto-loan-calculator/">Auto Loan Calculator</a></li>
+          <!--STAXFOOT:START-->
+          <li><a href="/sales-tax-calculator/">Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax Calculator</a></li>
+          <!--STAXFOOT:END-->
+        </ul>
+      </div>
+      </div>
+
+      <div class="footer-right">
+<div class="footer-col footer-col--two" style="order:2">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/vo2-max-calculator/">VO2 Max Calculator</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/bmi-calculator/">BMI Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/ideal-weight-calculator/">Ideal Weight Calculator</a></li>
+          <li><a href="/lean-body-mass-calculator/">Lean Body Mass Calculator</a></li>
+          <li><a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio Calculator</a></li>
+          <li><a href="/calorie-calculator/">Calorie Calculator</a></li>
+          <li><a href="/bmr-calculator/">BMR Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/water-intake-calculator/">Water Intake Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/protein-intake-calculator/">Protein Intake Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
+          <li><a href="/steps-to-miles-calculator/">Steps to Miles Calculator</a></li>
+        </ul>
+      </div>
+
+        <div class="footer-sub">
+<div class="footer-col" style="order:3">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+          <li><a href="/grade-curve-calculator/">Grade Curve Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:4">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/fraction-calculator/">Fraction Calculator</a></li>
+          <li><a href="/standard-deviation-calculator/">Standard Deviation Calculator</a></li>
+          <li><a href="/scientific-notation-calculator/">Scientific Notation Calculator</a></li>
+          <li><a href="/weighted-average-calculator/">Weighted Average Calculator</a></li>
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+          <li><a href="/age-calculator/">Age Calculator</a></li>
+          <li><a href="/date-calculator/">Date Calculator</a></li>
+          <li><a href="/time-calculator/">Time Calculator</a></li>
+          <li><a href="/hours-calculator/">Hours Calculator</a></li>
+          <li><a href="/triangle-calculator/">Triangle Calculator</a></li>
+        </ul>
+      </div>
+        </div>
+      </div>
+
+      <!--PAYFOOT:START-->
+      <div class="footer-col footer-col--wide">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Paycheck</span> <span class="ft2">Calculators</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/paycheck-calculator/">Paycheck Calculator (all states)</a></li>
+          <li><a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/california/">California Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a></li>
+        </ul>
+      </div>
+      <!--PAYFOOT:END-->
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/blog/">Blog</a>
+      <span aria-hidden="true">·</span>
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+</div>
+
+<script src="/assets/app.js?v=208"></script>
+<script>CalcThis.initSalesTaxCalc();</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>

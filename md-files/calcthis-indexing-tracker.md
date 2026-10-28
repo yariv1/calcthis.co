@@ -69,3 +69,5 @@ GSC snapshot 2026-10-26: 69 indexed, 13 not indexed (8 Discovered, 1 Crawled, 1 
 | /turkey-cooking-time-calculator/ | 2026-10-28 | 2026-10-28 (GSC + Bing) |
 | /turkey-thawing-time-calculator/ | 2026-10-28 | 2026-10-28 (GSC + Bing) |
 | /turkey-size-calculator/ | 2026-10-28 | 2026-10-28 (GSC + Bing) |
+| /sales-tax-calculator/ | 2026-10-28 (v207) | not yet (Bing: sitemap + IndexNow) |
+| /sales-tax-calculator/new-jersey/ | 2026-10-28 (v207) | not yet (Bing: sitemap + IndexNow) |
