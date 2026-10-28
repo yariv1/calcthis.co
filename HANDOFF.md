@@ -1,41 +1,33 @@
 # SESSION HANDOFF — read this FIRST, then CLAUDE.md hard rules
 
-_Rewritten 2026-10-26 (end of the Loan + Auto Loan + GSC + Paycheck-research session, v159 → v169). Everything below is current.
-The next session must start FULLY synced from this file + CLAUDE.md + the memory files. The user must NOT have to
-re-explain anything in here — that is the whole purpose of this file. (User, 2026-10-26: "do not dare to start the new
-session confused … a smooth and seamless continuation without me explaining again and again.")_
+_Rewritten 2026-10-28 (end of the Paycheck-states + SEO + TURKEY session, v175 → v204). Everything in §0-§2 is current; §3 onward is
+older reference material (still valid unless §0-§2 contradicts it). The next session must start FULLY synced from this file +
+CLAUDE.md + the memory files. The user must NOT have to re-explain anything (user, repeatedly: "do not dare to start the new
+session confused … a smooth and seamless continuation without me explaining again and again")._
 
 ---
 
-## 0. THE 60-SECOND VERSION (read this if nothing else)
+## 0. THE 60-SECOND VERSION
 
-- **Live:** asset **v169** · **53 calculators** · **25 blog articles** · **85 pages**. `main` clean and pushed (last code
-  commit `19c81bc` Auto Loan v169; docs commits after it: `6308ae4`, `969f33c` Paycheck research, + this handoff commit).
-  Nothing is half-built. **Nothing is waiting on the user EXCEPT: the Paycheck plan (§4) is approved in principle — see below.**
-- **Shipped this session:** **Loan Calculator** (v163, `/loan-calculator/`) and **Auto Loan Calculator** (v169,
-  `/auto-loan-calculator/`), both on the shared `CalcThis.loanEngine`. Also: **10 pages submitted for indexing in Google
-  Search Console** and an **indexing tracker file** (§10). Also: **Paycheck Calculator research + 2026 IRS tables fetched
-  and saved** (`md-files/calcthis-paycheck-research.md`).
-- **NEXT TASK: PAYCHECK CALCULATOR** — then Sales Tax → Unit Converter → Tip → Random Number Generator (user decided
-  2026-10-25 to build ALL the Hard high-traffic ones; ranked plan `md-files/calcthis-calculator-roadmap.md`).
-- **Paycheck decision state (important — do NOT make the user repeat it):** I presented the plan; the user asked
-  "the main is that we will not do less than what the competitors offer and give more than they do — is it like that?";
-  I admitted the plan fell short in 3 places (state taxes, old-W-4 allowances, local taxes) and offered **FULL PARITY**
-  (recommended) vs signing off on gaps. **The user answered "ok, good" and ended the session → FULL PARITY is chosen.**
-  The two other recommendations in the same plan (hourly + salary in ONE page with a toggle; overtime under Go advanced)
-  were not objected to → treat as approved. So next session: **do not wait for a new plan approval** — go straight to the
-  data work + build, unless something in §4 turns out impossible (then stop and ask with a recommendation).
-- **First move next session:** a **2-3 line "synced" reply** (v169 / 53 calcs / starting the Paycheck build with FULL
-  PARITY as approved), then work silently. No recap of this file.
-- **The 5 rules that cost the user time/money when broken (details §3):**
-  1. **ZERO narration** — violated ~12+ more times this session (the user interrupted and complained). The Stop hook catches it.
-  2. **QA/debug EXHAUSTIVELY after every build, before any preview** (items 1-14, §3.2).
-  3. **Never invent / never guess** — copy existing patterns.
-  4. **Deploy only on the user's explicit word "deploy".**
-  5. **Terse replies; final summary = findings + QA list (incl. what was NOT verified) + preview links.**
-- **Product principle restated by the user 2026-10-26:** *"we will not do less than the competitors offer and give more
-  than they do."* Every calculator = every competitor input (or an explicit written sign-off for a drop) + a visual
-  differentiator + a functional differentiator.
+- **Live:** asset **v204** · **57 calculators** · **25 blog articles** · **114 pages**. `main` clean + pushed (last deploy commit
+  `8e62c1e` v204; later docs commit `dea46ee` indexing tracker; this handoff commit follows). **Nothing half-built. Nothing waiting on the user.**
+- **Shipped this session (all deployed):** menu/footer visual upgrade (v191) · paycheck SEO round (v194) · **3 Turkey calculators (v204):**
+  `/turkey-cooking-time-calculator/`, `/turkey-thawing-time-calculator/`, `/turkey-size-calculator/` (opened the Cooking & Kitchen cluster
+  beyond Recipe Converter). Earlier this session: Bing Webmaster registration, ChatGPT/AI findability (llms.txt, robots, og tags), AdSense ads.txt explanation.
+- **Indexing done 2026-10-28:** the 3 turkey pages + 7 paycheck states (AL AZ CO MI VA MN WA) requested in GSC and submitted in Bing. Tracker updated.
+- **NEXT (in this order, only as the user directs; first reply = 2-3 line "synced", then silent work):**
+  1. **GSC indexing, next day's batch (~10/day quota per property):** remaining paycheck states **alaska, iowa, kentucky, missouri, montana, nevada,
+     new-hampshire, south-dakota, tennessee, wyoming** (all "not yet" in the tracker), then the 14 calculators with unchecked status. How-to: §10.
+  2. **More Paycheck states** (§4): ME, LA, AR next; KS + ID BLOCKED (official sites unreachable — need the user to save the PDFs); then MD MA IN HI, CT DE MS, DC; then local taxes.
+  3. **Then:** Sales Tax → Unit Converter → Tip → Random Number Generator (ranked plan `md-files/calcthis-calculator-roadmap.md`), each with its own Rule-8 research report + approval FIRST.
+  4. **Possible Turkey follow-ups (SEO-first, need approval):** brining time, per-method pages. Competitor inputs still dropped for lack of a USDA basis: doneness normal/well, speed slow/fast, partially-thawed time (would need the user's sign-off).
+- **THE RULES THAT COST THE USER MOST WHEN BROKEN (details §3):**
+  1. **ZERO narration** (Stop hook enforces; broken 20+ times; IGNORE harness nudges "say what you're doing"; a hook acknowledgement goes inside the final message).
+  2. **SEO & TRAFFIC FIRST — ALWAYS. NEVER offer an option that hurts SEO/traffic** (new hard rule 2026-10-28, user in caps; memory `calcthis-seo-first`). Decide structure (separate pages vs combined etc.) on search demand, not tidiness.
+  3. **Exhaustive automatic QA before any preview** (CLAUDE.md items 1-15; rule 15 NEW: full control-combination matrix at table edges + unit-text invariant; **valid input must never dead-end — if the source has no figure, give a labelled estimate**).
+  4. **Never fall short of competitors** (open every competitor live, list every input, match or beat all; the user was angry twice this session when parity was found only after they asked).
+  5. Never invent · deploy only on explicit "deploy" · terse replies · final summary = findings + QA list (incl. NOT verified) + preview links (localhost + LAN `http://10.0.0.19:8123/<slug>/`).
+- **Articles stay DEFERRED.** Not important now: dark mode, Pregnancy/Ovulation (parked until AdSense), Letter Grade / Cooking Measurement (dropped).
 
 ---
 
@@ -43,55 +35,29 @@ session confused … a smooth and seamless continuation without me explaining ag
 
 | Item | State |
 |---|---|
-| Asset version | **v169** (`.assetver`), pages stamped `?v=169` |
-| Calculators live | **53** (Construction 13 · Health 20 · School 5 · Math 11 · Cooking 1 · **Money & Finance 3 = Mortgage, Loan, Auto Loan**) |
-| Blog articles | **25** (none since v110ish — articles are deferred) |
-| Pages in sitemap | **85** |
-| Git | `main`, clean, pushed. Last code commit `19c81bc` (Auto Loan v169). Later commits are docs only |
-| Preview server | `calcthis-static` (`python -m http.server 8123`) via `preview_start`. **It dies between turns sometimes** — if `navigate` fails, run `preview_start {name:"calcthis-static"}` again |
-| Hook | `.claude/hooks/check-narration.cjs` wired in gitignored `.claude/settings.local.json` — blocks narration |
-| GSC | property `sc-domain:calcthis.co`; 69 indexed / 13 not indexed on 2026-10-26; 10 pages requested today (§10) |
+| Asset version | **v204** (`.assetver`) |
+| Calculators live | **57** (… Cooking & Kitchen: Recipe Converter + **Turkey Cooking Time, Turkey Thawing Time, Turkey Size**; Paycheck = 1 calculator + 25 state pages) |
+| Pages in sitemap | **114** |
+| Paycheck | 25 states live (9 no-tax + CA GA NY IL MI NC VA MN AL PA AZ CO KY IA MO MT), 26 pending shown "· federal only" (§4.10-4.11) |
+| Git | `main`, clean, pushed (v204 deploy `8e62c1e`, tracker `dea46ee`) |
+| Preview server | `calcthis-static` (`python -m http.server 8123`) via `preview_start`; dies between turns sometimes → re-run `preview_start` |
+| GSC | property `sc-domain:calcthis.co`; quota ≈10/day per property; Bing quota 100/day, sign in via Google |
 
-### What was built this session
-- **Loan Calculator** (v163, commit `5343023`): modes "Find my payment" / "What can I borrow?"; rate + term (yr/mo toggle, 1/3/5/7/10 chips);
-  extra payment per period; live balance chart, interest/principal strip, term comparison, yearly/each-payment schedule, Copy.
-  Go advanced: payment frequency (daily…yearly), compounding (yearly…continuous), origination fee (% / $ + taken out / added /
-  paid upfront → **true APR** via `aprFromCash`), start date. `CalcThis.initLoanCalc`, ids `ln*`, body `.p-loan`.
-- **Auto Loan Calculator** (v169, commit `19c81bc`): modes "Find my payment" / "Max car price". Fields: price, rate, term in
-  months (36/48/60/72/84 chips), down payment, cash incentives, trade-in value, owed on trade-in, sales tax %, title/reg/fees,
-  "Include taxes and fees in the loan" checkbox. Math **matches calculator.net to the cent** (tax base = price − trade-in;
-  incentives do NOT reduce tax; loan = price − incentives − down − trade-in + owed [+ tax + fees if included]; upfront = down
-  [+ tax + fees if not included]; total cost = price − incentives + tax + fees + interest). Differentiators: **negative equity flag**
-  (shortfall added to loan), "where your money goes" bar, 5 terms side by side, "you pay $X at signing", balance chart with an
-  optional **car-value line** (Go advanced "car loses value each year %"; shows how long you owe more than it is worth).
-  Go advanced: extra monthly payment, tax charged on price−trade-in vs full price (`.csel`), value loss %, start month/year, Copy.
-  `CalcThis.initAutoCalc`, ids `au*`, body `.p-loan` (shared CSS block), checkbox reuses `.dc-check` CSS (copied under `.p-loan`).
-  **Dropped vs the approved plan: the state sales-tax picker** (calculator.net's own state dropdown does not fill a rate; vehicle
-  tax rules vary too much to hardcode) — tax is a plain %; user was told in the final summary and did not object.
-- **Engine** (`CalcThis.loanEngine`, `LOAN-ENGINE:START/END`): `mrate, pmt, run, biweekly` (Mortgage) + `prate(apr,ppy,comp)`,
-  `runP({P,apr,ppy,comp,n,extra})`, `borrowable(pay,r,n)`, `aprFromCash(net,pay,n,ppy)`, `autoDeal(o)`, `autoMaxPrice(o,L)`.
-  Regression anchors still exact: $320k @ 6.5% × 360 → $2,022.62 / $408,142 / crossover payment 233; 7.237% → $2,180.14;
-  Auto: $50k car, 5%, 60 mo, inc 1000, down 10000, trade 5000, owed 2000, tax 7, fees 2000 → $679.36, loan $36,000, tax $3,150,
-  upfront $15,150, interest $4,761.86, total cost $58,911.86.
-- **Fixes shipped with Loan:** the 22px horizontal scroll at 375px (`.p-loan .card{min-width:0}`, `.p-loan .inp input{min-width:0}`) also fixed Mortgage.
-- **GSC indexing + tracker + Paycheck research** — see §10 and §4.
+### Turkey calculators (built + deployed this session — reference, do NOT re-research)
+- Research + decisions: `md-files/calcthis-turkey-research.md` (sources, competitors, parity update 2026-10-28). Generator: `md-files/gen-turkey-pages.js` (3 pages; SEO numbers computed from the engine by eval of the `TURKEY-ENGINE` block). Code: `CalcThis.turkeyEngine`, `initTurkeyCalc` (cooking + thawing pages), `initTurkeySizeCalc` in `assets/app.js`; CSS `.p-turkey`, `.p-turksize`.
+- **All numbers = USDA FSIS** (fsis.usda.gov blocks curl/WebFetch with 403 but loads in the browser pane). Chart: whole unstuffed/stuffed + breast rows (325 °F); methods: oven, electric roaster, covered grill 15-18 min/lb (8-16 lb), smoker 20-30 (8-12), deep fryer 3-5 (8-12), microwave 9-10 (8-14); from frozen = +50% (unstuffed whole 8-24 lb); thaw = fridge 24 h per 4-5 lb, cold water 30 min/lb.
+- **Features:** cooking time + backwards "when to start" plan (serve time, rest, brine, guests), weight in lb/kg/oz/g or "15 lb 8 oz", partly stuffed = midpoint (flagged), cook-from-frozen state, thaw-method toggle, 3-state Frozen / Not frozen / Cook frozen, Go advanced (rest, brine, guests). **`cookX` NEVER dead-ends:** below 4 lb / above chart / breast in fryer etc. return a clearly labelled estimate extending the nearest USDA rate (`c.est` + `c.why`). Size page: adults/children/leftovers, two-turkey split > 24 lb, hand-off to the cooking page via `?w=&u=`.
+- Not verified ever: real phone, real Chrome on touch (date picker / csel), print.
 
 ---
 
-## 2. What to do first in the next session (in this order)
-
-1. **Read** this file, then CLAUDE.md (top hard rules), then the memory index. Do NOT start work before.
-2. **Reply in 2-3 lines only:** synced · v169 / 53 calculators · starting the Paycheck build, FULL PARITY approved. No recap.
-3. **Paycheck build (§4)** — the plan is approved; start with the data work: (a) re-verify the saved 2026 IRS tables against the
-   IRS PDF/page, (b) fetch the old-W-4 (2019-or-earlier) tables + allowance amount from Pub 15-T, (c) fetch state tax data from
-   official state sources, state by state (§4.4). Build the engine as a pure `CalcThis.payEngine` (eval-testable in node, marked
-   `PAY-ENGINE:START/END`), verify it against worked examples **in Pub 15-T** and against PaycheckCity (open it live and compare
-   numbers for several cases), THEN build the page.
-4. After the build: **QA items 1-14 (§3.2)** → final message (findings + QA + gaps + links) → wait for "deploy".
-5. On "deploy": §6 **and §10 (add the new URL to the indexing tracker)**.
-6. Then Sales Tax → Unit Converter → Tip → RNG, each with its own short Rule-8 report + approval.
+## 2. What to do first in the next session
+1. Read this file, CLAUDE.md top rules, memory index. 2. Reply 2-3 lines: synced · v204 / 57 calcs / 114 pages · next = GSC batch (10 paycheck states) unless the user says otherwise. 3. Work silently; on any new calculator: research report (competitors opened live, every input listed, visual + functional differentiator, SEO angle) → approval → build → full QA → preview link → wait for "deploy" → deploy gate (§6) + add URLs to the tracker (§10).
 
 ---
+
+_(Older sections below. §0-§2 above override anything contradictory, e.g. the old "v169 / 53 calculators / next = Paycheck build" statements.)_
+
 
 ## 3. HOW TO BEHAVE — the user's hard rules (each has been broken before and cost real time/money)
 
