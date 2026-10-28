@@ -34,6 +34,15 @@ next tool call instead. This check applies every single time text is about to be
 not just once at session start; a rule read once at the top of a long session is exactly
 what has failed three times running.
 
+## ⛔ HARD RULE — SEO & TRAFFIC FIRST, ALWAYS (user, 2026-10-28)
+
+Every decision — page structure, URLs, combining vs splitting pages, features, content, order of work —
+is judged FIRST by SEO and traffic potential. Never offer the user an option that hurts SEO/traffic or goes
+against it; offer only options that serve it, with one recommendation. User's words: "ALWAYS THINK SEO &
+TRAFFIC FIRST. NEVER EVER OFFER ME AN OPTION THAT HURTS IT OR GO AGAINST IT." (Triggered when "combine thaw +
+cook into one page" was offered although separate pages target separate head keywords.) One page per distinct
+search intent/keyword; check demand (Ahrefs terms) before choosing.
+
 ## ⛔ HARD RULE — DEEP QA AFTER EVERY BUILD, AUTOMATICALLY, BEFORE ANY PREVIEW
 
 (User, 2026-10-14: "the deep QA needs to be done after every build — I don't even need to say anything —
