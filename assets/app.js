@@ -12322,6 +12322,15 @@ CalcThis.turkeyEngine = (function () {
   /* cooking time for any method / cavity / frozen state.
      o: { lb, cut, method, cav:'un'|'part'|'st', frozen:boolean }  ->  { c } or { err:{k,..} }
      c: { from, to, lo, hi (hours), chart:boolean, mixed, frozen, est, fb } */
+  function estC(lb, rpm, why, extra) {
+    var h = lb * rpm / 60, c = { from: lb, to: lb, lo: h, hi: h, est: true, why: why, rpm: rpm, chart: true };
+    for (var k in (extra || {})) c[k] = extra[k];
+    return c;
+  }
+  /* cooking time for any method / cavity / frozen state — ALWAYS returns a time: the USDA figure when it has one,
+     otherwise a labelled estimate that extends the nearest USDA rate (c.est + c.why).
+     o: { lb, cut, method, cav:'un'|'part'|'st', frozen:boolean }  ->  { c }
+     c: { from, to, lo, hi (hours), chart:boolean, mixed, frozen, est, why, rpm, fb } */
   function cookX(o) {
     var M = METHODS[o.method] || METHODS.oven, lb = o.lb, cut = o.cut, cav = o.cav || 'un', c = null;
     if (M.chart) {
@@ -12330,18 +12339,14 @@ CalcThis.turkeyEngine = (function () {
         if (u && s) c = { from: u.from, to: u.to, lo: (u.lo + s.lo) / 2, hi: (u.hi + s.hi) / 2, mixed: true };
       } else c = cook(lb, cut, cav === 'st');
       if (!c && cut === 'whole' && lb >= 4 && lb < 8) { c = cook(lb, 'breast', false); if (c) c.fb = true; }
-      if (!c && lb >= 1 && lb < 4) { var h = lb * 0.375; c = { from: lb, to: lb, lo: h, hi: h, est: true }; }
-      if (c) c.chart = true;
+      if (!c && lb < 4) c = estC(lb, 22.5, 'below');
+      if (!c) { var r = rows(cut, cav === 'st'), top = r[r.length - 1]; c = estC(lb, top[3] * 60 / top[1], 'above', { top: top[1] }); }
+      c.chart = true;
     } else {
-      if (cut === 'breast') return { err: { k: 'methodcut', M: M } };
-      if (lb >= M.from && lb <= M.to) c = { from: M.from, to: M.to, lo: lb * M.lo / 60, hi: lb * M.hi / 60, chart: false };
-      else return { err: { k: 'method', M: M } };
+      c = { from: M.from, to: M.to, lo: lb * M.lo / 60, hi: lb * M.hi / 60, chart: false };
+      if (!(cut === 'whole' && lb >= M.from && lb <= M.to)) { c.est = true; c.why = cut === 'breast' ? 'breast-method' : 'method-range'; }
     }
-    if (!c) return { err: { k: 'chart', cut: cut, cav: cav } };
-    if (o.frozen) {
-      if (!(M.chart && cut === 'whole' && cav === 'un' && lb >= 8 && lb <= 24)) return { err: { k: 'frozen' } };
-      c = { from: c.from, to: c.to, lo: c.lo * 1.5, hi: c.hi * 1.5, chart: true, frozen: true };
-    }
+    if (o.frozen && M.chart) { c.lo *= 1.5; c.hi *= 1.5; c.frozen = true; if (c.rpm) c.rpm *= 1.5; }
     c.method = o.method;
     return { c: c };
   }
@@ -12403,7 +12408,7 @@ CalcThis.turkeyEngine = (function () {
       if (o.method === 'fridge') coldOk = new Date(prepEnd.getTime() - th.cold * HR).getTime() >= o.now.getTime();
     }
     var M = METHODS[c.method] || METHODS.oven;
-    var dur0 = c.est ? 'about ' + hm(c.lo) : (c.chart ? q(c.lo) + (c.lo === c.hi ? '' : '–' + q(c.hi)) + ' hours' : hm(c.lo) + ' to ' + hm(c.hi));
+    var dur0 = (c.est && c.lo === c.hi) ? 'about ' + hm(c.lo) : (c.chart ? q(c.lo) + (c.lo === c.hi ? '' : '–' + q(c.hi)) + ' hours' : hm(c.lo) + ' to ' + hm(c.hi));
     if (thawStart) steps.push({ t: thawStart, k: 'thaw', what: o.method === 'cold' ? 'Start thawing in cold water' : 'Start thawing in the refrigerator',
       det: o.method === 'cold' ? 'About ' + hm(th.cold) + '. Leak-proof bag, cold tap water, change the water every 30 minutes.' : 'Plan on ' + dur(th.fridgeHi) + ' at 40 °F (4 °C) or below. A thawed turkey keeps 1–2 days, so a day early is fine.' });
     if (brineH > 0) steps.push({ t: prepEnd, k: 'prep', what: 'Start brining', det: brineH + ' hour' + (brineH === 1 ? '' : 's') + ' in the refrigerator before cooking.' });
@@ -12521,7 +12526,7 @@ CalcThis.initTurkeyCalc = function () {
     var w = readWeight();
     var M = E.METHODS[st.cook], ovenLike = !!M.chart;
     var cutName = st.cut === 'breast' ? 'turkey breast' : 'whole turkey';
-    var needsThaw = st.state === 'thaw', fromFrozen = st.state === 'frozen';
+    var needsThaw = st.state === 'thaw' || (st.state === 'frozen' && !ovenLike), fromFrozen = st.state === 'frozen' && ovenLike;
     var noStuff = st.cut === 'breast' || M.nostuff || fromFrozen;
     var cav = noStuff ? 'un' : st.cav;
     $('tkStuffFld').style.display = noStuff ? 'none' : '';
@@ -12537,9 +12542,9 @@ CalcThis.initTurkeyCalc = function () {
     if (brine.err) hints.push(brine.err);
     var cavName = cav === 'st' ? ', stuffed' : cav === 'part' ? ', partly stuffed' : ', unstuffed';
     var cutLab = (c && c.est) ? cutName + ', estimate' : (c && c.fb) ? 'whole turkey, USDA turkey-breast row' : cutName + (st.cut === 'whole' ? cavName : '');
-    if (c && !ovenLike) cutLab = cutName + ' · ' + M.label.toLowerCase();
+    if (c && !ovenLike) cutLab = cutName + ' · ' + M.label.toLowerCase() + (c.est ? ', estimate' : '');
     if (c && c.frozen) cutLab += ' · from frozen';
-    var verb = ovenLike ? 'Roasting' : 'Cooking';
+    var verb = ovenLike ? 'Roasting' : 'Cooking', cut0 = st.cut;
 
     /* thaw box */
     var thawRows = [];
@@ -12558,21 +12563,27 @@ CalcThis.initTurkeyCalc = function () {
 
     /* cook box */
     if (c) {
-      var rt = rangeTxt(c), cr = [['Turkey', wTxt(w) + ' · ' + cutLab]];
-      if (c.est) cr.push(['USDA chart row', 'Below the chart — it starts at ' + wl(4)]);
+      var rt = rangeTxt(c), cr = [['Turkey', wTxt(w) + ' · ' + cutLab]], single = c.lo === c.hi;
+      if (c.est) cr.push([ovenLike ? 'USDA chart row' : 'USDA range', c.why === 'below' ? 'Below the chart — it starts at ' + wl(4) : c.why === 'above' ? 'Above the chart — it stops at ' + wl(c.top) : wr(M.from, M.to) + ' whole turkeys only']);
       else cr.push([ovenLike ? 'USDA chart row' : 'USDA range', wr(c.from, c.to) + (c.fb ? ' (turkey breast)' : '') + (c.mixed ? ' (between unstuffed and stuffed)' : '')]);
-      if (c.est) cr.push(['Estimated ' + verb.toLowerCase() + ' time at ' + M.short, 'about ' + E.hm(c.lo), true]);
-      else {
-        cr.push([verb + ' time at ' + M.short, (c.chart ? rt.big + (rt.unit ? ' ' + rt.unit : '') : E.hm(c.lo) + ' to ' + E.hm(c.hi)), true]);
-        cr.push(['In hours and minutes', E.hm(c.lo) + (c.lo === c.hi ? '' : ' to ' + E.hm(c.hi))]);
+      cr.push([(c.est ? 'Estimated ' + verb.toLowerCase() : verb) + ' time' + (ovenLike ? ' at ' + M.short : ' (' + M.short + ')'), (c.est && single) ? 'about ' + E.hm(c.lo) : (c.chart ? rt.big + (rt.unit ? ' ' + rt.unit : '') : E.hm(c.lo) + ' to ' + E.hm(c.hi)), true]);
+      if (!single) {
+        cr.push(['In hours and minutes', E.hm(c.lo) + ' to ' + E.hm(c.hi)]);
         cr.push(['Start checking the temperature after', E.hm(c.lo)]);
         cr.push(['Plan on', E.hm(c.hi) + ' to cook']);
       }
-      if (c.est) cr.push(['Note', 'Estimate only: the USDA chart starts at ' + wl(4) + ', so this extends its ' + wr(4, 6) + ' turkey-breast rate (about ' + (st.unit === 'lb' ? '22½ minutes per pound' : '50 minutes per kg') + '). Go by the 165 °F thermometer reading.']);
-      else if (c.fb) cr.push(['Note', 'The USDA lists no whole turkey under ' + wl(8) + ' — this is its ' + wr(4, 8) + ' turkey-breast time.']);
-      else if (c.mixed) cr.push(['Note', 'Partly stuffed is the midpoint of the USDA unstuffed and stuffed times.']);
-      else if (c.frozen) cr.push(['Note', 'Cooking from frozen adds 50% to the USDA time. Do not use an oven cooking bag, and take the giblets out as it thaws.']);
-      else if (!ovenLike) cr.push(['Note', M.temp]);
+      var rpmTxt = c.rpm ? (st.unit === 'lb' ? (Math.round(c.rpm * 2) / 2) + ' minutes per pound' : Math.round(c.rpm * E.LB_PER_KG) + ' minutes per kg') : '';
+      var nt = '';
+      if (c.est && c.why === 'below') nt = 'Estimate only: the USDA chart starts at ' + wl(4) + ', so this extends its ' + wr(4, 6) + ' turkey-breast rate (about ' + rpmTxt + '). Go by the 165 °F thermometer reading.';
+      else if (c.est && c.why === 'above') nt = 'Estimate only: the USDA chart stops at ' + wl(c.top) + ', so this extends its top row (about ' + rpmTxt + '). Go by the 165 °F thermometer reading.';
+      else if (c.est && c.why === 'breast-method') nt = 'Estimate only: the USDA gives ' + M.label.toLowerCase() + ' times for whole turkeys of ' + wr(M.from, M.to) + '; this applies the same minutes per pound to your turkey breast. Go by the 165 °F thermometer reading.';
+      else if (c.est && c.why === 'method-range') nt = 'Estimate only: the USDA gives ' + M.label.toLowerCase() + ' times for turkeys of ' + wr(M.from, M.to) + '; this applies the same minutes per pound to your weight. Go by the 165 °F thermometer reading.';
+      else if (c.fb) nt = 'The USDA lists no whole turkey under ' + wl(8) + ' — this is its ' + wr(4, 8) + ' turkey-breast time.';
+      else if (c.mixed) nt = 'Partly stuffed is the midpoint of the USDA unstuffed and stuffed times.';
+      else if (!ovenLike) nt = M.temp;
+      if (nt) cr.push(['Note', nt]);
+      if (c.frozen) cr.push(['Note', 'Cooking from frozen adds 50% to the time (USDA, published for unstuffed whole turkeys of ' + wr(8, 24) + '). Do not use an oven cooking bag, and take the giblets out as it thaws.' + (c.est || c.fb || c.mixed || cut0 !== 'whole' ? ' Applied here to your turkey.' : '')]);
+      if (st.state === 'frozen' && !ovenLike) cr.push(['Note', 'The USDA adds 50% for cooking from frozen only in an oven or electric roaster — for this method the plan thaws the turkey first.']);
       $('tkCookTbl').innerHTML = rowsHtml(cr);
       show('tkCookTbl', true); show('tkCookTip', true); $('tkCookNone').style.display = 'none';
     } else {
@@ -12585,9 +12596,9 @@ CalcThis.initTurkeyCalc = function () {
     var sub1 = wTxt(w) + ' · feeds about ' + feeds;
     if (PAGE === 'cook') {
       if (c) {
-        var rb = rangeTxt(c), big = c.est ? '~' + E.hm(c.lo) : rb.big;
-        $('tkUnitLab').textContent = c.est ? '' : rb.unit;
-        setPrimary(verb + ' time', big, 'at ' + (c.chart ? M.short : M.label.toLowerCase() + ', ' + M.short) + ' · ' + cutLab + ' · ' + wTxt(w), verb + ' time', c.est ? big : big + (rb.unit ? ' h' : ''));
+        var rb = rangeTxt(c), es = c.est && c.lo === c.hi, big = c.est ? '~' + (es ? E.hm(c.lo) : rb.big) : rb.big;
+        $('tkUnitLab').textContent = es ? '' : rb.unit;
+        setPrimary(verb + ' time', big, (ovenLike ? 'at ' + M.short : M.short) + ' · ' + cutLab + ' · ' + wTxt(w), verb + ' time', es ? big : big + (rb.unit ? ' h' : ''));
       } else { $('tkUnitLab').textContent = ''; setPrimary('Cooking time', '—', chint || 'No USDA time for this weight.', 'Cooking time', '—'); }
     } else {
       if (needsThaw) {
