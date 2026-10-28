@@ -70,6 +70,8 @@ const PAGES = [
   { file: 'auto-loan-calculator/index.html',   slug: '/auto-loan-calculator/' },
   { file: 'paycheck-calculator/index.html',   slug: '/paycheck-calculator/' },
   { file: 'recipe-converter/index.html',       slug: '/recipe-converter/' },
+  { file: 'turkey-cooking-time-calculator/index.html', slug: '/turkey-cooking-time-calculator/' },
+  { file: 'turkey-thawing-time-calculator/index.html', slug: '/turkey-thawing-time-calculator/' },
   { file: 'macro-calculator/index.html',      slug: '/macro-calculator/' },
   { file: 'peptide-reconstitution-calculator/index.html', slug: '/peptide-reconstitution-calculator/' },
   { file: 'steps-to-miles-calculator/index.html', slug: '/steps-to-miles-calculator/' },

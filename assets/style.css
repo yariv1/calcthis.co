@@ -2226,3 +2226,44 @@
   @media(min-width:701px){.footer-stack .footer-col,.footer-right .footer-col,.footer-sub .footer-col{order:0!important}}
 
   .p-pay .dtable a{color:var(--amber-deep);text-decoration:underline}
+
+  /* COOKING · TURKEY COOKING + THAWING TIME (body.p-turkey)
+     Time field + AM/PM are the Hours calculator's own components (copied page-scoped);
+     reuses .seg, .chips, .dtable tr.cur, .advbtn / .add-row.split, .adv-tip, .mbar. */
+  .p-turkey .time-field{display:flex;align-items:center;gap:10px;width:100%;background:#FBF6EC;border:1px solid var(--line);border-radius:11px;padding:6px 8px;transition:.15s}
+  .p-turkey .time-field:focus-within{border-color:var(--amber);background:#fff;box-shadow:0 0 0 3px rgba(181,118,31,.13)}
+  .p-turkey .time-box{position:relative;flex:none;width:74px;height:34px}
+  .p-turkey .time-ghost,.p-turkey .time-digits{position:absolute;inset:0;width:100%;height:100%;font:inherit;font-size:19px;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:1px;line-height:34px;padding:0 0 0 4px;margin:0;border:0;background:none}
+  .p-turkey .time-ghost{display:block;z-index:1;pointer-events:none;white-space:pre}
+  .p-turkey .time-ghost .g-on{color:var(--ink)}
+  .p-turkey .time-ghost .g-off{color:var(--muted)}
+  .p-turkey .time-ghost .g-sep{color:var(--ink-soft)}
+  .p-turkey .time-digits{z-index:2;color:transparent;caret-color:var(--ink)}
+  .p-turkey .time-digits:focus{outline:none}
+  .p-turkey .ap-seg{flex:none;padding:2px}
+  .p-turkey .ap-seg button{padding:6px 11px;font-size:12.5px}
+  .p-turkey .fld.tk-tf .lab .linkbtn{font-size:12.5px;padding:0 2px}
+  .p-turkey .tk-info{font-size:12px;font-weight:500;color:var(--amber-deep);min-height:0;margin-top:4px}
+  .p-turkey .tk-info:empty{display:none}
+  .p-turkey .tk-seg{display:flex;width:100%}
+  .p-turkey .tk-seg button{flex:1;text-align:center;padding:8px 6px}
+  .p-turkey .bf-res{margin:2px 0 14px}
+  .p-turkey .res-big{font-size:clamp(30px,6vw,44px)}
+  .p-turkey .tk-cap{font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin:16px 0 8px}
+  .p-turkey .dtable small{font-size:12.5px;color:var(--muted);font-weight:500}
+  .p-turkey #tkTime{margin-top:0}
+  .p-turkey .tk-tl{list-style:none;margin:2px 0 12px;padding:14px 14px 4px;background:#FCFAF6;border:1px solid var(--line);border-radius:12px}
+  .p-turkey .tk-st{position:relative;padding:0 0 12px 30px}
+  .p-turkey .tk-st::before{content:'';position:absolute;left:8px;top:18px;bottom:-4px;width:2px;background:var(--line)}
+  .p-turkey .tk-st:last-child::before{display:none}
+  .p-turkey .tk-st:last-child{padding-bottom:10px}
+  .p-turkey .tk-dot{position:absolute;left:1px;top:3px;width:16px;height:16px;border-radius:50%;background:var(--amber);border:3px solid #FCFAF6;box-shadow:0 0 0 1.5px var(--amber)}
+  .p-turkey .tk-thaw .tk-dot,.p-turkey .tk-prep .tk-dot{background:var(--spruce);box-shadow:0 0 0 1.5px var(--spruce)}
+  .p-turkey .tk-serve .tk-dot{background:var(--ink);box-shadow:0 0 0 1.5px var(--ink)}
+  .p-turkey .tk-when{font-weight:700;font-size:15px;color:var(--ink);font-variant-numeric:tabular-nums}
+  .p-turkey .tk-what{font-size:14.5px;color:var(--ink);font-weight:500}
+  .p-turkey .tk-det{font-size:14px;color:var(--ink-soft);line-height:1.45;margin-top:2px}
+  .p-turkey .tk-gap{font-size:14px;color:var(--muted);margin-top:6px}
+  .p-turkey .tk-none{font-size:14.5px;color:var(--ink-soft);margin:2px 0 10px}
+  .p-turkey .tk-note{font-size:14px;color:var(--ink-soft);margin:10px 0 0}
+  .p-turkey .tk-chips{margin:-8px 0 15px}
