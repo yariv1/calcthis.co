@@ -2,6 +2,20 @@
 
 _How-to for requesting indexing with Claude in Chrome + the next batch: HANDOFF.md §10. Next batch = /auto-loan-calculator/ + the "not checked yet" list below, ~10 per day._
 
+## NEXT TO REQUEST IN GSC (in this order, ~10/day; quota exceeded 2026-10-29, retry next day)
+1. /random-number-generator/
+2. /random-number-generator-1-100/
+3. /random-number-generator-wheel/
+4. /random-number-generator-no-repeats/
+5. /random-number-generator-1-10/
+6. /random-number-generator-1-13/
+7. /random-number-generator-1-3/
+8. /speed-converter/
+9. /data-storage-converter/
+10. /cooking-converter/
+11. /px-to-rem-converter/
+Then the 10 paycheck state pages never requested: alaska iowa kentucky missouri montana nevada new-hampshire south-dakota tennessee wyoming (/paycheck-calculator/<state>/). Bing: all of the above except the paycheck pages are already submitted.
+
 **Rule:** every new calculator/article is added to the table below the moment it deploys (status `Not requested`).
 Request indexing in GSC → URL Inspection → Request indexing. **Quota is per property (~10/day, shared by the whole domain), not per user.**
 Requesting only queues a crawl; re-check status ~1–2 weeks later and update the table.
