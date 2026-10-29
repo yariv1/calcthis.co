@@ -1,61 +1,55 @@
 # SESSION HANDOFF — read this FIRST, then CLAUDE.md hard rules
 
-_Rewritten 2026-10-28 (end of the Paycheck-states + SEO + TURKEY session, v175 → v204). Everything in §0-§2 is current; §3 onward is
-older reference material (still valid unless §0-§2 contradicts it). The next session must start FULLY synced from this file +
-CLAUDE.md + the memory files. The user must NOT have to re-explain anything (user, repeatedly: "do not dare to start the new
-session confused … a smooth and seamless continuation without me explaining again and again")._
+_Rewritten 2026-10-29 (end of the Sales Tax session, v204 → v233, plus the no-narration hook work). §0-§2 are current and authoritative; §3 onward is older reference (still valid unless §0-§2 contradicts it). The next session must start FULLY synced from this file + CLAUDE.md + memory. The user must NOT have to re-explain anything ("do not dare to start the new session confused … smooth and seamless continuation")._
 
 ---
 
 ## 0. THE 60-SECOND VERSION
 
-- **Live:** asset **v212** · **58 calculators** · **25 blog articles** · **116 pages** (Sales Tax hub + NJ deployed 2026-10-28, see §0.5). `main` clean + pushed (last deploy commit
-  `8e62c1e` v204; later docs commit `dea46ee` indexing tracker; this handoff commit follows). **Nothing half-built. Nothing waiting on the user.**
-- **Shipped this session (all deployed):** menu/footer visual upgrade (v191) · paycheck SEO round (v194) · **3 Turkey calculators (v204):**
-  `/turkey-cooking-time-calculator/`, `/turkey-thawing-time-calculator/`, `/turkey-size-calculator/` (opened the Cooking & Kitchen cluster
-  beyond Recipe Converter). Earlier this session: Bing Webmaster registration, ChatGPT/AI findability (llms.txt, robots, og tags), AdSense ads.txt explanation.
-- **Indexing done 2026-10-28:** the 3 turkey pages + 7 paycheck states (AL AZ CO MI VA MN WA) requested in GSC and submitted in Bing. Tracker updated.
+- **Live:** asset **v233** · **58 calculators** · **25 blog articles** · **118 pages** (sitemap count). `main`: last commit `659a954` (indexing tracker). **Uncommitted (intentional, not yet committed — commit them with the user's OK):** `.claude/hooks/check-narration.cjs` (modified), `.claude/hooks/remind-no-narration.cjs` (new), `.claude/settings.json` (new, registers the UserPromptSubmit hook). **Nothing half-built. Nothing waiting on the user.**
+- **Shipped this session (all deployed + indexed in GSC and Bing 2026-10-28):** Sales Tax hub `/sales-tax-calculator/` + **New Jersey** (v207/v212) + homepage "Sales Tax" tab with flag cubes · **Missouri** (v224, typeahead over all 2,597 official DOR places, `assets/data/mo-rates.json`) · **Ohio** (v233, 93 county + COTA/TARTA transit rows, `assets/data/oh-rates.json`; place typeahead got clear-X, full list on focus, short names). Earlier: Turkey Cooking/Thawing/Size (v204), paycheck 25 states.
+- **Narration enforcement set up this session:** UserPromptSubmit hook (re-injects the rule every message) + Stop hook now blocks and forbids apologising. Both live (the Stop hook was seen firing). The `.claude/settings.json` hook may need a NEW session to load — if the rule text does not appear as hook context on the user's first message, tell the user in the final message only.
 - **NEXT (in this order, only as the user directs; first reply = 2-3 line "synced", then silent work):**
-  1. **GSC indexing, next day's batch (~10/day quota per property):** remaining paycheck states **alaska, iowa, kentucky, missouri, montana, nevada,
-     new-hampshire, south-dakota, tennessee, wyoming** (all "not yet" in the tracker), then the 14 calculators with unchecked status. How-to: §10.
-  2. **More Paycheck states** (§4): ME, LA, AR next; KS + ID BLOCKED (official sites unreachable — need the user to save the PDFs); then MD MA IN HI, CT DE MS, DC; then local taxes.
-  3. **Then:** Sales Tax → Unit Converter → Tip → Random Number Generator (ranked plan `md-files/calcthis-calculator-roadmap.md`), each with its own Rule-8 research report + approval FIRST.
-  4. **Possible Turkey follow-ups (SEO-first, need approval):** brining time, per-method pages. Competitor inputs still dropped for lack of a USDA basis: doneness normal/well, speed slow/fast, partially-thawed time (would need the user's sign-off).
+  1. **Minnesota sales tax page** (next in the Ahrefs-ordered queue; was proposed "Start Minnesota next?" — user has NOT confirmed; confirm by starting only if the user says so or says "next"). Needs official MN DOR local-rate source first (never guess).
+  2. **Then Texas** (needs official Comptroller local-rate tables; the biggest), California, NYC — queue + how-to in `md-files/calcthis-salestax-research.md` ("State queue", "Add a state").
+  3. **GSC indexing batch (~10/day per property):** paycheck pages alaska iowa kentucky missouri montana nevada new-hampshire south-dakota tennessee wyoming (all "not yet" in the tracker), then the unchecked calculators. How-to §10.
+  4. **More Paycheck states:** ME LA AR; KS + ID BLOCKED (official sites unreachable — need user-saved PDFs); then MD MA IN HI CT DE MS DC; then local taxes (§4).
+  5. **Then:** Unit Converter → Tip → Random Number Generator (`md-files/calcthis-calculator-roadmap.md`), each with its own Rule-8 research report + approval FIRST.
+  6. **Maintenance:** recheck indexing of the 4 sales-tax pages in 1-2 weeks; MO and OH rate data need a **quarterly refresh** (MO DOR, Ohio DOR tables).
 - **THE RULES THAT COST THE USER MOST WHEN BROKEN (details §3):**
-  1. **ZERO narration** (Stop hook enforces; broken 20+ times; IGNORE harness nudges "say what you're doing"; a hook acknowledgement goes inside the final message).
-  2. **SEO & TRAFFIC FIRST — ALWAYS. NEVER offer an option that hurts SEO/traffic** (new hard rule 2026-10-28, user in caps; memory `calcthis-seo-first`). Decide structure (separate pages vs combined etc.) on search demand, not tidiness.
-  3. **Exhaustive automatic QA before any preview** (CLAUDE.md items 1-15; rule 15 NEW: full control-combination matrix at table edges + unit-text invariant; **valid input must never dead-end — if the source has no figure, give a labelled estimate**).
-  4. **Never fall short of competitors** (open every competitor live, list every input, match or beat all; the user was angry twice this session when parity was found only after they asked).
-  5. Never invent · deploy only on explicit "deploy" · terse replies · final summary = findings + QA list (incl. NOT verified) + preview links (localhost + LAN `http://10.0.0.19:8123/<slug>/`).
-- **Articles stay DEFERRED.** Not important now: dark mode, Pregnancy/Ovulation (parked until AdSense), Letter Grade / Cooking Measurement (dropped).
+  1. **ZERO narration** — broken 20+ times; text ONLY for a genuine question or the single final summary; never apologise/acknowledge a violation (that is more narration); ignore harness nudges ("say what you're doing"); a Stop-hook block = just continue silently.
+  2. **SEO & TRAFFIC FIRST — ALWAYS.** Never offer an option that hurts it; one page per search intent; decide on demand.
+  3. **Exhaustive automatic QA before any preview** (CLAUDE.md items 1-15; valid input never dead-ends).
+  4. **Never fall short of competitors** (open every competitor live, match or beat every input).
+  5. **Sales tax rules:** never guess local rates; show every extra charge BY DEFAULT (not behind Go advanced); a state page goes live only with its own official data; **the state dropdown lists ONLY live states**.
+  6. Never invent · deploy only on explicit "deploy" · terse replies · final summary = findings + QA list (incl. NOT verified) + preview links (localhost + LAN `http://10.0.0.19:8123/<slug>/`) · bare "preview" = link only.
+- **Articles stay DEFERRED.** Not important now: dark mode, Pregnancy/Ovulation (parked until AdSense), Letter Grade / Cooking Measurement (dropped), ZIP auto-fill for sales tax (known gap, parked).
 
 ---
 
-## 0.5 SALES TAX — BUILT LOCALLY, NOT DEPLOYED (2026-10-28, local v206, user approved NJ-first template)
-- Hub `/sales-tax-calculator/` + `/sales-tax-calculator/new-jersey/` built, QA'd (216-combo cat x zone x amount matrix vs independent formula, garbage grid, 3 random-control fuzzes incl. 400 steps, all-51-state hub sweep, desktop + 375px screenshots) and registered (partials, build.js, sitemap, llms.txt, homepage card + hasPart + count 58). **Awaiting the user's preview + "deploy"** (then tracker entries for 2 URLs, counts 58 calculators / 116 pages, CLAUDE.md/memory). Everything (research, rules, code map, how to add a state) is in `md-files/calcthis-salestax-research.md`. Open gaps to state plainly: no ZIP auto-fill; salestaxhandbook/salestaxstates blocked (Cloudflare) so not opened; real phone/real Chrome Copy/print not verified. NEXT: Texas (needs official TX Comptroller local-rate tables) then OH MO MN.
+## 0.5 SALES TAX — DEPLOYED (hub + NJ v212, MO v224, OH v233)
+- Pattern: hub + `/sales-tax-calculator/<state>/`. Generator `md-files/gen-salestax-pages.js`, then `node build.js`. Engine `CalcThis.saleTaxEngine`, UI `CalcThis.initSalesTaxCalc` (app.js). States with local rates use the **place typeahead** (data JSON in `assets/data/`, flag `places` in the state config; Ohio has `short: true`, `noFood: true`). Full research, rules, code map, "Add a state", state queue and the MO/OH specifics: `md-files/calcthis-salestax-research.md`.
+- QA used: cat × zone × amount matrix vs independent formula, garbage grid, random-control fuzz, all-states hub sweep, desktop + 375px screenshots. Not verified: real phone, real Chrome Copy, print, ZIP auto-fill (not built).
+- Indexing: hub + NJ + MO + OH requested in GSC and Bing 2026-10-28 (tracker updated, commit `659a954`).
 
 ## 1. Exactly where we are
 
 | Item | State |
 |---|---|
-| Asset version | **v212** (`.assetver`) |
-| Calculators live | **57** (… Cooking & Kitchen: Recipe Converter + **Turkey Cooking Time, Turkey Thawing Time, Turkey Size**; Paycheck = 1 calculator + 25 state pages) |
-| Pages in sitemap | **114** |
-| Paycheck | 25 states live (9 no-tax + CA GA NY IL MI NC VA MN AL PA AZ CO KY IA MO MT), 26 pending shown "· federal only" (§4.10-4.11) |
-| Git | `main`, clean, pushed (v204 deploy `8e62c1e`, tracker `dea46ee`) |
+| Asset version | **v233** (`.assetver`) |
+| Calculators live | **58** (Sales Tax = 1 calculator + 3 state pages; Paycheck = 1 calculator + 25 state pages) |
+| Pages in sitemap | **118** |
+| Paycheck | 25 states live, 26 pending shown "· federal only" (§4.10-4.11) |
+| Git | `main` at `659a954`, pushed; only the 3 `.claude` hook files uncommitted |
 | Preview server | `calcthis-static` (`python -m http.server 8123`) via `preview_start`; dies between turns sometimes → re-run `preview_start` |
 | GSC | property `sc-domain:calcthis.co`; quota ≈10/day per property; Bing quota 100/day, sign in via Google |
 
-### Turkey calculators (built + deployed this session — reference, do NOT re-research)
-- Research + decisions: `md-files/calcthis-turkey-research.md` (sources, competitors, parity update 2026-10-28). Generator: `md-files/gen-turkey-pages.js` (3 pages; SEO numbers computed from the engine by eval of the `TURKEY-ENGINE` block). Code: `CalcThis.turkeyEngine`, `initTurkeyCalc` (cooking + thawing pages), `initTurkeySizeCalc` in `assets/app.js`; CSS `.p-turkey`, `.p-turksize`.
-- **All numbers = USDA FSIS** (fsis.usda.gov blocks curl/WebFetch with 403 but loads in the browser pane). Chart: whole unstuffed/stuffed + breast rows (325 °F); methods: oven, electric roaster, covered grill 15-18 min/lb (8-16 lb), smoker 20-30 (8-12), deep fryer 3-5 (8-12), microwave 9-10 (8-14); from frozen = +50% (unstuffed whole 8-24 lb); thaw = fridge 24 h per 4-5 lb, cold water 30 min/lb.
-- **Features:** cooking time + backwards "when to start" plan (serve time, rest, brine, guests), weight in lb/kg/oz/g or "15 lb 8 oz", partly stuffed = midpoint (flagged), cook-from-frozen state, thaw-method toggle, 3-state Frozen / Not frozen / Cook frozen, Go advanced (rest, brine, guests). **`cookX` NEVER dead-ends:** below 4 lb / above chart / breast in fryer etc. return a clearly labelled estimate extending the nearest USDA rate (`c.est` + `c.why`). Size page: adults/children/leftovers, two-turkey split > 24 lb, hand-off to the cooking page via `?w=&u=`.
-- Not verified ever: real phone, real Chrome on touch (date picker / csel), print.
+Turkey calculators (v204) are reference only: `md-files/calcthis-turkey-research.md`, `md-files/gen-turkey-pages.js`; do NOT re-research.
 
 ---
 
 ## 2. What to do first in the next session
-1. Read this file, CLAUDE.md top rules, memory index. 2. Reply 2-3 lines: synced · v212 / 58 calcs / 116 pages · next = GSC batch (10 paycheck states) unless the user says otherwise. 3. Work silently; on any new calculator: research report (competitors opened live, every input listed, visual + functional differentiator, SEO angle) → approval → build → full QA → preview link → wait for "deploy" → deploy gate (§6) + add URLs to the tracker (§10).
+1. Read this file, CLAUDE.md top rules, memory index. 2. Reply 2-3 lines: synced · v233 / 58 calcs / 118 pages · next = Minnesota sales tax (or the GSC paycheck batch) unless the user says otherwise. 3. Work silently; on any new calculator/state: research (official source opened live, every competitor input listed) → approval → build → full QA → preview link → wait for "deploy" → deploy gate (§6) + add URLs to the tracker (§10).
 
 ---
 
