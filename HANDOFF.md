@@ -1,16 +1,16 @@
 # SESSION HANDOFF — read this FIRST, then CLAUDE.md hard rules
 
-_Rewritten 2026-10-29 (end of the Sales Tax session, v204 → v233, plus the no-narration hook work). §0-§2 are current and authoritative; §3 onward is older reference (still valid unless §0-§2 contradicts it). The next session must start FULLY synced from this file + CLAUDE.md + memory. The user must NOT have to re-explain anything ("do not dare to start the new session confused … smooth and seamless continuation")._
+_Rewritten 2026-10-29 (end of the Sales Tax session, v204 → v235, plus the no-narration hook work). §0-§2 are current and authoritative; §3 onward is older reference (still valid unless §0-§2 contradicts it). The next session must start FULLY synced from this file + CLAUDE.md + memory. The user must NOT have to re-explain anything ("do not dare to start the new session confused … smooth and seamless continuation")._
 
 ---
 
 ## 0. THE 60-SECOND VERSION
 
-- **Live:** asset **v233** · **58 calculators** · **25 blog articles** · **118 pages** (sitemap count). `main`: last commit `659a954` (indexing tracker). **Uncommitted (intentional, not yet committed — commit them with the user's OK):** `.claude/hooks/check-narration.cjs` (modified), `.claude/hooks/remind-no-narration.cjs` (new), `.claude/settings.json` (new, registers the UserPromptSubmit hook). **Nothing half-built. Nothing waiting on the user.**
+- **Live:** asset **v235** · **58 calculators** · **25 blog articles** · **119 pages** (sitemap count). `main`: Minnesota deploy commit `dd16244` + docs commit. **Uncommitted (intentional, not yet committed — commit them with the user's OK):** `.claude/hooks/check-narration.cjs` (modified), `.claude/hooks/remind-no-narration.cjs` (new), `.claude/settings.json` (new, registers the UserPromptSubmit hook). **Nothing half-built. Nothing waiting on the user.**
 - **Shipped this session (all deployed + indexed in GSC and Bing 2026-10-28):** Sales Tax hub `/sales-tax-calculator/` + **New Jersey** (v207/v212) + homepage "Sales Tax" tab with flag cubes · **Missouri** (v224, typeahead over all 2,597 official DOR places, `assets/data/mo-rates.json`) · **Ohio** (v233, 93 county + COTA/TARTA transit rows, `assets/data/oh-rates.json`; place typeahead got clear-X, full list on focus, short names). Earlier: Turkey Cooking/Thawing/Size (v204), paycheck 25 states.
 - **Narration enforcement set up this session:** UserPromptSubmit hook (re-injects the rule every message) + Stop hook now blocks and forbids apologising. Both live (the Stop hook was seen firing). The `.claude/settings.json` hook may need a NEW session to load — if the rule text does not appear as hook context on the user's first message, tell the user in the final message only.
 - **NEXT (in this order, only as the user directs; first reply = 2-3 line "synced", then silent work):**
-  1. **Minnesota sales tax page** (next in the Ahrefs-ordered queue; was proposed "Start Minnesota next?" — user has NOT confirmed; confirm by starting only if the user says so or says "next"). Needs official MN DOR local-rate source first (never guess).
+  1. **Minnesota DONE (v235).** Request its indexing in GSC + Bing (add to tracker), recheck in 1-2 weeks.
   2. **Then Texas** (needs official Comptroller local-rate tables; the biggest), California, NYC — queue + how-to in `md-files/calcthis-salestax-research.md` ("State queue", "Add a state").
   3. **GSC indexing batch (~10/day per property):** paycheck pages alaska iowa kentucky missouri montana nevada new-hampshire south-dakota tennessee wyoming (all "not yet" in the tracker), then the unchecked calculators. How-to §10.
   4. **More Paycheck states:** ME LA AR; KS + ID BLOCKED (official sites unreachable — need user-saved PDFs); then MD MA IN HI CT DE MS DC; then local taxes (§4).
@@ -27,7 +27,7 @@ _Rewritten 2026-10-29 (end of the Sales Tax session, v204 → v233, plus the no-
 
 ---
 
-## 0.5 SALES TAX — DEPLOYED (hub + NJ v212, MO v224, OH v233)
+## 0.5 SALES TAX — DEPLOYED (hub + NJ v212, MO v224, OH v233, **MN v235 2026-10-29**; MN details in md-files/calcthis-salestax-research.md; MN not yet requested in GSC/Bing; MN data refresh quarterly via md-files/mn-salestax/)
 - Pattern: hub + `/sales-tax-calculator/<state>/`. Generator `md-files/gen-salestax-pages.js`, then `node build.js`. Engine `CalcThis.saleTaxEngine`, UI `CalcThis.initSalesTaxCalc` (app.js). States with local rates use the **place typeahead** (data JSON in `assets/data/`, flag `places` in the state config; Ohio has `short: true`, `noFood: true`). Full research, rules, code map, "Add a state", state queue and the MO/OH specifics: `md-files/calcthis-salestax-research.md`.
 - QA used: cat × zone × amount matrix vs independent formula, garbage grid, random-control fuzz, all-states hub sweep, desktop + 375px screenshots. Not verified: real phone, real Chrome Copy, print, ZIP auto-fill (not built).
 - Indexing: hub + NJ + MO + OH requested in GSC and Bing 2026-10-28 (tracker updated, commit `659a954`).
@@ -36,7 +36,7 @@ _Rewritten 2026-10-29 (end of the Sales Tax session, v204 → v233, plus the no-
 
 | Item | State |
 |---|---|
-| Asset version | **v233** (`.assetver`) |
+| Asset version | **v235** (`.assetver`) |
 | Calculators live | **58** (Sales Tax = 1 calculator + 3 state pages; Paycheck = 1 calculator + 25 state pages) |
 | Pages in sitemap | **118** |
 | Paycheck | 25 states live, 26 pending shown "· federal only" (§4.10-4.11) |
@@ -49,7 +49,7 @@ Turkey calculators (v204) are reference only: `md-files/calcthis-turkey-research
 ---
 
 ## 2. What to do first in the next session
-1. Read this file, CLAUDE.md top rules, memory index. 2. Reply 2-3 lines: synced · v233 / 58 calcs / 118 pages · next = Minnesota sales tax (or the GSC paycheck batch) unless the user says otherwise. 3. Work silently; on any new calculator/state: research (official source opened live, every competitor input listed) → approval → build → full QA → preview link → wait for "deploy" → deploy gate (§6) + add URLs to the tracker (§10).
+1. Read this file, CLAUDE.md top rules, memory index. 2. Reply 2-3 lines: synced · v235 / 58 calcs / 119 pages · MN sales tax live; next = request MN indexing, then Texas (or the GSC paycheck batch) unless the user says otherwise. 3. Work silently; on any new calculator/state: research (official source opened live, every competitor input listed) → approval → build → full QA → preview link → wait for "deploy" → deploy gate (§6) + add URLs to the tracker (§10).
 
 ---
 
