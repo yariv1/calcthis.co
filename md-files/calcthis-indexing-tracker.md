@@ -75,10 +75,10 @@ GSC snapshot 2026-10-26: 69 indexed, 13 not indexed (8 Discovered, 1 Crawled, 1 
 | /sales-tax-calculator/ohio/ | 2026-10-28 (v233) | 2026-10-28 (GSC + Bing) |
 | /sales-tax-calculator/minnesota/ | 2026-10-29 (v235) | 2026-10-29 (GSC + Bing) |
 | /unit-converter/ + /length-converter/ /weight-converter/ /volume-converter/ /temperature-converter/ /area-converter/ /speed-converter/ /data-storage-converter/ /cooking-converter/ /px-to-rem-converter/ | 2026-10-29 (v241) | Bing: all 10 submitted 2026-10-29. GSC: hub, length, weight, volume, temperature, area requested 2026-10-29; TODO next day (quota hit): speed, data-storage, cooking, px-to-rem |
-| /random-number-generator/ | 2026-10-29 (v246) | not yet (Bing: sitemap + IndexNow) |
-| /random-number-generator-1-100/ | 2026-10-29 (v246) | not yet (Bing: sitemap + IndexNow) |
-| /random-number-generator-1-10/ | 2026-10-29 (v246) | not yet (Bing: sitemap + IndexNow) |
-| /random-number-generator-1-3/ | 2026-10-29 (v246) | not yet (Bing: sitemap + IndexNow) |
-| /random-number-generator-1-13/ | 2026-10-29 (v246) | not yet (Bing: sitemap + IndexNow) |
-| /random-number-generator-no-repeats/ | 2026-10-29 (v246) | not yet (Bing: sitemap + IndexNow) |
-| /random-number-generator-wheel/ | 2026-10-29 (v246) | not yet (Bing: sitemap + IndexNow) |
+| /random-number-generator/ | 2026-10-29 (v246) | GSC not yet (quota exceeded 2026-10-29); Bing submitted 2026-10-29 |
+| /random-number-generator-1-100/ | 2026-10-29 (v246) | GSC not yet (quota exceeded 2026-10-29); Bing submitted 2026-10-29 |
+| /random-number-generator-1-10/ | 2026-10-29 (v246) | GSC not yet (quota exceeded 2026-10-29); Bing submitted 2026-10-29 |
+| /random-number-generator-1-3/ | 2026-10-29 (v246) | GSC not yet (quota exceeded 2026-10-29); Bing submitted 2026-10-29 |
+| /random-number-generator-1-13/ | 2026-10-29 (v246) | GSC not yet (quota exceeded 2026-10-29); Bing submitted 2026-10-29 |
+| /random-number-generator-no-repeats/ | 2026-10-29 (v246) | GSC not yet (quota exceeded 2026-10-29); Bing submitted 2026-10-29 |
+| /random-number-generator-wheel/ | 2026-10-29 (v246) | GSC not yet (quota exceeded 2026-10-29); Bing submitted 2026-10-29 |
