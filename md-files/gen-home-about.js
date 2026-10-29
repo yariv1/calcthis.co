@@ -37,7 +37,7 @@ const CATS = [
     ['/fraction-calculator/', 'Fractions', 'any number of fractions, with a bar diagram'], ['/standard-deviation-calculator/', 'Standard deviation', 'sample and population side by side'], ['/scientific-notation-calculator/', 'Scientific notation', 'every notation at once'],
     ['/weighted-average-calculator/', 'Weighted average', 'with a contribution bar'], ['/ratio-calculator/', 'Ratio', 'solve for the missing value'], ['/percentage-calculator/', 'Percentage', 'the common percent questions'],
     ['/age-calculator/', 'Age', 'exact years, months and days'], ['/date-calculator/', 'Date', 'days between dates, or add and subtract'], ['/time-calculator/', 'Time', 'elapsed time, durations and time cards'],
-    ['/hours-calculator/', 'Hours', 'shifts, breaks, overtime and pay'], ['/triangle-calculator/', 'Triangle', 'solved and drawn to scale']] },
+    ['/hours-calculator/', 'Hours', 'shifts, breaks, overtime and pay'], ['/triangle-calculator/', 'Triangle', 'solved and drawn to scale'], ['/random-number-generator/', 'Random number generator', 'any range, no repeats, with a number wheel']] },
   { k: 'kitchen', h: 'Cooking & kitchen', p: 'Scale a recipe, convert measures the way a kitchen reads them, and plan the turkey backwards from dinner time.', items: [
     ['/recipe-converter/', 'Recipe converter', 'scale servings, cups to grams'], ['/turkey-cooking-time-calculator/', 'Turkey cooking time', 'oven, roaster, grill, smoker or fryer'], ['/turkey-thawing-time-calculator/', 'Turkey thawing time', 'fridge or cold water'], ['/turkey-size-calculator/', 'Turkey size', 'how big a bird for your guests'],
     ['/cooking-converter/', 'Cooking converter', 'cups, grams, mL and oven temperatures']] },

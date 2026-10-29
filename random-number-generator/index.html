@@ -1,0 +1,641 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Random Number Generator — Any Range, No Repeats | CalcThis</title>
+<meta name="description" content="Free random number generator: pick one or many numbers in any range, with or without repeats, decimals, odd or even, sets, and a spinning number wheel. Secure, unbiased, no sign-up.">
+<link rel="canonical" href="https://calcthis.co/random-number-generator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Random Number Generator">
+<meta property="og:description" content="Free random number generator: pick one or many numbers in any range, with or without repeats, decimals, odd or even, sets, and a spinning number wheel. Secure, unbiased, no sign-up.">
+<meta property="og:url" content="https://calcthis.co/random-number-generator/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<meta name="theme-color" content="#B5761F">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css?v=246">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Random Number Generator",
+  "url": "https://calcthis.co/random-number-generator/",
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "Free random number generator: pick one or many numbers in any range, with or without repeats, decimals, odd or even, sets, and a spinning number wheel. Secure, unbiased, no sign-up."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I generate a random number?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Type a minimum and a maximum (or tap a range such as 1–100), choose how many numbers you want and press Generate. Both limits are included, so 1 to 10 can give 1 or 10."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I get random numbers with no repeats?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Tick No repeats and each number can appear only once. You can ask for at most as many numbers as the range holds — from 1 to 10 that is 10. To deal numbers out one by one, switch to Draw one at a time."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I generate random decimals?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Choose Decimals and set the decimal places. From 0 to 1 with 3 decimal places you get values such as 0.482."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I get only odd or even numbers?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes — open Go advanced and pick odd only, even only, half odd and half even, or the exact number of odd numbers you want."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I leave certain numbers out?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Under Go advanced, type the numbers to skip in “Leave out these numbers”, for example 13 42 99. You can also count in steps, such as every 5th number."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is this random number generator truly random?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The numbers come from your browser’s secure random source (the same one used for encryption keys), and the range maths is exact, so no number is favoured. It is a computer-generated source rather than hardware noise, which is more than enough for games, draws, raffles, sampling and classroom use."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How big can the numbers be?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Whole numbers can have up to 999 digits and decimals up to 999 decimal places. The maths is exact, so a range like 1 to 10^50 works without rounding."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "CalcThis",
+      "item": "https://calcthis.co/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Random Number Generator",
+      "item": "https://calcthis.co/random-number-generator/"
+    }
+  ]
+}
+</script>
+</head>
+<body class="p-loan p-rng" data-mode="gen" data-min="" data-max="" data-unique="0">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <a class="hdr-back" href="/blog/" aria-label="Back to blog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-search"><input id="menuSearch" type="search" placeholder="Search calculators or states…" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Search calculators"><div class="menu-results" id="menuResults" hidden></div></div>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <span class="menu-col-head">Construction &amp; Gardening</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+          <a href="/paint-calculator/">Paint</a>
+          <a href="/wallpaper-calculator/">Wallpaper</a>
+          <a href="/square-footage-calculator/">Square Footage</a>
+          <a href="/tape-measure-fraction-calculator/">Tape Measure Fraction</a>
+          <a href="/stair-calculator/">Stair</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/vo2-max-calculator/">VO2 Max</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
+          <a href="/bmi-calculator/">BMI</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/ideal-weight-calculator/">Ideal Weight</a>
+          <a href="/lean-body-mass-calculator/">Lean Body Mass</a>
+          <a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio</a>
+          <a href="/calorie-calculator/">Calorie</a>
+          <a href="/bmr-calculator/">BMR</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/water-intake-calculator/">Water Intake</a>
+          <a href="/macro-calculator/">Macro</a>
+          <a href="/protein-intake-calculator/">Protein Intake</a>
+          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
+          <a href="/steps-to-miles-calculator/">Steps to Miles</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+          <a href="/grade-curve-calculator/">Grade Curve</a>
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/fraction-calculator/">Fraction</a>
+          <a href="/standard-deviation-calculator/">Standard Deviation</a>
+          <a href="/scientific-notation-calculator/">Scientific Notation</a>
+          <a href="/weighted-average-calculator/">Weighted Average</a>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+          <a href="/age-calculator/">Age</a>
+          <a href="/date-calculator/">Date</a>
+          <a href="/time-calculator/">Time</a>
+          <a href="/hours-calculator/">Hours</a>
+          <a href="/triangle-calculator/">Triangle</a>
+          <a href="/random-number-generator/" class="current">Random Number</a>
+          <span class="menu-col-head">Cooking &amp; Kitchen</span>
+          <a href="/recipe-converter/">Recipe Converter</a>
+          <a href="/turkey-cooking-time-calculator/">Turkey Cooking Time</a>
+          <a href="/turkey-thawing-time-calculator/">Turkey Thawing Time</a>
+          <a href="/turkey-size-calculator/">Turkey Size</a>
+          <!--UNITNAV:START-->
+          <span class="menu-col-head">Unit Converters</span>
+          <a href="/unit-converter/">Unit Converter</a>
+          <a href="/length-converter/">Length Converter</a>
+          <a href="/weight-converter/">Weight Converter</a>
+          <a href="/volume-converter/">Volume Converter</a>
+          <a href="/temperature-converter/">Temperature Converter</a>
+          <a href="/area-converter/">Area Converter</a>
+          <a href="/speed-converter/">Speed Converter</a>
+          <a href="/data-storage-converter/">Data Storage Converter</a>
+          <a href="/cooking-converter/">Cooking Converter</a>
+          <a href="/px-to-rem-converter/">PX to REM Converter</a>
+          <!--UNITNAV:END-->
+          <span class="menu-col-head">Money &amp; Finance</span>
+          <a href="/mortgage-calculator/">Mortgage</a>
+          <a href="/loan-calculator/">Loan</a>
+          <a href="/auto-loan-calculator/">Auto Loan</a>
+          <!--STAXNAV:START-->
+          <a href="/sales-tax-calculator/">Sales Tax</a>
+          <a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax</a>
+          <a href="/sales-tax-calculator/missouri/">Missouri Sales Tax</a>
+          <a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax</a>
+          <a href="/sales-tax-calculator/ohio/">Ohio Sales Tax</a>
+          <!--STAXNAV:END-->
+        </div>
+        <!--PAYNAV:START-->
+        <div class="menu-col">
+          <span class="menu-col-head">Paycheck Calculators</span>
+          <a href="/paycheck-calculator/">Paycheck Calculator (all states)</a>
+          <a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a>
+          <a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a>
+          <a href="/paycheck-calculator/california/">California Paycheck Calculator</a>
+          <a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a>
+          <a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a>
+          <a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a>
+          <a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a>
+          <a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a>
+          <a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a>
+          <a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a>
+          <a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a>
+          <a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a>
+          <a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a>
+          <a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a>
+          <a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a>
+        </div>
+        <!--PAYNAV:END-->
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">Whole numbers, decimals, no repeats, sets and a number wheel</div>
+    <h1>Random Number Generator</h1>
+    <p>Pick <strong>one number or thousands</strong> from any range — whole numbers or decimals, with or without repeats. Tap a range, press Generate, and watch the wheel land on your number.</p>
+  </section>
+
+  <div class="grid">
+    <div class="card">
+      <div class="card-pad">
+        <h2 class="card-h2">Generate</h2>
+
+        <div class="modeseg" id="rgMode" role="group" aria-label="How to pick">
+          <button class="on" type="button" data-v="gen">Pick numbers</button>
+          <button type="button" data-v="draw">Draw one at a time</button>
+        </div>
+        <div class="modeseg" id="rgType" role="group" aria-label="Number type">
+          <button class="on" type="button" data-v="int">Whole numbers</button>
+          <button type="button" data-v="dec">Decimals</button>
+        </div>
+
+        <div class="ln-two">
+          <div class="fld"><label class="lab" for="rgMin">Minimum</label><div class="inp"><input id="rgMin" type="text" inputmode="text" autocomplete="off" placeholder="e.g. 1"></div></div>
+          <div class="fld"><label class="lab" for="rgMax">Maximum</label><div class="inp"><input id="rgMax" type="text" inputmode="text" autocomplete="off" placeholder="e.g. 100"></div></div>
+        </div>
+        <div class="chips" id="rgChips" aria-label="Quick ranges" style="margin:-4px 0 16px"><button type="button" data-min="1" data-max="2">1–2</button><button type="button" data-min="1" data-max="3">1–3</button><button type="button" data-min="1" data-max="6">1–6</button><button type="button" data-min="1" data-max="10">1–10</button><button type="button" data-min="1" data-max="13">1–13</button><button type="button" data-min="1" data-max="100">1–100</button><button type="button" data-min="1" data-max="1000">1–1,000</button></div>
+
+        <div id="rgCountFld"><div class="fld"><label class="lab" for="rgCount">How many numbers</label><div class="inp"><input id="rgCount" type="text" inputmode="numeric" autocomplete="off" placeholder="e.g. 1"></div></div></div>
+        <div id="rgDpFld" style="display:none"><div class="fld"><label class="lab" for="rgDp">Decimal places</label><div class="inp"><input id="rgDp" type="text" inputmode="numeric" autocomplete="off" placeholder="e.g. 2"></div></div></div>
+        <div id="rgUniqueWrap"><label class="dc-check" for="rgUnique"><input type="checkbox" id="rgUnique"><span>No repeats <span class="unit" style="font-weight:500;color:var(--muted)">each number comes up once</span></span></label></div>
+        <div class="fld" id="rgSortFld"><span class="lab">Sort</span><div class="csel" id="rgSort" data-value=""><button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false"><span class="csel-val"></span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="csel-panel" role="listbox"></div></div></div>
+
+        <div class="rg-btns" id="rgBtns">
+          <button class="btn" id="rgGo" type="button">Generate</button>
+          <button class="btn btn-ghost" id="rgReset" type="button" style="display:none">Reset pile</button>
+        </div>
+        <p class="un-note" id="rgModeNote" style="display:none;margin-top:10px"></p>
+        <p class="add-note ln-hint" id="rgHint" style="display:none"></p>
+
+        <div id="rgAdvIn" style="display:none">
+          <div class="proj-sep"></div>
+          <div class="fld"><label class="lab" for="rgStep">Count in steps of</label><div class="inp"><input id="rgStep" type="text" inputmode="numeric" autocomplete="off" placeholder="e.g. 5"></div></div>
+          <div class="fld"><label class="lab" for="rgExcl">Leave out these numbers</label><div class="inp"><input id="rgExcl" type="text" inputmode="text" autocomplete="off" placeholder="e.g. 13 42 99"></div></div>
+          <div class="fld" id="rgParFld"><span class="lab">Odd or even</span><div class="csel" id="rgPar" data-value=""><button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false"><span class="csel-val"></span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="csel-panel" role="listbox"></div></div></div>
+          <div id="rgOddFld" style="display:none"><div class="fld"><label class="lab" for="rgOdd">How many of them are odd</label><div class="inp"><input id="rgOdd" type="text" inputmode="numeric" autocomplete="off" placeholder="e.g. 3"></div></div></div>
+          <div id="rgSetsFld"><div class="fld"><label class="lab" for="rgSets">How many sets</label><div class="inp"><input id="rgSets" type="text" inputmode="numeric" autocomplete="off" placeholder="e.g. 1"></div></div></div>
+          <label class="dc-check" for="rgIncMin"><input type="checkbox" id="rgIncMin" checked><span>Include the minimum</span></label>
+          <label class="dc-check" for="rgIncMax"><input type="checkbox" id="rgIncMax" checked><span>Include the maximum</span></label>
+          <div class="fld" style="margin-top:10px"><span class="lab">Copy and download as</span><div class="csel" id="rgFmt" data-value=""><button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false"><span class="csel-val"></span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="csel-panel" role="listbox"></div></div></div>
+        </div>
+
+        <div class="add-row split" style="margin-top:16px">
+          <span></span>
+          <button class="advbtn" id="rgAdvBtn" type="button">
+            <span id="rgAdvBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-pad">
+        <div class="ln-res">
+          <div class="res-lab" id="rgResLab">Result</div>
+          <div class="res-big" id="rgBig">—</div>
+          <div class="res-sub" id="rgSub">Press Generate.</div>
+        </div>
+
+        <div id="rgBallsWrap" style="display:none"><div class="fc-grp">Your numbers</div><div id="rgBalls"></div></div>
+        <div id="rgVisWrap" style="display:none"><div class="fc-grp" id="rgVisLab">The wheel</div><div class="ln-box" id="rgVis"></div></div>
+
+        <div id="rgResults" style="display:none">
+          <div id="rgStatsWrap" style="display:none"><div class="fc-grp">At a glance</div><table class="dtable ln-terms" id="rgStats"></table></div>
+          <div id="rgHist" style="display:none"></div>
+          <div class="rg-btnrow">
+            <button class="btn btn-ghost" id="rgCopy" type="button">Copy numbers</button>
+            <button class="btn btn-ghost" id="rgDl" type="button">Download .txt</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- mobile sticky bar -->
+  <div class="mbar" id="mbar">
+    <span class="mbar-lab" id="rgMLab">Result</span>
+    <div class="mbar-vals"><b id="rgMVal">—</b></div>
+  </div>
+
+  <div class="related-calcs">
+    <p class="related-calcs-h">More tools that may interest you</p>
+    <div class="pills">
+      <a class="pill" href="/random-number-generator-1-100/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17L17 3l4 4L7 21z"/><path d="M7 13l2 2M10 10l2 2M13 7l2 2"/></svg>
+        Random Number 1–100
+      </a>
+      <a class="pill" href="/random-number-generator-wheel/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17L17 3l4 4L7 21z"/><path d="M7 13l2 2M10 10l2 2M13 7l2 2"/></svg>
+        Random Number Wheel
+      </a>
+      <a class="pill" href="/standard-deviation-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17L17 3l4 4L7 21z"/><path d="M7 13l2 2M10 10l2 2M13 7l2 2"/></svg>
+        Standard Deviation Calculator
+      </a>
+      <a class="pill" href="/percentage-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17L17 3l4 4L7 21z"/><path d="M7 13l2 2M10 10l2 2M13 7l2 2"/></svg>
+        Percentage Calculator
+      </a>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use the random number generator</h2>
+        <ol class="rg-steps">
+          <li>Type a <strong>minimum</strong> and a <strong>maximum</strong> — or tap a ready-made range.</li>
+          <li>Choose <strong>how many</strong> numbers you want.</li>
+          <li>Tick <strong>No repeats</strong> if each number may appear only once.</li>
+          <li>Press <strong>Generate</strong> — copy or download the result.</li>
+        </ol>
+        <h2>Pick a range</h2>
+        <div class="un-tiles"><a class="un-tile" href="/random-number-generator-1-100/"><b>1–100</b><span>A random number from 1 to 100</span></a><a class="un-tile" href="/random-number-generator-1-10/"><b>1–10</b><span>A random number from 1 to 10</span></a><a class="un-tile" href="/random-number-generator-1-3/"><b>1–3</b><span>A random number from 1 to 3</span></a><a class="un-tile" href="/random-number-generator-1-13/"><b>1–13</b><span>A random number from 1 to 13</span></a><a class="un-tile" href="/random-number-generator-no-repeats/"><b>No repeats</b><span>Unique numbers — none appears twice</span></a><a class="un-tile" href="/random-number-generator-wheel/"><b>Random Number Wheel</b><span>Spin a wheel of numbers</span></a></div>
+        <h2>What it can do</h2>
+        <ul class="rg-list">
+          <li>One number or up to <strong>10,000</strong> at a time</li>
+          <li>Whole numbers or <strong>decimals</strong> (up to 999 places)</li>
+          <li><strong>No repeats</strong>, or draw one at a time from a pile</li>
+          <li>Odd only, even only, or half and half</li>
+          <li>Leave numbers out, or count in steps</li>
+          <li>Several sets at once, sorted either way</li>
+          <li>Copy or download as commas, spaces, lines or a spreadsheet row</li>
+        </ul>
+      </div>
+      <div>
+        <h2>How random are the numbers?</h2>
+        <p>Each number comes from your browser’s secure random source — the one used for encryption keys.</p>
+        <p>The range is sliced without bias, so every number has exactly the same chance. Nothing is sent to a server.</p>
+        <p>It suits games, draws, raffles, sampling and homework. For passwords or keys, use a dedicated password generator.</p>
+        <h2>Chances at a glance</h2>
+        <div class="pc-tblwrap"><table class="dtable"><thead><tr><th>On a single draw from 1 to 10</th><th>Chance</th></tr></thead><tbody><tr><td>Any one number you name</td><td>1 in 10 (10%)</td></tr><tr><td>The same number twice in a row</td><td>1 in 10 (10%)</td></tr><tr><td>An even number</td><td>5 of 10 (50%)</td></tr><tr><td>An odd number</td><td>5 of 10 (50%)</td></tr><tr><td>A prime number</td><td>4 of 10 (40%)</td></tr><tr><td>A number above 5</td><td>5 of 10 (50%)</td></tr></tbody></table></div>
+        <div class="pc-tblwrap"><table class="dtable"><thead><tr><th>On a single draw from 1 to 100</th><th>Chance</th></tr></thead><tbody><tr><td>Any one number you name</td><td>1 in 100 (1%)</td></tr><tr><td>The same number twice in a row</td><td>1 in 100 (1%)</td></tr><tr><td>An even number</td><td>50 of 100 (50%)</td></tr><tr><td>An odd number</td><td>50 of 100 (50%)</td></tr><tr><td>A prime number</td><td>25 of 100 (25%)</td></tr><tr><td>A number above 50</td><td>50 of 100 (50%)</td></tr></tbody></table></div>
+        <p class="st-src">Randomness: <a href="https://developer.mozilla.org/docs/Web/API/Crypto/getRandomValues" rel="noopener">Web Crypto getRandomValues</a>. Probabilities on this page are exact counts — favourable numbers divided by all numbers in the range.</p>
+        <p>Need maths on your numbers? Try the <a href="/standard-deviation-calculator/">Standard Deviation Calculator</a> or the <a href="/percentage-calculator/">Percentage Calculator</a>.</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>How do I generate a random number?</summary><p>Type a minimum and a maximum (or tap a range such as 1–100), choose how many numbers you want and press Generate. Both limits are included, so 1 to 10 can give 1 or 10.</p></details>
+    <details class="faq"><summary>How do I get random numbers with no repeats?</summary><p>Tick <strong>No repeats</strong> and each number can appear only once. You can ask for at most as many numbers as the range holds — from 1 to 10 that is 10. To deal numbers out one by one, switch to <strong>Draw one at a time</strong>.</p></details>
+    <details class="faq"><summary>How do I generate random decimals?</summary><p>Choose <strong>Decimals</strong> and set the decimal places. From 0 to 1 with 3 decimal places you get values such as 0.482.</p></details>
+    <details class="faq"><summary>Can I get only odd or even numbers?</summary><p>Yes — open <strong>Go advanced</strong> and pick odd only, even only, half odd and half even, or the exact number of odd numbers you want.</p></details>
+    <details class="faq"><summary>Can I leave certain numbers out?</summary><p>Yes. Under <strong>Go advanced</strong>, type the numbers to skip in “Leave out these numbers”, for example 13 42 99. You can also count in steps, such as every 5th number.</p></details>
+    <details class="faq"><summary>Is this random number generator truly random?</summary><p>The numbers come from your browser’s secure random source (the same one used for encryption keys), and the range maths is exact, so no number is favoured. It is a computer-generated source rather than hardware noise, which is more than enough for games, draws, raffles, sampling and classroom use.</p></details>
+    <details class="faq"><summary>How big can the numbers be?</summary><p>Whole numbers can have up to 999 digits and decimals up to 999 decimal places. The maths is exact, so a range like 1 to 10^50 works without rounding.</p></details>
+  </section>
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+      <div class="footer-stack">
+<div class="footer-col" style="order:1">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+          <li><a href="/paint-calculator/">Paint Calculator</a></li>
+          <li><a href="/wallpaper-calculator/">Wallpaper Calculator</a></li>
+          <li><a href="/square-footage-calculator/">Square Footage Calculator</a></li>
+          <li><a href="/tape-measure-fraction-calculator/">Tape Measure Fraction Calculator</a></li>
+          <li><a href="/stair-calculator/">Stair Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:5">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Cooking &amp;</span> <span class="ft2">Kitchen</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/recipe-converter/">Recipe Converter</a></li>
+          <li><a href="/turkey-cooking-time-calculator/">Turkey Cooking Time Calculator</a></li>
+          <li><a href="/turkey-thawing-time-calculator/">Turkey Thawing Time Calculator</a></li>
+          <li><a href="/turkey-size-calculator/">Turkey Size Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:6">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Money &amp;</span> <span class="ft2">Finance</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/mortgage-calculator/">Mortgage Calculator</a></li>
+          <li><a href="/loan-calculator/">Loan Calculator</a></li>
+          <li><a href="/auto-loan-calculator/">Auto Loan Calculator</a></li>
+          <!--STAXFOOT:START-->
+          <li><a href="/sales-tax-calculator/">Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/missouri/">Missouri Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/ohio/">Ohio Sales Tax Calculator</a></li>
+          <!--STAXFOOT:END-->
+        </ul>
+      </div>
+      </div>
+
+      <div class="footer-right">
+<div class="footer-col footer-col--two" style="order:2">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/vo2-max-calculator/">VO2 Max Calculator</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/bmi-calculator/">BMI Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/ideal-weight-calculator/">Ideal Weight Calculator</a></li>
+          <li><a href="/lean-body-mass-calculator/">Lean Body Mass Calculator</a></li>
+          <li><a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio Calculator</a></li>
+          <li><a href="/calorie-calculator/">Calorie Calculator</a></li>
+          <li><a href="/bmr-calculator/">BMR Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/water-intake-calculator/">Water Intake Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/protein-intake-calculator/">Protein Intake Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
+          <li><a href="/steps-to-miles-calculator/">Steps to Miles Calculator</a></li>
+        </ul>
+      </div>
+
+        <div class="footer-sub">
+<div class="footer-subcol">
+<div class="footer-col" style="order:3">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+          <li><a href="/grade-curve-calculator/">Grade Curve Calculator</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:START-->
+<div class="footer-col" style="order:7">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Unit</span> <span class="ft2">Converters</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/unit-converter/">Unit Converter</a></li>
+          <li><a href="/length-converter/">Length Converter</a></li>
+          <li><a href="/weight-converter/">Weight Converter</a></li>
+          <li><a href="/volume-converter/">Volume Converter</a></li>
+          <li><a href="/temperature-converter/">Temperature Converter</a></li>
+          <li><a href="/area-converter/">Area Converter</a></li>
+          <li><a href="/speed-converter/">Speed Converter</a></li>
+          <li><a href="/data-storage-converter/">Data Storage Converter</a></li>
+          <li><a href="/cooking-converter/">Cooking Measurement Converter</a></li>
+          <li><a href="/px-to-rem-converter/">PX to REM Converter</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:END-->
+</div>
+
+<div class="footer-col" style="order:4">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/fraction-calculator/">Fraction Calculator</a></li>
+          <li><a href="/standard-deviation-calculator/">Standard Deviation Calculator</a></li>
+          <li><a href="/scientific-notation-calculator/">Scientific Notation Calculator</a></li>
+          <li><a href="/weighted-average-calculator/">Weighted Average Calculator</a></li>
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+          <li><a href="/age-calculator/">Age Calculator</a></li>
+          <li><a href="/date-calculator/">Date Calculator</a></li>
+          <li><a href="/time-calculator/">Time Calculator</a></li>
+          <li><a href="/hours-calculator/">Hours Calculator</a></li>
+          <li><a href="/triangle-calculator/">Triangle Calculator</a></li>
+          <li><a href="/random-number-generator/">Random Number Generator</a></li>
+        </ul>
+      </div>
+        </div>
+      </div>
+
+      <!--PAYFOOT:START-->
+      <div class="footer-col footer-col--wide">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Paycheck</span> <span class="ft2">Calculators</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/paycheck-calculator/">Paycheck Calculator (all states)</a></li>
+          <li><a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/california/">California Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a></li>
+        </ul>
+      </div>
+      <!--PAYFOOT:END-->
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/blog/">Blog</a>
+      <span aria-hidden="true">·</span>
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+</div>
+
+<script src="/assets/app.js?v=246"></script>
+<script>CalcThis.initRngCalc();</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>

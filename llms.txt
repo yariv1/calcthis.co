@@ -141,3 +141,12 @@
 - [Virginia Paycheck Calculator](https://calcthis.co/paycheck-calculator/virginia/): take-home pay after federal tax, FICA and Virginia state tax.
 - [Washington Paycheck Calculator](https://calcthis.co/paycheck-calculator/washington/): take-home pay after federal tax, FICA.
 - [Wyoming Paycheck Calculator](https://calcthis.co/paycheck-calculator/wyoming/): take-home pay after federal tax, FICA.
+
+## Random number generator
+- [Random Number Generator](https://calcthis.co/random-number-generator/): Free random number generator: pick one or many numbers in any range, with or without repeats, decimals, odd or even, sets, and a spinning number wheel. Secure, unbiased, no sign-up.
+- [Random Number Generator 1–100](https://calcthis.co/random-number-generator-1-100/): Pick a random number from 1 to 100 instantly. Get one number or many, with or without repeats, odd or even, sorted — 100 is included. Free, unbiased, no sign-up.
+- [Random Number Generator 1–10](https://calcthis.co/random-number-generator-1-10/): Pick a random number from 1 to 10 instantly, with a spinning number wheel. One number or many, with or without repeats. Free, unbiased, no sign-up.
+- [Random Number Generator 1–3](https://calcthis.co/random-number-generator-1-3/): Pick 1, 2 or 3 at random with a spinning wheel — a fair way to choose between three options. Free, unbiased, no sign-up.
+- [Random Number Generator 1–13](https://calcthis.co/random-number-generator-1-13/): Pick a random number from 1 to 13 instantly, with a spinning wheel — handy for card ranks (ace to king), a 13-item list or a class draw. Free and unbiased.
+- [Random Number Generator With No Repeats](https://calcthis.co/random-number-generator-no-repeats/): Generate random numbers with no repeats: set a range, choose how many, and every number is unique. Or draw one at a time from a pile. Free, unbiased, no sign-up.
+- [Random Number Wheel](https://calcthis.co/random-number-generator-wheel/): Spin a random number wheel: set any range, spin, and the wheel lands on a number. Each spin can remove the number so none repeats. Free, no sign-up.

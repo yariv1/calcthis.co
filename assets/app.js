@@ -13796,6 +13796,502 @@ CalcThis.initUnitConverter = function () {
 };
 
 /* =========================================================
+   RANDOM NUMBER GENERATOR — one engine for the hub and every range page.
+   Pure (no DOM). Randomness = crypto.getRandomValues with rejection sampling (no modulo bias), BigInt arithmetic so any
+   range up to 999 digits and up to 999 decimal places is exact.
+   CalcThis.rngEngine  ·  CalcThis.initRngCalc (ids rg*)
+   ========================================================= */
+/* RNG-ENGINE:START */
+CalcThis.rngEngine = (function () {
+  var Z = BigInt(0), O = BigInt(1), TWO = BigInt(2), TEN = BigInt(10);
+  var MAXD = 999, MAXN = 10000, MAXSETS = 100, MAXTOTAL = 100000, ENUM = 400000, MAXEXCL = 5000;
+  var src = null, buf = null, bp = 0;
+  function setSource(f) { src = f || null; buf = null; bp = 0; }
+  function take(n) {
+    if (src) return src(n);
+    if (!buf || bp + n > buf.length) {
+      var size = Math.max(8192, n), i;
+      buf = new Uint8Array(size);
+      if (typeof crypto !== 'undefined' && crypto.getRandomValues) { for (i = 0; i < size; i += 65536) crypto.getRandomValues(buf.subarray(i, Math.min(size, i + 65536))); }
+      else for (i = 0; i < size; i++) buf[i] = Math.floor(Math.random() * 256);
+      bp = 0;
+    }
+    var o = buf.subarray(bp, bp + n); bp += n; return o;
+  }
+  /* uniform integer in [0, n) for a Number n between 1 and 2^32 */
+  function randInt(n) {
+    if (n <= 1) return 0;
+    var lim = Math.floor(4294967296 / n) * n, b, x;
+    for (;;) { b = take(4); x = b[0] * 16777216 + ((b[1] << 16) | (b[2] << 8) | b[3]); if (x < lim) return x % n; }
+  }
+  /* uniform BigInt in [0, n) for any BigInt n >= 1 */
+  function randBelow(n) {
+    if (n <= O) return Z;
+    if (n <= BigInt(4294967296)) return BigInt(randInt(Number(n)));
+    var bits = n.toString(2).length, nb = Math.ceil(bits / 8), mask = (O << BigInt(bits)) - O, b, h, i, x;
+    for (;;) {
+      b = take(nb); h = '';
+      for (i = 0; i < nb; i++) h += (b[i] < 16 ? '0' : '') + b[i].toString(16);
+      x = BigInt('0x' + h) & mask;
+      if (x < n) return x;
+    }
+  }
+  function amod(v, m) { var r = v % m; return r < Z ? r + m : r; }
+  function abs(v) { return v < Z ? -v : v; }
+  /* "12.5" -> scaled BigInt (x 10^dp). mode: 'ceil' | 'floor' | 'exact'. Returns {v} or {err}. */
+  function parseScaled(t, dp, mode) {
+    var s = String(t).replace(/[\s,_]/g, '').replace(/[−–]/g, '-');
+    if (!/^[-+]?(\d+\.?\d*|\.\d+)$/.test(s)) return { err: 'badnum' };
+    var neg = s.charAt(0) === '-'; if (/^[-+]/.test(s)) s = s.slice(1);
+    var ip = s.split('.')[0] || '0', fp = s.split('.')[1] || '';
+    ip = ip.replace(/^0+(?=\d)/, '');
+    if (ip.length > MAXD) return { err: 'toobig' };
+    var extra = false;
+    if (fp.length > dp) { extra = /[1-9]/.test(fp.slice(dp)); if (extra && dp === 0 && mode === 'exact') return { err: 'whole' }; fp = fp.slice(0, dp); }
+    while (fp.length < dp) fp += '0';
+    var m = BigInt(ip + fp);
+    if (extra) {
+      if (mode === 'exact') return { err: 'precision' };
+      if (!neg) { if (mode === 'ceil') m = m + O; }
+      else { if (mode === 'floor') m = m + O; }
+    }
+    return { v: neg ? -m : m };
+  }
+  function fmtScaled(v, dp) {
+    var neg = v < Z, s = abs(v).toString();
+    if (dp > 0) { while (s.length < dp + 1) s = '0' + s; s = s.slice(0, s.length - dp) + '.' + s.slice(s.length - dp); }
+    return (neg ? '-' : '') + s;
+  }
+  function commas(s) { return String(s).replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+  function bigCount(n) { var s = n.toString(); return s.length <= 18 ? commas(s) : 'about 10^' + (s.length - 1); }
+
+  var MSG = {
+    empty: 'Enter a minimum and a maximum, or tap a range below.',
+    badnum: 'Enter numbers like 1 and 100 — digits only.',
+    whole: 'Whole numbers only — switch to Decimals to use values like 2.5.',
+    precision: 'That has more decimal places than you asked for — raise the decimal places.',
+    toobig: 'Numbers can have up to 999 digits.',
+    order: 'The minimum is higher than the maximum, or no value fits between them.',
+    step: 'The step must be a number above 0.',
+    count: 'How many numbers must be a whole number from 1 to 10,000.',
+    sets: 'Sets must be a whole number from 1 to 100.',
+    total: 'That is more than 100,000 numbers in total — ask for fewer.',
+    dp: 'Decimal places must be a whole number from 0 to 999.',
+    odd: 'The number of odd numbers must be between 0 and how many numbers you ask for.',
+    none: 'No numbers fit — check the minimum, maximum, step, exclude list and odd/even setting.',
+    range: 'No numbers fit between those limits with that step.'
+  };
+
+  /* prepare a validated "context" from settings, or {err, msg} */
+  function prep(o) {
+    var type = o.type === 'dec' ? 'dec' : 'int', dp = 0, n;
+    var fail = function (code, extra) { return { err: code, msg: (extra || '') + MSG[code] }; };
+    if (type === 'dec') {
+      var dt = String(o.dp == null ? '' : o.dp).trim();
+      if (dt === '') dp = 2; else { if (!/^\d+$/.test(dt) || +dt > MAXD) return fail('dp'); dp = +dt; }
+    }
+    if (!String(o.min == null ? '' : o.min).trim() || !String(o.max == null ? '' : o.max).trim()) return fail('empty');
+    var lo = parseScaled(o.min, dp, dp === 0 ? 'exact' : 'ceil'), hi = parseScaled(o.max, dp, dp === 0 ? 'exact' : 'floor');
+    if (lo.err) return fail(lo.err); if (hi.err) return fail(hi.err);
+    lo = lo.v; hi = hi.v;
+    if (lo > hi) return fail('order');
+    var step = O, stxt = String(o.step == null ? '' : o.step).trim();
+    if (stxt) { var sv = parseScaled(stxt, dp, 'exact'); if (sv.err) return fail(sv.err === 'whole' ? 'whole' : 'step'); if (sv.v <= Z) return fail('step'); step = sv.v; }
+    var K = (hi - lo) / step, k0 = Z;
+    if (o.incMin === false) k0 = O;
+    if (o.incMax === false && amod(hi - lo, step) === Z) K = K - O;
+    var N = K - k0 + O;
+    if (N <= Z) return fail('range');
+    /* exclusions */
+    var excl = {}, ecount = 0, etxt = String(o.exclude == null ? '' : o.exclude).trim();
+    if (etxt) {
+      var toks = etxt.split(/[,;\s]+/).filter(function (x) { return x !== ''; }), i, ev, k;
+      if (toks.length > MAXEXCL) return { err: 'exclude', msg: 'The exclude list can hold up to 5,000 numbers.' };
+      for (i = 0; i < toks.length; i++) {
+        ev = parseScaled(toks[i], dp, 'exact');
+        if (ev.err) return { err: 'exclude', msg: 'Can’t read “' + toks[i].slice(0, 20) + '” in the exclude list — use numbers separated by commas or spaces.' };
+        if (amod(ev.v - lo, step) !== Z) continue;
+        k = (ev.v - lo) / step;
+        if (k >= k0 && k <= K && !excl[k.toString()]) { excl[k.toString()] = 1; ecount++; }
+      }
+    }
+    var parity = type === 'int' ? (o.parity || 'any') : 'any';
+    var stepEven = amod(step, TWO) === Z, loPar = Number(amod(lo, TWO));
+    /* parity of grid index k: value = lo + k*step */
+    function parOfK(k) { return stepEven ? loPar : Number(amod(BigInt(loPar) + amod(k, TWO), TWO)); }
+    function countK(par) {  /* eligible count for par in {-1 any, 0 even, 1 odd} */
+      var tot;
+      if (par < 0) tot = N;
+      else if (stepEven) tot = (loPar === par) ? N : Z;
+      else {
+        /* k in [k0,K] with (loPar + k) % 2 == par  <=>  k % 2 == (par - loPar) mod 2 */
+        var want = ((par - loPar) % 2 + 2) % 2, firstK = (Number(amod(k0, TWO)) === want) ? k0 : k0 + O;
+        tot = firstK > K ? Z : (K - firstK) / TWO + O;
+      }
+      var kk;
+      for (kk in excl) { if (par < 0 || parOfK(BigInt(kk)) === par) tot = tot - O; }
+      return tot;
+    }
+    var ctx = { type: type, dp: dp, lo: lo, hi: hi, step: step, k0: k0, K: K, N: N, excl: excl, ecount: ecount, parity: parity };
+    ctx.value = function (k) { return lo + k * step; };
+    ctx.count = function (par) { return countK(par); };
+    ctx.ok = function (k, par) { return !excl[k.toString()] && (par < 0 || parOfK(k) === par); };
+    /* every eligible value as {v, s} when there are at most `max` of them, else null */
+    ctx.list = function (par, max) {
+      if (par == null) par = -1;
+      if (countK(par) > BigInt(max) || N > BigInt(ENUM)) return null;
+      var out = [], n2 = Number(N), j, k;
+      for (j = 0; j < n2; j++) { k = k0 + BigInt(j); if (ctx.ok(k, par)) { var v = ctx.value(k); out.push({ v: v, s: fmtScaled(v, dp) }); } }
+      return out;
+    };
+    /* draw n numbers matching par (-1 any, 0 even, 1 odd) */
+    ctx.draw = function (n, par, unique) {
+      var Ec = countK(par), out = [], i, j, k, arr, t, off, guard, seen;
+      if (n <= 0) return { out: [] };
+      if (Ec <= Z) return { err: 'none', msg: MSG.none };
+      if (unique && BigInt(n) > Ec) return { err: 'many', msg: 'Only ' + bigCount(Ec) + ' different number' + (Ec === O ? ' fits' : 's fit') + ' with no repeats — ask for ' + (Ec === O ? 'one' : bigCount(Ec) + ' or fewer') + ', or allow repeats.', limit: Ec };
+      if (N <= BigInt(ENUM)) {
+        arr = []; var n2 = Number(N);
+        for (j = 0; j < n2; j++) { k = k0 + BigInt(j); if (ctx.ok(k, par)) arr.push(k); }
+        if (unique) {
+          for (i = 0; i < n; i++) { j = i + randInt(arr.length - i); t = arr[i]; arr[i] = arr[j]; arr[j] = t; out.push(arr[i]); }
+        } else for (i = 0; i < n; i++) out.push(arr[randInt(arr.length)]);
+      } else {
+        seen = {}; guard = 0;
+        while (out.length < n && guard < 200 * n + 2000) {
+          guard++; off = randBelow(N); k = k0 + off;
+          if (!ctx.ok(k, par)) continue;
+          if (unique) { if (seen[off.toString()]) continue; seen[off.toString()] = 1; }
+          out.push(k);
+        }
+        if (out.length < n) return { err: 'none', msg: MSG.none };
+      }
+      return { out: out.map(function (kk) { return ctx.value(kk); }) };
+    };
+    return ctx;
+  }
+
+  function stats(vals, dp) {
+    var mn = vals[0], mx = vals[0], sum = Z, i;
+    for (i = 0; i < vals.length; i++) { if (vals[i] < mn) mn = vals[i]; if (vals[i] > mx) mx = vals[i]; sum = sum + vals[i]; }
+    var md = dp < 2 ? 2 : dp, scale = TEN ** BigInt(md - dp), num = sum * scale, cnt = BigInt(vals.length);
+    var q = abs(num) / cnt, r = abs(num) % cnt; if (r * TWO >= cnt) q = q + O;
+    var ms = fmtScaled(num < Z ? -q : q, md);
+    if (ms.indexOf('.') > -1) { var keep = dp, parts = ms.split('.'), f = parts[1]; while (f.length > keep && f.charAt(f.length - 1) === '0') f = f.slice(0, -1); ms = f ? parts[0] + '.' + f : parts[0]; }
+    return { min: fmtScaled(mn, dp), max: fmtScaled(mx, dp), sum: fmtScaled(sum, dp), mean: ms };
+  }
+
+  function sideErr(r, word, n, par, ctx) {
+    if (r.err === 'many') return { err: 'many', msg: 'Only ' + bigCount(r.limit) + ' ' + word + ' number' + (r.limit === O ? ' is' : 's are') + ' available with no repeats — ask for fewer ' + word + ' numbers or allow repeats.' };
+    if (r.err === 'none') return { err: 'none', msg: 'There are no ' + word + ' numbers in that range, so it can’t include ' + word + ' numbers — change the odd/even setting.' };
+    return r;
+  }
+  /* generate sets of numbers. o: min max count type dp unique step exclude parity oddCount incMin incMax sets sort */
+  function generate(o) {
+    var ctx = prep(o); if (ctx.err) return ctx;
+    var ct = String(o.count == null ? '' : o.count).trim().replace(/,/g, ''), cn = ct === '' ? 1 : +ct;
+    if (!/^\d*$/.test(ct) || !isFinite(cn) || cn < 1 || cn > MAXN) return { err: 'count', msg: MSG.count };
+    var st = String(o.sets == null ? '' : o.sets).trim(), sn = st === '' ? 1 : +st;
+    if (!/^\d*$/.test(st) || !isFinite(sn) || sn < 1 || sn > MAXSETS) return { err: 'sets', msg: MSG.sets };
+    if (cn * sn > MAXTOTAL) return { err: 'total', msg: MSG.total };
+    var unique = !!o.unique, par = ctx.parity, sets = [], s, i, g, res, vals, oddN, evenN, pickOdd;
+    var ot = String(o.oddCount == null ? '' : o.oddCount).trim();
+    if (par === 'custom') { if (!/^\d+$/.test(ot) || +ot > cn) return { err: 'odd', msg: MSG.odd }; }
+    for (s = 0; s < sn; s++) {
+      if (par === 'odd' || par === 'even') { res = ctx.draw(cn, par === 'odd' ? 1 : 0, unique); if (res.err) return res; vals = res.out; }
+      else if (par === 'half' || par === 'custom') {
+        if (par === 'custom') oddN = +ot; else { oddN = Math.floor(cn / 2); if (cn % 2 && randInt(2) === 1) oddN += 1; }
+        evenN = cn - oddN;
+        res = ctx.draw(oddN, 1, unique); if (res.err) return sideErr(res, 'odd', oddN, 1);
+        g = ctx.draw(evenN, 0, unique); if (g.err) return sideErr(g, 'even', evenN, 0);
+        vals = res.out.concat(g.out);
+        for (i = vals.length - 1; i > 0; i--) { var j = randInt(i + 1), t = vals[i]; vals[i] = vals[j]; vals[j] = t; }
+      } else { res = ctx.draw(cn, -1, unique); if (res.err) return res; vals = res.out; }
+      if (o.sort === 'asc') vals.sort(function (a, b) { return a < b ? -1 : a > b ? 1 : 0; });
+      else if (o.sort === 'desc') vals.sort(function (a, b) { return a < b ? 1 : a > b ? -1 : 0; });
+      sets.push(vals.map(function (v) { return { v: v, s: fmtScaled(v, ctx.dp) }; }));
+    }
+    return { ok: true, sets: sets, ctx: ctx, eligible: ctx.count(-1) };
+  }
+
+  return { generate: generate, prep: prep, stats: stats, randInt: randInt, randBelow: randBelow, setSource: setSource, fmt: fmtScaled, parse: parseScaled, bigCount: bigCount, commas: commas, MAXN: MAXN, MSG: MSG };
+})();
+/* RNG-ENGINE:END */
+
+CalcThis.initRngCalc = function () {
+  var E = CalcThis.rngEngine, $ = function (id) { return document.getElementById(id); }, B = document.body;
+  var st = { mode: B.getAttribute('data-mode') === 'draw' ? 'draw' : 'gen', type: 'int', adv: false, sort: 'none', par: 'any', fmt: 'comma' };
+  var shown = null, pile = null, recent = [], rot = 0, wheelKey = '', MAXBALLS = 1500, MAXHIST = 60;
+  var reduce = false; try { reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+  function esc(t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'); }
+  function setSeg(id, v) { [].forEach.call($(id).querySelectorAll('button'), function (b) { b.classList.toggle('on', b.getAttribute('data-v') === v); }); }
+  function setPanel(root, opts, val) {
+    var panel = root.querySelector('.csel-panel');
+    panel.innerHTML = opts.map(function (o) { return '<button type="button" class="csel-opt' + (o[0] === val ? ' on' : '') + '" role="option" aria-selected="' + (o[0] === val) + '" data-value="' + esc(o[0]) + '">' + esc(o[1]) + '</button>'; }).join('');
+    root.setAttribute('data-value', val);
+    root.querySelector('.csel-val').textContent = (opts.filter(function (o) { return o[0] === val; })[0] || opts[0])[1];
+    CalcThis.initCsel(root);
+  }
+  function setHint(m) { var h = $('rgHint'); h.textContent = m || ''; h.style.display = m ? 'block' : 'none'; }
+  var SORT = [['none', 'Don’t sort'], ['asc', 'Low to high'], ['desc', 'High to low']];
+  var FMT = [['comma', 'Commas'], ['space', 'Spaces'], ['line', 'New lines (spreadsheet column)'], ['row', 'Tabs (spreadsheet row)']];
+  var PAR = [['any', 'Any numbers'], ['odd', 'Odd numbers only'], ['even', 'Even numbers only'], ['half', 'Half odd, half even'], ['custom', 'Choose how many are odd']];
+  function parOpts() { return st.mode === 'draw' ? PAR.slice(0, 3) : PAR; }
+
+  function read() {
+    var adv = st.adv, draw = st.mode === 'draw';
+    return {
+      min: $('rgMin').value, max: $('rgMax').value, count: draw ? '1' : $('rgCount').value, type: st.type, dp: $('rgDp').value,
+      unique: draw ? true : $('rgUnique').checked, sort: draw ? 'none' : st.sort,
+      step: adv ? $('rgStep').value : '', exclude: adv ? $('rgExcl').value : '',
+      parity: adv && st.type === 'int' ? st.par : 'any', oddCount: $('rgOdd').value,
+      incMin: adv ? $('rgIncMin').checked : true, incMax: adv ? $('rgIncMax').checked : true,
+      sets: adv && !draw ? $('rgSets').value : '1'
+    };
+  }
+  function parCode(p) { return p === 'odd' ? 1 : p === 'even' ? 0 : -1; }
+
+  /* ---------- layout ---------- */
+  function layout() {
+    var draw = st.mode === 'draw';
+    $('rgCountFld').style.display = draw ? 'none' : '';
+    $('rgUniqueWrap').style.display = draw ? 'none' : '';
+    $('rgSortFld').style.display = draw ? 'none' : '';
+    $('rgDpFld').style.display = st.type === 'dec' ? '' : 'none';
+    $('rgGo').textContent = draw ? 'Draw a number' : 'Generate';
+    $('rgReset').style.display = draw ? '' : 'none';
+    $('rgAdvIn').style.display = st.adv ? '' : 'none';
+    $('rgParFld').style.display = st.type === 'int' ? '' : 'none';
+    $('rgOddFld').style.display = st.type === 'int' && st.par === 'custom' && !draw ? '' : 'none';
+    $('rgSetsFld').style.display = draw ? 'none' : '';
+    $('rgGo').disabled = false; $('rgBtns').classList.toggle('draw', draw);
+    var d = draw ? 'Drawn numbers leave the pile, so none repeats until you reset it.' : '';
+    $('rgModeNote').textContent = d; $('rgModeNote').style.display = d ? '' : 'none';
+    var mn = $('rgMin').value.trim(), mx = $('rgMax').value.trim();
+    [].forEach.call($('rgChips').querySelectorAll('button'), function (b) { b.classList.toggle('on', b.getAttribute('data-min') === mn && b.getAttribute('data-max') === mx); });
+  }
+  function hideResults() {
+    $('rgResults').style.display = 'none'; $('rgBallsWrap').style.display = 'none'; $('rgVisWrap').style.display = 'none'; $('rgBig').textContent = '—'; $('rgBig').classList.remove('rg-long');
+    $('rgResLab').textContent = 'Result'; $('rgSub').textContent = st.mode === 'draw' ? 'Press Draw a number.' : 'Press Generate.';
+    $('rgMLab').textContent = 'Result'; $('rgMVal').textContent = '—'; shown = null; preview();
+  }
+  function preview() {
+    if (shown) return;
+    var s = read(), ct = s.count.trim(); if (st.mode === 'gen' && ct !== '' && ct !== '1') return;
+    var ctx = E.prep(s); if (ctx.err) return;
+    var pool = ctx.list(parCode(s.parity), 100);
+    if (pool && pool.length >= 2) { $('rgVisWrap').style.display = ''; $('rgVisLab').textContent = 'The wheel'; showWheel(pool, null, null, true); }
+  }
+  function invalidate() { hideResults(); setHint(''); $('rgGo').disabled = false; layout(); }
+  function fail(r) { hideResults(); setHint(r.msg || ''); $('rgSub').textContent = r.err === 'empty' ? 'Enter a minimum and a maximum.' : 'Check the settings on the left.'; }
+
+  /* ---------- visuals ---------- */
+  var SLICE = ['#F5EFE4', '#EBDDBE'];
+  function wheelSvg(pool, win, used, startRot) {
+    var M = pool.length, a = 360 / M, cx = 150, cy = 164, r = 134, i, s, labelled = M <= 24 && pool.every(function (p) { return p.s.length <= 7; });
+    function pt(deg, rad) { var t = deg * Math.PI / 180; return (cx + rad * Math.sin(t)).toFixed(2) + ' ' + (cy - rad * Math.cos(t)).toFixed(2); }
+    s = '<svg viewBox="0 0 300 316" role="img" aria-label="Number wheel with ' + M + ' numbers"><g id="rgWheel" style="transform-origin:' + cx + 'px ' + cy + 'px;transform:rotate(' + startRot + 'deg)">';
+    for (i = 0; i < M; i++) {
+      var fill = i === win ? '#B5761F' : (used && used[pool[i].s] ? '#DDD6C8' : SLICE[i % 2]);
+      if (M === 1) s += '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="' + fill + '" stroke="#D9C79F"/>';
+      else s += '<path d="M' + cx + ' ' + cy + ' L' + pt(i * a, r) + ' A' + r + ' ' + r + ' 0 ' + (a > 180 ? 1 : 0) + ' 1 ' + pt((i + 1) * a, r) + ' Z" fill="' + fill + '" stroke="#D9C79F" stroke-width="' + (M > 40 ? 0.6 : 1) + '"/>';
+      if (labelled) { var cen = (i + 0.5) * a, left = cen > 180, tf = left ? cen + 90 : cen - 90; s += '<text transform="rotate(' + tf.toFixed(2) + ' ' + cx + ' ' + cy + ')" x="' + (left ? cx - r + 9 : cx + r - 9) + '" y="' + (cy + 5) + '" text-anchor="' + (left ? 'start' : 'end') + '" font-size="14" font-weight="600" fill="' + (i === win ? '#fff' : (used && used[pool[i].s] ? '#9A8F7E' : '#2a2118')) + '">' + esc(pool[i].s) + '</text>'; }
+    }
+    s += '</g><circle cx="' + cx + '" cy="' + cy + '" r="34" fill="#fff" stroke="#D9C79F" stroke-width="1.4"/>';
+    var w = win >= 0 ? pool[win].s : '';
+    if (w && w.length <= 7) s += '<text x="' + cx + '" y="' + (cy + 6) + '" text-anchor="middle" font-size="' + (w.length <= 3 ? 20 : 15) + '" font-weight="700" fill="#2a2118">' + esc(w) + '</text>';
+    s += '<path d="M150 30 L139 6 L161 6 Z" fill="#2a2118"/></svg>';
+    return { svg: s, centre: (win + 0.5) * a };
+  }
+  function short(t) { return t.length > 11 ? t.slice(0, 9) + '…' : t; }
+  function stripSvg(vals, lo, hi, dp) {
+    var X0 = 16, X1 = 284, n = vals.length, i, s = '<svg viewBox="' + (n === 1 ? '0 22 300 88' : n > 300 ? '0 10 300 98' : '0 42 300 66') + '" role="img" aria-label="Where the numbers fall between the minimum and the maximum">';
+    function frac(v) { return hi > lo ? Number((v - lo) * BigInt(1000000) / (hi - lo)) / 1000000 : 0.5; }
+    s += '<line x1="' + X0 + '" y1="62" x2="' + X1 + '" y2="62" stroke="#D9C79F" stroke-width="3" stroke-linecap="round"/>';
+    if (n > 300) {
+      var bins = [], b, mx = 1; for (i = 0; i < 20; i++) bins.push(0);
+      for (i = 0; i < n; i++) { b = Math.min(19, Math.floor(frac(vals[i]) * 20)); bins[b]++; if (bins[b] > mx) mx = bins[b]; }
+      for (i = 0; i < 20; i++) { var h = Math.max(bins[i] ? 2 : 0, bins[i] / mx * 46); s += '<rect x="' + (X0 + i * 13.4 + 1).toFixed(1) + '" y="' + (62 - h).toFixed(1) + '" width="11.4" height="' + h.toFixed(1) + '" rx="2" fill="#B5761F" opacity=".8"/>'; }
+    } else {
+      for (i = 0; i < n; i++) s += '<circle cx="' + (X0 + frac(vals[i]) * (X1 - X0)).toFixed(1) + '" cy="62" r="' + (n === 1 ? 8 : 6) + '" fill="#B5761F" fill-opacity="' + (n === 1 ? 1 : 0.6) + '" stroke="#fff"/>';
+      if (n === 1) { var x = Math.min(Math.max(X0 + frac(vals[0]) * (X1 - X0), 40), 260); s += '<text x="' + x.toFixed(1) + '" y="38" text-anchor="middle" font-size="14" font-weight="700" fill="#2a2118">' + esc(short(E.fmt(vals[0], dp))) + '</text>'; }
+    }
+    s += '<text x="' + X0 + '" y="92" font-size="14" fill="#6b5f50">' + esc(short(E.fmt(lo, dp))) + '</text><text x="' + X1 + '" y="92" text-anchor="end" font-size="14" fill="#6b5f50">' + esc(short(E.fmt(hi, dp))) + '</text></svg>';
+    return s;
+  }
+  function showWheel(pool, winS, used, idle) {
+    var key = pool.length + ':' + pool[0].s + ':' + pool[pool.length - 1].s, win = -1, i;
+    for (i = 0; i < pool.length; i++) if (pool[i].s === winS) { win = i; break; }
+    if (key !== wheelKey) { rot = 0; wheelKey = key; }
+    var w = wheelSvg(pool, win, used, rot);
+    $('rgVis').innerHTML = w.svg + '<div class="un-vleg">' + (idle ? 'Every possible number is a slice — press ' + (st.mode === 'draw' ? 'Draw a number' : 'Generate') + ' to spin.' : used ? 'Grey slices are already drawn.' : 'Every possible number is a slice.') + '</div>';
+    $('rgVisLab').textContent = 'The wheel';
+    if (idle) return;
+    var g = $('rgWheel'), fin = Math.ceil(rot / 360) * 360 + 1080 - w.centre;
+    g.setAttribute('data-rot', fin);
+    if (reduce) { g.style.transform = 'rotate(' + fin + 'deg)'; }
+    else setTimeout(function () { g.style.transition = 'transform 1.7s cubic-bezier(.17,.67,.2,1)'; g.style.transform = 'rotate(' + fin + 'deg)'; }, 30);
+    rot = fin;
+  }
+
+  /* ---------- results ---------- */
+  function setBig(t) { var b = $('rgBig'); b.textContent = t; b.classList.toggle('rg-long', t.length > 12); }
+  function rangeText(ctx) { return 'between ' + E.fmt(ctx.lo, ctx.dp) + ' and ' + E.fmt(ctx.hi, ctx.dp); }
+  function chanceText(n) { return n > BigInt(1) ? ' · each has a 1 in ' + E.bigCount(n) + ' chance' : ''; }
+  function showHist() {
+    var h = $('rgHist'), list = st.mode === 'draw' ? (pile ? pile.drawn : []) : recent, lab, items;
+    if (st.mode === 'draw') { if (list.length < 2) { h.style.display = 'none'; return; } lab = 'Drawn so far (' + list.length + ')'; items = list.length > MAXHIST ? list.slice(-MAXHIST) : list; if (list.length > MAXHIST) lab += ', latest ' + MAXHIST; }
+    else { if (list.length < 2) { h.style.display = 'none'; return; } lab = 'Recent'; items = list.slice(1); }
+    h.innerHTML = '<div class="fc-grp">' + lab + '</div><div class="rg-balls rg-small">' + items.map(function (t) { return '<span class="rg-ball">' + esc(t) + '</span>'; }).join('') + '</div>';
+    h.style.display = '';
+  }
+  function showGen(r) {
+    var sets = r.sets, ctx = r.ctx, total = 0, all = [], i, j;
+    sets.forEach(function (s) { total += s.length; s.forEach(function (x) { all.push(x); }); });
+    shown = { r: r, total: total };
+    var parWord = ctx.parity === 'odd' ? ' · odd numbers only' : ctx.parity === 'even' ? ' · even numbers only' : '';
+    var single = total === 1;
+    if (single) {
+      $('rgResLab').textContent = 'Your random number'; setBig(all[0].s);
+      $('rgSub').textContent = 'Between ' + E.fmt(ctx.lo, ctx.dp) + ' and ' + E.fmt(ctx.hi, ctx.dp) + ' · ' + E.bigCount(r.eligible) + ' possible number' + (r.eligible === BigInt(1) ? '' : 's') + chanceText(r.eligible) + parWord;
+      recent.unshift(all[0].s); if (recent.length > 13) recent.pop();
+      $('rgMLab').textContent = 'Your number'; $('rgMVal').textContent = all[0].s.length > 14 ? all[0].s.slice(0, 12) + '…' : all[0].s;
+    } else {
+      $('rgResLab').textContent = 'Random numbers'; setBig(E.commas(total) + ' number' + (total === 1 ? '' : 's'));
+      $('rgSub').textContent = E.commas(total) + ' random ' + (total === 1 ? 'number ' : 'numbers ') + rangeText(ctx) + ' · ' + (read().unique ? 'no repeats' : 'repeats allowed') + (read().sort === 'asc' ? ' · low to high' : read().sort === 'desc' ? ' · high to low' : '') + (sets.length > 1 ? ' · ' + sets.length + ' sets' : '') + parWord;
+      var first = sets[0].slice(0, 3).map(function (x) { return x.s; }).join(', ');
+      $('rgMLab').textContent = 'Your numbers'; $('rgMVal').textContent = (first.length > 22 ? first.slice(0, 20) : first) + (total > 3 || first.length > 22 ? '…' : '');
+    }
+    /* balls */
+    var html = '', shownN = 0, cut = false;
+    for (i = 0; i < sets.length && !cut; i++) {
+      if (sets.length > 1) html += '<div class="rg-setlab">Set ' + (i + 1) + '</div>';
+      html += '<div class="rg-balls">';
+      for (j = 0; j < sets[i].length; j++) { if (shownN >= MAXBALLS) { cut = true; break; } html += '<span class="rg-ball">' + esc(sets[i][j].s) + '</span>'; shownN++; }
+      html += '</div>';
+    }
+    if (cut) html += '<p class="un-note">Showing the first ' + E.commas(MAXBALLS) + ' numbers — Copy and Download include all ' + E.commas(total) + '.</p>';
+    $('rgBalls').innerHTML = single ? '' : html; $('rgBallsWrap').style.display = single ? 'none' : '';
+    /* stats */
+    var sh = '';
+    if (total >= 2) {
+      sh = '<thead><tr>' + (sets.length > 1 ? '<th>Set</th>' : '') + '<th>Lowest</th><th>Highest</th><th>Sum</th><th>Average</th></tr></thead><tbody>';
+      sets.slice(0, 30).forEach(function (s, k) { var q = E.stats(s.map(function (x) { return x.v; }), ctx.dp); sh += '<tr>' + (sets.length > 1 ? '<td>' + (k + 1) + '</td>' : '') + '<td>' + esc(q.min) + '</td><td>' + esc(q.max) + '</td><td>' + esc(q.sum) + '</td><td>' + esc(q.mean) + '</td></tr>'; });
+      sh += '</tbody>';
+    }
+    $('rgStats').innerHTML = sh; $('rgStatsWrap').style.display = sh ? '' : 'none';
+    /* visual */
+    var par = ctx.parity === 'odd' ? 1 : ctx.parity === 'even' ? 0 : -1, pool = single ? ctx.list(par, 100) : null;
+    if (single && pool && pool.length >= 2) { $('rgVisWrap').style.display = ''; showWheel(pool, all[0].s, null); }
+    else { $('rgVis').innerHTML = stripSvg(all.map(function (x) { return x.v; }), ctx.lo, ctx.hi, ctx.dp) + '<div class="un-vleg">' + (total > 300 ? 'Bars show how many numbers landed in each slice of the range.' : 'Each dot is a number, placed between your minimum and maximum.') + '</div>'; $('rgVisLab').textContent = 'Where your numbers landed'; $('rgVisWrap').style.display = ''; }
+    showHist();
+    $('rgResults').style.display = ''; setHint('');
+  }
+  function showDraw(x) {
+    var left = pile.left.length, total = pile.all.length, ctx = pile.ctx;
+    var cur = x ? x.s : pile.drawn[pile.drawn.length - 1];
+    if (cur !== undefined) {
+      $('rgResLab').textContent = 'Drawn number ' + pile.drawn.length; setBig(cur);
+      $('rgMLab').textContent = 'Drawn #' + pile.drawn.length; $('rgMVal').textContent = cur.length > 14 ? cur.slice(0, 12) + '…' : cur;
+    }
+    $('rgSub').textContent = left ? E.commas(left) + ' of ' + E.commas(total) + ' numbers left in the pile · ' + rangeText(ctx) : 'That was the last number — press Reset pile to put them all back.';
+    $('rgGo').disabled = !left;
+    $('rgBallsWrap').style.display = 'none'; $('rgStatsWrap').style.display = 'none';
+    var used = {}; pile.drawn.forEach(function (t) { used[t] = 1; });
+    if (total >= 2 && total <= 100) { $('rgVisWrap').style.display = ''; showWheel(pile.all, x ? x.s : pile.drawn[pile.drawn.length - 1], used); }
+    else {
+      var vals = pile.drawn.length ? pile.all.filter(function (p) { return used[p.s]; }).map(function (p) { return p.v; }) : [];
+      $('rgVis').innerHTML = stripSvg(vals.length ? vals : [ctx.lo], ctx.lo, ctx.hi, ctx.dp) + '<div class="un-vleg">Dots are the numbers drawn so far.</div>'; $('rgVisLab').textContent = 'Drawn so far'; $('rgVisWrap').style.display = '';
+    }
+    shown = { draw: true };
+    showHist(); $('rgResults').style.display = ''; setHint('');
+  }
+  function sigOf(s) { return JSON.stringify([s.min.trim(), s.max.trim(), s.type, s.type === 'dec' ? s.dp.trim() : '', s.step.trim(), s.exclude.trim(), s.parity, s.incMin, s.incMax]); }
+  function runDraw() {
+    var s = read(), ctx = E.prep(s);
+    if (ctx.err) { fail(ctx); return; }
+    var sg = sigOf(s);
+    if (!pile || pile.sig !== sg) {
+      var all = ctx.list(parCode(s.parity), 100000);
+      if (!all) { fail({ err: 'big', msg: 'There are too many numbers to draw one at a time (limit 100,000) — use Pick numbers, or narrow the range.' }); return; }
+      if (!all.length) { fail({ err: 'none', msg: E.MSG.none }); return; }
+      pile = { sig: sg, all: all, left: all.slice(), drawn: [], ctx: ctx };
+    }
+    if (!pile.left.length) { showDraw(null); return; }
+    var i = E.randInt(pile.left.length), x = pile.left.splice(i, 1)[0];
+    pile.drawn.push(x.s); showDraw(x);
+  }
+  function run() {
+    $('rgGo').disabled = false;
+    if (st.mode === 'draw') { runDraw(); return; }
+    var r = E.generate(read());
+    if (!r.ok) { fail(r); return; }
+    showGen(r);
+  }
+
+  /* ---------- copy / download ---------- */
+  function textOut() {
+    var sep = { comma: ', ', space: ' ', line: '\n', row: '\t' }[st.fmt];
+    if (shown && shown.draw) return pile ? pile.drawn.join(sep) : '';
+    if (!shown) return '';
+    return shown.r.sets.map(function (s) { return s.map(function (x) { return x.s; }).join(sep); }).join(st.fmt === 'line' ? '\n\n' : '\n');
+  }
+  $('rgCopy').addEventListener('click', function () {
+    var txt = textOut(); if (!txt) return; var btn = $('rgCopy');
+    var done = function (ok) { btn.textContent = ok ? 'Copied' : 'Copy failed'; setTimeout(function () { btn.textContent = 'Copy numbers'; }, 1600); };
+    var legacy = function () { try { var ta = document.createElement('textarea'); ta.value = txt; ta.setAttribute('readonly', ''); ta.style.cssText = 'position:fixed;left:-9999px;top:0'; document.body.appendChild(ta); ta.select(); var ok = document.execCommand('copy'); document.body.removeChild(ta); done(ok); } catch (e) { done(false); } };
+    try { navigator.clipboard.writeText(txt).then(function () { done(true); }, legacy); } catch (e) { legacy(); }
+  });
+  $('rgDl').addEventListener('click', function () {
+    var txt = textOut(); if (!txt) return;
+    try { var url = URL.createObjectURL(new Blob([txt + '\n'], { type: 'text/plain' })), a = document.createElement('a'); a.href = url; a.download = 'random-numbers.txt'; document.body.appendChild(a); a.click(); document.body.removeChild(a); setTimeout(function () { URL.revokeObjectURL(url); }, 1000); } catch (e) {}
+  });
+
+  /* ---------- wiring ---------- */
+  $('rgGo').addEventListener('click', run);
+  $('rgReset').addEventListener('click', function () { pile = null; hideResults(); setHint(''); $('rgHist').style.display = 'none'; layout(); wheelKey = ''; rot = 0; });
+  ['rgMin', 'rgMax', 'rgCount', 'rgDp', 'rgStep', 'rgExcl', 'rgOdd', 'rgSets'].forEach(function (id) {
+    $(id).addEventListener('input', invalidate);
+    $(id).addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); run(); } });
+  });
+  ['rgUnique', 'rgIncMin', 'rgIncMax'].forEach(function (id) { $(id).addEventListener('change', invalidate); });
+  $('rgSort').addEventListener('change', function () { st.sort = $('rgSort').getAttribute('data-value'); invalidate(); });
+  $('rgFmt').addEventListener('change', function () { st.fmt = $('rgFmt').getAttribute('data-value'); });
+  $('rgPar').addEventListener('change', function () { st.par = $('rgPar').getAttribute('data-value'); invalidate(); });
+  $('rgMode').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return; st.mode = b.getAttribute('data-v'); setSeg('rgMode', st.mode);
+    if (st.mode === 'draw' && (st.par === 'half' || st.par === 'custom')) st.par = 'any';
+    setPanel($('rgPar'), parOpts(), st.par); pile = null; recent = []; $('rgHist').style.display = 'none'; invalidate();
+  });
+  $('rgType').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return; st.type = b.getAttribute('data-v'); setSeg('rgType', st.type);
+    if (st.type === 'dec') { if (st.par !== 'any') { st.par = 'any'; setPanel($('rgPar'), parOpts(), 'any'); } }
+    else { $('rgMin').value = $('rgMin').value.replace(/^(-?\d*)\.\d*$/, '$1'); $('rgMax').value = $('rgMax').value.replace(/^(-?\d*)\.\d*$/, '$1'); }
+    invalidate();
+  });
+  $('rgChips').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    $('rgMin').value = b.getAttribute('data-min'); $('rgMax').value = b.getAttribute('data-max'); layout(); run();
+  });
+  $('rgAdvBtn').addEventListener('click', function () {
+    st.adv = !st.adv; $('rgAdvBtn').classList.toggle('open', st.adv); $('rgAdvBtnLab').textContent = st.adv ? 'Go simple' : 'Go advanced';
+    if (!st.adv) {
+      $('rgStep').value = ''; $('rgExcl').value = ''; $('rgOdd').value = ''; $('rgSets').value = ''; $('rgIncMin').checked = true; $('rgIncMax').checked = true;
+      st.par = 'any'; st.fmt = 'comma'; setPanel($('rgPar'), parOpts(), 'any'); setPanel($('rgFmt'), FMT, 'comma');
+    }
+    invalidate();
+  });
+
+  /* ---------- init ---------- */
+  setPanel($('rgSort'), SORT, 'none'); setPanel($('rgFmt'), FMT, 'comma'); setPanel($('rgPar'), parOpts(), 'any');
+  var pmin = B.getAttribute('data-min'), pmax = B.getAttribute('data-max');
+  if (pmin != null && pmax != null) { $('rgMin').value = pmin; $('rgMax').value = pmax; }
+  if (B.getAttribute('data-unique') === '1') $('rgUnique').checked = true;
+  setSeg('rgMode', st.mode);
+  layout(); hideResults(); setHint('');
+};
+
+/* =========================================================
    SITE FOOTER — mobile accordion
    Multiple pillars can be open simultaneously.
    First pillar starts expanded (aria-expanded="true" in HTML).

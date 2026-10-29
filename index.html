@@ -94,6 +94,7 @@
         { "@type": "WebApplication", "name": "Sales Tax Calculator", "url": "https://calcthis.co/sales-tax-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Unit Converter", "url": "https://calcthis.co/unit-converter/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Triangle Calculator", "url": "https://calcthis.co/triangle-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
+        { "@type": "WebApplication", "name": "Random Number Generator", "url": "https://calcthis.co/random-number-generator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Recipe Converter", "url": "https://calcthis.co/recipe-converter/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Turkey Cooking Time Calculator", "url": "https://calcthis.co/turkey-cooking-time-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Turkey Thawing Time Calculator", "url": "https://calcthis.co/turkey-thawing-time-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
@@ -103,7 +104,7 @@
   ]
 }
 </script>
-<link rel="stylesheet" href="/assets/style.css?v=241">
+<link rel="stylesheet" href="/assets/style.css?v=246">
 <style>
   .cat-tabs{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
   .cat-grp--hidden{display:none}
@@ -190,6 +191,7 @@
           <a href="/time-calculator/">Time</a>
           <a href="/hours-calculator/">Hours</a>
           <a href="/triangle-calculator/">Triangle</a>
+          <a href="/random-number-generator/">Random Number</a>
           <span class="menu-col-head">Cooking &amp; Kitchen</span>
           <a href="/recipe-converter/">Recipe Converter</a>
           <a href="/turkey-cooking-time-calculator/">Turkey Cooking Time</a>
@@ -1062,6 +1064,19 @@
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </span>
     </a>
+    <a class="calc" href="/random-number-generator/">
+      <span class="ico" aria-hidden="true">
+        <svg width="30" height="30" viewBox="0 0 32 32" fill="none">
+          <rect x="5" y="5" width="22" height="22" rx="5" fill="#EFE7D8" stroke="#8F5C13" stroke-width="1.3"/>
+          <circle cx="11" cy="11" r="1.9" fill="#B5761F"/><circle cx="21" cy="11" r="1.9" fill="#37503F"/><circle cx="16" cy="16" r="1.9" fill="#B5761F"/><circle cx="11" cy="21" r="1.9" fill="#37503F"/><circle cx="21" cy="21" r="1.9" fill="#B5761F"/>
+        </svg>
+      </span>
+      <h3>Random Number Generator</h3>
+      <p>Pick one number or thousands from any range — whole numbers or decimals, with or without repeats, odd or even, in sets — and watch a spinning number wheel land on the result.</p>
+      <span class="go">Open calculator
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+    </a>
 
 
   </div>
@@ -1361,6 +1376,7 @@
           <li><a href="/time-calculator/">Time</a><span> — elapsed time, durations and time cards</span></li>
           <li><a href="/hours-calculator/">Hours</a><span> — shifts, breaks, overtime and pay</span></li>
           <li><a href="/triangle-calculator/">Triangle</a><span> — solved and drawn to scale</span></li>
+          <li><a href="/random-number-generator/">Random number generator</a><span> — any range, no repeats, with a number wheel</span></li>
         </ul>
       </article>
       <article class="about-cat">
@@ -1466,26 +1482,6 @@
           <!--STAXFOOT:END-->
         </ul>
       </div>
-<!--UNITFOOT:START-->
-<div class="footer-col" style="order:7">
-        <button class="footer-col-btn" aria-expanded="false" type="button">
-          <span class="fttl"><span class="ft1">Unit</span> <span class="ft2">Converters</span></span>
-          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
-        <ul class="footer-links">
-          <li><a href="/unit-converter/">Unit Converter</a></li>
-          <li><a href="/length-converter/">Length Converter</a></li>
-          <li><a href="/weight-converter/">Weight Converter</a></li>
-          <li><a href="/volume-converter/">Volume Converter</a></li>
-          <li><a href="/temperature-converter/">Temperature Converter</a></li>
-          <li><a href="/area-converter/">Area Converter</a></li>
-          <li><a href="/speed-converter/">Speed Converter</a></li>
-          <li><a href="/data-storage-converter/">Data Storage Converter</a></li>
-          <li><a href="/cooking-converter/">Cooking Measurement Converter</a></li>
-          <li><a href="/px-to-rem-converter/">PX to REM Converter</a></li>
-        </ul>
-      </div>
-<!--UNITFOOT:END-->
       </div>
 
       <div class="footer-right">
@@ -1519,6 +1515,7 @@
       </div>
 
         <div class="footer-sub">
+<div class="footer-subcol">
 <div class="footer-col" style="order:3">
         <button class="footer-col-btn" aria-expanded="false" type="button">
           <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
@@ -1532,6 +1529,27 @@
           <li><a href="/grade-curve-calculator/">Grade Curve Calculator</a></li>
         </ul>
       </div>
+<!--UNITFOOT:START-->
+<div class="footer-col" style="order:7">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Unit</span> <span class="ft2">Converters</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/unit-converter/">Unit Converter</a></li>
+          <li><a href="/length-converter/">Length Converter</a></li>
+          <li><a href="/weight-converter/">Weight Converter</a></li>
+          <li><a href="/volume-converter/">Volume Converter</a></li>
+          <li><a href="/temperature-converter/">Temperature Converter</a></li>
+          <li><a href="/area-converter/">Area Converter</a></li>
+          <li><a href="/speed-converter/">Speed Converter</a></li>
+          <li><a href="/data-storage-converter/">Data Storage Converter</a></li>
+          <li><a href="/cooking-converter/">Cooking Measurement Converter</a></li>
+          <li><a href="/px-to-rem-converter/">PX to REM Converter</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:END-->
+</div>
 
 <div class="footer-col" style="order:4">
         <button class="footer-col-btn" aria-expanded="false" type="button">
@@ -1550,6 +1568,7 @@
           <li><a href="/time-calculator/">Time Calculator</a></li>
           <li><a href="/hours-calculator/">Hours Calculator</a></li>
           <li><a href="/triangle-calculator/">Triangle Calculator</a></li>
+          <li><a href="/random-number-generator/">Random Number Generator</a></li>
         </ul>
       </div>
         </div>
@@ -1624,7 +1643,7 @@
   });
 })();
 </script>
-<script src="/assets/app.js?v=241"></script>
+<script src="/assets/app.js?v=246"></script>
 <script src="/feedback.js" defer></script>
 </body>
 </html>

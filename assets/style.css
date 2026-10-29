@@ -2232,6 +2232,8 @@
   .footer-col--two .footer-links{display:grid;grid-template-columns:1fr 1fr;gap:9px 40px}
   @media(min-width:701px) and (max-width:900px){.footer-right{grid-column:2/3}.footer-sub{grid-template-columns:1fr}.footer-col--two .footer-links{grid-template-columns:1fr}}
   @media(max-width:700px){.footer-stack,.footer-right,.footer-sub{display:contents}.footer-col--two .footer-links{display:flex}}
+  .footer-subcol{display:flex;flex-direction:column;gap:34px;min-width:0}
+  @media(max-width:700px){.footer-subcol{display:contents}}
   .footer-col--wide{order:7}
   @media(min-width:701px){.footer-stack .footer-col,.footer-right .footer-col,.footer-sub .footer-col{order:0!important}}
 
@@ -2403,3 +2405,37 @@
   .about-why p{color:var(--ink-soft);font-size:15px;line-height:1.6;margin:0}
   .about-why strong{color:var(--ink);font-weight:600}
   @media (max-width:760px){.about-grid,.about-why{grid-template-columns:1fr}.about-cat{padding:18px 18px 16px}.about-lead{font-size:16px}}
+
+  /* =========================================================
+     MATH · RANDOM NUMBER GENERATOR  (body.p-loan p-rng) — reuses the .p-loan look
+     ========================================================= */
+  .p-rng .rg-btns{display:grid;grid-template-columns:minmax(0,1fr);gap:8px;margin-top:6px}
+  .p-rng .rg-btns.draw{grid-template-columns:minmax(0,1fr) auto}
+  .p-rng .rg-btns .btn{width:100%}
+  .p-rng .rg-btns .btn-ghost{width:auto;padding-left:18px;padding-right:18px}
+  .p-rng .btn:disabled{opacity:.5;cursor:not-allowed}
+  .p-rng .rg-balls{display:flex;flex-wrap:wrap;gap:6px;max-height:260px;overflow:auto;padding:2px}
+  .p-rng .rg-balls.rg-small{max-height:110px}
+  .p-rng .rg-ball{display:inline-block;min-width:44px;max-width:100%;text-align:center;font-variant-numeric:tabular-nums;font-weight:700;font-size:15px;line-height:1.2;background:#fff;border:1px solid var(--line);border-radius:999px;padding:6px 12px;color:var(--ink);word-break:break-all}
+  .p-rng .rg-setlab{font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin:10px 0 6px}
+  .p-rng .res-sub,.p-rng .un-vleg,.p-rng .add-note{overflow-wrap:anywhere}
+  .p-rng .res-big.rg-long{font-size:22px;word-break:break-all;line-height:1.25}
+  .p-rng #rgVis svg{max-width:330px;margin:0 auto}
+  .p-rng .ln-terms td,.p-rng .ln-terms th{text-align:right}
+  .p-rng .ln-terms td,.p-rng .ln-terms th{word-break:break-all}
+  .p-rng .ln-terms td:first-child{white-space:normal}
+  .p-rng .rg-btnrow{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}
+  .p-rng .rg-btnrow .btn{width:100%}
+  .p-rng .un-note{font-size:12px;font-weight:500;color:var(--muted);margin:4px 0 12px;line-height:1.45}
+  .p-rng .un-vleg{font-size:12.5px;color:var(--ink-soft);margin:6px 0 0;line-height:1.45;text-align:center}
+  .p-rng .un-tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0 0 6px}
+  .p-rng .un-tile{display:block;text-decoration:none;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;transition:.14s}
+  .p-rng .un-tile:hover{border-color:var(--amber);box-shadow:0 4px 14px rgba(36,26,17,.08)}
+  .p-rng .un-tile b{display:block;font-family:'Fraunces',serif;font-size:16px;font-weight:600;margin-bottom:2px}
+  .p-rng .un-tile span{font-size:13px;color:var(--ink-soft);line-height:1.4}
+  .p-rng .grid2>div{min-width:0}
+  .p-rng .pc-tblwrap{overflow-x:auto}
+  .p-rng .st-src{font-size:12.5px;color:var(--muted);line-height:1.5;margin:8px 0 0}
+  .p-rng .rg-steps{margin:0 0 6px;padding-left:20px;line-height:1.7}
+  .p-rng .rg-list{margin:0 0 6px;padding-left:20px;line-height:1.7}
+  @media (prefers-reduced-motion:reduce){.p-rng #rgWheel{transition:none!important}}
