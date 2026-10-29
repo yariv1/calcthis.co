@@ -137,6 +137,65 @@ window.CalcThis = window.CalcThis || {};
   CalcThis.initAllCsel();
 })();
 
+/* ---- shared: clear (X) button inside any text field that has a value, shown while the field is focused (design system, 2026-10-29) ----
+   Skips read-only/disabled fields, search fields (native X), datepicker fields, masked time fields and outputs. */
+(function () {
+  var xb = null, cur = null;
+  function eligible(el) {
+    if (!el || el.tagName !== 'INPUT') return false;
+    var t = (el.getAttribute('type') || 'text').toLowerCase();
+    if (t !== 'text' && t !== 'tel' && t !== 'number' && t !== 'email' && t !== 'url') return false;
+    if (el.readOnly || el.disabled || el.datepicker || el.hasAttribute('data-no-clear')) return false;
+    var w = el.parentNode; if (!w || !w.classList || !w.classList.contains('inp')) return false;
+    if (el.closest('.time-box, .time-field, .isout, .csel')) return false;
+    return true;
+  }
+  function build() {
+    if (xb) return xb;
+    xb = document.createElement('button'); xb.type = 'button'; xb.className = 'inp-x'; xb.tabIndex = -1; xb.setAttribute('aria-label', 'Clear'); xb.title = 'Clear';
+    xb.innerHTML = '<svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M2 2l8 8M10 2l-8 8"/></svg>';
+    xb.addEventListener('mousedown', function (e) { e.preventDefault(); });
+    xb.addEventListener('click', function () {
+      if (!cur) return; var el = cur; el.value = '';
+      el.dispatchEvent(new Event('input', { bubbles: true })); el.dispatchEvent(new Event('change', { bubbles: true })); el.focus(); sync();
+    });
+    return xb;
+  }
+  function hide() { if (xb && xb.parentNode) xb.parentNode.removeChild(xb); if (cur && cur._xpad != null) { cur.style.paddingRight = cur._xpad; cur._xpad = null; } cur = null; }
+  function sync() {
+    if (!cur) return;
+    if (!cur.value) { if (xb && xb.parentNode) xb.parentNode.removeChild(xb); return; }
+    var w = cur.parentNode, b = build(), right = 10, ad = w.querySelector('.suf, .len-toggle');
+    if (ad) right = ad.offsetWidth + 18;
+    if (b.parentNode !== w) w.appendChild(b);
+    b.style.right = right + 'px';
+    if (cur._xpad == null) { cur._xpad = cur.style.paddingRight; }
+    var need = right + 30, have = parseFloat(getComputedStyle(cur).paddingRight) || 0;
+    cur.style.paddingRight = Math.max(need, have) + 'px';
+  }
+  document.addEventListener('focusin', function (e) { var el = e.target; if (!eligible(el)) return; if (cur && cur !== el) hide(); cur = el; sync(); });
+  document.addEventListener('focusout', function (e) { if (e.target === cur) hide(); });
+  document.addEventListener('input', function (e) { if (e.target === cur) sync(); });
+})();
+
+/* ---- shared: homepage category tabs get scroll arrows on desktop (YouTube-style chips row) ---- */
+(function () {
+  var tabs = document.getElementById('catTabs'); if (!tabs || tabs.parentNode.classList.contains('cat-tabs-wrap')) return;
+  var wrap = document.createElement('div'); wrap.className = 'cat-tabs-wrap';
+  tabs.parentNode.insertBefore(wrap, tabs); wrap.appendChild(tabs);
+  function mk(dir) {
+    var b = document.createElement('button'); b.type = 'button'; b.className = 'cat-arrow cat-arrow-' + dir; b.setAttribute('aria-label', dir === 'l' ? 'Scroll categories left' : 'Scroll categories right');
+    b.innerHTML = '<span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="' + (dir === 'l' ? 'M15 6l-6 6 6 6' : 'M9 6l6 6-6 6') + '"/></svg></span>';
+    b.addEventListener('click', function () { tabs.scrollBy({ left: (dir === 'l' ? -1 : 1) * Math.max(160, tabs.clientWidth * 0.7), behavior: 'smooth' }); });
+    wrap.appendChild(b); return b;
+  }
+  var L = mk('l'), R = mk('r');
+  function upd() { var max = tabs.scrollWidth - tabs.clientWidth; L.classList.toggle('show', tabs.scrollLeft > 2); R.classList.toggle('show', max > 2 && tabs.scrollLeft < max - 2); }
+  tabs.addEventListener('scroll', upd); window.addEventListener('resize', upd); window.addEventListener('load', upd); upd();
+  /* keep the selected tab in view when it is chosen (also by the page's own hash/keyboard handling) */
+  tabs.addEventListener('click', function (e) { var t = e.target.closest('.cat-tab'); if (t) { var r = t.getBoundingClientRect(), c = tabs.getBoundingClientRect(); if (r.left < c.left + 40 || r.right > c.right - 40) tabs.scrollBy({ left: (r.left + r.right) / 2 - (c.left + c.right) / 2, behavior: 'smooth' }); } });
+})();
+
 /* ---- shared calc helpers (global) ---- */
 function parseNum(v){
   if(v==null) return NaN;
@@ -8884,7 +8943,7 @@ CalcThis.recipeEngine = (function () {
     var C = unit === 'C' ? val : (F2C[F] != null ? F2C[F] : Math.round((val - 32) * 5 / 9 / 5) * 5);
     var gas = null, bd = 99;
     GAS.forEach(function (g) { var d = Math.abs(g[0] - F); if (d < bd) { bd = d; gas = g[1]; } });
-    return { F: F, C: C, fan: C - 20, gas: bd <= 13 ? gas : null };
+    return { F: F, C: C, fan: C - 20, gas: bd <= 12.5 + 1e-9 ? gas : null };
   }
 
   return { CFG: CFG, parseLine: parseLine, parseAmount: parseAmount, convert: convert, massOf: massOf, lookup: lookup, fx: fx, nice: nice, dec: dec, fmtG: fmtG, fmtVolUS: fmtVolUS, fmtMl: fmtMl, fmtOz: fmtOz, full: full, oven: oven, S_CNT: S_CNT };
@@ -13376,6 +13435,364 @@ CalcThis.initSalesTaxCalc = function () {
   restoreForm();
   syncState(); showMode();
   render();
+};
+
+/* =========================================================
+   UNIT CONVERTER — one engine for every converter page (hub + length, weight, volume, temperature, area, speed,
+   data storage, cooking, px/rem). Pure (no DOM). Every factor is an exact international definition
+   (BIPM SI brochure, NIST Handbook 44 / Special Publication 811, IEC 80000-13 for data units).
+   CalcThis.unitEngine  ·  CalcThis.initUnitConverter (ids un*)
+   ========================================================= */
+/* UNIT-ENGINE:START */
+CalcThis.unitEngine = (function () {
+  function U(id, name, sym, f, grp) { return { id: id, name: name, sym: sym, f: f, grp: grp || '' }; }
+  var CATS = {};
+  CATS.length = { slug: 'length-converter', name: 'Length', units: [
+    U('mm', 'Millimeters', 'mm', 0.001, 'Metric'), U('cm', 'Centimeters', 'cm', 0.01, 'Metric'), U('m', 'Meters', 'm', 1, 'Metric'), U('km', 'Kilometers', 'km', 1000, 'Metric'),
+    U('um', 'Micrometers', 'µm', 1e-6, 'Metric'), U('nm', 'Nanometers', 'nm', 1e-9, 'Metric'),
+    U('in', 'Inches', 'in', 0.0254, 'US / imperial'), U('ft', 'Feet', 'ft', 0.3048, 'US / imperial'), U('yd', 'Yards', 'yd', 0.9144, 'US / imperial'), U('mi', 'Miles', 'mi', 1609.344, 'US / imperial'),
+    U('nmi', 'Nautical miles', 'nmi', 1852, 'Other'), U('ly', 'Light-years', 'ly', 9460730472580800, 'Other')
+  ], neg: true, from: 'in', to: 'cm', ex: 12 };
+  CATS.weight = { slug: 'weight-converter', name: 'Weight', units: [
+    U('mg', 'Milligrams', 'mg', 1e-6, 'Metric'), U('g', 'Grams', 'g', 1e-3, 'Metric'), U('kg', 'Kilograms', 'kg', 1, 'Metric'), U('t', 'Metric tons (tonnes)', 't', 1000, 'Metric'), U('ug', 'Micrograms', 'µg', 1e-9, 'Metric'),
+    U('oz', 'Ounces', 'oz', 0.028349523125, 'US / imperial'), U('lb', 'Pounds', 'lb', 0.45359237, 'US / imperial'), U('st', 'Stone', 'st', 6.35029318, 'US / imperial'),
+    U('ston', 'US tons (short tons)', 'US ton', 907.18474, 'US / imperial'), U('lton', 'Imperial tons (long tons)', 'long ton', 1016.0469088, 'US / imperial')
+  ], neg: false, from: 'lb', to: 'kg', ex: 150 };
+  CATS.volume = { slug: 'volume-converter', name: 'Volume', units: [
+    U('ml', 'Milliliters', 'mL', 0.001, 'Metric'), U('l', 'Liters', 'L', 1, 'Metric'), U('m3', 'Cubic meters', 'm³', 1000, 'Metric'),
+    U('tsp', 'Teaspoons (US)', 'tsp', 0.00492892159375, 'US'), U('tbsp', 'Tablespoons (US)', 'tbsp', 0.01478676478125, 'US'), U('floz', 'Fluid ounces (US)', 'fl oz', 0.0295735295625, 'US'),
+    U('cup', 'Cups (US)', 'cup', 0.2365882365, 'US'), U('pt', 'Pints (US)', 'pt', 0.473176473, 'US'), U('qt', 'Quarts (US)', 'qt', 0.946352946, 'US'), U('gal', 'Gallons (US)', 'gal', 3.785411784, 'US'),
+    U('ukfloz', 'Fluid ounces (imperial)', 'imp fl oz', 0.0284130625, 'Imperial'), U('ukpt', 'Pints (imperial)', 'imp pt', 0.56826125, 'Imperial'), U('ukqt', 'Quarts (imperial)', 'imp qt', 1.1365225, 'Imperial'), U('ukgal', 'Gallons (imperial)', 'imp gal', 4.54609, 'Imperial'),
+    U('in3', 'Cubic inches', 'in³', 0.016387064, 'Other'), U('ft3', 'Cubic feet', 'ft³', 28.316846592, 'Other')
+  ], neg: false, from: 'gal', to: 'l', ex: 1 };
+  CATS.area = { slug: 'area-converter', name: 'Area', units: [
+    U('mm2', 'Square millimeters', 'mm²', 1e-6, 'Metric'), U('cm2', 'Square centimeters', 'cm²', 1e-4, 'Metric'), U('m2', 'Square meters', 'm²', 1, 'Metric'), U('ha', 'Hectares', 'ha', 10000, 'Metric'), U('km2', 'Square kilometers', 'km²', 1e6, 'Metric'),
+    U('in2', 'Square inches', 'in²', 0.00064516, 'US / imperial'), U('ft2', 'Square feet', 'ft²', 0.09290304, 'US / imperial'), U('yd2', 'Square yards', 'yd²', 0.83612736, 'US / imperial'), U('ac', 'Acres', 'ac', 4046.8564224, 'US / imperial'), U('mi2', 'Square miles', 'mi²', 2589988.110336, 'US / imperial')
+  ], neg: false, from: 'ft2', to: 'm2', ex: 1000 };
+  CATS.speed = { slug: 'speed-converter', name: 'Speed', units: [
+    U('ms', 'Meters per second', 'm/s', 1), U('kmh', 'Kilometers per hour', 'km/h', 1 / 3.6), U('mph', 'Miles per hour', 'mph', 0.44704), U('kn', 'Knots', 'kn', 1852 / 3600), U('fts', 'Feet per second', 'ft/s', 0.3048), U('cms', 'Centimeters per second', 'cm/s', 0.01)
+  ], neg: true, from: 'mph', to: 'kmh', ex: 60 };
+  CATS.data = { slug: 'data-storage-converter', name: 'Data storage', units: [
+    U('b', 'Bits', 'bit', 1, 'Basic'), U('B', 'Bytes', 'B', 8, 'Basic'),
+    U('kB', 'Kilobytes (1,000 bytes)', 'KB', 8e3, 'Decimal (SI)'), U('MB', 'Megabytes', 'MB', 8e6, 'Decimal (SI)'), U('GB', 'Gigabytes', 'GB', 8e9, 'Decimal (SI)'), U('TB', 'Terabytes', 'TB', 8e12, 'Decimal (SI)'), U('PB', 'Petabytes', 'PB', 8e15, 'Decimal (SI)'),
+    U('KiB', 'Kibibytes (1,024 bytes)', 'KiB', 8192, 'Binary (IEC)'), U('MiB', 'Mebibytes', 'MiB', 8388608, 'Binary (IEC)'), U('GiB', 'Gibibytes', 'GiB', 8589934592, 'Binary (IEC)'), U('TiB', 'Tebibytes', 'TiB', 8796093022208, 'Binary (IEC)'), U('PiB', 'Pebibytes', 'PiB', 9007199254740992, 'Binary (IEC)'),
+    U('kb', 'Kilobits', 'Kb', 1e3, 'Bits'), U('Mb', 'Megabits', 'Mb', 1e6, 'Bits'), U('Gb', 'Gigabits', 'Gb', 1e9, 'Bits'), U('Tb', 'Terabits', 'Tb', 1e12, 'Bits')
+  ], neg: false, from: 'GB', to: 'MB', ex: 1 };
+  /* temperature: each unit has to(x) -> degrees Celsius and from(c) */
+  CATS.temperature = { slug: 'temperature-converter', name: 'Temperature', units: [
+    { id: 'c', name: 'Celsius', sym: '°C', to: function (x) { return x; }, fr: function (c) { return c; } },
+    { id: 'f', name: 'Fahrenheit', sym: '°F', to: function (x) { return (x - 32) * 5 / 9; }, fr: function (c) { return c * 9 / 5 + 32; } },
+    { id: 'k', name: 'Kelvin', sym: 'K', to: function (x) { return x - 273.15; }, fr: function (c) { return c + 273.15; } },
+    { id: 'r', name: 'Rankine', sym: '°R', to: function (x) { return (x - 491.67) * 5 / 9; }, fr: function (c) { return (c + 273.15) * 9 / 5; } }
+  ], neg: true, from: 'f', to: 'c', ex: 98.6, temp: true };
+  CATS.css = { slug: 'px-to-rem-converter', name: 'CSS units (px, rem, em)', units: [
+    U('px', 'Pixels', 'px', 1), U('rem', 'rem (root font size)', 'rem', 1), U('em', 'em (parent font size)', 'em', 1), U('pct', 'Percent (of parent font size)', '%', 1),
+    U('pt', 'Points', 'pt', 96 / 72), U('pc', 'Picas', 'pc', 16), U('in', 'Inches', 'in', 96), U('cm', 'Centimeters', 'cm', 96 / 2.54), U('mm', 'Millimeters', 'mm', 96 / 25.4),
+    U('vw', 'Viewport width (vw)', 'vw', 1), U('vh', 'Viewport height (vh)', 'vh', 1)
+  ], neg: false, from: 'px', to: 'rem', ex: 24, css: true };
+  CATS.cooking = { slug: 'cooking-converter', name: 'Cooking', units: [
+    U('tsp', 'Teaspoons', 'tsp', 0, 'Volume'), U('tbsp', 'Tablespoons', 'tbsp', 0, 'Volume'), U('floz', 'Fluid ounces', 'fl oz', 0, 'Volume'), U('cup', 'Cups', 'cup', 0, 'Volume'), U('ml', 'Milliliters', 'mL', 0, 'Volume'), U('l', 'Liters', 'L', 0, 'Volume'), U('stick', 'Sticks of butter', 'stick', 0, 'Volume'),
+    U('g', 'Grams', 'g', 1, 'Weight'), U('kg', 'Kilograms', 'kg', 1000, 'Weight'), U('oz', 'Ounces', 'oz', 28.349523125, 'Weight'), U('lb', 'Pounds', 'lb', 453.59237, 'Weight')
+  ], neg: false, from: 'cup', to: 'g', ex: 1, cook: true };
+  var CAT_ORDER = ['length', 'weight', 'volume', 'temperature', 'area', 'speed', 'data', 'cooking', 'css'];
+
+  function unit(cat, id) { var l = CATS[cat].units; for (var i = 0; i < l.length; i++) if (l[i].id === id) return l[i]; return null; }
+
+  /* ---------- cooking: cups <-> grams per ingredient, grams per US cup (typical values, about +-5%) ---------- */
+  var US_CUP_ML = 236.5882365;
+  var CUP_STD = { us: { tsp: 4.92892159375, tbsp: 14.78676478125, floz: 29.5735295625, cup: 236.5882365 }, uk: { tsp: 5, tbsp: 15, floz: 28.4130625, cup: 250 }, au: { tsp: 5, tbsp: 20, floz: 28.4130625, cup: 250 } };
+  var ING = [
+    ['flour', 'All-purpose flour', 120], ['breadflour', 'Bread flour', 120], ['cakeflour', 'Cake flour', 114], ['wwflour', 'Whole wheat flour', 113], ['almondflour', 'Almond flour', 96], ['ryeflour', 'Rye flour', 102],
+    ['cornmeal', 'Cornmeal', 138], ['cornstarch', 'Cornstarch', 128], ['sugar', 'Granulated sugar', 200], ['brownsugar', 'Brown sugar (packed)', 213], ['powsugar', 'Powdered sugar', 120],
+    ['butter', 'Butter', 226.8], ['shortening', 'Shortening or lard', 205], ['oil', 'Vegetable oil', 218], ['oliveoil', 'Olive oil', 216],
+    ['honey', 'Honey', 340], ['maple', 'Maple syrup', 322], ['molasses', 'Molasses', 340], ['jam', 'Jam or jelly', 320],
+    ['water', 'Water', 237], ['milk', 'Milk', 245], ['cream', 'Heavy cream', 238], ['yogurt', 'Yogurt', 245], ['sourcream', 'Sour cream', 240], ['creamcheese', 'Cream cheese', 232],
+    ['peanutbutter', 'Peanut butter', 256], ['applesauce', 'Applesauce', 244], ['pumpkin', 'Pumpkin puree', 245], ['banana', 'Mashed banana', 225],
+    ['oats', 'Rolled oats', 90], ['rice', 'Rice (uncooked)', 185], ['cookedrice', 'Rice (cooked)', 158], ['cocoa', 'Cocoa powder', 85], ['chips', 'Chocolate chips', 170],
+    ['salt', 'Salt (table)', 288], ['bakingpowder', 'Baking powder', 192], ['bakingsoda', 'Baking soda', 220],
+    ['walnuts', 'Walnuts or pecans', 113], ['almonds', 'Almonds', 142], ['raisins', 'Raisins', 149], ['coconut', 'Shredded coconut', 85],
+    ['cheddar', 'Cheddar (shredded)', 113], ['parmesan', 'Parmesan (grated)', 100], ['breadcrumbs', 'Breadcrumbs', 108], ['panko', 'Panko', 60],
+    ['vanilla', 'Vanilla extract', 208], ['lemonjuice', 'Lemon juice', 244], ['broth', 'Broth or stock', 240], ['vinegar', 'Vinegar', 239]
+  ];
+  function ingredient(id) { for (var i = 0; i < ING.length; i++) if (ING[i][0] === id) return { id: id, name: ING[i][1], gpc: ING[i][2], gpm: ING[i][2] / US_CUP_ML }; return null; }
+  function cookMl(u, std) { if (u === 'ml') return 1; if (u === 'l') return 1000; if (u === 'stick') return 118.29411825; return (CUP_STD[std] || CUP_STD.us)[u]; }
+  function cookKind(u) { return (u === 'g' || u === 'kg' || u === 'oz' || u === 'lb') ? 'w' : 'v'; }
+  function cookConv(from, to, x, o) {
+    var std = (o && o.std) || 'us', ing = o && o.ing ? ingredient(o.ing) : ingredient('flour');
+    var kf = cookKind(from), kt = cookKind(to);
+    if (kf === 'w' && kt === 'w') return x * unit('cooking', from).f / unit('cooking', to).f;
+    if (kf === 'v' && kt === 'v') return x * cookMl(from, std) / cookMl(to, std);
+    if (kf === 'v') { var g = x * cookMl(from, std) * ing.gpm; return g / unit('cooking', to).f; }
+    var ml = x * unit('cooking', from).f / ing.gpm; return ml / cookMl(to, std);
+  }
+
+  /* ---------- oven temperatures ---------- */
+  var GAS = [[0.25, '¼', 225], [0.5, '½', 250], [1, '1', 275], [2, '2', 300], [3, '3', 325], [4, '4', 350], [5, '5', 375], [6, '6', 400], [7, '7', 425], [8, '8', 450], [9, '9', 475]];
+  var OVEN_UNITS = [{ id: 'c', name: 'Celsius', sym: '°C' }, { id: 'f', name: 'Fahrenheit', sym: '°F' }, { id: 'fan', name: 'Fan oven (Celsius)', sym: '°C fan' }, { id: 'gas', name: 'Gas mark', sym: 'gas mark' }];
+  function gasF(x) { for (var i = 0; i < GAS.length; i++) if (Math.abs(GAS[i][0] - x) < 1e-9) return GAS[i][2]; return null; }
+  function ovenAll(from, x) {
+    var F;
+    if (from === 'f') F = x; else if (from === 'c') F = x * 9 / 5 + 32; else if (from === 'fan') F = (x + 20) * 9 / 5 + 32; else { F = gasF(x); if (F == null) return null; }
+    var C = (F - 32) * 5 / 9, gas = null, bd = 1e9;
+    GAS.forEach(function (g) { var d = Math.abs(g[2] - F); if (d < bd) { bd = d; gas = g; } });
+    return { F: F, C: C, fan: C - 20, gas: bd <= 13 ? gas : null, gasExact: from === 'gas' };
+  }
+
+  /* ---------- the conversion ---------- */
+  /* o: css { root, parent, vw, vh }, cook { ing, std } */
+  function cssPx(id, o) {
+    var root = o.root, parent = o.parent == null ? root : o.parent;
+    if (id === 'rem') return root; if (id === 'em') return parent; if (id === 'pct') return parent / 100; if (id === 'vw') return o.vw / 100; if (id === 'vh') return o.vh / 100;
+    return unit('css', id).f;
+  }
+  function convert(cat, from, to, x, o) {
+    var c = CATS[cat];
+    if (c.temp) return unit(cat, to).fr(unit(cat, from).to(x));
+    if (c.cook) return cookConv(from, to, x, o);
+    if (c.css) return x * cssPx(from, o) / cssPx(to, o);
+    return x * unit(cat, from).f / unit(cat, to).f;
+  }
+  function all(cat, from, x, o) { return CATS[cat].units.map(function (u) { return { u: u, v: convert(cat, from, u.id, x, o) }; }); }
+
+  /* ---------- number formatting ---------- */
+  var SUP = { '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹', '-': '⁻', '+': '' };
+  function commas(s) { return s.replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+  function expo(x, n) {
+    var p = x.toExponential(Math.max(0, n - 1)).split('e'), m = p[0], e = p[1];
+    if (m.indexOf('.') >= 0) m = m.replace(/0+$/, '').replace(/\.$/, '');
+    return m + ' × 10' + String(parseInt(e, 10)).split('').map(function (ch) { return SUP[ch]; }).join('');
+  }
+  /* prec: 'auto' | '2dp' | '4dp' | '6dp' | '4sig' | '10sig' */
+  function fmt(x, prec) {
+    if (!isFinite(x)) return '—';
+    if (x === 0 || Math.abs(x) < 1e-300) return '0';
+    var a = Math.abs(x), p = prec || 'auto', m = /^(\d+)(dp|sig)$/.exec(p), n = m ? +m[1] : 8, mode = m ? m[2] : 'sig', s;
+    if (mode === 'dp' && a < 1e15) {
+      s = x.toFixed(n);
+      if (+s === 0) { mode = 'sig'; n = 4; }
+      else { var t = s.split('.'); return (t[0].charAt(0) === '-' ? '−' : '') + commas(t[0].replace('-', '')) + (t[1] ? '.' + t[1] : ''); }
+    }
+    if (a >= 1e15 || a < 1e-6) return (x < 0 ? '−' : '') + expo(a, Math.min(n, 10));
+    s = String(Number(a.toPrecision(Math.min(Math.max(n, 1), 15))));
+    if (s.indexOf('e') >= 0) return (x < 0 ? '−' : '') + expo(a, Math.min(n, 10));
+    var q = s.split('.');
+    return (x < 0 ? '−' : '') + commas(q[0]) + (q[1] ? '.' + q[1] : '');
+  }
+  /* inches as a tape-measure fraction: nearest 1/16 */
+  function tape(inches) {
+    var neg = inches < 0, v = Math.abs(inches), sx = Math.round(v * 16), w = Math.floor(sx / 16), r = sx % 16, d = 16;
+    while (r && r % 2 === 0) { r /= 2; d /= 2; }
+    var txt = (neg ? '−' : '') + (w ? w : '') + (r ? (w ? ' ' : '') + r + '/' + d : (w ? '' : '0'));
+    return { text: txt, exact: Math.abs(sx / 16 - v) < 1e-9 };
+  }
+  /* number parsing: 12.5, 1,234.5, 1/2, 1 1/2, 1e3, 1,5 */
+  function parse(s) {
+    s = String(s == null ? '' : s).replace(/[−–]/g, '-').trim();
+    if (!s) return NaN;
+    var m, neg = false;
+    if (s.charAt(0) === '-') { neg = true; s = s.slice(1).trim(); } else if (s.charAt(0) === '+') s = s.slice(1).trim();
+    var v;
+    if ((m = /^(\d+)[\s-]+(\d+)\/(\d+)$/.exec(s))) v = +m[3] ? +m[1] + (+m[2]) / (+m[3]) : NaN;
+    else if ((m = /^(\d+)\/(\d+)$/.exec(s))) v = +m[2] ? (+m[1]) / (+m[2]) : NaN;
+    else if (/^\d+,\d{1,2}$/.test(s)) v = parseFloat(s.replace(',', '.'));
+    else if (/^\d{1,3}(,\d{3})+(\.\d+)?$/.test(s)) v = parseFloat(s.replace(/,/g, ''));
+    else if (/^(\d+\.?\d*|\.\d+)([eE][+-]?\d+)?$/.test(s)) v = parseFloat(s);
+    else v = NaN;
+    return neg ? -v : v;
+  }
+  return { CATS: CATS, ORDER: CAT_ORDER, unit: unit, convert: convert, all: all, fmt: fmt, tape: tape, parse: parse, ING: ING, ingredient: ingredient, CUP_STD: CUP_STD, GAS: GAS, OVEN_UNITS: OVEN_UNITS, ovenAll: ovenAll, cssPx: cssPx, cookKind: cookKind, commas: commas };
+})();
+/* UNIT-ENGINE:END */
+
+CalcThis.initUnitConverter = function () {
+  var E = CalcThis.unitEngine, $ = function (id) { return document.getElementById(id); };
+  var CAT = document.body.getAttribute('data-cat') || 'length', C = E.CATS[CAT];
+  var st = { mode: 'conv', adv: false, prec: 'auto', std: 'us', ing: 'flour' }, last = null;
+  function esc(t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'); }
+  function setHint(m) { var h = $('unHint'); h.textContent = m || ''; h.style.display = m ? 'block' : 'none'; }
+  function setSeg(id, v) { [].forEach.call($(id).querySelectorAll('button'), function (b) { b.classList.toggle('on', b.getAttribute('data-v') === v); }); }
+  function fmt(x) { return E.fmt(x, st.prec); }
+  function withSym(v, sym) { return v + (sym === '%' || sym.charAt(0) === '°' ? '' : ' ') + sym; }
+  function pos(t) { var n = E.parse(t); return isFinite(n) && n > 0 && n <= 1e6 ? n : NaN; }
+  var CHEV = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
+  function setPanel(root, opts, val) {
+    var panel = root.querySelector('.csel-panel');
+    panel.innerHTML = opts.map(function (o) { return '<button type="button" class="csel-opt' + (o[0] === val ? ' on' : '') + '" role="option" aria-selected="' + (o[0] === val) + '" data-value="' + esc(o[0]) + '">' + esc(o[1]) + '</button>'; }).join('');
+    root.setAttribute('data-value', val);
+    root.querySelector('.csel-val').textContent = (opts.filter(function (o) { return o[0] === val; })[0] || opts[0])[1];
+    CalcThis.initCsel(root);
+  }
+  function unitOpts() {
+    if (CAT === 'cooking' && st.mode === 'oven') return E.OVEN_UNITS.map(function (u) { return [u.id, u.sym + ' — ' + u.name]; });
+    return C.units.map(function (u) { return [u.id, u.sym + ' — ' + u.name]; });
+  }
+  function defaults() {
+    if (CAT === 'cooking' && st.mode === 'oven') return { from: 'f', to: 'c', ex: 350 };
+    return { from: C.from, to: C.to, ex: C.ex };
+  }
+  function usym(id) { if (CAT === 'cooking' && st.mode === 'oven') return E.OVEN_UNITS.filter(function (u) { return u.id === id; })[0].sym; return E.unit(CAT, id).sym; }
+  function setUnits(from, to) { var o = unitOpts(); setPanel($('unFrom'), o, from); setPanel($('unTo'), o, to); }
+  function cssOpts() {
+    var o = { root: pos($('unBase').value), parent: null, vw: pos($('unVw').value), vh: pos($('unVh').value) };
+    var p = pos($('unParent').value); o.parent = isFinite(p) ? p : o.root; return o;
+  }
+
+  /* ---------- visuals ---------- */
+  function ruler(cm) {
+    var x0 = 10, ppc = 280 / 32, s = '<svg viewBox="0 0 300 116" role="img" aria-label="Ruler in centimeters and inches"><rect x="10" y="24" width="280" height="66" rx="4" fill="#F5EFE4" stroke="#D9C79F"/>';
+    var i, x;
+    for (i = 0; i <= 32; i++) { x = x0 + i * ppc; s += '<line x1="' + x + '" y1="24" x2="' + x + '" y2="' + (24 + (i % 5 === 0 ? 14 : 8)) + '" stroke="#37503F" stroke-width="1"/>'; if (i % 5 === 0 && i > 0) s += '<text x="' + x + '" y="54" font-size="14" text-anchor="middle" fill="#37503F">' + i + '</text>'; }
+    for (i = 0; i <= 12; i++) { x = x0 + i * 2.54 * ppc; s += '<line x1="' + x + '" y1="90" x2="' + x + '" y2="' + (90 - 14) + '" stroke="#8F5C13" stroke-width="1"/>'; if (i % 2 === 0 && i > 0) s += '<text x="' + x + '" y="82" font-size="14" text-anchor="middle" fill="#8F5C13">' + i + '</text>'; }
+    var mx = x0 + cm * ppc, lab = fmt(cm) + ' cm', lx = Math.min(Math.max(mx, 40), 260);
+    s += '<line x1="' + mx + '" y1="14" x2="' + mx + '" y2="100" stroke="#B5761F" stroke-width="2.4"/><circle cx="' + mx + '" cy="14" r="4" fill="#B5761F"/><text x="' + lx + '" y="114" font-size="14" font-weight="700" text-anchor="middle" fill="#2a2118">' + lab + '</text></svg>';
+    return s;
+  }
+  function thermo(c, label) {
+    var lo = -50, hi = 250, W = 280, X = function (t) { return 10 + (Math.min(hi, Math.max(lo, t)) - lo) / (hi - lo) * W; };
+    var s = '<svg viewBox="0 0 300 78" role="img" aria-label="Temperature scale from -50 to 250 degrees Celsius"><defs><linearGradient id="unGrad" x1="0" x2="1"><stop offset="0" stop-color="#6E97B0"/><stop offset=".3" stop-color="#E9DDC3"/><stop offset=".6" stop-color="#D9A24A"/><stop offset="1" stop-color="#A8442F"/></linearGradient></defs><rect x="10" y="30" width="280" height="14" rx="7" fill="url(#unGrad)" stroke="#D9C79F"/>';
+    [-40, 0, 37, 100, 200].forEach(function (t) { s += '<line x1="' + X(t) + '" y1="44" x2="' + X(t) + '" y2="50" stroke="#2a2118" stroke-width="1.4"/><text x="' + X(t) + '" y="68" font-size="14" text-anchor="middle" fill="#2a2118">' + (t < 0 ? '−' + (-t) : t) + '</text>'; });
+    var mx = X(c), on = c >= lo && c <= hi;
+    s += '<path d="M' + (mx - 6) + ' 16 L' + (mx + 6) + ' 16 L' + mx + ' 28 Z" fill="#B5761F"/><text x="' + Math.min(Math.max(mx, 40), 260) + '" y="12" font-size="14" font-weight="700" text-anchor="middle" fill="#2a2118">' + esc(on ? label : 'Off the scale') + '</text></svg>';
+    return s + '<div class="un-vleg">Scale in °C: −40 (same in °F) · 0 freezes · 37 body · 100 boils at sea level' + (on ? '' : ' · <b>your value is off the scale, shown at the edge</b>') + '</div>';
+  }
+  function visual(px, x, from, to, v) {
+    var h = '';
+    if (CAT === 'length') {
+      var cm = E.convert('length', from, 'cm', x);
+      h = cm >= 0 && cm <= 32 ? ruler(cm) + '<div class="un-vleg">Top: centimeters · bottom: inches · the ruler shows 0–32 cm (12.6 in)</div>' : '';
+    } else if (C.temp) h = thermo(E.convert('temperature', from, 'c', x), withSym(fmt(x), E.unit('temperature', from).sym));
+    else if (C.css) {
+      var p = E.convert('css', from, 'px', x, cssOpts());
+      if (isFinite(p) && p > 0) { var shown = Math.min(120, Math.max(8, p)); h = '<div class="un-sample" style="font-size:' + shown + 'px">The quick brown fox</div><div class="un-vleg">Sample text at ' + fmt(p) + ' px' + (shown !== p ? ' (drawn at ' + shown + ' px so it fits)' : '') + '</div>'; }
+    }
+    $('unVis').innerHTML = h; $('unVisWrap').style.display = h ? '' : 'none';
+  }
+
+  /* ---------- result ---------- */
+  function empty(msg, hint) {
+    $('unResLab').textContent = 'Result'; $('unBig').textContent = '—'; $('unSub').textContent = msg || 'Enter a value to convert.'; $('unMVal').textContent = '—'; $('unMLab').textContent = 'Result';
+    $('unResults').style.display = 'none'; last = null; setHint(hint || '');
+  }
+  function tableHtml(rows, curId) {
+    return '<thead><tr><th>Unit</th><th>Value</th></tr></thead><tbody>' + rows.map(function (r) { return '<tr' + (r.id === curId ? ' class="cur"' : '') + '><td>' + esc(r.name) + '</td><td>' + esc(r.val) + '</td></tr>'; }).join('') + '</tbody>';
+  }
+  var TFORM = { 'c>f': '°F = °C × 9/5 + 32', 'f>c': '°C = (°F − 32) × 5/9', 'c>k': 'K = °C + 273.15', 'k>c': '°C = K − 273.15', 'f>k': 'K = (°F − 32) × 5/9 + 273.15', 'k>f': '°F = (K − 273.15) × 9/5 + 32', 'c>r': '°R = (°C + 273.15) × 9/5', 'r>c': '°C = °R × 5/9 − 273.15', 'f>r': '°R = °F + 459.67', 'r>f': '°F = °R − 459.67', 'k>r': '°R = K × 9/5', 'r>k': 'K = °R × 5/9' };
+  function renderOven(raw, from, to) {
+    var x = E.parse(raw);
+    if (!isFinite(x)) { empty('Enter an oven temperature.', 'Enter a number like 350, 180 or 4.'); return; }
+    if (from === 'gas' && !E.GAS.some(function (g) { return Math.abs(g[0] - x) < 1e-9; })) { empty('Pick a gas mark.', 'Gas marks run ¼ (0.25), ½ (0.5) and 1 to 9.'); return; }
+    if (from !== 'gas' && (x < 0 || x > 1000)) { empty('Enter an oven temperature.', 'Oven temperatures run from 0 to 1000 — try 350 for °F or 180 for °C.'); return; }
+    var o = E.ovenAll(from, x), U = E.OVEN_UNITS, fu = U.filter(function (u) { return u.id === from; })[0], tu = U.filter(function (u) { return u.id === to; })[0];
+    var ofmt = function (v) { return st.prec === 'auto' ? String(+v.toFixed(1)) : fmt(v); };
+    var val = to === 'c' ? o.C : to === 'f' ? o.F : to === 'fan' ? o.fan : null;
+    var big = to === 'gas' ? (o.gas ? 'Gas mark ' + o.gas[1] : 'Off the scale') : withSym(ofmt(val), tu.sym);
+    $('unResLab').textContent = (from === 'gas' ? 'Gas mark ' + (E.GAS.filter(function (g) { return Math.abs(g[0] - x) < 1e-9; })[0][1]) : withSym(fmt(x), fu.sym)) + ' =';
+    $('unBig').textContent = big; $('unMLab').textContent = $('unResLab').textContent; $('unMVal').textContent = big;
+    $('unSub').textContent = to === 'gas' && !o.gas ? 'This temperature is outside the gas mark scale (¼ to 9, 225–475 °F).' : withSym(ofmt(o.F), '°F') + ' = ' + withSym(ofmt(o.C), '°C') + ' = ' + withSym(ofmt(o.fan), '°C fan') + (o.gas ? ' = gas mark ' + o.gas[1] : '');
+    var rC = Math.round(o.C / 5) * 5, rF = Math.round(o.F / 25) * 25;
+    $('unTip').textContent = from === 'f' ? 'Recipes usually round this to ' + rC + ' °C (' + (rC - 20) + ' °C in a fan oven).' : (from === 'gas' ? '' : 'Recipes usually round this to ' + rF + ' °F.');
+    $('unTip').style.display = $('unTip').textContent ? '' : 'none';
+    $('unVis').innerHTML = ''; $('unVisWrap').style.display = 'none';
+    $('unTable').innerHTML = tableHtml([{ id: 'c', name: 'Celsius (°C)', val: ofmt(o.C) }, { id: 'f', name: 'Fahrenheit (°F)', val: ofmt(o.F) }, { id: 'fan', name: 'Fan oven (°C fan)', val: ofmt(o.fan) }, { id: 'gas', name: 'Gas mark (nearest)', val: o.gas ? o.gas[1] : '—' }], to);
+    $('unFormula').textContent = 'Fan oven = °C − 20. Gas mark is the nearest standard setting (marks are 25 °F apart). Oven dials are only accurate to about ±10 °C.';
+    $('unResults').style.display = ''; setHint('');
+    last = { text: $('unResLab').textContent.replace(/ =$/, '') + ' = ' + big, lines: ['Celsius: ' + ofmt(o.C) + ' °C', 'Fahrenheit: ' + ofmt(o.F) + ' °F', 'Fan oven: ' + ofmt(o.fan) + ' °C', 'Gas mark: ' + (o.gas ? o.gas[1] : '—')] };
+  }
+  function render() {
+    var from = $('unFrom').getAttribute('data-value'), to = $('unTo').getAttribute('data-value'), raw = $('unVal').value.trim();
+    if (!raw) { empty(); return; }
+    if (CAT === 'cooking' && st.mode === 'oven') { renderOven(raw, from, to); return; }
+    var x = E.parse(raw);
+    if (!isFinite(x)) { empty('Enter a number.', 'Enter a number like 12.5, 1/2 or 1 1/2 — digits only.'); return; }
+    if (Math.abs(x) > 1e30) { empty('That number is too large.', 'Enter a value below 1,000,000,000,000,000,000,000,000,000,000.'); return; }
+    if (!C.neg && x < 0) { empty('Enter 0 or more.', 'This value cannot be negative — enter 0 or more.'); return; }
+    var o = null, fu = E.unit(CAT, from), tu = E.unit(CAT, to);
+    if (C.temp && E.convert('temperature', from, 'c', x) < -273.15 - 1e-9) { empty('Below absolute zero.', 'Nothing can be colder than absolute zero (−273.15 °C, −459.67 °F, 0 K).'); return; }
+    if (C.css) {
+      o = cssOpts();
+      if (!isFinite(o.root)) { empty('Enter the root font size.', 'Enter the root (base) font size in px — browsers use 16.'); return; }
+      if ($('unParent').value.trim() && !isFinite(pos($('unParent').value))) { empty('Check the parent font size.', 'Parent font size must be a number above 0, like 16.'); return; }
+      if ((from === 'vw' || to === 'vw') && !isFinite(o.vw)) { empty('Enter the viewport width.', 'To use vw, open Go advanced and enter your viewport width in px, like 1440.'); return; }
+      if ((from === 'vh' || to === 'vh') && !isFinite(o.vh)) { empty('Enter the viewport height.', 'To use vh, open Go advanced and enter your viewport height in px, like 900.'); return; }
+    }
+    if (C.cook) o = { ing: st.ing, std: st.std };
+    var v = E.convert(CAT, from, to, x, o);
+    if (!isFinite(v)) { empty('That number is too large.', 'The result is too large to show — try a smaller value.'); return; }
+    var vs = fmt(v), big = withSym(vs, tu.sym), one = E.convert(CAT, from, to, 1, o);
+    $('unResLab').textContent = withSym(fmt(x), fu.sym) + ' ='; $('unBig').textContent = big; $('unMLab').textContent = $('unResLab').textContent; $('unMVal').textContent = big;
+    var sub;
+    if (C.temp) sub = TFORM[from + '>' + to] || 'Same unit';
+    else if (from === to) sub = 'Same unit — nothing to convert.';
+    else sub = '1 ' + fu.sym + ' = ' + withSym(E.fmt(one, st.prec === 'auto' ? '10sig' : st.prec), tu.sym) + (C.css ? ' (root font size ' + fmt(o.root) + ' px)' : '') + (C.cook && E.cookKind(from) !== E.cookKind(to) ? ' of ' + E.ingredient(st.ing).name.toLowerCase() : '');
+    $('unSub').textContent = sub;
+    /* tip */
+    var tip = '';
+    if (CAT === 'length' && (to === 'in' || to === 'ft')) { var inch = E.convert('length', from, 'in', x), t = E.tape(inch); tip = to === 'in' ? 'On a tape measure that is ' + t.text + ' in' + (t.exact ? '' : ' (nearest 1/16 in)') + '.' : (function () { var ft = Math.floor(Math.abs(inch) / 12 + 1e-9), rem = inch - Math.sign(inch) * ft * 12, tr = E.tape(Math.abs(rem)); return 'That is ' + (inch < 0 ? '−' : '') + ft + ' ft ' + tr.text + ' in' + (tr.exact ? '' : ' (nearest 1/16 in)') + '.'; })(); }
+    else if (CAT === 'weight' && to === 'lb' && x > 0) { var lbv = v, wl = Math.floor(lbv + 1e-9), oz = (lbv - wl) * 16; if (oz > 15.995) { wl += 1; oz = 0; } tip = lbv < 1e6 ? 'That is ' + wl + ' lb ' + E.fmt(oz, '1dp').replace(/\.0$/, '') + ' oz.' : ''; }
+    else if (CAT === 'data') {
+      var dec = /^(kB|MB|GB|TB|PB)$/, bin = /^(KiB|MiB|GiB|TiB|PiB)$/;
+      if ((dec.test(from) && bin.test(to)) || (bin.test(from) && dec.test(to))) tip = 'Drives are sold in decimal units (1 GB = 1,000,000,000 bytes) while Windows reports binary units (1 GiB = 1,073,741,824 bytes) but still labels them GB — that is why a 1 TB drive shows about 931 GB.';
+    }
+    else if (C.cook && E.cookKind(from) !== E.cookKind(to)) { var ing = E.ingredient(st.ing); tip = ing.name + ' weighs about ' + fmt(ing.gpc) + ' g per US cup — typical values, about ±5%. For baking, weigh it.'; }
+    $('unTip').textContent = tip; $('unTip').style.display = tip ? '' : 'none';
+    visual(null, x, from, to, v);
+    var rows = E.all(CAT, from, x, o).map(function (r) { return { id: r.u.id, name: r.u.name + ' (' + r.u.sym + ')', val: fmt(r.v) }; });
+    $('unTable').innerHTML = tableHtml(rows, from);
+    $('unFormula').textContent = C.css ? 'px ÷ root font size = rem. Root font size ' + fmt(o.root) + ' px' + (isFinite(pos($('unParent').value)) ? ', parent font size ' + fmt(o.parent) + ' px.' : ' (em and % use it too unless you set a parent size under Go advanced).') : (C.temp ? '' : 'Every unit is converted through one base unit, using exact international definitions.');
+    $('unFormula').style.display = $('unFormula').textContent ? '' : 'none';
+    $('unResults').style.display = ''; setHint('');
+    last = { text: withSym(fmt(x), fu.sym) + ' = ' + big, lines: [sub] };
+  }
+
+  /* ---------- wiring ---------- */
+  function showMode() {
+    var cook = CAT === 'cooking', oven = cook && st.mode === 'oven', css = !!C.css;
+    $('unModeSeg').parentNode.style.display = cook ? '' : 'none';
+    $('unIngFld').style.display = cook && !oven ? '' : 'none';
+    $('unBaseFld').style.display = css ? '' : 'none';
+    $('unStdFld').style.display = cook && !oven ? '' : 'none';
+    $('unCssAdv').style.display = css ? '' : 'none';
+    $('unAdvIn').style.display = st.adv ? '' : 'none';
+    var d = defaults(); $('unEx').textContent = 'See an example: ' + d.ex + ' ' + usym(d.from) + ' to ' + usym(d.to);
+  }
+  $('unVal').addEventListener('input', render);
+  $('unFrom').addEventListener('change', render); $('unTo').addEventListener('change', render);
+  ['unBase', 'unParent', 'unVw', 'unVh'].forEach(function (id) { $(id).addEventListener('input', render); });
+  $('unSwap').addEventListener('click', function () { var f = $('unFrom').getAttribute('data-value'), t = $('unTo').getAttribute('data-value'); setUnits(t, f); render(); });
+  $('unModeSeg').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return; st.mode = b.getAttribute('data-v'); setSeg('unModeSeg', st.mode);
+    var d = defaults(); $('unVal').value = ''; setUnits(d.from, d.to); showMode(); render();
+  });
+  $('unEx').addEventListener('click', function () { var d = defaults(); $('unVal').value = String(d.ex); setUnits(d.from, d.to); render(); });
+  $('unAdvBtn').addEventListener('click', function () {
+    st.adv = !st.adv; $('unAdvBtn').classList.toggle('open', st.adv); $('unAdvBtnLab').textContent = st.adv ? 'Go simple' : 'Go advanced';
+    if (!st.adv) { st.prec = 'auto'; st.std = 'us'; setPanel($('unPrec'), PREC, 'auto'); setPanel($('unStd'), STD, 'us'); $('unParent').value = ''; $('unVw').value = ''; $('unVh').value = ''; }
+    showMode(); render();
+  });
+  $('unPrec').addEventListener('change', function () { st.prec = $('unPrec').getAttribute('data-value'); render(); });
+  $('unStd').addEventListener('change', function () { st.std = $('unStd').getAttribute('data-value'); render(); });
+  $('unIng').addEventListener('change', function () { st.ing = $('unIng').getAttribute('data-value'); render(); });
+  $('unCopy').addEventListener('click', function () {
+    if (!last) return; var btn = $('unCopy'), txt = [last.text].concat(last.lines).join('\n');
+    var done = function (ok) { btn.textContent = ok ? 'Copied' : 'Copy failed'; setTimeout(function () { btn.textContent = 'Copy result'; }, 1600); };
+    var legacy = function () { try { var ta = document.createElement('textarea'); ta.value = txt; ta.setAttribute('readonly', ''); ta.style.cssText = 'position:fixed;left:-9999px;top:0'; document.body.appendChild(ta); ta.select(); var ok = document.execCommand('copy'); document.body.removeChild(ta); done(ok); } catch (e) { done(false); } };
+    try { navigator.clipboard.writeText(txt).then(function () { done(true); }, legacy); } catch (e) { legacy(); }
+  });
+  /* category dropdown = navigation (keeps the typed value for 15 s) */
+  $('unCat').addEventListener('change', function () {
+    var c = $('unCat').getAttribute('data-value'), target = '/' + E.CATS[c].slug + '/';
+    if (location.pathname !== target && c !== CAT && !window.__unNoNav) { try { sessionStorage.setItem('unForm', JSON.stringify({ t: Date.now(), v: $('unVal').value })); } catch (e) {} location.href = target; }
+  });
+
+  /* ---------- init ---------- */
+  var PREC = [['auto', 'Auto (up to 8 digits)'], ['2dp', '2 decimal places'], ['4dp', '4 decimal places'], ['6dp', '6 decimal places'], ['4sig', '4 significant digits'], ['10sig', '10 significant digits']];
+  var STD = [['us', 'US cup (237 mL)'], ['uk', 'UK / metric cup (250 mL)'], ['au', 'Australian cup (250 mL, 20 mL tablespoon)']];
+  setPanel($('unCat'), E.ORDER.map(function (k) { return [k, E.CATS[k].name]; }), CAT);
+  setPanel($('unPrec'), PREC, 'auto'); setPanel($('unStd'), STD, 'us');
+  setPanel($('unIng'), E.ING.map(function (i) { return [i[0], i[1]]; }), 'flour');
+  var d0 = defaults(); setUnits(d0.from, d0.to);
+  try { var raw = sessionStorage.getItem('unForm'); if (raw) { sessionStorage.removeItem('unForm'); var o = JSON.parse(raw); if (o && Date.now() - o.t < 15000 && o.v) $('unVal').value = o.v; } } catch (e) {}
+  showMode(); render();
 };
 
 /* =========================================================

@@ -96,6 +96,25 @@
 - [Privacy Policy](https://calcthis.co/privacy-policy/): CalcThis privacy policy. We don't collect personal data. Learn how we use cookies and third-party services.
 - [Terms of Use](https://calcthis.co/terms-of-use/): Terms of use for CalcThis. Free calculators for informational purposes — please verify results with a qualified professional.
 
+## Sales tax calculators
+- [Sales Tax Calculator](https://calcthis.co/sales-tax-calculator/): add sales tax, remove it from a total or find the rate; state rates for every state.
+- [Minnesota Sales Tax Calculator](https://calcthis.co/sales-tax-calculator/minnesota/): Minnesota sales tax with exempt items, shipping rule and special zones.
+- [Missouri Sales Tax Calculator](https://calcthis.co/sales-tax-calculator/missouri/): Missouri sales tax with exempt items, shipping rule and special zones.
+- [New Jersey Sales Tax Calculator](https://calcthis.co/sales-tax-calculator/new-jersey/): New Jersey sales tax with exempt items, shipping rule and special zones.
+- [Ohio Sales Tax Calculator](https://calcthis.co/sales-tax-calculator/ohio/): Ohio sales tax with exempt items, shipping rule and special zones.
+
+## Unit converters
+- [Unit Converter](https://calcthis.co/unit-converter/): convert length, weight, volume, temperature, area, speed, data storage, cooking measures and px to rem.
+- [Length Converter](https://calcthis.co/length-converter/): Inches, centimeters, feet, meters, miles and more.
+- [Weight Converter](https://calcthis.co/weight-converter/): Kilograms, pounds, ounces, grams, stone and tons.
+- [Volume Converter](https://calcthis.co/volume-converter/): Liters, gallons, cups, fluid ounces and more.
+- [Temperature Converter](https://calcthis.co/temperature-converter/): Celsius, Fahrenheit, Kelvin and Rankine.
+- [Area Converter](https://calcthis.co/area-converter/): Square feet, square meters, acres, hectares and more.
+- [Speed Converter](https://calcthis.co/speed-converter/): mph, km/h, m/s, knots and ft/s.
+- [Data Storage Converter](https://calcthis.co/data-storage-converter/): Bytes, KB, MB, GB, TB, KiB, MiB, GiB and bits.
+- [Cooking Measurement Converter](https://calcthis.co/cooking-converter/): Cups to grams, tablespoons, mL and oven temperatures.
+- [PX to REM Converter](https://calcthis.co/px-to-rem-converter/): Pixels, rem, em, points and percent for CSS.
+
 ## Paycheck calculators by state
 - [Alabama Paycheck Calculator](https://calcthis.co/paycheck-calculator/alabama/): take-home pay after federal tax, FICA and Alabama state tax.
 - [Alaska Paycheck Calculator](https://calcthis.co/paycheck-calculator/alaska/): take-home pay after federal tax, FICA.
@@ -122,10 +141,3 @@
 - [Virginia Paycheck Calculator](https://calcthis.co/paycheck-calculator/virginia/): take-home pay after federal tax, FICA and Virginia state tax.
 - [Washington Paycheck Calculator](https://calcthis.co/paycheck-calculator/washington/): take-home pay after federal tax, FICA.
 - [Wyoming Paycheck Calculator](https://calcthis.co/paycheck-calculator/wyoming/): take-home pay after federal tax, FICA.
-
-## Sales tax calculators
-- [Sales Tax Calculator](https://calcthis.co/sales-tax-calculator/): add sales tax, remove it from a total or find the rate; state rates for every state.
-- [Minnesota Sales Tax Calculator](https://calcthis.co/sales-tax-calculator/minnesota/): Minnesota sales tax with exempt items, shipping rule and special zones.
-- [Missouri Sales Tax Calculator](https://calcthis.co/sales-tax-calculator/missouri/): Missouri sales tax with exempt items, shipping rule and special zones.
-- [New Jersey Sales Tax Calculator](https://calcthis.co/sales-tax-calculator/new-jersey/): New Jersey sales tax with exempt items, shipping rule and special zones.
-- [Ohio Sales Tax Calculator](https://calcthis.co/sales-tax-calculator/ohio/): Ohio sales tax with exempt items, shipping rule and special zones.

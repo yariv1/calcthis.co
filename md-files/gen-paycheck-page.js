@@ -100,7 +100,10 @@ const CONTENT_MAIN = `  <section class="content">
 
       <div>
         <h2>State income tax</h2>
-        <p>${listAnd(noTax)} have no state income tax on wages, so only federal tax and FICA apply${noTax.indexOf('Washington') >= 0 ? ' (Washington still has employee-paid paid-family-leave and long-term-care premiums, which the calculator includes)' : ''}. This calculator computes state withholding from each state’s official 2026 formula for <strong>${listAnd(liveWithTax)}</strong>. For the other states the result shows federal tax and FICA only and says so — it never guesses a state rate. We are adding more states as each official formula is checked: ${listAnd(pending)}.</p>
+        <p><strong>No state income tax:</strong> ${listAnd(noTax)}. Only federal tax and FICA apply${noTax.indexOf('Washington') >= 0 ? ' (Washington still has employee-paid paid-family-leave and long-term-care premiums, which the calculator includes)' : ''}.</p>
+        <p><strong>Computed from the official 2026 formula:</strong> ${listAnd(liveWithTax)}.</p>
+        <p><strong>Every other state</strong> shows federal tax and FICA only and says so — the calculator never guesses a state rate.</p>
+        <p><strong>Coming next</strong>, as each official formula is checked: ${listAnd(pending)}.</p>
         <p>City, county and school-district taxes are not included.</p>
 
         <h2>Before-tax and after-tax deductions</h2>

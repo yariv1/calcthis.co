@@ -92,6 +92,7 @@
         { "@type": "WebApplication", "name": "Auto Loan Calculator", "url": "https://calcthis.co/auto-loan-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Paycheck Calculator", "url": "https://calcthis.co/paycheck-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Sales Tax Calculator", "url": "https://calcthis.co/sales-tax-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
+        { "@type": "WebApplication", "name": "Unit Converter", "url": "https://calcthis.co/unit-converter/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Triangle Calculator", "url": "https://calcthis.co/triangle-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Recipe Converter", "url": "https://calcthis.co/recipe-converter/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Turkey Cooking Time Calculator", "url": "https://calcthis.co/turkey-cooking-time-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
@@ -102,7 +103,7 @@
   ]
 }
 </script>
-<link rel="stylesheet" href="/assets/style.css?v=235">
+<link rel="stylesheet" href="/assets/style.css?v=241">
 <style>
   .cat-tabs{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
   .cat-grp--hidden{display:none}
@@ -194,6 +195,19 @@
           <a href="/turkey-cooking-time-calculator/">Turkey Cooking Time</a>
           <a href="/turkey-thawing-time-calculator/">Turkey Thawing Time</a>
           <a href="/turkey-size-calculator/">Turkey Size</a>
+          <!--UNITNAV:START-->
+          <span class="menu-col-head">Unit Converters</span>
+          <a href="/unit-converter/">Unit Converter</a>
+          <a href="/length-converter/">Length Converter</a>
+          <a href="/weight-converter/">Weight Converter</a>
+          <a href="/volume-converter/">Volume Converter</a>
+          <a href="/temperature-converter/">Temperature Converter</a>
+          <a href="/area-converter/">Area Converter</a>
+          <a href="/speed-converter/">Speed Converter</a>
+          <a href="/data-storage-converter/">Data Storage Converter</a>
+          <a href="/cooking-converter/">Cooking Converter</a>
+          <a href="/px-to-rem-converter/">PX to REM Converter</a>
+          <!--UNITNAV:END-->
           <span class="menu-col-head">Money &amp; Finance</span>
           <a href="/mortgage-calculator/">Mortgage</a>
           <a href="/loan-calculator/">Loan</a>
@@ -264,6 +278,7 @@
     <button class="cat-tab" type="button" data-cat="finance" role="tab" aria-selected="false">Money &amp;<br>Finance</button>
     <button class="cat-tab" type="button" data-cat="paycheck" role="tab" aria-selected="false">Paycheck<br>Calculators</button>
     <button class="cat-tab" type="button" data-cat="salestax" role="tab" aria-selected="false">Sales<br>Tax</button>
+    <button class="cat-tab" type="button" data-cat="units" role="tab" aria-selected="false">Unit<br>Converters</button>
   </div>
 
   <section id="grp-construction" class="cat-grp" aria-label="Construction &amp; Gardening calculators">
@@ -1250,17 +1265,149 @@
     <!--STAXCUBES:END-->
   </section>
 
-  <section class="prose">
-    <h2>Calculators that do one thing well</h2>
-    <p>Most calculator sites are enormous libraries where every tool is a compromise — a generic form bolted onto a shared template. <strong>CalcThis takes the opposite approach.</strong> Each calculator here is designed around a single real-world task, so the inputs match how you actually measure, the results come out in the units your supplier sells by, and the whole thing works the instant you type — no compute button, no account, no clutter.</p>
-    <p>Today the hub covers thirteen of the most-searched estimating jobs in construction and landscaping: figuring out <strong>board feet</strong> and lumber cost for a cut list, working out how much <strong>gravel</strong> a driveway or path needs in tons or bags, how much <strong>sand</strong> a paver base or leveling job takes, how much <strong>topsoil</strong> a lawn or raised bed needs by the cubic yard or bag, estimating <strong>mulch</strong> for garden beds, working out how many <strong>bags of concrete</strong> a slab or footing takes, how many <strong>boxes of flooring</strong> a room needs, exactly how many <strong>tiles</strong> a floor, wall or backsplash takes, a <strong>square footage calculator</strong> that handles 13 shapes — rectangles, circles, triangles, trapezoids and a wall-minus-window mode — with a live diagram and a running project total, and a <strong>tape measure fraction calculator</strong> that adds and subtracts feet, inches and fractions into a running total with a live ruler showing the exact tick mark, and a <strong>stair calculator</strong> that solves riser height, tread run, step count, stringer length and angle from your total rise, with a live stair diagram, code &amp; comfort checks, and a materials &amp; cost estimate for stringers, treads and risers, and a <strong>paint calculator</strong> for interior and exterior walls, ceilings and trim with a live room diagram, a shopping list of cans to buy with the leftover and cost, and a project total across rooms, and a <strong>wallpaper calculator</strong> that counts rolls in whole strips the way a paperhanger does, with pattern repeat and a live strip diagram of every wall. Each construction tool includes a running project total so you can add several boards, areas or beds and price the whole job at once — plus a waste factor so you order enough the first time. A second category covers health &amp; fitness — with a <strong>running pace</strong> tool that solves pace, time or distance and predicts finish times, a <strong>race time predictor</strong> that projects your 5K, 10K, half and marathon times from one recent race, a <strong>VO2 max</strong> calculator that estimates your aerobic fitness from resting heart rate or a walk test and ranks it against age-and-sex norms on a live gauge, a <strong>heart rate zone</strong> calculator that maps your five training zones and fat-burning Zone 2, a <strong>Zone 2 heart rate</strong> calculator for your aerobic base training range, a <strong>BMI</strong> calculator with a live category scale, an interactive height-vs-weight chart and your healthy weight range, a <strong>body fat</strong> calculator using the US Navy tape method, an <strong>ideal weight</strong> calculator that shows your healthy weight range for your height with the Robinson, Devine, Miller and Hamwi formulas plotted on one scale, a <strong>lean body mass</strong> calculator with a live lean-vs-fat composition bar and the Boer, James and Hume formulas plotted on one scale, a <strong>waist-to-hip ratio</strong> calculator with a live sex-specific health-risk gauge and a WHO waist-circumference cross-check, a <strong>calorie</strong> calculator that turns a goal weight into a daily target with a projected weight-loss curve, a <strong>BMR</strong> calculator that plots five formulas on one scale with daily calories at every activity level, a <strong>TDEE</strong> calculator for maintenance calories and macros, a <strong>one rep max</strong> calculator with a full training table, and a <strong>sleep cycle</strong> calculator for ideal bedtimes and wake-up times, and a <strong>water intake calculator</strong> that scales a daily hydration target to your weight, activity and climate and splits it into a glass-by-glass schedule, and a <strong>macro calculator</strong> for daily protein, carb and fat targets with a live animated split ring, and a <strong>peptide reconstitution calculator</strong> that converts vial size, BAC water volume, and target dose into exact U-100 syringe draw units with a live visual syringe diagram, and a <strong>steps to miles calculator</strong> that converts your step count to distance using your own height-based stride length, plotted against real distance milestones on a live bar, with a calorie-burn estimate by walking speed and incline, and a <strong>protein intake calculator</strong> that turns your weight and goal into a daily protein target plotted on a live g/kg gauge, with real-world food equivalents and a per-meal breakdown. A third category covers school and grades: a <strong>final grade calculator</strong> that tells you exactly what score you need on your final exam to hit your target course grade, and a <strong>GPA calculator</strong>, and a <strong>weighted grade calculator</strong> that handles college 4.0 scale, high school weighted and unweighted GPAs, and AP/IB/Honors weight bumps, and a <strong>test score calculator</strong> that converts raw scores to percentages and letter grades, shows how many questions you can miss, and estimates AP scores on the 1–5 scale, and a <strong>grade curve calculator</strong> that curves a whole class's raw scores at once — add points, scale to the highest grade, percentage boost, or (advanced) bell curve, square root and target-mean — with a live before/after letter-grade distribution bar and a per-student breakdown. A fourth category covers everyday <strong>math and numbers</strong>: a <strong>fraction calculator</strong> that adds, subtracts, multiplies and divides any number of fractions, mixed numbers and decimals with a live bar diagram and step-by-step working, a <strong>standard deviation calculator</strong> that shows the sample and population standard deviation side by side with step-by-step working and a live number line of your data, with outlier flags, z-scores and confidence intervals under Go advanced, a <strong>scientific notation calculator</strong> that converts any number or expression to scientific, E and engineering notation at once with a live picture of the decimal point moving, a <strong>weighted average calculator</strong> that adds any number of value-and-weight rows and shows a live contribution bar of which entries pull the result the most, plus a reverse-solve mode for a missing value, a <strong>ratio calculator</strong>, a <strong>percentage calculator</strong>, and an <strong>age calculator</strong> that turns a date of birth into an exact age in years, months and days with a live seconds count, a next-birthday countdown and a life timeline, and a <strong>date calculator</strong> for the days, weeks and months between two dates or for adding and subtracting days from a date, with a business-days count and a live span timeline, and a <strong>time calculator</strong> for the elapsed time between two clock times, adding or subtracting durations with a running total, or a full time card with breaks and weekly pay, and an <strong>hours calculator</strong> that reads times typed any way you like, handles breaks, split and overnight shifts, and totals a week with overtime and pay, and a <strong>triangle calculator</strong> that solves any triangle from any three values, or a right triangle from two, and draws it to scale. A fifth category covers the <strong>kitchen</strong>: a <strong>recipe converter</strong> that scales any pasted ingredient list to the servings you need and shows every amount the way a kitchen measures it — cups and spoons, whole eggs, cups to grams per ingredient — with pan-size scaling, oven temperatures and cost under Go advanced. A sixth category covers <strong>money</strong>: a <strong>mortgage calculator</strong> that turns price, down payment, rate and term into a monthly payment, charts how your balance falls and when principal overtakes interest, and shows what extra payments save, with taxes, insurance and PMI under Go advanced, and a <strong>loan calculator</strong> that turns an amount, rate and term into a payment at any frequency, shows the true APR once a fee is added, and works backwards from the payment you can afford, an <strong>auto loan calculator</strong> that adds trade-in, sales tax and fees to the car payment, plus a <strong>paycheck calculator</strong> that turns a salary or hourly wage into take-home pay after federal, Social Security, Medicare and state tax, a <strong>sales tax calculator</strong> that adds, removes or finds the tax by state with exempt items, shipping and special zones shown, and <strong>turkey cooking, thawing and size calculators</strong> that plan Thanksgiving dinner backwards from the time you want to eat — fifty-eight calculators in all.</p>
-
-    <h3>Why single-purpose beats all-in-one</h3>
-    <p>A dedicated tool can make choices a general calculator can't: sensible defaults, the exact depth options people really use, unit handling that matches the trade, and a layout tuned for one job on a phone at the lumber yard or garden centre. That focus is the whole point — <strong>fast, accurate, and purpose-built</strong>, one calculator at a time.</p>
-
-    <h3>Free, instant, no sign-up</h3>
-    <p>Every calculator on CalcThis is free to use, needs no account, and runs entirely in your browser. Pick the one you need above and get your answer in seconds.</p>
+  <section id="grp-units" class="cat-grp cat-grp--hidden" aria-label="Unit converters">
+    <p class="st-lead">One converter per job — length with a ruler, temperature with a thermometer, cooking by ingredient, px to rem with your own root size.</p>
+    <!--UNITCUBES:START-->
+    <div class="st-cubes">
+      <a class="st-cube st-all" href="/unit-converter/"><span class="st-ico" aria-hidden="true"><svg width="34" height="34" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="12" fill="#EFE7D8" stroke="#8F5C13" stroke-width="1.4"/><path d="M9 12.5h12.5l-3-3M23 19.5H10.5l3 3" stroke="#37503F" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="st-name">All converters</span></a>
+      <a class="st-cube" href="/length-converter/"><span class="st-ico" aria-hidden="true"><svg width="34" height="34" viewBox="0 0 32 32" fill="none"><rect x="3" y="10" width="26" height="12" rx="2.5" fill="#EFE7D8" stroke="#8F5C13" stroke-width="1.4"/><path d="M8 10v5M12 10v3M16 10v5M20 10v3M24 10v5" stroke="#37503F" stroke-width="1.4" stroke-linecap="round"/></svg></span><span class="st-name">Length</span></a>
+      <a class="st-cube" href="/weight-converter/"><span class="st-ico" aria-hidden="true"><svg width="34" height="34" viewBox="0 0 32 32" fill="none"><path d="M7 27h18l-2.5-13h-13z" fill="#EFE7D8" stroke="#8F5C13" stroke-width="1.4" stroke-linejoin="round"/><circle cx="16" cy="8.5" r="4.5" fill="#fff" stroke="#8F5C13" stroke-width="1.4"/><path d="M16 8.5l2-2" stroke="#B5761F" stroke-width="1.6" stroke-linecap="round"/><path d="M12 20h8" stroke="#37503F" stroke-width="1.4" stroke-linecap="round"/></svg></span><span class="st-name">Weight</span></a>
+      <a class="st-cube" href="/volume-converter/"><span class="st-ico" aria-hidden="true"><svg width="34" height="34" viewBox="0 0 32 32" fill="none"><path d="M9 4h14M11 4v7l-5 13a2.5 2.5 0 0 0 2.3 3.5h15.4A2.5 2.5 0 0 0 26 24l-5-13V4" fill="#fff" stroke="#8F5C13" stroke-width="1.4" stroke-linejoin="round"/><path d="M8.4 19.5h15.2l2.4 5.6a2 2 0 0 1-1.8 2.9H7.8A2 2 0 0 1 6 25.1z" fill="#B5761F" opacity=".85"/><path d="M17 11h3M17 15h3" stroke="#37503F" stroke-width="1.3" stroke-linecap="round"/></svg></span><span class="st-name">Volume</span></a>
+      <a class="st-cube" href="/temperature-converter/"><span class="st-ico" aria-hidden="true"><svg width="34" height="34" viewBox="0 0 32 32" fill="none"><path d="M13 5.5a3 3 0 0 1 6 0V17a5.5 5.5 0 1 1-6 0z" fill="#fff" stroke="#8F5C13" stroke-width="1.4" stroke-linejoin="round"/><circle cx="16" cy="22" r="3" fill="#B5761F"/><path d="M16 10v12" stroke="#B5761F" stroke-width="2" stroke-linecap="round"/><path d="M22 8h3M22 12h2M22 16h3" stroke="#37503F" stroke-width="1.3" stroke-linecap="round"/></svg></span><span class="st-name">Temperature</span></a>
+      <a class="st-cube" href="/area-converter/"><span class="st-ico" aria-hidden="true"><svg width="34" height="34" viewBox="0 0 32 32" fill="none"><rect x="5" y="5" width="22" height="22" rx="2" fill="#EFE7D8" stroke="#8F5C13" stroke-width="1.4"/><path d="M5 12.3h22M5 19.7h22M12.3 5v22M19.7 5v22" stroke="#37503F" stroke-width="1.1" opacity=".7"/><path d="M9 23l5-5M9 23v-3.5M9 23h3.5" stroke="#B5761F" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="st-name">Area</span></a>
+      <a class="st-cube" href="/speed-converter/"><span class="st-ico" aria-hidden="true"><svg width="34" height="34" viewBox="0 0 32 32" fill="none"><path d="M4.5 24a11.5 11.5 0 1 1 23 0" fill="#EFE7D8" stroke="#8F5C13" stroke-width="1.4" stroke-linecap="round"/><path d="M16 23l5.5-8" stroke="#B5761F" stroke-width="2" stroke-linecap="round"/><circle cx="16" cy="23" r="2" fill="#37503F"/><path d="M8 18l1.4.8M16 10.5v1.6M24 18l-1.4.8" stroke="#37503F" stroke-width="1.3" stroke-linecap="round"/></svg></span><span class="st-name">Speed</span></a>
+      <a class="st-cube" href="/data-storage-converter/"><span class="st-ico" aria-hidden="true"><svg width="34" height="34" viewBox="0 0 32 32" fill="none"><rect x="4" y="6" width="24" height="9" rx="2" fill="#EFE7D8" stroke="#8F5C13" stroke-width="1.4"/><rect x="4" y="17" width="24" height="9" rx="2" fill="#EFE7D8" stroke="#8F5C13" stroke-width="1.4"/><circle cx="9" cy="10.5" r="1.4" fill="#B5761F"/><circle cx="9" cy="21.5" r="1.4" fill="#B5761F"/><path d="M14 10.5h9M14 21.5h9" stroke="#37503F" stroke-width="1.4" stroke-linecap="round"/></svg></span><span class="st-name">Data storage</span></a>
+      <a class="st-cube" href="/cooking-converter/"><span class="st-ico" aria-hidden="true"><svg width="34" height="34" viewBox="0 0 32 32" fill="none"><path d="M6 14h20v8a4 4 0 0 1-4 4H10a4 4 0 0 1-4-4z" fill="#EFE7D8" stroke="#8F5C13" stroke-width="1.4" stroke-linejoin="round"/><path d="M4 14h24M3 17.5h3M26 17.5h3" stroke="#8F5C13" stroke-width="1.4" stroke-linecap="round"/><path d="M12 4.5c-1.5 2 1.5 3 0 5M17 4.5c-1.5 2 1.5 3 0 5M22 4.5c-1.5 2 1.5 3 0 5" stroke="#B5761F" stroke-width="1.5" stroke-linecap="round" fill="none"/></svg></span><span class="st-name">Cooking</span></a>
+      <a class="st-cube" href="/px-to-rem-converter/"><span class="st-ico" aria-hidden="true"><svg width="34" height="34" viewBox="0 0 32 32" fill="none"><rect x="3" y="6" width="26" height="20" rx="3" fill="#EFE7D8" stroke="#8F5C13" stroke-width="1.4"/><path d="M12.5 12l-4 4 4 4M19.5 12l4 4-4 4" stroke="#37503F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M17.2 11l-2.4 10" stroke="#B5761F" stroke-width="1.6" stroke-linecap="round"/></svg></span><span class="st-name">PX to REM</span></a>
+    </div>
+    <!--UNITCUBES:END-->
   </section>
+
+  <!--ABOUT:START-->
+  <section class="about">
+    <h2>Calculators that do one thing well</h2>
+    <p class="about-lead">Most calculator sites are huge libraries where every tool is a compromise — a generic form bolted onto a shared template. <strong>CalcThis takes the opposite approach.</strong></p>
+    <p class="about-lead">Each calculator is built around one real-world task, so the inputs match how you actually measure and the results come out in the units your supplier sells by. It works the instant you type — no compute button, no account, no clutter.</p>
+
+    <div class="about-grid">
+      <article class="about-cat">
+        <div class="about-head"><span class="about-ico"><svg width="26" height="26" viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M4 26h24M7 26V13l9-7 9 7v13" stroke="#8F5C13" stroke-width="1.6" stroke-linejoin="round" fill="#EFE7D8"/><path d="M13 26v-7h6v7" stroke="#37503F" stroke-width="1.6" stroke-linejoin="round"/></svg></span><h3>Construction &amp; gardening</h3></div>
+        <p>Thirteen estimating jobs for the lumber yard, garden centre and paint aisle. Every tool keeps a running project total, so you can add several boards, areas or beds and price the whole job at once — with a waste factor so you order enough the first time.</p>
+        <ul class="about-list">
+          <li><a href="/board-foot-calculator/">Board foot</a><span> — lumber and cost for a cut list</span></li>
+          <li><a href="/gravel-calculator/">Gravel</a><span> — tons or bags for a driveway or path</span></li>
+          <li><a href="/sand-calculator/">Sand</a><span> — a paver base or leveling job</span></li>
+          <li><a href="/topsoil-calculator/">Topsoil</a><span> — a lawn or raised bed, by yard or bag</span></li>
+          <li><a href="/mulch-calculator/">Mulch</a><span> — garden beds</span></li>
+          <li><a href="/concrete-calculator/">Concrete</a><span> — bags for a slab or footing</span></li>
+          <li><a href="/flooring-calculator/">Flooring</a><span> — boxes for a room</span></li>
+          <li><a href="/tile-calculator/">Tile</a><span> — a floor, wall or backsplash</span></li>
+          <li><a href="/square-footage-calculator/">Square footage</a><span> — 13 shapes with a live diagram</span></li>
+          <li><a href="/tape-measure-fraction-calculator/">Tape measure fractions</a><span> — feet, inches and fractions on a live ruler</span></li>
+          <li><a href="/stair-calculator/">Stairs</a><span> — rise, run, stringer length and a materials estimate</span></li>
+          <li><a href="/paint-calculator/">Paint</a><span> — cans to buy, leftover and cost</span></li>
+          <li><a href="/wallpaper-calculator/">Wallpaper</a><span> — rolls counted in whole strips</span></li>
+        </ul>
+      </article>
+      <article class="about-cat">
+        <div class="about-head"><span class="about-ico"><svg width="26" height="26" viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M16 27C8 21 5 16.5 5 12.5A6 6 0 0 1 16 9a6 6 0 0 1 11 3.5C27 16.5 24 21 16 27z" fill="#EFE7D8" stroke="#8F5C13" stroke-width="1.6" stroke-linejoin="round"/><path d="M8 16h4l2-4 3 7 2-3h5" stroke="#B5761F" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><h3>Health &amp; fitness</h3></div>
+        <p>Twenty tools for training, body measurements and nutrition, most with a live gauge, chart or scale so you see where you stand and not just a number.</p>
+        <ul class="about-list">
+          <li><a href="/pace-calculator/">Running pace</a><span> — pace, time or distance</span></li>
+          <li><a href="/race-time-predictor/">Race time predictor</a><span> — 5K to marathon from one race</span></li>
+          <li><a href="/vo2-max-calculator/">VO2 max</a><span> — aerobic fitness on an age and sex gauge</span></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart rate zones</a><span> — your five training zones</span></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 heart rate</a><span> — your aerobic base range</span></li>
+          <li><a href="/bmi-calculator/">BMI</a><span> — category scale and healthy weight range</span></li>
+          <li><a href="/body-fat-calculator/">Body fat</a><span> — the US Navy tape method</span></li>
+          <li><a href="/ideal-weight-calculator/">Ideal weight</a><span> — four formulas on one scale</span></li>
+          <li><a href="/lean-body-mass-calculator/">Lean body mass</a><span> — lean-versus-fat composition</span></li>
+          <li><a href="/waist-to-hip-ratio-calculator/">Waist-to-hip ratio</a><span> — a sex-specific health-risk gauge</span></li>
+          <li><a href="/calorie-calculator/">Calories</a><span> — a daily target for a goal weight</span></li>
+          <li><a href="/bmr-calculator/">BMR</a><span> — five formulas on one scale</span></li>
+          <li><a href="/tdee-calculator/">TDEE</a><span> — maintenance calories and macros</span></li>
+          <li><a href="/one-rep-max-calculator/">One rep max</a><span> — a full training table</span></li>
+          <li><a href="/sleep-calculator/">Sleep cycles</a><span> — ideal bedtimes and wake-up times</span></li>
+          <li><a href="/water-intake-calculator/">Water intake</a><span> — a glass-by-glass daily plan</span></li>
+          <li><a href="/macro-calculator/">Macros</a><span> — protein, carb and fat targets</span></li>
+          <li><a href="/protein-intake-calculator/">Protein intake</a><span> — a daily target with food equivalents</span></li>
+          <li><a href="/steps-to-miles-calculator/">Steps to miles</a><span> — distance from your own stride</span></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide reconstitution</a><span> — exact syringe draw units</span></li>
+        </ul>
+      </article>
+      <article class="about-cat">
+        <div class="about-head"><span class="about-ico"><svg width="26" height="26" viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M3 12l13-6 13 6-13 6z" fill="#EFE7D8" stroke="#8F5C13" stroke-width="1.6" stroke-linejoin="round"/><path d="M8 15v6c0 2 4 4 8 4s8-2 8-4v-6M29 12v8" stroke="#37503F" stroke-width="1.6" stroke-linecap="round"/></svg></span><h3>School &amp; grades</h3></div>
+        <p>Find out what you need on the final, work out your GPA, and curve a whole class in one go.</p>
+        <ul class="about-list">
+          <li><a href="/final-grade-calculator/">Final grade</a><span> — the score you need to hit your target</span></li>
+          <li><a href="/gpa-calculator/">GPA</a><span> — college and high school, weighted or not</span></li>
+          <li><a href="/grade-calculator/">Grade</a><span> — weighted course grades</span></li>
+          <li><a href="/test-score-calculator/">Test score</a><span> — percentage, letter grade and AP score</span></li>
+          <li><a href="/grade-curve-calculator/">Grade curve</a><span> — curve a class with a before and after chart</span></li>
+        </ul>
+      </article>
+      <article class="about-cat">
+        <div class="about-head"><span class="about-ico"><svg width="26" height="26" viewBox="0 0 32 32" fill="none" aria-hidden="true"><rect x="5" y="4" width="22" height="24" rx="3" fill="#EFE7D8" stroke="#8F5C13" stroke-width="1.6"/><path d="M10 10h12" stroke="#B5761F" stroke-width="2" stroke-linecap="round"/><path d="M11 16h3M18 16h3M11 22h3M18 22h3" stroke="#37503F" stroke-width="2" stroke-linecap="round"/></svg></span><h3>Math &amp; numbers</h3></div>
+        <p>Everyday math with step-by-step working and a live picture of what is happening.</p>
+        <ul class="about-list">
+          <li><a href="/fraction-calculator/">Fractions</a><span> — any number of fractions, with a bar diagram</span></li>
+          <li><a href="/standard-deviation-calculator/">Standard deviation</a><span> — sample and population side by side</span></li>
+          <li><a href="/scientific-notation-calculator/">Scientific notation</a><span> — every notation at once</span></li>
+          <li><a href="/weighted-average-calculator/">Weighted average</a><span> — with a contribution bar</span></li>
+          <li><a href="/ratio-calculator/">Ratio</a><span> — solve for the missing value</span></li>
+          <li><a href="/percentage-calculator/">Percentage</a><span> — the common percent questions</span></li>
+          <li><a href="/age-calculator/">Age</a><span> — exact years, months and days</span></li>
+          <li><a href="/date-calculator/">Date</a><span> — days between dates, or add and subtract</span></li>
+          <li><a href="/time-calculator/">Time</a><span> — elapsed time, durations and time cards</span></li>
+          <li><a href="/hours-calculator/">Hours</a><span> — shifts, breaks, overtime and pay</span></li>
+          <li><a href="/triangle-calculator/">Triangle</a><span> — solved and drawn to scale</span></li>
+        </ul>
+      </article>
+      <article class="about-cat">
+        <div class="about-head"><span class="about-ico"><svg width="26" height="26" viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M6 14h20v8a4 4 0 0 1-4 4H10a4 4 0 0 1-4-4z" fill="#EFE7D8" stroke="#8F5C13" stroke-width="1.6" stroke-linejoin="round"/><path d="M4 14h24M3 18h3M26 18h3" stroke="#8F5C13" stroke-width="1.6" stroke-linecap="round"/><path d="M12 4.5c-1.5 2 1.5 3 0 5M17 4.5c-1.5 2 1.5 3 0 5M22 4.5c-1.5 2 1.5 3 0 5" stroke="#B5761F" stroke-width="1.6" stroke-linecap="round"/></svg></span><h3>Cooking &amp; kitchen</h3></div>
+        <p>Scale a recipe, convert measures the way a kitchen reads them, and plan the turkey backwards from dinner time.</p>
+        <ul class="about-list">
+          <li><a href="/recipe-converter/">Recipe converter</a><span> — scale servings, cups to grams</span></li>
+          <li><a href="/turkey-cooking-time-calculator/">Turkey cooking time</a><span> — oven, roaster, grill, smoker or fryer</span></li>
+          <li><a href="/turkey-thawing-time-calculator/">Turkey thawing time</a><span> — fridge or cold water</span></li>
+          <li><a href="/turkey-size-calculator/">Turkey size</a><span> — how big a bird for your guests</span></li>
+          <li><a href="/cooking-converter/">Cooking converter</a><span> — cups, grams, mL and oven temperatures</span></li>
+        </ul>
+      </article>
+      <article class="about-cat">
+        <div class="about-head"><span class="about-ico"><svg width="26" height="26" viewBox="0 0 32 32" fill="none" aria-hidden="true"><circle cx="16" cy="16" r="12" fill="#EFE7D8" stroke="#8F5C13" stroke-width="1.6"/><path d="M19.5 11.5c-.8-1.2-2-1.8-3.5-1.8-2 0-3.3 1-3.3 2.6 0 3.7 7 1.8 7 5.5 0 1.6-1.4 2.7-3.4 2.7-1.7 0-3-.7-3.8-2M16 7.5v2.2M16 22.3v2.2" stroke="#37503F" stroke-width="1.6" stroke-linecap="round"/></svg></span><h3>Money &amp; finance</h3></div>
+        <p>Payments, take-home pay and tax, with charts that show where the money goes.</p>
+        <ul class="about-list">
+          <li><a href="/mortgage-calculator/">Mortgage</a><span> — payment, balance chart and extra payments</span></li>
+          <li><a href="/loan-calculator/">Loan</a><span> — any frequency, true APR with fees</span></li>
+          <li><a href="/auto-loan-calculator/">Auto loan</a><span> — trade-in, tax and fees</span></li>
+          <li><a href="/paycheck-calculator/">Paycheck</a><span> — take-home pay after federal and state tax</span></li>
+          <li><a href="/sales-tax-calculator/">Sales tax</a><span> — by state, with exempt items and local rates</span></li>
+        </ul>
+      </article>
+      <article class="about-cat">
+        <div class="about-head"><span class="about-ico"><svg width="26" height="26" viewBox="0 0 32 32" fill="none" aria-hidden="true"><rect x="3" y="10" width="26" height="12" rx="2.5" fill="#EFE7D8" stroke="#8F5C13" stroke-width="1.6"/><path d="M8 10v5M12 10v3M16 10v5M20 10v3M24 10v5" stroke="#37503F" stroke-width="1.6" stroke-linecap="round"/></svg></span><h3>Unit converters</h3></div>
+        <p>One converter per job, with every unit of the family shown at once.</p>
+        <ul class="about-list">
+          <li><a href="/unit-converter/">All unit converters</a><span> — start here</span></li>
+          <li><a href="/length-converter/">Length</a><span> — inches, cm, feet, meters, miles</span></li>
+          <li><a href="/weight-converter/">Weight</a><span> — kg, pounds, ounces, stone</span></li>
+          <li><a href="/volume-converter/">Volume</a><span> — liters, gallons, cups</span></li>
+          <li><a href="/temperature-converter/">Temperature</a><span> — Celsius, Fahrenheit, Kelvin</span></li>
+          <li><a href="/area-converter/">Area</a><span> — square feet, acres, hectares</span></li>
+          <li><a href="/speed-converter/">Speed</a><span> — mph, km/h, knots</span></li>
+          <li><a href="/data-storage-converter/">Data storage</a><span> — MB, GB, TB, GiB</span></li>
+          <li><a href="/px-to-rem-converter/">PX to REM</a><span> — CSS units with your root size</span></li>
+        </ul>
+      </article>
+    </div>
+
+    <div class="about-why">
+      <div><span class="about-ico"><svg width="26" height="26" viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M18 3L7 18h8l-2 11 11-15h-8z" fill="#EFE7D8" stroke="#8F5C13" stroke-width="1.6" stroke-linejoin="round"/></svg></span><h3>Why single-purpose beats all-in-one</h3><p>A dedicated tool can make choices a general calculator can't: sensible defaults, the exact options people really use, unit handling that matches the trade, and a layout tuned for one job on a phone at the lumber yard or garden centre. <strong>Fast, accurate and purpose-built</strong>, one calculator at a time.</p></div>
+      <div><span class="about-ico"><svg width="26" height="26" viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M16 4l3.5 7.2 7.9 1.1-5.7 5.6 1.3 7.9L16 22l-7 3.8 1.3-7.9-5.7-5.6 7.9-1.1z" fill="#EFE7D8" stroke="#8F5C13" stroke-width="1.6" stroke-linejoin="round"/></svg></span><h3>Free, instant, no sign-up</h3><p>Every calculator on CalcThis is free, needs no account, and runs entirely in your browser. Pick the one you need above and get your answer in seconds.</p></div>
+    </div>
+  </section>
+<!--ABOUT:END-->
 
 <!--FOOTER:START-->
   <footer class="site-footer">
@@ -1319,6 +1466,26 @@
           <!--STAXFOOT:END-->
         </ul>
       </div>
+<!--UNITFOOT:START-->
+<div class="footer-col" style="order:7">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Unit</span> <span class="ft2">Converters</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/unit-converter/">Unit Converter</a></li>
+          <li><a href="/length-converter/">Length Converter</a></li>
+          <li><a href="/weight-converter/">Weight Converter</a></li>
+          <li><a href="/volume-converter/">Volume Converter</a></li>
+          <li><a href="/temperature-converter/">Temperature Converter</a></li>
+          <li><a href="/area-converter/">Area Converter</a></li>
+          <li><a href="/speed-converter/">Speed Converter</a></li>
+          <li><a href="/data-storage-converter/">Data Storage Converter</a></li>
+          <li><a href="/cooking-converter/">Cooking Measurement Converter</a></li>
+          <li><a href="/px-to-rem-converter/">PX to REM Converter</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:END-->
       </div>
 
       <div class="footer-right">
@@ -1446,7 +1613,7 @@
 <script>
 (function(){
   var tabs=document.getElementById('catTabs'); if(!tabs) return;
-  var grp={construction:document.getElementById('grp-construction'),health:document.getElementById('grp-health'),academic:document.getElementById('grp-academic'),math:document.getElementById('grp-math'),cooking:document.getElementById('grp-cooking'),finance:document.getElementById('grp-finance'),paycheck:document.getElementById('grp-paycheck'),salestax:document.getElementById('grp-salestax')};
+  var grp={construction:document.getElementById('grp-construction'),health:document.getElementById('grp-health'),academic:document.getElementById('grp-academic'),math:document.getElementById('grp-math'),cooking:document.getElementById('grp-cooking'),finance:document.getElementById('grp-finance'),paycheck:document.getElementById('grp-paycheck'),salestax:document.getElementById('grp-salestax'),units:document.getElementById('grp-units')};
   tabs.addEventListener('click',function(e){
     var b=e.target.closest('.cat-tab'); if(!b) return;
     [].forEach.call(tabs.querySelectorAll('.cat-tab'),function(x){x.classList.remove('on');x.setAttribute('aria-selected','false');});
@@ -1457,7 +1624,7 @@
   });
 })();
 </script>
-<script src="/assets/app.js?v=235"></script>
+<script src="/assets/app.js?v=241"></script>
 <script src="/feedback.js" defer></script>
 </body>
 </html>
