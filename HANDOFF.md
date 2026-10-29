@@ -10,7 +10,7 @@ _Rewritten 2026-10-29 (end of the Sales Tax session, v204 → v235, plus the no-
 - **Shipped this session (all deployed + indexed in GSC and Bing 2026-10-28):** Sales Tax hub `/sales-tax-calculator/` + **New Jersey** (v207/v212) + homepage "Sales Tax" tab with flag cubes · **Missouri** (v224, typeahead over all 2,597 official DOR places, `assets/data/mo-rates.json`) · **Ohio** (v233, 93 county + COTA/TARTA transit rows, `assets/data/oh-rates.json`; place typeahead got clear-X, full list on focus, short names). Earlier: Turkey Cooking/Thawing/Size (v204), paycheck 25 states.
 - **Narration enforcement set up this session:** UserPromptSubmit hook (re-injects the rule every message) + Stop hook now blocks and forbids apologising. Both live (the Stop hook was seen firing). The `.claude/settings.json` hook may need a NEW session to load — if the rule text does not appear as hook context on the user's first message, tell the user in the final message only.
 - **NEXT (in this order, only as the user directs; first reply = 2-3 line "synced", then silent work):**
-  1. **Minnesota DONE (v235).** Request its indexing in GSC + Bing (add to tracker), recheck in 1-2 weeks.
+  1. **Minnesota DONE (v235), requested in GSC + Bing 2026-10-29;** recheck indexing in 1-2 weeks.
   2. **Then Texas** (needs official Comptroller local-rate tables; the biggest), California, NYC — queue + how-to in `md-files/calcthis-salestax-research.md` ("State queue", "Add a state").
   3. **GSC indexing batch (~10/day per property):** paycheck pages alaska iowa kentucky missouri montana nevada new-hampshire south-dakota tennessee wyoming (all "not yet" in the tracker), then the unchecked calculators. How-to §10.
   4. **More Paycheck states:** ME LA AR; KS + ID BLOCKED (official sites unreachable — need user-saved PDFs); then MD MA IN HI CT DE MS DC; then local taxes (§4).
@@ -27,7 +27,7 @@ _Rewritten 2026-10-29 (end of the Sales Tax session, v204 → v235, plus the no-
 
 ---
 
-## 0.5 SALES TAX — DEPLOYED (hub + NJ v212, MO v224, OH v233, **MN v235 2026-10-29**; MN details in md-files/calcthis-salestax-research.md; MN not yet requested in GSC/Bing; MN data refresh quarterly via md-files/mn-salestax/)
+## 0.5 SALES TAX — DEPLOYED (hub + NJ v212, MO v224, OH v233, **MN v235 2026-10-29**; MN details in md-files/calcthis-salestax-research.md; MN data refresh quarterly via md-files/mn-salestax/)
 - Pattern: hub + `/sales-tax-calculator/<state>/`. Generator `md-files/gen-salestax-pages.js`, then `node build.js`. Engine `CalcThis.saleTaxEngine`, UI `CalcThis.initSalesTaxCalc` (app.js). States with local rates use the **place typeahead** (data JSON in `assets/data/`, flag `places` in the state config; Ohio has `short: true`, `noFood: true`). Full research, rules, code map, "Add a state", state queue and the MO/OH specifics: `md-files/calcthis-salestax-research.md`.
 - QA used: cat × zone × amount matrix vs independent formula, garbage grid, random-control fuzz, all-states hub sweep, desktop + 375px screenshots. Not verified: real phone, real Chrome Copy, print, ZIP auto-fill (not built).
 - Indexing: hub + NJ + MO + OH requested in GSC and Bing 2026-10-28 (tracker updated, commit `659a954`).
