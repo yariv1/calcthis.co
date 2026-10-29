@@ -6,6 +6,8 @@ _Rewritten 2026-10-29 at the very end of the Minnesota + Unit Converter session 
 
 ## 0. THE 60-SECOND VERSION
 
+- **DEPLOYED v248 (2026-10-29): nav type-ahead fix** — site menu stays full header width while typing (), the search uses the global DS clear-X ( wrapper, native X hidden). Live = v248.
+
 - **DEPLOYED v246 (2026-10-29): Random Number Generator** — hub `/random-number-generator/` + 6 range pages (`-1-100`, `-1-10`, `-1-3`, `-1-13`, `-no-repeats`, `-wheel`), generator `md-files/gen-rng-pages.js`, engine `CalcThis.rngEngine`/`initRngCalc` (ids `rg*`, `.p-rng`), plus the footer move. 136 pages. Bing: 7 RNG URLs submitted 2026-10-29 (unit pages already there). GSC quota was ALREADY exceeded on 2026-10-29 — the ordered queue is at the top of md-files/calcthis-indexing-tracker.md ("NEXT TO REQUEST IN GSC"); still to request: the 7 RNG URLs, 4 unit-converter pages, 10 paycheck state pages (quota ~10/day). Ideas not built (ask first): python and google random-number pages (Ahrefs >1K Easy), a homepage "Random Number" tab with cubes for the range pages.
 
 - **Live:** asset **v241** · **59 calculators** · **25 blog articles** · **129 pages** (sitemap count). `main` is clean and pushed (last code commit `7ce0c67`, then docs/tracker/handoff commits). **Nothing half-built. Nothing uncommitted. Nothing waiting on the user except the items under NEXT.**

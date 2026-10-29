@@ -1083,7 +1083,7 @@
      NAV — two-column menu + mobile scroll fix
      ========================================================= */
   .menu{
-    position:absolute;top:calc(100% + 6px);left:0;z-index:60;
+    position:absolute;top:calc(100% + 6px);left:0;right:0;z-index:60;
     background:var(--card);border:1px solid var(--line);border-radius:12px;
     box-shadow:var(--shadow);padding:10px;
     /* 70px accounts for the header + the menu's own top offset; the extra 24px is a
@@ -2194,6 +2194,8 @@
   /* MENU-SEARCH */
   .menu-search{position:sticky;top:-10px;z-index:2;background:var(--card);margin:-10px -10px 6px;padding:10px 12px 8px;border-bottom:1px solid var(--line);border-radius:12px 12px 0 0}
   .menu-search input{width:100%;box-sizing:border-box;font:inherit;font-size:15px;color:var(--ink);background:#FBF7F0;border:1px solid var(--line);border-radius:10px;padding:11px 14px;outline:none}
+  .menu-sx{position:relative}
+  .menu-search input::-webkit-search-cancel-button,.menu-search input::-webkit-search-decoration{-webkit-appearance:none;appearance:none;display:none}
   .menu-search input:focus{border-color:var(--amber);box-shadow:0 0 0 3px rgba(181,118,31,.15)}
   .menu-results{display:flex;flex-direction:column;padding:6px 0 4px}
   .menu-results a{display:flex;align-items:baseline;justify-content:space-between;gap:12px;font-family:'Fraunces',serif;font-size:16px;font-weight:500;color:var(--ink-soft);text-decoration:none;padding:10px 12px;border-radius:8px}

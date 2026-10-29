@@ -144,9 +144,9 @@ window.CalcThis = window.CalcThis || {};
   function eligible(el) {
     if (!el || el.tagName !== 'INPUT') return false;
     var t = (el.getAttribute('type') || 'text').toLowerCase();
-    if (t !== 'text' && t !== 'tel' && t !== 'number' && t !== 'email' && t !== 'url') return false;
+    var w0 = el.parentNode; if (t !== 'text' && t !== 'tel' && t !== 'number' && t !== 'email' && t !== 'url' && !(t === 'search' && w0 && w0.classList && w0.classList.contains('menu-sx'))) return false;
     if (el.readOnly || el.disabled || el.datepicker || el.hasAttribute('data-no-clear')) return false;
-    var w = el.parentNode; if (!w || !w.classList || !w.classList.contains('inp')) return false;
+    var w = el.parentNode; if (!w || !w.classList || !(w.classList.contains('inp') || w.classList.contains('menu-sx'))) return false;
     if (el.closest('.time-box, .time-field, .isout, .csel')) return false;
     return true;
   }
