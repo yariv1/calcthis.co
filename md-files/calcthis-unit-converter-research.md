@@ -1,4 +1,4 @@
-# Unit Converter — research + decisions (2026-10-29, built local, NOT deployed until "deploy")
+# Unit Converter — research + decisions (2026-10-29, DEPLOYED v241, commit 7ce0c67)
 
 **SEO structure (user approved 2026-10-29):** hub `/unit-converter/` (head >10K Hard; every variant <100) + one page per category + (LATER) one page per high-demand pair (cm to inches, kg to lbs, celsius to fahrenheit, px to rem, cups to grams, mb to gb…) — the user will send Ahrefs screenshots for the pair terms; add them to a PAIRS list in the generator then. Phase 1 pages: `/length-converter/ /weight-converter/ /volume-converter/ /temperature-converter/ /area-converter/ /speed-converter/ /data-storage-converter/ /cooking-converter/ /px-to-rem-converter/`.
 

@@ -74,3 +74,4 @@ GSC snapshot 2026-10-26: 69 indexed, 13 not indexed (8 Discovered, 1 Crawled, 1 
 | /sales-tax-calculator/missouri/ | 2026-10-28 (v224) | 2026-10-28 (GSC + Bing) |
 | /sales-tax-calculator/ohio/ | 2026-10-28 (v233) | 2026-10-28 (GSC + Bing) |
 | /sales-tax-calculator/minnesota/ | 2026-10-29 (v235) | 2026-10-29 (GSC + Bing) |
+| /unit-converter/ + /length-converter/ /weight-converter/ /volume-converter/ /temperature-converter/ /area-converter/ /speed-converter/ /data-storage-converter/ /cooking-converter/ /px-to-rem-converter/ | 2026-10-29 (v241) | not yet (IndexNow only) |

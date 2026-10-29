@@ -6,7 +6,7 @@ _Rewritten 2026-10-29 (end of the Sales Tax session, v204 → v235, plus the no-
 
 ## 0. THE 60-SECOND VERSION
 
-- **Live:** asset **v235** · **58 calculators** · **25 blog articles** · **119 pages** (sitemap count). `main`: Minnesota deploy commit `dd16244` + docs commit. **Uncommitted (intentional, not yet committed — commit them with the user's OK):** `.claude/hooks/check-narration.cjs` (modified), `.claude/hooks/remind-no-narration.cjs` (new), `.claude/settings.json` (new, registers the UserPromptSubmit hook). **Nothing half-built. Nothing waiting on the user.**
+- **Live:** asset **v241** · **59 calculators** · **25 blog articles** · **129 pages** (sitemap count). `main`: Minnesota deploy commit `dd16244` + docs commit. **Uncommitted (intentional, not yet committed — commit them with the user's OK):** `.claude/hooks/check-narration.cjs` (modified), `.claude/hooks/remind-no-narration.cjs` (new), `.claude/settings.json` (new, registers the UserPromptSubmit hook). **Nothing half-built. Nothing waiting on the user.**
 - **Shipped this session (all deployed + indexed in GSC and Bing 2026-10-28):** Sales Tax hub `/sales-tax-calculator/` + **New Jersey** (v207/v212) + homepage "Sales Tax" tab with flag cubes · **Missouri** (v224, typeahead over all 2,597 official DOR places, `assets/data/mo-rates.json`) · **Ohio** (v233, 93 county + COTA/TARTA transit rows, `assets/data/oh-rates.json`; place typeahead got clear-X, full list on focus, short names). Earlier: Turkey Cooking/Thawing/Size (v204), paycheck 25 states.
 - **Narration enforcement set up this session:** UserPromptSubmit hook (re-injects the rule every message) + Stop hook now blocks and forbids apologising. Both live (the Stop hook was seen firing). The `.claude/settings.json` hook may need a NEW session to load — if the rule text does not appear as hook context on the user's first message, tell the user in the final message only.
 - **NEXT (in this order, only as the user directs; first reply = 2-3 line "synced", then silent work):**
@@ -36,7 +36,7 @@ _Rewritten 2026-10-29 (end of the Sales Tax session, v204 → v235, plus the no-
 
 | Item | State |
 |---|---|
-| Asset version | **v235** (`.assetver`) |
+| Asset version | **v241** (`.assetver`) |
 | Calculators live | **58** (Sales Tax = 1 calculator + 3 state pages; Paycheck = 1 calculator + 25 state pages) |
 | Pages in sitemap | **118** |
 | Paycheck | 25 states live, 26 pending shown "· federal only" (§4.10-4.11) |
@@ -339,3 +339,8 @@ For every new calculator: Rule 8 research report → approval → build → QA (
 - **Mid-2026 rate changes found (always use the NEWEST official doc):** GA 4.99% (May 11), AR top rate 3.9% -> 3.7% (whformula_2026.pdf still shows 3.9% — find the revised doc), OH new tables for payrolls ending on/after Aug 1 2026 (rates cut, top withholding 3.64%), ID tables revised July 31 2026 (5.3% over $16,100 single / $32,200 married, child credit gone), IN county rate changes (Carroll .024733, Grant .0275, Greene .0235, Howard .0235, Shelby .017, Union .0275), NC withholding rate 4.09%?? (3.99% tax rate; verify NC-30), MD std ded $3,400 + county rates (Allegany 3.2, Kent 3.3), VA std ded $8,750/$17,500 for 2026, MA 5% + 4% surtax over $1,107,750 + PFML 0.46% employee, MI 4.25% / $5,900 exemption, CO 4.4% (allowance 5,500/11,000 per Bloomberg — verify DR 1098), AZ A-4 options 0.5-3.5% default 2.0%, AL (graduated 2/4/5 + federal-tax deduction — need the 2026 whbooklet), DE (std ded 3,250/6,500? verify), PA 3.07% flat, MN (wh-inst-26.pdf), WI (W-166), NJ (NJ-WT rate tables A-E), NC, HI (Booklet A 2026), CT (TPG-211 12/2025).
 
 - **BLOCKER 2026-10-27:** ksrevenue.gov (Kansas) and tax.idaho.gov are UNREACHABLE from this PC (curl, WebFetch and the user's Chrome all time out / ECONNREFUSED); the Kansas admin.ks.gov circular 25-P-004 URL 404s. Kansas/Idaho need the official PDF saved by the user into the project (e.g. md-files/sources/) or another route. Secondary-source facts (do NOT ship from them): KS 5.2%/5.58%, $9,160 personal allowance, $2,320 per extra allowance; ID 5.3% over $16,100 single / $32,200 married, child credit gone.
+
+---
+## 0.6 UNIT CONVERTER — DEPLOYED v241 (2026-10-29, commit 7ce0c67)
+- Hub `/unit-converter/` + 9 category pages (length, weight, volume, temperature, area, speed, data-storage, cooking, px-to-rem). Engine `CalcThis.unitEngine` + `CalcThis.initUnitConverter` (app.js), generator `md-files/gen-unit-pages.js`, notes `md-files/calcthis-unit-converter-research.md`. **NEXT:** request indexing (GSC + Bing, tracker), then PAIR pages (cm-to-inches, kg-to-lbs, celsius-to-fahrenheit, px-to-rem, cups-to-grams, mb-to-gb…) once the user sends Ahrefs screenshots; add visuals for weight/volume/area/speed/data later.
+- Same session: homepage "about" cards (`md-files/gen-home-about.js`), homepage tab scroll arrows, GLOBAL clear-X in text fields, readable-paragraph rule (all in design system). Sales Tax Minnesota is live and indexed.
