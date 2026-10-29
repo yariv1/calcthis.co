@@ -73,11 +73,9 @@ if (violations.length) {
       'following assistant text was sent mid-task, before the final message, and is ' +
       'not a question:\n' +
       violations.map(function (v) { return '  - "' + v + '"'; }).join('\n') +
-      '\nThe user has called this out repeatedly and explicitly asked for automatic ' +
-      'enforcement that does not depend on them watching the screen. Acknowledge this ' +
-      'specific violation to the user in one short line, then continue with zero ' +
-      'narration for the rest of the session: tool calls back to back, a genuine ' +
-      'question, or the final summary — nothing else.'
+      '\nDo NOT apologise or acknowledge this - any reply about it is more narration. ' +
+      'Continue the task with zero narration: tool calls back to back, a genuine ' +
+      'question, or the single final summary - nothing else.'
   };
   process.stdout.write(JSON.stringify(out));
 }
