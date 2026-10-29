@@ -12924,6 +12924,32 @@ CalcThis.saleTaxEngine = (function () {
       { t: 'Rates change every quarter', d: 'County and transit rates can only change on January 1, April 1, July 1 or October 1. Warren County rose from 6.75% to 7.25% on October 1, 2026; the rates here are from the October–December 2026 table.' }
     ]
   });
+  /* Minnesota: the rate is the combined state + local rate for the exact place, from the Department of Revenue Local Sales and Use Tax Rate Guide
+     effective 10/1/2026 – 12/31/2026 (every row is in /assets/data/mn-rates.json). Special local taxes (restaurant, entertainment, lodging) are shown, not computed. */
+  Object.assign(S.MN, {
+    live: true, slug: 'minnesota', eff: 'the October 1 – December 31, 2026 Local Sales and Use Tax Rate Guide',
+    src: [{ t: 'Minnesota Department of Revenue — Local Sales and Use Tax Rate Guide, effective 10/1/2026', u: 'https://www.revenue.state.mn.us/sites/default/files/2026-08/local-sales-and-use-tax-rate-guide-2026-q4.pdf' }, { t: 'Minnesota DOR — Special Local Taxes, Fact Sheet 164S (4th quarter 2026)', u: 'https://www.revenue.state.mn.us/sites/default/files/2026-07/164s-2026-4th-quarter_0.pdf' }, { t: 'Minnesota DOR — Minneapolis Special Local Taxes, Fact Sheet 164M (Feb. 2025)', u: 'https://www.revenue.state.mn.us/sites/default/files/2025-02/fs164m.pdf' }, { t: 'Minnesota DOR — Food and Food Ingredients', u: 'https://www.revenue.state.mn.us/guide/food-and-food-ingredients' }, { t: 'Minnesota DOR — Clothing', u: 'https://www.revenue.state.mn.us/clothing' }, { t: 'Minnesota DOR — Drugs', u: 'https://www.revenue.state.mn.us/guide/drugs' }, { t: 'Minnesota DOR — Delivery Charges', u: 'https://www.revenue.state.mn.us/guide/delivery-charges' }],
+    places: { url: '/assets/data/mn-rates.json', n: 2116, lo: 6.875, hi: 9.875, baseHi: 9.875, noFood: true, hubNote: ' (St. Paul)', ph: 'Type your city, e.g. Minneapolis', hint: 'Local tax in Minnesota depends on the city, county and township. Type your city and pick it. A city can appear twice (“City of …” and a line with its county); they normally match, so pick the one for your county.' },
+    cats: [
+      { id: 'general', label: 'Other goods', long: 'Most other goods', taxable: true, note: 'Most goods are taxable. Vitamins and other dietary supplements, candy, soft drinks, alcohol and tobacco products (but not cigarettes) are taxable too.' },
+      { id: 'grocery', label: 'Groceries', long: 'Groceries (food for home)', taxable: false, note: 'Food and food ingredients are exempt. Candy, soft drinks, alcohol, prepared food, dietary supplements and food from vending machines are taxable.' },
+      { id: 'clothing', label: 'Clothing', long: 'Clothing and shoes', taxable: false, note: 'General-use clothing is exempt at any price. Fur clothing, clothing accessories (handbags, jewelry, nonprescription sunglasses), sports or recreational equipment and protective equipment are taxable.' },
+      { id: 'drugs', label: 'Medicine', long: 'Prescription and over-the-counter drugs', taxable: false, note: 'Prescription drugs and over-the-counter drugs (with a Drug Facts panel or active-ingredient list) are exempt. Vitamins and minerals are taxable dietary supplements.' },
+      { id: 'prepared', label: 'Restaurant', long: 'Restaurant and prepared food', taxable: true, note: 'Food prepared by the seller or sold with eating utensils is taxable. Some cities add a food and beverage tax on top — see the note under your place.' },
+      { id: 'candy', label: 'Candy & soda', long: 'Candy and soft drinks', taxable: true, note: 'Taxable, even in a grocery store. Soft drinks include sweetened water and fruit drinks with 50% juice or less.' }
+    ],
+    shipNote: 'A delivery charge from the seller is taxed when the item is taxable and not taxed when the item is exempt. A mixed shipment is split by price or weight, and a carrier you pay directly is not taxed.',
+    others: [
+      { t: 'Local tax depends on the place', d: 'Minnesota’s state rate is 6.875%. Cities, counties and transit areas add their own, so in the October–December 2026 guide the combined rate runs from 6.875% to 9.875% (St. Paul). Search your place above.' },
+      { t: 'Twin Cities metro tax', d: 'The seven metro counties — Anoka, Carver, Dakota, Hennepin, Ramsey, Scott and Washington — add 1% (0.25% for housing and 0.75% for transportation). Many counties outside the metro add a 0.5% county or transit tax.' },
+      { t: 'Restaurant, entertainment and liquor taxes', d: 'Some places add a special tax that is not in the combined rate: a food and beverage tax on restaurant sales in Detroit Lakes (1%), Mankato (0.5%), Marshall (1.5%), North Mankato (0.5%), Proctor (1%) and the Giants Ridge area (1%); St. Cloud (1% food and 1% liquor); Mankato (0.5% entertainment); and in Minneapolis a 3% entertainment tax everywhere plus 3% restaurant and liquor taxes downtown. A 2.5% liquor gross receipts tax can also apply. Your place’s extras are shown under the search box.' },
+      { t: 'Hotels and lodging', d: 'Short-term lodging is taxable, and many places add a local lodging tax: for example 7% in Rochester and St. Paul (hotels with 50 or more rooms), 3% in Minneapolis, Plymouth, Richfield, Woodbury and Cottage Grove, and 4.5% in Marshall. Lodging taxes are not included in the calculator.' },
+      { t: 'Food, clothing and medicine', d: 'Groceries, general clothing, prescription drugs and over-the-counter drugs are exempt. Candy, soft drinks, alcohol, prepared food, supplements, fur, clothing accessories, sports gear and protective equipment are taxable.' },
+      { t: 'Delivery charges', d: 'A delivery charge from the seller follows the item: taxed with a taxable item, not taxed with an exempt one. A separate retail delivery fee of 50 cents applies to qualifying deliveries of $100 or more; it is shown on the receipt, is not part of the sales tax and is not included here.' },
+      { t: 'Bought online or out of state', d: 'If the seller did not charge Minnesota tax you owe use tax at the combined rate for where you use the item. Pick your place and enter any tax the seller charged under Go advanced.' },
+      { t: 'Rates change every quarter', d: 'Local rates change in January, April, July and October. The rates here are from the October–December 2026 guide.' }
+    ]
+  });
   function r2(x) { return Math.round(x * 100 + 1e-9) / 100; }
   function cat(st, id) { var l = st && st.cats ? st.cats : []; for (var i = 0; i < l.length; i++) if (l[i].id === id) return l[i]; return null; }
   function zone(st, id) { var l = st && st.zones ? st.zones : []; for (var i = 0; i < l.length; i++) if (l[i].id === id) return l[i]; return null; }
@@ -13008,7 +13034,7 @@ CalcThis.initSalesTaxCalc = function () {
   function loadPlaces() {
     var s = S(); if (!placed() || placeData || placeState === 'loading') return;
     placeState = 'loading';
-    var done = function (ok, d) { if (ok) { placeData = d.map(function (r) { return { label: r[0], short: shortLabel(r[0], s.places.short), sales: r[1], use: r[2], food: r[3], foodUse: r[4], key: ' ' + norm(r[0]) }; }); placeState = 'ok'; } else placeState = 'err'; placeNote(); render(); if (document.activeElement === $('stPlace')) showPlaceList(!!st.place); };
+    var done = function (ok, d) { if (ok) { placeData = d.map(function (r) { return { label: r[0], short: shortLabel(r[0], s.places.short), sales: r[1], use: r[2], food: r[3], foodUse: r[4], note: r[5] || '', key: ' ' + norm(r[0]) }; }); placeState = 'ok'; } else placeState = 'err'; placeNote(); render(); if (document.activeElement === $('stPlace')) showPlaceList(!!st.place); };
     try { fetch(s.places.url).then(function (r) { if (!r.ok) throw new Error('x'); return r.json(); }).then(function (d) { done(true, d); }, function () { done(false); }); } catch (e) { done(false); }
   }
   function closePlaceList() { $('stPlaceList').style.display = 'none'; $('stPlace').setAttribute('aria-expanded', 'false'); placeAct = -1; }
@@ -13038,7 +13064,7 @@ CalcThis.initSalesTaxCalc = function () {
   function placeNote() {
     var n = $('stPlaceNote'), p = st.place, s = S();
     if (!p) { n.textContent = placeState === 'loading' ? 'Loading the official rate table…' : (placeState === 'err' ? 'The rate table could not be loaded. Enter your combined rate under Go advanced instead.' : (s && s.places ? s.places.hint : '')); return; }
-    n.textContent = (p.short !== p.label ? p.label + ': ' : '') + pct(p.sales) + ' combined' + (s.places.noFood ? '' : ' on most goods') + ' (' + pct(s.base) + ' state + ' + pct(Math.round((p.sales - s.base) * 1000) / 1000) + ' local)' + (s.places.noFood ? '.' : ' · ' + pct(p.food) + ' on groceries.');
+    n.textContent = (p.short !== p.label ? p.label + ': ' : '') + pct(p.sales) + ' combined' + (s.places.noFood ? '' : ' on most goods') + ' (' + pct(s.base) + ' state + ' + pct(Math.round((p.sales - s.base) * 1000) / 1000) + ' local)' + (s.places.noFood ? '.' : ' · ' + pct(p.food) + ' on groceries.') + (p.note ? ' ' + p.note : '');
   }
   var CHEV = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
   function setPanel(root, opts, val) {

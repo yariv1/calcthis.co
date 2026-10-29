@@ -69,6 +69,7 @@ const PAGES = [
   { file: 'loan-calculator/index.html',        slug: '/loan-calculator/' },
   { file: 'auto-loan-calculator/index.html',   slug: '/auto-loan-calculator/' },
   { file: 'paycheck-calculator/index.html',   slug: '/paycheck-calculator/' },
+  { file: 'sales-tax-calculator/minnesota/index.html', slug: '/sales-tax-calculator/minnesota/' },
   { file: 'sales-tax-calculator/ohio/index.html', slug: '/sales-tax-calculator/ohio/' },
   { file: 'sales-tax-calculator/missouri/index.html', slug: '/sales-tax-calculator/missouri/' },
   { file: 'sales-tax-calculator/index.html', slug: '/sales-tax-calculator/' },

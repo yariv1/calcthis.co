@@ -247,7 +247,7 @@ const hubContent = `  <section class="content">
       </div>
       <div>
         <h2>Sales tax rates by state</h2>
-        <p>State rates, the population-weighted average local rate and the highest local rate as of July 1, 2026 (Tax Foundation). On a state with its own page the local rate is exact: New Jersey has none, and ${live.filter((c) => E.STATES[c].places).map((c) => E.STATES[c].name).join(' and ')} ${live.filter((c) => E.STATES[c].places).length > 1 ? 'are' : 'is'} looked up by place from the official table.</p>
+        <p>State rates, the population-weighted average local rate and the highest local rate as of July 1, 2026 (Tax Foundation). On a state with its own page the local rate is exact: New Jersey has none, and ${(() => { const l = live.filter((c) => E.STATES[c].places).map((c) => E.STATES[c].name); return l.length > 1 ? l.slice(0, -1).join(', ') + ' and ' + l[l.length - 1] : l[0]; })()} ${live.filter((c) => E.STATES[c].places).length > 1 ? 'are' : 'is'} looked up by place from the official table.</p>
         ${stateTable}
         <p class="st-src">Source: <a href="${E.SRC_TF}" rel="noopener">Tax Foundation — 2026 sales tax rates, midyear update</a>. Alaska, Delaware, Montana, New Hampshire and Oregon have no statewide sales tax; Alaska allows local sales taxes.</p>
       </div>
@@ -319,6 +319,27 @@ function ohFaqs(c) {
   ];
 }
 
+const MN_CITIES = [['Minneapolis', 'City of Minneapolis'], ['St. Paul', 'City of St. Paul'], ['Rochester', 'City of Rochester'], ['Duluth', 'City of Duluth'], ['Bloomington', 'City of Bloomington'], ['Brooklyn Park', 'Brooklyn Park — Hennepin County'], ['Plymouth', 'Plymouth — Hennepin County'], ['Maple Grove', 'City of Maple Grove'], ['Woodbury', 'City of Woodbury'], ['Eagan', 'Eagan — Dakota County'], ['Golden Valley', 'City of Golden Valley'], ['St. Cloud (Stearns County)', 'St. Cloud — Stearns County'], ['Mankato', 'City of Mankato'], ['Moorhead', 'City of Moorhead'], ['Winona', 'Winona — Winona County'], ['Bemidji', 'City of Bemidji'], ['Owatonna', 'Owatonna — Steele County']];
+
+function mnFaqs(c) {
+  const s = E.STATES[c], n = s.name, P = s.places;
+  const mp = placeBy(c, 'City of Minneapolis'), sp = placeBy(c, 'City of St. Paul'), ro = placeBy(c, 'City of Rochester'), du = placeBy(c, 'City of Duluth'), gv = placeBy(c, 'City of Golden Valley'), ow = placeBy(c, 'Owatonna — Steele County'), els = placeBy(c, 'Anywhere else in Minnesota — not listed in the DOR guide');
+  const shipT = E.add({ state: c, items: [{ amt: 100, cat: 'general' }], ship: 10, place: mp }), shipX = E.add({ state: c, items: [{ amt: 100, cat: 'grocery' }], ship: 10, place: mp });
+  const use = ar(c, mp, 'general', 3000, { paid: 0 }), use2 = ar(c, mp, 'general', 3000, { paid: 4 });
+  const rev = E.reverse({ state: c, total: 109.03, cat: 'general', place: mp });
+  return [
+    [`What is the sales tax rate in ${n}?`, `${n}’s state sales tax rate is ${pct(s.base)}, and cities, counties and transit areas add their own. In the Department of Revenue’s October–December 2026 guide the combined rate runs from ${pct(P.lo)} (no local tax) to ${pct(P.hi)} in St. Paul. Minneapolis is ${pct(mp.sales)}, Rochester ${pct(ro.sales)}, Duluth ${pct(du.sales)} and Owatonna ${pct(ow.sales)}. Search your city in the calculator above for your exact rate.`],
+    [`Why is ${n} sales tax different in every city?`, `The ${pct(s.base)} state rate is topped up by a county or transit tax (often 0.5%), a city tax in some cities and, in the seven Twin Cities metro counties, 1% for housing and transportation. A $100 purchase costs ${m(ar(c, mp).total)} in Minneapolis, ${m(ar(c, sp).total)} in St. Paul and ${m(ar(c, ro).total)} in Rochester. Golden Valley is ${pct(gv.sales)}, the highest rate in the metro outside St. Paul. Rates can change on January 1, April 1, July 1 or October 1.`],
+    [`Is food taxed in ${n}?`, `Groceries are exempt: a $100 grocery bill has $0.00 of tax. Candy, soft drinks, alcohol, prepared food, dietary supplements and food from vending machines are taxable, so a $100 restaurant meal in Minneapolis has ${m(ar(c, mp, 'prepared').tax)} of tax. Some places add a food and beverage tax on restaurants on top of that — Minneapolis downtown, Mankato, Marshall, North Mankato, Detroit Lakes, Proctor, St. Cloud and the Giants Ridge area — and the calculator lists your place’s extras under the search box.`],
+    [`Is clothing taxed in ${n}?`, `No. General-use clothing is exempt at any price: ${m(ar(c, mp, 'clothing').tax)} of tax on $100 of clothing. The exemption does not cover fur clothing, clothing accessories such as handbags, jewelry and nonprescription sunglasses, sports or recreational equipment, or protective equipment — those are taxed at your place’s rate (${m(ar(c, mp).tax)} on $100 in Minneapolis).`],
+    [`Are prescription drugs taxed in ${n}?`, `No. Prescription drugs and over-the-counter drugs with a Drug Facts panel or active-ingredient list are exempt. Vitamins, minerals and other dietary supplements are taxable. Choose “Medicine” as the item type to see the tax removed.`],
+    [`Is shipping taxed in ${n}?`, `A delivery charge from the seller follows the item: taxed with a taxable item, not taxed with an exempt one. On a $100 taxable item in Minneapolis with $10 shipping the tax is ${m(shipT.tax)}; on $100 of exempt groceries it is ${m(shipX.tax)}. A mixed shipment is split by price or weight, and a carrier you pay directly is not taxed. A separate 50-cent retail delivery fee can apply to qualifying deliveries of $100 or more; it is not part of the sales tax.`],
+    [`How do I take sales tax out of a total in ${n}?`, `Divide the total by 1 plus your combined rate. In Minneapolis (${pct(mp.sales)}) a total of $109.03 is ${m(rev.pre)} before tax, with ${m(rev.tax)} of tax inside it. Switch the calculator to “Remove tax”, pick your city and enter the total.`],
+    [`Do I owe ${n} tax on things I buy online?`, `Yes, when the seller does not charge ${n} tax you owe use tax at the combined rate for where you use the item. A $3,000 item used in Minneapolis with no tax charged means ${m(use.owed)} of use tax; if the seller charged 4% you still owe ${m(use2.owed)}. Enter the tax the seller charged under Go advanced.`],
+    [`What if my city is not in the Department of Revenue list?`, `The Department of Revenue guide lists only places that have a local sales tax, so the calculator offers “Anywhere else in Minnesota” at the ${pct(s.base)} state rate (${m(ar(c, els).total)} on $100). If you are unsure, check your address in the department’s own Sales Tax Rate Calculator.`]
+  ];
+}
+
 const PF = {
   MO: {
     unit: 'city', sampleLabel: 'Springfield, Greene County', sampleName: 'Springfield', faqs: moFaqs,
@@ -345,6 +366,20 @@ const PF = {
     title: (s) => s.name + ' Sales Tax Calculator 2026 — ' + pct(s.base) + ' State Rate + County, by County | CalcThis',
     desc: (s) => s.name + ' sales tax calculator by county: ' + pct(s.base) + ' state tax plus county and transit, official Oct–Dec 2026 rates, groceries and prescriptions exempt, delivery rule, reverse tax.',
     ogTitle: (s) => s.name + ' Sales Tax Calculator 2026 — by County', source: 'Ohio Department of Taxation', sampleOf: 'in Franklin County'
+  }
+  ,
+  MN: {
+    unit: 'city', sampleLabel: 'City of Minneapolis', sampleName: 'Minneapolis', faqs: mnFaqs,
+    cityRows: () => MN_CITIES.map((x) => [x[0], placeBy('MN', x[1])]), cityHead: 'Sales tax by city', cityLead: 'City',
+    heroP: (s, P, a) => `${s.name} charges a ${pct(s.base)} state sales tax and <strong>cities, counties and transit areas add their own</strong> — combined rates run from ${pct(P.lo)} to ${pct(P.baseHi)}. Search your city to see yours: on <strong>$100</strong> it is <strong>${m(a.total)}</strong> in Minneapolis with <strong>${m(a.tax)}</strong> of tax.`,
+    glance: (s, P) => `<p>${s.name}’s state rate is <strong>${pct(s.base)}</strong>. Local taxes are added on top: a county or transit tax (often 0.5%), a city tax in some cities, and 1% for housing and transportation in the seven Twin Cities metro counties. In the Department of Revenue’s October–December 2026 guide the combined rate runs from <strong>${pct(P.lo)}</strong> to <strong>${pct(P.baseHi)}</strong> (St. Paul). Local rates change in January, April, July and October.</p>
+        <p>Groceries, general clothing and medicine are exempt, so only part of a typical shopping trip is taxed. Minneapolis is ${pct(placeBy('MN', 'City of Minneapolis').sales)}, St. Paul ${pct(placeBy('MN', 'City of St. Paul').sales)}, Rochester ${pct(placeBy('MN', 'City of Rochester').sales)} and Duluth ${pct(placeBy('MN', 'City of Duluth').sales)} — so the calculator looks up your exact place instead of guessing.</p>`,
+    cityNote: (s, P) => `Combined state and local rates from the Minnesota Department of Revenue guide for October–December 2026. Special local taxes (restaurant, entertainment, lodging) are not in these rates — your place’s extras are listed under the search box. Search the calculator for any of the ${P.n.toLocaleString('en-US')} cities, counties and townships in the guide.`,
+    shipLine: (c, s, p) => `On a $100 taxable item in Minneapolis with $10 shipping the tax is ${m(E.add({ state: c, items: [{ amt: 100, cat: 'general' }], ship: 10, place: p }).tax)}; on $100 of exempt groceries with $10 shipping it is ${m(E.add({ state: c, items: [{ amt: 100, cat: 'grocery' }], ship: 10, place: p }).tax)}.`,
+    use: 'Search your city, pick the line that matches where the seller is, add one item or several, choose what each one is and add shipping.',
+    title: (s) => s.name + ' Sales Tax Calculator 2026 — ' + pct(s.base) + ' State Rate + Local, by City | CalcThis',
+    desc: (s) => s.name + ' sales tax calculator by city: ' + pct(s.base) + ' state tax plus local, official Oct–Dec 2026 rates, groceries, clothing and medicine exempt, delivery rule, reverse tax.',
+    ogTitle: (s) => s.name + ' Sales Tax Calculator 2026 — by City', source: 'Minnesota Department of Revenue', sampleOf: 'in Minneapolis'
   }
 };
 
