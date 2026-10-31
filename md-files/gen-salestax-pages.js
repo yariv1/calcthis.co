@@ -228,7 +228,7 @@ function write(rel, html) { const dir = ROOT + rel.replace(/index\.html$/, ''); 
 
 /* ---------- hub ---------- */
 const hubF = hubFaqs();
-const stateTable = '<div class="pc-tblwrap"><table class="dtable"><thead><tr><th>State</th><th>State rate</th><th>Average local</th><th>Highest local</th></tr></thead><tbody>' + all.map((c) => { const s = E.STATES[c]; return '<tr><td>' + (s.live ? '<a href="/sales-tax-calculator/' + s.slug + '/">' + s.name + '</a>' : s.name) + '</td><td>' + pct(s.base) + '</td><td>' + (s.places ? 'varies by place' : (s.live ? 'none' : pct(s.avgLocal))) + '</td><td>' + (s.places ? pct(Math.round((s.places.baseHi - s.base) * 1000) / 1000) + (s.places.hubNote || '') : (s.live ? 'none' : pct(s.maxLocal))) + '</td></tr>'; }).join('') + '</tbody></table></div>';
+const stateTable = '<div class="pc-tblwrap"><table class="dtable"><thead><tr><th>State</th><th>State rate</th><th>Average local</th><th>Highest local</th></tr></thead><tbody>' + all.filter((c) => !E.STATES[c].city).map((c) => { const s = E.STATES[c]; return '<tr><td>' + (s.live ? '<a href="/sales-tax-calculator/' + s.slug + '/">' + s.name + '</a>' : s.name) + '</td><td>' + pct(s.base) + '</td><td>' + (s.places ? 'varies by place' : (s.live ? 'none' : pct(s.avgLocal))) + '</td><td>' + (s.places ? pct(Math.round((s.places.baseHi - s.base) * 1000) / 1000) + (s.places.hubNote || '') : (s.live ? 'none' : pct(s.maxLocal))) + '</td></tr>'; }).join('') + '</tbody></table></div>';
 const hubContent = `  <section class="content">
     <div class="grid2">
       <div>
@@ -510,8 +510,84 @@ ${f.map((q) => `    <details class="faq"><summary>${q[0]}</summary><p>${q[1]}</p
   }));
 }
 
+/* ---------- New York City (a city page: one flat rate, per-item $110 clothing line) ---------- */
+function writeCity(c) {
+  const s = E.STATES[c], n = s.name, url = 'https://calcthis.co/sales-tax-calculator/' + s.slug + '/';
+  const ad = (items, ship, extra) => E.add(Object.assign({ state: c, items, ship: ship || 0 }, extra || {}));
+  const a100 = ad([{ amt: 100, cat: 'general' }]), a1000 = ad([{ amt: 1000, cat: 'general' }]);
+  const jk109 = ad([{ amt: 109.99, cat: 'clothing' }]), jk110 = ad([{ amt: 110, cat: 'clothing' }]), five = ad([{ amt: 60, cat: 'clothing' }, { amt: 60, cat: 'clothing' }, { amt: 60, cat: 'clothing' }, { amt: 60, cat: 'clothing' }, { amt: 60, cat: 'clothing' }]);
+  const shipT = ad([{ amt: 100, cat: 'general' }], 10), shipX = ad([{ amt: 100, cat: 'grocery' }], 10), mix = ad([{ amt: 100, cat: 'general' }, { amt: 50, cat: 'clothing' }], 10);
+  const rev = E.reverse({ state: c, total: 108.88, cat: 'general' }), gap = E.reverse({ state: c, total: 115, cat: 'clothing' });
+  const meal = ad([{ amt: 40, cat: 'prepared' }]), park = ad([{ amt: 50, cat: 'parking' }]), parkR = ad([{ amt: 50, cat: 'parkres' }]), cut = ad([{ amt: 60, cat: 'service' }]);
+  const use = ad([{ amt: 3000, cat: 'general' }], 50, { paid: 0 }), use2 = ad([{ amt: 4000, cat: 'general' }], 0, { paid: 5.5 });
+  const sp = (cat) => s.split;
+  const f = [
+    ['What is the sales tax rate in New York City?', `${pct(s.base)} in all five boroughs — Manhattan, Brooklyn, Queens, the Bronx and Staten Island. It is 4% New York State, 4.5% New York City and 0.375% for the Metropolitan Commuter Transportation District (MCTD). On a $100 purchase the tax is ${m(a100.tax)} and the total is ${m(a100.total)}; on $1,000 it is ${m(a1000.tax)}, for ${m(a1000.total)}.`],
+    ['Is clothing taxed in NYC?', `Only when a single item costs $110 or more. Clothing and footwear under $110 per item or pair are exempt from the state, city and MCTD tax. The test is per item: five shirts at $60 each cost $300 with ${m(five.tax)} of tax, but one $110 jacket costs ${m(jk110.total)}, because the full ${pct(s.base)} (${m(jk110.tax)}) applies to the whole price. A $109.99 item has ${m(jk109.tax)} of tax. Jewelry, watches, costumes, rented formalwear, athletic equipment and protective gear are not exempt.`],
+    ['Are groceries taxed in New York City?', 'No. Food, food products, dietary foods and health supplements sold for home use are exempt. Candy, soft drinks, alcohol, fruit drinks with less than 70% juice, sandwiches and heated food are taxable, and so are restaurant meals. Choose the item type in the calculator to see the difference.'],
+    ['How much is the tax on a restaurant meal in NYC?', `Restaurant food and drink are taxed at the full ${pct(s.base)}. A $40 meal has ${m(meal.tax)} of tax and costs ${m(meal.total)} before any tip.`],
+    ['Is shipping taxed in New York City?', `Shipping, handling and delivery charged by the seller on a taxable item are taxable: a $100 item with $10 shipping has ${m(shipT.tax)} of tax. Shipping on an exempt item is not taxed (${m(shipX.tax)} on $100 of groceries with $10 shipping). In a mixed shipment the charge is split by price: $100 of goods and $50 of clothing under $110 with $10 shipping has ${m(mix.tax)} of tax. If you arrange delivery yourself and pay the carrier directly, the carrier’s charge is not taxed.`],
+    ['How do I take sales tax out of a total in NYC?', `Divide the total by 1.08875. A total of $108.88 is ${m(rev.pre)} before tax, with ${m(rev.tax)} of tax inside it. Switch the calculator to “Remove tax” to do it for any amount. For clothing there is a gap: no clothing purchase can total between $110.00 and ${m(E.add({ state: c, items: [{ amt: 110, cat: 'clothing' }] }).total)}, because an item under $110 has no tax and an item at $110 or more costs at least ${m(jk110.total)}.`],
+    ['What is the sales tax on parking in NYC?', `Parking, garaging or storing a vehicle in Manhattan pays 10.375% plus an 8% surtax, 18.375%: ${m(park.tax)} of tax on a $50 garage fee. A Manhattan resident with a Manhattan-registered vehicle who qualifies pays 10.375%: ${m(parkR.tax)} on $50.`],
+    ['Are haircuts, massages and gym memberships taxed in NYC?', `The city taxes these services at 4.5% on the service itself, with no New York State tax: a $60 haircut has ${m(cut.tax)} of tax. Products you buy there, such as shampoo, pay the full ${pct(s.base)}.`],
+    ['Do I owe New York tax on things I buy online?', `Yes, when the seller does not charge New York tax you owe use tax at the rate where you use the item. A $3,000 item with $50 shipping and no tax charged means ${m(use.owed)} of use tax. A credit may be available for tax you paid to another state: with a $4,000 purchase and 5.5% paid elsewhere the calculator shows ${m(use2.owed)} still owed. Enter the rate the seller charged under Go advanced.`]
+  ];
+  const catRows = s.cats.map((k) => '<tr><td>' + (k.long || k.label) + '</td><td>' + (k.under != null ? 'Exempt under $110' : (typeof k.rate === 'number' ? pct(k.rate) : (k.taxable ? 'Taxable' : 'Exempt'))) + '</td><td>' + k.note + '</td></tr>').join('');
+  const amtRows = [10, 25, 50, 100, 250, 500, 1000, 5000].map((a) => { const t = ad([{ amt: a, cat: 'general' }]); return '<tr><td>' + m0(a) + '</td><td>' + m(t.tax) + '</td><td>' + m(t.total) + '</td></tr>'; }).join('');
+  const clRows = [50, 99.99, 109.99, 110, 150, 250].map((a) => { const t = ad([{ amt: a, cat: 'clothing' }]); return '<tr><td>' + m(a) + '</td><td>' + (t.tax > 0 ? m(t.tax) : 'No tax') + '</td><td>' + m(t.total) + '</td></tr>'; }).join('');
+  const hero = `  <section class="hero">
+    <div class="eyebrow">New York City · 2026 rates</div>
+    <h1>New York City Sales Tax Calculator</h1>
+    <p>New York City charges <strong>${pct(s.base)}</strong> sales tax in all five boroughs, and clothing under <strong>$110</strong> an item is exempt. A <strong>$100</strong> purchase costs <strong>${m(a100.total)}</strong> with <strong>${m(a100.tax)}</strong> of tax.</p>
+  </section>`;
+  const content = `  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>NYC sales tax at a glance</h2>
+        <p>The combined rate is <strong>${pct(s.base)}</strong>: 4% New York State, 4.5% New York City and 0.375% for the Metropolitan Commuter Transportation District (MCTD). It is the same in Manhattan, Brooklyn, Queens, the Bronx and Staten Island. On <strong>$100</strong> that is <strong>${m(a100.tax)}</strong> of tax, for a total of <strong>${m(a100.total)}</strong>.</p>
+        <div class="pc-tblwrap"><table class="dtable"><thead><tr><th>Part of the rate</th><th>Rate</th><th>Tax on $100</th></tr></thead><tbody><tr><td>New York State</td><td>4%</td><td>$4.00</td></tr><tr><td>New York City</td><td>4.5%</td><td>$4.50</td></tr><tr><td>MCTD surcharge</td><td>0.375%</td><td>$0.38</td></tr><tr><td><strong>Total</strong></td><td><strong>${pct(s.base)}</strong></td><td><strong>${m(a100.tax)}</strong></td></tr></tbody></table></div>
+        <h2>The $110 clothing rule</h2>
+        <p>Clothing and footwear that cost less than $110 <strong>per item or pair</strong> are exempt from all three parts of the tax. The test is the price of each item, not the total of the purchase. Cross the line and the full tax applies to the whole price of that item.</p>
+        <div class="pc-tblwrap"><table class="dtable"><thead><tr><th>Item price</th><th>Sales tax</th><th>Total</th></tr></thead><tbody>${clRows}</tbody></table></div>
+        <h2>What is taxed and what is exempt</h2>
+        <div class="pc-tblwrap"><table class="dtable st-cattbl"><thead><tr><th>Item type</th><th>Sales tax</th><th>Details</th></tr></thead><tbody>${catRows}</tbody></table></div>
+        <h2>Shipping and delivery</h2>
+        <p>${s.shipNote} On a $100 taxable item with $10 shipping the tax is ${m(shipT.tax)}.</p>
+        <h2>Sales tax on common amounts</h2>
+        <div class="pc-tblwrap"><table class="dtable"><thead><tr><th>Price</th><th>Sales tax</th><th>Total</th></tr></thead><tbody>${amtRows}</tbody></table></div>
+        <p>General goods at ${pct(s.base)}, rounded to the cent.</p>
+      </div>
+      <div>
+        <h2>Other taxes and special rates</h2>
+        <ul class="st-otherlist">${s.others.map((x) => '<li><b>' + x.t + '.</b> ' + x.d + '</li>').join('')}</ul>
+        <h2>Use the NYC calculator</h2>
+        <p>The city is already set to <strong>${n}</strong>. Add one item or several, choose what each one is and add shipping. Clothing is tested item by item against the $110 line. <strong>Remove tax</strong> works out the price before tax from a total, and <strong>Find the rate</strong> compares a price before and after tax with the ${pct(s.base)} rate. Under <strong>Go advanced</strong> you can use your own rate or work out the use tax on something bought online.</p>
+        <p>This is an estimate based on the published New York State and New York City rules — the register can differ by a cent, and the seller’s own system decides what is taxable.</p>
+        <h2>Other places</h2>
+        ${stateLinks(c)}
+        <p>For any other state, the <a href="/sales-tax-calculator/">main sales tax calculator</a> uses the state rate or your own combined rate.</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions about NYC sales tax</h2>
+${f.map((q) => `    <details class="faq"><summary>${q[0]}</summary><p>${q[1]}</p></details>`).join('\n')}
+  </section>`;
+  const crumbs = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'CalcThis', item: 'https://calcthis.co/' },
+    { '@type': 'ListItem', position: 2, name: 'Sales Tax Calculator', item: 'https://calcthis.co/sales-tax-calculator/' },
+    { '@type': 'ListItem', position: 3, name: n, item: url }] };
+  write('sales-tax-calculator/' + s.slug + '/index.html', pageHtml({
+    title: 'NYC Sales Tax Calculator 2026 — 8.875% & $110 Clothing Rule',
+    desc: 'NYC sales tax calculator: 8.875% in all five boroughs. $100 is ' + m(a100.total) + ' with tax. Clothing under $110 an item is exempt, groceries exempt, shipping rule.',
+    ogTitle: 'NYC Sales Tax Calculator 2026 — 8.875% & $110 Clothing Rule', url,
+    app: Object.assign(jsonApp('New York City Sales Tax Calculator', url, 'NYC sales tax calculator: add tax, remove tax or find the rate at 8.875%, with the $110 clothing rule tested item by item, exempt items and the delivery rule.'), { dateModified: new Date().toISOString().slice(0, 10), inLanguage: 'en-US', isAccessibleForFree: true, applicationSubCategory: 'Sales tax calculator', areaServed: { '@type': 'City', name: 'New York City' }, isPartOf: { '@type': 'WebSite', name: 'CalcThis', url: 'https://calcthis.co/' }, featureList: ['Add sales tax to a price', 'Remove sales tax from a total', 'Find the sales tax rate', 'Clothing under $110 tested per item', 'Where the 8.875% goes: state, city, MCTD', 'Parking and service rates', 'Shipping and delivery rule', 'Use tax on online purchases'] }),
+    faq: jsonFaq(f), extraLd: [crumbs], hero, content, bodyAttr: ' data-state="' + c + '"', srcHtml: srcHtml(c)
+  }));
+}
+
 /* ---------- state pages ---------- */
 live.forEach((c) => {
+  if (E.STATES[c].city) { writeCity(c); return; }
   if (E.STATES[c].places) { writePlaceState(c); return; }
   const s = E.STATES[c], n = s.name, url = 'https://calcthis.co/sales-tax-calculator/' + s.slug + '/', f = faqsFor(c);
   const a100 = tax(c, 100);

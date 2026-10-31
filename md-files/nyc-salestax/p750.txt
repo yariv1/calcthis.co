@@ -1,0 +1,1812 @@
+Publication 750
+A Guide to Sales Tax in
+New York State
+Pub 750 (11/15)
+
+Publication 750
+(11/15)
+About this publication
+This publication is a comprehensive guide to New York State and local sales and use taxes for businesses that
+sell taxable tangible personal property, perform taxable services, receive admission charges, or operate a hotel
+or motel, and restaurants, taverns, or other establishments that sell food and drink.
+Note: For basic, easy-to-understand explanations of particular sales tax topics, see our sales tax bulletins,
+available on the Tax Department’s website at www.tax.ny.gov. We continue to add new bulletins on a regular
+basis.
+It is the department’s goal that all taxpayers meet their sales tax obligations and pay the correct amount of tax
+they owe. If your business makes sales of property or services that are subject to sales tax, you must register
+for sales tax purposes and obtain a Certificate of Authority. You should thoroughly read all the information
+contained in this publication so that you become aware of your obligations in regard to sales tax. If you do not
+fulfill your obligations under the Sales Tax Law, you could be subject to penalties. Some of these obligations
+include, but are not limited to:
+• registering for sales tax purposes and displaying a Certificate of Authority (see page 12, How to obtain
+your Certificate of Authority) and Tax Bulletin How to Register for New York State Sales Tax (TB-ST-360);
+• collecting the proper amount of sales tax from customers (see page 22, Calculating and stating the sales
+tax) and Tax Bulletin Taxable Receipt-How Discounts, Trade-ins and Additional Charges Affect Sales Tax
+(TB-ST-860);
+• issuing and accepting properly-completed sales tax exemption certificates (see page 27, Exemption
+certificates) and Tax Bulletin Exemption Certificates for Sales Tax (TB-ST-240);
+• maintaining records of sales and purchases in an orderly and adequate manner (see Part 3, Record
+keeping) and Tax Bulletin Recordkeeping Requirements for Sales Tax Vendors (TB-ST-770);
+•filing sales tax returns and remitting any sales tax due in a timely manner as a trustee for the state (see
+Part 4, Filing your sales tax return), Tax Bulletins Filing Requirements for Sales and Use Tax Returns
+(TB-ST-275), E-File Mandate for Businesses TB-MU-210) and E-File Mandate for Tax Return Preparers
+(TB-MU-220);
+• assuming personal liability for the payment of sales tax by certain responsible persons of a business; and
+• providing notice to the department 20 days prior to purchasing or acquiring business assets from a sales
+tax vendor, other than in the ordinary course of business (see Part 6, Purchasing or acquiring a business
+or its assets: Caution).
+Publication 900, Important Information for Business Owners, and Tax Bulletin Business Information for Sales
+Tax Purposes (TB-ST-75) provide additional information on your responsibilities under the Sales Tax Law.
+Obligation to register for sales tax purposes
+You must register for sales tax purposes with the Tax Department if you make sales that are subject to tax. In
+addition, you must be registered to issue or accept most exemption certificates and documents. See Part 1,
+Registration, to help you determine if you are required to register for sales tax purposes.
+3
+Publication 750
+(11/15)
+As used in this publication and for purposes of the Tax Department’s registration rules, the term vendor
+includes persons required to collect sales tax on sales and transactions described in Part II, Making sales.
+Also, when used in this publication, the terms sales, purchases, taxable sales, and taxable purchases, include,
+but are not limited to, where appropriate, the sale or purchase of the following: tangible personal property,
+certain services, rentals of hotel and motel rooms, admissions to places of amusement, and dues paid to social
+or athletic clubs. See Tax Bulletin Do I Need to Register for Sales Tax? (TB-ST-175).
+Note: See page 17, Sales by New York and United States governmental entities and certain exempt
+organizations, for information relating to sales by governmental entities and certain exempt organizations.
+Obligation to collect and remit tax
+Once you are registered for sales tax purposes, you are responsible for collecting and remitting both state and
+local sales taxes to the Tax Department, along with any use tax you may owe. If your business is an entity
+such as a corporation or a partnership, the responsibility for collecting and remitting sales tax extends to the
+responsible persons of the business. Therefore, certain owners, officers, directors, employees, partners or
+members (responsible persons) of a business can be held personally liable for the tax the business owes. As
+trustees for the state, a business and its responsible persons must remit any sales tax that is due with timely
+filed sales tax returns. If you fail to collect and remit sales tax we may impose penalties and interest. (See
+Part 4, Filing your sales tax return.)
+Recordkeeping
+You must keep detailed records of every sale, the amount paid, charged, or due on the transaction, and the
+sales tax that is due, if any. Keeping good records of your business operation will help you prepare accurate
+and complete sales tax returns. (See Part 3, Recordkeeping and Tax Bulletin Recordkeeping Requirements for
+Sales Tax Vendors (TB-ST-770).)
+In addition to being required to register for sales tax purposes, you may also be subject to registration,
+collection, or payment requirements for other taxes. For a more detailed description of these taxes, see
+Publication 20, New York State Tax Guide for New Businesses.
+Additional information
+The department has many general and industry-specific sales tax publications and technical service
+memoranda that provide additional detailed information on various sales tax topics. You can obtain any tax
+bulletin, publication, memorandum (TSB-M) or document referenced in this publication by visiting the Tax
+Department’s website or by contacting us directly. You can also subscribe to receive timely notification of sales
+tax changes by using our e-mail subscription service.
+If you have any questions about sales and use tax, you may contact us by using the information provided in the
+Need help? section on the back cover of this publication.
+Note: A publication is an informational document that addresses a particular topic of interest to
+taxpayers. Subsequent changes in the law and regulations, judicial decisions, Tax Appeals
+Tribunal decisions, or changes in department policies could affect the validity of the
+information contained in a publication. Publications are updated regularly and are accurate on
+the date issued.
+4
+Publication 750
+(11/15)
+Table of contents Page
+Part I – Registration
+Who must be registered for sales tax purposes ................................................................................................. 7
+Rules for out-of-state businesses ...................................................................................................................... 8
+About your Certificate of Authority ..................................................................................................................... 9
+Types of Certificates of Authority ..................................................................................................................... 10
+How to obtain your Certificate of Authority ....................................................................................................... 12
+Denial of a Certificate of Authority .................................................................................................................. 12
+Taxpayers’ Bill of Rights ................................................................................................................................. 13
+Registration rules for farmers .......................................................................................................................... 13
+Registration rules for contractors ..................................................................................................................... 13
+Registration rules for manufacturers ............................................................................................................... 14
+Part II – Making sales
+Taxable sales .................................................................................................................................................. 14
+Additional sales taxes and fees you may be required to collect ...................................................................... 19
+Sales taxes imposed only within New York City ............................................................................................... 20
+Sales taxes imposed by certain school districts .............................................................................................. 21
+Calculating and stating the sales tax ............................................................................................................... 22
+Exempt sales .................................................................................................................................................. 25
+Exempt sales – exemption certificate required ................................................................................................. 26
+Exemption certificates ..................................................................................................................................... 27
+Exempt purchasers .......................................................................................................................................... 28
+Taxable business purchases ........................................................................................................................... 29
+Part III – Recordkeeping
+Recordkeeping rules ....................................................................................................................................... 31
+Part IV – Filing your sales tax return
+Filing requirements ......................................................................................................................................... 33
+Completing your sales and use tax return ........................................................................................................ 35
+Part V – Show and entertainment promoters
+Show promoters .............................................................................................................................................. 37
+Entertainment promoters ................................................................................................................................ 38
+Part VI – Purchasing or acquiring a business or its assets: Caution
+Bulk sales transactions .................................................................................................................................... 40
+Appendix – List of common sales tax forms .................................................................................................... 43
+Need help? ......................................................................................................................................... Back cover
+5
+Publication 750
+(11/15)
+THIS PAGE IS INTENTIONALLY LEFT BLANK
+6
+Publication 750
+(11/15)
+Part 1 – Registration
+Who must be registered for sales tax purposes
+You must be If you will be selling property or services in New York State that are subject
+registered for sales to sales tax, you may be required to collect the sales tax from the person to
+tax purposes with whom you make the sale. (The discussion on page 14 under Taxable sales
+the Tax Department will help you determine whether the sales you make are subject to sales
+if you will be selling tax.) In general, the sales tax you must collect and remit is computed using
+tangible personal the combined state and local rate in effect in the locality where you deliver
+property or services the taxable product or service to the customer. See pages 22 through 25 of
+on which you are this publication for information on the special rules for calculating and
+required to collect collecting tax on sales of motor fuels, alternative fuels, motor vehicles, and
+sales tax certain boats. If you must collect sales tax on your sales, then you must
+register for sales tax purposes with the Tax Department and obtain a
+Certificate of Authority (see page 12 and Tax Bulletin How to Register for
+New York State Sales Tax (TB-ST-360)).
+You must be You must also be registered for sales tax purposes to issue or accept most
+registered for sales New York State sales tax exemption documents. For example, even though
+tax purposes to wholesalers may never collect sales tax because all of their purchases and
+issue or accept most sales are for resale (and, therefore, are eligible for exemption from sales
+New York State tax), they must still be registered to legally issue and accept most
+sales tax exemption exemption documents.
+certificates
+For additional information on who must be registered for sales tax purposes,
+see Tax Bulletin Do I Need to Register for Sales Tax? (TB-ST-175).
+If you engage in If you are required to register for sales tax purposes but fail to do so and
+business without you engage in business without having obtained a valid Certificate of
+obtaining a valid Authority, you will be subject to a penalty. The penalty is up to $500 for the
+Certificate of first day business is conducted without having obtained a valid Certificate of
+Authority, you will Authority, plus up to $200 per day for each day thereafter. The maximum
+be subject to a penalty for engaging in business without obtaining a valid Certificate of
+substantial penalty Authority is $10,000. See Tax Bulletin Sales and Use Tax Penalties
+(TB-ST-805).
+If you are changing If you change your organizational structure (for example, from a sole
+your organizational proprietorship to a corporation, a limited liability company, or a partnership),
+structure, you must the new organization must register for sales tax purposes and obtain a new
+register for sales tax Certificate of Authority. The new business must obtain its own Certificate of
+purposes as a new Authority before it begins operating. You must also file a final return for your
+business existing business and surrender or destroy the Certificate of Authority that
+was issued to the existing business. See Tax Bulletins Amending or
+Surrendering a Certificate of Authority (TB-ST-25) and Filing Period
+Indicators on Final Sales Tax Returns (TB-ST-270).
+7
+Publication 750
+(11/15)
+Purchasing, If you are purchasing, transferring, or assigning either part or all of the
+transferring, or assets of an existing business, there are specific rules that apply to the
+assigning business transaction (see Part 6, Purchasing or acquiring a business or its assets:
+assets Caution).
+Rules for out-of-state businesses
+Even though you are Even though you are located outside of New York State, if you have
+located in another customers in New York State, and you have sufficient connection with
+state, if you have New York State, you may be required to register for New York State and
+customers in local sales tax purposes. For example, if you are located outside New York
+New York State, you State, make sales of taxable products to persons within New York State,
+may be considered a and regularly deliver the products in your trucks to your New York State
+vendor for New York customers, you have sufficient connection with New York State and must
+State sales tax register for sales tax purposes and collect and remit sales tax. You must
+purposes also register if you solicit sales of taxable products or services through
+employees, salespersons, independent agents, or service representatives
+located in, or who enter New York State.
+If the only connection you have with New York State is the delivery of your
+products into the state by the U.S. Postal Service or common carrier, you
+are not required to register or collect sales tax. Thus, some out-of-state
+businesses (including some mail order companies) may not have sufficient
+connection with New York State to be required to collect and remit sales
+tax.
+However, out-of-state sellers that make taxable sales of tangible personal
+property or services in New York are presumed to be sales tax vendors
+under certain conditions where they have agreements with New York
+residents to compensate them for referring potential customers to the seller.
+Also, under certain conditions, sellers of tangible personal property or
+services located outside of New York that have an affiliate located in
+New York may also be required to register to collect and remit sales tax. For
+more detailed information, see TSB-M-08(3)S, New Presumption Applicable
+to Definition of Sales Tax Vendor, TSB-M-08(3.1)S, Additional Information
+on How Sellers May Rebut the New Presumption Applicable to the
+Definition of Sales Tax Vendor as Described in TSB-M-08(3)S, and
+TSB-M-09(3)S, Definition of a Sales Tax Vendor is Expanded to Include
+Out-of-State Sellers with Related Businesses in New York State.
+Although, as an out-of-state business, you may not be required to collect
+sales tax from your customers in New York State, your customers are still
+responsible for the payment of sales or use tax on their purchases. The use
+tax complements the sales tax. An example of when use tax applies is when
+a New York State resident purchases taxable products or services outside
+of New York State and then brings them or has them brought into New York
+State for use here. For more information, see Tax Bulletin Use Tax for
+Businesses (TB-ST-910).
+8
+Publication 750
+(11/15)
+Although you may not have sufficient connection with New York State to
+require you to be registered, you may voluntarily register for sales tax
+purposes to collect and remit the sales tax that is otherwise due from the
+purchaser. You will then have the same obligations as vendors that are
+required to register with the Tax Department.
+If you are required to register for sales tax purposes, or if you voluntarily
+register, you must collect sales tax on all taxable sales delivered by you, or
+for you, to the purchaser, or the purchaser’s designee, in this state. The tax
+due is the combined state and local rate in effect in the locality where the
+taxable product or service is delivered.
+For more information on registration rules for out-of-state businesses, see
+Tax Bulletin Do I Need to Register for Sales Tax? (TB-ST-175).
+About your Certificate of Authority
+Your Certificate of Your Certificate of Authority authorizes you to collect sales tax on your
+Authority authorizes taxable sales and to issue and accept certain New York State sales tax
+you to collect sales exemption certificates. You cannot legally make taxable sales, collect tax on
+tax on your taxable your taxable sales, or issue or accept many exemption documents until you
+sales and to issue receive your Certificate of Authority. Exemption certificates are forms that a
+and accept certain purchaser fills out and gives to the seller, so that there is a record of why
+New York State the seller did not collect sales tax on the sale.
+sales tax exemption
+certificates Once you receive your Certificate of Authority, you are considered to be in
+business for sales tax purposes even if you never make a sale or never
+open the doors of your establishment. Therefore, it is important that you file
+your sales tax returns on time, even if you did not have any taxable sales
+during the reporting period, to avoid penalties for not filing.
+You must You must prominently display your Certificate of Authority at your place of
+prominently display business. If you have no permanent physical location, you can attach it to
+your Certificate of your truck, cart, wagon, stand, or other vehicle or facility from which you
+Authority at your conduct business. You are subject to a $50 penalty if you fail to properly
+place of business display your Certificate of Authority. See Tax Bulletin Sales and Use Tax
+Penalties (TB-ST-805).
+If you have more than one place of business, you must display a Certificate
+of Authority at each place of business. You may not use photocopies of a
+Certificate of Authority but may request a separate certificate for each
+location from the Tax Department. For more information on applying for a
+Certificate of Authority when you have multiple business locations, see How
+to obtain your Certificate of Authority on page 12.
+If you already received your Certificate of Authority, but need a duplicate
+copy because the original was lost or destroyed, you may contact us and
+request a replacement.
+9
+Publication 750
+(11/15)
+A Certificate of A Certificate of Authority is not transferable or assignable. If you buy an
+Authority is not ongoing business, you must apply for your own certificate. If you sell,
+transferable transfer, or assign your business or cease doing business, you must
+surrender your Certificate of Authority to the Tax Department or destroy it.
+See Part 6 on page 40 for additional information on the rules regarding the
+purchase, transfer, or assignment of a business.
+Although your Certificate of Authority is not transferable or assignable, it
+may be amended to account for changes in the address of the business or
+business name. If you need to change your address you can do so by
+visiting our website or by contacting us directly. You can also use
+Form DTF-96, Report of Address Change for Business Tax Accounts.
+Form DTF-95, Business Tax Account Update, can be used to provide the
+Tax Department with information regarding address changes, telephone
+number changes, and certain changes in business activities. You may
+report some changes in business activities by contacting us directly.
+If you cease doing If you cease doing business, you must surrender or destroy your Certificate
+business of Authority and file a final sales tax return for the business within 20 days of
+terminating the business. Special rules apply if you Web File a final sales
+tax return. For more information, visit the Online Services section of our
+website. Also, see Tax Bulletins Filing a Final Sales Tax Return
+(TB-ST-265) and Amending or Surrendering a Certificate of Authority
+(TB-ST-25).
+Types of Certificates of Authority
+The Tax Department The Tax Department issues two types of Certificates of Authority for sales
+issues two types of tax purposes:
+Certificates of
+Authority for sales • regular, and
+tax purposes • temporary.
+The type of Certificate of Authority you apply for is based on the anticipated
+duration of your business activities.
+Note: The department no longer issues the Certificate of Authority for
+Show and Entertainment Vendors. If you make sales at shows or
+entertainment events, such as flea markets, craft shows, antique shows,
+fairs, and similar shows, you should apply for a regular Certificate of
+Authority.
+See TSB-M-08(13)S, Changes Regarding the Issuance of Certificates of
+Authority to Show and Entertainment Vendors, for more information.
+Regular Certificate You should apply for a regular Certificate of Authority if you will be making
+of Authority ongoing taxable sales from your home, a shop, a store, a cart, a stand, or
+any other facility or facilities from which you regularly conduct your
+business. It does not matter whether you own or rent the facility.
+10
+Publication 750
+(11/15)
+You must apply for a regular Certificate of Authority at least 20 days
+before you begin operating your business in New York State. See How
+to obtain your Certificate of Authority on page 14 and Tax Bulletin How To
+Register for New York State Sales Tax (TB-ST-360).
+Temporary You may apply for a temporary Certificate of Authority if you expect to make
+Certificate of taxable sales in New York State for no more than two consecutive quarterly
+Authority sales tax periods in any 12-month period. In determining whether you meet
+this requirement, keep in mind that the sales tax quarters are: March 1
+through May 31, June 1 through August 31, September 1 through
+November 30, and December 1 through February 28 (February 29 in a leap
+year).
+Show and entertainment vendors may not apply for a temporary Certificate
+of Authority; they must apply for a regular Certificate of Authority.
+Even if you are eligible to obtain a temporary Certificate of Authority, it may
+be to your benefit to apply for a regular Certificate of Authority. That is
+because a temporary Certificate of Authority is only good for the two
+consecutive quarterly sales tax periods listed on your application and on
+your temporary Certificate of Authority. In addition, if you operate the same
+business or another business during the next 12-month period, you must
+apply for a new temporary Certificate of Authority at least 20 days before
+you resume doing business.
+Example: You sell Christmas trees in November and December, and
+your taxable sales consist only of sales during this period. Accordingly,
+you are eligible to apply for a temporary Certificate of Authority.
+However, if you intend to conduct this type of business activity every
+year, you may wish to apply for a regular Certificate of Authority.
+Therefore, you would not have to apply every year for a new temporary
+Certificate of Authority, as the regular Certificate of Authority would
+continue to be in effect until you indicate that you are no longer doing
+business by filing a final return. However, once you receive a regular
+Certificate of Authority you must file sales and use tax returns even if
+you have no sales tax liability. Also, even if you file a final return, and
+subsequently change your plans, you may apply for reactivation of your
+regular Certificate of Authority simply by contacting us directly (as long
+as it is within one year of deactivation).
+Example: You have no consistent year-to-year sales activity in
+New York State. However, you intend to sell costume jewelry from a
+kiosk in the common area of a mall from October through December.
+This will be your only business activity in New York State this year, and
+you do not intend to sell in New York State next year. You may apply for
+a temporary Certificate of Authority.
+Example: You intend to sell crafts at a farmers’ market for seven
+months, from the beginning of April through the end of October. This
+seven-month period covers three consecutive quarterly sales tax
+periods: March through May, June through August, and September
+11
+Publication 750
+(11/15)
+through November. You may not apply for a temporary Certificate of
+Authority. You must apply for a regular Certificate of Authority.
+If you qualify to apply for a temporary Certificate of Authority, you
+must apply for it at least 20 days before you begin operating your
+business. (See How to obtain your Certificate of Authority, below.)
+How to obtain your Certificate of Authority
+You must apply for a You must apply for a Certificate of Authority at least 20 days before you
+Certificate of begin operating your business. You can apply online by visiting New
+Authority at least 20 York Business Express.
+days before you
+begin business If you cannot apply online, you must contact the Sales Tax Information
+Center. See the Need help? section on the back cover of this publication.
+The Tax Department will review your completed application. If your
+application is approved, we will mail you a Certificate of Authority. You
+cannot legally make taxable sales, collect tax on your taxable sales, or
+issue or accept most exemption certificates until you receive your Certificate
+of Authority. If you listed several places of business on your application, the
+Tax Department will provide you with a separate Certificate of Authority for
+each location.
+Denial of a Certificate of Authority
+The Tax Department The Tax Department may deny your request for a Certificate of Authority
+may deny your under certain circumstances. For example, if you owe any tax imposed
+request for a under the Tax Law that was finally determined to be due from you that you
+Certificate of have not paid, we may deny your application for a Certificate of Authority.
+Authority Remember that you cannot legally make taxable sales, collect tax on your
+taxable sales, or issue or accept most New York State exemption
+certificates until you receive a Certificate of Authority. See page 7 for
+information regarding the penalties imposed for engaging in business
+without first receiving a Certificate of Authority.
+Within 30 days of If we deny your timely and complete application for a Certificate of Authority,
+the mailing of the we will send you a Notice of Proposed Refusal to Register by certified mail
+notice that your within five days of the date we receive your application. The Notice of
+application for a Proposed Refusal to Register will state the basis for the proposed refusal. If
+Certificate of you believe that the Tax Department has made a mistake, you should file a
+Authority has been request for a conference with the Bureau of Conciliation and Mediation
+denied, you may file Services, or file a petition for an expedited hearing with the Division of Tax
+either a request for a Appeals. You must file the application for a conference or expedited hearing
+conference, or a within 30 days of the mailing of the Notice of Proposed Refusal to Register;
+petition for a hearing otherwise it becomes final. Once the Notice of Proposed Refusal to Register
+becomes final, you are prohibited from engaging in any business in
+New York State for which a Certificate of Authority is required.
+12
+Publication 750
+(11/15)
+Taxpayers’ Bill of Rights
+New York State has a Taxpayers’ Bill of Rights that enhances and
+formalizes your rights as a New York State taxpayer. In part, the Bill of
+Rights requires the Tax Department to advise you, in writing, of your rights
+to appeal a departmental decision. For more information on your rights, see
+Publication 131, Your Rights and Obligations Under the Tax Law, or contact
+us.
+Registration rules for farmers
+Farmers are not A farmer is not required to register for sales tax purposes if the only sales
+required to register the farmer makes are sales of food and food products that are exempt from
+for sales tax tax. For example, if a farmer sells fruits, vegetables, baked goods, jellies,
+purposes unless jams, and preserves at a roadside stand, the farmer will not be required to
+they make sales that register. In addition, farmers can issue Form ST-125, Farmer’s and
+are subject to sales Commercial Horse Boarding Operator’s Exemption Certificate, to make
+tax purchases exempt from tax when purchasing certain goods and services
+used predominantly (more than 50%) in farm production, even though the
+farmer is not registered for sales tax purposes.
+However, if a farmer sells taxable tangible personal property such as hay,
+livestock, plants, shrubs, trees, homemade crafts, or items such as candy
+and other confections, or sells food or drink for consumption on the
+premises where sold, then the farmer must register for sales tax purposes
+and collect sales tax on sales of taxable tangible personal property and
+services, or taxable food and drink. See Tax Bulletin Exemptions for
+Farmers and Commercial Horse Boarding Operators (TB-ST-244).
+Registration rules for contractors
+A contractor is not required to register for sales tax purposes if the
+contractor only contracts or subcontracts to do capital improvements. For
+more information on the application of the Sales Tax Law to contractors and
+the definition of capital improvement, see Publication 862, Sales and Use
+Tax Classifications of Capital Improvements and Repairs to Real Property,
+and Tax Bulletins Capital Improvements (TB-ST-104), and Contractors-
+Sales Tax Credits (TB-ST-130),
+Contractors must Contractors must register for sales tax purposes if they will make sales that
+register for sales tax are subject to sales tax. For example, if a construction contractor makes
+purposes if the sales repairs such as repairing a roof or a leaking pipe, the contractor must
+they make are register for sales tax purposes.
+subject to tax, or to
+issue certain A contractor is required to be registered for sales tax purposes if the
+exemption contractor is also a retailer. For example, if a tile shop both installs tile and
+documents sells tile at retail, the contractor must register for sales tax purposes.
+13
+Publication 750
+(11/15)
+A contractor must also register for sales tax purposes in order to issue an
+exemption document to make certain specific purchases exempt from sales
+tax (such as a purchase of tangible personal property that is installed into
+real property owned by an exempt organization).
+Registration rules for manufacturers
+As used in this section, the term manufacturer means and includes
+manufacturers, processors, generators, assemblers, refiners, miners, and
+extractors.
+Manufacturers must A manufacturer may purchase raw materials and certain machinery,
+register for sales tax equipment, parts, tools, supplies and related services exempt from sales
+purposes if the sales tax. A manufacturer must be registered for sales tax purposes in order to
+they make are make these purchases exempt from sales tax and issue the appropriate
+subject to tax or to exemption documents. See Tax Bulletin Machinery, Equipment, Materials
+issue or accept most and Services Used in Production (TB-ST-552).
+exemption
+documents A manufacturer must also register for sales tax purposes to accept a resale
+certificate from a customer. For more information, see Publication 852,
+Sales Tax Information For: Manufacturers, Processors, Generators,
+Assemblers, Refiners, Miners and Extractors, and Other Producers of
+Goods and Merchandise.
+Part 2 – Making sales
+Taxable sales
+The following products and services are subject to sales tax when delivered
+in New York State, unless specifically exempted or excluded. This list is
+intended to provide general guidelines of the types of sales that are subject
+to tax and is not all-inclusive. If your business will be making sales of any of
+these types of products or services, you are required to register for sales tax
+purposes and obtain a valid Certificate of Authority prior to doing business
+in New York State.
+For further information regarding products and services subject to sales tax,
+see Tax Bulletin Quick Reference Guide for Taxable and Exempt Property
+and Services (TB-ST-740).
+Items and services Generally, the sales tax is imposed on:
+subject to tax
+• Retail sales of tangible personal property; unless specifically exempted
+in the law.
+• Sales of certain services (see page 16).
+• Sales of gas, electricity, refrigeration, and steam (utilities).
+• Sales of gas, electric, refrigeration and steam services (utilities).
+• Sales of telephony and telegraphy.
+14
+Publication 750
+(11/15)
+• Sales of telephone and telegraph service (including telephone
+answering services, facsimile transmission services, and mobile
+telecommunications services).
+• Sales of food and drink for on-premises consumption, for example,
+when sold by restaurants and taverns; see Tax Bulletin Sales By
+Restaurants, Taverns and Similar Establishments (TB-ST-806).
+• Sales of food and drink when sold by caterers; see Tax Bulletin
+Caterers and Catering Services (TB-ST-110).
+• Sales of sandwiches and heated food; see Tax Bulletin Sandwiches
+(TB-ST-835).
+• Rent for occupancy of hotel or motel rooms (including bed and
+breakfasts, boarding houses, guest houses, etc.); for more information
+see Publication 848, A Guide to Sales Tax for Hotel and Motel
+Operators, and Tax Bulletin Hotel and Motel Occupancy (TB-ST-331).
+• Admission charges to places of amusement, other than live dramatic
+or musical arts performances, motion picture theaters, sporting
+facilities or activities in which the patron is the participant, live circus
+performances, or charges which are taxed under any other law of this
+state, such as for admissions to race tracks, boxing, sparring or
+wrestling matches or exhibitions. Note: 75% of admission charges to
+qualifying places of amusement are exempted from the imposition of
+sales tax. See Tax Bulletins Amusement Parks - Admission, Ride, and
+Other Charges (TB-ST-30) and Admission Charges to a Place of
+Amusement (TB-ST-8).
+• Dues, including initiation or membership fees, paid to social or athletic
+clubs when the combined dues and fees are more than $10 per year.
+• The charges of a roof garden, cabaret, or other similar place. Note:
+When certain conditions are met, a portion of the charges made by a
+roof garden, cabaret, or other similar place for admission to see a
+dramatic or musical arts performance is exempt from sales tax. (See
+TSB-M-06(15)S, Supplemental Summary of Recently Enacted
+Legislation Affecting Sales and Use Taxes Effective in 2006.)
+Sales of tangible The term tangible personal property means physical personal property, of
+personal property any nature, that has a material existence and is perceptible to the human
+senses. The term sale includes outright sales, rentals, leases, and licenses
+to use. Tangible personal property includes a variety of goods. Examples of
+taxable sales of tangible personal property include, but are not limited to,
+sales of:
+• furniture, appliances, and lighting fixtures;
+• certain clothing and footwear; see Tax Bulletin Clothing and Footwear
+Exemption (TB-ST-122);*
+• machinery and equipment, parts, tools, and supplies;
+• computers;
+• prewritten (canned/off-the-shelf/standard) computer software (whether
+transferred by CD-ROM, Internet download, remote access, etc.); see
+Tax Bulletin Computer Software (TB-ST-128);
+• motor vehicles;
+15
+Publication 750
+(11/15)
+• boats and yachts; for information on the partial exemption for vessels,
+see TSB-M-15(2)S, Changes to the Application of Sales and Use Tax
+to Vessels;
+• fuels (for example, gasoline, diesel fuel, and kero-jet fuel);
+• candy and confections; see Tax Bulletin Candy and Confectionary
+(TB-ST-103);
+• bottled water; see Tax Bulletin Beverages Sold by Food Stores,
+Beverage Centers, and Similar Establishments (TB-ST-65);
+• soda and beer; see Tax Bulletin Beverages Sold by Food Stores,
+Beverage Centers, and Similar Establishments (TB-ST-65);
+• cigarettes and tobacco products;
+• cosmetics and toiletries; see Tax Bulletin Drugstores and Pharmacies
+(TB-ST-193);
+• jewelry;
+• artistic items such as sketches, paintings, and photographs;
+• animals (for example, dogs, cats, or pet birds);
+• food and supplies for animals;
+• trees, shrubs, plants, and seeds;
+• coins and other monetary items, when purchased for purposes other
+than for use as a medium of exchange;
+• building materials; and
+• prepaid telephone calling cards.
+* If you sell clothing or footwear, see Publication 718-C, Sales and Use Tax
+Rates On Clothing and Footwear, for the most up-to-date information
+concerning the applicable tax rates to charge your customers.
+Services subject to Only certain services are subject to tax. These services include:
+tax
+• Providing certain information services. (See TSB-M-10(7)S, Sales and
+Compensating Use Tax Treatment of Certain Information Services.)
+• Producing, fabricating, processing, printing or imprinting tangible
+personal property furnished by a customer who does not intend to
+resell it (for example, when an individual purchases lumber and has a
+cabinetmaker construct a bookcase for him or her).
+• Installing, maintaining, servicing, or repairing tangible personal
+property that is not held for sale by the purchaser of the service in the
+regular course of business (for example, servicing automobiles,
+repairing appliances, and repairing radio and television sets).
+• Storing tangible personal property that is not being held for sale (for
+example, storing a customer’s fur coat or providing storage for a
+customer’s household goods).
+• Renting safe deposit boxes.
+• Maintaining, servicing, or repairing real property, both inside and
+outside buildings (for example, cleaning, painting, gardening,
+snowplowing, trash removal, and general repairs). (See
+Publication 862, Sales and Use Tax Classifications of Capital
+Improvements and Repairs to Real Property.)
+• Providing parking, garaging, or storage services for motor vehicles.*
+See Tax Bulletin Parking, Garaging, and Storing of Motor Vehicles
+(TB-ST-677).
+16
+Publication 750
+(11/15)
+• Interior decorating and design services. See Tax Bulletin Interior
+Decorating and Design Services (TB-ST-400).
+• Protective or detective services.
+• Entertainment or information services provided by means of telephone
+or telegraph (for example, 800 or 900 numbers).
+• Passenger transportation services with a driver, using limousines,
+black cars, and certain other motor vehicles (not including taxi and bus
+services). See TSB-M-09(2)S, Sales Tax Imposed on Certain
+Transportation Services, TSB-M-09(7)S, Additional Guidance Relating
+to the Sales Tax on Certain Transportation Services, and TSB-M-
+13(2)S, Revised Policy Concerning the Application of the Sales Tax
+Exclusion for Certain Transportation Services Provided by an Affiliated
+Livery Vehicle in New York City.
+* See TSB-M-08(14)S, Sales Tax Treatment of a Lease or Rental of Real
+Property for the Purpose of Parking, Garaging, or Storage of Motor
+Vehicles, for information on what constitutes a nontaxable lease of real
+property for parking.
+Sales by New York The Tax Law provides a general exemption from sales tax for sales made
+and United States by the following:
+governmental
+entities and certain • New York State or any of its agencies, instrumentalities, public
+exempt corporations, or political subdivisions (New York governmental entity);
+organizations • the United States and its agencies and instrumentalities (United States
+governmental entity);
+• the United Nations or any international organization of which the
+United States is a member (United Nations or any international
+organization);
+• certain not-for-profit organizations, (such as religious, charitable,
+scientific, testing for public safety, literary or educational, or to foster
+national or international sports competition);
+• certain posts or organizations consisting of past or present members of
+the armed forces of the United States, and qualifying auxiliary units of
+such posts or organizations; and
+• certain Indian nations or tribes residing in New York.
+However, there are some exceptions to this general rule for sales made by
+governmental entities and other exempt organizations. The sales described
+below, when made in the manner indicated by either a governmental entity
+or other exempt organization, are subject to sales and use taxes. This list is
+intended to provide general guidance and is not meant to be all-inclusive. If
+an exempt organization or governmental entity engages in sales of these
+types of products or services, it is required to register for sales tax purposes
+and obtain a valid Certificate of Authority prior to conducting business in
+New York State (see page 12).
+Generally, sales and use taxes are imposed on:
+• Tangible personal property or services sold by New York or United
+States governmental entities and certain sales by the United Nations
+17
+Publication 750
+(11/15)
+or any international organization, if the property or services are similar
+to those ordinarily sold by private persons.
+• Tangible personal property sold by any shop or store* operated by
+certain not-for-profit organizations; posts or organizations of past or
+present members of the armed forces, and qualifying auxiliary units; or
+certain Indian nations or tribes residing in New York (see below for a
+definition of shop or store).
+• Tangible personal property or services sold by a rural electric
+cooperative corporation, unless the purchaser is an exempt
+organization.
+• Food or drink sold in or by a restaurant or tavern operated by a
+New York governmental entity; certain not-for-profit organizations;
+posts or organizations of past or present members of the armed forces
+and qualifying auxiliary units; or certain Indian nations or tribes residing
+in New York.
+• Under certain circumstances, rent for hotel occupancy received by
+certain not-for-profit organizations. (See Publication 848, A Guide to
+Sales Tax for Hotel and Motel Operators, and Publication 843, A Guide
+to Sales Tax in New York State for Exempt Organizations.)
+• Certain motor vehicle parking, garaging, or storage services by certain
+not-for-profit organizations and posts or organizations of past or
+present members of the armed forces, and qualifying auxiliary units.
+* A shop or store is any place or establishment where goods are sold from
+display with a degree of regularity, frequency, and continuity as well as any
+place where sales are made through a temporary shop or store located on
+the same premises as persons required to collect tax.
+Additionally, certain not-for-profit organizations; certain posts or
+organizations of past or present members of the armed forces, and
+qualifying auxiliary units; and certain Indian nations or tribes residing in
+New York are required to collect state and local sales tax on their retail
+sales of the following property and on their sales, other than for resale, of
+the following services:
+• any lease or rental of tangible personal property;
+• any utility service described in section 1105(b) of the Tax Law;
+• any service to real property described in section 1105(c)(5) of the Tax
+Law; and
+• any tangible personal property where the sale is made by remote
+means, such as by telephone, mail order (including email), over the
+Internet, or by other similar methods, provided the exempt organization
+makes such sales with a degree of regularity, frequency, or continuity.
+Also, certain not-for-profit organizations; posts or organizations of past or
+present members of the armed forces, and qualifying auxiliary units; and
+certain Indian nations or tribes residing in New York are also required to
+collect state and local sales and use tax on certain remote and auction
+sales.
+18
+Publication 750
+(11/15)
+The sales described above are subject to tax whether or not they are made
+from a shop or store. For more information on sales by certain exempt
+organizations, see Publication 843, A Guide to Sales Tax in New York State
+for Exempt Organizations. Also, see TSB-M-08(5)S, Tax Law Amendments
+Related to Sales Made by Certain Sales Tax Exempt Organizations
+Effective September 1, 2008, and TSB-M-08(15)S, Regulatory Amendments
+Related to Sales Made by Certain Sales Tax Exempt Organizations –
+Effective January 1, 2009.
+For information on purchases made by governmental entities and certain
+exempt organizations, including Indian nations, tribes, and individual
+Indians, see Exempt purchasers on page 28.
+Additional sales taxes and fees you may be required to collect
+Passenger car An additional 6% statewide special tax is imposed on the short-term rental
+rentals of a passenger car rented within New York State, or rented outside
+New York State for use within New York State. Short-term rental means any
+rental for less than one year. This tax is in addition to the applicable state
+and local sales and use taxes.
+Also, a special 5% supplemental tax is imposed on the short-term rental of
+passenger cars within the Metropolitan Commuter Transportation District
+(MCTD).* The special supplemental tax is in addition to the applicable state
+and local sales and use taxes and the statewide special tax.
+See TSB-M-09(1)S, Increase in the Special Tax on the Rental of Passenger
+Cars, TSB-M-09(6)S, Special Supplemental Tax on the Rental of Passenger
+Cars Within the Metropolitan Commuter Transportation District and Tax
+Bulletin Sales Tax Rates, Additional Sales Taxes, and Fees (TB-ST-825) for
+more information.
+* The MCTD consists of New York City (Bronx, Kings, New York, Queens,
+and Richmond counties) and the counties of Dutchess, Nassau, Orange,
+Putnam, Rockland, Suffolk, and Westchester.
+Entertainment or An additional 5% sales tax is imposed on entertainment or information
+information services services provided by means of telephone that are received in an exclusively
+aural manner by the customer (for example, 800 or 900 numbers).
+Parking services Charges for parking services in New York City are subject to a higher rate of
+sold in New York tax than most other sales. If you sell parking services in the borough of
+City Manhattan (New York County), those sales are subject to the 8% additional
+parking tax imposed on parking services within that borough. See Tax
+Bulletin Parking Services in New York City (TB-ST-679). Under certain
+circumstances, an individual resident of Manhattan is exempt from this 8%
+tax. See TSB-M-85(14)S, 1985 Legislation - Chapter 330 Exemption From
+New York City Additional Tax On Parking, Garaging and Storing of Motor
+Vehicles, and TSB-M-96(13)S, Change In the New York City Parking Tax
+19
+Publication 750
+(11/15)
+Exemption for Manhattan Residents, for more information about the
+exemption afforded Manhattan residents.
+Fee on hotel An additional hotel unit fee in the amount of $1.50 per unit, per day, is
+occupancy in imposed on every occupancy of a unit in a hotel located within New York
+New York City City (Bronx, Kings, New York, Queens, and Richmond counties). See
+TSB-M-05(2)S, Fee on Hotel Occupancy in New York City, for additional
+information on this hotel unit fee.
+Sales taxes imposed only within New York City
+New York City local New York City local sales tax is also imposed on the following services
+sales tax is also performed or delivered in the city:
+imposed on certain
+services that are • written or oral credit rating services;
+performed or • oral credit reporting services not delivered by telephone;
+delivered within • beautician, barbering, and hair restoring services; see Tax Bulletin
+New York City Beauty Salons, Barber Shops, and Hair Restoration Services
+(TB-ST-60);
+• tattooing services; see Tax Bulletin Tattooing and Permanent Make-up
+Services (TB-ST-855);
+• tanning services; see Tax Bulletin Tanning Salons (TB-ST-853);
+• manicure and pedicure services; see Tax Bulletin Manicures and
+Pedicures (TB-ST-551);
+• electrolysis;
+• massage services; see Tax Bulletin Massage Services (TB-ST-554);
+and
+• the sale of the services of transporting, transmitting, distributing, or
+delivering gas or electricity, when purchased from someone other than
+the vendor of the gas or electricity. (See Important Notice, N-09-12,
+Sales Tax Law Changes in New York City – Effective August 1, 2009.)
+Note: The 4% New York State sales tax and the additional sales tax
+imposed by the state in the MCTD do not apply to the above referenced
+services.
+In addition, the New York City local sales tax is imposed on every sale of
+services by:
+• weight control and health salons;
+• gymnasiums;
+• Turkish and sauna baths and similar establishments; and
+• every charge for the use of such facilities.
+Sales of these services are subject to the New York City local sales tax only
+when the services are performed or delivered to customers within New York
+City. See Tax Bulletins Miscellaneous Personal Services and Related Sales
+in New York City (TB-ST-575), Health and Fitness Clubs (TB-ST-329),
+New York City Health and Fitness Facilities (TB-ST-615), and Sales Tax
+Rates, Additional Sales Taxes and Fees (TB-ST-825).
+20
+Publication 750
+(11/15)
+However, charges for services rendered by the following are not subject to
+the local New York City sales tax:
+• physicians;
+• osteopaths;
+• dentists;
+• nurses;
+• physiotherapists;
+• chiropractors;
+• podiatrists;
+• optometrists; and
+• ophthalmic dispensers; or
+• a person performing similar services licensed under title VIII of the
+New York State Education Law, and excluding those services when
+performed on pets and other animals.
+Note: The services described above are not subject to New York State
+sales tax, including the sales tax imposed in the Metropolitan Commuter
+Transportation District (MCTD), or to any local sales taxes imposed
+elsewhere in the state. However, those credit rating and credit reporting
+services that are subject to New York State and local sales tax as an
+information service are subject to the full rate of state and local tax imposed
+in each locality, including New York City. (For more information on the state
+sales tax imposed in the MCTD, see page 22.)
+Sales taxes imposed by certain school districts
+Certain school Certain school districts in New York State impose sales tax on sales of the
+districts in New York following utilities and utility services:
+State impose sales
+tax on utilities and • gas (including propane sold in containers of 100 pounds or more),
+utility services electricity, refrigeration, and steam;
+• gas, electric, refrigeration, and steam service;
+• telephony and telegraphy, except interstate and international telephony
+and telegraphy;
+• telephone and telegraph services, except interstate and international
+telephone and telegraph services, including telephone answering
+services and facsimile transmission services (not including prepaid
+telephone calling cards and services); and
+• mobile telecommunications services provided by a home service
+provider.
+You can look up the combined tax rate on utilities or utility services sold in a
+school district by using our online Jurisdiction/Rate Lookup by Address
+service on the Tax Department’s website (at www.tax.ny.gov). You should
+also look at Publication 718-R, Local Sales and Use Tax Rates on
+Residential Energy, and sales tax Schedule B and Schedule T, for a list of
+tax rates on utilities or utility services.
+21
+Publication 750
+(11/15)
+Calculating and stating the sales tax
+Compute the Generally, you compute the amount of sales tax due on a sale by applying
+amount of sales tax the combined state and local sales tax rate to the amount of the sale. The
+due on a sale by combined state and local sales tax rate consists of the state sales tax rate,
+applying the plus the applicable rate of sales tax imposed by the local jurisdiction (city,
+combined state and county, and school district). In addition, the state imposes an additional
+local sales tax rate sales tax in those localities that are within the Metropolitan Commuter
+to the amount of the Transportation District (MCTD). The MCTD is composed of New York City
+sale (Bronx, Kings, New York, Queens, and Richmond counties), and the
+counties of Dutchess, Nassau, Orange, Putnam, Rockland, Suffolk, and
+Westchester.
+The local tax rates vary by jurisdiction and by the items or services sold. For
+updated state and local sales tax rates, use our online Jurisdiction/Rate
+Lookup by Address service on our website (at www.tax.ny.gov).
+Publication 718, New York State Sales and Use Tax Rates by Jurisdiction,
+also lists the combined state and local rates and the proper jurisdiction and
+jurisdiction codes.
+Note: Do not use ZIP codes for identifying customer location. Postal zones
+usually do not coincide with political boundaries, and using ZIP codes for
+tax collection results in a high degree of inaccurate tax reporting. Instead,
+use our Sales Tax Jurisdiction and Rate Lookup service to determine the
+taxing jurisdiction, correct sales tax rate, and jurisdictional reporting code.
+For additional information on sales tax rate publications, sales tax rates, and
+additional sales taxes and fees, see Tax Bulletins Sales Tax Rate
+Publications (TB-ST-820), and Sales Tax Rates, Additional Sales Taxes,
+and Fees (TB-ST-825).
+Special rules for the New York State computes the state sales tax on qualified motor fuel and
+calculation of sales diesel motor fuel using a cents-per-gallon method. The cents-per-gallon
+tax on the sale of method also applies to the additional sales tax imposed on motor fuel and
+qualified motor fuel diesel motor fuel in the MCTD. Counties and cities can also elect to change
+and diesel motor their percentage rate sales tax to a cents-per-gallon method. For more
+fuel information, see TSB-M-06(8)S, New Guidelines on the Sales of Motor Fuel
+and Diesel Motor Fuel Subject to the Cents-Per-Gallon Sales Tax, and
+Publication 718-F, Local Sales and Use Tax Rates on Qualified Motor Fuel,
+Highway Diesel Motor Fuel, and B20 Biodiesel.
+Sales tax exemption Alternative fuels (CNG, hydrogen, E85) are exempt from state and local
+and reductions for sales tax, provided the fuel meets the definition of qualified fuel. Also, a
+sales of certain reduced rate of state and local sales tax applies to biodiesel (B20).
+alternative fuels
+For additional information on these exemptions and reductions, see
+TSB-M-06(10)S, Sales Tax Exemptions and Reductions for Certain
+Alternative Fuels Beginning September 1, 2006, and TSB-M-12(10)S,
+Extension of Sales and Use Tax Exemptions for Alternative Fuels.
+22
+Publication 750
+(11/15)
+The point of delivery The point of delivery generally determines the sales tax rate that applies to
+determines the a transaction. Therefore, in computing the sales tax due, the rate to charge
+combined tax rate to is the total of the New York State tax rate in effect in the jurisdiction where
+charge on a sale, the delivery takes place, including the MCTD rate, if it applies, plus the local
+except in the case of rate in effect in that jurisdiction. For taxable sales subject to the same tax
+motor vehicles and rate, do not compute sales tax on each item separately. Instead, compute
+certain boats the tax on the total amount of the transaction. However, if separate sales
+are subject to different tax rates, then compute sales tax on each sale
+separately.
+For assistance in determining the proper jurisdiction for tax collection, go to
+the department’s website at www.tax.ny.gov. Click on Find sales tax rates
+and then the link for Jurisdiction/Rate Lookup by Address service.
+Sales of motor For sales or long-term leases of motor vehicles, trailers, and certain boats,
+vehicles, trailers, the point of delivery does not necessarily determine the rate of sales tax to
+and certain boats to charge. If the purchaser or lessee is an individual who is a resident of
+individuals New York State and the individual takes delivery of a motor vehicle, trailer,
+or boat within New York State, collect the sales tax at the rate in effect in
+the local jurisdiction where the individual is a resident. If the individual is a
+resident of New York State and has one or more residences outside of
+New York State, sales tax is to be collected at the rate in effect in the local
+jurisdiction where the individual is a New York State resident.
+If an individual is a resident of more than one local taxing jurisdiction within
+New York State (whether or not the individual has one or more residences
+outside of New York State), sales tax is to be collected at the rate in effect
+in the local jurisdiction within New York State where the vehicle, trailer, or
+boat is principally used or garaged, or the boat is principally stored. The
+storage of a boat also includes mooring.
+If the purchaser or lessee is an individual who is not a resident of New York
+State, you generally do not need to charge sales tax on the sale unless the
+vehicle, trailer or boat is registered in New York State. If the vehicle, trailer,
+or boat is registered in New York State, collect sales tax at the rate in effect
+in the jurisdiction where the vehicle, trailer, or boat is delivered to the
+purchaser.
+For sales tax purposes, an individual is a resident of New York State and of
+a local taxing jurisdiction if the individual has a permanent place of abode
+within the jurisdiction. A permanent place of abode is a dwelling place
+maintained by an individual, or maintained on his or her behalf, whether or
+not owned by the individual, on other than a temporary or transient basis.
+The dwelling may be a house, apartment, flat, trailer, mobile home,
+houseboat, or any other premises. It also may be a room, including a room
+in a hotel, motel, boarding house, club, or a room at a residence hall
+operated by an educational, charitable, or other institution. A permanent
+place of abode also includes housing provided by the Armed Forces of the
+United States, whether the housing is located on or off a military base or
+reservation.
+23
+Publication 750
+(11/15)
+An individual is also a resident of any local jurisdiction in which he or she
+carries out any employment, trade, business, or profession with respect to
+any property used in that trade, business, or profession.
+Sales of motor If the purchaser or lessee is a business that is a resident of New York State
+vehicles, trailers, and the business takes delivery of a motor vehicle, trailer, or boat within
+and certain boats to New York State, collect sales tax at the combined state and local rate in
+businesses effect in the local jurisdiction where the business is a resident. If the
+business is a resident of New York State and has one or more residences
+outside of New York State, collect sales tax at the rate in effect in the local
+jurisdiction where the business is a New York State resident.
+If a business is a resident of more than one taxing jurisdiction within
+New York State (whether or not it has one or more residences outside of
+New York State), sales tax is to be collected at the rate in effect in the local
+jurisdiction within New York State where the vehicle, trailer, or boat is
+principally used or garaged, or the boat is principally stored. The storage of
+a boat includes mooring it.
+If the purchaser is a business that is not a resident of New York State, you
+generally do not need to charge sales tax on the sale unless the vehicle,
+trailer, or boat is registered in New York State. If the vehicle, trailer, or boat
+is registered in New York State, collect sales tax at the rate in effect in the
+jurisdiction where the vehicle, trailer, or boat is delivered to the purchaser.
+See Tax Bulletin Motor Vehicles, Vessels, and Trailers (TB-ST-590).
+For sales tax purposes, a business is a resident of a New York State taxing
+jurisdiction if it carries on any employment, trade, profession, or maintains a
+place of business in the jurisdiction. The storage of property, including
+vehicles, trailers, and boats, constitutes maintaining a place of business.
+For additional information on collecting sales tax on sales of motor vehicles,
+see Publication 838, A Guide to Sales Tax for Automobile Dealers.
+Shipping and If you charge your customer for shipping, handling, or delivery on the sale of
+delivery charges tangible personal property or tangible personal property on which a taxable
+service has been performed, include your charges for shipping, handling, or
+delivery when calculating the sales tax. However, if the customer arranges
+delivery by a third person and pays that person directly, the third person’s
+delivery charge is not taxable. See TSB-M-92(2)S, Delivery Charge Added
+to Taxable Receipt Effective September 1, 1991, and Tax Bulletin Shipping
+and Delivery Charges (TB-ST-838).
+Use the Jurisdiction/Rate Lookup by Address service on the department’s
+website to determine the proper locality and rate of tax.
+Separately stating You are not required to give your customer a written or printed receipt.
+the amount of sales However, if you do give your customer any sales slip, invoice, receipt, or
+tax versus the other statement relating to a sales transaction, you must separately state
+alternate unit price the amount of sales tax due on the sales slip, invoice, receipt, or other
+method statement. See Part 3, Recordkeeping, and Tax Bulletin Recordkeeping
+Requirements for Sales Tax Vendors (TB-ST-770).
+24
+Publication 750
+(11/15)
+If you do not provide your customer with a written or printed receipt, you
+may use the alternate unit price method. The unit price is the price of the
+product, including sales tax, at which the sale is recorded. This price is
+either rung up on a cash register or accounted for in some other way. If you
+use this method, you must visibly display a sign telling the customer that the
+price he or she is paying includes sales tax. You must also distinguish
+products offered for sale by: labeling them taxable or nontaxable;
+displaying taxable and nontaxable products separately; or by having a
+detailed list of taxable and nontaxable products available for the customer.
+You must keep accurate records distinguishing sales of taxable and
+nontaxable products.
+Exempt sales
+General In general, if you only sell tangible personal property or services that are
+always exempt from sales tax (see below), you are not required to
+substantiate the exempt nature of the sale by receiving an exemption
+certificate from the purchaser. In addition, you may not be required to
+register and obtain a Certificate of Authority if the only sales that you make
+are of property and services that are always exempt from tax.
+You should collect sales tax if you sell tangible personal property or a
+service that is normally taxable unless it is exempt because, for example,
+the purchaser is a sales tax exempt organization (certain nonprofit
+organizations), the purchaser intends to resell the property or service, or
+because the purchaser will use the property or service in an exempt
+manner. In these cases, you must receive a properly completed exemption
+certificate from the purchaser within 90 days of the date of sale. Please note
+that if you sell property or services that are normally taxable, even if you
+only make sales that are exempt or excluded from the imposition of sales
+tax, you must still be registered for sales tax purposes to issue and accept
+most New York State sales tax exemption certificates. For additional
+information on exemption certificates, see Exemption certificates on
+page 27 and Tax Bulletin Quick Reference Guide for Taxable and Exempt
+Property and Services (TB-ST-740).
+Exempt sales – No Certain sales are always exempt from sales tax. Therefore, the purchaser is
+exemption not required to give you an exemption certificate to claim the exemption.
+certificate required These exemptions include, but are not limited to, sales of:
+• Food, food products, certain beverages, dietary foods, and health
+supplements that are sold for human consumption. However, sales of
+candy, confections, soft drinks, alcoholic beverages, fruit drinks that
+contain less than 70% natural fruit juice, sandwiches, and heated
+foods are subject to sales tax. (See Tax Bulletins Listings of Taxable
+and Exempt Foods and Beverages Sold by Food Stores and Similar
+Establishments (TB-ST-525) and Dietary Foods and Health
+Supplements (TB-ST-160) for more information.)
+25
+Publication 750
+(11/15)
+• Drugs and medicines intended for internal or external use, in the
+diagnosis, cure, mitigation, treatment, or prevention of illnesses or
+diseases in human beings. (See Publication 840, A Guide To Sales
+Tax For Drugstores and Pharmacies and Tax Bulletin Drugstores and
+Pharmacies (TB-ST-193).)
+• Clothing and footwear sold for less than $110 per item of clothing or
+per pair of shoes or other articles of footwear, and items used to make
+or repair exempt clothing, except that this exemption does not apply to
+any locally-imposed sales taxes unless the county or city imposing the
+sales tax has elected to also provide for the exemption. (See
+Publication 718-C, Sales and Use Tax Rates On Clothing and
+Footwear.) For additional information on the state clothing exemption
+and a listing of exempt and taxable items, see TSB-M-06(6)S, Year-
+Round Sales and Use Tax Exemption of Clothing, Footwear, and Items
+Used to Make or Repair Exempt Clothing, Effective April 1, 2006, Tax
+Bulletins Lists of Exempt and Taxable Clothing, Footwear, and Items
+Used to Make or Repair Exempt Clothing (TB-ST-530), and Clothing
+and Footwear Exemption (TB-ST-122).
+• Medical equipment and supplies. However, medical equipment and
+supplies purchased for use in providing medical or similar services for
+compensation, such as services of physicians, hospitals, clinical
+laboratories, and ambulance companies, are subject to sales tax. (See
+Publication 822, Taxable Status of Medical Equipment and Supplies,
+Prosthetic Devices, and Related Items.)
+• Prosthetic aids and devices, hearing aids, and eyeglasses.
+• Services of laundering and dry cleaning, including carpet, drapery,
+etc., and rug cleaning services.
+• Newspapers, magazines, and other periodicals.
+• Tangible personal property sold by any gift shop located in a veterans’
+home. (See TSB-M-06(15)S, Supplemental Summary of Recently
+Enacted Legislation Affecting Sales and Use Taxes Effective in 2006.)
+• Shoe repair.
+• Services of a licensed veterinarian constituting the practice of
+veterinary medicine. (See Publication 851, A Guide To Sales Tax in
+New York State for Veterinarians.)
+Exempt sales – exemption certificate required
+Certain purchases If you are registered for sales tax purposes, you can make certain
+can be made exempt purchases exempt from sales tax that would otherwise be subject to sales
+from sales tax, but tax. The purchase of inventory that will be held for resale; qualifying
+only with the manufacturing equipment; packaging material; farm equipment; and certain
+issuance of a tractors, trailers, and semitrailers are examples of some of these types of
+properly completed purchases. For more complete information on various exemption
+exemption documents and their uses, see Tax Bulletin Quick Reference Guide for
+document Taxable and Exempt Property and Services (TB-ST-740).
+26
+Publication 750
+(11/15)
+Exemption certificates
+You are not required You are not required to collect sales tax from a purchaser who furnishes
+to collect sales tax you with a properly completed exemption certificate that you accept in good
+from a purchaser faith within 90 days of the delivery of property or rendition of a service.
+who furnishes you Accepting an exemption certificate in good faith means you have no prior
+with a properly knowledge that the document is falsely or fraudulently issued.
+completed
+exemption Exemption certificates show why you did not collect tax on the sale to which
+certificate within 90 the exemption certificate relates. For example, if you sell an otherwise
+days, provided you taxable product to a purchaser who is going to sell the product to someone
+accept the certificate else (i.e., a purchase for resale), you must collect sales tax unless the
+in good faith purchaser gives you Form ST-120, Resale Certificate, within 90 days of
+your delivering the product to the purchaser. If you are audited by the Tax
+Department, the certificate will show the department that you did not collect
+sales tax because the purchaser certified that the transaction was not
+subject to tax. You must maintain a system that associates the certificate
+with the invoice or other evidence of the sale that you retain as part of your
+records. For a list of the various exemption certificates and their uses, see
+Tax Bulletin Exemption Certificates for Sales Tax (TB-ST-240).
+The purchaser must If a transaction is exempt from sales tax, the purchaser must give you a
+give you a properly properly completed exemption certificate or other required documentation
+completed within 90 days of the delivery of the product or the rendition of the service
+exemption being purchased, or within 90 days of the hotel occupancy or payment of the
+certificate within 90 amusement charge. If you accept a certificate after 90 days, both you and
+days the purchaser share the burden of proving that the sale was exempt, and
+additional substantiation may be required. Also, both you and the purchaser
+may be liable for any tax, penalties, and interest due in the event the sale is
+determined to be taxable.
+Single transaction The purchaser may give you an exemption certificate for a single sale. You
+certificates should attach this to your record of the sales transaction that you keep for
+your files, and keep it for at least three years after the due date of the sales
+tax return to which it relates, or the date the return was filed, if later.
+Blanket exemption If applicable, the purchaser may instead give you a blanket exemption
+certificates certificate. This certificate may be used for the current sale as well as for
+subsequent sales made to that purchaser. A blanket exemption certificate
+may only be used by a purchaser to cover additional sales of the same
+general type. You must keep the blanket exemption certificate for three
+years after the due date of the most recent sales tax return to which it
+relates, or the date the most recent return was filed, if later.
+Electronic resale A purchaser may issue an electronic version of a resale certificate or other
+and exemption exemption document to a seller provided the e-certificates meet all
+documents
+27
+Publication 750
+(11/15)
+departmental requirements as described in TSB-M-07(1)S, Electronic
+Resale and Exemption Documents for Sales and Compensating Use Taxes.
+Note: See page 32 for information on keeping adequate records.
+Exempt purchasers
+General Sales to certain individuals and organizations are generally not subject to
+sales tax. Exempt purchasers include the United States and its agencies
+and instrumentalities, New York State, and its local governmental agencies
+and instrumentalities; the United Nations; diplomatic missions and
+diplomatic personnel; exempt organizations such as religious, charitable,
+scientific, and educational institutions that have qualified for exempt status
+under the Tax Law; certain posts or organizations consisting of past or
+present members of the armed forces of the United States; and certain
+Indian nations, tribes, or individuals. In each case, the purchaser must
+establish the right to the exemption by submitting the proper exemption
+certificate or other documentation to the vendor. (See page 17 for more
+information on sales by governmental entities and certain exempt
+organizations.)
+Federal, New York The United States government; an agency or political subdivision of the
+State, and local United States government or New York State; or a New York State agency,
+governmental authority, or political subdivision must issue a governmental purchase order
+agencies or other appropriate proof that the sale is to the government to make a
+purchase without paying sales tax. Purchases by another state or country or
+by an agency or locality of another state or country are not exempt from tax.
+The United Nations The United Nations, or any other international organization of which the
+and similar United States of America is a member, must issue the proper exemption
+organizations certificate to make a purchase without paying sales tax.
+Other exempt Certain not-for-profit organizations (such as charitable, religious, scientific,
+organizations and educational organizations) must apply for exempt organization status
+for sales tax purposes. If the Tax Department grants this exempt
+organization status, these organizations must issue the proper exemption
+certificate.
+Posts or Posts or organizations consisting of past or present members of the armed
+organizations of forces of the United States, and the qualifying auxiliary units of such posts
+past or present or organizations, establish their right to exemption through the issuance of
+members of the the proper exemption certificate.
+United States armed
+forces
+Indian nations, The following Indian nations or tribes residing in New York State are exempt
+tribes, and organizations: Cayuga, Oneida, Onondaga, Poospatuck, Saint Regis
+individuals Mohawk, Seneca, Shinnecock, Tonawanda Band of Senecas, and
+Tuscarora.
+28
+Publication 750
+(11/15)
+These nations or tribes must provide the proper exemption certificate to
+make purchases without paying tax.
+Sales to members of recognized Indian nations or tribes are not subject to
+sales tax, provided that the product is delivered to the member of the
+qualified nation or tribe on a qualified reservation. The qualified reservations
+are Allegany, Cattaraugus, Oil Spring, Oneida, Onondaga, Poospatuck,
+St. Regis Mohawk (Akwesasne), Shinnecock, Tonawanda, and Tuscarora.
+Note: Based on the Settlement Agreement by the Oneida Nation, the State
+of New York, the County of Madison and the County of Oneida dated May
+6, 2013, special rules now apply to a business operating on Oneida Nation
+land. For more information, see Important Notice-N-15-2, Notice to
+Businesses Operating on Oneida Nation Land.
+See page 17 for information on sales by New York and United States
+governmental entities and certain exempt organizations. For more
+information, see Publication 843, A Guide to Sales Tax in New York State
+for Exempt Organizations, and Tax Bulletin Purchases and Sales by
+Government Entities (TB-ST-700).
+Taxable business purchases
+Be aware that you If you are conducting business in New York State, you should be aware that
+are required to pay you must pay sales and use taxes in the following situations, whether or not
+sales and use taxes you are required to be registered for sales tax purposes:
+in certain situations,
+whether or not you • You purchase taxable property (such as inventory) or services without
+are required to be paying taxes because you intend to resell them, but you later use the
+registered for sales property or services rather than reselling them.
+tax purposes • You purchase taxable property without paying taxes because you
+purchased them from a seller who is located outside of New York
+State, and you use that property in this state.
+• You purchase property or services outside of New York State where
+you pay the other state’s tax and use the property or services in
+New York State and the tax paid in the other state either does not
+qualify for credit against New York State and local taxes, or the tax
+paid to the other state qualifies for credit but the tax rate paid in the
+other state is less than the New York rate.
+• You purchase taxable gas and electricity without paying taxes because
+you purchased these commodities from a seller who is located outside
+New York State, and your business uses that gas and electricity in this
+state.
+• You send property out of New York State to have a taxable service
+performed on that property, do not pay tax, and then use that property
+in this state.
+• You purchase taxable property, services, hotel occupancy or pay
+admission charges in New York State without paying taxes.
+• You are a resident of a locality (county or city) in New York at the time
+of a purchase and you purchase taxable property in a locality in
+29
+Publication 750
+(11/15)
+New York State that has a lower rate of tax than the (locality) where
+you are a resident, and then you bring the property into the locality
+where you are a resident for sales tax purposes.
+• You are a resident of a locality (county or city) in New York at the time
+of a purchase and you have a taxable service performed on property in
+another locality in New York State that has a lower rate of tax than the
+(locality) where you are a resident, and then you bring the property into
+the locality where you are a resident for sales tax purposes.
+You generally compute the taxes due in the above situations on the sales
+price paid. Apply the combined state and local sales tax rate to the selling
+price (see Calculating and stating the sales tax on page 22). If you use the
+property outside New York for more than six months prior to its use within
+the state, you may calculate the tax due on the lower of the selling price or
+fair market value of the property. If you purchase taxable property outside of
+New York State, and use the property in the performance of a contract in
+New York State for a period of less than six months, you may elect to
+calculate the tax due on the lower of the fair rental value of the property for
+the period of use within New York State or the sales price paid. You may
+only use this calculation if you do not completely consume, or incorporate
+the property into real property, in New York State.
+Under certain circumstances, there may be a credit available for the amount
+of tax paid to another state or local jurisdiction of that state where your
+business made the purchase. To determine whether the tax you paid to
+another state or local jurisdiction in another state qualifies for credit against
+New York State and local tax, see Tax Bulletin Reciprocal Credit for Sales
+or Use Taxes Paid to Other Taxing Jurisdictions (TB-ST-765).
+You do not owe tax on property or services purchased outside New York
+State before you became a resident of New York State or before you began
+conducting business in New York State. This rule also applies to local sales
+and use taxes.
+If you are registered, or required to be registered, with the Tax Department
+for sales tax purposes, you must report and pay the sales and use taxes
+incurred in connection with the taxable business purchases with your
+business’s monthly, quarterly, or annual sales tax return. See page 33 for
+information on filing your sales tax return.
+If your business is not registered or required to be registered, and is not a
+sole proprietorship for federal tax purposes, you must pay any use tax due
+by filing Form ST-130, Business Purchaser’s Report of Sales and Use Tax,
+within 20 days from the date the property or service purchased is first
+brought or delivered into New York State. If your business is a sole
+proprietorship, or an estate or trust carrying on a business, trade, profession
+or occupation in New York State, you may remit any use tax due with your
+annual personal income tax return or by filing Form ST-140, Individual
+Purchaser’s Annual Report of Sales and Use Tax. An estate or trust
+carrying on a business, trade, profession or occupation in New York State
+may also remit any use tax due with its annual personal income tax return
+30
+Publication 750
+(11/15)
+or by filing Form ST-140.
+For more information, see Tax Bulletins Use Tax for Businesses
+(TB-ST-910) and Use Tax for Individuals (including Estates and Trusts)
+(TB-ST-913).
+Part 3 – Recordkeeping
+Recordkeeping rules
+Keep detailed Keeping good records of your business operation will help you prepare
+records of all sales accurate and complete sales tax returns. Your returns must show gross
+that are subject to sales, taxable sales, purchases subject to sales or use tax, sales and use
+sales or use tax taxes due for the specific locality in which the items or services were
+delivered to your customers, other special taxes due, and other information.
+See Tax Bulletin Recordkeeping Requirements for Sales Tax Vendors
+(TB-ST-770), for information about recordkeeping.
+If you must register for sales tax purposes or if you voluntarily registered,
+you must keep detailed records of all sales and credits by jurisdiction. You
+must also maintain a method of associating an exempt sale to a particular
+purchaser with the exemption certificate you have on file for that sale or
+purchaser. If you issue exemption certificates when you make purchases,
+you must maintain records of these purchases that will substantiate the
+exempt use.
+Keep your records You must keep your records for a minimum of three years from the due date
+for a minimum of of the return to which they relate, or the date the return is filed, if later. You
+three years must make the records available to the Tax Department upon request.
+Sales records You must keep records of every sale, the amount paid, charged, or due on
+the transaction, and the sales tax that is due, if any. If you give a written
+receipt or other evidence of the sale to the purchaser, you must retain a
+copy of the receipt or other evidence. Otherwise, you must keep a daily
+record of all cash and credit sales in a daybook or similar journal. The
+records and supporting documentation you keep must provide sufficient
+detail to independently determine the taxable status of each transaction and
+the amount of tax due and collected.
+Delivery records You must maintain records that substantiate points of delivery of the taxable
+products or services you sell if you delivered the product or service to a
+place other than your place of business.
+If you sell taxable products or perform taxable services within New York
+State, you must charge and collect the state’s sales tax, including the state
+sales tax imposed in the MCTD, if applicable, plus the sales tax due to the
+locality where the property or service is delivered. This is true regardless of
+where you made the sale. However, as indicated on page 23, for sales of
+motor vehicles, trailers, and certain boats, the purchaser’s place of
+31
+Publication 750
+(11/15)
+residence generally controls the jurisdiction and rate of tax.
+If you deliver products or perform services outside New York State, you do
+not need to charge New York State sales tax on the sale, regardless of
+where you made the sale.
+Your invoices must clearly show the place of delivery. In addition, you
+should keep documentation such as delivery receipts, parcel post receipts,
+bills of lading, driver log books, or, a certified copy of the export declaration
+from the foreign freight forwarder for deliveries outside the United States.
+A vendor’s charges for postage and handling to deliver taxable products or
+services are taxable, whether or not the vendor separately states the
+charges. See Tax Bulletin Delivery Rules for New York State Sales Tax
+(TB-ST-155) for information.
+Purchase records You must keep detailed records of the nature, type, value, and amount of all
+business purchases. You must be able to determine any sales and use tax
+due on the basis of these records. To fulfill this requirement, you must keep
+the purchase invoices and prepare a daily, weekly, or monthly analysis.
+Maintaining records If you maintain records in an electronic format, you may need to give the
+electronically Tax Department access to your equipment, computer programs, and
+records. You must make your electronic records available and accessible to
+the Tax Department, even if the records are also maintained in a hard copy
+format. For more information, see TSB-M-09(17)S, Amendments That
+Encourage Compliance with the Tax Law and Enhance the Tax
+Department’s Enforcement Ability.
+If you fail to keep If you fail to keep adequate records and your business is audited by the Tax
+adequate records, Department, you could be held liable for substantial additional sales and
+you could be liable use taxes plus penalties and interest. The penalties include:
+for substantial
+additional tax, • a penalty of up to $1,000 for the first quarter or part of a quarter, if you
+penalties and fail to make or maintain records or make them available to the Tax
+interest Department; the penalty increases up to $5,000 for each subsequent
+quarter or part of a quarter that failure occurs;
+• a penalty of up to $1,000 for each quarter or part of a quarter, if you fail
+to make your records available in an auditable form; and
+• a penalty of up to $5,000 for each quarter or part of a quarter, if you
+maintain records in an electronic format and fail to make those records
+available and accessible to the Tax Department.
+In addition, we may suspend or revoke your Certificate of Authority if you
+willfully fail to keep records and are convicted of a crime for that wilful
+failure.
+See TSB-M-09(17)S, Amendments That Encourage Compliance with the
+Tax Law and Enhance the Tax Department’s Enforcement Ability, Tax
+Bulletin Sales and Use Tax Penalties (TB-ST-805), and Publication 900,
+Important Information for Business Owners, for additional information.
+32
+Publication 750
+(11/15)
+Operators of parking If you operate a parking facility in New York County (Manhattan), you have
+facilities in specific recordkeeping requirements. If you operate more than one parking
+Manhattan facility in Manhattan, you must keep separate records for each facility. For
+more information about these requirements, see TP-832, Special
+Requirements for Parking Facility Operators Located in New York County
+(Manhattan) Made Permanent.
+Part 4 – Filing your sales tax return
+Filing requirements
+You must file a sales As a registered sales tax vendor, you become a trustee for the state and
+tax return on time must file your sales and use tax returns on time. You also must remit any
+even if you did not tax due, including any tax that you have not yet collected from purchasers
+have any taxable on sales occurring during the filing period. You must file a sales and use tax
+sales or business return on time, even if you have no tax due during the filing period. Sales
+purchases subject tax returns are generally due no later than 20 days after the period to which
+to use tax during the they relate has ended.
+filing period
+If you fail to file a sales tax return on time, we will calculate penalty and
+interest on the amount of tax due. We will also impose a penalty of at least
+$50, whether or not there is any tax due. Therefore, it is very important that
+you know the dates your returns must be filed, and that you remit any tax
+due on time.
+Most registered sales tax vendors must Web File their returns and remit any
+sales tax due through the Online Services section of our website. For more
+information on Web filing, see Web filing and fill-in form, on page 34 and
+Tax Bulletin E-File Mandate for Businesses (TB-MU-210). Sales tax returns
+are also available on the Tax Department’s website or by contacting us
+directly.
+For other sources of information regarding filing your sales tax return, see
+Tax Bulletins Filing a Final Sales Tax Return (TB-ST-265), Filing Period
+Indicators on Final Sales Tax Returns (TB-ST-270), and Filing
+Requirements for Sales and Use Tax Returns (TB-ST-275).
+Quarterly filing When you first register, you will be classified as a quarterly filer unless you
+meet the limited conditions described under Annual filing, below. The
+quarterly returns cover the periods March 1 through May 31, June 1 through
+August 31, September 1 through November 30, and December 1 through
+February 28 (29 in a leap year). As a result, if you are a quarterly filer, you
+will be required to file quarterly returns by June 20, September 20,
+December 20, and March 20.
+Monthly filing If the combined amount of your taxable sales and purchases subject to
+sales or use tax totals $300,000 or more in a quarter, you must file monthly
+(also referred to as part-quarterly) returns. The change to monthly filing
+33
+Publication 750
+(11/15)
+status is effective the first month following the quarter in which you exceed
+$300,000 in taxable transactions. Since we may not receive the quarterly
+return used as the basis for determining when you must begin filing monthly
+in time to change your filing status, it is your responsibility to notify the Tax
+Department of a change in your filing status, and file a return for the first
+month you are required to file monthly. You must continue to file monthly
+until your taxable sales and purchases are less than $300,000 for four
+consecutive quarters, at which time you may request a change to quarterly
+filing status. Monthly returns are due no later than 20 days after the month
+to which they apply.
+You must also file monthly if you are a distributor of petroleum products and
+your sales of petroleum products total 100,000 gallons or more in a quarter.
+Since we may not receive the quarterly return used as the basis for
+determining when you must begin filing monthly in time to change your filing
+status, it is your responsibility to notify the Tax Department of the change
+and file a return for the first month you are required to file monthly. You
+must continue to file monthly until sales of petroleum products total less
+than 100,000 gallons in four consecutive quarters, at which time you may
+request a change to quarterly filing status.
+Annual filing You will automatically be classified as an annual filer if, on your registration
+application, you:
+• indicate that you do not expect to pay or collect any sales or use tax;
+and
+• describe your major business activity as a manufacturer or wholesaler
+that does not make retail sales.
+In addition, the Tax Department may reclassify you as an annual filer if your
+total tax due for the four most recently filed quarterly periods (March through
+February) did not exceed $3,000. The Tax Department will notify you if you
+are reclassified as an annual filer.
+The annual return covers the period March 1 through February 28 (29 in a
+leap year). Since sales tax returns are generally due within 20 days after the
+end of the reporting period, you must file an annual return by March 20 each
+year.
+Web filing and fill-in Most vendors must Web File their sales tax returns and remit any sales tax
+form due through the Online Services section of our website. You will need to
+create an Online Services business account before you can Web File.
+As a sales tax vendor, you must Web File all authorized tax documents if
+you:
+• prepare tax documents yourself without the assistance of a tax
+professional;
+• use a computer to prepare, document, or calculate the required filings;
+and
+• have broadband internet access.
+34
+Publication 750
+(11/15)
+You can enroll in our subscription service on our website to receive prompt
+notification of additional online services and electronic filing requirements as
+they become available.
+For additional information on sales tax return filing requirements and
+options, visit the Tax Department’s website at www.tax.ny.gov or contact us
+directly.
+E-file mandate for For returns filed on or after January 1, 2013, tax return preparers that meet
+tax return preparers either of the following conditions must file returns electronically:
+• You or your firm prepared at least one authorized tax document for
+more than 10 different taxpayers during the previous calendar year
+and used tax software to prepare one or more of these tax documents.
+An authorized tax document includes any document that the Tax
+Department authorizes to be e-filed.
+• You were previously subject to the mandate. Once subject to the e-file
+mandate, you must continue to e-file all of your clients’ authorized tax
+documents in future years, regardless of the number of taxpayers you
+prepare returns for.
+You’re a tax return preparer if you prepare any New York State return or
+claim for refund for compensation; or you receive compensation for returns
+or claims for refund prepared by people who you employ or engage.
+The e-file mandate applies to preparers located within and outside
+New York State.
+For more information on the e-file mandate for tax return preparers, see Tax
+Bulletin E-File Mandate for Tax Return Preparers (TB-MU-220).
+Completing your sales and use tax return
+Your return is used Your return and any required schedules are used to report your business
+to report your activity. Use them to report your gross sales, taxable sales, total non-
+business activity taxable and exempt sales, purchases subject to use tax, and the total
+amount of the credits you are claiming on the return. You will also report the
+amount of your debit and credit card purchases. You must also report any
+special taxes you collected, or were required to collect, and compute the
+amount of sales and use tax you must remit with the return.
+Your return must There are more than 80 separate jurisdictions (cities, counties, and school
+report your districts) statewide that impose local sales and use taxes. Your return and
+businesses’ any required schedules are also used to report, for each of these
+activities by jurisdictions, the amounts of your sales, purchases, and credits by
+jurisdiction jurisdiction, and the amount of sales or use tax you owe for each
+jurisdiction. Therefore, you must know your gross sales and purchases;
+your taxable sales, purchases, and credits; the amount of tax you collected
+or were required to collect; and the jurisdiction in which these transactions
+35
+Publication 750
+(11/15)
+occurred.
+Tax remitted based You may keep your books using the cash or accrual method of accounting.
+on accrual method No matter which recordkeeping method you choose to record your
+of accounting business’s transactions, you must report any sales made, and remit the
+applicable sales tax based on the accrual method of accounting. That is,
+you are required to report taxable sales and remit the tax due on the return
+covering the period in which the sales are made, regardless of whether your
+customer has paid you.
+Note: If you are a materialman (a supplier of building materials), see
+TSB-M-99(2)S, Materialmen - Pay When Paid, and Tax Bulletin
+Materialmen and the Pay-When-Paid Option (TB-ST-555), for information
+on the rules relating to when you may report and remit sales tax due using
+the cash method of accounting.
+Vendor collection If you file your return on time and remit the amount of sales and use tax due
+credit on time, you may be entitled to claim a vendor collection credit on your
+return. The credit is equal to 5% of all taxes and fees collected and paid up
+to a maximum of $200 per quarter or longer period. For additional
+information, see Tax Bulletin Vendor Collection Credit (TB-ST-925).
+Remitting the tax You must remit the tax due on or before the due date. If you file or pay late
+due you will be subject to penalties and interest. In addition, we may impose a
+bad check or failed electronic withdrawal fee, if necessary.
+Certain large vendors must remit a portion of the state and local sales and
+use tax due for each period (including prepaid sales and use taxes due on
+motor fuel and diesel motor fuel) by EFT or certified check through the
+PrompTax payment program. We will notify you if you must make this type
+of payment.
+Taxpayers may also voluntarily enroll to remit payments by EFT. For more
+information about the PrompTax program, visit our website at
+www.tax.ny.gov/bus/prompt.
+Mailing your sales If you are not Web filing, send your sales tax return to the address shown
+tax return on the return.
+In addition to the United States Postal Service, you may use certain private
+delivery services to assure that returns, payments, and other
+correspondence mailed on time will be considered filed on time. The private
+delivery services that we currently treat in the same manner as the
+United States Postal Service are listed in Publication 55, Designated Private
+Delivery Services.
+36
+Publication 750
+(11/15)
+Part 5 – Show and entertainment promoters
+Show promoters
+A show promoter is A show promoter includes any person who, directly or indirectly, grants the
+a person who use of a location to any person for the display for sale or for the sale of
+organizes or taxable products or services, at four or more shows, or who operates four or
+operates a show by more shows, during a calendar year. An example of a person who indirectly
+granting the use of a grants such use of a location is a person who leases space to a person who
+location intends to operate a show. Show promoters may own or lease parking lots,
+shopping malls, hotels, or any other place where shows are held. Show
+promoters can be individuals, business groups, trade associations,
+government agencies, or nonprofit organizations.
+The term show includes flea markets, craft shows, antique shows, coin
+shows, stamp shows, comic book shows, fairs, and similar shows, whether
+the show is held regularly or is an occasional event, at which more than one
+vendor displays for sale, or makes sales of, taxable products or services.
+If you operate four If a show promoter operates four or more shows during the calendar year,
+or more shows or leases property or space to others who, in the aggregate, operate four or
+during the calendar more shows, the show promoter must register before the fourth show and
+year, or lease get a permit from the Tax Department to operate a show. However, a show
+property or space to promoter who operates fewer than four shows during a calendar year does
+others who operate not have to register as a show promoter with the Tax Department for that
+four or more shows, year.
+you must obtain a
+show permit. A show is a single event lasting up to seven consecutive days. On the
+eighth consecutive day, a second show automatically begins; on the
+fifteenth consecutive day, a third show begins; and so forth. If there is a
+break between show dates, a new show automatically starts on the first day
+after the break. If one or more days of a show are rained out, or canceled
+due to some other uncontrollable event, the break does not automatically
+start a new show.
+Filing for a show A show promoter must file Form DTF-723, Application for Show Permit and
+permit Notice of Show, at least 10 days before the fourth show opens. A show
+promoter needs only one permit for all shows held at the same location
+during the calendar year, but the shows must be listed individually on the
+application and on the back of the permit. A show promoter must file
+Form DTF-723 at least 10 days before each additional show that is held at a
+different location, or for each show that is not listed on the permit held by
+the promoter.
+If the application for a show promoter’s permit is approved, the Tax
+Department will send the applicant a validated Form DTF-724, Permit to
+Operate a Show, within five days after receiving a properly completed
+37
+Publication 750
+(11/15)
+application. The show promoter must display the validated permit at the
+main entrance to the show where everyone can see it.
+Responsibilities of a A show promoter cannot let anyone at the show offer for sale, or make
+show promoter sales of, taxable products or services unless that person is registered as a
+vendor with the Tax Department. A show promoter must, in addition, make
+sure that each vendor who is making sales of products or services at the
+show clearly displays a valid Certificate of Authority.
+Record-keeping and Starting with the fourth show, the show promoter must keep a record of
+filing requirements each vendor who participates in the show. These records must have the
+following information for each vendor: name, address, New York State
+Certificate of Authority number (include vendors who claim that their sales
+are tax exempt), and amount of rent paid. You must keep these records for
+at least three years, unless the Tax Department gives you permission to
+destroy them earlier.
+Show promoters must file Form DTF-727, Report of Show, within 20 days
+after the end of the month in which a show is scheduled to be held. They
+must file a separate report for each show scheduled in that month. If the
+dates of a single show include the last day of one month and the first day of
+the next month, that show may be reported as though all dates of that show
+occurred in the second month. They must file this report even if a scheduled
+show was canceled. Form DTF-727-I, Instructions for Form DTF-727,
+Report of Show, gives detailed instructions on how to complete and file the
+report.
+Show promoters must return Form DTF-724, Permit to Operate a Show, to
+the Tax Department along with Form DTF-727 that covers the last show
+date indicated on the permit.
+When a show has more than one promoter, each promoter must file
+Form DTF-727, but only one promoter needs to submit a list of participating
+vendors (as shown on the back of Form DTF-727). However, each promoter
+is responsible for ensuring that we receive the list of participating vendors.
+Promoters who do not list participating vendors must include on their
+Form DTF-727, the names, addresses, and show permit numbers of the
+other promoters, and indicate which one is submitting the list of vendors.
+Entertainment promoters
+An entertainment An entertainment promoter includes any person who, directly or indirectly,
+promoter is an owns or operates a facility or site where entertainment events are held, and
+owner or operator of who allows vendors to make sales of tangible personal property at an event.
+a facility where An entertainment promoter may also be someone who, directly or indirectly,
+entertainment rents, leases, or grants a vendor a license to use space at an entertainment
+events are held event or who has management responsibility with respect to those vendors
+making sales at such event.
+38
+Publication 750
+(11/15)
+An entertainment event includes a concert, an athletic contest or exhibition
+(other than an amateur sports competition), and other similar forms of
+entertainment such as a musical show, dramatic play, rodeo, auto race, or a
+dog show, where:
+• the persons performing at the event give less than four performances
+per week at the same location where the event occurs, or in the case
+of athletic contests or exhibitions between teams, no one team
+competes in more than four contests per year at that location; and
+• the facility or site where the event is held holds more than 1,000
+people.
+Example: A professional football team that plays 10 games a year at its
+home field hosts an out-of-state team to play a regular season game.
+This game is not considered to be an entertainment event because one
+of the teams competes at that location more than four times a year.
+The term entertainment event does not include events such as high school
+or college athletic games, little league games, or festivals featuring amateur
+sporting events. In the case of concerts, plays, shows or other similar forms
+of entertainment, the term entertainment event does not include an event
+that consists of four or more performances by the same person or persons
+during a weekly period at the same facility or site.
+Filing for an If sales of tangible personal property are going to be made at one or more
+Entertainment entertainment events, the promoter must file Form DTF-728, Application for
+Promoter Certificate Entertainment Promoter Certificate, at least 20 days before the first
+entertainment event is held. The Tax Department will, within 10 days after
+receiving a properly completed Form DTF-728, send the entertainment
+promoter a validated Form DTF-729, Entertainment Promoter Certificate, if
+the application is approved.
+An entertainment promoter only needs one certificate for all events held at
+the same location during the calendar year, and those events must be listed
+on the back of the permit. An entertainment promoter must file
+Form DTF-728 for each additional event held at a different location or for
+each event not listed on the original permit held by the promoter.
+Responsibilities of An entertainment promoter cannot let anyone at the entertainment event
+an entertainment offer for sale, or make sales of, taxable tangible personal property unless
+promoter that person is a registered vendor. The entertainment promoter must also
+make sure that each vendor making sales of taxable products at the event
+displays a valid Certificate of Authority. Entertainment promoters who allow
+an unregistered vendor to make taxable sales of tangible personal property
+at an entertainment event may be subject to a substantial penalty.
+An entertainment promoter must keep records of the name, address, and
+Certificate of Authority number of every vendor that the entertainment
+promoter authorizes to make taxable sales, at each entertainment event for
+which he or she is a promoter.
+39
+Publication 750
+(11/15)
+An entertainment promoter must also file Form DTF-730, Report of
+Entertainment Event, within 20 days after the end of the month in which an
+entertainment event was scheduled to be held. The entertainment promoter
+must file this report even if an event was canceled. Form DTF-730-I,
+Instructions for Form DTF-730, provides detailed instructions on how to
+complete this report.
+If the dates of a single event include the last day of one month and the first
+day of the next month, that event may be reported as though the entire
+event occurred in the second month.
+The promoter must return Form DTF-729, Entertainment Promoter
+Certificate, to the Tax Department along with Form DTF-730 covering the
+last event date on the permit.
+These requirements apply to entertainment promoters whether or not they
+charge admissions for the event, and whether or not any charges for
+admissions are taxable. If there is more than one entertainment promoter
+for any entertainment event, the requirement imposed on an entertainment
+promoter will be satisfied if any one promoter complies with the
+requirement.
+Part 6 - Purchasing or acquiring a business or its assets: Caution
+Bulk sales transactions
+If you are acquiring If you are purchasing or otherwise acquiring some or all of the business
+business assets of assets of an existing business that is registered or required to be registered
+an existing for sales tax purposes, other than in the ordinary course of the seller’s
+business, you may business, you may be held personally liable for any sales taxes the seller
+be held liable for any owes the Tax Department. You may be held liable for the amount of the
+sales taxes that are seller’s unpaid sales and use taxes, up to the sales price or fair market
+due to the Tax value of the assets you purchased or acquired, whichever is greater. This
+Department from the applies whether the assets you are acquiring are tangible personal property,
+seller/transferor intangible property, or real property.
+The sale, transfer, or assignment of business assets, in whole or in part, by
+a person required to be registered for sales tax purposes, other than in the
+seller’s ordinary course of business, is called a bulk sale transaction.
+As the purchaser, transferee, or assignee (hereinafter, the purchaser) in a
+bulk sale transaction you will not be held liable for the seller’s unpaid sales
+and use tax liability if you comply with all of the requirements listed below.
+• Notify the Tax Department – You must notify the Tax Department of
+the pending bulk sale transaction at least 10 days before paying for
+or taking possession of any business assets, whichever occurs
+first, by filing Form AU-196.10, Notification of Sale, Transfer, or
+Assignment in Bulk.
+40
+Publication 750
+(11/15)
+You must send Form AU-196.10 by registered mail, certified mail with
+return receipt, or it can be hand delivered, to the address on the form.
+The seller is supposed to advise you of this notification requirement,
+but if the seller does not, that does not relieve you of liability for the
+seller’s unpaid sales and use taxes. When the 10th day falls on a
+Saturday, Sunday, or legal holiday in New York State, notice will be
+considered timely if given on the next succeeding day which is not a
+Saturday, Sunday, or legal holiday in New York State.
+• Withhold consideration payable to the seller until authorized to release
+it by the Tax Department – Within five business days of receiving Form
+AU-196.10, the Tax Department will advise you as to whether the
+seller has unpaid sales and use taxes. If the seller has unpaid sales or
+use taxes or is selected for additional review or audit, the Tax
+Department will send you Form AU-196.2, Notice of Claim to
+Purchaser, which will require you to not release any consideration to
+the seller until authorized by the department.
+If the seller does not have any unpaid sales or use taxes and if an additional
+review or audit is not necessary, the Tax Department will issue to you
+Form AU-197.1, Purchaser’s and/or Escrow Agent’s Release-Bulk Sale.
+If the department does not issue Form AU-196.2 to you within five business
+days of the date it received your properly completed, timely filed AU-196.10,
+or if the department incorrectly sends you Form AU-197.1, you will not be
+held liable for any of the seller’s unpaid sales and use taxes under
+section 1141(c) of the Tax Law, and you may pay the seller the full
+purchase price. However, the assets you purchased from the seller may be
+subject to the department’s liens if there are outstanding warrants or
+judgments against the seller for past unpaid sales and use taxes.
+For purposes of the department’s obligation to respond within five business
+days, the date of receipt of Form AU-196.10 by the department will be the
+date it was actually delivered to the Bulk Sales Unit of the Audit Division, but
+no earlier than 10 days before the later of the scheduled date of sale or the
+actual date of sale. The actual date of sale is deemed to be the earlier of the
+date of payment or the date the purchaser takes possession of the assets
+acquired.
+If you receive Form AU-197.1 – You may pay the seller the full purchase
+price. The department will not hold you liable for any of the seller’s unpaid
+sales or use taxes, although the assets you purchased may be subject to
+the department’s liens if there are outstanding warrants or judgments.
+If you receive Form AU-196.2 – You will be advised not to pay the seller
+until the Tax Department completes its review of the seller’s sales tax
+account. Within 90 days of the receipt of Form AU-196.10, the department
+must notify you (and the seller) of the actual amount of sales and use taxes
+the seller owes for which you can be held liable on account of the bulk sale.
+Upon receipt of Form AU-196.2, you may wish to consult a tax practitioner
+about the best course of action to take.
+41
+Publication 750
+(11/15)
+For more information on bulk sale transactions, see TSB-M-83(6)S,
+Guidelines for Bulk Sales Transactions and Tax Bulletin Bulk Sales
+(TB-ST-70).
+You may owe sales and use taxes on the business assets purchased
+In addition to your obligations and requirements with respect to sales and
+use taxes accrued and determined to be due to the department from the
+seller, you are also responsible for paying the sales and use taxes due, if
+any, on your purchase of any tangible personal property as part of a bulk
+sale transaction. Sales and use taxes are not imposed on the sale or use of
+real property or intangible assets, such as goodwill.
+Sales tax registration requirements – If, as the owner of a new business,
+you will be making taxable sales, issuing or accepting certain exemption
+certificates, charging rent for hotel or motel rooms or making admission
+charges, you must register for sales tax purposes. See Tax Bulletin How to
+Register for New York State Sales Tax (TB-ST-360). You will find step by
+step instructions on how to apply for a Certificate of Authority using New
+York Business Express.
+The following examples illustrate some common transactions that are and
+are not bulk sales:
+Example: Corporation A, a person required to collect sales tax, sells its
+business assets to Corporation B. This sale is a bulk sale transaction.
+Example: Corporation A, a person required to collect sales tax,
+transfers all of its business assets to Corporation B in exchange for
+stock in Corporation B. The transfer of Corporation A’s assets to
+Corporation B is a bulk sale transaction.
+Example: Corporation A purchases all the issued and outstanding
+stock of Corporation B, a person required to collect sales tax.
+Corporation A and Corporation B will continue to exist as separate legal
+entities. Since the business assets of Corporation B have not been
+transferred in connection with the sale of its stock, this is not a bulk sale
+transaction.
+Example: Corporation A, a person required to collect sales tax, sells its
+entire inventory which is purchased by Corporation B for resale. The
+sale by Corporation A is a bulk sale transaction.
+Example: Mr. Smith, a person required to collect sales tax, makes a gift
+of all of his business assets to another person. This transfer is a bulk
+sale transaction.
+42
+Publication 750
+(11/15)
+Appendix – List of common sales tax forms
+Business account updates:
+DTF-95 .......... Business Tax Account Update
+DTF-96 .......... Report of Address Change for Business Tax Accounts
+Sales tax returns:
+ST-100 .......... New York State and Local Quarterly Sales and Use Tax Return
+ST-101 .......... New York State and Local Annual Sales and Use Tax Return
+ST-809 .......... New York State and Local Sales and Use Tax Return for Part-Quarterly (Monthly) Filers
+ST-810 .......... New York State and Local Quarterly Sales and Use Tax Return for Part-Quarterly (Monthly)
+Filers
+Sales tax exemption forms:
+ST-120 .......... Resale Certificate
+ST-120.1 ....... Contractor Exempt Purchase Certificate
+ST-121 .......... Exempt Use Certificate
+ST-124 .......... Certificate of Capital Improvement
+ST-125 .......... Farmers and Commercial Horse Boarding Operator’s Exemption Certificate
+Other sales tax forms:
+AU-11 ............ Application for Credit or Refund of Sales or Use Tax
+AU-12 ............ Application for Credit or Refund of Sales or Use Tax – Qualified Empire Zone
+Enterprise (QEZE)
+AU-196.10 ..... Notification of Sale, Transfer, or Assignment in Bulk
+ST-130 .......... Business Purchaser’s Report of Sales and Use Tax
+ST-140 .......... Individual Purchaser’s Annual Report of Sales and Use Tax
+43
+Notes
+Notes
+Notes
+
+Publication 750
+(11/15)
+Need help?
+Telephone assistance
+Visit our Web site at www.tax.ny.gov
+• get information and manage your taxes online Sales Tax Information Center: (518) 485-2889
+• check for new online services and features
+To order forms and publications: (518) 457-5431
+Text Telephone (TTY) Hotline (for persons with Persons with disabilities: In compliance with the
+hearing and speech disabilities using a TTY): If you Americans with Disabilities Act, we will ensure that our
+have access to a TTY, contact us at (518) 485-5082. lobbies, offi ces, meeting rooms, and other facilities
+If you do not own a TTY, check with independent are accessible to persons with disabilities. If you have
+living centers or community action programs to fi nd questions about special accommodations for persons
+out where machines are available for public use. with disabilities, call the information center.
+NYS TAX DEPARTMENT
+W A HARRIMAN CAMPUS
+ALBANY NY 12227

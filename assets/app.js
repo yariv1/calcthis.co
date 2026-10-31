@@ -13063,6 +13063,33 @@ CalcThis.saleTaxEngine = (function () {
       { t: 'Rates change every quarter', d: 'Local rates can change on January 1, April 1, July 1 or October 1. The rates here are from the October 2026 table.' }
     ]
   });
+  /* New York City: a city page (not a state). One flat rate in all five boroughs = 4% state + 4.5% city + 0.375% MCTD (nyc.gov Finance, NYC311).
+     Clothing and shoes under $110 PER ITEM are exempt from all three (NY Tax Bulletin TB-ST-122, Publication 718-C eff. 3/1/2025). */
+  S.NYC = { code: 'NYC', name: 'New York City', base: 8.875, avgLocal: 0, maxLocal: 0, city: true, live: true, slug: 'new-york-city', eff: 'March 1, 2025 (Publication 718, 718-C) and the current NYC Department of Finance guidance',
+    rateNote: '8.875% in all five boroughs (4% state + 4.5% city + 0.375% commuter-district tax)',
+    split: [{ label: 'State', rate: 4 }, { label: 'City', rate: 4.5 }, { label: 'MCTD', rate: 0.375 }],
+    src: [{ t: 'NYC Department of Finance — New York State sales and use tax', u: 'https://www.nyc.gov/site/finance/business/business-nys-sales-tax.page' }, { t: 'NYC311 — Sales Tax', u: 'https://portal.311.nyc.gov/article/?kanumber=KA-01675' }, { t: 'NY Tax Dept. — Publication 718, Sales and Use Tax Rates by Jurisdiction (2/25)', u: 'https://www.tax.ny.gov/pdf/publications/sales/pub718.pdf' }, { t: 'NY Tax Dept. — Publication 718-C, Rates on Clothing and Footwear (2/25)', u: 'https://www.tax.ny.gov/pdf/publications/sales/pub718c.pdf' }, { t: 'NY Tax Dept. — Clothing and Footwear Exemption (TB-ST-122)', u: 'https://www.tax.ny.gov/pubs_and_bulls/tg_bulletins/st/clothing_and_footwear.htm' }, { t: 'NY Tax Dept. — Publication 750, A Guide to Sales Tax in New York State', u: 'https://www.tax.ny.gov/pdf/publications/sales/pub750.pdf' }, { t: 'NY Tax Dept. — Find sales tax rates (destination rule)', u: 'https://www.tax.ny.gov/bus/st/rates.htm' }],
+    cats: [
+      { id: 'general', label: 'Other goods', long: 'Most other goods', taxable: true, note: 'Most goods are taxable: electronics, furniture, household items, books and more.' },
+      { id: 'clothing', label: 'Clothing & shoes', long: 'Clothing and footwear (per item or pair)', taxable: true, under: 110, tip: 'Each item or pair under $110 is exempt from state, city and MCTD tax.', note: 'Each item or pair that costs less than $110 is exempt from state, city and MCTD tax; an item at $110 or more pays the full rate on its whole price. Enter one item or pair per line. Jewelry, watches, costumes, rented formalwear, athletic equipment and protective gear are taxable — choose “Other goods” for those.' },
+      { id: 'grocery', label: 'Groceries', long: 'Groceries (food for home)', taxable: false, note: 'Food, food products, dietary foods and health supplements sold for home use are exempt. Candy, soft drinks, alcohol, fruit drinks under 70% juice, sandwiches and heated food are taxable.' },
+      { id: 'prepared', label: 'Restaurant & heated food', long: 'Restaurant meals, sandwiches and heated food', taxable: true, note: 'Restaurant food and drink, sandwiches and heated food are taxable.' },
+      { id: 'candy', label: 'Candy, soda & alcohol', long: 'Candy, soft drinks, alcohol and juice drinks under 70% juice', taxable: true, note: 'Taxable, even when bought in a grocery store.' },
+      { id: 'drugs', label: 'Medicine', long: 'Drugs and medicines for people', taxable: false, note: 'Drugs and medicines for people are exempt, and so are medical equipment and supplies for home use, eyeglasses, hearing aids and diapers.' },
+      { id: 'service', label: 'Haircut, massage, gym', long: 'Barbering, beauty, massage and fitness-club services', taxable: true, rate: 4.5, note: 'Beauty, barbering, manicure, massage, tanning and similar services and health-club fees pay the 4.5% City tax only — there is no State tax on the service. Products you buy there pay the full 8.875%.' },
+      { id: 'parking', label: 'Parking, Manhattan', long: 'Parking, garaging or storing a vehicle in Manhattan', taxable: true, rate: 18.375, note: 'Manhattan parking pays 10.375% plus an 8% surtax: 18.375%.' },
+      { id: 'parkres', label: 'Parking, Manhattan resident', long: 'Parking for a Manhattan resident with a Manhattan-registered vehicle', taxable: true, rate: 10.375, note: 'A Manhattan resident who owns a Manhattan-registered vehicle can be exempt from the 8% surtax and pays 10.375%. Eligibility rules apply.' }
+    ],
+    shipNote: 'Shipping, handling and delivery charged by the seller on a taxable item are taxable. If you arrange delivery yourself and pay the carrier directly, the carrier’s charge is not taxed. Delivery of an exempt item (groceries, clothing under $110) is not taxed.',
+    others: [
+      { t: 'One rate in all five boroughs', d: 'Manhattan, Brooklyn, Queens, the Bronx and Staten Island all charge 8.875%: 4% New York State, 4.5% New York City and 0.375% for the Metropolitan Commuter Transportation District (MCTD). The rate follows where the item is delivered or handed to you.' },
+      { t: 'Clothing under $110', d: 'Clothing and footwear that cost less than $110 per item or pair are exempt from all of the tax. The test is per item, not per purchase: five shirts at $60 each are all exempt, a single $110 jacket pays the full 8.875% on the whole $110.' },
+      { t: 'Food and drink', d: 'Groceries are exempt. Candy, soft drinks, alcohol, sandwiches, heated food and restaurant meals are taxable. Choose the item type in the calculator to see the difference.' },
+      { t: 'Parking', d: 'Parking, garaging and storing a car in Manhattan pays 10.375% plus an 8% surtax: 18.375%. A qualifying Manhattan resident with a Manhattan-registered vehicle pays 10.375%.' },
+      { t: 'Haircuts, massage and gyms', d: 'Beauty and barbering services, massage, tanning and fitness clubs pay the 4.5% City tax on the service only. Products sold there pay 8.875%.' },
+      { t: 'Hotels, tickets and other taxes', d: 'Hotel occupancy tax, admission and ticket taxes and similar local taxes are not computed here. Check the NYC Department of Finance for those.' },
+      { t: 'Bought online or out of state', d: 'If the seller did not charge New York tax you owe use tax at the same rate where you use the item. A credit may be available for tax paid to another state; enter the rate the seller charged under Go advanced.' }
+    ] };
   function r2(x) { return Math.round(x * 100 + 1e-9) / 100; }
   function cat(st, id) { var l = st && st.cats ? st.cats : []; for (var i = 0; i < l.length; i++) if (l[i].id === id) return l[i]; return null; }
   function zone(st, id) { var l = st && st.zones ? st.zones : []; for (var i = 0; i < l.length; i++) if (l[i].id === id) return l[i]; return null; }
@@ -13072,7 +13099,9 @@ CalcThis.saleTaxEngine = (function () {
     if (!st) return { rate: o.own == null ? 0 : o.own, taxable: true, ignored: '' };
     var c = cat(st, o.cat);
     if (c && !c.taxable) return { rate: 0, taxable: false, ignored: '', cat: c };
+    if (c && c.under != null && o.amt != null && o.amt < c.under) return { rate: 0, taxable: false, ignored: '', cat: c };
     if (o.own != null) return { rate: o.own, taxable: true, ignored: '', cat: c };
+    if (c && typeof c.rate === 'number') return { rate: c.rate, taxable: true, ignored: '', cat: c };
     if (st.places) {
       if (!o.place) return { rate: null, taxable: true, ignored: '', cat: c, needsPlace: true };
       var fd = !!(c && c.rate === 'food');
@@ -13090,7 +13119,7 @@ CalcThis.saleTaxEngine = (function () {
     var lines = [], taxSum = 0, shipTax = 0, owedRaw = 0, paid = o.paid == null ? null : o.paid;
     var stt = o.state ? S[o.state] : null, shipTaxed = (stt && stt.live && !stt.shipOpt) ? true : !!o.shipTaxed;
     for (i = 0; i < items.length; i++) {
-      var it = items[i], rf = rateFor({ state: o.state, cat: it.cat, zone: o.zone, own: o.own, place: o.place });
+      var it = items[i], rf = rateFor({ state: o.state, cat: it.cat, zone: o.zone, own: o.own, place: o.place, amt: it.amt });
       var tax = r2(it.amt * rf.rate / 100);
       var share = sum > 0 ? ship * it.amt / sum : 0;
       if (shipTaxed) shipTax += share * rf.rate / 100;
@@ -13107,7 +13136,14 @@ CalcThis.saleTaxEngine = (function () {
   }
   /* tax-inclusive total -> price before tax and the tax inside it */
   function reverse(o) {
-    var rf = rateFor({ state: o.state, cat: o.cat, zone: o.zone, own: o.own, place: o.place }), tot = r2(o.total);
+    var tot = r2(o.total), rf = rateFor({ state: o.state, cat: o.cat, zone: o.zone, own: o.own, place: o.place, amt: tot });
+    var cu = o.state && S[o.state] ? cat(S[o.state], o.cat) : null;
+    if (cu && cu.under != null && tot >= cu.under) {
+      /* a price under the line has no tax, a price at or over it pays full tax: totals in between cannot exist */
+      var edge = add({ state: o.state, items: [{ amt: cu.under, cat: o.cat }], ship: 0, own: o.own, place: o.place }).total;
+      if (tot < edge) return { gap: true, lo: cu.under, hi: edge, total: tot, rate: null, catObj: cu };
+      rf = rateFor({ state: o.state, cat: o.cat, zone: o.zone, own: o.own, place: o.place, amt: cu.under });
+    }
     var pre = rf.rate > 0 ? r2(tot / (1 + rf.rate / 100)) : tot;
     return { total: tot, pre: pre, tax: r2(tot - pre), rate: rf.rate, taxable: rf.taxable, ignored: rf.ignored, catObj: rf.cat };
   }
@@ -13330,15 +13366,35 @@ CalcThis.initSalesTaxCalc = function () {
       if (r.ship > 0) tip += shipChk ? ' Shipping is taxed because it is billed with handling as one charge.' : ' Shipping is not taxed because it is listed separately.';
     } else if (s.live) {
       var exm = r.lines.filter(function (l) { return !l.taxable; });
-      tip = (r.rate === s.base && !r.mixed ? s.name + ' has one statewide rate of ' + pct(s.base) + ' and no city or county sales tax, so this total is exact.' : (r.rate != null && r.rate !== s.base ? 'Rate used: ' + pct(r.rate) + ' (' + E.zone(s, $('stZone').value).label + ').' : (r.mixed ? 'Different items have different rates.' : '')));
-      if (exm.length) tip += ' ' + exm.map(function (l) { return l.catObj.label + ': ' + l.catObj.note; }).filter(function (v, k, a) { return a.indexOf(v) === k; }).join(' ');
+      tip = (s.city && r.rate === s.base && !r.mixed ? s.name + ' charges ' + s.rateNote + ', so this total is exact.' : r.rate === s.base && !r.mixed ? s.name + ' has one statewide rate of ' + pct(s.base) + ' and no city or county sales tax, so this total is exact.' : (r.rate != null && r.rate !== s.base ? 'Rate used: ' + pct(r.rate) + ' (' + (E.zone(s, $('stZone').value) || r.lines.filter(function (l) { return l.taxable; })[0].catObj).label + ').' : (r.mixed ? 'Different items have different rates.' : '')));
+      if (exm.length) tip += ' ' + exm.map(function (l) { return l.catObj.label + ': ' + (l.catObj.tip || l.catObj.note); }).filter(function (v, k, a) { return a.indexOf(v) === k; }).join(' ');
       if (r.ignored.length) tip += ' ' + r.ignored.join(' ');
     } else tip = rangeLine(s, r.subtotal + (shipChk ? r.ship : 0), own, shipChk ? 0 : r.ship);
     $('stTip').textContent = tip.trim(); $('stTip').style.display = tip.trim() ? '' : 'none';
     var extra = '';
     if (r.owed != null && (s || own != null)) extra = '<div class="fc-grp">Bought out of state or online?</div><p class="res-tip">The seller charged ' + pct(r.paid) + '. ' + (!r.lines.some(function (l) { return l.taxable; }) ? 'These items are exempt, so no use tax is owed.' : r.owed > 0 ? 'You still owe about <b>' + mon(r.owed) + '</b> in use tax' + (s ? ' to ' + s.name : '') + ' to make up the difference.' : 'That already covers the tax rate here, so no use tax is owed.') + '</p>';
     var plain = s && s.live && !s.places && own == null && r.lines.every(function (l) { return l.cat === 'general' && l.rate === s.base; });
-    $('stExtra').innerHTML = extra + (plain ? neighbours(r.subtotal) : '');
+    var cityX = '';
+    if (s && s.live && s.city && own == null) {
+      if (s.split && r.tax > 0 && r.rate === s.base && !r.mixed) {
+        var sa = E.r2(r.tax * s.split[0].rate / s.base), sc = E.r2(r.tax * s.split[2].rate / s.base), sb = E.r2(r.tax - sa - sc);
+        var sp = bar([['ln-p', sa, s.split[0].label + ' (' + pct(s.split[0].rate) + ')'], ['ln-i', sb, s.split[1].label + ' (' + pct(s.split[1].rate) + ')'], ['ln-s', sc, s.split[2].label + ' (' + pct(s.split[2].rate) + ')']]);
+        cityX += '<div class="fc-grp">Where your ' + mon(r.tax) + ' of tax goes</div>' + sp[0] + '<div class="ln-leg">' + sp[1] + '</div>';
+      }
+      var cl = r.lines.filter(function (l) { return l.catObj && l.catObj.under != null; });
+      if (cl.length) {
+        var U = cl[0].catObj.under, edgeT = E.add({ state: code(), items: [{ amt: U, cat: cl[0].cat }], ship: 0 }), below = E.r2(U - 0.01);
+        cityX += '<div class="fc-grp">The ' + mon(U).replace('.00', '') + ' clothing line</div>';
+        r.lines.forEach(function (l, i) {
+          if (!l.catObj || l.catObj.under == null) return;
+          var nm = (items.length > 1 ? 'Item ' + (i + 1) : 'Item') + ': ' + mon(l.amt) + ' — ';
+          if (l.amt < U) { var bl = bar([['ln-p', l.amt, 'Price'], ['ln-s', U - l.amt, 'Room left under the line']]); cityX += '<p class="res-tip">' + nm + 'exempt, ' + mon(E.r2(U - l.amt)) + ' under the line.</p>' + bl[0] + '<div class="ln-leg">' + bl[1] + '</div>'; }
+          else { var bo = bar([['ln-i', l.amt, 'Price, at or over the line']]); cityX += '<p class="res-tip">' + nm + 'taxed on the whole price: ' + mon(l.tax) + '.</p>' + bo[0] + '<div class="ln-leg">' + bo[1] + '</div>'; }
+        });
+        cityX += '<p class="res-tip">The line is per item or pair. At ' + mon(below) + ' the tax is $0.00; at ' + mon(U) + ' it jumps to ' + mon(edgeT.tax) + '.</p>';
+      }
+    }
+    $('stExtra').innerHTML = extra + cityX + (plain ? neighbours(r.subtotal) : '');
     $('stResults').style.display = '';
     $('stCopyWrap').style.display = '';
     last = { mode: 'add', r: r, s: s, rate: rate, place: pl && pl.label };
@@ -13358,6 +13414,7 @@ CalcThis.initSalesTaxCalc = function () {
     }
     var pl = placed() && own == null ? st.place : null;
     var r = E.reverse({ state: code() || null, total: n, cat: live() ? $('stRevCat').value : 'general', zone: zone, own: own, place: pl });
+    if (r.gap) { empty('Price before tax', 'No clothing purchase in ' + s.name + ' can total ' + mon(r.total) + '. An item under ' + mon(r.lo) + ' has no tax, so its total stays under ' + mon(r.lo) + '; an item of ' + mon(r.lo) + ' or more costs at least ' + mon(r.hi) + ' with tax.', hints[0]); return; }
     $('stResLab').textContent = 'Price before tax'; $('stBig').textContent = mon(r.pre);
     $('stSub').textContent = r.tax > 0 ? 'Includes ' + mon(r.tax) + ' of sales tax at ' + pct(r.rate) : (r.taxable ? 'No tax is included at a 0% rate' : 'No sales tax is included — this kind of item is exempt');
     $('stMLab').textContent = 'Price before tax'; $('stMVal').textContent = mon(r.pre);
@@ -13366,7 +13423,7 @@ CalcThis.initSalesTaxCalc = function () {
     var tip = '';
     if (!s) tip = 'Using your sales tax rate of ' + pct(own) + '.';
     else if (own != null) tip = 'Using your own rate of ' + pct(own) + ' on this item.';
-    else if (s.live) { tip = r.taxable ? (r.rate === s.base ? s.name + ' has one statewide rate of ' + pct(s.base) + ' and no city or county sales tax, so this is exact.' : 'Rate used: ' + pct(r.rate) + (pl ? ' for ' + pl.label : '') + '.') : r.catObj.note; if (r.ignored) tip += ' ' + r.ignored; }
+    else if (s.live) { tip = r.taxable ? (s.city && r.rate === s.base ? s.name + ' charges ' + s.rateNote + ', so this is exact.' : r.rate === s.base ? s.name + ' has one statewide rate of ' + pct(s.base) + ' and no city or county sales tax, so this is exact.' : 'Rate used: ' + pct(r.rate) + (pl ? ' for ' + pl.label : '') + '.') : r.catObj.note; if (r.ignored) tip += ' ' + r.ignored; }
     else if (own == null && s.maxLocal > 0) { var lowPre = E.r2(n / (1 + (s.base + s.maxLocal) / 100)); tip = 'This uses the ' + s.name + ' state rate (' + pct(s.base) + ') only. If your city or county adds up to ' + pct(s.maxLocal) + ', the price before tax would be between ' + mon(lowPre) + ' and ' + mon(r.pre) + '. Enter your exact combined rate under Go advanced to get one number.'; }
     else tip = rangeLine(s, r.pre, own, 0);
     $('stTip').textContent = tip.trim(); $('stTip').style.display = tip.trim() ? '' : 'none';
@@ -13390,7 +13447,7 @@ CalcThis.initSalesTaxCalc = function () {
     var bb = bar([['ln-p', nb, 'Price'], ['ln-i', tax, 'Sales tax']]); $('stBar').innerHTML = bb[0]; $('stBarLeg').innerHTML = bb[1];
     var tip = 'Prices rounded to the cent can move the rate by a few thousandths of a percent.';
     if (s && s.live && s.places) tip = rate < s.places.lo - 0.02 ? 'That is lower than any combined ' + s.name + ' rate (the lowest is ' + pct(s.places.lo) + '), so some of the tax may be missing from the price. ' + tip : (rate > s.places.hi + 0.02 ? 'That is higher than any combined ' + s.name + ' rate (the highest is ' + pct(s.places.hi) + '), so it may include other charges. ' + tip : 'Combined ' + s.name + ' rates run from ' + pct(s.places.lo) + ' to ' + pct(s.places.hi) + ' (' + pct(s.base) + ' state plus local tax). ' + tip);
-    else if (s && s.live) tip = Math.abs(rate - s.base) < 0.02 ? 'That matches ' + s.name + '’s statewide rate of ' + pct(s.base) + '. ' + tip : s.name + '’s statewide rate is ' + pct(s.base) + ' — this rate is ' + (rate > s.base ? 'higher' : 'lower') + ', so a different rate, a zone rate or a fee may be involved. ' + tip;
+    else if (s && s.live) tip = Math.abs(rate - s.base) < 0.02 ? 'That matches ' + s.name + '’s ' + (s.city ? 'citywide' : 'statewide') + ' rate of ' + pct(s.base) + '. ' + tip : s.name + '’s ' + (s.city ? 'citywide' : 'statewide') + ' rate is ' + pct(s.base) + ' — this rate is ' + (rate > s.base ? 'higher' : 'lower') + ', so a different rate, a zone rate or a fee may be involved. ' + tip;
     else if (s) tip = Math.abs(rate - s.base) < 0.02 ? 'That matches ' + s.name + '’s state rate of ' + pct(s.base) + '. ' + tip : s.name + '’s state rate is ' + pct(s.base) + (s.maxLocal ? ', and cities and counties may add up to ' + pct(s.maxLocal) + '.' : '.') + ' ' + tip;
     $('stTip').textContent = tip; $('stTip').style.display = '';
     $('stExtra').innerHTML = '';
