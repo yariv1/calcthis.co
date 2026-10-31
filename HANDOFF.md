@@ -1,40 +1,81 @@
 # SESSION HANDOFF — read this FIRST, then CLAUDE.md hard rules
 
-_Rewritten 2026-10-29 at the very end of the Minnesota + Unit Converter session (v235 → v241). §0-§2 are current and authoritative; §3 onward is older reference (still valid unless §0-§2 contradicts it). The next session must start FULLY synced from this file + CLAUDE.md + memory. The user must NOT have to re-explain anything ("do not dare to start the new session confused … smooth and seamless continuation")._
+_Rewritten 2026-10-31 at the end of the RNG + nav-fix + pair-page-research session (v241 → v248). §0 (0.1-0.4d) is current and authoritative; 0.5-0.7 and §1+ are older reference (still valid unless §0 contradicts them; §1 table and §2 are SUPERSEDED by 0.1). The next session must start FULLY synced from this file + CLAUDE.md + memory. The user must NOT have to re-explain anything ("do not dare to start the new session confused … smooth and seamless continuation")._
 
 ---
 
-## 0. THE 60-SECOND VERSION
+## 0. THE 60-SECOND VERSION (rewritten 2026-10-31, end of the RNG + nav + pair-page-research session)
 
-- **DEPLOYED v248 (2026-10-29): nav type-ahead fix** — site menu stays full header width while typing (left:0;right:0 on .menu), the search uses the global DS clear-X (.menu-sx wrapper, native X hidden). Live = v248.
+### 0.1 WHAT TO DO FIRST IN THE NEXT SESSION (user: "we will continue exactly that")
+1. Read this file, CLAUDE.md top rules, memory index. Reply **2-3 lines only**: "synced · live v248 / 60 calcs / 136 pages · building unit-converter PAIR pages, batch 1 (6 pages)". **Do not ask the user anything that is answered below. Do not recap. Do not re-research.**
+2. **Build PAIR PAGES, BATCH 1 NOW (research report already written and approved by the user on 2026-10-31 — do NOT redo it, do NOT ask for approval again).** Then: exhaustive automatic QA (CLAUDE.md items 1-15) → preview link ONLY (localhost + LAN) → wait for the explicit word "deploy". After batch 1 is deployed, ask the user once for the go-ahead on batch 2 (the report listed all 3 batches; the user only approved batch 1 explicitly).
+3. Right after, if the user wants it: request indexing in GSC (queue at the top of `md-files/calcthis-indexing-tracker.md`) — see section 0.6 below (how-to) and the tracker.
 
-- **DEPLOYED v246 (2026-10-29): Random Number Generator** — hub `/random-number-generator/` + 6 range pages (`-1-100`, `-1-10`, `-1-3`, `-1-13`, `-no-repeats`, `-wheel`), generator `md-files/gen-rng-pages.js`, engine `CalcThis.rngEngine`/`initRngCalc` (ids `rg*`, `.p-rng`), plus the footer move. 136 pages. Bing: 7 RNG URLs submitted 2026-10-29 (unit pages already there). GSC quota was ALREADY exceeded on 2026-10-29 — the ordered queue is at the top of md-files/calcthis-indexing-tracker.md ("NEXT TO REQUEST IN GSC"); still to request: the 7 RNG URLs, 4 unit-converter pages, 10 paycheck state pages (quota ~10/day). Ideas not built (ask first): python and google random-number pages (Ahrefs >1K Easy), a homepage "Random Number" tab with cubes for the range pages.
+### 0.2 THE TASK IN DETAIL — UNIT-CONVERTER PAIR PAGES (SEO: one URL per search intent; a pair and its reverse are ONE page)
+**Why:** the 9 category pages (length-converter … px-to-rem-converter) already default to / mention the main pairs, but NONE of the pairs has its own URL, and Ahrefs (user screenshots 2026-10-31) shows the base terms at >100K and the numeric variants ("50 cm to inches", "80 kg to lbs", "500 ml to oz", "200 celsius to fahrenheit"…) each >10K and Easy.
+**The user's strict rules for this task (each caused anger when broken this session):**
+- **Never list a pair AND its reverse separately** ("cm to inches" / "inches to cm" = one page; the swap button covers the reverse). Never propose pairs that the category pages already default to *as if they were new*; be exact: they have no own URL, that is why we build them.
+- **Before proposing or listing anything about the unit converter, READ what exists** (`md-files/calcthis-unit-converter-research.md`, the live pages' titles/defaults, `md-files/gen-unit-pages.js`). The user: "did you even go through the list of what was done already?"
+- `kg to stone` is DROPPED by the user (volume <100). Everything else in the table below is approved as worth a URL. "Start with the big numbers."
+**Approved plan = the research report (competitors opened live 2026-10-31: metric-conversions.org, unitconverters.net, inchcalculator.com — all three: value box + unit dropdowns, formula, worked example, a chart; none has a visual; inchcalculator has fractional inches and a chart; metric-conversions has an accuracy setting):**
+- **Parity (nothing dropped):** both directions (swap), precision (Go advanced: 2/4/6 dp, 4/10 sig), tape-measure fractions on length, formula line, copy — all already in the engine/UI. **New on every pair page:** a **"common values" table** (computed from the engine, text and tool agree to the digit) containing exactly the numbers people search (list below), a one-line answer at the top ("1 cm = 0.3937 in"), quick-value chips, FAQ + JSON-LD (WebApplication + FAQPage + BreadcrumbList), reverse-direction table.
+- **Visuals = the category's existing ones, no inventing:** ruler for length pairs (cm→in, mm→in, feet→in, yards→m), thermometer for temperature pairs (C→F, C→K), none for weight/volume/data/cooking/area/speed (same gap as the category pages; said plainly).
+- **Linking (so pages don't compete):** every pair page links UP to its category page and SIDEWAYS to sibling pairs; each category page gets a "Popular conversions" link list to its pair pages; category titles/descriptions stay unchanged. Pair pages are NOT added to the nav; hub/category tiles + sitemap + llms.txt + build.js PAGES register them (same generator pattern as RNG/unit pages).
+- **Slugs:** `/cm-to-inches/` style = `<from>-to-<to>` plural words as in the search phrase. Titles end with "(and inches to cm)" style so one page serves both directions. Paragraphs ≤ ~600 chars, lists/headings (readable-text rule).
+**Implementation facts (nothing exists yet for pairs):** `md-files/gen-unit-pages.js` has NO pair support — add a `PAIRS` list + pair template (same `bodyFor` card; pass preselected from/to via body data attributes, e.g. `data-from` `data-to`, and make `CalcThis.initUnitConverter` (app.js ~line 13600+, ids `un*`) honour them over the category defaults; keep the category dropdown (it navigates to category pages); add the common-values table + chips). Engine = `CalcThis.unitEngine` (`UNIT-ENGINE:START/END`), unit ids per category are in `E.CATS` (e.g. length `in cm ft m mi km yd mm`; weight `lb kg oz g st`; volume `l ml gal cup floz qt …`; temperature `c f k r`; data `KB MB GB TB KiB…`; cooking `cup tbsp tsp g ml …` + ingredient `unIng`; speed `mph kmh ms kn`; area `ft2 m2 ac ha`) — read the real ids from the engine, never guess. Cups→grams page must keep the **ingredient picker** (flour default) and cup standard (Go advanced) — it is the cooking converter's core; give it a different angle/title from `/cooking-converter/` so they don't cannibalise.
+**Batches (user approved batch 1 only; ask once before batch 2):**
+| Batch | Pair (slug) | Ahrefs base term | Numeric long-tail values to put in the common-values table (from the screenshots) |
+|---|---|---|---|
+| **1 (build now)** | cm to inches (`cm-to-inches`) | >100K, KD Hard (all variants Easy, >10K) | 15 20 25 30 40 50 60 |
+| 1 | kg to lbs (`kg-to-lbs`) | >100K Easy | 20 50 60 65 80 90 100 |
+| 1 | celsius to fahrenheit (`celsius-to-fahrenheit`) | >100K Easy | 20 25 30 40 180 200 |
+| 1 | mm to inches (`mm-to-inches`) | >100K Easy | 5 10 12 20 30 100 |
+| 1 | grams to ounces (`grams-to-ounces`) | >100K Medium | 28 30 150 200 300 400 |
+| 1 | ml to oz (`ml-to-oz`) | >100K Easy | 30 50 100 150 200 250 500 750 |
+| 2 | mb to gb (`mb-to-gb`) | >10,000 Easy | 100 1000 1024 4096 16000 |
+| 2 | cups to grams (`cups-to-grams`) | >10,000 Medium ("cups to grams flour" >1000, "sugar cups to grams" >100) | 1.5 2 3 4 (flour, sugar) |
+| 2 | feet to inches (`feet-to-inches`) | >10,000 Easy | 1 3 4 5 6 8 |
+| 2 | yards to meters (`yards-to-meters`) | >10,000 Easy | 25 40 50 100 200 300 500 |
+| 2 | liters to quarts (`liters-to-quarts`) | >10,000 Easy | 1.5 2 2.5 3 4 5 8 |
+| 2 | celsius to kelvin (`celsius-to-kelvin`) | >10,000 Easy | 0 25 |
+| 2 | knots to mph (`knots-to-mph`) | >10,000 Easy | 20 21 30 35 40 50 60 120 |
+| 2 | kb to mb (`kb-to-mb`) | >10,000 Easy | 100 1000 10000 10240 |
+| 2 | cups to tablespoons (`cups-to-tablespoons`) | >10,000 Easy | 1/8 1/4 1/3 3/4 2 |
+| 3 | tablespoons to teaspoons (`tablespoons-to-teaspoons`) | >1000 Easy | 1 1.5 2 3 4 |
+| 3 | acres to sq ft (`acres-to-sq-ft`) | >1000 Easy | .25 .26 .27 .28 .29 .3 .33 |
+| 3 | tablespoons to ml (`tablespoons-to-ml`) | >100 (numbers 2 and 3 are >1000) Easy | 1 1.5 2 3 4 5 6 |
+(`kg to stone` dropped by the user. Ahrefs checks were done by the user via screenshots; **the Chrome that Claude controls is NOT logged into Ahrefs** — never try to log in; ask for a screenshot only if a new term is needed.)
 
-- **Live:** asset **v241** · **59 calculators** · **25 blog articles** · **129 pages** (sitemap count). `main` is clean and pushed (last code commit `7ce0c67`, then docs/tracker/handoff commits). **Nothing half-built. Nothing uncommitted. Nothing waiting on the user except the items under NEXT.**
-- **Shipped this session (all deployed, in this order):**
-  1. **Minnesota sales tax** `/sales-tax-calculator/minnesota/` (v235): all 2,116 places from the official DOR Q4-2026 rate guide (`assets/data/mn-rates.json`), special local taxes shown (not computed). **Indexed in GSC + Bing 2026-10-29.** Details: `md-files/calcthis-salestax-research.md` → "Minnesota". Refresh data quarterly with `md-files/mn-salestax/` (parse.py → build.py → mk.py).
-  2. **Unit Converter** (v241): hub `/unit-converter/` + 9 category pages `/length-converter/ /weight-converter/ /volume-converter/ /temperature-converter/ /area-converter/ /speed-converter/ /data-storage-converter/ /cooking-converter/ /px-to-rem-converter/`. Engine `CalcThis.unitEngine` (pure, `UNIT-ENGINE:START/END` in assets/app.js) + `CalcThis.initUnitConverter` (ids `un*`, body `p-loan p-unit data-cat`), CSS `.p-unit`, generator `md-files/gen-unit-pages.js` (all SEO numbers from the engine; also registers sitemap/build.js/llms.txt/header+footer partials (UNITNAV/UNITFOOT markers)/homepage tab `grp-units` with one distinct icon per converter). Notes: `md-files/calcthis-unit-converter-research.md`. Features: every unit at once, swap, copy, tape-measure fractions (length), lb+oz (weight), thermometer scale (temperature), live ruler (length), px/rem live text sample + editable root/parent font + viewport (vw/vh), cooking = cups↔grams for 50 ingredients (US/UK/AU cup) + oven °C/°F/fan/gas mark mode, data = decimal vs binary explained. Category dropdown navigates and carries the typed value.
-  3. **Homepage text wall replaced** by category cards (icon + one-line summary + link list of all 68 tools): generated by `md-files/gen-home-about.js` (markers `<!--ABOUT:START/END-->`; add a calculator = add a line there). **Rule (user): content under the calculator is for humans — no paragraph over ~600 chars on any page**; three other pages were split (paycheck state coverage, WHR, protein). Audit one-liner is in the design system.
-  4. **Homepage category tabs: scroll arrows on desktop** (YouTube-chips style, runtime-wrapped in app.js).
-  5. **GLOBAL clear (X) button** in every `.inp` text field while focused and non-empty (app.js "shared: clear (X)", CSS `.inp-x`; excluded: readonly, search, datepicker, masked time fields, outputs, `data-no-clear`). All three UI items are documented in `md-files/calcthis-design-system.md`.
-- **Indexing status (tracker `md-files/calcthis-indexing-tracker.md`):** Bing: all 10 unit-converter URLs submitted 2026-10-29. **GSC: 6 of 10 requested** (hub, length, weight, volume, temperature, area). **GSC quota ran out ("Quota Exceeded") → STILL TO REQUEST: `/speed-converter/` `/data-storage-converter/` `/cooking-converter/` `/px-to-rem-converter/`.** Quota is per property (~10/day, shared), resets daily.
-- **NEXT (in this order; first reply = 2-3 line "synced", then work silently):**
-  1. **GSC: request the 4 pending unit-converter pages**, then use the rest of the day's quota on the **paycheck state pages never requested** (alaska iowa kentucky missouri montana nevada new-hampshire south-dakota tennessee wyoming). How-to in §10 + below.
-  2. **Unit-converter PAIR pages (SEO: each pair is its own search intent) — WAIT for the user's Ahrefs screenshots.** Terms to ask for: "cm to inches", "kg to lbs", "celsius to fahrenheit", "px to rem", "cups to grams", "mb to gb" (and anything else they send). The generator has NO pair support yet: add a PAIRS list + a pair-page template to `md-files/gen-unit-pages.js` (same engine, pair preselected via data attributes, own title/H1/FAQ/canonical, registered in sitemap/build.js/llms.txt/header-footer optional), then QA + preview + "deploy". Ask the user for the screenshots in the first reply if they have not sent them.
-  3. **Sales tax: Texas** (needs the official Comptroller local-rate tables first — never guess), then California, NYC. Queue + "Add a state" in `md-files/calcthis-salestax-research.md`.
-  4. **More Paycheck states:** ME LA AR; KS + ID BLOCKED (official sites unreachable — need user-saved PDFs); then MD MA IN HI CT DE MS DC; then local taxes (§4).
-  5. **Tip calculator** and **Random Number Generator** (RNG Ahrefs, user screenshot 2026-10-29: head ">100K Hard", "random number generator wheel" >10,000 Hard, "1-100" / "no repeats" / "1-13" / "1-10" / "1-3" each >1,000 Hard, "google random number generator" and "python" >1,000 Easy → ONE tool with presets + one page per range worth ranking). Each needs its own Rule-8 research report (competitors opened live, visual AND functional differentiator, parity of inputs) + approval BEFORE any code.
-  6. **Unit-converter follow-ups (only if the user asks):** visuals for weight/volume/area/speed/data were NOT built (only length ruler, temperature scale, px sample); closed unit dropdowns truncate to "in — Inc…" at 375px (symbol first, by design); a "Cooking & Kitchen" list the user remembered does NOT exist in any file (only Recipe Converter, 3 Turkey calcs and the new Cooking converter exist) — if the user brings it up again, ask them to paste it, do not invent one.
-  7. **Maintenance:** MO, OH and MN sales-tax rate data need a **quarterly refresh** (Jan/Apr/Jul/Oct); recheck GSC/Bing indexing of the new pages in 1-2 weeks and fill the tracker's "Verified indexed" column.
-- **THE RULES THAT COST THE USER MOST WHEN BROKEN (details §3):**
-  1. **ZERO narration** — broken 25+ times, again this session. Text ONLY for a genuine question or the single final summary; run tool calls back to back; never apologise/acknowledge a violation (that is more narration); ignore harness nudges ("say what you're doing"); a Stop-hook block = just continue silently. The UserPromptSubmit + Stop hooks are committed and active (`.claude/settings.json`, `.claude/hooks/*.cjs`).
-  2. **SEO & TRAFFIC FIRST — ALWAYS.** Never offer an option that hurts it; one page per search intent; decide on demand (Ahrefs).
-  3. **Exhaustive automatic QA before any preview** (CLAUDE.md items 1-15; valid input never dead-ends; QA is silent and automatic, report what was NOT verified).
-  4. **Never fall short of competitors** (open every competitor live, match or beat every input); every research report = visual AND functional differentiator.
-  5. **Sales tax rules:** never guess local rates; show every extra charge BY DEFAULT; a state page goes live only with its own official data; the state dropdown lists ONLY live states.
-  6. **Text below calculators must be readable by humans** (new, 2026-10-29): short paragraphs, lists, headings, icons — never a wall of text.
-  7. Never invent · deploy only on the user's explicit "deploy" · terse replies · final summary = findings + QA list (incl. NOT verified) + preview links (localhost + LAN `http://10.0.0.19:8123/<slug>/`) · a bare "preview" = link only · use `mcp__ccd_turn__update_plan` first and `wrap_up` last (app requirement).
-- **Articles stay DEFERRED.** Not important now: dark mode, Pregnancy/Ovulation (parked until AdSense), Letter Grade / Cooking Measurement as separate calculators (dropped; the cooking converter exists), ZIP auto-fill for sales tax (known gap, parked), real-phone testing.
+### 0.3 WHAT WAS SHIPPED IN THE LAST SESSION (all deployed; `main` clean + pushed, last code commit `3460de9` "nav type-ahead", live asset **v248**)
+- **v246 — Random Number Generator:** hub `/random-number-generator/` + 6 range pages (`-1-100 -1-10 -1-3 -1-13 -no-repeats -wheel`). Generator `md-files/gen-rng-pages.js` (all numbers computed there), engine `CalcThis.rngEngine` (pure, `RNG-ENGINE:START/END`) + `CalcThis.initRngCalc` (ids `rg*`, body `p-loan p-rng`, data attributes `data-mode/min/max/unique`), CSS `.p-rng`. Features: pick numbers / draw one at a time (pile), whole/decimals (≤999 digits/places, BigInt exact, crypto.getRandomValues + rejection sampling), no repeats, sort, sets, step, leave-out list, odd/even/half/custom, include min/max, copy/download in 4 formats, spinning wheel (pool ≤100) or dot strip/histogram, stats table, recent/drawn strip. Presets pre-fill the range but results stay blank until Generate. QA: 6,000 random-setting engine runs vs brute force, chi-square uniformity, UI junk grid, 38 control combos, 800 fuzz steps, wheel landing 108/108, desktop + 375px screenshots. Not verified: real phone, Copy/Download in real Chrome, print. Not built (ask first): `random-number-generator-python`, `google-random-number-generator` pages (Ahrefs >1K Easy), a homepage "Random Number" tab with cubes.
+- **v246 footer move:** Unit Converters block sits under School & Grades in the footer (`.footer-subcol` wrapper in partials/footer.html; generator markers UNITFOOT unchanged).
+- **v248 — nav type-ahead fix (user bug report):** menu panel stays the full header width while typing (`.menu{left:0;right:0}`), search uses the global DS clear-X (`.menu-sx` wrapper around `#menuSearch`, native X hidden, works on mobile). Documented in design system "Clear (X)".
+- Earlier same day (before this session's handoff): Minnesota sales tax v235, Unit Converter hub + 9 pages v241, homepage about cards, tab arrows, global clear-X, readable-text rule (details in sections 0.5-0.7 below and §3+).
+
+### 0.4 LIVE STATE
+**v248 · 60 calculators · 25 blog articles · 136 pages** (sitemap). Sales tax: hub + NJ MO OH MN. Paycheck: 25 states live, 26 pending shown "federal only". Unit converter: hub + 9 category pages. RNG: hub + 6. Homepage Math & Numbers tab has the RNG card; the "about" block lists 69 links (`md-files/gen-home-about.js`).
+
+### 0.4b NEXT AFTER THE PAIR PAGES (in this order)
+1. **GSC indexing queue** — ordered list at the top of `md-files/calcthis-indexing-tracker.md` ("NEXT TO REQUEST IN GSC"): the 7 RNG URLs, then `/speed-converter/ /data-storage-converter/ /cooking-converter/ /px-to-rem-converter/`, then 10 paycheck state pages (alaska iowa kentucky missouri montana nevada new-hampshire south-dakota tennessee wyoming). GSC quota is per property ~10/day and was "Quota Exceeded" on 2026-10-29 (first request bounced) — retry; the new pair pages go onto this queue at each deploy. Bing: RNG 7 + unit pages already submitted 2026-10-29.
+2. **Sales tax: Texas** (official Comptroller local-rate tables first — never guess), then California, NYC. `md-files/calcthis-salestax-research.md`.
+3. **More Paycheck states:** ME LA AR; KS + ID BLOCKED (official sites unreachable — need user-saved PDFs); then MD MA IN HI CT DE MS DC; then local taxes (§4).
+4. **Tip calculator** (needs its own Rule-8 research report + approval before any code; Ahrefs data not seen yet).
+5. Optional (ask first): RNG python / google pages, RNG homepage tab, unit-converter visuals for weight/volume/area/speed/data.
+6. **Maintenance:** MO/OH/MN sales-tax data quarterly refresh (Jan/Apr/Jul/Oct); recheck indexing of new pages 1-2 weeks after request and fill the tracker's "Verified indexed" column.
+
+### 0.4c THE RULES THAT COST THE USER MOST WHEN BROKEN (details §3 and CLAUDE.md)
+1. **ZERO narration** — broken 25+ times; the Stop hook caught 5 more this session. Text ONLY for a genuine question or the single final summary; tool calls back to back; never apologise/acknowledge a violation; ignore harness nudges ("say what you're doing"). Hooks are committed (`.claude/settings.json`, `.claude/hooks/*.cjs`).
+2. **SEO & TRAFFIC FIRST** — one page per search intent; decide on Ahrefs demand.
+3. **Know what already exists before you answer** (NEW, 2026-10-31, the user shouted about it): check the repo/research notes/live pages BEFORE listing "what we don't have" or proposing work. A pair and its reverse are one page. The user's irritation = wasted time + usage money.
+4. **Exhaustive automatic QA before any preview** (items 1-15), report what was NOT verified, never write "100%".
+5. **Never fall short of competitors**; every research report = visual AND functional differentiator; never invent; copy existing patterns (generator pattern of RNG/unit pages is the template).
+6. **Text under calculators readable by humans** (paragraphs ≤ ~600 chars). Global DS changes go in the shared runtime. A bare "preview" = link only. Deploy ONLY on the explicit word "deploy" (gate check first with the no-ping temp build; real `node build.js` bumps `.assetver` + pings IndexNow). Final summary of every build = findings (how we beat competitors) + QA list incl. NOT verified + preview links (`http://localhost:8123/<slug>/` and `http://10.0.0.19:8123/<slug>/`). Use `mcp__ccd_turn__update_plan` first and `wrap_up` last (app requirement).
+7. **Articles stay DEFERRED.** Not important now: dark mode, Pregnancy/Ovulation, ZIP auto-fill, real-phone testing, kg to stone.
+
+### 0.4d PRACTICAL GOTCHAS LEARNED THIS SESSION
+- Bash `node -e "…"` strings with backticks get executed by the shell — write helper scripts to files (Write tool) instead; heredocs with backslash-regex also get mangled. The Browser pane's screenshot tool is flaky (stale frames, "timed out", and when the pane is hidden `innerWidth` is 0 → false "hscroll" failures): take a screenshot first to wake it, wait 2-3 s, retry. Preview server: `calcthis-static` may start on port 8124; port 8123 already serves the repo — navigate to whichever answers (8123 worked all session; `fetch(url,{cache:'reload'})` + reload after edits).
+- Each local no-ping build bumps `.assetver` (it reached 248 on deploy); generators hardcode an `app.js?v=` number that the build restamps — harmless.
+- Temp QA scripts: put in repo root (`_qa_*.js`), run via `fetch` + `(0,eval)`, DELETE afterwards (done).
 
 ---
 
@@ -55,7 +96,7 @@ _Rewritten 2026-10-29 at the very end of the Minnesota + Unit Converter session 
 - Known pre-existing (not ours, unchanged): ~8px footer overflow at the pane's desktop width on every page.
 - Python + pdfplumber is available (`pip install pdfplumber` worked) for PDF rate tables; WebFetch is blocked by Akamai/Cloudflare on several official sites (MN DOR pages, convertunits, salestaxhandbook) but PDFs download with curl.
 
-## 1. Exactly where we are
+## 1. Exactly where we are (OLD 2026-10-29 snapshot — SUPERSEDED by §0.3-0.4: live is now v248 · 60 calcs · 136 pages)
 
 | Item | State |
 |---|---|
@@ -71,7 +112,7 @@ Turkey calculators (v204) are reference only: `md-files/calcthis-turkey-research
 
 ---
 
-## 2. What to do first in the next session
+## 2. What to do first in the next session (OLD — SUPERSEDED by §0.1)
 1. Read this file, CLAUDE.md top rules, memory index. 2. Reply **2-3 lines only**: synced · v241 / 59 calcs / 129 pages · unit converters + Minnesota live · next = the 4 pending GSC requests, then pair pages (ask for the Ahrefs screenshots: cm to inches, kg to lbs, celsius to fahrenheit, px to rem, cups to grams, mb to gb) unless the user says otherwise. 3. Work silently; on any new calculator/state: research (official source opened live, every competitor input listed) → approval → build → full QA → preview link → wait for "deploy" → deploy gate (§6) + tracker (§10).
 
 ---
