@@ -181,7 +181,7 @@ must be built from the article's actual units, every time, not pasted from a tem
 ## ⛔ SESSION HANDOFF — START HERE (rewritten 2026-11-01, end of session; full detail in `HANDOFF.md` §0)
 
 **Read `HANDOFF.md` §0 in full before replying.** Do not make the user re-explain anything in it (user, 2026-10-26: "do not dare to start the new session confused").
-- **STATE (end of the 2026-10-31 → 11-01 session): LIVE = v270 · 61 calculators · 25 articles · 170 pages; `main` pushed (last commits `db463963` tracker ← `6ddd48ab` tip phase 3).** Shipped this session: NYC sales tax (v259), the whole TIP FAMILY — `/tip-calculator/` hub (v261), `/how-much-to-tip/` + 8 service pages (v264), `/tipping-in/{canada,italy,japan}/` (v270). All pages are in Bing (manual + IndexNow); GSC is NOT done for any of them (quota was exceeded 2026-10-31).
+- **STATE (end of the 2026-10-31 → 11-01 session): LIVE = v273 · 62 calculators · 25 articles · 171 pages (calorie deficit calculator shipped 2026-11-01; NEXT = semester grade calculator research report, see HANDOFF §0.2); `main` pushed (last commits `db463963` tracker ← `6ddd48ab` tip phase 3).** Shipped this session: NYC sales tax (v259), the whole TIP FAMILY — `/tip-calculator/` hub (v261), `/how-much-to-tip/` + 8 service pages (v264), `/tipping-in/{canada,italy,japan}/` (v270). All pages are in Bing (manual + IndexNow); GSC is NOT done for any of them (quota was exceeded 2026-10-31).
 - **FIRST JOB NEXT SESSION: CALORIE DEFICIT CALCULATOR RESEARCH REPORT** (`calorie deficit calculator` >100K Medium + four >1K variants; user said "yes"). Normal order: open competitors live → report (every competitor input + VISUAL + FUNCTIONAL differentiator; check the existing `/calorie-calculator/`, `/tdee-calculator/`, `/bmr-calculator/` first so the new page has its own job and no cannibalisation) → wait for explicit approval → build → exhaustive QA → preview link only → wait for "deploy". After it, the ranked Ahrefs list in `md-files/calcthis-ahrefs-2026-11.md`: semester grade calculator (>10K Easy), average calculator hub + batting/stock/dice/time spokes (each >1K), percentage change calculator (>10K Hard); ovulation + pregnancy due date are ON HOLD (YMYL, after AdSense).
 - **ALSO FIRST: GSC INDEXING (new day → quota should be open).** Standing instruction: request the next ~10 URLs in order — NYC sales tax, /tip-calculator/, /how-much-to-tip/, its 8 services, /tipping-in/ x3, then the older queue (HANDOFF §0.3, §0.4e how-to). Keep `md-files/calcthis-indexing-tracker.md` LIVE QUEUE updated.
 - **STOP expanding tipping (user 2026-11-01):** tipping phrases are informational/articles with low volume. Only ask Ahrefs checks for `{x} calculator` phrases. Sales tax is PAUSED by the user until he resumes (still needs his Ahrefs numbers for the remaining states).
@@ -198,7 +198,7 @@ must be built from the article's actual units, every time, not pasted from a tem
 
 ## Project state
 
-- **Asset version:** v270 (live; `.assetver`)
+- **Asset version:** v273 (live; `.assetver`)
 - **Total pages:** 170 live (sitemap)
 - **Model:** Sonnet 5
 
@@ -299,9 +299,12 @@ Recipe Converter
 ### Money & Finance (6)
 Mortgage · Loan · Auto Loan · Paycheck · Sales Tax · Tip
 
-Total live calculators: **61** (v270)
+Total live calculators: **62** (v273)
 
 ---
+
+## Last session addendum (2026-11-01, v273): CALORIE DEFICIT CALCULATOR `/calorie-deficit-calculator/`
+Deficit set 4 ways (kcal / pace / date / what you eat), estimate or known maintenance, energy bar (food vs exercise, safe-minimum marker), simple-vs-realistic weight curve, deficit ladder, Go advanced = formula + body fat + headline model. Engine `CalcThis.deficitEngine` (`DEFICIT-ENGINE:START/END`) + `CalcThis.initDeficitCalc` (ids `df*`) in app.js, body `p-bmr p-def`, generator `md-files/gen-deficit-page.js`. Activity = the site's 5 levels (deliberately not calculator.net's 6). GSC not requested (quota); Bing manual submit pending the user.
 
 ## Last session (2026-10-31 → 2026-11-01, v257 → v270)
 

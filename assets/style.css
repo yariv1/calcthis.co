@@ -2033,6 +2033,29 @@
   .p-bmr .mbar-vals b{font-size:20px;overflow-wrap:anywhere}
 
   /* =========================================================
+     HEALTH · CALORIE DEFICIT CALCULATOR  (body.p-bmr p-def)
+     Reuses the BMR page look: .card-h2/.ctl-row, .seg, .modeseg, .chips, .csel, .bf-res/.bf-cmp,
+     .bm-bar/.bm-seg/.bm-key (energy bar), .dtable + clickable rows (.bm-act), .res-tip.adv-tip.
+     ========================================================= */
+  .p-def .modeseg{grid-template-columns:repeat(4,1fr)}
+  .p-def .modeseg.m2{grid-template-columns:1fr 1fr}
+  .p-def .chips{margin-top:8px;margin-bottom:2px}
+  .p-def .df-barwrap{position:relative;padding-top:0}
+  .p-def .df-floor{position:absolute;top:-5px;width:3px;height:36px;background:var(--ink);transform:translateX(-50%);border-radius:2px;box-shadow:0 0 0 2px var(--card)}
+  .p-def .bm-key i.df-fk{width:3px;height:12px;border-radius:1px;background:var(--ink);vertical-align:-2px}
+  .p-def .df-low{color:var(--amber-deep)}
+  .p-def #dfChart{margin:6px 0 4px}
+  .p-def #dfChart svg{display:block;width:100%;max-width:440px;height:auto;overflow:visible}
+  .p-def .df-note{font-size:12.5px;font-weight:500;color:var(--muted);margin:2px 0 6px;line-height:1.45}
+  .p-def .bm-key i.df-ls{width:16px;height:0;border-radius:0;border-top:2px dashed var(--amber);vertical-align:3px}
+  .p-def .bm-key i.df-lr{width:16px;height:3px;border-radius:2px;background:var(--spruce);vertical-align:2px}
+  .p-def .bm-act tr[data-d]{cursor:pointer}
+  .p-def .bm-act tr[data-d]:hover td{background:#FCF7EE}
+  .p-def .bm-act tr[data-d]:focus-visible{outline:2px solid var(--amber);outline-offset:-2px}
+  .p-def .bm-act tr.cur td{background:#F7EBD2;font-weight:600}
+  .p-def .mbar-vals b{font-size:20px;overflow-wrap:anywhere}
+
+  /* =========================================================
      MATH · HOURS CALCULATOR  (body.p-hours)
      Reuses .card-h2, .modeseg (4 modes), .seg, .chips, .csel (rounding),
      .advbtn / .add-row.split, .res-tip.adv-tip, .bf-res, .dtable, .proj-sep,

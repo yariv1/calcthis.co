@@ -146,6 +146,10 @@
   "/protein-intake-calculator/": {
     "d": "Free protein intake calculator: daily protein in grams for fitness, muscle gain or fat loss, on a live g/kg gauge, with food equivalents."
   },
+  "/calorie-deficit-calculator/": {
+    "t": "Calorie Deficit Calculator — Daily Deficit & Time to Goal",
+    "d": "Free calorie deficit calculator: how many calories to cut and eat to lose weight. 500 kcal a day is 0.45 kg a week; simple vs realistic time to goal."
+  },
   "/bmr-calculator/": {
     "d": "Free BMR calculator: basal metabolic rate in kcal and kJ from five formulas, plus daily calories by activity level and lose, maintain and gain targets."
   },

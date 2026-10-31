@@ -9491,6 +9491,473 @@ CalcThis.initBmrCalc = function () {
 };
 
 /* =========================================================
+   CALORIE DEFICIT CALCULATOR — pure engine (no DOM). Maintenance from the BMR engine,
+   the deficit from any of four inputs (kcal a day, pace per week, target date, what you eat),
+   and two ways to time it: the simple 7,700 kcal per kg rule and a realistic one where
+   maintenance falls as you lose weight (so a fixed intake slowly stops working).
+   ========================================================= */
+/* DEFICIT-ENGINE:START */
+CalcThis.deficitEngine = (function () {
+  var KCAL_KG = 7700, LB = 0.45359237;
+  var KNOWN_SLOPE = 14;                                   // kcal of maintenance per kg lost when only a maintenance number is known
+  /* o = { male, W (kg), H (cm), A (years), f (activity factor), formula ('mifflin'|'hbrev'|'katch'), bf (% or null) } -> maintenance kcal/day */
+  function maint(o) {
+    var B = CalcThis.bmrEngine, bmr;
+    if (o.formula === 'katch' && o.bf > 0 && o.bf < 100) bmr = B.katch(o.W * (1 - o.bf / 100));
+    else if (o.formula === 'hbrev') bmr = B.hbrev(o.male, o.W, o.H, o.A);
+    else bmr = B.mifflin(o.male, o.W, o.H, o.A);
+    return bmr * o.f;
+  }
+  /* kcal of maintenance lost per kg of weight lost */
+  function slope(o) {
+    var a = maint(o), b = maint({ male: o.male, W: o.W - 5, H: o.H, A: o.A, f: o.f, formula: o.formula, bf: o.bf });
+    var s = (a - b) / 5;
+    return s > 1 ? s : KNOWN_SLOPE;
+  }
+  /* simple rule: days to lose W-G at a steady deficit D (kcal/day) */
+  function simpleDays(D, W, G) { return (D > 0 && W > G) ? (W - G) * KCAL_KG / D : null; }
+  /* realistic: out0 = what you burn now, I = what you eat, s = slope. -> { days (null = never), plateau (kg where this intake levels off) } */
+  function realDays(out0, I, s, W, G) {
+    var D0 = out0 - I;
+    if (!(D0 > 0)) return { days: null, plateau: W };
+    var wInf = W - D0 / s;
+    if (!(W > G) || !(G > wInf)) return { days: null, plateau: wInf };
+    return { days: -(KCAL_KG / s) * Math.log((G - wInf) / (W - wInf)), plateau: wInf };
+  }
+  function weightSimple(D, W, t) { return W - D * t / KCAL_KG; }
+  function weightReal(out0, I, s, W, t) {
+    var D0 = out0 - I, wInf = W - D0 / s;
+    return wInf + (W - wInf) * Math.exp(-s * t / KCAL_KG);
+  }
+  /* what you must eat to reach G in `days`; model 'simple' | 'real' -> { D, I } */
+  function forDate(out0, s, W, G, days, model) {
+    if (!(W > G) || !(days > 0)) return null;
+    var D;
+    if (model === 'real') {
+      var k = s * days / KCAL_KG, e = Math.exp(-k), wInf = (G - W * e) / (1 - e);
+      D = s * (W - wInf);
+    } else D = (W - G) * KCAL_KG / days;
+    return { D: D, I: out0 - D };
+  }
+  /* the deficit for a plan. o = { out0 (burn incl. exercise), plan:'def'|'pace'|'intake'|'date', val, s, W, G, days, model } -> { D, I } | null */
+  function plan(o) {
+    if (o.plan === 'def') return { D: o.val, I: o.out0 - o.val };
+    if (o.plan === 'pace') { var d = o.val * KCAL_KG / 7; return { D: d, I: o.out0 - d }; }
+    if (o.plan === 'intake') return { D: o.out0 - o.val, I: o.val };
+    if (o.plan === 'date') return forDate(o.out0, o.s, o.W, o.G, o.days, o.model);
+    return null;
+  }
+  return { KCAL_KG: KCAL_KG, LB: LB, KNOWN_SLOPE: KNOWN_SLOPE, maint: maint, slope: slope, simpleDays: simpleDays, realDays: realDays, weightSimple: weightSimple, weightReal: weightReal, forDate: forDate, plan: plan };
+})();
+/* DEFICIT-ENGINE:END */
+
+/* =========================================================
+   CalcThis.initDeficitCalc() — calorie deficit. Differentiator vs. Omni, calculator.io and
+   FitnessVolt (all checked live: a bare number or table, no picture, one way to time it):
+   four ways to set the deficit (kcal a day / pace per week / target date / what you eat),
+   a known-maintenance shortcut, an energy bar that splits the deficit into food and exercise
+   with the safe-minimum marked, a weight curve that compares the simple 7,700 kcal/kg rule
+   with a realistic one (maintenance falls as you lose), a ladder of deficits side by side and
+   the weight where a fixed intake levels off. Go advanced = formula, body fat %, headline
+   timing model. Engine: CalcThis.deficitEngine (+ bmrEngine). No shared state. */
+CalcThis.initDeficitCalc = function () {
+  var E = CalcThis.deficitEngine, B = CalcThis.bmrEngine;
+  var $ = function (id) { return document.getElementById(id); };
+  var st = { unit: 'met', sex: 'female', src: 'est', plan: 'def', adv: false, model: 'simple', ex: 0 };
+  var LB = E.LB, IN = 2.54;
+  var keep = { H: null, W: null, G: null };
+  var MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  var dp = null;
+
+  function num(id) { var v = parseFloat(($(id).value + '').trim()); return isNaN(v) ? NaN : v; }
+  function blank(id) { return !($(id).value + '').trim(); }
+  function commas(n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+  function r0(x) { return Math.round(x); }
+  function r1(x) { return Math.round(x * 10) / 10; }
+  function r2(x) { return Math.round(x * 100) / 100; }
+  function setHint(m) { var h = $('dfHint'); h.textContent = m || ''; h.style.display = m ? 'block' : 'none'; }
+  function floorCal() { return st.sex === 'female' ? 1200 : 1500; }
+  function wUnit() { return st.unit === 'met' ? 'kg' : 'lb'; }
+  function toDisp(kg) { return st.unit === 'met' ? kg : kg / LB; }
+  function wTxt(kg, dp2) { var v = toDisp(kg); return (dp2 ? r2(v) : r1(v)) + ' ' + wUnit(); }
+  function dateTxt(d) { return d.getDate() + ' ' + MON[d.getMonth()] + ' ' + d.getFullYear(); }
+  function durTxt(days) {
+    if (days > 3650) return 'more than 10 years';
+    if (days < 14) return Math.max(1, Math.ceil(days)) + (Math.ceil(days) === 1 ? ' day' : ' days');
+    var wk = Math.round(days / 7);
+    return wk + ' weeks' + (wk >= 12 ? ' (about ' + (Math.round(days / 30.4 * 2) / 2) + ' months)' : '');
+  }
+  function durShort(days) { return days > 3650 ? 'more than 10 years' : (days < 14 ? durTxt(days) : Math.round(days / 7) + ' weeks'); }
+  function dateOf(days) { return days > 3650 ? '' : dateTxt(addDays(days)); }
+  function addDays(n) { var d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() + Math.round(n)); return d; }
+
+  /* ---------- weight / height fields in the chosen units ---------- */
+  var KEYS = { H: ['dfHcm', 'dfHft', 'dfHin'], W: ['dfWkg', 'dfWlb', 'dfWst', 'dfWlb2'], G: ['dfGkg', 'dfGlb', 'dfGst', 'dfGlb2'] };
+  function readH() {
+    if (keep.H != null) return keep.H;
+    if (st.unit === 'met') return blank('dfHcm') ? NaN : num('dfHcm');
+    if (blank('dfHft') && blank('dfHin')) return NaN;
+    return ((blank('dfHft') ? 0 : num('dfHft')) * 12 + (blank('dfHin') ? 0 : num('dfHin'))) * IN;
+  }
+  function readWt(p) {
+    if (keep[p] != null) return keep[p];
+    var k = KEYS[p];
+    if (st.unit === 'met') return blank(k[0]) ? NaN : num(k[0]);
+    if (st.unit === 'imp') return blank(k[1]) ? NaN : num(k[1]) * LB;
+    if (blank(k[2]) && blank(k[3])) return NaN;
+    return ((blank(k[2]) ? 0 : num(k[2])) * 14 + (blank(k[3]) ? 0 : num(k[3]))) * LB;
+  }
+  function writeH(cm) {
+    if (!(cm > 0)) return;
+    if (st.unit === 'met') { $('dfHcm').value = String(r1(cm)); return; }
+    var tot = cm / IN, ft = Math.floor(tot / 12), inch = r1(tot - ft * 12);
+    if (inch >= 12) { ft += 1; inch = 0; }
+    $('dfHft').value = String(ft); $('dfHin').value = String(inch);
+  }
+  function writeWt(p, kg) {
+    if (!(kg > 0)) return;
+    var k = KEYS[p];
+    if (st.unit === 'met') { $(k[0]).value = String(r1(kg)); return; }
+    var lb = kg / LB;
+    if (st.unit === 'imp') { $(k[1]).value = String(r1(lb)); return; }
+    var s = Math.floor(lb / 14), l = r1(lb - s * 14);
+    if (l >= 14) { s += 1; l = 0; }
+    $(k[2]).value = String(s); $(k[3]).value = String(l);
+  }
+  function showUnit() {
+    $('dfHmet').style.display = st.unit === 'met' ? '' : 'none';
+    $('dfHimp').style.display = st.unit === 'met' ? 'none' : '';
+    ['W', 'G'].forEach(function (p) {
+      $('df' + p + 'met').style.display = st.unit === 'met' ? '' : 'none';
+      $('df' + p + 'imp').style.display = st.unit === 'imp' ? '' : 'none';
+      $('df' + p + 'uk').style.display = st.unit === 'uk' ? '' : 'none';
+    });
+    $('dfPaceUnit').textContent = st.unit === 'met' ? 'kg per week' : 'lb per week';
+    $('dfPace').placeholder = st.unit === 'met' ? '0.5' : '1';
+    [].forEach.call($('dfUnitSeg').children, function (b) { b.classList.toggle('on', b.getAttribute('data-v') === st.unit); });
+    paceChips();
+  }
+
+  /* ---------- chips ---------- */
+  function chipRow(el, items, cur) {
+    var h = '';
+    items.forEach(function (it) { h += '<button type="button" data-v="' + it[1] + '"' + (it[2] ? ' data-p="1"' : '') + (cur != null && !it[2] && Math.abs(parseFloat(it[1]) - cur) < 1e-9 ? ' class="on"' : '') + '>' + it[0] + '</button>'; });
+    el.innerHTML = h;
+  }
+  function defChips() {
+    var cur = blank('dfDef') ? null : num('dfDef');
+    chipRow($('dfDefChips'), [['250', 250], ['500', 500], ['750', 750], ['1,000', 1000]], cur);
+  }
+  function paceChips() {
+    var cur = blank('dfPace') ? null : num('dfPace');
+    var items = st.unit === 'met' ? [['0.25 kg', 0.25], ['0.5 kg', 0.5], ['0.75 kg', 0.75], ['1 kg', 1]] : [['0.5 lb', 0.5], ['1 lb', 1], ['1.5 lb', 1.5], ['2 lb', 2]];
+    items.push(['0.5% of my weight', 0.5, 1], ['1% of my weight', 1, 1]);
+    chipRow($('dfPaceChips'), items, cur);
+  }
+
+  /* ---------- pictures ---------- */
+  function renderBar(M, ex, I) {
+    var out = M + ex, D = out - I, exPart = Math.min(ex, Math.max(0, D)), foodPart = Math.max(0, D - exPart), eat = Math.min(I, out);
+    var parts = [['You eat', eat, 'c0'], ['Cut from food', foodPart, 'c1'], ['Burned by exercise', exPart, 'c3']], bar = '', key = '';
+    parts.forEach(function (p) {
+      if (!(p[1] > 0.5)) return;
+      var pc = p[1] / out * 100;
+      bar += '<div class="bm-seg ' + p[2] + '" style="width:' + pc + '%">' + (pc >= 14 ? r0(p[1]) : '') + '</div>';
+      key += '<span><i class="' + p[2] + '"></i>' + p[0] + ' ' + commas(r0(p[1])) + ' kcal</span>';
+    });
+    var fl = floorCal(), fpos = Math.min(100, fl / out * 100);
+    $('dfBar').innerHTML = '<div class="df-barwrap"><div class="bm-bar">' + bar + '</div><span class="df-floor" style="left:' + fpos + '%" title="Safe minimum ' + commas(fl) + ' kcal"></span></div><div class="bm-key">' + key + '<span><i class="df-fk"></i>Safe minimum ' + commas(fl) + ' kcal</span></div>';
+    $('dfBarH').textContent = 'Where your ' + commas(r0(out)) + ' kcal a day goes';
+  }
+  function renderChart(out0, I, s, W, G, sD, rd) {
+    var Tend = rd.days != null ? Math.max(rd.days, sD || 0) : (sD || 0) * 1.7;
+    Tend = Math.min(Math.max(Tend, 14), 1825);
+    var D = out0 - I, X0 = 46, X1 = 308, Y0 = 14, Y1 = 150, n = 48, i, t, pa = '', pb = '';
+    var wmin = Math.min(G, E.weightReal(out0, I, s, W, Tend)), wmax = W;
+    var lo = Math.min(wmin, G), hi = wmax; if (hi - lo < 1) hi = lo + 1;
+    var pad = (hi - lo) * 0.08; lo -= pad; hi += pad;
+    function x(d) { return X0 + (d / Tend) * (X1 - X0); }
+    function y(w) { return Y1 - (w - lo) / (hi - lo) * (Y1 - Y0); }
+    for (i = 0; i <= n; i++) {
+      t = Tend * i / n;
+      var ws = Math.max(G, E.weightSimple(D, W, t)), wr = E.weightReal(out0, I, s, W, t);
+      pa += (i ? ' ' : '') + r1(x(t)) + ',' + r1(y(ws));
+      pb += (i ? ' ' : '') + r1(x(t)) + ',' + r1(y(wr));
+    }
+    var svg = '<line x1="' + X0 + '" y1="' + r1(y(G)) + '" x2="' + X1 + '" y2="' + r1(y(G)) + '" stroke="var(--spruce)" stroke-width="1.2" stroke-dasharray="2 3"/>';
+    svg += '<line x1="' + X0 + '" y1="' + Y1 + '" x2="' + X1 + '" y2="' + Y1 + '" stroke="var(--line)" stroke-width="1.2"/>';
+    svg += '<polyline fill="none" stroke="var(--amber)" stroke-width="2" stroke-dasharray="5 4" points="' + pa + '"/>';
+    svg += '<polyline fill="none" stroke="var(--spruce)" stroke-width="2.4" points="' + pb + '"/>';
+    svg += '<text x="' + (X0 - 6) + '" y="' + (r1(y(W)) + 4) + '" text-anchor="end" font-size="12" font-weight="600" fill="var(--muted)">' + r0(toDisp(W)) + '</text>';
+    svg += '<text x="' + (X0 - 6) + '" y="' + (r1(y(G)) + 4) + '" text-anchor="end" font-size="12" font-weight="600" fill="var(--spruce)">' + r0(toDisp(G)) + '</text>';
+    [0, 0.5, 1].forEach(function (f, k) {
+      var d = Tend * f, lab = k === 0 ? '0' : r0(d / 7) + (k === 2 ? ' wk' : '');
+      svg += '<text x="' + r1(x(d)) + '" y="' + (Y1 + 17) + '" text-anchor="' + (k === 0 ? 'start' : (k === 2 ? 'end' : 'middle')) + '" font-size="12" font-weight="600" fill="var(--muted)">' + lab + '</text>';
+    });
+    if (sD != null && sD <= Tend) svg += '<circle cx="' + r1(x(sD)) + '" cy="' + r1(y(G)) + '" r="4" fill="var(--amber)"/>';
+    if (rd.days != null && rd.days <= Tend) svg += '<circle cx="' + r1(x(rd.days)) + '" cy="' + r1(y(G)) + '" r="4.5" fill="var(--spruce)"/>';
+    $('dfChart').innerHTML = '<svg viewBox="0 0 320 172" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Weight over time: simple rule versus realistic">' + svg + '</svg>';
+  }
+
+  /* ---------- main ---------- */
+  function empty(msg, sub) {
+    $('dfBig').textContent = '—'; $('dfUnitTxt').textContent = ''; $('dfResLab').textContent = 'Your daily calorie deficit';
+    $('dfSub').textContent = sub || 'Enter your details to see your deficit.';
+    $('dfBody').style.display = 'none'; $('dfMVal').textContent = '—'; $('dfMLab').textContent = 'Deficit';
+    setHint(msg || '');
+  }
+  function solve() {
+    var W = readWt('W'), Graw = readWt('G'), male = st.sex === 'male', H = NaN, A = NaN, Mk = NaN;
+    var est = st.src === 'est';
+    if (est) { A = num('dfAge'); H = readH(); } else Mk = blank('dfMaint') ? NaN : num('dfMaint');
+    var allBlank = isNaN(W) && (est ? (isNaN(A) && isNaN(H)) : isNaN(Mk));
+    if (allBlank) { empty(''); return; }
+    if (isNaN(W) || (est ? (isNaN(A) || isNaN(H)) : isNaN(Mk))) { empty(''); return; }
+    if (W < 20 || W > 400) { empty('Weight should be between 20 and 400 kg (44 to 880 lb).'); return; }
+    if (est) {
+      if (A < 15 || A > 100) { empty('Enter an age from 15 to 100.'); return; }
+      if (H < 100 || H > 250) { empty('Height should be between 100 and 250 cm (3 ft 3 in to 8 ft 2 in).'); return; }
+    } else if (Mk < 800 || Mk > 8000) { empty('Maintenance should be between 800 and 8,000 kcal a day.'); return; }
+
+    var notes = [], G = NaN;
+    if (!isNaN(Graw)) {
+      if (Graw < 20 || Graw > 400) notes.push('Goal weight should be between 20 and 400 kg (44 to 880 lb) — ignored.');
+      else if (Graw >= W) notes.push('Your goal weight is not below your current weight, so no timeline is shown. For gaining weight use the TDEE calculator.');
+      else G = Graw;
+    }
+    var bfRaw = blank('dfBf') ? NaN : num('dfBf'), bf = (st.adv && bfRaw >= 3 && bfRaw <= 70) ? bfRaw : null;
+    var formula = st.adv ? $('dfFormula').value : 'mifflin', f = parseFloat($('dfAct').value) || 1.55, M, s;
+    if (formula === 'katch' && bf == null) { formula = 'mifflin'; if (st.adv) notes.push('Katch-McArdle needs a body fat % — using Mifflin-St Jeor instead.'); }
+    if (est) {
+      var o = { male: male, W: W, H: H, A: A, f: f, formula: formula, bf: bf };
+      M = E.maint(o); s = E.slope(o);
+    } else { M = Mk; s = E.KNOWN_SLOPE; }
+    var ex = st.ex, out0 = M + ex;
+
+    /* the plan input */
+    var plan = st.plan, val = NaN, days = NaN, fill = '', sub0 = '';
+    if (plan === 'def') {
+      if (blank('dfDef')) { val = 500; fill = ' Using 500 kcal a day — type your own or tap a preset.'; } else val = num('dfDef');
+      if (!(val > 0)) { empty('Enter a deficit above 0 kcal a day.'); return; }
+    } else if (plan === 'pace') {
+      var pv = blank('dfPace') ? (st.unit === 'met' ? 0.5 : 1) : num('dfPace');
+      if (blank('dfPace')) fill = ' Using ' + (st.unit === 'met' ? '0.5 kg' : '1 lb') + ' a week — type your own or tap a preset.';
+      if (!(pv > 0)) { empty('Enter a weekly loss above 0.'); return; }
+      val = pv * (st.unit === 'met' ? 1 : LB);
+      if (val > 4) { empty('That is more than 4 kg (9 lb) a week — enter a smaller pace.'); return; }
+    } else if (plan === 'intake') {
+      if (blank('dfIntake')) { plan = 'maint'; }
+      else { val = num('dfIntake'); if (!(val >= 300 && val <= 12000)) { empty('Enter what you eat between 300 and 12,000 kcal a day.'); return; } }
+    } else if (plan === 'date') {
+      var dd = null;
+      if (dp && dp.getDate) dd = dp.getDate(); else if (!blank('dfDate')) { var pd = new Date($('dfDate').value); if (!isNaN(pd)) dd = pd; }
+      if (!dd || isNaN(dd)) plan = 'maint';
+      else {
+        var td = new Date(); td.setHours(0, 0, 0, 0); var d2 = new Date(dd); d2.setHours(0, 0, 0, 0);
+        days = Math.round((d2 - td) / 86400000);
+        if (days < 1) { empty('Pick a date after today.'); return; }
+        if (days > 3650) { empty('Pick a date within the next 10 years.'); return; }
+        if (isNaN(G)) { plan = 'maint'; sub0 = 'Enter a goal weight below your current weight to plan by date.'; }
+      }
+    }
+
+    var P = null;
+    if (plan !== 'maint') {
+      P = E.plan({ out0: out0, plan: plan, val: val, s: s, W: W, G: G, days: days, model: st.model });
+      if (!P || !isFinite(P.D) || !isFinite(P.I)) { empty('Those numbers do not give a result — check the fields.'); return; }
+      if ((P.I <= 0 || P.D >= out0) && st.plan === 'date') { empty('To reach ' + wTxt(G) + ' by then you would need a deficit of ' + commas(r0(P.D)) + ' kcal a day — more than the ' + commas(r0(out0)) + ' you burn. Pick a later date.'); return; }
+      if (P.I <= 0 || P.D >= out0) { empty('A deficit of ' + commas(r0(P.D)) + ' kcal would leave nothing to eat — you burn about ' + commas(r0(out0)) + ' kcal a day.'); return; }
+    }
+    setHint(notes.join(' '));
+
+    /* ----- shared pieces ----- */
+    var imp = st.unit !== 'met';
+    $('dfBody').style.display = '';
+    $('dfLadderWrap').style.display = '';
+    renderLadder(M, ex, s, W, G, P && Math.abs(P.D));
+    $('dfMaintRow').textContent = commas(r0(M)) + ' kcal';
+    $('dfMaintLab').textContent = est ? 'Maintenance (' + (formula === 'katch' ? 'Katch-McArdle' : formula === 'hbrev' ? 'Revised Harris-Benedict' : 'Mifflin-St Jeor') + ')' : 'Maintenance (your number)';
+
+    if (!P) {
+      $('dfResLab').textContent = 'Your maintenance calories';
+      $('dfBig').textContent = commas(r0(M)); $('dfUnitTxt').textContent = 'kcal/day';
+      $('dfSub').textContent = sub0 || (st.plan === 'date' ? 'Pick a target date and a goal weight to see the deficit it needs.' : 'Enter what you eat to see your deficit.');
+      $('dfMVal').textContent = commas(r0(M)) + ' kcal'; $('dfMLab').textContent = 'Maintenance';
+      ['dfTip', 'dfFlags', 'dfRows', 'dfBarWrap', 'dfExWrap', 'dfChartBlock', 'dfAdvOut', 'dfNoGoal'].forEach(function (id) { $(id).style.display = 'none'; });
+      $('dfLadderNote').textContent = 'Tap a row to use that deficit.';
+      return;
+    }
+    ['dfTip', 'dfRows', 'dfBarWrap', 'dfExWrap'].forEach(function (id) { $(id).style.display = ''; });
+    var D = P.D, I = P.I, bal = Math.abs(P.D) < 1, surplus = D <= 0 || bal, wkKg = D * 7 / E.KCAL_KG, pct = D / M * 100;
+    var sD = (!isNaN(G) && !surplus) ? E.simpleDays(D, W, G) : null;
+    var rd = (!isNaN(G) && !surplus) ? E.realDays(out0, I, s, W, G) : { days: null, plateau: null };
+    var head = st.model === 'real' ? rd.days : sD;
+    var headLab = st.model === 'real' ? 'realistic' : 'simple rule';
+
+    $('dfResLab').textContent = bal ? 'Your daily calorie balance' : (surplus ? 'Your daily calorie surplus' : 'Your daily calorie deficit');
+    $('dfBig').textContent = bal ? '0' : commas(Math.abs(r0(D))); $('dfUnitTxt').textContent = 'kcal/day';
+    var perWk = surplus ? 'gain about ' + (imp ? r2(-wkKg / LB) + ' lb' : r2(-wkKg) + ' kg') + ' a week' : 'lose about ' + (imp ? r2(wkKg / LB) + ' lb' : r2(wkKg) + ' kg') + ' a week';
+    $('dfSub').textContent = 'Eat about ' + commas(r0(I)) + ' kcal · ' + (bal ? 'your weight stays about the same' : perWk) + (head != null ? ' · goal in ' + durTxt(head) : '');
+    $('dfMLab').textContent = bal ? 'Balance' : (surplus ? 'Surplus' : 'Deficit');
+    $('dfMVal').textContent = (bal ? '0' : commas(Math.abs(r0(D)))) + ' kcal · eat ' + commas(r0(I));
+
+    /* plain-English reading */
+    var tip = bal
+      ? 'Eating <strong>' + commas(r0(I)) + ' kcal</strong> a day is about what you burn (' + commas(r0(out0)) + '), so expect your weight to stay about the same.'
+      : surplus
+      ? 'Eating <strong>' + commas(r0(I)) + ' kcal</strong> a day against about <strong>' + commas(r0(out0)) + '</strong> burned is a <strong>surplus</strong> of ' + commas(r0(-D)) + ' kcal: expect to gain about ' + (imp ? r2(-wkKg / LB) + ' lb' : r2(-wkKg) + ' kg') + ' a week.'
+      : 'Eat about <strong>' + commas(r0(I)) + ' kcal</strong> a day. That is <strong>' + r0(D) + ' kcal</strong> under what you burn (' + r0(pct) + '% of maintenance) and loses about <strong>' + (imp ? r2(wkKg / LB) + ' lb' : r2(wkKg) + ' kg') + '</strong> a week' + (head != null ? ', so you reach ' + wTxt(G) + ' in about <strong>' + durShort(head) + '</strong>' + (dateOf(head) ? ' (' + dateOf(head) + ').' : '.') : '.') + fill;
+    if (!est && !surplus) tip += ' Your own maintenance number is used as given.';
+    if (est && num('dfAge') < 18) tip += ' <strong>Under 18:</strong> talk to a doctor before cutting calories.';
+    $('dfTip').innerHTML = tip;
+
+    /* flags */
+    var fl = '';
+    if (!surplus && I < floorCal()) fl += '<p class="bm-flag">Eating ' + commas(r0(I)) + ' kcal is below the ' + commas(floorCal()) + ' kcal a day minimum usually advised without medical supervision. Add exercise below or choose a smaller deficit.</p>';
+    if (!surplus && wkKg > W * 0.01) fl += '<p class="bm-flag">That loses more than 1% of your body weight (' + wTxt(W * 0.01, true) + ') a week — faster than most guidelines recommend.</p>';
+    if (!isNaN(G) && !surplus && rd.days == null && rd.plateau != null && rd.plateau >= 20) fl += '<p class="bm-flag">At ' + commas(r0(I)) + ' kcal a day your weight levels off near <strong>' + wTxt(rd.plateau) + '</strong>, above your goal — you burn less as you get lighter, so you would need to eat less or move more later.</p>';
+    $('dfFlags').innerHTML = fl; $('dfFlags').style.display = fl ? '' : 'none';
+
+    /* rows */
+    var rows = '';
+    function row(k, v) { rows += '<div class="bf-cmp"><span class="k">' + k + '</span><span class="v">' + v + '</span></div>'; }
+    if (ex > 0) row('You burn a day (incl. ' + ex + ' from exercise)', commas(r0(out0)) + ' kcal');
+    row('You eat a day', commas(r0(I)) + ' kcal');
+    row(bal ? 'Daily balance' : (surplus ? 'Daily surplus' : 'Daily deficit'), commas(Math.abs(r0(D))) + ' kcal (' + Math.abs(r0(pct)) + '%)');
+    row(bal ? 'Change per week' : (surplus ? 'Gain per week' : 'Loss per week'), (imp ? r2(Math.abs(wkKg) / LB) + ' lb' : r2(Math.abs(wkKg)) + ' kg'));
+    if (!isNaN(G) && !surplus) {
+      row('Time to ' + wTxt(G) + ' (simple rule)', sD != null ? durTxt(sD) : '—');
+      row('Time to ' + wTxt(G) + ' (realistic)', rd.days != null ? durTxt(rd.days) : 'levels off first');
+      if (head != null && dateOf(head)) row('Goal date (' + headLab + ')', dateOf(head));
+    }
+    $('dfRows').innerHTML = rows;
+
+    renderBar(M, ex, I);
+    /* exercise chips */
+    var exItems = [[ 'None', 0 ], ['+100', 100], ['+200', 200], ['+300', 300], ['+500', 500]], eh = '';
+    exItems.forEach(function (it) { eh += '<button type="button" data-v="' + it[1] + '"' + (it[1] === st.ex ? ' class="on"' : '') + '>' + it[0] + '</button>'; });
+    $('dfExChips').innerHTML = eh;
+
+    /* chart */
+    if (!isNaN(G) && !surplus) { $('dfChartBlock').style.display = ''; renderChart(out0, I, s, W, G, sD, rd); $('dfNoGoal').style.display = 'none'; }
+    else { $('dfChartBlock').style.display = 'none'; $('dfNoGoal').style.display = surplus ? 'none' : ''; }
+
+    /* advanced extras */
+    if (st.adv) {
+      var adv = '<div class="bf-cmp"><span class="k">' + (bal ? 'Weekly balance' : (surplus ? 'Weekly surplus' : 'Weekly deficit')) + '</span><span class="v">' + commas(Math.abs(r0(D * 7))) + ' kcal</span></div>';
+      if (!isNaN(G)) adv += '<div class="bf-cmp"><span class="k">Energy in the ' + wTxt(W - G) + ' to lose</span><span class="v">' + commas(r0((W - G) * E.KCAL_KG)) + ' kcal</span></div>';
+      if (!surplus) { var pl = rd.plateau != null ? rd.plateau : W - D / s; adv += '<div class="bf-cmp"><span class="k">Weight where this intake levels off</span><span class="v">' + (pl >= 20 ? wTxt(pl) : 'no floor in range') + '</span></div>'; }
+      adv += '<p class="res-tip adv-tip">The simple rule treats a pound of body fat as 3,500 kcal (7,700 per kg) and assumes you burn the same every day. In practice you burn about ' + r0(s) + ' kcal less per kg lost, so the realistic line slows down. Use the headline model setting above to time the goal either way.</p>';
+      $('dfAdvOut').innerHTML = adv; $('dfAdvOut').style.display = '';
+    } else $('dfAdvOut').style.display = 'none';
+    $('dfLadderNote').textContent = 'Tap a row to use that deficit. Times use the ' + headLab + (isNaN(G) ? '.' : '.');
+  }
+
+  /* ladder of deficits, current exercise included */
+  function renderLadder(M, ex, s, W, G, curD) {
+    var out0 = M + ex, rows = '', imp = st.unit !== 'met', hasG = !isNaN(G);
+    [250, 500, 750, 1000].forEach(function (d) {
+      var I = out0 - d, bad = I <= 0, wk = d * 7 / E.KCAL_KG, tm = '—', dt = '';
+      if (!bad && hasG) {
+        var days = st.model === 'real' ? E.realDays(out0, I, s, W, G).days : E.simpleDays(d, W, G);
+        if (days != null) { tm = durShort(days); dt = dateOf(days); } else tm = 'levels off';
+      }
+      var low = !bad && I < floorCal();
+      rows += '<tr data-d="' + d + '" tabindex="0"' + (curD != null && Math.abs(curD - d) < 0.5 ? ' class="cur"' : '') + '><td>' + commas(d) + '</td><td>' + (bad ? '—' : commas(r0(I))) + (low ? '<span class="bm-sub df-low">below minimum</span>' : '') + '</td><td>' + (imp ? r2(wk / LB) + ' lb' : r2(wk) + ' kg') + '</td><td>' + tm + (dt ? '<span class="bm-sub">' + dt + '</span>' : '') + '</td></tr>';
+    });
+    $('dfLadder').innerHTML = '<thead><tr><th>Deficit</th><th>You eat</th><th>Per week</th><th>' + (hasG ? 'Goal in' : 'Goal') + '</th></tr></thead><tbody>' + rows + '</tbody>';
+  }
+
+  /* ---------- events ---------- */
+  ['dfAge', 'dfMaint', 'dfBf', 'dfIntake'].forEach(function (id) { $(id).addEventListener('input', solve); });
+  $('dfDef').addEventListener('input', function () { defChips(); solve(); });
+  $('dfPace').addEventListener('input', function () { paceChips(); solve(); });
+  ['dfHcm', 'dfHft', 'dfHin'].forEach(function (id) { $(id).addEventListener('input', function () { keep.H = null; solve(); }); });
+  KEYS.W.forEach(function (id) { $(id).addEventListener('input', function () { keep.W = null; solve(); }); });
+  KEYS.G.forEach(function (id) { $(id).addEventListener('input', function () { keep.G = null; solve(); }); });
+  $('dfSexSeg').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; st.sex = b.getAttribute('data-v'); [].forEach.call($('dfSexSeg').children, function (x) { x.classList.toggle('on', x === b); }); solve(); });
+  $('dfUnitSeg').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    var v = b.getAttribute('data-v'); if (v === st.unit) return;
+    var H = readH(), W = readWt('W'), G = readWt('G'), pv = blank('dfPace') ? NaN : num('dfPace'), pk = isNaN(pv) ? NaN : pv * (st.unit === 'met' ? 1 : LB);
+    st.unit = v; showUnit();
+    ['dfHcm', 'dfHft', 'dfHin'].concat(KEYS.W, KEYS.G).forEach(function (id) { $(id).value = ''; });
+    writeH(H); writeWt('W', W); writeWt('G', G);
+    keep.H = H > 0 ? H : null; keep.W = W > 0 ? W : null; keep.G = G > 0 ? G : null;
+    if (pk > 0) { $('dfPace').value = String(r2(pk / (v === 'met' ? 1 : LB))); }
+    paceChips(); solve();
+  });
+  $('dfMainSeg').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    st.src = b.getAttribute('data-v');
+    [].forEach.call($('dfMainSeg').children, function (x) { x.classList.toggle('on', x === b); });
+    $('dfEst').style.display = st.src === 'est' ? '' : 'none';
+    $('dfKnown').style.display = st.src === 'est' ? 'none' : '';
+    $('dfAdvEst').style.display = st.src === 'est' ? '' : 'none';
+    solve();
+  });
+  $('dfPlanSeg').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    st.plan = b.getAttribute('data-v');
+    [].forEach.call($('dfPlanSeg').children, function (x) { x.classList.toggle('on', x === b); });
+    ['def', 'pace', 'date', 'intake'].forEach(function (p) { $('dfP' + p).style.display = p === st.plan ? '' : 'none'; });
+    solve();
+  });
+  $('dfDefChips').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; $('dfDef').value = b.getAttribute('data-v'); defChips(); solve(); });
+  $('dfPaceChips').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    var v = parseFloat(b.getAttribute('data-v'));
+    if (b.getAttribute('data-p')) {
+      var W = readWt('W'); if (!(W >= 20 && W <= 400)) { setHint('Enter your weight first to use a percentage of it.'); return; }
+      v = r2(toDisp(W * v / 100));
+    }
+    $('dfPace').value = String(v); paceChips(); solve();
+  });
+  $('dfExChips').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; st.ex = parseFloat(b.getAttribute('data-v')) || 0; solve(); });
+  function ladderPick(tr) {
+    if (!tr) return;
+    st.plan = 'def'; $('dfDef').value = tr.getAttribute('data-d');
+    [].forEach.call($('dfPlanSeg').children, function (x) { x.classList.toggle('on', x.getAttribute('data-v') === 'def'); });
+    ['def', 'pace', 'date', 'intake'].forEach(function (p) { $('dfP' + p).style.display = p === 'def' ? '' : 'none'; });
+    defChips(); solve();
+  }
+  $('dfLadder').addEventListener('click', function (e) { ladderPick(e.target.closest('tr[data-d]')); });
+  $('dfLadder').addEventListener('keydown', function (e) {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    var tr = e.target.closest('tr[data-d]'); if (!tr) return; e.preventDefault();
+    var d = tr.getAttribute('data-d'); ladderPick(tr);
+    var n = $('dfLadder').querySelector('tr[data-d="' + d + '"]'); if (n) n.focus();
+  });
+  $('dfAct').addEventListener('change', solve);
+  $('dfFormula').addEventListener('change', solve);
+  $('dfModelSeg').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    st.model = b.getAttribute('data-v');
+    [].forEach.call($('dfModelSeg').children, function (x) { x.classList.toggle('on', x === b); });
+    solve();
+  });
+  $('dfAdvBtn').addEventListener('click', function () {
+    st.adv = !st.adv;
+    $('dfAdvBtn').classList.toggle('open', st.adv);
+    $('dfAdvBtnLab').textContent = st.adv ? 'Go simple' : 'Go advanced';
+    $('dfAdvIn').style.display = st.adv ? '' : 'none';
+    if (!st.adv) {
+      st.model = 'simple'; $('dfFormula').value = 'mifflin'; $('dfBf').value = '';
+      [].forEach.call($('dfModelSeg').children, function (x) { x.classList.toggle('on', x.getAttribute('data-v') === 'simple'); });
+    }
+    solve();
+  });
+  if (window.Datepicker) {
+    dp = new Datepicker($('dfDate'), { format: 'd MM yyyy', autohide: true, weekStart: 0, todayHighlight: true, minDate: new Date() });
+    $('dfDate').addEventListener('changeDate', solve);
+  } else $('dfDate').addEventListener('change', solve);
+  $('dfDate').addEventListener('input', solve);
+
+  showUnit(); defChips();
+  solve();
+};
+
+/* =========================================================
    HOURS CALCULATOR — pure engine (no DOM). Loose clock parsing ("9", "915", "9:15a",
    "5p", "1730", "0830", noon, midnight), end-after-start resolution with overnight
    shifts, break parsing (minutes, "1h", "0:30", or a clock range such as "12-12:30"),
