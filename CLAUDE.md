@@ -304,7 +304,7 @@ Total live calculators: **62** (v273)
 ---
 
 ## Last session addendum (2026-11-01, v273): CALORIE DEFICIT CALCULATOR `/calorie-deficit-calculator/`
-Deficit set 4 ways (kcal / pace / date / what you eat), estimate or known maintenance, energy bar (food vs exercise, safe-minimum marker), simple-vs-realistic weight curve, deficit ladder, Go advanced = formula + body fat + headline model. Engine `CalcThis.deficitEngine` (`DEFICIT-ENGINE:START/END`) + `CalcThis.initDeficitCalc` (ids `df*`) in app.js, body `p-bmr p-def`, generator `md-files/gen-deficit-page.js`. Activity = the site's 5 levels (deliberately not calculator.net's 6). GSC not requested (quota); Bing manual submit pending the user.
+Deficit set 4 ways (kcal / pace / date / what you eat), estimate or known maintenance, energy bar (food vs exercise, safe-minimum marker), simple-vs-realistic weight curve, deficit ladder, Go advanced = formula + body fat + headline model. Engine `CalcThis.deficitEngine` (`DEFICIT-ENGINE:START/END`) + `CalcThis.initDeficitCalc` (ids `df*`) in app.js, body `p-bmr p-def`, generator `md-files/gen-deficit-page.js`. Activity = the site's 5 levels (deliberately not calculator.net's 6). GSC not requested (quota); Bing submitted manually 2026-11-01.
 
 ## Last session (2026-10-31 → 2026-11-01, v257 → v270)
 
