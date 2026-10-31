@@ -2,6 +2,8 @@
 
 _How-to for requesting indexing with Claude in Chrome + the next batch: HANDOFF.md §10. Next batch = /auto-loan-calculator/ + the "not checked yet" list below, ~10 per day._
 
+## DONE 2026-10-31 (GSC, 10 requests, quota used up for the day): /random-number-generator/ and -1-100 -wheel -no-repeats -1-10 -1-13 -1-3 (1-3 and the speed converter confirmed only indirectly), /speed-converter/, /data-storage-converter/, /cooking-converter/. STILL TO REQUEST: /px-to-rem-converter/, 10 paycheck state pages, then the 18 pair pages. Re-verify 1-3 + speed converter in GSC.
+
 ## NEXT TO REQUEST IN GSC (in this order, ~10/day; quota exceeded 2026-10-29, retry next day)
 1. /random-number-generator/
 2. /random-number-generator-1-100/
