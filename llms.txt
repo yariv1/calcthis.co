@@ -156,3 +156,12 @@
 - [MM to Inches Converter](https://calcthis.co/mm-to-inches/): Millimeters to inches, and inches to millimeters.
 - [Grams to Ounces Converter](https://calcthis.co/grams-to-ounces/): Grams to ounces, and ounces to grams.
 - [mL to Oz Converter](https://calcthis.co/ml-to-oz/): Milliliters to fluid ounces, and fluid ounces to mL.
+- [MB to GB Converter](https://calcthis.co/mb-to-gb/): Megabytes to gigabytes, and gigabytes to megabytes.
+- [KB to MB Converter](https://calcthis.co/kb-to-mb/): Kilobytes to megabytes, and megabytes to kilobytes.
+- [Cups to Grams Converter](https://calcthis.co/cups-to-grams/): Cups to grams for the ingredient you are using.
+- [Feet to Inches Converter](https://calcthis.co/feet-to-inches/): Feet to inches, and inches to feet and inches.
+- [Yards to Meters Converter](https://calcthis.co/yards-to-meters/): Yards to meters, and meters to yards.
+- [Liters to Quarts Converter](https://calcthis.co/liters-to-quarts/): Liters to US quarts, and quarts to liters.
+- [Celsius to Kelvin Converter](https://calcthis.co/celsius-to-kelvin/): °C to K, and K to °C, with a thermometer.
+- [Knots to MPH Converter](https://calcthis.co/knots-to-mph/): Knots to miles per hour, and mph to knots.
+- [Cups to Tablespoons Converter](https://calcthis.co/cups-to-tablespoons/): Cups to tablespoons, and tablespoons to cups.

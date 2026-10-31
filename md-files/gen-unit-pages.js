@@ -211,7 +211,7 @@ const pill = (href, label, svg) => `      <a class="pill" href="${href}">\n     
 const PILLSVG = '<path d="M3 17L17 3l4 4L7 21z"/><path d="M7 13l2 2M10 10l2 2M13 7l2 2"/>';
 
 function bodyFor(o) {
-  return `<body class="p-loan p-unit" data-cat="${o.cat}"${o.pair ? ` data-from="${o.pair.a}" data-to="${o.pair.b}" data-ex="${o.pair.ex}"` : ''}>
+  return `<body class="p-loan p-unit" data-cat="${o.cat}"${o.pair ? ` data-from="${o.pair.a}" data-to="${o.pair.b}" data-ex="${o.pair.ex}"${o.pair.ing ? ` data-ing="${o.pair.ing}"` : ''}` : ''}>
 <div class="wrap">
 
 ${hdr}
@@ -324,7 +324,7 @@ const tile = (c) => `<a class="un-tile" href="${urlOf(c)}"><b>${E.CATS[c].name =
 const catLinks = (except) => '<ul class="pc-statelist">' + ORDER.filter((c) => c !== except).map((c) => '<li><a href="' + urlOf(c) + '">' + P[c].h1 + '</a></li>').join('') + '</ul>';
 
 function pairTable(cat, a, b, vals, o) {
-  const rows = vals.map((x) => '<tr><td>' + withSym(F(x), sym(cat, a)) + '</td><td>' + withSym(F(cv(cat, a, b, x, o)), sym(cat, b)) + '</td></tr>').join('');
+  const rows = vals.map((x0) => { const x = typeof x0 === 'string' ? E.parse(x0) : x0; return '<tr><td>' + withSym(typeof x0 === 'string' ? x0 : F(x0), sym(cat, a)) + '</td><td>' + withSym(F(cv(cat, a, b, x, o)), sym(cat, b)) + '</td></tr>'; }).join('');
   return '<div class="pc-tblwrap"><table class="dtable"><thead><tr><th>' + nm(cat, a) + '</th><th>' + nm(cat, b) + '</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
 }
 const SOURCE = '<p class="st-src">Sources: factors are the exact international definitions — <a href="https://www.bipm.org/en/publications/si-brochure" rel="noopener">BIPM SI Brochure</a>, <a href="https://www.nist.gov/pml/special-publication-811" rel="noopener">NIST Special Publication 811</a> and, for binary data units, IEC 80000-13.</p>';
@@ -483,16 +483,129 @@ const PAIRS = [
       ['How do I convert oz to mL?', `Multiply fluid ounces by 29.5735. ${say('volume', 'floz', 'ml', 1)}, ${say('volume', 'floz', 'ml', 8)} and ${say('volume', 'floz', 'ml', 16)}.`],
       ['How many mL is a cup in fluid ounces?', `A US cup is 8 fl oz: ${say('volume', 'cup', 'ml', 1)}. A 12 fl oz can holds ${say('volume', 'floz', 'ml', 12)}.`],
       ['Is a UK fluid ounce the same as a US fluid ounce?', `No. A US fl oz is ${withSym(F(cv('volume', 'floz', 'ml', 1)), 'mL')} and an imperial fl oz is ${withSym(F(cv('volume', 'ukfloz', 'ml', 1)), 'mL')} — about 4% smaller.`]
+    ] },
+  { slug: 'mb-to-gb', cat: 'data', a: 'MB', b: 'GB', ex: 1024, vals: [100, 1000, 1024, 4096, 16000], rvals: [1, 2, 4, 8, 16],
+    h1: 'MB to GB Converter', link: 'MB to GB', title: 'MB to GB Converter — Megabytes to Gigabytes (and GB to MB) | CalcThis',
+    eyebrow: 'Megabytes to gigabytes, and gigabytes to megabytes', sib: ['kb-to-mb', 'kg-to-lbs', 'feet-to-inches'],
+    formula: '<div class="formula">GB = MB ÷ 1,000 (decimal) · GiB = MiB ÷ 1,024 (binary)<small>1 GB = 1,000 MB · 1 GIB = 1,024 MIB · 1 BYTE = 8 BITS</small></div>',
+    steps: () => `<p>Storage makers, networks and macOS use decimal units, so you divide megabytes by 1,000: ${say('data', 'MB', 'GB', 4096)}. Windows and memory use powers of two (binary units), so divide by 1,024: ${say('data', 'MiB', 'GiB', 4096)}.</p><p>That is why 1,024 MB is ${say('data', 'MB', 'GB', 1024)} in the decimal system but exactly ${say('data', 'MiB', 'GiB', 1024)} in the binary one. Use the To menu to pick GiB when you need the binary result.</p>`,
+    faqs: () => [
+      ['How many MB are in a GB?', `${say('data', 'GB', 'MB', 1)} in the decimal system used by storage makers and networks, and ${say('data', 'GiB', 'MiB', 1)} in the binary system used by Windows and RAM.`],
+      ['How do I convert MB to GB?', `Divide by 1,000 (decimal). ${say('data', 'MB', 'GB', 100)}, ${say('data', 'MB', 'GB', 500)} and ${say('data', 'MB', 'GB', 16000)}.`],
+      ['How many GB is 1024 MB?', `${say('data', 'MB', 'GB', 1024)} in decimal units, or exactly ${say('data', 'MiB', 'GiB', 1024)} in binary units.`],
+      ['How do I convert GB to MB?', `Multiply by 1,000. ${say('data', 'GB', 'MB', 2)}, ${say('data', 'GB', 'MB', 8)} and ${say('data', 'GB', 'MB', 16)}.`],
+      ['What is the difference between MB and Mb?', `A capital B is bytes and a small b is bits: ${say('data', 'MB', 'Mb', 1)}. Internet speeds use megabits, so a 100 Mbps line moves at most ${val('data', 'Mb', 'MB', 100)} per second.`]
+    ] },
+  { slug: 'kb-to-mb', cat: 'data', a: 'kB', b: 'MB', ex: 10000, vals: [100, 1000, 10000, 10240], rvals: [1, 5, 10, 100],
+    h1: 'KB to MB Converter', link: 'KB to MB', title: 'KB to MB Converter — Kilobytes to Megabytes (and MB to KB) | CalcThis',
+    eyebrow: 'Kilobytes to megabytes, and megabytes to kilobytes', sib: ['mb-to-gb', 'kg-to-lbs', 'feet-to-inches'],
+    formula: '<div class="formula">MB = KB ÷ 1,000 (decimal) · MiB = KiB ÷ 1,024 (binary)<small>1 MB = 1,000 KB · 1 MIB = 1,024 KIB</small></div>',
+    steps: () => `<p>In the decimal system divide kilobytes by 1,000: ${say('data', 'kB', 'MB', 10000)}. In the binary system, used by Windows file sizes, divide kibibytes by 1,024: ${say('data', 'KiB', 'MiB', 10240)}.</p><p>So 10,240 KB is ${say('data', 'kB', 'MB', 10240)} in decimal units but exactly ${say('data', 'KiB', 'MiB', 10240)} in binary units. Choose KiB and MiB in the unit menus for the binary result.</p>`,
+    faqs: () => [
+      ['How many KB are in an MB?', `${say('data', 'MB', 'kB', 1)} in the decimal system and ${say('data', 'MiB', 'KiB', 1)} in the binary system.`],
+      ['How do I convert KB to MB?', `Divide by 1,000. ${say('data', 'kB', 'MB', 100)}, ${say('data', 'kB', 'MB', 1000)} and ${say('data', 'kB', 'MB', 10000)}.`],
+      ['How many MB is 10240 KB?', `${say('data', 'kB', 'MB', 10240)} in decimal units, or exactly ${say('data', 'KiB', 'MiB', 10240)} in binary units.`],
+      ['How do I convert MB to KB?', `Multiply by 1,000. ${say('data', 'MB', 'kB', 1)}, ${say('data', 'MB', 'kB', 5)} and ${say('data', 'MB', 'kB', 100)}.`],
+      ['What is the difference between KB and Kb?', `A capital B is bytes and a small b is bits: ${say('data', 'kB', 'kb', 1)}.`]
+    ] },
+  { slug: 'cups-to-grams', cat: 'cooking', a: 'cup', b: 'g', ex: 1, ing: 'flour', vals: [1.5, 2, 3, 4],
+    answer: () => 'A US cup of all-purpose flour = ' + val('cooking', 'cup', 'g', 1, { ing: 'flour', std: 'us' }),
+    desc: 'Free cups to grams converter: pick the ingredient — flour, sugar, butter and 50 more — and get the weight in grams or ounces, plus a table of the most common amounts.',
+    h1: 'Cups to Grams Converter', link: 'cups to grams', title: 'Cups to Grams Converter — Flour, Sugar, Butter & 50 Ingredients | CalcThis',
+    eyebrow: 'Cups to grams for the ingredient you are using', sib: ['cups-to-tablespoons', 'grams-to-ounces', 'ml-to-oz'],
+    formula: '<div class="formula">grams = cups × grams per cup<small>ALL-PURPOSE FLOUR 120 G · SUGAR 200 G · BUTTER 226.8 G PER US CUP · GRAMS ÷ G PER CUP = CUPS</small></div>',
+    steps: () => `<p>A cup measures volume and a gram measures weight, so the answer depends on the ingredient. Pick it in the Ingredient menu: ${say('cooking', 'cup', 'g', 1, { ing: 'flour' })} for all-purpose flour, ${say('cooking', 'cup', 'g', 1, { ing: 'sugar' })} for granulated sugar and ${say('cooking', 'cup', 'g', 1, { ing: 'butter' })} for butter.</p><p>Values are typical (about ±5%) because flour packs differently from scoop to scoop — for baking, weigh it. Under Go advanced you can switch to a UK/metric (250 mL) or Australian cup.</p>`,
+    tables: () => { const t = (ing, name) => `<h3>${name}: cups to grams</h3>` + pairTable('cooking', 'cup', 'g', [0.25, '1/3', 0.5, '3/4', 1, 1.5, 2, 3, 4], { ing, std: 'us' }); return `<h2>Common values by ingredient</h2>` + t('flour', 'All-purpose flour') + t('sugar', 'Granulated sugar') + t('butter', 'Butter') + `<h3>All-purpose flour: grams to cups</h3>` + pairTable('cooking', 'g', 'cup', [30, 60, 100, 120, 125, 250, 500], { ing: 'flour', std: 'us' }); },
+    faqs: () => { const o = (i) => ({ ing: i, std: 'us' }); return [
+      ['How many grams are in a cup of flour?', `A US cup of all-purpose flour is about ${val('cooking', 'cup', 'g', 1, o('flour'))}. Half a cup is ${val('cooking', 'cup', 'g', 0.5, o('flour'))} and 2 cups are ${val('cooking', 'cup', 'g', 2, o('flour'))}. Cake flour is lighter, about ${val('cooking', 'cup', 'g', 1, o('cakeflour'))}.`],
+      ['How many grams are in a cup of sugar?', `Granulated sugar is about ${val('cooking', 'cup', 'g', 1, o('sugar'))} per US cup, packed brown sugar ${val('cooking', 'cup', 'g', 1, o('brownsugar'))} and powdered sugar ${val('cooking', 'cup', 'g', 1, o('powsugar'))}.`],
+      ['How many grams are in a cup of butter?', `A US cup of butter is about ${val('cooking', 'cup', 'g', 1, o('butter'))} — two sticks. One stick is ${val('cooking', 'stick', 'g', 1, o('butter'))}.`],
+      ['How do I convert grams to cups?', `Divide the grams by the ingredient's grams per cup. ${say('cooking', 'g', 'cup', 250, o('flour'))} of all-purpose flour, but ${say('cooking', 'g', 'cup', 250, o('sugar'))} of sugar.`],
+      ['Why is a cup of one ingredient a different weight from another?', `Cups measure space, not weight: a cup of honey is ${val('cooking', 'cup', 'g', 1, o('honey'))} and a cup of flour ${val('cooking', 'cup', 'g', 1, o('flour'))}. Values are typical, about ±5%, so weigh baking ingredients when you can.`]
+    ]; } },
+  { slug: 'feet-to-inches', cat: 'length', a: 'ft', b: 'in', ex: 5, vals: [1, 3, 4, 5, 6, 8], rvals: [12, 24, 36, 60, 72, 100],
+    h1: 'Feet to Inches Converter', link: 'feet to inches', title: 'Feet to Inches Converter — ft to in (and Inches to Feet) | CalcThis',
+    eyebrow: 'Feet to inches, and inches to feet and inches', sib: ['cm-to-inches', 'yards-to-meters', 'mm-to-inches'],
+    formula: '<div class="formula">inches = feet × 12<small>FEET = INCHES ÷ 12 · 1 FOOT = 12 INCHES = 30.48 CM</small></div>',
+    steps: () => `<p>A foot is exactly 12 inches, so multiply feet by 12: ${say('length', 'ft', 'in', 5)}. For a height such as 5 ft 10 in, convert the feet and add the inches: 5 × 12 + 10 = ${5 * 12 + 10} in.</p><p>To go the other way divide inches by 12: ${say('length', 'in', 'ft', 72)}. When the result is in feet, the converter also shows it as feet and inches under the answer.</p>`,
+    faqs: () => [
+      ['How many inches are in a foot?', `${say('length', 'ft', 'in', 1)}, which is ${say('length', 'ft', 'cm', 1)}.`],
+      ['How do I convert feet to inches?', `Multiply by 12. ${say('length', 'ft', 'in', 3)}, ${say('length', 'ft', 'in', 6)} and ${say('length', 'ft', 'in', 8)}.`],
+      ['How do I convert inches to feet?', `Divide by 12. ${say('length', 'in', 'ft', 36)}, ${say('length', 'in', 'ft', 60)} and ${say('length', 'in', 'ft', 100)} — which is 8 ft 4 in.`],
+      ['How many inches is 5 feet 10 inches?', `5 × 12 + 10 = ${5 * 12 + 10} inches, which is ${say('length', 'in', 'cm', 70)}.`],
+      ['How many inches are in a yard?', `${say('length', 'yd', 'in', 1)}, or 3 feet.`]
+    ] },
+  { slug: 'yards-to-meters', cat: 'length', a: 'yd', b: 'm', ex: 100, vals: [25, 40, 50, 100, 200, 300, 500], rvals: [1, 10, 50, 100, 400],
+    h1: 'Yards to Meters Converter', link: 'yards to meters', title: 'Yards to Meters Converter — yd to m (and Meters to Yards) | CalcThis',
+    eyebrow: 'Yards to meters, and meters to yards', sib: ['feet-to-inches', 'cm-to-inches', 'knots-to-mph'],
+    formula: '<div class="formula">meters = yards × 0.9144<small>YARDS = METERS ÷ 0.9144 · 1 YARD = EXACTLY 0.9144 M = 3 FEET</small></div>',
+    steps: () => `<p>A yard is defined as exactly 0.9144 meters, so multiply yards by 0.9144: ${say('length', 'yd', 'm', 100)}. A 100-yard football field is ${say('length', 'yd', 'm', 100)}.</p><p>To go the other way divide meters by 0.9144: ${say('length', 'm', 'yd', 100)}. A quick mental rule: a meter is a little more than a yard (about 9% more).</p>`,
+    faqs: () => [
+      ['How many meters are in a yard?', `${say('length', 'yd', 'm', 1)} exactly. That is also ${say('length', 'yd', 'ft', 1)}.`],
+      ['How do I convert yards to meters?', `Multiply by 0.9144. ${say('length', 'yd', 'm', 50)}, ${say('length', 'yd', 'm', 200)} and ${say('length', 'yd', 'm', 500)}.`],
+      ['How do I convert meters to yards?', `Divide by 0.9144. ${say('length', 'm', 'yd', 10)}, ${say('length', 'm', 'yd', 100)} and ${say('length', 'm', 'yd', 400)}.`],
+      ['How many meters is a 100-yard field?', `${say('length', 'yd', 'm', 100)}. A 100 m sprint is ${say('length', 'm', 'yd', 100)}.`],
+      ['How many yards are in a mile?', `${say('length', 'mi', 'yd', 1)}, or 5,280 feet.`]
+    ] },
+  { slug: 'liters-to-quarts', cat: 'volume', a: 'l', b: 'qt', ex: 2, vals: [1.5, 2, 2.5, 3, 4, 5, 8], rvals: [1, 2, 4, 8],
+    h1: 'Liters to Quarts Converter', link: 'liters to quarts', title: 'Liters to Quarts Converter — L to qt (and Quarts to Liters) | CalcThis',
+    eyebrow: 'Liters to US quarts, and quarts to liters', sib: ['ml-to-oz', 'cups-to-tablespoons', 'yards-to-meters'],
+    formula: '<div class="formula">US quarts = liters ÷ 0.946352946<small>LITERS = US QUARTS × 0.946352946 · 1 US GAL = 4 QT · IMPERIAL QT = 1.1365225 L</small></div>',
+    steps: () => `<p>A US liquid quart is exactly 0.946352946 liters. Divide liters by 0.946353 to get US quarts: ${say('volume', 'l', 'qt', 2)}. To go the other way multiply quarts by 0.946353: ${say('volume', 'qt', 'l', 4)}.</p><p>An imperial (UK) quart is bigger: ${say('volume', 'l', 'ukqt', 2)}. Pick “Quarts (imperial)” in the To menu to use it.</p>`,
+    faqs: () => [
+      ['How many quarts are in a liter?', `${one('volume', 'l', 'qt')} (rounded) — US liquid quarts. A liter is a little more than a quart.`],
+      ['How do I convert liters to quarts?', `Divide by 0.946353 (or multiply by 1.0566882). ${say('volume', 'l', 'qt', 1.5)}, ${say('volume', 'l', 'qt', 3)} and ${say('volume', 'l', 'qt', 5)}.`],
+      ['How do I convert quarts to liters?', `Multiply by 0.946353. ${say('volume', 'qt', 'l', 1)}, ${say('volume', 'qt', 'l', 2)} and ${say('volume', 'qt', 'l', 8)}.`],
+      ['How many liters are in a gallon?', `${say('volume', 'gal', 'l', 1)}, which is ${say('volume', 'gal', 'qt', 1)}.`],
+      ['Is a UK quart the same as a US quart?', `No. A US quart is ${withSym(F(cv('volume', 'qt', 'l', 1)), 'L')} and an imperial quart is ${withSym(F(cv('volume', 'ukqt', 'l', 1)), 'L')} — about 20% bigger.`]
+    ] },
+  { slug: 'celsius-to-kelvin', cat: 'temperature', a: 'c', b: 'k', ex: 25, vals: [-40, 0, 25, 37, 100], rvals: [0, 100, 273.15, 300, 373.15],
+    h1: 'Celsius to Kelvin Converter', link: 'Celsius to Kelvin', title: 'Celsius to Kelvin Converter — °C to K (and Kelvin to Celsius) | CalcThis',
+    eyebrow: '°C to K, and K to °C, with a thermometer', sib: ['celsius-to-fahrenheit', 'knots-to-mph', 'mb-to-gb'],
+    answer: () => say('temperature', 'c', 'k', 0) + ', ' + say('temperature', 'c', 'k', 100),
+    formula: '<div class="formula">K = °C + 273.15<small>°C = K − 273.15 · ABSOLUTE ZERO = 0 K = −273.15 °C</small></div>',
+    steps: () => `<p>Kelvin and Celsius degrees are the same size, so you only add or subtract an offset: K = °C + 273.15. ${say('temperature', 'c', 'k', 25)}. Water freezes at ${say('temperature', 'c', 'k', 0)} and boils at ${say('temperature', 'c', 'k', 100)}.</p><p>To go the other way subtract: ${say('temperature', 'k', 'c', 300)}. Kelvin has no degree sign and cannot go below 0 K, absolute zero (${say('temperature', 'k', 'c', 0)}).</p>`,
+    faqs: () => [
+      ['How do I convert Celsius to Kelvin?', `Add 273.15. ${say('temperature', 'c', 'k', 0)}, ${say('temperature', 'c', 'k', 25)} and ${say('temperature', 'c', 'k', 100)}.`],
+      ['How do I convert Kelvin to Celsius?', `Subtract 273.15. ${say('temperature', 'k', 'c', 273.15)}, ${say('temperature', 'k', 'c', 300)} and ${say('temperature', 'k', 'c', 373.15)}.`],
+      ['What is absolute zero in Celsius?', `${say('temperature', 'k', 'c', 0)} — the lowest temperature possible. The converter shows a message for anything colder.`],
+      ['Why is there no degree sign on Kelvin?', 'Kelvin is an absolute scale named after Lord Kelvin, so it is written K, not °K. A change of 1 K equals a change of 1 °C.'],
+      ['What is room temperature in Kelvin?', `About ${say('temperature', 'c', 'k', 20)} to ${say('temperature', 'c', 'k', 25)}. Body temperature is ${say('temperature', 'c', 'k', 37)}.`]
+    ] },
+  { slug: 'knots-to-mph', cat: 'speed', a: 'kn', b: 'mph', ex: 20, vals: [20, 21, 30, 35, 40, 50, 60, 120], rvals: [10, 25, 30, 60, 70],
+    h1: 'Knots to MPH Converter', link: 'knots to mph', title: 'Knots to MPH Converter — kn to mph (and MPH to Knots) | CalcThis',
+    eyebrow: 'Knots to miles per hour, and mph to knots', sib: ['yards-to-meters', 'celsius-to-kelvin', 'feet-to-inches'],
+    formula: '<div class="formula">mph = knots × 1.150779<small>KNOTS = MPH × 0.868976 · 1 KNOT = 1 NAUTICAL MILE PER HOUR = 1.852 KM/H</small></div>',
+    steps: () => `<p>A knot is one nautical mile per hour, and a nautical mile is exactly 1,852 meters, so multiply knots by 1.150779 to get miles per hour: ${say('speed', 'kn', 'mph', 20)}. In km/h: ${say('speed', 'kn', 'kmh', 20)}.</p><p>To go the other way multiply mph by 0.868976: ${say('speed', 'mph', 'kn', 60)}. A quick mental rule: add about 15% to knots to get mph.</p>`,
+    faqs: () => [
+      ['How many mph is one knot?', `${say('speed', 'kn', 'mph', 1)} (rounded), which is ${say('speed', 'kn', 'kmh', 1)}.`],
+      ['How do I convert knots to mph?', `Multiply by 1.150779. ${say('speed', 'kn', 'mph', 20)}, ${say('speed', 'kn', 'mph', 35)} and ${say('speed', 'kn', 'mph', 60)}.`],
+      ['How do I convert mph to knots?', `Multiply by 0.868976. ${say('speed', 'mph', 'kn', 25)}, ${say('speed', 'mph', 'kn', 60)} and ${say('speed', 'mph', 'kn', 70)}.`],
+      ['How fast is 120 knots in mph?', `${say('speed', 'kn', 'mph', 120)} — a typical small-aircraft cruise speed. A 30-knot wind is ${say('speed', 'kn', 'mph', 30)}.`],
+      ['What is a nautical mile?', `Exactly 1,852 meters: ${say('length', 'nmi', 'mi', 1)} and ${say('length', 'nmi', 'km', 1)}.`]
+    ] },
+  { slug: 'cups-to-tablespoons', cat: 'volume', a: 'cup', b: 'tbsp', ex: 1, vals: ['1/8', '1/4', '1/3', '1/2', '3/4', '1', '2'], rvals: [1, 2, 4, 8, 16],
+    h1: 'Cups to Tablespoons Converter', link: 'cups to tablespoons', title: 'Cups to Tablespoons Converter — Cups to Tbsp (and Tbsp to Cups) | CalcThis',
+    eyebrow: 'Cups to tablespoons, and tablespoons to cups', sib: ['cups-to-grams', 'liters-to-quarts', 'ml-to-oz'],
+    formula: '<div class="formula">tablespoons = cups × 16<small>CUPS = TABLESPOONS ÷ 16 · 1 TBSP = 3 TSP = 1/2 FL OZ · US MEASURES</small></div>',
+    steps: () => `<p>In US measures one cup is exactly 16 tablespoons, so multiply cups by 16: 3/4 cup = ${val('volume', 'cup', 'tbsp', 0.75)}. Half a cup is 8 tablespoons and a quarter cup is 4.</p><p>To go the other way divide tablespoons by 16: ${say('volume', 'tbsp', 'cup', 4)}. Australian tablespoons are 20 mL, so a metric cup holds 12.5 of them — see the <a href="/cooking-converter/">cooking converter</a> for that.</p>`,
+    faqs: () => [
+      ['How many tablespoons are in a cup?', `${say('volume', 'cup', 'tbsp', 1)} in US measures. A tablespoon is ${val('volume', 'tbsp', 'ml', 1)}.`],
+      ['How many tablespoons are in 1/2, 1/3 and 1/4 cup?', `1/2 cup = ${val('volume', 'cup', 'tbsp', 0.5)}, 1/3 cup = ${val('volume', 'cup', 'tbsp', 1 / 3)} (5 tbsp + 1 tsp) and 1/4 cup = ${val('volume', 'cup', 'tbsp', 0.25)}.`],
+      ['How many tablespoons are in 3/4 cup?', `3/4 cup = ${val('volume', 'cup', 'tbsp', 0.75)}, and 1/8 cup = ${val('volume', 'cup', 'tbsp', 0.125)}.`],
+      ['How do I convert tablespoons to cups?', `Divide by 16. ${say('volume', 'tbsp', 'cup', 2)}, ${say('volume', 'tbsp', 'cup', 8)} and ${say('volume', 'tbsp', 'cup', 12)}.`],
+      ['How many teaspoons are in a tablespoon?', `${say('volume', 'tbsp', 'tsp', 1)}, so a cup is ${say('volume', 'cup', 'tsp', 1)}.`]
     ] }
 ];
 const pairUrl = (p) => '/' + p.slug + '/';
 const popularLinks = (c) => { const l = PAIRS.filter((p) => p.cat === c); return l.length ? '<h2>Popular conversions</h2><ul class="pc-statelist">' + l.map((p) => '<li><a href="' + pairUrl(p) + '">' + p.h1.replace(' Converter', '') + '</a></li>').join('') + '</ul>' : ''; };
 
+const lw = (t) => t.replace(/^\S+/, (w) => w.toLowerCase());
 function writePair(p) {
   const c = p.cat, url = 'https://calcthis.co' + pairUrl(p), f = p.faqs();
-  const answer = c === 'temperature' ? say(c, p.a, p.b, 0) + ', ' + say(c, p.a, p.b, 100) : one(c, p.a, p.b);
-  const desc = 'Free ' + p.link + ' converter (and the reverse): type a value for an instant answer, ' + (c === 'length' ? 'with a live ruler and tape-measure fractions' : c === 'temperature' ? 'with the formula and a live thermometer' : 'with every unit at once') + ' and a table of the most common values.';
-  const hero = `<strong>${answer}.</strong> Type a value for an instant answer — use the swap button for ${nm(c, p.b).toLowerCase()} to ${nm(c, p.a).toLowerCase()} — with a table of the most common values below.`;
+  const answer = p.answer ? p.answer() : c === 'temperature' ? say(c, p.a, p.b, 0) + ', ' + say(c, p.a, p.b, 100) : one(c, p.a, p.b);
+  const desc = p.desc ? p.desc : 'Free ' + p.link + ' converter (and the reverse): type a value for an instant answer, ' + (c === 'length' ? 'with a live ruler and tape-measure fractions' : c === 'temperature' ? 'with the formula and a live thermometer' : 'with every unit at once') + ' and a table of the most common values.';
+  const hero = `<strong>${answer}.</strong> Type a value for an instant answer — use the swap button for ${lw(nm(c, p.b))} to ${lw(nm(c, p.a))} — with a table of the most common values below.`;
   const content = `  <section class="content">
     <div class="grid2">
       <div>
@@ -500,10 +613,10 @@ function writePair(p) {
         ${p.steps()}
         <h2>The formula</h2>
         ${p.formula}
-        <h2>${nm(c, p.a)} to ${nm(c, p.b).toLowerCase()} — common values</h2>
+        ${p.tables ? p.tables() : `<h2>${nm(c, p.a)} to ${nm(c, p.b).toLowerCase()} — common values</h2>
         ${pairTable(c, p.a, p.b, p.vals)}
         <h2>${nm(c, p.b)} to ${nm(c, p.a).toLowerCase()} — common values</h2>
-        ${pairTable(c, p.b, p.a, p.rvals)}
+        ${pairTable(c, p.b, p.a, p.rvals)}`}
         ${SOURCE}
       </div>
       <div>

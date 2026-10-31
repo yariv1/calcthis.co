@@ -13792,7 +13792,7 @@ CalcThis.initUnitConverter = function () {
   var STD = [['us', 'US cup (237 mL)'], ['uk', 'UK / metric cup (250 mL)'], ['au', 'Australian cup (250 mL, 20 mL tablespoon)']];
   setPanel($('unCat'), E.ORDER.map(function (k) { return [k, E.CATS[k].name]; }), CAT);
   setPanel($('unPrec'), PREC, 'auto'); setPanel($('unStd'), STD, 'us');
-  setPanel($('unIng'), E.ING.map(function (i) { return [i[0], i[1]]; }), 'flour');
+  setPanel($('unIng'), E.ING.map(function (i) { return [i[0], i[1]]; }), (st.ing = (document.body.getAttribute('data-ing') && E.ingredient(document.body.getAttribute('data-ing')) ? document.body.getAttribute('data-ing') : 'flour')));
   var d0 = defaults(); setUnits(d0.from, d0.to);
   try { var raw = sessionStorage.getItem('unForm'); if (raw) { sessionStorage.removeItem('unForm'); var o = JSON.parse(raw); if (o && Date.now() - o.t < 15000 && o.v) $('unVal').value = o.v; } } catch (e) {}
   showMode(); render();

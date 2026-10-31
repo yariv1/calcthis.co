@@ -16,6 +16,7 @@ _How-to for requesting indexing with Claude in Chrome + the next batch: HANDOFF.
 11. /px-to-rem-converter/
 Then the 10 paycheck state pages never requested: alaska iowa kentucky missouri montana nevada new-hampshire south-dakota tennessee wyoming (/paycheck-calculator/<state>/). Bing: all of the above except the paycheck pages are already submitted.
 
+## Unit-converter pair pages (batch 2 deployed 2026-10-31: /mb-to-gb/ /kb-to-mb/ /cups-to-grams/ /feet-to-inches/ /yards-to-meters/ /liters-to-quarts/ /celsius-to-kelvin/ /knots-to-mph/ /cups-to-tablespoons/ — status `Not requested`)
 ## Unit-converter pair pages (batch 1, deployed v249, 2026-10-31) — add to the GSC queue after the list above
 /cm-to-inches/ · /kg-to-lbs/ · /celsius-to-fahrenheit/ · /mm-to-inches/ · /grams-to-ounces/ · /ml-to-oz/ — status `Not requested`
 
