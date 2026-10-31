@@ -13631,18 +13631,35 @@ CalcThis.tipEngine = (function () {
     var f = FLAT[o.svc], u = o.units, t = o.times;
     return { units: u, times: t, per: o.per, total: r2(u * t * o.per), low: r2(u * t * f.lo), high: r2(u * t * f.hi), perUnitDay: r2(o.per), verdict: o.per < f.lo - 0.0001 ? 'below' : (o.per > f.hi + 0.0001 ? 'above' : 'within') };
   }
+  /* Canada: GST/HST + PST by province, from the CRA "GST/HST calculator (and rates)" table (modified April 1, 2025) */
+  var PROVINCES = [
+    { id: 'AB', name: 'Alberta', gst: 5, pst: 0, hst: 0 }, { id: 'BC', name: 'British Columbia', gst: 5, pst: 7, hst: 0 }, { id: 'MB', name: 'Manitoba', gst: 5, pst: 7, hst: 0 },
+    { id: 'NB', name: 'New Brunswick', gst: 0, pst: 0, hst: 15 }, { id: 'NL', name: 'Newfoundland and Labrador', gst: 0, pst: 0, hst: 15 }, { id: 'NT', name: 'Northwest Territories', gst: 5, pst: 0, hst: 0 },
+    { id: 'NS', name: 'Nova Scotia', gst: 0, pst: 0, hst: 14 }, { id: 'NU', name: 'Nunavut', gst: 5, pst: 0, hst: 0 }, { id: 'ON', name: 'Ontario', gst: 0, pst: 0, hst: 13 },
+    { id: 'PE', name: 'Prince Edward Island', gst: 0, pst: 0, hst: 15 }, { id: 'QC', name: 'Quebec', gst: 5, pst: 9.975, hst: 0 }, { id: 'SK', name: 'Saskatchewan', gst: 5, pst: 6, hst: 0 }, { id: 'YT', name: 'Yukon', gst: 5, pst: 0, hst: 0 }
+  ];
+  PROVINCES.forEach(function (p) { p.rate = Math.round((p.gst + p.pst + p.hst) * 1000) / 1000; p.label = p.hst ? p.hst + '% HST' : (p.pst ? p.gst + '% GST + ' + p.pst + '% provincial' : p.gst + '% GST'); });
+  function province(id) { for (var i = 0; i < PROVINCES.length; i++) if (PROVINCES[i].id === id) return PROVINCES[i]; return null; }
+  /* the tax inside a bill that already includes it, at a combined rate in percent */
+  function taxIn(bill, rate) { return r2(bill - bill / (1 + rate / 100)); }
+  /* Italy: a restaurant bill with coperto (a per-person cover charge, not a tip) and an optional servizio (service charge) already on it */
+  function italy(o) {
+    var coperto = r2(o.coperto * o.people), food = r2(o.bill - coperto), steps = [1, 5, 10];
+    var rounds = steps.map(function (s) { var tot = Math.ceil(o.bill / s - 1e-9) * s; return { step: s, total: r2(tot), tip: r2(tot - o.bill), each: splitEven(tot, o.people)[0] }; });
+    return { bill: r2(o.bill), people: o.people, coperto: coperto, food: food, servizio: !!o.servizio, rounds: rounds, eachNow: splitEven(o.bill, o.people)[0] };
+  }
   function verdict(svc, pct) {
     if (svc.lo == null) return '';
     if (pct < svc.lo - 0.0001) return 'below'; if (pct > svc.hi + 0.0001) return 'above'; return 'within';
   }
-  return { SERVICES: SERVICES, FLAT: FLAT, flat: flat, COMMON: COMMON, service: service, calc: calc, ladder: ladder, baseCompare: baseCompare, reverse: reverse, verdict: verdict, splitEven: splitEven, splitWeighted: splitWeighted, r2: r2 };
+  return { PROVINCES: PROVINCES, province: province, taxIn: taxIn, italy: italy, SERVICES: SERVICES, FLAT: FLAT, flat: flat, COMMON: COMMON, service: service, calc: calc, ladder: ladder, baseCompare: baseCompare, reverse: reverse, verdict: verdict, splitEven: splitEven, splitWeighted: splitWeighted, r2: r2 };
 })();
 /* TIP-ENGINE:END */
 
 CalcThis.initTipCalc = function () {
   var E = CalcThis.tipEngine, $ = function (id) { return document.getElementById(id); };
   var pre = document.body.getAttribute('data-svc');
-  var st = { mode: 'tip', adv: false, svc: pre && E.service(pre).id === pre ? pre : 'restaurant', base: 'total', round: 'none', sym: '$', uneven: false, rows: [{ amt: '' }, { amt: '' }] }, last = null;
+  var st = { mode: 'tip', adv: false, svc: pre && E.service(pre).id === pre ? pre : 'restaurant', prov: '', base: 'total', round: 'none', sym: '$', uneven: false, rows: [{ amt: '' }, { amt: '' }] }, last = null;
   var MAX = 1e9;
   function num(v) { var t = String(v).replace(/[$,\s%]/g, ''); var n = t === '' ? NaN : Number(t); return isFinite(n) ? n : NaN; }
   function mon(x) { return (x < 0 ? '−' : '') + st.sym + Math.abs(x).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
@@ -13713,6 +13730,7 @@ CalcThis.initTipCalc = function () {
     if (!isFinite(p) || p < 0 || p > 100) { empty('Total with tip', 'Pick or type a tip percentage.', 'Tip must be a percentage from 0 to 100, like 18.'); return; }
     var tax = 0, tr = $('tpTax').value.trim();
     if (tr) { var tn = num(tr); if (!isFinite(tn) || tn < 0 || tn >= bill) hints.push(isFinite(tn) && tn >= bill ? 'Tax must be less than the bill, because the bill already includes it.' : 'Tax must be a number like 7.35.'); else tax = tn; }
+    if (!tr && st.prov) { var pv = E.province(st.prov); if (pv && pv.rate > 0) tax = E.taxIn(bill, pv.rate); }
     var items = null, people = 1;
     if (st.uneven) {
       var bad = false, arr = [];
@@ -13839,7 +13857,88 @@ CalcThis.initTipCalc = function () {
   var SYMS = [['$', '$ dollar'], ['€', '€ euro'], ['£', '£ pound'], ['CA$', 'CA$ Canadian dollar'], ['A$', 'A$ Australian dollar'], ['₹', '₹ rupee']];
   setPanel($('tpService'), E.SERVICES.map(function (s) { return [s.id, s.label]; }), st.svc);
   setPanel($('tpRound'), ROUNDS, 'none'); setPanel($('tpSym'), SYMS, '$');
+  if ($('tpProv')) {
+    setPanel($('tpProv'), [['', 'Not sure — no tax split']].concat(E.PROVINCES.map(function (p) { return [p.id, p.name]; })), '');
+    $('tpProv').addEventListener('change', function () {
+      st.prov = $('tpProv').value; var pv = E.province(st.prov);
+      $('tpProvNote').textContent = pv ? 'Tax in ' + pv.name + ': ' + pv.label + (pv.hst || !pv.pst ? '' : ' (' + pct(pv.rate) + ' in all)') + '. Some provinces tax restaurant meals and alcohol differently — type the tax from your receipt under Go advanced to be exact.' : 'Pick your province to split the tax out of the bill and see the tip before tax and on the total.';
+      render();
+    });
+    $('tpProvNote').textContent = 'Pick your province to split the tax out of the bill and see the tip before tax and on the total.';
+  }
   $('tpPct').value = String(svc().def); buildChips(); buildRows(); showMode(); render();
+};
+
+/* Italy: restaurant bill with coperto and servizio (body data-page="italy"; ids ti*) */
+CalcThis.initTipItaly = function () {
+  var E = CalcThis.tipEngine, $ = function (id) { return document.getElementById(id); };
+  var last = null, MAX = 1e7;
+  function num(v) { var t = String(v).replace(/[€,\s]/g, ''); var n = t === '' ? NaN : Number(t); return isFinite(n) ? n : NaN; }
+  function mon(x) { return '€' + Math.abs(x).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+  function setHint(m) { var h = $('tiHint'); h.textContent = m || ''; h.style.display = m ? 'block' : 'none'; }
+  function empty(msg, hint) { $('tiBig').textContent = '—'; $('tiSub').textContent = msg; $('tiMVal').textContent = '—'; $('tiResults').style.display = 'none'; last = null; setHint(hint || ''); }
+  function whole(v) { return isFinite(v) && v >= 1 && v <= 100 && Math.floor(v) === v; }
+  function render() {
+    var braw = $('tiBill').value.trim(), typed = braw !== '';
+    $('tiEx').parentNode.style.display = typed ? 'none' : '';
+    if (!braw) { empty('Enter the total on the bill.', ''); return; }
+    var bill = num(braw);
+    if (!isFinite(bill) || bill <= 0 || bill > MAX) { empty('Enter the total on the bill.', 'The bill must be a number above 0, like 86.40.'); return; }
+    var pr = $('tiPeople').value.trim(), people = 1;
+    if (pr) { var pn = num(pr); if (!whole(pn)) { empty('Enter the total on the bill.', 'People must be a whole number from 1 to 100.'); return; } people = pn; }
+    var cr = $('tiCoperto').value.trim(), cop = 0;
+    if (cr) { cop = num(cr); if (!isFinite(cop) || cop < 0 || cop > 1000) { empty('Enter the total on the bill.', 'Coperto must be a number like 2 — the amount per person on the bill.'); return; } }
+    if (cop * people >= bill) { empty('Enter the total on the bill.', 'The coperto for everyone adds up to more than the bill. Check the coperto per person.'); return; }
+    var sv = $('tiServizio').checked, r = E.italy({ bill: bill, people: people, coperto: cop, servizio: sv });
+    var best = r.rounds[1];
+    $('tiResLab').textContent = sv ? 'Extra tip needed' : 'Round-up tip (to €5)';
+    $('tiBig').textContent = sv ? mon(0) : mon(best.tip);
+    $('tiSub').textContent = sv ? 'Servizio is already on the bill — no extra tip is needed.' : 'Pay ' + mon(best.total) + (people > 1 ? ' — ' + mon(best.each) + ' each' : '') + ' instead of ' + mon(r.bill) + '.';
+    $('tiMLab').textContent = sv ? 'Extra tip needed' : 'Round-up tip (to €5)'; $('tiMVal').textContent = sv ? mon(0) : mon(best.tip);
+    var rows = [['Bill', mon(r.bill), people > 1 ? mon(r.eachNow) : ''], ['of which coperto <small>' + mon(cop) + ' × ' + people + '</small>', mon(r.coperto), ''], ['of which food and drink', mon(r.food), '']];
+    $('tiTable').innerHTML = '<thead><tr><th></th><th>Amount</th><th>' + (people > 1 ? 'Each' : '') + '</th></tr></thead><tbody>' + rows.map(function (x) { return '<tr><td>' + x[0] + '</td><td>' + x[1] + '</td><td>' + x[2] + '</td></tr>'; }).join('') + '</tbody>';
+    $('tiTip').textContent = sv ? 'A servizio (service charge) of about 15% to 20% is often included in the bill, so extra tipping is only needed for exceptional service. The coperto is a cover charge, not a tip.' : 'There is no servizio on the bill, so a tip is optional. Rounding up is common for a good meal. The coperto is a cover charge, not a tip.';
+    $('tiExtra').innerHTML = sv ? '' : '<div class="fc-grp">If you round up</div><table class="dtable ln-terms"><thead><tr><th>Round up to</th><th>Tip</th><th>You pay</th></tr></thead><tbody>' + r.rounds.map(function (x) { return '<tr' + (x.step === 5 ? ' class="cur"' : '') + '><td>the next €' + x.step + '</td><td>' + mon(x.tip) + '</td><td>' + mon(x.total) + (people > 1 ? ' <small>' + mon(x.each) + ' each</small>' : '') + '</td></tr>'; }).join('') + '</tbody></table>';
+    $('tiResults').style.display = ''; setHint(''); last = r;
+  }
+  ['tiBill', 'tiPeople', 'tiCoperto'].forEach(function (id) { $(id).addEventListener('input', render); });
+  $('tiServizio').addEventListener('change', render);
+  $('tiEx').addEventListener('click', function () { $('tiBill').value = '86.40'; $('tiPeople').value = '4'; $('tiCoperto').value = '2'; render(); });
+  $('tiCopy').addEventListener('click', function () {
+    if (!last) return; var txt = 'Bill: ' + mon(last.bill) + '\nCoperto: ' + mon(last.coperto) + '\nServizio on the bill: ' + (last.servizio ? 'yes' : 'no') + (last.servizio ? '' : '\nRound up to the next €5: ' + mon(last.rounds[1].tip) + ' tip, pay ' + mon(last.rounds[1].total));
+    var btn = $('tiCopy'), done = function (ok) { btn.textContent = ok ? 'Copied' : 'Copy failed'; setTimeout(function () { btn.textContent = 'Copy results'; }, 1600); };
+    var legacy = function () { try { var ta = document.createElement('textarea'); ta.value = txt; ta.setAttribute('readonly', ''); ta.style.cssText = 'position:fixed;left:-9999px;top:0'; document.body.appendChild(ta); ta.select(); var ok = document.execCommand('copy'); document.body.removeChild(ta); done(ok); } catch (e) { done(false); } };
+    try { navigator.clipboard.writeText(txt).then(function () { done(true); }, legacy); } catch (e) { legacy(); }
+  });
+  render();
+};
+
+/* Japan: "Should I tip here?" (JNTO guidance; ids tj*) */
+CalcThis.initTipJapan = function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var P = [
+    ['restaurant', 'Restaurant', 'No. It is not common to tip in restaurants in Japan.'],
+    ['bar', 'Bar or cafe', 'No. It is not common to tip in bars and cafes in Japan.'],
+    ['taxi', 'Taxi', 'No. It is not common to tip taxi drivers in Japan.'],
+    ['hotel', 'Hotel', 'No. It is not common to tip in hotels in Japan.'],
+    ['guide', 'Private guide or interpreter', 'Not expected, but a private guide or interpreter who is accustomed to overseas practices may accept a tip as a gesture of gratitude.']
+  ];
+  var CHEV = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
+  function esc(t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'); }
+  var root = $('tjPlace'), panel = root.querySelector('.csel-panel');
+  panel.innerHTML = [['', 'Pick where you are']].concat(P.map(function (p) { return [p[0], p[1]]; })).map(function (o) { return '<button type="button" class="csel-opt' + (o[0] === '' ? ' on' : '') + '" role="option" aria-selected="' + (o[0] === '') + '" data-value="' + esc(o[0]) + '">' + esc(o[1]) + '</button>'; }).join('');
+  root.setAttribute('data-value', ''); root.querySelector('.csel-val').textContent = 'Pick where you are'; CalcThis.initCsel(root);
+  function render() {
+    var v = $('tjPlace').value, p = P.filter(function (x) { return x[0] === v; })[0];
+    if (!p) { $('tjBig').textContent = '—'; $('tjSub').textContent = 'Pick where you are to see whether to tip.'; $('tjMVal').textContent = '—'; $('tjResults').style.display = 'none'; return; }
+    var no = v !== 'guide';
+    $('tjBig').textContent = no ? 'No tip' : 'Not expected'; $('tjMVal').textContent = $('tjBig').textContent;
+    $('tjSub').textContent = p[2];
+    $('tjTip').textContent = 'If you do choose to tip, it is customary to put it in an envelope and give it discreetly. Small envelopes are sold at convenience stores, stationery stores and 100 yen stores.';
+    $('tjResults').style.display = '';
+  }
+  $('tjPlace').addEventListener('change', render);
+  render();
 };
 
 /* Flat-amount tips (movers: per mover per day; valet: per visit). Page: body data-flat="movers|valet". ids tf* */

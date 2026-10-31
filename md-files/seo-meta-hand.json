@@ -315,5 +315,17 @@
   "/how-much-to-tip/": {
     "t": "How Much to Tip: Tip Guide by Service + Calculator",
     "d": "How much to tip: 15%–20% for restaurants, hair and massage, $20–$50 per mover per day, $2–$10 for a valet. Pick the service and see the tip for your bill."
+  },
+  "/tipping-in/canada/": {
+    "t": "Tipping in Canada: How Much to Tip + Tax Calculator",
+    "d": "Tip 15%–20% at restaurants in Canada. Pick your province: the calculator takes out the tax and shows the tip before tax and on the total."
+  },
+  "/tipping-in/italy/": {
+    "t": "Tipping in Italy: Servizio, Coperto & How Much to Tip",
+    "d": "Tipping in Italy is not expected: check the bill for servizio, and coperto is not a tip. Enter your bill to see what rounding up costs."
+  },
+  "/tipping-in/japan/": {
+    "t": "Tipping in Japan: Is It Expected? JNTO Guidance",
+    "d": "Tipping is not expected in Japan: not common in restaurants, bars, cafes, taxis or hotels, says JNTO. Pick where you are to see what to do."
   }
 }

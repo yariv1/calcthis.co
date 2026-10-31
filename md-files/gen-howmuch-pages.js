@@ -348,6 +348,8 @@ const hf = [
         <p>Find the service in the table for the usual range, or pick it in the calculator to see the tip in dollars for your bill: the low end, your own tip and the high end. Click a service for its own guide with the sources and a table of common prices.</p>
         <h2>Percent or a flat amount?</h2>
         <p>Most services are a percentage of the price of the service. Movers and valets are flat amounts: $20 to $50 per mover per day, and $2 to $10 per visit. For splitting a restaurant bill, tipping on the pre-tax amount or rounding up, use the <a href="/tip-calculator/">tip calculator</a>.</p>
+        <h2>Tipping abroad</h2>
+        <p>Customs change by country: see <a href="/tipping-in/canada/">tipping in Canada</a> (with a provincial-tax calculator), <a href="/tipping-in/italy/">tipping in Italy</a> (coperto and servizio) and <a href="/tipping-in/japan/">tipping in Japan</a> (not expected).</p>
         <p>Where the guides disagree the ranges differ a little, and older guidance can be lower. Amounts are customs for the U.S. and Canada, not rules.</p>
       </div>
     </div>
