@@ -218,9 +218,11 @@ function headFor(o) {
     .replace(/<meta property="og:description" content="[^"]*">/, () => '<meta property="og:description" content="' + esc(o.ogDesc || o.desc) + '">')
     .replace(/<meta property="og:url" content="[^"]*">/, () => '<meta property="og:url" content="' + o.url + '">');
 }
+const escA = (t) => String(t).replace(/&/g, '&amp;').replace(/"/g, '&quot;');
 function pageHtml(o) {
   const ld = [o.app, o.faq].concat(o.extraLd || []).map((j) => '<script type="application/ld+json">\n' + JSON.stringify(j, null, 2) + '\n</script>\n').join('');
-  return headFor(o) + ld + '</head>\n' + bodyFor(o);
+  const head = headFor(o).replace('<meta name="twitter:card" content="summary">', () => '<meta name="twitter:card" content="summary">\n<meta name="twitter:title" content="' + escA(o.ogTitle || o.title) + '">\n<meta name="twitter:description" content="' + escA(o.desc) + '">\n<meta property="og:site_name" content="CalcThis">\n<meta property="og:locale" content="en_US">');
+  return head + ld + '</head>\n' + bodyFor(o);
 }
 function write(rel, html) { const dir = ROOT + rel.replace(/index\.html$/, ''); fs.mkdirSync(dir, { recursive: true }); fs.writeFileSync(ROOT + rel, html.replace(/\n/g, '\r\n')); }
 
@@ -340,6 +342,28 @@ function mnFaqs(c) {
   ];
 }
 
+const CA_CITIES = [['Los Angeles', 'Los Angeles'], ['San Diego', 'San Diego'], ['San Jose', 'San Jose'], ['San Francisco', 'San Francisco'], ['Fresno', 'Fresno'], ['Sacramento', 'Sacramento'], ['Long Beach', 'Long Beach'], ['Oakland', 'Oakland'], ['Bakersfield', 'Bakersfield'], ['Anaheim', 'Anaheim'], ['Irvine', 'Irvine'], ['Riverside', 'Riverside'], ['Santa Monica', 'Santa Monica'], ['Pasadena', 'Pasadena'], ['Lancaster', 'Lancaster'], ['Palmdale', 'Palmdale']];
+
+function caFaqs(c) {
+  const s = E.STATES[c], n = s.name, P = s.places;
+  const la = placeBy(c, CA_CITIES[0][1]), sd = placeBy(c, CA_CITIES[1][1]), sj = placeBy(c, CA_CITIES[2][1]), sf = placeBy(c, CA_CITIES[3][1]), sa = placeBy(c, CA_CITIES[5][1]), lb = placeBy(c, CA_CITIES[6][1]), pd = placeBy(c, CA_CITIES[15][1]);
+  const shipT = E.add({ state: c, items: [{ amt: 100, cat: 'general' }], ship: 10, place: la }), shipC = E.add({ state: c, items: [{ amt: 100, cat: 'general' }], ship: 10, place: la, shipTaxed: true });
+  const use = ar(c, la, 'general', 3000, { paid: 0 }), use2 = ar(c, la, 'general', 3000, { paid: 4 });
+  const rev = E.reverse({ state: c, total: 110.25, cat: 'general', place: la });
+  return [
+    [`What is the sales tax rate in ${n}?`, `${n}’s statewide sales tax rate is ${pct(s.base)}, and most cities and counties add district taxes of 0.10% to 2.00% on top. In the CDTFA’s October 1, 2026 table the combined rate runs from ${pct(P.lo)} to ${pct(P.baseHi)} (Lancaster and Palmdale). Los Angeles is ${pct(la.sales)}, San Francisco ${pct(sf.sales)}, San Diego ${pct(sd.sales)}, San Jose ${pct(sj.sales)} and Sacramento ${pct(sa.sales)}. Search your city in the calculator above for your rate.`],
+    [`What is the ${n} sales tax made of?`, `The ${pct(s.base)} base is 6% state tax plus 1.25% local tax (0.25% for county transportation and 1% for city or county operations). Voter-approved district taxes are added on top, so a $100 purchase costs ${m(ar(c, sd).total)} in San Diego, ${m(ar(c, la).total)} in Los Angeles and ${m(ar(c, lb).total)} in Long Beach. A place can have more than one district tax.`],
+    [`Is food taxed in ${n}?`, `Groceries are exempt — a $100 grocery bill has $0.00 of tax, and candy, juice and noncarbonated bottled water count as groceries. Hot prepared food and restaurant meals are taxable whether eaten there or taken away: $100 of restaurant food in Los Angeles has ${m(ar(c, la, 'prepared').tax)} of tax. Carbonated drinks and alcohol bought in a store are taxable too (${m(ar(c, la, 'soda').tax)} on $100). Choose the item type to see the difference.`],
+    [`Is clothing taxed in ${n}?`, `Yes. ${n} has no clothing exemption, so clothing and shoes are taxed at your place’s rate — ${m(ar(c, la).tax)} on $100 in Los Angeles and ${m(ar(c, sd).tax)} in San Diego.`],
+    [`Are prescription drugs taxed in ${n}?`, `No. Medicine dispensed on a prescription and certain medical devices are exempt. Over-the-counter medicine is taxable. Choose “Prescription” as the item type to see the tax removed.`],
+    [`Is shipping taxed in ${n}?`, `Not when the charge is listed separately on the bill and covers the actual cost of carrier, mail or the seller’s own delivery after the sale (CDTFA Regulation 1628). On a $100 item in Los Angeles with $10 shipping listed separately the tax is ${m(shipT.tax)}; billed as one shipping-and-handling charge it is ${m(shipC.tax)}, because only the actual shipping part can be left out. Tick the box in the calculator for the combined case.`],
+    [`How do I take sales tax out of a total in ${n}?`, `Divide the total by 1 plus your combined rate. In Los Angeles (${pct(la.sales)}) a total of $110.25 is ${m(rev.pre)} before tax, with ${m(rev.tax)} of tax inside it. Switch the calculator to “Remove tax”, pick your city and enter the total.`],
+    [`Do I owe ${n} tax on things I buy online?`, `Yes, when the seller does not charge ${n} tax you owe use tax at the combined rate for where you use the item. A $3,000 item used in Los Angeles with no tax charged means ${m(use.owed)} of use tax; if the seller charged 4% you still owe ${m(use2.owed)}. Enter the tax the seller charged under Go advanced.`],
+    [`Can I find my exact ${n} rate from a ZIP code?`, `Not reliably. The CDTFA says district tax areas can cut across a city, so a ZIP code or mailing address does not always give the right rate. This calculator uses the rate the CDTFA lists for your city or county, and the CDTFA’s find-a-rate-by-address tool gives the exact rate for one address. Palmdale, for example, is ${pct(pd.sales)}.`],
+    [`What sales tax do I pay on a car in ${n}?`, `Vehicles are taxed at the rate of the place where they will be registered, not where they are bought. Pick that place in the calculator — for a $30,000 car registered in Los Angeles the tax is ${m(ar(c, la, 'general', 30000).tax)}. Registration fees and other charges are separate.`]
+  ];
+}
+
 const PF = {
   MO: {
     unit: 'city', sampleLabel: 'Springfield, Greene County', sampleName: 'Springfield', faqs: moFaqs,
@@ -350,8 +374,8 @@ const PF = {
     cityNote: (s, P) => `City and county rates from the Missouri Department of Revenue table for October–December 2026, including any district the DOR lists for the whole place. Search the calculator for any of the ${P.n.toLocaleString('en-US')} places and districts in the table.`,
     shipLine: (c, s, p) => `On a $100 item in Springfield with $10 shipping listed separately the tax is ${m(E.add({ state: c, items: [{ amt: 100, cat: 'general' }], ship: 10, place: p }).tax)}; billed as one shipping-and-handling charge it is ${m(E.add({ state: c, items: [{ amt: 100, cat: 'general' }], ship: 10, place: p, shipTaxed: true }).tax)}.`,
     use: 'Search your city or county, pick the line that matches where the seller is, add one item or several, choose what each one is and add shipping.',
-    title: (s) => s.name + ' Sales Tax Calculator 2026 — ' + pct(s.base) + ' State Rate + Local, by City | CalcThis',
-    desc: (s) => s.name + ' sales tax calculator by city and county: ' + pct(s.base) + ' state tax plus local, official Oct–Dec 2026 rates, groceries at the reduced rate, prescription drugs exempt, delivery rule, reverse tax.',
+    title: (s) => s.name + ' Sales Tax Calculator 2026 — ' + pct(s.base) + ' + Local, by City | CalcThis',
+    desc: (s) => s.name + ' sales tax calculator by city and county: ' + pct(s.base) + ' state plus local, official Oct–Dec 2026 rates, reduced food rate, Rx exempt, shipping rule.',
     ogTitle: (s) => s.name + ' Sales Tax Calculator 2026 — by City', source: 'Missouri Department of Revenue', sampleOf: 'in Springfield'
   },
   OH: {
@@ -363,8 +387,8 @@ const PF = {
     cityNote: (s, P) => `County rates from the Ohio Department of Taxation table for October 1 – December 31, 2026. The city names in brackets are only there to help you find your county — the rate is always the county’s. Search the calculator for any of the ${P.n} county and transit-area rates in the table.`,
     shipLine: (c, s, p) => `On a $100 taxable item in Franklin County with $10 shipping the tax is ${m(E.add({ state: c, items: [{ amt: 100, cat: 'general' }], ship: 10, place: p }).tax)}; on $100 of exempt groceries with $10 shipping it is ${m(E.add({ state: c, items: [{ amt: 100, cat: 'grocery' }], ship: 10, place: p }).tax)}.`,
     use: 'Search your county or city, pick where you receive the item, add one item or several, choose what each one is and add shipping.',
-    title: (s) => s.name + ' Sales Tax Calculator 2026 — ' + pct(s.base) + ' State Rate + County, by County | CalcThis',
-    desc: (s) => s.name + ' sales tax calculator by county: ' + pct(s.base) + ' state tax plus county and transit, official Oct–Dec 2026 rates, groceries and prescriptions exempt, delivery rule, reverse tax.',
+    title: (s) => s.name + ' Sales Tax Calculator 2026 — ' + pct(s.base) + ' + County Rates | CalcThis',
+    desc: (s) => s.name + ' sales tax calculator by county: ' + pct(s.base) + ' state plus county and transit, official Oct–Dec 2026 rates, groceries and Rx exempt, shipping rule.',
     ogTitle: (s) => s.name + ' Sales Tax Calculator 2026 — by County', source: 'Ohio Department of Taxation', sampleOf: 'in Franklin County'
   }
   ,
@@ -377,9 +401,24 @@ const PF = {
     cityNote: (s, P) => `Combined state and local rates from the Minnesota Department of Revenue guide for October–December 2026. Special local taxes (restaurant, entertainment, lodging) are not in these rates — your place’s extras are listed under the search box. Search the calculator for any of the ${P.n.toLocaleString('en-US')} cities, counties and townships in the guide.`,
     shipLine: (c, s, p) => `On a $100 taxable item in Minneapolis with $10 shipping the tax is ${m(E.add({ state: c, items: [{ amt: 100, cat: 'general' }], ship: 10, place: p }).tax)}; on $100 of exempt groceries with $10 shipping it is ${m(E.add({ state: c, items: [{ amt: 100, cat: 'grocery' }], ship: 10, place: p }).tax)}.`,
     use: 'Search your city, pick the line that matches where the seller is, add one item or several, choose what each one is and add shipping.',
-    title: (s) => s.name + ' Sales Tax Calculator 2026 — ' + pct(s.base) + ' State Rate + Local, by City | CalcThis',
-    desc: (s) => s.name + ' sales tax calculator by city: ' + pct(s.base) + ' state tax plus local, official Oct–Dec 2026 rates, groceries, clothing and medicine exempt, delivery rule, reverse tax.',
+    title: (s) => s.name + ' Sales Tax Calculator 2026 — ' + pct(s.base) + ' + Local, by City | CalcThis',
+    desc: (s) => s.name + ' sales tax calculator by city: ' + pct(s.base) + ' state plus local, official Oct–Dec 2026 rates, groceries, clothing and medicine exempt, shipping rule.',
     ogTitle: (s) => s.name + ' Sales Tax Calculator 2026 — by City', source: 'Minnesota Department of Revenue', sampleOf: 'in Minneapolis'
+  }
+  ,
+  CA: {
+    unit: 'city', sampleLabel: 'Los Angeles', sampleName: 'Los Angeles', faqs: caFaqs,
+    cityRows: () => CA_CITIES.map((x) => [x[0], placeBy('CA', x[1])]), cityHead: 'California sales tax rate by city', cityLead: 'City',
+    extra: (s, P) => { const rows = placeRows('CA').filter((x) => /County$/.test(x.label) || /\(unincorporated areas\)$/.test(x.label)).map((x) => '<tr><td>' + x.label.replace(' (unincorporated areas)', '') + '</td><td>' + pct(x.sales) + '</td></tr>').join(''); return '<h2>California sales tax rate by county</h2><p>The rate for the unincorporated areas of each county, from the CDTFA table. A city inside a county can have a different rate — search your city in the calculator.</p><div class="pc-tblwrap"><table class="dtable"><thead><tr><th>County</th><th>Unincorporated areas</th></tr></thead><tbody>' + rows + '</tbody></table></div>'; },
+    heroP: (s, P, a) => `${s.name} charges a ${pct(s.base)} statewide sales tax and <strong>cities and counties add district taxes</strong> — combined rates run from ${pct(P.lo)} to ${pct(P.baseHi)}. Search your city to see yours: on <strong>$100</strong> it is <strong>${m(a.total)}</strong> in Los Angeles with <strong>${m(a.tax)}</strong> of tax.`,
+    glance: (s, P) => `<p>${s.name}’s base rate is <strong>${pct(s.base)}</strong> — 6% state plus 1.25% local — and cities and counties add voter-approved district taxes of 0.10% to 2.00%, so the rate you pay depends on where the sale happens. In the CDTFA’s October 1, 2026 table the combined rate runs from <strong>${pct(P.lo)}</strong> to <strong>${pct(P.baseHi)}</strong>. District taxes start on the first day of a calendar quarter.</p>
+        <p>Los Angeles is ${pct(placeBy('CA', CA_CITIES[0][1]).sales)}, San Francisco ${pct(placeBy('CA', CA_CITIES[3][1]).sales)}, San Diego ${pct(placeBy('CA', CA_CITIES[1][1]).sales)} and Sacramento ${pct(placeBy('CA', CA_CITIES[5][1]).sales)}. Groceries and prescriptions are exempt, but clothing is not — so the calculator looks up your place and item type instead of guessing.</p>`,
+    cityNote: (s, P) => `Combined rates from the California Department of Tax and Fee Administration table effective October 1, 2026. District tax areas can cut across a city, so use the CDTFA address lookup for an exact address. Search the calculator for any of the ${P.n.toLocaleString('en-US')} cities and counties in the table.`,
+    shipLine: (c, s, p) => `On a $100 item in Los Angeles with $10 shipping listed separately the tax is ${m(E.add({ state: c, items: [{ amt: 100, cat: 'general' }], ship: 10, place: p }).tax)}; billed as one shipping-and-handling charge it is ${m(E.add({ state: c, items: [{ amt: 100, cat: 'general' }], ship: 10, place: p, shipTaxed: true }).tax)}.`,
+    use: 'Search your city or county, pick the line that matches where the sale happens, add one item or several, choose what each one is and add shipping.',
+    title: (s) => s.name + ' Sales Tax Calculator &amp; Rates by City 2026 | CalcThis',
+    desc: (s) => s.name + ' sales tax rates by city and county (' + pct(s.base) + ' to 11.75%, CDTFA Oct 2026) plus a free calculator: add or remove tax, groceries exempt, shipping rule.',
+    ogTitle: (s) => s.name + ' Sales Tax Calculator & Rates by City 2026', source: 'California Department of Tax and Fee Administration', sampleOf: 'in Los Angeles'
   }
 };
 
@@ -406,6 +445,7 @@ function writePlaceState(c) {
         <h2>${F.cityHead}</h2>
         <div class="pc-tblwrap"><table class="dtable"><thead><tr>${cityTh}</tr></thead><tbody>${cityRows}</tbody></table></div>
         <p>${F.cityNote(s, P)}</p>
+        ${F.extra ? F.extra(s, P) : ''}
       </div>
       <div>
         <h2>Local taxes, special districts and fees</h2>
@@ -428,7 +468,7 @@ ${f.map((q) => `    <details class="faq"><summary>${q[0]}</summary><p>${q[1]}</p
     { '@type': 'ListItem', position: 3, name: n, item: url }] };
   write('sales-tax-calculator/' + s.slug + '/index.html', pageHtml({
     title: F.title(s), desc: F.desc(s), ogTitle: F.ogTitle(s), url,
-    app: Object.assign(jsonApp(n + ' Sales Tax Calculator', url, n + ' sales tax calculator by ' + F.unit + ': add tax, remove tax or find the rate, with the exact local rate, exempt items and delivery rule.'), { dateModified: new Date().toISOString().slice(0, 10) }),
+    app: Object.assign(jsonApp(n + ' Sales Tax Calculator', url, n + ' sales tax calculator by ' + F.unit + ': add tax, remove tax or find the rate, with the exact local rate, exempt items and delivery rule.'), { dateModified: new Date().toISOString().slice(0, 10), inLanguage: 'en-US', isAccessibleForFree: true, applicationSubCategory: 'Sales tax calculator', areaServed: { '@type': 'AdministrativeArea', name: n }, isPartOf: { '@type': 'WebSite', name: 'CalcThis', url: 'https://calcthis.co/' }, featureList: ['Add sales tax to a price', 'Remove sales tax from a total', 'Find the sales tax rate', 'Rates for ' + P.n.toLocaleString('en-US') + ' places from the official ' + F.source + ' table', 'Exempt and taxable item types', 'Shipping and delivery rule', 'Use tax on online purchases'] }),
     faq: jsonFaq(f), extraLd: [crumbs], hero, content, bodyAttr: ' data-state="' + c + '"', srcHtml: srcHtml(c)
   }));
 }
@@ -481,7 +521,7 @@ ${f.map((q) => `    <details class="faq"><summary>${q[0]}</summary><p>${q[1]}</p
     { '@type': 'ListItem', position: 3, name: n, item: url }] };
   write('sales-tax-calculator/' + s.slug + '/index.html', pageHtml({
     title: n + ' Sales Tax Calculator 2026 — ' + pct(s.base) + ' Rate, Exempt Items | CalcThis',
-    desc: n + ' sales tax calculator: ' + pct(s.base) + ' statewide, no local tax. $100 is ' + m(a100.total) + ' with tax. Clothing and groceries exempt, shipping rule, Salem County and UEZ rates, reverse calculation.',
+    desc: n + ' sales tax calculator: ' + pct(s.base) + ' statewide, no local tax. $100 is ' + m(a100.total) + ' with tax. Clothing and groceries exempt, shipping rule, UEZ rates.',
     ogTitle: n + ' Sales Tax Calculator 2026', url,
     app: Object.assign(jsonApp(n + ' Sales Tax Calculator', url, n + ' sales tax calculator: add tax, remove tax or find the rate, with exempt items, shipping and special zones.'), { dateModified: new Date().toISOString().slice(0, 10) }),
     faq: jsonFaq(f), extraLd: [crumbs], hero, content, bodyAttr: ' data-state="' + c + '"', srcHtml: srcHtml(c)

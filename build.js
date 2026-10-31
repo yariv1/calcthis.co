@@ -69,6 +69,7 @@ const PAGES = [
   { file: 'loan-calculator/index.html',        slug: '/loan-calculator/' },
   { file: 'auto-loan-calculator/index.html',   slug: '/auto-loan-calculator/' },
   { file: 'paycheck-calculator/index.html',   slug: '/paycheck-calculator/' },
+  { file: 'sales-tax-calculator/california/index.html', slug: '/sales-tax-calculator/california/' },
   { file: 'tablespoons-to-teaspoons/index.html', slug: '/tablespoons-to-teaspoons/' },
   { file: 'acres-to-sq-ft/index.html', slug: '/acres-to-sq-ft/' },
   { file: 'tablespoons-to-ml/index.html', slug: '/tablespoons-to-ml/' },
@@ -429,6 +430,63 @@ const HDR_RE = /<!--HEADER:START-->[\s\S]*?<!--HEADER:END-->/;
 const FTR_RE = /<!--FOOTER:START-->[\s\S]*?<!--FOOTER:END-->/;
 const ASSET_RE = /(\/assets\/(?:style\.css|app\.js))(\?v=\d+)?/g;
 
+/* ---- SEO stamp: every page gets the same crawler/social metadata, whichever tool wrote the page ----
+   - og:site_name, og:locale, og:image (+ size/alt), twitter:card=summary_large_image, twitter:title/description/image
+   - title: the " | CalcThis" suffix is dropped when the title is over 60 characters (search results cut it off anyway)
+   - BreadcrumbList JSON-LD for blog posts (Home > Blog > article) and calculator pages (Home > page) when the page has none */
+let SEO_HAND = {};
+try { SEO_HAND = JSON.parse(fs.readFileSync(path.join(ROOT, 'md-files', 'seo-meta-hand.json'), 'utf8')); } catch (e) { console.warn('  ! md-files/seo-meta-hand.json not read: ' + e.message); }
+function seoStamp(html, slug) {
+  /* hand-written title / description overrides (md-files/seo-meta-hand.json) win over whatever a generator wrote */
+  const ov = SEO_HAND[slug];
+  if (ov) {
+    const esc = (t) => t.replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+    if (ov.t) { const t = esc(ov.t); html = html.replace(/<title>[^<]*<\/title>/, () => '<title>' + t + '</title>').replace(/(<meta property="og:title" content=")[^"]*(")/, (a, x, y) => x + t + y).replace(/(<meta name="twitter:title" content=")[^"]*(")/, (a, x, y) => x + t + y); }
+    if (ov.d) { const d = esc(ov.d); html = html.replace(/(<meta name="description" content=")[^"]*(")/, (a, x, y) => x + d + y).replace(/(<meta property="og:description" content=")[^"]*(")/, (a, x, y) => x + d + y).replace(/(<meta name="twitter:description" content=")[^"]*(")/, (a, x, y) => x + d + y); }
+  }
+  const attr = (re) => { const m = html.match(re); return m ? m[1] : ''; };
+  const dec = (t) => t.replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+  let title = attr(/<title>([^<]*)<\/title>/);
+  if (!title) return html;
+  const cleanT = title.replace(/\s*\|\s*CalcThis$/, '');
+  if (dec(title).length > 60 && cleanT !== title) { html = html.replace('<title>' + title + '</title>', () => '<title>' + cleanT + '</title>'); title = cleanT; }
+  let desc = attr(/<meta name="description" content="([^"]*)"/);
+  if (desc && dec(desc).length > 160) {
+    /* keep whole sentences up to 160 characters; hand-written descriptions should already fit (see the audit in md-files/calcthis-seo-checklist.md) */
+    const parts = desc.split(/(?<=[.!?])\s+/); let out = '';
+    for (const part of parts) { if (dec(out + (out ? ' ' : '') + part).length <= 160) out += (out ? ' ' : '') + part; else break; }
+    if (dec(out).length < 90) { out = desc.slice(0, 157).replace(/[,;:—–-]?\s*\S*$/, '') + '…'; console.warn('  ! description cut mid-sentence: ' + slug); }
+    html = html.split('content="' + desc + '"').join('content="' + out + '"'); desc = out;
+  }
+  const ogT = attr(/<meta property="og:title" content="([^"]*)"/) || title, ogD = attr(/<meta property="og:description" content="([^"]*)"/) || desc;
+  const add = [];
+  if (!/<meta property="og:site_name"/.test(html)) add.push('<meta property="og:site_name" content="CalcThis">');
+  if (!/<meta property="og:locale"/.test(html)) add.push('<meta property="og:locale" content="en_US">');
+  if (!/<meta property="og:image"/.test(html)) add.push('<meta property="og:image" content="https://calcthis.co/assets/og-default.png">', '<meta property="og:image:width" content="1200">', '<meta property="og:image:height" content="630">', '<meta property="og:image:alt" content="CalcThis — free, purpose-built calculators">');
+  if (!/<meta name="twitter:title"/.test(html)) add.push('<meta name="twitter:title" content="' + ogT + '">');
+  if (!/<meta name="twitter:description"/.test(html) && ogD) add.push('<meta name="twitter:description" content="' + ogD + '">');
+  if (!/<meta name="twitter:image"/.test(html)) add.push('<meta name="twitter:image" content="https://calcthis.co/assets/og-default.png">');
+  if (/<meta name="twitter:card"/.test(html)) html = html.replace(/<meta name="twitter:card" content="[^"]*">/, '<meta name="twitter:card" content="summary_large_image">');
+  else add.push('<meta name="twitter:card" content="summary_large_image">');
+  if (add.length) html = html.replace('</head>', () => add.join('\n') + '\n</head>');
+  const h1 = (html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/) || [, ''])[1].replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+  const needCrumb = !/"@type":\s*"BreadcrumbList"/.test(html) && slug !== '/' && !/^\/(about|contact|terms-of-use|privacy-policy|zone-2-calculator)\/$/.test(slug) && h1;
+  if (!/<script type="application\/ld\+json">/.test(html) && /^\/(about|contact|terms-of-use|privacy-policy)\/$/.test(slug)) {
+    const kind = slug === '/about/' ? 'AboutPage' : slug === '/contact/' ? 'ContactPage' : 'WebPage';
+    const ld = ['<script type="application/ld+json">', JSON.stringify({ '@context': 'https://schema.org', '@type': kind, name: dec(title), url: 'https://calcthis.co' + slug, description: dec(desc), inLanguage: 'en-US', isPartOf: { '@type': 'WebSite', name: 'CalcThis', url: 'https://calcthis.co/' } }, null, 2), '</script>', ''].join('\n');
+    html = html.replace('</head>', () => ld + '</head>');
+  }
+  if (needCrumb) {
+    const item = (n, name, url) => ({ '@type': 'ListItem', position: n, name, item: url });
+    const els = [item(1, 'CalcThis', 'https://calcthis.co/')];
+    if (/^\/blog\/.+/.test(slug)) { els.push(item(2, 'Blog', 'https://calcthis.co/blog/')); els.push(item(3, h1, 'https://calcthis.co' + slug)); }
+    else els.push(item(2, h1, 'https://calcthis.co' + slug));
+    const ld = '<script type="application/ld+json">\n' + JSON.stringify({ '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: els }, null, 2) + '\n</script>\n';
+    html = html.replace('</head>', () => ld + '</head>');
+  }
+  return html;
+}
+
 let changed = 0, warned = 0;
 for (const p of PAGES) {
   const fp = path.join(ROOT, p.file);
@@ -456,6 +514,9 @@ for (const p of PAGES) {
 
   // 3. cache-bust
   html = html.replace(ASSET_RE, '$1?v=' + ver);
+
+  // 4. SEO head stamp (idempotent): shared social tags + title length + breadcrumbs, same on every page
+  html = seoStamp(html, p.slug);
 
   fs.writeFileSync(fp, html);
   changed++;

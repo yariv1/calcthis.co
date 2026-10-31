@@ -96,13 +96,6 @@
 - [Privacy Policy](https://calcthis.co/privacy-policy/): CalcThis privacy policy. We don't collect personal data. Learn how we use cookies and third-party services.
 - [Terms of Use](https://calcthis.co/terms-of-use/): Terms of use for CalcThis. Free calculators for informational purposes — please verify results with a qualified professional.
 
-## Sales tax calculators
-- [Sales Tax Calculator](https://calcthis.co/sales-tax-calculator/): add sales tax, remove it from a total or find the rate; state rates for every state.
-- [Minnesota Sales Tax Calculator](https://calcthis.co/sales-tax-calculator/minnesota/): Minnesota sales tax with exempt items, shipping rule and special zones.
-- [Missouri Sales Tax Calculator](https://calcthis.co/sales-tax-calculator/missouri/): Missouri sales tax with exempt items, shipping rule and special zones.
-- [New Jersey Sales Tax Calculator](https://calcthis.co/sales-tax-calculator/new-jersey/): New Jersey sales tax with exempt items, shipping rule and special zones.
-- [Ohio Sales Tax Calculator](https://calcthis.co/sales-tax-calculator/ohio/): Ohio sales tax with exempt items, shipping rule and special zones.
-
 ## Paycheck calculators by state
 - [Alabama Paycheck Calculator](https://calcthis.co/paycheck-calculator/alabama/): take-home pay after federal tax, FICA and Alabama state tax.
 - [Alaska Paycheck Calculator](https://calcthis.co/paycheck-calculator/alaska/): take-home pay after federal tax, FICA.
@@ -168,3 +161,11 @@
 - [Tablespoons to Teaspoons Converter](https://calcthis.co/tablespoons-to-teaspoons/): Tablespoons to teaspoons, and teaspoons to tablespoons.
 - [Acres to Square Feet Converter](https://calcthis.co/acres-to-sq-ft/): Acres to square feet, and square feet to acres.
 - [Tablespoons to mL Converter](https://calcthis.co/tablespoons-to-ml/): Tablespoons to milliliters, and mL to tablespoons.
+
+## Sales tax calculators
+- [Sales Tax Calculator](https://calcthis.co/sales-tax-calculator/): add sales tax, remove it from a total or find the rate; state rates for every state.
+- [California Sales Tax Calculator](https://calcthis.co/sales-tax-calculator/california/): California sales tax with exempt items, shipping rule and special zones.
+- [Minnesota Sales Tax Calculator](https://calcthis.co/sales-tax-calculator/minnesota/): Minnesota sales tax with exempt items, shipping rule and special zones.
+- [Missouri Sales Tax Calculator](https://calcthis.co/sales-tax-calculator/missouri/): Missouri sales tax with exempt items, shipping rule and special zones.
+- [New Jersey Sales Tax Calculator](https://calcthis.co/sales-tax-calculator/new-jersey/): New Jersey sales tax with exempt items, shipping rule and special zones.
+- [Ohio Sales Tax Calculator](https://calcthis.co/sales-tax-calculator/ohio/): Ohio sales tax with exempt items, shipping rule and special zones.

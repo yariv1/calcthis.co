@@ -1,0 +1,279 @@
+{
+  "/board-foot-calculator/": {
+    "d": "Free board foot calculator: enter thickness, width and length for board feet and lumber cost. Handles 4/4 sizes, metric and a running cut-list tally."
+  },
+  "/gravel-calculator/": {
+    "d": "Free gravel calculator: enter area and depth for tons, cubic yards or bags, plus cost. Add multiple areas, rectangle or circle, US or metric."
+  },
+  "/mulch-calculator/": {
+    "d": "Free mulch calculator: enter bed size and depth for cubic yards or bags, plus cost. Add multiple beds, rectangle or circle, US or metric."
+  },
+  "/concrete-calculator/": {
+    "d": "Free concrete calculator: enter slab size and thickness for 40, 60 or 80 lb bags, cubic yards, weight and cost. Multiple slabs, US or metric."
+  },
+  "/sand-calculator/": {
+    "t": "Sand Calculator — How Much Sand Do I Need? (Tons & Yards)",
+    "d": "Free sand calculator: enter area and depth for tons, cubic yards or bags, plus cost. Paver, leveling, play and fill sand; US or metric."
+  },
+  "/topsoil-calculator/": {
+    "t": "Topsoil Calculator — How Much Topsoil Do I Need?",
+    "d": "Free topsoil calculator: enter area and depth for cubic yards, tons or bags, plus cost. Covers garden soil, fill dirt and compost; US or metric."
+  },
+  "/flooring-calculator/": {
+    "t": "Flooring Calculator — How Much Flooring Do I Need?",
+    "d": "Free flooring calculator: enter room size for boxes of laminate, vinyl plank, hardwood or tile, plus waste and cost. Multiple rooms, US or metric."
+  },
+  "/tape-measure-fraction-calculator/": {
+    "t": "Tape Measure Fraction Calculator — Add & Subtract Inches",
+    "d": "Free tape measure fraction calculator: add and subtract feet, inches and fractions, see the exact tick on a live ruler, and divide into equal parts."
+  },
+  "/tile-calculator/": {
+    "d": "Free tile calculator: enter area and tile size for tiles, boxes, waste and cost. Floors, walls and backsplashes, ceramic to mosaic; US or metric.",
+    "t": "Tile Calculator — How Many Tiles Do I Need? (Boxes & Cost)"
+  },
+  "/paint-calculator/": {
+    "d": "Free paint calculator for interior and exterior walls, ceilings and trim: gallons and quarts per surface, leftover, cost and a live room diagram."
+  },
+  "/wallpaper-calculator/": {
+    "d": "Free wallpaper calculator that counts rolls in whole strips with pattern repeat and match type. Live strip diagram, leftover, cost and room totals."
+  },
+  "/square-footage-calculator/": {
+    "d": "Free square footage calculator with 13 shapes: rectangle, circle, triangle, trapezoid and more. Running project total, live diagram and cost estimate."
+  },
+  "/stair-calculator/": {
+    "d": "Free stair calculator: enter total rise for riser height, tread run, steps, stringer length and angle. Live diagram, code checks and materials cost."
+  },
+  "/lean-body-mass-calculator/": {
+    "d": "Free lean body mass calculator using the Boer, James and Hume formulas, with a lean-vs-fat bar. Use a known body fat % for an exact result."
+  },
+  "/pace-calculator/": {
+    "d": "Free running pace calculator: enter any two of pace, time and distance for the third, plus splits, km/h, mph and 5K to marathon equivalents."
+  },
+  "/race-time-predictor/": {
+    "d": "Free race time predictor: enter one recent race for predicted mile, 5K, 10K, half and marathon times from the Riegel and VDOT models, plus splits."
+  },
+  "/vo2-max-calculator/": {
+    "d": "Free VO2 max calculator: estimate aerobic fitness from resting heart rate or a 1-mile walk, see your age-and-sex percentile and equivalent race times."
+  },
+  "/heart-rate-zone-calculator/": {
+    "d": "Free heart rate zone calculator: your 5 training zones and Zone 2 fat-burn range from age, plus Karvonen zones from your resting heart rate."
+  },
+  "/zone-2-heart-rate-calculator/": {
+    "t": "Zone 2 Heart Rate Calculator — Find Your Zone 2 Range",
+    "d": "Find your Zone 2 heart rate range: enter your age, pick the MHR formula (Fox, Tanaka or Gulati) and add resting heart rate for Karvonen results."
+  },
+  "/bmi-calculator/": {
+    "d": "Free BMI calculator with a live chart: body mass index and weight category from height and weight, metric or imperial, plus your healthy weight range."
+  },
+  "/calorie-calculator/": {
+    "d": "Free calorie calculator: daily calories to reach a goal weight, with a gentle-to-fast pace table, weight-loss curve with milestone dates and protein target."
+  },
+  "/body-fat-calculator/": {
+    "d": "Free body fat calculator using the US Navy tape method: body fat % and category for men and women from a tape measure, no scale needed."
+  },
+  "/ideal-weight-calculator/": {
+    "d": "Free ideal weight calculator: your healthy weight range for your height, the Robinson, Devine, Miller and Hamwi estimates, and frame-size adjustment."
+  },
+  "/tdee-calculator/": {
+    "d": "Free TDEE calculator: total daily energy expenditure and maintenance calories (Mifflin-St Jeor), plus calorie targets to lose or gain weight."
+  },
+  "/one-rep-max-calculator/": {
+    "d": "Free one rep max calculator: estimate your 1RM for bench, squat or deadlift from a working set, with a %-of-1RM table and Epley, Brzycki and Lombardi."
+  },
+  "/sleep-calculator/": {
+    "t": "Sleep Calculator — Best Bedtime & Wake-Up Time",
+    "d": "Free sleep calculator: find the best bedtime or wake-up time using 90-minute sleep cycles so you wake between cycles feeling rested."
+  },
+  "/water-intake-calculator/": {
+    "t": "Water Intake Calculator — How Much Water Per Day?",
+    "d": "Free water intake calculator: daily target from weight, activity and climate in glasses, litres and fl oz, with a glass-by-glass schedule."
+  },
+  "/final-grade-calculator/": {
+    "d": "Find out what score you need on your final exam to reach your target grade, or predict your course grade from an expected exam score."
+  },
+  "/gpa-calculator/": {
+    "d": "Free GPA calculator for college and high school: weighted and unweighted GPA, AP/IB/Honors bumps, letter grades or percentages, and a what-if course adder."
+  },
+  "/grade-calculator/": {
+    "d": "Free weighted grade calculator: enter categories (homework, quizzes, midterm, final), weights and scores for an instant course grade, in % or points."
+  },
+  "/test-score-calculator/": {
+    "d": "Convert raw test scores to percentages and letter grades, see how many questions you can miss, apply curves and estimate AP scores (1–5). Free."
+  },
+  "/grade-curve-calculator/": {
+    "d": "Free grade curve calculator: paste raw scores, pick a curve method (add points, bell curve, square root and more) and see the new letter-grade distribution."
+  },
+  "/fraction-calculator/": {
+    "t": "Fraction Calculator — Add, Subtract, Multiply & Divide",
+    "d": "Free fraction calculator: add, subtract, multiply and divide fractions, mixed numbers and decimals, simplify and convert, with a live bar diagram and steps."
+  },
+  "/standard-deviation-calculator/": {
+    "t": "Standard Deviation Calculator — Sample & Population SD",
+    "d": "Free standard deviation calculator: sample and population SD side by side, plus mean, variance, step-by-step working and a live number line."
+  },
+  "/scientific-notation-calculator/": {
+    "d": "Free scientific notation calculator: convert to and from E-notation and engineering notation, or calculate with expressions, with exact results and steps."
+  },
+  "/weighted-average-calculator/": {
+    "d": "Free weighted average calculator: add value and weight rows, see the average update live with a contribution bar, and solve for a missing value."
+  },
+  "/ratio-calculator/": {
+    "d": "Free ratio calculator: simplify ratios, solve for a missing value or scale a ratio up or down, with a live proportion bar and real-world presets."
+  },
+  "/about/": {
+    "t": "About CalcThis — Free, Purpose-Built Calculators",
+    "d": "CalcThis is a free collection of purpose-built calculators for construction, health, money and school. No sign-up, just fast, accurate answers."
+  },
+  "/percentage-calculator/": {
+    "d": "Free percentage calculator: find a percent of a number, what percent one number is of another, or the percent change between two values."
+  },
+  "/age-calculator/": {
+    "d": "Free age calculator: exact age in years, months and days from your date of birth, a live seconds count, next-birthday countdown and age on any date."
+  },
+  "/date-calculator/": {
+    "d": "Free date calculator: days, weeks and months between two dates, or add and subtract days from a date, with business days and a live span timeline."
+  },
+  "/time-calculator/": {
+    "d": "Free time calculator: elapsed time between two clock times, add or subtract hours and minutes, or total a time card with breaks, overtime and pay."
+  },
+  "/macro-calculator/": {
+    "d": "Free macro calculator: daily protein, carb and fat targets for your goal, with a live macro ring and balanced, high-protein, keto and low-carb modes."
+  },
+  "/peptide-reconstitution-calculator/": {
+    "t": "Peptide Reconstitution Calculator — U-100 Syringe Units",
+    "d": "Peptide reconstitution calculator: enter vial size, BAC water and dose for U-100 syringe units on a visual syringe, plus concentration and doses per vial."
+  },
+  "/protein-intake-calculator/": {
+    "d": "Free protein intake calculator: daily protein in grams for fitness, muscle gain or fat loss, on a live g/kg gauge, with food equivalents."
+  },
+  "/bmr-calculator/": {
+    "d": "Free BMR calculator: basal metabolic rate in kcal and kJ from five formulas, plus daily calories by activity level and lose, maintain and gain targets."
+  },
+  "/hours-calculator/": {
+    "d": "Free hours calculator: hours worked with breaks, split and overnight shifts, weekly overtime and pay, hours between dates and minutes to decimal hours."
+  },
+  "/triangle-calculator/": {
+    "t": "Triangle Calculator — Solve Any Triangle & Pythagorean Theorem",
+    "d": "Free triangle calculator: enter any 3 values (SSS, SAS, ASA, AAS, SSA) or 2 for a right triangle for every side, angle, area and height, with a diagram."
+  },
+  "/mortgage-calculator/": {
+    "t": "Mortgage Calculator — Monthly Payment & Amortization",
+    "d": "Free mortgage calculator: monthly payment, balance chart, what extra payments save and 10/15/20/30-year terms side by side. Taxes, insurance and PMI included."
+  },
+  "/loan-calculator/": {
+    "d": "Free loan calculator: payment, balance chart, extra-payment savings and true APR, or work backwards from a payment to what you can borrow."
+  },
+  "/auto-loan-calculator/": {
+    "d": "Free auto loan calculator: monthly payment, cash due at signing and total cost from price, down payment, trade-in, tax and fees, with a negative-equity flag."
+  },
+  "/paycheck-calculator/": {
+    "d": "Free paycheck calculator for salary and hourly pay: take-home after federal, Social Security, Medicare and state tax, 401(k), overtime and every pay schedule."
+  },
+  "/turkey-cooking-time-calculator/": {
+    "d": "Turkey cooking time calculator: a 15 lb unstuffed turkey roasts 3¾–4¼ hours at 325 °F (USDA). Enter weight and dinner time to get when it goes in."
+  },
+  "/turkey-thawing-time-calculator/": {
+    "d": "Turkey thawing time calculator: a 15 lb turkey takes 3 to 3.8 days in the fridge or 7 h 30 min in cold water (USDA). Get your start time."
+  },
+  "/turkey-size-calculator/": {
+    "d": "Turkey size calculator: 10 adults need a 10 lb turkey, 15 lb with leftovers. Enter adults and children for the size to buy, plus thaw and cook times."
+  },
+  "/sales-tax-calculator/": {
+    "t": "Sales Tax Calculator — Add, Remove or Find the Rate by State",
+    "d": "Free sales tax calculator: add tax to a price, remove it from a total or find the rate. Pick your state for rates, exempt items and shipping rules."
+  },
+  "/waist-to-hip-ratio-calculator/": {
+    "d": "Free waist-to-hip ratio calculator: your WHR on a sex-specific health-risk gauge, with a WHO waist-circumference cross-check."
+  },
+  "/steps-to-miles-calculator/": {
+    "d": "Free steps to miles calculator: convert steps to miles or km using your height-based stride, see distance milestones, and estimate calories burned."
+  },
+  "/recipe-converter/": {
+    "d": "Free recipe converter: paste ingredients, scale servings and get kitchen-ready amounts, cups to grams per ingredient, US or metric, plus oven temperatures."
+  },
+  "/blog/what-is-lean-body-mass/": {
+    "d": "What lean body mass measures, the exact formula, the Boer, James and Hume estimates, and what counts as a healthy range, with a worked example."
+  },
+  "/blog/what-is-a-weighted-average/": {
+    "d": "What a weighted average is, the formula, a worked example with exam grades, what to use as a weight and how it differs from a simple average."
+  },
+  "/blog/how-much-protein-do-i-need/": {
+    "d": "How much protein you need by goal, why the RDA is a floor not a target, how age and sex change it, total weight vs. lean mass, and meal timing."
+  },
+  "/blog/how-much-sand-do-i-need/": {
+    "d": "How to calculate how much sand you need: a depth guide by project, sand types explained, bags vs. bulk, and the compaction factor most people miss."
+  },
+  "/blog/what-is-zone-2-heart-rate/": {
+    "d": "Zone 2 heart rate is 60–70% of your max: the zone that builds aerobic base and fat burning. Calculate your range by age and how long to train in it."
+  },
+  "/blog/what-is-one-rep-max/": {
+    "d": "Your one-rep max (1RM) is the most you can lift for one rep. Learn the Epley and Brzycki formulas, estimate it safely, and program training by percentages."
+  },
+  "/blog/what-is-bmi/": {
+    "d": "What BMI is, the formula in metric and imperial, a worked example, the WHO weight categories, your healthy weight range and where BMI falls short."
+  },
+  "/blog/how-much-should-i-weigh/": {
+    "d": "How much you should weigh is a range, not one number. Find your healthy weight range from height, what the four formulas add and where to aim."
+  },
+  "/blog/what-is-vo2-max/": {
+    "d": "What VO2 max measures, how to estimate it from resting heart rate or a 1-mile walk, what's good for your age and sex, and how it links to race pace."
+  },
+  "/blog/how-many-steps-are-in-a-mile/": {
+    "d": "How many steps are in a mile: stride length depends on height, not a flat 2,000. Work out your own number, with a height-based table in miles and km."
+  },
+  "/blog/how-to-calculate-stair-rise-and-run/": {
+    "d": "The riser-height formula, standard vs. flush stringer mounts, the Pythagorean stringer length and the IRC code numbers, with a full worked example."
+  },
+  "/blog/how-to-curve-grades/": {
+    "d": "Six ways to curve grades: add points, scale to the top score, percentage boost, bell curve, square root and target mean, with formulas and a worked example."
+  },
+  "/blog/what-is-waist-to-hip-ratio/": {
+    "d": "What waist-to-hip ratio measures, how to measure your waist and hips, the WHO risk bands by sex, a worked example, and WHR vs. BMI."
+  },
+  "/blog/how-many-calories-to-lose-weight/": {
+    "d": "How many calories to eat to lose weight: the deficit method, your TDEE, safe minimums, a worked example and what to do when the scale stalls."
+  },
+  "/blog/how-to-calculate-your-macros/": {
+    "d": "How to calculate your macros: set calories, split protein, carbs and fat by goal, with a worked example and tips for adjusting over time."
+  },
+  "/blog/how-to-calculate-your-body-fat-percentage/": {
+    "d": "How to calculate your body fat percentage: the US Navy tape method step by step, healthy ranges by age and sex, and how it compares with BMI."
+  },
+  "/blog/how-to-add-fractions-on-a-tape-measure/": {
+    "d": "How to add and subtract fractions on a tape measure: reading the tick marks, finding a common denominator and worked examples in inches."
+  },
+  "/blog/how-to-calculate-square-footage/": {
+    "d": "How to calculate square footage for any shape, room or project: formulas, a worked example, unit conversions and how much waste to add."
+  },
+  "/blog/how-to-calculate-the-number-of-days-between-two-dates/": {
+    "d": "How to calculate the days between two dates by hand: two methods, whether to count the end date, leap years and business days, with an example."
+  },
+  "/blog/how-to-calculate-your-exact-age/": {
+    "d": "How to calculate your exact age by hand with the borrow-and-subtract method, leap-year edge cases and a worked example in years, months and days."
+  },
+  "/blog/how-to-calculate-your-tdee/": {
+    "d": "How to calculate your TDEE: BMR formulas, activity multipliers and a worked example, then how to set calories for losing or gaining weight."
+  },
+  "/unit-converter/": {
+    "t": "Unit Converter — Length, Weight, Volume, Temperature & More"
+  },
+  "/acres-to-sq-ft/": {
+    "t": "Acres to Sq Ft Converter — Acres to Square Feet (and Back)"
+  },
+  "/cups-to-grams/": {
+    "d": "A US cup of all-purpose flour is 120 g. Free cups to grams converter for flour, sugar, butter and 50 more ingredients, with a table of common amounts."
+  },
+  "/celsius-to-kelvin/": {
+    "d": "0 °C = 273.15 K and 100 °C = 373.15 K. Free Celsius to Kelvin converter, both directions, with a live thermometer and a table of common values."
+  },
+  "/contact/": {
+    "t": "Contact CalcThis — Questions, Feedback & Corrections"
+  },
+  "/terms-of-use/": {
+    "t": "Terms of Use — CalcThis"
+  },
+  "/": {
+    "t": "CalcThis — Free Online Calculators & Unit Converters",
+    "d": "Free, fast, single-purpose calculators and converters: construction, health, money, paycheck, sales tax, math, school grades and unit conversion. No sign-up."
+  }
+}

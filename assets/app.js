@@ -13009,6 +13009,33 @@ CalcThis.saleTaxEngine = (function () {
       { t: 'Rates change every quarter', d: 'Local rates change in January, April, July and October. The rates here are from the October–December 2026 guide.' }
     ]
   });
+  /* California: the rate is the combined state + local + district rate for the place, from the CDTFA "California City & County Sales & Use Tax
+     Rates" table effective October 1, 2026 (every row is in /assets/data/ca-rates.json). District taxes can differ by address inside a city. */
+  Object.assign(S.CA, {
+    live: true, slug: 'california', eff: 'the October 1, 2026 CDTFA rate table', nearby: ['OR', 'NV', 'AZ'],
+    src: [{ t: 'CDTFA — California City & County Sales & Use Tax Rates, effective October 1, 2026', u: 'https://cdtfa.ca.gov/taxes-and-fees/sales-use-tax-rates.htm' }, { t: 'CDTFA — Detailed Description of the Sales & Use Tax Rate', u: 'https://cdtfa.ca.gov/taxes-and-fees/sut-rates-description.htm' }, { t: 'CDTFA — Know Your Sales and Use Tax Rate', u: 'https://cdtfa.ca.gov/taxes-and-fees/know-your-rate.htm' }, { t: 'CDTFA — Regulation 1603, Taxable Sales of Food Products', u: 'https://www.cdtfa.ca.gov/lawguides/vol1/sutr/1603.html' }, { t: 'CDTFA — Publication 31, Grocery Stores', u: 'https://cdtfa.ca.gov/formspubs/pub31.pdf' }, { t: 'CDTFA — Regulation 1628, Transportation Charges', u: 'https://www.cdtfa.ca.gov/lawguides/vol1/sutr/1628.html' }, { t: 'CDTFA — Regulation 1591, Medicines and Medical Devices', u: 'https://www.cdtfa.ca.gov/lawguides/vol1/sutr/1591.html' }, { t: 'CDTFA — California Tax Matrix for Remote Sellers (CDTFA-758)', u: 'https://cdtfa.ca.gov/formspubs/cdtfa758.pdf' }],
+    places: { url: '/assets/data/ca-rates.json', n: 541, lo: 7.25, hi: 11.75, baseHi: 11.75, noFood: true, hubNote: ' (up to 11.75%)', ph: 'Type your city, e.g. Los Angeles', hint: 'The rate in California depends on the city or county, plus any district taxes there. Type your city and pick it — or pick your county for the unincorporated areas. Rates can differ by address inside a city; the CDTFA address lookup gives the exact one.' },
+    cats: [
+      { id: 'general', label: 'Other goods', long: 'Most other goods, including clothing', taxable: true, note: 'Most goods are taxable, including clothing and shoes. Over-the-counter medicine is taxable too.' },
+      { id: 'grocery', label: 'Groceries', long: 'Groceries (food for home)', taxable: false, note: 'Cold food and groceries bought to take home are exempt, including candy, juice and noncarbonated bottled water. Hot prepared food, carbonated drinks and alcohol are taxable — choose “Restaurant” or “Soda & alcohol”.' },
+      { id: 'prepared', label: 'Restaurant', long: 'Restaurant meals and hot prepared food', taxable: true, note: 'Meals and hot prepared food from restaurants and similar sellers are taxable, whether eaten there or taken away.' },
+      { id: 'soda', label: 'Soda & alcohol', long: 'Carbonated drinks and alcohol', taxable: true, note: 'Carbonated beverages and alcoholic beverages sold in a store are taxable, even though other groceries are exempt.' },
+      { id: 'drugs', label: 'Prescription', long: 'Prescription medicine and medical devices', taxable: false, note: 'Medicine dispensed on a prescription and certain medical devices are exempt. Over-the-counter medicine is taxable.' }
+    ],
+    shipOpt: true, shipOptLabel: 'Shipping and handling are billed as one charge',
+    shipNote: 'A delivery charge that is listed separately on the bill and covers the actual cost of carrier, mail or the seller’s own delivery after the sale is not taxed. A combined “shipping and handling” charge is taxed except for the actual shipping part — tick the box in the calculator to tax it in full.',
+    others: [
+      { t: 'The rate depends on the place', d: 'California’s statewide rate is 7.25%. Cities and counties add district taxes of 0.10% to 2.00%, and a place can have more than one. In the October 1, 2026 table the combined rate runs from 7.25% to 11.75% (Lancaster and Palmdale). Search your city above.' },
+      { t: 'District taxes can differ inside a city', d: 'The CDTFA says a ZIP code or mailing address does not always tell you the rate: district tax areas can cut through a city. The calculator uses the rate the CDTFA lists for the city or county, so for an exact address use the CDTFA’s find-a-rate-by-address tool.' },
+      { t: 'What the 7.25% is made of', d: 'The state portion is 6% and the local portion is 1.25% (0.25% for county transportation funds and 1% for city or county operations). District taxes are added on top.' },
+      { t: 'Groceries and drinks', d: 'Groceries, candy, juice and noncarbonated bottled water are exempt. Carbonated drinks and alcohol bought in a store are taxable, and so is hot prepared food and restaurant food, whether eaten there or taken away.' },
+      { t: 'Clothing and medicine', d: 'Clothing has no exemption — it is taxed at your place’s rate. Medicine dispensed on a prescription and certain medical devices are exempt; over-the-counter medicine is taxable.' },
+      { t: 'Delivery charges', d: 'Separately stated carrier or mail transport charges are not taxed. If shipping and handling are billed as one amount, only the actual shipping cost can be left out of the tax. If the item is sold at a delivered price, the whole price is taxed.' },
+      { t: 'Cars, boats and aircraft', d: 'Vehicles are taxed at the rate of the place where they are registered, not where they are bought. The calculator does not apply that rule — pick the place where the vehicle will be registered.' },
+      { t: 'Bought online or out of state', d: 'If the seller did not charge California tax you owe use tax at the combined rate for where you use the item. Pick your place and enter any tax the seller charged under Go advanced.' },
+      { t: 'Rates change every quarter', d: 'District tax rates take effect on the first day of a calendar quarter (January, April, July or October). The rates here are from the October 1, 2026 table.' }
+    ]
+  });
   function r2(x) { return Math.round(x * 100 + 1e-9) / 100; }
   function cat(st, id) { var l = st && st.cats ? st.cats : []; for (var i = 0; i < l.length; i++) if (l[i].id === id) return l[i]; return null; }
   function zone(st, id) { var l = st && st.zones ? st.zones : []; for (var i = 0; i < l.length; i++) if (l[i].id === id) return l[i]; return null; }

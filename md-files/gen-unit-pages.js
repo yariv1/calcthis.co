@@ -640,7 +640,7 @@ const lw = (t) => t.replace(/^\S+/, (w) => w.toLowerCase());
 function writePair(p) {
   const c = p.cat, url = 'https://calcthis.co' + pairUrl(p), f = p.faqs();
   const answer = p.answer ? p.answer() : c === 'temperature' ? say(c, p.a, p.b, 0) + ', ' + say(c, p.a, p.b, 100) : one(c, p.a, p.b);
-  const desc = p.desc ? p.desc : 'Free ' + p.link + ' converter (and the reverse): type a value for an instant answer, ' + (c === 'length' ? 'with a live ruler and tape-measure fractions' : c === 'temperature' ? 'with the formula and a live thermometer' : 'with every unit at once') + ' and a table of the most common values.';
+  const desc = p.desc ? p.desc : answer + '. Free ' + p.link + ' converter, both directions: type any value for an instant answer, with a table of the most common values.';
   const hero = `<strong>${answer}.</strong> Type a value for an instant answer — use the swap button for ${lw(nm(c, p.b))} to ${lw(nm(c, p.a))} — with a table of the most common values below.`;
   const content = `  <section class="content">
     <div class="grid2">
