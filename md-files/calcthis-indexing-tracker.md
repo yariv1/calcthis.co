@@ -2,28 +2,11 @@
 
 _How-to for requesting indexing with Claude in Chrome + the next batch: HANDOFF.md §10. Next batch = /auto-loan-calculator/ + the "not checked yet" list below, ~10 per day._
 
-## Newly deployed 2026-10-31: /sales-tax-calculator/california/ (status `Not requested`) — add to the GSC queue. Site-wide SEO metadata deployed (see calcthis-seo-checklist.md).
-
-## DONE 2026-10-31 (GSC, 10 requests, quota used up for the day): /random-number-generator/ and -1-100 -wheel -no-repeats -1-10 -1-13 -1-3 (1-3 and the speed converter confirmed only indirectly), /speed-converter/, /data-storage-converter/, /cooking-converter/. STILL TO REQUEST: /px-to-rem-converter/, 10 paycheck state pages, then the 18 pair pages. Re-verify 1-3 + speed converter in GSC.
-
-## NEXT TO REQUEST IN GSC (in this order, ~10/day; quota exceeded 2026-10-29, retry next day)
-1. /random-number-generator/
-2. /random-number-generator-1-100/
-3. /random-number-generator-wheel/
-4. /random-number-generator-no-repeats/
-5. /random-number-generator-1-10/
-6. /random-number-generator-1-13/
-7. /random-number-generator-1-3/
-8. /speed-converter/
-9. /data-storage-converter/
-10. /cooking-converter/
-11. /px-to-rem-converter/
-Then the 10 paycheck state pages never requested: alaska iowa kentucky missouri montana nevada new-hampshire south-dakota tennessee wyoming (/paycheck-calculator/<state>/). Bing: all of the above except the paycheck pages are already submitted.
-
-## Unit-converter pair pages (batch 3 deployed 2026-10-31: /tablespoons-to-teaspoons/ /acres-to-sq-ft/ /tablespoons-to-ml/ — status `Not requested`)
-## Unit-converter pair pages (batch 2 deployed 2026-10-31: /mb-to-gb/ /kb-to-mb/ /cups-to-grams/ /feet-to-inches/ /yards-to-meters/ /liters-to-quarts/ /celsius-to-kelvin/ /knots-to-mph/ /cups-to-tablespoons/ — status `Not requested`)
-## Unit-converter pair pages (batch 1, deployed v249, 2026-10-31) — add to the GSC queue after the list above
-/cm-to-inches/ · /kg-to-lbs/ · /celsius-to-fahrenheit/ · /mm-to-inches/ · /grams-to-ounces/ · /ml-to-oz/ — status `Not requested`
+## LIVE QUEUE (update at EVERY deploy and every request session; last updated 2026-10-31 evening)
+**Google (GSC) — quota is per property ~10/day; "Quota Exceeded" seen again 2026-10-31 ~15:30 (reset time unclear, retry later).** Requested so far (confirmed unless noted): /random-number-generator/ + -1-100 -wheel -no-repeats -1-10 -1-13 (2026-10-31), -1-3 (UNCONFIRMED), /speed-converter/ (UNCONFIRMED — GSC shows "Crawled – currently not indexed", last crawl Oct 27), /data-storage-converter/, /cooking-converter/.
+**NEXT for GSC, in this order:** 1 /random-number-generator-1-3/ · 2 /speed-converter/ · 3 /px-to-rem-converter/ · 4 /sales-tax-calculator/california/ · 5 /cm-to-inches/ · 6 /kg-to-lbs/ · 7 /celsius-to-fahrenheit/ · 8 /mm-to-inches/ · 9 /grams-to-ounces/ · 10 /ml-to-oz/ · then /cups-to-grams/ /feet-to-inches/ /mb-to-gb/ /yards-to-meters/ /liters-to-quarts/ /celsius-to-kelvin/ /knots-to-mph/ /kb-to-mb/ /cups-to-tablespoons/ /tablespoons-to-teaspoons/ /acres-to-sq-ft/ /tablespoons-to-ml/ · then the 10 paycheck states (alaska iowa kentucky missouri montana nevada new-hampshire south-dakota tennessee wyoming).
+**Bing:** (a) every deploy pings IndexNow with ALL sitemap URLs (Bing + Yandex; automatic in build.js); (b) manual Webmaster URL submission (quota 100/day) done 2026-10-29 (RNG 7, unit pages) and **2026-10-31 15:28 (30 URLs: California, px-to-rem, all 18 pair pages, 10 paycheck states)**. Nothing pending for Bing; submit any new URL manually right after each deploy.
+**New pages deployed 2026-10-31:** California sales tax (v256), 18 unit pair pages (v249-251). Site-wide SEO metadata deployed v256 (calcthis-seo-checklist.md).
 
 **Rule:** every new calculator/article is added to the table below the moment it deploys (status `Not requested`).
 Request indexing in GSC → URL Inspection → Request indexing. **Quota is per property (~10/day, shared by the whole domain), not per user.**
