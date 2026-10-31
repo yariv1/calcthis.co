@@ -178,23 +178,21 @@ must be built from the article's actual units, every time, not pasted from a tem
 
 ---
 
-## ⛔ SESSION HANDOFF — START HERE (rewritten 2026-10-31, end of session; full detail in `HANDOFF.md` §0)
+## ⛔ SESSION HANDOFF — START HERE (rewritten 2026-11-01, end of session; full detail in `HANDOFF.md` §0)
 
 **Read `HANDOFF.md` §0 in full before replying.** Do not make the user re-explain anything in it (user, 2026-10-26: "do not dare to start the new session confused").
-- **STATE (end of 2026-10-31 session): LIVE = v257 · 60 calculators · 25 articles · 156 pages; `main` pushed (last code commit eed4b21c Texas, then ca927644 tracker).** Shipped this session: all 18 unit-converter PAIR pages (v249-251), California sales tax (v256), SITE-WIDE SEO metadata (v256: build.js `seoStamp()` + `md-files/seo-meta-hand.json` + `/assets/og-default.png`, checklist `md-files/calcthis-seo-checklist.md`), Texas sales tax (v257); Bing manually submitted (30 URLs + Texas) on top of the automatic IndexNow ping.
-- **FIRST JOB NEXT SESSION: NYC SALES TAX RESEARCH REPORT** (`/sales-tax-calculator/new-york-city/`, a city page, Ahrefs >1K Hard; official NY DTF/NYC sources; expected 8.875% = 4 + 4.5 + 0.375 MCTD — VERIFY; clothing <$110 rule, groceries, restaurant, delivery, use tax; open competitors live; visual AND functional differentiator) → wait for approval → build → exhaustive QA → preview link only → wait for "deploy". The user already said NYC is next ("ok - first, [handoff]"); starting the research needs no further question. After NYC: ask the user ONCE for an Ahrefs screenshot/export of "{state} sales tax calculator" to rank the remaining states (FL IL WA PA GA AZ CO NC VA…) — never rank by guess.
-- **ALSO: GSC INDEXING QUEUE — keep `md-files/calcthis-indexing-tracker.md` LIVE QUEUE updated at every deploy; user: "be ready with the next ones, index more".** GSC said "Quota Exceeded" 2026-10-31 ~15:30 (resets in a few hours). Next ~10 in order: /random-number-generator-1-3/ (unconfirmed), /speed-converter/ (unconfirmed), /px-to-rem-converter/, /sales-tax-calculator/california/, /sales-tax-calculator/texas/, then the pair pages (cm-to-inches, kg-to-lbs, celsius-to-fahrenheit, mm-to-inches, grams-to-ounces …), then 10 paycheck states. HANDOFF §0.3 + §0.4e (≤3 URLs per browser_batch; screenshot after each request). Every deploy also: IndexNow auto + manual Bing submit of the new URL(s).
-- **NARRATION HOOKS:** UserPromptSubmit hook + Stop hook are committed and active. Never apologise or acknowledge a violation: just continue silently. Broken 30+ times — text only for a genuine question or the final summary; mid-task lines like "Writing the QA script." count as violations.
-- **User rules reinforced this session:** (a) **SEO/metadata work applies to ALL pages, never just the page just built** ("I am talking in general, all the pages!!"); (b) a pair + its reverse = ONE page, check what exists before proposing; (c) the slug question: keep `/sales-tax-calculator/<state>/` (consistency, hub authority); put the head keyword first in the TITLE instead; (d) tax data: official source + date on the page, never guess; (e) text under calculators readable (short paragraphs).
-- **SALES TAX (all LIVE): hub + NJ MO OH MN CA TX** — HANDOFF §0.2/§0.4 + `md-files/calcthis-salestax-research.md` (CA/TX sections: sources, parsers `md-files/ca-salestax/mk.py` `md-files/tx-salestax/mk.py`, rules, QA). Quarterly refresh of MO/OH/MN/CA/TX rate data (Jan/Apr/Jul/Oct).
-- **PAYCHECK:** 25 states live, 26 pending shown "· federal only"; HANDOFF §4.10-4.11. Next states ME LA AR (KS/ID blocked: need user-saved PDFs), then MD MA IN HI CT DE MS DC. **Tip calculator** needs its own research report + approval first.
-- **First move next session:** 2-3 line "synced" reply (v270 · 61 calcs · 170 pages · NYC + tip phases 1-3 deployed; next = more tipping-in countries or sales tax states per Ahrefs, GSC queue NYC + tip pages first), then work silently. No recap.
+- **STATE (end of the 2026-10-31 → 11-01 session): LIVE = v270 · 61 calculators · 25 articles · 170 pages; `main` pushed (last commits `db463963` tracker ← `6ddd48ab` tip phase 3).** Shipped this session: NYC sales tax (v259), the whole TIP FAMILY — `/tip-calculator/` hub (v261), `/how-much-to-tip/` + 8 service pages (v264), `/tipping-in/{canada,italy,japan}/` (v270). All pages are in Bing (manual + IndexNow); GSC is NOT done for any of them (quota was exceeded 2026-10-31).
+- **FIRST JOB NEXT SESSION: CALORIE DEFICIT CALCULATOR RESEARCH REPORT** (`calorie deficit calculator` >100K Medium + four >1K variants; user said "yes"). Normal order: open competitors live → report (every competitor input + VISUAL + FUNCTIONAL differentiator; check the existing `/calorie-calculator/`, `/tdee-calculator/`, `/bmr-calculator/` first so the new page has its own job and no cannibalisation) → wait for explicit approval → build → exhaustive QA → preview link only → wait for "deploy". After it, the ranked Ahrefs list in `md-files/calcthis-ahrefs-2026-11.md`: semester grade calculator (>10K Easy), average calculator hub + batting/stock/dice/time spokes (each >1K), percentage change calculator (>10K Hard); ovulation + pregnancy due date are ON HOLD (YMYL, after AdSense).
+- **ALSO FIRST: GSC INDEXING (new day → quota should be open).** Standing instruction: request the next ~10 URLs in order — NYC sales tax, /tip-calculator/, /how-much-to-tip/, its 8 services, /tipping-in/ x3, then the older queue (HANDOFF §0.3, §0.4e how-to). Keep `md-files/calcthis-indexing-tracker.md` LIVE QUEUE updated.
+- **STOP expanding tipping (user 2026-11-01):** tipping phrases are informational/articles with low volume. Only ask Ahrefs checks for `{x} calculator` phrases. Sales tax is PAUSED by the user until he resumes (still needs his Ahrefs numbers for the remaining states).
+- **NARRATION HOOKS:** UserPromptSubmit hook + Stop hook are committed and active. Never apologise or acknowledge a violation; no mid-task text at all (the first reply of a session = the 2-3 line sync, then silence; text only for a genuine question or the final summary). Broken 40+ times.
+- **User rules reinforced this session:** (a) SEO/traffic first, only calculator-intent searches justify pages; (b) never guess — customs/tax/rate facts need a named, dated source on the page; (c) metadata/SEO applies to ALL pages; (d) a pair + its reverse = one page, check what exists before proposing; (e) text under calculators readable; (f) "give me a list of the exact phrases to check in Ahref" — he sends screenshots of Ahrefs keyword ideas; (g) final summary after `wrap_up` must be the complete answer.
 - **Product principle (user, 2026-10-26):** "we will not do less than the competitors offer and give more than they do." Never drop a competitor input without sign-off; never hardcode data you cannot source.
-- **QA is EXHAUSTIVE and automatic before any preview** (items 1-15 below): control × value matrix, hostile pass + randomized fuzz with invariants, screenshots of every state at desktop + 375px, no preview with a known bug; report exactly what was and was not verified, never "100%". Desktop "hscroll" flags at the pane width are an artifact — verify with a controlled check.
-- **A bare "preview" request = ONLY the localhost link(s), nothing else.** **Reuse design-system components.** **Final summary of every build:** (1) findings — how we beat competitors, (2) QA list incl. what was NOT verified, (3) preview links (localhost + LAN `http://10.0.0.19:8123/<slug>/`).
-- **Articles are DEFERRED** — never write/propose/ask about one. **NOT important now:** articles, dark mode, Pregnancy/Ovulation, ZIP auto-fill, real-phone testing, kg to stone, per-article og:image, RNG python/google pages.
-- **Deploy gate:** build + commit + push only on the user's explicit "deploy" (real `node build.js` = bump assetver + stamp all pages incl. SEO head + IndexNow ping; then update tracker/CLAUDE state line/HANDOFF/memory). Check gates beforehand with the no-ping temp build (HANDOFF §0.4e).
-- **Dev gotchas:** write scripts/patches with the Write tool (Bash heredocs mangle backslashes/quotes), keep scratch files inside the repo and delete them, preview server `calcthis-static` port 8123 dies between turns → `preview_start`.
+- **QA is EXHAUSTIVE and automatic before any preview** (items 1-15 below): control × value matrix, hostile pass + randomized fuzz with invariants, screenshots of every state at desktop + 375px, no preview with a known bug; report exactly what was and was not verified, never "100%".
+- **A bare "preview" request = ONLY the localhost link(s).** **Reuse design-system components.** **Final summary of every build:** (1) findings — how we beat competitors, (2) QA list incl. what was NOT verified, (3) preview links (localhost + LAN `http://10.0.0.19:8123/<slug>/`). Use `mcp__ccd_turn__update_plan` first, `wrap_up` last.
+- **Articles are DEFERRED** — never write/propose/ask about one. **NOT important now:** articles, dark mode, ZIP auto-fill, real-phone testing, kg to stone, per-article og:image, more tipping pages, paused sales-tax states, Pregnancy/Ovulation until AdSense.
+- **Deploy gate:** build + commit + push only on the user's explicit "deploy" (real `node build.js` = bump assetver + stamp all pages incl. SEO head + IndexNow ping; then update tracker / CLAUDE.md state line / HANDOFF / memory, and submit the new URLs to Bing manually). Check gates beforehand with the no-ping temp build (HANDOFF §0.4e).
+- **Tip family code map (so you never re-derive it):** engine `CalcThis.tipEngine` + `initTipCalc` (ids `tp*`), `initTipFlat` (`tf*`), `initTipItaly` (`ti*`), `initTipJapan` (`tj*`) in `assets/app.js`; generators `md-files/gen-tip-page.js` → `gen-howmuch-pages.js` → `gen-tipping-in-pages.js`; research `md-files/calcthis-tip-research.md`. NYC sales tax: `S.NYC` + `writeCity()` in `md-files/gen-salestax-pages.js`. Dev gotchas: preview at http://localhost:8123 (another session's server; 8124 does not work), write scripts with the Write tool, keep scratch files in the repo and delete them.
 
 ---
 
@@ -281,7 +279,7 @@ Paint, Wallpaper, Scientific Notation.
 
 ---
 
-## Live calculators (53)
+## Live calculators (61 incl. Hours, BMR, Triangle, Scientific Notation, Recipe, Unit Converter, RNG, Paycheck, Sales Tax, Tip; list below is the older 53 — see HANDOFF §0.4b)
 
 ### Construction & Gardening (13)
 Board Foot · Gravel · Sand · Topsoil · Mulch · Concrete · Flooring · Tile · Square Footage · Tape Measure Fraction · Stair · Paint · Wallpaper
@@ -298,12 +296,16 @@ Fraction · Standard Deviation · Scientific Notation · Weighted Average · Rat
 ### Cooking & Kitchen (1)
 Recipe Converter
 
-### Money & Finance (3)
-Mortgage · Loan · Auto Loan
+### Money & Finance (6)
+Mortgage · Loan · Auto Loan · Paycheck · Sales Tax · Tip
 
-Total live calculators: **53**
+Total live calculators: **61** (v270)
 
 ---
+
+## Last session (2026-10-31 → 2026-11-01, v257 → v270)
+
+- **NYC sales tax (v259)**, then the whole **TIP FAMILY (13 pages)**: `/tip-calculator/` hub (v261), `/how-much-to-tip/` + 8 service pages (v264), `/tipping-in/{canada,italy,japan}/` (v270). Each went research report → approval → build → exhaustive QA → preview → "deploy" → Bing manual submit; GSC not requested (quota). Engine/UI/generator map and the sources used are in HANDOFF §0.4 and `md-files/calcthis-tip-research.md`. User corrections: tipping phrases are informational (articles, low volume) → stop expanding tip; only calculator-intent phrases get pages; he asked for "the exact phrases to check in Ahref" lists. Ahrefs data for the next builds (calorie deficit >100K Medium, semester grade >10K Easy, average calculator hub + spokes, percentage change; ovulation/pregnancy on hold) is in `md-files/calcthis-ahrefs-2026-11.md`. NEXT: calorie deficit calculator research report (user said yes).
 
 ## Last session (v143–v174)
 
