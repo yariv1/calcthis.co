@@ -188,7 +188,7 @@ must be built from the article's actual units, every time, not pasted from a tem
 - **User rules reinforced this session:** (a) **SEO/metadata work applies to ALL pages, never just the page just built** ("I am talking in general, all the pages!!"); (b) a pair + its reverse = ONE page, check what exists before proposing; (c) the slug question: keep `/sales-tax-calculator/<state>/` (consistency, hub authority); put the head keyword first in the TITLE instead; (d) tax data: official source + date on the page, never guess; (e) text under calculators readable (short paragraphs).
 - **SALES TAX (all LIVE): hub + NJ MO OH MN CA TX** — HANDOFF §0.2/§0.4 + `md-files/calcthis-salestax-research.md` (CA/TX sections: sources, parsers `md-files/ca-salestax/mk.py` `md-files/tx-salestax/mk.py`, rules, QA). Quarterly refresh of MO/OH/MN/CA/TX rate data (Jan/Apr/Jul/Oct).
 - **PAYCHECK:** 25 states live, 26 pending shown "· federal only"; HANDOFF §4.10-4.11. Next states ME LA AR (KS/ID blocked: need user-saved PDFs), then MD MA IN HI CT DE MS DC. **Tip calculator** needs its own research report + approval first.
-- **First move next session:** 2-3 line "synced" reply (v261 · 61 calcs · 158 pages · NYC + Tip hub deployed; next = tip phase 2 how-much-to-tip pages per md-files/calcthis-tip-research.md, GSC queue NYC + tip first), then work silently. No recap.
+- **First move next session:** 2-3 line "synced" reply (v264 · 61 calcs · 167 pages · NYC + tip phases 1-2 deployed; next = tip phase 3 countries per md-files/calcthis-tip-research.md, GSC queue NYC + tip pages first), then work silently. No recap.
 - **Product principle (user, 2026-10-26):** "we will not do less than the competitors offer and give more than they do." Never drop a competitor input without sign-off; never hardcode data you cannot source.
 - **QA is EXHAUSTIVE and automatic before any preview** (items 1-15 below): control × value matrix, hostile pass + randomized fuzz with invariants, screenshots of every state at desktop + 375px, no preview with a known bug; report exactly what was and was not verified, never "100%". Desktop "hscroll" flags at the pane width are an artifact — verify with a controlled check.
 - **A bare "preview" request = ONLY the localhost link(s), nothing else.** **Reuse design-system components.** **Final summary of every build:** (1) findings — how we beat competitors, (2) QA list incl. what was NOT verified, (3) preview links (localhost + LAN `http://10.0.0.19:8123/<slug>/`).
@@ -200,8 +200,8 @@ must be built from the article's actual units, every time, not pasted from a tem
 
 ## Project state
 
-- **Asset version:** v261 (live; `.assetver`)
-- **Total pages:** 158 live (sitemap)
+- **Asset version:** v264 (live; `.assetver`)
+- **Total pages:** 167 live (sitemap)
 - **Model:** Sonnet 5
 
 ### New this session — global `.csel` custom-dropdown component

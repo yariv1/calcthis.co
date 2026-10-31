@@ -30,7 +30,7 @@ const bills = [10, 20, 30, 40, 50, 60, 75, 100, 150, 200];
 const chart = bills.map((b) => '<tr><td>' + m0(b) + '</td>' + [15, 18, 20, 25].map((p) => '<td>' + m(c(b, p).tip) + '</td>').join('') + '</tr>').join('');
 const svcRows = [
   ['Restaurants and bartenders', '15%–20%'], ['Food delivery', '15%–20%, depending on distance and order size'], ['Hotel room service', 'Usually already in the price; if not, 15%–20%'],
-  ['Hotel housekeeping', 'Not expected; $1–$2 per person per night'], ['Hairstylists, barbers and nail services', '10%–20%'], ['Massage', '10%–20%'],
+  ['Hotel housekeeping', 'Not expected; $1–$2 per person per night'], ['Hairstylists, barbers and nail services', '10%–20% (Calculator.net); newer guides say 15%–20% for hairdressers and 15%–25% for barbers'], ['Massage', '10%–20% (Calculator.net); 15%–20% (Ally, NerdWallet)'],
   ['Taxi or limo drivers', '15%–20%'], ['Shuttle drivers and parking attendants', '$1–$3'], ['Tour guides', '$1–$5, depending on the length of the tour'],
   ['Movers and furniture or appliance delivery', 'Not expected; or $5, $10 or $20 each'], ['Plumbers, cleaners and other home services', 'Not expected; or $5, $10 or $20 each']
 ].map((r) => '<tr><td>' + r[0] + '</td><td>' + r[1] + '</td></tr>').join('');

@@ -2448,3 +2448,4 @@
   .p-tip .modeseg{grid-template-columns:repeat(2,1fr)}
   .p-tip #tpBaseSeg{margin-bottom:0}
   .p-tip .ln-terms td small{white-space:nowrap}
+  .p-tip .st-cattbl a,.p-tip .st-otherlist a,.p-tip .content p a{color:var(--amber-deep);text-decoration:underline}

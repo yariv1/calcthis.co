@@ -279,5 +279,41 @@
   "/": {
     "t": "CalcThis — Free Online Calculators & Unit Converters",
     "d": "Free, fast, single-purpose calculators and converters: construction, health, money, paycheck, sales tax, math, school grades and unit conversion. No sign-up."
+  },
+  "/how-much-to-tip/hairdresser/": {
+    "t": "How Much to Tip a Hairdresser: 15%–20% + Calculator",
+    "d": "Tip a hairdresser 15% to 20% of the service price. 20% is the usual standard. Calculator for your bill."
+  },
+  "/how-much-to-tip/barber/": {
+    "t": "How Much to Tip a Barber: 15%–25% + Calculator",
+    "d": "Tip a barber 15% to 25% of the service price. 20% is typical. Calculator for your bill."
+  },
+  "/how-much-to-tip/tattoo-artist/": {
+    "t": "How Much to Tip a Tattoo Artist: 15%–25% + Calculator",
+    "d": "Tip a tattoo artist 15% to 25% of the tattoo price. Calculator for your bill."
+  },
+  "/how-much-to-tip/massage-therapist/": {
+    "t": "How Much to Tip a Massage Therapist: 15%–20% + Calculator",
+    "d": "Tip a massage therapist 15% to 20% of the service price. Calculator for your bill."
+  },
+  "/how-much-to-tip/dog-groomer/": {
+    "t": "How Much to Tip a Dog Groomer: 15%–20% + Calculator",
+    "d": "Tip a dog groomer 15% to 20% of the grooming price. Calculator for your bill."
+  },
+  "/how-much-to-tip/uber-driver/": {
+    "t": "How Much to Tip an Uber Driver: 10%–20% + Calculator",
+    "d": "Tip an Uber driver 10% to 20% of the fare. Tipping is optional. Calculator for your bill."
+  },
+  "/how-much-to-tip/movers/": {
+    "t": "How Much to Tip Movers: $20–$50 Each per Day + Calculator",
+    "d": "Tip movers $20 to $50 per mover per day, in cash. Calculator for your crew and days."
+  },
+  "/how-much-to-tip/valet/": {
+    "t": "How Much to Tip a Valet: $2–$10 + Calculator",
+    "d": "Tip a valet $2 to $10, in cash when your car is returned. Calculator for your crew and days."
+  },
+  "/how-much-to-tip/": {
+    "t": "How Much to Tip: Tip Guide by Service + Calculator",
+    "d": "How much to tip: 15%–20% for restaurants, hair and massage, $20–$50 per mover per day, $2–$10 for a valet. Pick the service and see the tip for your bill."
   }
 }

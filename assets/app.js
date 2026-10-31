@@ -13562,8 +13562,13 @@ CalcThis.tipEngine = (function () {
     { id: 'restaurant', label: 'Restaurant or bar', lo: 15, hi: 20, chips: [15, 18, 20, 25], def: 18, who: 'restaurants and bars' },
     { id: 'delivery', label: 'Food delivery', lo: 15, hi: 20, chips: [15, 18, 20, 25], def: 18, who: 'food delivery (depending on distance and order size)' },
     { id: 'taxi', label: 'Taxi or limo', lo: 15, hi: 20, chips: [10, 15, 18, 20], def: 18, who: 'taxi and limo drivers' },
-    { id: 'hair', label: 'Hair, barber or nails', lo: 10, hi: 20, chips: [10, 15, 18, 20], def: 15, who: 'hairstylists, barbers and nail services' },
-    { id: 'massage', label: 'Massage', lo: 10, hi: 20, chips: [10, 15, 18, 20], def: 15, who: 'massage' },
+    { id: 'hairdresser', label: 'Hairdresser', lo: 15, hi: 20, chips: [15, 18, 20, 25], def: 20, who: 'hairdressers' },
+    { id: 'barber', label: 'Barber', lo: 15, hi: 25, chips: [15, 20, 25], def: 20, who: 'barbers' },
+    { id: 'tattoo', label: 'Tattoo artist', lo: 15, hi: 25, chips: [15, 20, 25], def: 20, who: 'tattoo artists' },
+    { id: 'massage', label: 'Massage therapist', lo: 15, hi: 20, chips: [15, 18, 20, 25], def: 18, who: 'massage therapists' },
+    { id: 'groomer', label: 'Dog groomer', lo: 15, hi: 20, chips: [15, 18, 20, 25], def: 18, who: 'dog groomers' },
+    { id: 'rideshare', label: 'Uber or Lyft driver', lo: 10, hi: 20, chips: [10, 15, 18, 20], def: 15, who: 'rideshare drivers' },
+    { id: 'hair', label: 'Nails or other salon service', lo: 10, hi: 20, chips: [10, 15, 18, 20], def: 15, who: 'nail and other salon services' },
     { id: 'other', label: 'Something else', lo: null, hi: null, chips: [10, 15, 18, 20, 25], def: 18, who: '' }
   ];
   var COMMON = [10, 15, 18, 20, 25];
@@ -13617,17 +13622,27 @@ CalcThis.tipEngine = (function () {
     var tip = r2(o.paid - o.bill), pct = o.bill > 0 ? tip / o.bill * 100 : 0;
     return { tip: tip, pct: pct, bill: r2(o.bill), paid: r2(o.paid) };
   }
+  /* flat tips (movers: per mover per day; valet: per visit): the low and high end for the crew and days, and your own amount */
+  var FLAT = {
+    movers: { id: 'movers', lo: 20, hi: 50, chips: [20, 30, 40, 50], def: 30, unit: 'mover', units: 'movers', per: 'per mover per day', times: 'day', timesPl: 'days', who: 'movers' },
+    valet: { id: 'valet', lo: 2, hi: 10, chips: [2, 3, 5, 10], def: 5, unit: 'valet', units: 'valets', per: 'per visit', times: 'visit', timesPl: 'visits', who: 'valets' }
+  };
+  function flat(o) {
+    var f = FLAT[o.svc], u = o.units, t = o.times;
+    return { units: u, times: t, per: o.per, total: r2(u * t * o.per), low: r2(u * t * f.lo), high: r2(u * t * f.hi), perUnitDay: r2(o.per), verdict: o.per < f.lo - 0.0001 ? 'below' : (o.per > f.hi + 0.0001 ? 'above' : 'within') };
+  }
   function verdict(svc, pct) {
     if (svc.lo == null) return '';
     if (pct < svc.lo - 0.0001) return 'below'; if (pct > svc.hi + 0.0001) return 'above'; return 'within';
   }
-  return { SERVICES: SERVICES, COMMON: COMMON, service: service, calc: calc, ladder: ladder, baseCompare: baseCompare, reverse: reverse, verdict: verdict, splitEven: splitEven, splitWeighted: splitWeighted, r2: r2 };
+  return { SERVICES: SERVICES, FLAT: FLAT, flat: flat, COMMON: COMMON, service: service, calc: calc, ladder: ladder, baseCompare: baseCompare, reverse: reverse, verdict: verdict, splitEven: splitEven, splitWeighted: splitWeighted, r2: r2 };
 })();
 /* TIP-ENGINE:END */
 
 CalcThis.initTipCalc = function () {
   var E = CalcThis.tipEngine, $ = function (id) { return document.getElementById(id); };
-  var st = { mode: 'tip', adv: false, svc: 'restaurant', base: 'total', round: 'none', sym: '$', uneven: false, rows: [{ amt: '' }, { amt: '' }] }, last = null;
+  var pre = document.body.getAttribute('data-svc');
+  var st = { mode: 'tip', adv: false, svc: pre && E.service(pre).id === pre ? pre : 'restaurant', base: 'total', round: 'none', sym: '$', uneven: false, rows: [{ amt: '' }, { amt: '' }] }, last = null;
   var MAX = 1e9;
   function num(v) { var t = String(v).replace(/[$,\s%]/g, ''); var n = t === '' ? NaN : Number(t); return isFinite(n) ? n : NaN; }
   function mon(x) { return (x < 0 ? '−' : '') + st.sym + Math.abs(x).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
@@ -13736,6 +13751,10 @@ CalcThis.initTipCalc = function () {
       var sumI = c.items.reduce(function (a, x) { return a + x; }, 0), expect = c.pre;
       if (Math.abs(sumI - expect) > Math.max(0.5, expect * 0.02)) ex += '<p class="res-tip">The amounts add up to ' + mon(sumI) + ' but the bill before tax is ' + mon(expect) + '. Each person still pays their share of the bill and tip by what they ordered.</p>';
     }
+    if (s.lo != null) {
+      var lw = E.calc({ bill: bill, tax: tax, pct: s.lo, people: 1, base: tax > 0 ? st.base : 'total', round: 'none', items: null }), hg = E.calc({ bill: bill, tax: tax, pct: s.hi, people: 1, base: tax > 0 ? st.base : 'total', round: 'none', items: null });
+      ex += '<div class="fc-grp">The typical range for ' + esc(s.who) + '</div><table class="dtable ln-terms">' + table(['Tip', 'Tip amount', 'Total'], [['Low end · ' + pct(s.lo), mon(lw.tip), mon(lw.total)], ['Your tip · ' + pct(c.effPct), mon(c.tip), mon(c.total), true], ['High end · ' + pct(s.hi), mon(hg.tip), mon(hg.total)]]) + '</table>';
+    }
     var lad = E.ladder({ bill: bill, tax: tax, pct: p, people: items ? 1 : people, base: tax > 0 ? st.base : 'total' });
     ex += '<div class="fc-grp">The tip at every common percentage</div><table class="dtable ln-terms">' + table(['Tip', 'Tip amount', many && !items ? 'Total · each' : 'Total'], lad.map(function (l) { return [pct(l.pct), mon(l.tip), mon(l.total) + (many && !items ? ' <small>' + mon(l.each) + ' each</small>' : ''), l.cur]; })) + '</table>';
     if (tax > 0) {
@@ -13821,6 +13840,54 @@ CalcThis.initTipCalc = function () {
   setPanel($('tpService'), E.SERVICES.map(function (s) { return [s.id, s.label]; }), st.svc);
   setPanel($('tpRound'), ROUNDS, 'none'); setPanel($('tpSym'), SYMS, '$');
   $('tpPct').value = String(svc().def); buildChips(); buildRows(); showMode(); render();
+};
+
+/* Flat-amount tips (movers: per mover per day; valet: per visit). Page: body data-flat="movers|valet". ids tf* */
+CalcThis.initTipFlat = function () {
+  var E = CalcThis.tipEngine, $ = function (id) { return document.getElementById(id); };
+  var F = E.FLAT[document.body.getAttribute('data-flat')], last = null;
+  var MAX = 1e6;
+  function num(v) { var t = String(v).replace(/[$,\s]/g, ''); var n = t === '' ? NaN : Number(t); return isFinite(n) ? n : NaN; }
+  function mon(x) { return '$' + Math.abs(x).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+  function whole(v) { return isFinite(v) && v >= 1 && v <= 100 && Math.floor(v) === v; }
+  function setHint(m) { var h = $('tfHint'); h.textContent = m || ''; h.style.display = m ? 'block' : 'none'; }
+  function markChips() { var v = num($('tfPer').value); [].forEach.call($('tfChips').querySelectorAll('button'), function (b) { b.classList.toggle('on', isFinite(v) && Number(b.getAttribute('data-p')) === v); }); }
+  function empty(msg, hint) { $('tfBig').textContent = '—'; $('tfSub').textContent = msg; $('tfMVal').textContent = '—'; $('tfResults').style.display = 'none'; last = null; setHint(hint || ''); }
+  function render() {
+    var hints = [], typed = $('tfUnits') ? ($('tfUnits').value.trim() !== '' || $('tfTimes').value.trim() !== '') : $('tfTimes').value.trim() !== '';
+    $('tfEx').parentNode.style.display = typed ? 'none' : '';
+    var ur = $('tfUnits') ? $('tfUnits').value.trim() : '1', tr = $('tfTimes').value.trim(), pr = $('tfPer').value.trim();
+    var u = ur === '' ? NaN : num(ur), t = tr === '' ? NaN : num(tr), per = pr === '' ? NaN : num(pr);
+    if ($('tfUnits') && !ur) { empty('Enter how many ' + F.units + ' there are.', ''); return; }
+    if ($('tfUnits') && !whole(u)) { empty('Enter how many ' + F.units + ' there are.', 'Number of ' + F.units + ' must be a whole number from 1 to 100.'); return; }
+    if (!$('tfUnits')) u = 1;
+    if (!tr) { empty('Enter the number of ' + F.timesPl + '.', ''); return; }
+    if (!whole(t)) { empty('Enter the number of ' + F.timesPl + '.', 'Number of ' + F.timesPl + ' must be a whole number from 1 to 100.'); return; }
+    if (!pr) { empty('Pick or type an amount ' + F.per + '.', ''); return; }
+    if (!isFinite(per) || per < 0 || per > MAX) { empty('Pick or type an amount ' + F.per + '.', 'Amount must be a number like 30 — only dollars and cents.'); return; }
+    var r = E.flat({ svc: F.id, units: u, times: t, per: per });
+    $('tfBig').textContent = mon(r.total);
+    $('tfSub').textContent = mon(per) + ' ' + F.per + (u > 1 ? ' × ' + u + ' ' + F.units : '') + (t > 1 ? ' × ' + t + ' ' + F.timesPl : '');
+    $('tfMVal').textContent = mon(r.total);
+    var rows = [['Low end <small>' + mon(F.lo) + ' ' + F.per + '</small>', mon(r.low)], ['Your tip <small>' + mon(per) + ' ' + F.per + '</small>', mon(r.total), true], ['High end <small>' + mon(F.hi) + ' ' + F.per + '</small>', mon(r.high)]];
+    $('tfTable').innerHTML = '<thead><tr><th></th><th>Total</th></tr></thead><tbody>' + rows.map(function (x) { return '<tr' + (x[2] ? ' class="cur"' : '') + '><td>' + x[0] + '</td><td>' + x[1] + '</td></tr>'; }).join('') + '</tbody>';
+    var tip = 'A tip of ' + mon(per) + ' ' + F.per + ' is ' + (r.verdict === 'within' ? 'within' : (r.verdict === 'below' ? 'below' : 'above')) + ' the typical ' + mon(F.lo) + ' to ' + mon(F.hi) + ' ' + F.per + '.';
+    $('tfTip').textContent = tip;
+    if (u > 1 && t > 0) $('tfExtra').innerHTML = '<p class="res-tip">Tip each ' + F.unit + ' ' + mon(r.total / u) + ' in cash.</p>'; else $('tfExtra').innerHTML = '';
+    $('tfResults').style.display = ''; setHint(hints[0] || '');
+    last = r;
+  }
+  ['tfUnits', 'tfTimes'].forEach(function (id) { if ($(id)) $(id).addEventListener('input', render); });
+  $('tfPer').addEventListener('input', function () { markChips(); render(); });
+  $('tfChips').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; $('tfPer').value = b.getAttribute('data-p'); markChips(); render(); });
+  $('tfEx').addEventListener('click', function () { if ($('tfUnits')) $('tfUnits').value = '3'; $('tfTimes').value = '1'; $('tfPer').value = String(F.def); markChips(); render(); });
+  $('tfCopy').addEventListener('click', function () {
+    if (!last) return; var txt = 'Tip: ' + mon(last.total) + '\n' + mon(last.per) + ' ' + F.per + (last.units > 1 ? ' × ' + last.units + ' ' + F.units : '') + (last.times > 1 ? ' × ' + last.times + ' ' + F.timesPl : '');
+    var btn = $('tfCopy'), done = function (ok) { btn.textContent = ok ? 'Copied' : 'Copy failed'; setTimeout(function () { btn.textContent = 'Copy results'; }, 1600); };
+    var legacy = function () { try { var ta = document.createElement('textarea'); ta.value = txt; ta.setAttribute('readonly', ''); ta.style.cssText = 'position:fixed;left:-9999px;top:0'; document.body.appendChild(ta); ta.select(); var ok = document.execCommand('copy'); document.body.removeChild(ta); done(ok); } catch (e) { done(false); } };
+    try { navigator.clipboard.writeText(txt).then(function () { done(true); }, legacy); } catch (e) { legacy(); }
+  });
+  $('tfPer').value = String(F.def); markChips(); render();
 };
 
 /* =========================================================
