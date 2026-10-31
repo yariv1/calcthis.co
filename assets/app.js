@@ -13628,6 +13628,8 @@ CalcThis.initUnitConverter = function () {
   }
   function defaults() {
     if (CAT === 'cooking' && st.mode === 'oven') return { from: 'f', to: 'c', ex: 350 };
+    var bf = document.body.getAttribute('data-from'), bt = document.body.getAttribute('data-to');
+    if (bf && bt && E.unit(CAT, bf) && E.unit(CAT, bt)) return { from: bf, to: bt, ex: +document.body.getAttribute('data-ex') || C.ex };
     return { from: C.from, to: C.to, ex: C.ex };
   }
   function usym(id) { if (CAT === 'cooking' && st.mode === 'oven') return E.OVEN_UNITS.filter(function (u) { return u.id === id; })[0].sym; return E.unit(CAT, id).sym; }
@@ -13764,6 +13766,7 @@ CalcThis.initUnitConverter = function () {
     var d = defaults(); $('unVal').value = ''; setUnits(d.from, d.to); showMode(); render();
   });
   $('unEx').addEventListener('click', function () { var d = defaults(); $('unVal').value = String(d.ex); setUnits(d.from, d.to); render(); });
+  [].forEach.call(document.querySelectorAll('.chips [data-val]'), function (b) { b.addEventListener('click', function () { $('unVal').value = b.getAttribute('data-val'); render(); }); });
   $('unAdvBtn').addEventListener('click', function () {
     st.adv = !st.adv; $('unAdvBtn').classList.toggle('open', st.adv); $('unAdvBtnLab').textContent = st.adv ? 'Go simple' : 'Go advanced';
     if (!st.adv) { st.prec = 'auto'; st.std = 'us'; setPanel($('unPrec'), PREC, 'auto'); setPanel($('unStd'), STD, 'us'); $('unParent').value = ''; $('unVw').value = ''; $('unVh').value = ''; }

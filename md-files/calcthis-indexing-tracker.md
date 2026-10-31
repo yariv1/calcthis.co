@@ -16,6 +16,9 @@ _How-to for requesting indexing with Claude in Chrome + the next batch: HANDOFF.
 11. /px-to-rem-converter/
 Then the 10 paycheck state pages never requested: alaska iowa kentucky missouri montana nevada new-hampshire south-dakota tennessee wyoming (/paycheck-calculator/<state>/). Bing: all of the above except the paycheck pages are already submitted.
 
+## Unit-converter pair pages (batch 1, deployed v249, 2026-10-31) — add to the GSC queue after the list above
+/cm-to-inches/ · /kg-to-lbs/ · /celsius-to-fahrenheit/ · /mm-to-inches/ · /grams-to-ounces/ · /ml-to-oz/ — status `Not requested`
+
 **Rule:** every new calculator/article is added to the table below the moment it deploys (status `Not requested`).
 Request indexing in GSC → URL Inspection → Request indexing. **Quota is per property (~10/day, shared by the whole domain), not per user.**
 Requesting only queues a crawl; re-check status ~1–2 weeks later and update the table.

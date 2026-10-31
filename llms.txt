@@ -103,18 +103,6 @@
 - [New Jersey Sales Tax Calculator](https://calcthis.co/sales-tax-calculator/new-jersey/): New Jersey sales tax with exempt items, shipping rule and special zones.
 - [Ohio Sales Tax Calculator](https://calcthis.co/sales-tax-calculator/ohio/): Ohio sales tax with exempt items, shipping rule and special zones.
 
-## Unit converters
-- [Unit Converter](https://calcthis.co/unit-converter/): convert length, weight, volume, temperature, area, speed, data storage, cooking measures and px to rem.
-- [Length Converter](https://calcthis.co/length-converter/): Inches, centimeters, feet, meters, miles and more.
-- [Weight Converter](https://calcthis.co/weight-converter/): Kilograms, pounds, ounces, grams, stone and tons.
-- [Volume Converter](https://calcthis.co/volume-converter/): Liters, gallons, cups, fluid ounces and more.
-- [Temperature Converter](https://calcthis.co/temperature-converter/): Celsius, Fahrenheit, Kelvin and Rankine.
-- [Area Converter](https://calcthis.co/area-converter/): Square feet, square meters, acres, hectares and more.
-- [Speed Converter](https://calcthis.co/speed-converter/): mph, km/h, m/s, knots and ft/s.
-- [Data Storage Converter](https://calcthis.co/data-storage-converter/): Bytes, KB, MB, GB, TB, KiB, MiB, GiB and bits.
-- [Cooking Measurement Converter](https://calcthis.co/cooking-converter/): Cups to grams, tablespoons, mL and oven temperatures.
-- [PX to REM Converter](https://calcthis.co/px-to-rem-converter/): Pixels, rem, em, points and percent for CSS.
-
 ## Paycheck calculators by state
 - [Alabama Paycheck Calculator](https://calcthis.co/paycheck-calculator/alabama/): take-home pay after federal tax, FICA and Alabama state tax.
 - [Alaska Paycheck Calculator](https://calcthis.co/paycheck-calculator/alaska/): take-home pay after federal tax, FICA.
@@ -150,3 +138,21 @@
 - [Random Number Generator 1–13](https://calcthis.co/random-number-generator-1-13/): Pick a random number from 1 to 13 instantly, with a spinning wheel — handy for card ranks (ace to king), a 13-item list or a class draw. Free and unbiased.
 - [Random Number Generator With No Repeats](https://calcthis.co/random-number-generator-no-repeats/): Generate random numbers with no repeats: set a range, choose how many, and every number is unique. Or draw one at a time from a pile. Free, unbiased, no sign-up.
 - [Random Number Wheel](https://calcthis.co/random-number-generator-wheel/): Spin a random number wheel: set any range, spin, and the wheel lands on a number. Each spin can remove the number so none repeats. Free, no sign-up.
+
+## Unit converters
+- [Unit Converter](https://calcthis.co/unit-converter/): convert length, weight, volume, temperature, area, speed, data storage, cooking measures and px to rem.
+- [Length Converter](https://calcthis.co/length-converter/): Inches, centimeters, feet, meters, miles and more.
+- [Weight Converter](https://calcthis.co/weight-converter/): Kilograms, pounds, ounces, grams, stone and tons.
+- [Volume Converter](https://calcthis.co/volume-converter/): Liters, gallons, cups, fluid ounces and more.
+- [Temperature Converter](https://calcthis.co/temperature-converter/): Celsius, Fahrenheit, Kelvin and Rankine.
+- [Area Converter](https://calcthis.co/area-converter/): Square feet, square meters, acres, hectares and more.
+- [Speed Converter](https://calcthis.co/speed-converter/): mph, km/h, m/s, knots and ft/s.
+- [Data Storage Converter](https://calcthis.co/data-storage-converter/): Bytes, KB, MB, GB, TB, KiB, MiB, GiB and bits.
+- [Cooking Measurement Converter](https://calcthis.co/cooking-converter/): Cups to grams, tablespoons, mL and oven temperatures.
+- [PX to REM Converter](https://calcthis.co/px-to-rem-converter/): Pixels, rem, em, points and percent for CSS.
+- [CM to Inches Converter](https://calcthis.co/cm-to-inches/): Centimeters to inches, and inches to centimeters.
+- [KG to Lbs Converter](https://calcthis.co/kg-to-lbs/): Kilograms to pounds, and pounds to kilograms.
+- [Celsius to Fahrenheit Converter](https://calcthis.co/celsius-to-fahrenheit/): °C to °F, and °F to °C, with a thermometer.
+- [MM to Inches Converter](https://calcthis.co/mm-to-inches/): Millimeters to inches, and inches to millimeters.
+- [Grams to Ounces Converter](https://calcthis.co/grams-to-ounces/): Grams to ounces, and ounces to grams.
+- [mL to Oz Converter](https://calcthis.co/ml-to-oz/): Milliliters to fluid ounces, and fluid ounces to mL.

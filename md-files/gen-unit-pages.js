@@ -211,7 +211,7 @@ const pill = (href, label, svg) => `      <a class="pill" href="${href}">\n     
 const PILLSVG = '<path d="M3 17L17 3l4 4L7 21z"/><path d="M7 13l2 2M10 10l2 2M13 7l2 2"/>';
 
 function bodyFor(o) {
-  return `<body class="p-loan p-unit" data-cat="${o.cat}">
+  return `<body class="p-loan p-unit" data-cat="${o.cat}"${o.pair ? ` data-from="${o.pair.a}" data-to="${o.pair.b}" data-ex="${o.pair.ex}"` : ''}>
 <div class="wrap">
 
 ${hdr}
@@ -246,7 +246,7 @@ ${hdr}
         <p class="add-note ln-hint" id="unHint" style="display:none"></p>
 
         <div class="chips" aria-label="Try an example">
-          <button type="button" id="unEx">See an example</button>
+          <button type="button" id="unEx">See an example</button>${o.pair ? o.pair.vals.slice(0, 6).map((v) => `\n          <button type="button" data-val="${v}">${v}</button>`).join('') : ''}
         </div>
 
         <div id="unAdvIn" style="display:none">
@@ -348,7 +348,7 @@ function writeCat(c) {
       <div>
         <h2>Use the ${p.h1.toLowerCase()}</h2>
         <p>Type a value, pick the unit you have and the unit you want, and the answer appears with every other unit in the same family listed below it. Use the swap button to flip the two units. Under <strong>Go advanced</strong> you can set how many digits the result shows${c === 'css' ? ', your parent font size for em and %, and your viewport size for vw and vh' : (c === 'cooking' ? ' and choose a US, UK or Australian cup' : '')}.</p>
-        <h2>Other converters</h2>
+        ${popularLinks(c)}<h2>Other converters</h2>
         <p><a href="/unit-converter/">All unit converters</a></p>
         ${catLinks(c)}
         <p>Also see the <a href="/recipe-converter/">Recipe Converter</a>, which scales and converts a whole recipe at once.</p>
@@ -410,12 +410,128 @@ ${f.map((q) => `    <details class="faq"><summary>${q[0]}</summary><p>${q[1]}</p
   write('unit-converter/index.html', html);
 }
 
-writeHub(); ORDER.forEach(writeCat);
-console.log('pages written: hub +', ORDER.length, 'converters');
+/* ---------- PAIR pages: /cm-to-inches/ etc. (a pair and its reverse are ONE page) ---------- */
+const PAIRS = [
+  { slug: 'cm-to-inches', cat: 'length', a: 'cm', b: 'in', ex: 50, vals: [15, 20, 25, 30, 40, 50, 60], rvals: [1, 2, 5, 6, 10, 12, 24, 36],
+    h1: 'CM to Inches Converter', link: 'cm to inches', title: 'CM to Inches Converter — Centimeters to Inches (and Inches to CM) | CalcThis',
+    eyebrow: 'Centimeters to inches, and inches to centimeters', sib: ['mm-to-inches', 'celsius-to-fahrenheit', 'kg-to-lbs'],
+    formula: '<div class="formula">inches = cm ÷ 2.54<small>CM = INCHES × 2.54 · 1 INCH = EXACTLY 2.54 CM</small></div>',
+    steps: () => `<p>An inch is defined as exactly 2.54 centimeters, so the conversion is one division. Divide the centimeters by 2.54: ${say('length', 'cm', 'in', 50)}. On a tape measure that is ${E.tape(cv('length', 'cm', 'in', 50)).text} inches, to the nearest 1/16.</p><p>To go the other way, multiply inches by 2.54: ${say('length', 'in', 'cm', 12)}. The swap button flips the direction.</p>`,
+    faqs: () => [
+      ['How many inches are in a centimeter?', `${one('length', 'cm', 'in')} (rounded). Because an inch is exactly 2.54 cm, dividing by 2.54 is always exact.`],
+      ['How do I convert cm to inches?', `Divide by 2.54. ${say('length', 'cm', 'in', 25)}, ${say('length', 'cm', 'in', 30)} and ${say('length', 'cm', 'in', 60)}.`],
+      ['How do I convert inches to cm?', `Multiply by 2.54. ${say('length', 'in', 'cm', 1)}, ${say('length', 'in', 'cm', 12)} and ${say('length', 'in', 'cm', 36)}.`],
+      ['What is 180 cm in feet and inches?', `${say('length', 'cm', 'in', 180)}, which is ${Math.floor(cv('length', 'cm', 'in', 180) / 12)} ft ${E.tape(cv('length', 'cm', 'in', 180) % 12).text} in. The converter shows the feet-and-inches split under the answer when you convert to feet.`],
+      ['How do I read centimeters as a fraction of an inch?', `Choose inches as the result and the answer is also shown as a tape-measure fraction, rounded to the nearest 1/16 in: ${say('length', 'cm', 'in', 15)} is ${E.tape(cv('length', 'cm', 'in', 15)).text} in.`]
+    ] },
+  { slug: 'kg-to-lbs', cat: 'weight', a: 'kg', b: 'lb', ex: 70, vals: [20, 50, 60, 65, 80, 90, 100], rvals: [1, 10, 100, 150, 180, 200],
+    h1: 'KG to Lbs Converter', link: 'kg to lbs', title: 'KG to Lbs Converter — Kilograms to Pounds (and Pounds to KG) | CalcThis',
+    eyebrow: 'Kilograms to pounds, and pounds to kilograms', sib: ['grams-to-ounces', 'cm-to-inches', 'celsius-to-fahrenheit'],
+    formula: '<div class="formula">pounds = kg × 2.2046226<small>KG = POUNDS × 0.45359237 · 1 LB = EXACTLY 0.45359237 KG</small></div>',
+    steps: () => `<p>The pound is defined as exactly 0.45359237 kilograms. To convert kg to lbs, multiply by 2.2046226: ${say('weight', 'kg', 'lb', 70)}. The result is also split into pounds and ounces under the answer.</p><p>To go the other way, multiply pounds by 0.45359237: ${say('weight', 'lb', 'kg', 150)}. Use the swap button to flip the direction.</p>`,
+    faqs: () => [
+      ['How many pounds are in a kilogram?', `${one('weight', 'kg', 'lb')} (rounded). A quick mental rule: double the kilograms and add 10%.`],
+      ['How do I convert kg to lbs?', `Multiply by 2.2046226. ${say('weight', 'kg', 'lb', 60)}, ${say('weight', 'kg', 'lb', 80)} and ${say('weight', 'kg', 'lb', 100)}.`],
+      ['How do I convert lbs to kg?', `Multiply by 0.45359237 (or divide by 2.2046226). ${say('weight', 'lb', 'kg', 150)} and ${say('weight', 'lb', 'kg', 200)}.`],
+      ['What is 70 kg in pounds and ounces?', `${say('weight', 'kg', 'lb', 70)}, which is ${Math.floor(cv('weight', 'kg', 'lb', 70))} lb ${E.fmt((cv('weight', 'kg', 'lb', 70) % 1) * 16, '1dp').replace(/\.0$/, '')} oz.`],
+      ['How many kg is a stone?', `One stone is 14 pounds: ${say('weight', 'st', 'kg', 1)}. So 11 stone is ${say('weight', 'st', 'kg', 11)}.`]
+    ] },
+  { slug: 'celsius-to-fahrenheit', cat: 'temperature', a: 'c', b: 'f', ex: 25, vals: [20, 25, 30, 40, 180, 200], rvals: [32, 68, 72, 98.6, 212, 350],
+    h1: 'Celsius to Fahrenheit Converter', link: 'Celsius to Fahrenheit', title: 'Celsius to Fahrenheit Converter — °C to °F (and °F to °C) | CalcThis',
+    eyebrow: '°C to °F, and °F to °C, with a thermometer', sib: ['cm-to-inches', 'kg-to-lbs', 'ml-to-oz'],
+    formula: '<div class="formula">°F = °C × 9/5 + 32<small>°C = (°F − 32) × 5/9 · −40 IS THE SAME ON BOTH SCALES</small></div>',
+    steps: () => `<p>Multiply the Celsius temperature by 9/5 (1.8), then add 32: ${say('temperature', 'c', 'f', 25)}. Temperature scales have different zero points, so unlike lengths or weights you multiply <em>and</em> add.</p><p>For Fahrenheit to Celsius, subtract 32 first, then multiply by 5/9: ${say('temperature', 'f', 'c', 72)}. A thermometer under the answer shows where it sits between −50 and 250 °C.</p>`,
+    faqs: () => [
+      ['How do I convert Celsius to Fahrenheit?', `Multiply by 1.8 and add 32. ${say('temperature', 'c', 'f', 20)}, ${say('temperature', 'c', 'f', 30)} and ${say('temperature', 'c', 'f', 40)}.`],
+      ['What is 200 °C in Fahrenheit?', `${say('temperature', 'c', 'f', 200)}. Common oven settings: ${say('temperature', 'c', 'f', 180)}.`],
+      ['How do I convert Fahrenheit to Celsius?', `Subtract 32, then multiply by 5/9. ${say('temperature', 'f', 'c', 68)}, ${say('temperature', 'f', 'c', 98.6)} and ${say('temperature', 'f', 'c', 212)}.`],
+      ['At what temperature are Celsius and Fahrenheit equal?', `At −40: ${say('temperature', 'c', 'f', -40)}. It is the only point where both scales show the same number.`],
+      ['What are the freezing and boiling points of water?', `Water freezes at ${say('temperature', 'c', 'f', 0)} and boils at ${say('temperature', 'c', 'f', 100)} at sea level. Body temperature is ${say('temperature', 'c', 'f', 37)}.`]
+    ] },
+  { slug: 'mm-to-inches', cat: 'length', a: 'mm', b: 'in', ex: 25, vals: [5, 10, 12, 20, 30, 100], rvals: [0.25, 0.5, 1, 2, 4],
+    h1: 'MM to Inches Converter', link: 'mm to inches', title: 'MM to Inches Converter — Millimeters to Inches (and Inches to MM) | CalcThis',
+    eyebrow: 'Millimeters to inches, and inches to millimeters', sib: ['cm-to-inches', 'ml-to-oz', 'grams-to-ounces'],
+    formula: '<div class="formula">inches = mm ÷ 25.4<small>MM = INCHES × 25.4 · 1 INCH = EXACTLY 25.4 MM</small></div>',
+    steps: () => `<p>An inch is exactly 25.4 millimeters, so divide the millimeters by 25.4: ${say('length', 'mm', 'in', 100)}. As a tape-measure fraction, ${say('length', 'mm', 'in', 10)} is about ${E.tape(cv('length', 'mm', 'in', 10)).text} in.</p><p>To go the other way, multiply inches by 25.4: ${say('length', 'in', 'mm', 1)}. The ruler under the answer shows both scales for values up to 32 cm.</p>`,
+    faqs: () => [
+      ['How many inches are in a millimeter?', `${one('length', 'mm', 'in')} (rounded). One inch is exactly 25.4 mm.`],
+      ['How do I convert mm to inches?', `Divide by 25.4. ${say('length', 'mm', 'in', 5)}, ${say('length', 'mm', 'in', 12)} and ${say('length', 'mm', 'in', 30)}.`],
+      ['How do I convert inches to mm?', `Multiply by 25.4. ${say('length', 'in', 'mm', 0.25)}, ${say('length', 'in', 'mm', 0.5)} and ${say('length', 'in', 'mm', 2)}.`],
+      ['How many mm is 1/8, 1/4 and 1/2 inch?', `${say('length', 'in', 'mm', 0.125)}, ${say('length', 'in', 'mm', 0.25)} and ${say('length', 'in', 'mm', 0.5)}.`],
+      ['How many millimeters are in a centimeter?', `10: ${say('length', 'cm', 'mm', 1)}. So ${say('length', 'mm', 'cm', 25)}.`]
+    ] },
+  { slug: 'grams-to-ounces', cat: 'weight', a: 'g', b: 'oz', ex: 100, vals: [28, 30, 150, 200, 300, 400], rvals: [1, 2, 4, 8, 12, 16],
+    h1: 'Grams to Ounces Converter', link: 'grams to ounces', title: 'Grams to Ounces Converter — g to oz (and Ounces to Grams) | CalcThis',
+    eyebrow: 'Grams to ounces, and ounces to grams', sib: ['kg-to-lbs', 'ml-to-oz', 'mm-to-inches'],
+    formula: '<div class="formula">ounces = grams ÷ 28.349523<small>GRAMS = OUNCES × 28.349523 · 16 OZ = 1 LB</small></div>',
+    steps: () => `<p>An avoirdupois ounce is exactly 28.349523125 grams (1/16 of a pound). Divide grams by 28.349523 to get ounces: ${say('weight', 'g', 'oz', 100)}. To go the other way multiply ounces by 28.349523: ${say('weight', 'oz', 'g', 4)}.</p><p>This is weight, not volume. For fluid ounces, use the <a href="/ml-to-oz/">mL to oz converter</a>; for cups of an ingredient, use the <a href="/cooking-converter/">cooking converter</a>.</p>`,
+    faqs: () => [
+      ['How many ounces are in a gram?', `${one('weight', 'g', 'oz')} (rounded). It is the reverse of ${one('weight', 'oz', 'g')}.`],
+      ['How do I convert grams to ounces?', `Divide by 28.349523. ${say('weight', 'g', 'oz', 28)}, ${say('weight', 'g', 'oz', 200)} and ${say('weight', 'g', 'oz', 500)}.`],
+      ['How do I convert ounces to grams?', `Multiply by 28.349523. ${say('weight', 'oz', 'g', 1)}, ${say('weight', 'oz', 'g', 8)} and ${say('weight', 'oz', 'g', 16)}.`],
+      ['How many grams are in a pound?', `${say('weight', 'lb', 'g', 1)}. So a quarter pound is ${say('weight', 'lb', 'g', 0.25)}.`],
+      ['Are ounces of weight the same as fluid ounces?', `No. An ounce of weight is ${say('weight', 'oz', 'g', 1)}; a US fluid ounce is ${say('volume', 'floz', 'ml', 1)} of volume. Only for water do they come close: 1 fl oz of water weighs about 29.6 g.`]
+    ] },
+  { slug: 'ml-to-oz', cat: 'volume', a: 'ml', b: 'floz', ex: 250, vals: [30, 50, 100, 150, 200, 250, 500, 750], rvals: [1, 2, 4, 8, 12, 16],
+    h1: 'mL to Oz Converter', link: 'mL to oz', title: 'mL to Oz Converter — Milliliters to Fluid Ounces (and Oz to mL) | CalcThis',
+    eyebrow: 'Milliliters to fluid ounces, and fluid ounces to mL', sib: ['grams-to-ounces', 'kg-to-lbs', 'celsius-to-fahrenheit'],
+    formula: '<div class="formula">US fl oz = mL ÷ 29.5735296<small>ML = US FL OZ × 29.5735296 · IMPERIAL FL OZ = 28.4130625 ML</small></div>',
+    steps: () => `<p>A US fluid ounce is exactly 29.5735295625 mL. Divide milliliters by 29.5735 to get US fluid ounces: ${say('volume', 'ml', 'floz', 250)}. To go the other way multiply fluid ounces by 29.5735: ${say('volume', 'floz', 'ml', 8)}.</p><p>An imperial (UK) fluid ounce is slightly smaller: ${say('volume', 'ml', 'ukfloz', 250)}. Pick “Fluid ounces (imperial)” in the To menu to use it. Ounces of weight are different — see <a href="/grams-to-ounces/">grams to ounces</a>.</p>`,
+    faqs: () => [
+      ['How many fluid ounces are in a milliliter?', `${one('volume', 'ml', 'floz')} (rounded) — US fluid ounces. One US fl oz is ${withSym(F(cv('volume', 'floz', 'ml', 1)), 'mL')}.`],
+      ['How do I convert mL to oz?', `Divide by 29.5735. ${say('volume', 'ml', 'floz', 100)}, ${say('volume', 'ml', 'floz', 500)} and ${say('volume', 'ml', 'floz', 750)}.`],
+      ['How do I convert oz to mL?', `Multiply fluid ounces by 29.5735. ${say('volume', 'floz', 'ml', 1)}, ${say('volume', 'floz', 'ml', 8)} and ${say('volume', 'floz', 'ml', 16)}.`],
+      ['How many mL is a cup in fluid ounces?', `A US cup is 8 fl oz: ${say('volume', 'cup', 'ml', 1)}. A 12 fl oz can holds ${say('volume', 'floz', 'ml', 12)}.`],
+      ['Is a UK fluid ounce the same as a US fluid ounce?', `No. A US fl oz is ${withSym(F(cv('volume', 'floz', 'ml', 1)), 'mL')} and an imperial fl oz is ${withSym(F(cv('volume', 'ukfloz', 'ml', 1)), 'mL')} — about 4% smaller.`]
+    ] }
+];
+const pairUrl = (p) => '/' + p.slug + '/';
+const popularLinks = (c) => { const l = PAIRS.filter((p) => p.cat === c); return l.length ? '<h2>Popular conversions</h2><ul class="pc-statelist">' + l.map((p) => '<li><a href="' + pairUrl(p) + '">' + p.h1.replace(' Converter', '') + '</a></li>').join('') + '</ul>' : ''; };
+
+function writePair(p) {
+  const c = p.cat, url = 'https://calcthis.co' + pairUrl(p), f = p.faqs();
+  const answer = c === 'temperature' ? say(c, p.a, p.b, 0) + ', ' + say(c, p.a, p.b, 100) : one(c, p.a, p.b);
+  const desc = 'Free ' + p.link + ' converter (and the reverse): type a value for an instant answer, ' + (c === 'length' ? 'with a live ruler and tape-measure fractions' : c === 'temperature' ? 'with the formula and a live thermometer' : 'with every unit at once') + ' and a table of the most common values.';
+  const hero = `<strong>${answer}.</strong> Type a value for an instant answer — use the swap button for ${nm(c, p.b).toLowerCase()} to ${nm(c, p.a).toLowerCase()} — with a table of the most common values below.`;
+  const content = `  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to convert ${p.link}</h2>
+        ${p.steps()}
+        <h2>The formula</h2>
+        ${p.formula}
+        <h2>${nm(c, p.a)} to ${nm(c, p.b).toLowerCase()} — common values</h2>
+        ${pairTable(c, p.a, p.b, p.vals)}
+        <h2>${nm(c, p.b)} to ${nm(c, p.a).toLowerCase()} — common values</h2>
+        ${pairTable(c, p.b, p.a, p.rvals)}
+        ${SOURCE}
+      </div>
+      <div>
+        <h2>More conversions</h2>
+        <ul class="pc-statelist">${p.sib.map((s) => { const q = PAIRS.find((x) => x.slug === s); return '<li><a href="' + pairUrl(q) + '">' + q.h1.replace(' Converter', '') + '</a></li>'; }).join('')}</ul>
+        <p>Need another unit? Use the full <a href="${urlOf(c)}">${P[c].h1.toLowerCase()}</a>, or see <a href="/unit-converter/">all unit converters</a>.</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+${f.map((q) => `    <details class="faq"><summary>${q[0]}</summary><p>${q[1]}</p></details>`).join('\n')}
+  </section>`;
+  const crumbs = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'CalcThis', item: 'https://calcthis.co/' },
+    { '@type': 'ListItem', position: 2, name: 'Unit Converter', item: 'https://calcthis.co/unit-converter/' },
+    { '@type': 'ListItem', position: 3, name: P[c].h1, item: 'https://calcthis.co' + urlOf(c) },
+    { '@type': 'ListItem', position: 4, name: p.h1, item: url }] };
+  const pills = [pill(urlOf(c), P[c].h1, PILLSVG)].concat(p.sib.map((s) => { const q = PAIRS.find((x) => x.slug === s); return pill(pairUrl(q), q.h1, PILLSVG); })).concat([pill('/unit-converter/', 'Unit Converter', PILLSVG)]);
+  const html = headFor({ title: p.title, desc, url }) + [jsonApp(p.h1, url, desc), jsonFaq(f), crumbs].map((j) => '<script type="application/ld+json">\n' + JSON.stringify(j, null, 2) + '\n</script>\n').join('') + '</head>\n' + bodyFor({ cat: c, eyebrow: p.eyebrow, h1: p.h1, hero, ph: String(p.ex), content, pills, pair: p });
+  write(p.slug + '/index.html', html);
+}
+
+writeHub(); ORDER.forEach(writeCat); PAIRS.forEach(writePair);
+console.log('pages written: hub +', ORDER.length, 'converters +', PAIRS.length, 'pair pages');
 
 /* ---------- registration (idempotent) ---------- */
 function edit(rel, fn) { const fp = ROOT + rel; let s = fs.readFileSync(fp, 'utf8'); const crlf = s.includes('\r\n'); s = s.replace(/\r\n/g, '\n'); const o = s; s = fn(s); if (s !== o) { fs.writeFileSync(fp, crlf ? s.replace(/\n/g, '\r\n') : s); console.log('updated', rel); } }
-const slugs = ['/unit-converter/'].concat(ORDER.map(urlOf));
+const slugs = ['/unit-converter/'].concat(ORDER.map(urlOf)).concat(PAIRS.map(pairUrl));
 edit('sitemap.xml', (sm) => {
   const today = new Date().toISOString().slice(0, 10); let add = '';
   slugs.forEach((u) => { if (!sm.includes('<loc>https://calcthis.co' + u + '</loc>')) add += '  <url>\n    <loc>https://calcthis.co' + u + '</loc>\n    <lastmod>' + today + '</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>' + (u === '/unit-converter/' ? '0.8' : '0.7') + '</priority>\n  </url>\n'; });
@@ -428,7 +544,7 @@ edit('build.js', (s) => {
 });
 edit('llms.txt', (lt) => {
   lt = lt.replace(/\n## Unit converters\n[\s\S]*?(?=\n## |$)/, '');
-  return lt.trimEnd() + '\n\n## Unit converters\n- [Unit Converter](https://calcthis.co/unit-converter/): convert length, weight, volume, temperature, area, speed, data storage, cooking measures and px to rem.\n' + ORDER.map((c) => '- [' + P[c].h1 + '](https://calcthis.co' + urlOf(c) + '): ' + P[c].eyebrow + '.').join('\n') + '\n';
+  return lt.trimEnd() + '\n\n## Unit converters\n- [Unit Converter](https://calcthis.co/unit-converter/): convert length, weight, volume, temperature, area, speed, data storage, cooking measures and px to rem.\n' + ORDER.map((c) => '- [' + P[c].h1 + '](https://calcthis.co' + urlOf(c) + '): ' + P[c].eyebrow + '.').join('\n') + '\n' + PAIRS.map((p) => '- [' + p.h1 + '](https://calcthis.co' + pairUrl(p) + '): ' + p.eyebrow + '.').join('\n') + '\n';
 });
 edit('partials/header.html', (s) => {
   const block = '          <!--UNITNAV:START-->\n          <span class="menu-col-head">Unit Converters</span>\n          <a href="/unit-converter/">Unit Converter</a>\n' + ORDER.map((c) => '          <a href="' + urlOf(c) + '">' + P[c].h1.replace(' Converter', '').replace('Cooking Measurement', 'Cooking') + ' Converter</a>').join('\n') + '\n          <!--UNITNAV:END-->\n';
