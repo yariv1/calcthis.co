@@ -163,6 +163,10 @@
   "/loan-calculator/": {
     "d": "Free loan calculator: payment, balance chart, extra-payment savings and true APR, or work backwards from a payment to what you can borrow."
   },
+  "/tip-calculator/": {
+    "t": "Tip Calculator — Split the Bill, Tip on Tax or Total",
+    "d": "Tip calculator: enter the bill, pick a tip % and see the tip, total and each person’s share. $86.40 at 18% is $15.55. Split evenly or by order."
+  },
   "/auto-loan-calculator/": {
     "d": "Free auto loan calculator: monthly payment, cash due at signing and total cost from price, down payment, trade-in, tax and fees, with a negative-equity flag."
   },

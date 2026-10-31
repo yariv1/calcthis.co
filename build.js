@@ -68,6 +68,7 @@ const PAGES = [
   { file: 'mortgage-calculator/index.html',    slug: '/mortgage-calculator/' },
   { file: 'loan-calculator/index.html',        slug: '/loan-calculator/' },
   { file: 'auto-loan-calculator/index.html',   slug: '/auto-loan-calculator/' },
+  { file: 'tip-calculator/index.html',   slug: '/tip-calculator/' },
   { file: 'paycheck-calculator/index.html',   slug: '/paycheck-calculator/' },
   { file: 'sales-tax-calculator/new-york-city/index.html', slug: '/sales-tax-calculator/new-york-city/' },
   { file: 'sales-tax-calculator/texas/index.html', slug: '/sales-tax-calculator/texas/' },

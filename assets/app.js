@@ -13549,6 +13549,281 @@ CalcThis.initSalesTaxCalc = function () {
 };
 
 /* =========================================================
+   TIP CALCULATOR — hub page. Bill (tax included) + tip % + people, tip on the total or before tax, rounding that
+   always rounds UP and shows the real tip %, an uneven split by what each person ordered, the tip at every common %
+   at once, and a reverse mode ("what % did I tip?"). Typical tip ranges are customs, not rules: they come from the
+   calculator.net "typical tip" table (read 2026-10-31) and are labelled as typical on the page.
+   CalcThis.tipEngine (pure, TIP-ENGINE:START/END)  ·  CalcThis.initTipCalc (ids tp*)
+   ========================================================= */
+/* TIP-ENGINE:START */
+CalcThis.tipEngine = (function () {
+  function r2(x) { return Math.round(x * 100 + 1e-9) / 100; }
+  var SERVICES = [
+    { id: 'restaurant', label: 'Restaurant or bar', lo: 15, hi: 20, chips: [15, 18, 20, 25], def: 18, who: 'restaurants and bars' },
+    { id: 'delivery', label: 'Food delivery', lo: 15, hi: 20, chips: [15, 18, 20, 25], def: 18, who: 'food delivery (depending on distance and order size)' },
+    { id: 'taxi', label: 'Taxi or limo', lo: 15, hi: 20, chips: [10, 15, 18, 20], def: 18, who: 'taxi and limo drivers' },
+    { id: 'hair', label: 'Hair, barber or nails', lo: 10, hi: 20, chips: [10, 15, 18, 20], def: 15, who: 'hairstylists, barbers and nail services' },
+    { id: 'massage', label: 'Massage', lo: 10, hi: 20, chips: [10, 15, 18, 20], def: 15, who: 'massage' },
+    { id: 'other', label: 'Something else', lo: null, hi: null, chips: [10, 15, 18, 20, 25], def: 18, who: '' }
+  ];
+  var COMMON = [10, 15, 18, 20, 25];
+  function service(id) { for (var i = 0; i < SERVICES.length; i++) if (SERVICES[i].id === id) return SERVICES[i]; return SERVICES[0]; }
+  /* share whole cents between n people: the first (total mod n) people pay one cent more */
+  function splitEven(total, n) {
+    var c = Math.round(total * 100), b = Math.floor(c / n), rem = c - b * n, out = [], i;
+    for (i = 0; i < n; i++) out.push((b + (i < rem ? 1 : 0)) / 100);
+    return out;
+  }
+  /* share whole cents by weights (largest remainder) so the shares add up exactly */
+  function splitWeighted(total, w) {
+    var c = Math.round(total * 100), sum = 0, i; for (i = 0; i < w.length; i++) sum += w[i];
+    var raw = w.map(function (x) { return c * x / sum; }), fl = raw.map(Math.floor), used = 0;
+    for (i = 0; i < fl.length; i++) used += fl[i];
+    var order = raw.map(function (x, k) { return [x - Math.floor(x), k]; }).sort(function (a, b) { return b[0] - a[0] || a[1] - b[1]; });
+    for (i = 0; i < c - used; i++) fl[order[i][1]]++;
+    return fl.map(function (x) { return x / 100; });
+  }
+  function ceilW(x) { return Math.ceil(x - 1e-9); }
+  /* o: bill (tax included), tax, pct, people, base ('total' | 'pre'), round ('none' | 'tip' | 'total' | 'person'), items (amounts ordered per person) or null */
+  function calc(o) {
+    var bill = o.bill, tax = o.tax || 0, pre = r2(bill - tax), base = o.base === 'pre' ? pre : bill;
+    var tipRaw = r2(base * o.pct / 100), tip = tipRaw, total = r2(bill + tip), shares = null, n = o.items ? o.items.length : (o.people || 1), rd = o.round || 'none', i;
+    if (rd === 'tip') { tip = ceilW(tipRaw); total = r2(bill + tip); }
+    else if (rd === 'total') { total = ceilW(bill + tipRaw); tip = r2(total - bill); }
+    else if (rd === 'person') {
+      if (o.items) {
+        var sumI = 0; o.items.forEach(function (x) { sumI += x; });
+        shares = o.items.map(function (x) { return ceilW((bill + tipRaw) * x / sumI); });
+        total = 0; shares.forEach(function (x) { total += x; }); total = r2(total);
+      } else { var per = ceilW((bill + tipRaw) / n); shares = []; for (i = 0; i < n; i++) shares.push(per); total = r2(per * n); }
+      tip = r2(total - bill);
+    }
+    if (!shares) shares = o.items ? splitWeighted(total, o.items) : splitEven(total, n);
+    var tipShares = o.items ? splitWeighted(tip, o.items) : splitEven(tip, n);
+    return { bill: r2(bill), tax: r2(tax), pre: pre, base: base, tipRaw: tipRaw, tip: tip, total: total, effPct: base > 0 ? tip / base * 100 : 0, people: n, shares: shares, tipShares: tipShares, rounded: rd !== 'none' && (r2(tip) !== r2(tipRaw)), items: o.items || null };
+  }
+  /* the tip at every common percentage (plus the one in use) */
+  function ladder(o) {
+    var list = COMMON.slice(); if (list.indexOf(o.pct) < 0) { list.push(o.pct); list.sort(function (a, b) { return a - b; }); }
+    return list.map(function (p) { var c = calc({ bill: o.bill, tax: o.tax, pct: p, people: o.people, base: o.base, round: 'none', items: null }); return { pct: p, tip: c.tip, total: c.total, each: c.shares[0], cur: p === o.pct }; });
+  }
+  /* tip on the total versus before tax */
+  function baseCompare(o) {
+    var a = calc({ bill: o.bill, tax: o.tax, pct: o.pct, people: 1, base: 'pre', round: 'none', items: null }), b = calc({ bill: o.bill, tax: o.tax, pct: o.pct, people: 1, base: 'total', round: 'none', items: null });
+    return { pre: a, total: b, diff: r2(b.tip - a.tip) };
+  }
+  /* reverse: what percent did I tip? */
+  function reverse(o) {
+    var tip = r2(o.paid - o.bill), pct = o.bill > 0 ? tip / o.bill * 100 : 0;
+    return { tip: tip, pct: pct, bill: r2(o.bill), paid: r2(o.paid) };
+  }
+  function verdict(svc, pct) {
+    if (svc.lo == null) return '';
+    if (pct < svc.lo - 0.0001) return 'below'; if (pct > svc.hi + 0.0001) return 'above'; return 'within';
+  }
+  return { SERVICES: SERVICES, COMMON: COMMON, service: service, calc: calc, ladder: ladder, baseCompare: baseCompare, reverse: reverse, verdict: verdict, splitEven: splitEven, splitWeighted: splitWeighted, r2: r2 };
+})();
+/* TIP-ENGINE:END */
+
+CalcThis.initTipCalc = function () {
+  var E = CalcThis.tipEngine, $ = function (id) { return document.getElementById(id); };
+  var st = { mode: 'tip', adv: false, svc: 'restaurant', base: 'total', round: 'none', sym: '$', uneven: false, rows: [{ amt: '' }, { amt: '' }] }, last = null;
+  var MAX = 1e9;
+  function num(v) { var t = String(v).replace(/[$,\s%]/g, ''); var n = t === '' ? NaN : Number(t); return isFinite(n) ? n : NaN; }
+  function mon(x) { return (x < 0 ? '−' : '') + st.sym + Math.abs(x).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+  function pct(x) { return String(Math.round(x * 100) / 100) + '%'; }
+  function esc(t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'); }
+  function setSeg(id, v) { [].forEach.call($(id).querySelectorAll('button'), function (b) { b.classList.toggle('on', b.getAttribute('data-v') === v); }); }
+  function setHint(m) { var h = $('tpHint'); h.textContent = m || ''; h.style.display = m ? 'block' : 'none'; }
+  var CHEV = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
+  function setPanel(root, opts, val) {
+    var panel = root.querySelector('.csel-panel');
+    panel.innerHTML = opts.map(function (o) { return '<button type="button" class="csel-opt' + (o[0] === val ? ' on' : '') + '" role="option" aria-selected="' + (o[0] === val) + '" data-value="' + esc(o[0]) + '">' + esc(o[1]) + '</button>'; }).join('');
+    root.setAttribute('data-value', val);
+    root.querySelector('.csel-val').textContent = (opts.filter(function (o) { return o[0] === val; })[0] || opts[0])[1];
+    CalcThis.initCsel(root);
+  }
+  function svc() { return E.service(st.svc); }
+  function table(head, rows) {
+    return '<thead><tr>' + head.map(function (h) { return '<th>' + h + '</th>'; }).join('') + '</tr></thead><tbody>' + rows.map(function (r) { return '<tr' + (r[3] ? ' class="cur"' : '') + '><td>' + r[0] + '</td><td>' + r[1] + '</td><td>' + r[2] + '</td></tr>'; }).join('') + '</tbody>';
+  }
+  function bar(segs) {
+    var tot = segs.reduce(function (a, s) { return a + s[1]; }, 0); if (!(tot > 0)) return ['', ''];
+    var k = segs.filter(function (s) { return s[1] > 0.0049; });
+    return ['<div class="ln-bar">' + k.map(function (s) { return '<span class="ln-seg ' + s[0] + '" style="width:' + (s[1] / tot * 100) + '%"></span>'; }).join('') + '</div>', k.map(function (s) { return '<span><i class="ln-dotc ' + s[0] + '"></i>' + s[2] + ' ' + mon(s[1]) + '</span>'; }).join('')];
+  }
+  function empty(lab, msg, hint) {
+    $('tpResLab').textContent = lab; $('tpBig').textContent = '—'; $('tpSub').textContent = msg; $('tpMVal').textContent = '—'; $('tpMLab').textContent = lab;
+    $('tpResults').style.display = 'none'; last = null; setHint(hint || '');
+  }
+  /* ---- controls ---- */
+  function markPct() {
+    var v = num($('tpPct').value);
+    [].forEach.call($('tpPctChips').querySelectorAll('button'), function (b) { b.classList.toggle('on', isFinite(v) && Number(b.getAttribute('data-p')) === v); });
+  }
+  function markPeople() {
+    var v = num($('tpPeople').value);
+    [].forEach.call($('tpPeopleChips').querySelectorAll('button'), function (b) { b.classList.toggle('on', isFinite(v) && Number(b.getAttribute('data-n')) === v); });
+  }
+  function buildChips() {
+    var s = svc(); $('tpPctChips').innerHTML = s.chips.map(function (p) { return '<button type="button" data-p="' + p + '">' + p + '%</button>'; }).join('');
+    $('tpRange').textContent = s.lo == null ? 'Pick the service above to see the usual range, or type any percentage.' : 'Typical for ' + s.who + ': ' + s.lo + '% to ' + s.hi + '%.';
+    markPct();
+  }
+  function buildRows() {
+    $('tpRows').innerHTML = st.rows.map(function (r, i) {
+      return '<div class="fld"><div class="st-lab"><label class="lab" for="tpAmt' + i + '">Person ' + (i + 1) + ' ordered <span class="unit">' + esc(st.sym) + '</span></label>' + (i > 1 ? '<button type="button" class="st-rm" data-i="' + i + '">Remove</button>' : '') + '</div><div class="inp"><input id="tpAmt' + i + '" class="tp-amt" data-i="' + i + '" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. ' + (i % 2 ? '18.50' : '32') + '" value="' + esc(r.amt) + '"></div></div>';
+    }).join('');
+  }
+  function showMode() {
+    var rev = st.mode === 'rev', un = st.uneven && !rev;
+    $('tpTipBox').style.display = rev ? 'none' : '';
+    $('tpRevBox').style.display = rev ? '' : 'none';
+    $('tpPeopleFld').style.display = rev || un ? 'none' : '';
+    $('tpUnevenBox').style.display = un ? '' : 'none';
+    $('tpAdvBtn').parentNode.style.display = rev ? 'none' : '';
+    $('tpAdvIn').style.display = !rev && st.adv ? '' : 'none';
+    $('tpBillLab').firstChild.textContent = rev ? 'Bill, before the tip ' : 'Bill, tax included ';
+    $('tpEx').textContent = rev ? 'See an example: $86.40 bill, $102 paid' : 'See an example: $86.40 bill, 18% tip, 4 people';
+  }
+  /* ---- results ---- */
+  function renderTip(hints) {
+    var s = svc(), bill = NaN, raw = $('tpBill').value.trim();
+    if (!raw) { empty('Total with tip', 'Enter the bill to see the tip.', ''); return; }
+    bill = num(raw);
+    if (!isFinite(bill) || bill < 0 || bill > MAX) { empty('Total with tip', 'Enter the bill to see the tip.', 'Bill must be a number like 86.40 — only dollars and cents.'); return; }
+    if (bill === 0) { empty('Total with tip', 'Enter the bill to see the tip.', 'Bill must be more than 0.'); return; }
+    var pr = $('tpPct').value.trim(), p = num(pr);
+    if (!pr) { empty('Total with tip', 'Pick or type a tip percentage.', ''); return; }
+    if (!isFinite(p) || p < 0 || p > 100) { empty('Total with tip', 'Pick or type a tip percentage.', 'Tip must be a percentage from 0 to 100, like 18.'); return; }
+    var tax = 0, tr = $('tpTax').value.trim();
+    if (tr) { var tn = num(tr); if (!isFinite(tn) || tn < 0 || tn >= bill) hints.push(isFinite(tn) && tn >= bill ? 'Tax must be less than the bill, because the bill already includes it.' : 'Tax must be a number like 7.35.'); else tax = tn; }
+    var items = null, people = 1;
+    if (st.uneven) {
+      var bad = false, arr = [];
+      st.rows.forEach(function (r) { var t = String(r.amt).trim(); if (!t) return; var n = num(t); if (!isFinite(n) || n <= 0 || n > MAX) { bad = true; return; } arr.push(n); });
+      if (bad) hints.push('Each amount must be a number above 0, like 18.50.');
+      if (arr.length >= 2) items = arr; else hints.push('Enter what at least two people ordered, or untick “Split unevenly”.');
+    }
+    if (!items) {
+      var pe = $('tpPeople').value.trim();
+      if (pe) { var pn = num(pe); if (!isFinite(pn) || pn < 1 || pn > 100 || Math.floor(pn) !== pn) hints.push('People must be a whole number from 1 to 100.'); else people = pn; }
+    }
+    var c = E.calc({ bill: bill, tax: tax, pct: p, people: people, base: tax > 0 ? st.base : 'total', round: st.round, items: items });
+    var n = c.people, many = n > 1, big = Math.max.apply(null, c.shares);
+    var lab = many ? 'Each person pays' : 'Total with tip';
+    $('tpResLab').textContent = lab; $('tpBig').textContent = mon(many ? big : c.total);
+    $('tpSub').textContent = mon(c.tip) + ' tip' + (c.rounded ? ' (' + pct(c.effPct) + ' after rounding)' : ' at ' + pct(p)) + (many ? ' · ' + mon(c.total) + ' in total' : '');
+    $('tpMLab').textContent = lab; $('tpMVal').textContent = mon(many ? big : c.total);
+    var rows = [['Bill' + (c.tax > 0 ? ' <small>incl. ' + mon(c.tax) + ' tax</small>' : ''), mon(c.bill), many && !items ? mon(E.splitEven(c.bill, n)[0]) : ''], ['Tip <small>' + pct(c.effPct) + '</small>', mon(c.tip), many && !items ? mon(c.tipShares[0]) : ''], ['Total', mon(c.total), many && !items ? mon(big) : '', true]];
+    $('tpTable').innerHTML = table(['', 'Amount', many && !items ? 'Each' : ''], rows);
+    var b = bar([['ln-p', c.pre, c.tax > 0 ? 'Food and drink' : 'Bill'], ['ln-s', c.tax, 'Tax'], ['ln-i', c.tip, 'Tip']]);
+    $('tpBar').innerHTML = b[0]; $('tpBarLeg').innerHTML = b[1];
+    var tip = 'A ' + pct(p) + ' tip on ' + mon(c.base) + (tax > 0 && st.base === 'pre' ? ' (the bill before tax)' : '') + ' is ' + mon(c.tipRaw) + '.';
+    if (c.rounded) tip += ' Rounded up, your tip is ' + mon(c.tip) + ', which is ' + pct(c.effPct) + '.';
+    var vd = E.verdict(s, c.effPct);
+    if (vd === 'within') tip += ' That is within the typical ' + s.lo + '% to ' + s.hi + '% for ' + s.who + '.';
+    else if (vd === 'below') tip += ' That is below the typical ' + s.lo + '% to ' + s.hi + '% for ' + s.who + '.';
+    else if (vd === 'above') tip += ' That is above the typical ' + s.lo + '% to ' + s.hi + '% for ' + s.who + '.';
+    $('tpTip').textContent = tip; $('tpTip').style.display = '';
+    var ex = '';
+    if (many && !items) {
+      var lo = Math.min.apply(null, c.shares);
+      if (big !== lo) { var cnt = c.shares.filter(function (x) { return x === big; }).length; ex += '<p class="res-tip">The total does not split evenly: ' + cnt + (cnt === 1 ? ' person pays ' : ' people pay ') + mon(big) + ' and ' + (n - cnt === 1 ? 'one pays ' : 'the other ' + (n - cnt) + ' pay ') + mon(lo) + ', so the shares add up to exactly ' + mon(c.total) + '.</p>'; }
+    }
+    if (items) {
+      ex += '<div class="fc-grp">What each person pays</div><table class="dtable ln-terms">' + table(['Person', 'Ordered', 'Pays'], c.items.map(function (x, i) { return ['Person ' + (i + 1), mon(x), mon(c.shares[i]) + ' <small>' + mon(c.tipShares[i]) + ' tip</small>']; }).concat([['All', mon(c.items.reduce(function (a, x) { return a + x; }, 0)), mon(c.total), true]])) + '</table>';
+      var sumI = c.items.reduce(function (a, x) { return a + x; }, 0), expect = c.pre;
+      if (Math.abs(sumI - expect) > Math.max(0.5, expect * 0.02)) ex += '<p class="res-tip">The amounts add up to ' + mon(sumI) + ' but the bill before tax is ' + mon(expect) + '. Each person still pays their share of the bill and tip by what they ordered.</p>';
+    }
+    var lad = E.ladder({ bill: bill, tax: tax, pct: p, people: items ? 1 : people, base: tax > 0 ? st.base : 'total' });
+    ex += '<div class="fc-grp">The tip at every common percentage</div><table class="dtable ln-terms">' + table(['Tip', 'Tip amount', many && !items ? 'Total · each' : 'Total'], lad.map(function (l) { return [pct(l.pct), mon(l.tip), mon(l.total) + (many && !items ? ' <small>' + mon(l.each) + ' each</small>' : ''), l.cur]; })) + '</table>';
+    if (tax > 0) {
+      var bc = E.baseCompare({ bill: bill, tax: tax, pct: p });
+      ex += '<div class="fc-grp">Tip before tax or on the total</div><table class="dtable ln-terms">' + table(['Tip on', 'Tip', 'Total'], [['Before tax (' + mon(bc.pre.base) + ')', mon(bc.pre.tip), mon(bc.pre.total), st.base === 'pre'], ['The total bill (' + mon(bc.total.base) + ')', mon(bc.total.tip), mon(bc.total.total), st.base !== 'pre']]) + '</table><p class="res-tip">Tipping on the total costs ' + mon(bc.diff) + ' more here. Both are common — pick the one you are comfortable with.</p>';
+    }
+    $('tpExtra').innerHTML = ex;
+    $('tpResults').style.display = ''; $('tpCopyWrap').style.display = '';
+    last = { mode: 'tip', c: c, p: p };
+    setHint(hints[0] || '');
+  }
+  function renderRev(hints) {
+    var s = svc(), braw = $('tpBill').value.trim(), praw = $('tpPaid').value.trim();
+    if (!braw || !praw) { empty('You tipped', 'Enter the bill and the total you paid.', ''); return; }
+    var bill = num(braw), paid = num(praw);
+    if (!isFinite(bill) || bill <= 0 || bill > MAX) { empty('You tipped', 'Enter the bill and the total you paid.', 'Bill must be a number above 0, like 86.40.'); return; }
+    if (!isFinite(paid) || paid < 0 || paid > MAX) { empty('You tipped', 'Enter the bill and the total you paid.', 'Total paid must be a number like 102.'); return; }
+    if (paid < bill) { empty('You tipped', 'The total paid can’t be less than the bill.', 'Total paid must be at least the bill.'); return; }
+    var r = E.reverse({ bill: bill, paid: paid });
+    $('tpResLab').textContent = 'You tipped'; $('tpBig').textContent = pct(r.pct);
+    $('tpSub').textContent = mon(r.tip) + ' on a ' + mon(r.bill) + ' bill';
+    $('tpMLab').textContent = 'You tipped'; $('tpMVal').textContent = pct(r.pct);
+    $('tpTable').innerHTML = table(['', 'Amount', ''], [['Bill', mon(r.bill), ''], ['Tip <small>' + pct(r.pct) + '</small>', mon(r.tip), ''], ['Total paid', mon(r.paid), '', true]]);
+    var b = bar([['ln-p', r.bill, 'Bill'], ['ln-i', r.tip, 'Tip']]); $('tpBar').innerHTML = b[0]; $('tpBarLeg').innerHTML = b[1];
+    var tip = 'The tip is ' + pct(r.pct) + ' of the bill.', vd = E.verdict(s, r.pct);
+    if (vd === 'within') tip += ' That is within the typical ' + s.lo + '% to ' + s.hi + '% for ' + s.who + '.';
+    else if (vd === 'below') tip += ' That is below the typical ' + s.lo + '% to ' + s.hi + '% for ' + s.who + '.';
+    else if (vd === 'above') tip += ' That is above the typical ' + s.lo + '% to ' + s.hi + '% for ' + s.who + '.';
+    $('tpTip').textContent = tip; $('tpTip').style.display = '';
+    $('tpExtra').innerHTML = '';
+    $('tpResults').style.display = ''; $('tpCopyWrap').style.display = '';
+    last = { mode: 'rev', r: r };
+    setHint(hints[0] || '');
+  }
+  function render() {
+    var hints = [], typed = $('tpBill').value.trim() !== '' || $('tpPaid').value.trim() !== '';
+    $('tpEx').parentNode.style.display = typed ? 'none' : '';
+    if (st.mode === 'rev') renderRev(hints); else renderTip(hints);
+  }
+  /* ---- events ---- */
+  $('tpModeSeg').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; st.mode = b.getAttribute('data-v'); setSeg('tpModeSeg', st.mode); showMode(); render(); });
+  ['tpBill', 'tpPaid', 'tpTax'].forEach(function (id) { $(id).addEventListener('input', render); });
+  $('tpPct').addEventListener('input', function () { markPct(); render(); });
+  $('tpPctChips').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; $('tpPct').value = b.getAttribute('data-p'); markPct(); render(); });
+  $('tpPeople').addEventListener('input', function () { markPeople(); render(); });
+  $('tpPeopleChips').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; $('tpPeople').value = b.getAttribute('data-n'); markPeople(); render(); });
+  $('tpService').addEventListener('change', function () { st.svc = $('tpService').value; var s = svc(); buildChips(); $('tpPct').value = String(s.def); markPct(); render(); });
+  $('tpBaseSeg').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; st.base = b.getAttribute('data-v'); setSeg('tpBaseSeg', st.base); render(); });
+  $('tpRound').addEventListener('change', function () { st.round = $('tpRound').value; render(); });
+  $('tpSym').addEventListener('change', function () { st.sym = $('tpSym').value; [].forEach.call(document.querySelectorAll('.tp-symlab'), function (el) { el.textContent = st.sym; }); buildRows(); render(); });
+  $('tpUneven').addEventListener('change', function () { st.uneven = $('tpUneven').checked; showMode(); render(); });
+  $('tpRows').addEventListener('input', function (e) { var t = e.target; if (t.classList.contains('tp-amt')) { st.rows[+t.getAttribute('data-i')].amt = t.value; render(); } });
+  $('tpRows').addEventListener('click', function (e) { var b = e.target.closest('.st-rm'); if (!b) return; st.rows.splice(+b.getAttribute('data-i'), 1); buildRows(); render(); });
+  $('tpAddRow').addEventListener('click', function () { if (st.rows.length >= 20) return; st.rows.push({ amt: '' }); buildRows(); var i = $('tpAmt' + (st.rows.length - 1)); if (i) i.focus(); render(); });
+  $('tpEx').addEventListener('click', function () {
+    if (st.mode === 'rev') { $('tpBill').value = '86.40'; $('tpPaid').value = '102'; }
+    else { $('tpBill').value = '86.40'; $('tpPct').value = '18'; $('tpPeople').value = '4'; markPct(); markPeople(); }
+    render();
+  });
+  $('tpAdvBtn').addEventListener('click', function () {
+    st.adv = !st.adv; $('tpAdvBtn').classList.toggle('open', st.adv); $('tpAdvBtnLab').textContent = st.adv ? 'Go simple' : 'Go advanced';
+    if (!st.adv) { /* Go simple resets every advanced setting */
+      $('tpTax').value = ''; st.base = 'total'; setSeg('tpBaseSeg', 'total'); st.round = 'none'; setPanel($('tpRound'), ROUNDS, 'none');
+      st.uneven = false; $('tpUneven').checked = false; st.rows = [{ amt: '' }, { amt: '' }]; buildRows();
+      st.sym = '$'; setPanel($('tpSym'), SYMS, '$'); [].forEach.call(document.querySelectorAll('.tp-symlab'), function (el) { el.textContent = '$'; });
+    }
+    showMode(); render();
+  });
+  $('tpCopy').addEventListener('click', function () {
+    if (!last) return; var lines = [];
+    if (last.mode === 'tip') {
+      var c = last.c; lines.push('Bill: ' + mon(c.bill)); lines.push('Tip (' + pct(c.effPct) + '): ' + mon(c.tip)); lines.push('Total: ' + mon(c.total));
+      if (c.people > 1) lines.push('Each of ' + c.people + ' people: ' + mon(Math.max.apply(null, c.shares)));
+    } else { var q = last.r; lines.push('Bill: ' + mon(q.bill)); lines.push('Total paid: ' + mon(q.paid)); lines.push('Tip: ' + mon(q.tip) + ' (' + pct(q.pct) + ')'); }
+    var btn = $('tpCopy'), txt = lines.join('\n');
+    var done = function (ok) { btn.textContent = ok ? 'Copied' : 'Copy failed'; setTimeout(function () { btn.textContent = 'Copy results'; }, 1600); };
+    var legacy = function () { try { var ta = document.createElement('textarea'); ta.value = txt; ta.setAttribute('readonly', ''); ta.style.cssText = 'position:fixed;left:-9999px;top:0'; document.body.appendChild(ta); ta.select(); var ok = document.execCommand('copy'); document.body.removeChild(ta); done(ok); } catch (e) { done(false); } };
+    try { navigator.clipboard.writeText(txt).then(function () { done(true); }, legacy); } catch (e) { legacy(); }
+  });
+  /* ---- init ---- */
+  var ROUNDS = [['none', 'No rounding'], ['tip', 'Round the tip up to a whole dollar'], ['total', 'Round the total up to a whole dollar'], ['person', 'Round each share up to a whole dollar']];
+  var SYMS = [['$', '$ dollar'], ['€', '€ euro'], ['£', '£ pound'], ['CA$', 'CA$ Canadian dollar'], ['A$', 'A$ Australian dollar'], ['₹', '₹ rupee']];
+  setPanel($('tpService'), E.SERVICES.map(function (s) { return [s.id, s.label]; }), st.svc);
+  setPanel($('tpRound'), ROUNDS, 'none'); setPanel($('tpSym'), SYMS, '$');
+  $('tpPct').value = String(svc().def); buildChips(); buildRows(); showMode(); render();
+};
+
+/* =========================================================
    UNIT CONVERTER — one engine for every converter page (hub + length, weight, volume, temperature, area, speed,
    data storage, cooking, px/rem). Pure (no DOM). Every factor is an exact international definition
    (BIPM SI brochure, NIST Handbook 44 / Special Publication 811, IEC 80000-13 for data units).

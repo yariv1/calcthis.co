@@ -1,0 +1,688 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tip Calculator — Split the Bill, Tip on Tax or Total</title>
+<meta name="description" content="Tip calculator: enter the bill, pick a tip % and see the tip, total and each person’s share. $86.40 at 18% is $15.55. Split evenly or by order.">
+<link rel="canonical" href="https://calcthis.co/tip-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Tip Calculator — Split the Bill, Tip on Tax or Total">
+<meta property="og:description" content="Tip calculator: enter the bill, pick a tip % and see the tip, total and each person’s share. $86.40 at 18% is $15.55. Split evenly or by order.">
+<meta property="og:url" content="https://calcthis.co/tip-calculator/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<meta name="theme-color" content="#B5761F">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css?v=261">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Tip Calculator",
+  "url": "https://calcthis.co/tip-calculator/",
+  "applicationCategory": "FinanceApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "Tip calculator: tip, total and each person’s share from the bill and a tip percentage. Tip before or after tax, round up, split evenly or by what each person ordered, or find the percentage you tipped.",
+  "dateModified": "2026-10-31",
+  "inLanguage": "en-US",
+  "isAccessibleForFree": true,
+  "applicationSubCategory": "Tip calculator",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "CalcThis",
+    "url": "https://calcthis.co/"
+  },
+  "featureList": [
+    "Tip, total and per-person share",
+    "Tip on the total or before tax",
+    "Round the tip or total up and see the real percentage",
+    "Split evenly (pennies handled) or by what each person ordered",
+    "The tip at every common percentage",
+    "What percent did I tip?"
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How much should I tip at a restaurant?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "In the U.S. a tip of 15% to 20% of the bill is typical at restaurants and bars. On a $86.40 bill that is $12.96 at 15%, $15.55 at 18% and $17.28 at 20%. Tipping is voluntary and customs differ by country; the calculator shows the tip at every common percentage at once."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I calculate a 15% tip in my head?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Work out 10% by moving the decimal point one place to the left, then add half of that. For a $86.40 bill, 10% is $8.64, half of that is $4.32, so 15% is about $12.96."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I calculate a 20% tip in my head?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Work out 10% and double it. On $86.40, 10% is $8.64, so 20% is $17.28. For 18%, take 20% and subtract a tenth of it ($17.28 minus $1.73) to get about $15.55."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do you tip on the total with tax or before tax?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Both are common. Tipping on the pre-tax amount is the traditional way; tipping on the total is simpler and a little more generous. On a $108.00 bill that includes $8.00 of tax, a 20% tip is $20.00 before tax and $21.60 on the total — $1.60 more. Enter the tax under Go advanced and the calculator shows both side by side."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I split a bill and the tip between people?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Add the tip to the bill and divide by the number of people. A $86.40 bill with an 18% tip is $101.95, so four people pay $25.49 each. When the total does not divide into whole cents the shares differ by a cent — here three people pay $25.49 and one pays $25.48 — and the calculator makes them add up exactly. To split by what each person ordered, tick “Split unevenly” under Go advanced: on a $100.00 bill with a 20% tip, a person who ordered $32.00 of $100.00 pays $38.40."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I find out what percent I tipped?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Switch the calculator to “What % did I tip?”, enter the bill and the total you paid. If the bill was $86.40 and you paid $102.00, the tip was $15.60, which is 18.06% of the bill."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Should I round the tip up?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Rounding up is a common shortcut. An 18% tip on $86.40 is $15.55; rounded up to a whole dollar it is $16.00, which is really 18.52%. Rounding the whole total up to $102.00 gives a $15.60 tip (18.06%). The calculator always rounds up and shows the real percentage you end up tipping."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How much do I tip for delivery, a haircut or a taxi?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The table above lists typical amounts for the common services. Delivery, hairstylists, barbers, massage and taxi drivers are usually 10% to 20%; hotel housekeeping, shuttle drivers and tour guides are usually a few dollars. These are customs, not rules, and they vary by country and place."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "CalcThis",
+      "item": "https://calcthis.co/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Tip Calculator",
+      "item": "https://calcthis.co/tip-calculator/"
+    }
+  ]
+}
+</script>
+<meta property="og:site_name" content="CalcThis">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://calcthis.co/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="CalcThis — free, purpose-built calculators">
+<meta name="twitter:title" content="Tip Calculator — Split the Bill, Tip on Tax or Total">
+<meta name="twitter:description" content="Tip calculator: enter the bill, pick a tip % and see the tip, total and each person’s share. $86.40 at 18% is $15.55. Split evenly or by order.">
+<meta name="twitter:image" content="https://calcthis.co/assets/og-default.png">
+</head>
+<body class="p-loan p-stax p-tip">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <a class="hdr-back" href="/blog/" aria-label="Back to blog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-search"><div class="menu-sx"><input id="menuSearch" type="search" placeholder="Search calculators or states…" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Search calculators" enterkeyhint="search"></div><div class="menu-results" id="menuResults" hidden></div></div>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <span class="menu-col-head">Construction &amp; Gardening</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+          <a href="/paint-calculator/">Paint</a>
+          <a href="/wallpaper-calculator/">Wallpaper</a>
+          <a href="/square-footage-calculator/">Square Footage</a>
+          <a href="/tape-measure-fraction-calculator/">Tape Measure Fraction</a>
+          <a href="/stair-calculator/">Stair</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/vo2-max-calculator/">VO2 Max</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
+          <a href="/bmi-calculator/">BMI</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/ideal-weight-calculator/">Ideal Weight</a>
+          <a href="/lean-body-mass-calculator/">Lean Body Mass</a>
+          <a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio</a>
+          <a href="/calorie-calculator/">Calorie</a>
+          <a href="/bmr-calculator/">BMR</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/water-intake-calculator/">Water Intake</a>
+          <a href="/macro-calculator/">Macro</a>
+          <a href="/protein-intake-calculator/">Protein Intake</a>
+          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
+          <a href="/steps-to-miles-calculator/">Steps to Miles</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+          <a href="/grade-curve-calculator/">Grade Curve</a>
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/fraction-calculator/">Fraction</a>
+          <a href="/standard-deviation-calculator/">Standard Deviation</a>
+          <a href="/scientific-notation-calculator/">Scientific Notation</a>
+          <a href="/weighted-average-calculator/">Weighted Average</a>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+          <a href="/age-calculator/">Age</a>
+          <a href="/date-calculator/">Date</a>
+          <a href="/time-calculator/">Time</a>
+          <a href="/hours-calculator/">Hours</a>
+          <a href="/triangle-calculator/">Triangle</a>
+          <a href="/random-number-generator/">Random Number</a>
+          <span class="menu-col-head">Cooking &amp; Kitchen</span>
+          <a href="/recipe-converter/">Recipe Converter</a>
+          <a href="/turkey-cooking-time-calculator/">Turkey Cooking Time</a>
+          <a href="/turkey-thawing-time-calculator/">Turkey Thawing Time</a>
+          <a href="/turkey-size-calculator/">Turkey Size</a>
+          <!--UNITNAV:START-->
+          <span class="menu-col-head">Unit Converters</span>
+          <a href="/unit-converter/">Unit Converter</a>
+          <a href="/length-converter/">Length Converter</a>
+          <a href="/weight-converter/">Weight Converter</a>
+          <a href="/volume-converter/">Volume Converter</a>
+          <a href="/temperature-converter/">Temperature Converter</a>
+          <a href="/area-converter/">Area Converter</a>
+          <a href="/speed-converter/">Speed Converter</a>
+          <a href="/data-storage-converter/">Data Storage Converter</a>
+          <a href="/cooking-converter/">Cooking Converter</a>
+          <a href="/px-to-rem-converter/">PX to REM Converter</a>
+          <!--UNITNAV:END-->
+          <span class="menu-col-head">Money &amp; Finance</span>
+          <a href="/mortgage-calculator/">Mortgage</a>
+          <a href="/loan-calculator/">Loan</a>
+          <a href="/auto-loan-calculator/">Auto Loan</a>
+          <!--STAXNAV:START-->
+          <a href="/sales-tax-calculator/">Sales Tax</a>
+          <a href="/sales-tax-calculator/california/">California Sales Tax</a>
+          <a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax</a>
+          <a href="/sales-tax-calculator/missouri/">Missouri Sales Tax</a>
+          <a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax</a>
+          <a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax</a>
+          <a href="/sales-tax-calculator/ohio/">Ohio Sales Tax</a>
+          <a href="/sales-tax-calculator/texas/">Texas Sales Tax</a>
+          <!--STAXNAV:END-->
+          <a href="/tip-calculator/" class="current">Tip</a>
+        </div>
+        <!--PAYNAV:START-->
+        <div class="menu-col">
+          <span class="menu-col-head">Paycheck Calculators</span>
+          <a href="/paycheck-calculator/">Paycheck Calculator (all states)</a>
+          <a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a>
+          <a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a>
+          <a href="/paycheck-calculator/california/">California Paycheck Calculator</a>
+          <a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a>
+          <a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a>
+          <a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a>
+          <a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a>
+          <a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a>
+          <a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a>
+          <a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a>
+          <a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a>
+          <a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a>
+          <a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a>
+          <a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a>
+          <a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a>
+        </div>
+        <!--PAYNAV:END-->
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">Tip calculator · split the bill</div>
+    <h1>Tip Calculator</h1>
+    <p>Enter the bill, pick a <strong>tip %</strong> and see the tip, the total and what each person pays. A <strong>$86.40</strong> bill at 18% is <strong>$15.55</strong> of tip and <strong>$101.95</strong> in total — <strong>$25.49</strong> each between four.</p>
+  </section>
+
+  <div class="grid">
+    <div class="card">
+      <div class="card-pad">
+        <h2 class="card-h2">Your bill</h2>
+
+        <div class="modeseg" id="tpModeSeg" role="group" aria-label="What to calculate">
+          <button class="on" type="button" data-v="tip">Tip &amp; split</button>
+          <button type="button" data-v="rev">What % did I tip?</button>
+        </div>
+
+        <div class="fld"><label class="lab" for="tpBill" id="tpBillLab">Bill, tax included <span class="unit tp-symlab">$</span></label><div class="inp"><input id="tpBill" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 86.40"></div></div>
+
+        <div id="tpRevBox" style="display:none">
+          <div class="fld"><label class="lab" for="tpPaid">Total you paid, tip included <span class="unit"><span class="tp-symlab">$</span></span></label><div class="inp"><input id="tpPaid" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 102"></div></div>
+        </div>
+
+        <div class="fld"><span class="lab">What are you tipping?</span><div class="csel" id="tpService" data-value=""><button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false"><span class="csel-val"></span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="csel-panel" role="listbox"></div></div></div>
+
+        <div id="tpTipBox">
+          <div class="fld"><label class="lab" for="tpPct">Tip <span class="unit">%</span></label><div class="inp"><input id="tpPct" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 18"></div></div>
+          <div class="chips" id="tpPctChips" aria-label="Common tip percentages" style="margin-top:-6px;margin-bottom:6px"></div>
+          <p class="st-note" id="tpRange" style="margin-top:8px"></p>
+
+          <div id="tpPeopleFld">
+            <div class="fld"><label class="lab" for="tpPeople">Number of people <span class="unit">to split between</span></label><div class="inp"><input id="tpPeople" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 4"></div></div>
+            <div class="chips" id="tpPeopleChips" aria-label="Number of people" style="margin-top:-6px;margin-bottom:15px">
+              <button type="button" data-n="1">1</button><button type="button" data-n="2">2</button><button type="button" data-n="3">3</button><button type="button" data-n="4">4</button><button type="button" data-n="5">5</button><button type="button" data-n="6">6</button>
+            </div>
+          </div>
+
+          <div id="tpUnevenBox" style="display:none">
+            <div id="tpRows"></div>
+            <div class="st-addwrap"><button type="button" class="st-add" id="tpAddRow">+ Add another person</button></div>
+          </div>
+        </div>
+
+        <p class="add-note ln-hint" id="tpHint" style="display:none"></p>
+
+        <div class="chips" aria-label="Try an example">
+          <button type="button" id="tpEx">See an example: $86.40 bill, 18% tip, 4 people</button>
+        </div>
+
+        <div id="tpAdvIn" style="display:none">
+          <div class="proj-sep"></div>
+          <div class="fld"><label class="lab" for="tpTax">Tax included in the bill <span class="unit"><span class="tp-symlab">$</span> optional</span></label><div class="inp"><input id="tpTax" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 7.35"></div></div>
+          <div class="fld"><span class="lab">Tip on</span>
+            <div class="modeseg" id="tpBaseSeg" role="group" aria-label="What the tip is based on"><button class="on" type="button" data-v="total">The total bill</button><button type="button" data-v="pre">Before tax</button></div>
+          </div>
+          <div class="fld"><span class="lab">Rounding</span><div class="csel" id="tpRound" data-value=""><button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false"><span class="csel-val"></span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="csel-panel" role="listbox"></div></div></div>
+          <label class="dc-check" for="tpUneven"><input type="checkbox" id="tpUneven"><span>Split unevenly, by what each person ordered</span></label>
+          <div class="fld"><span class="lab">Currency symbol</span><div class="csel" id="tpSym" data-value=""><button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false"><span class="csel-val"></span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="csel-panel" role="listbox"></div></div></div>
+        </div>
+
+        <div class="add-row split" style="margin-top:16px">
+          <span></span>
+          <button class="advbtn" id="tpAdvBtn" type="button">
+            <span id="tpAdvBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-pad">
+        <div class="ln-res">
+          <div class="res-lab" id="tpResLab">Total with tip</div>
+          <div class="res-big" id="tpBig">—</div>
+          <div class="res-sub" id="tpSub">Enter the bill to see the tip.</div>
+        </div>
+
+        <div id="tpResults" style="display:none">
+          <p class="res-tip adv-tip" id="tpTip"></p>
+          <div class="fc-grp">Where your money goes</div>
+          <div id="tpBar"></div>
+          <div class="ln-leg" id="tpBarLeg"></div>
+          <table class="dtable ln-terms" id="tpTable"></table>
+          <div id="tpExtra"></div>
+          <div id="tpCopyWrap" style="display:none"><button class="btn" id="tpCopy" type="button" style="margin-top:6px">Copy results</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- mobile sticky bar -->
+  <div class="mbar" id="mbar">
+    <span class="mbar-lab" id="tpMLab">Total with tip</span>
+    <div class="mbar-vals"><b id="tpMVal">—</b><span id="tpMDec"></span></div>
+  </div>
+
+  <div class="related-calcs">
+    <p class="related-calcs-h">More calculators that may interest you</p>
+    <div class="pills">
+      <a class="pill" href="/percentage-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 5L5 19"/><circle cx="7" cy="7" r="2.5"/><circle cx="17" cy="17" r="2.5"/></svg>
+        Percentage Calculator
+      </a>
+      <a class="pill" href="/sales-tax-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="4" width="12" height="16" rx="2"/><path d="M9 15l6-6"/></svg>
+        Sales Tax Calculator
+      </a>
+      <a class="pill" href="/ratio-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14M5 16h14"/></svg>
+        Ratio Calculator
+      </a>
+      <a class="pill" href="/paycheck-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="18" height="11" rx="2"/><circle cx="12" cy="12.5" r="2.5"/></svg>
+        Paycheck Calculator
+      </a>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to calculate a tip</h2>
+        <p>Multiply the bill by the tip percentage, then add the result to the bill. A 20% tip on $86.40 is $17.28, so the total is $103.68.</p>
+        <div class="formula">
+          Tip = bill × tip % ÷ 100
+          <small>TOTAL = BILL + TIP</small>
+        </div>
+        <p>In your head: 10% is the bill with the decimal point moved one place left ($8.64 on $86.40). 15% is 10% plus half of it ($12.96). 20% is 10% doubled ($17.28). 25% is a quarter of the bill ($21.60).</p>
+        <h2>Tip chart: 15%, 18%, 20% and 25%</h2>
+        <div class="pc-tblwrap"><table class="dtable"><thead><tr><th>Bill</th><th>15% tip</th><th>18% tip</th><th>20% tip</th><th>25% tip</th></tr></thead><tbody><tr><td>$10</td><td>$1.50</td><td>$1.80</td><td>$2.00</td><td>$2.50</td></tr><tr><td>$20</td><td>$3.00</td><td>$3.60</td><td>$4.00</td><td>$5.00</td></tr><tr><td>$30</td><td>$4.50</td><td>$5.40</td><td>$6.00</td><td>$7.50</td></tr><tr><td>$40</td><td>$6.00</td><td>$7.20</td><td>$8.00</td><td>$10.00</td></tr><tr><td>$50</td><td>$7.50</td><td>$9.00</td><td>$10.00</td><td>$12.50</td></tr><tr><td>$60</td><td>$9.00</td><td>$10.80</td><td>$12.00</td><td>$15.00</td></tr><tr><td>$75</td><td>$11.25</td><td>$13.50</td><td>$15.00</td><td>$18.75</td></tr><tr><td>$100</td><td>$15.00</td><td>$18.00</td><td>$20.00</td><td>$25.00</td></tr><tr><td>$150</td><td>$22.50</td><td>$27.00</td><td>$30.00</td><td>$37.50</td></tr><tr><td>$200</td><td>$30.00</td><td>$36.00</td><td>$40.00</td><td>$50.00</td></tr></tbody></table></div>
+        <p>Tips are rounded to the cent. Add the tip to the bill for the total.</p>
+        <h2>Tip before tax or on the total?</h2>
+        <p>Both are common. Tipping on the pre-tax amount is the traditional way; tipping on the total is simpler and a little more generous. On a $108.00 bill that includes $8.00 of tax, a 20% tip is <strong>$20.00</strong> before tax and <strong>$21.60</strong> on the total. Under <strong>Go advanced</strong> enter the tax and the calculator shows both.</p>
+        <h2>Splitting the bill</h2>
+        <p>Choose the number of people and the calculator divides the total, including the tip, and shows what each person pays. When the total does not divide into whole cents the shares differ by a cent, and they always add up exactly: $101.95 between four is $25.49, $25.49, $25.49 and $25.48.</p>
+        <p>To split by what each person ordered, tick <strong>Split unevenly</strong> under Go advanced and enter each person’s amount. Everyone pays their share of the bill and the tip: $32.00 of a $100.00 bill with a 20% tip is $38.40.</p>
+      </div>
+      <div>
+        <h2>How much to tip by service</h2>
+        <div class="pc-tblwrap"><table class="dtable st-cattbl"><thead><tr><th>Service</th><th>Typical tip</th></tr></thead><tbody><tr><td>Restaurants and bartenders</td><td>15%–20%</td></tr><tr><td>Food delivery</td><td>15%–20%, depending on distance and order size</td></tr><tr><td>Hotel room service</td><td>Usually already in the price; if not, 15%–20%</td></tr><tr><td>Hotel housekeeping</td><td>Not expected; $1–$2 per person per night</td></tr><tr><td>Hairstylists, barbers and nail services</td><td>10%–20%</td></tr><tr><td>Massage</td><td>10%–20%</td></tr><tr><td>Taxi or limo drivers</td><td>15%–20%</td></tr><tr><td>Shuttle drivers and parking attendants</td><td>$1–$3</td></tr><tr><td>Tour guides</td><td>$1–$5, depending on the length of the tour</td></tr><tr><td>Movers and furniture or appliance delivery</td><td>Not expected; or $5, $10 or $20 each</td></tr><tr><td>Plumbers, cleaners and other home services</td><td>Not expected; or $5, $10 or $20 each</td></tr></tbody></table></div>
+        <p class="st-src">Typical amounts for the U.S. and Canada as listed by <a href="https://www.calculator.net/tip-calculator.html" rel="noopener">Calculator.net</a> (read October 31, 2026). Tipping is voluntary and customs vary by country, place and service; some restaurants add a service charge to the bill.</p>
+        <h2>What percent did I tip?</h2>
+        <p>Switch to <strong>What % did I tip?</strong>, enter the bill and the total you paid. A $86.40 bill paid with $102.00 means a $15.60 tip, or 18.06%.</p>
+        <h2>Rounding the tip</h2>
+        <p>Under Go advanced you can round the tip, the total or each person’s share <strong>up</strong> to a whole dollar. The calculator shows the real percentage you end up tipping: an 18% tip on $86.40 ($15.55) rounded up to $16.00 is 18.52%.</p>
+        <h2>Use the calculator</h2>
+        <p>Type the bill with tax included, pick what you are tipping for to see the usual range, choose a tip % and the number of people. The tip at every common percentage is listed below the result, so you can compare 15%, 18%, 20% and 25% without retyping. Under <strong>Go advanced</strong> you can enter the tax, tip before or after it, round up, split unevenly or change the currency symbol.</p>
+        <p>This is a calculator, not advice on what to tip: tipping customs are not rules.</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions about tipping</h2>
+    <details class="faq"><summary>How much should I tip at a restaurant?</summary><p>In the U.S. a tip of 15% to 20% of the bill is typical at restaurants and bars. On a $86.40 bill that is $12.96 at 15%, $15.55 at 18% and $17.28 at 20%. Tipping is voluntary and customs differ by country; the calculator shows the tip at every common percentage at once.</p></details>
+    <details class="faq"><summary>How do I calculate a 15% tip in my head?</summary><p>Work out 10% by moving the decimal point one place to the left, then add half of that. For a $86.40 bill, 10% is $8.64, half of that is $4.32, so 15% is about $12.96.</p></details>
+    <details class="faq"><summary>How do I calculate a 20% tip in my head?</summary><p>Work out 10% and double it. On $86.40, 10% is $8.64, so 20% is $17.28. For 18%, take 20% and subtract a tenth of it ($17.28 minus $1.73) to get about $15.55.</p></details>
+    <details class="faq"><summary>Do you tip on the total with tax or before tax?</summary><p>Both are common. Tipping on the pre-tax amount is the traditional way; tipping on the total is simpler and a little more generous. On a $108.00 bill that includes $8.00 of tax, a 20% tip is $20.00 before tax and $21.60 on the total — $1.60 more. Enter the tax under Go advanced and the calculator shows both side by side.</p></details>
+    <details class="faq"><summary>How do I split a bill and the tip between people?</summary><p>Add the tip to the bill and divide by the number of people. A $86.40 bill with an 18% tip is $101.95, so four people pay $25.49 each. When the total does not divide into whole cents the shares differ by a cent — here three people pay $25.49 and one pays $25.48 — and the calculator makes them add up exactly. To split by what each person ordered, tick “Split unevenly” under Go advanced: on a $100.00 bill with a 20% tip, a person who ordered $32.00 of $100.00 pays $38.40.</p></details>
+    <details class="faq"><summary>How do I find out what percent I tipped?</summary><p>Switch the calculator to “What % did I tip?”, enter the bill and the total you paid. If the bill was $86.40 and you paid $102.00, the tip was $15.60, which is 18.06% of the bill.</p></details>
+    <details class="faq"><summary>Should I round the tip up?</summary><p>Rounding up is a common shortcut. An 18% tip on $86.40 is $15.55; rounded up to a whole dollar it is $16.00, which is really 18.52%. Rounding the whole total up to $102.00 gives a $15.60 tip (18.06%). The calculator always rounds up and shows the real percentage you end up tipping.</p></details>
+    <details class="faq"><summary>How much do I tip for delivery, a haircut or a taxi?</summary><p>The table above lists typical amounts for the common services. Delivery, hairstylists, barbers, massage and taxi drivers are usually 10% to 20%; hotel housekeeping, shuttle drivers and tour guides are usually a few dollars. These are customs, not rules, and they vary by country and place.</p></details>
+  </section>
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+      <div class="footer-stack">
+<div class="footer-col" style="order:1">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+          <li><a href="/paint-calculator/">Paint Calculator</a></li>
+          <li><a href="/wallpaper-calculator/">Wallpaper Calculator</a></li>
+          <li><a href="/square-footage-calculator/">Square Footage Calculator</a></li>
+          <li><a href="/tape-measure-fraction-calculator/">Tape Measure Fraction Calculator</a></li>
+          <li><a href="/stair-calculator/">Stair Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:5">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Cooking &amp;</span> <span class="ft2">Kitchen</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/recipe-converter/">Recipe Converter</a></li>
+          <li><a href="/turkey-cooking-time-calculator/">Turkey Cooking Time Calculator</a></li>
+          <li><a href="/turkey-thawing-time-calculator/">Turkey Thawing Time Calculator</a></li>
+          <li><a href="/turkey-size-calculator/">Turkey Size Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:6">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Money &amp;</span> <span class="ft2">Finance</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/mortgage-calculator/">Mortgage Calculator</a></li>
+          <li><a href="/loan-calculator/">Loan Calculator</a></li>
+          <li><a href="/auto-loan-calculator/">Auto Loan Calculator</a></li>
+          <!--STAXFOOT:START-->
+          <li><a href="/sales-tax-calculator/">Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/california/">California Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/missouri/">Missouri Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/ohio/">Ohio Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/texas/">Texas Sales Tax Calculator</a></li>
+          <!--STAXFOOT:END-->
+          <li><a href="/tip-calculator/">Tip Calculator</a></li>
+        </ul>
+      </div>
+      </div>
+
+      <div class="footer-right">
+<div class="footer-col footer-col--two" style="order:2">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/vo2-max-calculator/">VO2 Max Calculator</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/bmi-calculator/">BMI Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/ideal-weight-calculator/">Ideal Weight Calculator</a></li>
+          <li><a href="/lean-body-mass-calculator/">Lean Body Mass Calculator</a></li>
+          <li><a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio Calculator</a></li>
+          <li><a href="/calorie-calculator/">Calorie Calculator</a></li>
+          <li><a href="/bmr-calculator/">BMR Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/water-intake-calculator/">Water Intake Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/protein-intake-calculator/">Protein Intake Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
+          <li><a href="/steps-to-miles-calculator/">Steps to Miles Calculator</a></li>
+        </ul>
+      </div>
+
+        <div class="footer-sub">
+<div class="footer-subcol">
+<div class="footer-col" style="order:3">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+          <li><a href="/grade-curve-calculator/">Grade Curve Calculator</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:START-->
+<div class="footer-col" style="order:7">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Unit</span> <span class="ft2">Converters</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/unit-converter/">Unit Converter</a></li>
+          <li><a href="/length-converter/">Length Converter</a></li>
+          <li><a href="/weight-converter/">Weight Converter</a></li>
+          <li><a href="/volume-converter/">Volume Converter</a></li>
+          <li><a href="/temperature-converter/">Temperature Converter</a></li>
+          <li><a href="/area-converter/">Area Converter</a></li>
+          <li><a href="/speed-converter/">Speed Converter</a></li>
+          <li><a href="/data-storage-converter/">Data Storage Converter</a></li>
+          <li><a href="/cooking-converter/">Cooking Measurement Converter</a></li>
+          <li><a href="/px-to-rem-converter/">PX to REM Converter</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:END-->
+</div>
+
+<div class="footer-col" style="order:4">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/fraction-calculator/">Fraction Calculator</a></li>
+          <li><a href="/standard-deviation-calculator/">Standard Deviation Calculator</a></li>
+          <li><a href="/scientific-notation-calculator/">Scientific Notation Calculator</a></li>
+          <li><a href="/weighted-average-calculator/">Weighted Average Calculator</a></li>
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+          <li><a href="/age-calculator/">Age Calculator</a></li>
+          <li><a href="/date-calculator/">Date Calculator</a></li>
+          <li><a href="/time-calculator/">Time Calculator</a></li>
+          <li><a href="/hours-calculator/">Hours Calculator</a></li>
+          <li><a href="/triangle-calculator/">Triangle Calculator</a></li>
+          <li><a href="/random-number-generator/">Random Number Generator</a></li>
+        </ul>
+      </div>
+        </div>
+      </div>
+
+      <!--PAYFOOT:START-->
+      <div class="footer-col footer-col--wide">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Paycheck</span> <span class="ft2">Calculators</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/paycheck-calculator/">Paycheck Calculator (all states)</a></li>
+          <li><a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/california/">California Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a></li>
+        </ul>
+      </div>
+      <!--PAYFOOT:END-->
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/blog/">Blog</a>
+      <span aria-hidden="true">·</span>
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+</div>
+
+<script src="/assets/app.js?v=261"></script>
+<script>CalcThis.initTipCalc();</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>

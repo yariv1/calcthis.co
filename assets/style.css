@@ -2441,3 +2441,10 @@
   .p-rng .rg-steps{margin:0 0 6px;padding-left:20px;line-height:1.7}
   .p-rng .rg-list{margin:0 0 6px;padding-left:20px;line-height:1.7}
   @media (prefers-reduced-motion:reduce){.p-rng #rgWheel{transition:none!important}}
+
+/* =========================================================
+   FINANCE · TIP CALCULATOR  (body.p-loan p-stax p-tip) — reuses .p-loan/.p-stax look: .modeseg, .chips, .csel, .dtable,
+   .st-note / .st-rm / .st-add (rows), .dc-check, .adv-tip, .mbar. Only what differs is below. */
+  .p-tip .modeseg{grid-template-columns:repeat(2,1fr)}
+  .p-tip #tpBaseSeg{margin-bottom:0}
+  .p-tip .ln-terms td small{white-space:nowrap}

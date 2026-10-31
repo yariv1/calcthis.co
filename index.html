@@ -92,6 +92,7 @@
         { "@type": "WebApplication", "name": "Auto Loan Calculator", "url": "https://calcthis.co/auto-loan-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Paycheck Calculator", "url": "https://calcthis.co/paycheck-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Sales Tax Calculator", "url": "https://calcthis.co/sales-tax-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
+        { "@type": "WebApplication", "name": "Tip Calculator", "url": "https://calcthis.co/tip-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Unit Converter", "url": "https://calcthis.co/unit-converter/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Triangle Calculator", "url": "https://calcthis.co/triangle-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Random Number Generator", "url": "https://calcthis.co/random-number-generator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
@@ -104,7 +105,7 @@
   ]
 }
 </script>
-<link rel="stylesheet" href="/assets/style.css?v=259">
+<link rel="stylesheet" href="/assets/style.css?v=261">
 <style>
   .cat-tabs{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
   .cat-grp--hidden{display:none}
@@ -234,6 +235,7 @@
           <a href="/sales-tax-calculator/ohio/">Ohio Sales Tax</a>
           <a href="/sales-tax-calculator/texas/">Texas Sales Tax</a>
           <!--STAXNAV:END-->
+          <a href="/tip-calculator/">Tip</a>
         </div>
         <!--PAYNAV:START-->
         <div class="menu-col">
@@ -1243,6 +1245,20 @@
       </span>
     </a>
 
+    <a class="calc" href="/tip-calculator/">
+      <span class="ico" aria-hidden="true">
+        <svg width="30" height="30" viewBox="0 0 32 32" fill="none">
+          <circle cx="16" cy="16" r="11" fill="#EFE7D8" stroke="#8F5C13" stroke-width="1.4"/>
+          <path d="M16 9v14M19.5 12.5c-.7-1-1.9-1.5-3.5-1.5-1.9 0-3.1.9-3.1 2.3 0 3.3 6.8 1.6 6.8 5 0 1.4-1.3 2.4-3.3 2.4-1.7 0-2.9-.6-3.7-1.7" stroke="#37503F" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <h3>Tip Calculator</h3>
+      <p>The tip, the total and each person’s share from the bill and a tip %. See every common percentage at once, tip before or after tax, round up and see the real percentage, split evenly or by what each person ordered, or find the percent you tipped.</p>
+      <span class="go">Open calculator
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+    </a>
+
   </div>
   </section>
 
@@ -1415,6 +1431,7 @@
           <li><a href="/auto-loan-calculator/">Auto loan</a><span> — trade-in, tax and fees</span></li>
           <li><a href="/paycheck-calculator/">Paycheck</a><span> — take-home pay after federal and state tax</span></li>
           <li><a href="/sales-tax-calculator/">Sales tax</a><span> — by state, with exempt items and local rates</span></li>
+          <li><a href="/tip-calculator/">Tip</a><span> — split the bill, tip before or after tax</span></li>
         </ul>
       </article>
       <article class="about-cat">
@@ -1499,6 +1516,7 @@
           <li><a href="/sales-tax-calculator/ohio/">Ohio Sales Tax Calculator</a></li>
           <li><a href="/sales-tax-calculator/texas/">Texas Sales Tax Calculator</a></li>
           <!--STAXFOOT:END-->
+          <li><a href="/tip-calculator/">Tip Calculator</a></li>
         </ul>
       </div>
       </div>
@@ -1662,7 +1680,7 @@
   });
 })();
 </script>
-<script src="/assets/app.js?v=259"></script>
+<script src="/assets/app.js?v=261"></script>
 <script src="/feedback.js" defer></script>
 </body>
 </html>
