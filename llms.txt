@@ -165,3 +165,6 @@
 - [Celsius to Kelvin Converter](https://calcthis.co/celsius-to-kelvin/): °C to K, and K to °C, with a thermometer.
 - [Knots to MPH Converter](https://calcthis.co/knots-to-mph/): Knots to miles per hour, and mph to knots.
 - [Cups to Tablespoons Converter](https://calcthis.co/cups-to-tablespoons/): Cups to tablespoons, and tablespoons to cups.
+- [Tablespoons to Teaspoons Converter](https://calcthis.co/tablespoons-to-teaspoons/): Tablespoons to teaspoons, and teaspoons to tablespoons.
+- [Acres to Square Feet Converter](https://calcthis.co/acres-to-sq-ft/): Acres to square feet, and square feet to acres.
+- [Tablespoons to mL Converter](https://calcthis.co/tablespoons-to-ml/): Tablespoons to milliliters, and mL to tablespoons.

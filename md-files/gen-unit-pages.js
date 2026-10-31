@@ -595,6 +595,42 @@ const PAIRS = [
       ['How many tablespoons are in 3/4 cup?', `3/4 cup = ${val('volume', 'cup', 'tbsp', 0.75)}, and 1/8 cup = ${val('volume', 'cup', 'tbsp', 0.125)}.`],
       ['How do I convert tablespoons to cups?', `Divide by 16. ${say('volume', 'tbsp', 'cup', 2)}, ${say('volume', 'tbsp', 'cup', 8)} and ${say('volume', 'tbsp', 'cup', 12)}.`],
       ['How many teaspoons are in a tablespoon?', `${say('volume', 'tbsp', 'tsp', 1)}, so a cup is ${say('volume', 'cup', 'tsp', 1)}.`]
+    ] },
+  { slug: 'tablespoons-to-teaspoons', cat: 'volume', a: 'tbsp', b: 'tsp', ex: 2, vals: [1, 1.5, 2, 3, 4], rvals: [1, 2, 3, 6, 12],
+    h1: 'Tablespoons to Teaspoons Converter', link: 'tablespoons to teaspoons', title: 'Tablespoons to Teaspoons Converter — Tbsp to Tsp (and Tsp to Tbsp) | CalcThis',
+    eyebrow: 'Tablespoons to teaspoons, and teaspoons to tablespoons', sib: ['cups-to-tablespoons', 'tablespoons-to-ml', 'cups-to-grams'],
+    formula: '<div class="formula">teaspoons = tablespoons × 3<small>TABLESPOONS = TEASPOONS ÷ 3 · 1 TBSP = 3 TSP = 1/2 FL OZ (US)</small></div>',
+    steps: () => `<p>In US measures a tablespoon is exactly 3 teaspoons, so multiply tablespoons by 3: ${say('volume', 'tbsp', 'tsp', 2)}. Half a tablespoon is 1.5 teaspoons.</p><p>To go the other way divide teaspoons by 3: ${say('volume', 'tsp', 'tbsp', 12)}. Australian tablespoons are 20 mL and hold 4 teaspoons — see the <a href="/cooking-converter/">cooking converter</a> for that standard.</p>`,
+    faqs: () => [
+      ['How many teaspoons are in a tablespoon?', `${say('volume', 'tbsp', 'tsp', 1)} in the US, UK and Canada. In Australia a tablespoon is 20 mL, which is 4 teaspoons.`],
+      ['How many teaspoons are in 1.5, 2 and 3 tablespoons?', `${say('volume', 'tbsp', 'tsp', 1.5)}, ${say('volume', 'tbsp', 'tsp', 2)} and ${say('volume', 'tbsp', 'tsp', 3)}.`],
+      ['How do I convert teaspoons to tablespoons?', `Divide by 3. ${say('volume', 'tsp', 'tbsp', 1)}, ${say('volume', 'tsp', 'tbsp', 6)} and ${say('volume', 'tsp', 'tbsp', 12)}.`],
+      ['How many mL are a teaspoon and a tablespoon?', `A US teaspoon is ${val('volume', 'tsp', 'ml', 1)} and a tablespoon ${val('volume', 'tbsp', 'ml', 1)} (often rounded to 5 and 15 mL).`],
+      ['How many tablespoons are in a cup?', `${say('volume', 'cup', 'tbsp', 1)}, so a cup is ${say('volume', 'cup', 'tsp', 1)}.`]
+    ] },
+  { slug: 'acres-to-sq-ft', cat: 'area', a: 'ac', b: 'ft2', ex: 0.25, vals: [0.25, 0.26, 0.27, 0.28, 0.29, 0.3, 0.33], rvals: [1000, 5000, 10000, 43560, 100000],
+    h1: 'Acres to Square Feet Converter', link: 'acres to square feet', title: 'Acres to Square Feet Converter — Acres to Sq Ft (and Sq Ft to Acres) | CalcThis',
+    eyebrow: 'Acres to square feet, and square feet to acres', sib: ['feet-to-inches', 'yards-to-meters', 'tablespoons-to-ml'],
+    formula: '<div class="formula">square feet = acres × 43,560<small>ACRES = SQ FT ÷ 43,560 · 1 ACRE = 4,046.8564 M² · 1 HECTARE = 2.4710538 ACRES</small></div>',
+    steps: () => `<p>An acre is exactly 43,560 square feet, so multiply acres by 43,560: ${say('area', 'ac', 'ft2', 0.25)} for a quarter acre. A typical suburban lot of 0.25 to 0.33 acre is 10,890 to 14,375 square feet.</p><p>To go the other way divide square feet by 43,560: ${say('area', 'ft2', 'ac', 10000)}. Under the answer the converter also lists square meters, hectares and square miles.</p>`,
+    faqs: () => [
+      ['How many square feet are in an acre?', `${say('area', 'ac', 'ft2', 1)}, which is ${val('area', 'ac', 'm2', 1)}.`],
+      ['How many square feet are in a quarter acre?', `${say('area', 'ac', 'ft2', 0.25)}. A third of an acre (0.33 ac) is ${val('area', 'ac', 'ft2', 0.33)} and half an acre (0.5 ac) is ${val('area', 'ac', 'ft2', 0.5)}.`],
+      ['How do I convert square feet to acres?', `Divide by 43,560. ${say('area', 'ft2', 'ac', 10000)}, ${say('area', 'ft2', 'ac', 43560)} and ${say('area', 'ft2', 'ac', 100000)}.`],
+      ['How big is an acre as a square?', `About 208.7 feet on each side (the square root of 43,560 sq ft), or ${val('area', 'ac', 'm2', 1)}.`],
+      ['How many acres are in a hectare?', `${say('area', 'ha', 'ac', 1)}, and a square mile is ${val('area', 'mi2', 'ac', 1)}.`]
+    ] },
+  { slug: 'tablespoons-to-ml', cat: 'volume', a: 'tbsp', b: 'ml', ex: 2, vals: [1, 1.5, 2, 3, 4, 5, 6], rvals: [5, 10, 15, 30, 50, 100],
+    h1: 'Tablespoons to mL Converter', link: 'tablespoons to mL', title: 'Tablespoons to mL Converter — Tbsp to Milliliters (and mL to Tbsp) | CalcThis',
+    eyebrow: 'Tablespoons to milliliters, and mL to tablespoons', sib: ['tablespoons-to-teaspoons', 'ml-to-oz', 'cups-to-grams'],
+    formula: '<div class="formula">mL = US tablespoons × 14.78676478<small>TBSP = ML ÷ 14.78676478 · 1 TSP = 4.92892159 ML · METRIC TBSP = 15 ML · AUSTRALIAN TBSP = 20 ML</small></div>',
+    steps: () => `<p>A US tablespoon is exactly 14.78676478 mL, which recipes round to 15 mL. Multiply tablespoons by 14.78676: ${say('volume', 'tbsp', 'ml', 2)}. To go the other way divide mL by 14.78676: ${say('volume', 'ml', 'tbsp', 30)}.</p><p>A metric tablespoon is exactly 15 mL and an Australian one is 20 mL, so a 3-tablespoon recipe is 45 mL in the UK and 60 mL in Australia. The <a href="/cooking-converter/">cooking converter</a> lets you pick the standard.</p>`,
+    faqs: () => [
+      ['How many mL are in a tablespoon?', `A US tablespoon is ${val('volume', 'tbsp', 'ml', 1)}, usually rounded to 15 mL. A metric tablespoon is exactly 15 mL and an Australian tablespoon 20 mL.`],
+      ['How many mL are in 2 and 3 tablespoons?', `${say('volume', 'tbsp', 'ml', 2)} and ${say('volume', 'tbsp', 'ml', 3)} in US measures.`],
+      ['How do I convert mL to tablespoons?', `Divide by 14.78676. ${say('volume', 'ml', 'tbsp', 15)}, ${say('volume', 'ml', 'tbsp', 30)} and ${say('volume', 'ml', 'tbsp', 100)}.`],
+      ['How many mL are in a teaspoon?', `${val('volume', 'tsp', 'ml', 1)} (US), usually rounded to 5 mL.`],
+      ['How many tablespoons are in a cup?', `${say('volume', 'cup', 'tbsp', 1)}, which is ${val('volume', 'cup', 'ml', 1)}.`]
     ] }
 ];
 const pairUrl = (p) => '/' + p.slug + '/';
