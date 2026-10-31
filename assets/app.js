@@ -9958,6 +9958,334 @@ CalcThis.initDeficitCalc = function () {
 };
 
 /* =========================================================
+   SEMESTER GRADE CALCULATOR — pure engine (no DOM). Terms (quarters, midterm, final...) with a
+   grade and a weight -> the grade so far, the best and worst the semester can land on, and the
+   score needed on the remaining terms for every letter. Letters convert to the middle of their
+   band in the plus/minus table (calculator.net's scale).
+   ========================================================= */
+/* SEMESTER-ENGINE:START */
+CalcThis.semesterEngine = (function () {
+  var PM = [['A+', 97, 98.5], ['A', 93, 94.5], ['A-', 90, 91], ['B+', 87, 88], ['B', 83, 84.5], ['B-', 80, 81], ['C+', 77, 78], ['C', 73, 74.5], ['C-', 70, 71], ['D+', 67, 68], ['D', 63, 64.5], ['D-', 60, 61], ['F', 0, 29.5]];
+  var STD = [['A', 90], ['B', 80], ['C', 70], ['D', 60], ['F', 0]];
+  /* kind 'std' | 'pm'; custom = { A, B, C, D } cutoffs (numbers or NaN) used with 'std' -> [{ l, min }] best first */
+  function scale(kind, custom) {
+    var out = [], i;
+    if (kind === 'pm') { for (i = 0; i < PM.length; i++) out.push({ l: PM[i][0], min: PM[i][1] }); return out; }
+    for (i = 0; i < STD.length; i++) {
+      var m = STD[i][1], c = custom && custom[STD[i][0]];
+      out.push({ l: STD[i][0], min: (c != null && isFinite(c)) ? c : m });
+    }
+    out.sort(function (a, b) { return b.min - a.min; });
+    return out;
+  }
+  function letterOf(p, sc) { for (var i = 0; i < sc.length; i++) if (p >= sc[i].min - 1e-9) return sc[i].l; return sc[sc.length - 1].l; }
+  function letterMid(tok) {
+    for (var i = 0; i < PM.length; i++) if (PM[i][0] === tok) return PM[i][2];
+    return null;
+  }
+  /* txt -> { blank } | { err } | { v, n } ; mode 'pct' (a number, or a list "88, 92, 75" with the lowest `drop` removed) or 'let' (A+, B-, ...) */
+  function parseGrade(txt, mode, drop) {
+    var t = String(txt == null ? '' : txt).trim();
+    if (!t) return { blank: true };
+    if (mode === 'let') {
+      var L = t.toUpperCase().replace(/[−–—]/g, '-').replace(/\s+/g, '');
+      var v = letterMid(L);
+      return v == null ? { err: t } : { v: v, n: 1 };
+    }
+    var toks = t.replace(/%/g, ' ').split(/[\s,;]+/).filter(function (x) { return x; }), vals = [];
+    for (var i = 0; i < toks.length; i++) {
+      if (!/^\d+(\.\d+)?$|^\.\d+$/.test(toks[i])) return { err: t };
+      vals.push(parseFloat(toks[i]));
+    }
+    if (!vals.length) return { blank: true };
+    vals.sort(function (a, b) { return a - b; });
+    var d = Math.min(Math.max(0, drop | 0), vals.length - 1), kept = vals.slice(d), s = 0;
+    for (i = 0; i < kept.length; i++) s += kept[i];
+    return { v: s / kept.length, n: vals.length, dropped: d };
+  }
+  /* rows = [{ g (percent | NaN when ungraded), w (>0) }] -> totals. ec = extra-credit % points already capped. */
+  function totals(rows, max, ec) {
+    var S = 0, Wg = 0, Wr = 0, ng = 0, nr = 0, i;
+    for (i = 0; i < rows.length; i++) {
+      if (isFinite(rows[i].g)) { S += rows[i].g * rows[i].w; Wg += rows[i].w; ng++; } else { Wr += rows[i].w; nr++; }
+    }
+    var Wt = Wg + Wr;
+    return { S: S, Wg: Wg, Wr: Wr, Wt: Wt, ng: ng, nr: nr, soFar: Wg > 0 ? S / Wg + ec : NaN, zero: Wt > 0 ? S / Wt + ec : NaN, worst: Wt > 0 ? S / Wt + ec : NaN, best: Wt > 0 ? (S + Wr * max) / Wt + ec : NaN, ec: ec };
+  }
+  /* the score needed on the remaining terms (average) to finish on T */
+  function need(tt, T) { return tt.Wr > 0 ? ((T - tt.ec) * tt.Wt - tt.S) / tt.Wr : NaN; }
+  return { PM: PM, STD: STD, scale: scale, letterOf: letterOf, letterMid: letterMid, parseGrade: parseGrade, totals: totals, need: need };
+})();
+/* SEMESTER-ENGINE:END */
+
+/* =========================================================
+   CalcThis.initSemesterCalc() — semester grade. Differentiator vs. Omni, Pearson, calculator.net
+   and CalculatorSoup (all checked live: a bare number, a fixed 3-row form, or a dashboard of
+   text): any number of terms (quarters, midterm, final...) with a grade as % or a letter, the
+   grade so far and the best/worst the semester can end on, every letter's needed score on the
+   remaining terms in one table, a chart of semester grade vs the score on the remaining terms
+   shaded by letter band, and a stacked bar of each term's share coloured by its grade. Go
+   advanced = empty terms as zero, highest possible score, drop-lowest for score lists, extra
+   credit with a cap, custom A-D cutoffs. Engine: CalcThis.semesterEngine. No shared state. */
+CalcThis.initSemesterCalc = function () {
+  var E = CalcThis.semesterEngine;
+  var $ = function (id) { return document.getElementById(id); };
+  var st = { mode: 'pct', scale: 'std', adv: false, zero: false };
+  var PRESETS = {
+    q: [['Quarter 1', '40'], ['Quarter 2', '40'], ['Final exam', '20']],
+    m: [['Midterm', '50'], ['Final exam', '50']],
+    t: [['Term 1', '30'], ['Term 2', '30'], ['Term 3', '40']]
+  };
+  var PH = { q: ['40', '40', '20'], m: ['50', '50'], t: ['30', '30', '40'] };
+  var layout = 'q';
+  var CLS = { A: 'c0', B: 'c2', C: 'c1', D: 'c3', F: 'c5' };
+
+  function art(l) { return /^[AF]/.test(l) ? 'an' : 'a'; }
+  function esc(t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'); }
+  function r1(x) { return String(Math.round(x * 10) / 10); }
+  function num(id) { var v = parseFloat(($(id).value + '').trim()); return isNaN(v) ? NaN : v; }
+  function blank(id) { return !($(id).value + '').trim(); }
+  function setHint(m) { var h = $('smHint'); h.textContent = m || ''; h.style.display = m ? 'block' : 'none'; }
+  function custom() {
+    var c = {}; ['A', 'B', 'C', 'D'].forEach(function (k) { var v = blank('smC' + k) ? NaN : num('smC' + k); if (isFinite(v) && v > 0 && v <= 150) c[k] = v; });
+    return c;
+  }
+  function sc() { return E.scale(st.scale, st.adv ? custom() : null); }
+  function cut(sc0, l) { for (var i = 0; i < sc0.length; i++) if (sc0[i].l === l) return sc0[i].min; return NaN; }
+
+  /* ---------- rows ---------- */
+  function rowHtml(name, ph, grade, weight) {
+    return '<div class="sm-row"><input type="text" class="win sm-name" placeholder="Term" value="' + esc(name || '') + '" aria-label="Term name">' +
+      '<input type="text" inputmode="decimal" class="win sm-g" placeholder="' + (st.mode === 'let' ? 'B+' : '88') + '" value="' + esc(grade || '') + '" aria-label="Grade" autocomplete="off">' +
+      '<input type="number" inputmode="decimal" class="win sm-w" placeholder="' + (ph || '') + '" value="' + esc(weight || '') + '" aria-label="Weight in percent">' +
+      '<button class="x" type="button" aria-label="Remove term">&#215;</button></div>';
+  }
+  function readRows() {
+    return [].map.call($('smRows').children, function (d) { return { name: d.querySelector('.sm-name').value, g: d.querySelector('.sm-g').value, w: d.querySelector('.sm-w').value }; });
+  }
+  function build(items) {
+    var h = '';
+    items.forEach(function (it) { h += rowHtml(it.name, it.ph, it.g, it.w); });
+    $('smRows').innerHTML = h;
+  }
+  function applyPreset(k, weights) {
+    var old = readRows(), items = PRESETS[k].map(function (p, i) { return { name: p[0], ph: PH[k][i], g: old[i] ? old[i].g : '', w: weights ? p[1] : '' }; });
+    layout = k; build(items);
+    [].forEach.call($('smPre').children, function (b) { b.classList.toggle('on', b.getAttribute('data-v') === k); });
+  }
+
+  /* ---------- pictures ---------- */
+  function renderBar(rows, tt, sc0) {
+    var bar = '', key = '';
+    rows.forEach(function (r) {
+      var pc = r.w / tt.Wt * 100, graded = isFinite(r.g), L = graded ? E.letterOf(r.g, sc0) : '', cl = graded ? CLS[L.charAt(0)] : 'rem';
+      bar += '<span class="sm-seg ' + cl + '" style="width:' + pc + '%">' + (pc >= 14 ? (graded ? r1(r.g) : '?') : '') + '</span>';
+      key += '<span><i class="' + cl + '"></i>' + esc(r.name) + ' — ' + r1(pc) + '%' + (graded ? ' · ' + r1(r.g) + '% ' + L : ' · to come') + '</span>';
+    });
+    $('smBar').innerHTML = bar; $('smKey').innerHTML = key;
+  }
+  function renderChart(tt, sc0, max, T, x) {
+    var X0 = 40, X1 = 312, Y0 = 12, Y1 = 148;
+    var lo = Math.max(0, Math.floor((tt.worst - 4) / 5) * 5), hi = Math.min(160, Math.ceil((tt.best + 4) / 5) * 5);
+    if (hi - lo < 10) hi = lo + 10;
+    function px(v) { return X0 + v / max * (X1 - X0); }
+    function py(v) { return Y1 - (Math.min(hi, Math.max(lo, v)) - lo) / (hi - lo) * (Y1 - Y0); }
+    var svg = '', i, cols = { A: '#37503F', B: '#5B7A66', C: '#B5761F', D: '#8F5C13', F: '#A4795A' };
+    for (i = 0; i < sc0.length; i++) {
+      var top = i === 0 ? hi : sc0[i - 1].min, bot = sc0[i].min;
+      if (top <= lo || bot >= hi) continue;
+      var yt = py(top), yb = py(bot), h = yb - yt;
+      svg += '<rect x="' + X0 + '" y="' + r1(yt) + '" width="' + (X1 - X0) + '" height="' + r1(h) + '" fill="' + cols[sc0[i].l.charAt(0)] + '" opacity="' + (i % 2 ? '.1' : '.18') + '"/>';
+      if (h >= 14) svg += '<text x="' + (X1 - 5) + '" y="' + r1(yt + 14) + '" text-anchor="end" font-size="12" font-weight="700" fill="' + cols[sc0[i].l.charAt(0)] + '">' + sc0[i].l + '</text>';
+    }
+    svg += '<line x1="' + X0 + '" y1="' + Y1 + '" x2="' + X1 + '" y2="' + Y1 + '" stroke="var(--line)" stroke-width="1.2"/>';
+    svg += '<polyline fill="none" stroke="var(--ink)" stroke-width="2.4" points="' + r1(px(0)) + ',' + r1(py(tt.worst)) + ' ' + r1(px(max)) + ',' + r1(py(tt.best)) + '"/>';
+    svg += '<text x="' + (X0 - 5) + '" y="' + (r1(py(tt.worst)) + 4) + '" text-anchor="end" font-size="12" font-weight="600" fill="var(--muted)">' + r1(tt.worst) + '</text>';
+    svg += '<text x="' + (X0 - 5) + '" y="' + (r1(py(tt.best)) + 4) + '" text-anchor="end" font-size="12" font-weight="600" fill="var(--muted)">' + r1(tt.best) + '</text>';
+    [0, 0.5, 1].forEach(function (f, k) {
+      svg += '<text x="' + r1(px(max * f)) + '" y="' + (Y1 + 17) + '" text-anchor="' + (k === 0 ? 'start' : (k === 2 ? 'end' : 'middle')) + '" font-size="12" font-weight="600" fill="var(--muted)">' + r1(max * f) + '</text>';
+    });
+    if (T != null && isFinite(x) && x > 0 && x <= max) {
+      svg += '<line x1="' + r1(px(x)) + '" y1="' + r1(py(T)) + '" x2="' + r1(px(x)) + '" y2="' + Y1 + '" stroke="var(--amber-deep)" stroke-width="1.4" stroke-dasharray="3 3"/>';
+      svg += '<circle cx="' + r1(px(x)) + '" cy="' + r1(py(T)) + '" r="5" fill="var(--amber)" stroke="#fff" stroke-width="1.5"/>';
+    }
+    $('smChart').innerHTML = '<svg viewBox="0 0 320 168" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Semester grade against the score on the remaining terms">' + svg + '</svg>';
+  }
+
+  /* ---------- main ---------- */
+  function empty(msg, sub) {
+    $('smBig').textContent = '—'; $('smBadge').innerHTML = ''; $('smResLab').textContent = 'Your semester grade';
+    $('smSub').textContent = sub || 'Enter a grade and a weight for at least one term.';
+    $('smBody').style.display = 'none'; $('smMVal').textContent = '—'; $('smMLab').textContent = 'Semester grade';
+    setHint(msg || '');
+  }
+  function solve() {
+    var drop = st.adv && !blank('smDrop') ? Math.max(0, Math.min(10, num('smDrop') | 0)) : 0;
+    var max = st.adv && !blank('smMax') ? num('smMax') : 100;
+    if (!(max >= 50 && max <= 200)) { empty('The highest possible score should be between 50 and 200.'); return; }
+    var ecE = st.adv && !blank('smEc') ? num('smEc') : 0, cap = st.adv && !blank('smEcCap') ? num('smEcCap') : Infinity;
+    if (!(ecE >= 0) || ecE > 100) { empty('Extra credit should be between 0 and 100 percentage points.'); return; }
+    var ec = Math.min(ecE, isFinite(cap) && cap >= 0 ? cap : Infinity);
+    var raw = readRows(), rows = [], problems = [], anyInput = false, i;
+    for (i = 0; i < raw.length; i++) {
+      var r = raw[i], nm = (r.name || '').trim() || ('Term ' + (i + 1)), g = E.parseGrade(r.g, st.mode, drop), wTxt = (r.w + '').trim(), w = wTxt ? parseFloat(wTxt) : NaN;
+      if (g.blank && !wTxt) continue;
+      anyInput = true;
+      if (g.err != null) { problems.push('Couldn’t read the grade “' + g.err + '” for ' + nm + (st.mode === 'let' ? ' — try A, B+ or C-.' : ' — try 88, 88% or 88, 92, 75.')); continue; }
+      if (!isFinite(w) || w <= 0) { if (wTxt) problems.push('The weight for ' + nm + ' should be above 0.'); else problems.push('Add a weight for ' + nm + '.'); continue; }
+      if (w > 1000) { problems.push('The weight for ' + nm + ' is too large.'); continue; }
+      if (!g.blank && (g.v < 0 || g.v > max * 1.5)) { problems.push('The grade for ' + nm + ' should be between 0 and ' + r1(max * 1.5) + '.'); continue; }
+      rows.push({ name: nm, g: g.blank ? NaN : g.v, w: w, list: g.n > 1 ? g : null });
+    }
+    if (!anyInput) { empty(''); return; }
+    var graded = rows.filter(function (x) { return isFinite(x.g); });
+    var sc0 = sc();
+    if (!rows.length || !graded.length) { empty(problems.join(' '), 'Enter a grade and a weight for at least one term.'); return; }
+    var tt = E.totals(rows, max, ec);
+    var head = st.zero ? tt.zero : tt.soFar, done = tt.nr === 0;
+    var L = E.letterOf(head, sc0);
+    setHint(problems.join(' '));
+
+    $('smResLab').textContent = done ? 'Your semester grade' : (st.zero ? 'Semester grade (empty terms as 0)' : 'Your grade so far');
+    $('smBig').textContent = r1(head) + '%';
+    $('smBadge').innerHTML = '<span class="sm-badge ' + CLS[L.charAt(0)] + '">' + L + '</span>';
+    $('smSub').textContent = tt.ng + ' of ' + rows.length + ' term' + (rows.length === 1 ? '' : 's') + ' graded' + (done ? '' : ' · ' + r1(tt.Wr / tt.Wt * 100) + '% of the semester still to come') + (ec > 0 ? ' · includes ' + r1(ec) + (r1(ec) === '1' ? ' point' : ' points') + ' of extra credit' : '');
+    $('smMLab').textContent = done ? 'Semester grade' : (st.zero ? 'Semester (empties = 0)' : 'Grade so far');
+    $('smMVal').textContent = r1(head) + '% · ' + L;
+    $('smBody').style.display = '';
+
+    /* weights note */
+    var wn = '';
+    if (Math.abs(tt.Wt - 100) > 0.001) wn = 'Your weights add up to ' + r1(tt.Wt) + ', not 100, so they are scaled to 100% for the result.';
+    $('smWNote').textContent = wn; $('smWNote').style.display = wn ? '' : 'none';
+
+    renderBar(rows, tt, sc0);
+
+    var remLab = tt.nr === 1 ? rows.filter(function (x) { return !isFinite(x.g); })[0].name : 'the remaining ' + tt.nr + ' terms (on average)';
+    var tip = '', fl = '';
+    if (done) {
+      var up = null;
+      for (i = sc0.length - 1; i >= 0; i--) if (sc0[i].min > head + 1e-9) { up = sc0[i]; break; }
+      tip = 'Your semester grade is <strong>' + r1(head) + '%</strong> — <strong>' + L + '</strong>.' + (up ? ' The next grade up, <strong>' + up.l + '</strong> (' + r1(up.min) + '%), is ' + r1(up.min - head) + ' points away.' : ' That is the top grade on this scale.');
+    } else {
+      var typed = blank('smTarget') ? NaN : num('smTarget'), T, Tl = '';
+      if (isFinite(typed) && typed > 0 && typed <= 150) { T = typed; }
+      else {
+        var cl = E.letterOf(tt.soFar, sc0); T = cut(sc0, cl); Tl = cl;
+        if (!(T > 0)) { T = cut(sc0, sc0[sc0.length - 2].l); Tl = sc0[sc0.length - 2].l; }
+      }
+      var nT = E.need(tt, T);
+      var ph = function (x) { return x <= 0 ? null : (x > max ? 'more than the highest possible score (' + r1(max) + '%)' : 'at least <strong>' + r1(x) + '%</strong>'); };
+      var lead = Tl ? 'To finish with ' + art(Tl) + ' <strong>' + Tl + '</strong> (' + r1(T) + '%)' : 'To finish on <strong>' + r1(T) + '%</strong>';
+      if (nT <= 0) tip = (Tl ? art(Tl).charAt(0).toUpperCase() + art(Tl).slice(1) + ' <strong>' + Tl + '</strong> (' + r1(T) + '%)' : '<strong>' + r1(T) + '%</strong>') + ' is already secured — even 0% on ' + remLab + ' keeps you at or above it.';
+      else tip = lead + ' you need ' + ph(nT) + ' on ' + remLab + '.';
+      if (Tl) {
+        var upL = null;
+        for (i = sc0.length - 1; i >= 0; i--) if (sc0[i].min > T + 1e-9) { upL = sc0[i]; break; }
+        if (upL) { var nU = E.need(tt, upL.min), pu = ph(nU); tip += pu ? ' ' + art(upL.l).charAt(0).toUpperCase() + art(upL.l).slice(1) + ' <strong>' + upL.l + '</strong> (' + r1(upL.min) + '%) needs ' + pu + '.' : ' ' + art(upL.l).charAt(0).toUpperCase() + art(upL.l).slice(1) + ' <strong>' + upL.l + '</strong> is already secured.'; }
+      }
+      tip += ' The semester can land anywhere from <strong>' + r1(tt.worst) + '%</strong> to <strong>' + r1(tt.best) + '%</strong>.';
+      if (nT > max) fl += '<p class="bm-flag">' + (Tl ? art(Tl).charAt(0).toUpperCase() + art(Tl).slice(1) + ' ' + Tl : r1(T) + '%') + ' is out of reach: even a perfect ' + r1(max) + '% on ' + remLab + ' tops out at ' + r1(tt.best) + '%.</p>';
+      $('smChartWrap').style.display = '';
+      renderChart(tt, sc0, max, T, nT);
+      $('smChartCap').textContent = 'Score on ' + remLab + ' → semester grade';
+    }
+    if (done) $('smChartWrap').style.display = 'none';
+    $('smTip').innerHTML = tip; $('smFlags').innerHTML = fl; $('smFlags').style.display = fl ? '' : 'none';
+
+    /* ladder */
+    if (done) $('smLadderWrap').style.display = 'none';
+    else {
+      $('smLadderWrap').style.display = '';
+      var lr = '';
+      sc0.forEach(function (s) {
+        if (!(s.min > 0)) return;
+        var nx = E.need(tt, s.min), cell, cls = '';
+        if (nx <= 0) { cell = 'Secured'; cls = 'ok'; } else if (nx > max) { cell = 'Out of reach'; cls = 'no'; } else { cell = r1(nx) + '%'; }
+        lr += '<tr data-t="' + s.min + '" tabindex="0"><td>' + s.l + '</td><td>' + r1(s.min) + '%</td><td class="' + cls + '">' + cell + '</td></tr>';
+      });
+      $('smLadder').innerHTML = '<thead><tr><th>Grade</th><th>Semester needs</th><th>Score needed on ' + (tt.nr === 1 ? esc(remLab) : 'the rest') + '</th></tr></thead><tbody>' + lr + '</tbody>';
+    }
+
+    /* advanced extras */
+    if (st.adv) {
+      var adv = '<div class="bf-cmp"><span class="k">Weighted points so far</span><span class="v">' + r1(tt.S / tt.Wt) + ' of ' + r1(tt.Wg / tt.Wt * 100) + '</span></div>';
+      if (!done) adv += '<div class="bf-cmp"><span class="k">Lowest the semester can end</span><span class="v">' + r1(tt.worst) + '%</span></div><div class="bf-cmp"><span class="k">Highest the semester can end</span><span class="v">' + r1(tt.best) + '%</span></div>';
+      var dl = rows.filter(function (x) { return x.list && x.list.dropped; });
+      if (dl.length) adv += '<p class="res-tip adv-tip">Dropped the lowest ' + dl[0].list.dropped + ' score' + (dl[0].list.dropped === 1 ? '' : 's') + ' in each list before averaging.</p>';
+      $('smAdvOut').innerHTML = adv; $('smAdvOut').style.display = '';
+    } else $('smAdvOut').style.display = 'none';
+  }
+
+  /* ---------- events ---------- */
+  function chips() {
+    var s = sc(), h = '';
+    s.forEach(function (x) { if (x.min > 0) h += '<button type="button" data-v="' + x.min + '">' + x.l + ' ' + r1(x.min) + '%</button>'; });
+    $('smTChips').innerHTML = h;
+    [].forEach.call($('smTChips').children, function (b) { b.classList.toggle('on', !blank('smTarget') && Math.abs(parseFloat(b.getAttribute('data-v')) - num('smTarget')) < 1e-9); });
+  }
+  function all() { chips(); solve(); }
+  $('smRows').addEventListener('input', solve);
+  $('smRows').addEventListener('click', function (e) {
+    var x = e.target.closest('.x'); if (!x) return;
+    x.parentNode.parentNode.removeChild(x.parentNode); solve();
+  });
+  $('smAdd').addEventListener('click', function () {
+    var d = document.createElement('div'); d.innerHTML = rowHtml('', '', '', ''); $('smRows').appendChild(d.firstChild);
+    $('smRows').lastChild.querySelector('.sm-name').focus();
+  });
+  $('smPre').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; applyPreset(b.getAttribute('data-v'), true); solve(); });
+  $('smModeSeg').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    var v = b.getAttribute('data-v'); if (v === st.mode) return;
+    st.mode = v;
+    [].forEach.call($('smModeSeg').children, function (x) { x.classList.toggle('on', x === b); });
+    [].forEach.call($('smRows').querySelectorAll('.sm-g'), function (g) { g.value = ''; g.placeholder = v === 'let' ? 'B+' : '88'; });
+    $('smDropWrap').style.display = v === 'let' ? 'none' : '';
+    solve();
+  });
+  $('smScaleSeg').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    st.scale = b.getAttribute('data-v');
+    [].forEach.call($('smScaleSeg').children, function (x) { x.classList.toggle('on', x === b); });
+    $('smCustomWrap').style.display = st.scale === 'std' ? '' : 'none';
+    all();
+  });
+  $('smTChips').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; $('smTarget').value = b.getAttribute('data-v'); all(); });
+  $('smTarget').addEventListener('input', all);
+  ['smMax', 'smDrop', 'smEc', 'smEcCap', 'smCA', 'smCB', 'smCC', 'smCD'].forEach(function (id) { $(id).addEventListener('input', all); });
+  $('smZeroSeg').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    st.zero = b.getAttribute('data-v') === 'zero';
+    [].forEach.call($('smZeroSeg').children, function (x) { x.classList.toggle('on', x === b); });
+    solve();
+  });
+  function pickLadder(tr) { if (!tr) return; $('smTarget').value = tr.getAttribute('data-t'); all(); }
+  $('smLadder').addEventListener('click', function (e) { pickLadder(e.target.closest('tr[data-t]')); });
+  $('smLadder').addEventListener('keydown', function (e) {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    var tr = e.target.closest('tr[data-t]'); if (!tr) return; e.preventDefault();
+    var t = tr.getAttribute('data-t'); pickLadder(tr);
+    var n = $('smLadder').querySelector('tr[data-t="' + t + '"]'); if (n) n.focus();
+  });
+  $('smAdvBtn').addEventListener('click', function () {
+    st.adv = !st.adv;
+    $('smAdvBtn').classList.toggle('open', st.adv);
+    $('smAdvBtnLab').textContent = st.adv ? 'Go simple' : 'Go advanced';
+    $('smAdvIn').style.display = st.adv ? '' : 'none';
+    if (!st.adv) {
+      st.zero = false;
+      [].forEach.call($('smZeroSeg').children, function (x) { x.classList.toggle('on', x.getAttribute('data-v') === 'ignore'); });
+      ['smMax', 'smDrop', 'smEc', 'smEcCap', 'smCA', 'smCB', 'smCC', 'smCD'].forEach(function (id) { $(id).value = ''; });
+    }
+    all();
+  });
+
+  applyPreset('q', false);
+  all();
+};
+
+/* =========================================================
    HOURS CALCULATOR — pure engine (no DOM). Loose clock parsing ("9", "915", "9:15a",
    "5p", "1730", "0830", noon, midnight), end-after-start resolution with overnight
    shifts, break parsing (minutes, "1h", "0:30", or a clock range such as "12-12:30"),

@@ -76,6 +76,7 @@
         { "@type": "WebApplication", "name": "Final Grade Calculator", "url": "https://calcthis.co/final-grade-calculator/", "applicationCategory": "EducationApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "GPA Calculator", "url": "https://calcthis.co/gpa-calculator/", "applicationCategory": "EducationApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Grade Calculator", "url": "https://calcthis.co/grade-calculator/", "applicationCategory": "EducationApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
+        { "@type": "WebApplication", "name": "Semester Grade Calculator", "url": "https://calcthis.co/semester-grade-calculator/", "applicationCategory": "EducationApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Test Score Calculator", "url": "https://calcthis.co/test-score-calculator/", "applicationCategory": "EducationApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Grade Curve Calculator", "url": "https://calcthis.co/grade-curve-calculator/", "applicationCategory": "EducationApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Fraction Calculator", "url": "https://calcthis.co/fraction-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
@@ -106,7 +107,7 @@
   ]
 }
 </script>
-<link rel="stylesheet" href="/assets/style.css?v=273">
+<link rel="stylesheet" href="/assets/style.css?v=276">
 <style>
   .cat-tabs{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
   .cat-grp--hidden{display:none}
@@ -190,6 +191,7 @@
           <a href="/final-grade-calculator/">Final Grade</a>
           <a href="/gpa-calculator/">GPA</a>
           <a href="/grade-calculator/">Grade</a>
+          <a href="/semester-grade-calculator/">Semester Grade</a>
           <a href="/test-score-calculator/">Test Score</a>
           <a href="/grade-curve-calculator/">Grade Curve</a>
           <span class="menu-col-head">Math &amp; Numbers</span>
@@ -892,6 +894,20 @@
       </span>
     </a>
 
+    <a class="calc" href="/semester-grade-calculator/">
+      <span class="ico" aria-hidden="true">
+        <svg width="30" height="30" viewBox="0 0 32 32" fill="none">
+          <rect x="6" y="5" width="20" height="22" rx="3" fill="#EFE7D8" stroke="#8F5C13" stroke-width="1.4"/>
+          <path d="M10 11h12M10 16h12M10 21h7" stroke="#37503F" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <h3>Semester Grade Calculator</h3>
+      <p>Enter your quarters, midterm and final with weights to see your grade so far, the best and worst the semester can end on, and the score you need on the rest for every letter grade.</p>
+      <span class="go">Open calculator
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+    </a>
+
     <a class="calc" href="/test-score-calculator/">
       <span class="ico" aria-hidden="true">
         <svg width="30" height="30" viewBox="0 0 32 32" fill="none">
@@ -1408,6 +1424,7 @@
           <li><a href="/final-grade-calculator/">Final grade</a><span> — the score you need to hit your target</span></li>
           <li><a href="/gpa-calculator/">GPA</a><span> — college and high school, weighted or not</span></li>
           <li><a href="/grade-calculator/">Grade</a><span> — weighted course grades</span></li>
+          <li><a href="/semester-grade-calculator/">Semester grade</a><span> — grade so far and what you need on the rest</span></li>
           <li><a href="/test-score-calculator/">Test score</a><span> — percentage, letter grade and AP score</span></li>
           <li><a href="/grade-curve-calculator/">Grade curve</a><span> — curve a class with a before and after chart</span></li>
         </ul>
@@ -1583,6 +1600,7 @@
           <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
           <li><a href="/gpa-calculator/">GPA Calculator</a></li>
           <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/semester-grade-calculator/">Semester Grade Calculator</a></li>
           <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
           <li><a href="/grade-curve-calculator/">Grade Curve Calculator</a></li>
         </ul>
@@ -1701,7 +1719,7 @@
   });
 })();
 </script>
-<script src="/assets/app.js?v=273"></script>
+<script src="/assets/app.js?v=276"></script>
 <script src="/feedback.js" defer></script>
 </body>
 </html>

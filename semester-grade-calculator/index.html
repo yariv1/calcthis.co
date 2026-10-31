@@ -1,0 +1,736 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Semester Grade Calculator — Grade So Far &amp; What You Need</title>
+<meta name="description" content="Free semester grade calculator: enter quarters, midterm and final with weights to see your grade so far and the score you need on the rest for every letter.">
+<link rel="canonical" href="https://calcthis.co/semester-grade-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Semester Grade Calculator — Grade So Far &amp; What You Need">
+<meta property="og:description" content="Free semester grade calculator: enter quarters, midterm and final with weights to see your grade so far and the score you need on the rest for every letter.">
+<meta property="og:url" content="https://calcthis.co/semester-grade-calculator/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/datepicker.min.css">
+<link rel="stylesheet" href="/assets/style.css?v=276">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Semester Grade Calculator",
+  "url": "https://calcthis.co/semester-grade-calculator/",
+  "applicationCategory": "EducationApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "Semester grade calculator: enter any number of terms (quarters, midterm, final) with a grade as a percentage or a letter and a weight, and see your grade so far, the lowest and highest the semester can end on, and the score you need on the remaining terms for every letter grade, with a chart shaded by letter band."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I calculate my semester grade?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Multiply each term's grade by its weight, add the results and divide by the total weight. With a quarter 1 grade of 78% and a quarter 2 grade of 85% (each worth 40%) and a final exam of 80% (worth 20%), the semester grade is (78 × 40 + 85 × 40 + 80 × 20) ÷ 100 = 81.2%, a B."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What do I need on the final exam to get an A?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It depends on your grades so far and the final's weight. With 78% and 85% in two quarters worth 40% each, an A (90%) would need 124% on a final worth 20% — out of reach, since even 100% leaves you at 85.2%. A B (80%) needs 74%, a C (70%) needs 24%, and a D (60%) is already secured. The calculator shows every letter at once."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I find my semester grade if I only have some terms graded?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Leave the unfinished terms blank. The calculator shows your grade so far (81.5% in the example), the lowest and highest the semester can end on (65.2% to 85.2%), and what you need on the rest. Under Go advanced you can choose to count empty terms as zero instead."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do the weights have to add up to 100?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. The calculator scales whatever you enter to 100%, so weights of 2, 2 and 1 work the same as 40, 40 and 20. It tells you when your weights do not add up to 100 so you can check them."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I use letter grades?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes — switch “Grades as” to Letters. A letter counts as the middle of its band in the plus/minus table (for example B+ is 88% and A- is 91%, F is 29.5%), so a B+ and an A- in two equally weighted terms give 89.5%. Type percentages for exact results."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I drop the lowest score?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Under Go advanced, set “Drop the lowest” to 1 (or more) and type a term's scores as a list such as 88, 92, 75. The calculator drops the lowest score and averages the rest: 85% without a drop, 90% with one."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What if I have extra credit?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Under Go advanced, enter the extra-credit percentage points and an optional cap. They are added to the semester grade after the weighted average, so 2 points of extra credit turns an 81.2% into 83.2%."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How is this different from the final grade calculator?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The final grade calculator answers one question — what score do I need on one exam. This page works with the whole semester: any number of terms, the grade so far, the best and worst the semester can end on and the score you need for every letter at once. For one exam, use the final grade calculator; for a course split into homework, quizzes and tests, the grade calculator."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "CalcThis",
+      "item": "https://calcthis.co/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Semester Grade Calculator",
+      "item": "https://calcthis.co/semester-grade-calculator/"
+    }
+  ]
+}
+</script>
+<meta property="og:site_name" content="CalcThis">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://calcthis.co/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="CalcThis — free, purpose-built calculators">
+<meta name="twitter:title" content="Semester Grade Calculator — Grade So Far &amp; What You Need">
+<meta name="twitter:description" content="Free semester grade calculator: enter quarters, midterm and final with weights to see your grade so far and the score you need on the rest for every letter.">
+<meta name="twitter:image" content="https://calcthis.co/assets/og-default.png">
+</head>
+<body class="p-bmr p-sem">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <a class="hdr-back" href="/blog/" aria-label="Back to blog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-search"><div class="menu-sx"><input id="menuSearch" type="search" placeholder="Search calculators or states…" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Search calculators" enterkeyhint="search"></div><div class="menu-results" id="menuResults" hidden></div></div>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <span class="menu-col-head">Construction &amp; Gardening</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+          <a href="/paint-calculator/">Paint</a>
+          <a href="/wallpaper-calculator/">Wallpaper</a>
+          <a href="/square-footage-calculator/">Square Footage</a>
+          <a href="/tape-measure-fraction-calculator/">Tape Measure Fraction</a>
+          <a href="/stair-calculator/">Stair</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/vo2-max-calculator/">VO2 Max</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
+          <a href="/bmi-calculator/">BMI</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/ideal-weight-calculator/">Ideal Weight</a>
+          <a href="/lean-body-mass-calculator/">Lean Body Mass</a>
+          <a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio</a>
+          <a href="/calorie-calculator/">Calorie</a>
+          <a href="/calorie-deficit-calculator/">Calorie Deficit</a>
+          <a href="/bmr-calculator/">BMR</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/water-intake-calculator/">Water Intake</a>
+          <a href="/macro-calculator/">Macro</a>
+          <a href="/protein-intake-calculator/">Protein Intake</a>
+          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
+          <a href="/steps-to-miles-calculator/">Steps to Miles</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/semester-grade-calculator/" class="current">Semester Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+          <a href="/grade-curve-calculator/">Grade Curve</a>
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/fraction-calculator/">Fraction</a>
+          <a href="/standard-deviation-calculator/">Standard Deviation</a>
+          <a href="/scientific-notation-calculator/">Scientific Notation</a>
+          <a href="/weighted-average-calculator/">Weighted Average</a>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+          <a href="/age-calculator/">Age</a>
+          <a href="/date-calculator/">Date</a>
+          <a href="/time-calculator/">Time</a>
+          <a href="/hours-calculator/">Hours</a>
+          <a href="/triangle-calculator/">Triangle</a>
+          <a href="/random-number-generator/">Random Number</a>
+          <span class="menu-col-head">Cooking &amp; Kitchen</span>
+          <a href="/recipe-converter/">Recipe Converter</a>
+          <a href="/turkey-cooking-time-calculator/">Turkey Cooking Time</a>
+          <a href="/turkey-thawing-time-calculator/">Turkey Thawing Time</a>
+          <a href="/turkey-size-calculator/">Turkey Size</a>
+          <!--UNITNAV:START-->
+          <span class="menu-col-head">Unit Converters</span>
+          <a href="/unit-converter/">Unit Converter</a>
+          <a href="/length-converter/">Length Converter</a>
+          <a href="/weight-converter/">Weight Converter</a>
+          <a href="/volume-converter/">Volume Converter</a>
+          <a href="/temperature-converter/">Temperature Converter</a>
+          <a href="/area-converter/">Area Converter</a>
+          <a href="/speed-converter/">Speed Converter</a>
+          <a href="/data-storage-converter/">Data Storage Converter</a>
+          <a href="/cooking-converter/">Cooking Converter</a>
+          <a href="/px-to-rem-converter/">PX to REM Converter</a>
+          <!--UNITNAV:END-->
+          <span class="menu-col-head">Money &amp; Finance</span>
+          <a href="/mortgage-calculator/">Mortgage</a>
+          <a href="/loan-calculator/">Loan</a>
+          <a href="/auto-loan-calculator/">Auto Loan</a>
+          <!--STAXNAV:START-->
+          <a href="/sales-tax-calculator/">Sales Tax</a>
+          <a href="/sales-tax-calculator/california/">California Sales Tax</a>
+          <a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax</a>
+          <a href="/sales-tax-calculator/missouri/">Missouri Sales Tax</a>
+          <a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax</a>
+          <a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax</a>
+          <a href="/sales-tax-calculator/ohio/">Ohio Sales Tax</a>
+          <a href="/sales-tax-calculator/texas/">Texas Sales Tax</a>
+          <!--STAXNAV:END-->
+          <a href="/tip-calculator/">Tip</a>
+          <a href="/how-much-to-tip/">How Much to Tip</a>
+        </div>
+        <!--PAYNAV:START-->
+        <div class="menu-col">
+          <span class="menu-col-head">Paycheck Calculators</span>
+          <a href="/paycheck-calculator/">Paycheck Calculator (all states)</a>
+          <a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a>
+          <a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a>
+          <a href="/paycheck-calculator/california/">California Paycheck Calculator</a>
+          <a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a>
+          <a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a>
+          <a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a>
+          <a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a>
+          <a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a>
+          <a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a>
+          <a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a>
+          <a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a>
+          <a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a>
+          <a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a>
+          <a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a>
+          <a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a>
+        </div>
+        <!--PAYNAV:END-->
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">Quarters · midterm · final</div>
+    <h1>Semester Grade Calculator</h1>
+    <p>Enter each term's <strong>grade and weight</strong> and see your <strong>grade so far</strong>, the lowest and highest the semester can end on, and the <strong>score you need on the rest for every letter</strong> at once. Quarters of 78% and 85% (40% each) put you at <strong>81.5%</strong> before the final.</p>
+  </section>
+
+  <div class="grid">
+
+    <!-- INPUT -->
+    <div class="card">
+      <div class="card-pad">
+        <h2 class="card-h2">Your terms</h2>
+
+        <div class="ctl-row">
+          <span class="ctl-lab">Grades as</span>
+          <div class="seg" id="smModeSeg" role="group" aria-label="Grades as">
+            <button class="on" type="button" data-v="pct">Percent</button>
+            <button type="button" data-v="let">Letters</button>
+          </div>
+        </div>
+        <div class="ctl-row">
+          <span class="ctl-lab">Letter scale</span>
+          <div class="seg" id="smScaleSeg" role="group" aria-label="Letter scale">
+            <button class="on" type="button" data-v="std">A 90 · B 80</button>
+            <button type="button" data-v="pm">Plus / minus</button>
+          </div>
+        </div>
+
+        <span class="sm-lab">Layout</span>
+        <div class="chips" id="smPre">
+          <button type="button" class="on" data-v="q">Quarters + final</button>
+          <button type="button" data-v="m">Midterm + final</button>
+          <button type="button" data-v="t">Three terms</button>
+        </div>
+
+        <div class="sm-head"><span>Term</span><span>Grade</span><span>Weight %</span><span></span></div>
+        <div id="smRows"></div>
+
+        <div class="add-row" style="margin-top:10px">
+          <button class="btn" id="smAdd" type="button">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+            Add term
+          </button>
+        </div>
+        <p class="sm-note" id="smWNote" style="display:none"></p>
+        <p class="sm-note">Leave a grade blank for a term still to come — the calculator shows what you need on it.</p>
+
+        <div class="proj-sep"></div>
+        <label class="fld" for="smTarget" style="margin-bottom:0">
+          <span class="lab">Target semester grade <span class="unit">% · optional</span></span>
+          <div class="inp"><input id="smTarget" type="number" inputmode="decimal" step="any" placeholder="e.g. 90"></div>
+        </label>
+        <div class="chips" id="smTChips" style="margin-top:8px"></div>
+
+        <div class="res-hint" id="smHint" style="display:none;text-align:left;margin:4px 0 8px"></div>
+
+        <div id="smAdvIn" style="display:none">
+          <div class="proj-sep"></div>
+          <div class="ctl-row" style="display:block;margin-bottom:12px">
+            <span class="ctl-lab" style="display:block;margin-bottom:6px">Empty terms count as</span>
+            <div class="modeseg" id="smZeroSeg" role="group" aria-label="Empty terms count as" style="grid-template-columns:1fr 1fr">
+              <button class="on" type="button" data-v="ignore">Not graded yet</button>
+              <button type="button" data-v="zero">Zero</button>
+            </div>
+          </div>
+          <div class="two">
+            <label class="fld" for="smMax"><span class="lab">Highest score <span class="unit">%</span></span><div class="inp"><input id="smMax" type="number" inputmode="decimal" step="any" placeholder="100"></div></label>
+            <div id="smDropWrap"><label class="fld" for="smDrop"><span class="lab">Drop lowest <span class="unit">count</span></span><div class="inp"><input id="smDrop" type="number" inputmode="decimal" step="any" placeholder="0" min="0" max="10"></div></label></div>
+          </div>
+          <div class="two">
+            <label class="fld" for="smEc"><span class="lab">Extra credit <span class="unit">points</span></span><div class="inp"><input id="smEc" type="number" inputmode="decimal" step="any" placeholder="0"></div></label>
+            <label class="fld" for="smEcCap"><span class="lab">Credit cap <span class="unit">points</span></span><div class="inp"><input id="smEcCap" type="number" inputmode="decimal" step="any" placeholder="none"></div></label>
+          </div>
+          <div id="smCustomWrap">
+            <span class="sm-lab">Custom cutoffs <span style="color:var(--muted);font-weight:500">(blank = standard)</span></span>
+            <div class="two">
+              <label class="fld" for="smCA"><span class="lab">A from <span class="unit">%</span></span><div class="inp"><input id="smCA" type="number" inputmode="decimal" step="any" placeholder="90"></div></label>
+              <label class="fld" for="smCB"><span class="lab">B from <span class="unit">%</span></span><div class="inp"><input id="smCB" type="number" inputmode="decimal" step="any" placeholder="80"></div></label>
+            </div>
+            <div class="two">
+              <label class="fld" for="smCC"><span class="lab">C from <span class="unit">%</span></span><div class="inp"><input id="smCC" type="number" inputmode="decimal" step="any" placeholder="70"></div></label>
+              <label class="fld" for="smCD"><span class="lab">D from <span class="unit">%</span></span><div class="inp"><input id="smCD" type="number" inputmode="decimal" step="any" placeholder="60" style="margin-bottom:0"></div></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="add-row split" style="margin-top:16px">
+          <span></span>
+          <button class="advbtn" id="smAdvBtn" type="button">
+            <span id="smAdvBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div class="card">
+      <div class="card-pad">
+        <div class="bf-res">
+          <div class="res-lab" id="smResLab">Your semester grade</div>
+          <div class="res-big"><span id="smBig">—</span> <span id="smBadge"></span></div>
+          <div class="res-sub" id="smSub">Enter a grade and a weight for at least one term.</div>
+        </div>
+
+        <div id="smBody" style="display:none">
+          <p class="res-tip adv-tip" id="smTip"></p>
+          <div id="smFlags"></div>
+
+          <p class="bm-h">Your semester, term by term</p>
+          <div class="sm-bar" id="smBar"></div>
+          <div class="sm-key" id="smKey"></div>
+
+          <div id="smChartWrap" style="display:none">
+            <p class="bm-h" style="margin-top:18px">What the rest of the semester decides</p>
+            <p class="sm-note" id="smChartCap" style="margin-top:-6px"></p>
+            <div id="smChart"></div>
+            <p class="sm-note">The line is your semester grade at each score; the shaded bands are the letter grades. The dot is your target.</p>
+          </div>
+
+          <div id="smLadderWrap" style="display:none">
+            <div class="proj-sep"></div>
+            <div class="tally-head"><h3>What you need for each grade</h3></div>
+            <p class="add-note" style="text-align:left;margin:-6px 0 6px">Tap a row to use it as your target.</p>
+            <table class="dtable bm-act" id="smLadder"></table>
+          </div>
+
+          <div id="smAdvOut" style="display:none"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- mobile sticky bar -->
+  <div class="mbar" id="mbar">
+    <span class="mbar-lab" id="smMLab">Semester grade</span>
+    <div class="mbar-vals"><b id="smMVal">—</b></div>
+  </div>
+
+  <div class="related-calcs">
+    <p class="related-calcs-h">More school calculators that may interest you</p>
+    <div class="pills">
+      <a class="pill" href="/final-grade-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+        Final Grade Calculator
+      </a>
+      <a class="pill" href="/grade-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
+        Grade Calculator
+      </a>
+      <a class="pill" href="/gpa-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5 9-5zM3 8v6c0 2 4 4 9 4s9-2 9-4V8"/></svg>
+        GPA Calculator
+      </a>
+      <a class="pill" href="/weighted-average-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="12" r="4"/><circle cx="16" cy="12" r="4"/></svg>
+        Weighted Average Calculator
+      </a>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use the semester grade calculator</h2>
+        <p>Pick a <strong>layout</strong> (quarters + final, midterm + final or three terms) or add your own terms. For each one enter the <strong>grade</strong> — a percentage, or a letter if you switch to Letters — and its <strong>weight</strong>. Leave the grade blank for any term you have not had yet.</p>
+        <p>The big number is your <strong>grade so far</strong>. Below it you get the lowest and highest the semester can end on, the <strong>score you need on the rest for every letter</strong>, and a chart that shows your semester grade at every possible score. Type a <strong>target grade</strong>, or tap a letter, to focus the answer on it.</p>
+
+        <h2>The semester grade formula</h2>
+        <div class="formula">
+          Semester grade = Σ (grade × weight) ÷ Σ weights
+          <small>EACH TERM'S GRADE TIMES ITS SHARE OF THE SEMESTER</small>
+        </div>
+        <p>Two quarters of 78% and 85%, each worth 40%, with the final (20%) still to come: (78 × 40 + 85 × 40) ÷ 80 = <strong>81.5%</strong> so far. If the final is 80%, the semester grade is (78 × 40 + 85 × 40 + 80 × 20) ÷ 100 = <strong>81.2%</strong>, a B.</p>
+
+        <h2>What you need on the final</h2>
+        <p>To finish on a target grade <em>T</em>, the score needed on the remaining term is (T × total weight − points so far) ÷ remaining weight. For the example:</p>
+        <table class="dtable">
+          <thead><tr><th>Grade</th><th>Semester needs</th><th>Needed on the final</th></tr></thead>
+          <tbody><tr><td>A</td><td>90%</td><td>Out of reach</td></tr><tr><td>B</td><td>80%</td><td>74%</td></tr><tr><td>C</td><td>70%</td><td>24%</td></tr><tr><td>D</td><td>60%</td><td>Secured</td></tr></tbody>
+        </table>
+        <p>A is out of reach here: even 100% on the final tops out at 85.2%. The calculator shows this table, and the chart behind it, for your own numbers.</p>
+      </div>
+
+      <div>
+        <h2>Percent or letters?</h2>
+        <p>Percentages give exact results. If you only have letters, the calculator converts each one to the <strong>middle of its band</strong> in the plus/minus scale (A+ 98.5%, A 94.5%, A- 91%, B+ 88%, and so on down to F at 29.5%). Two equally weighted terms of B+ and A- come to 89.5%.</p>
+
+        <h2>Letter scales</h2>
+        <table class="dtable">
+          <thead><tr><th>Scale</th><th>Cutoffs</th></tr></thead>
+          <tbody>
+            <tr><td>Standard</td><td>A 90 · B 80 · C 70 · D 60</td></tr>
+            <tr><td>Plus / minus</td><td>A+ 97 · A 93 · A- 90 · B+ 87 · B 83 · B- 80 · C+ 77 · C 73 · C- 70 · D+ 67 · D 63 · D- 60</td></tr>
+          </tbody>
+        </table>
+        <p>Your school may use different cutoffs. Under <strong>Go advanced</strong> you can set your own A, B, C and D.</p>
+
+        <h2>Empty terms, extra credit and dropped scores</h2>
+        <ul>
+          <li><strong>Empty terms.</strong> By default a blank term is "not graded yet" and left out of your grade so far. Choose <strong>Zero</strong> to see the grade if it stays empty.</li>
+          <li><strong>Extra credit.</strong> Added to the semester grade after the weighted average, with an optional cap.</li>
+          <li><strong>Drop the lowest.</strong> Type a term's scores as a list (88, 92, 75) and drop the lowest one or more: 85% becomes 90% with one dropped.</li>
+          <li><strong>Highest score.</strong> If a term can go above 100%, raise this so the needed scores and the chart use the right ceiling.</li>
+        </ul>
+        <p>For a course split into homework, quizzes and exams use the <a href="/grade-calculator/">grade calculator</a>; for one exam, the <a href="/final-grade-calculator/">final grade calculator</a>; for your GPA across courses, the <a href="/gpa-calculator/">GPA calculator</a>.</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>How do I calculate my semester grade?</summary><p>Multiply each term's grade by its weight, add the results and divide by the total weight. With a quarter 1 grade of 78% and a quarter 2 grade of 85% (each worth 40%) and a final exam of 80% (worth 20%), the semester grade is (78 × 40 + 85 × 40 + 80 × 20) ÷ 100 = 81.2%, a B.</p></details>
+    <details class="faq"><summary>What do I need on the final exam to get an A?</summary><p>It depends on your grades so far and the final's weight. With 78% and 85% in two quarters worth 40% each, an A (90%) would need 124% on a final worth 20% — out of reach, since even 100% leaves you at 85.2%. A B (80%) needs 74%, a C (70%) needs 24%, and a D (60%) is already secured. The calculator shows every letter at once.</p></details>
+    <details class="faq"><summary>How do I find my semester grade if I only have some terms graded?</summary><p>Leave the unfinished terms blank. The calculator shows your grade so far (81.5% in the example), the lowest and highest the semester can end on (65.2% to 85.2%), and what you need on the rest. Under Go advanced you can choose to count empty terms as zero instead.</p></details>
+    <details class="faq"><summary>Do the weights have to add up to 100?</summary><p>No. The calculator scales whatever you enter to 100%, so weights of 2, 2 and 1 work the same as 40, 40 and 20. It tells you when your weights do not add up to 100 so you can check them.</p></details>
+    <details class="faq"><summary>Can I use letter grades?</summary><p>Yes — switch “Grades as” to Letters. A letter counts as the middle of its band in the plus/minus table (for example B+ is 88% and A- is 91%, F is 29.5%), so a B+ and an A- in two equally weighted terms give 89.5%. Type percentages for exact results.</p></details>
+    <details class="faq"><summary>How do I drop the lowest score?</summary><p>Under Go advanced, set “Drop the lowest” to 1 (or more) and type a term's scores as a list such as 88, 92, 75. The calculator drops the lowest score and averages the rest: 85% without a drop, 90% with one.</p></details>
+    <details class="faq"><summary>What if I have extra credit?</summary><p>Under Go advanced, enter the extra-credit percentage points and an optional cap. They are added to the semester grade after the weighted average, so 2 points of extra credit turns an 81.2% into 83.2%.</p></details>
+    <details class="faq"><summary>How is this different from the final grade calculator?</summary><p>The final grade calculator answers one question — what score do I need on one exam. This page works with the whole semester: any number of terms, the grade so far, the best and worst the semester can end on and the score you need for every letter at once. For one exam, use the <a href="/final-grade-calculator/">final grade calculator</a>; for a course split into homework, quizzes and tests, the <a href="/grade-calculator/">grade calculator</a>.</p></details>
+  </section>
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+      <div class="footer-stack">
+<div class="footer-col" style="order:1">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+          <li><a href="/paint-calculator/">Paint Calculator</a></li>
+          <li><a href="/wallpaper-calculator/">Wallpaper Calculator</a></li>
+          <li><a href="/square-footage-calculator/">Square Footage Calculator</a></li>
+          <li><a href="/tape-measure-fraction-calculator/">Tape Measure Fraction Calculator</a></li>
+          <li><a href="/stair-calculator/">Stair Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:5">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Cooking &amp;</span> <span class="ft2">Kitchen</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/recipe-converter/">Recipe Converter</a></li>
+          <li><a href="/turkey-cooking-time-calculator/">Turkey Cooking Time Calculator</a></li>
+          <li><a href="/turkey-thawing-time-calculator/">Turkey Thawing Time Calculator</a></li>
+          <li><a href="/turkey-size-calculator/">Turkey Size Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:6">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Money &amp;</span> <span class="ft2">Finance</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/mortgage-calculator/">Mortgage Calculator</a></li>
+          <li><a href="/loan-calculator/">Loan Calculator</a></li>
+          <li><a href="/auto-loan-calculator/">Auto Loan Calculator</a></li>
+          <!--STAXFOOT:START-->
+          <li><a href="/sales-tax-calculator/">Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/california/">California Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/missouri/">Missouri Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/ohio/">Ohio Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/texas/">Texas Sales Tax Calculator</a></li>
+          <!--STAXFOOT:END-->
+          <li><a href="/tip-calculator/">Tip Calculator</a></li>
+          <li><a href="/how-much-to-tip/">How Much to Tip</a></li>
+        </ul>
+      </div>
+      </div>
+
+      <div class="footer-right">
+<div class="footer-col footer-col--two" style="order:2">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/vo2-max-calculator/">VO2 Max Calculator</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/bmi-calculator/">BMI Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/ideal-weight-calculator/">Ideal Weight Calculator</a></li>
+          <li><a href="/lean-body-mass-calculator/">Lean Body Mass Calculator</a></li>
+          <li><a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio Calculator</a></li>
+          <li><a href="/calorie-calculator/">Calorie Calculator</a></li>
+          <li><a href="/calorie-deficit-calculator/">Calorie Deficit Calculator</a></li>
+          <li><a href="/bmr-calculator/">BMR Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/water-intake-calculator/">Water Intake Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/protein-intake-calculator/">Protein Intake Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
+          <li><a href="/steps-to-miles-calculator/">Steps to Miles Calculator</a></li>
+        </ul>
+      </div>
+
+        <div class="footer-sub">
+<div class="footer-subcol">
+<div class="footer-col" style="order:3">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/semester-grade-calculator/">Semester Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+          <li><a href="/grade-curve-calculator/">Grade Curve Calculator</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:START-->
+<div class="footer-col" style="order:7">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Unit</span> <span class="ft2">Converters</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/unit-converter/">Unit Converter</a></li>
+          <li><a href="/length-converter/">Length Converter</a></li>
+          <li><a href="/weight-converter/">Weight Converter</a></li>
+          <li><a href="/volume-converter/">Volume Converter</a></li>
+          <li><a href="/temperature-converter/">Temperature Converter</a></li>
+          <li><a href="/area-converter/">Area Converter</a></li>
+          <li><a href="/speed-converter/">Speed Converter</a></li>
+          <li><a href="/data-storage-converter/">Data Storage Converter</a></li>
+          <li><a href="/cooking-converter/">Cooking Measurement Converter</a></li>
+          <li><a href="/px-to-rem-converter/">PX to REM Converter</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:END-->
+</div>
+
+<div class="footer-col" style="order:4">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/fraction-calculator/">Fraction Calculator</a></li>
+          <li><a href="/standard-deviation-calculator/">Standard Deviation Calculator</a></li>
+          <li><a href="/scientific-notation-calculator/">Scientific Notation Calculator</a></li>
+          <li><a href="/weighted-average-calculator/">Weighted Average Calculator</a></li>
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+          <li><a href="/age-calculator/">Age Calculator</a></li>
+          <li><a href="/date-calculator/">Date Calculator</a></li>
+          <li><a href="/time-calculator/">Time Calculator</a></li>
+          <li><a href="/hours-calculator/">Hours Calculator</a></li>
+          <li><a href="/triangle-calculator/">Triangle Calculator</a></li>
+          <li><a href="/random-number-generator/">Random Number Generator</a></li>
+        </ul>
+      </div>
+        </div>
+      </div>
+
+      <!--PAYFOOT:START-->
+      <div class="footer-col footer-col--wide">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Paycheck</span> <span class="ft2">Calculators</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/paycheck-calculator/">Paycheck Calculator (all states)</a></li>
+          <li><a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/california/">California Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a></li>
+        </ul>
+      </div>
+      <!--PAYFOOT:END-->
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/blog/">Blog</a>
+      <span aria-hidden="true">·</span>
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+</div>
+
+<script src="/assets/app.js?v=276"></script>
+<script>CalcThis.initSemesterCalc();</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>

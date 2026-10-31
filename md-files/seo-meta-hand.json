@@ -100,6 +100,10 @@
   "/test-score-calculator/": {
     "d": "Convert raw test scores to percentages and letter grades, see how many questions you can miss, apply curves and estimate AP scores (1–5). Free."
   },
+  "/semester-grade-calculator/": {
+    "t": "Semester Grade Calculator — Grade So Far & What You Need",
+    "d": "Free semester grade calculator: enter quarters, midterm and final with weights to see your grade so far and the score you need on the rest for every letter."
+  },
   "/grade-curve-calculator/": {
     "d": "Free grade curve calculator: paste raw scores, pick a curve method (add points, bell curve, square root and more) and see the new letter-grade distribution."
   },
