@@ -364,6 +364,29 @@ function caFaqs(c) {
   ];
 }
 
+const TX_CITIES = [['Houston', 'Houston (Harris Co)'], ['Dallas', 'Dallas (Dallas Co)'], ['Austin', 'Austin (Travis Co)'], ['San Antonio', 'San Antonio (Bexar Co)'], ['Fort Worth', 'Fort Worth (Tarrant Co)'], ['El Paso', 'El Paso'], ['Arlington', 'Arlington (Tarrant Co)'], ['Plano', 'Plano (Collin Co)'], ['Corpus Christi', 'Corpus Christi (Nueces Co)'], ['Lubbock', 'Lubbock'], ['Laredo', 'Laredo'], ['Irving', 'Irving (Dallas Co)'], ['Garland', 'Garland (Dallas Co)'], ['Frisco', 'Frisco (Collin Co)'], ['McKinney', 'McKinney (Collin Co)'], ['Amarillo', 'Amarillo (Potter Co)'], ['Waco', 'Waco'], ['Ackerly (small town)', 'Ackerly'], ['Acton (small town)', 'Acton'], ['Ace (small town)', 'Ace']];
+
+function txFaqs(c) {
+  const s = E.STATES[c], n = s.name, P = s.places;
+  const hou = placeBy(c, TX_CITIES[0][1]), dal = placeBy(c, TX_CITIES[1][1]), aus = placeBy(c, TX_CITIES[2][1]), sa = placeBy(c, TX_CITIES[3][1]), ace = placeBy(c, 'Ace');
+  const shipT = E.add({ state: c, items: [{ amt: 100, cat: 'general' }], ship: 10, place: aus }), shipX = E.add({ state: c, items: [{ amt: 100, cat: 'grocery' }], ship: 10, place: aus });
+  const use = ar(c, aus, 'general', 3000, { paid: 0 }), use2 = ar(c, aus, 'general', 3000, { paid: 4 });
+  const rev = E.reverse({ state: c, total: 108.25, cat: 'general', place: aus });
+  const sofa = E.add({ state: c, items: [{ amt: 500, cat: 'general' }], ship: 50, place: aus });
+  return [
+    [`What is the sales tax rate in ${n}?`, `${n}’s state sales tax rate is ${pct(s.base)} and cities, counties, transit authorities and special districts add up to 2%, so the combined rate is capped at ${pct(P.hi)}. In the Comptroller’s October 2026 table the combined rate runs from ${pct(P.lo)} to ${pct(P.hi)}: Houston, Dallas, Austin and San Antonio are all ${pct(hou.sales)}, while a small town such as Ace is ${pct(ace.sales)}. Search your city in the calculator above for your rate.`],
+    [`Why does ${n} sales tax differ from town to town?`, `Each place adds its own pieces to the ${pct(s.base)} state rate — a city tax (up to 2%), a county tax, a transit authority or a special district — and the total can never go above ${pct(P.hi)}. A $100 purchase costs ${m(ar(c, aus).total)} in Austin but ${m(ar(c, ace).total)} in Ace. A city that spans several counties is listed once for each county where the pieces differ.`],
+    [`Is food taxed in ${n}?`, `Basic groceries are exempt: a $100 grocery bill has $0.00 of tax, and water, milk and juice drinks with more than 50% juice are exempt too. Candy and gum, soft drinks and individual-size snacks (under 2.5 ounces) are taxable even in a grocery store — ${m(ar(c, aus, 'candy').tax)} on $100 in Austin. Restaurant food is taxable: ${m(ar(c, aus, 'prepared').tax)} on $100. Choose the item type in the calculator to see the difference.`],
+    [`Is clothing taxed in ${n}?`, `Yes. Clothing is taxed at your place’s rate — ${m(ar(c, aus).tax)} on $100 in Austin. The exception is the annual sales tax holiday in August, when most clothing and footwear sold for under $100 is tax free; the next one is August 6–8, 2027.`],
+    [`Are prescription and over-the-counter drugs taxed in ${n}?`, `No. Prescription drugs and over-the-counter medicine with an FDA Drug Facts label are exempt. A drug without a Drug Facts label is exempt only when a physician prescribes or dispenses it. Choose “Medicine” as the item type to see the tax removed.`],
+    [`Is shipping taxed in ${n}?`, `Delivery and shipping charges connected with a taxable item are taxable, and charges on an exempt item are not. A $500 item with $50 delivery in Austin is taxed on $550 — ${m(sofa.tax)} of tax. On a $100 taxable item with $10 shipping the tax is ${m(shipT.tax)}; on $100 of exempt groceries with $10 shipping it is ${m(shipX.tax)}.`],
+    [`How do I take sales tax out of a total in ${n}?`, `Divide the total by 1 plus your combined rate. In Austin (${pct(aus.sales)}) a total of $108.25 is ${m(rev.pre)} before tax, with ${m(rev.tax)} of tax inside it. Switch the calculator to “Remove tax”, pick your city and enter the total.`],
+    [`Do I owe ${n} tax on things I buy online?`, `Yes, when the seller does not charge ${n} tax you owe use tax: ${pct(s.base)} state plus up to 2% local use tax, depending on where you use the item, less any sales tax you already paid to another state. A $3,000 item used in Austin with no tax charged means ${m(use.owed)} of use tax; if the seller charged 4% you still owe ${m(use2.owed)}. Enter the tax the seller charged under Go advanced.`],
+    [`Which local rate applies to an order shipped to me in ${n}?`, `It depends on where the seller received and filled the order. A seller with a Texas place of business generally charges its own location’s local rate; if the order was filled from a Texas location that is not a place of business, or from outside Texas, the ship-to address decides. For in-person purchases it is the rate where you buy. The Comptroller’s Local Sales and Use Tax Collection publication (94-105) has the full table.`],
+    [`What sales tax do I pay on a car in ${n}?`, `Motor vehicles pay the state motor vehicle sales tax of 6.25% to the county tax office, and local sales taxes are not charged on them. The calculator does not compute vehicle tax.`]
+  ];
+}
+
 const PF = {
   MO: {
     unit: 'city', sampleLabel: 'Springfield, Greene County', sampleName: 'Springfield', faqs: moFaqs,
@@ -419,6 +442,20 @@ const PF = {
     title: (s) => s.name + ' Sales Tax Calculator &amp; Rates by City 2026 | CalcThis',
     desc: (s) => s.name + ' sales tax rates by city and county (' + pct(s.base) + ' to 11.75%, CDTFA Oct 2026) plus a free calculator: add or remove tax, groceries exempt, shipping rule.',
     ogTitle: (s) => s.name + ' Sales Tax Calculator & Rates by City 2026', source: 'California Department of Tax and Fee Administration', sampleOf: 'in Los Angeles'
+  }
+  ,
+  TX: {
+    unit: 'city', sampleLabel: 'Austin (Travis Co)', sampleName: 'Austin', faqs: txFaqs,
+    cityRows: () => TX_CITIES.map((x) => [x[0], placeBy('TX', x[1])]), cityHead: 'Texas sales tax rate by city', cityLead: 'City',
+    heroP: (s, P, a) => `${s.name} charges a ${pct(s.base)} state sales tax and <strong>cities, counties and districts add up to 2%</strong> — combined rates run from ${pct(P.lo)} to ${pct(P.hi)}. Search your city to see yours: on <strong>$100</strong> it is <strong>${m(a.total)}</strong> in Austin with <strong>${m(a.tax)}</strong> of tax.`,
+    glance: (s, P) => `<p>${s.name}’s state rate is <strong>${pct(s.base)}</strong>. Cities, counties, transit authorities and special districts add up to 2% on top, so the combined rate is capped at <strong>${pct(P.hi)}</strong>. In the Comptroller’s October 2026 table the combined rate runs from <strong>${pct(P.lo)}</strong> to <strong>${pct(P.hi)}</strong> — 8.25% in most big cities and 6.75% in many small towns. Local rates can change in January, April, July and October.</p>
+        <p>Houston, Dallas, Austin and San Antonio are all ${pct(placeBy('TX', TX_CITIES[0][1]).sales)}. Groceries, water, milk and medicine are exempt, but candy, soft drinks, restaurant food and clothing are taxed — so the calculator looks up your place and item type instead of guessing.</p>`,
+    cityNote: (s, P) => `Combined rates from the Texas Comptroller table for October 2026. Search the calculator for any of the ${P.n.toLocaleString('en-US')} places in the table; a city that spans several counties is listed once per county when its pieces differ.`,
+    shipLine: (c, s, p) => `On a $100 taxable item in Austin with $10 shipping the tax is ${m(E.add({ state: c, items: [{ amt: 100, cat: 'general' }], ship: 10, place: p }).tax)}; on $100 of exempt groceries with $10 shipping it is ${m(E.add({ state: c, items: [{ amt: 100, cat: 'grocery' }], ship: 10, place: p }).tax)}.`,
+    use: 'Search your city, pick the line that matches where the sale happens, add one item or several, choose what each one is and add shipping.',
+    title: (s) => s.name + ' Sales Tax Calculator & Rates by City 2026 | CalcThis',
+    desc: (s) => s.name + ' sales tax rates by city (' + pct(s.base) + ' state, up to 8.25% combined, Comptroller Oct 2026) plus a free calculator: groceries exempt, candy taxed, shipping rule.',
+    ogTitle: (s) => s.name + ' Sales Tax Calculator & Rates by City 2026', source: 'Texas Comptroller of Public Accounts', sampleOf: 'in Austin'
   }
 };
 

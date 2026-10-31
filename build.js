@@ -69,6 +69,7 @@ const PAGES = [
   { file: 'loan-calculator/index.html',        slug: '/loan-calculator/' },
   { file: 'auto-loan-calculator/index.html',   slug: '/auto-loan-calculator/' },
   { file: 'paycheck-calculator/index.html',   slug: '/paycheck-calculator/' },
+  { file: 'sales-tax-calculator/texas/index.html', slug: '/sales-tax-calculator/texas/' },
   { file: 'sales-tax-calculator/california/index.html', slug: '/sales-tax-calculator/california/' },
   { file: 'tablespoons-to-teaspoons/index.html', slug: '/tablespoons-to-teaspoons/' },
   { file: 'acres-to-sq-ft/index.html', slug: '/acres-to-sq-ft/' },
