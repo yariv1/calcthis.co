@@ -58,6 +58,11 @@ const PAGES = [
   // Legal & info pages
   { file: 'ratio-calculator/index.html', slug: '/ratio-calculator/' },
   { file: 'weighted-average-calculator/index.html', slug: '/weighted-average-calculator/' },
+  { file: 'time-average-calculator/index.html', slug: '/time-average-calculator/' },
+  { file: 'dice-average-calculator/index.html', slug: '/dice-average-calculator/' },
+  { file: 'stock-average-calculator/index.html', slug: '/stock-average-calculator/' },
+  { file: 'batting-average-calculator/index.html', slug: '/batting-average-calculator/' },
+  { file: 'average-calculator/index.html', slug: '/average-calculator/' },
   { file: 'fraction-calculator/index.html', slug: '/fraction-calculator/' },
   { file: 'standard-deviation-calculator/index.html', slug: '/standard-deviation-calculator/' },
   { file: 'scientific-notation-calculator/index.html', slug: '/scientific-notation-calculator/' },

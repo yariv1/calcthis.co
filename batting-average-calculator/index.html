@@ -1,0 +1,662 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Batting Average Calculator — Baseball &amp; Cricket</title>
+<meta name="description" content="Free batting average calculator for baseball and cricket: enter hits and at-bats or runs and outs, see it on a scale and the hits in a row you need.">
+<link rel="canonical" href="https://calcthis.co/batting-average-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Batting Average Calculator — Baseball &amp; Cricket">
+<meta property="og:description" content="Free batting average calculator for baseball and cricket: enter hits and at-bats or runs and outs, see it on a scale and the hits in a row you need.">
+<meta property="og:url" content="https://calcthis.co/batting-average-calculator/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/datepicker.min.css">
+<link rel="stylesheet" href="/assets/style.css?v=280">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Batting Average Calculator",
+  "url": "https://calcthis.co/batting-average-calculator/",
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "Batting average calculator for baseball, softball and cricket: hits ÷ at-bats or runs ÷ times out, shown on a scale of typical ranges, with the straight hits needed to reach a target average and optional OBP, slugging and OPS."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do you calculate a batting average in baseball?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Divide hits by official at-bats. 120 hits in 400 at-bats is 120 ÷ 400 = 0.300, written .300."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do you calculate a batting average in cricket?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Divide the runs scored by the number of times out. 2,400 runs and 60 dismissals gives 2,400 ÷ 60 = 40. If a batter has never been out the average is undefined."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How many hits in a row do I need to reach a .300 average?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It depends on where you start: straight hits needed = (target × at-bats − hits) ÷ (1 − target), rounded up. From 25 hits in 100 at-bats you need 8 straight hits to reach .306. The calculator does this for any numbers."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do walks count as at-bats?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Walks, hit-by-pitch and sacrifice flies are not official at-bats, so they do not change a batting average — but they do count in on-base percentage."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is a good batting average?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "In MLB, above .300 is exceptional, .250 to .300 is good to very good, and below .250 is poor to average. The last player to hit over .400 for a season was Ted Williams (.406 in 1941). In cricket, 40 to 50 is very good and above 50 is extraordinary."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why is a batting average written without a zero?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "By convention baseball averages are written to three decimals with no leading zero (.300, not 0.300) and read as \"three hundred\". Cricket averages are written normally, for example 40."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How is OPS calculated?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "OPS is on-base percentage plus slugging percentage. Slugging is total bases divided by at-bats, where a single is 1, a double 2, a triple 3 and a home run 4. Open Go advanced to enter the extra numbers."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "CalcThis",
+      "item": "https://calcthis.co/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Batting Average Calculator",
+      "item": "https://calcthis.co/batting-average-calculator/"
+    }
+  ]
+}
+</script>
+<meta property="og:site_name" content="CalcThis">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://calcthis.co/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="CalcThis — free, purpose-built calculators">
+<meta name="twitter:title" content="Batting Average Calculator — Baseball &amp; Cricket">
+<meta name="twitter:description" content="Free batting average calculator for baseball and cricket: enter hits and at-bats or runs and outs, see it on a scale and the hits in a row you need.">
+<meta name="twitter:image" content="https://calcthis.co/assets/og-default.png">
+</head>
+<body class="p-bmr p-avg">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <a class="hdr-back" href="/blog/" aria-label="Back to blog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-search"><div class="menu-sx"><input id="menuSearch" type="search" placeholder="Search calculators or states…" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Search calculators" enterkeyhint="search"></div><div class="menu-results" id="menuResults" hidden></div></div>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <span class="menu-col-head">Construction &amp; Gardening</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+          <a href="/paint-calculator/">Paint</a>
+          <a href="/wallpaper-calculator/">Wallpaper</a>
+          <a href="/square-footage-calculator/">Square Footage</a>
+          <a href="/tape-measure-fraction-calculator/">Tape Measure Fraction</a>
+          <a href="/stair-calculator/">Stair</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/vo2-max-calculator/">VO2 Max</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
+          <a href="/bmi-calculator/">BMI</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/ideal-weight-calculator/">Ideal Weight</a>
+          <a href="/lean-body-mass-calculator/">Lean Body Mass</a>
+          <a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio</a>
+          <a href="/calorie-calculator/">Calorie</a>
+          <a href="/calorie-deficit-calculator/">Calorie Deficit</a>
+          <a href="/bmr-calculator/">BMR</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/water-intake-calculator/">Water Intake</a>
+          <a href="/macro-calculator/">Macro</a>
+          <a href="/protein-intake-calculator/">Protein Intake</a>
+          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
+          <a href="/steps-to-miles-calculator/">Steps to Miles</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/semester-grade-calculator/">Semester Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+          <a href="/grade-curve-calculator/">Grade Curve</a>
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/fraction-calculator/">Fraction</a>
+          <a href="/standard-deviation-calculator/">Standard Deviation</a>
+          <a href="/scientific-notation-calculator/">Scientific Notation</a>
+          <a href="/average-calculator/">Average</a>
+          <a href="/batting-average-calculator/" class="current">Batting Average</a>
+          <a href="/stock-average-calculator/">Stock Average</a>
+          <a href="/dice-average-calculator/">Dice Average</a>
+          <a href="/time-average-calculator/">Time Average</a>
+          <a href="/weighted-average-calculator/">Weighted Average</a>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+          <a href="/age-calculator/">Age</a>
+          <a href="/date-calculator/">Date</a>
+          <a href="/time-calculator/">Time</a>
+          <a href="/hours-calculator/">Hours</a>
+          <a href="/triangle-calculator/">Triangle</a>
+          <a href="/random-number-generator/">Random Number</a>
+          <span class="menu-col-head">Cooking &amp; Kitchen</span>
+          <a href="/recipe-converter/">Recipe Converter</a>
+          <a href="/turkey-cooking-time-calculator/">Turkey Cooking Time</a>
+          <a href="/turkey-thawing-time-calculator/">Turkey Thawing Time</a>
+          <a href="/turkey-size-calculator/">Turkey Size</a>
+          <!--UNITNAV:START-->
+          <span class="menu-col-head">Unit Converters</span>
+          <a href="/unit-converter/">Unit Converter</a>
+          <a href="/length-converter/">Length Converter</a>
+          <a href="/weight-converter/">Weight Converter</a>
+          <a href="/volume-converter/">Volume Converter</a>
+          <a href="/temperature-converter/">Temperature Converter</a>
+          <a href="/area-converter/">Area Converter</a>
+          <a href="/speed-converter/">Speed Converter</a>
+          <a href="/data-storage-converter/">Data Storage Converter</a>
+          <a href="/cooking-converter/">Cooking Converter</a>
+          <a href="/px-to-rem-converter/">PX to REM Converter</a>
+          <!--UNITNAV:END-->
+          <span class="menu-col-head">Money &amp; Finance</span>
+          <a href="/mortgage-calculator/">Mortgage</a>
+          <a href="/loan-calculator/">Loan</a>
+          <a href="/auto-loan-calculator/">Auto Loan</a>
+          <!--STAXNAV:START-->
+          <a href="/sales-tax-calculator/">Sales Tax</a>
+          <a href="/sales-tax-calculator/california/">California Sales Tax</a>
+          <a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax</a>
+          <a href="/sales-tax-calculator/missouri/">Missouri Sales Tax</a>
+          <a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax</a>
+          <a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax</a>
+          <a href="/sales-tax-calculator/ohio/">Ohio Sales Tax</a>
+          <a href="/sales-tax-calculator/texas/">Texas Sales Tax</a>
+          <!--STAXNAV:END-->
+          <a href="/tip-calculator/">Tip</a>
+          <a href="/how-much-to-tip/">How Much to Tip</a>
+        </div>
+        <!--PAYNAV:START-->
+        <div class="menu-col">
+          <span class="menu-col-head">Paycheck Calculators</span>
+          <a href="/paycheck-calculator/">Paycheck Calculator (all states)</a>
+          <a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a>
+          <a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a>
+          <a href="/paycheck-calculator/california/">California Paycheck Calculator</a>
+          <a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a>
+          <a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a>
+          <a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a>
+          <a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a>
+          <a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a>
+          <a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a>
+          <a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a>
+          <a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a>
+          <a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a>
+          <a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a>
+          <a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a>
+          <a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a>
+        </div>
+        <!--PAYNAV:END-->
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">Baseball · softball · cricket</div>
+    <h1>Batting Average Calculator</h1>
+    <p>Enter <strong>hits and at-bats</strong> (baseball, softball) or <strong>runs and times out</strong> (cricket) and see the batting average on a scale — plus the <strong>hits in a row you need to reach a target</strong>. 120 hits in 400 at-bats is <strong>.300</strong>.</p>
+  </section>
+
+  <div class="grid">
+
+    <!-- INPUT -->
+    <div class="card">
+      <div class="card-pad">
+        <h2 class="card-h2">Your numbers</h2>
+        <div class="ctl-row">
+          <span class="ctl-lab">Sport</span>
+          <div class="seg" id="avSportSeg" role="group" aria-label="Sport"><button class="on" type="button" data-v="base">Baseball / softball</button><button type="button" data-v="cr">Cricket</button></div>
+        </div>
+        <div class="two">
+          <label class="fld" for="avA"><span class="lab" id="avALab">Hits <span class="unit">count</span></span><div class="inp"><input id="avA" type="number" inputmode="decimal" step="any" placeholder="e.g. 120" min="0"></div></label>
+          <label class="fld" for="avB"><span class="lab" id="avBLab">At-bats <span class="unit">count</span></span><div class="inp"><input id="avB" type="number" inputmode="decimal" step="any" placeholder="e.g. 400" min="0"></div></label>
+        </div>
+        <div class="proj-sep"></div>
+        <label class="fld" for="avTarget" style="margin-bottom:0"><span class="lab" id="avTLab">Target average <span class="unit">optional</span></span><div class="inp"><input id="avTarget" type="text" inputmode="decimal" placeholder="e.g. .300" autocomplete="off"></div></label>
+        <div class="chips" id="avTChips" style="margin-top:8px"></div>
+        <div id="avNextWrap"><label class="fld" for="avNext"><span class="lab" id="avNextLab">Next at-bats <span class="unit">optional</span></span><div class="inp"><input id="avNext" type="number" inputmode="decimal" step="any" placeholder="e.g. 50" min="0"></div></label></div>
+        <div class="res-hint" id="avHint" style="display:none;text-align:left;margin:4px 0 8px"></div>
+        <div id="avAdvIn" style="display:none">
+          <div class="proj-sep"></div>
+          <div id="avAdvBase">
+            <span class="av-lab">For OBP, slugging and OPS <span style="color:var(--muted);font-weight:500">(blank = 0)</span></span>
+            <div class="two"><label class="fld" for="avBB"><span class="lab" id="avBBLab">Walks <span class="unit">BB</span></span><div class="inp"><input id="avBB" type="number" inputmode="decimal" step="any" placeholder="0" min="0"></div></label><label class="fld" for="avHBP"><span class="lab" id="avHBPLab">Hit by pitch <span class="unit">HBP</span></span><div class="inp"><input id="avHBP" type="number" inputmode="decimal" step="any" placeholder="0" min="0"></div></label></div>
+            <div class="two"><label class="fld" for="avSF"><span class="lab" id="avSFLab">Sacrifice flies <span class="unit">SF</span></span><div class="inp"><input id="avSF" type="number" inputmode="decimal" step="any" placeholder="0" min="0"></div></label><label class="fld" for="av2B"><span class="lab" id="av2BLab">Doubles <span class="unit">2B</span></span><div class="inp"><input id="av2B" type="number" inputmode="decimal" step="any" placeholder="0" min="0"></div></label></div>
+            <div class="two"><label class="fld" for="av3B"><span class="lab" id="av3BLab">Triples <span class="unit">3B</span></span><div class="inp"><input id="av3B" type="number" inputmode="decimal" step="any" placeholder="0" min="0"></div></label><label class="fld" for="avHR"><span class="lab" id="avHRLab">Home runs <span class="unit">HR</span></span><div class="inp"><input id="avHR" type="number" inputmode="decimal" step="any" placeholder="0" min="0" style="margin-bottom:0"></div></label></div>
+          </div>
+          <div id="avAdvCr" style="display:none">
+            <span class="av-lab">For not outs and strike rate <span style="color:var(--muted);font-weight:500">(optional)</span></span>
+            <div class="two"><label class="fld" for="avInn"><span class="lab" id="avInnLab">Innings <span class="unit">count</span></span><div class="inp"><input id="avInn" type="number" inputmode="decimal" step="any" placeholder="e.g. 65" min="0"></div></label><label class="fld" for="avBalls"><span class="lab" id="avBallsLab">Balls faced <span class="unit">count</span></span><div class="inp"><input id="avBalls" type="number" inputmode="decimal" step="any" placeholder="e.g. 2800" min="0"></div></label></div>
+          </div>
+        </div>
+        <div class="add-row split" style="margin-top:16px">
+          <span></span>
+          <button class="advbtn" id="avAdvBtn" type="button">
+            <span id="avAdvBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div class="card">
+      <div class="card-pad">
+        <div class="bf-res">
+          <div class="res-lab" id="avResLab">Batting average</div>
+          <div class="res-big"><span id="avBig">—</span></div>
+          <div class="res-sub" id="avSub" data-empty="Enter your hits and at-bats.">Enter your hits and at-bats.</div>
+        </div>
+        <div id="avBody" style="display:none">
+          <p class="res-tip adv-tip" id="avTip"></p>
+          <p class="bm-h">Where it sits</p>
+          <div class="av-scale" id="avScale"></div>
+          <div class="av-ticks" id="avScaleT"></div>
+          <p class="av-note">Typical ranges, darker = better. Baseball: below .250 poor to average, .250–.300 good to very good, above .300 exceptional. Cricket: below 10 poor up to above 50 extraordinary.</p>
+          <div class="proj-sep"></div>
+          <table class="dtable" id="avStats"></table>
+          <div id="avAdvOut" style="display:none"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- mobile sticky bar -->
+  <div class="mbar" id="mbar">
+    <span class="mbar-lab" id="avMLab">Batting average</span>
+    <div class="mbar-vals"><b id="avMVal">—</b></div>
+  </div>
+
+  <div class="related-calcs">
+    <p class="related-calcs-h">More calculators that may interest you</p>
+    <div class="pills">
+      <a class="pill" href="/average-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 12h2M12 12h2M8 16h2M12 16h2"/></svg>
+        Average Calculator
+      </a>
+      <a class="pill" href="/percentage-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 5L5 19"/><circle cx="7" cy="7" r="2.5"/><circle cx="17" cy="17" r="2.5"/></svg>
+        Percentage Calculator
+      </a>
+      <a class="pill" href="/ratio-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 17h16M9 3L7 21M17 3l-2 18"/></svg>
+        Ratio Calculator
+      </a>
+      <a class="pill" href="/weighted-average-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="12" r="4"/><circle cx="16" cy="12" r="4"/></svg>
+        Weighted Average Calculator
+      </a>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use the batting average calculator</h2>
+        <p>Choose <strong>Baseball / softball</strong> and enter hits and at-bats, or <strong>Cricket</strong> and enter runs scored and times out. The big number is the batting average, shown on a scale of typical ranges. Add a <strong>target average</strong> (type .300 or tap a chip) and the calculator tells you how many <strong>hits in a row</strong> you need — or, if you are already above it, how many outs in a row you can afford.</p>
+        <p>Enter the number of <strong>next at-bats</strong> you have left to see how many hits you need in them, and whether the target is still possible.</p>
+
+        <h2>The batting average formula</h2>
+        <div class="formula">
+          Baseball: AVG = hits ÷ at-bats
+          <small>CRICKET: AVERAGE = RUNS SCORED ÷ TIMES OUT</small>
+        </div>
+        <p>120 hits in 400 at-bats is 120 ÷ 400 = <strong>.300</strong> — "batting three-hundred". In cricket, 2,400 runs in 60 dismissals is 2,400 ÷ 60 = <strong>40</strong>. Baseball averages are written to three decimals without the leading zero; cricket averages to two.</p>
+
+        <h2>Hits in a row to reach a target</h2>
+        <p>With 25 hits in 100 at-bats (.250) and a target of .300, each hit raises both hits and at-bats by one, so you need <strong>8 hits in a row</strong> to get to .306. The general rule: straight hits needed = (target × at-bats − hits) ÷ (1 − target), rounded up.</p>
+      </div>
+
+      <div>
+        <h2>What is a good batting average?</h2>
+        <table class="dtable">
+          <thead><tr><th>Baseball (MLB)</th><th>Reading</th></tr></thead>
+          <tbody><tr><td>below .250</td><td>poor to average</td></tr><tr><td>.250–.275</td><td>good to very good</td></tr><tr><td>.275–.300</td><td>very good</td></tr><tr><td>above .300</td><td>exceptional</td></tr><tr><td>above .400</td><td>the ultimate achievement</td></tr></tbody>
+        </table>
+        <table class="dtable" style="margin-top:12px">
+          <thead><tr><th>Cricket</th><th>Reading</th></tr></thead>
+          <tbody><tr><td>below 10</td><td>poor</td></tr><tr><td>10–20</td><td>average</td></tr><tr><td>20–30</td><td>above average</td></tr><tr><td>30–40</td><td>good</td></tr><tr><td>40–50</td><td>very good</td></tr><tr><td>above 50</td><td>extraordinary</td></tr></tbody>
+        </table>
+        <p class="av-note">These are the commonly quoted ranges for MLB and cricket, as summarised by Omni Calculator (retrieved November 2026). Leagues, ages and levels differ, so treat them as a guide.</p>
+
+        <h2>OBP, slugging and OPS</h2>
+        <p>Under <strong>Go advanced</strong> add walks, hit-by-pitch, sacrifice flies, doubles, triples and home runs for the fuller picture. <strong>On-base percentage</strong> = (H + BB + HBP) ÷ (AB + BB + HBP + SF); <strong>slugging</strong> = total bases ÷ AB; <strong>OPS</strong> = OBP + SLG. With 120 H, 40 BB, 5 HBP, 3 SF, 25 2B, 3 3B, 12 HR in 400 AB: OBP .368, SLG .468, OPS .836.</p>
+        <p>For cricket, the same panel takes innings and balls faced for <strong>not outs</strong> and <strong>strike rate</strong> (runs per 100 balls). For averages of any list of numbers, use the <a href="/average-calculator/">average calculator</a>.</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>How do you calculate a batting average in baseball?</summary><p>Divide hits by official at-bats. 120 hits in 400 at-bats is 120 ÷ 400 = 0.300, written .300.</p></details>
+    <details class="faq"><summary>How do you calculate a batting average in cricket?</summary><p>Divide the runs scored by the number of times out. 2,400 runs and 60 dismissals gives 2,400 ÷ 60 = 40. If a batter has never been out the average is undefined.</p></details>
+    <details class="faq"><summary>How many hits in a row do I need to reach a .300 average?</summary><p>It depends on where you start: straight hits needed = (target × at-bats − hits) ÷ (1 − target), rounded up. From 25 hits in 100 at-bats you need 8 straight hits to reach .306. The calculator does this for any numbers.</p></details>
+    <details class="faq"><summary>Do walks count as at-bats?</summary><p>No. Walks, hit-by-pitch and sacrifice flies are not official at-bats, so they do not change a batting average — but they do count in on-base percentage.</p></details>
+    <details class="faq"><summary>What is a good batting average?</summary><p>In MLB, above .300 is exceptional, .250 to .300 is good to very good, and below .250 is poor to average. The last player to hit over .400 for a season was Ted Williams (.406 in 1941). In cricket, 40 to 50 is very good and above 50 is extraordinary.</p></details>
+    <details class="faq"><summary>Why is a batting average written without a zero?</summary><p>By convention baseball averages are written to three decimals with no leading zero (.300, not 0.300) and read as "three hundred". Cricket averages are written normally, for example 40.</p></details>
+    <details class="faq"><summary>How is OPS calculated?</summary><p>OPS is on-base percentage plus slugging percentage. Slugging is total bases divided by at-bats, where a single is 1, a double 2, a triple 3 and a home run 4. Open Go advanced to enter the extra numbers.</p></details>
+  </section>
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+      <div class="footer-stack">
+<div class="footer-col" style="order:1">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+          <li><a href="/paint-calculator/">Paint Calculator</a></li>
+          <li><a href="/wallpaper-calculator/">Wallpaper Calculator</a></li>
+          <li><a href="/square-footage-calculator/">Square Footage Calculator</a></li>
+          <li><a href="/tape-measure-fraction-calculator/">Tape Measure Fraction Calculator</a></li>
+          <li><a href="/stair-calculator/">Stair Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:5">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Cooking &amp;</span> <span class="ft2">Kitchen</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/recipe-converter/">Recipe Converter</a></li>
+          <li><a href="/turkey-cooking-time-calculator/">Turkey Cooking Time Calculator</a></li>
+          <li><a href="/turkey-thawing-time-calculator/">Turkey Thawing Time Calculator</a></li>
+          <li><a href="/turkey-size-calculator/">Turkey Size Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:6">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Money &amp;</span> <span class="ft2">Finance</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/mortgage-calculator/">Mortgage Calculator</a></li>
+          <li><a href="/loan-calculator/">Loan Calculator</a></li>
+          <li><a href="/auto-loan-calculator/">Auto Loan Calculator</a></li>
+          <!--STAXFOOT:START-->
+          <li><a href="/sales-tax-calculator/">Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/california/">California Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/missouri/">Missouri Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/ohio/">Ohio Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/texas/">Texas Sales Tax Calculator</a></li>
+          <!--STAXFOOT:END-->
+          <li><a href="/tip-calculator/">Tip Calculator</a></li>
+          <li><a href="/how-much-to-tip/">How Much to Tip</a></li>
+        </ul>
+      </div>
+      </div>
+
+      <div class="footer-right">
+<div class="footer-col footer-col--two" style="order:2">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/vo2-max-calculator/">VO2 Max Calculator</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/bmi-calculator/">BMI Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/ideal-weight-calculator/">Ideal Weight Calculator</a></li>
+          <li><a href="/lean-body-mass-calculator/">Lean Body Mass Calculator</a></li>
+          <li><a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio Calculator</a></li>
+          <li><a href="/calorie-calculator/">Calorie Calculator</a></li>
+          <li><a href="/calorie-deficit-calculator/">Calorie Deficit Calculator</a></li>
+          <li><a href="/bmr-calculator/">BMR Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/water-intake-calculator/">Water Intake Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/protein-intake-calculator/">Protein Intake Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
+          <li><a href="/steps-to-miles-calculator/">Steps to Miles Calculator</a></li>
+        </ul>
+      </div>
+
+        <div class="footer-sub">
+<div class="footer-subcol">
+<div class="footer-col" style="order:3">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/semester-grade-calculator/">Semester Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+          <li><a href="/grade-curve-calculator/">Grade Curve Calculator</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:START-->
+<div class="footer-col" style="order:7">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Unit</span> <span class="ft2">Converters</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/unit-converter/">Unit Converter</a></li>
+          <li><a href="/length-converter/">Length Converter</a></li>
+          <li><a href="/weight-converter/">Weight Converter</a></li>
+          <li><a href="/volume-converter/">Volume Converter</a></li>
+          <li><a href="/temperature-converter/">Temperature Converter</a></li>
+          <li><a href="/area-converter/">Area Converter</a></li>
+          <li><a href="/speed-converter/">Speed Converter</a></li>
+          <li><a href="/data-storage-converter/">Data Storage Converter</a></li>
+          <li><a href="/cooking-converter/">Cooking Measurement Converter</a></li>
+          <li><a href="/px-to-rem-converter/">PX to REM Converter</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:END-->
+</div>
+
+<div class="footer-col" style="order:4">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/fraction-calculator/">Fraction Calculator</a></li>
+          <li><a href="/standard-deviation-calculator/">Standard Deviation Calculator</a></li>
+          <li><a href="/scientific-notation-calculator/">Scientific Notation Calculator</a></li>
+          <li><a href="/weighted-average-calculator/">Weighted Average Calculator</a></li>
+          <li><a href="/average-calculator/">Average Calculator</a></li>
+          <li><a href="/batting-average-calculator/">Batting Average Calculator</a></li>
+          <li><a href="/stock-average-calculator/">Stock Average Calculator</a></li>
+          <li><a href="/dice-average-calculator/">Dice Average Calculator</a></li>
+          <li><a href="/time-average-calculator/">Time Average Calculator</a></li>
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+          <li><a href="/age-calculator/">Age Calculator</a></li>
+          <li><a href="/date-calculator/">Date Calculator</a></li>
+          <li><a href="/time-calculator/">Time Calculator</a></li>
+          <li><a href="/hours-calculator/">Hours Calculator</a></li>
+          <li><a href="/triangle-calculator/">Triangle Calculator</a></li>
+          <li><a href="/random-number-generator/">Random Number Generator</a></li>
+        </ul>
+      </div>
+        </div>
+      </div>
+
+      <!--PAYFOOT:START-->
+      <div class="footer-col footer-col--wide">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Paycheck</span> <span class="ft2">Calculators</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/paycheck-calculator/">Paycheck Calculator (all states)</a></li>
+          <li><a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/california/">California Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a></li>
+        </ul>
+      </div>
+      <!--PAYFOOT:END-->
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/blog/">Blog</a>
+      <span aria-hidden="true">·</span>
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+</div>
+
+<script src="/assets/app.js?v=280"></script>
+<script>CalcThis.initAvgCalc('bat');</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>

@@ -10285,6 +10285,675 @@ CalcThis.initSemesterCalc = function () {
   all();
 };
 
+/* AVG-FAMILY:BEGIN */
+/* =========================================================
+   AVERAGE FAMILY — pure engine (no DOM). Marked AVERAGE-ENGINE:START/END so the page generator and
+   the QA scripts can eval it. Hub (list statistics), batting (baseball + cricket), stock (average
+   cost + averaging solver), dice (exact distribution, keep highest/lowest) and time (durations +
+   circular mean of clock times across midnight). */
+/* AVERAGE-ENGINE:START */
+CalcThis.avgEngine = (function () {
+  var NUM = /^[-+]?(\d+\.?\d*|\.\d+)(e[-+]?\d+)?$/i;
+  function tok(s) { s = String(s).replace(/−/g, '-').replace(/[$€£%]/g, ''); return NUM.test(s) ? parseFloat(s) : NaN; }
+
+  /* ---------- list statistics ---------- */
+  function parseList(text) {
+    var vals = [], ignored = [];
+    String(text).split(/[\s,;]+/).forEach(function (t) {
+      if (!t) return;
+      var v = tok(t);
+      if (isFinite(v)) vals.push(v); else ignored.push(t);
+    });
+    return { vals: vals, ignored: ignored };
+  }
+  function med(a) { var n = a.length; if (!n) return NaN; return n % 2 ? a[(n - 1) / 2] : (a[n / 2 - 1] + a[n / 2]) / 2; }
+  function stats(v) {
+    var n = v.length; if (!n) return null;
+    var s = v.slice().sort(function (a, b) { return a - b; }), sum = 0, i;
+    for (i = 0; i < n; i++) sum += s[i];
+    if (!isFinite(sum)) return { n: n, huge: true };
+    var mean = sum / n, cnt = {}, best = 0, modes = [], seen = {};
+    for (i = 0; i < n; i++) { var k = String(s[i]); cnt[k] = (cnt[k] || 0) + 1; }
+    s.forEach(function (x) {
+      var k2 = String(x); if (seen[k2]) return; seen[k2] = 1;
+      var c = cnt[k2]; if (c > best) { best = c; modes = [x]; } else if (c === best) modes.push(x);
+    });
+    if (best < 2) modes = [];
+    var q1 = n > 1 ? med(s.slice(0, Math.floor(n / 2))) : s[0], q3 = n > 1 ? med(s.slice(Math.ceil(n / 2))) : s[0];
+    var iqr = q3 - q1, lf = q1 - 1.5 * iqr, uf = q3 + 1.5 * iqr;
+    var out = s.filter(function (x) { return x < lf || x > uf; });
+    var geo = NaN, har = NaN;
+    if (s[0] > 0) {
+      var sl = 0, sr = 0;
+      s.forEach(function (x) { sl += Math.log(x); sr += 1 / x; });
+      geo = Math.exp(sl / n); har = n / sr;
+    }
+    return { n: n, sorted: s, sum: sum, mean: mean, median: med(s), modes: modes, modeCount: best, min: s[0], max: s[n - 1], range: s[n - 1] - s[0], q1: q1, q3: q3, iqr: iqr, lf: lf, uf: uf, out: out, geo: geo, har: har };
+  }
+  function weighted(v, w) {
+    var n = v.length, sw = 0, sx = 0, i;
+    if (!n || w.length !== n) return { err: 'count' };
+    for (i = 0; i < n; i++) { if (!(w[i] >= 0)) return { err: 'neg' }; sw += w[i]; sx += w[i] * v[i]; }
+    if (!(sw > 0)) return { err: 'zero' };
+    return { mean: sx / sw, sumW: sw };
+  }
+
+  /* ---------- batting ---------- */
+  function straightHits(h, ab, t) { if (!(t < 1)) return Infinity; return Math.max(0, Math.ceil((t * ab - h) / (1 - t) - 1e-9)); }
+  function hitsIn(h, ab, t, n) { return Math.max(0, Math.ceil(t * (ab + n) - h - 1e-9)); }
+  function runsNeeded(runs, outs, t) { return Math.max(0, Math.ceil(t * (outs + 1) - runs - 1e-9)); }
+  function obp(h, bb, hbp, ab, sf) { var d = ab + bb + hbp + sf; return d > 0 ? (h + bb + hbp) / d : NaN; }
+  function slg(h, d2, d3, hr, ab) { return ab > 0 ? ((h - d2 - d3 - hr) + 2 * d2 + 3 * d3 + 4 * hr) / ab : NaN; }
+  var BASE_BANDS = [[0, 0.250, 'below .250 — poor to average'], [0.250, 0.275, '.250–.275 — good to very good'], [0.275, 0.300, '.275–.300 — very good'], [0.300, 0.400, 'above .300 — exceptional'], [0.400, 9, 'above .400 — the ultimate achievement']];
+  var CRIC_BANDS = [[0, 10, 'below 10 — poor'], [10, 20, '10–20 — average'], [20, 30, '20–30 — above average'], [30, 40, '30–40 — good'], [40, 50, '40–50 — very good'], [50, 9999, 'above 50 — extraordinary']];
+  function band(bands, x) { for (var i = bands.length - 1; i >= 0; i--) if (x >= bands[i][0] - 1e-12) return i; return 0; }
+
+  /* ---------- stock ---------- */
+  function stock(rows, fee) {
+    var S = 0, C = 0, i;
+    for (i = 0; i < rows.length; i++) { S += rows[i].s; C += rows[i].s * rows[i].p + (fee || 0); }
+    return { shares: S, cost: C, avg: S > 0 ? C / S : NaN, n: rows.length };
+  }
+  /* shares to buy at price P0 so the average becomes T: C + f + P0 x = T (S + x) */
+  function sharesFor(S, C, T, P0, f) {
+    var d = P0 - T; if (!(Math.abs(d) > 1e-12)) return NaN;
+    return (T * S - C - (f || 0)) / d;
+  }
+
+  /* ---------- dice ---------- */
+  function diceDist(N, S, mod, keep, K) {
+    var p, base, i, j, c, v, sum;
+    if (!keep || K >= N) {
+      p = [1];
+      for (i = 0; i < N; i++) {
+        var q = new Array(p.length + S - 1), run = 0;
+        for (j = 0; j < q.length; j++) {
+          if (j < p.length) run += p[j];
+          if (j - S >= 0) run -= p[j - S];
+          q[j] = run / S;
+        }
+        p = q;
+      }
+      base = N;
+    } else {
+      var binom = [], a, b;
+      for (a = 0; a <= N; a++) { binom[a] = [1]; for (b = 1; b <= a; b++) binom[a][b] = (b === a ? 1 : binom[a - 1][b - 1] + binom[a - 1][b]); }
+      var W = K * S + 1, dp = [], nd, kept, add;
+      for (j = 0; j <= N; j++) { dp[j] = new Array(W); for (sum = 0; sum < W; sum++) dp[j][sum] = 0; }
+      dp[0][0] = 1;
+      for (var step = 0; step < S; step++) {
+        v = keep === 'h' ? S - step : step + 1;
+        nd = [];
+        for (j = 0; j <= N; j++) { nd[j] = new Array(W); for (sum = 0; sum < W; sum++) nd[j][sum] = 0; }
+        for (j = 0; j <= N; j++) for (sum = 0; sum < W; sum++) {
+          var w0 = dp[j][sum]; if (!w0) continue;
+          kept = Math.min(j, K);
+          for (c = 0; c <= N - j; c++) {
+            add = Math.min(c, K - kept);
+            var ns = sum + add * v; if (ns >= W) continue;
+            nd[j + c][ns] += w0 * binom[N - j][c];
+          }
+        }
+        dp = nd;
+      }
+      var tot = Math.pow(S, N);
+      p = []; for (sum = K; sum < W; sum++) p.push(dp[N][sum] / tot);
+      base = K;
+    }
+    var t = 0; for (i = 0; i < p.length; i++) t += p[i];
+    for (i = 0; i < p.length; i++) p[i] /= t;
+    var mean = 0, m2 = 0, best = 0, modes = [];
+    for (i = 0; i < p.length; i++) { var x = base + i + mod; mean += p[i] * x; }
+    for (i = 0; i < p.length; i++) { var x2 = base + i + mod; m2 += p[i] * (x2 - mean) * (x2 - mean); if (p[i] > best + 1e-15) { best = p[i]; modes = [x2]; } else if (Math.abs(p[i] - best) <= 1e-15) modes.push(x2); }
+    return { p: p, lo: base + mod, hi: base + p.length - 1 + mod, mean: mean, sd: Math.sqrt(m2), modes: modes, best: best };
+  }
+  function probAt(d, x, kind) {
+    var i, s = 0, v;
+    for (i = 0; i < d.p.length; i++) {
+      v = d.lo + i;
+      if ((kind === 'eq' && v === x) || (kind === 'ge' && v >= x) || (kind === 'le' && v <= x)) s += d.p[i];
+    }
+    return Math.min(1, s);
+  }
+
+  /* ---------- time ---------- */
+  var UNIT = { h: 3600, hr: 3600, hrs: 3600, hour: 3600, hours: 3600, m: 60, min: 60, mins: 60, minute: 60, minutes: 60, s: 1, sec: 1, secs: 1, second: 1, seconds: 1 };
+  /* mode 'hm' (1:30 = 1h30m, bare number = minutes) or 'ms' (1:30 = 1m30s, bare number = seconds) -> seconds, or NaN */
+  function parseDur(t, mode) {
+    t = String(t).trim().toLowerCase(); if (!t) return NaN;
+    var m, total = 0, rest, any = false, last = 9;
+    if (/[a-z]/.test(t)) {
+      rest = t.replace(/,/g, '');
+      var re = /^\s*(\d+(?:\.\d+)?)\s*([a-z]+)\s*/;
+      while (rest.length) {
+        m = re.exec(rest); if (!m || UNIT[m[2]] === undefined) return NaN;
+        var rk = UNIT[m[2]] >= 3600 ? 3 : (UNIT[m[2]] >= 60 ? 2 : 1); if (rk >= last) return NaN; last = rk; total += parseFloat(m[1]) * UNIT[m[2]]; any = true; rest = rest.slice(m[0].length);
+      }
+      return any ? total : NaN;
+    }
+    if (t.indexOf(':') >= 0) {
+      var parts = t.split(':');
+      if (parts.length > 3 || !parts.every(function (x) { return /^\d+(\.\d+)?$/.test(x); })) return NaN;
+      var n = parts.map(parseFloat);
+      if (parts.length === 3) { if (n[1] >= 60 || n[2] >= 60) return NaN; return n[0] * 3600 + n[1] * 60 + n[2]; }
+      if (n[1] >= 60) return NaN;
+      return mode === 'ms' ? n[0] * 60 + n[1] : n[0] * 3600 + n[1] * 60;
+    }
+    if (!/^\d+(\.\d+)?$/.test(t)) return NaN;
+    return parseFloat(t) * (mode === 'ms' ? 1 : 60);
+  }
+  function parseDurList(text, mode) {
+    var vals = [], ignored = [];
+    String(text).split(/[\n,;]+/).forEach(function (chunk) {
+      chunk = chunk.trim(); if (!chunk) return;
+      var items = /[a-z]/i.test(chunk) ? [chunk] : chunk.split(/\s+/);
+      items.forEach(function (it) { var v = parseDur(it, mode); if (isFinite(v)) vals.push({ s: v, t: it }); else ignored.push(it); });
+    });
+    return { vals: vals, ignored: ignored };
+  }
+  /* clock time -> minutes after midnight (0..1439), or NaN. noSuffix: 'am' | 'pm' for 1-12 without a suffix */
+  function parseClock(t, noSuffix) {
+    t = String(t).trim().toLowerCase().replace(/\./g, ''); if (!t) return NaN;
+    var m = /^(\d{1,2})(?::?(\d{2}))?\s*(a|p|am|pm)?$/.exec(t), h, mi, suf;
+    if (!m) return NaN;
+    h = parseInt(m[1], 10); mi = m[2] ? parseInt(m[2], 10) : 0; suf = m[3] ? m[3].charAt(0) : '';
+    if (mi > 59) return NaN;
+    if (/^\d{3,4}$/.test(t.replace(/\s*[ap]m?$/, '')) && !m[2]) return NaN;
+    if (suf) { if (h < 1 || h > 12) return NaN; if (suf === 'p') h = h === 12 ? 12 : h + 12; else h = h === 12 ? 0 : h; return h * 60 + mi; }
+    if (h > 23) return NaN;
+    if (h === 0 || h >= 13) return h * 60 + mi;
+    if (noSuffix === 'pm') h = h === 12 ? 12 : h + 12; else h = h === 12 ? 0 : h;
+    return h * 60 + mi;
+  }
+  function parseClockList(text, noSuffix) {
+    var vals = [], ignored = [];
+    String(text).split(/[\n,;]+/).forEach(function (chunk) {
+      chunk = chunk.trim(); if (!chunk) return;
+      var items = /^\d{1,2}(:\d{2})?\s*[ap]\.?m?\.?$/i.test(chunk) ? [chunk] : (chunk.match(/\d{1,2}(?::?\d{2})?\s*(?:[ap]\.?m?\.?)?|\S+/gi) || []);
+      items.forEach(function (it) { it = it.trim(); if (!it) return; var v = parseClock(it, noSuffix); if (isFinite(v)) vals.push({ m: v, t: it }); else ignored.push(it); });
+    });
+    return { vals: vals, ignored: ignored };
+  }
+  function circMean(mins) {
+    var sx = 0, sy = 0, n = mins.length, i, a;
+    for (i = 0; i < n; i++) { a = mins[i] / 1440 * 2 * Math.PI; sx += Math.cos(a); sy += Math.sin(a); }
+    var R = Math.sqrt(sx * sx + sy * sy) / n;
+    if (R < 1e-9) return null;
+    var mean = ((Math.atan2(sy, sx) / (2 * Math.PI) * 1440) % 1440 + 1440) % 1440;
+    var offs = mins.map(function (m) { return ((m - mean + 720) % 1440 + 1440) % 1440 - 720; });
+    return { mean: mean, R: R, offs: offs, early: Math.min.apply(null, offs), late: Math.max.apply(null, offs) };
+  }
+  return { tok: tok, parseList: parseList, stats: stats, weighted: weighted, med: med,
+    straightHits: straightHits, hitsIn: hitsIn, runsNeeded: runsNeeded, obp: obp, slg: slg, BASE_BANDS: BASE_BANDS, CRIC_BANDS: CRIC_BANDS, band: band,
+    stock: stock, sharesFor: sharesFor, diceDist: diceDist, probAt: probAt,
+    parseDur: parseDur, parseDurList: parseDurList, parseClock: parseClock, parseClockList: parseClockList, circMean: circMean };
+})();
+/* AVERAGE-ENGINE:END */
+
+/* =========================================================
+   CalcThis.initAvgCalc(kind) — the average family: 'hub' (any list of numbers), 'bat' (batting average,
+   baseball + cricket), 'stock' (average cost per share), 'dice' (average roll + exact odds) and 'time'
+   (average duration or average clock time). Shared result shell (ids av*), per-kind inputs. Differentiators vs.
+   calculator.net, CalculatorSoup, Omni, Finbold, Inch Calculator (all checked live): a number-line plot with mean
+   AND median, outlier test with a one-click "without them" average; a batting scale + "hits in a row you need";
+   an averaging-down solver; the exact dice distribution (keep highest/lowest) with the chance of a target; clock
+   times averaged correctly across midnight. Engine: CalcThis.avgEngine. No shared state. */
+CalcThis.initAvgCalc = function (kind) {
+  var E = CalcThis.avgEngine;
+  var $ = function (id) { return document.getElementById(id); };
+  var st = { adv: false };
+  function esc(t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'); }
+  function blank(id) { return !($(id).value + '').trim(); }
+  function num(id) { var t = ($(id).value + '').trim(); return t ? Number(t) : NaN; }
+  function setHint(m) { var h = $('avHint'); if (!h) return; h.textContent = m || ''; h.style.display = m ? 'block' : 'none'; }
+  function fmt(x, dp) {
+    if (!isFinite(x)) return '—';
+    var a = Math.abs(x);
+    if (a >= 1e15 || (a > 0 && a < 1e-9)) return x.toExponential(Math.min(dp, 6)).replace('e+', 'e').replace('-', '−');
+    var s = x.toLocaleString('en-US', { maximumFractionDigits: dp });
+    if (s === '-0') s = '0';
+    return s.replace('-', '−');
+  }
+  function fmt2(x) { return isFinite(x) ? x.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: Math.abs(x) >= 1 ? 2 : 4 }).replace('-', '−') : '—'; }
+  function plural(n, w) { return fmt(n, 0) + ' ' + w + (n === 1 ? '' : 's'); }
+  function pct(p) { if (!(p > 0)) return '0%'; if (p < 0.0001) return '<0.01%'; return (p * 100).toFixed(p < 0.1 ? 2 : 1).replace(/\.?0+$/, '') + '%'; }
+  function empty(msg, sub) {
+    $('avBig').textContent = '—'; $('avSub').textContent = sub || $('avSub').getAttribute('data-empty') || '';
+    $('avBody').style.display = 'none'; $('avMVal').textContent = '—'; setHint(msg || '');
+  }
+  function head(lab, big, sub, mlab, mval) {
+    $('avResLab').textContent = lab; $('avBig').textContent = big; $('avSub').textContent = sub;
+    $('avMLab').textContent = mlab || lab; $('avMVal').textContent = mval || big;
+    $('avBody').style.display = '';
+  }
+  function table(id, rows, firstCol) {
+    $(id).innerHTML = '<tbody>' + rows.map(function (r) { return '<tr><td>' + r[0] + '</td><td>' + r[1] + '</td></tr>'; }).join('') + '</tbody>';
+  }
+  function segSet(id, v) { [].forEach.call($(id).children, function (b) { b.classList.toggle('on', b.getAttribute('data-v') === String(v)); }); }
+  function wireSeg(id, cb) {
+    $(id).addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; var v = b.getAttribute('data-v'); segSet(id, v); cb(v); render(); });
+  }
+  function openAdv(on) {
+    st.adv = on; $('avAdvBtn').classList.toggle('open', on); $('avAdvBtnLab').textContent = on ? 'Go simple' : 'Go advanced'; $('avAdvIn').style.display = on ? '' : 'none';
+  }
+  var render, resetAdv = function () {};
+
+  /* ============================== HUB ============================== */
+  if (kind === 'hub') {
+    var excl = false;
+    var places = function () { if (!st.adv || blank('avPlaces')) return 6; var v = parseInt($('avPlaces').value, 10); return isNaN(v) ? 6 : Math.max(0, Math.min(10, v)); };
+    var drawPlot = function (all, used, s, dp) {
+      var box = $('avPlot'), W = box.clientWidth || 300, v = all.sorted, lo = v[0], hi = v[v.length - 1], html = '', i;
+      if (hi === lo) { lo -= 1; hi += 1; }
+      var pad = (hi - lo) * 0.04; lo -= pad; hi += pad;
+      function pc(x) { return Math.max(0, Math.min(100, (x - lo) / (hi - lo) * 100)); }
+      var usedSet = {}; used.forEach(function (x) { usedSet[x] = (usedSet[x] || 0) + 1; });
+      var h;
+      if (v.length > 120) {
+        var B = 40, cnt = [], mx = 0;
+        for (i = 0; i < B; i++) cnt[i] = 0;
+        v.forEach(function (x) { var b = Math.min(B - 1, Math.floor((x - lo) / (hi - lo) * B)); cnt[b]++; if (cnt[b] > mx) mx = cnt[b]; });
+        for (i = 0; i < B; i++) if (cnt[i]) html += '<span class="av-bar" style="left:' + (i / B * 100) + '%;width:' + (100 / B) + '%;height:' + Math.max(4, cnt[i] / mx * 70) + 'px"></span>';
+        h = 90;
+      } else {
+        var DOT = 12, rows = [], maxRow = 0;
+        v.forEach(function (x) {
+          var ex = usedSet[x] > 0 ? (usedSet[x]--, false) : true, px = pc(x) / 100 * W, r = 0;
+          while (r < 9 && rows[r] !== undefined && px - rows[r] < DOT) r++;
+          rows[r] = px; if (r > maxRow) maxRow = r;
+          html += '<span class="av-dot' + (ex ? ' ex' : '') + '" style="left:' + pc(x) + '%;bottom:' + (7 + r * DOT) + 'px"></span>';
+        });
+        h = maxRow * DOT + 30;
+      }
+      html += '<div class="av-med" style="left:' + pc(s.median) + '%"></div><div class="av-mean" style="left:' + pc(s.mean) + '%"></div>';
+      box.style.height = h + 'px'; box.innerHTML = html;
+      var t = [[all.min, 'min'], [all.max, 'max']];
+      if (pc(s.mean) > 14 && pc(s.mean) < 86) t.push([s.mean, 'mean']);
+      $('avTicks').innerHTML = t.map(function (a) { var p = Math.max(6, Math.min(94, pc(a[0]))); return '<span style="left:' + p + '%;transform:translateX(-50%)">' + fmt(a[0], Math.min(dp, 4)) + '</span>'; }).join('');
+    };
+    render = function () {
+      var P = E.parseList($('avData').value), dp = places(), note = $('avNote');
+      if (!$('avData').value.trim()) note.textContent = 'Separate numbers with commas, spaces or new lines — or paste a column from a spreadsheet.';
+      else note.textContent = plural(P.vals.length, 'number') + ' read' + (P.ignored.length ? ' · ' + P.ignored.length + ' ignored (' + P.ignored.slice(0, 4).map(esc).join(', ') + (P.ignored.length > 4 ? '…' : '') + ')' : '');
+      if (!P.vals.length) { empty($('avData').value.trim() ? 'No numbers found — separate values with commas, spaces or new lines.' : ''); return; }
+      var all = E.stats(P.vals);
+      if (all.huge) { empty('These numbers are too large to add up.'); return; }
+      var vals = P.vals, wts = null, wMsg = '';
+      if (st.adv && !blank('avWData')) {
+        var W = E.parseList($('avWData').value).vals;
+        if (W.length !== vals.length) wMsg = 'Weights: you gave ' + W.length + ' but there are ' + vals.length + ' numbers — they need to match, so the weights are ignored.';
+        else if (W.some(function (x) { return x < 0; })) wMsg = 'Weights cannot be negative, so they are ignored.';
+        else if (!(W.reduce(function (a, b) { return a + b; }, 0) > 0)) wMsg = 'Weights must add up to more than 0, so they are ignored.';
+        else wts = W;
+      }
+      var keep = vals.map(function () { return true; }), canEx = all.out.length > 0 && all.out.length < all.n, exOn = st.adv && excl && canEx;
+      if (exOn) keep = vals.map(function (x) { return !(x < all.lf || x > all.uf); });
+      var used = vals.filter(function (x, i) { return keep[i]; }), s = E.stats(used);
+      var wUsed = null, wAvg = NaN;
+      if (wts) { var wv = [], ww = []; vals.forEach(function (x, i) { if (keep[i]) { wv.push(x); ww.push(wts[i]); } }); var wr = E.weighted(wv, ww); if (wr.err) wMsg = 'These weights give no usable total once outliers are excluded, so they are ignored.'; else { wAvg = wr.mean; wUsed = true; } }
+      setHint(wMsg);
+      var mean = wUsed ? wAvg : s.mean;
+      head(wUsed ? 'Weighted average' : 'Average (mean)', fmt(mean, dp), plural(s.n, 'number') + ' · sum ' + fmt(s.sum, dp) + (exOn ? ' · ' + plural(all.out.length, 'outlier') + ' excluded' : ''), 'Average', fmt(mean, dp));
+      var tip = s.n === 1 ? 'With one number the average is that number.' : 'The average of <strong>' + s.n + '</strong> numbers is <strong>' + fmt(s.mean, dp) + '</strong>: their sum, ' + fmt(s.sum, dp) + ', divided by ' + s.n + '.';
+      if (wUsed) tip = 'The weighted average is <strong>' + fmt(wAvg, dp) + '</strong>; the plain average of the same numbers is ' + fmt(s.mean, dp) + '.';
+      if (s.n >= 3 && s.range > 0 && Math.abs(s.mean - s.median) / s.range > 0.1) tip += ' The median is ' + fmt(s.median, dp) + ' — the average is pulled ' + (s.mean > s.median ? 'up by the high' : 'down by the low') + ' values.';
+      var outTxt = all.out.slice(0, 5).map(function (x) { return fmt(x, 4); }).join(', ') + (all.out.length > 5 ? '…' : '');
+      if (exOn) tip += ' Excluded ' + plural(all.out.length, 'outlier') + ' (' + outTxt + '): the average changed from ' + fmt(all.mean, dp) + ' to ' + fmt(s.mean, dp) + '.';
+      else if (canEx) { var wo = E.stats(vals.filter(function (x) { return !(x < all.lf || x > all.uf); })); tip += ' ' + plural(all.out.length, 'outlier') + ' found (' + outTxt + ') — without ' + (all.out.length === 1 ? 'it' : 'them') + ' the average would be <strong>' + fmt(wo.mean, dp) + '</strong>' + (st.adv ? '' : ' (see Go advanced to exclude)') + '.'; }
+      $('avTip').innerHTML = tip;
+      drawPlot(all, used, s, dp);
+      $('avLegend').innerHTML = '<span><i class="d"></i>a value</span><span><i class="m"></i>average</span><span><i class="md"></i>median</span>' + (exOn ? '<span><i class="x"></i>excluded</span>' : '');
+      var modeTxt = s.modes.length ? s.modes.slice(0, 4).map(function (x) { return fmt(x, dp); }).join(', ') + (s.modes.length > 4 ? '…' : '') + ' (×' + s.modeCount + ')' : 'none (no value repeats)';
+      var rows = [['Count', fmt(s.n, 0)], ['Sum', fmt(s.sum, dp)], ['Median', fmt(s.median, dp)], ['Mode', modeTxt],
+        ['Geometric mean', isFinite(s.geo) ? fmt(s.geo, dp) : 'needs positive numbers'], ['Minimum', fmt(s.min, dp)], ['Maximum', fmt(s.max, dp)], ['Range', fmt(s.range, dp)],
+        ['Lower quartile (Q1)', fmt(s.q1, dp)], ['Upper quartile (Q3)', fmt(s.q3, dp)], ['Interquartile range (IQR)', fmt(s.iqr, dp)],
+        ['Outliers', all.out.length ? outTxt : 'none']];
+      table('avStats', rows);
+      if (st.adv) {
+        var ar = [['Arithmetic mean (the average)', fmt(s.mean, dp)], ['Geometric mean', isFinite(s.geo) ? fmt(s.geo, dp) : 'needs positive numbers'], ['Harmonic mean', isFinite(s.har) ? fmt(s.har, dp) : 'needs positive numbers']];
+        if (wUsed) ar.push(['Weighted average', fmt(wAvg, dp)]);
+        var steps = s.n <= 12 ? '(' + used.map(function (x) { return fmt(x, dp); }).join(' + ') + ') ÷ ' + s.n + ' = ' + fmt(s.mean, dp) : fmt(s.sum, dp) + ' ÷ ' + s.n + ' = ' + fmt(s.mean, dp);
+        $('avAdvOut').innerHTML = '<div class="proj-sep"></div><p class="bm-h">Three kinds of mean</p><table class="dtable">' + ar.map(function (r) { return '<tr><td>' + r[0] + '</td><td>' + r[1] + '</td></tr>'; }).join('') + '</table><p class="av-note">For positive numbers the arithmetic mean is never below the geometric mean, which is never below the harmonic mean.</p><p class="bm-h">The working</p><p class="av-steps">' + steps + '</p>';
+        $('avAdvOut').style.display = '';
+      } else $('avAdvOut').style.display = 'none';
+    };
+    resetAdv = function () { excl = false; segSet('avExclSeg', 'keep'); $('avWData').value = ''; $('avPlaces').value = ''; };
+    $('avData').addEventListener('input', render); $('avWData').addEventListener('input', render); $('avPlaces').addEventListener('input', render);
+    wireSeg('avExclSeg', function (v) { excl = v === 'excl'; });
+    var rt; window.addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(render, 150); });
+  }
+
+  /* ============================== BATTING ============================== */
+  if (kind === 'bat') {
+    var sp = 'base';
+    var TCH = { base: [['.250', 0.25], ['.275', 0.275], ['.300', 0.3], ['.350', 0.35]], cr: [['30', 30], ['40', 40], ['50', 50], ['60', 60]] };
+    var isInt = function (v) { return isFinite(v) && v >= 0 && Math.floor(v) === v && v < 1e9; };
+    var fmtBA = function (x) { return x >= 1 ? x.toFixed(3) : '.' + x.toFixed(3).slice(2); };
+    var parseT = function () {
+      if (blank('avTarget')) return null;
+      var v = num('avTarget'); if (!isFinite(v) || v <= 0) return NaN;
+      if (sp === 'base') { if (v > 1) v /= 1000; return v > 0 && v < 1 ? v : NaN; }
+      return v <= 1000 ? v : NaN;
+    };
+    var drawScale = function (x) {
+      var isB = sp === 'base', lo = isB ? 0.15 : 0, hi = isB ? 0.45 : 70, B = isB ? E.BASE_BANDS : E.CRIC_BANDS, h = '';
+      function pc(v) { return Math.max(0, Math.min(100, (v - lo) / (hi - lo) * 100)); }
+      B.forEach(function (b, i) { var a = pc(Math.max(b[0], lo)), z = pc(Math.min(b[1], hi)); if (z > a) h += '<span class="av-band b' + i + '" style="left:' + a + '%;width:' + (z - a) + '%"></span>'; });
+      h += '<span class="av-mk" style="left:' + pc(x) + '%"><i></i></span>';
+      $('avScale').innerHTML = h;
+      var ticks = isB ? [0.2, 0.25, 0.3, 0.35, 0.4] : [10, 20, 30, 40, 50, 60];
+      $('avScaleT').innerHTML = ticks.map(function (t) { return '<span style="left:' + pc(t) + '%">' + (isB ? fmtBA(t) : t) + '</span>'; }).join('');
+    };
+    var labels = function () {
+      var b = sp === 'base';
+      $('avALab').firstChild.textContent = b ? 'Hits ' : 'Runs scored '; $('avBLab').firstChild.textContent = b ? 'At-bats ' : 'Times out ';
+      $('avA').placeholder = b ? 'e.g. 120' : 'e.g. 1200'; $('avB').placeholder = b ? 'e.g. 400' : 'e.g. 30';
+      $('avTLab').firstChild.textContent = b ? 'Target average ' : 'Target average '; $('avTarget').placeholder = b ? 'e.g. .300' : 'e.g. 40';
+      $('avNextWrap').style.display = b ? '' : 'none';
+      $('avAdvBase').style.display = b ? '' : 'none'; $('avAdvCr').style.display = b ? 'none' : '';
+      $('avTChips').innerHTML = TCH[sp].map(function (c) { return '<button type="button" data-v="' + c[1] + '">' + c[0] + '</button>'; }).join('');
+    };
+    render = function () {
+      var b = sp === 'base', A = num('avA'), B = num('avB');
+      var chips = $('avTChips').children, tv = blank('avTarget') ? NaN : num('avTarget');
+      [].forEach.call(chips, function (c) { var cv = parseFloat(c.getAttribute('data-v')); c.classList.toggle('on', isFinite(tv) && (Math.abs(cv - tv) < 1e-9 || (b && Math.abs(cv * 1000 - tv) < 1e-9))); });
+      if (blank('avA') && blank('avB')) { empty(''); return; }
+      if (blank('avA') || blank('avB')) { empty('', 'Enter both numbers to see the batting average.'); return; }
+      if (!isInt(A) || !isInt(B)) { empty('Use whole numbers (0 or more) in both boxes.'); return; }
+      var hint = '';
+      if (b) {
+        if (B === 0) { empty('At-bats must be more than 0.'); return; }
+        if (A > B) { empty('Hits can’t be more than at-bats.'); return; }
+        var avg = A / B, bi = E.band(E.BASE_BANDS, avg);
+        head('Batting average', fmtBA(avg), plural(A, 'hit') + ' in ' + plural(B, 'at-bat') + ' · ' + plural(B - A, 'out'), 'Batting average', fmtBA(avg));
+        var tip = 'By typical MLB standards a <strong>' + fmtBA(avg) + '</strong> average is <strong>' + E.BASE_BANDS[bi][2].split(' — ')[1] + '</strong> (' + E.BASE_BANDS[bi][2].split(' — ')[0] + ').';
+        var rows = [['Hits', fmt(A, 0)], ['At-bats', fmt(B, 0)], ['Batting average', fmtBA(avg)], ['Hits per 10 at-bats', fmt(avg * 10, 2)]];
+        var T = parseT();
+        if (T !== null && isNaN(T)) hint = 'Target should be between .001 and .999 — for example .300.';
+        else if (T !== null) {
+          if (avg >= T - 1e-12) { var room = Math.max(0, Math.floor(A / T + 1e-9 - B)); tip += ' You are already at or above <strong>' + fmtBA(T) + '</strong>: you can make ' + plural(room, 'out') + ' in a row and still stay at ' + fmtBA(T) + ' or better.'; rows.push(['Target ' + fmtBA(T), 'already reached']); rows.push(['Outs in a row you can afford', fmt(room, 0)]); }
+          else {
+            var sh = E.straightHits(A, B, T);
+            tip += ' To reach <strong>' + fmtBA(T) + '</strong> you need <strong>' + plural(sh, 'hit') + ' in a row</strong> (' + fmtBA((A + sh) / (B + sh)) + ' after that).';
+            rows.push(['Target ' + fmtBA(T), 'not yet']); rows.push(['Straight hits needed', fmt(sh, 0)]);
+            if (!blank('avNext')) {
+              var N = num('avNext');
+              if (!isInt(N) || N === 0) hint = 'Next at-bats should be a whole number above 0.';
+              else { var hn = E.hitsIn(A, B, T, N); if (hn > N) { tip += ' In your next ' + plural(N, 'at-bat') + ' even ' + N + ' hits only reach ' + fmtBA((A + N) / (B + N)) + '.'; rows.push(['In the next ' + N + ' at-bats', 'can’t reach ' + fmtBA(T)]); } else { tip += ' If you have ' + plural(N, 'at-bat') + ' left, you need <strong>' + plural(hn, 'hit') + '</strong> in them.'; rows.push(['Hits needed in the next ' + N, fmt(hn, 0)]); } }
+            }
+          }
+        }
+        if (st.adv) {
+          var g = function (id) { return blank(id) ? 0 : num(id); }, bb = g('avBB'), hbp = g('avHBP'), sf = g('avSF'), d2 = g('av2B'), d3 = g('av3B'), hr = g('avHR');
+          var vals = [bb, hbp, sf, d2, d3, hr];
+          if (!vals.every(isInt)) hint = 'Walks, hit-by-pitch, sacrifice flies and extra-base hits should be whole numbers.';
+          else if (d2 + d3 + hr > A) hint = 'Doubles + triples + home runs can’t be more than hits.';
+          else {
+            var hasOb = !blank('avBB') || !blank('avHBP') || !blank('avSF'), hasSl = !blank('av2B') || !blank('av3B') || !blank('avHR');
+            var ob = hasOb ? E.obp(A, bb, hbp, B, sf) : NaN, sl = hasSl ? E.slg(A, d2, d3, hr, B) : NaN;
+            if (isFinite(ob)) rows.push(['On-base percentage (OBP)', fmtBA(ob)]);
+            if (isFinite(sl)) rows.push(['Slugging percentage (SLG)', fmtBA(sl)]);
+            if (isFinite(ob) && isFinite(sl)) rows.push(['OPS', fmtBA(ob + sl)]);
+            if (!hasOb && !hasSl) rows.push(['OBP / SLG / OPS', 'add walks or extra-base hits above']);
+          }
+        }
+        setHint(hint); $('avTip').innerHTML = tip; drawScale(avg); table('avStats', rows);
+      } else {
+        if (B === 0) {
+          if (A === 0) { empty('', 'No runs and no dismissals yet — there is no average to show.'); return; }
+          head('Batting average', '—', plural(A, 'run') + ', never out — the average needs at least one dismissal', 'Batting average', '—');
+          $('avTip').innerHTML = 'A cricket batting average is runs ÷ times out. With no dismissals there is nothing to divide by — an unbeaten batter has not been out yet.';
+          $('avScale').innerHTML = ''; $('avScaleT').innerHTML = ''; table('avStats', [['Runs scored', fmt(A, 0)], ['Times out', '0']]); setHint(''); return;
+        }
+        var cav = A / B, ci = E.band(E.CRIC_BANDS, cav);
+        head('Batting average', fmt(cav, 2), plural(A, 'run') + ' · out ' + plural(B, 'time'), 'Batting average', fmt(cav, 2));
+        var ctip = 'A cricket batting average of <strong>' + fmt(cav, 2) + '</strong> is <strong>' + E.CRIC_BANDS[ci][2].split(' — ')[1] + '</strong> (' + E.CRIC_BANDS[ci][2].split(' — ')[0] + ').';
+        var crow = [['Runs scored', fmt(A, 0)], ['Times out', fmt(B, 0)], ['Batting average', fmt(cav, 2)]];
+        var CT = parseT();
+        if (CT !== null && isNaN(CT)) hint = 'Target should be a number above 0 — for example 40.';
+        else if (CT !== null) {
+          if (cav >= CT - 1e-12) { ctip += ' You are already at or above <strong>' + fmt(CT, 2) + '</strong>.'; crow.push(['Target ' + fmt(CT, 2), 'already reached']); }
+          else { var rn = E.runsNeeded(A, B, CT); ctip += ' If you are out in your next innings you need <strong>' + plural(rn, 'run') + '</strong> to reach ' + fmt(CT, 2) + '.'; crow.push(['Target ' + fmt(CT, 2), 'not yet']); crow.push(['Runs needed in the next innings (if out)', fmt(rn, 0)]); }
+        }
+        if (st.adv) {
+          var inn = blank('avInn') ? NaN : num('avInn'), balls = blank('avBalls') ? NaN : num('avBalls');
+          if (!blank('avInn')) { if (!isInt(inn) || inn < B) hint = 'Innings should be a whole number, at least the times out.'; else crow.push(['Innings · not outs', fmt(inn, 0) + ' · ' + fmt(inn - B, 0)]); }
+          if (!blank('avBalls')) { if (!isInt(balls) || balls === 0) hint = 'Balls faced should be a whole number above 0.'; else crow.push(['Strike rate (runs per 100 balls)', fmt(A / balls * 100, 2)]); }
+        }
+        setHint(hint); $('avTip').innerHTML = ctip; drawScale(cav); table('avStats', crow);
+      }
+    };
+    wireSeg('avSportSeg', function (v) { sp = v; $('avA').value = ''; $('avB').value = ''; $('avTarget').value = ''; $('avNext').value = ''; resetAdv(); labels(); });
+    ['avA', 'avB', 'avTarget', 'avNext', 'avBB', 'avHBP', 'avSF', 'av2B', 'av3B', 'avHR', 'avInn', 'avBalls'].forEach(function (id) { $(id).addEventListener('input', render); });
+    $('avTChips').addEventListener('click', function (e) { var c = e.target.closest('button'); if (!c) return; var v = parseFloat(c.getAttribute('data-v')); $('avTarget').value = sp === 'base' ? v.toFixed(3).slice(1) : String(v); render(); });
+    resetAdv = function () { ['avBB', 'avHBP', 'avSF', 'av2B', 'av3B', 'avHR', 'avInn', 'avBalls'].forEach(function (id) { $(id).value = ''; }); };
+    labels();
+  }
+
+  /* ============================== STOCK ============================== */
+  if (kind === 'stock') {
+    var rowHtml = function (s, p) {
+      return '<div class="av-row"><span class="av-n"></span><input type="number" inputmode="decimal" step="any" min="0" class="win av-s" placeholder="e.g. 50" value="' + esc(s || '') + '" aria-label="Shares bought">' +
+        '<input type="number" inputmode="decimal" step="any" min="0" class="win av-p" placeholder="e.g. 200" value="' + esc(p || '') + '" aria-label="Price per share"><button class="x" type="button" aria-label="Remove purchase">&#215;</button></div>';
+    };
+    var readRows = function () { return [].map.call($('avRows').children, function (d) { return { s: d.querySelector('.av-s').value, p: d.querySelector('.av-p').value }; }); };
+    var drawLadder = function (rows, avg, P, T) {
+      var prices = rows.map(function (r) { return r.p; }).concat([avg]); if (isFinite(P)) prices.push(P); if (isFinite(T)) prices.push(T);
+      var lo = Math.min.apply(null, prices), hi = Math.max.apply(null, prices);
+      if (hi === lo) { lo -= 1; hi += 1; }
+      var pad = (hi - lo) * 0.08; lo -= pad; hi += pad;
+      function pc(x) { return (x - lo) / (hi - lo) * 100; }
+      var tot = rows.reduce(function (a, r) { return a + r.s; }, 0), h = '';
+      rows.forEach(function (r, i) { var d = Math.round(12 + 26 * Math.sqrt(r.s / tot)); h += '<span class="av-bub" style="left:' + pc(r.p) + '%;width:' + d + 'px;height:' + d + 'px" title="Buy ' + (i + 1) + '"></span>'; });
+      h += '<div class="av-avg" style="left:' + pc(avg) + '%"></div>';
+      if (isFinite(P)) h += '<div class="av-now" style="left:' + pc(P) + '%"></div>';
+      if (isFinite(T)) h += '<div class="av-tgt" style="left:' + pc(T) + '%"></div>';
+      $('avViz').innerHTML = h;
+      var ticks = [[avg, 'avg']]; if (isFinite(P)) ticks.push([P, 'now']); if (isFinite(T)) ticks.push([T, 'target']);
+      ticks.push([Math.min.apply(null, rows.map(function (r) { return r.p; })), 'low']); ticks.push([Math.max.apply(null, rows.map(function (r) { return r.p; })), 'high']);
+      var seen = [];
+      $('avVizT').innerHTML = ticks.filter(function (t) { var p = pc(t[0]); for (var i = 0; i < seen.length; i++) if (Math.abs(seen[i] - p) < 17) return false; seen.push(p); return true; }).map(function (t) { return '<span style="left:' + Math.max(7, Math.min(93, pc(t[0]))) + '%">' + fmt2(t[0]) + '</span>'; }).join('');
+    };
+    render = function () {
+      var raw = readRows(), rows = [], problems = [], any = false, fee = st.adv && !blank('avFee') ? num('avFee') : 0;
+      if (!(fee >= 0) || fee > 1e9) { empty('The fee should be 0 or more.'); return; }
+      raw.forEach(function (r, i) {
+        var st0 = String(r.s).trim(), pt = String(r.p).trim();
+        if (!st0 && !pt) return; any = true;
+        var s = Number(st0), p = Number(pt), n = i + 1;
+        if (!st0) { problems.push('Add the number of shares for Buy ' + n + '.'); return; }
+        if (!pt) { problems.push('Add the price for Buy ' + n + '.'); return; }
+        if (!(s > 0) || s > 1e12) { problems.push('Shares for Buy ' + n + ' should be above 0.'); return; }
+        if (!(p >= 0) || p > 1e12) { problems.push('The price for Buy ' + n + ' should be 0 or more.'); return; }
+        rows.push({ s: s, p: p });
+      });
+      if (!rows.length) { empty(any ? problems.join(' ') : ''); return; }
+      var r0 = E.stock(rows, fee);
+      if (!(r0.shares > 0) || !isFinite(r0.cost)) { empty('Those numbers are too large.'); return; }
+      var avg = r0.avg, P = blank('avPrice') ? NaN : num('avPrice'), T = blank('avTarget') ? NaN : num('avTarget'), hint = problems.join(' ');
+      if (!blank('avPrice') && !(P > 0)) { hint += ' The current price should be above 0.'; P = NaN; }
+      if (!blank('avTarget') && !(T > 0)) { hint += ' The target average should be above 0.'; T = NaN; }
+      setHint(hint.trim());
+      head('Average price per share', fmt2(avg), fmt(r0.shares, 4) + ' shares for ' + fmt2(r0.cost) + ' in total' + (fee > 0 ? ' (includes ' + fmt2(fee * rows.length) + ' in fees)' : ''), 'Average price', fmt2(avg));
+      var tip = rows.length === 1 ? 'With one purchase your average price is just that price' + (fee > 0 ? ' plus the fee spread over the shares' : '') + '.' : 'Your average cost is <strong>' + fmt2(avg) + '</strong> per share — total cost ÷ total shares, so bigger purchases count for more than a simple average of the prices (' + fmt2(rows.reduce(function (a, r) { return a + r.p; }, 0) / rows.length) + ').';
+      var trows = [['Total shares', fmt(r0.shares, 4)], ['Total cost' + (fee > 0 ? ' (with fees)' : ''), fmt2(r0.cost)], ['Average price per share', fmt2(avg)], ['Lowest · highest buy', fmt2(Math.min.apply(null, rows.map(function (r) { return r.p; }))) + ' · ' + fmt2(Math.max.apply(null, rows.map(function (r) { return r.p; })))]];
+      if (isFinite(P)) {
+        var val = r0.shares * P, gl = val - r0.cost;
+        trows.push(['Value at ' + fmt2(P), fmt2(val)]); trows.push(['Gain / loss', (gl > 0 ? '+' : (gl < 0 ? '−' : '')) + fmt2(Math.abs(gl)) + ' (' + (gl > 0 ? '+' : (gl < 0 ? '−' : '')) + fmt(Math.abs(gl / r0.cost * 100), 2) + '%)']);
+        tip += ' At ' + fmt2(P) + ' you are ' + (gl > 0 ? 'up ' : (gl < 0 ? 'down ' : 'level ')) + (gl === 0 ? '' : fmt(Math.abs(gl / r0.cost * 100), 2) + '%') + '.';
+      }
+      if (isFinite(P) && isFinite(T)) {
+        var x = E.sharesFor(r0.shares, r0.cost, T, P, fee), lowTo = Math.min(avg, P), highTo = Math.max(avg, P);
+        if (Math.abs(T - avg) < 1e-9) tip += ' Your average is already ' + fmt2(avg) + '.';
+        else if (!(x > 0) || !isFinite(x) || !(T > lowTo - 1e-12 && T < highTo + 1e-12) || Math.abs(T - avg) < 1e-12) tip += ' A target of ' + fmt2(T) + ' can’t be reached by buying at ' + fmt2(P) + ': the new average always lands between ' + fmt2(lowTo) + ' and ' + fmt2(highTo) + '.';
+        else {
+          var xw = Math.ceil(x - 1e-9), na = (r0.cost + fee + P * xw) / (r0.shares + xw);
+          tip += ' To bring your average to <strong>' + fmt2(T) + '</strong> at ' + fmt2(P) + ' you need to buy <strong>' + fmt(xw, 0) + ' more shares</strong> (' + fmt2(P * xw + fee) + '), giving ' + fmt2(na) + ' on ' + fmt(r0.shares + xw, 4) + ' shares.';
+          trows.push(['Shares to buy at ' + fmt2(P), fmt(xw, 0)]); trows.push(['Cost of that purchase', fmt2(P * xw + fee)]); trows.push(['New average', fmt2(na)]);
+        }
+      } else if (isFinite(P) && !isFinite(T)) tip += ' Add a target average to see how many shares to buy at ' + fmt2(P) + '.';
+      else if (!isFinite(P) && isFinite(T)) tip += ' Add the current share price to see how many shares reach your target of ' + fmt2(T) + '.';
+      $('avTip').innerHTML = tip; table('avStats', trows);
+      drawLadder(rows, avg, P, T);
+    };
+    $('avRows').addEventListener('input', render);
+    $('avRows').addEventListener('click', function (e) { var x = e.target.closest('.x'); if (!x) return; x.parentNode.parentNode.removeChild(x.parentNode); render(); });
+    $('avAdd').addEventListener('click', function () { var d = document.createElement('div'); d.innerHTML = rowHtml('', ''); $('avRows').appendChild(d.firstChild); $('avRows').lastChild.querySelector('.av-s').focus(); });
+    ['avPrice', 'avTarget', 'avFee'].forEach(function (id) { $(id).addEventListener('input', render); });
+    resetAdv = function () { $('avFee').value = ''; };
+    $('avRows').innerHTML = rowHtml('', '') + rowHtml('', '');
+  }
+
+  /* ============================== DICE ============================== */
+  if (kind === 'dice') {
+    var keep = 'all';
+    var isInt2 = function (v) { return isFinite(v) && Math.floor(v) === v; };
+    var syncChips = function () { [].forEach.call($('avSChips').children, function (c) { c.classList.toggle('on', c.getAttribute('data-v') === ($('avSides').value + '').trim()); }); };
+    var drawChart = function (d, tgt) {
+      var n = d.p.length, g = Math.ceil(n / 60), bars = [], i, mx = 0;
+      for (i = 0; i < n; i += g) { var s = 0, k; for (k = i; k < Math.min(n, i + g); k++) s += d.p[k]; bars.push({ s: s, a: d.lo + i, b: d.lo + Math.min(n, i + g) - 1 }); if (s > mx) mx = s; }
+      var h = '';
+      bars.forEach(function (b, j) {
+        var hit = isFinite(tgt) && b.a >= tgt, part = isFinite(tgt) && b.a < tgt && b.b >= tgt;
+        h += '<span class="av-dbar' + (hit ? ' hit' : (part ? ' part' : '')) + '" style="left:' + (j / bars.length * 100) + '%;width:' + (100 / bars.length) + '%;height:' + Math.max(2, b.s / mx * 100) + '%" title="' + (b.a === b.b ? b.a : b.a + '–' + b.b) + ': ' + pct(b.s) + '"></span>';
+      });
+      var mp = Math.max(0, Math.min(100, (d.mean - d.lo + 0.5) / n * 100));
+      h += '<div class="av-dmean" style="left:' + mp + '%"></div>';
+      $('avChart').innerHTML = h;
+      var t = [[d.lo, 0], [d.mean, mp], [d.hi, 100]];
+      $('avChartT').innerHTML = t.map(function (a, i) { var p = i === 0 ? 3 : (i === 2 ? 97 : Math.max(14, Math.min(86, a[1]))); return '<span style="left:' + p + '%">' + fmt(a[0], i === 1 ? 2 : 0) + '</span>'; }).join('');
+    };
+    render = function () {
+      var N = num('avN'), S = num('avSides'), mod = blank('avMod') ? 0 : num('avMod');
+      if (blank('avN') || blank('avSides')) { empty(''); return; }
+      if (!isInt2(N) || N < 1 || N > 100) { empty('The number of dice should be a whole number from 1 to 100.'); return; }
+      if (!isInt2(S) || S < 2 || S > 100) { empty('Sides should be a whole number from 2 to 100.'); return; }
+      if (!isInt2(mod) || Math.abs(mod) > 10000) { empty('The modifier should be a whole number between −10,000 and 10,000 (leave it blank for none).'); return; }
+      var K = N, kp = 'all', hint = '';
+      if (st.adv && keep !== 'all') {
+        K = blank('avKeepN') ? 1 : num('avKeepN');
+        if (!isInt2(K) || K < 1) { empty('How many to keep should be a whole number of at least 1.'); return; }
+        if (N > 12) { empty('Keep highest / lowest works with up to 12 dice.'); return; }
+        if (K >= N) { hint = 'Keeping ' + (K > N ? 'more dice than you roll' : 'all the dice') + ' is the same as a plain roll, so every die counts.'; K = N; } else kp = keep;
+      }
+      setHint(hint);
+      var d = E.diceDist(N, S, mod, kp === 'all' ? null : kp, K);
+      var nm = N + 'd' + S + (mod ? (mod > 0 ? '+' : '−') + Math.abs(mod) : '') + (kp !== 'all' ? ' (keep ' + (kp === 'h' ? 'highest ' : 'lowest ') + K + ')' : '');
+      head('Average roll', fmt(d.mean, 2), nm + ' · totals from ' + d.lo + ' to ' + d.hi, 'Average roll', fmt(d.mean, 2));
+      var tgt = blank('avTarget') ? NaN : num('avTarget'), tip = 'Rolling <strong>' + nm + '</strong> averages <strong>' + fmt(d.mean, 2) + '</strong>' + (kp === 'all' && N > 1 ? ' — ' + fmt((S + 1) / 2, 2) + ' per die' : '') + ', with the middle two-thirds of rolls between ' + fmt(d.mean - d.sd, 1) + ' and ' + fmt(d.mean + d.sd, 1) + '.';
+      var modeTxt = d.modes.length > 3 ? d.modes[0] + '–' + d.modes[d.modes.length - 1] + ' (all equally likely)' : d.modes.join(', ') + ' (' + pct(d.best) + (d.modes.length > 1 ? ' each' : '') + ')';
+      var rows = [['Average (expected total)', fmt(d.mean, 4)], ['Minimum · maximum', d.lo + ' · ' + d.hi], ['Most likely total', modeTxt], ['Standard deviation', fmt(d.sd, 3)]];
+      if (!blank('avTarget')) {
+        if (!isInt2(tgt)) setHint((hint ? hint + ' ' : '') + 'The target total should be a whole number.');
+        else if (tgt < d.lo || tgt > d.hi) { tip += ' A total of ' + tgt + ' is outside this roll’s range (' + d.lo + ' to ' + d.hi + ').'; rows.push(['Chance of ' + tgt + '+', tgt < d.lo ? '100%' : '0%']); }
+        else {
+          var pe = E.probAt(d, tgt, 'eq'), pg = E.probAt(d, tgt, 'ge'), pl = E.probAt(d, tgt, 'le');
+          tip += ' The chance of <strong>' + tgt + ' or more</strong> is <strong>' + pct(pg) + '</strong>' + (pg > 0 && pg < 1 && 1 / pg < 1e6 ? ' (about 1 in ' + fmt(1 / pg, 1) + ')' : '') + '.';
+          rows.push(['Exactly ' + tgt, pct(pe)]); rows.push([tgt + ' or more', pct(pg)]); rows.push([tgt + ' or less', pct(pl)]);
+        }
+      }
+      $('avTip').innerHTML = tip; table('avStats', rows);
+      drawChart(d, isInt2(tgt) ? tgt : NaN);
+      $('avChartCap').textContent = 'Chance of each total' + (isInt2(tgt) && tgt >= d.lo && tgt <= d.hi ? ' — amber bars are ' + tgt + ' or more' : '') + (Math.ceil(d.p.length / 60) > 1 ? ' (grouped)' : '');
+    };
+    ['avN', 'avSides', 'avMod', 'avTarget', 'avKeepN'].forEach(function (id) { $(id).addEventListener('input', function () { syncChips(); render(); }); });
+    $('avSChips').addEventListener('click', function (e) { var c = e.target.closest('button'); if (!c) return; $('avSides').value = c.getAttribute('data-v'); syncChips(); render(); });
+    wireSeg('avKeepSeg', function (v) { keep = v; });
+    $('avPre').addEventListener('click', function (e) {
+      var c = e.target.closest('button'); if (!c) return; var p = c.getAttribute('data-v');
+      var set = { d6: [1, 6, 'all', ''], '2d6': [2, 6, 'all', ''], d20: [1, 20, 'all', ''], adv: [2, 20, 'h', 1], dis: [2, 20, 'l', 1], '4d6': [4, 6, 'h', 3] }[p];
+      $('avN').value = set[0]; $('avSides').value = set[1]; $('avMod').value = '';
+      if (set[2] !== 'all') { openAdv(true); }
+      keep = set[2]; segSet('avKeepSeg', keep); $('avKeepN').value = set[3]; syncChips(); render();
+    });
+    resetAdv = function () { keep = 'all'; segSet('avKeepSeg', 'all'); $('avKeepN').value = ''; };
+  }
+
+  /* ============================== TIME ============================== */
+  if (kind === 'time') {
+    var mode = 'dur', fm = 'hm', ap = 'am', disp = '12', rnd = 'exact';
+    var fmtDur = function (sec) {
+      sec = Math.round(sec * 100) / 100; var neg = sec < 0; sec = Math.abs(sec);
+      var h = Math.floor(sec / 3600), m = Math.floor((sec - h * 3600) / 60), s = Math.round((sec - h * 3600 - m * 60) * 100) / 100;
+      if (s >= 60) { s -= 60; m++; } if (m >= 60) { m -= 60; h++; }
+      var ss = (s < 10 ? '0' : '') + String(s);
+      return (neg ? '−' : '') + (h > 0 || fm === 'hm' ? h + ':' + (m < 10 ? '0' : '') + m + ':' + ss : m + ':' + ss);
+    };
+    var fmtClock = function (mins) {
+      var m = ((Math.round(mins) % 1440) + 1440) % 1440, h = Math.floor(m / 60), mi = m % 60, mm = (mi < 10 ? '0' : '') + mi;
+      if (disp === '24') return (h < 10 ? '0' : '') + h + ':' + mm;
+      return (h % 12 === 0 ? 12 : h % 12) + ':' + mm + ' ' + (h < 12 ? 'AM' : 'PM');
+    };
+    var fmtOff = function (m) { var a = Math.round(Math.abs(m)), h = Math.floor(a / 60), r = a % 60; return (m < 0 ? '−' : '+') + (h ? h + ' h ' : '') + r + ' min'; };
+    var fmtSpan = function (m) { var a = Math.round(m), h = Math.floor(a / 60), r = a % 60; return (h ? h + ' h ' : '') + r + ' min'; };
+    var applyMode = function () {
+      var d = mode === 'dur';
+      $('avFmtWrap').style.display = d ? '' : 'none'; $('avApWrap').style.display = d ? 'none' : ''; $('avDispWrap').style.display = d ? 'none' : ''; $('avRndWrap').style.display = d ? '' : 'none';
+      $('avData').placeholder = d ? 'e.g.\n1:30:45\n2h 15m\n45 min\n95 s' : 'e.g.\n11:30 pm\n12:15 am\n23:45\n11 pm';
+      $('avDataLab').textContent = d ? 'Durations (one per line, or separated by commas)' : 'Clock times (one per line, or separated by commas)';
+    };
+    render = function () {
+      var txt = $('avData').value, note = $('avNote');
+      if (mode === 'dur') {
+        var P = E.parseDurList(txt, fm);
+        note.textContent = !txt.trim() ? 'Formats: 1:30:45, 2h 15m, 45 min, 95 s, or a bare number (' + (fm === 'hm' ? 'minutes' : 'seconds') + '). Put each time on its own line or separate with commas.' : plural(P.vals.length, 'time') + ' read' + (P.ignored.length ? ' · ' + P.ignored.length + ' ignored (' + P.ignored.slice(0, 4).map(esc).join(', ') + (P.ignored.length > 4 ? '…' : '') + ')' : '');
+        if (!P.vals.length) { empty(txt.trim() ? 'No times found — try 1:30:45, 2h 15m or 45 min, one per line.' : ''); return; }
+        var secs = P.vals.map(function (v) { return v.s; }), s = E.stats(secs);
+        if (s.huge) { empty('Those times are too large.'); return; }
+        var avg = s.mean; if (rnd === 'sec') avg = Math.round(avg); else if (rnd === 'min') avg = Math.round(avg / 60) * 60;
+        head('Average time', fmtDur(avg), plural(s.n, 'time') + ' · total ' + fmtDur(s.sum), 'Average time', fmtDur(avg));
+        $('avTip').innerHTML = 'The average of <strong>' + s.n + '</strong> times is <strong>' + fmtDur(avg) + '</strong> — their total, ' + fmtDur(s.sum) + ', divided by ' + s.n + '. Shortest ' + fmtDur(s.min) + ', longest ' + fmtDur(s.max) + '.';
+        table('avStats', [['Count', fmt(s.n, 0)], ['Total time', fmtDur(s.sum)], ['Average time', fmtDur(avg)], ['Average in hours', fmt(avg / 3600, 4)], ['Average in minutes', fmt(avg / 60, 3)], ['Average in seconds', fmt(avg, 2)], ['Median', fmtDur(s.median)], ['Shortest', fmtDur(s.min)], ['Longest', fmtDur(s.max)], ['Range', fmtDur(s.range)]]);
+        var mx = s.max, vz = '', shown = P.vals.slice(0, 30);
+        shown.forEach(function (v) { vz += '<div class="av-hbar"><span class="av-hl">' + esc(v.t) + '</span><span class="av-hb"><i style="width:' + (mx > 0 ? v.s / mx * 100 : 0) + '%"></i><b style="left:' + (mx > 0 ? s.mean / mx * 100 : 0) + '%"></b></span><span class="av-hv">' + fmtDur(v.s) + '</span></div>'; });
+        if (P.vals.length > 30) vz += '<p class="av-note">+ ' + (P.vals.length - 30) + ' more (all counted in the average).</p>';
+        $('avViz').innerHTML = vz;
+        $('avVizCap').textContent = 'Each time against the longest — the amber line is the average';
+        if (st.adv) {
+          $('avAdvOut').innerHTML = '<div class="proj-sep"></div><p class="bm-h">Each time against the average</p><table class="dtable">' + P.vals.slice(0, 100).map(function (v) { var dd = v.s - s.mean; return '<tr><td>' + esc(v.t) + '</td><td>' + fmtDur(v.s) + '</td><td>' + (Math.abs(dd) < 0.005 ? 'at the average' : (dd > 0 ? '+' : '−') + fmtDur(Math.abs(dd))) + '</td></tr>'; }).join('') + '</table>';
+          $('avAdvOut').style.display = '';
+        } else $('avAdvOut').style.display = 'none';
+        setHint('');
+      } else {
+        var C = E.parseClockList(txt, ap);
+        note.textContent = !txt.trim() ? 'Formats: 11:30 pm, 11pm, 23:30, 0:15. Times without am/pm count as ' + ap.toUpperCase() + ' (change it above). Put each on its own line or separate with commas.' : plural(C.vals.length, 'time') + ' read' + (C.ignored.length ? ' · ' + C.ignored.length + ' ignored (' + C.ignored.slice(0, 4).map(esc).join(', ') + (C.ignored.length > 4 ? '…' : '') + ')' : '');
+        if (!C.vals.length) { empty(txt.trim() ? 'No clock times found — try 11:30 pm, 23:30 or 7am, one per line.' : ''); return; }
+        var mins = C.vals.map(function (v) { return v.m; }), cm = E.circMean(mins);
+        if (!cm) { empty('These times are spread evenly around the clock, so there is no meaningful average time.'); return; }
+        var meanR = Math.round(cm.mean) % 1440, arith = mins.reduce(function (a, b) { return a + b; }, 0) / mins.length;
+        var dd2 = Math.abs(((arith - cm.mean + 720) % 1440 + 1440) % 1440 - 720), wrapNote = '';
+        if (dd2 > 1) wrapNote = ' A plain average of the clock numbers would say ' + fmtClock(arith) + ', which is wrong because the times cross midnight.';
+        head('Average time', fmtClock(meanR), plural(mins.length, 'time') + ' · spread ' + fmtSpan(cm.late - cm.early), 'Average time', fmtClock(meanR));
+        $('avTip').innerHTML = mins.length === 1 ? 'With one time, the average is that time: <strong>' + fmtClock(meanR) + '</strong>.' : 'The average of these <strong>' + mins.length + '</strong> clock times is <strong>' + fmtClock(meanR) + '</strong>, with every time within ' + fmtSpan(Math.max(-cm.early, cm.late)) + ' of it.' + wrapNote;
+        table('avStats', [['Count', fmt(mins.length, 0)], ['Average time', fmtClock(meanR)], ['Earliest', fmtClock(cm.mean + cm.early) + ' (' + fmtOff(cm.early) + ' vs average)'], ['Latest', fmtClock(cm.mean + cm.late) + ' (' + fmtOff(cm.late) + ' vs average)'], ['Spread, earliest to latest', fmtSpan(cm.late - cm.early)], ['Plain average of the numbers', fmtClock(arith) + (dd2 > 1 ? ' (misleading across midnight)' : ' (same here)')]]);
+        var rb = '<div class="av-rib">';
+        [0, 6, 12, 18].forEach(function (hh) { rb += '<i class="av-rt" style="left:' + hh / 24 * 100 + '%"></i>'; });
+        mins.forEach(function (m) { rb += '<span class="av-rd" style="left:' + m / 1440 * 100 + '%"></span>'; });
+        rb += '<span class="av-rm" style="left:' + meanR / 1440 * 100 + '%"></span></div><div class="av-rl"><span style="left:0">12 AM</span><span style="left:25%">6 AM</span><span style="left:50%">12 PM</span><span style="left:75%">6 PM</span><span style="left:100%">12 AM</span></div>';
+        $('avViz').innerHTML = rb; $('avVizCap').textContent = 'Your times on a 24-hour day — the amber marker is the average';
+        if (st.adv) {
+          $('avAdvOut').innerHTML = '<div class="proj-sep"></div><p class="bm-h">Each time against the average</p><table class="dtable">' + C.vals.slice(0, 100).map(function (v, i) { return '<tr><td>' + esc(v.t) + '</td><td>' + fmtClock(v.m) + '</td><td>' + (Math.abs(cm.offs[i]) < 0.5 ? 'at the average' : fmtOff(cm.offs[i])) + '</td></tr>'; }).join('') + '</table>';
+          $('avAdvOut').style.display = '';
+        } else $('avAdvOut').style.display = 'none';
+        setHint('');
+      }
+    };
+    $('avData').addEventListener('input', render);
+    $('avModeSeg').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; mode = b.getAttribute('data-v'); segSet('avModeSeg', mode); $('avData').value = ''; applyMode(); render(); });
+    wireSeg('avFmtSeg', function (v) { fm = v; });
+    wireSeg('avApSeg', function (v) { ap = v; });
+    wireSeg('avDispSeg', function (v) { disp = v; });
+    wireSeg('avRndSeg', function (v) { rnd = v; });
+    resetAdv = function () { rnd = 'exact'; segSet('avRndSeg', 'exact'); };
+    applyMode();
+  }
+
+  /* ---------- advanced button + start ---------- */
+  $('avAdvBtn').addEventListener('click', function () { openAdv(!st.adv); if (!st.adv) resetAdv(); render(); });
+  render();
+};
+/* AVG-FAMILY:END */
+
 /* =========================================================
    HOURS CALCULATOR — pure engine (no DOM). Loose clock parsing ("9", "915", "9:15a",
    "5p", "1730", "0830", noon, midnight), end-after-start resolution with overnight

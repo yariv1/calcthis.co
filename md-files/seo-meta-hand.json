@@ -118,6 +118,26 @@
   "/scientific-notation-calculator/": {
     "d": "Free scientific notation calculator: convert to and from E-notation and engineering notation, or calculate with expressions, with exact results and steps."
   },
+  "/average-calculator/": {
+    "t": "Average Calculator — Mean, Median, Mode & More",
+    "d": "Free average calculator: paste any numbers to get the mean, median, mode, range, quartiles and outliers, with a live plot and the average without outliers."
+  },
+  "/batting-average-calculator/": {
+    "t": "Batting Average Calculator — Baseball & Cricket",
+    "d": "Free batting average calculator for baseball and cricket: enter hits and at-bats or runs and outs, see it on a scale and the hits in a row you need."
+  },
+  "/stock-average-calculator/": {
+    "t": "Stock Average Calculator — Average Cost Per Share",
+    "d": "Free stock average calculator: add your buys to get the average price per share, then see how many shares to buy to bring it down to a target."
+  },
+  "/dice-average-calculator/": {
+    "t": "Dice Average Calculator — Average Roll & Odds",
+    "d": "Free dice average calculator: any dice, sides and modifier give the average roll, the exact odds of every total and the chance of hitting a target."
+  },
+  "/time-average-calculator/": {
+    "t": "Time Average Calculator — Average Duration & Clock Time",
+    "d": "Free time average calculator: average durations like 1:30:45 or 2h 15m, or average clock times such as bedtimes correctly across midnight."
+  },
   "/weighted-average-calculator/": {
     "d": "Free weighted average calculator: add value and weight rows, see the average update live with a contribution bar, and solve for a missing value."
   },

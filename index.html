@@ -83,6 +83,11 @@
         { "@type": "WebApplication", "name": "Standard Deviation Calculator", "url": "https://calcthis.co/standard-deviation-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Scientific Notation Calculator", "url": "https://calcthis.co/scientific-notation-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Weighted Average Calculator", "url": "https://calcthis.co/weighted-average-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
+        { "@type": "WebApplication", "name": "Time Average Calculator", "url": "https://calcthis.co/time-average-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
+        { "@type": "WebApplication", "name": "Dice Average Calculator", "url": "https://calcthis.co/dice-average-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
+        { "@type": "WebApplication", "name": "Stock Average Calculator", "url": "https://calcthis.co/stock-average-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
+        { "@type": "WebApplication", "name": "Batting Average Calculator", "url": "https://calcthis.co/batting-average-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
+        { "@type": "WebApplication", "name": "Average Calculator", "url": "https://calcthis.co/average-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Ratio Calculator", "url": "https://calcthis.co/ratio-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Percentage Calculator", "url": "https://calcthis.co/percentage-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Age Calculator", "url": "https://calcthis.co/age-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
@@ -107,7 +112,7 @@
   ]
 }
 </script>
-<link rel="stylesheet" href="/assets/style.css?v=276">
+<link rel="stylesheet" href="/assets/style.css?v=280">
 <style>
   .cat-tabs{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
   .cat-grp--hidden{display:none}
@@ -198,6 +203,11 @@
           <a href="/fraction-calculator/">Fraction</a>
           <a href="/standard-deviation-calculator/">Standard Deviation</a>
           <a href="/scientific-notation-calculator/">Scientific Notation</a>
+          <a href="/average-calculator/">Average</a>
+          <a href="/batting-average-calculator/">Batting Average</a>
+          <a href="/stock-average-calculator/">Stock Average</a>
+          <a href="/dice-average-calculator/">Dice Average</a>
+          <a href="/time-average-calculator/">Time Average</a>
           <a href="/weighted-average-calculator/">Weighted Average</a>
           <a href="/ratio-calculator/">Ratio</a>
           <a href="/percentage-calculator/">Percentage</a>
@@ -989,6 +999,61 @@
       </span>
     </a>
 
+    <a class="calc" href="/average-calculator/">
+      <span class="ico" aria-hidden="true">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#8F5C13" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 12h2M12 12h2M8 16h2M12 16h2"/></svg>
+      </span>
+      <h3>Average Calculator</h3>
+      <p>Paste any numbers to get the average, median, mode, range, quartiles and outliers — with a live plot, an average without outliers, and weighted and geometric means.</p>
+      <span class="go">Open calculator
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+    </a>
+
+    <a class="calc" href="/batting-average-calculator/">
+      <span class="ico" aria-hidden="true">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#8F5C13" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M7 7l10 10M7 17L17 7"/></svg>
+      </span>
+      <h3>Batting Average Calculator</h3>
+      <p>Batting average for baseball, softball and cricket on a scale of typical ranges — plus the hits in a row you need to reach a target, and optional OBP, slugging and OPS.</p>
+      <span class="go">Open calculator
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+    </a>
+
+    <a class="calc" href="/stock-average-calculator/">
+      <span class="ico" aria-hidden="true">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#8F5C13" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5-5 4 4 8-9"/><path d="M15 7h5v5"/></svg>
+      </span>
+      <h3>Stock Average Calculator</h3>
+      <p>Add your stock purchases to get the average cost per share, then see how many shares to buy at today’s price to bring the average down to a target.</p>
+      <span class="go">Open calculator
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+    </a>
+
+    <a class="calc" href="/dice-average-calculator/">
+      <span class="ico" aria-hidden="true">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#8F5C13" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="3"/><circle cx="9" cy="9" r="1.2" fill="currentColor"/><circle cx="15" cy="15" r="1.2" fill="currentColor"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/></svg>
+      </span>
+      <h3>Dice Average Calculator</h3>
+      <p>The average roll of any dice with the exact odds of every total, the chance of hitting a target, and advantage, disadvantage or drop-lowest rules.</p>
+      <span class="go">Open calculator
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+    </a>
+
+    <a class="calc" href="/time-average-calculator/">
+      <span class="ico" aria-hidden="true">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#8F5C13" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+      </span>
+      <h3>Time Average Calculator</h3>
+      <p>Average a list of durations like 1:30:45 or 2h 15m — or average clock times such as bedtimes correctly across midnight.</p>
+      <span class="go">Open calculator
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+    </a>
+
     <a class="calc" href="/weighted-average-calculator/">
       <span class="ico" aria-hidden="true">
         <svg width="30" height="30" viewBox="0 0 32 32" fill="none">
@@ -1436,6 +1501,11 @@
           <li><a href="/fraction-calculator/">Fractions</a><span> — any number of fractions, with a bar diagram</span></li>
           <li><a href="/standard-deviation-calculator/">Standard deviation</a><span> — sample and population side by side</span></li>
           <li><a href="/scientific-notation-calculator/">Scientific notation</a><span> — every notation at once</span></li>
+          <li><a href="/average-calculator/">Average</a><span> — mean, median, mode and outliers</span></li>
+          <li><a href="/batting-average-calculator/">Batting average</a><span> — baseball and cricket, with a target solver</span></li>
+          <li><a href="/stock-average-calculator/">Stock average</a><span> — average cost per share and a target solver</span></li>
+          <li><a href="/dice-average-calculator/">Dice average</a><span> — average roll and exact odds</span></li>
+          <li><a href="/time-average-calculator/">Time average</a><span> — average durations and clock times</span></li>
           <li><a href="/weighted-average-calculator/">Weighted average</a><span> — with a contribution bar</span></li>
           <li><a href="/ratio-calculator/">Ratio</a><span> — solve for the missing value</span></li>
           <li><a href="/percentage-calculator/">Percentage</a><span> — the common percent questions</span></li>
@@ -1637,6 +1707,11 @@
           <li><a href="/standard-deviation-calculator/">Standard Deviation Calculator</a></li>
           <li><a href="/scientific-notation-calculator/">Scientific Notation Calculator</a></li>
           <li><a href="/weighted-average-calculator/">Weighted Average Calculator</a></li>
+          <li><a href="/average-calculator/">Average Calculator</a></li>
+          <li><a href="/batting-average-calculator/">Batting Average Calculator</a></li>
+          <li><a href="/stock-average-calculator/">Stock Average Calculator</a></li>
+          <li><a href="/dice-average-calculator/">Dice Average Calculator</a></li>
+          <li><a href="/time-average-calculator/">Time Average Calculator</a></li>
           <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
           <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
           <li><a href="/age-calculator/">Age Calculator</a></li>
@@ -1719,7 +1794,7 @@
   });
 })();
 </script>
-<script src="/assets/app.js?v=276"></script>
+<script src="/assets/app.js?v=280"></script>
 <script src="/feedback.js" defer></script>
 </body>
 </html>
