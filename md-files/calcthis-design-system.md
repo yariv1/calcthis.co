@@ -50,6 +50,12 @@ competition is a failed build.
 
 ---
 
+## Clickable card hover — ONE hover for every card/tile (STANDARD, 2026-11-01)
+
+Every clickable card or tile (`.calc`, `.bcard`, `.st-cube`, any future one) uses the SAME hover:
+`transform:translateY(-3px); box-shadow:0 2px 4px rgba(36,26,17,.05),0 16px 40px rgba(36,26,17,.10); border-color:#DFD2BC`
+(`.bcard` keeps its slightly larger shadow). No amber border, no 1px lift, no per-component variant. A deviation needs to be discussed with the user first. Found 2026-11-01: `.st-cube` had its own amber-border/1px hover with no reason — unified.
+
 ## Card header — title + labelled control rows (STANDARD, v78+)
 
 The first input card's header is **always**: the `<h2>` title on its own line, then

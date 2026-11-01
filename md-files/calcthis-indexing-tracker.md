@@ -4,6 +4,7 @@ _How-to for requesting indexing with Claude in Chrome + the next batch: HANDOFF.
 
 ## LIVE QUEUE (update at EVERY deploy and every request session; last updated 2026-11-01 end of session)
 **Google (GSC) — quota is per property ~10/day; "Quota Exceeded" seen again 2026-10-31 ~15:30 AND again 2026-11-01 (first request of the new session, NYC sales tax) — quota is NOT reset by the calendar day; retry later.** Requested so far (confirmed unless noted): /random-number-generator/ + -1-100 -wheel -no-repeats -1-10 -1-13 (2026-10-31), -1-3 (UNCONFIRMED), /speed-converter/ (UNCONFIRMED — GSC shows "Crawled – currently not indexed", last crawl Oct 27), /data-storage-converter/, /cooking-converter/.
+**UPDATED 2026-11-01 (v286): /grade-calculator/ upgraded to Weighted Grade Calculator (new title/meta/FAQ) — already indexed, re-request in GSC to refresh the stale snippet; Bing submit.**
 **NEW 2026-11-01 (v284): /percentage-change-calculator/ deployed + Bing submitted — add to END of GSC queue.**
 **NEW 2026-11-01 (v280): /average-calculator/, /batting-average-calculator/, /stock-average-calculator/, /dice-average-calculator/, /time-average-calculator/ deployed + Bing submitted — add to END of GSC queue (after semester grade).**
 **NEW 2026-11-01 (v276): /semester-grade-calculator/ deployed + Bing submitted — add to END of GSC queue.**

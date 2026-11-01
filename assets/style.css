@@ -2243,7 +2243,7 @@
   .st-lead{color:var(--ink-soft);font-size:15px;line-height:1.55;margin:0 0 16px;max-width:720px}
   .st-cubes{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px}
   .st-cube{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;min-height:118px;padding:14px 10px;background:var(--card);border:1px solid var(--line);border-radius:14px;text-decoration:none;color:var(--ink);transition:.14s}
-  .st-cube:hover{border-color:var(--amber);box-shadow:0 4px 14px rgba(36,26,17,.08);transform:translateY(-1px)}
+  .st-cube:hover{transform:translateY(-3px);box-shadow:0 2px 4px rgba(36,26,17,.05),0 16px 40px rgba(36,26,17,.10);border-color:#DFD2BC}
   .st-cube img{display:block;width:60px;height:40px;border-radius:4px;box-shadow:0 0 0 1px rgba(36,26,17,.12)}
   .st-cube .st-ico{display:flex;align-items:center;justify-content:center;width:60px;height:40px}
   .st-cube .st-name{font-family:'Fraunces',serif;font-weight:600;font-size:15px;text-align:center;line-height:1.25}
@@ -2593,3 +2593,37 @@
 .p-pct .dtable td:last-child{white-space:nowrap}
 .p-pct .pc-tbl td:first-child{color:var(--muted);font-weight:500;width:34px}
 .p-pct .pc-tbl td:not(:first-child){font-variant-numeric:tabular-nums}
+
+/* =========================================================
+   GRADE CALCULATOR upgrade (2026-11-01) — Letters mode, Go advanced, "where your points went"
+   bar (same stacked-slice idea as the semester page) and the clickable letter ladder.
+   Reuses .modeseg, .seg, .ctl-row, .advbtn, .dtable, .res-tip.adv-tip, the sticky .mbar.
+   ========================================================= */
+.p-grade .in-warn{font-size:14px;color:#c07030;font-weight:600;margin:10px 0 0;line-height:1.45}
+.p-grade .gb-bar{display:flex;height:30px;border-radius:8px;overflow:hidden;background:var(--card);border:1px solid var(--line);margin-top:10px}
+.p-grade .gb-seg{position:relative;display:block;min-width:0;background:#EFE7D8;border-left:2px solid var(--card)}
+.p-grade .gb-seg:first-child{border-left:0}
+.p-grade .gb-seg.rem{background:repeating-linear-gradient(45deg,#EFE7D8,#EFE7D8 5px,#E3D8C3 5px,#E3D8C3 10px)}
+.p-grade .gb-fill{position:absolute;left:0;top:0;bottom:0;display:block}
+.p-grade .gb-fill.c0,.p-grade .gb-key i.c0{background:var(--spruce)}
+.p-grade .gb-fill.c1,.p-grade .gb-key i.c1{background:var(--amber)}
+.p-grade .gb-fill.c2,.p-grade .gb-key i.c2{background:var(--spruce-soft)}
+.p-grade .gb-fill.c3,.p-grade .gb-key i.c3{background:var(--amber-deep)}
+.p-grade .gb-fill.c4,.p-grade .gb-key i.c4{background:#A4795A}
+.p-grade .gb-fill.c5,.p-grade .gb-key i.c5{background:#6F8F7A}
+.p-grade .gb-key{display:flex;flex-direction:column;gap:6px;margin:12px 0 4px;font-size:14px;line-height:1.45;color:var(--ink-soft)}
+.p-grade .gb-row{display:flex;gap:8px;align-items:flex-start}
+.p-grade .gb-key i{flex:none;display:inline-block;width:12px;height:12px;border-radius:3px;margin-top:4px}
+.p-grade .gb-key i.rem{background:repeating-linear-gradient(45deg,#EFE7D8,#EFE7D8 3px,#E3D8C3 3px,#E3D8C3 6px)}
+.p-grade .gb-row b{color:var(--ink)}
+.p-grade .gb-lost{color:#b23030;font-weight:600}
+.p-grade .gb-bonus{color:var(--spruce);font-weight:600}
+.p-grade .gb-note{font-size:14px;color:var(--muted);margin:8px 0 0;line-height:1.45}
+.p-grade .wi-ladder td:first-child{color:var(--ink);font-weight:600}
+.p-grade .wi-ladder tr[data-t]{cursor:pointer}
+.p-grade .wi-ladder tr[data-t]:hover td{background:#FCF7EE}
+.p-grade .wi-ladder tr[data-t]:focus-visible{outline:2px solid var(--amber);outline-offset:-2px}
+.p-grade .wi-ladder td.wi-bad{color:#b23030}
+.p-grade .wi-ladder td.wi-ok{color:var(--spruce);font-weight:600}
+.p-grade .cat-grid-pct .cat-letter:not(:placeholder-shown){text-transform:uppercase}
+.p-grade .two{grid-template-columns:1fr 1fr;gap:10px}

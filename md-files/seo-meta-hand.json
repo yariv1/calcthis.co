@@ -95,7 +95,8 @@
     "d": "Free GPA calculator for college and high school: weighted and unweighted GPA, AP/IB/Honors bumps, letter grades or percentages, and a what-if course adder."
   },
   "/grade-calculator/": {
-    "d": "Free weighted grade calculator: enter categories (homework, quizzes, midterm, final), weights and scores for an instant course grade, in % or points."
+    "t": "Weighted Grade Calculator — Class and College Grades",
+    "d": "Weighted grade calculator for any class or college course: enter weights and grades as %, points or letters for your grade and what you need on the rest."
   },
   "/test-score-calculator/": {
     "d": "Convert raw test scores to percentages and letter grades, see how many questions you can miss, apply curves and estimate AP scores (1–5). Free."

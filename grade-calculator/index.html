@@ -12,13 +12,13 @@
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Grade Calculator — Weighted Categories for Any Course</title>
+<title>Weighted Grade Calculator — Class and College Grades</title>
 <link rel="canonical" href="https://calcthis.co/grade-calculator/">
 <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
 <meta name="theme-color" content="#B5761F">
-<meta name="description" content="Free weighted grade calculator: enter categories (homework, quizzes, midterm, final), weights and scores for an instant course grade, in % or points.">
-<meta property="og:title" content="Grade Calculator — Weighted Categories for Any Course">
-<meta property="og:description" content="Free weighted grade calculator: enter categories (homework, quizzes, midterm, final), weights and scores for an instant course grade, in % or points.">
+<meta name="description" content="Weighted grade calculator for any class or college course: enter weights and grades as %, points or letters for your grade and what you need on the rest.">
+<meta property="og:title" content="Weighted Grade Calculator — Class and College Grades">
+<meta property="og:description" content="Weighted grade calculator for any class or college course: enter weights and grades as %, points or letters for your grade and what you need on the rest.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://calcthis.co/grade-calculator/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -28,17 +28,17 @@
 {
   "@context": "https://schema.org",
   "@type": "WebApplication",
-  "name": "Grade Calculator",
+  "name": "Weighted Grade Calculator",
   "url": "https://calcthis.co/grade-calculator/",
-  "description": "Weighted grade calculator for any course. Enter categories, weights, and scores — supports percentage and points mode with live what-if analysis.",
+  "description": "Weighted grade calculator for any class or college course. Enter categories, weights and grades as percentages, points or letters to see your course grade, where your points went, and the score you need on the rest for every letter.",
   "applicationCategory": "EducationApplication",
   "operatingSystem": "Any (web browser)",
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
 }
 </script>
-<link rel="stylesheet" href="/assets/style.css?v=284">
+<link rel="stylesheet" href="/assets/style.css?v=286">
 <style>
-  .p-grade .modeseg{grid-template-columns:1fr 1fr!important;margin-bottom:20px}
+  .p-grade .modeseg{grid-template-columns:1fr 1fr 1fr!important;margin-bottom:20px}
 
   /* Category rows */
   .p-grade .cat-block{display:flex;flex-direction:row;gap:10px;align-items:center;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--line)}
@@ -122,8 +122,8 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="CalcThis — free, purpose-built calculators">
-<meta name="twitter:title" content="Grade Calculator — Weighted Categories for Any Course">
-<meta name="twitter:description" content="Free weighted grade calculator: enter categories (homework, quizzes, midterm, final), weights and scores for an instant course grade, in % or points.">
+<meta name="twitter:title" content="Weighted Grade Calculator — Class and College Grades">
+<meta name="twitter:description" content="Weighted grade calculator for any class or college course: enter weights and grades as %, points or letters for your grade and what you need on the rest.">
 <meta name="twitter:image" content="https://calcthis.co/assets/og-default.png">
 <meta name="twitter:card" content="summary_large_image">
 <script type="application/ld+json">
@@ -142,6 +142,78 @@
       "position": 2,
       "name": "Grade Calculator",
       "item": "https://calcthis.co/grade-calculator/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I calculate a weighted grade?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Multiply each category's grade by its weight, add the results, and divide by the total weight. With homework 90% (20% of the course), quizzes 85% (20%), a midterm of 78% (25%) and a final of 88% (35%): (90 × 20 + 85 × 20 + 78 × 25 + 88 × 35) ÷ 100 = 85.3%."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I calculate my grade with and without weights?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "With weights, bigger categories move your grade more. Without weights, every category counts the same, so the grade is a plain average: 90, 85 and 78 average 84.3%. In the calculator, leave every weight box empty and each category counts equally; fill them in and the weights take over."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What do I need on the final to get an A?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It depends on your grade so far and how much the final is worth. With homework 90% (20%), quizzes 85% (20%) and a midterm of 78% (25%), your grade so far is 83.8%. With a final worth 35%, an A (90%) would need 101.4% — out of reach — while a B (80%) needs 72.9%, a C (70%) needs 44.3% and a D (60%) needs 15.7%. Under “What score do I need?” the calculator shows every letter at once."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I enter letter grades instead of percentages?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes — switch the toggle to Letters. A letter counts as the middle of its band in the plus/minus table: A+ is 98.5%, A is 94.5%, A- is 91%, B+ is 88%, and so on down to F at 29.5%. A B+ and an A- of equal weight give 89.5%. Type percentages when you have them for an exact result."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What if my weights do not add up to 100?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The calculator scales whatever you enter, so weights of 2, 2 and 1 give the same grade as 40, 40 and 20. It shows a notice when they do not add up to 100 so you can check them against your syllabus."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I calculate a college or class grade?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The same way: your syllabus lists the categories (homework, labs, papers, midterm, final) and the share each one counts for. Enter those shares as weights and your grade in each category, and leave the categories you have not had yet empty. For your GPA across classes, use the GPA calculator."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I use points instead of percentages?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Switch to Points and enter the points you earned and the points possible for each category. A homework category of 180 out of 200 points counts as 90%. If your class is graded on total points, make each weight equal to the points possible: 180/200 and 85/100 give (180 + 85) ÷ 300 = 88.3%, the same as weighting 90% by 200 and 85% by 100."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why is my result different from my school’s gradebook?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Common reasons: your school rounds differently, drops the lowest score in a category, adds extra credit, treats empty work as zero, or uses its own letter cutoffs (under Go advanced you can set your own A, B, C and D). For one exam use the final grade calculator; for quarters or terms, the semester grade calculator."
+      }
     }
   ]
 }
@@ -308,8 +380,8 @@
 
 <div class="hero">
   <p class="eyebrow">School &amp; Grades</p>
-  <h1>Grade Calculator</h1>
-  <p>Enter your syllabus categories, weights, and scores — your weighted course grade updates live. Supports percentage scores or raw points.</p>
+  <h1>Weighted Grade Calculator</h1>
+  <p>Enter your syllabus categories, weights, and scores — your weighted course grade updates live. Supports percentage scores or raw points. Works for any class or college course, with or without weights, and accepts letter grades too.</p>
 </div>
 
 <div class="grid">
@@ -324,12 +396,14 @@
     <div class="modeseg" id="modeSeg" role="group" aria-label="Input mode">
       <button class="on" data-mode="pct">% Score</button>
       <button data-mode="pts">Points</button>
+      <button data-mode="let">Letters</button>
     </div>
 
     <!-- Category rows -->
     <div id="catRows"></div>
 
     <p class="weight-warn" id="weightWarn"></p>
+    <p class="in-warn" id="inWarn" style="display:none"></p>
 
     <div style="margin-top:16px">
       <div class="add-row">
@@ -338,6 +412,44 @@
           Add Category
         </button>
       </div>
+    </div>
+
+    <div id="advIn" style="display:none">
+      <div class="proj-sep"></div>
+      <div class="ctl-row">
+        <span class="ctl-lab">Letter scale</span>
+        <div class="seg" id="scaleSeg" role="group" aria-label="Letter scale">
+          <button class="on" type="button" data-v="std">A 90 · B 80</button>
+          <button type="button" data-v="pm">Plus / minus</button>
+        </div>
+      </div>
+      <div id="cutWrap">
+        <span class="cat-name-lbl">Custom cutoffs (blank = standard)</span>
+        <div class="two">
+          <label class="fld" for="cutA"><span class="lab">A from <span class="unit">%</span></span><div class="inp"><input id="cutA" type="number" inputmode="decimal" step="any" placeholder="90"></div></label>
+          <label class="fld" for="cutB"><span class="lab">B from <span class="unit">%</span></span><div class="inp"><input id="cutB" type="number" inputmode="decimal" step="any" placeholder="80"></div></label>
+        </div>
+        <div class="two">
+          <label class="fld" for="cutC"><span class="lab">C from <span class="unit">%</span></span><div class="inp"><input id="cutC" type="number" inputmode="decimal" step="any" placeholder="70"></div></label>
+          <label class="fld" for="cutD"><span class="lab">D from <span class="unit">%</span></span><div class="inp"><input id="cutD" type="number" inputmode="decimal" step="any" placeholder="60"></div></label>
+        </div>
+      </div>
+      <div class="ctl-row">
+        <span class="ctl-lab">Decimal places</span>
+        <div class="seg" id="decSeg" role="group" aria-label="Decimal places">
+          <button type="button" data-v="0">0</button>
+          <button class="on" type="button" data-v="1">1</button>
+          <button type="button" data-v="2">2</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="add-row split" style="margin-top:16px">
+      <span></span>
+      <button class="advbtn" id="advBtn" type="button">
+        <span id="advBtnLab">Go advanced</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
     </div>
   </div>
 
@@ -350,6 +462,15 @@
       <div class="grade-big" id="gradeBig">—</div>
       <div id="letterBadge"></div>
       <div class="res-sub" id="gradeSub">Fill in at least one category above.</div>
+    </div>
+
+    <!-- Where your points went -->
+    <div class="bk-wrap" id="cbWrap" style="display:none">
+      <div class="bk-title">Where your course points went</div>
+      <p class="res-tip adv-tip" id="cbTip"></p>
+      <div class="gb-bar" id="cbBar"></div>
+      <div class="gb-key" id="cbKey"></div>
+      <p class="gb-note">Each slice is a category, sized by its weight. The coloured part is what you earned; the empty part is what was lost; the striped slice has no grade yet.</p>
     </div>
 
     <!-- Breakdown table -->
@@ -381,6 +502,10 @@
         </div>
       </div>
       <div class="wi-result" id="wiResult"></div>
+      <div id="wiLadWrap" style="display:none">
+        <p class="gb-note" style="margin:12px 0 2px">What you need for each grade — tap a row to use it as your target.</p>
+        <table class="dtable wi-ladder" id="wiLadder"></table>
+      </div>
     </div>
 
     <!-- Cross-links -->
@@ -398,6 +523,34 @@
 
 </div>
 
+<!-- mobile sticky bar -->
+<div class="mbar" id="mbar">
+  <span class="mbar-lab" id="gMLab">Course grade</span>
+  <div class="mbar-vals"><b id="gMVal">—</b></div>
+</div>
+
+<div class="related-calcs">
+  <p class="related-calcs-h">More school calculators that may interest you</p>
+  <div class="pills">
+      <a class="pill" href="/final-grade-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+        Final Grade Calculator
+      </a>
+      <a class="pill" href="/semester-grade-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
+        Semester Grade Calculator
+      </a>
+      <a class="pill" href="/gpa-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5 9-5zM3 8v6c0 2 4 4 9 4s9-2 9-4V8"/></svg>
+        GPA Calculator
+      </a>
+      <a class="pill" href="/weighted-average-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="12" r="4"/><circle cx="16" cy="12" r="4"/></svg>
+        Weighted Average Calculator
+      </a>
+  </div>
+</div>
+
 <section class="prose">
   <h2>How weighted grades work</h2>
   <p>Most courses divide your grade into categories — homework, quizzes, midterm, final exam — each worth a different percentage of your total grade. A weighted grade calculator multiplies each category's score by its weight, sums the results, and divides by the total weight. So a 78% midterm worth 25% contributes 19.5 percentage points to your final grade, while a 95% homework score worth 10% only contributes 9.5 points.</p>
@@ -406,6 +559,59 @@
   <p>Use <strong>% Score mode</strong> when your syllabus lists category weights as percentages and you know your average score per category. Use <strong>Points mode</strong> when you track raw points — enter total points earned and total points possible per category; the calculator converts to percentages automatically.</p>
   <h3>What-if analysis</h3>
   <p>The "What Score Do I Need?" tool works backwards: given your current scores in all other categories, it calculates exactly what score you need in the selected category to hit your target course grade. Useful for planning before a final exam or major project.</p>
+
+  <h2>Weighted grade calculator for any class or college course</h2>
+  <p>A weighted grade is your course grade when some categories count for more than others. Your syllabus gives each category a share — homework 20%, quizzes 20%, midterm 25%, final exam 35% — and the calculator combines your grades with those shares. It works the same for a high school class and a college course.</p>
+
+  <h3>How to calculate your grade with weights</h3>
+  <div class="formula">
+    Course grade = Σ (grade × weight) ÷ Σ weights
+    <small>EACH CATEGORY'S GRADE TIMES ITS SHARE OF THE COURSE</small>
+  </div>
+  <p>Take homework 90% (20%), quizzes 85% (20%) and a midterm of 78% (25%), with the final (35%) still to come. Your grade so far is (90 × 20 + 85 × 20 + 78 × 25) ÷ 65 = <strong>83.8%</strong>. If the final comes in at 88%, the course grade is (90 × 20 + 85 × 20 + 78 × 25 + 88 × 35) ÷ 100 = <strong>85.3%</strong>.</p>
+
+  <h3>How to calculate your grade without weights</h3>
+  <p>If every assignment counts the same, the grade is a plain average. Leave all the weight boxes empty and each category counts equally — 90, 85 and 78 average <strong>84.3%</strong>. As soon as you type a weight, the weights take over.</p>
+
+  <h3>What you need on the rest</h3>
+  <p>To finish on a target grade <em>T</em>, the score needed on the remaining work is (T × total weight − points so far) ÷ remaining weight. For the example above, with a final worth 35%:</p>
+  <table class="dtable">
+    <thead><tr><th>Course grade</th><th>Score needed on the final</th></tr></thead>
+    <tbody>
+      <tr><td>A (90%)</td><td>101.4% — out of reach</td></tr>
+      <tr><td>B (80%)</td><td>72.9%</td></tr>
+      <tr><td>C (70%)</td><td>44.3%</td></tr>
+      <tr><td>D (60%)</td><td>15.7%</td></tr>
+    </tbody>
+  </table>
+  <p>The calculator shows this table for your own numbers under “What Score Do I Need?”. Pick “All remaining” to spread the target over several categories that have no grade yet.</p>
+
+  <h3>Letter grades</h3>
+  <p>Switch to <strong>Letters</strong> if all you have are letters. Each letter counts as the middle of its band in the plus/minus table (A+ 97 · A 93 · A- 90 · B+ 87 · B 83 · B- 80 · C+ 77 · C 73 · C- 70 · D+ 67 · D 63 · D- 60): A+ is 98.5%, A- is 91%, B+ is 88%, down to F at 29.5%. A B+ and an A- of equal weight give 89.5%. Under <strong>Go advanced</strong> you can switch to the plus/minus scale for your result or set your own A, B, C and D cutoffs.</p>
+
+  <h3>Example weightings</h3>
+  <p>Every course is different, so use the shares on your own syllabus. These are only examples of how a course can be split (the calculator starts with the balanced one):</p>
+  <table class="dtable">
+    <thead><tr><th>Example</th><th>Homework</th><th>Quiz</th><th>Mid</th><th>Final</th></tr></thead>
+    <tbody>
+      <tr><td>Balanced</td><td>20%</td><td>20%</td><td>25%</td><td>35%</td></tr>
+      <tr><td>Exam-heavy</td><td>10%</td><td>10%</td><td>30%</td><td>50%</td></tr>
+      <tr><td>Coursework-heavy</td><td>40%</td><td>20%</td><td>15%</td><td>25%</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Related calculators</h3>
+  <p>For one exam, use the <a href="/final-grade-calculator/">final grade calculator</a>. For quarters, a midterm and a final, the <a href="/semester-grade-calculator/">semester grade calculator</a>. For your grade point average across classes, the <a href="/gpa-calculator/">GPA calculator</a>. For any other weighted average, the <a href="/weighted-average-calculator/">weighted average calculator</a>.</p>
+
+  <h2 style="margin-top:36px">Common questions</h2>
+  <details class="faq"><summary>How do I calculate a weighted grade?</summary><p>Multiply each category's grade by its weight, add the results, and divide by the total weight. With homework 90% (20% of the course), quizzes 85% (20%), a midterm of 78% (25%) and a final of 88% (35%): (90 × 20 + 85 × 20 + 78 × 25 + 88 × 35) ÷ 100 = 85.3%.</p></details>
+  <details class="faq"><summary>How do I calculate my grade with and without weights?</summary><p>With weights, bigger categories move your grade more. Without weights, every category counts the same, so the grade is a plain average: 90, 85 and 78 average 84.3%. In the calculator, leave every weight box empty and each category counts equally; fill them in and the weights take over.</p></details>
+  <details class="faq"><summary>What do I need on the final to get an A?</summary><p>It depends on your grade so far and how much the final is worth. With homework 90% (20%), quizzes 85% (20%) and a midterm of 78% (25%), your grade so far is 83.8%. With a final worth 35%, an A (90%) would need 101.4% — out of reach — while a B (80%) needs 72.9%, a C (70%) needs 44.3% and a D (60%) needs 15.7%. Under “What score do I need?” the calculator shows every letter at once.</p></details>
+  <details class="faq"><summary>Can I enter letter grades instead of percentages?</summary><p>Yes — switch the toggle to Letters. A letter counts as the middle of its band in the plus/minus table: A+ is 98.5%, A is 94.5%, A- is 91%, B+ is 88%, and so on down to F at 29.5%. A B+ and an A- of equal weight give 89.5%. Type percentages when you have them for an exact result.</p></details>
+  <details class="faq"><summary>What if my weights do not add up to 100?</summary><p>The calculator scales whatever you enter, so weights of 2, 2 and 1 give the same grade as 40, 40 and 20. It shows a notice when they do not add up to 100 so you can check them against your syllabus.</p></details>
+  <details class="faq"><summary>How do I calculate a college or class grade?</summary><p>The same way: your syllabus lists the categories (homework, labs, papers, midterm, final) and the share each one counts for. Enter those shares as weights and your grade in each category, and leave the categories you have not had yet empty. For your GPA across classes, use the <a href="/gpa-calculator/">GPA calculator</a>.</p></details>
+  <details class="faq"><summary>How do I use points instead of percentages?</summary><p>Switch to Points and enter the points you earned and the points possible for each category. A homework category of 180 out of 200 points counts as 90%. If your class is graded on total points, make each weight equal to the points possible: 180/200 and 85/100 give (180 + 85) ÷ 300 = 88.3%, the same as weighting 90% by 200 and 85% by 100.</p></details>
+  <details class="faq"><summary>Why is my result different from my school’s gradebook?</summary><p>Common reasons: your school rounds differently, drops the lowest score in a category, adds extra credit, treats empty work as zero, or uses its own letter cutoffs (under Go advanced you can set your own A, B, C and D). For one exam use the <a href="/final-grade-calculator/">final grade calculator</a>; for quarters or terms, the <a href="/semester-grade-calculator/">semester grade calculator</a>.</p></details>
 </section>
 
 <!--FOOTER:START-->
@@ -625,166 +831,297 @@
 
 </div><!-- /.wrap -->
 
-<script src="/assets/app.js?v=284"></script>
+<script src="/assets/app.js?v=286"></script>
 <script>
 (function(){
-  var mode = 'pct'; // 'pct' | 'pts'
+  var E = CalcThis.semesterEngine;
+  var mode = 'pct'; // 'pct' | 'pts' | 'let'
+  var scaleKind = 'std', dec = 1, adv = false;
   var cats = [];
   var rowId = 0;
+  var PAL = ['c0','c1','c2','c3','c4','c5'];
 
   var DEFAULTS = [
-    {name:'Homework',   weight:20, score:'', earned:'', possible:''},
-    {name:'Quizzes',    weight:20, score:'', earned:'', possible:''},
-    {name:'Midterm',    weight:25, score:'', earned:'', possible:''},
-    {name:'Final Exam', weight:35, score:'', earned:'', possible:''}
+    {name:'Homework',   weight:20, score:'', earned:'', possible:'', letter:''},
+    {name:'Quizzes',    weight:20, score:'', earned:'', possible:'', letter:''},
+    {name:'Midterm',    weight:25, score:'', earned:'', possible:'', letter:''},
+    {name:'Final Exam', weight:35, score:'', earned:'', possible:'', letter:''}
   ];
 
-  function pctToLetter(p){
-    if(p>=90) return 'A';
-    if(p>=80) return 'B';
-    if(p>=70) return 'C';
-    if(p>=60) return 'D';
-    return 'F';
-  }
-  function letterClass(l){
-    return {A:'ga',B:'gb',C:'gc',D:'gd',F:'gf'}[l]||'';
-  }
-  function badgeClass(l){
-    return {A:'la',B:'lb',C:'lc',D:'ld',F:'lf'}[l]||'';
+  function $(id){return document.getElementById(id);}
+  function fx(x){return x.toFixed(dec);}
+  function num(v){var n=parseFloat(v);return isFinite(n)?n:NaN;}
+  function trim2(x){return String(parseFloat(x.toFixed(2)));}
+  function escHtml(s){
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
-  function getScore(cat){
-    if(mode==='pct'){
-      var s=parseFloat(cat.score);
-      return isNaN(s)?NaN:s;
-    } else {
-      var e=parseFloat(cat.earned), p=parseFloat(cat.possible);
-      if(isNaN(e)||isNaN(p)||p<=0) return NaN;
-      return (e/p)*100;
-    }
+  function cuts(){
+    var o={};
+    ['A','B','C','D'].forEach(function(k){
+      var v=parseFloat($('cut'+k).value);
+      if(isFinite(v)&&v>0&&v<=100) o[k]=v;
+    });
+    return o;
   }
+  function letterOf(p){
+    var sc = scaleKind==='pm' ? E.scale('pm') : E.scale('std', cuts());
+    return E.letterOf(p, sc);
+  }
+  function letterClass(l){return {A:'ga',B:'gb',C:'gc',D:'gd',F:'gf'}[l.charAt(0)]||'';}
+  function badgeClass(l){return {A:'la',B:'lb',C:'lc',D:'ld',F:'lf'}[l.charAt(0)]||'';}
+
+  /* score of a category as a percent, NaN when blank or not usable */
+  function getScore(cat){
+    var s;
+    if(mode==='pct'){
+      s=num(cat.score);
+    } else if(mode==='pts'){
+      var e=num(cat.earned), p=num(cat.possible);
+      s=(isNaN(e)||isNaN(p)||p<=0||e<0)?NaN:(e/p)*100;
+    } else {
+      var g=E.parseGrade(cat.letter,'let');
+      s=(g.v==null)?NaN:g.v;
+    }
+    return (isFinite(s)&&s>=0&&s<=200)?s:NaN;
+  }
+  /* true when something was typed in the grade field but it cannot be used */
+  function gradeBad(cat){
+    if(mode==='pct') return String(cat.score).trim()!==''&&isNaN(getScore(cat));
+    if(mode==='let') return String(cat.letter).trim()!==''&&isNaN(getScore(cat));
+    var any=String(cat.earned).trim()!==''||String(cat.possible).trim()!=='';
+    var both=String(cat.earned).trim()!==''&&String(cat.possible).trim()!=='';
+    return both&&isNaN(getScore(cat))&&any;
+  }
+
+  var last=null; // last solved state, used by the what-if
 
   function solve(){
-    var totalW=0, weightedSum=0, validCats=[];
-    cats.forEach(function(c){
-      var w=parseFloat(c.weight);
-      if(isNaN(w)||w<=0) return;
-      totalW+=w;
-      var s=getScore(c);
-      if(!isNaN(s)){
-        weightedSum+=s*w;
-        validCats.push({name:c.name||'Category',weight:w,score:s,contrib:(s*w)});
-      }
+    var anyW=cats.some(function(c){return String(c.weight).trim()!=='';});
+    var rows=[], badW=[], badG=[];
+    cats.forEach(function(c,i){
+      var nm=c.name||('Category '+(i+1));
+      var w=anyW?num(c.weight):1;
+      var hasW=String(c.weight).trim()!=='';
+      if(anyW&&hasW&&!(w>=0.001&&w<=1000)) badW.push(nm);
+      if(gradeBad(c)) badG.push(nm);
+      if(!(w>=0.001&&w<=1000)) return;
+      rows.push({i:i,name:nm,w:w,s:getScore(c)});
     });
 
-    // weight warning
-    var warnEl=document.getElementById('weightWarn');
-    var allW=cats.reduce(function(a,c){var w=parseFloat(c.weight);return a+(isNaN(w)?0:w);},0);
-    if(cats.length>0 && Math.abs(allW-100)>0.5){
+    // flag fields
+    [].forEach.call($('catRows').children,function(div){
+      var id=parseInt(div.getAttribute('data-cid'));
+      var c=null;for(var k=0;k<cats.length;k++) if(cats[k]._id===id) c=cats[k];
+      if(!c) return;
+      var wEl=div.querySelector('.cat-weight');
+      var hasW=String(c.weight).trim()!=='';
+      var wv=num(c.weight);
+      wEl.classList.toggle('warn',anyW&&hasW&&!(wv>=0.001&&wv<=1000));
+      var gEl=div.querySelector('.cat-score')||div.querySelector('.cat-letter')||null;
+      if(gEl) gEl.classList.toggle('warn',gradeBad(c));
+      ['.cat-earned','.cat-possible'].forEach(function(q){
+        var el=div.querySelector(q);if(el) el.classList.toggle('warn',gradeBad(c));
+      });
+    });
+
+    var warnEl=$('weightWarn');
+    var allW=cats.reduce(function(a,c){var w=num(c.weight);return a+(isNaN(w)?0:w);},0);
+    if(cats.length>0&&!anyW){
+      warnEl.style.display='';
+      warnEl.textContent='No weights entered — every category counts equally.';
+    } else if(cats.length>0 && Math.abs(allW-100)>0.5){
       warnEl.style.display='';
       warnEl.textContent='Weights sum to '+allW.toFixed(1)+'% (not 100%). Grade is still calculated correctly.';
     } else {
       warnEl.style.display='none';
     }
+    var inW=$('inWarn'), msgs=[];
+    if(badW.length) msgs.push('Weight must be between 0.001 and 1000 for: '+badW.map(escHtml).join(', ')+'.');
+    if(badG.length) msgs.push('Not counted (check the grade): '+badG.map(escHtml).join(', ')+' — '+(mode==='let'?'use A+, A, A-, B+ … F.':mode==='pts'?'total points must be above 0.':'use a number from 0 to 200.'));
+    inW.innerHTML=msgs.join('<br>');
+    inW.style.display=msgs.length?'':'none';
 
-    var gradeBig=document.getElementById('gradeBig');
-    var letterBadge=document.getElementById('letterBadge');
-    var gradeSub=document.getElementById('gradeSub');
-    var bkWrap=document.getElementById('bkWrap');
-    var wiWrap=document.getElementById('wiWrap');
+    var gradeBig=$('gradeBig'), letterBadge=$('letterBadge'), gradeSub=$('gradeSub');
+    var bkWrap=$('bkWrap'), wiWrap=$('wiWrap'), cbWrap=$('cbWrap');
+    var graded=rows.filter(function(r){return !isNaN(r.s);});
 
-    if(validCats.length===0){
+    if(graded.length===0){
       gradeBig.textContent='—';
       gradeBig.className='grade-big';
       letterBadge.innerHTML='';
       gradeSub.textContent='Fill in at least one category above.';
       bkWrap.style.display='none';
       wiWrap.style.display='none';
+      cbWrap.style.display='none';
+      $('gMVal').textContent='—';$('gMLab').textContent='Course grade';
+      last=null;
       return;
     }
 
-    var usedW=validCats.reduce(function(a,c){return a+c.weight;},0);
-    var grade=weightedSum/usedW;
-    var letter=pctToLetter(grade);
+    var S=0, usedW=0, Wall=0;
+    rows.forEach(function(r){Wall+=r.w;});
+    graded.forEach(function(r){S+=r.s*r.w;usedW+=r.w;});
+    var restW=Wall-usedW;
+    var grade=S/usedW;
+    var shown=parseFloat(fx(grade));
+    var letter=letterOf(shown);
 
-    gradeBig.textContent=grade.toFixed(1)+'%';
+    gradeBig.textContent=fx(grade)+'%';
     gradeBig.className='grade-big '+letterClass(letter);
-    letterBadge.innerHTML='<span class="letter-badge '+badgeClass(letter)+'">'+letter+'</span>';
-    gradeSub.textContent=validCats.length+' of '+cats.length+' categor'+(cats.length===1?'y':'ies')+' filled · '+allW.toFixed(0)+'% total weight';
+    letterBadge.innerHTML='<span class="letter-badge '+badgeClass(letter)+'">'+escHtml(letter)+'</span>';
+    gradeSub.textContent=graded.length+' of '+cats.length+' categor'+(cats.length===1?'y':'ies')+' filled · '+(anyW?allW.toFixed(0)+'% total weight':'equal weights');
+    $('gMVal').textContent=fx(grade)+'% · '+letter;
+    $('gMLab').textContent=restW>1e-9?'Grade so far':'Course grade';
+
+    last={rows:rows,S:S,usedW:usedW,Wall:Wall,restW:restW,grade:grade};
+
+    renderBar(rows,Wall);
 
     // breakdown
     bkWrap.style.display='';
-    var bkBody=document.getElementById('bkBody');
-    var maxContrib=Math.max.apply(null,validCats.map(function(c){return c.contrib/usedW;}));
-    bkBody.innerHTML=validCats.map(function(c){
-      var contrib=(c.contrib/usedW).toFixed(1);
-      var barW=maxContrib>0?Math.round((c.contrib/usedW)/maxContrib*100):0;
+    var maxContrib=Math.max.apply(null,graded.map(function(c){return c.s*c.w/usedW;}));
+    $('bkBody').innerHTML=graded.map(function(c){
+      var contrib=c.s*c.w/usedW;
+      var barW=maxContrib>0?Math.round(contrib/maxContrib*100):0;
+      var wLab=anyW?trim2(c.w)+'%':trim2(c.w/Wall*100)+'%';
       return '<tr>'+
         '<td>'+escHtml(c.name)+'</td>'+
-        '<td>'+c.weight.toFixed(0)+'%</td>'+
-        '<td>'+c.score.toFixed(1)+'%</td>'+
+        '<td>'+wLab+'</td>'+
+        '<td>'+fx(c.s)+'%</td>'+
         '<td class="contrib-cell">'+
           '<div style="display:flex;align-items:center;gap:6px">'+
-            '<span style="font-variant-numeric:tabular-nums;min-width:36px">'+contrib+'%</span>'+
+            '<span style="font-variant-numeric:tabular-nums;min-width:36px">'+fx(contrib)+'%</span>'+
             '<div class="contrib-bar-wrap" style="flex:1"><div class="contrib-bar" style="width:'+barW+'%"></div></div>'+
           '</div>'+
         '</td>'+
       '</tr>';
     }).join('');
 
-    // what-if
     wiWrap.style.display='';
     populateWiCat();
-    solveWhatIf(grade, usedW, weightedSum);
+    solveWhatIf();
   }
 
-  function escHtml(s){
-    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  /* where the course points went: every category is a slice of the bar (its weight),
+     the coloured part is what you earned, the empty part is what was lost */
+  function renderBar(rows,Wall){
+    var cbWrap=$('cbWrap');
+    var bar='', key='', earned=0, lost=0, toCome=0, bonus=0, worst=null;
+    rows.forEach(function(r,k){
+      var pts=r.w/Wall*100, cl=PAL[k%PAL.length], graded=!isNaN(r.s);
+      if(graded){
+        var e=r.s/100*pts, l=Math.max(0,pts-e), x=Math.max(0,e-pts);
+        earned+=e; lost+=l; bonus+=x;
+        if(l>0&&(!worst||l>worst.l)) worst={n:r.name,l:l};
+        bar+='<span class="gb-seg" style="width:'+pts+'%"><span class="gb-fill '+cl+'" style="width:'+Math.min(100,r.s)+'%"></span></span>';
+        key+='<div class="gb-row"><i class="'+cl+'"></i><span><b>'+escHtml(r.name)+'</b> · '+fx(r.s)+'% of '+fx(pts)+' points → <strong>'+fx(e)+'</strong> earned'+(l>0.0005?', <span class="gb-lost">'+fx(l)+' lost</span>':(x>0.0005?', <span class="gb-bonus">'+fx(x)+' above the maximum</span>':''))+'</span></div>';
+      } else {
+        toCome+=pts;
+        bar+='<span class="gb-seg rem" style="width:'+pts+'%"></span>';
+        key+='<div class="gb-row"><i class="rem"></i><span><b>'+escHtml(r.name)+'</b> · no grade yet — up to <strong>'+fx(pts)+'</strong> points still to come</span></div>';
+      }
+    });
+    $('cbBar').innerHTML=bar;
+    $('cbKey').innerHTML=key;
+    var tip='You have <strong>'+fx(earned)+'</strong> of the 100 course points so far';
+    if(lost>0.0005) tip+='; <strong>'+fx(lost)+'</strong> were lost on graded work';
+    if(toCome>0.0005) tip+=(lost>0.0005?' and ':'; ')+'<strong>'+fx(toCome)+'</strong> are still to come';
+    tip+='.';
+    if(worst&&lost>0.0005) tip+=' Biggest loss: <strong>'+escHtml(worst.n)+'</strong> ('+fx(worst.l)+').';
+    $('cbTip').innerHTML=tip;
+    cbWrap.style.display='';
   }
 
   function populateWiCat(){
-    var sel=document.getElementById('wiCat');
+    var sel=$('wiCat');
     var prev=sel.value;
-    sel.innerHTML=cats.map(function(c,i){
-      return '<option value="'+i+'">'+(c.name||'Category '+(i+1))+'</option>';
+    var nGap=last.rows.filter(function(r){return isNaN(r.s);}).length;
+    var html=cats.map(function(c,i){
+      return '<option value="'+i+'">'+escHtml(c.name||'Category '+(i+1))+'</option>';
     }).join('');
+    if(nGap>=2) html+='<option value="rest">All remaining ('+nGap+' without a grade)</option>';
+    sel.innerHTML=html;
     if(prev) sel.value=prev;
+    if(sel.selectedIndex<0) sel.selectedIndex=0;
   }
 
-  function solveWhatIf(currentGrade, usedW, weightedSum){
-    var sel=document.getElementById('wiCat');
-    var targetEl=document.getElementById('wiTarget');
-    var needEl=document.getElementById('wiNeed');
-    var resultEl=document.getElementById('wiResult');
+  /* score needed in the chosen category (or on all remaining ones) to finish on T */
+  function planFor(T){
+    if(!last) return null;
+    var v=$('wiCat').value;
+    if(v==='rest'){
+      if(last.restW<=1e-9) return null;
+      return {need:(T*(last.usedW+last.restW)-last.S)/last.restW, name:'the remaining categories', all:true};
+    }
+    var i=parseInt(v);
+    var row=null;
+    last.rows.forEach(function(r){if(r.i===i) row=r;});
+    if(!row) return null;
+    var has=!isNaN(row.s);
+    var sumW=has?last.S-row.s*row.w:last.S;
+    var wW=has?last.usedW-row.w:last.usedW;
+    var other=last.rows.filter(function(r){return isNaN(r.s)&&r.i!==i;}).length;
+    return {need:(T*(wW+row.w)-sumW)/row.w, name:row.name, all:false, other:other};
+  }
 
-    var idx=parseInt(sel.value);
-    var target=parseFloat(targetEl.value);
-    if(isNaN(idx)||isNaN(target)){
+  function needText(n){
+    if(n>10000) return {t:'over 10,000%',bad:true};
+    if(n>100+1e-9) return {t:fx(n)+'%',bad:true};
+    if(n<=1e-9) return {t:'Secured',ok:true};
+    return {t:fx(n)+'%'};
+  }
+
+  function solveWhatIf(){
+    var needEl=$('wiNeed'), resultEl=$('wiResult'), ladder=$('wiLadder');
+    var target=parseFloat($('wiTarget').value);
+    var sel=$('wiCat');
+    var okSel=last&&sel.value!=='';
+    // ladder (needs only a selected category)
+    var lp=okSel?planFor(100):null;
+    if(!lp){ladder.innerHTML='';$('wiLadWrap').style.display='none';}
+    else{
+      var sc=scaleKind==='pm'?E.scale('pm'):E.scale('std',cuts());
+      var html='<thead><tr><th>Grade</th><th>Course grade</th><th>Score needed</th></tr></thead><tbody>';
+      sc.forEach(function(x){
+        if(x.min<=0) return;
+        var p=planFor(x.min);
+        if(!p) return;
+        var nt=needText(p.need);
+        html+='<tr data-t="'+x.min+'" tabindex="0" role="button"><td>'+escHtml(x.l)+'</td><td>'+trim2(x.min)+'%</td><td class="'+(nt.bad?'wi-bad':nt.ok?'wi-ok':'')+'">'+(nt.bad?'Out of reach ('+nt.t+')':nt.t)+'</td></tr>';
+      });
+      ladder.innerHTML=html+'</tbody>';
+      $('wiLadWrap').style.display='';
+    }
+    if(!okSel||isNaN(target)){
       needEl.value='';
       resultEl.textContent='Select a category and enter your target grade.';
       return;
     }
-    var cat=cats[idx];
-    var catW=parseFloat(cat.weight);
-    if(isNaN(catW)||catW<=0){
+    if(!(target>0&&target<=100)){
+      needEl.value='';
+      resultEl.textContent='Enter a target between 1 and 100.';
+      return;
+    }
+    var pl=planFor(target);
+    if(!pl){
       needEl.value='';
       resultEl.textContent='Give that category a weight first.';
       return;
     }
-    // remove this cat's contribution from sum
-    var catScore=getScore(cat);
-    var sumWithout=isNaN(catScore)?weightedSum:weightedSum-(catScore*catW);
-    var wWithout=isNaN(catScore)?usedW:usedW-catW;
-    // need: target = (sumWithout + need*catW) / (wWithout + catW)
-    var need=(target*(wWithout+catW)-sumWithout)/catW;
-    needEl.value=need.toFixed(1)+'%';
-    var color=need>100?'#b23030':need<0?'var(--spruce)':'var(--ink-soft)';
-    if(need>100){
-      resultEl.innerHTML='<span style="color:#b23030">Not mathematically possible — you\'d need more than 100%.</span>';
-    } else if(need<0){
-      resultEl.innerHTML='<span style="color:var(--spruce)">You\'ve already secured a '+target+'% course grade!</span>';
+    var need=pl.need;
+    needEl.value=need<=1e-9?'Secured':need>10000?'>10,000%':fx(need)+'%';
+    var tg=trim2(target);
+    var color=need>100?'#b23030':'var(--ink-soft)';
+    var extra=(!pl.all&&pl.other>0)?' <span style="color:var(--muted)">(categories without a grade yet are left out of this target.)</span>':'';
+    if(need>100+1e-9){
+      resultEl.innerHTML='<span style="color:#b23030">Not mathematically possible — you\'d need more than 100%.</span>'+extra;
+    } else if(need<=1e-9){
+      resultEl.innerHTML='<span style="color:var(--spruce)">You\'ve already secured a '+tg+'% course grade!</span>'+extra;
+    } else if(pl.all){
+      resultEl.innerHTML='Average <strong style="color:'+color+'">'+fx(need)+'%</strong> across <em>all remaining categories</em> to reach <strong>'+tg+'%</strong> overall.';
     } else {
-      resultEl.innerHTML='Score <strong style="color:'+color+'">'+need.toFixed(1)+'%</strong> on <em>'+escHtml(cat.name||'this category')+'</em> to reach <strong>'+target+'%</strong> overall.';
+      resultEl.innerHTML='Score <strong style="color:'+color+'">'+fx(need)+'%</strong> on <em>'+escHtml(pl.name)+'</em> to reach <strong>'+tg+'%</strong> overall.'+extra;
     }
   }
 
@@ -794,38 +1131,38 @@
     div.className='cat-block';
     div.setAttribute('data-cid', id);
 
-    var isPts=mode==='pts';
-
-    var fieldsHtml = isPts
-      ? '<div class="cat-grid-pts">'+
-          '<div class="cat-col"><span class="cat-lbl">Weight %</span><input type="number" class="cf cat-weight" placeholder="%" min="0" max="200" step="0.5" value="'+(data.weight||'')+'" aria-label="Weight"></div>'+
-          '<div class="cat-col"><span class="cat-lbl">Earned pts</span><input type="number" class="cf cat-earned" placeholder="pts" min="0" step="0.5" value="'+(data.earned||'')+'" aria-label="Points earned"></div>'+
-          '<div class="cat-col"><span class="cat-lbl">Total pts</span><input type="number" class="cf cat-possible" placeholder="pts" min="0.1" step="0.5" value="'+(data.possible||'')+'" aria-label="Total points"></div>'+
-        '</div>'
-      : '<div class="cat-grid-pct">'+
-          '<div class="cat-col"><span class="cat-lbl">Weight %</span><input type="number" class="cf cat-weight" placeholder="%" min="0" max="200" step="0.5" value="'+(data.weight||'')+'" aria-label="Weight"></div>'+
-          '<div class="cat-col"><span class="cat-lbl">Your score (0–100)</span><input type="number" class="cf cat-score" placeholder="e.g. 85" min="0" max="110" step="0.1" value="'+(data.score||'')+'" aria-label="Score"></div>'+
+    var fieldsHtml;
+    var wFld='<div class="cat-col"><span class="cat-lbl">Weight %</span><input type="number" class="cf cat-weight" placeholder="%" min="0" max="1000" step="any" value="'+escHtml(data.weight)+'" aria-label="Weight"></div>';
+    if(mode==='pts'){
+      fieldsHtml='<div class="cat-grid-pts">'+wFld+
+          '<div class="cat-col"><span class="cat-lbl">Earned pts</span><input type="number" class="cf cat-earned" placeholder="pts" min="0" step="any" value="'+escHtml(data.earned)+'" aria-label="Points earned"></div>'+
+          '<div class="cat-col"><span class="cat-lbl">Total pts</span><input type="number" class="cf cat-possible" placeholder="pts" min="0" step="any" value="'+escHtml(data.possible)+'" aria-label="Total points"></div>'+
         '</div>';
+    } else if(mode==='let'){
+      fieldsHtml='<div class="cat-grid-pct">'+wFld+
+          '<div class="cat-col"><span class="cat-lbl">Letter grade</span><input type="text" class="cf cat-letter" placeholder="e.g. B+" maxlength="3" autocomplete="off" autocapitalize="characters" spellcheck="false" value="'+escHtml(data.letter)+'" aria-label="Letter grade"></div>'+
+        '</div>';
+    } else {
+      fieldsHtml='<div class="cat-grid-pct">'+wFld+
+          '<div class="cat-col"><span class="cat-lbl">Your score (0–100)</span><input type="number" class="cf cat-score" placeholder="e.g. 85" min="0" max="200" step="any" value="'+escHtml(data.score)+'" aria-label="Score"></div>'+
+        '</div>';
+    }
 
     div.innerHTML=
       '<div class="cat-fields">'+
         '<div class="cat-name-row">'+
           '<span class="cat-name-lbl">Category name (optional)</span>'+
-          '<input type="text" class="cf cat-name" placeholder="e.g. Homework" value="'+(data.name||'')+'" aria-label="Category name">'+
+          '<input type="text" class="cf cat-name" placeholder="e.g. Homework" value="'+escHtml(data.name)+'" aria-label="Category name">'+
         '</div>'+
         fieldsHtml+
       '</div>'+
       '<button class="del-btn" data-cid="'+id+'" aria-label="Remove category" type="button">&#215;</button>';
 
     function onChange(){readCat(id,div);solve();}
-    div.querySelector('.cat-name').addEventListener('input',onChange);
-    div.querySelector('.cat-weight').addEventListener('input',onChange);
-    if(isPts){
-      div.querySelector('.cat-earned').addEventListener('input',onChange);
-      div.querySelector('.cat-possible').addEventListener('input',onChange);
-    } else {
-      div.querySelector('.cat-score').addEventListener('input',onChange);
-    }
+    ['.cat-name','.cat-weight','.cat-earned','.cat-possible','.cat-score','.cat-letter'].forEach(function(q){
+      var el=div.querySelector(q);
+      if(el) el.addEventListener('input',onChange);
+    });
     div.querySelector('.del-btn').addEventListener('click',function(){
       cats=cats.filter(function(c){return c._id!==id;});
       div.parentNode.removeChild(div);
@@ -837,36 +1174,40 @@
   function readCat(id,div){
     var idx=-1;
     for(var i=0;i<cats.length;i++) if(cats[i]._id===id){idx=i;break;}
+    var old=idx>=0?cats[idx]:{};
+    function v(q,k){var el=div.querySelector(q);return el?el.value:(old[k]||'');}
     var obj={
       _id:id,
-      name:div.querySelector('.cat-name').value,
-      weight:div.querySelector('.cat-weight').value,
-      score: div.querySelector('.cat-score') ? div.querySelector('.cat-score').value : cats[idx]&&cats[idx].score||'',
-      earned: div.querySelector('.cat-earned') ? div.querySelector('.cat-earned').value : cats[idx]&&cats[idx].earned||'',
-      possible: div.querySelector('.cat-possible') ? div.querySelector('.cat-possible').value : cats[idx]&&cats[idx].possible||''
+      name:v('.cat-name','name'),
+      weight:v('.cat-weight','weight'),
+      score:v('.cat-score','score'),
+      earned:v('.cat-earned','earned'),
+      possible:v('.cat-possible','possible'),
+      letter:v('.cat-letter','letter')
     };
     if(idx>=0) cats[idx]=obj; else cats.push(obj);
   }
 
   function addCat(data){
     var id=++rowId;
-    var obj={_id:id,name:data.name||'',weight:data.weight||'',score:data.score||'',earned:data.earned||'',possible:data.possible||''};
+    var obj={_id:id,name:data.name||'',weight:data.weight===undefined?'':data.weight,score:data.score||'',earned:data.earned||'',possible:data.possible||'',letter:data.letter||''};
+    obj.weight=String(obj.weight);
     cats.push(obj);
     var div=buildCat(id,obj);
-    document.getElementById('catRows').appendChild(div);
+    $('catRows').appendChild(div);
     return div;
   }
 
   function rebuildRows(){
     var saved=cats.slice();
     cats=[];
-    document.getElementById('catRows').innerHTML='';
+    $('catRows').innerHTML='';
     rowId=0;
     saved.forEach(function(c){addCat(c);});
   }
 
   // mode toggle
-  document.getElementById('modeSeg').addEventListener('click',function(e){
+  $('modeSeg').addEventListener('click',function(e){
     var b=e.target.closest('button');if(!b)return;
     [].forEach.call(this.querySelectorAll('button'),function(x){x.classList.remove('on');});
     b.classList.add('on');
@@ -875,23 +1216,55 @@
     solve();
   });
 
-  document.getElementById('addCatBtn').addEventListener('click',function(){
+  $('addCatBtn').addEventListener('click',function(){
     addCat({});
     solve();
   });
 
   // what-if listeners
-  document.getElementById('wiCat').addEventListener('change',function(){
-    var grade=parseFloat(document.getElementById('gradeBig').textContent);
-    if(!isNaN(grade)) solve();
+  $('wiCat').addEventListener('change',function(){solve();});
+  $('wiTarget').addEventListener('input',function(){solve();});
+  function pickLadder(tr){
+    if(!tr||!tr.getAttribute('data-t')) return;
+    $('wiTarget').value=tr.getAttribute('data-t');
+    solve();
+  }
+  $('wiLadder').addEventListener('click',function(e){pickLadder(e.target.closest('tr'));});
+  $('wiLadder').addEventListener('keydown',function(e){
+    if(e.key==='Enter'||e.key===' '){e.preventDefault();pickLadder(e.target.closest('tr'));}
   });
-  document.getElementById('wiTarget').addEventListener('input',function(){solve();});
+
+  // Go advanced
+  function segSet(segId,val){
+    [].forEach.call($(segId).querySelectorAll('button'),function(b){b.classList.toggle('on',b.getAttribute('data-v')===String(val));});
+  }
+  function syncCut(){$('cutWrap').style.display=scaleKind==='std'?'':'none';}
+  $('scaleSeg').addEventListener('click',function(e){
+    var b=e.target.closest('button');if(!b)return;
+    scaleKind=b.getAttribute('data-v');segSet('scaleSeg',scaleKind);syncCut();solve();
+  });
+  $('decSeg').addEventListener('click',function(e){
+    var b=e.target.closest('button');if(!b)return;
+    dec=parseInt(b.getAttribute('data-v'));segSet('decSeg',dec);solve();
+  });
+  ['A','B','C','D'].forEach(function(k){$('cut'+k).addEventListener('input',solve);});
+  $('advBtn').addEventListener('click',function(){
+    adv=!adv;
+    $('advIn').style.display=adv?'':'none';
+    $('advBtn').classList.toggle('open',adv);
+    $('advBtnLab').textContent=adv?'Go simple':'Go advanced';
+    if(!adv){
+      scaleKind='std';dec=1;
+      ['A','B','C','D'].forEach(function(k){$('cut'+k).value='';});
+      segSet('scaleSeg','std');segSet('decSeg',1);syncCut();
+      solve();
+    }
+  });
 
   // init with defaults
   DEFAULTS.forEach(function(d){addCat(d);});
+  syncCut();
   solve();
-
-  document.getElementById('yr').textContent=new Date().getFullYear();
 })();
 </script>
 <script src="/feedback.js" defer></script>

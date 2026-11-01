@@ -6,6 +6,8 @@ _Rewritten 2026-11-01 at the end of session #2 of that day (v270 → v284: calor
 
 ## 0. THE 60-SECOND VERSION (end of the 2026-11-01 session #2: v270 → v284 — calorie deficit, semester grade, average family, percentage change)
 
+### 0.0 UPDATE 2026-11-01 session #3 (v286): the grade-calculator upgrade in 0.1/0.2 is DONE and LIVE (see CLAUDE.md addendum 5); .st-cube hover unified with .calc. NEXT = GSC queue (0.3) + ask the user for fresh Ahrefs numbers. Backlink ideas discussed (Reddit threads need the user to search, Reddit is blocked for my tools; Product Hunt low value): not started.
+
 ### 0.1 WHAT TO DO FIRST IN THE NEXT SESSION
 1. Read this file §0, CLAUDE.md top rules, memory index. Reply **2-3 lines only**: "synced · live v284 / 69 calcs / 178 pages · first job: upgrade /grade-calculator/ in place (letters mode + content + FAQ + contribution bar — approved, no new pages) · then GSC indexing queue". **Do not ask anything answered below. Do not recap. Do not re-research anything marked DONE.**
 2. **FIRST JOB = UPGRADE THE EXISTING `/grade-calculator/` IN PLACE (the user approved this on 2026-11-01: "ok, got it — we will not create [new pages] for now. going with your recommendation").** It is a build, so the normal order still applies: build → exhaustive QA (CLAUDE.md items 1-15 incl. the new functional differential tests, §0.4e) → preview link only → wait for "deploy". Full spec in §0.2.
