@@ -1,0 +1,684 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Percentage Change Calculator — Increase, Decrease &amp; Back</title>
+<meta name="description" content="Free percentage change calculator: find the % change between two values, the final or starting value, and the % you need to get back to the start.">
+<link rel="canonical" href="https://calcthis.co/percentage-change-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Percentage Change Calculator — Increase, Decrease &amp; Back">
+<meta property="og:description" content="Free percentage change calculator: find the % change between two values, the final or starting value, and the % you need to get back to the start.">
+<meta property="og:url" content="https://calcthis.co/percentage-change-calculator/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/datepicker.min.css">
+<link rel="stylesheet" href="/assets/style.css?v=284">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Percentage Change Calculator",
+  "url": "https://calcthis.co/percentage-change-calculator/",
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "Percentage change calculator: the percent change between a starting and an ending value, the final value after a percent increase or decrease, or the starting value from an end value and a percent, with a before-and-after bar picture, the percentage needed to get back to the start, working shown, time values and a list of values over time."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do you calculate percentage change?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Subtract the starting value from the ending value, divide by the starting value, and multiply by 100: (end − start) ÷ start × 100. Going from 80 to 96 gives (96 − 80) ÷ 80 × 100 = +20%. A positive answer is an increase, a negative one a decrease."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why does a 25% rise followed by a 25% fall not get me back to where I started?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Because the second percentage is measured from a bigger number. 100 up 25% is 125; 125 down 25% is 93.75, a net change of −6.25%. To get back from 125 to 100 you need a −20% change. The calculator always shows the percentage you need to get back."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I find the percentage change when the starting value is negative?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Divide by the absolute value of the starting value, which keeps the sign meaningful: going from −25 to 25 is (25 − (−25)) ÷ |−25| × 100 = +200%, an increase, and from −25 to −50 is −100%, a decrease. Percent change is easiest to interpret when both values are positive, so the calculator adds a note when the start is negative."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What if the starting value is zero?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The percent change is undefined: there is no starting size to compare with, and dividing by zero has no answer. From 0 to 0 there is no change (0%). The calculator says so in plain words and still shows the absolute change."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between percent change and percentage points?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "If a rate rises from 2% to 3%, it went up by +1 percentage point — but the percent change is +50%, because 3 is half as big again as 2. Open Go advanced and set the values to percentages to see both side by side."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I find the original value after a percentage increase?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Divide the final value by 1 plus the percentage as a decimal. If a price is 120 after a 20% increase, the original was 120 ÷ 1.2 = 100. Choose \"Starting value\" at the top of the calculator and enter the end value and the percentage."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I calculate the new value after a percentage increase or decrease?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Multiply the starting value by 1 plus the percentage (as a decimal). 80 increased by 25% is 80 × 1.25 = 100; a decrease uses a minus, so 80 down 25% is 80 × 0.75 = 60. Choose \"Final value\" at the top."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I find the percentage change across a whole list of values?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes — open Go advanced and paste the values in order. For 100, 110, 99, 120 you get +10%, −10% and +21.21% for each step, a total of +20%, and a compound rate of +6.27% per period."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does it work with times?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Enter times such as 1:30:00 and 1:12:00 (h:mm:ss) or 1:30 and 1:12 (m:ss) in both boxes: the change from 1:30:00 to 1:12:00 is −20%. Use the same format in both boxes."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "CalcThis",
+      "item": "https://calcthis.co/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Percentage Change Calculator",
+      "item": "https://calcthis.co/percentage-change-calculator/"
+    }
+  ]
+}
+</script>
+<meta property="og:site_name" content="CalcThis">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://calcthis.co/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="CalcThis — free, purpose-built calculators">
+<meta name="twitter:title" content="Percentage Change Calculator — Increase, Decrease &amp; Back">
+<meta name="twitter:description" content="Free percentage change calculator: find the % change between two values, the final or starting value, and the % you need to get back to the start.">
+<meta name="twitter:image" content="https://calcthis.co/assets/og-default.png">
+</head>
+<body class="p-bmr p-avg p-pct">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <a class="hdr-back" href="/blog/" aria-label="Back to blog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-search"><div class="menu-sx"><input id="menuSearch" type="search" placeholder="Search calculators or states…" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Search calculators" enterkeyhint="search"></div><div class="menu-results" id="menuResults" hidden></div></div>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <span class="menu-col-head">Construction &amp; Gardening</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+          <a href="/paint-calculator/">Paint</a>
+          <a href="/wallpaper-calculator/">Wallpaper</a>
+          <a href="/square-footage-calculator/">Square Footage</a>
+          <a href="/tape-measure-fraction-calculator/">Tape Measure Fraction</a>
+          <a href="/stair-calculator/">Stair</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/vo2-max-calculator/">VO2 Max</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
+          <a href="/bmi-calculator/">BMI</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/ideal-weight-calculator/">Ideal Weight</a>
+          <a href="/lean-body-mass-calculator/">Lean Body Mass</a>
+          <a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio</a>
+          <a href="/calorie-calculator/">Calorie</a>
+          <a href="/calorie-deficit-calculator/">Calorie Deficit</a>
+          <a href="/bmr-calculator/">BMR</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/water-intake-calculator/">Water Intake</a>
+          <a href="/macro-calculator/">Macro</a>
+          <a href="/protein-intake-calculator/">Protein Intake</a>
+          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
+          <a href="/steps-to-miles-calculator/">Steps to Miles</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/semester-grade-calculator/">Semester Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+          <a href="/grade-curve-calculator/">Grade Curve</a>
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/fraction-calculator/">Fraction</a>
+          <a href="/standard-deviation-calculator/">Standard Deviation</a>
+          <a href="/scientific-notation-calculator/">Scientific Notation</a>
+          <a href="/average-calculator/">Average</a>
+          <a href="/batting-average-calculator/">Batting Average</a>
+          <a href="/stock-average-calculator/">Stock Average</a>
+          <a href="/dice-average-calculator/">Dice Average</a>
+          <a href="/time-average-calculator/">Time Average</a>
+          <a href="/weighted-average-calculator/">Weighted Average</a>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+          <a href="/percentage-change-calculator/" class="current">Percentage Change</a>
+          <a href="/age-calculator/">Age</a>
+          <a href="/date-calculator/">Date</a>
+          <a href="/time-calculator/">Time</a>
+          <a href="/hours-calculator/">Hours</a>
+          <a href="/triangle-calculator/">Triangle</a>
+          <a href="/random-number-generator/">Random Number</a>
+          <span class="menu-col-head">Cooking &amp; Kitchen</span>
+          <a href="/recipe-converter/">Recipe Converter</a>
+          <a href="/turkey-cooking-time-calculator/">Turkey Cooking Time</a>
+          <a href="/turkey-thawing-time-calculator/">Turkey Thawing Time</a>
+          <a href="/turkey-size-calculator/">Turkey Size</a>
+          <!--UNITNAV:START-->
+          <span class="menu-col-head">Unit Converters</span>
+          <a href="/unit-converter/">Unit Converter</a>
+          <a href="/length-converter/">Length Converter</a>
+          <a href="/weight-converter/">Weight Converter</a>
+          <a href="/volume-converter/">Volume Converter</a>
+          <a href="/temperature-converter/">Temperature Converter</a>
+          <a href="/area-converter/">Area Converter</a>
+          <a href="/speed-converter/">Speed Converter</a>
+          <a href="/data-storage-converter/">Data Storage Converter</a>
+          <a href="/cooking-converter/">Cooking Converter</a>
+          <a href="/px-to-rem-converter/">PX to REM Converter</a>
+          <!--UNITNAV:END-->
+          <span class="menu-col-head">Money &amp; Finance</span>
+          <a href="/mortgage-calculator/">Mortgage</a>
+          <a href="/loan-calculator/">Loan</a>
+          <a href="/auto-loan-calculator/">Auto Loan</a>
+          <!--STAXNAV:START-->
+          <a href="/sales-tax-calculator/">Sales Tax</a>
+          <a href="/sales-tax-calculator/california/">California Sales Tax</a>
+          <a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax</a>
+          <a href="/sales-tax-calculator/missouri/">Missouri Sales Tax</a>
+          <a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax</a>
+          <a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax</a>
+          <a href="/sales-tax-calculator/ohio/">Ohio Sales Tax</a>
+          <a href="/sales-tax-calculator/texas/">Texas Sales Tax</a>
+          <!--STAXNAV:END-->
+          <a href="/tip-calculator/">Tip</a>
+          <a href="/how-much-to-tip/">How Much to Tip</a>
+        </div>
+        <!--PAYNAV:START-->
+        <div class="menu-col">
+          <span class="menu-col-head">Paycheck Calculators</span>
+          <a href="/paycheck-calculator/">Paycheck Calculator (all states)</a>
+          <a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a>
+          <a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a>
+          <a href="/paycheck-calculator/california/">California Paycheck Calculator</a>
+          <a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a>
+          <a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a>
+          <a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a>
+          <a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a>
+          <a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a>
+          <a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a>
+          <a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a>
+          <a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a>
+          <a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a>
+          <a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a>
+          <a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a>
+          <a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a>
+        </div>
+        <!--PAYNAV:END-->
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">Increase · decrease · and back again</div>
+    <h1>Percentage Change Calculator</h1>
+    <p>Enter a <strong>starting and an ending value</strong> to get the percent change — or find the <strong>final</strong> or <strong>starting value</strong> from a percentage. You also see <strong>what it takes to get back</strong>: 80 to 96 is <strong>+20%</strong>, but 96 back to 80 is <strong>−16.67%</strong>.</p>
+  </section>
+
+  <div class="grid">
+
+    <!-- INPUT -->
+    <div class="card">
+      <div class="card-pad">
+        <h2 class="card-h2">Your values</h2>
+        <div class="modeseg" id="pcModeSeg" role="group" aria-label="Find" style="grid-template-columns:1fr 1fr 1fr;margin-bottom:14px"><button class="on" type="button" data-v="chg">% change</button><button type="button" data-v="fin">Final value</button><button type="button" data-v="sta">Start value</button></div>
+        <div id="pcAWrap"><label class="fld" for="pcA"><span class="lab">Starting value</span><div class="inp"><input id="pcA" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 80"></div></label></div>
+        <div id="pcBWrap"><label class="fld" for="pcB"><span class="lab">Ending value</span><div class="inp"><input id="pcB" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 96"></div></label></div>
+        <div id="pcPWrap"><label class="fld" for="pcP"><span class="lab">Percent change <span class="unit">%</span></span><div class="inp"><input id="pcP" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 25 or −20" style="margin-bottom:0"></div></label></div>
+        <div id="pcDirWrap">
+          <div class="ctl-row" style="margin-top:12px"><span class="ctl-lab">Direction</span><div class="seg" id="pcDirSeg" role="group" aria-label="Direction"><button class="on" type="button" data-v="inc">Increase</button><button type="button" data-v="dec">Decrease</button></div></div>
+          <div class="chips" id="pcChips"><button type="button" data-v="10">+10%</button><button type="button" data-v="25">+25%</button><button type="button" data-v="50">+50%</button><button type="button" data-v="-10">−10%</button><button type="button" data-v="-25">−25%</button><button type="button" data-v="-50">−50%</button></div>
+        </div>
+        <p class="av-note" id="pcFormatNote">Numbers, $ and commas are fine — or times like 1:30:00. A minus sign in the percent means a decrease.</p>
+        <div class="res-hint" id="pcHint" style="display:none;text-align:left;margin:4px 0 8px"></div>
+        <div id="pcAdvIn" style="display:none">
+          <div class="proj-sep"></div>
+          <div class="ctl-row" style="display:block;margin-bottom:12px">
+            <span class="ctl-lab" style="display:block;margin-bottom:6px">The values are</span>
+            <div class="modeseg" id="pcPPSeg" role="group" aria-label="The values are" style="grid-template-columns:1fr 1fr"><button class="on" type="button" data-v="num">Plain numbers</button><button type="button" data-v="pct">Percentages</button></div>
+          </div>
+          <label class="fld" for="pcDp"><span class="lab">Decimal places <span class="unit">max</span></span><div class="inp"><input id="pcDp" type="number" inputmode="decimal" step="any" placeholder="2" min="0" max="10"></div></label>
+          <label class="av-lab" for="pcSeries">Values over time <span style="color:var(--muted);font-weight:500">(optional)</span></label>
+          <textarea class="av-ta" id="pcSeries" style="min-height:84px" placeholder="e.g. 100, 110, 99, 120" aria-label="Values over time" spellcheck="false"></textarea>
+          <p class="av-note" id="pcSeriesNote"></p>
+        </div>
+        <div class="add-row split" style="margin-top:16px">
+          <span></span>
+          <button class="advbtn" id="pcAdvBtn" type="button">
+            <span id="pcAdvBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div class="card">
+      <div class="card-pad">
+        <div class="bf-res">
+          <div class="res-lab" id="pcResLab">Percent change</div>
+          <div class="res-big"><span id="pcBig">—</span></div>
+          <div class="res-sub" id="pcSub" data-empty="Enter a starting and an ending value.">Enter a starting and an ending value.</div>
+        </div>
+        <div id="pcBody" style="display:none">
+          <p class="res-tip adv-tip" id="pcTip"></p>
+          <p class="bm-h">Before and after</p>
+          <div id="pcViz"></div>
+          <p class="bm-h" style="margin-top:16px">The working</p>
+          <ul class="pc-steps" id="pcSteps"></ul>
+          <div class="proj-sep"></div>
+          <table class="dtable" id="pcStats"></table>
+        </div>
+        <div id="pcSeriesOut" style="display:none"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- mobile sticky bar -->
+  <div class="mbar" id="mbar">
+    <span class="mbar-lab" id="pcMLab">Percent change</span>
+    <div class="mbar-vals"><b id="pcMVal">—</b></div>
+  </div>
+
+  <div class="related-calcs">
+    <p class="related-calcs-h">More calculators that may interest you</p>
+    <div class="pills">
+      <a class="pill" href="/percentage-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 5L5 19"/><circle cx="7" cy="7" r="2.5"/><circle cx="17" cy="17" r="2.5"/></svg>
+        Percentage Calculator
+      </a>
+      <a class="pill" href="/average-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 12h2M12 12h2M8 16h2M12 16h2"/></svg>
+        Average Calculator
+      </a>
+      <a class="pill" href="/ratio-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 17h16M9 3L7 21M17 3l-2 18"/></svg>
+        Ratio Calculator
+      </a>
+      <a class="pill" href="/sales-tax-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+        Sales Tax Calculator
+      </a>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use the percentage change calculator</h2>
+        <p>Pick what you want to find. <strong>Percent change</strong> takes a starting and an ending value. <strong>Final value</strong> takes a starting value and a percentage (use a minus sign, or the Decrease button, for a drop). <strong>Starting value</strong> works backwards from an ending value and a percentage.</p>
+        <p>Below the answer you get a <strong>before-and-after bar</strong>, the working, the change in absolute terms, the multiplier, and the <strong>percentage you would need to get back to the start</strong>. Values can include $ and commas, or be times like 1:30:00.</p>
+
+        <h2>The percentage change formula</h2>
+        <div class="formula">
+          % change = (end − start) ÷ |start| × 100
+          <small>POSITIVE = INCREASE · NEGATIVE = DECREASE</small>
+        </div>
+        <p>From 80 to 96: (96 − 80) ÷ 80 × 100 = <strong>+20%</strong>. From 96 back to 80: (80 − 96) ÷ 96 × 100 = <strong>−16.67%</strong>. The two are different because each is measured from a different starting point.</p>
+
+        <h2>Why going back needs a different percentage</h2>
+        <table class="dtable">
+          <thead><tr><th>Change</th><th>Percent</th><th>To get back</th></tr></thead>
+          <tbody>
+            <tr><td>100 → 125</td><td>+25%</td><td>−20%</td></tr>
+            <tr><td>80 → 96</td><td>+20%</td><td>−16.67%</td></tr>
+            <tr><td>100 → 50</td><td>−50%</td><td>+100%</td></tr>
+            <tr><td>100 → 200</td><td>+100%</td><td>−50%</td></tr>
+          </tbody>
+        </table>
+        <p>That is why +25% then −25% leaves you at 93.75, not 100.</p>
+      </div>
+
+      <div>
+        <h2>Percent increase and percent decrease</h2>
+        <p>They are the same formula. A positive result is a percent <strong>increase</strong>, a negative one is a percent <strong>decrease</strong> — the calculator labels it either way, so there is no need for two tools. A decrease can never be more than 100% (that takes the value to zero), but an increase can be any size.</p>
+
+        <h2>Negative and zero starting values</h2>
+        <p>The formula divides by the <em>absolute</em> value of the start, so the answer keeps its meaning: −25 to 25 is <strong>+200%</strong> (an increase of 50 on a base of 25) and −25 to −50 is <strong>−100%</strong>. A start of <strong>0</strong> has no percentage — the calculator says so and shows the absolute change instead.</p>
+
+        <h2>Percent change vs percentage points</h2>
+        <p>When both values are themselves percentages, the plain difference is in <strong>percentage points</strong>. A rate that goes from 2% to 3% rises +1 point but +50% in relative terms. Switch on <strong>Go advanced</strong> and choose "Percentages" to see both.</p>
+
+        <h2>A list of values over time</h2>
+        <p>Paste values in order under Go advanced — monthly sales, yearly prices, anything — to see the change from each value to the next, the total change from first to last, the average of the period changes and the <strong>compound rate per period</strong>. For 100, 110, 99, 120 that is +10%, −10%, +21.21%, a total of +20% and +6.27% a period compounded.</p>
+        <p>For percent of a number, or what percent one number is of another, use the <a href="/percentage-calculator/">percentage calculator</a>; for the average of a list, the <a href="/average-calculator/">average calculator</a>.</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>How do you calculate percentage change?</summary><p>Subtract the starting value from the ending value, divide by the starting value, and multiply by 100: (end − start) ÷ start × 100. Going from 80 to 96 gives (96 − 80) ÷ 80 × 100 = +20%. A positive answer is an increase, a negative one a decrease.</p></details>
+    <details class="faq"><summary>Why does a 25% rise followed by a 25% fall not get me back to where I started?</summary><p>Because the second percentage is measured from a bigger number. 100 up 25% is 125; 125 down 25% is 93.75, a net change of −6.25%. To get back from 125 to 100 you need a −20% change. The calculator always shows the percentage you need to get back.</p></details>
+    <details class="faq"><summary>How do I find the percentage change when the starting value is negative?</summary><p>Divide by the absolute value of the starting value, which keeps the sign meaningful: going from −25 to 25 is (25 − (−25)) ÷ |−25| × 100 = +200%, an increase, and from −25 to −50 is −100%, a decrease. Percent change is easiest to interpret when both values are positive, so the calculator adds a note when the start is negative.</p></details>
+    <details class="faq"><summary>What if the starting value is zero?</summary><p>The percent change is undefined: there is no starting size to compare with, and dividing by zero has no answer. From 0 to 0 there is no change (0%). The calculator says so in plain words and still shows the absolute change.</p></details>
+    <details class="faq"><summary>What is the difference between percent change and percentage points?</summary><p>If a rate rises from 2% to 3%, it went up by +1 percentage point — but the percent change is +50%, because 3 is half as big again as 2. Open Go advanced and set the values to percentages to see both side by side.</p></details>
+    <details class="faq"><summary>How do I find the original value after a percentage increase?</summary><p>Divide the final value by 1 plus the percentage as a decimal. If a price is 120 after a 20% increase, the original was 120 ÷ 1.2 = 100. Choose "Starting value" at the top of the calculator and enter the end value and the percentage.</p></details>
+    <details class="faq"><summary>How do I calculate the new value after a percentage increase or decrease?</summary><p>Multiply the starting value by 1 plus the percentage (as a decimal). 80 increased by 25% is 80 × 1.25 = 100; a decrease uses a minus, so 80 down 25% is 80 × 0.75 = 60. Choose "Final value" at the top.</p></details>
+    <details class="faq"><summary>Can I find the percentage change across a whole list of values?</summary><p>Yes — open Go advanced and paste the values in order. For 100, 110, 99, 120 you get +10%, −10% and +21.21% for each step, a total of +20%, and a compound rate of +6.27% per period.</p></details>
+    <details class="faq"><summary>Does it work with times?</summary><p>Yes. Enter times such as 1:30:00 and 1:12:00 (h:mm:ss) or 1:30 and 1:12 (m:ss) in both boxes: the change from 1:30:00 to 1:12:00 is −20%. Use the same format in both boxes.</p></details>
+  </section>
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+      <div class="footer-stack">
+<div class="footer-col" style="order:1">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+          <li><a href="/paint-calculator/">Paint Calculator</a></li>
+          <li><a href="/wallpaper-calculator/">Wallpaper Calculator</a></li>
+          <li><a href="/square-footage-calculator/">Square Footage Calculator</a></li>
+          <li><a href="/tape-measure-fraction-calculator/">Tape Measure Fraction Calculator</a></li>
+          <li><a href="/stair-calculator/">Stair Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:5">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Cooking &amp;</span> <span class="ft2">Kitchen</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/recipe-converter/">Recipe Converter</a></li>
+          <li><a href="/turkey-cooking-time-calculator/">Turkey Cooking Time Calculator</a></li>
+          <li><a href="/turkey-thawing-time-calculator/">Turkey Thawing Time Calculator</a></li>
+          <li><a href="/turkey-size-calculator/">Turkey Size Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:6">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Money &amp;</span> <span class="ft2">Finance</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/mortgage-calculator/">Mortgage Calculator</a></li>
+          <li><a href="/loan-calculator/">Loan Calculator</a></li>
+          <li><a href="/auto-loan-calculator/">Auto Loan Calculator</a></li>
+          <!--STAXFOOT:START-->
+          <li><a href="/sales-tax-calculator/">Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/california/">California Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/missouri/">Missouri Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/ohio/">Ohio Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/texas/">Texas Sales Tax Calculator</a></li>
+          <!--STAXFOOT:END-->
+          <li><a href="/tip-calculator/">Tip Calculator</a></li>
+          <li><a href="/how-much-to-tip/">How Much to Tip</a></li>
+        </ul>
+      </div>
+      </div>
+
+      <div class="footer-right">
+<div class="footer-col footer-col--two" style="order:2">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/vo2-max-calculator/">VO2 Max Calculator</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/bmi-calculator/">BMI Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/ideal-weight-calculator/">Ideal Weight Calculator</a></li>
+          <li><a href="/lean-body-mass-calculator/">Lean Body Mass Calculator</a></li>
+          <li><a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio Calculator</a></li>
+          <li><a href="/calorie-calculator/">Calorie Calculator</a></li>
+          <li><a href="/calorie-deficit-calculator/">Calorie Deficit Calculator</a></li>
+          <li><a href="/bmr-calculator/">BMR Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/water-intake-calculator/">Water Intake Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/protein-intake-calculator/">Protein Intake Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
+          <li><a href="/steps-to-miles-calculator/">Steps to Miles Calculator</a></li>
+        </ul>
+      </div>
+
+        <div class="footer-sub">
+<div class="footer-subcol">
+<div class="footer-col" style="order:3">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/semester-grade-calculator/">Semester Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+          <li><a href="/grade-curve-calculator/">Grade Curve Calculator</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:START-->
+<div class="footer-col" style="order:7">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Unit</span> <span class="ft2">Converters</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/unit-converter/">Unit Converter</a></li>
+          <li><a href="/length-converter/">Length Converter</a></li>
+          <li><a href="/weight-converter/">Weight Converter</a></li>
+          <li><a href="/volume-converter/">Volume Converter</a></li>
+          <li><a href="/temperature-converter/">Temperature Converter</a></li>
+          <li><a href="/area-converter/">Area Converter</a></li>
+          <li><a href="/speed-converter/">Speed Converter</a></li>
+          <li><a href="/data-storage-converter/">Data Storage Converter</a></li>
+          <li><a href="/cooking-converter/">Cooking Measurement Converter</a></li>
+          <li><a href="/px-to-rem-converter/">PX to REM Converter</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:END-->
+</div>
+
+<div class="footer-col" style="order:4">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/fraction-calculator/">Fraction Calculator</a></li>
+          <li><a href="/standard-deviation-calculator/">Standard Deviation Calculator</a></li>
+          <li><a href="/scientific-notation-calculator/">Scientific Notation Calculator</a></li>
+          <li><a href="/weighted-average-calculator/">Weighted Average Calculator</a></li>
+          <li><a href="/average-calculator/">Average Calculator</a></li>
+          <li><a href="/batting-average-calculator/">Batting Average Calculator</a></li>
+          <li><a href="/stock-average-calculator/">Stock Average Calculator</a></li>
+          <li><a href="/dice-average-calculator/">Dice Average Calculator</a></li>
+          <li><a href="/time-average-calculator/">Time Average Calculator</a></li>
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+          <li><a href="/percentage-change-calculator/">Percentage Change Calculator</a></li>
+          <li><a href="/age-calculator/">Age Calculator</a></li>
+          <li><a href="/date-calculator/">Date Calculator</a></li>
+          <li><a href="/time-calculator/">Time Calculator</a></li>
+          <li><a href="/hours-calculator/">Hours Calculator</a></li>
+          <li><a href="/triangle-calculator/">Triangle Calculator</a></li>
+          <li><a href="/random-number-generator/">Random Number Generator</a></li>
+        </ul>
+      </div>
+        </div>
+      </div>
+
+      <!--PAYFOOT:START-->
+      <div class="footer-col footer-col--wide">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Paycheck</span> <span class="ft2">Calculators</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/paycheck-calculator/">Paycheck Calculator (all states)</a></li>
+          <li><a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/california/">California Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a></li>
+        </ul>
+      </div>
+      <!--PAYFOOT:END-->
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/blog/">Blog</a>
+      <span aria-hidden="true">·</span>
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+</div>
+
+<script src="/assets/app.js?v=284"></script>
+<script>CalcThis.initPctChangeCalc();</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>

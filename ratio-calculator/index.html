@@ -52,7 +52,7 @@
   ]
 }
 </script>
-<link rel="stylesheet" href="/assets/style.css?v=280">
+<link rel="stylesheet" href="/assets/style.css?v=284">
 <style>
 .presets-label{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
 .presets{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px}
@@ -213,6 +213,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
           <a href="/weighted-average-calculator/">Weighted Average</a>
           <a href="/ratio-calculator/" class="current">Ratio</a>
           <a href="/percentage-calculator/">Percentage</a>
+          <a href="/percentage-change-calculator/">Percentage Change</a>
           <a href="/age-calculator/">Age</a>
           <a href="/date-calculator/">Date</a>
           <a href="/time-calculator/">Time</a>
@@ -711,6 +712,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
           <li><a href="/time-average-calculator/">Time Average Calculator</a></li>
           <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
           <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+          <li><a href="/percentage-change-calculator/">Percentage Change Calculator</a></li>
           <li><a href="/age-calculator/">Age Calculator</a></li>
           <li><a href="/date-calculator/">Date Calculator</a></li>
           <li><a href="/time-calculator/">Time Calculator</a></li>
@@ -775,7 +777,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
   </footer>
 <!--FOOTER:END-->
 
-<script src="/assets/app.js?v=280"></script>
+<script src="/assets/app.js?v=284"></script>
 <script>
 function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){var t=b;b=a%b;a=t;}return a;}
 function toInts(a,b){var sa=(''+a).split('.')[1]||'',sb=(''+b).split('.')[1]||'';var s=Math.pow(10,Math.max(sa.length,sb.length));var ai=Math.round(a*s),bi=Math.round(b*s);var g=gcd(ai,bi);return[ai/g,bi/g];}

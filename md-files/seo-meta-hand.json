@@ -148,6 +148,10 @@
     "t": "About CalcThis — Free, Purpose-Built Calculators",
     "d": "CalcThis is a free collection of purpose-built calculators for construction, health, money and school. No sign-up, just fast, accurate answers."
   },
+  "/percentage-change-calculator/": {
+    "t": "Percentage Change Calculator — Increase, Decrease & Back",
+    "d": "Free percentage change calculator: find the % change between two values, the final or starting value, and the % you need to get back to the start."
+  },
   "/percentage-calculator/": {
     "d": "Free percentage calculator: find a percent of a number, what percent one number is of another, or the percent change between two values."
   },

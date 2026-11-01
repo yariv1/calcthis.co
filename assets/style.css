@@ -2570,3 +2570,26 @@
 .p-avg .av-hb i{position:absolute;left:0;top:0;bottom:0;background:var(--spruce-soft);border-radius:5px}
 .p-avg .av-hb b{position:absolute;top:-3px;bottom:-3px;width:2px;margin-left:-1px;background:var(--amber)}
 .p-avg .av-hv{font-variant-numeric:tabular-nums;text-align:right;font-weight:600}
+
+/* =========================================================
+   PERCENTAGE CHANGE (body.p-pct, alongside p-bmr p-avg)
+   ========================================================= */
+.p-pct .pc-row{display:grid;grid-template-columns:48px minmax(0,1fr) auto;gap:10px;align-items:center;margin:8px 0;font-size:13px}
+.p-pct .pc-l{font-weight:600;color:var(--ink-soft)}
+.p-pct .pc-b{display:flex;height:22px;background:#EFE7D8;border-radius:6px;overflow:hidden}
+.p-pct .pc-seg{display:block;height:100%}
+.p-pct .pc-seg.base{background:var(--spruce-soft)}
+.p-pct .pc-seg.gain{background:var(--spruce)}
+.p-pct .pc-seg.lost{background:repeating-linear-gradient(45deg,#E7CF9E,#E7CF9E 4px,#D9B36C 4px,#D9B36C 8px)}
+.p-pct .pc-v{font-variant-numeric:tabular-nums;font-weight:600;text-align:right;min-width:48px}
+.p-pct .pc-steps{list-style:none;margin:0 0 6px;padding:0;font-size:14.5px;line-height:1.55;color:var(--ink-soft)}
+.p-pct .pc-steps li{padding:4px 0 4px 14px;border-left:2px solid var(--line);margin-bottom:3px;overflow-wrap:anywhere}
+.p-pct .pc-spark{display:flex;align-items:flex-end;gap:2px;height:70px;background:#FCFAF6;border:1px solid var(--line);border-radius:10px;padding:6px;margin:6px 0 12px;overflow:hidden}
+.p-pct .pc-col{flex:1;min-width:2px;height:100%;display:flex;align-items:flex-end}
+.p-pct .pc-col i{display:block;width:100%;border-radius:2px 2px 0 0}
+.p-pct .pc-col i.up{background:var(--spruce)}
+.p-pct .pc-col i.dn{background:var(--amber-deep)}
+.p-pct .pc-tbl{max-height:none}
+.p-pct .dtable td:last-child{white-space:nowrap}
+.p-pct .pc-tbl td:first-child{color:var(--muted);font-weight:500;width:34px}
+.p-pct .pc-tbl td:not(:first-child){font-variant-numeric:tabular-nums}

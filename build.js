@@ -67,6 +67,7 @@ const PAGES = [
   { file: 'standard-deviation-calculator/index.html', slug: '/standard-deviation-calculator/' },
   { file: 'scientific-notation-calculator/index.html', slug: '/scientific-notation-calculator/' },
   { file: 'percentage-calculator/index.html', slug: '/percentage-calculator/' },
+  { file: 'percentage-change-calculator/index.html', slug: '/percentage-change-calculator/' },
   { file: 'age-calculator/index.html',         slug: '/age-calculator/' },
   { file: 'date-calculator/index.html',        slug: '/date-calculator/' },
   { file: 'time-calculator/index.html',        slug: '/time-calculator/' },

@@ -10511,6 +10511,7 @@ CalcThis.initAvgCalc = function (kind) {
     var a = Math.abs(x);
     if (a >= 1e15 || (a > 0 && a < 1e-9)) return x.toExponential(Math.min(dp, 6)).replace('e+', 'e').replace('-', '−');
     var s = x.toLocaleString('en-US', { maximumFractionDigits: dp });
+    if ((s === '0' || s === '-0') && x !== 0) s = x.toLocaleString('en-US', { maximumFractionDigits: 10 });
     if (s === '-0') s = '0';
     return s.replace('-', '−');
   }
@@ -10953,6 +10954,263 @@ CalcThis.initAvgCalc = function (kind) {
   render();
 };
 /* AVG-FAMILY:END */
+
+/* PCT-CHANGE:BEGIN */
+/* =========================================================
+   PERCENTAGE CHANGE — pure engine (no DOM). Marked PCT-ENGINE:START/END. Percent change = (end - start) / |start| x 100
+   (the absolute-value form CalculatorSoup and Omni use, so a negative start still reads the right way round). */
+/* PCT-ENGINE:START */
+CalcThis.pctEngine = (function () {
+  var NUM = /^[-+]?(\d+\.?\d*|\.\d+)(e[-+]?\d+)?$/i;
+  /* a value: 1,250.5 / $40 / -3 / 50% (percent sign ignored) / times m:ss (1:30 = 90) and h:mm:ss (-> seconds, time:true, parts 2|3). Returns {v,time} or null */
+  function parseVal(t) {
+    t = String(t).trim().replace(/−/g, '-');
+    if (!t) return null;
+    var tm = /^(\d+):(\d{1,2})(?::(\d{1,2}(?:\.\d+)?))?$/.exec(t);
+    if (tm) {
+      var a = parseInt(tm[1], 10), b = parseInt(tm[2], 10), c = tm[3] !== undefined ? parseFloat(tm[3]) : null;
+      if (b >= 60 || (c !== null && c >= 60)) return null;
+      return { v: c === null ? a * 60 + b : a * 3600 + b * 60 + c, time: true, parts: c === null ? 2 : 3 };
+    }
+    var s = t.replace(/[$€£%\s]/g, '').replace(/,(?=\d{3}(\D|$))/g, '');
+    if (!NUM.test(s)) return null;
+    var v = parseFloat(s);
+    return isFinite(v) ? { v: v, time: false } : null;
+  }
+  /* start -> end. pct is NaN when start is 0 and end is not (no starting size to compare with) */
+  function change(s, e) {
+    var abs = e - s, pct = s !== 0 ? abs / Math.abs(s) * 100 : (e === 0 ? 0 : NaN);
+    var back = e !== 0 ? (s - e) / Math.abs(e) * 100 : (s === 0 ? 0 : NaN);
+    return { abs: abs, pct: pct, back: back, mult: s !== 0 ? e / s : NaN };
+  }
+  function finalFrom(s, p) { return s + Math.abs(s) * p / 100; }
+  /* original value from the end value and the % change; assumes the start was positive unless that is impossible.
+     returns {v, alt} - alt is the other possible start (negative) when there are two, else NaN; v NaN when impossible */
+  function startFrom(e, p) {
+    var k = 1 + p / 100, pos = k !== 0 ? e / k : NaN, neg = (1 - p / 100) !== 0 ? e / (1 - p / 100) : NaN;
+    var posOk = isFinite(pos) && pos > 0, negOk = isFinite(neg) && neg < 0;
+    if (posOk) return { v: pos, alt: negOk ? neg : NaN };
+    if (negOk) return { v: neg, alt: NaN };
+    if (e === 0 && k === 0) return { v: NaN, alt: NaN, any: true };
+    if (e === 0) return { v: 0, alt: NaN };
+    return { v: NaN, alt: NaN };
+  }
+  /* period-by-period changes for a list of values */
+  function series(vals) {
+    var n = vals.length, rows = [], i, sum = 0, cnt = 0;
+    for (i = 0; i < n; i++) {
+      var prev = i ? vals[i - 1] : NaN, ch = i ? change(prev, vals[i]) : null;
+      var cum = i ? change(vals[0], vals[i]).pct : NaN;
+      rows.push({ v: vals[i], abs: ch ? ch.abs : NaN, pct: ch ? ch.pct : NaN, cum: cum });
+      if (ch && isFinite(ch.pct)) { sum += ch.pct; cnt++; }
+    }
+    var tot = n > 1 ? change(vals[0], vals[n - 1]) : null;
+    var cagr = n > 1 && vals[0] > 0 && vals[n - 1] > 0 ? (Math.pow(vals[n - 1] / vals[0], 1 / (n - 1)) - 1) * 100 : NaN;
+    return { rows: rows, total: tot, cagr: cagr, avg: cnt ? sum / cnt : NaN, periods: n - 1 };
+  }
+  return { parseVal: parseVal, change: change, finalFrom: finalFrom, startFrom: startFrom, series: series };
+})();
+/* PCT-ENGINE:END */
+
+/* =========================================================
+   CalcThis.initPctChangeCalc() — percentage change. Differentiator vs. calculator.net, CalculatorSoup, Omni and
+   percent-change.com (all checked live: a bare number, no picture, nothing about getting back): solves percent change
+   / final value / starting value, a to-scale before-after bar pair, ALWAYS shows the percentage needed to get back to
+   the start, the multiplier and the absolute difference, working shown by default, time values (1:30:00), negative
+   and zero starting values handled in plain words. Go advanced = values-are-percentages (percentage-point change),
+   decimal places and a list of values over time (each period, total, compound rate). Engine: CalcThis.pctEngine. */
+CalcThis.initPctChangeCalc = function () {
+  var E = CalcThis.pctEngine;
+  var $ = function (id) { return document.getElementById(id); };
+  var st = { mode: 'chg', dir: 'inc', adv: false, pp: false, tparts: 3 };
+  function esc(t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'); }
+  function blank(id) { return !($(id).value + '').trim(); }
+  function dp() { if (!st.adv || blank('pcDp')) return 2; var v = parseInt($('pcDp').value, 10); return isNaN(v) ? 2 : Math.max(0, Math.min(10, v)); }
+  function fmt(x, d) {
+    if (!isFinite(x)) return '—';
+    var a = Math.abs(x);
+    if (a >= 1e15 || (a > 0 && a < 1e-9)) return x.toExponential(Math.min(d, 6)).replace('e+', 'e').replace('-', '−');
+    var s = x.toLocaleString('en-US', { maximumFractionDigits: d });
+    if ((s === '0' || s === '-0') && x !== 0) s = x.toLocaleString('en-US', { maximumFractionDigits: 10 });
+    if (s === '-0') s = '0';
+    return s.replace('-', '−');
+  }
+  function sg(x, d) { var s = fmt(x, d); return (x > 0 && s !== '0' ? '+' : '') + s; }
+  function fmtDur(sec) {
+    var neg = sec < 0; sec = Math.round(Math.abs(sec) * 100) / 100;
+    var h = Math.floor(sec / 3600), m = Math.floor((sec - h * 3600) / 60), s = Math.round((sec - h * 3600 - m * 60) * 100) / 100;
+    if (s >= 60) { s -= 60; m++; } if (m >= 60) { m -= 60; h++; }
+    var ss = (s < 10 ? '0' : '') + s;
+    if (st.tparts === 2) return (neg ? '−' : '') + (h * 60 + m) + ':' + ss;
+    return (neg ? '−' : '') + h + ':' + (m < 10 ? '0' : '') + m + ':' + ss;
+  }
+  function setHint(m) { var h = $('pcHint'); h.textContent = m || ''; h.style.display = m ? 'block' : 'none'; }
+  function empty(msg, sub) {
+    $('pcBig').textContent = '—'; $('pcSub').textContent = sub || $('pcSub').getAttribute('data-empty'); $('pcBody').style.display = 'none';
+    $('pcMVal').textContent = '—'; setHint(msg || '');
+  }
+  function parsePct(id) {
+    var t = ($(id).value + '').trim();
+    if (!t) return null;
+    var r = E.parseVal(t.replace(/%/g, ''));
+    if (!r || r.time) return NaN;
+    var p = r.v;
+    if (p >= 0 && st.dir === 'dec') p = -p;
+    return p;
+  }
+  function plural(n, w) { return fmt(n, 0) + ' ' + w + (n === 1 ? '' : 's'); }
+
+  function bars(s, e, time) {
+    var base = Math.max(Math.abs(s), Math.abs(e)); if (!(base > 0)) { $('pcViz').innerHTML = ''; return; }
+    var ws = Math.abs(s) / base * 100, we = Math.abs(e) / base * 100;
+    function v(x) { return time ? fmtDur(x) : fmt(x, 6); }
+    var row2;
+    if (we >= ws) row2 = '<span class="pc-seg base" style="width:' + ws + '%"></span>' + (we > ws ? '<span class="pc-seg gain" style="width:' + (we - ws) + '%"></span>' : '');
+    else row2 = '<span class="pc-seg base" style="width:' + we + '%"></span><span class="pc-seg lost" style="width:' + (ws - we) + '%"></span>';
+    $('pcViz').innerHTML = '<div class="pc-row"><span class="pc-l">Start</span><span class="pc-b"><span class="pc-seg base" style="width:' + ws + '%"></span></span><span class="pc-v">' + v(s) + '</span></div>' +
+      '<div class="pc-row"><span class="pc-l">End</span><span class="pc-b">' + row2 + '</span><span class="pc-v">' + v(e) + '</span></div>';
+  }
+
+  function render() {
+    var mode = st.mode, A = $('pcA').value, B = $('pcB').value, a = null, b = null, p = null, hint = '', d = dp();
+    var needA = mode !== 'sta', needB = mode !== 'fin', needP = mode !== 'chg';
+    if (needA) { a = E.parseVal(A); if (A.trim() && !a) hint = 'Couldn’t read the starting value — use a number like 80 or a time like 1:30:00.'; }
+    if (needB) { b = E.parseVal(B); if (B.trim() && !b) hint = 'Couldn’t read the ending value — use a number like 96 or a time like 1:12:00.'; }
+    if (needP) { p = parsePct('pcP'); if (p !== null && isNaN(p)) { hint = 'Couldn’t read the percent change — try 25, +25 or −20.'; p = null; } }
+    var anyTyped = (needA && A.trim()) || (needB && B.trim()) || (needP && !blank('pcP'));
+    if (hint) { empty(hint); renderSeries(); return; }
+    if (!anyTyped) { empty(''); renderSeries(); return; }
+    var have = (!needA || a) && (!needB || b) && (!needP || p !== null);
+    if (!have) { empty('', mode === 'chg' ? 'Enter a starting and an ending value.' : (mode === 'fin' ? 'Enter a starting value and a percent change.' : 'Enter an ending value and a percent change.')); renderSeries(); return; }
+    if (needA && needB && a.time && b.time && a.parts !== b.parts) { empty('Use the same time format in both boxes — both m:ss or both h:mm:ss.'); renderSeries(); return; }
+    if (needA && needB && a.time !== b.time) { empty('Use the same kind of value in both boxes — two numbers, or two times.'); renderSeries(); return; }
+    var time = (a && a.time) || (b && b.time), s, e, pct, note = '', altNote = '';
+    if (time) st.tparts = (a && a.time ? a.parts : b.parts);
+    if (mode === 'chg') { s = a.v; e = b.v; }
+    else if (mode === 'fin') { s = a.v; e = E.finalFrom(s, p); }
+    else {
+      var sf = E.startFrom(b.v, p); e = b.v;
+      if (sf.any) { empty('', 'With a −100% change the end value is 0 — so any starting value fits. Enter an end value other than 0.'); renderSeries(); return; }
+      if (!isFinite(sf.v)) { empty('That combination has no starting value — a ' + fmt(p, d) + '% change cannot end at ' + fmt(e, 6) + ' from a positive or a negative start.'); renderSeries(); return; }
+      s = sf.v; if (isFinite(sf.alt)) altNote = ' (A negative start of ' + fmt(sf.alt, 6) + ' would also give this result.)';
+    }
+    if (!isFinite(s) || !isFinite(e)) { empty('Those numbers are too large.'); renderSeries(); return; }
+    var ch = E.change(s, e); pct = ch.pct;
+    setHint('');
+    var vf = function (x) { return time ? fmtDur(x) : fmt(x, 6); };
+    var unit = st.pp ? '%' : '';
+    var big, lab, sub, mlab;
+    if (mode === 'chg') {
+      lab = 'Percent change'; mlab = 'Percent change';
+      big = isFinite(pct) ? sg(pct, d) + '%' : '—';
+      sub = isFinite(pct) ? (pct === 0 ? 'No change — ' + vf(s) + ' stays ' + vf(e) : 'From ' + vf(s) + unit + ' to ' + vf(e) + unit + ' — ' + (pct > 0 ? 'an increase' : 'a decrease') + ' of ' + vf(Math.abs(ch.abs)) + unit) : 'From 0 there is no percent change';
+    } else if (mode === 'fin') {
+      lab = 'Final value'; mlab = 'Final value'; big = vf(e);
+      sub = vf(s) + (p >= 0 ? ' increased by ' : ' decreased by ') + fmt(Math.abs(p), d) + '% — a change of ' + (ch.abs >= 0 ? '+' : '−') + vf(Math.abs(ch.abs));
+    } else {
+      lab = 'Starting value'; mlab = 'Starting value'; big = vf(s);
+      sub = 'Ending at ' + vf(e) + ' after ' + (p >= 0 ? 'an increase' : 'a decrease') + ' of ' + fmt(Math.abs(p), d) + '%';
+    }
+    $('pcResLab').textContent = lab; $('pcBig').textContent = big; $('pcSub').textContent = sub; $('pcMLab').textContent = mlab; $('pcMVal').textContent = big;
+    $('pcBody').style.display = '';
+
+    /* tip: the reverse trap */
+    var tip;
+    if (!isFinite(pct)) tip = 'A change from <strong>0</strong> to <strong>' + vf(e) + '</strong> has no percentage — there is no starting size to compare with. The absolute change is ' + sg(ch.abs, 6) + '.';
+    else if (pct === 0) tip = 'The value did not change, so the percent change is <strong>0%</strong>.';
+    else {
+      tip = 'The value ' + (pct > 0 ? '<strong>rose</strong>' : '<strong>fell</strong>') + ' by <strong>' + fmt(Math.abs(pct), d) + '%</strong>.';
+      if (isFinite(ch.back)) tip += ' To get back from ' + vf(e) + ' to ' + vf(s) + ' you need a change of <strong>' + sg(ch.back, d) + '%</strong> — not ' + sg(-pct, d) + '%, because it is measured from ' + vf(e) + ' this time.';
+      if (s < 0) tip += ' Because the start is negative, “increase” means moving toward more positive values.';
+      if (mode === 'fin' && p <= -100 && s > 0) tip += ' A drop of 100% or more takes the value to zero or below.';
+    }
+    if (st.pp && !time) tip += ' As percentages, the change is <strong>' + sg(ch.abs, d) + ' percentage point' + (Math.abs(ch.abs) === 1 ? '' : 's') + '</strong> (a different thing from the ' + (isFinite(pct) ? sg(pct, d) + '%' : 'percent') + ' change).';
+    if (altNote) tip += altNote;
+    $('pcTip').innerHTML = tip;
+    bars(s, e, time);
+
+    /* working */
+    var wk = [];
+    if (mode === 'chg') {
+      wk.push('% change = 100 × (end − start) ÷ |start|');
+      wk.push(isFinite(pct) ? '= 100 × (' + vf(e) + ' − ' + vf(s) + ') ÷ ' + vf(Math.abs(s)) + ' = 100 × ' + fmt(ch.abs / Math.abs(s), 6) + ' = ' + sg(pct, d) + '%' : '= no percentage, because the start is 0');
+    } else if (mode === 'fin') {
+      wk.push('final = start + |start| × % ÷ 100');
+      wk.push('= ' + vf(s) + ' + ' + vf(Math.abs(s)) + ' × ' + fmt(p, d) + ' ÷ 100 = ' + vf(e));
+    } else {
+      wk.push('start = end ÷ (1 + % ÷ 100)');
+      wk.push('= ' + vf(e) + ' ÷ ' + fmt(1 + p / 100, 6) + ' = ' + vf(s));
+    }
+    $('pcSteps').innerHTML = wk.map(function (l) { return '<li>' + l + '</li>'; }).join('');
+
+    var rows = [['Starting value', vf(s) + unit], ['Ending value', vf(e) + unit], ['Change', (ch.abs > 0 ? '+' : (ch.abs < 0 ? '−' : '')) + vf(Math.abs(ch.abs)) + unit],
+      ['Percent change', isFinite(pct) ? sg(pct, d) + '%' : 'n/a'], ['Multiplier', isFinite(ch.mult) ? fmt(ch.mult, 4) + ' ×' : '—'],
+      ['To get back to the start', isFinite(ch.back) ? sg(ch.back, d) + '%' : '—']];
+    if (st.pp && !time) rows.push(['Change in percentage points', sg(ch.abs, d) + ' pt']);
+    $('pcStats').innerHTML = '<tbody>' + rows.map(function (r) { return '<tr><td>' + r[0] + '</td><td>' + r[1] + '</td></tr>'; }).join('') + '</tbody>';
+    renderSeries();
+  }
+
+  function renderSeries() {
+    var out = $('pcSeriesOut'), t = $('pcSeries').value;
+    if (!st.adv || !t.trim()) { out.style.display = 'none'; $('pcSeriesNote').textContent = 'Paste values in order — months, years, anything. One per line, or separated by commas or spaces.'; return; }
+    var vals = [], ign = 0;
+    t.split(/[\s,;]+/).forEach(function (x) { if (!x) return; var r = E.parseVal(x); if (r && !r.time) vals.push(r.v); else ign++; });
+    $('pcSeriesNote').textContent = plural(vals.length, 'value') + ' read' + (ign ? ' · ' + ign + ' ignored' : '');
+    if (vals.length < 2) { out.innerHTML = '<p class="av-note">Add at least two values to see the changes between them.</p>'; out.style.display = ''; return; }
+    var d = dp(), S = E.series(vals), h = '';
+    var mx = 0; S.rows.forEach(function (r) { if (isFinite(r.pct) && Math.abs(r.pct) > mx) mx = Math.abs(r.pct); });
+    var shown = S.rows.slice(1, 61), cols = '';
+    shown.forEach(function (r) {
+      var hgt = isFinite(r.pct) && mx > 0 ? Math.abs(r.pct) / mx * 100 : 0;
+      cols += '<span class="pc-col"><i class="' + (r.pct < 0 ? 'dn' : 'up') + '" style="height:' + Math.max(hgt, isFinite(r.pct) ? 3 : 0) + '%"></i></span>';
+    });
+    h += '<div class="proj-sep"></div><p class="bm-h">Change from each value to the next</p><div class="pc-spark">' + cols + '</div>';
+    var sum = [['Total change (first to last)', isFinite(S.total.pct) ? sg(S.total.pct, d) + '%' : 'n/a'], ['Periods', fmt(S.periods, 0)],
+      ['Average of the period changes', isFinite(S.avg) ? sg(S.avg, d) + '%' : '—'], ['Compound rate per period', isFinite(S.cagr) ? sg(S.cagr, d) + '%' : 'needs a positive first and last value']];
+    h += '<table class="dtable">' + sum.map(function (r) { return '<tr><td>' + r[0] + '</td><td>' + r[1] + '</td></tr>'; }).join('') + '</table>';
+    h += '<table class="dtable pc-tbl"><thead><tr><th>#</th><th>Value</th><th>Change</th><th>vs first</th></tr></thead><tbody>' + S.rows.slice(0, 100).map(function (r, i) {
+      return '<tr><td>' + (i + 1) + '</td><td>' + fmt(r.v, 6) + '</td><td>' + (i ? (isFinite(r.pct) ? sg(r.pct, d) + '%' : '—') : '—') + '</td><td>' + (i ? (isFinite(r.cum) ? sg(r.cum, d) + '%' : '—') : '—') + '</td></tr>';
+    }).join('') + '</tbody></table>' + (S.rows.length > 100 ? '<p class="av-note">First 100 of ' + S.rows.length + ' values shown — the summary covers all of them.</p>' : '');
+    out.innerHTML = h; out.style.display = '';
+  }
+
+  function applyMode() {
+    var m = st.mode;
+    $('pcAWrap').style.display = m === 'sta' ? 'none' : ''; $('pcBWrap').style.display = m === 'fin' ? 'none' : ''; $('pcPWrap').style.display = m === 'chg' ? 'none' : '';
+    $('pcDirWrap').style.display = m === 'chg' ? 'none' : '';
+  }
+  function chips() { [].forEach.call($('pcChips').children, function (c) { var v = parseFloat(c.getAttribute('data-v')), t = parsePct('pcP'); c.classList.toggle('on', t !== null && isFinite(t) && Math.abs(t - v) < 1e-9); }); }
+  function all() { chips(); render(); }
+
+  ['pcA', 'pcB', 'pcP', 'pcDp', 'pcSeries'].forEach(function (id) { $(id).addEventListener('input', all); });
+  $('pcModeSeg').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    var v = b.getAttribute('data-v'); if (v === st.mode) return;
+    st.mode = v; [].forEach.call($('pcModeSeg').children, function (x) { x.classList.toggle('on', x === b); });
+    applyMode(); all();
+  });
+  $('pcDirSeg').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return; st.dir = b.getAttribute('data-v');
+    [].forEach.call($('pcDirSeg').children, function (x) { x.classList.toggle('on', x === b); }); all();
+  });
+  $('pcChips').addEventListener('click', function (e) {
+    var c = e.target.closest('button'); if (!c) return; var v = parseFloat(c.getAttribute('data-v'));
+    st.dir = v < 0 ? 'dec' : 'inc'; [].forEach.call($('pcDirSeg').children, function (x) { x.classList.toggle('on', x.getAttribute('data-v') === st.dir); });
+    $('pcP').value = String(Math.abs(v)); all();
+  });
+  $('pcPPSeg').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return; st.pp = b.getAttribute('data-v') === 'pct';
+    [].forEach.call($('pcPPSeg').children, function (x) { x.classList.toggle('on', x === b); }); render();
+  });
+  $('pcAdvBtn').addEventListener('click', function () {
+    st.adv = !st.adv; $('pcAdvBtn').classList.toggle('open', st.adv); $('pcAdvBtnLab').textContent = st.adv ? 'Go simple' : 'Go advanced'; $('pcAdvIn').style.display = st.adv ? '' : 'none';
+    if (!st.adv) { st.pp = false; [].forEach.call($('pcPPSeg').children, function (x) { x.classList.toggle('on', x.getAttribute('data-v') === 'num'); }); $('pcDp').value = ''; $('pcSeries').value = ''; }
+    render();
+  });
+  applyMode(); all();
+};
+/* PCT-CHANGE:END */
 
 /* =========================================================
    HOURS CALCULATOR — pure engine (no DOM). Loose clock parsing ("9", "915", "9:15a",
