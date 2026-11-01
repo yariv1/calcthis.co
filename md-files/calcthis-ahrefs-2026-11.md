@@ -12,6 +12,13 @@ Rule: only CALCULATOR-intent phrases justify a page (user 2026-11-01: tipping "h
 - **cost per mile calculator** >100 Easy (79 kws; trucking/truck variants >100 Easy) — SKIP (small).
 - **gas mileage calculator** >1000 Hard (136 kws): u haul gas mileage calculator >100 Medium; the rest <100 — later maybe.
 
+## Grade phrases (screenshots 2026-11-01, sent after the 4 builds) — DECISION: NO new pages, upgrade /grade-calculator/ in place (HANDOFF §0.2)
+- **weighted grade calculator** >10,000 Medium (94 kws): mercer weighted grade calculator <100 Easy; …excel <100 Easy; …formula <100; final weighted grade calculator <100 Medium; …college <100 Hard; …with points <100; …explanation <100; non weighted grade calculator <100 Hard.
+- **grade calculator with weights** >1,000 Medium (14 kws): final grade calculator with weights >100 Medium; class/course/college (Hard)/total/online/…and points (Medium)/…excel all <100.
+- **college grade calculator** >1,000 Hard (29 kws): …gpa <100 Medium; …with weights <100 Hard; …points <100 Hard; final college grade calculator <100 Easy; school-specific (juniata, brooklyn, philippines, percentages) <100.
+- **class grade calculator** >1,000 Hard (40 kws): college class grade calculator >100 Hard; class grade calculator college >100 Easy; final class grade calculator <100 Easy; weighted class grade calculator <100 Easy; ap class grade calculator <100 Easy; overall / average class grade calculator <100 Medium.
+- Reading: one search intent (weighted course grade) = the existing /grade-calculator/. Head term grade calculator >100K Hard (4,750 kws).
+
 ## Tip family data (screenshots 2026-10-31) — BUILT, do not expand (informational)
 tip calculator >100K Hard · tip calculator google >10K Hard · how to calculate tip >10K Easy · how much to tip movers/hairdresser/tattoo artist/uber driver/massage therapist/valet/dog groomer/barber each >1K Easy · tipping in italy/canada/japan each >1K Easy (spain, france, mexico, london, ireland, greece, portugal >100) · bill splitter / split bill / tip percentage / tip calculator with tax / 10-15-20% tip calculator all <100 or >100 (folded into the hub). Details: `md-files/calcthis-tip-research.md`.
 
