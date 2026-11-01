@@ -181,7 +181,7 @@ must be built from the article's actual units, every time, not pasted from a tem
 ## ⛔ SESSION HANDOFF — START HERE (rewritten 2026-11-01, end of session; full detail in `HANDOFF.md` §0)
 
 **Read `HANDOFF.md` §0 in full before replying.** Do not make the user re-explain anything in it (user, 2026-10-26: "do not dare to start the new session confused").
-- **STATE (end of the 2026-10-31 → 11-01 session): LIVE = v280 · 68 calculators · 25 articles · 177 pages (calorie deficit v273, semester grade v276, AVERAGE hub + batting/stock/dice/time spokes v280 — all 2026-11-01; NEXT = percentage change calculator research report, see HANDOFF §0.2 #4); `main` pushed (last commits `db463963` tracker ← `6ddd48ab` tip phase 3).** Shipped this session: NYC sales tax (v259), the whole TIP FAMILY — `/tip-calculator/` hub (v261), `/how-much-to-tip/` + 8 service pages (v264), `/tipping-in/{canada,italy,japan}/` (v270). All pages are in Bing (manual + IndexNow); GSC is NOT done for any of them (quota was exceeded 2026-10-31).
+- **STATE (end of the 2026-10-31 → 11-01 session): LIVE = v284 · 69 calculators · 25 articles · 178 pages (calorie deficit v273, semester grade v276, AVERAGE hub + 4 spokes v280, PERCENTAGE CHANGE v284 — all 2026-11-01; NEXT = ask the user for fresh Ahrefs data — the ranked list in md-files/calcthis-ahrefs-2026-11.md is exhausted except ON-HOLD ovulation/pregnancy, see HANDOFF §0.2); `main` pushed (last commits `db463963` tracker ← `6ddd48ab` tip phase 3).** Shipped this session: NYC sales tax (v259), the whole TIP FAMILY — `/tip-calculator/` hub (v261), `/how-much-to-tip/` + 8 service pages (v264), `/tipping-in/{canada,italy,japan}/` (v270). All pages are in Bing (manual + IndexNow); GSC is NOT done for any of them (quota was exceeded 2026-10-31).
 - **FIRST JOB NEXT SESSION: CALORIE DEFICIT CALCULATOR RESEARCH REPORT** (`calorie deficit calculator` >100K Medium + four >1K variants; user said "yes"). Normal order: open competitors live → report (every competitor input + VISUAL + FUNCTIONAL differentiator; check the existing `/calorie-calculator/`, `/tdee-calculator/`, `/bmr-calculator/` first so the new page has its own job and no cannibalisation) → wait for explicit approval → build → exhaustive QA → preview link only → wait for "deploy". After it, the ranked Ahrefs list in `md-files/calcthis-ahrefs-2026-11.md`: semester grade calculator (>10K Easy), average calculator hub + batting/stock/dice/time spokes (each >1K), percentage change calculator (>10K Hard); ovulation + pregnancy due date are ON HOLD (YMYL, after AdSense).
 - **ALSO FIRST: GSC INDEXING (new day → quota should be open).** Standing instruction: request the next ~10 URLs in order — NYC sales tax, /tip-calculator/, /how-much-to-tip/, its 8 services, /tipping-in/ x3, then the older queue (HANDOFF §0.3, §0.4e how-to). Keep `md-files/calcthis-indexing-tracker.md` LIVE QUEUE updated.
 - **STOP expanding tipping (user 2026-11-01):** tipping phrases are informational/articles with low volume. Only ask Ahrefs checks for `{x} calculator` phrases. Sales tax is PAUSED by the user until he resumes (still needs his Ahrefs numbers for the remaining states).
@@ -198,7 +198,7 @@ must be built from the article's actual units, every time, not pasted from a tem
 
 ## Project state
 
-- **Asset version:** v280 (live; `.assetver`)
+- **Asset version:** v284 (live; `.assetver`)
 - **Total pages:** 170 live (sitemap)
 - **Model:** Sonnet 5
 
@@ -299,9 +299,12 @@ Recipe Converter
 ### Money & Finance (6)
 Mortgage · Loan · Auto Loan · Paycheck · Sales Tax · Tip
 
-Total live calculators: **68** (v280)
+Total live calculators: **69** (v284)
 
 ---
+
+## Last session addendum 4 (2026-11-01, v284): PERCENTAGE CHANGE CALCULATOR `/percentage-change-calculator/`
+Modes % change / final value / start value; before-after bars; ALWAYS shows the % needed to get back; multiplier + absolute change; working shown; times (m:ss or h:mm:ss); negative/zero start in plain words; Go advanced = values-are-percentages (points), decimal places, list of values over time (each period, total, average, compound rate). Engine `CalcThis.pctEngine` (`PCT-ENGINE:START/END`) + `CalcThis.initPctChangeCalc` (ids `pc*`, body `p-bmr p-avg p-pct`, block `PCT-CHANGE:BEGIN/END`), generator `md-files/gen-pctchange-page.js` (also adds a cross-link on /percentage-calculator/). QA incl. UI-vs-independent differential tests for ALL six new calculators (percentage change, average hub, batting, stock, dice, time) — no wrong results; one display fix (tiny values no longer show as 0). Bing submitted manually; GSC not requested (quota).
 
 ## Last session addendum 3 (2026-11-01, v280): AVERAGE FAMILY — hub `/average-calculator/` + spokes `/batting-average-calculator/`, `/stock-average-calculator/`, `/dice-average-calculator/`, `/time-average-calculator/`
 One shared engine `CalcThis.avgEngine` (`AVERAGE-ENGINE:START/END`) + `CalcThis.initAvgCalc(kind)` (ids `av*`, body `p-bmr p-avg`) in app.js (block `AVG-FAMILY:BEGIN/END`), CSS `.p-avg` at the end of style.css, generator `md-files/gen-average-pages.js` (writes all 5 pages + registers them incl. header menu for all 5, footer, homepage, sitemap, llms, seo-meta). Hub = paste list → mean/median/mode/geo/quartiles/outliers, plot, average without outliers, advanced weights/exclude/harmonic. Batting = baseball+cricket scale + straight-hits solver + OBP/SLG/OPS. Stock = average cost + target solver + fee. Dice = exact distribution incl. keep highest/lowest + target odds. Time = durations + clock times (circular mean across midnight). **Process lesson (user furious, 2026-11-01): the registration QA step printed header=0 for the 4 spokes and was ignored — now ALWAYS run a site-wide audit asserting every page has the header/footer links, never eyeball counts.** Bing submitted manually; GSC not requested (quota).
