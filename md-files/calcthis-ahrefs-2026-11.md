@@ -38,3 +38,8 @@ tip calculator >100K Hard · tip calculator google >10K Hard · how to calculate
 - `{state} paycheck calculator`: **New Jersey, Ohio, Massachusetts, Maryland, Wisconsin, Indiana, Oregon, South Carolina, Utah each >1000 EASY** (adp / hourly variants >100; Wisconsin + Indiana `... hourly` >100 Easy); Connecticut >100 Easy. -> BUILT 2026-11-02 as batch 2 (8 states, SC deferred: SC tables not yet updated for Act 110). See `md-files/calcthis-paycheck-states-batch2.md`.
 - `new jersey take home pay calculator` >100 Easy; `ohio take home pay calculator` >100 Easy (weak -> wording only).
 - Countries weak: `paycheck calculator canada` <100 Hard; `canada take home pay calculator` <100 Hard; `uk take home pay calculator` >100 Hard (126 kws); `uk salary calculator` >100 Hard (124 kws); `australia pay calculator` <100 Easy; `vat calculator` >1000 Hard (522 kws; reverse vat / vat calculator uk / online vat >100 Hard); `gst calculator` >100 Hard (535 kws). -> parked.
+
+## Remaining paycheck states — demand check (user screenshots, 2026-11-02, after batch 2)
+- **>1000 EASY (build candidates):** Oklahoma, Kansas, Arkansas, Idaho, Hawaii, Maine, Nebraska, Louisiana (`adp louisiana` >100 Medium). Plus South Carolina (>1000 Easy, waiting for its post-Act-110 tables).
+- **>100 Easy only (decide with him, default skip):** New Mexico, Delaware, Mississippi, Rhode Island, North Dakota, Vermont, DC (`dc paycheck calculator` and `washington dc paycheck calculator` both >100 Easy), Connecticut (>100 Easy).
+- West Virginia not checked (not sent).
