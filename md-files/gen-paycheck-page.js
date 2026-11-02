@@ -32,6 +32,7 @@ const hourWeekly = 22 * 40, hourAnnual = hourWeekly * 52;
 const exH = pc(base(hourAnnual / 52, 52));
 const otWeekly = 22 * 40 + 22 * 1.5 * 5;
 const exOT = pc(base(otWeekly, 52));
+const exMo65 = pc(base(65000 / 12, 12)), exMo100 = pc(base(100000 / 12, 12)), exMo40 = pc(base(40000 / 12, 12));
 
 const liveCodes = Object.keys(E.STATES).filter((c) => E.STATES[c].method !== 'pending');
 const NAMES = { AL: 'Alabama', AK: 'Alaska', AZ: 'Arizona', AR: 'Arkansas', CA: 'California', CO: 'Colorado', CT: 'Connecticut', DE: 'Delaware', DC: 'District of Columbia', FL: 'Florida', GA: 'Georgia', HI: 'Hawaii', ID: 'Idaho', IL: 'Illinois', IN: 'Indiana', IA: 'Iowa', KS: 'Kansas', KY: 'Kentucky', LA: 'Louisiana', ME: 'Maine', MD: 'Maryland', MA: 'Massachusetts', MI: 'Michigan', MN: 'Minnesota', MS: 'Mississippi', MO: 'Missouri', MT: 'Montana', NE: 'Nebraska', NV: 'Nevada', NH: 'New Hampshire', NJ: 'New Jersey', NM: 'New Mexico', NY: 'New York', NC: 'North Carolina', ND: 'North Dakota', OH: 'Ohio', OK: 'Oklahoma', OR: 'Oregon', PA: 'Pennsylvania', RI: 'Rhode Island', SC: 'South Carolina', SD: 'South Dakota', TN: 'Tennessee', TX: 'Texas', UT: 'Utah', VT: 'Vermont', VA: 'Virginia', WA: 'Washington', WV: 'West Virginia', WI: 'Wisconsin', WY: 'Wyoming' };
@@ -42,17 +43,19 @@ const pending = Object.keys(NAMES).filter((c) => liveCodes.indexOf(c) < 0).map((
 const nLive = liveCodes.length;
 
 const faqs = [
+  ['What is a take home pay calculator?', `A take home pay calculator turns your gross pay (what you earn before anything is taken out) into your net pay — the amount that reaches your bank account. It subtracts federal income tax, Social Security, Medicare, state income tax and any deductions you choose, such as a 401(k) or health insurance. Enter your pay above and the take home pay shows up as you type, per paycheck and per year.`],
   ['How is my paycheck calculated?', `Take-home pay = gross pay − before-tax deductions − federal income tax − Social Security − Medicare − state income tax − after-tax deductions. On a ${m0(65000)} salary paid bi-weekly (${m(65000 / 26)} gross) for a single filer in a state with no income tax, federal tax is ${m(ex1.fed)}, Social Security ${m(ex1.ss)} and Medicare ${m(ex1.med)}, so you take home ${m(ex1.net)} a paycheck (${m0(ex1.net * 26)} a year).`],
   ['How much is taken out of a $65,000 salary in California or New York?', `On the same ${m0(65000)} bi-weekly salary (single, no extra allowances), California withholds ${m(ex2.state)} in income tax plus ${m(ex2.programTotal)} of State Disability Insurance, leaving ${m(ex2.net)} a paycheck. New York withholds ${m(ex3.state)} in income tax plus ${m(ex3.programTotal)} of disability and paid family leave, leaving ${m(ex3.net)}. Pick your state to see yours.`],
   ['Does a 401(k) lower my paycheck taxes?', `A traditional 401(k) lowers your federal and most state income tax but not Social Security or Medicare. Putting 6% of the ${m0(65000)} salary (${m(65000 / 26 * 0.06)} a paycheck) into a 401(k) lowers take-home only from ${m(ex1.net)} to ${m(ex401.net)} — ${m(ex1.net - ex401.net)} less, because federal tax drops from ${m(ex1.fed)} to ${m(ex401.fed)}. Type “6%” in the 401(k) field under Go advanced to try it.`],
   ['When does Social Security tax stop?', `Social Security (6.2%) is withheld only on the first ${m0(E.SS_BASE)} of wages in 2026. On a ${m0(250000)} salary paid monthly you pay it through ${MONTHS[ssStop - 1]} and part of ${MONTHS[ssStop]}, then it stops and your take-home jumps — ${m(big[0].net)} in January versus ${m(big[11].net)} in December. The yearly chart under your result marks the paycheck where it stops.`],
+  ['How much is my monthly take-home pay?', `Choose “Monthly” as your pay frequency, or look at the monthly row in the table of all ten pay schedules. For a single filer in a state with no income tax, ${m0(40000)} a year takes home ${m(exMo40.net)} a month, ${m0(65000)} a year takes home ${m(exMo65.net)} a month and ${m0(100000)} a year takes home ${m(exMo100.net)} a month after federal income tax, Social Security and Medicare. Pick your state to include state tax.`],
   ['Does the calculator work for hourly pay and overtime?', `Yes — switch to Hourly. At $22 an hour for 40 hours a week your gross is ${m(hourWeekly)} a week (${m0(hourAnnual)} a year) and you take home ${m(exH.net)} a week as a single filer with no state tax. Under Go advanced, add overtime hours: 5 hours a week at 1.5× brings gross to ${m(otWeekly)} and take-home to ${m(exOT.net)}.`]
 ];
 
 const jsonLdApp = {
   '@context': 'https://schema.org', '@type': 'WebApplication', name: 'Paycheck Calculator', url: 'https://calcthis.co/paycheck-calculator/', applicationCategory: 'FinanceApplication', operatingSystem: 'Any (web browser)',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-  description: 'Paycheck calculator for salary and hourly pay: federal income tax (2020+ and older W-4), Social Security, Medicare, state income tax, deductions and overtime, with a take-home breakdown and what-if comparison.'
+  description: 'Paycheck and take home pay calculator for salary and hourly pay: federal income tax (2020+ and older W-4), Social Security, Medicare, state income tax, deductions and overtime, with a take-home breakdown and what-if comparison.'
 };
 const jsonLdFaq = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faqs.map((q) => ({ '@type': 'Question', name: q[0], acceptedAnswer: { '@type': 'Answer', text: q[1] } })) };
 
@@ -74,13 +77,13 @@ const chk = (id, text) => `<label class="dc-check" for="${id}"><input type="chec
 
 const HERO_MAIN = `  <section class="hero">
     <div class="eyebrow">Gross to net, itemized</div>
-    <h1>Paycheck Calculator</h1>
-    <p>Enter your salary or hourly pay and see your <strong>take-home pay</strong> after <strong>federal income tax, Social Security, Medicare</strong> and your <strong>state tax</strong>. See where every dollar of each paycheck goes, how a raise or a 401(k) changes it, and your pay on every pay schedule at once.</p>
+    <h1>Paycheck &amp; <span style="white-space:nowrap">Take-Home</span> Pay Calculator</h1>
+    <p>This take home pay calculator turns your salary or hourly pay into your <strong>paycheck after tax</strong>: enter it and see your <strong>take-home pay</strong> after <strong>federal income tax, Social Security, Medicare</strong> and your <strong>state tax</strong>. See where every dollar of each paycheck goes, how a raise or a 401(k) changes it, and your pay on every pay schedule at once.</p>
   </section>`;
 const CONTENT_MAIN = `  <section class="content">
     <div class="grid2">
       <div>
-        <h2>How to use the paycheck calculator</h2>
+        <h2>How to use the paycheck and take home pay calculator</h2>
         <p>Choose <strong>Salary</strong> or <strong>Hourly</strong>, type your pay, pick your <strong>pay frequency</strong>, <strong>state</strong> and <strong>filing status</strong>, and your take-home pay appears as you type. For a salary you can enter the yearly amount or the amount of one paycheck. Under <strong>Go advanced</strong> you can match your Form W-4 exactly, add 401(k), insurance and other deductions, enter year-to-date pay and exempt yourself from individual taxes.</p>
         <p>The result shows each paycheck dollar as a bar, an itemized table per paycheck and per year, what a raise or a bigger 401(k) would change, your take-home on all ten pay schedules, and a list of the assumptions behind the numbers.</p>
 
@@ -344,10 +347,12 @@ const cmpTable = '<p>Take-home pay on a ' + m0(65000) + ' salary, single filer, 
 const byState = '\n    <h2 style="margin-top:36px">Take-home pay on ' + m0(65000) + ' by state</h2>\n    ' + cmpTable + '\n    <h2 style="margin-top:36px">Paycheck calculator by state</h2>\n    ' + stateLinks() + '\n';
 const contentMain = CONTENT_MAIN.replace('\n    <h2 style="margin-top:36px">Common questions</h2>', () => byState + '\n    <h2 style="margin-top:36px">Common questions</h2>');
 
+const HUB_TITLE = 'Paycheck & Take-Home Pay Calculator 2026 — After Tax', HUB_DESC = 'Take home pay calculator: your paycheck after federal, state, Social Security and Medicare tax. Salary or hourly, 401(k), overtime and a what-if raise.';
+if (HUB_TITLE.length > 60 || HUB_DESC.length > 158) { console.error('hub SEO length', HUB_TITLE.length, HUB_DESC.length); process.exit(1); }
 write('paycheck-calculator/index.html', pageHtml({
-  title: 'Paycheck Calculator — Take-Home Pay After Taxes | CalcThis',
-  desc: 'Free paycheck calculator for salary and hourly pay. See take-home pay after federal income tax, Social Security, Medicare and state tax, with 401(k) and other deductions, overtime, a what-if raise and every pay schedule.',
-  ogTitle: 'Paycheck Calculator — Take-Home Pay After Taxes',
+  title: HUB_TITLE,
+  desc: HUB_DESC,
+  ogTitle: HUB_TITLE,
   ogDesc: 'See your take-home pay after federal, Social Security, Medicare and state tax — salary or hourly, with deductions, overtime and a what-if raise.',
   url: 'https://calcthis.co/paycheck-calculator/', app: jsonLdApp, faq: jsonLdFaq, hero: HERO_MAIN, content: contentMain
 }));
@@ -401,11 +406,15 @@ function stateExamples(c) {
   });
   return rows;
 }
+function monthly65(c) { return pc(base(65000 / 12, 12, { fed: { w4: 'new', status: 'single' }, state: { code: c, status: 'single', allowances: c === 'AZ' ? null : 0, allowances2: 0 } })); }
 function stateFaqs(c) {
   const n = NAMES[c], S = E.STATES[c], ex = stateExamples(c), e65 = ex[1], none = S.method === 'none', prog = programsText(S);
   const f = [];
   f.push([`How much is taken out of a $65,000 salary in ${n}?`,
     `On a ${m0(65000)} salary paid bi-weekly (${m(65000 / 26)} gross) for a single filer with no allowances, ${n} ${none && !prog ? 'withholds no state income tax' : 'withholds ' + m(e65.state) + ' of state income tax' + (e65.prog > 0 ? ' plus ' + m(e65.prog) + ' of ' + prog : '')}, federal income tax is ${m(e65.fed)}, Social Security ${m(e65.ss)} and Medicare ${m(e65.med)}. Take-home pay is ${m(e65.net)} a paycheck, about ${m0(e65.net * 26)} a year.`]);
+  const mo = monthly65(c);
+  f.push([`What is the monthly take-home pay on a $65,000 salary in ${n}?`,
+    `A single filer on ${m0(65000)} a year paid monthly in ${n} takes home about ${m(mo.net)} a month (${m(mo.gross)} gross): federal income tax ${m(mo.fed)}, Social Security ${m(mo.ss)}, Medicare ${m(mo.med)}${none && !mo.programTotal ? ', and no ' + n + ' income tax' : ', ' + n + ' ' + (mo.programTotal > 0 ? 'income tax ' + m(mo.state) + ' and ' + m(mo.programTotal) + ' of state programs' : 'income tax ' + m(mo.state))}.`]);
   f.push([`Does ${n} tax paychecks differently for married workers?`,
     `Federal withholding does, and ${none ? n + ' has no state income tax to change' : n + ' uses its own married tables or deductions'}. For a ${m0(65000)} salary paid bi-weekly, a married filer in ${n} takes home ${m(ex[3].net)} a paycheck versus ${m(e65.net)} for a single filer.`]);
   f.push([`Which form do I fill out for ${n} withholding?`,
@@ -435,7 +444,7 @@ function stateContent(c, faqs2) {
         <p>FICA is Social Security plus Medicare.</p>
       </div>
       <div>
-        <h2>Use the ${n} calculator</h2>
+        <h2>Use the ${n} take home pay calculator</h2>
         <p>The state is already set to <strong>${n}</strong> above. Enter your salary or hourly rate, your pay frequency and filing status, and the result appears as you type. Under <strong>Go advanced</strong> you can match your Form W-4 (new or 2019-or-earlier), add 401(k), insurance and other deductions, enter year-to-date pay and add overtime.</p>
         <p>You also get a bar showing where each paycheck dollar goes, a what-if for a raise or a bigger 401(k), and your pay on all ten schedules. This is an estimate of withholding, not payroll or tax advice.</p>
         <h2>Other states</h2>
@@ -451,7 +460,7 @@ ${faqs2.map((q) => `    <details class="faq"><summary>${q[0]}</summary><p>${q[1]
 let nState = 0;
 liveSorted.forEach((c) => {
   const n = NAMES[c], url = 'https://calcthis.co/paycheck-calculator/' + SLUG[c] + '/', f2 = stateFaqs(c), e65 = stateExamples(c)[1];
-  const app = Object.assign({}, jsonLdApp, { dateModified: '2026-10-27', name: n + ' Paycheck Calculator', url, description: n + ' paycheck calculator for salary and hourly pay: federal income tax, Social Security, Medicare' + (E.STATES[c].method === 'none' ? '' : ', ' + n + ' state tax') + ', deductions and overtime.' });
+  const app = Object.assign({}, jsonLdApp, { dateModified: '2026-10-27', name: n + ' Paycheck Calculator', url, description: n + ' paycheck and take home pay calculator for salary and hourly pay: federal income tax, Social Security, Medicare' + (E.STATES[c].method === 'none' ? '' : ', ' + n + ' state tax') + ', deductions and overtime.' });
   const faq = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: f2.map((q) => ({ '@type': 'Question', name: q[0], acceptedAnswer: { '@type': 'Answer', text: q[1] } })) };
   const crumbs = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'CalcThis', item: 'https://calcthis.co/' },
@@ -459,13 +468,14 @@ liveSorted.forEach((c) => {
     { '@type': 'ListItem', position: 3, name: n, item: url }] };
   const hero = `  <section class="hero">
     <div class="eyebrow">${n} · 2026 tax rates</div>
-    <h1>${n} Paycheck Calculator</h1>
-    <p>See your <strong>${n} take-home pay</strong> after <strong>federal income tax, Social Security, Medicare</strong>${E.STATES[c].method === 'none' ? (E.STATES[c].programs ? ' and the state’s employee-paid programs' : ' — ' + n + ' has no state income tax') : ' and <strong>' + n + ' state tax</strong>'}. On a ${m0(65000)} salary paid bi-weekly a single filer takes home about <strong>${m(e65.net)}</strong> a paycheck.</p>
+    <h1>${n} Paycheck &amp; <span style="white-space:nowrap">Take-Home</span> Pay Calculator</h1>
+    <p>This ${n} take home pay calculator shows your <strong>${n} take-home pay</strong> after <strong>federal income tax, Social Security, Medicare</strong>${E.STATES[c].method === 'none' ? (E.STATES[c].programs ? ' and the state’s employee-paid programs' : ' — ' + n + ' has no state income tax') : ' and <strong>' + n + ' state tax</strong>'}. On a ${m0(65000)} salary paid bi-weekly a single filer takes home about <strong>${m(e65.net)}</strong> a paycheck.</p>
   </section>`;
+  const stTitle = n + ' Paycheck & Take-Home Pay Calculator 2026';
+  let stDesc = n + ' take home pay calculator: ' + m0(65000) + ' a year is ' + m(e65.net) + ' bi-weekly after tax. Salary or hourly, 401(k), overtime, 2026 rates.';
+  if (stTitle.length > 60 || stDesc.length > 158) { console.error('state SEO length', n, stTitle.length, stDesc.length); process.exit(1); }
   write('paycheck-calculator/' + SLUG[c] + '/index.html', pageHtml({
-    title: n + ' Paycheck Calculator 2026 — Take-Home Pay After Tax | CalcThis',
-    desc: n + ' paycheck calculator: ' + m0(65000) + ' a year is ' + m(e65.net) + ' take-home bi-weekly after federal tax, Social Security, Medicare' + (E.STATES[c].method === 'none' ? '' : ' and ' + n + ' tax') + '. Salary or hourly, 401(k), overtime, 2026 rates.',
-    ogTitle: n + ' Paycheck Calculator 2026', url, app, faq, extraLd: [crumbs], hero, content: stateContent(c, f2), bodyAttr: ' data-state="' + c + '"'
+    title: stTitle, desc: stDesc, ogTitle: stTitle, url, app, faq, extraLd: [crumbs], hero, content: stateContent(c, f2), bodyAttr: ' data-state="' + c + '"'
   }));
   nState++;
 });

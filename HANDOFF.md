@@ -4,6 +4,10 @@ _Rewritten 2026-11-02 at the end of the overtime-calculator session: §00 is NEW
 
 ---
 
+## 0000. UPDATE (2026-11-02, latest): TAKE-HOME WORDING UPGRADE DEPLOYED (v302)
+Paycheck hub + 25 state pages: new title/H1/description/headings/FAQ ("Paycheck & Take-Home Pay Calculator", both phrases kept, no new URLs), new FAQs "What is a take home pay calculator?" + monthly take-home (hub: $40k/$65k/$100k; states: $65k), generator `md-files/gen-paycheck-page.js` (HUB_TITLE/HUB_DESC, stTitle/stDesc, h1 keeps "Take-Home" unbroken). Hand SEO override for the hub desc lives in `md-files/seo-meta-hand.json`. QA: lengths/uniqueness/FAQ-vs-JSON-LD script over 26 pages, monthly figures matched the live UI to the cent on 9 pages, 375px. Bing: hub submitted manually; GSC not requested (re-request the hub first when the queue resumes).
+**NEXT (user said functional differentiators + UX/efficiency are the priority): Plan 2 research report** — competitor gaps found live: no local/city tax, no manual rate for the 25 unbuilt states, no children/dependents helper (calculator.net + SmartAsset have them); dropped by proposal (needs user sign-off): age 65+, qualified tips, vehicle-loan interest, charity (return-level only). Optional differentiator: "paycheck now vs what you really owe" refund/owe line. NYC take-home page needs NYC local tax rules sourced.
+
 ## 000. UPDATE (end of 2026-11-02, later): SALARY CALCULATOR DEPLOYED (v299, 180 pages, 71 calculators)
 "synced · live v299 / 71 calcs / 180 pages · salary calculator deployed + in Bing · next: the TAKE-HOME PAY wording upgrade research report (paycheck hub + 25 state pages + NYC), then self-employment tax". See CLAUDE.md addendum 7 for code map and QA. Research -> short report -> wait for approval -> build -> full QA -> preview link only -> wait for "deploy". The user added the currency selector (searchable `.csel[data-search]`, 154 currencies) himself-requested; keep the same bar (mobile-first quick lookup) for any future long dropdown. GSC queue unchanged (add /salary-calculator/ at the end). The rest of §00 below is still valid except where this section says otherwise.
 
