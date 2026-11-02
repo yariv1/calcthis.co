@@ -13597,6 +13597,32 @@ CalcThis.payEngine = (function () {
     if (!S || S.method === 'pending') return null;
     return METHODS[S.method](S, o);
   }
+  // New York City resident income tax withholding — NYS-50-T-NYC (1/26), effective Jan 1 - Dec 31 2026, Method II exact calculation.
+  // Rows per payroll period: [column 3 floor, column 5 amount to add]; the rate for row k is NYC_RATES[k]. Single and married share the rows.
+  var NYC_RATES = [.0205, .028, .0325, .0395, .0415, .0425];
+  var NYC_ROWS = {
+    daily: [[0, 0], [31, .63], [33.5, .71], [57.5, 1.49], [96, 3.01], [231, 8.6]],
+    weekly: [[0, 0], [154, 3.15], [167, 3.54], [288, 7.46], [481, 15.06], [1154, 43]],
+    biweekly: [[0, 0], [308, 6.31], [334, 7.08], [577, 14.92], [962, 30.12], [2308, 86]],
+    semimonthly: [[0, 0], [333, 6.83], [362, 7.67], [625, 16.17], [1042, 32.63], [2500, 93.17]],
+    monthly: [[0, 0], [667, 13.67], [725, 15.33], [1250, 32.33], [2083, 65.25], [5000, 186.33]],
+    annual: [[0, 0], [8000, 164], [8700, 184], [15000, 388], [25000, 783], [60000, 2236]]
+  };
+  // deduction allowance (single, married) and value of one exemption, per payroll period (Tables A-C)
+  var NYC_ALLOW = { daily: [19.25, 21.15, 3.85], weekly: [96.15, 105.75, 19.25], biweekly: [192.3, 211.5, 38.5], semimonthly: [208.35, 229.15, 41.65], monthly: [416.7, 458.3, 83.3], annual: [5000, 5500, 1000] };
+  var NYC_PERIOD = { 260: 'daily', 52: 'weekly', 53: 'weekly', 26: 'biweekly', 27: 'biweekly', 24: 'semimonthly', 12: 'monthly', 4: 'annual', 2: 'annual', 1: 'annual' };
+  // wages = gross wages for ONE pay period after before-tax deductions. Returns the NYC tax to withhold from that paycheck.
+  function nycTax(wages, ppy, status, exemptions) {
+    var per = NYC_PERIOD[ppy] || 'annual', A = NYC_ALLOW[per];
+    var w = per === 'annual' ? wages * ppy : wages;
+    var net = w - ((status === 'married' ? A[1] : A[0]) + A[2] * Math.max(0, num(exemptions)));
+    if (!(net > 0)) return 0;
+    var rows = NYC_ROWS[per], k = 0;
+    for (var i = 1; i < rows.length; i++) if (net >= rows[i][0]) k = i; else break;
+    var t = rows[k][1] + NYC_RATES[k] * (net - rows[k][0]);
+    t = Math.round(t * 100) / 100;
+    return per === 'annual' ? Math.round(t / ppy * 100) / 100 : t;
+  }
   // Employee-paid state payroll programs: rate on wages up to an annual wage base, using year-to-date wages.
   function programs(code, wages, ytd, ppy) {
     var S = STATES[code], out = [];
@@ -13642,10 +13668,12 @@ CalcThis.payEngine = (function () {
       if (r !== null) progs = programs(st.code, ficaWages, inp.ytd || 0, ppy);
     }
     var localAmt = num(inp.localPct) > 0 ? incWages * num(inp.localPct) / 100 : 0;
+    var nycAmt = 0;
+    if (inp.nyc && inp.nyc.on && !st.exempt) nycAmt = nycTax(Math.max(0, g - preStateInc(pre, STATES.NY)), ppy, st.status || fx.status || 'single', inp.nyc.exemptions);
     var progAll = 0; for (i = 0; i < progs.length; i++) progAll += progs[i].amt;
     var postAll = 0; for (i = 0; i < post.length; i++) postAll += num(post[i].amt);
-    var net = g - preAll - fedTax - fc.ss - fc.med - fc.addl - stateAmt - localAmt - progAll - postAll;
-    return { gross: g, preTax: preAll, fed: fedTax, ss: fc.ss, med: fc.med, addl: fc.addl, state: stateAmt, local: localAmt, stateEst: stateEst, programs: progs, programTotal: progAll, stateKnown: stateKnown, post: postAll, net: net, aaw: fedR.aaw, incWages: incWages, ficaWages: ficaWages };
+    var net = g - preAll - fedTax - fc.ss - fc.med - fc.addl - stateAmt - localAmt - nycAmt - progAll - postAll;
+    return { gross: g, preTax: preAll, fed: fedTax, ss: fc.ss, med: fc.med, addl: fc.addl, state: stateAmt, local: localAmt, nyc: nycAmt, stateEst: stateEst, programs: progs, programTotal: progAll, stateKnown: stateKnown, post: postAll, net: net, aaw: fedR.aaw, incWages: incWages, ficaWages: ficaWages };
   }
   // Federal income tax for the whole year on a Form 1040 basis (standard deduction), from the same Pub 15-T rows:
   // the Pub 15-T rows already embed the standard deduction less the W-4 Step 2 adjustment, so removing that adjustment gives the tax a return shows.
@@ -13665,7 +13693,7 @@ CalcThis.payEngine = (function () {
     return s;
   }
 
-  return { YEAR: YEAR, PPY: PPY, SS_BASE: SS_BASE, STD: STD, CHK: CHK, tab: tab, federal: federal, fica: fica, paycheck: paycheck, STATES: STATES, METHODS: METHODS, stateTax: stateTax, programs: programs, whole: whole, liability: liability, CHILD_CREDIT: 2200, OTHER_DEP_CREDIT: 500 };
+  return { YEAR: YEAR, PPY: PPY, SS_BASE: SS_BASE, STD: STD, CHK: CHK, tab: tab, federal: federal, fica: fica, paycheck: paycheck, STATES: STATES, METHODS: METHODS, stateTax: stateTax, programs: programs, whole: whole, liability: liability, nycTax: nycTax, CHILD_CREDIT: 2200, OTHER_DEP_CREDIT: 500 };
 })();
 /* PAY-ENGINE:END */
 /* PAY-STATES:START */
@@ -13757,7 +13785,7 @@ CalcThis.initPayCalc = function () {
     last = null;
   }
 
-  function stateCode() { return $('pcState').value || ''; }
+  function stateCode() { var v = $('pcState').value || ''; return v === 'NYC' ? 'NY' : v; }
   function freqKey() { return $('pcFreq').value || 'biweekly'; }
   function statusKey() { return $('pcStatus').value || 'single'; }
 
@@ -13771,7 +13799,8 @@ CalcThis.initPayCalc = function () {
       fed: { w4: c.w4, status: c.status, step2: c.step2, credit: c.credit, other4a: c.other4a, ded4b: c.ded4b, extra: c.fedExtra, allowances: c.allow, exempt: c.exFed },
       ficaX: { exemptSS: c.exSS, exemptMed: c.exMed },
       state: c.state ? { code: c.state, status: c.status, allowances: c.stAllow, allowances2: c.stAllow2, extra: c.stExtra, exempt: c.exState, flatPct: c.stRate } : null,
-      localPct: c.localPct
+      localPct: c.localPct,
+      nyc: c.nyc ? { on: true, exemptions: c.stAllow } : null
     };
   }
 
@@ -13814,7 +13843,8 @@ CalcThis.initPayCalc = function () {
     var locP = adv ? val('pcLocal', 0) : 0, stR = adv ? val('pcStRate', 0) : 0;
     if (locP < 0 || locP > 25) return { msg: BASE, hint: 'Enter the city or local tax as a percentage between 0 and 25, like 1.5.' };
     if (stR < 0 || stR > 25) return { msg: BASE, hint: 'Enter the state tax as a percentage between 0 and 25, like 4.5.' };
-    var c = { w4: st.w4, status: statusKey(), step2: adv && st.w4 === 'new' && $('pcStep2').checked, credit: (adv ? val('pcCredit', 0) : 0) + kids * E.CHILD_CREDIT + othd * E.OTHER_DEP_CREDIT, kids: kids, othd: othd, localPct: locP, stRate: stR, other4a: adv ? val('pc4a', 0) : 0, ded4b: adv ? val('pc4b', 0) : 0, fedExtra: adv ? val('pcFedExtra', 0) : 0, allow: adv ? val('pcAllow', 0) : 0,
+    var nycOn = $('pcNyc') && stateCode() === 'NY' && $('pcNyc').checked;
+    var c = { nyc: nycOn, w4: st.w4, status: statusKey(), step2: adv && st.w4 === 'new' && $('pcStep2').checked, credit: (adv ? val('pcCredit', 0) : 0) + kids * E.CHILD_CREDIT + othd * E.OTHER_DEP_CREDIT, kids: kids, othd: othd, localPct: locP, stRate: stR, other4a: adv ? val('pc4a', 0) : 0, ded4b: adv ? val('pc4b', 0) : 0, fedExtra: adv ? val('pcFedExtra', 0) : 0, allow: adv ? val('pcAllow', 0) : 0,
       round: adv && $('pcRound').checked, exFed: adv && $('pcExFed').checked, exSS: adv && $('pcExSS').checked, exMed: adv && $('pcExMed').checked, exState: adv && $('pcExState').checked,
       state: stateCode(), stAllow: adv && f.pcStAllow && f.pcStAllow.v != null ? f.pcStAllow.v : (stateCode() === 'AZ' ? null : 0), stAllow2: adv ? val('pcStAllow2', 0) : 0, stExtra: adv ? val('pcStExtra', 0) : 0 };
     var nn = ['credit', 'other4a', 'ded4b', 'fedExtra', 'allow', 'stAllow', 'stAllow2', 'stExtra'], nl = ['pcCredit', 'pc4a', 'pc4b', 'pcFedExtra', 'pcAllow', 'pcStAllow', 'pcStAllow2', 'pcStExtra'];
@@ -13848,11 +13878,11 @@ CalcThis.initPayCalc = function () {
 
   /* ---------- helpers on a calc result ---------- */
   function yearSim(d, gross, ppy, ded) {
-    var tot = { gross: 0, pre: 0, fed: 0, ss: 0, med: 0, addl: 0, state: 0, local: 0, prog: 0, post: 0, net: 0 }, rows = [], ssStop = -1, addlStart = -1;
+    var tot = { gross: 0, pre: 0, fed: 0, ss: 0, med: 0, addl: 0, state: 0, local: 0, nyc: 0, prog: 0, post: 0, net: 0 }, rows = [], ssStop = -1, addlStart = -1;
     for (var k = 0; k < ppy; k++) {
       var y = gross * k;
       var q = E.paycheck(buildInput(d.c, gross, ppy, y, ded));
-      tot.gross += q.gross; tot.pre += q.preTax; tot.fed += q.fed; tot.ss += q.ss; tot.med += q.med; tot.addl += q.addl; tot.state += q.state; tot.local += q.local; tot.prog += q.programTotal; tot.post += q.post; tot.net += q.net;
+      tot.gross += q.gross; tot.pre += q.preTax; tot.fed += q.fed; tot.ss += q.ss; tot.med += q.med; tot.addl += q.addl; tot.state += q.state; tot.local += q.local; tot.nyc += q.nyc; tot.prog += q.programTotal; tot.post += q.post; tot.net += q.net;
       rows.push(q.net);
       if (ssStop < 0 && q.ss < q.ficaWages * 0.062 - 0.005 && !d.c.exSS) ssStop = k;
       if (addlStart < 0 && q.addl > 0.005) addlStart = k;
@@ -13892,13 +13922,13 @@ CalcThis.initPayCalc = function () {
     last = { d: d };
     $('pcResLab').textContent = 'Take-home pay per paycheck';
     $('pcResBig').textContent = mon(p.net);
-    $('pcResSub').textContent = mon(p.gross) + ' gross · ' + fw + (code ? ' · ' + sname : ' · federal taxes only') + ' · ' + mon0(p.net * ppy) + ' a year';
+    $('pcResSub').textContent = mon(p.gross) + ' gross · ' + fw + (code ? ' · ' + (c.nyc ? 'New York City' : sname) : ' · federal taxes only') + ' · ' + mon0(p.net * ppy) + ' a year';
     $('pcMLab').textContent = 'Take-home per paycheck'; $('pcMVal').textContent = mon(p.net); $('pcMDec').textContent = ' · ' + mon0(p.gross) + ' gross';
     $('pcResults').style.display = '';
 
     // full-year projection (exact Social Security cap)
     var ys = yearSim(d, p.gross, ppy, d.ded), T = ys.t;
-    var taxTot = p.fed + p.ss + p.med + p.addl + p.state + p.local + p.programTotal;
+    var taxTot = p.fed + p.ss + p.med + p.addl + p.state + p.local + p.nyc + p.programTotal;
     var tip = 'Of every $1 you earn, you keep about ' + Math.round(p.net / p.gross * 100) + '¢' + (p.gross > 0 ? ' — ' + pct(taxTot / p.gross * 100) + ' goes to taxes' : '') + '.';
     $('pcTip').textContent = tip;
     var sn = $('pcStateNote');
@@ -13908,7 +13938,7 @@ CalcThis.initPayCalc = function () {
     else sn.style.display = 'none';
 
     // where each paycheck dollar goes
-    var seg = [['Take-home', Math.max(0, p.net), '#37503F'], ['Federal tax', p.fed, '#B5761F'], ['Social Security', p.ss, '#8F5C13'], ['Medicare', p.med + p.addl, '#C99A55'], ['State & local', p.state + p.local + p.programTotal, '#6B7A9E'], ['Before-tax deductions', p.preTax, '#6E8A74'], ['After-tax deductions', p.post, '#A4795A']], bar = '', leg = '';
+    var seg = [['Take-home', Math.max(0, p.net), '#37503F'], ['Federal tax', p.fed, '#B5761F'], ['Social Security', p.ss, '#8F5C13'], ['Medicare', p.med + p.addl, '#C99A55'], ['State & local', p.state + p.local + p.programTotal, '#6B7A9E'], ['New York City tax', p.nyc, '#4F6B8F'], ['Before-tax deductions', p.preTax, '#6E8A74'], ['After-tax deductions', p.post, '#A4795A']], bar = '', leg = '';
     seg.forEach(function (x) {
       var q = x[1] / p.gross * 100;
       if (!(q > 0.05)) return;
@@ -13925,6 +13955,7 @@ CalcThis.initPayCalc = function () {
     rows.push(['Medicare (1.45%)', -p.med, -T.med, '']);
     if (p.addl > 0.005 || T.addl > 0.005) rows.push(['Additional Medicare (0.9%)', -p.addl, -T.addl, '']);
     if (code && p.stateKnown && !c.exState) rows.push([sname + ' income tax' + (p.stateEst ? ' (estimate, ' + pct(c.stRate) + ')' : ''), -p.state, -T.state, '']);
+    if (c.nyc) rows.push(['New York City income tax', -p.nyc, -T.nyc, '']);
     if (p.local > 0.005) rows.push(['City or local income tax (' + pct(c.localPct) + ')', -p.local, -T.local, '']);
     if (p.programs.length) p.programs.forEach(function (q) { rows.push([q.name, -q.amt, null, 'prog']); });
     if (p.post > 0.005) rows.push(['After-tax deductions', -p.post, -T.post, '']);
@@ -13941,6 +13972,12 @@ CalcThis.initPayCalc = function () {
     tb += '<tr class="cur"><td>Take-home pay</td><td>' + monS(p.net) + '</td><td>' + mon0(T.net) + '</td></tr></tbody>';
     $('pcTable').innerHTML = tb;
 
+    // what New York City takes
+    var nw = $('pcNycWrap');
+    if (nw) {
+      if (c.nyc) { nw.style.display = ''; $('pcNycTip').textContent = 'New York City income tax takes ' + mon(p.nyc) + ' from each paycheck (' + mon0(T.nyc) + ' a year). If you lived outside the city and still worked in New York, your take-home would be ' + mon(p.net + p.nyc) + ' a paycheck instead of ' + mon(p.net) + '.'; }
+      else nw.style.display = 'none';
+    }
     // refund or owe at tax time (federal income tax only, this job only, standard deduction)
     var liab = E.liability({ wages: p.incWages * ppy, status: c.status, other4a: c.w4 === 'new' ? c.other4a : 0, ded4b: c.w4 === 'new' ? c.ded4b : 0, credit: c.w4 === 'new' ? c.credit : 0 });
     var diff = T.fed - liab, rt;
@@ -13980,6 +14017,7 @@ CalcThis.initPayCalc = function () {
     as.push('Tax year ' + E.YEAR + ' — federal income tax by the IRS Publication 15-T percentage method (' + (c.w4 === 'old' ? 'Form W-4 from 2019 or earlier, ' + c.allow + ' allowance' + (c.allow === 1 ? '' : 's') : 'Form W-4 from 2020 or later') + ').');
     as.push('Social Security 6.2% up to ' + mon0(E.SS_BASE) + ' of wages in the year; Medicare 1.45%; Additional Medicare 0.9% on wages above $200,000.');
     if (d.ytd > 0) as.push('Year-to-date pay of ' + mon0(d.ytd) + ' is counted toward the Social Security limit.');
+    if (c.nyc) as.push('New York City resident income tax by the city’s official ' + E.YEAR + ' withholding method (NYS-50-T-NYC, <a href="https://www.tax.ny.gov/pdf/publications/withholding/nys50_t_nyc.pdf" target="_blank" rel="noopener">source</a>), using the same exemptions as your state form IT-2104. Only New York City residents pay it.');
     if (code && p.stateKnown && !p.stateEst) as.push(sname + ' income tax by the state’s official ' + E.YEAR + ' withholding formula' + (S.src && /^https?:/.test(S.src) ? ' (<a href="' + S.src + '" target="_blank" rel="noopener">source</a>)' : '') + '.');
     if (code && p.stateKnown && S && S.programs) as.push('Includes ' + S.programs.map(function (q) { return q.name; }).join(' and ') + ' (employee-paid).');
     if (code && p.stateKnown && S && S.note) as.push(S.note);
@@ -14017,6 +14055,7 @@ CalcThis.initPayCalc = function () {
   /* ---------- state-specific fields ---------- */
   function syncStateFields() {
     var code = stateCode(), lab = SFIELDS[code], live = code && E.STATES[code] && E.STATES[code].method !== 'pending';
+    if ($('pcNycFld')) $('pcNycFld').style.display = code === 'NY' ? '' : 'none';
     var pendingSt = !!code && !live;
     $('pcStRateFld').style.display = pendingSt ? '' : 'none';
     $('pcStAllowFld').style.display = lab ? '' : 'none';
@@ -14046,22 +14085,56 @@ CalcThis.initPayCalc = function () {
   seg('pcUnitSeg', 'data-v', function (v) { st.unit = v; render(); });
   seg('pcW4Seg', 'data-v', function (v) { st.w4 = v; $('pcW4New').style.display = v === 'new' ? '' : 'none'; $('pcW4Old').style.display = v === 'old' ? '' : 'none'; render(); });
 
-  var panel = $('pcState').querySelector('.csel-panel'), ph = '<button type="button" class="csel-opt on" role="option" aria-selected="true" data-value="">Federal taxes only</button>';
-  Object.keys(NAMES).sort(function (a, b) { return NAMES[a] < NAMES[b] ? -1 : 1; }).forEach(function (cd) {
-    var s = E.STATES[cd], ok = s && s.method !== 'pending';
-    ph += '<button type="button" class="csel-opt" role="option" aria-selected="false" data-value="' + cd + '">' + NAMES[cd] + (ok ? '' : ' · federal only') + '</button>';
+  /* State = typeahead (DS .st-ta, same as the sales-tax place field): the field itself is the input and shows the chosen state with the
+     browser's clear (x) button; #pcState is a hidden holder of the code, its value setter keeps the visible text in sync */
+  var stEl = $('pcState'), stIn = $('pcStateIn'), stList = $('pcStateList'), stVal = '', stHits = [], stAct = -1;
+  var ST_OPTS = [{ v: '', label: 'Federal taxes only', s: 'federal taxes only no state', fed: false }];
+  Object.keys(NAMES).sort(function (x, y) { return NAMES[x] < NAMES[y] ? -1 : 1; }).forEach(function (cd) {
+    var stt = E.STATES[cd], ok = stt && stt.method !== 'pending';
+    ST_OPTS.push({ v: cd, label: NAMES[cd], s: (NAMES[cd] + ' ' + cd).toLowerCase(), fed: !ok });
+    if (cd === 'NY') ST_OPTS.push({ v: 'NYC', label: 'New York City', s: 'new york city nyc manhattan brooklyn queens bronx staten island', fed: false });
   });
-  panel.innerHTML = ph; CalcThis.initCsel($('pcState'));
+  function stLabel(v) { if (!v) return ''; for (var i = 0; i < ST_OPTS.length; i++) if (ST_OPTS[i].v === v) return ST_OPTS[i].label; return ''; }
+  Object.defineProperty(stEl, 'value', { configurable: true, get: function () { return stVal; }, set: function (v) { stVal = v || ''; stIn.value = stLabel(stVal); } });
+  function stRank(o, q) { if (o.label.toLowerCase().indexOf(q) === 0) return 0; if ((' ' + o.s).indexOf(' ' + q) >= 0) return 1; return o.s.indexOf(q) >= 0 ? 2 : -1; }
+  function stClose() { stList.style.display = 'none'; stIn.setAttribute('aria-expanded', 'false'); stAct = -1; }
+  function stShow(full) {
+    var q = full ? '' : stIn.value.trim().toLowerCase(), hits = [];
+    ST_OPTS.forEach(function (o, i) { var r = q ? stRank(o, q) : 0; if (r >= 0) hits.push({ o: o, r: r, i: i }); });
+    hits.sort(function (x, y) { return x.r - y.r || x.i - y.i; });
+    stHits = hits.map(function (h) { return h.o; });
+    stAct = q && stHits.length ? 0 : -1;
+    stList.innerHTML = stHits.length ? stHits.map(function (o, i) { return '<button type="button" class="st-ta-opt' + (!q && o.v === stVal ? ' on' : '') + (q && i === stAct ? ' kb' : '') + '" role="option" data-i="' + i + '"><span>' + o.label + '</span>' + (o.fed ? '<b>federal only</b>' : '') + '</button>'; }).join('')
+      : '<div class="st-ta-none">No state matches “' + stIn.value.replace(/&/g, '&amp;').replace(/</g, '&lt;') + '”.</div>';
+    stList.style.display = 'block'; stIn.setAttribute('aria-expanded', 'true');
+    var cur = stList.querySelector('.st-ta-opt.on'); stList.scrollTop = cur && !q ? Math.max(0, cur.offsetTop - 60) : 0;
+  }
+  function stPick(o) {
+    if (!o) return;
+    var changed = o.v !== stVal; stClose(); stEl.value = o.v; stIn.blur();
+    if (changed) stEl.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+  stIn.addEventListener('focus', function () { stIn.select(); stShow(true); });
+  stIn.addEventListener('input', function () { stShow(!stIn.value.trim()); });
+  stIn.addEventListener('blur', function () { setTimeout(function () { stClose(); stIn.value = stLabel(stVal); }, 150); });
+  stIn.addEventListener('keydown', function (e) {
+    var opts = stList.querySelectorAll('.st-ta-opt');
+    if (e.key === 'Escape') { stClose(); stIn.value = stLabel(stVal); return; }
+    if (!opts.length) return;
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); stAct = e.key === 'ArrowDown' ? Math.min(opts.length - 1, stAct + 1) : Math.max(0, stAct - 1); [].forEach.call(opts, function (o, i) { o.classList.toggle('kb', i === stAct); }); opts[stAct].scrollIntoView({ block: 'nearest' }); }
+    else if (e.key === 'Enter') { e.preventDefault(); stPick(stHits[stAct >= 0 ? stAct : 0]); }
+  });
+  stList.addEventListener('mousedown', function (e) { e.preventDefault(); var bt = e.target.closest('.st-ta-opt'); if (bt) stPick(stHits[+bt.getAttribute('data-i')]); });
 
   ['pcGross', 'pcRate', 'pcHours', 'pcOtHours', 'pcOtMult', 'pcYtd', 'pcCredit', 'pcKids', 'pcOthDep', 'pcLocal', 'pcStRate', 'pc4a', 'pc4b', 'pcFedExtra', 'pcAllow', 'pcStAllow', 'pcStAllow2', 'pcStExtra', 'pc401k', 'pcHealth', 'pcHsa', 'pcPreOther', 'pcRoth', 'pcPostOther', 'pcWiRaise', 'pcWiK'].forEach(function (id) { $(id).addEventListener('input', render); });
   ['pcStep2', 'pcRound', 'pcExFed', 'pcExSS', 'pcExMed', 'pcExState'].forEach(function (id) { $(id).addEventListener('change', render); });
   ['pcFreq', 'pcStatus'].forEach(function (id) { $(id).addEventListener('change', render); });
   var FORM_IDS = ['pcGross', 'pcRate', 'pcHours', 'pcOtHours', 'pcOtMult', 'pcYtd', 'pcCredit', 'pcKids', 'pcOthDep', 'pcLocal', 'pcStRate', 'pc4a', 'pc4b', 'pcFedExtra', 'pcAllow', 'pcStExtra', 'pc401k', 'pcHealth', 'pcHsa', 'pcPreOther', 'pcRoth', 'pcPostOther', 'pcWiRaise', 'pcWiK'];
-  var CHECK_IDS = ['pcStep2', 'pcRound', 'pcExFed', 'pcExSS', 'pcExMed', 'pcExState'];
+  var CHECK_IDS = ['pcNyc', 'pcStep2', 'pcRound', 'pcExFed', 'pcExSS', 'pcExMed', 'pcExState'];
   function activeBtn(id) { var b = $(id).querySelector('button.on'); return b ? b.getAttribute('data-v') : null; }
   function saveForm(target) {
     try {
-      var o = { t: Date.now(), state: stateCode(), freq: freqKey(), status: statusKey(), mode: st.mode, unit: st.unit, w4: st.w4, adv: st.adv, f: {}, c: {} };
+      var o = { t: Date.now(), state: $('pcState').value || '', freq: freqKey(), status: statusKey(), mode: st.mode, unit: st.unit, w4: st.w4, adv: st.adv, f: {}, c: {} };
       FORM_IDS.forEach(function (id) { o.f[id] = $(id).value; });
       CHECK_IDS.forEach(function (id) { o.c[id] = $(id).checked; });
       sessionStorage.setItem('pcForm', JSON.stringify(o));
@@ -14079,16 +14152,23 @@ CalcThis.initPayCalc = function () {
       if (o.w4) click('pcW4Seg', o.w4);
       if (o.freq) $('pcFreq').value = o.freq;
       if (o.status) $('pcStatus').value = o.status;
-      if (o.state !== undefined && (o.state === '' || NAMES[o.state])) $('pcState').value = o.state;
+      if (o.state !== undefined && (o.state === '' || o.state === 'NYC' || NAMES[o.state])) $('pcState').value = o.state;
       for (var id in o.f) if ($(id) && o.f[id]) $(id).value = o.f[id];
       for (var cid in o.c) if ($(cid)) $(cid).checked = !!o.c[cid];
+      if ($('pcNyc')) $('pcNyc').checked = o.state === 'NYC';
     } catch (e) {}
   }
+  var NYC_URL = '/paycheck-calculator/new-york-city/';
+  function onNyPage() { return location.pathname.indexOf('/paycheck-calculator/new-york') === 0; }
+  if ($('pcNyc')) $('pcNyc').addEventListener('change', function () { $('pcState').value = $('pcNyc').checked ? 'NYC' : 'NY'; render(); });
   $('pcState').addEventListener('change', function () {
+    var raw = $('pcState').value;
+    if (raw === 'NYC' && onNyPage()) { $('pcNyc').checked = true; syncStateFields(); render(); return; }
+    if (raw === 'NY' && onNyPage()) { $('pcNyc').checked = false; syncStateFields(); render(); return; }
     var code = stateCode(), S = code ? E.STATES[code] : null;
-    var target = S && S.slug ? '/paycheck-calculator/' + S.slug + '/' : '/paycheck-calculator/';
+    var target = raw === 'NYC' ? NYC_URL : (S && S.slug ? '/paycheck-calculator/' + S.slug + '/' : '/paycheck-calculator/');
     if (location.pathname !== target && !window.__pcNoNav) { saveForm(); location.href = target; return; }  // __pcNoNav: test hook so fuzz tests can switch states without leaving the page
-    $('pcStAllow').value = ''; $('pcStAllow2').value = ''; $('pcStRate').value = ''; syncStateFields(); render();
+    $('pcStAllow').value = ''; $('pcStAllow2').value = ''; $('pcStRate').value = ''; if ($('pcNyc') && code !== 'NY') $('pcNyc').checked = false; syncStateFields(); render();
   });
 
   $('pcEx').addEventListener('click', function () {
@@ -14125,7 +14205,9 @@ CalcThis.initPayCalc = function () {
 
   var pre = document.body.getAttribute('data-state');
   if (pre && NAMES[pre]) { $('pcState').value = pre; }
+  if (document.body.getAttribute('data-nyc') === '1' && $('pcNyc')) { $('pcNyc').checked = true; $('pcState').value = 'NYC'; }
   restoreForm();
+  if ($('pcNyc') && stateCode() === 'NY') $('pcState').value = $('pcNyc').checked ? 'NYC' : 'NY';
   syncStateFields();
   render();
 };

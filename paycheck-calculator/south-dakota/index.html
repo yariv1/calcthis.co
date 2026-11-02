@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=303">
+<link rel="stylesheet" href="/assets/style.css?v=304">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
 <script>
@@ -313,6 +313,7 @@
           <a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a>
           <a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a>
           <a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a>
           <a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a>
           <a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a>
           <a href="/paycheck-calculator/south-dakota/" class="current">South Dakota Paycheck Calculator</a>
@@ -372,13 +373,7 @@
                 <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="annual">Annually</button>
               </div>
             </div></div>
-        <div class="fld"><span class="lab">State</span><div class="csel" id="pcState" data-value="">
-              <button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false">
-                <span class="csel-val">Federal taxes only</span>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
-              </button>
-              <div class="csel-panel" role="listbox"></div>
-            </div></div>
+        <div class="fld"><span class="lab">State</span><div class="st-ta"><div class="inp"><input id="pcStateIn" type="text" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="pcStateList" aria-label="State" placeholder="Federal taxes only — type to pick a state"><input id="pcState" type="hidden" value=""></div><div class="st-ta-list" id="pcStateList" role="listbox" style="display:none"></div></div></div>
         <div class="fld"><span class="lab">Filing status</span><div class="csel" id="pcStatus" data-value="single">
               <button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false">
                 <span class="csel-val">Single or married filing separately</span>
@@ -390,6 +385,8 @@
                 <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="hoh">Head of household</button>
               </div>
             </div></div>
+
+        <div id="pcNycFld" style="display:none"><label class="dc-check" for="pcNyc"><input type="checkbox" id="pcNyc"><span>I live in New York City (adds NYC income tax)</span></label></div>
 
         <p class="add-note ln-hint" id="pcHint" style="display:none"></p>
 
@@ -487,6 +484,7 @@
         <div id="pcResults" style="display:none">
           <p class="res-tip adv-tip" id="pcTip"></p>
           <p class="res-tip adv-tip" id="pcStateNote" style="display:none"></p>
+          <div id="pcNycWrap" style="display:none"><p class="res-tip adv-tip" id="pcNycTip"></p></div>
 
           <div class="fc-grp">Where each paycheck dollar goes</div>
           <div class="ln-bar" id="pcBar"></div>
@@ -568,7 +566,7 @@
         <p>The state is already set to <strong>South Dakota</strong> above. Enter your salary or hourly rate, your pay frequency and filing status, and the result appears as you type. Under <strong>Go advanced</strong> you can match your Form W-4 (new or 2019-or-earlier), add children and dependents, a city or local tax rate, 401(k), insurance and other deductions, enter year-to-date pay and add overtime.</p>
         <p>You also get a bar showing where each paycheck dollar goes, a refund-or-owe line for tax time, a what-if for a raise or a bigger 401(k), and your pay on all ten schedules. This is an estimate of withholding, not payroll or tax advice.</p>
         <h2>Other states</h2>
-        <ul class="pc-statelist"><li><a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a></li><li><a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a></li><li><a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a></li><li><a href="/paycheck-calculator/california/">California Paycheck Calculator</a></li><li><a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a></li><li><a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a></li><li><a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a></li><li><a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a></li><li><a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a></li><li><a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a></li><li><a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a></li><li><a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a></li><li><a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a></li><li><a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a></li><li><a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a></li><li><a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a></li><li><a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a></li><li><a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a></li><li><a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a></li><li><a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a></li><li><a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a></li><li><a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a></li><li><a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a></li><li><a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a></li></ul>
+        <ul class="pc-statelist"><li><a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a></li><li><a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a></li><li><a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a></li><li><a href="/paycheck-calculator/california/">California Paycheck Calculator</a></li><li><a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a></li><li><a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a></li><li><a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a></li><li><a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a></li><li><a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a></li><li><a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a></li><li><a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a></li><li><a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a></li><li><a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a></li><li><a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a></li><li><a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a></li><li><a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a></li><li><a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a></li><li><a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a></li><li><a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a></li><li><a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a></li><li><a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a></li><li><a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a></li><li><a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a></li><li><a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a></li><li><a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a></li></ul>
         <p>More states are being added as each official formula is checked. For any other state, the <a href="/paycheck-calculator/">main paycheck calculator</a> shows federal tax and FICA.</p>
       </div>
     </div>
@@ -775,6 +773,7 @@
           <li><a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a></li>
           <li><a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a></li>
           <li><a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a></li>
           <li><a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a></li>
           <li><a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a></li>
           <li><a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a></li>
@@ -805,7 +804,7 @@
 
 </div>
 
-<script src="/assets/app.js?v=303"></script>
+<script src="/assets/app.js?v=304"></script>
 <script>CalcThis.initPayCalc();</script>
 <script src="/feedback.js" defer></script>
 </body>

@@ -176,6 +176,7 @@
 - [Nevada Paycheck Calculator](https://calcthis.co/paycheck-calculator/nevada/): take-home pay after federal tax, FICA.
 - [New Hampshire Paycheck Calculator](https://calcthis.co/paycheck-calculator/new-hampshire/): take-home pay after federal tax, FICA.
 - [New York Paycheck Calculator](https://calcthis.co/paycheck-calculator/new-york/): take-home pay after federal tax, FICA and New York state tax.
+- [New York City Paycheck Calculator](https://calcthis.co/paycheck-calculator/new-york-city/): take-home pay after federal tax, FICA, New York State and New York City income tax.
 - [North Carolina Paycheck Calculator](https://calcthis.co/paycheck-calculator/north-carolina/): take-home pay after federal tax, FICA and North Carolina state tax.
 - [Pennsylvania Paycheck Calculator](https://calcthis.co/paycheck-calculator/pennsylvania/): take-home pay after federal tax, FICA and Pennsylvania state tax.
 - [South Dakota Paycheck Calculator](https://calcthis.co/paycheck-calculator/south-dakota/): take-home pay after federal tax, FICA.

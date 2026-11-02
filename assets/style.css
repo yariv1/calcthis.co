@@ -2405,6 +2405,18 @@
   .p-stax .st-ta-opt b{flex:none;font-weight:700;color:var(--ink)}
   .p-stax .st-ta-opt:hover,.p-stax .st-ta-opt.on{background:#F5EFE4;color:var(--ink)}
   .p-stax .st-ta-none{font-size:13.5px;color:var(--muted);padding:9px 11px;line-height:1.45}
+  /* PAY-TA — paycheck state typeahead reuses the sales-tax place typeahead */
+  .p-pay .st-ta{position:relative}
+  .p-pay .st-ta-list{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:40;max-height:320px;overflow-y:auto;background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:7px;scrollbar-color:var(--amber) transparent;scrollbar-width:thin}
+  .p-pay .st-ta-opt{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;width:100%;text-align:left;font:inherit;font-size:14.5px;font-weight:500;color:var(--ink-soft);background:none;border:0;border-radius:8px;padding:9px 11px;cursor:pointer;transition:.12s}
+  .p-pay .st-ta-opt b{flex:none;font-weight:700;color:var(--ink)}
+  .p-pay .st-ta-opt:hover,.p-pay .st-ta-opt.on{background:#F5EFE4;color:var(--ink)}
+  .p-pay .st-ta-none{font-size:13.5px;color:var(--muted);padding:9px 11px;line-height:1.45}
+  /* PAY-TA-MENU — same option text as every .csel dropdown (Inter 14.5px / 500); the right-hand tag matches .csel .c */
+  .p-pay .st-ta-opt{align-items:center}
+  .p-pay .st-ta-opt b{font-size:12.5px;font-weight:700;color:var(--muted);letter-spacing:.03em;white-space:nowrap}
+  .p-pay .st-ta-opt.on{background:#F3EADA;color:var(--ink);font-weight:600}
+  .p-pay .st-ta-opt.kb{background:#F5EFE4;color:var(--ink)}
   .p-stax .st-pnote{margin:8px 0 0}
 
   /* ============================================================

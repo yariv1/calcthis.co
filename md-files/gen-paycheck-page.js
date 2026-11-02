@@ -162,14 +162,10 @@ ${o.hero}
         </div>
 
         <div class="fld"><span class="lab">Pay frequency</span>${csel('pcFreq', 'biweekly', 'Bi-weekly', freqOpts)}</div>
-        <div class="fld"><span class="lab">State</span><div class="csel" id="pcState" data-value="">
-              <button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false">
-                <span class="csel-val">Federal taxes only</span>
-                ${chev}
-              </button>
-              <div class="csel-panel" role="listbox"></div>
-            </div></div>
+        <div class="fld"><span class="lab">State</span><div class="st-ta"><div class="inp"><input id="pcStateIn" type="text" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="pcStateList" aria-label="State" placeholder="Federal taxes only — type to pick a state"><input id="pcState" type="hidden" value=""></div><div class="st-ta-list" id="pcStateList" role="listbox" style="display:none"></div></div></div>
         <div class="fld"><span class="lab">Filing status</span>${csel('pcStatus', 'single', 'Single or married filing separately', [['single', 'Single or married filing separately'], ['married', 'Married filing jointly'], ['hoh', 'Head of household']])}</div>
+
+        <div id="pcNycFld" style="display:none">${chk('pcNyc', 'I live in New York City (adds NYC income tax)')}</div>
 
         <p class="add-note ln-hint" id="pcHint" style="display:none"></p>
 
@@ -267,6 +263,7 @@ ${o.hero}
         <div id="pcResults" style="display:none">
           <p class="res-tip adv-tip" id="pcTip"></p>
           <p class="res-tip adv-tip" id="pcStateNote" style="display:none"></p>
+          <div id="pcNycWrap" style="display:none"><p class="res-tip adv-tip" id="pcNycTip"></p></div>
 
           <div class="fc-grp">Where each paycheck dollar goes</div>
           <div class="ln-bar" id="pcBar"></div>
@@ -367,7 +364,9 @@ function write(rel, html) {
 // ---------------- main page: add the by-state link list ----------------
 const SLUG = {}; liveCodes.forEach((c) => { if (E.STATES[c].slug) SLUG[c] = E.STATES[c].slug; });
 const liveSorted = liveCodes.filter((c) => SLUG[c]).sort((a, b) => (NAMES[a] < NAMES[b] ? -1 : 1));
-const stateLinks = (except) => '<ul class="pc-statelist">' + liveSorted.filter((c) => c !== except).map((c) => '<li><a href="/paycheck-calculator/' + SLUG[c] + '/">' + NAMES[c] + ' Paycheck Calculator</a></li>').join('') + '</ul>';
+const listing = [];
+liveSorted.forEach((c) => { listing.push({ c, name: NAMES[c], slug: SLUG[c], flag: c.toLowerCase(), nyc: false }); if (c === 'NY') listing.push({ c: 'NYC', name: 'New York City', slug: 'new-york-city', flag: 'nyc', nyc: true }); });
+const stateLinks = (except) => '<ul class="pc-statelist">' + listing.filter((o) => o.c !== except).map((o) => '<li><a href="/paycheck-calculator/' + o.slug + '/">' + o.name + ' Paycheck Calculator</a></li>').join('') + '</ul>';
 const cmpRows = liveSorted.map((c) => ({ c, r: stateExamples(c)[1] })).sort((x, y) => y.r.net - x.r.net);
 const cmpTable = '<p>Take-home pay on a ' + m0(65000) + ' salary, single filer, paid bi-weekly in 2026, no deductions — ranked from highest to lowest across the states with a live calculator:</p>\n    <div class="pc-tblwrap"><table class="dtable"><thead><tr><th>State</th><th>Net per paycheck</th><th>Net per year</th><th>State tax per paycheck</th></tr></thead><tbody>' + cmpRows.map((o) => '<tr><td><a href="/paycheck-calculator/' + SLUG[o.c] + '/">' + NAMES[o.c] + '</a></td><td>' + m(o.r.net) + '</td><td>' + m0(o.r.net * 26) + '</td><td>' + m(o.r.state + o.r.prog) + '</td></tr>').join('') + '</tbody></table></div>';
 const byState = '\n    <h2 style="margin-top:36px">Take-home pay on ' + m0(65000) + ' by state</h2>\n    ' + cmpTable + '\n    <h2 style="margin-top:36px">Paycheck calculator by state</h2>\n    ' + stateLinks() + '\n';
@@ -387,7 +386,7 @@ console.log('main page written; live states', nLive, 'pending', pending.length);
 // ---------------- state pages ----------------
 const FORM = { AL: 'Form A-4', AZ: 'Form A-4', CA: 'Form DE 4', CO: 'Form DR 0004 (optional — without it your federal W-4 is used)', GA: 'Form G-4', IA: 'the IA W-4', IL: 'Form IL-W-4', KY: 'Form K-4', MI: 'Form MI-W4', MN: 'Form W-4MN', MO: 'Form MO W-4', MT: 'Form MW-4', NC: 'Form NC-4', NY: 'Form IT-2104', PA: '', VA: 'Form VA-4' };
 const LOCALS = {
-  NY: 'New York City and Yonkers residents also pay a local income tax, which this calculator does not include.',
+  NY: 'New York City residents also pay a city income tax — tick “I live in New York City” in the calculator or use the New York City paycheck calculator. Yonkers residents also pay a local tax, which is not included.',
   PA: 'Most Pennsylvania workers also pay a local earned income tax (commonly about 1%) and Philadelphia has its own wage tax; none of these are included here.',
   MI: 'Detroit and some other Michigan cities charge a city income tax, which is not included here.',
   MO: 'St. Louis and Kansas City charge a 1% earnings tax, which is not included here.',
@@ -463,7 +462,7 @@ function stateContent(c, faqs2) {
         <p><strong>${m0(65000)} a year in ${n}</strong> (single, bi-weekly, 2026) is <strong>${m(ex[1].net)} a paycheck</strong>, about ${m0(ex[1].net * 26)} a year. <strong>${m0(100000)}</strong> is <strong>${m(ex[2].net)}</strong> a paycheck. Updated for the 2026 tax year using the IRS Publication 15-T method${S.method === 'none' ? '' : ' and the official ' + n + ' withholding formula'}.</p>
         <h2>How ${n} paycheck tax works</h2>
         <p>${fact(c)}</p>
-        <p>${LOCALS[c] || 'City, county and school-district taxes are not included.'} Under Go advanced you can add a city or local tax rate as an estimate.</p>
+        <p>${c === 'NY' ? 'Live in New York City? Tick “I live in New York City” above, or use the <a href="/paycheck-calculator/new-york-city/">New York City paycheck calculator</a>, to add the city’s resident income tax. Yonkers and other local taxes are not included.' : (LOCALS[c] || 'City, county and school-district taxes are not included.')} Under Go advanced you can add a city or local tax rate as an estimate.</p>
         <h2>${n} paycheck examples</h2>
         <p>Single filer unless marked, paid bi-weekly in 2026, no extra withholding, no deductions. Amounts are per paycheck:</p>
         <div class="pc-tblwrap"><table class="dtable"><thead><tr><th>Pay</th><th>Federal</th><th>FICA</th><th>${n}</th><th>Net pay</th></tr></thead><tbody>${rowsHtml}</tbody></table></div>
@@ -507,16 +506,78 @@ liveSorted.forEach((c) => {
 });
 console.log('state pages written', nState);
 
+// ---------------- New York City page ----------------
+(function () {
+  const NYC_URL = 'https://calcthis.co/paycheck-calculator/new-york-city/';
+  const row = (a, st, ppy) => pc(base(a / (ppy || 26), ppy || 26, { fed: { w4: 'new', status: st }, state: { code: 'NY', status: st, allowances: 0, allowances2: 0 }, nyc: { on: true, exemptions: 0 } }));
+  const rowNo = (a, st, ppy) => pc(base(a / (ppy || 26), ppy || 26, { fed: { w4: 'new', status: st }, state: { code: 'NY', status: st, allowances: 0, allowances2: 0 } }));
+  const e65 = row(65000, 'single'), e65n = rowNo(65000, 'single'), e100 = row(100000, 'single'), e40 = row(40000, 'single'), e65m = row(65000, 'married');
+  const mo65 = row(65000, 'single', 12), mo100 = row(100000, 'single', 12), mo40 = row(40000, 'single', 12);
+  const sample = [[40000, 'single'], [65000, 'single'], [100000, 'single'], [150000, 'single'], [65000, 'married'], [100000, 'married'], [150000, 'married']].map(([a, st]) => ({ a, st, p: row(a, st) }));
+  const rowsHtml = sample.map((r) => '<tr><td>' + m0(r.a) + (r.st === 'single' ? '' : ' married') + '</td><td>' + m(r.p.fed) + '</td><td>' + m(r.p.ss + r.p.med + r.p.addl) + '</td><td>' + m(r.p.state + r.p.programTotal) + '</td><td>' + m(r.p.nyc) + '</td><td>' + m(r.p.net) + '</td></tr>').join('');
+  const hrRate = 30, hrWk = hrRate * 40, hr = pc(base(hrWk, 52, { fed: { w4: 'new', status: 'single' }, state: { code: 'NY', status: 'single', allowances: 0, allowances2: 0 }, nyc: { on: true, exemptions: 0 } }));
+  const faqsN = [
+    ['How much is taken out of a $65,000 salary in New York City?', `On a ${m0(65000)} salary paid bi-weekly (${m(65000 / 26)} gross) for a single filer with no exemptions, New York City withholds ${m(e65.nyc)} of city income tax, New York State ${m(e65.state)} plus ${m(e65.programTotal)} of disability and paid family leave, federal income tax ${m(e65.fed)}, Social Security ${m(e65.ss)} and Medicare ${m(e65.med)}. Take-home pay is ${m(e65.net)} a paycheck, about ${m0(e65.net * 26)} a year.`],
+    ['What is the take-home pay on $100,000 in NYC?', `A single filer on ${m0(100000)} a year paid bi-weekly in New York City takes home ${m(e100.net)} a paycheck (about ${m0(e100.net * 26)} a year), after ${m(e100.nyc)} of city tax and ${m(e100.state)} of state tax per paycheck. Paid monthly the same salary takes home ${m(mo100.net)} a month.`],
+    ['What is the monthly take-home pay on $65,000 in NYC?', `Paid monthly, ${m0(65000)} a year (${m(mo65.gross)} gross) takes home ${m(mo65.net)} a month for a single filer in New York City: federal tax ${m(mo65.fed)}, Social Security ${m(mo65.ss)}, Medicare ${m(mo65.med)}, New York State tax ${m(mo65.state)} plus ${m(mo65.programTotal)} of state programs, and New York City tax ${m(mo65.nyc)}. For ${m0(40000)} a year it is ${m(mo40.net)} a month.`],
+    ['How much does New York City income tax take from a paycheck?', `On ${m0(65000)} a year paid bi-weekly the city tax withholding is ${m(e65.nyc)} a paycheck, about ${m0(e65.nyc * 26)} a year, which is ${((e65.nyc / e65.gross) * 100).toFixed(1)}% of gross pay. Without the city tax the same single filer would take home ${m(e65n.net)} a paycheck instead of ${m(e65.net)}.`],
+    ['Do I pay NYC income tax if I live outside the city?', `The New York City withholding tables are for New York City residents, so someone who works in the city but lives elsewhere, for example in New Jersey or on Long Island, does not have NYC income tax withheld. Untick “I live in New York City” in the calculator to see New York State tax only. Yonkers has its own local tax, which is not included.`],
+    ['How is NYC withholding calculated?', `New York City uses the official withholding method published by the New York State Tax Department (NYS-50-T-NYC, effective January 1 to December 31, 2026): subtract a deduction allowance (${m0(5000)} a year single, ${m0(5500)} married) plus ${m0(1000)} for each exemption claimed on Form IT-2104, then apply rates from 2.05% to 4.25% in six steps. Single and married use the same rate steps. This calculator follows the per-paycheck tables for daily, weekly, bi-weekly, semi-monthly and monthly pay.`],
+    ['Does the calculator work for hourly pay in NYC?', `Yes — switch to Hourly. At ${m0(hrRate)} an hour for 40 hours a week your gross is ${m(hrWk)} a week and a single filer takes home ${m(hr.net)} a week after federal, New York State and New York City tax, Social Security and Medicare.`]
+  ];
+  const title = 'NYC Paycheck & Take-Home Pay Calculator 2026 (New York City)';
+  const desc = 'NYC take home pay calculator: ' + m0(65000) + ' a year is ' + m(e65.net) + ' bi-weekly after federal, state and New York City tax. 2026 rates.';
+  if (title.length > 60 || desc.length > 158) { console.error('NYC SEO length', title.length, desc.length); process.exit(1); }
+  const app = Object.assign({}, jsonLdApp, { dateModified: '2026-11-02', name: 'New York City Paycheck Calculator', url: NYC_URL, description: 'NYC paycheck and take home pay calculator for salary and hourly pay: federal income tax, Social Security, Medicare, New York State tax, New York City resident income tax, deductions and overtime.' });
+  const faq = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faqsN.map((q) => ({ '@type': 'Question', name: q[0], acceptedAnswer: { '@type': 'Answer', text: q[1] } })) };
+  const crumbs = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'CalcThis', item: 'https://calcthis.co/' },
+    { '@type': 'ListItem', position: 2, name: 'Paycheck Calculator', item: 'https://calcthis.co/paycheck-calculator/' },
+    { '@type': 'ListItem', position: 3, name: 'New York City', item: NYC_URL }] };
+  const hero = `  <section class="hero">
+    <div class="eyebrow">New York City · 2026 tax rates</div>
+    <h1>New York City (NYC) Paycheck &amp; <span style="white-space:nowrap">Take-Home</span> Pay Calculator</h1>
+    <p>This NYC take home pay calculator shows your <strong>take-home pay</strong> after <strong>federal income tax, Social Security, Medicare, New York State tax</strong> and <strong>New York City income tax</strong>. On a ${m0(65000)} salary paid bi-weekly a single filer takes home about <strong>${m(e65.net)}</strong> a paycheck.</p>
+  </section>`;
+  const content = `  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>NYC take-home pay at a glance</h2>
+        <p><strong>${m0(65000)} a year in New York City</strong> (single, bi-weekly, 2026) is <strong>${m(e65.net)} a paycheck</strong>, about ${m0(e65.net * 26)} a year. <strong>${m0(100000)}</strong> is <strong>${m(e100.net)}</strong> a paycheck. Of the ${m(e65.gross)} gross, ${m(e65.nyc)} goes to New York City income tax and ${m(e65.state + e65.programTotal)} to New York State.</p>
+        <h2>How New York City income tax works</h2>
+        <p>New York City residents pay a city income tax on top of New York State tax. Employers withhold it with the official method in the New York State Tax Department publication NYS-50-T-NYC, effective January 1 to December 31, 2026. It subtracts a deduction allowance of ${m0(5000)} a year for a single filer (${m0(5500)} married) plus ${m0(1000)} for each exemption on Form IT-2104, then applies steps from 2.05% to 4.25%. The exemptions you enter for New York State are used for the city too.</p>
+        <p>The calculator follows the per-paycheck tables for daily, weekly, bi-weekly, semi-monthly and monthly pay and checks against the examples printed in the publication. State disability insurance and paid family leave are included as for any New York paycheck.</p>
+        <h2>NYC paycheck examples</h2>
+        <p>Paid bi-weekly in 2026, no exemptions, no deductions. Amounts are per paycheck:</p>
+        <div class="pc-tblwrap"><table class="dtable"><thead><tr><th>Pay</th><th>Federal</th><th>FICA</th><th>NY State</th><th>NYC</th><th>Net pay</th></tr></thead><tbody>${rowsHtml}</tbody></table></div>
+        <p>FICA is Social Security plus Medicare. NY State includes disability and paid family leave.</p>
+      </div>
+      <div>
+        <h2>Use the NYC take home pay calculator</h2>
+        <p>The state is set to <strong>New York City</strong> above. Enter your salary or hourly rate, pay frequency and filing status and the result appears as you type, with the city tax as its own line and a note on what you would keep outside the city. If you live outside New York City, untick <strong>I live in New York City</strong> to see New York State tax only. Under <strong>Go advanced</strong> you can match your W-4, add children and dependents, 401(k), insurance and other deductions, year-to-date pay and overtime.</p>
+        <p>This is an estimate of withholding, not payroll or tax advice. Yonkers and other local taxes are not included.</p>
+        <h2>Other states</h2>
+        ${stateLinks('NYC')}
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions about NYC paychecks</h2>
+${faqsN.map((q) => `    <details class="faq"><summary>${q[0]}</summary><p>${q[1]}</p></details>`).join('\n')}
+  </section>`;
+  write('paycheck-calculator/new-york-city/index.html', pageHtml({ title, desc, ogTitle: title, url: NYC_URL, app, faq, extraLd: [crumbs], hero, content, bodyAttr: ' data-state="NY" data-nyc="1"' }));
+  console.log('NYC page written');
+})();
+
 // ---------------- sitemap (idempotent) ----------------
 (function () {
   const f = ROOT + 'sitemap.xml'; let sm = fs.readFileSync(f, 'utf8'); const crlf = sm.includes('\r\n'); sm = sm.replace(/\r\n/g, '\n');
   const today = new Date().toISOString().slice(0, 10); let add = '';
-  liveSorted.forEach((c) => { const u = 'https://calcthis.co/paycheck-calculator/' + SLUG[c] + '/'; if (!sm.includes('<loc>' + u + '</loc>')) add += '  <url>\n    <loc>' + u + '</loc>\n    <lastmod>' + today + '</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.7</priority>\n  </url>\n'; });
+  listing.forEach((o) => { const u = 'https://calcthis.co/paycheck-calculator/' + o.slug + '/'; if (!sm.includes('<loc>' + u + '</loc>')) add += '  <url>\n    <loc>' + u + '</loc>\n    <lastmod>' + today + '</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.7</priority>\n  </url>\n'; });
   if (add) { sm = sm.replace('</urlset>', () => add + '</urlset>'); fs.writeFileSync(f, crlf ? sm.replace(/\n/g, '\r\n') : sm); console.log('sitemap: added', (add.match(/<url>/g) || []).length); }
   // llms.txt: keep a "Paycheck calculators by state" section current
   const lf = ROOT + 'llms.txt'; let lt = fs.readFileSync(lf, 'utf8'); const lcrlf = lt.includes('\r\n'); lt = lt.replace(/\r\n/g, '\n');
   lt = lt.replace(/\n## Paycheck calculators by state\n[\s\S]*?(?=\n## |$)/, '');
-  lt = lt.trimEnd() + '\n\n## Paycheck calculators by state\n' + liveSorted.map((c) => '- [' + NAMES[c] + ' Paycheck Calculator](https://calcthis.co/paycheck-calculator/' + SLUG[c] + '/): take-home pay after federal tax, FICA' + (E.STATES[c].method === 'none' ? '' : ' and ' + NAMES[c] + ' state tax') + '.').join('\n') + '\n';
+  lt = lt.trimEnd() + '\n\n## Paycheck calculators by state\n' + listing.map((o) => '- [' + o.name + ' Paycheck Calculator](https://calcthis.co/paycheck-calculator/' + o.slug + '/): take-home pay after federal tax, FICA' + (o.nyc ? ', New York State and New York City income tax' : (E.STATES[o.c].method === 'none' ? '' : ' and ' + o.name + ' state tax')) + '.').join('\n') + '\n';
   fs.writeFileSync(lf, lcrlf ? lt.replace(/\n/g, '\r\n') : lt);
 })();
 console.log(JSON.stringify({ ex1: ex1.net, ex2: ex2.net, ex3: ex3.net, exM: exM.fed, ex401: ex401.net, ssStop, jan: big[0].net, dec: big[11].net, exH: exH.net, exOT: exOT.net }));
@@ -524,14 +585,14 @@ console.log(JSON.stringify({ ex1: ex1.net, ex2: ex2.net, ex3: ex3.net, exM: exM.
 // ---------------- nav + footer: "Paycheck Calculators" section (partials) ----------------
 (function () {
   function edit(rel, fn) { const f = ROOT + rel; let s = fs.readFileSync(f, 'utf8'); const crlf = s.includes('\r\n'); s = s.replace(/\r\n/g, '\n'); const o = s; s = fn(s); if (s !== o) { fs.writeFileSync(f, crlf ? s.replace(/\n/g, '\r\n') : s); console.log('partial updated', rel); } }
-  const hdrLinks = '          <a href="/paycheck-calculator/">Paycheck Calculator (all states)</a>\n' + liveSorted.map((c) => '          <a href="/paycheck-calculator/' + SLUG[c] + '/">' + NAMES[c] + ' Paycheck Calculator</a>').join('\n') + '\n';
+  const hdrLinks = '          <a href="/paycheck-calculator/">Paycheck Calculator (all states)</a>\n' + listing.map((o) => '          <a href="/paycheck-calculator/' + o.slug + '/">' + o.name + ' Paycheck Calculator</a>').join('\n') + '\n';
   const hdrBlock = '<!--PAYNAV:START-->\n        <div class="menu-col">\n          <span class="menu-col-head">Paycheck Calculators</span>\n' + hdrLinks + '        </div>\n        <!--PAYNAV:END-->';
   edit('partials/header.html', (s) => {
     if (s.includes('<!--PAYNAV:START-->')) return s.replace(/<!--PAYNAV:START-->[\s\S]*?<!--PAYNAV:END-->/, () => hdrBlock);
     s = s.replace('          <a href="/paycheck-calculator/">Paycheck</a>\n        </div>\n', () => '        </div>\n        ' + hdrBlock + '\n');
     return s;
   });
-  const ftrLinks = '          <li><a href="/paycheck-calculator/">Paycheck Calculator (all states)</a></li>\n' + liveSorted.map((c) => '          <li><a href="/paycheck-calculator/' + SLUG[c] + '/">' + NAMES[c] + ' Paycheck Calculator</a></li>').join('\n') + '\n';
+  const ftrLinks = '          <li><a href="/paycheck-calculator/">Paycheck Calculator (all states)</a></li>\n' + listing.map((o) => '          <li><a href="/paycheck-calculator/' + o.slug + '/">' + o.name + ' Paycheck Calculator</a></li>').join('\n') + '\n';
   const ftrBlock = '<!--PAYFOOT:START-->\n      <div class="footer-col footer-col--wide">\n        <button class="footer-col-btn" aria-expanded="false" type="button">\n          <span class="fttl"><span class="ft1">Paycheck</span> <span class="ft2">Calculators</span></span>\n          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>\n        </button>\n        <ul class="footer-links">\n' + ftrLinks + '        </ul>\n      </div>\n      <!--PAYFOOT:END-->';
   edit('partials/footer.html', (s) => {
     if (s.includes('<!--PAYFOOT:START-->')) return s.replace(/<!--PAYFOOT:START-->[\s\S]*?<!--PAYFOOT:END-->/, () => ftrBlock);
@@ -552,7 +613,7 @@ console.log(JSON.stringify({ ex1: ex1.net, ex2: ex2.net, ex3: ex3.net, exM: exM.
   const f = ROOT + 'index.html'; let h = fs.readFileSync(f, 'utf8'); const crlf = h.includes('\r\n'); h = h.replace(/\r\n/g, '\n'); const o = h;
   const allIco = '<svg width="30" height="30" viewBox="0 0 32 32" fill="none"><rect x="4" y="8" width="24" height="16" rx="2.5" fill="#EFE7D8" stroke="#8F5C13" stroke-width="1.4"/><circle cx="16" cy="16" r="3.6" fill="#B5761F"/><path d="M8 12h3M21 20h3" stroke="#37503F" stroke-width="1.5" stroke-linecap="round"/></svg>';
   const cubes = '<!--PAYCUBES:START-->\n    <div class="st-cubes">\n      <a class="st-cube st-all" href="/paycheck-calculator/"><span class="st-ico" aria-hidden="true">' + allIco + '</span><span class="st-name">All states</span><span class="st-sub">Paycheck Calculator</span></a>\n'
-    + liveSorted.map((c) => '      <a class="st-cube" href="/paycheck-calculator/' + SLUG[c] + '/"><img src="/assets/flags/' + c.toLowerCase() + '.webp" width="60" height="40" alt="' + NAMES[c] + ' paycheck calculator — flag of ' + NAMES[c] + '" loading="lazy"><span class="st-name">' + NAMES[c] + '</span><span class="st-sub">Paycheck Calculator</span></a>').join('\n')
+    + listing.map((o) => '      <a class="st-cube" href="/paycheck-calculator/' + o.slug + '/"><img src="/assets/flags/' + o.flag + '.webp" width="60" height="40" alt="' + o.name + ' paycheck calculator' + (o.nyc ? '' : ' — flag of ' + o.name) + '" loading="lazy"><span class="st-name">' + o.name + '</span><span class="st-sub">Paycheck Calculator</span></a>').join('\n')
     + '\n    </div>\n    <!--PAYCUBES:END-->';
   if (h.includes('<!--PAYCUBES:START-->')) h = h.replace(/<!--PAYCUBES:START-->[\s\S]*?<!--PAYCUBES:END-->/, () => cubes);
   else {
