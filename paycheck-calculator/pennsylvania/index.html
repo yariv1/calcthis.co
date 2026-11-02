@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=302">
+<link rel="stylesheet" href="/assets/style.css?v=303">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
 <script>
@@ -85,7 +85,7 @@
       "name": "Does this Pennsylvania calculator include local taxes?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Most Pennsylvania workers also pay a local earned income tax (commonly about 1%) and Philadelphia has its own wage tax; none of these are included here. State and federal figures follow the 2026 official withholding methods."
+        "text": "Most Pennsylvania workers also pay a local earned income tax (commonly about 1%) and Philadelphia has its own wage tax; none of these are included here. Open Go advanced to add a local tax rate as an estimate. State and federal figures follow the 2026 official withholding methods."
       }
     },
     {
@@ -403,7 +403,12 @@
           <div class="fld"><span class="lab">Which W-4 form</span><span class="seg" id="pcW4Seg" role="group" aria-label="Form W-4 version"><button class="on" type="button" data-v="new">2020 or later</button><button type="button" data-v="old">2019 or earlier</button></span></div>
           <div id="pcW4New">
             <label class="dc-check" for="pcStep2"><input type="checkbox" id="pcStep2"><span>Step 2: two jobs, or spouse also works (box checked)</span></label>
-            <div class="fld"><label class="lab" for="pcCredit">Step 3 dependents amount <span class="unit">$</span></label><div class="inp"><input id="pcCredit" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 2000"></div></div>
+            <div class="ln-two">
+              <div class="fld"><label class="lab" for="pcKids">Children under 17</label><div class="inp"><input id="pcKids" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 2"></div></div>
+              <div class="fld"><label class="lab" for="pcOthDep">Other dependents</label><div class="inp"><input id="pcOthDep" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 1"></div></div>
+            </div>
+            <p class="add-note" style="margin:-4px 0 12px">Fills W-4 Step 3 for you: $2,200 for each child under 17 and $500 for each other dependent.</p>
+            <div class="fld"><label class="lab" for="pcCredit">Other Step 3 credits <span class="unit">$ a year</span></label><div class="inp"><input id="pcCredit" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 500"></div></div>
             <div class="ln-two">
               <div class="fld"><label class="lab" for="pc4a">Step 4(a) other income <span class="unit">$</span></label><div class="inp"><input id="pc4a" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 1000"></div></div>
               <div class="fld"><label class="lab" for="pc4b">Step 4(b) deductions <span class="unit">$</span></label><div class="inp"><input id="pc4b" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 5000"></div></div>
@@ -414,6 +419,16 @@
             <div class="fld"><label class="lab" for="pcAllow">Allowances (line 5 of the old form)</label><div class="inp"><input id="pcAllow" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 2"></div></div>
           </div>
           <div class="fld"><label class="lab" for="pcFedExtra">Extra federal withholding <span class="unit">$ per paycheck</span></label><div class="inp"><input id="pcFedExtra" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 25"></div></div>
+
+          <div class="fc-grp">City or local tax</div>
+          <div class="fld"><label class="lab" for="pcLocal">City or local income tax rate <span class="unit">%</span></label><div class="inp"><input id="pcLocal" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 1.5"></div></div>
+          <p class="add-note" style="margin:-4px 0 12px">Your city’s or county’s rate, taken from pay after before-tax deductions. An estimate — check your city’s own rules.</p>
+
+          <div id="pcStRateFld">
+            <div class="fc-grp">State income tax estimate</div>
+            <div class="fld"><label class="lab" for="pcStRate">Your state’s income tax rate <span class="unit">%</span></label><div class="inp"><input id="pcStRate" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 4.5"></div></div>
+            <p class="add-note" style="margin:-4px 0 12px">This state’s exact formula isn’t built yet. Type its rate (see your state revenue department) for a flat estimate; leave it empty for federal tax only.</p>
+          </div>
 
           <div id="pcStGrp">
             <div class="fc-grp">State withholding form</div>
@@ -479,6 +494,9 @@
 
           <table class="dtable ln-terms" id="pcTable"></table>
 
+          <div class="fc-grp">Refund or owe at tax time</div>
+          <p class="res-tip adv-tip" id="pcRefund"></p>
+
           <div class="fc-grp">What if…</div>
           <div class="ln-two">
             <div class="fld"><label class="lab" for="pcWiRaise">I get a raise of <span class="unit">%</span></label><div class="inp"><input id="pcWiRaise" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 5"></div></div>
@@ -539,7 +557,7 @@
         <p><strong>$65,000 a year in Pennsylvania</strong> (single, bi-weekly, 2026) is <strong>$2,014.10 a paycheck</strong>, about $52,367 a year. <strong>$100,000</strong> is <strong>$2,924.62</strong> a paycheck. Updated for the 2026 tax year using the IRS Publication 15-T method and the official Pennsylvania withholding formula.</p>
         <h2>How Pennsylvania paycheck tax works</h2>
         <p>Pennsylvania taxes wages at a flat 3.07% with no standard deduction and no allowances, and employees also pay 0.07% of gross wages toward unemployment compensation. Unlike most states, Pennsylvania does not exempt 401(k) contributions from state income tax.</p>
-        <p>Most Pennsylvania workers also pay a local earned income tax (commonly about 1%) and Philadelphia has its own wage tax; none of these are included here.</p>
+        <p>Most Pennsylvania workers also pay a local earned income tax (commonly about 1%) and Philadelphia has its own wage tax; none of these are included here. Under Go advanced you can add a city or local tax rate as an estimate.</p>
         <h2>Pennsylvania paycheck examples</h2>
         <p>Single filer unless marked, paid bi-weekly in 2026, no extra withholding, no deductions. Amounts are per paycheck:</p>
         <div class="pc-tblwrap"><table class="dtable"><thead><tr><th>Pay</th><th>Federal</th><th>FICA</th><th>Pennsylvania</th><th>Net pay</th></tr></thead><tbody><tr><td>$30,000</td><td>$54.62</td><td>$88.27</td><td>$36.23</td><td>$974.73</td></tr><tr><td>$40,000</td><td>$100.77</td><td>$117.69</td><td>$48.31</td><td>$1,271.69</td></tr><tr><td>$50,000</td><td>$146.92</td><td>$147.12</td><td>$60.38</td><td>$1,568.65</td></tr><tr><td>$65,000</td><td>$216.15</td><td>$191.25</td><td>$78.50</td><td>$2,014.10</td></tr><tr><td>$75,000</td><td>$295.00</td><td>$220.67</td><td>$90.58</td><td>$2,278.37</td></tr><tr><td>$100,000</td><td>$506.54</td><td>$294.23</td><td>$120.77</td><td>$2,924.62</td></tr><tr><td>$150,000</td><td>$951.31</td><td>$441.35</td><td>$181.15</td><td>$4,195.42</td></tr><tr><td>$65,000 married</td><td>$132.31</td><td>$191.25</td><td>$78.50</td><td>$2,097.94</td></tr><tr><td>$100,000 married</td><td>$293.85</td><td>$294.23</td><td>$120.77</td><td>$3,137.31</td></tr></tbody></table></div>
@@ -547,8 +565,8 @@
       </div>
       <div>
         <h2>Use the Pennsylvania take home pay calculator</h2>
-        <p>The state is already set to <strong>Pennsylvania</strong> above. Enter your salary or hourly rate, your pay frequency and filing status, and the result appears as you type. Under <strong>Go advanced</strong> you can match your Form W-4 (new or 2019-or-earlier), add 401(k), insurance and other deductions, enter year-to-date pay and add overtime.</p>
-        <p>You also get a bar showing where each paycheck dollar goes, a what-if for a raise or a bigger 401(k), and your pay on all ten schedules. This is an estimate of withholding, not payroll or tax advice.</p>
+        <p>The state is already set to <strong>Pennsylvania</strong> above. Enter your salary or hourly rate, your pay frequency and filing status, and the result appears as you type. Under <strong>Go advanced</strong> you can match your Form W-4 (new or 2019-or-earlier), add children and dependents, a city or local tax rate, 401(k), insurance and other deductions, enter year-to-date pay and add overtime.</p>
+        <p>You also get a bar showing where each paycheck dollar goes, a refund-or-owe line for tax time, a what-if for a raise or a bigger 401(k), and your pay on all ten schedules. This is an estimate of withholding, not payroll or tax advice.</p>
         <h2>Other states</h2>
         <ul class="pc-statelist"><li><a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a></li><li><a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a></li><li><a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a></li><li><a href="/paycheck-calculator/california/">California Paycheck Calculator</a></li><li><a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a></li><li><a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a></li><li><a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a></li><li><a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a></li><li><a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a></li><li><a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a></li><li><a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a></li><li><a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a></li><li><a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a></li><li><a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a></li><li><a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a></li><li><a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a></li><li><a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a></li><li><a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a></li><li><a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a></li><li><a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a></li><li><a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a></li><li><a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a></li><li><a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a></li><li><a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a></li></ul>
         <p>More states are being added as each official formula is checked. For any other state, the <a href="/paycheck-calculator/">main paycheck calculator</a> shows federal tax and FICA.</p>
@@ -560,7 +578,7 @@
     <details class="faq"><summary>What is the monthly take-home pay on a $65,000 salary in Pennsylvania?</summary><p>A single filer on $65,000 a year paid monthly in Pennsylvania takes home about $4,363.88 a month ($5,416.67 gross): federal income tax $468.33, Social Security $335.83, Medicare $78.54, Pennsylvania income tax $166.29 and $3.79 of state programs.</p></details>
     <details class="faq"><summary>Does Pennsylvania tax paychecks differently for married workers?</summary><p>Federal withholding does, and Pennsylvania uses its own married tables or deductions. For a $65,000 salary paid bi-weekly, a married filer in Pennsylvania takes home $2,097.94 a paycheck versus $2,014.10 for a single filer.</p></details>
     <details class="faq"><summary>Which form do I fill out for Pennsylvania withholding?</summary><p>Pennsylvania withholding is a flat rate with no state allowance form — only your federal Form W-4 matters for federal tax.</p></details>
-    <details class="faq"><summary>Does this Pennsylvania calculator include local taxes?</summary><p>Most Pennsylvania workers also pay a local earned income tax (commonly about 1%) and Philadelphia has its own wage tax; none of these are included here. State and federal figures follow the 2026 official withholding methods.</p></details>
+    <details class="faq"><summary>Does this Pennsylvania calculator include local taxes?</summary><p>Most Pennsylvania workers also pay a local earned income tax (commonly about 1%) and Philadelphia has its own wage tax; none of these are included here. Open Go advanced to add a local tax rate as an estimate. State and federal figures follow the 2026 official withholding methods.</p></details>
     <details class="faq"><summary>What is my take-home pay on $40,000 or $100,000 in Pennsylvania?</summary><p>Single filer, paid bi-weekly: $40,000 a year gives $1,271.69 a paycheck; $100,000 a year gives $2,924.62 a paycheck.</p></details>
     <details class="faq"><summary>What is $30,000 a year after taxes in Pennsylvania?</summary><p>A single filer paid bi-weekly in Pennsylvania on $30,000 a year takes home about $974.73 a paycheck, roughly $25,343 a year after federal income tax, Pennsylvania tax, Social Security and Medicare. That is an effective total tax rate of about 15.5%.</p></details>
     <details class="faq"><summary>What is $50,000 a year after taxes in Pennsylvania?</summary><p>A single filer paid bi-weekly in Pennsylvania on $50,000 a year takes home about $1,568.65 a paycheck, roughly $40,785 a year after federal income tax, Pennsylvania tax, Social Security and Medicare. That is an effective total tax rate of about 18.4%.</p></details>
@@ -787,7 +805,7 @@
 
 </div>
 
-<script src="/assets/app.js?v=302"></script>
+<script src="/assets/app.js?v=303"></script>
 <script>CalcThis.initPayCalc();</script>
 <script src="/feedback.js" defer></script>
 </body>

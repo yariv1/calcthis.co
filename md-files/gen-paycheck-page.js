@@ -32,6 +32,8 @@ const hourWeekly = 22 * 40, hourAnnual = hourWeekly * 52;
 const exH = pc(base(hourAnnual / 52, 52));
 const otWeekly = 22 * 40 + 22 * 1.5 * 5;
 const exOT = pc(base(otWeekly, 52));
+const exKids = pc(base(65000 / 26, 26, { fed: { w4: 'new', status: 'single', credit: 2 * E.CHILD_CREDIT } }));
+const exLocal = pc(base(65000 / 26, 26, { localPct: 1.5 }));
 const exMo65 = pc(base(65000 / 12, 12)), exMo100 = pc(base(100000 / 12, 12)), exMo40 = pc(base(40000 / 12, 12));
 
 const liveCodes = Object.keys(E.STATES).filter((c) => E.STATES[c].method !== 'pending');
@@ -49,13 +51,16 @@ const faqs = [
   ['Does a 401(k) lower my paycheck taxes?', `A traditional 401(k) lowers your federal and most state income tax but not Social Security or Medicare. Putting 6% of the ${m0(65000)} salary (${m(65000 / 26 * 0.06)} a paycheck) into a 401(k) lowers take-home only from ${m(ex1.net)} to ${m(ex401.net)} — ${m(ex1.net - ex401.net)} less, because federal tax drops from ${m(ex1.fed)} to ${m(ex401.fed)}. Type “6%” in the 401(k) field under Go advanced to try it.`],
   ['When does Social Security tax stop?', `Social Security (6.2%) is withheld only on the first ${m0(E.SS_BASE)} of wages in 2026. On a ${m0(250000)} salary paid monthly you pay it through ${MONTHS[ssStop - 1]} and part of ${MONTHS[ssStop]}, then it stops and your take-home jumps — ${m(big[0].net)} in January versus ${m(big[11].net)} in December. The yearly chart under your result marks the paycheck where it stops.`],
   ['How much is my monthly take-home pay?', `Choose “Monthly” as your pay frequency, or look at the monthly row in the table of all ten pay schedules. For a single filer in a state with no income tax, ${m0(40000)} a year takes home ${m(exMo40.net)} a month, ${m0(65000)} a year takes home ${m(exMo65.net)} a month and ${m0(100000)} a year takes home ${m(exMo100.net)} a month after federal income tax, Social Security and Medicare. Pick your state to include state tax.`],
+  ['How do children and dependents change my paycheck?', `Under Go advanced, type your children under 17 and other dependents. The calculator fills Form W-4 Step 3 with $2,200 for each child and $500 for each other dependent, so your employer withholds less federal income tax. Those W-4 amounts assume income of $200,000 or less ($400,000 if married filing jointly). For example, a single filer on ${m0(65000)} a year paid bi-weekly with two children takes home ${m(exKids.net)} a paycheck instead of ${m(ex1.net)}.`],
+  ['Can I add city or local income tax?', `Yes. Under Go advanced, type your city or county income tax rate in City or local tax. The calculator takes that percentage from your pay after before-tax deductions and shows it as its own line. It is an estimate — check your city’s own withholding rules. At 1.5% on ${m0(65000)} a year paid bi-weekly the local tax is ${m(exLocal.local)} a paycheck.`],
+  ['Will I get a refund or owe tax?', `Under your result, the refund or owe line compares the federal income tax your paychecks withhold over the year with the federal tax on your return (standard deduction, the Step 3 credits you entered, this job only). A single filer with a standard W-4 usually lands near zero; checking the two-jobs box or adding extra withholding builds a refund, while claiming too many credits means a bill. It also shows how much extra to withhold per paycheck to break even.`],
   ['Does the calculator work for hourly pay and overtime?', `Yes — switch to Hourly. At $22 an hour for 40 hours a week your gross is ${m(hourWeekly)} a week (${m0(hourAnnual)} a year) and you take home ${m(exH.net)} a week as a single filer with no state tax. Under Go advanced, add overtime hours: 5 hours a week at 1.5× brings gross to ${m(otWeekly)} and take-home to ${m(exOT.net)}.`]
 ];
 
 const jsonLdApp = {
   '@context': 'https://schema.org', '@type': 'WebApplication', name: 'Paycheck Calculator', url: 'https://calcthis.co/paycheck-calculator/', applicationCategory: 'FinanceApplication', operatingSystem: 'Any (web browser)',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-  description: 'Paycheck and take home pay calculator for salary and hourly pay: federal income tax (2020+ and older W-4), Social Security, Medicare, state income tax, deductions and overtime, with a take-home breakdown and what-if comparison.'
+  description: 'Paycheck and take home pay calculator for salary and hourly pay: federal income tax (2020+ and older W-4, children and dependents), Social Security, Medicare, state and city income tax, deductions and overtime, with a take-home breakdown, refund-or-owe line and what-if comparison.'
 };
 const jsonLdFaq = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faqs.map((q) => ({ '@type': 'Question', name: q[0], acceptedAnswer: { '@type': 'Answer', text: q[1] } })) };
 
@@ -105,9 +110,12 @@ const CONTENT_MAIN = `  <section class="content">
         <h2>State income tax</h2>
         <p><strong>No state income tax:</strong> ${listAnd(noTax)}. Only federal tax and FICA apply${noTax.indexOf('Washington') >= 0 ? ' (Washington still has employee-paid paid-family-leave and long-term-care premiums, which the calculator includes)' : ''}.</p>
         <p><strong>Computed from the official 2026 formula:</strong> ${listAnd(liveWithTax)}.</p>
-        <p><strong>Every other state</strong> shows federal tax and FICA only and says so — the calculator never guesses a state rate.</p>
+        <p><strong>Every other state</strong> shows federal tax and FICA only and says so. Under Go advanced you can type your state’s tax rate for a flat estimate, clearly labelled as an estimate — the calculator never picks a state rate for you.</p>
         <p><strong>Coming next</strong>, as each official formula is checked: ${listAnd(pending)}.</p>
-        <p>City, county and school-district taxes are not included.</p>
+        <p><strong>City and local tax:</strong> not included unless you type a rate under Go advanced (City or local tax), which is taken from your pay after before-tax deductions.</p>
+
+        <h2>Children, dependents and your refund</h2>
+        <p>Under Go advanced, type the number of <strong>children under 17</strong> and <strong>other dependents</strong> and the calculator fills W-4 Step 3 for you: $2,200 per child and $500 per other dependent, which lowers the federal tax withheld from each paycheck. Below your result, the <strong>refund or owe</strong> line compares the federal tax withheld over the year with the tax on your return, so you can see whether you are on track for a refund or a bill, and how much extra to withhold to break even.</p>
 
         <h2>Before-tax and after-tax deductions</h2>
         <p>A traditional 401(k) lowers your federal and most state income tax but not Social Security or Medicare. Health, dental and vision premiums and HSA or FSA contributions through payroll lower both. Roth contributions and union dues come out after tax and change nothing about your taxes. With 6% of the ${m0(65000)} salary going into a 401(k), take-home falls only ${m(ex1.net - ex401.net)} a paycheck because federal tax drops by ${m(ex1.fed - ex401.fed)}. Type <strong>6%</strong> instead of a dollar amount to enter a share of pay.</p>
@@ -116,7 +124,7 @@ const CONTENT_MAIN = `  <section class="content">
         <p>Switch to Hourly, enter your rate and hours per week and pick how often you are paid. At $22 an hour for 40 hours your gross is ${m(hourWeekly)} a week. Under Go advanced, add overtime hours and the pay multiplier: 5 hours a week at 1.5× lifts gross to ${m(otWeekly)} and take-home to ${m(exOT.net)}.</p>
 
         <h2>What it does not include</h2>
-        <p>This is an estimate of withholding for 2026, not payroll or tax advice. Your employer’s payroll system, local taxes, other withholdings and your final tax return can differ. Employer-paid taxes are not part of your paycheck.</p>
+        <p>This is an estimate of withholding for 2026, not payroll or tax advice. Your employer’s payroll system, local taxes, other withholdings and your final tax return can differ. The refund or owe line counts federal income tax on this one job with the standard deduction. Employer-paid taxes are not part of your paycheck.</p>
 
         <h2>Related tools</h2>
         <p>Working out pay from hours? Use the <a href="/hours-calculator/">Hours Calculator</a>. Planning a big purchase? Try the <a href="/mortgage-calculator/">Mortgage</a>, <a href="/loan-calculator/">Loan</a> or <a href="/auto-loan-calculator/">Auto Loan</a> calculators.</p>
@@ -175,7 +183,12 @@ ${o.hero}
           <div class="fld"><span class="lab">Which W-4 form</span><span class="seg" id="pcW4Seg" role="group" aria-label="Form W-4 version"><button class="on" type="button" data-v="new">2020 or later</button><button type="button" data-v="old">2019 or earlier</button></span></div>
           <div id="pcW4New">
             ${chk('pcStep2', 'Step 2: two jobs, or spouse also works (box checked)')}
-            ${fld('pcCredit', 'Step 3 dependents amount', '$', 'e.g. 2000')}
+            <div class="ln-two">
+              ${fld('pcKids', 'Children under 17', '', 'e.g. 2')}
+              ${fld('pcOthDep', 'Other dependents', '', 'e.g. 1')}
+            </div>
+            <p class="add-note" style="margin:-4px 0 12px">Fills W-4 Step 3 for you: $2,200 for each child under 17 and $500 for each other dependent.</p>
+            ${fld('pcCredit', 'Other Step 3 credits', '$ a year', 'e.g. 500')}
             <div class="ln-two">
               ${fld('pc4a', 'Step 4(a) other income', '$', 'e.g. 1000')}
               ${fld('pc4b', 'Step 4(b) deductions', '$', 'e.g. 5000')}
@@ -186,6 +199,16 @@ ${o.hero}
             ${fld('pcAllow', 'Allowances (line 5 of the old form)', '', 'e.g. 2')}
           </div>
           ${fld('pcFedExtra', 'Extra federal withholding', '$ per paycheck', 'e.g. 25')}
+
+          <div class="fc-grp">City or local tax</div>
+          ${fld('pcLocal', 'City or local income tax rate', '%', 'e.g. 1.5')}
+          <p class="add-note" style="margin:-4px 0 12px">Your city’s or county’s rate, taken from pay after before-tax deductions. An estimate — check your city’s own rules.</p>
+
+          <div id="pcStRateFld">
+            <div class="fc-grp">State income tax estimate</div>
+            ${fld('pcStRate', 'Your state’s income tax rate', '%', 'e.g. 4.5')}
+            <p class="add-note" style="margin:-4px 0 12px">This state’s exact formula isn’t built yet. Type its rate (see your state revenue department) for a flat estimate; leave it empty for federal tax only.</p>
+          </div>
 
           <div id="pcStGrp">
             <div class="fc-grp">State withholding form</div>
@@ -250,6 +273,9 @@ ${o.hero}
           <div class="ln-leg" id="pcBarLeg"></div>
 
           <table class="dtable ln-terms" id="pcTable"></table>
+
+          <div class="fc-grp">Refund or owe at tax time</div>
+          <p class="res-tip adv-tip" id="pcRefund"></p>
 
           <div class="fc-grp">What if…</div>
           <div class="ln-two">
@@ -419,7 +445,7 @@ function stateFaqs(c) {
     `Federal withholding does, and ${none ? n + ' has no state income tax to change' : n + ' uses its own married tables or deductions'}. For a ${m0(65000)} salary paid bi-weekly, a married filer in ${n} takes home ${m(ex[3].net)} a paycheck versus ${m(e65.net)} for a single filer.`]);
   f.push([`Which form do I fill out for ${n} withholding?`,
     FORM[c] ? `${n} uses ${FORM[c]}. Under Go advanced the calculator asks for the same details, so your result matches what your employer would withhold.` : (none ? `${n} has no state income tax form because it does not tax wages — only your federal Form W-4 matters.` : `${n} withholding is a flat rate with no state allowance form — only your federal Form W-4 matters for federal tax.`)]);
-  f.push([`Does this ${n} calculator include local taxes?`, (LOCALS[c] || 'City, county and school-district taxes are not included.') + ' State and federal figures follow the 2026 official withholding methods.']);
+  f.push([`Does this ${n} calculator include local taxes?`, (LOCALS[c] || 'City, county and school-district taxes are not included by default.') + ' Open Go advanced to add a local tax rate as an estimate. State and federal figures follow the 2026 official withholding methods.']);
   f.push([`What is my take-home pay on $40,000 or $100,000 in ${n}?`,
     `Single filer, paid bi-weekly: ${m0(40000)} a year gives ${m(ex[0].net)} a paycheck; ${m0(100000)} a year gives ${m(ex[2].net)} a paycheck.`]);
   const byA = (a, st) => ex.find((r) => r.a === a && r.st === st);
@@ -437,7 +463,7 @@ function stateContent(c, faqs2) {
         <p><strong>${m0(65000)} a year in ${n}</strong> (single, bi-weekly, 2026) is <strong>${m(ex[1].net)} a paycheck</strong>, about ${m0(ex[1].net * 26)} a year. <strong>${m0(100000)}</strong> is <strong>${m(ex[2].net)}</strong> a paycheck. Updated for the 2026 tax year using the IRS Publication 15-T method${S.method === 'none' ? '' : ' and the official ' + n + ' withholding formula'}.</p>
         <h2>How ${n} paycheck tax works</h2>
         <p>${fact(c)}</p>
-        <p>${LOCALS[c] || 'City, county and school-district taxes are not included.'}</p>
+        <p>${LOCALS[c] || 'City, county and school-district taxes are not included.'} Under Go advanced you can add a city or local tax rate as an estimate.</p>
         <h2>${n} paycheck examples</h2>
         <p>Single filer unless marked, paid bi-weekly in 2026, no extra withholding, no deductions. Amounts are per paycheck:</p>
         <div class="pc-tblwrap"><table class="dtable"><thead><tr><th>Pay</th><th>Federal</th><th>FICA</th><th>${n}</th><th>Net pay</th></tr></thead><tbody>${rowsHtml}</tbody></table></div>
@@ -445,8 +471,8 @@ function stateContent(c, faqs2) {
       </div>
       <div>
         <h2>Use the ${n} take home pay calculator</h2>
-        <p>The state is already set to <strong>${n}</strong> above. Enter your salary or hourly rate, your pay frequency and filing status, and the result appears as you type. Under <strong>Go advanced</strong> you can match your Form W-4 (new or 2019-or-earlier), add 401(k), insurance and other deductions, enter year-to-date pay and add overtime.</p>
-        <p>You also get a bar showing where each paycheck dollar goes, a what-if for a raise or a bigger 401(k), and your pay on all ten schedules. This is an estimate of withholding, not payroll or tax advice.</p>
+        <p>The state is already set to <strong>${n}</strong> above. Enter your salary or hourly rate, your pay frequency and filing status, and the result appears as you type. Under <strong>Go advanced</strong> you can match your Form W-4 (new or 2019-or-earlier), add children and dependents, a city or local tax rate, 401(k), insurance and other deductions, enter year-to-date pay and add overtime.</p>
+        <p>You also get a bar showing where each paycheck dollar goes, a refund-or-owe line for tax time, a what-if for a raise or a bigger 401(k), and your pay on all ten schedules. This is an estimate of withholding, not payroll or tax advice.</p>
         <h2>Other states</h2>
         ${stateLinks(c)}
         <p>More states are being added as each official formula is checked. For any other state, the <a href="/paycheck-calculator/">main paycheck calculator</a> shows federal tax and FICA.</p>
