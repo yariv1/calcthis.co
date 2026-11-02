@@ -17,7 +17,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/datepicker.min.css">
-<link rel="stylesheet" href="/assets/style.css?v=294">
+<link rel="stylesheet" href="/assets/style.css?v=299">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
 <script>
@@ -206,6 +206,7 @@
           <a href="/loan-calculator/">Loan</a>
           <a href="/auto-loan-calculator/">Auto Loan</a>
           <a href="/overtime-calculator/">Overtime</a>
+          <a href="/salary-calculator/">Salary</a>
           <!--STAXNAV:START-->
           <a href="/sales-tax-calculator/">Sales Tax</a>
           <a href="/sales-tax-calculator/california/">California Sales Tax</a>
@@ -506,7 +507,7 @@
     <details class="faq"><summary>How do I calculate hours worked between two times?</summary><p>Subtract the start time from the end time, then subtract any unpaid break. For 9:00 AM to 5:30 PM with a 30-minute lunch, the span is 8 hours 30 minutes and the hours worked are <strong>8 hours</strong>. If the end time is earlier on the clock than the start time, the shift runs overnight and ends the next day, so 10 PM to 6 AM is <strong>8 hours</strong>.</p></details>
     <details class="faq"><summary>How do I convert minutes to decimal hours?</summary><p>Divide the minutes by 60. 15 minutes is <strong>0.25</strong> hours, 30 minutes is 0.5, 45 minutes is 0.75, and 20 minutes is 0.33. Add the whole hours in front: 7 hours 45 minutes is <strong>7.75</strong> hours. To go back, multiply the decimal part by 60, so 0.2 hours is 12 minutes.</p></details>
     <details class="faq"><summary>How do I add up my hours for the week?</summary><p>Use the Week tab: enter a start time, end time and break for each day and the calculator adds the days into a weekly total in hours and minutes and in decimal hours. Nine hours a day for five days is <strong>45 hours</strong>.</p></details>
-    <details class="faq"><summary>How is overtime calculated?</summary><p>Under Go advanced you can set a weekly threshold (commonly 40 hours), an optional daily threshold and a multiplier (commonly 1.5). Hours over the threshold are overtime. At 45 hours in a week with a 40-hour threshold and a $20 rate, 40 hours pay $800 and 5 overtime hours pay 5 &times; $20 &times; 1.5 = $150, for <strong>$950</strong>. Overtime rules differ by employer and location, so check yours. For overtime pay with take-home after tax, California daily rules and the no-tax-on-overtime deduction, use the <a href="/overtime-calculator/">overtime calculator</a>.</p></details>
+    <details class="faq"><summary>How is overtime calculated?</summary><p>Under Go advanced you can set a weekly threshold (commonly 40 hours), an optional daily threshold and a multiplier (commonly 1.5). Hours over the threshold are overtime. At 45 hours in a week with a 40-hour threshold and a $20 rate, 40 hours pay $800 and 5 overtime hours pay 5 &times; $20 &times; 1.5 = $150, for <strong>$950</strong>. Overtime rules differ by employer and location, so check yours. For overtime pay with take-home after tax, California daily rules and the no-tax-on-overtime deduction, use the <a href="/overtime-calculator/">overtime calculator</a>; to turn an hourly rate into a yearly or monthly salary use the <a href="/salary-calculator/">salary calculator</a>.</p></details>
     <details class="faq"><summary>What is the 7-minute rule?</summary><p>It is a payroll rounding rule that rounds time to the nearest 15 minutes: 1 to 7 minutes round down to the previous quarter-hour and 8 to 14 minutes round up to the next. A worked time of 7 hours 52 minutes becomes <strong>7:45</strong>, and 7 hours 53 minutes becomes <strong>8:00</strong>. Choose 15 minutes under Round to in Go advanced.</p></details>
   </section>
 
@@ -559,6 +560,7 @@
           <li><a href="/loan-calculator/">Loan Calculator</a></li>
           <li><a href="/auto-loan-calculator/">Auto Loan Calculator</a></li>
           <li><a href="/overtime-calculator/">Overtime Calculator</a></li>
+          <li><a href="/salary-calculator/">Salary Calculator</a></li>
           <!--STAXFOOT:START-->
           <li><a href="/sales-tax-calculator/">Sales Tax Calculator</a></li>
           <li><a href="/sales-tax-calculator/california/">California Sales Tax Calculator</a></li>
@@ -729,7 +731,7 @@
 </div>
 
 <script src="/assets/datepicker.min.js"></script>
-<script src="/assets/app.js?v=294"></script>
+<script src="/assets/app.js?v=299"></script>
 <script>CalcThis.initHoursCalc();</script>
 <script src="/feedback.js" defer></script>
 </body>

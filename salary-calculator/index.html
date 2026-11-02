@@ -1,0 +1,723 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Salary Calculator: Hourly to Annual, Monthly &amp; Take-Home</title>
+<meta name="description" content="Free salary calculator: turn hourly, weekly, monthly or yearly pay into every other period in any currency, with unpaid time off, US take-home and raises.">
+<link rel="canonical" href="https://calcthis.co/salary-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Salary Calculator: Hourly to Annual, Monthly &amp; Take-Home">
+<meta property="og:description" content="Free salary calculator: turn hourly, weekly, monthly or yearly pay into every other period in any currency, with unpaid time off, US take-home and raises.">
+<meta property="og:url" content="https://calcthis.co/salary-calculator/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/datepicker.min.css">
+<link rel="stylesheet" href="/assets/style.css?v=299">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Salary Calculator",
+  "url": "https://calcthis.co/salary-calculator/",
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "Salary calculator in any currency (USD, EUR, GBP, CAD, AUD, INR and 148 more): enter pay as hourly, daily, weekly, bi-weekly, semi-monthly, monthly, quarterly or yearly and see every other period at once, with and without unpaid holidays and vacation, US take-home pay after tax, a raise comparison and overtime."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I convert an hourly wage to a yearly salary?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Multiply the hourly rate by the hours you work in a week and by 52. At $25.00 an hour for 40 hours a week that is $25.00 × 40 × 52 = $52,000 a year. If some holidays or vacation days are unpaid, take those days out first: the calculator shows both figures side by side."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I convert a salary to an hourly rate?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Divide the yearly salary by the hours worked in a year — 2,080 for a 40-hour week (40 × 52). A $75,000 salary is $75,000 ÷ 2080 = $36.06 an hour. Type the salary with the period set to Yearly and the hourly figure is the headline."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between bi-weekly and semi-monthly pay?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Bi-weekly means every two weeks, so there are 26 paychecks a year; semi-monthly means twice a month, so there are 24. The same yearly salary therefore gives a bigger bi-weekly check: $75,000 a year is $2,884.62 bi-weekly or $3,125.00 semi-monthly. In a year with 26 bi-weekly pay dates, two months have three paychecks."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do holidays and vacation days change the result?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The calculator gives two columns. \"Without time off\" assumes every working day is paid. \"With time off\" takes the holidays and vacation days you enter out as unpaid days. At $50.00 an hour with 10 holidays and 15 vacation days, $104,000 becomes $94,000 a year, which is $45.19 an hour over the whole year. If your time off is paid, as it is for most salaried jobs, use the \"without time off\" column."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How many working hours and days are in a year?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "With a 5-day, 40-hour week there are 5 × 52 = 260 working days and 40 × 52 = 2080 working hours before any time off. Subtract holidays and vacation days (each day is 8 hours) to get the days you are actually paid for. Both the hours and the days a week are editable."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I calculate take-home pay from a salary?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Turn on the take-home column: it runs the pay through the same 2026 federal withholding, Social Security and Medicare as our paycheck calculator, with a state if you choose one under Go advanced. For $75,000 a year as a single filer with federal tax only the yearly take-home is $61,593 (82% kept); in Texas, which has no state income tax, it is the same $61,593, and with California withholding it is $57,397. It is an estimate: your W-4, pre-tax deductions and local taxes change it."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I see what a raise is worth?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Open Go advanced and enter the raise as a percent (or a negative number for a cut). The calculator shows hourly, monthly and yearly pay before and after, and the take-home change. A 5% raise on $75,000 is $3,750 more a year before tax and about $2,638 more after federal tax and payroll tax."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I use a currency other than US dollars?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Pick your currency at the top right of the calculator and start typing its name or code (euro, GBP, rupee, ₹) — about 154 currencies are included, with the most common ones (US, Canadian and Australian dollars, euro, pound, rupee, yen, yuan, Swiss franc, peso, real) listed first. The amounts are shown with that currency's symbol and nothing is converted, so type your pay in your own currency. The hourly, daily, weekly, bi-weekly, semi-monthly, monthly, quarterly and yearly figures work for any currency; the take-home column uses US federal and state tax rules, so it is shown for US dollars only."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does this salary calculator include overtime?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, under Go advanced: enter the extra hours you work each week and the multiplier (1.5 for time and a half). At $25.00 an hour, 5 overtime hours a week at 1.5× add $9,750 over a 52-week year. For exact overtime rules, day-by-day California pay and the no-tax-on-overtime deduction use the overtime calculator."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "CalcThis",
+      "item": "https://calcthis.co/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Salary Calculator",
+      "item": "https://calcthis.co/salary-calculator/"
+    }
+  ]
+}
+</script>
+<meta property="og:site_name" content="CalcThis">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://calcthis.co/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="CalcThis — free, purpose-built calculators">
+<meta name="twitter:title" content="Salary Calculator: Hourly to Annual, Monthly &amp; Take-Home">
+<meta name="twitter:description" content="Free salary calculator: turn hourly, weekly, monthly or yearly pay into every other period in any currency, with unpaid time off, US take-home and raises.">
+<meta name="twitter:image" content="https://calcthis.co/assets/og-default.png">
+</head>
+<body class="p-bmr p-avg p-ot p-sal">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <a class="hdr-back" href="/blog/" aria-label="Back to blog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-search"><div class="menu-sx"><input id="menuSearch" type="search" placeholder="Search calculators or states…" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Search calculators" enterkeyhint="search"></div><div class="menu-results" id="menuResults" hidden></div></div>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <span class="menu-col-head">Construction &amp; Gardening</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+          <a href="/paint-calculator/">Paint</a>
+          <a href="/wallpaper-calculator/">Wallpaper</a>
+          <a href="/square-footage-calculator/">Square Footage</a>
+          <a href="/tape-measure-fraction-calculator/">Tape Measure Fraction</a>
+          <a href="/stair-calculator/">Stair</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/vo2-max-calculator/">VO2 Max</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
+          <a href="/bmi-calculator/">BMI</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/ideal-weight-calculator/">Ideal Weight</a>
+          <a href="/lean-body-mass-calculator/">Lean Body Mass</a>
+          <a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio</a>
+          <a href="/calorie-calculator/">Calorie</a>
+          <a href="/calorie-deficit-calculator/">Calorie Deficit</a>
+          <a href="/bmr-calculator/">BMR</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/water-intake-calculator/">Water Intake</a>
+          <a href="/macro-calculator/">Macro</a>
+          <a href="/protein-intake-calculator/">Protein Intake</a>
+          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
+          <a href="/steps-to-miles-calculator/">Steps to Miles</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/semester-grade-calculator/">Semester Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+          <a href="/grade-curve-calculator/">Grade Curve</a>
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/fraction-calculator/">Fraction</a>
+          <a href="/standard-deviation-calculator/">Standard Deviation</a>
+          <a href="/scientific-notation-calculator/">Scientific Notation</a>
+          <a href="/average-calculator/">Average</a>
+          <a href="/batting-average-calculator/">Batting Average</a>
+          <a href="/stock-average-calculator/">Stock Average</a>
+          <a href="/dice-average-calculator/">Dice Average</a>
+          <a href="/time-average-calculator/">Time Average</a>
+          <a href="/weighted-average-calculator/">Weighted Average</a>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+          <a href="/percentage-change-calculator/">Percentage Change</a>
+          <a href="/age-calculator/">Age</a>
+          <a href="/date-calculator/">Date</a>
+          <a href="/time-calculator/">Time</a>
+          <a href="/hours-calculator/">Hours</a>
+          <a href="/triangle-calculator/">Triangle</a>
+          <a href="/random-number-generator/">Random Number</a>
+          <span class="menu-col-head">Cooking &amp; Kitchen</span>
+          <a href="/recipe-converter/">Recipe Converter</a>
+          <a href="/turkey-cooking-time-calculator/">Turkey Cooking Time</a>
+          <a href="/turkey-thawing-time-calculator/">Turkey Thawing Time</a>
+          <a href="/turkey-size-calculator/">Turkey Size</a>
+          <!--UNITNAV:START-->
+          <span class="menu-col-head">Unit Converters</span>
+          <a href="/unit-converter/">Unit Converter</a>
+          <a href="/length-converter/">Length Converter</a>
+          <a href="/weight-converter/">Weight Converter</a>
+          <a href="/volume-converter/">Volume Converter</a>
+          <a href="/temperature-converter/">Temperature Converter</a>
+          <a href="/area-converter/">Area Converter</a>
+          <a href="/speed-converter/">Speed Converter</a>
+          <a href="/data-storage-converter/">Data Storage Converter</a>
+          <a href="/cooking-converter/">Cooking Converter</a>
+          <a href="/px-to-rem-converter/">PX to REM Converter</a>
+          <!--UNITNAV:END-->
+          <span class="menu-col-head">Money &amp; Finance</span>
+          <a href="/mortgage-calculator/">Mortgage</a>
+          <a href="/loan-calculator/">Loan</a>
+          <a href="/auto-loan-calculator/">Auto Loan</a>
+          <a href="/overtime-calculator/">Overtime</a>
+          <a href="/salary-calculator/" class="current">Salary</a>
+          <!--STAXNAV:START-->
+          <a href="/sales-tax-calculator/">Sales Tax</a>
+          <a href="/sales-tax-calculator/california/">California Sales Tax</a>
+          <a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax</a>
+          <a href="/sales-tax-calculator/missouri/">Missouri Sales Tax</a>
+          <a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax</a>
+          <a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax</a>
+          <a href="/sales-tax-calculator/ohio/">Ohio Sales Tax</a>
+          <a href="/sales-tax-calculator/texas/">Texas Sales Tax</a>
+          <!--STAXNAV:END-->
+          <a href="/tip-calculator/">Tip</a>
+          <a href="/how-much-to-tip/">How Much to Tip</a>
+        </div>
+        <!--PAYNAV:START-->
+        <div class="menu-col">
+          <span class="menu-col-head">Paycheck Calculators</span>
+          <a href="/paycheck-calculator/">Paycheck Calculator (all states)</a>
+          <a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a>
+          <a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a>
+          <a href="/paycheck-calculator/california/">California Paycheck Calculator</a>
+          <a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a>
+          <a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a>
+          <a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a>
+          <a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a>
+          <a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a>
+          <a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a>
+          <a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a>
+          <a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a>
+          <a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a>
+          <a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a>
+          <a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a>
+          <a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a>
+        </div>
+        <!--PAYNAV:END-->
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">Hourly · weekly · monthly · yearly · any currency</div>
+    <h1>Salary Calculator</h1>
+    <p>Type your pay in <strong>any period</strong> — hourly, daily, weekly, bi-weekly, semi-monthly, monthly, quarterly or yearly — and see <strong>every other period at once</strong>, with and without unpaid holidays and vacation, in <strong>any currency</strong>, plus the <strong>US take-home after tax</strong>. At $25.00 an hour, a 40-hour week is <strong>$52,000 a year</strong>; a $75,000 salary is <strong>$36.06 an hour</strong>.</p>
+  </section>
+
+  <div class="grid">
+
+    <!-- INPUT -->
+    <div class="card">
+      <div class="card-pad">
+        <div class="sl-head"><h2 class="card-h2">Your pay</h2><div class="csel sl-cur" id="slCur" data-value="USD" data-search="1" aria-label="Currency"><button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false"><span class="csel-val">USD</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="csel-panel" role="listbox"></div></div></div>
+        <div class="two"><label class="fld" for="slAmt"><span class="lab">Pay amount <span class="unit"><span id="slSym">$</span></span></span><div class="inp"><input id="slAmt" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 25 or 62,400"></div></label><div class="fld"><span class="lab">Per</span><div class="csel" id="slUnit" data-value="hour">
+              <button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false">
+                <span class="csel-val">Hour</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="csel-panel" role="listbox">
+                <button type="button" class="csel-opt on" role="option" aria-selected="true" data-value="hour">Hour</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="day">Day</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="week">Week</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="biweek">Bi-week</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="semimonth">Semi-month</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="month">Month</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="quarter">Quarter</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="year">Year</button>
+              </div>
+            </div></div></div>
+        <div class="two"><label class="fld" for="slHpw"><span class="lab">Hours per week</span><div class="inp"><input id="slHpw" type="text" inputmode="decimal" autocomplete="off" placeholder="40"></div></label><label class="fld" for="slDpw"><span class="lab">Days per week</span><div class="inp"><input id="slDpw" type="text" inputmode="decimal" autocomplete="off" placeholder="5"></div></label></div>
+        <div class="two"><label class="fld" for="slHol"><span class="lab">Holidays a year</span><div class="inp"><input id="slHol" type="text" inputmode="decimal" autocomplete="off" placeholder="0"></div></label><label class="fld" for="slVac"><span class="lab">Vacation days a year</span><div class="inp"><input id="slVac" type="text" inputmode="decimal" autocomplete="off" placeholder="0"></div></label></div>
+        <p class="av-note" id="slNote">Holidays and vacation days are counted as unpaid in the “with time off” column; leave them empty if you don’t want that.</p>
+        <div class="res-hint" id="slHint" style="display:none;text-align:left;margin:4px 0 8px"></div>
+        <div id="slAdvIn" style="display:none">
+          <div class="proj-sep"></div>
+          <label class="fld" for="slRaise"><span class="lab">Raise or cut <span class="unit">%</span></span><div class="inp"><input id="slRaise" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 5 or -3"></div></label>
+          <div class="two"><label class="fld" for="slOTh"><span class="lab">Overtime hours a week</span><div class="inp"><input id="slOTh" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 5"></div></label><label class="fld" for="slMult"><span class="lab">Overtime multiplier <span class="unit">×</span></span><div class="inp"><input id="slMult" type="text" inputmode="decimal" autocomplete="off" placeholder="1.5"></div></label></div>
+          <div id="slTaxIn">
+          <div class="fld"><span class="lab">Filing status</span><div class="modeseg" id="slFileSeg" role="group" aria-label="Filing status" style="grid-template-columns:repeat(3,1fr)"><button class="on" type="button" data-v="single">Single</button><button type="button" data-v="married">Married, joint</button><button type="button" data-v="hoh">Head of household</button></div></div>
+          <div class="fld"><span class="lab">State income tax</span><div class="csel" id="slState" data-value="">
+              <button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false">
+                <span class="csel-val">Federal taxes only</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="csel-panel" role="listbox"></div>
+            </div></div>
+          </div>
+          <div class="fld"><span class="lab">Show cents on every figure</span><div class="modeseg" id="slCentsSeg" role="group" aria-label="Show cents" style="grid-template-columns:1fr 1fr"><button class="on" type="button" data-v="0">Off</button><button type="button" data-v="1">On</button></div></div>
+        </div>
+        <div class="add-row split" style="margin-top:16px">
+          <span></span>
+          <button class="advbtn" id="slAdvBtn" type="button">
+            <span id="slAdvBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div class="card">
+      <div class="card-pad">
+        <div class="bf-res">
+          <div class="res-lab" id="slBigLab">Yearly pay</div>
+          <div class="res-big"><span id="slBig">—</span></div>
+          <div class="res-sub" id="slSub" data-empty="Enter your pay and choose the period it is paid for.">Enter your pay and choose the period it is paid for.</div>
+        </div>
+        <div id="slBody" style="display:none">
+          <p class="res-tip adv-tip" id="slTip"></p>
+          <div id="slViz"></div>
+          <p class="bm-h">Every pay period</p>
+          <table class="dtable ot-per" id="slTbl"></table>
+          <p class="av-note" id="slTblNote"></p>
+          <div id="slTakeWrap">
+          <div class="proj-sep"></div>
+          <p class="bm-h">Yearly take-home after tax</p>
+          <table class="dtable" id="slTakeTbl"></table>
+          </div>
+          <div id="slRaiseWrap" style="display:none">
+            <div class="proj-sep"></div>
+            <p class="bm-h">What the raise or cut does</p>
+            <table class="dtable ot-per" id="slRaiseTbl"></table>
+          </div>
+          <div id="slOtWrap" style="display:none">
+            <div class="proj-sep"></div>
+            <p class="bm-h">With overtime</p>
+            <table class="dtable" id="slOtTbl"></table>
+          </div>
+          <div class="proj-sep"></div>
+          <p class="bm-h">The working</p>
+          <ul class="ot-steps" id="slSteps"></ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- mobile sticky bar -->
+  <div class="mbar" id="mbar">
+    <span class="mbar-lab" id="slMLab">Yearly pay</span>
+    <div class="mbar-vals"><b id="slMVal">—</b></div>
+  </div>
+
+  <div class="related-calcs">
+    <p class="related-calcs-h">More calculators that may interest you</p>
+    <div class="pills">
+      <a class="pill" href="/paycheck-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/></svg>
+        Paycheck Calculator
+      </a>
+      <a class="pill" href="/overtime-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2M9 3h6"/></svg>
+        Overtime Calculator
+      </a>
+      <a class="pill" href="/hours-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        Hours Calculator
+      </a>
+      <a class="pill" href="/percentage-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 5L5 19"/><circle cx="7" cy="7" r="2.5"/><circle cx="17" cy="17" r="2.5"/></svg>
+        Percentage Calculator
+      </a>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use the salary calculator</h2>
+        <p>Choose your <strong>currency</strong> at the top right (US dollars by default), type your <strong>pay amount</strong> and choose the period it is paid for — hour, day, week, bi-week, semi-month, month, quarter or year. The results show the same pay for every other period at once, so there is no direction to pick: hourly to salary, salary to hourly, weekly to monthly and bi-weekly to yearly are all the same box.</p>
+        <p>Set your <strong>hours per week</strong> and <strong>days per week</strong> (40 and 5 if you leave them empty). Add the <strong>holidays</strong> and <strong>vacation days</strong> you don't get paid for to see a second column with them taken out. Open <strong>Go advanced</strong> for a raise or cut, overtime hours, your filing status and state, and to show cents. The take-home column and the tax settings are for US dollars; every other figure works in all 154 currencies.</p>
+
+        <h2>Hourly to salary: the formula</h2>
+        <div class="formula">
+          Yearly pay = hourly rate × hours per week × 52
+          <small>HOURLY RATE = YEARLY PAY ÷ (HOURS PER WEEK × 52)</small>
+        </div>
+        <p>$25.00 an hour × 40 hours × 52 weeks = <strong>$52,000</strong> a year, $4,333 a month, $2,000.00 every two weeks and $1,000.00 a week. Going the other way, $75,000 ÷ 2080 hours = <strong>$36.06 an hour</strong>.</p>
+        <table class="dtable">
+          <thead><tr><th>Hourly rate</th><th>Weekly</th><th>Monthly</th><th>Yearly</th></tr></thead>
+          <tbody>
+            <tr><td>$12.00</td><td>$480.00</td><td>$2,080</td><td>$24,960</td></tr>
+            <tr><td>$15.00</td><td>$600.00</td><td>$2,600</td><td>$31,200</td></tr>
+            <tr><td>$18.00</td><td>$720.00</td><td>$3,120</td><td>$37,440</td></tr>
+            <tr><td>$20.00</td><td>$800.00</td><td>$3,467</td><td>$41,600</td></tr>
+            <tr><td>$25.00</td><td>$1,000</td><td>$4,333</td><td>$52,000</td></tr>
+            <tr><td>$30.00</td><td>$1,200</td><td>$5,200</td><td>$62,400</td></tr>
+            <tr><td>$40.00</td><td>$1,600</td><td>$6,933</td><td>$83,200</td></tr>
+            <tr><td>$50.00</td><td>$2,000</td><td>$8,667</td><td>$104,000</td></tr>
+          </tbody>
+        </table>
+        <p>The table is for a 40-hour, 5-day week with every working day paid. Change the hours or days, or add unpaid time off, in the calculator.</p>
+
+        <h2>Pay periods: weekly, bi-weekly, semi-monthly, monthly</h2>
+        <p>There are <strong>52 weekly</strong> paychecks in a year, <strong>26 bi-weekly</strong> (every two weeks), <strong>24 semi-monthly</strong> (twice a month) and <strong>12 monthly</strong>. The yearly pay is the same, but the check size differs: $75,000 a year is $1,442.31 a week, $2,884.62 bi-weekly, $3,125.00 semi-monthly and $6,250.00 a month. A $4,000.00 bi-weekly paycheck is $104,000 a year; a $1,200.00 weekly one is $62,400; $5,000 a month is $60,000; and $200 a day over a 5-day week is $52,000.</p>
+      </div>
+
+      <div>
+        <h2>Holidays, vacation and unpaid time off</h2>
+        <p>Hourly workers are usually paid only for the days they work, so each unpaid holiday or vacation day takes $200.00 out of a year at $25.00 an hour and 8 hours a day. The calculator's two columns show both sides: <strong>without time off</strong> (every working day paid) and <strong>with time off</strong> (the days you enter are unpaid). A worked example: $50.00 an hour, 40 hours, 5 days, with 10 holidays and 15 vacation days is $104,000 without time off and <strong>$94,000</strong> with it — $45.19 an hour over the whole year.</p>
+        <p>If your holidays and vacation are paid, as they are for most salaried jobs, leave them empty or use the first column: a salary already includes them.</p>
+
+        <h2>From salary to take-home pay</h2>
+        <p>The take-home column runs the yearly pay through the same 2026 federal income tax withholding, Social Security and Medicare as our <a href="/paycheck-calculator/">paycheck calculator</a>, with the Social Security wage limit applied exactly across 12 monthly paychecks. For $75,000 as a single filer with federal tax only that leaves <strong>$61,593</strong> a year ($5,133 a month); with California withholding it is $57,397. Choose a state, and your filing status, under Go advanced. For exact paychecks with your W-4, deductions and any state, use the paycheck calculator or a <a href="/paycheck-calculator/">state page</a>.</p>
+
+        <h2>What a raise is worth</h2>
+        <p>Enter a percent under Go advanced to compare before and after. A 5% raise on $75,000 adds $3,750 a year before tax — about $2,638 after federal and payroll tax — and lifts the hourly figure from $36.06 to $37.86. For other percentages and the reverse (what percent is the change) use the <a href="/percentage-calculator/">percentage calculator</a>.</p>
+
+        <h2>Overtime on top of your salary</h2>
+        <p>Hourly staff who work extra hours can add them under Go advanced: $25.00 an hour with 5 overtime hours a week at time and a half adds $9,750 over a 52-week year. Overtime rules, California's daily overtime and the no-tax-on-overtime deduction are in the <a href="/overtime-calculator/">overtime calculator</a>; the <a href="/hours-calculator/">hours calculator</a> totals shifts and breaks first.</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>How do I convert an hourly wage to a yearly salary?</summary><p>Multiply the hourly rate by the hours you work in a week and by 52. At $25.00 an hour for 40 hours a week that is $25.00 × 40 × 52 = $52,000 a year. If some holidays or vacation days are unpaid, take those days out first: the calculator shows both figures side by side.</p></details>
+    <details class="faq"><summary>How do I convert a salary to an hourly rate?</summary><p>Divide the yearly salary by the hours worked in a year — 2,080 for a 40-hour week (40 × 52). A $75,000 salary is $75,000 ÷ 2080 = $36.06 an hour. Type the salary with the period set to Yearly and the hourly figure is the headline.</p></details>
+    <details class="faq"><summary>What is the difference between bi-weekly and semi-monthly pay?</summary><p>Bi-weekly means every two weeks, so there are 26 paychecks a year; semi-monthly means twice a month, so there are 24. The same yearly salary therefore gives a bigger bi-weekly check: $75,000 a year is $2,884.62 bi-weekly or $3,125.00 semi-monthly. In a year with 26 bi-weekly pay dates, two months have three paychecks.</p></details>
+    <details class="faq"><summary>How do holidays and vacation days change the result?</summary><p>The calculator gives two columns. "Without time off" assumes every working day is paid. "With time off" takes the holidays and vacation days you enter out as unpaid days. At $50.00 an hour with 10 holidays and 15 vacation days, $104,000 becomes $94,000 a year, which is $45.19 an hour over the whole year. If your time off is paid, as it is for most salaried jobs, use the "without time off" column.</p></details>
+    <details class="faq"><summary>How many working hours and days are in a year?</summary><p>With a 5-day, 40-hour week there are 5 × 52 = 260 working days and 40 × 52 = 2080 working hours before any time off. Subtract holidays and vacation days (each day is 8 hours) to get the days you are actually paid for. Both the hours and the days a week are editable.</p></details>
+    <details class="faq"><summary>How do I calculate take-home pay from a salary?</summary><p>Turn on the take-home column: it runs the pay through the same 2026 federal withholding, Social Security and Medicare as our <a href="/paycheck-calculator/">paycheck calculator</a>, with a state if you choose one under Go advanced. For $75,000 a year as a single filer with federal tax only the yearly take-home is $61,593 (82% kept); in Texas, which has no state income tax, it is the same $61,593, and with California withholding it is $57,397. It is an estimate: your W-4, pre-tax deductions and local taxes change it.</p></details>
+    <details class="faq"><summary>How do I see what a raise is worth?</summary><p>Open Go advanced and enter the raise as a percent (or a negative number for a cut). The calculator shows hourly, monthly and yearly pay before and after, and the take-home change. A 5% raise on $75,000 is $3,750 more a year before tax and about $2,638 more after federal tax and payroll tax.</p></details>
+    <details class="faq"><summary>Can I use a currency other than US dollars?</summary><p>Yes. Pick your currency at the top right of the calculator and start typing its name or code (euro, GBP, rupee, ₹) — about 154 currencies are included, with the most common ones (US, Canadian and Australian dollars, euro, pound, rupee, yen, yuan, Swiss franc, peso, real) listed first. The amounts are shown with that currency's symbol and nothing is converted, so type your pay in your own currency. The hourly, daily, weekly, bi-weekly, semi-monthly, monthly, quarterly and yearly figures work for any currency; the take-home column uses US federal and state tax rules, so it is shown for US dollars only.</p></details>
+    <details class="faq"><summary>Does this salary calculator include overtime?</summary><p>Yes, under Go advanced: enter the extra hours you work each week and the multiplier (1.5 for time and a half). At $25.00 an hour, 5 overtime hours a week at 1.5× add $9,750 over a 52-week year. For exact overtime rules, day-by-day California pay and the no-tax-on-overtime deduction use the <a href="/overtime-calculator/">overtime calculator</a>.</p></details>
+  </section>
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+      <div class="footer-stack">
+<div class="footer-col" style="order:1">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+          <li><a href="/paint-calculator/">Paint Calculator</a></li>
+          <li><a href="/wallpaper-calculator/">Wallpaper Calculator</a></li>
+          <li><a href="/square-footage-calculator/">Square Footage Calculator</a></li>
+          <li><a href="/tape-measure-fraction-calculator/">Tape Measure Fraction Calculator</a></li>
+          <li><a href="/stair-calculator/">Stair Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:5">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Cooking &amp;</span> <span class="ft2">Kitchen</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/recipe-converter/">Recipe Converter</a></li>
+          <li><a href="/turkey-cooking-time-calculator/">Turkey Cooking Time Calculator</a></li>
+          <li><a href="/turkey-thawing-time-calculator/">Turkey Thawing Time Calculator</a></li>
+          <li><a href="/turkey-size-calculator/">Turkey Size Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:6">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Money &amp;</span> <span class="ft2">Finance</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/mortgage-calculator/">Mortgage Calculator</a></li>
+          <li><a href="/loan-calculator/">Loan Calculator</a></li>
+          <li><a href="/auto-loan-calculator/">Auto Loan Calculator</a></li>
+          <li><a href="/overtime-calculator/">Overtime Calculator</a></li>
+          <li><a href="/salary-calculator/">Salary Calculator</a></li>
+          <!--STAXFOOT:START-->
+          <li><a href="/sales-tax-calculator/">Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/california/">California Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/missouri/">Missouri Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/ohio/">Ohio Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/texas/">Texas Sales Tax Calculator</a></li>
+          <!--STAXFOOT:END-->
+          <li><a href="/tip-calculator/">Tip Calculator</a></li>
+          <li><a href="/how-much-to-tip/">How Much to Tip</a></li>
+        </ul>
+      </div>
+      </div>
+
+      <div class="footer-right">
+<div class="footer-col footer-col--two" style="order:2">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/vo2-max-calculator/">VO2 Max Calculator</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/bmi-calculator/">BMI Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/ideal-weight-calculator/">Ideal Weight Calculator</a></li>
+          <li><a href="/lean-body-mass-calculator/">Lean Body Mass Calculator</a></li>
+          <li><a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio Calculator</a></li>
+          <li><a href="/calorie-calculator/">Calorie Calculator</a></li>
+          <li><a href="/calorie-deficit-calculator/">Calorie Deficit Calculator</a></li>
+          <li><a href="/bmr-calculator/">BMR Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/water-intake-calculator/">Water Intake Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/protein-intake-calculator/">Protein Intake Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
+          <li><a href="/steps-to-miles-calculator/">Steps to Miles Calculator</a></li>
+        </ul>
+      </div>
+
+        <div class="footer-sub">
+<div class="footer-subcol">
+<div class="footer-col" style="order:3">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/semester-grade-calculator/">Semester Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+          <li><a href="/grade-curve-calculator/">Grade Curve Calculator</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:START-->
+<div class="footer-col" style="order:7">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Unit</span> <span class="ft2">Converters</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/unit-converter/">Unit Converter</a></li>
+          <li><a href="/length-converter/">Length Converter</a></li>
+          <li><a href="/weight-converter/">Weight Converter</a></li>
+          <li><a href="/volume-converter/">Volume Converter</a></li>
+          <li><a href="/temperature-converter/">Temperature Converter</a></li>
+          <li><a href="/area-converter/">Area Converter</a></li>
+          <li><a href="/speed-converter/">Speed Converter</a></li>
+          <li><a href="/data-storage-converter/">Data Storage Converter</a></li>
+          <li><a href="/cooking-converter/">Cooking Measurement Converter</a></li>
+          <li><a href="/px-to-rem-converter/">PX to REM Converter</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:END-->
+</div>
+
+<div class="footer-col" style="order:4">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/fraction-calculator/">Fraction Calculator</a></li>
+          <li><a href="/standard-deviation-calculator/">Standard Deviation Calculator</a></li>
+          <li><a href="/scientific-notation-calculator/">Scientific Notation Calculator</a></li>
+          <li><a href="/weighted-average-calculator/">Weighted Average Calculator</a></li>
+          <li><a href="/average-calculator/">Average Calculator</a></li>
+          <li><a href="/batting-average-calculator/">Batting Average Calculator</a></li>
+          <li><a href="/stock-average-calculator/">Stock Average Calculator</a></li>
+          <li><a href="/dice-average-calculator/">Dice Average Calculator</a></li>
+          <li><a href="/time-average-calculator/">Time Average Calculator</a></li>
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+          <li><a href="/percentage-change-calculator/">Percentage Change Calculator</a></li>
+          <li><a href="/age-calculator/">Age Calculator</a></li>
+          <li><a href="/date-calculator/">Date Calculator</a></li>
+          <li><a href="/time-calculator/">Time Calculator</a></li>
+          <li><a href="/hours-calculator/">Hours Calculator</a></li>
+          <li><a href="/triangle-calculator/">Triangle Calculator</a></li>
+          <li><a href="/random-number-generator/">Random Number Generator</a></li>
+        </ul>
+      </div>
+        </div>
+      </div>
+
+      <!--PAYFOOT:START-->
+      <div class="footer-col footer-col--wide">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Paycheck</span> <span class="ft2">Calculators</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/paycheck-calculator/">Paycheck Calculator (all states)</a></li>
+          <li><a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/california/">California Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a></li>
+        </ul>
+      </div>
+      <!--PAYFOOT:END-->
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/blog/">Blog</a>
+      <span aria-hidden="true">·</span>
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+</div>
+
+<script src="/assets/app.js?v=299"></script>
+<script>CalcThis.initSalaryCalc();</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>

@@ -183,7 +183,8 @@ must be built from the article's actual units, every time, not pasted from a tem
 ## ⛔ SESSION HANDOFF — START HERE (rewritten 2026-11-02, end of the overtime-calculator session; full detail in `HANDOFF.md` §00 — read §00 in full before replying)
 
 **Read `HANDOFF.md` §00 in full before replying.** Do not make the user re-explain anything in it (user, 2026-10-26: "do not dare to start the new session confused"; repeated 2026-11-01 and 2026-11-02: "do not dare to miss anything!!").
-- **STATE (end of 2026-11-02): LIVE = v294 · 70 calculators · 25 articles · 179 pages; `main` pushed and in sync (`c2cee371` docs ← `8591c612` overtime deploy).** Shipped this stretch: grade-calculator upgrade (v286), **OVERTIME CALCULATOR `/overtime-calculator/` (v294)** — in Bing (manual + IndexNow), **GSC not requested** (queued at the end of the list).
+- **STATE (end of 2026-11-02): LIVE = v299 · 71 calculators · 25 articles · 180 pages; `main` pushed.** Shipped this stretch: overtime calculator (v294), **SALARY CALCULATOR `/salary-calculator/` (v299)** — one page for salary / hourly to salary / annual salary; searchable currency picker (154 currencies, display only; take-home + tax fields USD only); in Bing (manual + IndexNow), GSC not requested.
+- **NEXT JOB: (3) in-place "take home pay calculator" wording upgrade of the paycheck hub + 25 state pages (+ NYC), then (4) self-employment tax calculator** (his Ahrefs 2026-11-02, see `md-files/calcthis-ahrefs-2026-11.md`). Research report first, wait for approval. Salary code map: engine `CalcThis.salaryEngine` (`SALARY-ENGINE:START/END`) + `CalcThis.initSalaryCalc` (ids `sl*`, block `SALARY:BEGIN/END`), generator `md-files/gen-salary-page.js`; shared searchable dropdown = `.csel[data-search]` (design system).
 - **FIRST JOB NEXT SESSION: the SALARY CALCULATOR RESEARCH REPORT.** The user said "we will continue exactly from here"; the last open question to him was "Start the salary calculator research next?" (unanswered) → treat as YES: reply with the 2-3 line sync, then research silently and deliver a SHORT report (HANDOFF §00.3): ONE page `/salary-calculator/` for `salary calculator` >100K Hard + `hourly to salary calculator` >10K Hard + `annual salary calculator` >10K Hard (+ yearly/hourly salary >1K Hard); open every competitor LIVE (calculator.net, Omnicalculator, ADP, Indeed/SmartAsset/PaycheckCity), list EVERY input, one visual + one functional differentiator, then WAIT for approval. Order after that (his Ahrefs, 2026-11-02): (3) in-place "take home pay calculator" wording upgrade of the paycheck hub + 25 state pages (+ NYC) · (4) self-employment tax calculator. Numbers: `md-files/calcthis-ahrefs-2026-11.md` → "2026-11-02 numbers".
 - **ALSO: GSC INDEXING** — standing instruction: request the next ~10 URLs in order when he says "Start queue" (tracker `md-files/calcthis-indexing-tracker.md`; order in HANDOFF §00.7: valet, tipping-in ×3, older pending, 18 unit pairs, 10 paycheck states, then the 9 newest pages incl. overtime + a re-request of /grade-calculator/). "Quota Exceeded" = stop and log it.
 - **The user's QA expectation (2026-11-02, "Did you fully QA and debug it? As was agreed for every calculator?"):** run ALL 17 QA items below BEFORE the first preview — including a systematic edge matrix, a real-mouse test, a script that drives the tool for EVERY number quoted in the page text (item 8), screenshots of every state at desktop + 375px — and list what was NOT verified. Never wait to be asked.
@@ -199,8 +200,8 @@ must be built from the article's actual units, every time, not pasted from a tem
 
 ## Project state
 
-- **Asset version:** v294 (live; `.assetver`)
-- **Total pages:** 179 live (sitemap)
+- **Asset version:** v299 (live; `.assetver`)
+- **Total pages:** 180 live (sitemap)
 - **Model:** Sonnet 5
 
 ### New this session — global `.csel` custom-dropdown component
@@ -300,9 +301,12 @@ Recipe Converter
 ### Money & Finance (6)
 Mortgage · Loan · Auto Loan · Overtime · Paycheck · Sales Tax · Tip
 
-Total live calculators: **70** (v294)
+Total live calculators: **71** (v299)
 
 ---
+
+## Last session addendum 7 (2026-11-02, DEPLOYED v299): SALARY CALCULATOR `/salary-calculator/`
+Research (calculator.net, Omnicalculator, Indeed, ADP, PaycheckCity opened live) -> "Approve all". One page; any pay period -> all 8 periods at once, calculator.net semantics (hourly/daily input = rate while working, other periods = pay received; two columns without/with unpaid time off; $50/h 10+15 days = 104,000 / 94,000 / 45.19), take-home column via payEngine (12 monthly paychecks, exact SS cap; equals the Paycheck page to the dollar), year bar of paid vs time-off days; Go advanced = raise/cut, overtime hours, filing status, state, cents. User added: currency selector top-right -> searchable `.csel` (154 ISO currencies via Intl.DisplayNames, Popular group, ranked type-to-filter, mobile-first); display only, take-home/tax USD only; metadata mentions it. Engine `CalcThis.salaryEngine`, init `CalcThis.initSalaryCalc`, generator `md-files/gen-salary-page.js` (registers everywhere + inbound links from overtime/hours/paycheck/time/percentage-change). QA: ~550 UI-vs-model runs, 154-currency sweep, 600-step fuzz x2, hostile inputs, 375px, site audit 180 pages. Not verified: real phone, other browsers, print. Bing submitted manually; GSC not requested.
 
 ## Last session addendum 6 (2026-11-02, DEPLOYED v294): OVERTIME CALCULATOR `/overtime-calculator/`
 Research report approved ("Approve all"): ONE page for `overtime calculator` >10K Easy + `no tax on overtime calculator` >10K Easy (+ California variants). Modes Total hours / Regular + overtime / Day by day (federal weekly or California daily + 7th-day rules), multiplier chips, result = total pay, hours/pay split bars, take-home after tax via `payEngine` (plus the overtime's own share), no-tax-on-overtime estimate (26 U.S.C. § 225: cap 12,500/25,000, $100 per $1,000 over 150,000/300,000, FLSA premium only, federal income tax only). Go advanced = workweek start, bonus (federal), rounding 5/6/15, filing status, state, weeks/year, own income. Engine `CalcThis.otEngine` (`OT-ENGINE:START/END`) + `CalcThis.initOvertimeCalc` (ids `ot*`, block `OVERTIME:BEGIN/END`), CSS `.p-ot`, generator `md-files/gen-overtime-page.js` (writes page + registers everywhere). QA: 350 UI-vs-brute-force gross runs, 60 take-home/no-tax runs, 400 random control steps, anchors vs the Paycheck page ($22/h 45 h = $1,045.00 gross / $881.58 take-home), registration audit 179 pages. Not verified: phase-out rounding (proportional 10% used), real phone, other browsers, print. Bing submitted 2026-11-02; GSC not requested. NEXT: salary / hourly-to-salary page.

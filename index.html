@@ -96,6 +96,7 @@
         { "@type": "WebApplication", "name": "Time Calculator", "url": "https://calcthis.co/time-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Hours Calculator", "url": "https://calcthis.co/hours-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Overtime Calculator", "url": "https://calcthis.co/overtime-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
+        { "@type": "WebApplication", "name": "Salary Calculator", "url": "https://calcthis.co/salary-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Mortgage Calculator", "url": "https://calcthis.co/mortgage-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Loan Calculator", "url": "https://calcthis.co/loan-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Auto Loan Calculator", "url": "https://calcthis.co/auto-loan-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
@@ -114,7 +115,7 @@
   ]
 }
 </script>
-<link rel="stylesheet" href="/assets/style.css?v=294">
+<link rel="stylesheet" href="/assets/style.css?v=299">
 <style>
   .cat-tabs{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
   .cat-grp--hidden{display:none}
@@ -243,6 +244,7 @@
           <a href="/loan-calculator/">Loan</a>
           <a href="/auto-loan-calculator/">Auto Loan</a>
           <a href="/overtime-calculator/">Overtime</a>
+          <a href="/salary-calculator/">Salary</a>
           <!--STAXNAV:START-->
           <a href="/sales-tax-calculator/">Sales Tax</a>
           <a href="/sales-tax-calculator/california/">California Sales Tax</a>
@@ -1359,6 +1361,17 @@
       </span>
     </a>
 
+    <a class="calc" href="/salary-calculator/">
+      <span class="ico" aria-hidden="true">
+        <svg width="30" height="30" viewBox="0 0 32 32" fill="none"><rect x="4" y="9" width="24" height="15" rx="3" fill="#EFE7D8" stroke="#8F5C13" stroke-width="1.4"/><circle cx="16" cy="16.5" r="3.4" stroke="#37503F" stroke-width="1.6"/><path d="M8 13v7M24 13v7" stroke="#8F5C13" stroke-width="1.4" stroke-linecap="round"/></svg>
+      </span>
+      <h3>Salary Calculator</h3>
+      <p>Convert pay between hourly, weekly, monthly and yearly in one box, in any currency — with unpaid holidays and vacation, US take-home after tax, a raise comparison and overtime.</p>
+      <span class="go">Open calculator
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+    </a>
+
     <a class="calc" href="/overtime-calculator/">
       <span class="ico" aria-hidden="true">
         <svg width="30" height="30" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="17" r="11" fill="#EFE7D8" stroke="#8F5C13" stroke-width="1.4"/><path d="M16 11v6l4 2.5" stroke="#37503F" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M13 4h6" stroke="#8F5C13" stroke-width="1.6" stroke-linecap="round"/></svg>
@@ -1564,6 +1577,7 @@
           <li><a href="/auto-loan-calculator/">Auto loan</a><span> — trade-in, tax and fees</span></li>
           <li><a href="/paycheck-calculator/">Paycheck</a><span> — take-home pay after federal and state tax</span></li>
           <li><a href="/overtime-calculator/">Overtime</a><span> — pay, take-home and no tax on overtime</span></li>
+          <li><a href="/salary-calculator/">Salary</a><span> — hourly to yearly, monthly and take-home</span></li>
           <li><a href="/sales-tax-calculator/">Sales tax</a><span> — by state, with exempt items and local rates</span></li>
           <li><a href="/tip-calculator/">Tip</a><span> — split the bill, tip before or after tax</span></li>
         </ul>
@@ -1641,6 +1655,7 @@
           <li><a href="/loan-calculator/">Loan Calculator</a></li>
           <li><a href="/auto-loan-calculator/">Auto Loan Calculator</a></li>
           <li><a href="/overtime-calculator/">Overtime Calculator</a></li>
+          <li><a href="/salary-calculator/">Salary Calculator</a></li>
           <!--STAXFOOT:START-->
           <li><a href="/sales-tax-calculator/">Sales Tax Calculator</a></li>
           <li><a href="/sales-tax-calculator/california/">California Sales Tax Calculator</a></li>
@@ -1824,7 +1839,7 @@
   });
 })();
 </script>
-<script src="/assets/app.js?v=294"></script>
+<script src="/assets/app.js?v=299"></script>
 <script src="/feedback.js" defer></script>
 </body>
 </html>

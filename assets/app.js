@@ -78,14 +78,14 @@ window.CalcThis = window.CalcThis || {};
       current = v; root.setAttribute('data-value', v);
       if (lab) lab.textContent = o.textContent;
       opts.forEach(function (op) {
-        var on = op === o;
+        var on = op.getAttribute('data-value') === v;
         op.classList.toggle('on', on);
         op.setAttribute('aria-selected', on ? 'true' : 'false');
       });
       if (fire) root.dispatchEvent(new Event('change', { bubbles: true }));
     }
     function isOpen() { return panel.style.display === 'block'; }
-    function openPanel() { panel.style.display = 'block'; btn.setAttribute('aria-expanded', 'true'); root.classList.add('open'); }
+    function openPanel() { panel.style.display = 'block'; btn.setAttribute('aria-expanded', 'true'); root.classList.add('open'); if (root._cselOpen) root._cselOpen(); }
     function closePanel() { panel.style.display = 'none'; btn.setAttribute('aria-expanded', 'false'); root.classList.remove('open'); }
 
     // The `.value` property is defined on `root` exactly once, ever, and forwards to
@@ -121,6 +121,7 @@ window.CalcThis = window.CalcThis || {};
       document.addEventListener('keydown', function (e) {
         if (!isOpen()) return;
         if (e.key === 'Escape') { closePanel(); btn.focus(); }
+        if (root.hasAttribute('data-search')) return;
         if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
           e.preventDefault();
           var idx = 0; for (var i = 0; i < opts.length; i++) if (opts[i].getAttribute('data-value') === current) { idx = i; break; }
@@ -128,6 +129,39 @@ window.CalcThis = window.CalcThis || {};
           select(opts[idx].getAttribute('data-value'), true);
         }
       });
+    }
+    // Optional type-to-filter (root has data-search and the panel holds an input.csel-search): matches each option's data-s
+    // (or its text), hides the group headings and the "Popular" duplicates while a query is typed, Arrow keys move the
+    // highlight, Enter picks it, the input is focused on open (so a phone keyboard comes up straight away).
+    var sIn = root.querySelector('.csel-search');
+    if (sIn) {
+      var live = function () { return [].slice.call(root.querySelectorAll('.csel-opt')); };
+      var shown = function () { return live().filter(function (o) { return o.style.display !== 'none'; }); };
+      var mark = function (o) { live().forEach(function (x) { x.classList.remove('kb'); }); if (o) { o.classList.add('kb'); if (o.scrollIntoView) o.scrollIntoView({ block: 'nearest' }); } };
+      var filter = function () {
+        var q = sIn.value.trim().toLowerCase();
+        live().forEach(function (o) {
+          var hit = !q || (o.getAttribute('data-s') || o.textContent).toLowerCase().indexOf(q) >= 0;
+          o.style.display = (!hit || (q && o.classList.contains('csel-pop'))) ? 'none' : '';
+        });
+        [].forEach.call(root.querySelectorAll('.csel-group'), function (h) { h.style.display = q ? 'none' : ''; });
+        var v = shown(), best = null, bi = 1e9;
+        if (q) v.forEach(function (o) { var ds = o.getAttribute('data-s') || '', r = (o.getAttribute('data-value').toLowerCase() === q ? 0 : ds.indexOf(q) === 0 ? 1 : ds.indexOf(' ' + q) >= 0 ? 2 : 3) * 1000 + (parseInt(o.getAttribute('data-p'), 10) || 999); if (r < bi) { bi = r; best = o; } });
+        mark(best);
+        if (q && best) { var sb = root.querySelector('.csel-sbox'); panel.scrollTop = Math.max(0, best.offsetTop - (sb ? sb.offsetHeight : 0) - 4); } else if (!q) panel.scrollTop = 0;
+        var none = root.querySelector('.csel-none'); if (none) none.style.display = v.length ? 'none' : '';
+      };
+      root._cselOpen = function () { sIn.value = ''; filter(); setTimeout(function () { sIn.focus(); }, 0); };
+      if (!sIn._cselBound) {
+        sIn._cselBound = true;
+        sIn.addEventListener('input', filter);
+        sIn.addEventListener('keydown', function (e) {
+          var v = shown(), i = v.indexOf(root.querySelector('.csel-opt.kb'));
+          if (e.key === 'ArrowDown') { e.preventDefault(); mark(v[Math.min(v.length - 1, i + 1)]); }
+          else if (e.key === 'ArrowUp') { e.preventDefault(); mark(v[Math.max(0, i - 1)]); }
+          else if (e.key === 'Enter') { e.preventDefault(); var k = root.querySelector('.csel-opt.kb') || v[0]; if (k) k.click(); }
+        });
+      }
     }
     closePanel();
     select(current, false);
@@ -16871,3 +16905,237 @@ CalcThis.initOvertimeCalc = function () {
   applyMode(); all();
 };
 /* OVERTIME:END */
+/* SALARY:BEGIN */
+/* =========================================================
+   FINANCE · SALARY CALCULATOR  (body.p-bmr p-avg p-ot p-sal)
+   Competitors checked live (calculator.net, Indeed, Omnicalculator): one amount + period dropdown, hours/days, holidays and
+   vacation, a plain table. Here: type any pay in any period and see every period at once (with and without unpaid time off),
+   the take-home for each period (reuses payEngine with an exact full-year Social Security cap), a year bar of paid vs time-off
+   days, and under Go advanced a raise/cut comparison, overtime hours and the state / filing status. Engine: CalcThis.salaryEngine.
+   ========================================================= */
+/* SALARY-ENGINE:START */
+CalcThis.salaryEngine = (function () {
+  var PER = [['hour', 'Hourly'], ['day', 'Daily'], ['week', 'Weekly'], ['biweek', 'Bi-weekly'], ['semimonth', 'Semi-monthly'], ['month', 'Monthly'], ['quarter', 'Quarterly'], ['year', 'Yearly']];
+  var N = { week: 52, biweek: 26, semimonth: 24, month: 12, quarter: 4, year: 1 };   // pay periods in a year
+  // o: { amount, unit, hpw (hours a week), dpw (days a week), off (unpaid days off a year) }
+  // hourly / daily amounts are the rate while you work; every other amount is the pay you actually receive (calculator.net's convention).
+  function convert(o) {
+    var days = o.dpw * 52, hours = o.hpw * 52, hpd = o.hpw / o.dpw, worked = days - o.off, annUn, annAdj;
+    if (o.unit === 'hour') { annUn = o.amount * hours; annAdj = o.amount * hpd * worked; }
+    else if (o.unit === 'day') { annUn = o.amount * days; annAdj = o.amount * worked; }
+    else { annAdj = o.amount * N[o.unit]; annUn = annAdj * days / worked; }
+    var div = { hour: hours, day: days, week: 52, biweek: 26, semimonth: 24, month: 12, quarter: 4, year: 1 };
+    var rows = PER.map(function (p) { return { k: p[0], name: p[1], un: annUn / div[p[0]], adj: annAdj / div[p[0]] }; });
+    return { days: days, hours: hours, hpd: hpd, worked: worked, workedHours: hpd * worked, annUn: annUn, annAdj: annAdj, rows: rows, rateWhileWorking: annUn / hours };
+  }
+  // Overtime hours a week on top of the base: paid at the working hourly rate × multiplier for each week actually worked.
+  function overtime(c, oth, mult) { return c.rateWhileWorking * mult * oth * (c.worked / (c.days / 52)); }
+  // Full-year take-home for a yearly gross: 12 monthly paychecks with the year-to-date running, so the Social Security cap is exact.
+  function takeHome(P, gross, status, state) {
+    var t = { gross: 0, net: 0, fed: 0, ss: 0, med: 0, state: 0, prog: 0 };
+    for (var k = 0; k < 12; k++) {
+      var q = P.paycheck({ gross: gross / 12, ppy: 12, ytd: gross / 12 * k, fed: { status: status, w4: 'new' }, state: state ? { code: state, status: status } : {} });
+      t.gross += q.gross; t.net += q.net; t.fed += q.fed; t.ss += q.ss; t.med += q.med + q.addl; t.state += q.state; t.prog += q.programTotal;
+    }
+    return t;
+  }
+  function parseMoney(t) {
+    t = String(t == null ? '' : t).replace(/[$€£¥₹₪₩₽₺฿₦\s]/g, ''); if (!t) return null;
+    if (t.indexOf(',') >= 0) { if (!/^\d{1,3}(,\d{3})+(\.\d*)?$/.test(t)) return NaN; t = t.replace(/,/g, ''); }
+    return /^(\d+(?:\.\d*)?|\.\d+)$/.test(t) ? parseFloat(t) : NaN;
+  }
+  function parseNum(t) { t = String(t == null ? '' : t).trim(); if (!t) return null; return /^(\d+(?:\.\d*)?|\.\d+)$/.test(t) ? parseFloat(t) : NaN; }
+  function parsePct(t) { t = String(t == null ? '' : t).replace(/[%\s]/g, ''); if (!t) return null; return /^[+-]?(\d+(?:\.\d*)?|\.\d+)$/.test(t) ? parseFloat(t) : NaN; }
+  // Active ISO 4217 currencies (display only — nothing is converted). Names come from Intl.DisplayNames in the browser.
+  var CURRENCIES = 'USD EUR GBP CAD AUD NZD CHF JPY CNY HKD SGD INR KRW MXN BRL ZAR SEK NOK DKK PLN CZK HUF RON BGN ISK TRY ILS AED SAR QAR KWD BHD OMR JOD EGP MAD DZD TND NGN GHS KES UGX TZS ETB XOF XAF RWF ZMW MZN AOA BWP NAD MUR THB VND IDR MYR PHP TWD PKR BDT LKR NPR MMK KHR LAK MNT KZT UZS KGS TJS TMT AZN GEL AMD UAH BYN RUB MDL RSD MKD ALL BAM ARS CLP COP PEN UYU PYG BOB VES CRC GTQ HNL NIO PAB DOP JMD TTD BBD BSD BZD CUP HTG GYD SRD FJD PGK WST TOP VUV SBD XPF XCD AFN IQD IRR LBP LYD SDG SYP YER KPW MWK SLE GMD GNF CDF BIF DJF ERN KMF LRD LSL MGA MRU SCR SOS SSP STN SZL ZWL AWG ANG BMD KYD FKP GIP SHP MOP BND BTN MVR CVE'.split(' ');
+  var POPULAR = 'USD EUR GBP CAD AUD INR JPY CNY CHF MXN BRL SGD'.split(' ');
+  // Tie-break order for type-to-search: the popular ones first, then the next most used (so "peso" finds MXN, "won" KRW, "franc" CHF).
+  var RANK = POPULAR.concat('KRW HKD NZD SEK NOK DKK PLN ZAR TRY AED SAR ILS THB IDR MYR PHP VND TWD CZK HUF RUB UAH EGP NGN ARS CLP COP PEN PKR BDT KES'.split(' '));
+  return { CURRENCIES: CURRENCIES, POPULAR: POPULAR, RANK: RANK, PER: PER, N: N, convert: convert, overtime: overtime, takeHome: takeHome, parseMoney: parseMoney, parseNum: parseNum, parsePct: parsePct };
+})();
+/* SALARY-ENGINE:END */
+
+CalcThis.initSalaryCalc = function () {
+  var E = CalcThis.salaryEngine, PE = CalcThis.payEngine;
+  var $ = function (id) { return document.getElementById(id); };
+  if (!$('slAmt')) return;
+  var st = { adv: false, cents: false, status: 'single', cur: 'USD', dec: 2 };
+  var NF = {}, DN = null;
+  try { DN = new Intl.DisplayNames(['en'], { type: 'currency' }); } catch (e) { DN = null; }
+  var CN = { SLE: 'Sierra Leonean Leone' };
+  function curName(c) { try { var n = DN && DN.of(c); return (n && n !== c) ? n : (CN[c] || c); } catch (e) { return CN[c] || c; } }
+  function decOf(c) { try { return Math.min(2, new Intl.NumberFormat('en-US', { style: 'currency', currency: c }).resolvedOptions().maximumFractionDigits); } catch (e) { return 2; } }
+  var FILE = { single: 'Single', married: 'Married filing jointly', hoh: 'Head of household' };
+  var PH = { hour: 'an hour', day: 'a day', week: 'a week', biweek: 'every two weeks', semimonth: 'twice a month', month: 'a month', quarter: 'a quarter', year: 'a year' };
+  var PL = { hour: 'hourly', day: 'daily', week: 'weekly', biweek: 'bi-weekly', semimonth: 'semi-monthly', month: 'monthly', quarter: 'quarterly', year: 'yearly' };
+
+  function cf(x, d) {
+    var k = st.cur + d;
+    if (!NF[k]) NF[k] = new Intl.NumberFormat('en-US', { style: 'currency', currency: st.cur, currencyDisplay: 'narrowSymbol', minimumFractionDigits: d, maximumFractionDigits: d });
+    return (x < 0 ? '−' : '') + NF[k].format(Math.abs(x));
+  }
+  function fmt(x) {
+    if (!isFinite(x)) return '—';
+    if (Math.abs(x) < 0.005) x = 0;
+    return cf(x, st.dec === 0 ? 0 : ((st.cents || Math.abs(x) < 1000) ? 2 : 0));
+  }
+  function fmt0(x) { x = Math.round(x) || 0; return cf(x, 0); }
+  function usd() { return st.cur === 'USD'; }
+  function num(x) { return (Math.round(x * 100) / 100).toLocaleString('en-US', { maximumFractionDigits: 2 }); }
+  function f0(x) { return st.cents ? fmt(x) : fmt0(x); }
+  function neg(x) { return x > 0.004 ? '−' + f0(x) : f0(0); }
+  function setHint(m) { var h = $('slHint'); h.textContent = m || ''; h.style.display = m ? 'block' : 'none'; }
+  function empty(msg, sub) {
+    $('slBig').textContent = '—'; $('slSub').textContent = sub || $('slSub').getAttribute('data-empty'); $('slBody').style.display = 'none';
+    $('slMVal').textContent = '—'; $('slBigLab').textContent = 'Yearly pay'; $('slMLab').textContent = 'Yearly pay'; setHint(msg || '');
+  }
+  function seg(idSeg, v) { [].forEach.call($(idSeg).children, function (x) { x.classList.toggle('on', x.getAttribute('data-v') === String(v)); }); }
+
+  (function () {
+    var sym = function (c) { try { return new Intl.NumberFormat('en-US', { style: 'currency', currency: c, currencyDisplay: 'narrowSymbol' }).format(0).replace(/[0-9.,\s]/g, ''); } catch (e) { return c; } };
+    var opt = function (c, pop) { var n = curName(c); return '<button type="button" class="csel-opt' + (pop ? ' csel-pop' : '') + (c === 'USD' ? ' on' : '') + '" role="option" aria-selected="' + (c === 'USD') + '" data-value="' + c + '" data-p="' + (E.RANK.indexOf(c) + 1) + '" data-s="' + (c + ' ' + n + ' ' + sym(c)).toLowerCase() + '"><span class="n">' + n + '</span><span class="c">' + c + '</span></button>'; };
+    var all = E.CURRENCIES.slice().sort(function (a, b) { return curName(a) < curName(b) ? -1 : 1; });
+    $('slCur').querySelector('.csel-panel').innerHTML = '<div class="csel-sbox"><input class="csel-search" type="text" placeholder="Search currency" aria-label="Search currency" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="go"></div><div class="csel-group">Popular</div>' +
+      E.POPULAR.map(function (c) { return opt(c, true); }).join('') + '<div class="csel-group">All currencies</div>' + all.map(function (c) { return opt(c, false); }).join('') + '<div class="csel-none" style="display:none">No currency found</div>';
+    CalcThis.initCsel($('slCur'));
+    $('slCur').querySelector('.csel-val').textContent = 'USD';
+  })();
+  (function () {
+    var arr = [];
+    for (var k in PE.STATES) if (PE.STATES[k].method && PE.STATES[k].method !== 'pending') arr.push([k, PE.STATES[k].name]);
+    arr.sort(function (a, b) { return a[1] < b[1] ? -1 : 1; });
+    $('slState').querySelector('.csel-panel').innerHTML = '<button type="button" class="csel-opt on" role="option" aria-selected="true" data-value="">Federal taxes only</button>' +
+      arr.map(function (s) { return '<button type="button" class="csel-opt" role="option" aria-selected="false" data-value="' + s[0] + '">' + s[1] + '</button>'; }).join('');
+    CalcThis.initCsel($('slState'));
+  })();
+
+  function read() {
+    var o = { unit: $('slUnit').value || 'hour', bad: '' }, v;
+    v = E.parseMoney($('slAmt').value);
+    if (v !== null && (isNaN(v) || v < 0.01 || v > 1e9)) o.bad = 'Enter your pay as a number between 0.01 and 1,000,000,000 — for example 25 or 62,400.';
+    o.amount = v;
+    function nv(id, label, lo, hi, dflt, unit) {
+      var x = E.parseNum($(id).value);
+      if (x === null) return dflt;
+      if (isNaN(x) || x < lo || x > hi) { o.bad = o.bad || label + ': enter a number from ' + lo + ' to ' + hi + (unit ? ' ' + unit : '') + '.'; return dflt; }
+      return x;
+    }
+    o.hpw = nv('slHpw', 'Hours per week', 0.1, 168, 40, 'hours');
+    o.dpw = nv('slDpw', 'Days per week', 0.5, 7, 5, 'days');
+    var hol = nv('slHol', 'Holidays a year', 0, 366, 0, 'days'), vac = nv('slVac', 'Vacation days a year', 0, 366, 0, 'days');
+    o.hol = hol; o.vac = vac; o.off = hol + vac;
+    var rs = E.parsePct($('slRaise').value);
+    if (rs !== null && (isNaN(rs) || rs < -99 || rs > 1000)) { o.bad = o.bad || 'Raise or cut: enter a percent such as 5 or -3.'; rs = null; }
+    o.raise = rs;
+    o.oth = nv('slOTh', 'Overtime hours', 0, 100, 0, 'hours a week');
+    var mt = E.parseNum($('slMult').value);
+    if (mt !== null && (isNaN(mt) || mt < 1 || mt > 10)) { o.bad = o.bad || 'Overtime multiplier: enter a number from 1 to 10 (1.5 is time and a half).'; mt = null; }
+    o.mult = mt === null ? 1.5 : mt;
+    if (!o.bad && o.hpw / o.dpw > 24) o.bad = o.hpw + ' hours a week over ' + o.dpw + ' days is more than 24 hours a day — lower the hours or raise the days.';
+    if (!o.bad && o.off >= o.dpw * 52) o.bad = 'Holidays plus vacation (' + num(o.off) + ' days) can’t be as many as your ' + num(o.dpw * 52) + ' working days a year.';
+    return o;
+  }
+
+  function render() {
+    var o = read();
+    $('slSym').textContent = fmt(0).replace(/[0-9.,s−]/g, '') || st.cur;
+    if (o.bad) { empty(o.bad); return; }
+    if (o.amount === null) { empty(''); return; }
+    var c = E.convert(o), u = o.unit, yearIn = u === 'year', off = o.off > 0;
+    if (!(c.annUn <= 1e9)) { empty('That adds up to more than 1,000,000,000 a year — check the amount and the period you chose.'); return; }
+    setHint('');
+    $('slSym').textContent = fmt(0).replace(/[0-9.,\s−]/g, '') || st.cur;
+    var head = yearIn ? c.rows[0] : c.rows[7], big = head.adj;
+    var lab = yearIn ? 'Hourly pay' : 'Yearly pay';
+    $('slBigLab').textContent = lab; $('slMLab').textContent = lab;
+    $('slBig').textContent = fmt(big); $('slMVal').textContent = fmt(big);
+    var basis;
+    if (u === 'hour') basis = fmt(o.amount) + ' an hour × ' + num(c.hpd) + ' hours × ' + num(c.worked) + ' paid days';
+    else if (u === 'day') basis = fmt(o.amount) + ' a day × ' + num(c.worked) + ' paid days';
+    else if (yearIn) basis = fmt(o.amount) + ' a year ÷ ' + num(c.hours) + ' hours (' + num(o.hpw) + ' hours × 52 weeks)';
+    else basis = fmt(o.amount) + ' ' + PH[u].replace('a ', 'per ').replace('an ', 'per ') + ' × ' + E.N[u] + ' pay periods';
+    $('slSub').textContent = basis;
+    $('slBody').style.display = '';
+
+    var R = {}; c.rows.forEach(function (r) { R[r.k] = r; });
+    var tip;
+    if (yearIn) tip = 'To earn <strong>' + fmt(o.amount) + ' a year</strong> you need about <strong>' + fmt(R.hour.adj) + ' an hour</strong> over all ' + num(c.hours) + ' hours' + (off ? ', or <strong>' + fmt(R.hour.un) + ' an hour</strong> on the days you work' : '') + '.';
+    else tip = '<strong>' + fmt(o.amount) + ' ' + PH[u] + '</strong> is <strong>' + fmt(R.year.adj) + ' a year</strong>, <strong>' + fmt(R.month.adj) + ' a month</strong> and <strong>' + fmt(R.hour.adj) + ' an hour</strong> over the whole year' + (off ? ' once ' + num(o.off) + ' unpaid days off are taken out' : '') + '.';
+    $('slTip').innerHTML = tip;
+
+    /* year bar */
+    var wk = c.worked;
+    if (off) {
+      $('slViz').innerHTML = '<div class="ot-row"><span class="ot-l">Days</span><span class="ot-b">' +
+        [['r', wk], ['o', o.hol], ['d', o.vac]].map(function (p) { return p[1] > 0 ? '<span class="ot-seg ' + p[0] + '" style="width:' + (p[1] / c.days * 100) + '%"></span>' : ''; }).join('') +
+        '</span><span class="ot-v">' + num(wk) + ' of ' + num(c.days) + '</span></div>' +
+        '<div class="ot-key"><span><i class="r"></i>Paid working days ' + num(wk) + '</span>' + (o.hol > 0 ? '<span><i class="o"></i>Holidays ' + num(o.hol) + '</span>' : '') + (o.vac > 0 ? '<span><i class="d"></i>Vacation ' + num(o.vac) + '</span>' : '') + '</div>';
+    } else $('slViz').innerHTML = '';
+
+    /* take-home */
+    var code = $('slState').value || '', status = st.status, sName = code ? PE.STATES[code].name : '', noState = code && PE.STATES[code].method === 'none';
+    var US = usd(), TH = US ? E.takeHome(PE, c.annAdj, status, code) : null;
+    $('slTakeWrap').style.display = US ? '' : 'none'; $('slTaxIn').style.display = US ? '' : 'none';
+    var rows = '<thead><tr><th>Pay period</th>' + (off ? '<th>Without time off</th><th>With time off</th>' : '<th>Pay</th>') + (US ? '<th>Take-home</th>' : '') + '</tr></thead><tbody>';
+    c.rows.forEach(function (r) {
+      var th = US && c.annAdj > 0 ? TH.net * r.adj / c.annAdj : 0;
+      rows += '<tr' + (r.k === u ? ' class="cur"' : '') + '><td>' + r.name + '</td>' + (off ? '<td>' + fmt(r.un) + '</td>' : '') + '<td>' + fmt(r.adj) + '</td>' + (US ? '<td>' + fmt(th) + '</td>' : '') + '</tr>';
+    });
+    $('slTbl').innerHTML = rows + '</tbody>';
+    $('slTblNote').innerHTML = (off ? '<strong>Without time off</strong> pays every working day; <strong>with time off</strong> takes out the ' + num(o.off) + ' holiday and vacation days as unpaid — if yours are paid, use the first column. ' : '') +
+      (!US ? 'Take-home after tax is shown for US dollars only. ' : 'Take-home is estimated on ' + (off ? 'the “with time off” pay' : 'the pay') + ': ' + FILE[status].toLowerCase() + ', 2026 federal withholding with a standard W-4' + (code ? (noState ? ' — ' + sName + ' has no state income tax' : ' and ' + sName + ' withholding') : ', no state tax (pick a state under Go advanced)') + ', 12 monthly paychecks. Hourly and daily take-home is spread over all ' + num(c.hours) + ' hours and ' + num(c.days) + ' days.') + '';
+
+    var trows = US ? [['Yearly pay', f0(TH.gross)], ['Federal income tax', neg(TH.fed)], ['Social Security', neg(TH.ss)], ['Medicare', neg(TH.med)]] : [];
+    if (US && code) trows.push([noState ? sName + ' <small>no state income tax</small>' : sName + ' income tax', neg(TH.state)]);
+    if (US && TH.prog > 0.004) trows.push(['State payroll programs', neg(TH.prog)]);
+    if (US) trows.push(['<b>Yearly take-home</b>', '<b>' + f0(TH.net) + '</b>'], ['Share kept', (TH.gross > 0 ? Math.round(TH.net / TH.gross * 100) : 0) + '%']);
+    $('slTakeTbl').innerHTML = '<tbody>' + trows.map(function (x) { return '<tr><td>' + x[0] + '</td><td>' + x[1] + '</td></tr>'; }).join('') + '</tbody>';
+
+    /* advanced: raise / cut */
+    if (o.raise !== null && o.raise !== 0) {
+      var g2 = c.annAdj * (1 + o.raise / 100), T2 = US ? E.takeHome(PE, g2, status, code) : null, f = 1 + o.raise / 100;
+      var rr = [['Hourly', R.hour.adj, R.hour.adj * f], ['Monthly', R.month.adj, R.month.adj * f], ['Yearly', c.annAdj, g2]]; if (US) rr.push(['Yearly take-home', TH.net, T2.net]);
+      $('slRaiseTbl').innerHTML = '<thead><tr><th>' + (o.raise > 0 ? 'Raise' : 'Cut') + ' of ' + num(Math.abs(o.raise)) + '%</th><th>Now</th><th>After</th><th>Change</th></tr></thead><tbody>' +
+        rr.map(function (x) { var d = x[2] - x[1]; return '<tr><td>' + x[0] + '</td><td>' + fmt(x[1]) + '</td><td>' + fmt(x[2]) + '</td><td>' + (d < 0 ? '−' : '+') + fmt(Math.abs(d)) + '</td></tr>'; }).join('') + '</tbody>';
+      $('slRaiseWrap').style.display = '';
+    } else $('slRaiseWrap').style.display = 'none';
+
+    /* advanced: overtime */
+    if (o.oth > 0) {
+      var otp = E.overtime(c, o.oth, o.mult), TO = US ? E.takeHome(PE, c.annAdj + otp, status, code) : null;
+      $('slOtTbl').innerHTML = '<tbody>' +
+        '<tr><td>Overtime rate <small>' + fmt(c.rateWhileWorking) + ' × ' + (Math.round(o.mult * 1000) / 1000) + '</small></td><td>' + fmt(c.rateWhileWorking * o.mult) + ' an hour</td></tr>' +
+        '<tr><td>Overtime pay a year <small>' + num(o.oth) + ' hours a week × ' + num(c.worked / (c.days / 52)) + ' weeks worked</small></td><td>' + fmt(otp) + '</td></tr>' +
+        '<tr><td><b>Yearly pay with overtime</b></td><td><b>' + fmt(c.annAdj + otp) + '</b></td></tr>' +
+        (US ? '<tr><td><b>Yearly take-home with overtime</b></td><td><b>' + f0(TO.net) + '</b></td></tr>' +
+        '<tr><td>Kept from the overtime</td><td>' + f0(TO.net - TH.net) + ' (' + (otp > 0 ? Math.round((TO.net - TH.net) / otp * 100) : 0) + '%)</td></tr>' : '') + '</tbody>';
+      $('slOtWrap').style.display = '';
+    } else $('slOtWrap').style.display = 'none';
+
+    /* the working */
+    var w = [];
+    if (u === 'hour') { w.push('Hours a day = ' + num(o.hpw) + ' ÷ ' + num(o.dpw) + ' = ' + num(c.hpd)); w.push('Without time off: ' + fmt(o.amount) + ' × ' + num(o.hpw) + ' × 52 = ' + fmt(c.annUn)); if (off) w.push('With time off: ' + fmt(o.amount) + ' × ' + num(c.hpd) + ' × (' + num(c.days) + ' − ' + num(o.off) + ') = ' + fmt(c.annAdj)); }
+    else if (u === 'day') { w.push('Without time off: ' + fmt(o.amount) + ' × ' + num(c.days) + ' days = ' + fmt(c.annUn)); if (off) w.push('With time off: ' + fmt(o.amount) + ' × (' + num(c.days) + ' − ' + num(o.off) + ') = ' + fmt(c.annAdj)); }
+    else { w.push('Yearly pay = ' + fmt(o.amount) + ' × ' + E.N[u] + ' = ' + fmt(c.annAdj)); if (off) w.push('Without time off: ' + fmt(c.annAdj) + ' × ' + num(c.days) + ' ÷ (' + num(c.days) + ' − ' + num(o.off) + ') = ' + fmt(c.annUn)); }
+    w.push('Hourly = yearly ÷ ' + num(c.hours) + ' hours = ' + fmt(R.hour.adj) + ' · monthly = yearly ÷ 12 = ' + fmt(R.month.adj) + ' · bi-weekly = yearly ÷ 26 = ' + fmt(R.biweek.adj));
+    $('slSteps').innerHTML = w.map(function (l) { return '<li>' + l + '</li>'; }).join('');
+  }
+
+  ['slAmt', 'slHpw', 'slDpw', 'slHol', 'slVac', 'slRaise', 'slOTh', 'slMult'].forEach(function (id) { $(id).addEventListener('input', render); });
+  $('slUnit').addEventListener('change', render);
+  $('slCur').addEventListener('change', function () { st.cur = $('slCur').value || 'USD'; st.dec = decOf(st.cur); $('slCur').querySelector('.csel-val').textContent = st.cur; render(); });
+  $('slFileSeg').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; st.status = b.getAttribute('data-v'); seg('slFileSeg', st.status); render(); });
+  $('slCentsSeg').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; st.cents = b.getAttribute('data-v') === '1'; seg('slCentsSeg', st.cents ? 1 : 0); render(); });
+  $('slState').addEventListener('change', render);
+  $('slAdvBtn').addEventListener('click', function () {
+    st.adv = !st.adv; $('slAdvBtn').classList.toggle('open', st.adv); $('slAdvBtnLab').textContent = st.adv ? 'Go simple' : 'Go advanced'; $('slAdvIn').style.display = st.adv ? '' : 'none';
+    if (!st.adv) {
+      st.cents = false; seg('slCentsSeg', 0); st.status = 'single'; seg('slFileSeg', 'single');
+      ['slRaise', 'slOTh', 'slMult'].forEach(function (id) { $(id).value = ''; });
+      $('slState').value = '';
+    }
+    render();
+  });
+  render();
+};
+/* SALARY:END */

@@ -2656,3 +2656,22 @@
 .p-ot .av-note{font-size:14px;line-height:1.5}
 .p-ot .dtable small{font-size:14px}
 .p-ot .ot-row{font-size:14px}
+
+/* SALARY CALCULATOR (body.p-bmr p-avg p-ot p-sal) — reuses every .p-ot rule; only the table cells and the unit select get tweaks */
+.p-sal .ot-per td,.p-sal .ot-per th{padding:8px 6px}
+@media(max-width:480px){.p-sal .ot-per td,.p-sal .ot-per th{padding:8px 3px;font-size:14px}.p-sal .ot-per th{font-size:13px}}
+.p-sal .two .csel{width:100%}
+.p-sal .sl-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}
+.p-sal .sl-head .card-h2{margin:0}
+.p-sal .sl-cur{width:auto;min-width:110px;flex:0 0 auto}
+.p-sal .sl-cur .csel-panel{left:auto;right:0;width:max-content;min-width:100%;max-width:min(280px,86vw)}
+
+/* Searchable .csel (root has data-search): input row pinned at the top of the panel, name left / code right, keyboard highlight */
+.csel[data-search] .csel-opt{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.csel[data-search] .csel-opt .c{font-size:12.5px;font-weight:700;color:var(--muted);letter-spacing:.03em}
+.csel-opt.kb{background:#F5EFE4;color:var(--ink)}
+.csel-sbox{position:sticky;top:-7px;z-index:2;margin:-7px -7px 4px;padding:7px;background:var(--card);border-bottom:1px solid var(--line)}
+.csel-search{width:100%;font:inherit;font-size:16px;font-weight:500;color:var(--ink);background:#FCFAF6;border:1.5px solid var(--line);border-radius:9px;padding:9px 11px;outline:none}
+.csel-search:focus{border-color:var(--amber);background:#fff;box-shadow:0 0 0 3px rgba(181,118,31,.13)}
+.csel-none{padding:14px 11px;font-size:14.5px;color:var(--muted)}
+.p-sal .sl-cur .csel-panel{width:300px;max-width:86vw;max-height:min(380px,60vh)}

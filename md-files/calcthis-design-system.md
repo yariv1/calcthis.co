@@ -370,6 +370,13 @@ see above). Single `.sel` wrapper, never nest two:
 
 ---
 
+
+### Searchable `.csel` (type-to-filter) — added 2026-11-02 (salary calculator currency picker)
+For any list longer than ~12 options (currencies, countries, units). Put `data-search="1"` on the `.csel` root and build the panel as:
+`<div class="csel-sbox"><input class="csel-search" placeholder="Search …"></div>` + optional `<div class="csel-group">Popular</div>` + options + `<div class="csel-none" style="display:none">No … found</div>`.
+Each option: `.csel-opt` with `data-value`, `data-s="lowercase search text"` (code + name + symbol), optional `data-p` (popularity rank; lower wins ties), and `.csel-pop` on the duplicates inside the Popular group (hidden while a query is typed). Name left / code right via `<span class="n">` / `<span class="c">`.
+Behaviour (shared runtime, `initCsel`): the input is focused on open (a phone keyboard appears at once); typing filters; the best match (exact code, then code prefix, then word prefix, then popularity) is highlighted and scrolled to the top; ArrowUp/Down moves the highlight, Enter picks it, Escape closes. The selected state is matched by `data-value`, so a value listed twice (Popular + All) is marked in both. The trigger text is whatever the page sets in `.csel-val` (the currency page shows the 3-letter code). Reference: `#slCur` on /salary-calculator/ (`CalcThis.salaryEngine.CURRENCIES`, names from `Intl.DisplayNames`).
+
 ## CSS Variables (from :root — never guess, these are the set)
 --paper #FBF8F3 · --card #FFFFFF · --ink #241A11 · --ink-soft #5B4C3B · --muted #8A7A66
 --line #E7DECF · --amber #B5761F · --amber-deep #8F5C13 · --spruce #37503F · --spruce-soft #5A7361

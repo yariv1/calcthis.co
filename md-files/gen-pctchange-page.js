@@ -180,7 +180,7 @@ ${pill('/sales-tax-calculator/', 'Sales Tax Calculator', '<rect x="4" y="3" widt
 
         <h2>A list of values over time</h2>
         <p>Paste values in order under Go advanced — monthly sales, yearly prices, anything — to see the change from each value to the next, the total change from first to last, the average of the period changes and the <strong>compound rate per period</strong>. For 100, 110, 99, 120 that is ${sgn(S.rows[1].pct, 0)}%, ${sgn(S.rows[2].pct, 0)}%, ${sgn(S.rows[3].pct, 2)}%, a total of ${sgn(S.total.pct, 0)}% and ${sgn(S.cagr, 2)}% a period compounded.</p>
-        <p>For percent of a number, or what percent one number is of another, use the <a href="/percentage-calculator/">percentage calculator</a>; for the average of a list, the <a href="/average-calculator/">average calculator</a>.</p>
+        <p>For percent of a number, or what percent one number is of another, use the <a href="/percentage-calculator/">percentage calculator</a>; for the average of a list, the <a href="/average-calculator/">average calculator</a>; to see what a pay raise does to hourly, monthly and yearly pay, the <a href="/salary-calculator/">salary calculator</a>.</p>
       </div>
     </div>
 

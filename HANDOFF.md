@@ -4,6 +4,9 @@ _Rewritten 2026-11-02 at the end of the overtime-calculator session: §00 is NEW
 
 ---
 
+## 000. UPDATE (end of 2026-11-02, later): SALARY CALCULATOR DEPLOYED (v299, 180 pages, 71 calculators)
+"synced · live v299 / 71 calcs / 180 pages · salary calculator deployed + in Bing · next: the TAKE-HOME PAY wording upgrade research report (paycheck hub + 25 state pages + NYC), then self-employment tax". See CLAUDE.md addendum 7 for code map and QA. Research -> short report -> wait for approval -> build -> full QA -> preview link only -> wait for "deploy". The user added the currency selector (searchable `.csel[data-search]`, 154 currencies) himself-requested; keep the same bar (mobile-first quick lookup) for any future long dropdown. GSC queue unchanged (add /salary-calculator/ at the end). The rest of §00 below is still valid except where this section says otherwise.
+
 ## 00. START HERE — END OF THE 2026-11-02 SESSION (v286 → v294: the OVERTIME CALCULATOR is LIVE) — authoritative; §0 below is the older 2026-11-01 handoff (still valid for everything not contradicted here)
 
 ### 00.1 THE FIRST 2-3 LINES OF THE NEXT SESSION (no recap, no questions that are answered here)
