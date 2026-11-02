@@ -152,7 +152,7 @@ ${o.hero}
         </div>
 
         <div id="pcSalBox">
-          <div class="fld"><label class="lab" for="pcGross">Pay <span class="unit">$</span></label><div class="inp"><input id="pcGross" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 65000"><span class="len-toggle" id="pcUnitSeg"><button type="button" class="on" data-v="year">per year</button><button type="button" data-v="period">per paycheck</button></span></div></div>
+          <div class="fld"><label class="lab" for="pcGross">Gross pay, before taxes <span class="unit">$</span></label><div class="inp"><input id="pcGross" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 65000"><span class="len-toggle" id="pcUnitSeg"><button type="button" class="on" data-v="year">per year</button><button type="button" data-v="period">per paycheck</button></span></div></div>
         </div>
         <div id="pcHourBox" style="display:none">
           <div class="ln-two">
@@ -163,6 +163,7 @@ ${o.hero}
 
         <div class="fld"><span class="lab">Pay frequency</span>${csel('pcFreq', 'biweekly', 'Bi-weekly', freqOpts)}</div>
         <div class="fld"><span class="lab">State</span><div class="st-ta"><div class="inp"><input id="pcStateIn" type="text" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="pcStateList" aria-label="State" placeholder="Federal taxes only — type to pick a state"><input id="pcState" type="hidden" value=""></div><div class="st-ta-list" id="pcStateList" role="listbox" style="display:none"></div></div></div>
+        <div class="fld" id="pcCountyFld" style="display:none"><span class="lab" id="pcCountyLab">County where you live</span><div class="st-ta"><div class="inp"><input id="pcCountyIn" type="text" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="pcCountyList" aria-label="County" placeholder="Type to pick your county"><input id="pcCounty" type="hidden" value=""></div><div class="st-ta-list" id="pcCountyList" role="listbox" style="display:none"></div></div></div>
         <div class="fld"><span class="lab">Filing status</span>${csel('pcStatus', 'single', 'Single or married filing separately', [['single', 'Single or married filing separately'], ['married', 'Married filing jointly'], ['hoh', 'Head of household']])}</div>
 
         <div id="pcNycFld" style="display:none">${chk('pcNyc', 'I live in New York City (adds NYC income tax)')}</div>
@@ -384,7 +385,7 @@ write('paycheck-calculator/index.html', pageHtml({
 console.log('main page written; live states', nLive, 'pending', pending.length);
 
 // ---------------- state pages ----------------
-const FORM = { AL: 'Form A-4', AZ: 'Form A-4', CA: 'Form DE 4', CO: 'Form DR 0004 (optional — without it your federal W-4 is used)', GA: 'Form G-4', IA: 'the IA W-4', IL: 'Form IL-W-4', KY: 'Form K-4', MI: 'Form MI-W4', MN: 'Form W-4MN', MO: 'Form MO W-4', MT: 'Form MW-4', NC: 'Form NC-4', NY: 'Form IT-2104', PA: '', VA: 'Form VA-4' };
+const FORM = { AL: 'Form A-4', AZ: 'Form A-4', CA: 'Form DE 4', CO: 'Form DR 0004 (optional — without it your federal W-4 is used)', GA: 'Form G-4', IA: 'the IA W-4', IL: 'Form IL-W-4', KY: 'Form K-4', MI: 'Form MI-W4', MN: 'Form W-4MN', MO: 'Form MO W-4', MT: 'Form MW-4', NC: 'Form NC-4', NY: 'Form IT-2104', PA: '', VA: 'Form VA-4', NJ: 'Form NJ-W4', OH: 'Form IT 4', MA: 'Form M-4', MD: 'Form MW507', WI: 'Form WT-4', IN: 'Form WH-4', OR: 'Form OR-W-4', UT: 'the federal Form W-4 and its filing status (there is no separate Utah allowance form)' };
 const LOCALS = {
   NY: 'New York City residents also pay a city income tax — tick “I live in New York City” in the calculator or use the New York City paycheck calculator. Yonkers residents also pay a local tax, which is not included.',
   PA: 'Most Pennsylvania workers also pay a local earned income tax (commonly about 1%) and Philadelphia has its own wage tax; none of these are included here.',
@@ -392,7 +393,15 @@ const LOCALS = {
   MO: 'St. Louis and Kansas City charge a 1% earnings tax, which is not included here.',
   KY: 'Many Kentucky cities and counties charge an occupational license tax, which is not included here.',
   AL: 'Some Alabama cities and counties charge an occupational tax, which is not included here.',
-  CO: 'Denver and a few other Colorado cities charge an occupational privilege tax, which is not included here.'
+  CO: 'Denver and a few other Colorado cities charge an occupational privilege tax, which is not included here.',
+  NJ: 'New Jersey cities do not charge an income tax on wages, so there is no local tax to add.',
+  OH: 'Many Ohio cities charge a municipal income tax and many school districts charge their own income tax; neither is included here, so add your rate under Go advanced.',
+  MA: 'Massachusetts cities and towns do not charge a local income tax.',
+  MD: 'Maryland county tax is included — pick your county or Baltimore City above and the calculator uses its 2026 rate.',
+  WI: 'Wisconsin has no local income tax.',
+  IN: 'Indiana county tax is included — pick your county above and the calculator adds its rate. City taxes do not exist in Indiana.',
+  OR: 'Some Oregon residents also owe Multnomah County and Portland-area Metro income taxes, which this calculator does not include; add your rate under Go advanced.',
+  UT: 'Utah has no local income tax.'
 };
 function programsText(S) {
   if (!S.programs || !S.programs.length) return '';
@@ -418,6 +427,14 @@ function fact(c) {
     case 'AL': return 'Alabama withholds 2%, 4% and 5% after a standard deduction that phases down with income, a personal exemption, dependent amounts and — uniquely — the federal income tax already withheld from the paycheck.';
     case 'MO': return 'Missouri withholds 0% up to $1,348 of taxable wages rising to 4.7% above $9,436, after a standard deduction of $16,100 ($24,150 for head of household, $32,200 for married with a spouse who does not work), rounded to the whole dollar.';
     case 'MT': return 'Montana withholds 4.7% on wages above the standard deduction ($16,100 single, $24,150 head of household, $32,200 married with one earner) and 5.65% on wages above $63,600, $95,400 or $127,200 respectively, rounded up to the next dollar.';
+    case 'NJ': return 'New Jersey withholds with the Division of Taxation’s percentage method: your pay less $1,000 a year for each allowance on Form NJ-W4, then graduated rates from 1.5% to 11.8% (Rate A for single filers, Rate B for married and head-of-household filers). Employees also pay unemployment and workforce development (0.425% up to $44,800), disability insurance (0.19% up to $171,100) and family leave insurance (0.23% up to $171,100).';
+    case 'OH': return 'Ohio withholds 1.6% on the first $26,050 of annual taxable pay, 2.99% up to $100,000 and 3.4% above that, after subtracting $650 for each exemption claimed on Form IT 4. These are the percentage-method tables effective August 1, 2026.';
+    case 'MA': return 'Massachusetts withholds 5% of pay after subtracting your Social Security and Medicare tax (up to $2,000 a year) and an amount for the exemptions you claim on Form M-4 ($1,000 each plus $3,400 once you claim any), plus 9% on annual pay above $1,107,750. Employees also pay 0.46% toward Paid Family and Medical Leave up to the Social Security wage limit.';
+    case 'MD': return 'Maryland withholds with the Comptroller’s percentage chart: state rates from 4.75% to 6.5% plus your county’s local rate (2.25% to 3.30%), after a $3,400 standard deduction and $3,200 for each exemption claimed on Form MW507. Without a county on file the Comptroller withholds local tax at 3.30%.';
+    case 'WI': return 'Wisconsin withholds 3.54%, 4.65%, 5.3% and 7.65% of annual pay after a sliding standard deduction (up to $6,702 single, $9,461 married) and $400 for each exemption claimed on Form WT-4.';
+    case 'IN': return 'Indiana withholds a flat 2.95% state rate plus your county’s rate (0.5% to 3.0%) on pay after $1,000 for each personal exemption and $1,500 for each dependent exemption claimed on Form WH-4.';
+    case 'OR': return 'Oregon withholds 4.75%, 6.75%, 8.75% and 9.9% after subtracting the federal income tax withheld from your pay (up to $8,750 a year), a $2,910 standard deduction ($5,820 married) and a $263 credit for each allowance on Form OR-W-4. Employees also pay 0.6% for Paid Leave Oregon (up to $184,500) and the 0.1% statewide transit tax.';
+    case 'UT': return 'Utah withholds a flat 4.45% of annual pay, less a withholding allowance of $485 ($970 married) that shrinks by 1.3% of pay above $9,348 ($18,696 married).';
     case 'WA': return 'Washington has no state income tax, but employees pay for the state’s Paid Family & Medical Leave program (about 0.81% of wages up to the Social Security limit) and the WA Cares long-term-care fund (0.58% of all wages).';
     default: return n + ' does not tax wages, so your paycheck has only federal income tax, Social Security and Medicare.';
   }
@@ -425,30 +442,31 @@ function fact(c) {
 function stateExamples(c) {
   const S = E.STATES[c], rows = [];
   [[40000, 'single'], [65000, 'single'], [100000, 'single'], [65000, 'married'], [30000, 'single'], [50000, 'single'], [75000, 'single'], [150000, 'single'], [100000, 'married']].forEach(([a, st]) => {
-    const inp = base(a / 26, 26, { fed: { w4: 'new', status: st }, state: { code: c, status: st, allowances: c === 'AZ' ? null : 0, allowances2: 0 } });
+    const inp = base(a / 26, 26, { fed: { w4: 'new', status: st }, state: { code: c, status: st, allowances: c === 'AZ' ? null : 0, allowances2: 0, county: S.defaultCounty } });
     const p = pc(inp);
-    rows.push({ a, st, gross: a / 26, fed: p.fed, ss: p.ss, med: p.med + p.addl, state: p.state, prog: p.programTotal, net: p.net });
+    rows.push({ a, st, gross: a / 26, fed: p.fed, ss: p.ss, med: p.med + p.addl, state: p.state + p.county, prog: p.programTotal, net: p.net });
   });
   return rows;
 }
-function monthly65(c) { return pc(base(65000 / 12, 12, { fed: { w4: 'new', status: 'single' }, state: { code: c, status: 'single', allowances: c === 'AZ' ? null : 0, allowances2: 0 } })); }
+function monthly65(c) { return pc(base(65000 / 12, 12, { fed: { w4: 'new', status: 'single' }, state: { code: c, status: 'single', allowances: c === 'AZ' ? null : 0, allowances2: 0, county: E.STATES[c].defaultCounty } })); }
 function stateFaqs(c) {
   const n = NAMES[c], S = E.STATES[c], ex = stateExamples(c), e65 = ex[1], none = S.method === 'none', prog = programsText(S);
+  const cty = S.defaultCounty ? ' (' + S.defaultCounty + ')' : '', sw = S.counties ? 'state and county' : 'state';
   const f = [];
   f.push([`How much is taken out of a $65,000 salary in ${n}?`,
-    `On a ${m0(65000)} salary paid bi-weekly (${m(65000 / 26)} gross) for a single filer with no allowances, ${n} ${none && !prog ? 'withholds no state income tax' : 'withholds ' + m(e65.state) + ' of state income tax' + (e65.prog > 0 ? ' plus ' + m(e65.prog) + ' of ' + prog : '')}, federal income tax is ${m(e65.fed)}, Social Security ${m(e65.ss)} and Medicare ${m(e65.med)}. Take-home pay is ${m(e65.net)} a paycheck, about ${m0(e65.net * 26)} a year.`]);
+    `On a ${m0(65000)} salary paid bi-weekly (${m(65000 / 26)} gross) for a single filer with no allowances${cty}, ${n} ${none && !prog ? 'withholds no state income tax' : 'withholds ' + m(e65.state) + ' of ' + sw + ' income tax' + (e65.prog > 0 ? ' plus ' + m(e65.prog) + ' of ' + prog : '')}, federal income tax is ${m(e65.fed)}, Social Security ${m(e65.ss)} and Medicare ${m(e65.med)}. Take-home pay is ${m(e65.net)} a paycheck, about ${m0(e65.net * 26)} a year.`]);
   const mo = monthly65(c);
   f.push([`What is the monthly take-home pay on a $65,000 salary in ${n}?`,
-    `A single filer on ${m0(65000)} a year paid monthly in ${n} takes home about ${m(mo.net)} a month (${m(mo.gross)} gross): federal income tax ${m(mo.fed)}, Social Security ${m(mo.ss)}, Medicare ${m(mo.med)}${none && !mo.programTotal ? ', and no ' + n + ' income tax' : ', ' + n + ' ' + (mo.programTotal > 0 ? 'income tax ' + m(mo.state) + ' and ' + m(mo.programTotal) + ' of state programs' : 'income tax ' + m(mo.state))}.`]);
+    `A single filer on ${m0(65000)} a year paid monthly in ${n}${cty} takes home about ${m(mo.net)} a month (${m(mo.gross)} gross): federal income tax ${m(mo.fed)}, Social Security ${m(mo.ss)}, Medicare ${m(mo.med)}${none && !mo.programTotal ? ', and no ' + n + ' income tax' : ', ' + n + ' ' + (mo.programTotal > 0 ? sw + ' income tax ' + m(mo.state + mo.county) + ' and ' + m(mo.programTotal) + ' of state programs' : sw + ' income tax ' + m(mo.state + mo.county))}.`]);
   f.push([`Does ${n} tax paychecks differently for married workers?`,
     `Federal withholding does, and ${none ? n + ' has no state income tax to change' : n + ' uses its own married tables or deductions'}. For a ${m0(65000)} salary paid bi-weekly, a married filer in ${n} takes home ${m(ex[3].net)} a paycheck versus ${m(e65.net)} for a single filer.`]);
   f.push([`Which form do I fill out for ${n} withholding?`,
     FORM[c] ? `${n} uses ${FORM[c]}. Under Go advanced the calculator asks for the same details, so your result matches what your employer would withhold.` : (none ? `${n} has no state income tax form because it does not tax wages — only your federal Form W-4 matters.` : `${n} withholding is a flat rate with no state allowance form — only your federal Form W-4 matters for federal tax.`)]);
   f.push([`Does this ${n} calculator include local taxes?`, (LOCALS[c] || 'City, county and school-district taxes are not included by default.') + ' Open Go advanced to add a local tax rate as an estimate. State and federal figures follow the 2026 official withholding methods.']);
   f.push([`What is my take-home pay on $40,000 or $100,000 in ${n}?`,
-    `Single filer, paid bi-weekly: ${m0(40000)} a year gives ${m(ex[0].net)} a paycheck; ${m0(100000)} a year gives ${m(ex[2].net)} a paycheck.`]);
+    `Single filer, paid bi-weekly${cty}: ${m0(40000)} a year gives ${m(ex[0].net)} a paycheck; ${m0(100000)} a year gives ${m(ex[2].net)} a paycheck.`]);
   const byA = (a, st) => ex.find((r) => r.a === a && r.st === st);
-  [30000, 50000, 75000, 150000].forEach((a) => { const r = byA(a, 'single'); f.push([`What is ${m0(a)} a year after taxes in ${n}?`, `A single filer paid bi-weekly in ${n} on ${m0(a)} a year takes home about ${m(r.net)} a paycheck, roughly ${m0(r.net * 26)} a year after federal income tax${none && !r.prog ? '' : ', ' + n + ' tax'}, Social Security and Medicare. That is an effective total tax rate of about ${((1 - r.net * 26 / a) * 100).toFixed(1)}%.`]); });
+  [30000, 50000, 75000, 150000].forEach((a) => { const r = byA(a, 'single'); f.push([`What is ${m0(a)} a year after taxes in ${n}?`, `A single filer paid bi-weekly in ${n}${cty} on ${m0(a)} a year takes home about ${m(r.net)} a paycheck, roughly ${m0(r.net * 26)} a year after federal income tax${none && !r.prog ? '' : ', ' + n + ' tax'}, Social Security and Medicare. That is an effective total tax rate of about ${((1 - r.net * 26 / a) * 100).toFixed(1)}%.`]); });
   return f;
 }
 function stateContent(c, faqs2) {
@@ -459,12 +477,12 @@ function stateContent(c, faqs2) {
     <div class="grid2">
       <div>
         <h2>${n} take-home pay at a glance</h2>
-        <p><strong>${m0(65000)} a year in ${n}</strong> (single, bi-weekly, 2026) is <strong>${m(ex[1].net)} a paycheck</strong>, about ${m0(ex[1].net * 26)} a year. <strong>${m0(100000)}</strong> is <strong>${m(ex[2].net)}</strong> a paycheck. Updated for the 2026 tax year using the IRS Publication 15-T method${S.method === 'none' ? '' : ' and the official ' + n + ' withholding formula'}.</p>
+        <p><strong>${m0(65000)} a year in ${n}${S.defaultCounty ? ' (' + S.defaultCounty + ')' : ''}</strong> (single, bi-weekly, 2026) is <strong>${m(ex[1].net)} a paycheck</strong>, about ${m0(ex[1].net * 26)} a year. <strong>${m0(100000)}</strong> is <strong>${m(ex[2].net)}</strong> a paycheck. Updated for the 2026 tax year using the IRS Publication 15-T method${S.method === 'none' ? '' : ' and the official ' + n + ' withholding formula'}.</p>
         <h2>How ${n} paycheck tax works</h2>
         <p>${fact(c)}</p>
         <p>${c === 'NY' ? 'Live in New York City? Tick “I live in New York City” above, or use the <a href="/paycheck-calculator/new-york-city/">New York City paycheck calculator</a>, to add the city’s resident income tax. Yonkers and other local taxes are not included.' : (LOCALS[c] || 'City, county and school-district taxes are not included.')} Under Go advanced you can add a city or local tax rate as an estimate.</p>
         <h2>${n} paycheck examples</h2>
-        <p>Single filer unless marked, paid bi-weekly in 2026, no extra withholding, no deductions. Amounts are per paycheck:</p>
+        <p>Single filer unless marked, paid bi-weekly in 2026, no extra withholding, no deductions${S.defaultCounty ? ', living in ' + S.defaultCounty : ''}. Amounts are per paycheck:</p>
         <div class="pc-tblwrap"><table class="dtable"><thead><tr><th>Pay</th><th>Federal</th><th>FICA</th><th>${n}</th><th>Net pay</th></tr></thead><tbody>${rowsHtml}</tbody></table></div>
         <p>FICA is Social Security plus Medicare.</p>
       </div>
@@ -485,7 +503,7 @@ ${faqs2.map((q) => `    <details class="faq"><summary>${q[0]}</summary><p>${q[1]
 let nState = 0;
 liveSorted.forEach((c) => {
   const n = NAMES[c], url = 'https://calcthis.co/paycheck-calculator/' + SLUG[c] + '/', f2 = stateFaqs(c), e65 = stateExamples(c)[1];
-  const app = Object.assign({}, jsonLdApp, { dateModified: '2026-10-27', name: n + ' Paycheck Calculator', url, description: n + ' paycheck and take home pay calculator for salary and hourly pay: federal income tax, Social Security, Medicare' + (E.STATES[c].method === 'none' ? '' : ', ' + n + ' state tax') + ', deductions and overtime.' });
+  const app = Object.assign({}, jsonLdApp, { dateModified: ['NJ', 'OH', 'MA', 'MD', 'WI', 'IN', 'OR', 'UT'].indexOf(c) >= 0 ? '2026-11-02' : '2026-10-27', name: n + ' Paycheck Calculator', url, description: n + ' paycheck and take home pay calculator for salary and hourly pay: federal income tax, Social Security, Medicare' + (E.STATES[c].method === 'none' ? '' : ', ' + n + ' state tax') + ', deductions and overtime.' });
   const faq = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: f2.map((q) => ({ '@type': 'Question', name: q[0], acceptedAnswer: { '@type': 'Answer', text: q[1] } })) };
   const crumbs = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'CalcThis', item: 'https://calcthis.co/' },
@@ -494,7 +512,7 @@ liveSorted.forEach((c) => {
   const hero = `  <section class="hero">
     <div class="eyebrow">${n} · 2026 tax rates</div>
     <h1>${n} Paycheck &amp; <span style="white-space:nowrap">Take-Home</span> Pay Calculator</h1>
-    <p>This ${n} take home pay calculator shows your <strong>${n} take-home pay</strong> after <strong>federal income tax, Social Security, Medicare</strong>${E.STATES[c].method === 'none' ? (E.STATES[c].programs ? ' and the state’s employee-paid programs' : ' — ' + n + ' has no state income tax') : ' and <strong>' + n + ' state tax</strong>'}. On a ${m0(65000)} salary paid bi-weekly a single filer takes home about <strong>${m(e65.net)}</strong> a paycheck.</p>
+    <p>This ${n} take home pay calculator shows your <strong>${n} take-home pay</strong> after <strong>federal income tax, Social Security, Medicare</strong>${E.STATES[c].method === 'none' ? (E.STATES[c].programs ? ' and the state’s employee-paid programs' : ' — ' + n + ' has no state income tax') : (E.STATES[c].counties ? ', <strong>' + n + ' state tax</strong> and <strong>county tax</strong>' : ' and <strong>' + n + ' state tax</strong>')}. On a ${m0(65000)} salary paid bi-weekly a single filer${E.STATES[c].defaultCounty ? ' in ' + E.STATES[c].defaultCounty : ''} takes home about <strong>${m(e65.net)}</strong> a paycheck.</p>
   </section>`;
   const stTitle = n + ' Paycheck & Take-Home Pay Calculator 2026';
   let stDesc = n + ' take home pay calculator: ' + m0(65000) + ' a year is ' + m(e65.net) + ' bi-weekly after tax. Salary or hourly, 401(k), overtime, 2026 rates.';

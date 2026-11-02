@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=304">
+<link rel="stylesheet" href="/assets/style.css?v=305">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
 <script>
@@ -61,7 +61,7 @@
       "name": "What is the monthly take-home pay on a $65,000 salary in Minnesota?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "A single filer on $65,000 a year paid monthly in Minnesota takes home about $4,208.67 a month ($5,416.67 gross): federal income tax $468.33, Social Security $335.83, Medicare $78.54, Minnesota income tax $301.45 and $23.83 of state programs."
+        "text": "A single filer on $65,000 a year paid monthly in Minnesota takes home about $4,208.67 a month ($5,416.67 gross): federal income tax $468.33, Social Security $335.83, Medicare $78.54, Minnesota state income tax $301.45 and $23.83 of state programs."
       }
     },
     {
@@ -304,23 +304,31 @@
           <a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a>
           <a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a>
           <a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a>
+          <a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a>
           <a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a>
           <a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a>
+          <a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a>
+          <a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a>
           <a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a>
           <a href="/paycheck-calculator/minnesota/" class="current">Minnesota Paycheck Calculator</a>
           <a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a>
           <a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a>
           <a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a>
           <a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a>
           <a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a>
           <a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a>
           <a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a>
+          <a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a>
+          <a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a>
           <a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a>
           <a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a>
           <a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a>
           <a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/utah/">Utah Paycheck Calculator</a>
           <a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a>
           <a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wisconsin/">Wisconsin Paycheck Calculator</a>
           <a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a>
         </div>
         <!--PAYNAV:END-->
@@ -346,7 +354,7 @@
         </div>
 
         <div id="pcSalBox">
-          <div class="fld"><label class="lab" for="pcGross">Pay <span class="unit">$</span></label><div class="inp"><input id="pcGross" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 65000"><span class="len-toggle" id="pcUnitSeg"><button type="button" class="on" data-v="year">per year</button><button type="button" data-v="period">per paycheck</button></span></div></div>
+          <div class="fld"><label class="lab" for="pcGross">Gross pay, before taxes <span class="unit">$</span></label><div class="inp"><input id="pcGross" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 65000"><span class="len-toggle" id="pcUnitSeg"><button type="button" class="on" data-v="year">per year</button><button type="button" data-v="period">per paycheck</button></span></div></div>
         </div>
         <div id="pcHourBox" style="display:none">
           <div class="ln-two">
@@ -374,6 +382,7 @@
               </div>
             </div></div>
         <div class="fld"><span class="lab">State</span><div class="st-ta"><div class="inp"><input id="pcStateIn" type="text" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="pcStateList" aria-label="State" placeholder="Federal taxes only — type to pick a state"><input id="pcState" type="hidden" value=""></div><div class="st-ta-list" id="pcStateList" role="listbox" style="display:none"></div></div></div>
+        <div class="fld" id="pcCountyFld" style="display:none"><span class="lab" id="pcCountyLab">County where you live</span><div class="st-ta"><div class="inp"><input id="pcCountyIn" type="text" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="pcCountyList" aria-label="County" placeholder="Type to pick your county"><input id="pcCounty" type="hidden" value=""></div><div class="st-ta-list" id="pcCountyList" role="listbox" style="display:none"></div></div></div>
         <div class="fld"><span class="lab">Filing status</span><div class="csel" id="pcStatus" data-value="single">
               <button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false">
                 <span class="csel-val">Single or married filing separately</span>
@@ -566,14 +575,14 @@
         <p>The state is already set to <strong>Minnesota</strong> above. Enter your salary or hourly rate, your pay frequency and filing status, and the result appears as you type. Under <strong>Go advanced</strong> you can match your Form W-4 (new or 2019-or-earlier), add children and dependents, a city or local tax rate, 401(k), insurance and other deductions, enter year-to-date pay and add overtime.</p>
         <p>You also get a bar showing where each paycheck dollar goes, a refund-or-owe line for tax time, a what-if for a raise or a bigger 401(k), and your pay on all ten schedules. This is an estimate of withholding, not payroll or tax advice.</p>
         <h2>Other states</h2>
-        <ul class="pc-statelist"><li><a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a></li><li><a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a></li><li><a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a></li><li><a href="/paycheck-calculator/california/">California Paycheck Calculator</a></li><li><a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a></li><li><a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a></li><li><a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a></li><li><a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a></li><li><a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a></li><li><a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a></li><li><a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a></li><li><a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a></li><li><a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a></li><li><a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a></li><li><a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a></li><li><a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a></li><li><a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a></li><li><a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a></li><li><a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a></li><li><a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a></li><li><a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a></li><li><a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a></li><li><a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a></li><li><a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a></li><li><a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a></li></ul>
+        <ul class="pc-statelist"><li><a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a></li><li><a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a></li><li><a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a></li><li><a href="/paycheck-calculator/california/">California Paycheck Calculator</a></li><li><a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a></li><li><a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a></li><li><a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a></li><li><a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a></li><li><a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a></li><li><a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a></li><li><a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a></li><li><a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a></li><li><a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a></li><li><a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a></li><li><a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a></li><li><a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a></li><li><a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a></li><li><a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a></li><li><a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a></li><li><a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a></li><li><a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a></li><li><a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a></li><li><a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a></li><li><a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a></li><li><a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a></li><li><a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a></li><li><a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a></li><li><a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a></li><li><a href="/paycheck-calculator/utah/">Utah Paycheck Calculator</a></li><li><a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a></li><li><a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a></li><li><a href="/paycheck-calculator/wisconsin/">Wisconsin Paycheck Calculator</a></li><li><a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a></li></ul>
         <p>More states are being added as each official formula is checked. For any other state, the <a href="/paycheck-calculator/">main paycheck calculator</a> shows federal tax and FICA.</p>
       </div>
     </div>
 
     <h2 style="margin-top:36px">Common questions about Minnesota paychecks</h2>
     <details class="faq"><summary>How much is taken out of a $65,000 salary in Minnesota?</summary><p>On a $65,000 salary paid bi-weekly ($2,500.00 gross) for a single filer with no allowances, Minnesota withholds $139.13 of state income tax plus $11.00 of MN Paid Leave, federal income tax is $216.15, Social Security $155.00 and Medicare $36.25. Take-home pay is $1,942.47 a paycheck, about $50,504 a year.</p></details>
-    <details class="faq"><summary>What is the monthly take-home pay on a $65,000 salary in Minnesota?</summary><p>A single filer on $65,000 a year paid monthly in Minnesota takes home about $4,208.67 a month ($5,416.67 gross): federal income tax $468.33, Social Security $335.83, Medicare $78.54, Minnesota income tax $301.45 and $23.83 of state programs.</p></details>
+    <details class="faq"><summary>What is the monthly take-home pay on a $65,000 salary in Minnesota?</summary><p>A single filer on $65,000 a year paid monthly in Minnesota takes home about $4,208.67 a month ($5,416.67 gross): federal income tax $468.33, Social Security $335.83, Medicare $78.54, Minnesota state income tax $301.45 and $23.83 of state programs.</p></details>
     <details class="faq"><summary>Does Minnesota tax paychecks differently for married workers?</summary><p>Federal withholding does, and Minnesota uses its own married tables or deductions. For a $65,000 salary paid bi-weekly, a married filer in Minnesota takes home $2,061.05 a paycheck versus $1,942.47 for a single filer.</p></details>
     <details class="faq"><summary>Which form do I fill out for Minnesota withholding?</summary><p>Minnesota uses Form W-4MN. Under Go advanced the calculator asks for the same details, so your result matches what your employer would withhold.</p></details>
     <details class="faq"><summary>Does this Minnesota calculator include local taxes?</summary><p>City, county and school-district taxes are not included by default. Open Go advanced to add a local tax rate as an estimate. State and federal figures follow the 2026 official withholding methods.</p></details>
@@ -764,23 +773,31 @@
           <li><a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a></li>
           <li><a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a></li>
           <li><a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a></li>
           <li><a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a></li>
           <li><a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a></li>
           <li><a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a></li>
           <li><a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a></li>
           <li><a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a></li>
           <li><a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a></li>
           <li><a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a></li>
           <li><a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a></li>
           <li><a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a></li>
           <li><a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a></li>
           <li><a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a></li>
           <li><a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a></li>
           <li><a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a></li>
           <li><a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a></li>
           <li><a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/utah/">Utah Paycheck Calculator</a></li>
           <li><a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a></li>
           <li><a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wisconsin/">Wisconsin Paycheck Calculator</a></li>
           <li><a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a></li>
         </ul>
       </div>
@@ -804,7 +821,7 @@
 
 </div>
 
-<script src="/assets/app.js?v=304"></script>
+<script src="/assets/app.js?v=305"></script>
 <script>CalcThis.initPayCalc();</script>
 <script src="/feedback.js" defer></script>
 </body>

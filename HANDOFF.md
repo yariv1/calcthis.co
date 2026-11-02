@@ -4,6 +4,10 @@ _Rewritten 2026-11-02 at the end of the overtime-calculator session: §00 is NEW
 
 ---
 
+## 00000000. UPDATE (2026-11-02, latest): PAYCHECK STATES BATCH 2 DEPLOYED (v305, 189 pages)
+**One-line sync:** "synced · live v305 / 71 calcs / 189 pages · paycheck states NJ OH MA MD WI IN OR UT deployed (county picker on MD + IN) · SC waiting for its Act 110 tables · next: your call — more states from your Ahrefs, or sales-tax exploration."
+User asked (after the exploration report) for the 9 states from his Ahrefs screenshots (all >1000 Easy; take-home variants weak; countries <100 -> parked). Built 8 (SC deferred), full 17-item QA (640 UI-vs-model runs 0 fails, 1,232 hostile combos, 720 chaos steps, 144 page-text checks, 189-page audit), user previewed and renamed the field to "Gross pay, before taxes", said "deploy". Sources/caveats/refresh dates: `md-files/calcthis-paycheck-states-batch2.md` (IN rates change Jan 1 2027; Utah Pub 14 + MA Circular M PDFs unreachable by tools -> re-verify; MD AA/Frederick tier reading; OR $8,750 vs $8,500). GSC not requested (queue in tracker); Bing: IndexNow pinged all 189; manual submit see tracker.
+
 ## 0000000. START HERE — END OF THE 2026-11-02 SESSION (live v304 · 71 calcs · 25 articles · 181 pages · `main` pushed, tree clean) — authoritative; everything below is older and valid unless this contradicts it
 **One-line sync to give the user first:** "synced · live v304 / 71 calcs / 181 pages · paycheck Plan 2 + NYC page + typeahead state picker deployed · self-employment tax looks weak (Ahrefs) · you wanted to EXPLORE adding more STATES/COUNTRIES to paycheck + sales tax first — next: that exploration report."
 **Where the conversation stopped (do not make him repeat it):**

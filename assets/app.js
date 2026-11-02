@@ -13590,8 +13590,135 @@ CalcThis.payEngine = (function () {
       var t = st === 'married' ? Math.min(taxable, 1000) * .02 + Math.max(0, Math.min(taxable, 6000) - 1000) * .04 + Math.max(0, taxable - 6000) * .05
         : Math.min(taxable, 500) * .02 + Math.max(0, Math.min(taxable, 3000) - 500) * .04 + Math.max(0, taxable - 3000) * .05;
       return { tax: t / o.ppy };
+    },
+    // New Jersey: NJ-WT percentage method, Rate A (single, married filing separately) or Rate B (joint, head of household); one table per payroll period
+    nj: function (S, o) {
+      var k = PERKEY[o.ppy] || o.ppy, sp = NJ_PER[k], key = (o.status === 'married' || o.status === 'hoh') ? 'B' : 'A';
+      var rows = tableFor('nj' + key + k, key === 'A' ? NJ_A : NJ_B, sp[0], sp[1] || (key === 'B' && k === 24));   // NJ prints the Rate B semi-monthly bases to the cent, every other dollar table to the dollar
+      return { tax: tab(rows, o.wages - sp[2] * num(o.allowances)) };
+    },
+    // Ohio: Employer Withholding Taxes - Percentage Method (effective Aug 1 2026): wages less the exemption amount per exemption, then the table
+    oh: function (S, o) {
+      var k = PERKEY[o.ppy] || o.ppy, T = OH_TABLES[k], w = o.wages, d = 1;
+      if (!T) { T = OH_TABLES.annual; w = o.wages * o.ppy; d = o.ppy; }
+      return { tax: tab(T.rows, w - T.ex * num(o.allowances)) / d };
+    },
+    // Massachusetts: Withholding Tax Guide percentage method - wages less FICA (up to $2,000 a year), less the exemption amount, 5% (9% above the surtax threshold)
+    ma: function (S, o) {
+      var k = o.ppy === 260 ? 'daily' : (o.ppy === 52 || o.ppy === 53) ? 'weekly' : (o.ppy === 26 || o.ppy === 27) ? 'biweekly' : o.ppy === 24 ? 'semimonthly' : o.ppy === 12 ? 'monthly' : 'annual';
+      var C = MA_EX[k], n = num(o.allowances), ann = k === 'annual', f = ann ? o.ppy : 1;
+      var w = o.wages * f, fica = Math.min(num(o.fica) * f, ann ? 2000 : 2000 / o.ppy);
+      var x = w - fica - (n > 0 ? C[0] * n + C[1] : 0);
+      if (!(x > 0)) return { tax: 0 };
+      var yr = x * (ann ? 1 : o.ppy), t = (Math.min(yr, 1107750) * 0.05 + Math.max(0, yr - 1107750) * 0.09) / o.ppy;
+      if (o.status === 'hoh') t = Math.max(0, t - (ann ? C[2] / o.ppy : C[2]));
+      return { tax: t };
+    },
+    // Maryland: Comptroller percentage charts - the chart for the county's local rate (state brackets + local rate), after the standard deduction and exemptions
+    md: function (S, o) {
+      var k = PERKEY[o.ppy] || o.ppy, ann = false;
+      if (!MD_PER[k]) { ann = true; k = 1; }
+      var P = MD_PER[k], w = ann ? o.wages * o.ppy : o.wages, joint = o.status === 'married' || o.status === 'hoh';
+      if (w < P[2]) return { tax: 0 };
+      var x = w - P[3] - P[4] * num(o.allowances);
+      if (!(x > 0)) return { tax: 0 };
+      var cty = findCounty(S, o.county), rate = 0.033;
+      if (cty) {
+        rate = cty.r;
+        if (cty.tiers) {
+          var at = ann ? x : x * o.ppy, tt = joint ? cty.tiers.j : cty.tiers.s;
+          rate = tt[tt.length - 1][1];
+          for (var i = 0; i < tt.length; i++) if (at <= tt[i][0]) { rate = tt[i][1]; break; }
+        }
+      }
+      var L = MD_CHARTS[MD_CHARTS.length - 1];
+      for (var j = 0; j < MD_CHARTS.length; j++) if (MD_CHARTS[j] >= rate - 1e-9) { L = MD_CHARTS[j]; break; }
+      var th = joint ? MD_JOINT : MD_SINGLE, a = [[0, MD_STATE[0] + L]];
+      for (var m = 0; m < th.length; m++) a.push([th[m], MD_STATE[m + 1] + L]);
+      var t = tab(tableFor('md' + (joint ? 'J' : 'S') + L + '_' + k, a, P[0], true), x);
+      return { tax: ann ? t / o.ppy : t, chart: L, countyName: cty ? cty.n : null, countyRate: rate };
+    },
+    // Wisconsin: W-166 alternate method of withholding (sliding standard deduction, $400 per exemption, 4 rate steps)
+    wi: function (S, o) {
+      var a = o.wages * o.ppy, mar = o.status === 'married', d;
+      if (mar) d = a < 25727 ? 9461 : (a >= 73032 ? 0 : 9461 - 0.20 * (a - 25727));
+      else d = a < 17780 ? 6702 : (a >= 73630 ? 0 : 6702 - 0.12 * (a - 17780));
+      var net = a - d - 400 * num(o.allowances);
+      if (!(net > 0)) return { tax: 0 };
+      var t = net <= 12760 ? net * 0.0354 : net <= 25520 ? 451.70 + (net - 12760) * 0.0465 : net <= 280950 ? 1045.04 + (net - 25520) * 0.053 : 14582.83 + (net - 280950) * 0.0765;
+      return { tax: t / o.ppy };
+    },
+    // Indiana: Departmental Notice #1 - wages less the exemption amounts per period, state rate on the rest and the county rate on the same amount
+    'in': function (S, o) {
+      var div = o.ppy === 260 ? 365 : o.ppy, r2 = function (v) { return Math.round(v * 100) / 100; };
+      var ded = r2(1000 * num(o.allowances) / div) + r2(1500 * num(o.allowances2) / div), x = Math.max(0, o.wages - ded);
+      var cty = findCounty(S, o.county);
+      return { tax: r2(x * 0.0295), county: cty ? r2(x * cty.r) : 0, countyName: cty ? cty.n : null, countyRate: cty ? cty.r : 0 };
+    },
+    // Oregon: 150-206-436 computer formula (annual wages less federal tax withheld, capped, less the standard deduction, then the rate formula)
+    or: function (S, o) {
+      var W = o.wages * o.ppy, married = o.status === 'married', mk = married || num(o.allowances) >= 3;
+      var al = num(o.allowances); if (W > (married ? 200000 : 100000)) al = 0;
+      var ph = function (single) {
+        if (W < 50000) return 8750;
+        var s = single ? [[125000, 8750], [130000, 7000], [135000, 5250], [140000, 3500], [145000, 1750]] : [[250000, 8750], [260000, 7000], [270000, 5250], [280000, 3500], [290000, 1750]];
+        for (var i = 0; i < s.length; i++) if (W < s[i][0]) return s[i][1];
+        return 0;
+      };
+      var fed = Math.min(Math.max(0, num(o.fedTax) * o.ppy), ph(!married)), B = W - fed - (mk ? 5820 : 2910), wh;
+      if (W < 50000) {
+        if (!mk) wh = B < 4550 ? 263 + B * 0.0475 : B < 11400 ? 479 + (B - 4550) * 0.0675 : 941 + (B - 11400) * 0.0875;
+        else wh = B < 9100 ? 263 + B * 0.0475 : B < 22800 ? 695 + (B - 9100) * 0.0675 : 1620 + (B - 22800) * 0.0875;
+      } else if (!mk) wh = B < 125000 ? 678 + (B - 11400) * 0.0875 : 10618 + (B - 125000) * 0.099;
+      else wh = B < 250000 ? 1357 + (B - 22800) * 0.0875 : 21237 + (B - 250000) * 0.099;
+      wh -= 263 * al;
+      return { tax: Math.max(0, wh) / o.ppy };
+    },
+    // Utah: Publication 14 - 4.45% of annual wages less the withholding allowance, which income above a threshold reduces by 1.3%
+    ut: function (S, o) {
+      var a = o.wages * o.ppy, mar = o.status === 'married', base = mar ? 970 : 485, thr = mar ? 18696 : 9348;
+      var allow = Math.max(0, base - 0.013 * Math.max(0, a - thr));
+      return { tax: Math.max(0, a * 0.0445 - allow) / o.ppy };
     }
   };
+  function findCounty(S, name) {
+    if (!S || !S.counties || !name) return null;
+    for (var i = 0; i < S.counties.length; i++) if (S.counties[i].n === name) return S.counties[i];
+    return null;
+  }
+  // Per-period tables built from annual brackets the way NJ-WT and the Maryland guide print them: floors to whole dollars, base amounts from the exact running tax.
+  var TCACHE = {};
+  function tableFor(key, ann, n, cents) {
+    if (TCACHE[key]) return TCACHE[key];
+    var rows = [], cum = 0, i, f;
+    for (i = 0; i < ann.length; i++) {
+      f = ann[i][0] / n;
+      if (i) cum += (f - ann[i - 1][0] / n) * ann[i - 1][1];
+      rows.push([Math.round(f + 1e-9), cents ? Math.round(cum * 100 + 1e-6) / 100 : Math.round(cum + 1e-9), ann[i][1]]);
+    }
+    return (TCACHE[key] = rows);
+  }
+  var PERKEY = { 53: 52, 27: 26 };
+  // New Jersey (NJ-WT): [periods in the table, base amounts to cents?, value of one withholding allowance]
+  var NJ_PER = { 260: [365, true, 2.70], 52: [52, true, 19.20], 26: [26, false, 38.40], 24: [24, false, 41.60], 12: [12, false, 83.30], 4: [4, true, 250], 2: [2, true, 500], 1: [1, true, 1000] };
+  var NJ_A = [[0, .015], [20000, .02], [35000, .039], [40000, .061], [75000, .07], [500000, .099], [1000000, .118]];
+  var NJ_B = [[0, .015], [20000, .02], [50000, .027], [70000, .039], [80000, .061], [150000, .07], [500000, .099], [1000000, .118]];
+  // Ohio (Percentage Method, effective Aug 1 2026): rows [floor, base, rate], exemption amount per exemption
+  var OH_TABLES = {
+    260: { ex: 2.50, rows: [[0, 0, .016], [100.19, 1.60, .0299], [384.62, 10.10, .034]] },
+    52: { ex: 12.50, rows: [[0, 0, .016], [500.96, 8.02, .0299], [1923.08, 50.54, .034]] },
+    26: { ex: 25.00, rows: [[0, 0, .016], [1001.92, 16.03, .0299], [3846.15, 101.07, .034]] },
+    24: { ex: 27.08, rows: [[0, 0, .016], [1085.42, 17.37, .0299], [4166.67, 109.50, .034]] },
+    12: { ex: 54.17, rows: [[0, 0, .016], [2170.83, 34.73, .0299], [8333.33, 218.99, .034]] },
+    annual: { ex: 650, rows: [[0, 0, .016], [26050, 416.80, .0299], [100000, 2627.91, .034]] }
+  };
+  // Massachusetts (Withholding Tax Guide): [amount per exemption, amount added when any exemption is claimed, head-of-household reduction]
+  var MA_EX = { daily: [3, 9, .33], weekly: [19, 66, 2.31], biweekly: [38, 131, 4.62], semimonthly: [42, 141, 5.00], monthly: [83, 284, 10.00], annual: [1000, 3400, 120] };
+  // Maryland (2026 Withholding Guide): [periods used for the chart floors, -, do-not-withhold wages below, standard deduction, one exemption]
+  var MD_PER = { 260: [364, 0, 13.70, 9.31, 8.77], 52: [52, 0, 96, 65.38, 61.54], 26: [26, 0, 192, 130.76, 123.08], 24: [24, 0, 208, 141.66, 133.33], 12: [12, 0, 417, 283.33, 266.67], 4: [4, 0, 1250, 850, 800], 1: [1, 0, 5000, 3400, 3200] };
+  var MD_STATE = [.0475, .05, .0525, .055, .0575, .0625, .065];
+  var MD_SINGLE = [100000, 125000, 150000, 250000, 500000, 1000000], MD_JOINT = [150000, 175000, 225000, 300000, 600000, 1200000];
+  var MD_CHARTS = [.0225, .024, .0265, .0275, .0285, .03, .0305, .031, .032, .033];
   function stateTax(code, o) {
     var S = STATES[code];
     if (!S || S.method === 'pending') return null;
@@ -13655,16 +13782,16 @@ CalcThis.payEngine = (function () {
     });
     var fedTax = inp.roundFed ? whole(fedR.tax) : fedR.tax;
     var fc = fica({ wages: ficaWages, ytd: inp.ytd, exemptSS: inp.ficaX && inp.ficaX.exemptSS, exemptMed: inp.ficaX && inp.ficaX.exemptMed });
-    var st = inp.state || {}, stateAmt = 0, stateKnown = true, stateEst = false, progs = [];
+    var st = inp.state || {}, stateAmt = 0, stateKnown = true, stateEst = false, progs = [], countyAmt = 0, countyName = null, countyRate = 0;
     if (st.code) {
       var S = STATES[st.code], stW = Math.max(0, g - preStateInc(pre, S));
-      var r = stateTax(st.code, { wages: stW, ppy: ppy, status: st.status || fx.status || 'single', allowances: st.allowances, allowances2: st.allowances2, fedTax: fedTax });
+      var r = stateTax(st.code, { wages: stW, ppy: ppy, status: st.status || fx.status || 'single', allowances: st.allowances, allowances2: st.allowances2, fedTax: fedTax, fica: fc.ss + fc.med + fc.addl, county: st.county });
       if (r === null) {
         // a state without an exact formula here: a typed flat rate is an estimate, nothing typed = federal only
         if (num(st.flatPct) > 0) { stateKnown = true; stateEst = true; if (!st.exempt) stateAmt = stW * num(st.flatPct) / 100 + num(st.extra); }
         else stateKnown = false;
       }
-      else if (!st.exempt) stateAmt = r.tax + num(st.extra);
+      else if (!st.exempt) { stateAmt = r.tax + num(st.extra); countyAmt = r.county || 0; countyName = r.countyName || null; countyRate = r.countyRate || 0; }
       if (r !== null) progs = programs(st.code, ficaWages, inp.ytd || 0, ppy);
     }
     var localAmt = num(inp.localPct) > 0 ? incWages * num(inp.localPct) / 100 : 0;
@@ -13672,8 +13799,8 @@ CalcThis.payEngine = (function () {
     if (inp.nyc && inp.nyc.on && !st.exempt) nycAmt = nycTax(Math.max(0, g - preStateInc(pre, STATES.NY)), ppy, st.status || fx.status || 'single', inp.nyc.exemptions);
     var progAll = 0; for (i = 0; i < progs.length; i++) progAll += progs[i].amt;
     var postAll = 0; for (i = 0; i < post.length; i++) postAll += num(post[i].amt);
-    var net = g - preAll - fedTax - fc.ss - fc.med - fc.addl - stateAmt - localAmt - nycAmt - progAll - postAll;
-    return { gross: g, preTax: preAll, fed: fedTax, ss: fc.ss, med: fc.med, addl: fc.addl, state: stateAmt, local: localAmt, nyc: nycAmt, stateEst: stateEst, programs: progs, programTotal: progAll, stateKnown: stateKnown, post: postAll, net: net, aaw: fedR.aaw, incWages: incWages, ficaWages: ficaWages };
+    var net = g - preAll - fedTax - fc.ss - fc.med - fc.addl - stateAmt - countyAmt - localAmt - nycAmt - progAll - postAll;
+    return { gross: g, preTax: preAll, fed: fedTax, ss: fc.ss, med: fc.med, addl: fc.addl, state: stateAmt, county: countyAmt, countyName: countyName, countyRate: countyRate, local: localAmt, nyc: nycAmt, stateEst: stateEst, programs: progs, programTotal: progAll, stateKnown: stateKnown, post: postAll, net: net, aaw: fedR.aaw, incWages: incWages, ficaWages: ficaWages };
   }
   // Federal income tax for the whole year on a Form 1040 basis (standard deduction), from the same Pub 15-T rows:
   // the Pub 15-T rows already embed the standard deduction less the W-4 Step 2 adjustment, so removing that adjustment gives the tax a return shows.
@@ -13736,7 +13863,45 @@ CalcThis.payEngine = (function () {
     note: 'Montana “married” assumes only one spouse works (the Form MW-4 line 1b table); if both spouses work, choose Single. Withholding is rounded up to the next dollar, as Montana requires.',
     tab: { single: [[0, 0, 0], [16100, 0, .047], [63600, 2232.5, .0565]], married: [[0, 0, 0], [32200, 0, .047], [127200, 4465, .0565]], hoh: [[0, 0, 0], [24150, 0, .047], [95400, 3348.75, .0565]] } };
   S.PA = { name: 'Pennsylvania', method: 'flatann', src: 'https://www.pa.gov/agencies/dli/resources/for-employers-and-educators/how-to-file/uc-tax', rate: .0307, taxes401k: true, programs: [{ name: 'PA Unemployment (employee)', rate: .0007 }] };
-  var SL = { AL: 'alabama', AK: 'alaska', AZ: 'arizona', CA: 'california', CO: 'colorado', FL: 'florida', GA: 'georgia', IL: 'illinois', IA: 'iowa', KY: 'kentucky', MI: 'michigan', MN: 'minnesota', MO: 'missouri', MT: 'montana', NV: 'nevada', NH: 'new-hampshire', NY: 'new-york', NC: 'north-carolina', PA: 'pennsylvania', SD: 'south-dakota', TN: 'tennessee', TX: 'texas', VA: 'virginia', WA: 'washington', WY: 'wyoming' };
+  S.NJ = { name: 'New Jersey', method: 'nj', src: 'https://www.nj.gov/treasury/taxation/pdf/NJWithholdingRateTablesPercentageMethod.pdf',
+    programs: [{ name: 'NJ Unemployment & Workforce Development', rate: .00425, base: 44800 }, { name: 'NJ Temporary Disability Insurance', rate: .0019, base: 171100 }, { name: 'NJ Family Leave Insurance', rate: .0023, base: 171100 }] };
+  S.OH = { name: 'Ohio', method: 'oh', src: 'https://dam.assets.ohio.gov/image/upload/tax.ohio.gov/employer_withholding/2026%20Withholding%20Tables/WHT_PercentageMethod_2026.pdf' };
+  S.MA = { name: 'Massachusetts', method: 'ma', src: 'https://www.mass.gov/info-details/withholding-tax-guide', programs: [{ name: 'MA Paid Family & Medical Leave', rate: .0046, base: 184500 }] };
+  S.MD = { name: 'Maryland', method: 'md', src: 'https://www.marylandcomptroller.gov/content/dam/mdcomp/tax/instructions/withholding/2026/withholding-guide.pdf', rowName: 'Maryland state and county income tax', defaultCounty: 'Montgomery County',
+    counties: [
+      { n: 'Allegany County', r: .032 },
+      { n: 'Anne Arundel County', r: .032, tiers: { s: [[50000, .027], [400000, .0294], [1e12, .032]], j: [[75000, .027], [480000, .0294], [1e12, .032]] } },
+      { n: 'Baltimore County', r: .032 },
+      { n: 'Baltimore City', r: .032 },
+      { n: 'Calvert County', r: .032 },
+      { n: 'Caroline County', r: .032 },
+      { n: 'Carroll County', r: .0303 },
+      { n: 'Cecil County', r: .0274 },
+      { n: 'Charles County', r: .0303 },
+      { n: 'Dorchester County', r: .033 },
+      { n: 'Frederick County', r: .032, tiers: { s: [[25000, .0225], [50000, .0275], [150000, .0296], [1e12, .032]], j: [[25000, .0225], [100000, .0275], [250000, .0296], [1e12, .032]] } },
+      { n: 'Garrett County', r: .0265 },
+      { n: 'Harford County', r: .0306 },
+      { n: 'Howard County', r: .032 },
+      { n: 'Kent County', r: .033 },
+      { n: 'Montgomery County', r: .032 },
+      { n: 'Prince George’s County', r: .032 },
+      { n: 'Queen Anne’s County', r: .032 },
+      { n: 'St. Mary’s County', r: .032 },
+      { n: 'Somerset County', r: .032 },
+      { n: 'Talbot County', r: .024 },
+      { n: 'Washington County', r: .0295 },
+      { n: 'Wicomico County', r: .032 },
+      { n: 'Worcester County', r: .0225 }
+    ] };
+  S.WI = { name: 'Wisconsin', method: 'wi', src: 'https://www.revenue.wi.gov/DOR%20Publications/pb166.pdf' };
+  S.IN = { name: 'Indiana', method: 'in', src: 'https://www.in.gov/dor/files/dn01.pdf', defaultCounty: 'Marion County',
+    counties: [
+      { n: 'Adams County', r: .016 },{ n: 'Allen County', r: .0159 },{ n: 'Bartholomew County', r: .0175 },{ n: 'Benton County', r: .0179 },{ n: 'Blackford County', r: .025 },{ n: 'Boone County', r: .0171 },{ n: 'Brown County', r: .025234 },{ n: 'Carroll County', r: .024733 },{ n: 'Cass County', r: .0295 },{ n: 'Clark County', r: .02 },{ n: 'Clay County', r: .0235 },{ n: 'Clinton County', r: .0265 },{ n: 'Crawford County', r: .0165 },{ n: 'Daviess County', r: .015 },{ n: 'Dearborn County', r: .014 },{ n: 'Decatur County', r: .0245 },{ n: 'DeKalb County', r: .0213 },{ n: 'Delaware County', r: .015 },{ n: 'Dubois County', r: .012 },{ n: 'Elkhart County', r: .02 },{ n: 'Fayette County', r: .0282 },{ n: 'Floyd County', r: .0189 },{ n: 'Fountain County', r: .021 },{ n: 'Franklin County', r: .017 },{ n: 'Fulton County', r: .0288 },{ n: 'Gibson County', r: .013 },{ n: 'Grant County', r: .0275 },{ n: 'Greene County', r: .0235 },{ n: 'Hamilton County', r: .011 },{ n: 'Hancock County', r: .0194 },{ n: 'Harrison County', r: .01 },{ n: 'Hendricks County', r: .017 },{ n: 'Henry County', r: .0202 },{ n: 'Howard County', r: .0235 },{ n: 'Huntington County', r: .0195 },{ n: 'Jackson County', r: .021 },{ n: 'Jasper County', r: .02864 },{ n: 'Jay County', r: .025 },{ n: 'Jefferson County', r: .0103 },{ n: 'Jennings County', r: .025 },{ n: 'Johnson County', r: .014 },{ n: 'Knox County', r: .017 },{ n: 'Kosciusko County', r: .01 },{ n: 'LaGrange County', r: .0165 },{ n: 'Lake County', r: .015 },{ n: 'LaPorte County', r: .0145 },{ n: 'Lawrence County', r: .0175 },{ n: 'Madison County', r: .0225 },{ n: 'Marion County', r: .0202 },{ n: 'Marshall County', r: .0125 },{ n: 'Martin County', r: .025 },{ n: 'Miami County', r: .0254 },{ n: 'Monroe County', r: .0214 },{ n: 'Montgomery County', r: .0265 },{ n: 'Morgan County', r: .0272 },{ n: 'Newton County', r: .01 },{ n: 'Noble County', r: .0175 },{ n: 'Ohio County', r: .02 },{ n: 'Orange County', r: .0175 },{ n: 'Owen County', r: .025 },{ n: 'Parke County', r: .0265 },{ n: 'Perry County', r: .014 },{ n: 'Pike County', r: .012 },{ n: 'Porter County', r: .005 },{ n: 'Posey County', r: .0145 },{ n: 'Pulaski County', r: .0285 },{ n: 'Putnam County', r: .023 },{ n: 'Randolph County', r: .03 },{ n: 'Ripley County', r: .0238 },{ n: 'Rush County', r: .0215 },{ n: 'St. Joseph County', r: .0175 },{ n: 'Scott County', r: .0216 },{ n: 'Shelby County', r: .017 },{ n: 'Spencer County', r: .008 },{ n: 'Starke County', r: .0171 },{ n: 'Steuben County', r: .0199 },{ n: 'Sullivan County', r: .017 },{ n: 'Switzerland County', r: .0145 },{ n: 'Tippecanoe County', r: .0128 },{ n: 'Tipton County', r: .026 },{ n: 'Union County', r: .0275 },{ n: 'Vanderburgh County', r: .0125 },{ n: 'Vermillion County', r: .015 },{ n: 'Vigo County', r: .02 },{ n: 'Wabash County', r: .029 },{ n: 'Warren County', r: .0212 },{ n: 'Warrick County', r: .01 },{ n: 'Washington County', r: .02 },{ n: 'Wayne County', r: .0125 },{ n: 'Wells County', r: .021 },{ n: 'White County', r: .0232 },{ n: 'Whitley County', r: .016829 }
+    ] };
+  S.OR = { name: 'Oregon', method: 'or', src: 'https://www.oregon.gov/dor/forms/FormsPubs/withholding-tax-formulas_206-436_2026.pdf', programs: [{ name: 'Paid Leave Oregon', rate: .006, base: 184500 }, { name: 'OR Statewide Transit Tax', rate: .001 }] };
+  S.UT = { name: 'Utah', method: 'ut', src: 'https://tax.utah.gov/forms/pubs/pub-14.pdf' };
+  var SL = { AL: 'alabama', AK: 'alaska', AZ: 'arizona', CA: 'california', CO: 'colorado', FL: 'florida', GA: 'georgia', IL: 'illinois', IA: 'iowa', KY: 'kentucky', MI: 'michigan', MN: 'minnesota', MO: 'missouri', MT: 'montana', NV: 'nevada', NH: 'new-hampshire', NY: 'new-york', NC: 'north-carolina', PA: 'pennsylvania', SD: 'south-dakota', NJ: 'new-jersey', OH: 'ohio', MA: 'massachusetts', MD: 'maryland', WI: 'wisconsin', IN: 'indiana', OR: 'oregon', UT: 'utah', TN: 'tennessee', TX: 'texas', VA: 'virginia', WA: 'washington', WY: 'wyoming' };
   for (var k in SL) if (S[k]) S[k].slug = SL[k];
 })(CalcThis.payEngine.STATES);
 /* PAY-STATES:END */
@@ -13754,7 +13919,9 @@ CalcThis.initPayCalc = function () {
   var SFIELDS = {
     AL: ['Dependents (Form A-4)'], AZ: ['Withholding percentage (Form A-4, default 2)'], IA: ['Total allowance amount (IA W-4)'], CA: ['Allowances (DE 4)', 'Extra allowances for deductions (DE 4)'], GA: ['Dependents (Form G-4)'],
     IL: ['Basic allowances (IL-W-4, line 1)', 'Additional allowances (IL-W-4, line 2)'], MI: ['Exemptions (MI-W4)'], MN: ['Allowances (W-4MN)'],
-    NC: ['Allowances (NC-4)'], NY: ['Exemptions (IT-2104)'], VA: ['Exemptions (VA-4)']
+    NC: ['Allowances (NC-4)'], NY: ['Exemptions (IT-2104)'], VA: ['Exemptions (VA-4)'],
+    NJ: ['Allowances (NJ-W4)'], OH: ['Exemptions (Ohio IT 4)'], MA: ['Exemptions (Form M-4)'], MD: ['Exemptions (Form MW507)'], WI: ['Exemptions (Form WT-4)'], OR: ['Allowances (Form OR-W-4)'],
+    IN: ['Personal exemptions (WH-4, line 5)', 'Dependent exemptions (WH-4, lines 6 to 8)']
   };
 
   function comma(x) { return x.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 }); }
@@ -13762,6 +13929,7 @@ CalcThis.initPayCalc = function () {
   function monS(x) { return Math.abs(x) >= 1e5 ? mon0(x) : mon(x); }
   function mon0(x) { x = Math.round(x) || 0; return (x < 0 ? '−$' : '$') + comma(Math.abs(x)); }
   function pct(x) { return (Math.round(x * 10) / 10) + '%'; }
+  function rate4(r) { return (Math.round(r * 1e6) / 1e4) + '%'; }
   function kfmt(x) { return x >= 1e6 ? '$' + (Math.round(x / 1e5) / 10) + 'M' : x >= 1e3 ? '$' + (Math.round(x / 100) / 10) + 'k' : '$' + Math.round(x); }
 
   function read(id) {
@@ -13773,7 +13941,7 @@ CalcThis.initPayCalc = function () {
     var v = Number(t);
     return isNaN(v) || !isFinite(v) || t === '' ? { bad: true } : { v: v, pct: isPct };
   }
-  var LABELS = { pcGross: 'Pay', pcRate: 'Hourly rate', pcHours: 'Hours per week', pcOtHours: 'Overtime hours', pcOtMult: 'Overtime multiplier', pcYtd: 'Year-to-date pay', pcCredit: 'Step 3 amount', pc4a: 'Step 4(a) other income', pc4b: 'Step 4(b) deductions', pcFedExtra: 'Extra federal withholding', pcAllow: 'Allowances', pcStAllow: 'State allowances or amount', pcStAllow2: 'Additional state allowances', pcStExtra: 'Extra state withholding', pcKids: 'Children under 17', pcOthDep: 'Other dependents', pcLocal: 'City or local tax rate', pcStRate: 'State tax rate', pc401k: '401(k) contribution', pcHealth: 'Health insurance', pcHsa: 'HSA / FSA / commuter', pcPreOther: 'Other before-tax deduction', pcRoth: 'Roth contribution', pcPostOther: 'Other after-tax deduction' };
+  var LABELS = { pcGross: 'Gross pay', pcRate: 'Hourly rate', pcHours: 'Hours per week', pcOtHours: 'Overtime hours', pcOtMult: 'Overtime multiplier', pcYtd: 'Year-to-date pay', pcCredit: 'Step 3 amount', pc4a: 'Step 4(a) other income', pc4b: 'Step 4(b) deductions', pcFedExtra: 'Extra federal withholding', pcAllow: 'Allowances', pcStAllow: 'State allowances or amount', pcStAllow2: 'Additional state allowances', pcStExtra: 'Extra state withholding', pcKids: 'Children under 17', pcOthDep: 'Other dependents', pcLocal: 'City or local tax rate', pcStRate: 'State tax rate', pc401k: '401(k) contribution', pcHealth: 'Health insurance', pcHsa: 'HSA / FSA / commuter', pcPreOther: 'Other before-tax deduction', pcRoth: 'Roth contribution', pcPostOther: 'Other after-tax deduction' };
   var EXS = { pcGross: '65000', pcRate: '22', pcHours: '40', pcOtHours: '5', pcOtMult: '1.5', pcYtd: '30000', pcCredit: '2000', pc4a: '1000', pc4b: '5000', pcFedExtra: '25', pcAllow: '2', pcStAllow: '2', pcStAllow2: '1', pcStExtra: '10', pcKids: '2', pcOthDep: '1', pcLocal: '1.5', pcStRate: '4.5', pc401k: '6%', pcHealth: '150', pcHsa: '50', pcPreOther: '25', pcRoth: '100', pcPostOther: '30' };
   var BASE = 'Enter your pay to see your take-home pay.';
 
@@ -13798,7 +13966,7 @@ CalcThis.initPayCalc = function () {
       gross: gross, ppy: ppy, ytd: ytd, preTax: pre, postTax: [{ amt: ded.roth }, { amt: ded.postOther }], roundFed: c.round,
       fed: { w4: c.w4, status: c.status, step2: c.step2, credit: c.credit, other4a: c.other4a, ded4b: c.ded4b, extra: c.fedExtra, allowances: c.allow, exempt: c.exFed },
       ficaX: { exemptSS: c.exSS, exemptMed: c.exMed },
-      state: c.state ? { code: c.state, status: c.status, allowances: c.stAllow, allowances2: c.stAllow2, extra: c.stExtra, exempt: c.exState, flatPct: c.stRate } : null,
+      state: c.state ? { code: c.state, status: c.status, allowances: c.stAllow, allowances2: c.stAllow2, extra: c.stExtra, exempt: c.exState, flatPct: c.stRate, county: c.county } : null,
       localPct: c.localPct,
       nyc: c.nyc ? { on: true, exemptions: c.stAllow } : null
     };
@@ -13832,7 +14000,7 @@ CalcThis.initPayCalc = function () {
       if (!(gross > 0)) return { msg: BASE, hint: 'Enter more than 0 hours a week.' };
     } else {
       var g = f.pcGross.v;
-      if (!(g > 0)) return { msg: BASE, hint: 'Pay must be more than $0.' };
+      if (!(g > 0)) return { msg: BASE, hint: 'Gross pay must be more than $0.' };
       if (g > 1e9) return { msg: BASE, hint: 'That amount is too large to calculate — enter it in dollars, like 65000.' };
       if (st.unit === 'year') { annual = g; gross = g / ppy; } else { gross = g; annual = g * ppy; }
     }
@@ -13846,7 +14014,7 @@ CalcThis.initPayCalc = function () {
     var nycOn = $('pcNyc') && stateCode() === 'NY' && $('pcNyc').checked;
     var c = { nyc: nycOn, w4: st.w4, status: statusKey(), step2: adv && st.w4 === 'new' && $('pcStep2').checked, credit: (adv ? val('pcCredit', 0) : 0) + kids * E.CHILD_CREDIT + othd * E.OTHER_DEP_CREDIT, kids: kids, othd: othd, localPct: locP, stRate: stR, other4a: adv ? val('pc4a', 0) : 0, ded4b: adv ? val('pc4b', 0) : 0, fedExtra: adv ? val('pcFedExtra', 0) : 0, allow: adv ? val('pcAllow', 0) : 0,
       round: adv && $('pcRound').checked, exFed: adv && $('pcExFed').checked, exSS: adv && $('pcExSS').checked, exMed: adv && $('pcExMed').checked, exState: adv && $('pcExState').checked,
-      state: stateCode(), stAllow: adv && f.pcStAllow && f.pcStAllow.v != null ? f.pcStAllow.v : (stateCode() === 'AZ' ? null : 0), stAllow2: adv ? val('pcStAllow2', 0) : 0, stExtra: adv ? val('pcStExtra', 0) : 0 };
+      state: stateCode(), stAllow: adv && f.pcStAllow && f.pcStAllow.v != null ? f.pcStAllow.v : (stateCode() === 'AZ' ? null : 0), stAllow2: adv ? val('pcStAllow2', 0) : 0, stExtra: adv ? val('pcStExtra', 0) : 0, county: cOpts.length ? cEl.value : '' };
     var nn = ['credit', 'other4a', 'ded4b', 'fedExtra', 'allow', 'stAllow', 'stAllow2', 'stExtra'], nl = ['pcCredit', 'pc4a', 'pc4b', 'pcFedExtra', 'pcAllow', 'pcStAllow', 'pcStAllow2', 'pcStExtra'];
     for (i = 0; i < nn.length; i++) {
       if (c[nn[i]] < 0) return { msg: BASE, hint: '“' + LABELS[nl[i]] + '” can’t be negative.' };
@@ -13878,11 +14046,11 @@ CalcThis.initPayCalc = function () {
 
   /* ---------- helpers on a calc result ---------- */
   function yearSim(d, gross, ppy, ded) {
-    var tot = { gross: 0, pre: 0, fed: 0, ss: 0, med: 0, addl: 0, state: 0, local: 0, nyc: 0, prog: 0, post: 0, net: 0 }, rows = [], ssStop = -1, addlStart = -1;
+    var tot = { gross: 0, pre: 0, fed: 0, ss: 0, med: 0, addl: 0, state: 0, county: 0, local: 0, nyc: 0, prog: 0, post: 0, net: 0 }, rows = [], ssStop = -1, addlStart = -1;
     for (var k = 0; k < ppy; k++) {
       var y = gross * k;
       var q = E.paycheck(buildInput(d.c, gross, ppy, y, ded));
-      tot.gross += q.gross; tot.pre += q.preTax; tot.fed += q.fed; tot.ss += q.ss; tot.med += q.med; tot.addl += q.addl; tot.state += q.state; tot.local += q.local; tot.nyc += q.nyc; tot.prog += q.programTotal; tot.post += q.post; tot.net += q.net;
+      tot.gross += q.gross; tot.pre += q.preTax; tot.fed += q.fed; tot.ss += q.ss; tot.med += q.med; tot.addl += q.addl; tot.state += q.state; tot.county += q.county; tot.local += q.local; tot.nyc += q.nyc; tot.prog += q.programTotal; tot.post += q.post; tot.net += q.net;
       rows.push(q.net);
       if (ssStop < 0 && q.ss < q.ficaWages * 0.062 - 0.005 && !d.c.exSS) ssStop = k;
       if (addlStart < 0 && q.addl > 0.005) addlStart = k;
@@ -13928,17 +14096,18 @@ CalcThis.initPayCalc = function () {
 
     // full-year projection (exact Social Security cap)
     var ys = yearSim(d, p.gross, ppy, d.ded), T = ys.t;
-    var taxTot = p.fed + p.ss + p.med + p.addl + p.state + p.local + p.nyc + p.programTotal;
+    var taxTot = p.fed + p.ss + p.med + p.addl + p.state + p.county + p.local + p.nyc + p.programTotal;
     var tip = 'Of every $1 you earn, you keep about ' + Math.round(p.net / p.gross * 100) + '¢' + (p.gross > 0 ? ' — ' + pct(taxTot / p.gross * 100) + ' goes to taxes' : '') + '.';
     $('pcTip').textContent = tip;
     var sn = $('pcStateNote');
     if (code && !p.stateKnown) { sn.style.display = ''; sn.textContent = sname + ' isn’t built with its exact withholding formula yet — the result shows federal tax and FICA only, so your real take-home will be lower by what ' + sname + ' withholds. Open Go advanced and type your state’s tax rate to get an estimate.'; }
     else if (code && p.stateEst) { sn.style.display = ''; sn.textContent = sname + ' is an estimate: a flat ' + pct(c.stRate) + ' of your taxable pay, not ' + sname + '’s exact withholding formula. Your employer’s withholding will differ somewhat.'; }
+    else if (code && S && S.counties && !c.county) { sn.style.display = ''; sn.textContent = code === 'MD' ? 'No county picked yet: Maryland withholds local tax at its highest rate, 3.30%, until a county is on file. Pick your county above to use your county’s own rate.' : 'County income tax is not included until you pick your county above — Indiana counties charge between 0.5% and 3.0% of your taxable pay.'; }
     else if (!code) { sn.style.display = ''; sn.textContent = 'Pick your state to include state income tax. Federal taxes only are shown now.'; }
     else sn.style.display = 'none';
 
     // where each paycheck dollar goes
-    var seg = [['Take-home', Math.max(0, p.net), '#37503F'], ['Federal tax', p.fed, '#B5761F'], ['Social Security', p.ss, '#8F5C13'], ['Medicare', p.med + p.addl, '#C99A55'], ['State & local', p.state + p.local + p.programTotal, '#6B7A9E'], ['New York City tax', p.nyc, '#4F6B8F'], ['Before-tax deductions', p.preTax, '#6E8A74'], ['After-tax deductions', p.post, '#A4795A']], bar = '', leg = '';
+    var seg = [['Take-home', Math.max(0, p.net), '#37503F'], ['Federal tax', p.fed, '#B5761F'], ['Social Security', p.ss, '#8F5C13'], ['Medicare', p.med + p.addl, '#C99A55'], ['State & local', p.state + p.county + p.local + p.programTotal, '#6B7A9E'], ['New York City tax', p.nyc, '#4F6B8F'], ['Before-tax deductions', p.preTax, '#6E8A74'], ['After-tax deductions', p.post, '#A4795A']], bar = '', leg = '';
     seg.forEach(function (x) {
       var q = x[1] / p.gross * 100;
       if (!(q > 0.05)) return;
@@ -13954,7 +14123,8 @@ CalcThis.initPayCalc = function () {
     rows.push(['Social Security (6.2%)', -p.ss, -T.ss, '']);
     rows.push(['Medicare (1.45%)', -p.med, -T.med, '']);
     if (p.addl > 0.005 || T.addl > 0.005) rows.push(['Additional Medicare (0.9%)', -p.addl, -T.addl, '']);
-    if (code && p.stateKnown && !c.exState) rows.push([sname + ' income tax' + (p.stateEst ? ' (estimate, ' + pct(c.stRate) + ')' : ''), -p.state, -T.state, '']);
+    if (code && p.stateKnown && !c.exState) rows.push([(S && S.rowName ? S.rowName : sname + ' income tax') + (p.stateEst ? ' (estimate, ' + pct(c.stRate) + ')' : ''), -p.state, -T.state, '']);
+    if (p.county > 0.005) rows.push([p.countyName + ' income tax (' + rate4(p.countyRate) + ')', -p.county, -T.county, '']);
     if (c.nyc) rows.push(['New York City income tax', -p.nyc, -T.nyc, '']);
     if (p.local > 0.005) rows.push(['City or local income tax (' + pct(c.localPct) + ')', -p.local, -T.local, '']);
     if (p.programs.length) p.programs.forEach(function (q) { rows.push([q.name, -q.amt, null, 'prog']); });
@@ -14021,6 +14191,8 @@ CalcThis.initPayCalc = function () {
     if (code && p.stateKnown && !p.stateEst) as.push(sname + ' income tax by the state’s official ' + E.YEAR + ' withholding formula' + (S.src && /^https?:/.test(S.src) ? ' (<a href="' + S.src + '" target="_blank" rel="noopener">source</a>)' : '') + '.');
     if (code && p.stateKnown && S && S.programs) as.push('Includes ' + S.programs.map(function (q) { return q.name; }).join(' and ') + ' (employee-paid).');
     if (code && p.stateKnown && S && S.note) as.push(S.note);
+    if (code === 'MD' && p.stateKnown) as.push('Maryland withholds with the Comptroller’s percentage chart for the local rate at or just above your county’s rate, so the withholding can differ by cents from your exact county tax. Anne Arundel and Frederick counties charge local tax in income steps; the chart for the step that applies to your pay is used.');
+    if (code === 'IN' && p.stateKnown) as.push('Indiana county tax is for your county of residence on January 1 (rates effective October 1, 2026). If you work in an Indiana county but live out of state, use the county where you work. An adopted child on line 8 counts as two dependent exemptions.');
     if (code && p.stateEst) as.push(sname + ' income tax is an estimate: the flat rate you typed (' + pct(c.stRate) + ') applied to your pay after before-tax deductions.');
     if (c.kids || c.othd) as.push('Form W-4 Step 3 includes ' + (c.kids ? c.kids + ' child' + (c.kids === 1 ? '' : 'ren') + ' under 17 × ' + mon0(E.CHILD_CREDIT) : '') + (c.kids && c.othd ? ' and ' : '') + (c.othd ? c.othd + ' other dependent' + (c.othd === 1 ? '' : 's') + ' × ' + mon0(E.OTHER_DEP_CREDIT) : '') + '. These W-4 amounts assume income of $200,000 or less ($400,000 if married filing jointly); above that, use the reduced amount from the W-4 worksheet.');
     if (p.local > 0.005) as.push('City or local income tax is an estimate: the rate you typed (' + pct(c.localPct) + ') applied to your pay after before-tax deductions. Check your city’s own withholding rules.');
@@ -14056,6 +14228,10 @@ CalcThis.initPayCalc = function () {
   function syncStateFields() {
     var code = stateCode(), lab = SFIELDS[code], live = code && E.STATES[code] && E.STATES[code].method !== 'pending';
     if ($('pcNycFld')) $('pcNycFld').style.display = code === 'NY' ? '' : 'none';
+    var cSt = live ? E.STATES[code] : null;
+    cOpts = cSt && cSt.counties ? cSt.counties.map(function (q) { return { v: q.n, label: q.n, s: q.n.toLowerCase() }; }) : [];
+    $('pcCountyFld').style.display = cOpts.length ? '' : 'none';
+    if (cSt && cSt.counties) $('pcCountyLab').textContent = code === 'MD' ? 'County or Baltimore City where you live' : 'County where you live (on January 1)';
     var pendingSt = !!code && !live;
     $('pcStRateFld').style.display = pendingSt ? '' : 'none';
     $('pcStAllowFld').style.display = lab ? '' : 'none';
@@ -14126,6 +14302,35 @@ CalcThis.initPayCalc = function () {
   });
   stList.addEventListener('mousedown', function (e) { e.preventDefault(); var bt = e.target.closest('.st-ta-opt'); if (bt) stPick(stHits[+bt.getAttribute('data-i')]); });
 
+  /* County (Maryland, Indiana) = the same typeahead as the state field, with the list of the chosen state's counties */
+  var cOpts = [], cEl = $('pcCounty'), cIn = $('pcCountyIn'), cList = $('pcCountyList'), cVal = '', cHits = [], cAct = -1;
+  Object.defineProperty(cEl, 'value', { configurable: true, get: function () { return cVal; }, set: function (v) { cVal = v || ''; cIn.value = cVal; } });
+  function cRank(o, q) { if (o.label.toLowerCase().indexOf(q) === 0) return 0; if ((' ' + o.s).indexOf(' ' + q) >= 0) return 1; return o.s.indexOf(q) >= 0 ? 2 : -1; }
+  function cClose() { cList.style.display = 'none'; cIn.setAttribute('aria-expanded', 'false'); cAct = -1; }
+  function cShow(full) {
+    var q = full ? '' : cIn.value.trim().toLowerCase(), hits = [];
+    cOpts.forEach(function (o, i) { var r = q ? cRank(o, q) : 0; if (r >= 0) hits.push({ o: o, r: r, i: i }); });
+    hits.sort(function (x, y) { return x.r - y.r || x.i - y.i; });
+    cHits = hits.map(function (h) { return h.o; });
+    cAct = q && cHits.length ? 0 : -1;
+    cList.innerHTML = cHits.length ? cHits.map(function (o, i) { return '<button type="button" class="st-ta-opt' + (!q && o.v === cVal ? ' on' : '') + (q && i === cAct ? ' kb' : '') + '" role="option" data-i="' + i + '"><span>' + o.label + '</span></button>'; }).join('')
+      : '<div class="st-ta-none">No county matches “' + cIn.value.replace(/&/g, '&amp;').replace(/</g, '&lt;') + '”.</div>';
+    cList.style.display = 'block'; cIn.setAttribute('aria-expanded', 'true');
+    var cur = cList.querySelector('.st-ta-opt.on'); cList.scrollTop = cur && !q ? Math.max(0, cur.offsetTop - 60) : 0;
+  }
+  function cPick(o) { if (!o) return; var changed = o.v !== cVal; cClose(); cEl.value = o.v; cIn.blur(); if (changed) render(); }
+  cIn.addEventListener('focus', function () { cIn.select(); cShow(true); });
+  cIn.addEventListener('input', function () { if (!cIn.value.trim() && cVal) { cVal = ''; render(); } cShow(!cIn.value.trim()); });
+  cIn.addEventListener('blur', function () { setTimeout(function () { cClose(); cIn.value = cVal; }, 150); });
+  cIn.addEventListener('keydown', function (e) {
+    var opts = cList.querySelectorAll('.st-ta-opt');
+    if (e.key === 'Escape') { cClose(); cIn.value = cVal; return; }
+    if (!opts.length) return;
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); cAct = e.key === 'ArrowDown' ? Math.min(opts.length - 1, cAct + 1) : Math.max(0, cAct - 1); [].forEach.call(opts, function (o, i) { o.classList.toggle('kb', i === cAct); }); opts[cAct].scrollIntoView({ block: 'nearest' }); }
+    else if (e.key === 'Enter') { e.preventDefault(); cPick(cHits[cAct >= 0 ? cAct : 0]); }
+  });
+  cList.addEventListener('mousedown', function (e) { e.preventDefault(); var bt = e.target.closest('.st-ta-opt'); if (bt) cPick(cHits[+bt.getAttribute('data-i')]); });
+
   ['pcGross', 'pcRate', 'pcHours', 'pcOtHours', 'pcOtMult', 'pcYtd', 'pcCredit', 'pcKids', 'pcOthDep', 'pcLocal', 'pcStRate', 'pc4a', 'pc4b', 'pcFedExtra', 'pcAllow', 'pcStAllow', 'pcStAllow2', 'pcStExtra', 'pc401k', 'pcHealth', 'pcHsa', 'pcPreOther', 'pcRoth', 'pcPostOther', 'pcWiRaise', 'pcWiK'].forEach(function (id) { $(id).addEventListener('input', render); });
   ['pcStep2', 'pcRound', 'pcExFed', 'pcExSS', 'pcExMed', 'pcExState'].forEach(function (id) { $(id).addEventListener('change', render); });
   ['pcFreq', 'pcStatus'].forEach(function (id) { $(id).addEventListener('change', render); });
@@ -14134,7 +14339,7 @@ CalcThis.initPayCalc = function () {
   function activeBtn(id) { var b = $(id).querySelector('button.on'); return b ? b.getAttribute('data-v') : null; }
   function saveForm(target) {
     try {
-      var o = { t: Date.now(), state: $('pcState').value || '', freq: freqKey(), status: statusKey(), mode: st.mode, unit: st.unit, w4: st.w4, adv: st.adv, f: {}, c: {} };
+      var o = { t: Date.now(), county: cEl.value || '', state: $('pcState').value || '', freq: freqKey(), status: statusKey(), mode: st.mode, unit: st.unit, w4: st.w4, adv: st.adv, f: {}, c: {} };
       FORM_IDS.forEach(function (id) { o.f[id] = $(id).value; });
       CHECK_IDS.forEach(function (id) { o.c[id] = $(id).checked; });
       sessionStorage.setItem('pcForm', JSON.stringify(o));
@@ -14154,6 +14359,7 @@ CalcThis.initPayCalc = function () {
       if (o.status) $('pcStatus').value = o.status;
       if (o.state !== undefined && (o.state === '' || o.state === 'NYC' || NAMES[o.state])) $('pcState').value = o.state;
       for (var id in o.f) if ($(id) && o.f[id]) $(id).value = o.f[id];
+      if (o.county) cEl.value = o.county;
       for (var cid in o.c) if ($(cid)) $(cid).checked = !!o.c[cid];
       if ($('pcNyc')) $('pcNyc').checked = o.state === 'NYC';
     } catch (e) {}
@@ -14168,7 +14374,7 @@ CalcThis.initPayCalc = function () {
     var code = stateCode(), S = code ? E.STATES[code] : null;
     var target = raw === 'NYC' ? NYC_URL : (S && S.slug ? '/paycheck-calculator/' + S.slug + '/' : '/paycheck-calculator/');
     if (location.pathname !== target && !window.__pcNoNav) { saveForm(); location.href = target; return; }  // __pcNoNav: test hook so fuzz tests can switch states without leaving the page
-    $('pcStAllow').value = ''; $('pcStAllow2').value = ''; $('pcStRate').value = ''; if ($('pcNyc') && code !== 'NY') $('pcNyc').checked = false; syncStateFields(); render();
+    $('pcStAllow').value = ''; $('pcStAllow2').value = ''; $('pcStRate').value = ''; cEl.value = ''; if ($('pcNyc') && code !== 'NY') $('pcNyc').checked = false; syncStateFields(); render();
   });
 
   $('pcEx').addEventListener('click', function () {
@@ -14193,6 +14399,7 @@ CalcThis.initPayCalc = function () {
     if (!last) return;
     var d = last.d, p = d.p, lines = ['Gross pay: ' + mon(p.gross) + ' (' + FREQ_WORD[freqKey()] + ')', 'Federal income tax: ' + mon(p.fed), 'Social Security: ' + mon(p.ss), 'Medicare: ' + mon(p.med + p.addl)];
     if (d.c.state && p.stateKnown) lines.push(NAMES[d.c.state] + ' tax and programs' + (p.stateEst ? ' (estimate)' : '') + ': ' + mon(p.state + p.programTotal));
+    if (p.county > 0.005) lines.push(p.countyName + ' income tax: ' + mon(p.county));
     if (p.local > 0.005) lines.push('City or local tax (estimate): ' + mon(p.local));
     if (p.preTax > 0.005) lines.push('Before-tax deductions: ' + mon(p.preTax));
     if (p.post > 0.005) lines.push('After-tax deductions: ' + mon(p.post));
@@ -16843,7 +17050,7 @@ CalcThis.initOvertimeCalc = function () {
   /* state list: every state the Paycheck calculator can compute */
   (function () {
     var arr = [];
-    for (var k in PE.STATES) if (PE.STATES[k].method && PE.STATES[k].method !== 'pending') arr.push([k, PE.STATES[k].name]);
+    for (var k in PE.STATES) if (PE.STATES[k].method && PE.STATES[k].method !== 'pending' && !PE.STATES[k].counties) arr.push([k, PE.STATES[k].name]);
     arr.sort(function (a, b) { return a[1] < b[1] ? -1 : 1; });
     $('otState').querySelector('.csel-panel').innerHTML = '<button type="button" class="csel-opt on" role="option" aria-selected="true" data-value="">Federal taxes only</button>' +
       arr.map(function (s) { return '<button type="button" class="csel-opt" role="option" aria-selected="false" data-value="' + s[0] + '">' + s[1] + '</button>'; }).join('');
@@ -17125,7 +17332,7 @@ CalcThis.initSalaryCalc = function () {
   })();
   (function () {
     var arr = [];
-    for (var k in PE.STATES) if (PE.STATES[k].method && PE.STATES[k].method !== 'pending') arr.push([k, PE.STATES[k].name]);
+    for (var k in PE.STATES) if (PE.STATES[k].method && PE.STATES[k].method !== 'pending' && !PE.STATES[k].counties) arr.push([k, PE.STATES[k].name]);
     arr.sort(function (a, b) { return a[1] < b[1] ? -1 : 1; });
     $('slState').querySelector('.csel-panel').innerHTML = '<button type="button" class="csel-opt on" role="option" aria-selected="true" data-value="">Federal taxes only</button>' +
       arr.map(function (s) { return '<button type="button" class="csel-opt" role="option" aria-selected="false" data-value="' + s[0] + '">' + s[1] + '</button>'; }).join('');

@@ -167,21 +167,29 @@
 - [Florida Paycheck Calculator](https://calcthis.co/paycheck-calculator/florida/): take-home pay after federal tax, FICA.
 - [Georgia Paycheck Calculator](https://calcthis.co/paycheck-calculator/georgia/): take-home pay after federal tax, FICA and Georgia state tax.
 - [Illinois Paycheck Calculator](https://calcthis.co/paycheck-calculator/illinois/): take-home pay after federal tax, FICA and Illinois state tax.
+- [Indiana Paycheck Calculator](https://calcthis.co/paycheck-calculator/indiana/): take-home pay after federal tax, FICA and Indiana state tax.
 - [Iowa Paycheck Calculator](https://calcthis.co/paycheck-calculator/iowa/): take-home pay after federal tax, FICA and Iowa state tax.
 - [Kentucky Paycheck Calculator](https://calcthis.co/paycheck-calculator/kentucky/): take-home pay after federal tax, FICA and Kentucky state tax.
+- [Maryland Paycheck Calculator](https://calcthis.co/paycheck-calculator/maryland/): take-home pay after federal tax, FICA and Maryland state tax.
+- [Massachusetts Paycheck Calculator](https://calcthis.co/paycheck-calculator/massachusetts/): take-home pay after federal tax, FICA and Massachusetts state tax.
 - [Michigan Paycheck Calculator](https://calcthis.co/paycheck-calculator/michigan/): take-home pay after federal tax, FICA and Michigan state tax.
 - [Minnesota Paycheck Calculator](https://calcthis.co/paycheck-calculator/minnesota/): take-home pay after federal tax, FICA and Minnesota state tax.
 - [Missouri Paycheck Calculator](https://calcthis.co/paycheck-calculator/missouri/): take-home pay after federal tax, FICA and Missouri state tax.
 - [Montana Paycheck Calculator](https://calcthis.co/paycheck-calculator/montana/): take-home pay after federal tax, FICA and Montana state tax.
 - [Nevada Paycheck Calculator](https://calcthis.co/paycheck-calculator/nevada/): take-home pay after federal tax, FICA.
 - [New Hampshire Paycheck Calculator](https://calcthis.co/paycheck-calculator/new-hampshire/): take-home pay after federal tax, FICA.
+- [New Jersey Paycheck Calculator](https://calcthis.co/paycheck-calculator/new-jersey/): take-home pay after federal tax, FICA and New Jersey state tax.
 - [New York Paycheck Calculator](https://calcthis.co/paycheck-calculator/new-york/): take-home pay after federal tax, FICA and New York state tax.
 - [New York City Paycheck Calculator](https://calcthis.co/paycheck-calculator/new-york-city/): take-home pay after federal tax, FICA, New York State and New York City income tax.
 - [North Carolina Paycheck Calculator](https://calcthis.co/paycheck-calculator/north-carolina/): take-home pay after federal tax, FICA and North Carolina state tax.
+- [Ohio Paycheck Calculator](https://calcthis.co/paycheck-calculator/ohio/): take-home pay after federal tax, FICA and Ohio state tax.
+- [Oregon Paycheck Calculator](https://calcthis.co/paycheck-calculator/oregon/): take-home pay after federal tax, FICA and Oregon state tax.
 - [Pennsylvania Paycheck Calculator](https://calcthis.co/paycheck-calculator/pennsylvania/): take-home pay after federal tax, FICA and Pennsylvania state tax.
 - [South Dakota Paycheck Calculator](https://calcthis.co/paycheck-calculator/south-dakota/): take-home pay after federal tax, FICA.
 - [Tennessee Paycheck Calculator](https://calcthis.co/paycheck-calculator/tennessee/): take-home pay after federal tax, FICA.
 - [Texas Paycheck Calculator](https://calcthis.co/paycheck-calculator/texas/): take-home pay after federal tax, FICA.
+- [Utah Paycheck Calculator](https://calcthis.co/paycheck-calculator/utah/): take-home pay after federal tax, FICA and Utah state tax.
 - [Virginia Paycheck Calculator](https://calcthis.co/paycheck-calculator/virginia/): take-home pay after federal tax, FICA and Virginia state tax.
 - [Washington Paycheck Calculator](https://calcthis.co/paycheck-calculator/washington/): take-home pay after federal tax, FICA.
+- [Wisconsin Paycheck Calculator](https://calcthis.co/paycheck-calculator/wisconsin/): take-home pay after federal tax, FICA and Wisconsin state tax.
 - [Wyoming Paycheck Calculator](https://calcthis.co/paycheck-calculator/wyoming/): take-home pay after federal tax, FICA.
