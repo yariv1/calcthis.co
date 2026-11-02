@@ -183,7 +183,8 @@ must be built from the article's actual units, every time, not pasted from a tem
 ## ⛔ SESSION HANDOFF — START HERE (rewritten 2026-11-02, end of the paycheck-states-batch-2 session; full detail in `HANDOFF.md` §000000000 = the FIRST section of the file — read it in full before replying)
 
 **Read `HANDOFF.md` §000000000 (top of the file) in full before replying; it replaces the older §00 / §0000000 pointers.** Do not make the user re-explain anything in it (user, 2026-10-26: "do not dare to start the new session confused"; repeated 2026-11-01 and 2026-11-02: "do not dare to miss anything!!").
-- **STATE (end of 2026-11-02): LIVE = v305 · 71 calculators · 25 articles · 189 pages; `main` pushed (`d2919882` deploy, `81ad84c6` tracker).** Shipped 2026-11-02: overtime (v294), salary (v299), take-home wording (v302), paycheck Plan 2 (v303), NYC (v304), **8 paycheck states NJ OH MA MD WI IN OR UT + county picker on MD/IN (v305; sources/caveats in `md-files/calcthis-paycheck-states-batch2.md`; SC deferred until SCDOR publishes new tables)**; the pay field is labelled "Gross pay, before taxes" everywhere. Bing: 9 URLs submitted manually; GSC: 11 requested then quota hit (remaining queue + order in the tracker).
+- **STATE (end of 2026-11-02): LIVE = v306 · 71 calculators · 25 articles · 194 pages; `main` pushed.** Shipped 2026-11-02: overtime (v294), salary (v299), take-home wording (v302), paycheck Plan 2 (v303), NYC (v304), **8 paycheck states NJ OH MA MD WI IN OR UT + county picker on MD/IN (v305; sources/caveats in `md-files/calcthis-paycheck-states-batch2.md`; SC deferred until SCDOR publishes new tables)**; the pay field is labelled "Gross pay, before taxes" everywhere. Bing: 9 URLs submitted manually; GSC: 11 requested then quota hit (remaining queue + order in the tracker).
+- **PAYCHECK STATES BATCH 3 DEPLOYED v306 (2026-11-02): LA, NE, OK, AR, HI** (Ahrefs >1000 Easy; primary sources in `md-files/calcthis-paycheck-states-batch3-research.md`). **STILL PENDING: Maine (Aug 13 2026 MRS revision with 2% surcharge unread; maine.gov 403), Idaho + Kansas (sites unreachable from our network — ask him for Idaho EPB00745 07-23-2026 and Kansas KW-100 PDFs), South Carolina (tables not updated for Act 110).**
 - **NEXT (ask him after the sync; recommend #1):** (1) GSC queue on "Start queue": 18 unit pairs from `/cm-to-inches/` → 8 new paycheck states → 10 older paycheck states → newest pages; (2) more paycheck states ONLY on his Ahrefs numbers (CT >100, SC waits for tables, the other 16 unbuilt states have no numbers — give him the exact phrases in HANDOFF §000000000 §3); (3) sales-tax states/countries exploration (he has not sent the sales-tax numbers; VAT >1000 Hard / GST >100 Hard are new-calculator intents); (4) self-employment tax (low). Typeahead mandatory for any state/country/place/county picker. Full detail: HANDOFF §000000000 §3.
 - **STALE items removed:** the salary research is DONE (v299); the "explore states/countries" report is DONE (paycheck states built; sales-tax part still open as #3 above).
 - **GSC INDEXING** — standing instruction: when he says "Start queue", request URLs one by one until "Quota Exceeded" (about 11-12 per window) in the tracker's order (`md-files/calcthis-indexing-tracker.md`); procedure + click coordinates in HANDOFF §000000000 §5; log what was done and close the Chrome tab.
@@ -201,8 +202,8 @@ must be built from the article's actual units, every time, not pasted from a tem
 
 ## Project state
 
-- **Asset version:** v305 (live; `.assetver`)
-- **Total pages:** 189 live (sitemap)
+- **Asset version:** v306 (live; `.assetver`)
+- **Total pages:** 194 live (sitemap)
 - **Model:** Sonnet 5
 
 ### New this session — global `.csel` custom-dropdown component

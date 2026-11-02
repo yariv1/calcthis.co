@@ -52,7 +52,7 @@
   ]
 }
 </script>
-<link rel="stylesheet" href="/assets/style.css?v=305">
+<link rel="stylesheet" href="/assets/style.css?v=306">
 <style>
 .presets-label{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
 .presets{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px}
@@ -264,20 +264,24 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
           <a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a>
           <a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a>
           <a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arkansas/">Arkansas Paycheck Calculator</a>
           <a href="/paycheck-calculator/california/">California Paycheck Calculator</a>
           <a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a>
           <a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a>
           <a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/hawaii/">Hawaii Paycheck Calculator</a>
           <a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a>
           <a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a>
           <a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a>
           <a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a>
+          <a href="/paycheck-calculator/louisiana/">Louisiana Paycheck Calculator</a>
           <a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a>
           <a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a>
           <a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a>
           <a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a>
           <a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a>
           <a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nebraska/">Nebraska Paycheck Calculator</a>
           <a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a>
           <a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a>
           <a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a>
@@ -285,6 +289,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
           <a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a>
           <a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a>
           <a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a>
+          <a href="/paycheck-calculator/oklahoma/">Oklahoma Paycheck Calculator</a>
           <a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a>
           <a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a>
           <a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a>
@@ -748,20 +753,24 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
           <li><a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a></li>
           <li><a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a></li>
           <li><a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arkansas/">Arkansas Paycheck Calculator</a></li>
           <li><a href="/paycheck-calculator/california/">California Paycheck Calculator</a></li>
           <li><a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a></li>
           <li><a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a></li>
           <li><a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/hawaii/">Hawaii Paycheck Calculator</a></li>
           <li><a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a></li>
           <li><a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a></li>
           <li><a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a></li>
           <li><a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/louisiana/">Louisiana Paycheck Calculator</a></li>
           <li><a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a></li>
           <li><a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a></li>
           <li><a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a></li>
           <li><a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a></li>
           <li><a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a></li>
           <li><a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nebraska/">Nebraska Paycheck Calculator</a></li>
           <li><a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a></li>
           <li><a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a></li>
           <li><a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a></li>
@@ -769,6 +778,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
           <li><a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a></li>
           <li><a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a></li>
           <li><a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/oklahoma/">Oklahoma Paycheck Calculator</a></li>
           <li><a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a></li>
           <li><a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a></li>
           <li><a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a></li>
@@ -799,7 +809,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
   </footer>
 <!--FOOTER:END-->
 
-<script src="/assets/app.js?v=305"></script>
+<script src="/assets/app.js?v=306"></script>
 <script>
 function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){var t=b;b=a%b;a=t;}return a;}
 function toInts(a,b){var sa=(''+a).split('.')[1]||'',sb=(''+b).split('.')[1]||'';var s=Math.pow(10,Math.max(sa.length,sb.length));var ai=Math.round(a*s),bi=Math.round(b*s);var g=gcd(ai,bi);return[ai/g,bi/g];}

@@ -385,7 +385,7 @@ write('paycheck-calculator/index.html', pageHtml({
 console.log('main page written; live states', nLive, 'pending', pending.length);
 
 // ---------------- state pages ----------------
-const FORM = { AL: 'Form A-4', AZ: 'Form A-4', CA: 'Form DE 4', CO: 'Form DR 0004 (optional — without it your federal W-4 is used)', GA: 'Form G-4', IA: 'the IA W-4', IL: 'Form IL-W-4', KY: 'Form K-4', MI: 'Form MI-W4', MN: 'Form W-4MN', MO: 'Form MO W-4', MT: 'Form MW-4', NC: 'Form NC-4', NY: 'Form IT-2104', PA: '', VA: 'Form VA-4', NJ: 'Form NJ-W4', OH: 'Form IT 4', MA: 'Form M-4', MD: 'Form MW507', WI: 'Form WT-4', IN: 'Form WH-4', OR: 'Form OR-W-4', UT: 'the federal Form W-4 and its filing status (there is no separate Utah allowance form)' };
+const FORM = { AL: 'Form A-4', AZ: 'Form A-4', CA: 'Form DE 4', CO: 'Form DR 0004 (optional — without it your federal W-4 is used)', GA: 'Form G-4', IA: 'the IA W-4', IL: 'Form IL-W-4', KY: 'Form K-4', MI: 'Form MI-W4', MN: 'Form W-4MN', MO: 'Form MO W-4', MT: 'Form MW-4', NC: 'Form NC-4', NY: 'Form IT-2104', PA: '', VA: 'Form VA-4', NJ: 'Form NJ-W4', OH: 'Form IT 4', MA: 'Form M-4', MD: 'Form MW507', WI: 'Form WT-4', IN: 'Form WH-4', OR: 'Form OR-W-4', UT: 'the federal Form W-4 and its filing status (there is no separate Utah allowance form)', LA: 'Form L-4 (R-1300)', OK: 'Form OK-W-4', NE: 'Form W-4N', AR: 'Form AR4EC', HI: 'Form HW-4' };
 const LOCALS = {
   NY: 'New York City residents also pay a city income tax — tick “I live in New York City” in the calculator or use the New York City paycheck calculator. Yonkers residents also pay a local tax, which is not included.',
   PA: 'Most Pennsylvania workers also pay a local earned income tax (commonly about 1%) and Philadelphia has its own wage tax; none of these are included here.',
@@ -401,7 +401,12 @@ const LOCALS = {
   WI: 'Wisconsin has no local income tax.',
   IN: 'Indiana county tax is included — pick your county above and the calculator adds its rate. City taxes do not exist in Indiana.',
   OR: 'Some Oregon residents also owe Multnomah County and Portland-area Metro income taxes, which this calculator does not include; add your rate under Go advanced.',
-  UT: 'Utah has no local income tax.'
+  UT: 'Utah has no local income tax.',
+  AR: 'Arkansas has no local income tax on wages.',
+  HI: 'Hawaii has no local income tax on wages.',
+  LA: 'Louisiana has no local income tax on wages.',
+  OK: 'Oklahoma has no local income tax on wages.',
+  NE: 'Nebraska has no local income tax on wages.'
 };
 function programsText(S) {
   if (!S.programs || !S.programs.length) return '';
@@ -435,6 +440,11 @@ function fact(c) {
     case 'IN': return 'Indiana withholds a flat 2.95% state rate plus your county’s rate (0.5% to 3.0%) on pay after $1,000 for each personal exemption and $1,500 for each dependent exemption claimed on Form WH-4.';
     case 'OR': return 'Oregon withholds 4.75%, 6.75%, 8.75% and 9.9% after subtracting the federal income tax withheld from your pay (up to $8,750 a year), a $2,910 standard deduction ($5,820 married) and a $263 credit for each allowance on Form OR-W-4. Employees also pay 0.6% for Paid Leave Oregon (up to $184,500) and the 0.1% statewide transit tax.';
     case 'UT': return 'Utah withholds a flat 4.45% of annual pay, less a withholding allowance of $485 ($970 married) that shrinks by 1.3% of pay above $9,348 ($18,696 married).';
+    case 'AR': return 'Arkansas withholds 2%, 3%, 3.4% and 3.7% by formula: annual pay less a $2,470 standard deduction, a bracket percentage minus a fixed adjustment, then $29 off for each exemption claimed on Form AR4EC. The top rate fell from 3.9% to 3.7% in 2026 and the Department of Finance and Administration posted the new formula on May 29, 2026.';
+    case 'HI': return 'Hawaii withholds 1.4% to 7.9% in eight steps after subtracting $1,144 for each allowance on Form HW-4 and an extra $4,350 withholding allowance; single filers (including unmarried heads of household) and married filers have their own tables. Employees also pay up to 0.5% of weekly wages (at most $7.50 a week) toward Temporary Disability Insurance.';
+    case 'LA': return 'Louisiana withholds a flat 3.09% (the 3% income tax rate plus a small cushion) of your pay after subtracting a standard deduction spread over the pay periods: $12,875 a year for a single filer and $25,750 for married filing jointly, head of household or a surviving spouse (Form L-4 claim “1” or “2”).';
+    case 'OK': return 'Oklahoma withholds 2.5%, 3.5% and 4.5% in three steps from its Packet OW-2 tables, after subtracting $1,000 a year for each allowance claimed on Form OK-W-4. Single filers pay tax above $10,100 a year and married filers above $20,200, and the result is rounded to the whole dollar.';
+    case 'NE': return 'Nebraska withholds 2.26%, 3.22%, 4.21%, 4.35%, 4.48% and 4.60% in six steps from its Circular EN tables, after subtracting $2,440 a year for each allowance claimed on Form W-4N. Head-of-household filers use the single table and surviving spouses use the married table.';
     case 'WA': return 'Washington has no state income tax, but employees pay for the state’s Paid Family & Medical Leave program (about 0.81% of wages up to the Social Security limit) and the WA Cares long-term-care fund (0.58% of all wages).';
     default: return n + ' does not tax wages, so your paycheck has only federal income tax, Social Security and Medicare.';
   }
@@ -503,7 +513,7 @@ ${faqs2.map((q) => `    <details class="faq"><summary>${q[0]}</summary><p>${q[1]
 let nState = 0;
 liveSorted.forEach((c) => {
   const n = NAMES[c], url = 'https://calcthis.co/paycheck-calculator/' + SLUG[c] + '/', f2 = stateFaqs(c), e65 = stateExamples(c)[1];
-  const app = Object.assign({}, jsonLdApp, { dateModified: ['NJ', 'OH', 'MA', 'MD', 'WI', 'IN', 'OR', 'UT'].indexOf(c) >= 0 ? '2026-11-02' : '2026-10-27', name: n + ' Paycheck Calculator', url, description: n + ' paycheck and take home pay calculator for salary and hourly pay: federal income tax, Social Security, Medicare' + (E.STATES[c].method === 'none' ? '' : ', ' + n + ' state tax') + ', deductions and overtime.' });
+  const app = Object.assign({}, jsonLdApp, { dateModified: ['NJ', 'OH', 'MA', 'MD', 'WI', 'IN', 'OR', 'UT', 'LA', 'OK', 'NE', 'AR', 'HI'].indexOf(c) >= 0 ? '2026-11-02' : '2026-10-27', name: n + ' Paycheck Calculator', url, description: n + ' paycheck and take home pay calculator for salary and hourly pay: federal income tax, Social Security, Medicare' + (E.STATES[c].method === 'none' ? '' : ', ' + n + ' state tax') + ', deductions and overtime.' });
   const faq = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: f2.map((q) => ({ '@type': 'Question', name: q[0], acceptedAnswer: { '@type': 'Answer', text: q[1] } })) };
   const crumbs = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'CalcThis', item: 'https://calcthis.co/' },

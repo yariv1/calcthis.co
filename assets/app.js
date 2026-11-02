@@ -13679,6 +13679,39 @@ CalcThis.payEngine = (function () {
       var a = o.wages * o.ppy, mar = o.status === 'married', base = mar ? 970 : 485, thr = mar ? 18696 : 9348;
       var allow = Math.max(0, base - 0.013 * Math.max(0, a - thr));
       return { tax: Math.max(0, a * 0.0445 - allow) / o.ppy };
+    },
+    // Louisiana: R-1306 (1/26) computer formula, W = (S - standard deduction / N) x 3.09%
+    la: function (S, o) {
+      var N = o.ppy === 260 ? 365 : (PERKEY[o.ppy] || o.ppy), sd = (o.status === 'married' || o.status === 'hoh') ? 25750 : 12875;
+      return { tax: Math.max(0, o.wages - sd / N) * 0.0309 };
+    },
+    // Oklahoma: Packet OW-2 (2026) percentage method - wages less the withholding allowance, per-period table, rounded to the whole dollar
+    ok: function (S, o) {
+      var k = PERKEY[o.ppy] || o.ppy, T = OK_TABLES[k];
+      return { tax: whole(tab(T[o.status === 'married' ? 'M' : 'S'], o.wages - T.al * num(o.allowances))) };
+    },
+    // Nebraska: Circular EN (2026) percentage method - wages less the withholding allowance, then the per-period table (single includes head of household)
+    ne: function (S, o) {
+      var k = PERKEY[o.ppy] || o.ppy, T = NE_TABLES[k];
+      return { tax: tab(T[o.status === 'married' ? 'M' : 'S'], o.wages - T.al * num(o.allowances)) };
+    },
+    // Arkansas: DFA Withholding Tax Formula (posted May 29 2026, 3.7% top rate) - annual pay less $2,470, $50-midpoint lookup under $100,001, bracket minus adjustment, rounded, less $29 per AR4EC exemption
+    ar: function (S, o) {
+      var pm = PERKEY[o.ppy] || o.ppy, n = Math.max(0, o.wages * pm - 2470), m = n < 100001 ? Math.floor(n / 100) * 100 + 50 : n, t;
+      if (m < 5600) t = 0;
+      else if (m < 11200) t = m * .02 - 111.98;
+      else if (m < 16000) t = m * .03 - 223.97;
+      else if (m < 26400) t = m * .034 - 287.97;
+      else if (m < 94701) t = m * .037 - 367.16;
+      else if (m < 97601) t = m * .037 - (369.90 - 10 * Math.floor((m - 94701) / 100));
+      else t = m * .037 - 79.90;
+      t = Math.max(0, whole(t) - 29 * num(o.allowances));
+      return { tax: t / pm };
+    },
+    // Hawaii: Booklet A (effective Dec 5 2025 for 2026 wages), Part 1 annualized method - annual pay less $1,144 per HW-4 allowance less the $4,350 extra lump-sum allowance, then the annual table
+    hi: function (S, o) {
+      var pm = PERKEY[o.ppy] || o.ppy, x = o.wages * pm - 1144 * num(o.allowances) - 4350;
+      return { tax: tab(o.status === 'married' ? HI_M : HI_S, x) / pm };
     }
   };
   function findCounty(S, name) {
@@ -13719,6 +13752,33 @@ CalcThis.payEngine = (function () {
   var MD_STATE = [.0475, .05, .0525, .055, .0575, .0625, .065];
   var MD_SINGLE = [100000, 125000, 150000, 250000, 500000, 1000000], MD_JOINT = [150000, 175000, 225000, 300000, 600000, 1200000];
   var MD_CHARTS = [.0225, .024, .0265, .0275, .0285, .03, .0305, .031, .032, .033];
+  // Oklahoma Packet OW-2 (2026), Tables 1-8: S = single (and head of household), M = married; rows [floor, base, rate]; al = withholding allowance per period
+  var OK_TABLES = {
+    260: { al: 3.85, S: [[0, 0, 0], [39, 0, .025], [43, .11, .035], [52, .42, .045]], M: [[0, 0, 0], [78, 0, .025], [87, .22, .035], [104, .84, .045]] },
+    52: { al: 19.23, S: [[0, 0, 0], [194, 0, .025], [216, .55, .035], [261, 2.10, .045]], M: [[0, 0, 0], [388, 0, .025], [433, 1.11, .035], [521, 4.20, .045]] },
+    26: { al: 38.46, S: [[0, 0, 0], [388, 0, .025], [433, 1.11, .035], [521, 4.20, .045]], M: [[0, 0, 0], [777, 0, .025], [865, 2.21, .035], [1042, 8.40, .045]] },
+    24: { al: 41.67, S: [[0, 0, 0], [421, 0, .025], [469, 1.20, .035], [565, 4.55, .045]], M: [[0, 0, 0], [842, 0, .025], [938, 2.40, .035], [1129, 9.10, .045]] },
+    12: { al: 83.33, S: [[0, 0, 0], [842, 0, .025], [938, 2.40, .035], [1129, 9.10, .045]], M: [[0, 0, 0], [1683, 0, .025], [1875, 4.79, .035], [2258, 18.21, .045]] },
+    4: { al: 250, S: [[0, 0, 0], [2525, 0, .025], [2813, 7.19, .035], [3388, 27.31, .045]], M: [[0, 0, 0], [5050, 0, .025], [5625, 14.38, .035], [6775, 54.63, .045]] },
+    2: { al: 500, S: [[0, 0, 0], [5050, 0, .025], [5625, 14.38, .035], [6775, 54.63, .045]], M: [[0, 0, 0], [10100, 0, .025], [11250, 28.75, .035], [13550, 109.25, .045]] },
+    1: { al: 1000, S: [[0, 0, 0], [10100, 0, .025], [11250, 28.75, .035], [13550, 109.25, .045]], M: [[0, 0, 0], [20200, 0, .025], [22500, 57.50, .035], [27100, 218.50, .045]] }
+  };
+  // Hawaii Booklet A (2026) annual tables: S = single (incl. unmarried head of household), M = married; rows [floor, base, rate]
+  var HI_S = [[0, 0, .014], [9600, 134, .032], [14400, 288, .055], [19200, 552, .064], [24000, 859, .068], [36000, 1675, .072], [48000, 2539, .076], [125000, 8391, .079]];
+  var HI_M = [[0, 0, .014], [19200, 269, .032], [28800, 576, .055], [38400, 1104, .064], [48000, 1718, .068], [72000, 3350, .072], [96000, 5078, .076], [250000, 16782, .079]];
+  // Nebraska Circular EN (2026), percentage method tables 1-8: S = single / head of household, M = married / surviving spouse; al = value of one withholding allowance per period
+  var NE_R = [0, .0226, .0322, .0421, .0435, .0448, .046];
+  function neRows(f, b) { var r = [[0, 0, 0]]; for (var i = 0; i < f.length; i++) r.push([f[i], b[i], NE_R[i + 1]]); return r; }
+  var NE_TABLES = {
+    260: { al: 9.38, S: neRows([13, 26, 84, 122, 154, 290], [0, .29, 2.16, 3.76, 5.15, 11.24]), M: neRows([32, 50, 125, 194, 241, 319], [0, .41, 2.83, 5.73, 7.77, 11.26]) },
+    52: { al: 46.92, S: neRows([66, 129, 419, 608, 772, 1449], [0, 1.42, 10.76, 18.72, 25.85, 56.18]), M: neRows([158, 250, 623, 969, 1203, 1595], [0, 2.08, 14.09, 28.66, 38.84, 56.40]) },
+    26: { al: 93.85, S: neRows([132, 258, 839, 1216, 1543, 2899], [0, 2.85, 21.56, 37.43, 51.65, 112.40]), M: neRows([315, 500, 1246, 1938, 2405, 3189], [0, 4.18, 28.20, 57.33, 77.64, 112.76]) },
+    24: { al: 101.67, S: neRows([143, 280, 909, 1317, 1672, 3140], [0, 3.10, 23.35, 40.53, 55.97, 121.74]), M: neRows([341, 542, 1350, 2100, 2605, 3455], [0, 4.54, 30.56, 62.14, 84.11, 122.19]) },
+    12: { al: 203.33, S: neRows([286, 559, 1818, 2634, 3344, 6281], [0, 6.17, 46.71, 81.06, 111.95, 243.53]), M: neRows([683, 1084, 2700, 4200, 5211, 6910], [0, 9.06, 61.10, 124.25, 168.23, 244.35]) },
+    4: { al: 610, S: neRows([858, 1678, 5453, 7903, 10033, 18843], [0, 18.53, 140.09, 243.24, 335.90, 730.59]), M: neRows([2048, 3253, 8100, 12600, 15633, 20730], [0, 27.23, 183.30, 372.75, 504.69, 733.04]) },
+    2: { al: 1220, S: neRows([1715, 3355, 10905, 15805, 20065, 37685], [0, 37.06, 280.17, 486.46, 671.77, 1461.15]), M: neRows([4095, 6505, 16200, 25200, 31265, 41460], [0, 54.47, 366.65, 745.55, 1009.38, 1466.12]) },
+    1: { al: 2440, S: neRows([3430, 6710, 21810, 31610, 40130, 75370], [0, 74.13, 560.35, 972.93, 1343.55, 2922.30]), M: neRows([8190, 13010, 32400, 50400, 62530, 82920], [0, 108.93, 733.29, 1491.09, 2018.75, 2932.22]) }
+  };
   function stateTax(code, o) {
     var S = STATES[code];
     if (!S || S.method === 'pending') return null;
@@ -13900,8 +13960,13 @@ CalcThis.payEngine = (function () {
       { n: 'Adams County', r: .016 },{ n: 'Allen County', r: .0159 },{ n: 'Bartholomew County', r: .0175 },{ n: 'Benton County', r: .0179 },{ n: 'Blackford County', r: .025 },{ n: 'Boone County', r: .0171 },{ n: 'Brown County', r: .025234 },{ n: 'Carroll County', r: .024733 },{ n: 'Cass County', r: .0295 },{ n: 'Clark County', r: .02 },{ n: 'Clay County', r: .0235 },{ n: 'Clinton County', r: .0265 },{ n: 'Crawford County', r: .0165 },{ n: 'Daviess County', r: .015 },{ n: 'Dearborn County', r: .014 },{ n: 'Decatur County', r: .0245 },{ n: 'DeKalb County', r: .0213 },{ n: 'Delaware County', r: .015 },{ n: 'Dubois County', r: .012 },{ n: 'Elkhart County', r: .02 },{ n: 'Fayette County', r: .0282 },{ n: 'Floyd County', r: .0189 },{ n: 'Fountain County', r: .021 },{ n: 'Franklin County', r: .017 },{ n: 'Fulton County', r: .0288 },{ n: 'Gibson County', r: .013 },{ n: 'Grant County', r: .0275 },{ n: 'Greene County', r: .0235 },{ n: 'Hamilton County', r: .011 },{ n: 'Hancock County', r: .0194 },{ n: 'Harrison County', r: .01 },{ n: 'Hendricks County', r: .017 },{ n: 'Henry County', r: .0202 },{ n: 'Howard County', r: .0235 },{ n: 'Huntington County', r: .0195 },{ n: 'Jackson County', r: .021 },{ n: 'Jasper County', r: .02864 },{ n: 'Jay County', r: .025 },{ n: 'Jefferson County', r: .0103 },{ n: 'Jennings County', r: .025 },{ n: 'Johnson County', r: .014 },{ n: 'Knox County', r: .017 },{ n: 'Kosciusko County', r: .01 },{ n: 'LaGrange County', r: .0165 },{ n: 'Lake County', r: .015 },{ n: 'LaPorte County', r: .0145 },{ n: 'Lawrence County', r: .0175 },{ n: 'Madison County', r: .0225 },{ n: 'Marion County', r: .0202 },{ n: 'Marshall County', r: .0125 },{ n: 'Martin County', r: .025 },{ n: 'Miami County', r: .0254 },{ n: 'Monroe County', r: .0214 },{ n: 'Montgomery County', r: .0265 },{ n: 'Morgan County', r: .0272 },{ n: 'Newton County', r: .01 },{ n: 'Noble County', r: .0175 },{ n: 'Ohio County', r: .02 },{ n: 'Orange County', r: .0175 },{ n: 'Owen County', r: .025 },{ n: 'Parke County', r: .0265 },{ n: 'Perry County', r: .014 },{ n: 'Pike County', r: .012 },{ n: 'Porter County', r: .005 },{ n: 'Posey County', r: .0145 },{ n: 'Pulaski County', r: .0285 },{ n: 'Putnam County', r: .023 },{ n: 'Randolph County', r: .03 },{ n: 'Ripley County', r: .0238 },{ n: 'Rush County', r: .0215 },{ n: 'St. Joseph County', r: .0175 },{ n: 'Scott County', r: .0216 },{ n: 'Shelby County', r: .017 },{ n: 'Spencer County', r: .008 },{ n: 'Starke County', r: .0171 },{ n: 'Steuben County', r: .0199 },{ n: 'Sullivan County', r: .017 },{ n: 'Switzerland County', r: .0145 },{ n: 'Tippecanoe County', r: .0128 },{ n: 'Tipton County', r: .026 },{ n: 'Union County', r: .0275 },{ n: 'Vanderburgh County', r: .0125 },{ n: 'Vermillion County', r: .015 },{ n: 'Vigo County', r: .02 },{ n: 'Wabash County', r: .029 },{ n: 'Warren County', r: .0212 },{ n: 'Warrick County', r: .01 },{ n: 'Washington County', r: .02 },{ n: 'Wayne County', r: .0125 },{ n: 'Wells County', r: .021 },{ n: 'White County', r: .0232 },{ n: 'Whitley County', r: .016829 }
     ] };
   S.OR = { name: 'Oregon', method: 'or', src: 'https://www.oregon.gov/dor/forms/FormsPubs/withholding-tax-formulas_206-436_2026.pdf', programs: [{ name: 'Paid Leave Oregon', rate: .006, base: 184500 }, { name: 'OR Statewide Transit Tax', rate: .001 }] };
+  S.LA = { name: 'Louisiana', method: 'la', src: 'https://dam.ldr.la.gov/taxforms/1306-1-26.pdf' };
+  S.OK = { name: 'Oklahoma', method: 'ok', src: 'https://www.opers.ok.gov/wp-content/uploads/2025/12/WHTables-2026.pdf' };
+  S.NE = { name: 'Nebraska', method: 'ne', src: 'https://revenue.nebraska.gov/sites/default/files/doc/business/Cir_En_2025/2026cir_en_whole.pdf' };
+  S.AR = { name: 'Arkansas', method: 'ar', src: 'https://www.dfa.arkansas.gov/wp-content/uploads/Withholding-Tax-Formula.pdf' };
+  S.HI = { name: 'Hawaii', method: 'hi', src: 'https://files.hawaii.gov/tax/news/pubs/25BkltA.pdf', programs: [{ name: 'HI Temporary Disability Insurance (employee share, up to 0.5%)', rate: .005, capAnnual: 390 }] };
   S.UT = { name: 'Utah', method: 'ut', src: 'https://tax.utah.gov/forms/pubs/pub-14.pdf' };
-  var SL = { AL: 'alabama', AK: 'alaska', AZ: 'arizona', CA: 'california', CO: 'colorado', FL: 'florida', GA: 'georgia', IL: 'illinois', IA: 'iowa', KY: 'kentucky', MI: 'michigan', MN: 'minnesota', MO: 'missouri', MT: 'montana', NV: 'nevada', NH: 'new-hampshire', NY: 'new-york', NC: 'north-carolina', PA: 'pennsylvania', SD: 'south-dakota', NJ: 'new-jersey', OH: 'ohio', MA: 'massachusetts', MD: 'maryland', WI: 'wisconsin', IN: 'indiana', OR: 'oregon', UT: 'utah', TN: 'tennessee', TX: 'texas', VA: 'virginia', WA: 'washington', WY: 'wyoming' };
+  var SL = { AL: 'alabama', AK: 'alaska', AZ: 'arizona', CA: 'california', CO: 'colorado', FL: 'florida', GA: 'georgia', IL: 'illinois', IA: 'iowa', KY: 'kentucky', MI: 'michigan', MN: 'minnesota', MO: 'missouri', MT: 'montana', NV: 'nevada', NH: 'new-hampshire', NY: 'new-york', NC: 'north-carolina', PA: 'pennsylvania', SD: 'south-dakota', NJ: 'new-jersey', AR: 'arkansas', HI: 'hawaii', LA: 'louisiana', OK: 'oklahoma', NE: 'nebraska', OH: 'ohio', MA: 'massachusetts', MD: 'maryland', WI: 'wisconsin', IN: 'indiana', OR: 'oregon', UT: 'utah', TN: 'tennessee', TX: 'texas', VA: 'virginia', WA: 'washington', WY: 'wyoming' };
   for (var k in SL) if (S[k]) S[k].slug = SL[k];
 })(CalcThis.payEngine.STATES);
 /* PAY-STATES:END */
@@ -13921,6 +13986,7 @@ CalcThis.initPayCalc = function () {
     IL: ['Basic allowances (IL-W-4, line 1)', 'Additional allowances (IL-W-4, line 2)'], MI: ['Exemptions (MI-W4)'], MN: ['Allowances (W-4MN)'],
     NC: ['Allowances (NC-4)'], NY: ['Exemptions (IT-2104)'], VA: ['Exemptions (VA-4)'],
     NJ: ['Allowances (NJ-W4)'], OH: ['Exemptions (Ohio IT 4)'], MA: ['Exemptions (Form M-4)'], MD: ['Exemptions (Form MW507)'], WI: ['Exemptions (Form WT-4)'], OR: ['Allowances (Form OR-W-4)'],
+    AR: ['Exemptions (Form AR4EC)'], HI: ['Allowances (Form HW-4)'], OK: ['Allowances (Form OK-W-4)'], NE: ['Allowances (Form W-4N)'],
     IN: ['Personal exemptions (WH-4, line 5)', 'Dependent exemptions (WH-4, lines 6 to 8)']
   };
 
