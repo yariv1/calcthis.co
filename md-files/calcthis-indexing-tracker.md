@@ -2,7 +2,7 @@
 
 _How-to for requesting indexing with Claude in Chrome + the next batch: HANDOFF.md §10. Next batch = /auto-loan-calculator/ + the "not checked yet" list below, ~10 per day._
 
-## LIVE QUEUE (update at EVERY deploy and every request session; last updated 2026-11-01 session #3)
+## LIVE QUEUE (update at EVERY deploy and every request session; last updated 2026-11-02 — overtime deployed; GSC not requested since 2026-11-01 (10 done, quota hit at valet))
 **GSC REQUESTED 2026-11-01 (10, all confirmed "Indexing requested"): /sales-tax-calculator/new-york-city/, /tip-calculator/, /how-much-to-tip/, /how-much-to-tip/{hairdresser,barber,tattoo-artist,massage-therapist,dog-groomer,uber-driver,movers}/. Then "Quota Exceeded" on the 11th. NEXT (retry next day, in this order): /how-much-to-tip/valet/ · /tipping-in/canada/ italy/ japan/ · /random-number-generator-1-3/ · /speed-converter/ · /px-to-rem-converter/ · /sales-tax-calculator/california/ · texas/ · the 18 unit pair pages · 10 paycheck states · then the 8 new 2026-11-01 pages + re-request /grade-calculator/.**
 **Google (GSC) — quota is per property ~10/day; "Quota Exceeded" seen again 2026-10-31 ~15:30 AND again 2026-11-01 (first request of the new session, NYC sales tax) — quota is NOT reset by the calendar day; retry later.** Requested so far (confirmed unless noted): /random-number-generator/ + -1-100 -wheel -no-repeats -1-10 -1-13 (2026-10-31), -1-3 (UNCONFIRMED), /speed-converter/ (UNCONFIRMED — GSC shows "Crawled – currently not indexed", last crawl Oct 27), /data-storage-converter/, /cooking-converter/.
 **UPDATED 2026-11-01 (v286): /grade-calculator/ upgraded to Weighted Grade Calculator (new title/meta/FAQ) — already indexed, re-request in GSC to refresh the stale snippet; Bing submit.**
