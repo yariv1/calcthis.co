@@ -16583,3 +16583,291 @@ CalcThis.initRngCalc = function () {
     });
   });
 })();
+
+/* OVERTIME:BEGIN */
+/* =========================================================
+   FINANCE · OVERTIME CALCULATOR  (body.p-bmr p-avg p-ot)
+   Competitors checked live (Connecteam, Omni, Zoho, Clockspot): gross pay only, or a tax-saving estimate only.
+   Here: three ways to enter hours (total / regular + overtime / day by day with the federal weekly rule or
+   California's daily + seventh-day rules), the pay split as a picture, take-home after tax (reuses payEngine) with
+   the overtime's own share, and the no-tax-on-overtime estimate (26 U.S.C. § 225). Engine: CalcThis.otEngine.
+   ========================================================= */
+/* OT-ENGINE:START */
+CalcThis.otEngine = (function () {
+  var FLSA = 40;
+  var CAP = { single: 12500, hoh: 12500, married: 25000 };            // 26 U.S.C. § 225(b)(1)
+  var THR = { single: 150000, hoh: 150000, married: 300000 };         // § 225(b)(2): $100 off per $1,000 of MAGI over this
+  var STD_DED = { single: 16100, hoh: 24150, married: 32200 };        // 2026 standard deduction (equals the Pub 15-T table start + the W-4 step-1 offset)
+  function num(v) { v = +v; return isFinite(v) ? v : 0; }
+  function rnd(h, mins) { return mins > 0 ? Math.round(h * 60 / mins) * mins / 60 : h; }
+  function plain(H, T) { var ot = Math.max(0, H - T); return { reg: H - ot, ot: ot, dt: 0, total: H, ca: false }; }
+  // Hours split. o: { mode:'total'|'split'|'day', total, after, reg, ot, days:[7, in workweek order], rule:'fed'|'ca', round:minutes }
+  function split(o) {
+    var r = o.round || 0, i, d, T = (o.after === null || o.after === undefined || isNaN(o.after)) ? FLSA : Math.max(0, o.after);
+    if (o.mode === 'split') { var rg = rnd(num(o.reg), r), ov = rnd(num(o.ot), r); return { reg: rg, ot: ov, dt: 0, total: rg + ov, ca: false }; }
+    if (o.mode === 'total') return plain(rnd(num(o.total), r), T);
+    d = []; for (i = 0; i < 7; i++) d.push(rnd(num(o.days[i]), r));
+    if (o.rule !== 'ca') { var s = 0; for (i = 0; i < 7; i++) s += d[i]; return plain(s, T); }
+    var all7 = true, regD = 0, ot = 0, dt = 0, tot = 0;
+    for (i = 0; i < 7; i++) if (!(d[i] > 0)) all7 = false;
+    for (i = 0; i < 7; i++) {
+      var h = d[i]; tot += h;
+      if (i === 6 && all7) { ot += Math.min(h, 8); dt += Math.max(0, h - 8); }
+      else { regD += Math.min(h, 8); ot += Math.max(0, Math.min(h, 12) - 8); dt += Math.max(0, h - 12); }
+    }
+    var wk = Math.max(0, regD - FLSA); regD -= wk; ot += wk;
+    return { reg: regD, ot: ot, dt: dt, total: tot, ca: true };
+  }
+  // Pay for a week. Bonus (federal rule only): a production-style bonus lifts the regular rate by bonus ÷ total hours.
+  function pay(rate, mult, bonus, h) {
+    var b = h.ca ? 0 : num(bonus), om = h.ca ? 1.5 : mult;
+    var regPay = rate * h.reg, otPay = rate * om * h.ot, dtPay = rate * 2 * h.dt;
+    var bp = (b > 0 && h.total > 0) ? b / h.total * (om - 1) * (h.ot + h.dt) : 0;
+    var otAmt = otPay + dtPay + bp, base = regPay + b;
+    return { reg: regPay, ot: otPay, dt: dtPay, bonus: b, bonusPrem: bp, otAmt: otAmt, base: base, gross: base + otAmt, otMult: om, straight: rate * (h.ot + h.dt) };
+  }
+  // Overtime premium the FLSA requires (the "half" of time-and-a-half), per week — the qualified overtime of § 225(c).
+  function qualified(rate, mult, bonus, h) {
+    var hrs = Math.min(Math.max(0, h.total - FLSA), h.ot + h.dt);
+    var rr = rate + (h.ca ? 0 : num(bonus)) / (h.total || 1);
+    var f = (h.ca || h.dt > 0) ? 0.5 : Math.min(0.5, Math.max(0, mult - 1));
+    return hrs * rr * f;
+  }
+  function taxOn(P, status, T) { var rows = P.STD[status], fl = rows[1][0]; return P.tab(rows, Math.max(0, T) + fl); }
+  // No tax on overtime estimate. q = weekly qualified premium. P = CalcThis.payEngine.
+  function noTax(q, weeks, status, grossWeek, magiIn, P) {
+    var annual = q * weeks, cap = CAP[status], thr = THR[status];
+    var magi = magiIn > 0 ? magiIn : grossWeek * weeks;
+    var capped = Math.min(annual, cap), red = Math.max(0, magi - thr) * 0.10;
+    var ded = Math.max(0, capped - red), sd = STD_DED[status];
+    var t0 = Math.max(0, magi - sd), t1 = Math.max(0, t0 - ded);
+    return { annual: annual, cap: cap, thr: thr, magi: magi, capped: capped, reduction: Math.min(red, capped), ded: ded, saving: taxOn(P, status, t0) - taxOn(P, status, t1) };
+  }
+  // Take-home for the week's check, with and without the overtime. P = CalcThis.payEngine.
+  function takeHome(o, P) {
+    function net(g) { return P.paycheck({ gross: g, ppy: 52, ytd: 0, fed: { status: o.status, w4: 'new' }, state: o.state ? { code: o.state, status: o.status } : {} }); }
+    return { a: net(o.gross), b: net(o.base) };
+  }
+  function parseHours(t) {
+    t = String(t == null ? '' : t).trim(); if (!t) return null;
+    var m = /^(\d+(?:\.\d*)?|\.\d+)$/.exec(t); if (m) return parseFloat(m[1]);
+    m = /^(\d+):([0-5]?\d)$/.exec(t); if (m) return parseInt(m[1], 10) + parseInt(m[2], 10) / 60;
+    return NaN;
+  }
+  function parseMoney(t) {
+    t = String(t == null ? '' : t).replace(/[$\s]/g, ''); if (!t) return null;
+    if (t.indexOf(',') >= 0) { if (!/^\d{1,3}(,\d{3})+(\.\d*)?$/.test(t)) return NaN; t = t.replace(/,/g, ''); }
+    return /^(\d+(?:\.\d*)?|\.\d+)$/.test(t) ? parseFloat(t) : NaN;
+  }
+  return { FLSA: FLSA, CAP: CAP, THR: THR, STD_DED: STD_DED, split: split, pay: pay, qualified: qualified, noTax: noTax, takeHome: takeHome, parseHours: parseHours, parseMoney: parseMoney, rnd: rnd };
+})();
+/* OT-ENGINE:END */
+
+CalcThis.initOvertimeCalc = function () {
+  var E = CalcThis.otEngine, PE = CalcThis.payEngine;
+  var $ = function (id) { return document.getElementById(id); };
+  if (!$('otRate')) return;
+  var st = { mode: 'total', rule: 'fed', adv: false, round: 0, status: 'single' };
+  var DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  var FILE = { single: 'Single', married: 'Married filing jointly', hoh: 'Head of household' };
+
+  function money(x) { if (Math.abs(x) < 0.005) x = 0; return (x < 0 ? '−$' : '$') + Math.abs(x).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+  function money0(x) { x = Math.round(x) || 0; return (x < 0 ? '−$' : '$') + Math.abs(x).toLocaleString('en-US', { maximumFractionDigits: 0 }); }
+  function hrs(x) { var s = (Math.round(x * 100) / 100).toLocaleString('en-US', { maximumFractionDigits: 2 }); return s; }
+  function multTxt(m) { return (Math.round(m * 1000) / 1000) + '×'; }
+  function blank(id) { return !($(id).value + '').trim(); }
+  function setHint(m) { var h = $('otHint'); h.textContent = m || ''; h.style.display = m ? 'block' : 'none'; }
+  function empty(msg, sub) {
+    $('otBig').textContent = '—'; $('otSub').textContent = sub || $('otSub').getAttribute('data-empty'); $('otBody').style.display = 'none';
+    $('otMVal').textContent = '—'; setHint(msg || '');
+  }
+  function seg(idSeg, v) { [].forEach.call($(idSeg).children, function (x) { x.classList.toggle('on', x.getAttribute('data-v') === String(v)); }); }
+
+  /* state list: every state the Paycheck calculator can compute */
+  (function () {
+    var arr = [];
+    for (var k in PE.STATES) if (PE.STATES[k].method && PE.STATES[k].method !== 'pending') arr.push([k, PE.STATES[k].name]);
+    arr.sort(function (a, b) { return a[1] < b[1] ? -1 : 1; });
+    $('otState').querySelector('.csel-panel').innerHTML = '<button type="button" class="csel-opt on" role="option" aria-selected="true" data-value="">Federal taxes only</button>' +
+      arr.map(function (s) { return '<button type="button" class="csel-opt" role="option" aria-selected="false" data-value="' + s[0] + '">' + s[1] + '</button>'; }).join('');
+    CalcThis.initCsel($('otState'));
+  })();
+
+  function weekStart() { var v = parseInt($('otWeekStart').value, 10); return isNaN(v) ? 1 : v; }
+  function labelDays() {
+    var s = weekStart();
+    for (var i = 0; i < 7; i++) $('otDL' + i).textContent = DAYS[(s + i) % 7];
+    $('otDayNote').innerHTML = st.rule === 'ca'
+      ? 'California pays <strong>1.5×</strong> after 8 hours a day and <strong>2×</strong> after 12; the <strong>seventh day in a row</strong> of the workweek (' + DAYS[(s + 6) % 7] + ') is 1.5× for the first 8 hours and 2× after that; then 1.5× past 40 regular hours a week. Set the first day of your workweek under Go advanced.'
+      : 'The federal rule counts the whole week: every hour past the weekly limit is paid at the overtime multiplier.';
+  }
+  function applyMode() {
+    var m = st.mode, ca = m === 'day' && st.rule === 'ca';
+    $('otTotalWrap').style.display = m === 'total' ? '' : 'none';
+    $('otSplitWrap').style.display = m === 'split' ? '' : 'none';
+    $('otDayWrap').style.display = m === 'day' ? '' : 'none';
+    $('otAfterWrap').style.display = (m === 'total' || (m === 'day' && !ca)) ? '' : 'none';
+    $('otMultWrap').style.display = ca ? 'none' : '';
+    $('otCaMult').style.display = ca ? '' : 'none';
+    $('otWsWrap').style.display = ca ? '' : 'none';
+    $('otBonusWrap').style.display = ca ? 'none' : '';
+    labelDays();
+  }
+
+  function read() {
+    var bad = '', o = { mode: st.mode, rule: st.rule, round: st.round }, n, r;
+    r = E.parseMoney($('otRate').value);
+    if (r !== null && (isNaN(r) || r < 0.01 || r > 10000)) bad = 'Enter an hourly rate between $0.01 and $10,000 — for example 22 or $22.50.';
+    o.rate = r;
+    function hv(id, label, max) {
+      var v = E.parseHours($(id).value);
+      if (v !== null && (isNaN(v))) { bad = bad || label + ': use hours like 8.5 or 8:30.'; return null; }
+      if (v !== null && v > max) { bad = bad || label + ' can’t be more than ' + max + ' hours.'; return null; }
+      return v;
+    }
+    if (st.mode === 'total') { o.total = hv('otTotal', 'Hours worked', 168); }
+    else if (st.mode === 'split') { o.reg = hv('otReg', 'Regular hours', 168); o.ot = hv('otOT', 'Overtime hours', 168); if (o.reg !== null && o.ot !== null && o.reg + o.ot > 168) bad = bad || 'A week has only 168 hours — regular plus overtime is more than that.'; }
+    else {
+      o.days = []; var sum = 0, any = false;
+      for (var i = 0; i < 7; i++) { var v = hv('otD' + i, $('otDL' + i).textContent, 24); o.days.push(v === null ? 0 : v); if (v !== null) { any = true; sum += v; } }
+      o.any = any;
+    }
+    n = hv('otAfter', 'Overtime start', 168); o.after = (st.mode === 'split' || (st.mode === 'day' && st.rule === 'ca')) ? null : n;
+    var mt = ($('otMult').value + '').trim(), mv = mt === '' ? 1.5 : parseFloat(mt.replace(/[×x]/g, ''));
+    if (mt !== '' && (isNaN(mv) || mv < 1 || mv > 10 || !/^[\d.]+\s*[×x]?$/.test(mt))) { bad = bad || 'The overtime multiplier is usually 1.5 (time and a half) or 2 (double time) — enter a number from 1 to 10.'; mv = 1.5; }
+    o.mult = mv;
+    var bn = E.parseMoney($('otBonus').value); if (bn !== null && (isNaN(bn) || bn > 1e7)) { bad = bad || 'Bonus: enter an amount in dollars, like 100.'; bn = null; } o.bonus = bn || 0;
+    var wk = ($('otWeeks').value + '').trim(), wv = wk === '' ? 52 : parseFloat(wk);
+    if (wk !== '' && (isNaN(wv) || wv < 1 || wv > 53 || !/^[\d.]+$/.test(wk))) { bad = bad || 'Weeks a year: enter a number from 1 to 53.'; wv = 52; }
+    o.weeks = wv;
+    var mg = E.parseMoney($('otMagi').value); if (mg !== null && (isNaN(mg) || mg > 1e9)) { bad = bad || 'Yearly income: enter an amount in dollars, like 60000.'; mg = null; } o.magi = mg || 0;
+    o.bad = bad; return o;
+  }
+
+  function bar(parts, total) {
+    return parts.map(function (p) { return p[1] > 0 && total > 0 ? '<span class="ot-seg ' + p[0] + '" style="width:' + (p[1] / total * 100) + '%"></span>' : ''; }).join('');
+  }
+
+  function render() {
+    var o = read(), r = o.rate, typedH;
+    if (st.mode === 'total') typedH = o.total !== null && o.total !== undefined;
+    else if (st.mode === 'split') typedH = (o.reg !== null && o.reg !== undefined) || (o.ot !== null && o.ot !== undefined);
+    else typedH = o.any;
+    if (o.bad) { empty(o.bad); return; }
+    if (r === null && !typedH) { empty(''); return; }
+    if (r === null) { empty('', 'Enter your hourly rate.'); return; }
+    if (!typedH) { empty('', 'Enter the hours you worked.'); return; }
+    var h = E.split(o), P = E.pay(r, o.mult, o.bonus, h), ca = h.ca, om = P.otMult;
+    var T = (o.after === null || o.after === undefined) ? 40 : o.after;
+    setHint('');
+    var big = money(P.gross);
+    $('otBig').textContent = big; $('otMVal').textContent = big; $('otMLab').textContent = 'Total pay this week';
+    var subParts = [hrs(h.reg) + ' regular'];
+    if (h.ot > 0 || h.dt > 0) subParts.push(hrs(h.ot) + ' overtime'); if (h.dt > 0) subParts.push(hrs(h.dt) + ' double-time');
+    $('otSub').textContent = hrs(h.total) + ' hours at ' + money(r) + ' an hour — ' + subParts.join(' + ') + (h.dt > 0 ? '' : ' hours');
+    $('otBody').style.display = '';
+
+    /* tip */
+    var tip, oh = h.ot + h.dt;
+    if (oh > 0) {
+      var pShare = P.gross > 0 ? P.otAmt / P.gross * 100 : 0, hShare = h.total > 0 ? oh / h.total * 100 : 0;
+      tip = 'Your <strong>' + hrs(oh) + ' overtime hour' + (oh === 1 ? '' : 's') + '</strong> add <strong>' + money(P.otAmt) + '</strong> — <strong>' + Math.round(pShare) + '%</strong> of the week’s pay from <strong>' + Math.round(hShare) + '%</strong> of the hours.';
+    } else {
+      tip = 'No overtime this week: all <strong>' + hrs(h.total) + '</strong> hours are paid at the regular rate. ' + (ca ? 'California overtime starts after 8 hours in a day or 40 in a week.' : 'Overtime starts after ' + hrs(T) + ' hours.');
+    }
+    if (om > 0 && oh > 0) tip += ' Your overtime rate is <strong>' + money(r * om) + ' an hour</strong>' + (h.dt > 0 ? ' (' + money(r * 2) + ' for double time)' : '') + '.';
+    $('otTip').innerHTML = tip;
+
+    /* bars */
+    var hp = [['r', h.reg], ['o', h.ot], ['d', h.dt]], pp = [['r', P.base], ['o', P.ot + P.bonusPrem], ['d', P.dt]];
+    $('otViz').innerHTML = '<div class="ot-row"><span class="ot-l">Hours</span><span class="ot-b">' + bar(hp, h.total) + '</span><span class="ot-v">' + hrs(h.total) + ' h</span></div>' +
+      '<div class="ot-row"><span class="ot-l">Pay</span><span class="ot-b">' + bar(pp, P.gross) + '</span><span class="ot-v">' + money(P.gross) + '</span></div>' +
+      '<div class="ot-key"><span><i class="r"></i>Regular</span>' + (h.ot > 0 ? '<span><i class="o"></i>Overtime ' + multTxt(om) + '</span>' : '') + (h.dt > 0 ? '<span><i class="d"></i>Double time 2×</span>' : '') + '</div>';
+
+    /* pay table */
+    var rows = [['Regular pay <small>' + hrs(h.reg) + ' h × ' + money(r) + '</small>', money(P.reg)]];
+    if (h.ot > 0) rows.push(['Overtime pay <small>' + hrs(h.ot) + ' h × ' + money(r) + ' × ' + multTxt(om) + '</small>', money(P.ot)]);
+    if (h.dt > 0) rows.push(['Double-time pay <small>' + hrs(h.dt) + ' h × ' + money(r) + ' × 2</small>', money(P.dt)]);
+    if (P.bonus > 0) rows.push(['Bonus', money(P.bonus)]);
+    if (P.bonusPrem > 0) rows.push(['Overtime owed on the bonus <small>raises your regular rate</small>', money(P.bonusPrem)]);
+    rows.push(['<b>Total pay this week</b>', '<b>' + money(P.gross) + '</b>']);
+    $('otPayTbl').innerHTML = '<tbody>' + rows.map(function (x) { return '<tr><td>' + x[0] + '</td><td>' + x[1] + '</td></tr>'; }).join('') + '</tbody>';
+
+    /* take-home */
+    var code = $('otState').value || '', status = st.status;
+    var TH = E.takeHome({ gross: P.gross, base: P.base, status: status, state: code }, PE), A = TH.a, B = TH.b;
+    var sName = code ? PE.STATES[code].name : '';
+    function neg(x) { return x > 0.004 ? '−' + money(x) : money(0); }
+    var trows = [['Total pay', money(A.gross)], ['Federal income tax', neg(A.fed)], ['Social Security', neg(A.ss)], ['Medicare', neg(A.med + A.addl)]];
+    var noState = code && PE.STATES[code].method === 'none';
+    if (code) trows.push([noState ? sName + ' <small>no state income tax</small>' : sName + ' income tax', neg(A.state)]);
+    A.programs.forEach(function (p) { trows.push([p.name, neg(p.amt)]); });
+    trows.push(['<b>Take-home pay</b>', '<b>' + money(A.net) + '</b>']);
+    $('otTakeTbl').innerHTML = '<tbody>' + trows.map(function (x) { return '<tr><td>' + x[0] + '</td><td>' + x[1] + '</td></tr>'; }).join('') + '</tbody>';
+    var otNet = A.net - B.net, keepTxt = '';
+    if (P.otAmt > 0.005) {
+      var kp = otNet / P.otAmt * 100;
+      keepTxt = 'Of your <strong>' + money(P.otAmt) + '</strong> of overtime pay you keep about <strong>' + money(otNet) + '</strong> (<strong>' + Math.round(kp) + '%</strong>) after tax — the rest goes to ' + (code && !noState ? 'federal, ' + sName + ' and payroll tax' : 'federal and payroll tax') + '. ';
+    }
+    $('otTakeNote').innerHTML = keepTxt + 'Estimate for a weekly paycheck: ' + FILE[status].toLowerCase() + ', 2026 federal withholding with a standard W-4' + (code ? (noState ? ' — ' + sName + ' has no state income tax' : ' and ' + sName + ' withholding') : ', no state tax (pick a state under Go advanced)') + '. Overtime is taxed as ordinary pay — it does not push all your income into a higher bracket.';
+
+    /* weekly / yearly */
+    var W = o.weeks, per = [['One week', 1], ['Two weeks', 2], ['One month (average)', W / 12], ['One year (' + (Math.round(W * 10) / 10) + ' weeks)', W]];
+    $('otPerTbl').innerHTML = '<thead><tr><th>If every week looks like this</th><th>Pay</th><th>Take-home</th></tr></thead><tbody>' +
+      per.map(function (x) { return '<tr><td>' + x[0] + '</td><td>' + money(P.gross * x[1]) + '</td><td>' + money(A.net * x[1]) + '</td></tr>'; }).join('') + '</tbody>';
+
+    /* no tax on overtime */
+    var q = E.qualified(r, o.mult, o.bonus, h), nt = E.noTax(q, W, status, P.gross, o.magi, PE);
+    var nRows = [];
+    if (q > 0) {
+      nRows.push(['Overtime premium required by law <small>the “half” of time-and-a-half, this week</small>', money(q)]);
+      nRows.push(['Per year <small>× ' + (Math.round(W * 10) / 10) + ' weeks</small>', money0(nt.annual)]);
+      if (nt.annual > nt.cap) nRows.push(['Yearly limit <small>' + FILE[status].toLowerCase() + '</small>', money0(nt.cap)]);
+      if (nt.reduction > 0) nRows.push(['Reduced for income over ' + money0(nt.thr) + ' <small>income ' + money0(nt.magi) + '</small>', '−' + money0(nt.reduction)]);
+      nRows.push(['<b>Overtime deduction</b>', '<b>' + money0(nt.ded) + '</b>']);
+      nRows.push(['<b>Estimated federal income tax saved</b>', '<b>' + money0(nt.saving) + ' a year</b>']);
+      $('otNoTaxTbl').innerHTML = '<tbody>' + nRows.map(function (x) { return '<tr><td>' + x[0] + '</td><td>' + x[1] + '</td></tr>'; }).join('') + '</tbody>';
+      $('otNoTaxNote').innerHTML = 'The deduction covers only the premium the Fair Labor Standards Act requires, up to ' + money0(nt.cap) + ' a year, for tax years 2025–2028. It lowers <strong>federal income tax only</strong> — Social Security and Medicare are still taken from the full overtime check. The saving assumes your income is ' + money0(nt.magi) + ' a year' + (o.magi > 0 ? '' : ' (this week × ' + (Math.round(W * 10) / 10) + ' weeks; set your own under Go advanced)') + ' and the standard deduction.';
+    } else {
+      $('otNoTaxTbl').innerHTML = '';
+      $('otNoTaxNote').innerHTML = oh > 0 ? 'None of this overtime counts for the deduction, which covers only overtime the federal law requires — hours past <strong>40 in a week</strong>.' : 'No overtime this week, so there is nothing to deduct. The deduction covers the “half” of time-and-a-half for hours past 40 in a week.';
+    }
+
+    /* the working */
+    var wk = [];
+    if (oh > 0) wk.push('Overtime rate = ' + money(r) + ' × ' + multTxt(om) + ' = ' + money(r * om));
+    wk.push('Regular pay = ' + hrs(h.reg) + ' h × ' + money(r) + ' = ' + money(P.reg));
+    if (h.ot > 0) wk.push('Overtime pay = ' + hrs(h.ot) + ' h × ' + money(r * om) + ' = ' + money(P.ot));
+    if (h.dt > 0) wk.push('Double time = ' + hrs(h.dt) + ' h × ' + money(r * 2) + ' = ' + money(P.dt));
+    if (P.bonus > 0) wk.push('Bonus ' + money(P.bonus) + (P.bonusPrem > 0 ? ' + overtime on it (' + money(P.bonus) + ' ÷ ' + hrs(h.total) + ' h × ' + hrs(om - 1) + ' × ' + hrs(h.ot) + ' h) = ' + money(P.bonus + P.bonusPrem) : ''));
+    wk.push('Total = ' + money(P.gross));
+    $('otSteps').innerHTML = wk.map(function (l) { return '<li>' + l + '</li>'; }).join('');
+  }
+
+  function chips() { var m = parseFloat($('otMult').value); [].forEach.call($('otChips').children, function (c) { c.classList.toggle('on', isFinite(m) && Math.abs(m - parseFloat(c.getAttribute('data-v'))) < 1e-9); }); }
+  function all() { chips(); render(); }
+  ['otRate', 'otTotal', 'otAfter', 'otReg', 'otOT', 'otMult', 'otBonus', 'otWeeks', 'otMagi'].concat([0, 1, 2, 3, 4, 5, 6].map(function (i) { return 'otD' + i; })).forEach(function (id) { $(id).addEventListener('input', all); });
+  $('otModeSeg').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return; var v = b.getAttribute('data-v'); if (v === st.mode) return;
+    st.mode = v; seg('otModeSeg', v); applyMode(); all();
+  });
+  $('otRuleSeg').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return; st.rule = b.getAttribute('data-v'); seg('otRuleSeg', st.rule); applyMode(); all();
+  });
+  $('otChips').addEventListener('click', function (e) { var c = e.target.closest('button'); if (!c) return; $('otMult').value = c.getAttribute('data-v'); all(); });
+  $('otRoundSeg').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; st.round = parseInt(b.getAttribute('data-v'), 10); seg('otRoundSeg', st.round); render(); });
+  $('otFileSeg').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; st.status = b.getAttribute('data-v'); seg('otFileSeg', st.status); render(); });
+  $('otState').addEventListener('change', render);
+  $('otWeekStart').addEventListener('change', function () { labelDays(); render(); });
+  $('otAdvBtn').addEventListener('click', function () {
+    st.adv = !st.adv; $('otAdvBtn').classList.toggle('open', st.adv); $('otAdvBtnLab').textContent = st.adv ? 'Go simple' : 'Go advanced'; $('otAdvIn').style.display = st.adv ? '' : 'none';
+    if (!st.adv) {
+      st.round = 0; seg('otRoundSeg', 0); st.status = 'single'; seg('otFileSeg', 'single');
+      ['otBonus', 'otWeeks', 'otMagi'].forEach(function (id) { $(id).value = ''; });
+      $('otState').value = ''; $('otWeekStart').value = '1'; labelDays();
+    }
+    render();
+  });
+  applyMode(); all();
+};
+/* OVERTIME:END */

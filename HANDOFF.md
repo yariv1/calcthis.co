@@ -8,6 +8,8 @@ _Rewritten 2026-11-01 at the end of session #2 of that day (v270 → v284: calor
 
 ### 0.0 UPDATE 2026-11-01 session #3 (v286): the grade-calculator upgrade in 0.1/0.2 is DONE and LIVE (see CLAUDE.md addendum 5); .st-cube hover unified with .calc. NEXT = GSC queue (0.3) + ask the user for fresh Ahrefs numbers. Backlink ideas discussed (Reddit threads need the user to search, Reddit is blocked for my tools; Product Hunt low value): not started.
 
+### 0.0c 2026-11-02 (v294): OVERTIME CALCULATOR `/overtime-calculator/` DEPLOYED (research approved, QA'd; see CLAUDE.md addendum 6). Ahrefs checked 2026-11-02: take home pay calculator >10K (state variants >1K) = same intent as Paycheck → upgrade wording in place + NYC local tax still open; salary calculator >100K Hard, hourly to salary >10K Hard (next page: `/salary-calculator/`), self employment tax >1K Medium. Unverified: IRS phase-out rounding (proportional 10% used).
+
 ### 0.0b GSC 2026-11-01 session #3: 10 requested and confirmed (NYC sales tax, tip-calculator, how-much-to-tip + hairdresser, barber, tattoo-artist, massage-therapist, dog-groomer, uber-driver, movers), 11th = Quota Exceeded. Resume with /how-much-to-tip/valet/ (see tracker LIVE QUEUE). A request can show "Testing if live URL can be indexed" for 40+ s: wait ~50 s before the confirmation screenshot.
 
 ### 0.1 WHAT TO DO FIRST IN THE NEXT SESSION

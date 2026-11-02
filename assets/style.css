@@ -2627,3 +2627,32 @@
 .p-grade .wi-ladder td.wi-ok{color:var(--spruce);font-weight:600}
 .p-grade .cat-grid-pct .cat-letter:not(:placeholder-shown){text-transform:uppercase}
 .p-grade .two{grid-template-columns:1fr 1fr;gap:10px}
+
+/* =========================================================
+   OVERTIME CALCULATOR (body.p-bmr p-avg p-ot) — reuses .modeseg, .seg, .chips, .csel, .advbtn, .dtable, .res-tip.adv-tip,
+   the sticky .mbar; adds the hours/pay split bars and the steps list.
+   ========================================================= */
+.p-ot .two{grid-template-columns:1fr 1fr;gap:10px}
+.p-ot .ot-row{display:grid;grid-template-columns:48px minmax(0,1fr) auto;gap:10px;align-items:center;margin:8px 0;font-size:13px}
+.p-ot .ot-l{font-weight:600;color:var(--ink-soft)}
+.p-ot .ot-b{display:flex;height:22px;border-radius:7px;overflow:hidden;background:#EFE7D8;border:1px solid var(--line)}
+.p-ot .ot-seg{display:block;height:100%}
+.p-ot .ot-seg.r{background:var(--spruce-soft)}
+.p-ot .ot-seg.o{background:var(--amber)}
+.p-ot .ot-seg.d{background:var(--amber-deep)}
+.p-ot .ot-v{font-weight:600;color:var(--ink);text-align:right;min-width:60px;font-variant-numeric:tabular-nums}
+.p-ot .ot-key{display:flex;flex-wrap:wrap;gap:4px 16px;margin:6px 0 14px;font-size:14px;color:var(--ink-soft)}
+.p-ot .ot-key i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.p-ot .ot-key i.r{background:var(--spruce-soft)}
+.p-ot .ot-key i.o{background:var(--amber)}
+.p-ot .ot-key i.d{background:var(--amber-deep)}
+.p-ot .ot-steps{list-style:none;margin:0 0 6px;padding:0;font-size:14.5px;line-height:1.55;color:var(--ink-soft)}
+.p-ot .ot-steps li{padding:4px 0 4px 14px;border-left:2px solid var(--line);margin-bottom:3px;overflow-wrap:anywhere}
+.p-ot .dtable small{display:block;font-size:12.5px;font-weight:500;color:var(--muted)}
+.p-ot .dtable td:last-child{white-space:nowrap}
+.p-ot .ot-per{margin-top:12px}
+.p-ot .ot-per th:not(:first-child){text-align:right}
+.p-ot .ot-per td:not(:first-child){text-align:right}
+.p-ot .av-note{font-size:14px;line-height:1.5}
+.p-ot .dtable small{font-size:14px}
+.p-ot .ot-row{font-size:14px}

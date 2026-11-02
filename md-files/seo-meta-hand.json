@@ -182,6 +182,10 @@
   "/bmr-calculator/": {
     "d": "Free BMR calculator: basal metabolic rate in kcal and kJ from five formulas, plus daily calories by activity level and lose, maintain and gain targets."
   },
+  "/overtime-calculator/": {
+    "t": "Overtime Calculator — Pay, Take-Home & No Tax on Overtime",
+    "d": "Free overtime calculator: your hourly rate and hours give overtime pay, take-home after tax, California daily rules and the no-tax-on-overtime deduction."
+  },
   "/hours-calculator/": {
     "d": "Free hours calculator: hours worked with breaks, split and overnight shifts, weekly overtime and pay, hours between dates and minutes to decimal hours."
   },

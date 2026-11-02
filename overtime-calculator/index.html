@@ -1,0 +1,726 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Overtime Calculator — Pay, Take-Home &amp; No Tax on Overtime</title>
+<meta name="description" content="Free overtime calculator: your hourly rate and hours give overtime pay, take-home after tax, California daily rules and the no-tax-on-overtime deduction.">
+<link rel="canonical" href="https://calcthis.co/overtime-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Overtime Calculator — Pay, Take-Home &amp; No Tax on Overtime">
+<meta property="og:description" content="Free overtime calculator: your hourly rate and hours give overtime pay, take-home after tax, California daily rules and the no-tax-on-overtime deduction.">
+<meta property="og:url" content="https://calcthis.co/overtime-calculator/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/datepicker.min.css">
+<link rel="stylesheet" href="/assets/style.css?v=294">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Overtime Calculator",
+  "url": "https://calcthis.co/overtime-calculator/",
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "Overtime calculator: overtime pay from your hourly rate and hours (total, regular plus overtime, or day by day with the federal weekly rule or California daily and seventh-day rules), a pay-split picture, take-home pay after federal, state and payroll tax, and the no-tax-on-overtime deduction estimate."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do you calculate overtime pay?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Multiply your hourly rate by the overtime multiplier (1.5 for time and a half) and by the number of overtime hours, then add your regular pay. At $22.00 an hour and 48 hours in a week: 40 × $22.00 = $880.00 regular, plus 8 × $33.00 = $264.00 overtime, for a total of $1,144.00."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is time and a half, and what is double time?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Time and a half means overtime hours pay 1.5 times your regular hourly rate ($22.00 becomes $33.00); double time pays 2 times ($44.00). Federal law requires time and a half for hours over 40 in a workweek for covered, non-exempt employees; double time comes from state law (such as California), a contract or an employer policy. Choose the multiplier at the top of the calculator, or use the 1.5, 2 and 2.5 buttons."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How is overtime calculated in California?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "California counts overtime by the day as well as the week: 1.5 times your regular rate after 8 hours in a day (up to 12), 2 times after 12 hours, and on the seventh consecutive day of the workweek 1.5 times for the first 8 hours and 2 times after that. Hours over 40 regular hours in a week are paid at 1.5 times as well. For 9, 10, 8, 13, 8, 0, 0 hours Monday to Friday at $22.00, the calculator's California rule gives 40 regular, 7 overtime and 1 double-time hours ($1,155.00), while the federal weekly rule gives 40 regular and 8 overtime hours ($1,144.00). Source: California Labor Commissioner's Office."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is overtime taxed more than regular pay?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Overtime is taxed like the rest of your wages. It can look like a bigger bite because payroll withholds as if every paycheck were as large as that week's, so a big overtime check is withheld at a higher rate than usual — but the tax you actually owe for the year depends on your total income, and any over-withholding comes back as a refund. In the example, $264.00 of overtime pay leaves you about $212.12 after federal tax, Social Security and Medicare (no state tax)."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the no tax on overtime deduction?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "For tax years 2025 through 2028 you can deduct the overtime premium that federal law requires — generally the \"half\" in time and a half — up to $12,500 a year ($25,000 if you file jointly). The deduction is reduced by $100 for every $1,000 your modified adjusted gross income is over $150,000 ($300,000 joint), and it is available whether you itemize or take the standard deduction. Married people must file jointly. In the example, 8 overtime hours a week at $22.00 is a $88.00 premium a week, $4,576 over a year, and about $549 less federal income tax. Sources: IRS and 26 U.S.C. § 225."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does the no tax on overtime deduction cover Social Security, Medicare and state tax?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. It lowers federal income tax only, so Social Security and Medicare tax are still taken from the full overtime check. The calculator shows the federal saving and does not change state tax, because states treat the deduction differently — check your state's rules."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is a bonus included when overtime is calculated?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, a non-discretionary bonus (one promised for hours, production or staying) is part of your regular rate, so overtime is owed on it too. The federal method divides the bonus by the total hours worked in the week and pays half of that extra rate for each overtime hour. A $200 bonus in the 48-hour example adds $16.67 of overtime on top of the bonus itself (total pay $1,360.67). Enter the bonus under Go advanced. California computes some bonuses differently, so the bonus box is for the federal rule."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How many hours before overtime starts?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Under federal law overtime starts after 40 hours in a workweek for covered employees; some states and employers use a daily limit or a lower weekly one. The calculator's \"Overtime starts after\" box defaults to 40 and can be changed, and the day-by-day mode applies California's daily rules. A few other states have their own rules; check your state labor department. Employees classified as exempt are not entitled to overtime."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "CalcThis",
+      "item": "https://calcthis.co/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Overtime Calculator",
+      "item": "https://calcthis.co/overtime-calculator/"
+    }
+  ]
+}
+</script>
+<meta property="og:site_name" content="CalcThis">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://calcthis.co/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="CalcThis — free, purpose-built calculators">
+<meta name="twitter:title" content="Overtime Calculator — Pay, Take-Home &amp; No Tax on Overtime">
+<meta name="twitter:description" content="Free overtime calculator: your hourly rate and hours give overtime pay, take-home after tax, California daily rules and the no-tax-on-overtime deduction.">
+<meta name="twitter:image" content="https://calcthis.co/assets/og-default.png">
+</head>
+<body class="p-bmr p-avg p-ot">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <a class="hdr-back" href="/blog/" aria-label="Back to blog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-search"><div class="menu-sx"><input id="menuSearch" type="search" placeholder="Search calculators or states…" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Search calculators" enterkeyhint="search"></div><div class="menu-results" id="menuResults" hidden></div></div>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <span class="menu-col-head">Construction &amp; Gardening</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+          <a href="/paint-calculator/">Paint</a>
+          <a href="/wallpaper-calculator/">Wallpaper</a>
+          <a href="/square-footage-calculator/">Square Footage</a>
+          <a href="/tape-measure-fraction-calculator/">Tape Measure Fraction</a>
+          <a href="/stair-calculator/">Stair</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/vo2-max-calculator/">VO2 Max</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
+          <a href="/bmi-calculator/">BMI</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/ideal-weight-calculator/">Ideal Weight</a>
+          <a href="/lean-body-mass-calculator/">Lean Body Mass</a>
+          <a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio</a>
+          <a href="/calorie-calculator/">Calorie</a>
+          <a href="/calorie-deficit-calculator/">Calorie Deficit</a>
+          <a href="/bmr-calculator/">BMR</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/water-intake-calculator/">Water Intake</a>
+          <a href="/macro-calculator/">Macro</a>
+          <a href="/protein-intake-calculator/">Protein Intake</a>
+          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
+          <a href="/steps-to-miles-calculator/">Steps to Miles</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/semester-grade-calculator/">Semester Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+          <a href="/grade-curve-calculator/">Grade Curve</a>
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/fraction-calculator/">Fraction</a>
+          <a href="/standard-deviation-calculator/">Standard Deviation</a>
+          <a href="/scientific-notation-calculator/">Scientific Notation</a>
+          <a href="/average-calculator/">Average</a>
+          <a href="/batting-average-calculator/">Batting Average</a>
+          <a href="/stock-average-calculator/">Stock Average</a>
+          <a href="/dice-average-calculator/">Dice Average</a>
+          <a href="/time-average-calculator/">Time Average</a>
+          <a href="/weighted-average-calculator/">Weighted Average</a>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+          <a href="/percentage-change-calculator/">Percentage Change</a>
+          <a href="/age-calculator/">Age</a>
+          <a href="/date-calculator/">Date</a>
+          <a href="/time-calculator/">Time</a>
+          <a href="/hours-calculator/">Hours</a>
+          <a href="/triangle-calculator/">Triangle</a>
+          <a href="/random-number-generator/">Random Number</a>
+          <span class="menu-col-head">Cooking &amp; Kitchen</span>
+          <a href="/recipe-converter/">Recipe Converter</a>
+          <a href="/turkey-cooking-time-calculator/">Turkey Cooking Time</a>
+          <a href="/turkey-thawing-time-calculator/">Turkey Thawing Time</a>
+          <a href="/turkey-size-calculator/">Turkey Size</a>
+          <!--UNITNAV:START-->
+          <span class="menu-col-head">Unit Converters</span>
+          <a href="/unit-converter/">Unit Converter</a>
+          <a href="/length-converter/">Length Converter</a>
+          <a href="/weight-converter/">Weight Converter</a>
+          <a href="/volume-converter/">Volume Converter</a>
+          <a href="/temperature-converter/">Temperature Converter</a>
+          <a href="/area-converter/">Area Converter</a>
+          <a href="/speed-converter/">Speed Converter</a>
+          <a href="/data-storage-converter/">Data Storage Converter</a>
+          <a href="/cooking-converter/">Cooking Converter</a>
+          <a href="/px-to-rem-converter/">PX to REM Converter</a>
+          <!--UNITNAV:END-->
+          <span class="menu-col-head">Money &amp; Finance</span>
+          <a href="/mortgage-calculator/">Mortgage</a>
+          <a href="/loan-calculator/">Loan</a>
+          <a href="/auto-loan-calculator/">Auto Loan</a>
+          <a href="/overtime-calculator/" class="current">Overtime</a>
+          <!--STAXNAV:START-->
+          <a href="/sales-tax-calculator/">Sales Tax</a>
+          <a href="/sales-tax-calculator/california/">California Sales Tax</a>
+          <a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax</a>
+          <a href="/sales-tax-calculator/missouri/">Missouri Sales Tax</a>
+          <a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax</a>
+          <a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax</a>
+          <a href="/sales-tax-calculator/ohio/">Ohio Sales Tax</a>
+          <a href="/sales-tax-calculator/texas/">Texas Sales Tax</a>
+          <!--STAXNAV:END-->
+          <a href="/tip-calculator/">Tip</a>
+          <a href="/how-much-to-tip/">How Much to Tip</a>
+        </div>
+        <!--PAYNAV:START-->
+        <div class="menu-col">
+          <span class="menu-col-head">Paycheck Calculators</span>
+          <a href="/paycheck-calculator/">Paycheck Calculator (all states)</a>
+          <a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a>
+          <a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a>
+          <a href="/paycheck-calculator/california/">California Paycheck Calculator</a>
+          <a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a>
+          <a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a>
+          <a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a>
+          <a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a>
+          <a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a>
+          <a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a>
+          <a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a>
+          <a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a>
+          <a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a>
+          <a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a>
+          <a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a>
+          <a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a>
+        </div>
+        <!--PAYNAV:END-->
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">Pay · take-home · no tax on overtime</div>
+    <h1>Overtime Calculator</h1>
+    <p>Enter your <strong>hourly rate and hours</strong> to see your overtime pay, the week's total and what you keep after tax. Type total hours, regular plus overtime hours, or <strong>each day</strong> — with the federal weekly rule or <strong>California's daily rules</strong>. At $22.00 an hour, 48 hours is <strong>$1,144.00</strong>, and the overtime part qualifies for the <strong>no-tax-on-overtime</strong> deduction.</p>
+  </section>
+
+  <div class="grid">
+
+    <!-- INPUT -->
+    <div class="card">
+      <div class="card-pad">
+        <h2 class="card-h2">Your pay and hours</h2>
+        <div class="modeseg" id="otModeSeg" role="group" aria-label="How to enter hours" style="grid-template-columns:1fr 1fr 1fr;margin-bottom:14px"><button class="on" type="button" data-v="total">Total hours</button><button type="button" data-v="split">Regular + overtime</button><button type="button" data-v="day">Day by day</button></div>
+        <label class="fld" for="otRate"><span class="lab">Hourly rate <span class="unit">$</span></span><div class="inp"><input id="otRate" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 22"></div></label>
+        <div id="otTotalWrap"><label class="fld" for="otTotal"><span class="lab">Hours worked this week <span class="unit">hours</span></span><div class="inp"><input id="otTotal" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 48"></div></label></div>
+        <div id="otSplitWrap" style="display:none"><div class="two"><label class="fld" for="otReg"><span class="lab">Regular hours <span class="unit">hours</span></span><div class="inp"><input id="otReg" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 40"></div></label><label class="fld" for="otOT"><span class="lab">Overtime hours <span class="unit">hours</span></span><div class="inp"><input id="otOT" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 8"></div></label></div></div>
+        <div id="otDayWrap" style="display:none">
+          <div class="ctl-row" style="display:block;margin-bottom:12px"><span class="ctl-lab" style="display:block;margin-bottom:6px">Overtime rule</span><div class="modeseg" id="otRuleSeg" role="group" aria-label="Overtime rule" style="grid-template-columns:1fr 1fr"><button class="on" type="button" data-v="fed">Federal (weekly)</button><button type="button" data-v="ca">California (daily)</button></div></div>
+          <div class="two"><label class="fld" for="otD0"><span class="lab" id="otDL0">Day 1</span><div class="inp"><input id="otD0" type="text" inputmode="decimal" autocomplete="off" placeholder="0"></div></label><label class="fld" for="otD1"><span class="lab" id="otDL1">Day 2</span><div class="inp"><input id="otD1" type="text" inputmode="decimal" autocomplete="off" placeholder="0"></div></label></div>
+          <div class="two"><label class="fld" for="otD2"><span class="lab" id="otDL2">Day 3</span><div class="inp"><input id="otD2" type="text" inputmode="decimal" autocomplete="off" placeholder="0"></div></label><label class="fld" for="otD3"><span class="lab" id="otDL3">Day 4</span><div class="inp"><input id="otD3" type="text" inputmode="decimal" autocomplete="off" placeholder="0"></div></label></div>
+          <div class="two"><label class="fld" for="otD4"><span class="lab" id="otDL4">Day 5</span><div class="inp"><input id="otD4" type="text" inputmode="decimal" autocomplete="off" placeholder="0"></div></label><label class="fld" for="otD5"><span class="lab" id="otDL5">Day 6</span><div class="inp"><input id="otD5" type="text" inputmode="decimal" autocomplete="off" placeholder="0"></div></label></div>
+          <div class="two"><label class="fld" for="otD6"><span class="lab" id="otDL6">Day 7</span><div class="inp"><input id="otD6" type="text" inputmode="decimal" autocomplete="off" placeholder="0"></div></label></div>
+          <p class="av-note" id="otDayNote"></p>
+        </div>
+        <div id="otAfterWrap"><label class="fld" for="otAfter"><span class="lab">Overtime starts after <span class="unit">hours a week</span></span><div class="inp"><input id="otAfter" type="text" inputmode="decimal" autocomplete="off" placeholder="40"></div></label></div>
+        <div id="otMultWrap">
+          <label class="fld" for="otMult"><span class="lab">Overtime multiplier <span class="unit">×</span></span><div class="inp"><input id="otMult" type="text" inputmode="decimal" autocomplete="off" placeholder="1.5" style="margin-bottom:0"></div></label>
+          <div class="chips" id="otChips"><button type="button" data-v="1.5">1.5× time and a half</button><button type="button" data-v="2">2× double time</button><button type="button" data-v="2.5">2.5×</button></div>
+        </div>
+        <p class="av-note" id="otCaMult" style="display:none">California sets the rates: 1.5× for daily overtime and weekly overtime, 2× for double time.</p>
+        <p class="av-note" id="otFormatNote">Hours can be decimals (8.5) or h:mm (8:30).</p>
+        <div class="res-hint" id="otHint" style="display:none;text-align:left;margin:4px 0 8px"></div>
+        <div id="otAdvIn" style="display:none">
+          <div class="proj-sep"></div>
+          <div id="otWsWrap" class="fld" style="display:none"><span class="lab">Workweek starts on</span><div class="csel" id="otWeekStart" data-value="1">
+              <button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false">
+                <span class="csel-val">Monday</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="csel-panel" role="listbox">
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="0">Sunday</button>
+                <button type="button" class="csel-opt on" role="option" aria-selected="true" data-value="1">Monday</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="2">Tuesday</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="3">Wednesday</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="4">Thursday</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="5">Friday</button>
+                <button type="button" class="csel-opt" role="option" aria-selected="false" data-value="6">Saturday</button>
+              </div>
+            </div></div>
+          <div id="otBonusWrap"><label class="fld" for="otBonus"><span class="lab">Bonus or extra pay this week <span class="unit">$</span></span><div class="inp"><input id="otBonus" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 200"></div></label></div>
+          <div class="fld"><span class="lab">Round hours to the nearest</span><div class="modeseg" id="otRoundSeg" role="group" aria-label="Round hours" style="grid-template-columns:repeat(4,1fr)"><button class="on" type="button" data-v="0">Off</button><button type="button" data-v="5">5 min</button><button type="button" data-v="6">6 min</button><button type="button" data-v="15">15 min</button></div></div>
+          <div class="fld"><span class="lab">Filing status</span><div class="modeseg" id="otFileSeg" role="group" aria-label="Filing status" style="grid-template-columns:repeat(3,1fr)"><button class="on" type="button" data-v="single">Single</button><button type="button" data-v="married">Married, joint</button><button type="button" data-v="hoh">Head of household</button></div></div>
+          <div class="fld"><span class="lab">State income tax</span><div class="csel" id="otState" data-value="">
+              <button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false">
+                <span class="csel-val">Federal taxes only</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="csel-panel" role="listbox"></div>
+            </div></div>
+          <label class="fld" for="otWeeks"><span class="lab">Weeks a year you work like this <span class="unit">weeks</span></span><div class="inp"><input id="otWeeks" type="text" inputmode="decimal" autocomplete="off" placeholder="52"></div></label>
+          <label class="fld" for="otMagi"><span class="lab">Your yearly income (for the overtime deduction) <span class="unit">$</span></span><div class="inp"><input id="otMagi" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 60000"></div></label>
+        </div>
+        <div class="add-row split" style="margin-top:16px">
+          <span></span>
+          <button class="advbtn" id="otAdvBtn" type="button">
+            <span id="otAdvBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div class="card">
+      <div class="card-pad">
+        <div class="bf-res">
+          <div class="res-lab">Total pay this week</div>
+          <div class="res-big"><span id="otBig">—</span></div>
+          <div class="res-sub" id="otSub" data-empty="Enter your hourly rate and the hours you worked.">Enter your hourly rate and the hours you worked.</div>
+        </div>
+        <div id="otBody" style="display:none">
+          <p class="res-tip adv-tip" id="otTip"></p>
+          <p class="bm-h">Hours and pay</p>
+          <div id="otViz"></div>
+          <table class="dtable" id="otPayTbl"></table>
+          <div class="proj-sep"></div>
+          <p class="bm-h">Take-home after tax</p>
+          <table class="dtable" id="otTakeTbl"></table>
+          <p class="av-note" id="otTakeNote"></p>
+          <table class="dtable ot-per" id="otPerTbl"></table>
+          <div class="proj-sep"></div>
+          <p class="bm-h">No tax on overtime (2025–2028)</p>
+          <table class="dtable" id="otNoTaxTbl"></table>
+          <p class="av-note" id="otNoTaxNote"></p>
+          <div class="proj-sep"></div>
+          <p class="bm-h">The working</p>
+          <ul class="ot-steps" id="otSteps"></ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- mobile sticky bar -->
+  <div class="mbar" id="mbar">
+    <span class="mbar-lab" id="otMLab">Total pay this week</span>
+    <div class="mbar-vals"><b id="otMVal">—</b></div>
+  </div>
+
+  <div class="related-calcs">
+    <p class="related-calcs-h">More calculators that may interest you</p>
+    <div class="pills">
+      <a class="pill" href="/hours-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        Hours Calculator
+      </a>
+      <a class="pill" href="/paycheck-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/></svg>
+        Paycheck Calculator
+      </a>
+      <a class="pill" href="/time-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2M9 3h6"/></svg>
+        Time Calculator
+      </a>
+      <a class="pill" href="/percentage-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 5L5 19"/><circle cx="7" cy="7" r="2.5"/><circle cx="17" cy="17" r="2.5"/></svg>
+        Percentage Calculator
+      </a>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use the overtime calculator</h2>
+        <p>Enter your <strong>hourly rate</strong>, then choose how to give the hours. <strong>Total hours</strong> works out the overtime for you from the hours after which it starts (40 a week unless you change it). <strong>Regular + overtime</strong> takes the two numbers as you have them on a pay stub. <strong>Day by day</strong> takes each day's hours and applies the federal weekly rule or California's daily rules.</p>
+        <p>Pick the multiplier — 1.5 for time and a half, 2 for double time, or your own — and you get the total pay, a picture of how the hours and the pay split, the take-home after tax, and what the no-tax-on-overtime deduction could save you. Open <strong>Go advanced</strong> to add your state and filing status, a bonus, rounding to 5, 6 or 15 minutes, and the weeks you work like this.</p>
+
+        <h2>The overtime pay formula</h2>
+        <div class="formula">
+          Total pay = regular hours × rate + overtime hours × rate × multiplier
+          <small>TIME AND A HALF = 1.5 · DOUBLE TIME = 2</small>
+        </div>
+        <p>At $22.00 an hour and 48 hours in the week: regular 40 × $22.00 = <strong>$880.00</strong>; overtime 8 × ($22.00 × 1.5) = 8 × $33.00 = <strong>$264.00</strong>; total <strong>$1,144.00</strong>. At double time the same week is <strong>$1,232.00</strong>.</p>
+
+        <h2>Federal overtime: the 40-hour rule</h2>
+        <p>The federal Fair Labor Standards Act requires overtime pay at not less than time and a half the regular rate for hours over 40 in a workweek, for covered employees. Some employees are exempt from the rule, and your employer may pay more than the minimum. A workweek is a fixed, regularly recurring period of 168 hours — seven consecutive 24-hour periods — that can start on any day, and hours are never averaged over two weeks. Source: <a href="https://www.dol.gov/agencies/whd/fact-sheets/23-flsa-overtime-pay" rel="noopener">U.S. Department of Labor, Fact Sheet #23</a> (revised October 2019).</p>
+
+        <h2>California overtime: daily, weekly and the seventh day</h2>
+        <p>California adds daily rules: 1.5× the regular rate after 8 hours in a day up to 12, 2× after 12, and on the seventh consecutive day of the workweek 1.5× for the first 8 hours and 2× after that. The calculator applies them in <strong>Day by day</strong> with the California rule, and counts hours over 40 regular hours a week at 1.5× as well.</p>
+        <table class="dtable">
+          <thead><tr><th>Hours worked</th><th>Federal</th><th>California</th></tr></thead>
+          <tbody>
+            <tr><td>Up to 8 in a day</td><td>Regular</td><td>Regular</td></tr>
+            <tr><td>8 to 12 in a day</td><td>Regular until 40 a week</td><td>1.5×</td></tr>
+            <tr><td>Over 12 in a day</td><td>Regular until 40 a week</td><td>2×</td></tr>
+            <tr><td>Over 40 in a week</td><td>1.5×</td><td>1.5×</td></tr>
+            <tr><td>Seventh day, first 8 hours</td><td>Regular until 40 a week</td><td>1.5×</td></tr>
+            <tr><td>Seventh day, past 8 hours</td><td>Regular until 40 a week</td><td>2×</td></tr>
+          </tbody>
+        </table>
+        <p>Example at $22.00 an hour — 9, 10, 8, 13, 8 hours Monday to Friday: California pays 40 regular + 7 at 1.5× + 1 at 2× = <strong>$1,155.00</strong>; the federal weekly rule pays 40 regular + 8 at 1.5× = <strong>$1,144.00</strong>. Working eight hours six days and ten on the seventh gives 40 regular + 16 at 1.5× + 2 at 2× = <strong>$1,496.00</strong> in California. Source: <a href="https://www.dir.ca.gov/dlse/faq_overtime.htm" rel="noopener">California Labor Commissioner's Office</a>. Other states with their own daily rules are not built in — check your state labor department.</p>
+      </div>
+
+      <div>
+        <h2>Take-home pay on overtime</h2>
+        <p>The take-home table runs the week's check through the same federal and state withholding as our <a href="/paycheck-calculator/">paycheck calculator</a>, with and without the overtime, so you see what the extra hours add after tax. For the 48-hour example that is $1,144.00 of pay and $961.13 take-home as a single filer with federal tax only — $212.12 of the $264.00 overtime pay (80%). With Texas (no state income tax) it is $961.13, and with California withholding $908.99.</p>
+        <p>Overtime is not taxed at a special rate. Payroll treats a big week's check as if every paycheck were that large, so withholding can be higher than the tax you owe for the year; the difference comes back when you file.</p>
+
+        <h2>The no tax on overtime deduction</h2>
+        <p>For tax years <strong>2025 through 2028</strong> you can deduct the overtime pay that is more than your regular rate and that federal law requires — in time and a half, the extra half. The most you can deduct is <strong>$12,500</strong> a year (<strong>$25,000</strong> on a joint return), reduced by $100 for each $1,000 of modified adjusted gross income over <strong>$150,000</strong> ($300,000 joint). You need a valid Social Security number, married people must file jointly, and you can take it with the standard deduction or itemizing.</p>
+        <table class="dtable">
+          <thead><tr><th>Example</th><th>Deduction</th><th>Federal tax saved</th></tr></thead>
+          <tbody>
+            <tr><td>$22.00 an hour, 48 hours a week, single, 52 weeks</td><td>$4,576</td><td>$549</td></tr>
+            <tr><td>$60.00 an hour, 60 hours a week, single, 52 weeks</td><td>$5,660</td><td>$1,400</td></tr>
+            <tr><td>$45.00 an hour, 70 hours a week, married filing jointly, 52 weeks</td><td>$25,000</td><td>$5,500</td></tr>
+          </tbody>
+        </table>
+        <p>It lowers <strong>federal income tax only</strong>: Social Security and Medicare are still taken from the whole check, and state tax is not changed here. The estimate takes your income as this week's pay × the weeks you enter unless you type your own, and uses the 2026 standard deduction and tax brackets. You claim it on Schedule 1-A; for 2025 employers did not have to show it separately on your W-2, and the IRS explains how to work it out from your pay records. Sources: <a href="https://www.irs.gov/newsroom/what-to-know-about-the-no-tax-on-overtime-deduction" rel="noopener">IRS: What to know about the No Tax on Overtime deduction</a> (March 5, 2026) and <a href="https://www.law.cornell.edu/uscode/text/26/225" rel="noopener">26 U.S.C. § 225</a>.</p>
+
+        <h2>Bonuses and the regular rate</h2>
+        <p>A non-discretionary bonus counts as part of your regular rate, so overtime is owed on it. Under Go advanced, the bonus is divided by the week's total hours and half of that extra rate is paid for each overtime hour: $200 in the 48-hour example adds $16.67. Use the <a href="/hours-calculator/">hours calculator</a> to total shifts and breaks first, and the <a href="/percentage-calculator/">percentage calculator</a> for a raise.</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>How do you calculate overtime pay?</summary><p>Multiply your hourly rate by the overtime multiplier (1.5 for time and a half) and by the number of overtime hours, then add your regular pay. At $22.00 an hour and 48 hours in a week: 40 × $22.00 = $880.00 regular, plus 8 × $33.00 = $264.00 overtime, for a total of $1,144.00.</p></details>
+    <details class="faq"><summary>What is time and a half, and what is double time?</summary><p>Time and a half means overtime hours pay 1.5 times your regular hourly rate ($22.00 becomes $33.00); double time pays 2 times ($44.00). Federal law requires time and a half for hours over 40 in a workweek for covered, non-exempt employees; double time comes from state law (such as California), a contract or an employer policy. Choose the multiplier at the top of the calculator, or use the 1.5, 2 and 2.5 buttons.</p></details>
+    <details class="faq"><summary>How is overtime calculated in California?</summary><p>California counts overtime by the day as well as the week: 1.5 times your regular rate after 8 hours in a day (up to 12), 2 times after 12 hours, and on the seventh consecutive day of the workweek 1.5 times for the first 8 hours and 2 times after that. Hours over 40 regular hours in a week are paid at 1.5 times as well. For 9, 10, 8, 13, 8, 0, 0 hours Monday to Friday at $22.00, the calculator's California rule gives 40 regular, 7 overtime and 1 double-time hours ($1,155.00), while the federal weekly rule gives 40 regular and 8 overtime hours ($1,144.00). Source: California Labor Commissioner's Office.</p></details>
+    <details class="faq"><summary>Is overtime taxed more than regular pay?</summary><p>No. Overtime is taxed like the rest of your wages. It can look like a bigger bite because payroll withholds as if every paycheck were as large as that week's, so a big overtime check is withheld at a higher rate than usual — but the tax you actually owe for the year depends on your total income, and any over-withholding comes back as a refund. In the example, $264.00 of overtime pay leaves you about $212.12 after federal tax, Social Security and Medicare (no state tax).</p></details>
+    <details class="faq"><summary>What is the no tax on overtime deduction?</summary><p>For tax years 2025 through 2028 you can deduct the overtime premium that federal law requires — generally the "half" in time and a half — up to $12,500 a year ($25,000 if you file jointly). The deduction is reduced by $100 for every $1,000 your modified adjusted gross income is over $150,000 ($300,000 joint), and it is available whether you itemize or take the standard deduction. Married people must file jointly. In the example, 8 overtime hours a week at $22.00 is a $88.00 premium a week, $4,576 over a year, and about $549 less federal income tax. Sources: IRS and 26 U.S.C. § 225.</p></details>
+    <details class="faq"><summary>Does the no tax on overtime deduction cover Social Security, Medicare and state tax?</summary><p>No. It lowers federal income tax only, so Social Security and Medicare tax are still taken from the full overtime check. The calculator shows the federal saving and does not change state tax, because states treat the deduction differently — check your state's rules.</p></details>
+    <details class="faq"><summary>Is a bonus included when overtime is calculated?</summary><p>Yes, a non-discretionary bonus (one promised for hours, production or staying) is part of your regular rate, so overtime is owed on it too. The federal method divides the bonus by the total hours worked in the week and pays half of that extra rate for each overtime hour. A $200 bonus in the 48-hour example adds $16.67 of overtime on top of the bonus itself (total pay $1,360.67). Enter the bonus under Go advanced. California computes some bonuses differently, so the bonus box is for the federal rule.</p></details>
+    <details class="faq"><summary>How many hours before overtime starts?</summary><p>Under federal law overtime starts after 40 hours in a workweek for covered employees; some states and employers use a daily limit or a lower weekly one. The calculator's "Overtime starts after" box defaults to 40 and can be changed, and the day-by-day mode applies California's daily rules. A few other states have their own rules; check your state labor department. Employees classified as exempt are not entitled to overtime.</p></details>
+  </section>
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+      <div class="footer-stack">
+<div class="footer-col" style="order:1">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+          <li><a href="/paint-calculator/">Paint Calculator</a></li>
+          <li><a href="/wallpaper-calculator/">Wallpaper Calculator</a></li>
+          <li><a href="/square-footage-calculator/">Square Footage Calculator</a></li>
+          <li><a href="/tape-measure-fraction-calculator/">Tape Measure Fraction Calculator</a></li>
+          <li><a href="/stair-calculator/">Stair Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:5">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Cooking &amp;</span> <span class="ft2">Kitchen</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/recipe-converter/">Recipe Converter</a></li>
+          <li><a href="/turkey-cooking-time-calculator/">Turkey Cooking Time Calculator</a></li>
+          <li><a href="/turkey-thawing-time-calculator/">Turkey Thawing Time Calculator</a></li>
+          <li><a href="/turkey-size-calculator/">Turkey Size Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:6">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Money &amp;</span> <span class="ft2">Finance</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/mortgage-calculator/">Mortgage Calculator</a></li>
+          <li><a href="/loan-calculator/">Loan Calculator</a></li>
+          <li><a href="/auto-loan-calculator/">Auto Loan Calculator</a></li>
+          <li><a href="/overtime-calculator/">Overtime Calculator</a></li>
+          <!--STAXFOOT:START-->
+          <li><a href="/sales-tax-calculator/">Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/california/">California Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/missouri/">Missouri Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/ohio/">Ohio Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/texas/">Texas Sales Tax Calculator</a></li>
+          <!--STAXFOOT:END-->
+          <li><a href="/tip-calculator/">Tip Calculator</a></li>
+          <li><a href="/how-much-to-tip/">How Much to Tip</a></li>
+        </ul>
+      </div>
+      </div>
+
+      <div class="footer-right">
+<div class="footer-col footer-col--two" style="order:2">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/vo2-max-calculator/">VO2 Max Calculator</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/bmi-calculator/">BMI Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/ideal-weight-calculator/">Ideal Weight Calculator</a></li>
+          <li><a href="/lean-body-mass-calculator/">Lean Body Mass Calculator</a></li>
+          <li><a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio Calculator</a></li>
+          <li><a href="/calorie-calculator/">Calorie Calculator</a></li>
+          <li><a href="/calorie-deficit-calculator/">Calorie Deficit Calculator</a></li>
+          <li><a href="/bmr-calculator/">BMR Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/water-intake-calculator/">Water Intake Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/protein-intake-calculator/">Protein Intake Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
+          <li><a href="/steps-to-miles-calculator/">Steps to Miles Calculator</a></li>
+        </ul>
+      </div>
+
+        <div class="footer-sub">
+<div class="footer-subcol">
+<div class="footer-col" style="order:3">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/semester-grade-calculator/">Semester Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+          <li><a href="/grade-curve-calculator/">Grade Curve Calculator</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:START-->
+<div class="footer-col" style="order:7">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Unit</span> <span class="ft2">Converters</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/unit-converter/">Unit Converter</a></li>
+          <li><a href="/length-converter/">Length Converter</a></li>
+          <li><a href="/weight-converter/">Weight Converter</a></li>
+          <li><a href="/volume-converter/">Volume Converter</a></li>
+          <li><a href="/temperature-converter/">Temperature Converter</a></li>
+          <li><a href="/area-converter/">Area Converter</a></li>
+          <li><a href="/speed-converter/">Speed Converter</a></li>
+          <li><a href="/data-storage-converter/">Data Storage Converter</a></li>
+          <li><a href="/cooking-converter/">Cooking Measurement Converter</a></li>
+          <li><a href="/px-to-rem-converter/">PX to REM Converter</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:END-->
+</div>
+
+<div class="footer-col" style="order:4">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/fraction-calculator/">Fraction Calculator</a></li>
+          <li><a href="/standard-deviation-calculator/">Standard Deviation Calculator</a></li>
+          <li><a href="/scientific-notation-calculator/">Scientific Notation Calculator</a></li>
+          <li><a href="/weighted-average-calculator/">Weighted Average Calculator</a></li>
+          <li><a href="/average-calculator/">Average Calculator</a></li>
+          <li><a href="/batting-average-calculator/">Batting Average Calculator</a></li>
+          <li><a href="/stock-average-calculator/">Stock Average Calculator</a></li>
+          <li><a href="/dice-average-calculator/">Dice Average Calculator</a></li>
+          <li><a href="/time-average-calculator/">Time Average Calculator</a></li>
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+          <li><a href="/percentage-change-calculator/">Percentage Change Calculator</a></li>
+          <li><a href="/age-calculator/">Age Calculator</a></li>
+          <li><a href="/date-calculator/">Date Calculator</a></li>
+          <li><a href="/time-calculator/">Time Calculator</a></li>
+          <li><a href="/hours-calculator/">Hours Calculator</a></li>
+          <li><a href="/triangle-calculator/">Triangle Calculator</a></li>
+          <li><a href="/random-number-generator/">Random Number Generator</a></li>
+        </ul>
+      </div>
+        </div>
+      </div>
+
+      <!--PAYFOOT:START-->
+      <div class="footer-col footer-col--wide">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Paycheck</span> <span class="ft2">Calculators</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/paycheck-calculator/">Paycheck Calculator (all states)</a></li>
+          <li><a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/california/">California Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a></li>
+        </ul>
+      </div>
+      <!--PAYFOOT:END-->
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/blog/">Blog</a>
+      <span aria-hidden="true">·</span>
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+</div>
+
+<script src="/assets/app.js?v=294"></script>
+<script>CalcThis.initOvertimeCalc();</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>

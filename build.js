@@ -72,6 +72,7 @@ const PAGES = [
   { file: 'date-calculator/index.html',        slug: '/date-calculator/' },
   { file: 'time-calculator/index.html',        slug: '/time-calculator/' },
   { file: 'hours-calculator/index.html',       slug: '/hours-calculator/' },
+  { file: 'overtime-calculator/index.html',    slug: '/overtime-calculator/' },
   { file: 'triangle-calculator/index.html',    slug: '/triangle-calculator/' },
   { file: 'mortgage-calculator/index.html',    slug: '/mortgage-calculator/' },
   { file: 'loan-calculator/index.html',        slug: '/loan-calculator/' },
