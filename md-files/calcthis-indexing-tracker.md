@@ -13,7 +13,7 @@ _How-to for requesting indexing with Claude in Chrome + the next batch: HANDOFF.
 **GSC retry 2026-11-02 (later, same day): first request (/cm-to-inches/) -> "Quota Exceeded — try again tomorrow". Nothing requested. Queue order unchanged (retry on a new day).**
 
 **GSC REQUESTED 2026-11-03 (11 confirmed "Indexing requested", quota had reset): /cm-to-inches/ /kg-to-lbs/ /celsius-to-fahrenheit/ /mm-to-inches/ /grams-to-ounces/ /ml-to-oz/ /cups-to-grams/ /feet-to-inches/ /mb-to-gb/ /yards-to-meters/ /liters-to-quarts/. Then "Quota Exceeded" on /celsius-to-kelvin/ (12th). NEXT: /celsius-to-kelvin/ /knots-to-mph/ /kb-to-mb/ /cups-to-tablespoons/ /tablespoons-to-teaspoons/ /acres-to-sq-ft/ /tablespoons-to-ml/ (rest of the 18 pairs) -> 13 new paycheck states -> 10 older paycheck states -> newest pages.**
-**2026-11-04 (v307): NEW PAGE /sales-tax-calculator/florida/ deployed (IndexNow pinged all 195; Bing manual submit: see below). Add to the GSC queue right after the 7 remaining unit pairs.**
+**2026-11-04 (v307): NEW PAGE /sales-tax-calculator/florida/ deployed (IndexNow pinged all 195; Bing manual submit: see below). Add to the GSC queue right after the 7 remaining unit pairs. BING manual submit DONE 2026-11-04 (/sales-tax-calculator/florida/, success; live site verified 200 + new placeholder).**
 **GSC retry 2026-11-04: /celsius-to-kelvin/ -> "Quota Exceeded" (about 1 day after the 11 of 2026-11-03). Nothing requested; same queue.**
 **(superseded) GSC retry 2026-11-03 earlier: /cm-to-inches/ -> "Quota Exceeded" again (quota had not reset ~a day after the 11 requests of 2026-11-02). Nothing requested; same queue order.**
 
