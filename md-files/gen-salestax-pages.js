@@ -246,6 +246,7 @@ const hubContent = `  <section class="content">
         <h2>States with their own calculator</h2>
         ${stateLinks()}
         <p>More states are added as each state’s rules are checked against its official guidance.</p>
+        <p>Buying a car? Vehicle tax follows its own rules for trade-ins, rebates and doc fees — use the <a href="/car-sales-tax-calculator/">car sales tax calculator</a>.</p>
       </div>
       <div>
         <h2>Sales tax rates by state</h2>

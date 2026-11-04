@@ -78,6 +78,7 @@ const PAGES = [
   { file: 'mortgage-calculator/index.html',    slug: '/mortgage-calculator/' },
   { file: 'loan-calculator/index.html',        slug: '/loan-calculator/' },
   { file: 'auto-loan-calculator/index.html',   slug: '/auto-loan-calculator/' },
+  { file: 'car-sales-tax-calculator/index.html', slug: '/car-sales-tax-calculator/' },
   { file: 'tip-calculator/index.html',   slug: '/tip-calculator/' },
   { file: 'how-much-to-tip/index.html', slug: '/how-much-to-tip/' },
   { file: 'how-much-to-tip/hairdresser/index.html', slug: '/how-much-to-tip/hairdresser/' },
@@ -427,6 +428,41 @@ try { fs.readdirSync(path.join(__dirname, 'paycheck-calculator'), { withFileType
   if (!/(^|\n)\s*\.fld\{[^}]*margin-bottom:\s*15px/.test(css)) {
     console.error('\n\u26d4 FIELD-SPACING GATE FAILED \u2014 build stopped, nothing was written.\n');
     console.error('  - style.css must contain the GLOBAL rule ".fld{display:block;margin-bottom:15px}" (not scoped to label.fld). See calcthis-design-system.md "Field spacing".\n');
+    process.exit(1);
+  }
+})();
+
+// ---- MANDATORY picker-design gate (2026-11-04) ----
+// A STATE / COUNTRY / PLACE / COUNTY picker is ALWAYS the design-system typeahead (.st-ta: the field itself is the input, round clear
+// X, type-to-filter list) exactly like the paycheck State field. The car sales tax page shipped a .csel[data-search] dropdown with a
+// separate "Search state" box instead and the user had to point it out ("make sure this never happens again"). The only searchable
+// .csel allowed is the salary currency picker (#slCur). This gate fails the build if any page or app.js builds another one.
+(function checkPickerDesign() {
+  const failures = [];
+  (function walk(dir) {
+    fs.readdirSync(dir, { withFileTypes: true }).forEach(function (e) {
+      if (e.name === 'node_modules' || e.name === '.git' || e.name === 'md-files' || e.name === 'assets') return;
+      const full = path.join(dir, e.name);
+      if (e.isDirectory()) { walk(full); return; }
+      if (e.name !== 'index.html') return;
+      const h = fs.readFileSync(full, 'utf8');
+      const re = /<div class="csel[^"]*"[^>]*>/g; let m;
+      while ((m = re.exec(h))) {
+        if (!/data-search/.test(m[0])) continue;
+        const id = (/id="([^"]+)"/.exec(m[0]) || [])[1];
+        if (id !== 'slCur') failures.push(path.relative(ROOT, full) + ': .csel[data-search] id="' + (id || '?') + '" — a state / place / county / country picker must be the .st-ta typeahead (calcthis-design-system.md "Typeahead field")');
+      }
+    });
+  })(ROOT);
+  const appPath = path.join(ROOT, 'assets', 'app.js');
+  if (fs.existsSync(appPath)) {
+    const a = fs.readFileSync(appPath, 'utf8');
+    ['Search state', 'Search country', 'Search county', 'Search place', 'Search city'].forEach(function (t) { if (a.indexOf('placeholder="' + t + '"') >= 0) failures.push('assets/app.js builds a "' + t + '" box inside a dropdown — use the .st-ta typeahead'); });
+  }
+  if (failures.length) {
+    console.error('\n\u26d4 PICKER-DESIGN GATE FAILED \u2014 build stopped, nothing was written.\n');
+    failures.forEach(function (f) { console.error('  - ' + f); });
+    console.error('\nUse the paycheck State picker pattern (initPayCalc: pcStateIn / pcState hidden / pcStateList) and rerun node build.js.\n');
     process.exit(1);
   }
 })();

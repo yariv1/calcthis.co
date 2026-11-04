@@ -17598,3 +17598,328 @@ CalcThis.initSalaryCalc = function () {
   render();
 };
 /* SALARY:END */
+
+/* CARTAX:BEGIN */
+/* =========================================================
+   CAR SALES TAX CALCULATOR — /car-sales-tax-calculator/. Vehicle tax is not ordinary sales tax: each state decides whether a trade-in, a manufacturer rebate and
+   the dealer doc fee change the taxed amount. Ten states have rules read from official pages (RULES below, every one with its source); for the rest the
+   page uses the state's general rate and asks the user to set the three rules. A rule the official pages do not settle is 'unknown': the tool then shows
+   the tax BOTH ways (a range) instead of guessing.   CalcThis.carTaxEngine (pure, CARTAX-ENGINE:START/END)  ·  CalcThis.initCarTaxCalc (ids ct*)
+   ========================================================= */
+/* CARTAX-ENGINE:START */
+CalcThis.carTaxEngine = (function () {
+  function r2(x) { return Math.round(x * 100 + 1e-9) / 100; }
+  function capTax(amt, rate, cap) { return cap ? amt * cap.base / 100 + Math.min(amt, cap.limit) * (rate - cap.base) / 100 : amt * rate / 100; }
+  /* trade: full = the whole allowance comes off · cap = off up to tradeCap · none = no credit.  rebate: reduces | taxed | unknown.  doc (dealer fee): taxed | unknown | untaxed */
+  var RULES = {
+    TX: { name: 'Texas', kind: 'flat', rate: 6.25, label: 'Motor vehicle tax', local: 'none', trade: 'full', rebate: 'unknown', doc: 'unknown', eff: 'Texas Comptroller, Motor Vehicle Tax Guide (96-254)',
+      note: 'Texas charges one statewide rate of 6.25% on the price less any trade-in and dealer discounts. The tax goes to the county tax office and no local tax is added.',
+      src: [{ t: 'Texas Comptroller — Motor Vehicle Tax Guide: sales tax', u: 'https://comptroller.texas.gov/taxes/publications/96-254/mv-sales.php' }, { t: 'Texas Comptroller — Motor Vehicle Tax Guide: trade-ins (even exchange)', u: 'https://comptroller.texas.gov/taxes/publications/96-254/even-trade.php' }],
+      why: { trade: 'The tax is figured on the price “less any amount given for trade-in vehicle(s) and/or dealer discounts” — the value of the trade, not your equity in it.', rebate: 'The Comptroller pages we read do not say how a manufacturer rebate is treated, so the tax is shown both ways.', doc: 'The Comptroller pages we read do not say whether a dealer doc fee is taxed, so the tax is shown both ways.' } },
+    CA: { name: 'California', kind: 'place', label: 'Sales and use tax', trade: 'none', rebate: 'taxed', doc: 'taxed', eff: 'CDTFA Publication 34 and the October 1, 2026 rate table',
+      place: { url: '/assets/data/ca-rates.json', ph: 'Type a city, e.g. Los Angeles', hint: 'The rate follows where the vehicle is registered, including district taxes. Type a city, or a county for unincorporated areas, and pick it.', what: 'where the vehicle is registered' },
+      note: 'California taxes the full price: a trade-in does not lower the tax. The rate is the combined rate of the place where the vehicle is registered.',
+      src: [{ t: 'CDTFA — Publication 34, Motor Vehicle Dealers', u: 'https://cdtfa.ca.gov/formspubs/pub34.pdf' }, { t: 'CDTFA — California City & County Sales & Use Tax Rates, Oct. 1, 2026', u: 'https://cdtfa.ca.gov/taxes-and-fees/sales-use-tax-rates.htm' }],
+      why: { trade: 'If you accept a trade-in, “the allowance for the trade-in cannot be excluded from the amount on which tax is based.”', rebate: 'A manufacturer rebate is part of the dealer’s gross receipts even when you assign it to the dealer, so it does not lower the tax.', doc: 'Charges for document preparation in connection with a vehicle sale are taxable.' } },
+    FL: { name: 'Florida', kind: 'place', label: 'Sales tax and county surtax', trade: 'full', rebate: 'unknown', doc: 'taxed', cap: { base: 6, limit: 5000 }, eff: 'Florida DOR, Sales and Use Tax on Motor Vehicles (GT-800030) and DR-15DSS for 2026',
+      place: { url: '/assets/data/fl-rates.json', ph: 'Type a city, e.g. Orlando', hint: 'The surtax follows the county of the buyer’s address on the title or registration. Type a city or a county name (like Orange County) and pick it.', what: 'the county of your address on the title' },
+      note: 'Florida charges 6% on the whole taxable price plus your county’s surtax on only the first $5,000.',
+      src: [{ t: 'Florida DOR — Sales and Use Tax on Motor Vehicles (GT-800030)', u: 'https://floridarevenue.com/Forms_library/gt800030.pdf' }, { t: 'Florida DOR — Discretionary Sales Surtax Information for 2026 (DR-15DSS)', u: 'https://floridarevenue.com/Forms_library/current/dr15dss_26.pdf' }],
+      why: { trade: 'A registered dealer may deduct a trade-in allowance when the trade and the purchase are one transaction.', rebate: 'The Florida pages we read do not settle manufacturer rebates, so the tax is shown both ways.', doc: 'Tax applies to the sales price including separately itemized “preparation, settlement, or closing fees”; fees the state requires for title and registration are not taxed.' } },
+    GA: { name: 'Georgia', kind: 'flat', rate: 7, label: 'Title ad valorem tax (TAVT)', local: 'none', trade: 'full', rebate: 'unknown', doc: 'taxed', eff: 'Georgia DOR, TAVT (rate 7% since July 1, 2023)',
+      note: 'Georgia charges a one-time title tax of 7% of the vehicle’s fair market value instead of sales tax. For a new vehicle that is the greater of the price or the state’s assessment-manual value, so a heavily discounted car can be taxed on more than you paid.',
+      src: [{ t: 'Georgia DOR — Title Ad Valorem Tax (TAVT) FAQ', u: 'https://dor.georgia.gov/title-ad-valorem-tax-tavt-faq' }, { t: 'Georgia DOR — TAVT rate back to 7 percent (MVD)', u: 'https://dor.georgia.gov/document/document/mvd-2023-02-title-ad-valorem-tax-tavt-rate-changing-7-percent/download' }],
+      why: { trade: 'A reduction is made for the trade-in when the sale is made by a dealer, but not in a private sale.', rebate: 'Rebates and cash discounts from the selling dealer reduce the value. The Georgia pages we read do not mention manufacturer rebates, so the tax is shown both ways.', doc: 'The retail selling price “includes charges for delivery, freight, doc fees, and other such fees.”' } },
+    NC: { name: 'North Carolina', kind: 'flat', rate: 3, label: 'Highway use tax', local: 'none', trade: 'full', rebate: 'unknown', doc: 'taxed', eff: 'NCDMV form MVR-106 (rev. 04/26)',
+      note: 'North Carolina charges a 3% highway use tax on the sale price plus any administrative or doc fee, less the trade-in. There is no local vehicle tax.',
+      src: [{ t: 'NCDMV — MVR-106, requirements for a title (rev. 04/26)', u: 'https://www.ncdot.gov/dmv/downloads/Documents/MVR-106.pdf' }, { t: 'NC Department of Revenue — Highway use tax', u: 'https://www.ncdor.gov/taxes-forms/highway-use-tax' }],
+      why: { trade: 'The tax is 3% of the sale price plus any administrative or doc fee, minus the trade-in price.', rebate: 'The North Carolina pages we read do not say how a manufacturer rebate is treated, so the tax is shown both ways.', doc: 'The base includes “any administrative or document fee.”' } },
+    VA: { name: 'Virginia', kind: 'flat', rate: 4.15, minTax: 75, label: 'Sales and use tax', local: 'none', trade: 'none', rebate: 'reduces', doc: 'taxed', eff: 'Virginia DMV, Motor Vehicle Sales and Use Tax',
+      note: 'Virginia charges 4.15% of the gross sales price, with a $75 minimum. A trade-in does not lower it, but rebates and incentives do.',
+      src: [{ t: 'Virginia DMV — Motor Vehicle Sales and Use Tax', u: 'https://www.dmv.virginia.gov/vehicles/taxes-fees/sut' }],
+      why: { trade: 'The gross sales price “does not include any other price reductions, such as credit for trade-ins” — a $40,000 car with a $5,000 trade-in is still taxed on $40,000.', rebate: 'The gross sales price is “the cost of the vehicle after any rebates or incentives are applied.”', doc: 'The gross sales price “includes the dealer processing fee.”' } },
+    MI: { name: 'Michigan', kind: 'flat', rate: 6, label: 'Sales tax', local: 'none', trade: 'cap', tradeCap: 12000, rebate: 'taxed', doc: 'taxed', eff: 'Michigan Treasury Form 485 (rev. 1-26) and the Secretary of State Dealer Manual',
+      note: 'Michigan charges 6% on the price less a trade-in allowance of up to $12,000 (2026). Manufacturer rebates and the doc fee stay in the taxed amount; dealer discounts come off it.',
+      src: [{ t: 'Michigan Treasury — Form 485, Sales Tax on Vehicles (rev. 1-26)', u: 'https://www.michigan.gov/taxes/-/media/Project/Websites/taxes/Forms/SUW/TY2026/485_11-25.pdf' }, { t: 'Michigan Secretary of State — Dealer Manual, Chapter 8: Sales Tax', u: 'https://www.michigan.gov/-/media/Project/Websites/sos/01preston/Dealer_Manual_Chapter_8.pdf' }],
+      why: { trade: 'The trade-in allowance is the vehicle’s value or $12,000, whichever is less.', rebate: 'Manufacturer rebates are taxable and “cannot be subtracted from the vehicle purchase price when computing sales tax”; dealer discounts come off before tax, so enter your price after any dealer discount.', doc: 'The documentary preparation fee is taxable.' } },
+    MO: { name: 'Missouri', kind: 'place', label: 'Sales tax (state + local)', trade: 'full', rebate: 'reduces', doc: 'unknown', eff: 'Missouri DOR, A Guide to Buying a Vehicle (Form 5687, rev. 04-2026) and the Oct–Dec 2026 rate table',
+      place: { url: '/assets/data/mo-rates.json', ph: 'Type a city, e.g. Springfield', hint: 'Missouri adds the local tax of the city or county where you live, not where you bought. Type your city or county and pick the line that matches.', what: 'where you live' },
+      note: 'Missouri charges 4.225% plus the local tax of where you live, on the price after any trade-in and rebate.',
+      src: [{ t: 'Missouri DOR — Buying a Vehicle (Form 5687)', u: 'https://dor.mo.gov/forms/5687.pdf' }, { t: 'Missouri DOR — Motor Vehicle Titling and Registration FAQ', u: 'https://dor.mo.gov/faq/motor-vehicle/titling-registration.html' }, { t: 'Missouri DOR — Sales and Use Tax Rate Tables, Oct–Dec 2026', u: 'https://dor.mo.gov/pdf/rates/2026/october2026.pdf' }],
+      why: { trade: 'The state rate is based on the net purchase price, after any rebate or trade-in.', rebate: 'A rebate the dealer records on the title application reduces the tax.', doc: 'The Missouri pages we read do not say whether a dealer doc fee is taxed, so the tax is shown both ways.' } },
+    AR: { name: 'Arkansas', kind: 'flat', rate: 6.5, label: 'State sales tax', local: 'typed', localCap: 2500, usedRule: true, trade: 'full', rebate: 'taxed', doc: 'unknown', eff: 'Arkansas DFA, motor vehicle sales tax pages',
+      note: 'Arkansas charges 6.5% on the price less the trade-in, and your city and county tax applies only to the first $2,500. A used vehicle priced from $4,000 to under $10,000 pays a reduced 3.5% state rate (local tax is not reduced).',
+      src: [{ t: 'Arkansas DFA — Sales and Use Tax FAQs', u: 'https://www.dfa.arkansas.gov/office/taxes/excise-tax-administration/sales-use-tax/sales-and-use-tax-faqs/' }, { t: 'Arkansas DFA — Recent Changes in the Law (Act 1013, used vehicles)', u: 'https://www.dfa.arkansas.gov/office/motor-vehicle/recent-changes-in-the-law/' }],
+      why: { trade: 'If the bill of sale shows a trade-in credit, the tax is figured on the total paid less the trade-in credit.', rebate: 'The tax is computed on the total delivery price, including the rebate, freight and extra equipment — so a rebate does not lower it.', doc: 'The Arkansas pages we read do not say whether a dealer doc fee is taxed, so the tax is shown both ways.' } },
+    AZ: { name: 'Arizona', kind: 'flat', rate: 5.6, label: 'State transaction privilege tax', local: 'typed', trade: 'full', rebate: 'reduces', doc: 'unknown', eff: 'Arizona DOR rulings and the MVD fee guide',
+      note: 'Arizona charges 5.6% state tax plus county and city tax on the price after the trade-in and a manufacturer rebate you assign to the dealer. Look up your combined local rate with the Department’s rate tool.',
+      src: [{ t: 'Arizona DOR — TPT Ruling TPR 96-1 (trade-ins)', u: 'https://azdor.gov/legal-research/rulings/tpr-96-1' }, { t: 'Arizona DOR — Model City Tax Code: trade-ins and rebates', u: 'https://azdor.gov/model-city-tax-code/articles-and-sections/exclusion-cash-discounts-returns-refunds-trade-values' }],
+      why: { trade: 'The trade-in value reduces the taxable amount, and a lien on the trade-in does not change that.', rebate: 'A manufacturer’s cash rebate reduces it when you assign your right to the rebate to the dealer, which is how an at-the-dealer rebate is normally applied.', doc: 'The Arizona pages we read do not say whether a dealer doc fee is taxed, so the tax is shown both ways.' } }
+  };
+  var VERIFIED = Object.keys(RULES).sort(function (a, b) { return RULES[a].name < RULES[b].name ? -1 : 1; });
+  function stateName(c) { var S = CalcThis.saleTaxEngine.STATES; return RULES[c] ? RULES[c].name : (S[c] ? S[c].name : c); }
+  /* the rule set used for a state: the verified record, or the state's general rate plus the user's three choices */
+  function ruleFor(c, assume) {
+    if (RULES[c]) return RULES[c];
+    var S = CalcThis.saleTaxEngine.STATES[c]; if (!S) return null;
+    assume = assume || {};
+    return { name: S.name, kind: 'flat', rate: S.base, label: 'Sales tax', local: 'typed', trade: assume.trade ? 'full' : 'none', rebate: assume.rebate ? 'reduces' : 'taxed', doc: assume.doc ? 'taxed' : 'untaxed', estimate: true };
+  }
+  function baseOf(ru, o, rebateMode, docMode) {
+    var doc = docMode === 'taxed' ? o.doc : 0;
+    var credit = ru.trade === 'none' ? 0 : (ru.trade === 'cap' ? Math.min(o.trade, ru.tradeCap) : o.trade);
+    credit = Math.min(credit, o.price);
+    var reb = rebateMode === 'reduces' ? o.rebate : 0;
+    return { base: Math.max(0, o.price + doc - credit - reb), credit: credit, reb: reb, doc: doc };
+  }
+  /* tax on a taxed amount b. Returns { tax, rate (headline %), note } */
+  function taxOn(ru, b, o) {
+    if (o.own != null) return { tax: b * o.own / 100, rate: o.own };
+    var loc = ru.local === 'typed' ? (o.local || 0) : 0;
+    if (ru.kind === 'place') { var pr = o.place ? o.place.sales : 0; return { tax: ru.cap ? capTax(b, pr, ru.cap) : b * pr / 100, rate: pr }; }
+    var st = ru.rate, t;
+    if (ru.usedRule && o.used) {
+      if (o.price < 4000) return { tax: 0, rate: 0, free: true };
+      if (o.price < 10000) st = 3.5;
+    }
+    t = b * st / 100 + (ru.localCap ? Math.min(b, ru.localCap) : b) * loc / 100;
+    if (ru.minTax && o.price > 0) t = Math.max(t, ru.minTax);
+    return { tax: t, rate: st + loc };
+  }
+  /* o: { state, price, trade, rebate, doc, gov, place, local, own, used, assume } — returns null when something required is missing */
+  function compute(o) {
+    var ru = ruleFor(o.state, o.assume); if (!ru) return null;
+    if (ru.kind === 'place' && !o.place && o.own == null) return { needPlace: true, rule: ru };
+    var rOpts = ru.rebate === 'unknown' ? ['reduces', 'taxed'] : [ru.rebate], dOpts = ru.doc === 'unknown' ? ['taxed', 'untaxed'] : [ru.doc], runs = [];
+    rOpts.forEach(function (rm) { dOpts.forEach(function (dm) { var bs = baseOf(ru, o, rm, dm), tx = taxOn(ru, bs.base, o); runs.push({ rm: rm, dm: dm, b: bs, tax: r2(tx.tax), rate: tx.rate, free: !!tx.free }); }); });
+    var lo = runs.reduce(function (a, x) { return x.tax < a.tax ? x : a; }, runs[0]), hi = runs.reduce(function (a, x) { return x.tax > a.tax ? x : a; }, runs[0]);
+    var fees = o.doc + o.gov, subtotal = o.price + o.doc + o.gov;
+    return { rule: ru, lo: lo, hi: hi, range: hi.tax - lo.tax > 0.004, rOpts: rOpts, dOpts: dOpts, price: o.price, doc: o.doc, gov: o.gov, trade: o.trade, rebate: o.rebate,
+      totalLo: r2(subtotal + lo.tax), totalHi: r2(subtotal + hi.tax), payLo: r2(subtotal + lo.tax - o.trade - o.rebate), payHi: r2(subtotal + hi.tax - o.trade - o.rebate), min: !!(ru.minTax && lo.tax === ru.minTax) };
+  }
+  return { RULES: RULES, VERIFIED: VERIFIED, ruleFor: ruleFor, stateName: stateName, compute: compute, baseOf: baseOf, taxOn: taxOn, capTax: capTax, r2: r2 };
+})();
+/* CARTAX-ENGINE:END */
+
+CalcThis.initCarTaxCalc = function () {
+  var E = CalcThis.carTaxEngine, SE = CalcThis.saleTaxEngine, $ = function (id) { return document.getElementById(id); };
+  var st = { adv: false, used: 'new', place: null }, last = null, MAX = 1e9;
+  var placeData = null, placeFor = '', placeState = 'idle', placeHits = [], placeAct = -1, placeShown = 0;
+  function num(v) { var t = String(v).replace(/[$,\s%]/g, ''); var n = t === '' ? NaN : Number(t); return isFinite(n) ? n : NaN; }
+  function mon(x) { return (x < 0 ? '−' : '') + '$' + Math.abs(x).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+  function pct(x) { return String(Math.round(x * 10000) / 10000) + '%'; }
+  function esc(t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'); }
+  function setHint(m) { var h = $('ctHint'); h.textContent = m || ''; h.style.display = m ? 'block' : 'none'; }
+  function code() { return $('ctState').value || ''; }
+  function rule() { return code() ? E.ruleFor(code(), assume()) : null; }
+  function assume() { return { trade: $('ctAsTrade').checked, rebate: $('ctAsRebate').checked, doc: $('ctAsDoc').checked }; }
+  function needsPlace() { var r = code() && E.RULES[code()]; return !!(r && r.kind === 'place'); }
+  function needsLocal() { var c = code(); if (!c) return false; var r = E.RULES[c]; return r ? r.local === 'typed' : !!SE.STATES[c]; }
+  /* ---- place search (California, Florida, Missouri) ---- */
+  function norm(t) { return String(t).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/['’]/g, '').replace(/\bsaint\b/g, 'st').replace(/[^a-z0-9 ]+/g, ' ').replace(/\s+/g, ' ').trim(); }
+  function loadPlaces() {
+    var c = code(), r = E.RULES[c]; if (!needsPlace()) return;
+    if (placeFor === c && (placeData || placeState === 'loading')) return;
+    placeFor = c; placeData = null; placeState = 'loading';
+    var done = function (ok, d) { if (placeFor !== c) return; if (ok) { placeData = d.map(function (x) { return { label: x[0], sales: x[1], note: x[5] || '', key: ' ' + norm(x[0]) }; }); placeState = 'ok'; } else placeState = 'err'; placeNote(); render(); if (document.activeElement === $('ctPlace')) showPlaceList(!!st.place); };
+    try { fetch(r.place.url).then(function (x) { if (!x.ok) throw new Error('x'); return x.json(); }).then(function (d) { done(true, d); }, function () { done(false); }); } catch (e) { done(false); }
+  }
+  function closePlaceList() { $('ctPlaceList').style.display = 'none'; $('ctPlace').setAttribute('aria-expanded', 'false'); placeAct = -1; }
+  function optHtml(p, i) { return '<button type="button" class="st-ta-opt' + (st.place === p ? ' on' : '') + '" role="option" data-i="' + i + '"><span>' + esc(p.label) + '</span><b>' + pct(p.sales) + '</b></button>'; }
+  function moreOpts() {
+    var box = $('ctPlaceList'); if (placeShown >= placeHits.length || box.scrollTop + box.clientHeight < box.scrollHeight - 120) return;
+    var end = Math.min(placeHits.length, placeShown + 120), h = ''; for (var i = placeShown; i < end; i++) h += optHtml(placeHits[i], i);
+    box.insertAdjacentHTML('beforeend', h); placeShown = end;
+  }
+  function showPlaceList(full) {
+    var box = $('ctPlaceList'), q = full ? '' : norm($('ctPlace').value);
+    if (!placeData) { closePlaceList(); return; }
+    var toks = q ? q.split(' ') : [], hits = placeData.filter(function (p) { return toks.every(function (t) { return p.key.indexOf(' ' + t) >= 0; }); });
+    var starts = hits.filter(function (p) { return p.key.indexOf(' ' + q) === 0; }), rest = hits.filter(function (p) { return p.key.indexOf(' ' + q) !== 0; });
+    var part = function (a, b) { return (a.label.indexOf(' — ') >= 0 ? 1 : 0) - (b.label.indexOf(' — ') >= 0 ? 1 : 0); };
+    var all = starts.slice().sort(part).concat(rest.slice().sort(part)); var cap = q ? 60 : all.length; placeHits = all.slice(0, cap); placeAct = -1;
+    if (!all.length) { box.innerHTML = '<div class="st-ta-none">No place matches “' + esc($('ctPlace').value.trim()) + '”. Try the city or county name only.</div>'; }
+    else { var selI = q ? -1 : placeHits.indexOf(st.place); placeShown = q ? placeHits.length : Math.min(placeHits.length, Math.max(120, selI + 40)); box.innerHTML = placeHits.slice(0, placeShown).map(optHtml).join('') + (q && all.length > 60 ? '<div class="st-ta-none">Showing 60 of ' + all.length + ' — keep typing to narrow it down.</div>' : ''); }
+    box.style.display = 'block'; $('ctPlace').setAttribute('aria-expanded', 'true');
+    var cur = box.querySelector('.st-ta-opt.on'); if (cur) box.scrollTop = Math.max(0, cur.offsetTop - 60); else box.scrollTop = 0;
+  }
+  function pickPlace(p) { if (!p) return; st.place = p; $('ctPlace').value = p.label; $('ctPlace').title = p.label; closePlaceList(); placeNote(); render(); }
+  function placeNote() {
+    var n = $('ctPlaceNote'), p = st.place, c = code(), r = E.RULES[c];
+    if (!r || r.kind !== 'place') { n.textContent = ''; return; }
+    if (!p) { n.textContent = placeState === 'loading' ? 'Loading the official rate table…' : (placeState === 'err' ? 'The rate table could not be loaded. Enter your combined rate under Go advanced instead.' : r.place.hint); return; }
+    n.textContent = pct(p.sales) + ' combined' + (r.cap ? ' (6% state + ' + pct(Math.round((p.sales - 6) * 1000) / 1000) + ' county surtax on the first $5,000).' : '.') + (p.note ? ' ' + p.note : '');
+  }
+  /* ---- layout of the form for the chosen state ---- */
+  function syncState() {
+    var c = code(), r = c ? E.RULES[c] : null, est = !!(c && !r);
+    $('ctPlaceFld').style.display = needsPlace() ? '' : 'none';
+    $('ctLocalFld').style.display = needsLocal() ? '' : 'none';
+    $('ctUsedFld').style.display = r && r.usedRule ? '' : 'none';
+    $('ctAssume').style.display = est ? '' : 'none';
+    $('ctEstNote').style.display = est ? '' : 'none';
+    if (est) $('ctEstNote').textContent = SE.STATES[c].name + ' is not on our verified list yet, so the page uses its general sales tax rate of ' + pct(SE.STATES[c].base) + ' and the three choices below. Check them against ' + SE.STATES[c].name + '’s own motor vehicle rules.';
+    $('ctLocalLab').textContent = r && r.local === 'typed' && r.localCap ? 'Local tax rate (city + county), first $2,500 only' : 'Local tax rate (city + county)';
+    st.place = null; $('ctPlace').value = ''; closePlaceList();
+    if (needsPlace()) { $('ctPlace').placeholder = r.place.ph; placeFor = ''; placeNote(); loadPlaces(); }
+    $('ctOwnFld').style.display = c ? '' : 'none';
+  }
+  /* ---- results ---- */
+  function table(head, rows) { return '<thead><tr>' + head.map(function (h) { return '<th>' + h + '</th>'; }).join('') + '</tr></thead><tbody>' + rows.map(function (r) { return '<tr' + (r[3] ? ' class="cur"' : '') + '><td>' + r[0] + '</td><td>' + r[1] + '</td><td>' + r[2] + '</td></tr>'; }).join('') + '</tbody>'; }
+  function bar(segs) {
+    var tot = segs.reduce(function (a, s) { return a + s[1]; }, 0); if (!(tot > 0)) return ['', ''];
+    var k = segs.filter(function (s) { return s[1] > 0.0049; });
+    return ['<div class="ln-bar">' + k.map(function (s) { return '<span class="ln-seg ' + s[0] + '" style="width:' + (s[1] / tot * 100) + '%"></span>'; }).join('') + '</div>', k.map(function (s) { return '<span><i class="ln-dotc ' + s[0] + '"></i>' + s[2] + ' ' + mon(s[1]) + '</span>'; }).join('')];
+  }
+  function empty(lab, msg, hint) {
+    $('ctResLab').textContent = lab; $('ctBig').textContent = '—'; $('ctSub').textContent = msg; $('ctMVal').textContent = '—';
+    $('ctResults').style.display = 'none'; last = null; setHint(hint || '');
+  }
+  function readNum(id, label, hints, req) {
+    var raw = $(id).value.trim(); if (!raw) return req ? NaN : 0;
+    var n = num(raw); if (!isFinite(n) || n < 0 || n > MAX) { hints.push(label + ' must be a number like 1,500 — only dollars and cents.'); return req ? NaN : 0; }
+    return n;
+  }
+  function rangeTxt(a, b) { return a === b ? mon(a) : mon(a) + ' – ' + mon(b); }
+  function ruleList(r, res) {
+    var items = [];
+    var tradeTxt = r.trade === 'none' ? 'Does <b>not</b> lower the tax' : (r.trade === 'cap' ? 'Lowers the tax, up to ' + mon(r.tradeCap) : 'Lowers the tax');
+    var rebTxt = r.rebate === 'reduces' ? 'Lowers the tax' : (r.rebate === 'taxed' ? 'Does <b>not</b> lower the tax' : 'Not confirmed — shown both ways');
+    var docTxt = r.doc === 'taxed' ? 'Taxed' : (r.doc === 'untaxed' ? 'Not taxed' : 'Not confirmed — shown both ways');
+    if (r.estimate) { tradeTxt = r.trade === 'full' ? 'You chose: lowers the tax' : 'You chose: does not lower the tax'; rebTxt = r.rebate === 'reduces' ? 'You chose: lowers the tax' : 'You chose: does not lower the tax'; docTxt = r.doc === 'taxed' ? 'You chose: taxed' : 'You chose: not taxed'; }
+    items.push(['Trade-in', tradeTxt, r.why ? r.why.trade : '']);
+    items.push(['Manufacturer rebate', rebTxt, r.why ? r.why.rebate : '']);
+    items.push(['Dealer doc fee', docTxt, r.why ? r.why.doc : '']);
+    return '<ul class="st-otherlist">' + items.map(function (x) { return '<li><b>' + x[0] + ': ' + x[1] + '.</b>' + (x[2] ? ' ' + esc(x[2]) : '') + '</li>'; }).join('') + '</ul>';
+  }
+  function compareRows(o, curCode) {
+    var flat = E.VERIFIED.filter(function (c) { var r = E.RULES[c]; return r.kind === 'flat' && r.local !== 'typed'; });
+    var rows = flat.map(function (c) { var r = E.compute(Object.assign({}, o, { state: c, place: null, own: null, local: 0 })); return [E.stateName(c), r.range ? rangeTxt(r.lo.tax, r.hi.tax) : mon(r.hi.tax), pct(E.RULES[c].rate), c === curCode, r.hi.tax]; });
+    rows.sort(function (a, b) { return a[4] - b[4]; });
+    return rows;
+  }
+  function render() {
+    var hints = [], c = code();
+    $('ctEx').parentNode.style.display = ($('ctPrice').value.trim() !== '') ? 'none' : '';
+    if (!c) { empty('Sales tax', 'Pick your state to see its vehicle tax rules.', ''); return; }
+    var price = readNum('ctPrice', 'Vehicle price', hints, true), trade = readNum('ctTrade', 'Trade-in value', hints), rebate = readNum('ctRebate', 'Rebate', hints), doc = readNum('ctDoc', 'Doc fee', hints), gov = readNum('ctGov', 'Title and registration fees', hints);
+    var local = 0, lraw = $('ctLocal').value.trim();
+    if (needsLocal() && lraw) { var ln = num(lraw); if (!isFinite(ln) || ln < 0 || ln > 20) hints.push('Local tax rate must be a number from 0 to 20, like 2.5.'); else local = ln; }
+    var own = null, oraw = $('ctOwn').value.trim();
+    if (oraw) { var on = num(oraw); if (!isFinite(on) || on < 0 || on > 30) hints.push('Your own rate must be a number from 0 to 30, like 7.5.'); else own = on; }
+    if (!isFinite(price) || price <= 0) { empty('Sales tax', 'Enter the vehicle price to see the tax.', hints[0]); return; }
+    var r = E.ruleFor(c, assume());
+    var o = { state: c, price: price, trade: trade, rebate: rebate, doc: doc, gov: gov, place: needsPlace() ? st.place : null, local: local, own: own, used: st.used === 'used', assume: assume() };
+    var res = E.compute(o);
+    if (res.needPlace) { empty('Sales tax', placeState === 'err' ? 'The rate table could not be loaded — enter your combined rate under Go advanced.' : 'Pick ' + r.place.what.replace(/^where/, 'where') + ' above to see the exact tax.', hints[0]); if (placeState !== 'err') $('ctMVal').textContent = 'Pick your place'; return; }
+    var rg = res.range, hi = res.hi, lo = res.lo;
+    $('ctResLab').textContent = 'Sales tax' + (r.label && !r.estimate ? '' : ''); $('ctBig').textContent = rangeTxt(lo.tax, hi.tax);
+    var eff = price > 0 ? hi.tax / price * 100 : 0;
+    $('ctSub').textContent = rg ? 'The range depends on how ' + E.stateName(c) + ' treats ' + [res.rOpts.length > 1 ? 'a manufacturer rebate' : '', res.dOpts.length > 1 ? 'the doc fee' : ''].filter(Boolean).join(' and ') + ' — not confirmed by the pages we read.' : (hi.free ? 'No tax is collected on this used vehicle.' : 'On a taxed amount of ' + mon(hi.b.base) + ' · ' + pct(Math.round(eff * 100) / 100) + ' of the price');
+    $('ctMLab').textContent = 'Sales tax'; $('ctMVal').textContent = rangeTxt(lo.tax, hi.tax);
+    var rows = [['Vehicle price', mon(price), '']];
+    if (doc > 0) rows.push(['Dealer doc fee', mon(doc), r.doc === 'taxed' ? 'taxed' : (r.doc === 'untaxed' ? 'not taxed' : 'taxed?')]);
+    if (trade > 0) rows.push(['Trade-in', '<span class="nw">−' + mon(trade) + '</span>', res.hi.b.credit >= trade - 0.004 ? 'lowers the tax' : (res.hi.b.credit > 0 ? 'only ' + mon(res.hi.b.credit) + ' counts' : 'does not lower the tax')]);
+    if (rebate > 0) rows.push(['Manufacturer rebate', '<span class="nw">−' + mon(rebate) + '</span>', r.rebate === 'reduces' ? 'lowers the tax' : (r.rebate === 'taxed' ? 'does not lower the tax' : 'rebate counts?')]);
+    rows.push(['Taxed amount', rg ? rangeTxt(lo.b.base, hi.b.base) : mon(hi.b.base), '']);
+    rows.push(['Sales tax', rangeTxt(lo.tax, hi.tax), rg ? '' : (own != null ? pct(own) + ' (your rate)' : (hi.free ? 'none' : pct(hi.rate)))]);
+    if (gov > 0) rows.push(['Title and registration', mon(gov), 'not taxed']);
+    rows.push(['Total with tax' + (trade > 0 || rebate > 0 ? ', before trade-in and rebate' : ''), rangeTxt(res.totalLo, res.totalHi), '', true]);
+    if (trade > 0 || rebate > 0) rows.push(['You pay after trade-in and rebate', res.payHi <= 0 ? '$0.00' : (res.payLo < 0 ? 'Up to ' + mon(res.payHi) : rangeTxt(res.payLo, res.payHi)), res.payLo < 0 ? 'trade-in and rebate cover it' : '']);
+    $('ctTable').innerHTML = table(['', 'Amount', ''], rows);
+    var fees = doc + gov, b = bar([['ln-p', price, 'Vehicle'], ['ln-s', fees, 'Fees'], ['ln-i', hi.tax, 'Tax']]); $('ctBar').innerHTML = b[0]; $('ctBarLeg').innerHTML = b[1];
+    /* how the taxed amount is built */
+    var gross = price + (hi.b.doc || 0), cut = Math.max(0, gross - hi.b.base);
+    var bb = cut > 0.004 ? bar([['ln-i', hi.b.base, 'Taxed'], ['ln-p', cut, 'Taken off before tax']]) : null;
+    var tip = own != null ? 'Using your own combined rate of ' + pct(own) + ' on the taxed amount.' : (r.note || '');
+    if (st.place && r.kind === 'place' && own == null) tip = (r.cap ? 'Rate for ' + st.place.label + ': ' + pct(st.place.sales) + ' (6% state + ' + pct(Math.round((st.place.sales - 6) * 1000) / 1000) + ' county surtax on the first $5,000). ' : 'Rate for ' + st.place.label + ': ' + pct(st.place.sales) + '. ') + (r.note || '');
+    if (r.local === 'typed' && !local && own == null && !r.estimate) tip += ' Add your local tax rate above — without it only the state tax is counted.';
+    if (r.estimate && r.rate === 0 && own == null) tip = E.stateName(c) + ' has no general state sales tax, so no vehicle sales tax is counted here. Some places charge local tax or vehicle fees that are not computed — add your local rate above if you know it. ' + tip;
+    else if (r.estimate && !local && own == null) tip = 'Only the state rate of ' + pct(r.rate) + ' is counted — add your local tax rate above for a fuller estimate. ' + tip;
+    if (res.hi.free) tip += ' Arkansas collects no tax on a used vehicle under $4,000.';
+    if (r.minTax && lo.tax === r.minTax) tip += ' The tax is the $75 minimum.';
+    $('ctTip').textContent = tip.trim(); $('ctTip').style.display = tip.trim() ? '' : 'none';
+    var extra = '';
+    if (bb) extra += '<div class="fc-grp">How your taxed amount is built</div>' + bb[0] + '<div class="ln-leg">' + bb[1] + '</div>';
+    var cmp = compareRows({ price: price, trade: trade, rebate: rebate, doc: doc, gov: gov, used: false, assume: assume() }, c);
+    if (cmp.length) extra += '<div class="fc-grp">The same car in other states</div><table class="dtable ln-terms st-near">' + table(['State', 'Tax', 'Rate'], cmp.map(function (x) { return [x[0], x[1], x[2], x[3]]; })) + '</table><p class="res-tip">Each state’s own trade-in, rebate and doc fee rules applied to your numbers. Only states with one statewide vehicle rate are listed — Florida, California, Missouri, Arkansas and Arizona depend on your local tax.</p>';
+    $('ctExtra').innerHTML = extra;
+    $('ctRule').innerHTML = '<div class="fc-grp">How ' + esc(E.stateName(c)) + ' treats each item</div>' + ruleList(r, res);
+    $('ctRule').style.display = '';
+    $('ctResults').style.display = ''; $('ctCopyWrap').style.display = '';
+    last = { state: E.stateName(c), place: st.place && st.place.label, price: price, trade: trade, rebate: rebate, doc: doc, tax: rangeTxt(lo.tax, hi.tax), total: rangeTxt(res.totalLo, res.totalHi) };
+    setHint(hints[0] || '');
+  }
+  /* ---- events ---- */
+  ['ctPrice', 'ctTrade', 'ctRebate', 'ctDoc', 'ctGov', 'ctLocal', 'ctOwn'].forEach(function (id) { $(id).addEventListener('input', render); });
+  ['ctAsTrade', 'ctAsRebate', 'ctAsDoc'].forEach(function (id) { $(id).addEventListener('change', render); });
+  $('ctUsedSeg').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; st.used = b.getAttribute('data-v'); [].forEach.call($('ctUsedSeg').querySelectorAll('button'), function (x) { x.classList.toggle('on', x === b); }); render(); });
+  $('ctState').addEventListener('change', function () { $('ctLocal').value = ''; $('ctOwn').value = ''; syncState(); render(); });
+  var pi = $('ctPlace');
+  pi.addEventListener('input', function () { st.place = null; pi.title = ''; placeNote(); showPlaceList(); render(); });
+  pi.addEventListener('focus', function () { loadPlaces(); if (st.place) { pi.select(); showPlaceList(true); } else showPlaceList(); });
+  pi.addEventListener('blur', function () { setTimeout(closePlaceList, 150); });
+  pi.addEventListener('keydown', function (e) {
+    var opts = $('ctPlaceList').querySelectorAll('.st-ta-opt'); if (!opts.length) return;
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); placeAct = e.key === 'ArrowDown' ? Math.min(opts.length - 1, placeAct + 1) : Math.max(0, placeAct - 1); [].forEach.call(opts, function (o, i) { o.classList.toggle('on', i === placeAct); }); opts[placeAct].scrollIntoView({ block: 'nearest' }); }
+    else if (e.key === 'Enter') { e.preventDefault(); pickPlace(placeHits[placeAct >= 0 ? placeAct : 0]); }
+    else if (e.key === 'Escape') closePlaceList();
+  });
+  $('ctPlaceList').addEventListener('scroll', moreOpts);
+  $('ctPlaceList').addEventListener('mousedown', function (e) { e.preventDefault(); var b = e.target.closest('.st-ta-opt'); if (!b) return; pickPlace(placeHits[+b.getAttribute('data-i')]); });
+  $('ctEx').addEventListener('click', function () { $('ctPrice').value = '30000'; $('ctTrade').value = '10000'; render(); });
+  $('ctAdvBtn').addEventListener('click', function () {
+    st.adv = !st.adv; $('ctAdvBtn').classList.toggle('open', st.adv); $('ctAdvBtnLab').textContent = st.adv ? 'Go simple' : 'Go advanced'; $('ctAdvIn').style.display = st.adv ? '' : 'none';
+    if (!st.adv) $('ctOwn').value = '';
+    render();
+  });
+  $('ctCopy').addEventListener('click', function () {
+    if (!last) return; var lines = [last.state + ' vehicle sales tax'];
+    if (last.place) lines.push('Place: ' + last.place);
+    lines.push('Price: ' + mon(last.price)); if (last.doc > 0) lines.push('Doc fee: ' + mon(last.doc)); if (last.trade > 0) lines.push('Trade-in: ' + mon(last.trade)); if (last.rebate > 0) lines.push('Rebate: ' + mon(last.rebate));
+    lines.push('Sales tax: ' + last.tax); lines.push('Total with tax: ' + last.total);
+    var btn = $('ctCopy'), txt = lines.join('\n');
+    var done = function (ok) { btn.textContent = ok ? 'Copied' : 'Copy failed'; setTimeout(function () { btn.textContent = 'Copy results'; }, 1600); };
+    var legacy = function () { try { var ta = document.createElement('textarea'); ta.value = txt; ta.setAttribute('readonly', ''); ta.style.cssText = 'position:fixed;left:-9999px;top:0'; document.body.appendChild(ta); ta.select(); var ok = document.execCommand('copy'); document.body.removeChild(ta); done(ok); } catch (e) { done(false); } };
+    try { navigator.clipboard.writeText(txt).then(function () { done(true); }, legacy); } catch (e) { legacy(); }
+  });
+  /* ---- State = the design-system typeahead (.st-ta), exactly like the paycheck State picker: the field itself is the input and shows the chosen
+     state with the round clear (x) button; #ctState is a hidden holder of the code whose value setter keeps the visible text in sync.
+     NEVER a .csel[data-search] dropdown for a state / place / county / country (design system, "Typeahead field"; build.js gate). ---- */
+  var stEl = $('ctState'), stIn = $('ctStateIn'), stList = $('ctStateList'), stVal = '', stHits = [], stAct = -1;
+  var ST_OPTS = Object.keys(SE.STATES).filter(function (cd) { return !SE.STATES[cd].city; }).sort(function (x, y) { return SE.STATES[x].name < SE.STATES[y].name ? -1 : 1; }).map(function (cd) { var n = SE.STATES[cd].name; return { v: cd, label: n, s: (n + ' ' + cd).toLowerCase(), ver: !!E.RULES[cd] }; });
+  function stLabel(v) { if (!v) return ''; for (var i = 0; i < ST_OPTS.length; i++) if (ST_OPTS[i].v === v) return ST_OPTS[i].label; return ''; }
+  Object.defineProperty(stEl, 'value', { configurable: true, get: function () { return stVal; }, set: function (v) { stVal = v || ''; stIn.value = stLabel(stVal); } });
+  function stRank(o, q) { if (o.label.toLowerCase().indexOf(q) === 0) return 0; if ((' ' + o.s).indexOf(' ' + q) >= 0) return 1; return o.s.indexOf(q) >= 0 ? 2 : -1; }
+  function stClose() { stList.style.display = 'none'; stIn.setAttribute('aria-expanded', 'false'); stAct = -1; }
+  function stShow(full) {
+    var q = full ? '' : stIn.value.trim().toLowerCase(), hits = [];
+    ST_OPTS.forEach(function (o, i) { var r = q ? stRank(o, q) : 0; if (r >= 0) hits.push({ o: o, r: r, i: i }); });
+    hits.sort(function (x, y) { return x.r - y.r || x.i - y.i; });
+    stHits = hits.map(function (h) { return h.o; });
+    stAct = q && stHits.length ? 0 : -1;
+    stList.innerHTML = stHits.length ? stHits.map(function (o, i) { return '<button type="button" class="st-ta-opt' + (!q && o.v === stVal ? ' on' : '') + (q && i === stAct ? ' kb' : '') + '" role="option" data-i="' + i + '"><span>' + esc(o.label) + '</span>' + (o.ver ? '<b>rules checked</b>' : '') + '</button>'; }).join('')
+      : '<div class="st-ta-none">No state matches “' + esc(stIn.value) + '”.</div>';
+    stList.style.display = 'block'; stIn.setAttribute('aria-expanded', 'true');
+    var cur = stList.querySelector('.st-ta-opt.on'); stList.scrollTop = cur && !q ? Math.max(0, cur.offsetTop - 60) : 0;
+  }
+  function stPick(o) {
+    if (!o) return;
+    var changed = o.v !== stVal; stClose(); stEl.value = o.v; stIn.blur();
+    if (changed) stEl.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+  stIn.addEventListener('focus', function () { stIn.select(); stShow(true); });
+  stIn.addEventListener('input', function () { stShow(!stIn.value.trim()); });
+  stIn.addEventListener('blur', function () { setTimeout(function () { stClose(); stIn.value = stLabel(stVal); }, 150); });
+  stIn.addEventListener('keydown', function (e) {
+    var opts = stList.querySelectorAll('.st-ta-opt');
+    if (e.key === 'Escape') { stClose(); stIn.value = stLabel(stVal); return; }
+    if (!opts.length) return;
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); stAct = e.key === 'ArrowDown' ? Math.min(opts.length - 1, stAct + 1) : Math.max(0, stAct - 1); [].forEach.call(opts, function (o, i) { o.classList.toggle('kb', i === stAct); }); opts[stAct].scrollIntoView({ block: 'nearest' }); }
+    else if (e.key === 'Enter') { e.preventDefault(); stPick(stHits[stAct >= 0 ? stAct : 0]); }
+  });
+  stList.addEventListener('mousedown', function (e) { e.preventDefault(); var bt = e.target.closest('.st-ta-opt'); if (bt) stPick(stHits[+bt.getAttribute('data-i')]); });
+  var pre = document.body.getAttribute('data-state'); if (pre && SE.STATES[pre]) stEl.value = pre;
+  syncState(); render();
+};
+/* CARTAX:END */

@@ -223,6 +223,10 @@
   "/turkey-size-calculator/": {
     "d": "Turkey size calculator: 10 adults need a 10 lb turkey, 15 lb with leftovers. Enter adults and children for the size to buy, plus thaw and cook times."
   },
+  "/car-sales-tax-calculator/": {
+    "t": "Car Sales Tax Calculator 2026 — Trade-In Rules by State",
+    "d": "Car sales tax calculator: price, trade-in, rebate and doc fee under official rules for 10 states. California and Virginia tax the full price."
+  },
   "/sales-tax-calculator/": {
     "t": "Sales Tax Calculator — Add, Remove or Find the Rate by State",
     "d": "Free sales tax calculator: add tax to a price, remove it from a total or find the rate. Pick your state for rates, exempt items and shipping rules."

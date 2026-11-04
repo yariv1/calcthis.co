@@ -196,3 +196,5 @@ Why each step is mandatory:
     check `calcthis-design-system.md` first. The advanced-mode explanatory line (16px amber)
     is `.adv-tip`, global in `style.css` — never write `.p-PAGENAME #advOut .res-tip{...}`
     again (happened 4 times, including once shipped at the wrong size, before this was fixed)
+
+17. A state / country / place / county picker built as a `.csel` dropdown (with or without `data-search`) instead of the `.st-ta` typeahead copied from the paycheck State field. Shipped once on the car sales tax page (2026-11-04) and the user was furious. `build.js` `checkPickerDesign` now fails the build; open the paycheck page and copy its State field BEFORE writing any such picker.
