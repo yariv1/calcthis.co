@@ -44,7 +44,7 @@ tip calculator >100K Hard · tip calculator google >10K Hard · how to calculate
 - `reverse sales tax calculator` >1000 HARD (32 kws): all variants <100 (nj, ct, texas, florida, ontario, bc).
 - `florida sales tax calculator` >1000 EASY (16 kws; the rest <100 incl. by zip code, 2025/2026, jacksonville, lee county).
 - `illinois sales tax calculator` >100 Medium (11 kws); `washington sales tax calculator` >100 Medium (12 kws); `pennsylvania sales tax calculator` <100 Medium (1 kw).
-- Not checked yet: georgia, arizona, colorado, north carolina, virginia, michigan, new york; cities chicago, los angeles, seattle, houston, las vegas.
+- **User screenshots 2026-11-04 (phrase match, all head terms ">100"; every variant <100):** EASY: colorado, north carolina, virginia, michigan, chicago, los angeles, las vegas. MEDIUM: georgia, arizona, new york, houston. seattle <100 Easy (skip). Decision: build chicago, los angeles, las vegas, michigan, virginia, north carolina as one batch (clear official rates); skip colorado/georgia/arizona (scattered local rates), new york (NYC exists), houston, seattle.
 
 ## Remaining paycheck states — demand check (user screenshots, 2026-11-02, after batch 2)
 - **>1000 EASY (build candidates):** Oklahoma, Kansas, Arkansas, Idaho, Hawaii, Maine, Nebraska, Louisiana (`adp louisiana` >100 Medium). Plus South Carolina (>1000 Easy, waiting for its post-Act-110 tables).

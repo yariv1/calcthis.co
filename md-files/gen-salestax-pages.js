@@ -621,8 +621,232 @@ ${f.map((q) => `    <details class="faq"><summary>${q[0]}</summary><p>${q[1]}</p
   }));
 }
 
+/* ---------- North Carolina + Virginia (county / locality tables; groceries have their own reduced rate) ---------- */
+const NC_COUNTIES = ['Mecklenburg County (Charlotte)', 'Wake County (Raleigh)', 'Durham County (Durham)', 'Orange County', 'Guilford County (Greensboro)', 'Forsyth County (Winston-Salem)', 'Cumberland County (Fayetteville)', 'Buncombe County (Asheville)', 'New Hanover County (Wilmington)', 'Pitt County (Greenville)', 'Gaston County (Gastonia)', 'Onslow County (Jacksonville)'];
+function ncFaqs(c) {
+  const s = E.STATES[c], n = s.name, P = s.places;
+  const mk = placeLike(c, 'Mecklenburg County'), wk = placeLike(c, 'Wake County'), gu = placeLike(c, 'Guilford County'), du = placeLike(c, 'Durham County'), fo = placeLike(c, 'Forsyth County');
+  const shipT = E.add({ state: c, items: [{ amt: 100, cat: 'general' }], ship: 10, place: wk, shipTaxed: true }), shipN = E.add({ state: c, items: [{ amt: 100, cat: 'general' }], ship: 10, place: wk, shipTaxed: false });
+  const use = ar(c, wk, 'general', 3000, { paid: 0 }), use2 = ar(c, wk, 'general', 3000, { paid: 4 });
+  const rev = E.reverse({ state: c, total: 107.25, cat: 'general', place: wk });
+  return [
+    [`What is the sales tax rate in ${n}?`, `${n}’s state rate is ${pct(s.base)} and every county adds its own local tax, so the combined rate in the Department of Revenue’s table effective July 1, 2026 runs from ${pct(P.lo)} to ${pct(P.hi)}. Wake County (Raleigh) is ${pct(wk.sales)}, Durham ${pct(du.sales)}, Guilford (Greensboro) ${pct(gu.sales)}, Forsyth (Winston-Salem) ${pct(fo.sales)} and Mecklenburg (Charlotte) ${pct(mk.sales)}. Search your city or county in the calculator above.`],
+    [`Why did the sales tax in Charlotte go up to ${pct(mk.sales)}?`, `Mecklenburg County levied an additional 1% local sales and use tax effective July 1, 2026, taking the combined rate from 7.25% to ${pct(mk.sales)}. A $100 purchase now costs ${m(ar(c, mk).total)} instead of $107.25. The additional 1% does not apply to qualifying food, which stays at 2%.`],
+    [`Is food taxed in ${n}?`, `Qualifying food pays only a 2% local rate — the state, transit and other local rates do not apply — so a $100 grocery bill has ${m(ar(c, wk, 'grocery').tax)} of tax in every county, Charlotte included. Candy, soft drinks, prepared food, dietary supplements, vending-machine food and alcohol are not qualifying food and pay the full county rate: ${m(ar(c, wk, 'prepared').tax)} on $100 of restaurant food in Wake County. Choose the item type in the calculator to see the difference.`],
+    [`Is clothing taxed in ${n}?`, `The Department of Revenue pages we used list no clothing exemption, so clothing is calculated at your county’s full rate — ${m(ar(c, wk).tax)} on $100 in Wake County.`],
+    [`Are prescription drugs taxed in ${n}?`, `No. Drugs that federal law lets only a prescription dispense, over-the-counter drugs sold on a prescription, and insulin are exempt. Other over-the-counter medicine is taxable. Choose “Prescription” as the item type to see the tax removed.`],
+    [`Is shipping taxed in ${n}?`, `Under the Department’s taxability matrix a transportation or shipping charge listed separately on the invoice is not taxed, while handling, crating and packing are taxable, and a charge that is combined or not listed separately is taxed with the sale. On a $100 item in Wake County with $10 shipping the tax is ${m(shipN.tax)} when the shipping is listed separately and ${m(shipT.tax)} when it is billed with handling. Tick the shipping box in the calculator for the second case.`],
+    [`How do I take sales tax out of a total in ${n}?`, `Divide the total by 1 plus your county’s rate. In Wake County (${pct(wk.sales)}) a total of $107.25 is ${m(rev.pre)} before tax, with ${m(rev.tax)} of tax inside it. Switch the calculator to “Remove tax”, pick your county and enter the total.`],
+    [`Do I owe ${n} tax on things I buy online?`, `Yes, when the seller does not charge ${n} tax you owe use tax at the rate of the county where you use the item. A $3,000 item used in Wake County with no tax charged means ${m(use.owed)} of use tax; if the seller charged 4% you still owe ${m(use2.owed)}. Enter the tax the seller charged under Go advanced.`],
+    [`Do restaurants charge more than the ${n} sales tax rate?`, `Sometimes. The Department’s rates do not include prepared-meal taxes that some local governments impose and administer themselves, so check the receipt for a separate prepared-meal tax.`]
+  ];
+}
+const VA_LOCALITIES = ['Richmond City', 'Virginia Beach City', 'Norfolk City', 'Arlington County', 'Alexandria City', 'Fairfax County', 'Loudoun County', 'Prince William County', 'Chesapeake City', 'Henrico County', 'Roanoke City', 'Williamsburg City', 'Charlottesville City', 'Lynchburg City'];
+function vaFaqs(c) {
+  const s = E.STATES[c], n = s.name, P = s.places;
+  const ri = placeLike(c, 'Richmond City'), ro = placeLike(c, 'Roanoke City'), wb = placeLike(c, 'Williamsburg City');
+  const shipT = E.add({ state: c, items: [{ amt: 100, cat: 'general' }], ship: 10, place: ri, shipTaxed: true }), shipN = E.add({ state: c, items: [{ amt: 100, cat: 'general' }], ship: 10, place: ri, shipTaxed: false });
+  const use = ar(c, ri, 'general', 3000, { paid: 0 }), use2 = ar(c, ri, 'general', 3000, { paid: 4 });
+  const rev = E.reverse({ state: c, total: 106, cat: 'general', place: ri });
+  return [
+    [`What is the sales tax rate in ${n}?`, `Most of ${n} pays ${pct(P.lo)}. Northern Virginia, Hampton Roads and Central Virginia pay 6% (Richmond, Virginia Beach, Norfolk, Arlington and Fairfax among them), eight localities pay 6.3% (Charlotte, Gloucester, Halifax, Henry, Northampton, Patrick and Pittsylvania counties and Danville) and James City County, York County and Williamsburg pay 7%. Roanoke is ${pct(ro.sales)}. Search your locality in the calculator above.`],
+    [`Why is the ${n} rate 6% in some places and 5.3% in others?`, `Northern Virginia, Hampton Roads and Central Virginia add a 0.7% regional tax, taking the combined rate from ${pct(P.lo)} to 6%. A $100 purchase costs ${m(ar(c, ro).total)} in Roanoke and ${m(ar(c, ri).total)} in Richmond. The Historic Triangle (James City County, York County and Williamsburg) adds a further 1%: ${m(ar(c, wb).total)} in Williamsburg.`],
+    [`Is food taxed in ${n}?`, `Food for home consumption pays a reduced 1% rate everywhere in ${n}, with no regional or additional local tax, so a $100 grocery bill has ${m(ar(c, ri, 'grocery').tax)} of tax in any locality. Alcohol, tobacco and prepared hot food for immediate consumption do not qualify and pay the full rate: ${m(ar(c, ri, 'prepared').tax)} on $100 of restaurant food in Richmond. Feminine hygiene and nondurable incontinence products get the same 1% rate.`],
+    [`Is clothing taxed in ${n}?`, `The Virginia Tax pages we used list no clothing exemption, so clothing is calculated at your locality’s full rate — ${m(ar(c, ri).tax)} on $100 in Richmond and ${m(ar(c, ro).tax)} in Roanoke.`],
+    [`Are prescription and over-the-counter drugs taxed in ${n}?`, `No. Prescription drugs and nonprescription drugs and medicines are exempt, but dietary supplements and vitamins sold as such are taxable. Choose “Medicine” as the item type to see the tax removed.`],
+    [`Is shipping taxed in ${n}?`, `A transportation or delivery charge listed separately on the invoice is not taxed. A combined “shipping and handling” charge is taxable even when it is on its own line, and so is a charge not listed separately. On a $100 item in Richmond with $10 shipping the tax is ${m(shipN.tax)} when the shipping is listed separately and ${m(shipT.tax)} when it is billed with handling. Tick the shipping box for the second case.`],
+    [`How do I take sales tax out of a total in ${n}?`, `Divide the total by 1 plus your locality’s rate. In Richmond (${pct(ri.sales)}) a total of $106.00 is ${m(rev.pre)} before tax, with ${m(rev.tax)} of tax inside it. Switch the calculator to “Remove tax”, pick your locality and enter the total.`],
+    [`Do I owe ${n} tax on things I buy online?`, `Yes, when the seller does not charge ${n} tax you owe use tax at the rate of the locality where you use the item. A $3,000 item used in Richmond with no tax charged means ${m(use.owed)} of use tax; if the seller charged 4% you still owe ${m(use2.owed)}. Enter the tax the seller charged under Go advanced.`],
+    [`What sales tax do I pay on a car in ${n}?`, `Motor vehicles, aircraft and watercraft are taxed at different rates (through the DMV for vehicles), so the calculator does not compute vehicle tax.`]
+  ];
+}
+PF.NC = {
+  unit: 'county', sampleLabel: 'Wake County', sampleName: 'Wake County', faqs: ncFaqs,
+  cityRows: () => NC_COUNTIES.map((x) => { const p = placeLike('NC', x); return [p.label, p]; }), cityHead: 'North Carolina sales tax by county', cityLead: 'County',
+  heroP: (s, P, a) => `${s.name} charges a ${pct(s.base)} state sales tax and <strong>every county adds its own</strong> — combined rates run from ${pct(P.lo)} to ${pct(P.baseHi)}, and groceries pay only <strong>2%</strong>. Search your county or city to see yours: on <strong>$100</strong> it is <strong>${m(a.total)}</strong> in Wake County (Raleigh) with <strong>${m(a.tax)}</strong> of tax.`,
+  glance: (s, P) => `<p>${s.name}’s state rate is <strong>${pct(s.base)}</strong>. Every county adds a local tax and four add a 0.5% transit tax, and the rate that applies is the rate of the county where the sale is made. In the Department of Revenue’s table effective July 1, 2026 the combined rate runs from <strong>${pct(P.lo)}</strong> to <strong>${pct(P.baseHi)}</strong> (Mecklenburg County, which added 1% on July 1, 2026).</p>
+        <p>Qualifying food is taxed differently: a flat <strong>2%</strong> local rate and no state, transit or other local tax, so groceries cost the same in every county. Wake County (Raleigh) is ${pct(placeLike('NC', 'Wake County').sales)}, Durham ${pct(placeLike('NC', 'Durham County').sales)}, Guilford (Greensboro) ${pct(placeLike('NC', 'Guilford County').sales)} and Mecklenburg (Charlotte) ${pct(placeLike('NC', 'Mecklenburg County').sales)}.</p>`,
+  cityNote: (s, P) => `County rates from the North Carolina Department of Revenue table effective July 1, 2026. The city names in brackets are only there to help you find your county — the rate is always the county’s. Search the calculator for any of the ${P.n} counties.`,
+  shipLine: (c, s, p) => `On a $100 item in Wake County with $10 shipping the tax is ${m(E.add({ state: c, items: [{ amt: 100, cat: 'general' }], ship: 10, place: p, shipTaxed: false }).tax)} when the shipping is listed separately and ${m(E.add({ state: c, items: [{ amt: 100, cat: 'general' }], ship: 10, place: p, shipTaxed: true }).tax)} when it is billed with handling.`,
+  use: 'Search your county or city, pick where the sale is made, add one item or several, choose what each one is and add shipping.',
+  title: (s) => s.name + ' Sales Tax Calculator 2026 — By County',
+  desc: (s) => s.name + ' sales tax calculator by county: official July 2026 rates, 4.75% state plus local, groceries at 2%, Mecklenburg 8.25%, prescriptions exempt.',
+  ogTitle: (s) => s.name + ' Sales Tax Calculator 2026 — by County', source: 'North Carolina Department of Revenue', sampleOf: 'in Wake County'
+};
+PF.VA = {
+  unit: 'locality', sampleLabel: 'Richmond City', sampleName: 'Richmond', faqs: vaFaqs,
+  cityRows: () => VA_LOCALITIES.map((x) => { const p = placeLike('VA', x); return [p.label, p]; }), cityHead: 'Virginia sales tax by city and county', cityLead: 'Locality',
+  heroP: (s, P, a) => `${s.name} charges <strong>${pct(P.lo)} in most places, 6% in Northern Virginia, Hampton Roads and Central Virginia and up to ${pct(P.baseHi)}</strong>, and groceries pay only <strong>1%</strong>. Search your city or county to see yours: on <strong>$100</strong> it is <strong>${m(a.total)}</strong> in Richmond with <strong>${m(a.tax)}</strong> of tax.`,
+  glance: (s, P) => `<p>${s.name}’s rate depends on the locality: <strong>${pct(P.lo)}</strong> in most places, <strong>6%</strong> in Northern Virginia, Hampton Roads and Central Virginia (a 0.7% regional tax), <strong>6.3%</strong> in eight localities that added 1% and <strong>${pct(P.baseHi)}</strong> in James City County, York County and Williamsburg. The rate that applies is the one for the locality where the sale is made.</p>
+        <p>Food for home consumption and essential personal hygiene products pay a reduced <strong>1%</strong> rate everywhere. Richmond is ${pct(placeLike('VA', 'Richmond City').sales)}, Virginia Beach ${pct(placeLike('VA', 'Virginia Beach City').sales)}, Fairfax County ${pct(placeLike('VA', 'Fairfax County').sales)} and Roanoke ${pct(placeLike('VA', 'Roanoke City').sales)}, so the calculator looks up your exact locality instead of guessing.</p>`,
+  cityNote: (s, P) => `Rates from the Virginia Tax rate sheet for January 2026 to the present, which lists all ${P.n} counties and independent cities. Towns are part of their county, so pick the county (the common town names are shown in brackets).`,
+  shipLine: (c, s, p) => `On a $100 item in Richmond with $10 shipping the tax is ${m(E.add({ state: c, items: [{ amt: 100, cat: 'general' }], ship: 10, place: p, shipTaxed: false }).tax)} when the shipping is listed separately and ${m(E.add({ state: c, items: [{ amt: 100, cat: 'general' }], ship: 10, place: p, shipTaxed: true }).tax)} when it is billed as shipping and handling.`,
+  use: 'Search your city or county, pick where the sale is made, add one item or several, choose what each one is and add shipping.',
+  title: (s) => s.name + ' Sales Tax Calculator 2026 — By Locality, 1% Food',
+  desc: (s) => s.name + ' sales tax calculator by city and county: 5.3% base, 6% regional, 7% Historic Triangle, official 2026 rates, groceries at 1%, medicine exempt.',
+  ogTitle: (s) => s.name + ' Sales Tax Calculator 2026 — by Locality', source: 'Virginia Tax', sampleOf: 'in Richmond'
+};
+
+/* ---------- one-rate pages: Michigan (state), Los Angeles, Chicago, Las Vegas (cities) ---------- */
+const fa = (c, items, ship, extra) => E.add(Object.assign({ state: c, items: items, ship: ship || 0 }, extra || {}));
+const one = (c, cat, amt, ship, extra) => fa(c, [{ amt: amt || 100, cat: cat || 'general' }], ship, extra);
+const FLAT = {
+  MI: {
+    word: 'state', source: 'Michigan Department of Treasury', eyebrow: 'Michigan · 2026 rates',
+    title: (s) => 'Michigan Sales Tax Calculator 2026 — 6% Rate, Exempt Items',
+    desc: (s, a) => 'Michigan sales tax calculator: 6% statewide, no local tax. $100 is ' + m(a.total) + ' with tax. Groceries and prescriptions exempt, prepared food taxed, delivery rule.',
+    hero: (s, a) => `Michigan charges <strong>6%</strong> sales tax everywhere — cities and counties may not add their own — so <strong>$100</strong> costs <strong>${m(a.total)}</strong> with <strong>${m(a.tax)}</strong> of tax. Groceries are exempt, restaurant food is not.`,
+    glance: (s, a) => `<p>Michigan’s sales tax is <strong>6%</strong> and the Department of Treasury says Michigan does not allow city or local units to impose a sales tax, so the rate is the same in Detroit, Grand Rapids, Lansing and Ann Arbor. On <strong>$100</strong> that is <strong>${m(a.tax)}</strong> of tax, for a total of <strong>${m(a.total)}</strong>.</p><p>What changes the bill is the type of item: food for home consumption and prescription drugs are exempt, prepared food is taxed, and delivery charges are not taxed when they are itemized separately on the invoice.</p>`,
+    shipLine: (c) => `On a $100 item with $10 delivery the tax is ${m(one(c, 'general', 100, 10, { shipTaxed: false }).tax)} when the delivery is itemized separately on the bill and ${m(one(c, 'general', 100, 10, { shipTaxed: true }).tax)} when it is not.`,
+    crumbName: 'Michigan', areaType: 'State',
+    faqs: (c) => {
+      const s = E.STATES[c], n = s.name, a100 = one(c), a1000 = one(c, 'general', 1000), r = E.reverse({ state: c, total: 106, cat: 'general' });
+      const meal = one(c, 'prepared', 40), shipS = one(c, 'general', 3000, 150, { shipTaxed: false }), shipC = one(c, 'general', 3000, 150, { shipTaxed: true });
+      const use = one(c, 'general', 3000, 50, { paid: 0 }), use2 = one(c, 'general', 4000, 0, { paid: 5.5 });
+      return [
+        [`What is the sales tax rate in ${n}?`, `${n}’s sales tax rate is ${pct(s.base)} statewide. The Department of Treasury says Michigan does not allow city or local units to impose a sales tax, so there is no local rate. On a $100 purchase the tax is ${m(a100.tax)} and the total is ${m(a100.total)}; on $1,000 it is ${m(a1000.tax)}, for ${m(a1000.total)}.`],
+        [`Are groceries taxed in ${n}?`, `No. The ${n} Constitution bars a tax on food for human consumption except prepared food, so groceries are exempt — a $100 grocery bill has $0.00 of tax. Prepared food is taxable: food sold hot or heated by the seller, two or more ingredients mixed or combined by the seller for sale as one item, and food sold with eating utensils the seller provides. A $40 restaurant meal has ${m(meal.tax)} of tax and costs ${m(meal.total)} before any tip.`],
+        [`Is clothing taxed in ${n}?`, `The Treasury pages we used list no clothing exemption, so clothing is calculated as general merchandise at 6% — ${m(one(c, 'general', 100).tax)} on $100.`],
+        [`Are prescription drugs and period products taxed in ${n}?`, `Drugs that can only be dispensed on a prescription, and over-the-counter drugs sold on a prescription, are exempt; other over-the-counter medicine is taxable. Feminine hygiene products — tampons, panty liners, menstrual cups and sanitary napkins — have been exempt since February 3, 2022. Choose the item type in the calculator to see the tax removed.`],
+        [`Is shipping or delivery taxed in ${n}?`, `Since April 26, 2023 most delivery and installation charges are not taxed when the seller itemizes them separately on the invoice and keeps records that show how the tax was worked out. Treasury’s own example is a $3,000 refrigerator with a $150 delivery fee: tax is only ${m(shipS.tax)} (6% of $3,000). If the delivery is not itemized separately it is part of the price and taxed — ${m(shipC.tax)} on the same sale. Tick the box in the calculator for that case.`],
+        [`How do I take sales tax out of a total in ${n}?`, `Divide the total by 1.06. A total of $106.00 is ${m(r.pre)} before tax, with ${m(r.tax)} of tax inside it. Switch the calculator to “Remove tax” to do it for any amount.`],
+        [`Do I owe ${n} tax on things I buy online?`, `Yes. Use tax of 6% is due on taxable items brought into ${n} or bought from out-of-state sellers that did not collect tax, with credit for tax paid to another state. A $3,000 item with $50 shipping and no tax charged means ${m(use.owed)} of use tax; a $4,000 item bought with 5.5% tax paid elsewhere leaves ${m(use2.owed)}. Enter the rate the seller charged under Go advanced.`],
+        [`Is the sales tax on electricity and heating fuel different in ${n}?`, `Yes. Electricity, natural or artificial gas and home heating fuels for residential use are taxed at 4%, not 6%. The calculator uses the 6% rate for everything else.`]
+      ];
+    }
+  },
+  LAX: {
+    word: 'city', source: 'California Department of Tax and Fee Administration', eyebrow: 'Los Angeles · 2026 rates',
+    title: (s) => 'Los Angeles Sales Tax Calculator 2026 — 10.25% Rate',
+    desc: (s, a) => 'Los Angeles sales tax calculator: 10.25% from October 1, 2026. $100 is ' + m(a.total) + ' with tax. Groceries and prescriptions exempt, clothing taxed, shipping rule.',
+    hero: (s, a) => `The sales tax rate in the City of Los Angeles is <strong>10.25%</strong> since October 1, 2026, so <strong>$100</strong> costs <strong>${m(a.total)}</strong> with <strong>${m(a.tax)}</strong> of tax. Groceries are exempt; clothing is not.`,
+    glance: (s, a) => `<p>The California Department of Tax and Fee Administration lists the City of Los Angeles and Los Angeles County at <strong>10.25%</strong> in its table effective October 1, 2026: the 7.25% statewide base plus 3% of voter-approved district taxes. On <strong>$100</strong> that is <strong>${m(a.tax)}</strong> of tax, for a total of <strong>${m(a.total)}</strong>.</p><p>Rates follow the address of the sale, so a store in a neighbouring city can charge more: Santa Monica and Culver City are 11.25%, Long Beach, Pasadena, Burbank and Glendale 11%, Inglewood 10.75% and Beverly Hills 10.25%. The <a href="/sales-tax-calculator/california/">California sales tax calculator</a> lists every city.</p>`,
+    shipLine: (c) => `On a $100 item with $10 shipping listed separately the tax is ${m(one(c, 'general', 100, 10, { shipTaxed: false }).tax)}; billed as one shipping-and-handling charge it is ${m(one(c, 'general', 100, 10, { shipTaxed: true }).tax)}.`,
+    extra: (s) => { const rows = [['Los Angeles', 'Los Angeles'], ['Santa Monica', 'Santa Monica'], ['Culver City', 'Culver City'], ['Long Beach', 'Long Beach'], ['Pasadena', 'Pasadena'], ['Burbank', 'Burbank'], ['Glendale', 'Glendale'], ['Inglewood', 'Inglewood'], ['Beverly Hills', 'Beverly Hills']].map((x) => { const p = placeBy('CA', x[1]); return '<tr><td>' + x[0] + '</td><td>' + pct(p.sales) + '</td><td>' + m(p.sales) + '</td></tr>'; }).join(''); return '<h2>Sales tax in Los Angeles and nearby cities</h2><div class="pc-tblwrap"><table class="dtable"><thead><tr><th>City</th><th>Rate</th><th>Tax on $100</th></tr></thead><tbody>' + rows + '</tbody></table></div><p>Rates from the CDTFA table effective October 1, 2026. Your exact rate depends on the address where the sale is made.</p>'; },
+    crumbName: 'Los Angeles', areaType: 'City',
+    faqs: (c) => {
+      const s = E.STATES[c], n = s.name, a100 = one(c), a1000 = one(c, 'general', 1000), r = E.reverse({ state: c, total: 110.25, cat: 'general' });
+      const meal = one(c, 'prepared', 40), soda = one(c, 'soda', 100), shipS = one(c, 'general', 100, 10, { shipTaxed: false }), shipC = one(c, 'general', 100, 10, { shipTaxed: true });
+      const use = one(c, 'general', 3000, 0, { paid: 0 }), use2 = one(c, 'general', 3000, 0, { paid: 4 }), car = one(c, 'general', 30000);
+      return [
+        [`What is the sales tax rate in ${n}?`, `${pct(s.base)} in the City of Los Angeles since October 1, 2026, according to the California Department of Tax and Fee Administration (CDTFA). It is the 7.25% statewide base plus 3% of district taxes. On a $100 purchase the tax is ${m(a100.tax)} and the total is ${m(a100.total)}; on $1,000 it is ${m(a1000.tax)}, for ${m(a1000.total)}.`],
+        [`Is the Los Angeles sales tax 9.75% or 10.25%?`, `The CDTFA table effective October 1, 2026 lists the City of Los Angeles and Los Angeles County at 10.25%. Some websites still show the earlier 9.75%, so check the date of the rate they quote.`],
+        [`Why is the sales tax different in Santa Monica or Long Beach?`, `Each city can have its own district taxes on top of the 7.25% base. In the same CDTFA table Santa Monica and Culver City are 11.25% and Long Beach, Pasadena, Burbank and Glendale are 11%, so $100 costs $111.25 in Santa Monica and ${m(a100.total)} in the City of Los Angeles. The rate follows the address of the sale.`],
+        [`Are groceries taxed in ${n}?`, `Groceries are exempt — a $100 grocery bill has $0.00 of tax, and candy, juice and noncarbonated bottled water count as groceries. Hot prepared food and restaurant meals are taxable whether eaten there or taken away: a $40 meal has ${m(meal.tax)} of tax. Carbonated drinks and alcohol bought in a store are taxable too (${m(soda.tax)} on $100).`],
+        [`Is clothing taxed in ${n}?`, `Yes. California has no clothing exemption, so clothing and shoes are taxed at ${pct(s.base)} — ${m(a100.tax)} on $100.`],
+        [`Is shipping taxed in ${n}?`, `Not when the charge is listed separately on the bill and covers the actual cost of carrier, mail or the seller’s own delivery after the sale (CDTFA Regulation 1628). On a $100 item with $10 shipping listed separately the tax is ${m(shipS.tax)}; billed as one shipping-and-handling charge it is ${m(shipC.tax)}, because only the actual shipping part can be left out. Tick the box in the calculator for the combined case.`],
+        [`How do I take sales tax out of a total in ${n}?`, `Divide the total by 1.1025. A total of $110.25 is ${m(r.pre)} before tax, with ${m(r.tax)} of tax inside it. Switch the calculator to “Remove tax” to do it for any amount.`],
+        [`Do I owe tax on things I buy online?`, `Yes, when the seller does not charge California tax you owe use tax at the rate where you use the item. A $3,000 item used in Los Angeles with no tax charged means ${m(use.owed)} of use tax; if the seller charged 4% you still owe ${m(use2.owed)}. Enter the rate the seller charged under Go advanced.`],
+        [`What sales tax do I pay on a car in ${n}?`, `Vehicles are taxed at the rate of the place where they will be registered, not where they are bought. For a $30,000 car registered in the City of Los Angeles the tax at ${pct(s.base)} is ${m(car.tax)}. Registration fees are separate. The <a href="/car-sales-tax-calculator/">car sales tax calculator</a> applies California’s trade-in and rebate rules.`]
+      ];
+    }
+  },
+  CHI: {
+    word: 'city', source: 'Illinois Department of Revenue', eyebrow: 'Chicago · 2026 rates',
+    title: (s) => 'Chicago Sales Tax Calculator 2026 — 10.5% Rate',
+    desc: (s, a) => 'Chicago sales tax calculator: 10.5% since August 1, 2026. $100 is ' + m(a.total) + ' with tax. Groceries 1.5%, medicine 2.5%, official Illinois rates.',
+    hero: (s, a) => `The sales tax rate in Chicago is <strong>10.5%</strong> since August 1, 2026, so <strong>$100</strong> costs <strong>${m(a.total)}</strong> with <strong>${m(a.tax)}</strong> of tax. Groceries pay <strong>1.5%</strong> and medicine <strong>2.5%</strong>.`,
+    glance: (s, a) => `<p>The Illinois Department of Revenue’s rate file lists Chicago at <strong>10.5%</strong> on general merchandise from August 1, 2026 (it was 10.25% until July 31, 2026). On <strong>$100</strong> that is <strong>${m(a.tax)}</strong> of tax, for a total of <strong>${m(a.total)}</strong>.</p><p>Chicago does not tax everything at the full rate. Groceries pay <strong>${pct(E.cat(s, 'grocery').rate)}</strong> and drugs and medical items <strong>${pct(E.cat(s, 'drugs').rate)}</strong>, while candy, soft drinks, alcohol and restaurant food pay the full rate. Many websites still show 10.25%.</p>`,
+    shipLine: (c) => `On a $100 item with $10 shipping listed separately the tax is ${m(one(c, 'general', 100, 10, { shipTaxed: false }).tax)}; when the shipping is not listed separately it is ${m(one(c, 'general', 100, 10, { shipTaxed: true }).tax)}.`,
+    crumbName: 'Chicago', areaType: 'City',
+    faqs: (c) => {
+      const s = E.STATES[c], n = s.name, a100 = one(c), a1000 = one(c, 'general', 1000), r = E.reverse({ state: c, total: 110.5, cat: 'general' });
+      const gro = one(c, 'grocery', 100), drug = one(c, 'drugs', 100), candy = one(c, 'candy', 100), meal = one(c, 'prepared', 40);
+      const shipS = one(c, 'general', 100, 10, { shipTaxed: false }), shipC = one(c, 'general', 100, 10, { shipTaxed: true });
+      const use = one(c, 'general', 3000, 0, { paid: 0 }), use2 = one(c, 'general', 3000, 0, { paid: 4 });
+      return [
+        [`What is the sales tax rate in ${n}?`, `${pct(s.base)} on most goods since August 1, 2026, according to the Illinois Department of Revenue’s rate file; it was 10.25% until July 31, 2026. On a $100 purchase the tax is ${m(a100.tax)} and the total is ${m(a100.total)}; on $1,000 it is ${m(a1000.tax)}, for ${m(a1000.total)}.`],
+        [`Is the Chicago sales tax 10.25% or 10.5%?`, `It is 10.5% for sales from August 1, 2026. The Illinois Department of Revenue file shows 10.25% as the rate that ended on July 31, 2026, and many websites have not updated yet. A store in a special taxing district can charge another rate; the department’s MyTax Illinois Tax Rate Finder gives the exact rate for one address.`],
+        [`Are groceries taxed in ${n}?`, `Yes, at a lower rate. Illinois ended its 1% state tax on groceries on January 1, 2026, but Chicago keeps a local grocery tax: the department’s grocery file lists ${pct(E.cat(s, 'grocery').rate)} from August 1, 2026 (1.25% before). A $100 grocery bill has ${m(gro.tax)} of tax. Candy, soft drinks, alcohol and food prepared for immediate consumption are not groceries and pay the full ${pct(s.base)}: ${m(candy.tax)} on $100 of candy and soda, ${m(meal.tax)} on a $40 restaurant meal.`],
+        [`What is the sales tax on medicine in ${n}?`, `Illinois taxes drugs and medical items at a lower “Drug & Medical” rate than general merchandise: ${pct(E.cat(s, 'drugs').rate)} in Chicago, or ${m(drug.tax)} on $100.`],
+        [`Is clothing taxed in ${n}?`, `Yes. Illinois has no clothing exemption, so clothing is taxed at the full ${pct(s.base)} — ${m(a100.tax)} on $100.`],
+        [`Is shipping taxed in ${n}?`, `A delivery charge is part of the price when it is inseparable from the sale, for example when it is not listed separately on the bill; a delivery charge listed separately for a delivery the buyer chose is generally not taxed. On a $100 item with $10 shipping listed separately the tax is ${m(shipS.tax)}; when the shipping is not listed separately it is ${m(shipC.tax)}. Tick the box in the calculator for the second case and ask the store if you are unsure.`],
+        [`How do I take sales tax out of a total in ${n}?`, `Divide the total by 1.105. A total of $110.50 is ${m(r.pre)} before tax, with ${m(r.tax)} of tax inside it. Switch the calculator to “Remove tax” to do it for any amount.`],
+        [`Do I owe tax on things I buy online?`, `Yes, when the seller does not charge Illinois tax you owe use tax at the rate where you use the item. A $3,000 item used in Chicago with no tax charged means ${m(use.owed)} of use tax; if the seller charged 4% you still owe ${m(use2.owed)}. Enter the rate the seller charged under Go advanced.`],
+        [`Does Chicago charge any other taxes?`, `Chicago also charges its own restaurant and beverage taxes, which are not part of the sales tax rate used here. Check the City of Chicago Department of Finance for those.`]
+      ];
+    }
+  },
+  LVS: {
+    word: 'city', source: 'Nevada Department of Taxation', eyebrow: 'Las Vegas · 2026 rates',
+    title: (s) => 'Las Vegas Sales Tax Calculator 2026 — 8.375% Rate',
+    desc: (s, a) => 'Las Vegas sales tax calculator: 8.375% across Clark County. $100 is ' + m(a.total) + ' with tax. Groceries exempt, clothing taxed, shipping and delivery rule.',
+    hero: (s, a) => `The sales tax rate in Las Vegas is <strong>8.375%</strong>, the same across Clark County, so <strong>$100</strong> costs <strong>${m(a.total)}</strong> with <strong>${m(a.tax)}</strong> of tax. Unprepared groceries are exempt; clothing is not.`,
+    glance: (s, a) => `<p>The Nevada Department of Taxation lists Clark County at <strong>8.375%</strong>: the 6.85% statewide minimum plus 1.525% of Clark County taxes. Las Vegas, Henderson, North Las Vegas and the rest of the county pay the same rate, and no city adds its own sales tax. On <strong>$100</strong> that is <strong>${m(a.tax)}</strong> of tax, for a total of <strong>${m(a.total)}</strong>.</p><p>The calculator also shows what is exempt (unprepared food, certain medicines, feminine hygiene products) and what is not (clothing, restaurant food, handling charges).</p>`,
+    shipLine: (c) => `On a $100 item with $10 shipping listed separately the tax is ${m(one(c, 'general', 100, 10, { shipTaxed: false }).tax)}; billed as shipping and handling it is ${m(one(c, 'general', 100, 10, { shipTaxed: true }).tax)}.`,
+    extra: (s) => { return '<h2>What the 8.375% is made of</h2><p>Nevada’s Components of Sales Tax table lists a 6.85% statewide minimum and, for Clark County, infrastructure (0.25%), flood control (0.25%), regional transportation (0.25%), the Southern Nevada Water Authority (0.25%), a regional transportation increase (0.3%), police support (0.1%) and police officers (0.125%): <strong>1.525%</strong> of county taxes. Together that is ' + pct(s.base) + '.</p>'; },
+    crumbName: 'Las Vegas', areaType: 'City',
+    faqs: (c) => {
+      const s = E.STATES[c], n = s.name, a100 = one(c), a1000 = one(c, 'general', 1000), r = E.reverse({ state: c, total: 108.38, cat: 'general' });
+      const meal = one(c, 'prepared', 40), shipS = one(c, 'general', 100, 10, { shipTaxed: false }), shipC = one(c, 'general', 100, 10, { shipTaxed: true });
+      const use = one(c, 'general', 3000, 0, { paid: 0 }), use2 = one(c, 'general', 3000, 0, { paid: 4 });
+      return [
+        [`What is the sales tax rate in ${n}?`, `${pct(s.base)}. The Nevada Department of Taxation’s rate sheet for Clark County is 8.375%, made of the 6.85% statewide minimum plus 1.525% of Clark County taxes, and no city adds its own. On a $100 purchase the tax is ${m(a100.tax)} and the total is ${m(a100.total)}; on $1,000 it is ${m(a1000.tax)}, for ${m(a1000.total)}.`],
+        [`Is the sales tax the same in Henderson and North Las Vegas?`, `Yes. The 8.375% rate applies across Clark County, so Las Vegas, Henderson, North Las Vegas and the rest of the county pay the same sales tax. Washoe County (Reno) has its own rate sheet at 8.265%.`],
+        [`Are groceries taxed in ${n}?`, `Unprepared food for human consumption is exempt (NRS 372.284), so a $100 grocery bill has $0.00 of tax. Alcoholic beverages, pet food, tonics and vitamins, and prepared food intended for immediate consumption are taxable: a $40 restaurant meal has ${m(meal.tax)} of tax and costs ${m(meal.total)} before any tip.`],
+        [`Is clothing taxed in ${n}?`, `Yes. Clothing is on the Department of Taxation’s list of taxable items and Nevada has no clothing exemption, so clothing is taxed at ${pct(s.base)} — ${m(a100.tax)} on $100.`],
+        [`Is medicine taxed in ${n}?`, `Medicine is exempt only under the prescription, health care provider or hospital conditions in NRS 372.283, which also exempts prosthetic devices, ostomy supplies and feminine hygiene products. Other medicine is taxable.`],
+        [`Is shipping taxed in ${n}?`, `A charge for transportation, shipping or postage that is listed separately on the invoice is not taxed. Handling, crating, packing and preparation charges are taxable even when listed separately, and so is a delivery charge that is not listed separately (Tax Bulletin SUT 15-0002). On a $100 item with $10 shipping listed separately the tax is ${m(shipS.tax)}; billed as shipping and handling it is ${m(shipC.tax)}. Tick the box in the calculator for the combined case.`],
+        [`How do I take sales tax out of a total in ${n}?`, `Divide the total by 1.08375. A total of $108.38 is ${m(r.pre)} before tax, with ${m(r.tax)} of tax inside it. Switch the calculator to “Remove tax” to do it for any amount.`],
+        [`Do I owe tax on things I buy online?`, `Yes, when the seller does not charge Nevada tax you owe use tax at the rate where you use the item. A $3,000 item used in Las Vegas with no tax charged means ${m(use.owed)} of use tax; if the seller charged 4% you still owe ${m(use2.owed)}. Enter the rate the seller charged under Go advanced.`],
+        [`Do hotels, shows and casinos charge more than the sales tax?`, `Yes. Room taxes, live entertainment tax and casino taxes are separate from the sales tax and are not included in the 8.375% used here.`]
+      ];
+    }
+  }
+};
+function writeFlat(c) {
+  const s = E.STATES[c], n = s.name, F = FLAT[c], url = 'https://calcthis.co/sales-tax-calculator/' + s.slug + '/', f = F.faqs(c);
+  const a100 = one(c), grp = F.word === 'city' ? 'city' : 'state';
+  const catRows = s.cats.map((k) => { const t = one(c, k.id, 100); return '<tr><td>' + (k.long || k.label) + '</td><td>' + (k.taxable ? (typeof k.rate === 'number' ? pct(k.rate) : pct(s.base)) : 'Exempt') + '</td><td>' + (k.taxable ? m(t.tax) : '$0.00') + '</td><td>' + k.note + '</td></tr>'; }).join('');
+  const amtRows = [10, 25, 50, 100, 250, 500, 1000, 5000].map((a) => { const t = one(c, 'general', a); return '<tr><td>' + m0(a) + '</td><td>' + m(t.tax) + '</td><td>' + m(t.total) + '</td></tr>'; }).join('');
+  const hero = `  <section class="hero">
+    <div class="eyebrow">${F.eyebrow}</div>
+    <h1>${n} Sales Tax Calculator</h1>
+    <p>${F.hero(s, a100)}</p>
+  </section>`;
+  const content = `  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>${n} sales tax at a glance</h2>
+        ${F.glance(s, a100)}
+        <h2>What is taxed and what is exempt</h2>
+        <div class="pc-tblwrap"><table class="dtable st-cattbl"><thead><tr><th>Item type</th><th>Rate</th><th>Tax on $100</th><th>Details</th></tr></thead><tbody>${catRows}</tbody></table></div>
+        <h2>Shipping and delivery</h2>
+        <p>${s.shipNote} ${F.shipLine(c)}</p>
+        <h2>Sales tax on common amounts</h2>
+        <div class="pc-tblwrap"><table class="dtable"><thead><tr><th>Price</th><th>Sales tax</th><th>Total</th></tr></thead><tbody>${amtRows}</tbody></table></div>
+        <p>General goods at ${pct(s.base)}, rounded to the cent.</p>
+        ${F.extra ? F.extra(s) : ''}
+      </div>
+      <div>
+        <h2>Other taxes and special rates</h2>
+        <ul class="st-otherlist">${s.others.map((x) => '<li><b>' + x.t + '.</b> ' + x.d + '</li>').join('')}</ul>
+        <h2>Use the ${n} calculator</h2>
+        <p>The ${grp} is already set to <strong>${n}</strong>. Add one item or several, choose what each one is and add shipping. <strong>Remove tax</strong> works out the price before tax from a total, and <strong>Find the rate</strong> compares a price before and after tax with the ${pct(s.base)} rate. Under <strong>Go advanced</strong> you can use your own rate or work out the use tax on something bought online.</p>
+        <p>This is an estimate based on the ${F.source}’s published rates and rules — the register can differ by a cent, and the seller’s own system decides what is taxable.</p>
+        <h2>Other places</h2>
+        ${stateLinks(c)}
+        <p>For any other state, the <a href="/sales-tax-calculator/">main sales tax calculator</a> uses the state rate or your own combined rate.</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions about ${n} sales tax</h2>
+${f.map((q) => `    <details class="faq"><summary>${q[0]}</summary><p>${q[1]}</p></details>`).join('\n')}
+  </section>`;
+  const crumbs = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'CalcThis', item: 'https://calcthis.co/' },
+    { '@type': 'ListItem', position: 2, name: 'Sales Tax Calculator', item: 'https://calcthis.co/sales-tax-calculator/' },
+    { '@type': 'ListItem', position: 3, name: n, item: url }] };
+  write('sales-tax-calculator/' + s.slug + '/index.html', pageHtml({
+    title: F.title(s), desc: F.desc(s, a100), ogTitle: F.title(s), url,
+    app: Object.assign(jsonApp(n + ' Sales Tax Calculator', url, n + ' sales tax calculator: add tax, remove tax or find the rate at ' + pct(s.base) + ', with exempt items, shipping and delivery rule.'), { dateModified: new Date().toISOString().slice(0, 10), inLanguage: 'en-US', isAccessibleForFree: true, applicationSubCategory: 'Sales tax calculator', areaServed: { '@type': F.areaType === 'City' ? 'City' : 'State', name: n }, isPartOf: { '@type': 'WebSite', name: 'CalcThis', url: 'https://calcthis.co/' }, featureList: ['Add sales tax to a price', 'Remove sales tax from a total', 'Find the sales tax rate', 'Exempt and taxable item types', 'Shipping and delivery rule', 'Use tax on online purchases'] }),
+    faq: jsonFaq(f), extraLd: [crumbs], hero, content, bodyAttr: ' data-state="' + c + '"', srcHtml: srcHtml(c)
+  }));
+}
+
 /* ---------- state pages ---------- */
 live.forEach((c) => {
+  if (FLAT[c]) { writeFlat(c); return; }
   if (E.STATES[c].city) { writeCity(c); return; }
   if (E.STATES[c].places) { writePlaceState(c); return; }
   const s = E.STATES[c], n = s.name, url = 'https://calcthis.co/sales-tax-calculator/' + s.slug + '/', f = faqsFor(c);

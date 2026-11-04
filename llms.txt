@@ -193,10 +193,16 @@
 ## Sales tax calculators
 - [Sales Tax Calculator](https://calcthis.co/sales-tax-calculator/): add sales tax, remove it from a total or find the rate; state rates for every state.
 - [California Sales Tax Calculator](https://calcthis.co/sales-tax-calculator/california/): California sales tax with exempt items, shipping rule and special zones.
+- [Chicago Sales Tax Calculator](https://calcthis.co/sales-tax-calculator/chicago/): Chicago sales tax with exempt items, shipping rule and special zones.
 - [Florida Sales Tax Calculator](https://calcthis.co/sales-tax-calculator/florida/): Florida sales tax with exempt items, shipping rule and special zones.
+- [Las Vegas Sales Tax Calculator](https://calcthis.co/sales-tax-calculator/las-vegas/): Las Vegas sales tax with exempt items, shipping rule and special zones.
+- [Los Angeles Sales Tax Calculator](https://calcthis.co/sales-tax-calculator/los-angeles/): Los Angeles sales tax with exempt items, shipping rule and special zones.
+- [Michigan Sales Tax Calculator](https://calcthis.co/sales-tax-calculator/michigan/): Michigan sales tax with exempt items, shipping rule and special zones.
 - [Minnesota Sales Tax Calculator](https://calcthis.co/sales-tax-calculator/minnesota/): Minnesota sales tax with exempt items, shipping rule and special zones.
 - [Missouri Sales Tax Calculator](https://calcthis.co/sales-tax-calculator/missouri/): Missouri sales tax with exempt items, shipping rule and special zones.
 - [New Jersey Sales Tax Calculator](https://calcthis.co/sales-tax-calculator/new-jersey/): New Jersey sales tax with exempt items, shipping rule and special zones.
 - [New York City Sales Tax Calculator](https://calcthis.co/sales-tax-calculator/new-york-city/): New York City sales tax with exempt items, shipping rule and special zones.
+- [North Carolina Sales Tax Calculator](https://calcthis.co/sales-tax-calculator/north-carolina/): North Carolina sales tax with exempt items, shipping rule and special zones.
 - [Ohio Sales Tax Calculator](https://calcthis.co/sales-tax-calculator/ohio/): Ohio sales tax with exempt items, shipping rule and special zones.
 - [Texas Sales Tax Calculator](https://calcthis.co/sales-tax-calculator/texas/): Texas sales tax with exempt items, shipping rule and special zones.
+- [Virginia Sales Tax Calculator](https://calcthis.co/sales-tax-calculator/virginia/): Virginia sales tax with exempt items, shipping rule and special zones.
