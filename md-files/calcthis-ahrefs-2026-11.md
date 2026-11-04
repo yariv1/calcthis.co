@@ -39,6 +39,13 @@ tip calculator >100K Hard · tip calculator google >10K Hard · how to calculate
 - `new jersey take home pay calculator` >100 Easy; `ohio take home pay calculator` >100 Easy (weak -> wording only).
 - Countries weak: `paycheck calculator canada` <100 Hard; `canada take home pay calculator` <100 Hard; `uk take home pay calculator` >100 Hard (126 kws); `uk salary calculator` >100 Hard (124 kws); `australia pay calculator` <100 Easy; `vat calculator` >1000 Hard (522 kws; reverse vat / vat calculator uk / online vat >100 Hard); `gst calculator` >100 Hard (535 kws). -> parked.
 
+## Sales-tax phrases (user screenshots, 2026-11-04; phrase match)
+- `car sales tax calculator` >1000 EASY (203 kws): missouri / california / arkansas / az car sales tax calculator each >100 Easy; texas / ny / mo variants <100.
+- `reverse sales tax calculator` >1000 HARD (32 kws): all variants <100 (nj, ct, texas, florida, ontario, bc).
+- `florida sales tax calculator` >1000 EASY (16 kws; the rest <100 incl. by zip code, 2025/2026, jacksonville, lee county).
+- `illinois sales tax calculator` >100 Medium (11 kws); `washington sales tax calculator` >100 Medium (12 kws); `pennsylvania sales tax calculator` <100 Medium (1 kw).
+- Not checked yet: georgia, arizona, colorado, north carolina, virginia, michigan, new york; cities chicago, los angeles, seattle, houston, las vegas.
+
 ## Remaining paycheck states — demand check (user screenshots, 2026-11-02, after batch 2)
 - **>1000 EASY (build candidates):** Oklahoma, Kansas, Arkansas, Idaho, Hawaii, Maine, Nebraska, Louisiana (`adp louisiana` >100 Medium). Plus South Carolina (>1000 Easy, waiting for its post-Act-110 tables).
 - **>100 Easy only (decide with him, default skip):** New Mexico, Delaware, Mississippi, Rhode Island, North Dakota, Vermont, DC (`dc paycheck calculator` and `washington dc paycheck calculator` both >100 Easy), Connecticut (>100 Easy).

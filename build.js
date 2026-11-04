@@ -92,6 +92,7 @@ const PAGES = [
   { file: 'tipping-in/italy/index.html', slug: '/tipping-in/italy/' },
   { file: 'tipping-in/japan/index.html', slug: '/tipping-in/japan/' },
   { file: 'paycheck-calculator/index.html',   slug: '/paycheck-calculator/' },
+  { file: 'sales-tax-calculator/florida/index.html', slug: '/sales-tax-calculator/florida/' },
   { file: 'sales-tax-calculator/new-york-city/index.html', slug: '/sales-tax-calculator/new-york-city/' },
   { file: 'sales-tax-calculator/texas/index.html', slug: '/sales-tax-calculator/texas/' },
   { file: 'sales-tax-calculator/california/index.html', slug: '/sales-tax-calculator/california/' },

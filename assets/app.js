@@ -15089,7 +15089,7 @@ CalcThis.saleTaxEngine = (function () {
   Object.assign(S.MO, {
     live: true, slug: 'missouri', eff: 'the October–December 2026 rate table (updated August 25, 2026)',
     src: [MO_DOR, { t: 'Missouri DOR — Sales and Use Tax Rate Tables, Oct–Dec 2026', u: 'https://dor.mo.gov/pdf/rates/2026/october2026.pdf' }, { t: 'Missouri DOR — Sales Tax Reduction on Food', u: 'https://dor.mo.gov/taxation/business/tax-types/sales-use/reduction-on-food.html' }, { t: 'Missouri DOR — Sales Tax Taxability and Exemptions FAQ', u: 'https://dor.mo.gov/faq/taxation/business/sales-use-tax-exemptions.html' }, { t: 'Missouri DOR — Letter Ruling 8387 on delivery charges (March 24, 2026)', u: 'https://dor.mo.gov/rulings/show/8387' }, { t: 'Missouri DOR — Back-to-School Sales Tax Holiday', u: 'https://dor.mo.gov/taxation/business/tax-types/sales-use/holidays/back-to-school/consumers.html' }],
-    places: { url: '/assets/data/mo-rates.json', n: 2597, lo: 5.225, hi: 13.238, baseHi: 11.488, foodLo: 2.225, foodHi: 9.85, hubNote: ' (more in districts)', ph: 'Type your city, e.g. Springfield', hint: 'Every place in Missouri adds local tax. Type your city or county and pick the line that matches where the seller is. Lines with CID or TDD are shopping-center districts that add tax.' },
+    places: { url: '/assets/data/mo-rates.json', n: 2597, lo: 5.225, hi: 13.238, baseHi: 11.488, foodLo: 2.225, foodHi: 9.85, hubNote: ' (more in districts)', ph: 'Type your city, e.g. Springfield', hint: 'Every place in Missouri adds local tax. Type a city or a county name and pick the line that matches where the seller is. Lines with CID or TDD are shopping-center districts that add tax.' },
     cats: [
       { id: 'general', label: 'Other goods', long: 'Most other goods', taxable: true, note: 'Taxable at the full combined rate. Over-the-counter medicine is taxable unless it is prescribed or bought by a person with a disability.' },
       { id: 'grocery', label: 'Groceries', long: 'Groceries (food for home)', taxable: true, rate: 'food', note: 'The state rate on food for home use is cut to 1.225%, but local taxes still apply to food — so the rate is the “food” rate listed for your place.' },
@@ -15114,7 +15114,7 @@ CalcThis.saleTaxEngine = (function () {
   Object.assign(S.OH, {
     live: true, slug: 'ohio', eff: 'the October 1 – December 31, 2026 county rate table',
     src: [{ t: 'Ohio Department of Taxation — Sales and Use Tax', u: 'https://tax.ohio.gov/business/sales-and-use-tax' }, { t: 'Ohio DOR — Sales and Use Tax Rates by County, Q4 2026', u: 'https://tax.ohio.gov/business/sales-and-use-tax/rate-tables/by-county-q4-2026' }, { t: 'Ohio DOR — Sales and Use Taxability', u: 'https://tax.ohio.gov/business/sales-and-use-tax/taxability' }, { t: 'Ohio DOR — Information Release ST 2004-01, Food Definition', u: 'https://dam.assets.ohio.gov/image/upload/tax.ohio.gov/sales_and_use/information_releases/st200401.pdf' }, { t: 'Ohio Admin. Code 5703-9-52 — Delivery charges', u: 'https://codes.ohio.gov/ohio-administrative-code/rule-5703-9-52' }, { t: 'Ohio DOR — Sales Tax Holiday 2026', u: 'https://tax.ohio.gov/business/sales-and-use-tax/sales-tax-holiday' }],
-    places: { url: '/assets/data/oh-rates.json', n: 93, lo: 6.5, hi: 8.25, baseHi: 8, noFood: true, short: true, hubNote: ' (up to 2.5% in transit areas)', ph: 'Type your county or city, e.g. Franklin', hint: 'Every county in Ohio adds its own tax. Type your county or a big city and pick where you receive the item. A few city areas on a transit line have their own rate and are listed separately.' },
+    places: { url: '/assets/data/oh-rates.json', n: 93, lo: 6.5, hi: 8.25, baseHi: 8, noFood: true, short: true, hubNote: ' (up to 2.5% in transit areas)', ph: 'Type a city, e.g. Columbus', hint: 'Every county in Ohio adds its own tax. Type a city or a county name (like Franklin County) and pick where you receive the item. A few city areas on a transit line have their own rate and are listed separately.' },
     cats: [
       { id: 'general', label: 'Other goods', long: 'Most goods, including clothing and medicine without a prescription', taxable: true, note: 'Clothing, electronics, furniture, over-the-counter medicine, vitamins and supplements, soft drinks, alcohol and tobacco are taxable.' },
       { id: 'grocery', label: 'Food to go', long: 'Groceries and takeout food (eaten off the premises)', taxable: false, note: 'Food bought to eat off the premises is exempt, takeout included. Soft drinks, alcohol, dietary supplements and tobacco are taxable — choose “Other goods” for those.' },
@@ -15215,6 +15215,33 @@ CalcThis.saleTaxEngine = (function () {
       { t: 'Rates change every quarter', d: 'Local rates can change on January 1, April 1, July 1 or October 1. The rates here are from the October 2026 table.' }
     ]
   });
+  /* Florida: 6% state sales tax + the COUNTY's discretionary sales surtax (0.5%-2%), from the Department of Revenue form DR-15DSS for calendar year 2026
+     (every county is in /assets/data/fl-rates.json). The surtax applies only to the first $5,000 of a single item (places.cap); there are no city sales taxes. */
+  Object.assign(S.FL, {
+    live: true, slug: 'florida', eff: 'the Department of Revenue’s 2026 county surtax form (DR-15DSS, R. 11/25)',
+    src: [{ t: 'Florida DOR — Discretionary Sales Surtax Information for Calendar Year 2026 (DR-15DSS)', u: 'https://floridarevenue.com/Forms_library/current/dr15dss_26.pdf' }, { t: 'Florida DOR — Discretionary Sales Surtax', u: 'https://floridarevenue.com/taxes/taxesfees/Pages/discretionary.aspx' }, { t: 'Florida DOR — Sales and Use Tax', u: 'https://floridarevenue.com/taxes/taxesfees/Pages/sales_tax.aspx' }, { t: 'Florida DOR — Nontaxable Medical Items and General Grocery List (DR-46NT, R. 11/25)', u: 'https://floridarevenue.com/forms_library/current/dr46nt.pdf' }, { t: 'Florida DOR — Are delivery charges subject to sales tax? (FAQ)', u: 'https://floridarevenue.com/faq/Pages/FAQDetails.aspx?FAQID=1277&IsDlg=1' }, { t: 'Florida Admin. Code Rule 12A-1.045 — Transportation charges', u: 'https://www.law.cornell.edu/regulations/florida/Fla-Admin-Code-Ann-R-12A-1-045' }, { t: 'Florida DOR — TIP 26A01-11, Annual Back-to-School Sales Tax Holiday (July 1, 2026)', u: 'https://floridarevenue.com/taxes/tips/Documents/TIP_26A01-11.pdf' }, { t: 'Florida DOR — TIP 25A01-12, Hillsborough County Surtax Rate Update (Dec. 1, 2025)', u: 'https://floridarevenue.com/taxes/tips/Documents/TIP_25A01-12.pdf' }, { t: 'Florida DOR — TIP 24A01-15, Temporary Suspension of Hillsborough County Surtaxes (Nov. 19, 2024)', u: 'https://floridarevenue.com/taxes/tips/Documents/TIP_24A01-15.pdf' }],
+    places: { url: '/assets/data/fl-rates.json', n: 151, lo: 6, hi: 8, baseHi: 8, noFood: true, short: false, cap: { base: 6, limit: 5000 }, compare: ['Miami-Dade County', 'Broward County', 'Palm Beach County', 'Hillsborough County', 'Orange County', 'Duval County'], hubNote: ' (up to 8%)', ph: 'Type a city, e.g. Orlando', hint: 'Florida has no city sales taxes — the surtax is set by the county. Type a city or a county name (like Orange County) and pick where the item is delivered or handed to you.' },
+    cats: [
+      { id: 'general', label: 'Other goods', long: 'Most other goods, including clothing', taxable: true, note: 'Most goods are taxable, including clothing and shoes (except during the back-to-school holiday). Cosmetics and toiletries stay taxable even with medicinal ingredients, and so do standard stock eyeglasses sold without a prescription.' },
+      { id: 'grocery', label: 'Groceries', long: 'Groceries (food for home)', taxable: false, note: 'General groceries are exempt, including meat, dairy, produce, bread, drinking water, coffee, vitamins and food supplements. Candy and items advertised as candy, fruit drinks labeled ade, beverage, cocktail or drink, ice cream novelties and ready-to-eat sandwiches are taxable.' },
+      { id: 'prepared', label: 'Restaurant', long: 'Restaurant and prepared food', taxable: true, note: 'Food prepared and sold for immediate consumption, food sold as part of a prepared meal (hot or cold) and food sold where the entrance has an admission charge are taxable. A bakery with eating facilities charges tax unless the item is taken off the premises.' },
+      { id: 'drugs', label: 'Medicine', long: 'Prescription medicine and listed household remedies', taxable: false, note: 'Medicine dispensed on a prescription is exempt. So are the common household remedies on the Department’s list with or without a prescription — pain relievers, antacids, cough and cold items, first aid supplies — plus insulin, test kits, prescription glasses and contacts and oral hygiene products.' },
+      { id: 'baby', label: 'Baby & period', long: 'Baby food, formula, diapers and menstrual products', taxable: false, note: 'Baby food and formula, diapers (all ages), incontinence products and menstrual products are exempt.' }
+    ],
+    shipOpt: true, shipDefault: true, shipOptLabel: 'The seller requires delivery, or shipping is built into the price', shipOnTip: ' Shipping is taxed because the seller requires delivery or builds it into the price.', shipOffTip: ' Shipping is not taxed because it is listed separately and you can avoid it.',
+    shipNote: 'Delivery charges are taxed with a taxable item. They are not taxed only when they are listed separately on the bill and you can avoid them — for example by picking the item up or using your own carrier. If delivery is required by the seller, it is taxed even when listed separately. Untick the box below when you can avoid the charge.',
+    others: [
+      { t: 'County surtax on top of the 6% state tax', d: 'Florida’s state rate is 6% everywhere. Each county can add a discretionary sales surtax of 0.5% to 2% by local vote, so the combined rate runs from 6% (Citrus and Collier) to 8% (Hamilton). There are no city or district sales taxes. Search your county or city above.' },
+      { t: 'The surtax stops at the first $5,000 of an item', d: 'The county surtax applies only to the first $5,000 of the sale of a single item. The 6% state tax applies to the whole price. On a $20,000 item in a county with a 1% surtax the tax is 6% of $20,000 plus 1% of $5,000, not 7% of $20,000. The cap does not apply to prepaid calling arrangements, admissions, transient rentals or services.' },
+      { t: 'Which county’s rate applies', d: 'The surtax follows the county where the item is delivered or handed to you. For motor vehicles and mobile homes it follows the buyer’s home address, and the calculator does not compute vehicle tax — pick the buyer’s county to see the rate.' },
+      { t: 'Hillsborough County', d: 'Two of its 0.5% surtaxes were suspended from January 1 to May 31, 2025 and collection resumed on June 1, 2025. The total rate is 7.5%: 6% state plus three 0.5% surtaxes (Department of Revenue TIP 25A01-12).' },
+      { t: 'Food, medicine and baby products', d: 'Groceries, medicine on the Department’s exempt list and prescription medicine, diapers, baby food and formula and menstrual products are exempt. Candy, restaurant meals, ready-to-eat sandwiches and cosmetics are taxable.' },
+      { t: 'Back-to-school sales tax holiday', d: 'In 2026 it ran from July 20 to August 20: clothing, footwear and bags of $100 or less per item, school supplies of $50 or less, learning aids and jigsaw puzzles of $30 or less and computers of $1,500 or less for home use were tax free. Florida holds this holiday every year, and the dates are set each year. The calculator does not apply the holiday.' },
+      { t: 'Hotels and short-term rentals', d: 'Rentals of accommodations for six months or less can pay sales tax plus county transient rental taxes. Those taxes are not included in the calculator.' },
+      { t: 'Bought online or out of state', d: 'If the seller did not charge Florida tax you owe use tax at the same rate: 6% plus the surtax of the county where you use the item, with the same $5,000 limit. Remote sellers with more than $100,000 of taxable Florida sales in the prior year must collect it. Pick your county and enter any tax the seller charged under Go advanced.' },
+      { t: 'Rates change every January', d: 'The Department publishes a new county surtax form each November. Surtaxes that end on December 31, 2026 are marked in the county list: Brevard (two 0.5% surtaxes), Charlotte (1%), Liberty (0.5%) and Santa Rosa (0.5%).' }
+    ]
+  });
   /* New York City: a city page (not a state). One flat rate in all five boroughs = 4% state + 4.5% city + 0.375% MCTD (nyc.gov Finance, NYC311).
      Clothing and shoes under $110 PER ITEM are exempt from all three (NY Tax Bulletin TB-ST-122, Publication 718-C eff. 3/1/2025). */
   S.NYC = { code: 'NYC', name: 'New York City', base: 8.875, avgLocal: 0, maxLocal: 0, city: true, live: true, slug: 'new-york-city', eff: 'March 1, 2025 (Publication 718, 718-C) and the current NYC Department of Finance guidance',
@@ -15243,6 +15270,8 @@ CalcThis.saleTaxEngine = (function () {
       { t: 'Bought online or out of state', d: 'If the seller did not charge New York tax you owe use tax at the same rate where you use the item. A credit may be available for tax paid to another state; enter the rate the seller charged under Go advanced.' }
     ] };
   function r2(x) { return Math.round(x * 100 + 1e-9) / 100; }
+  /* tax on one sale: the full rate, or (Florida) the state part on everything plus the county surtax on the first `limit` dollars only */
+  function capTax(amt, rate, cap) { return cap ? amt * cap.base / 100 + Math.min(amt, cap.limit) * (rate - cap.base) / 100 : amt * rate / 100; }
   function cat(st, id) { var l = st && st.cats ? st.cats : []; for (var i = 0; i < l.length; i++) if (l[i].id === id) return l[i]; return null; }
   function zone(st, id) { var l = st && st.zones ? st.zones : []; for (var i = 0; i < l.length; i++) if (l[i].id === id) return l[i]; return null; }
   /* the rate that applies to one purchase */
@@ -15257,7 +15286,7 @@ CalcThis.saleTaxEngine = (function () {
     if (st.places) {
       if (!o.place) return { rate: null, taxable: true, ignored: '', cat: c, needsPlace: true };
       var fd = !!(c && c.rate === 'food');
-      return { rate: fd ? o.place.food : o.place.sales, useRate: fd ? o.place.foodUse : o.place.use, taxable: true, ignored: '', cat: c, place: o.place };
+      return { rate: fd ? o.place.food : o.place.sales, useRate: fd ? o.place.foodUse : o.place.use, taxable: true, ignored: '', cat: c, place: o.place, cap: st.places.cap || null };
     }
     var z = zone(st, o.zone);
     if (!z || z.std) return { rate: st.base, taxable: true, ignored: '', cat: c };
@@ -15272,11 +15301,11 @@ CalcThis.saleTaxEngine = (function () {
     var stt = o.state ? S[o.state] : null, shipTaxed = (stt && stt.live && !stt.shipOpt) ? true : !!o.shipTaxed;
     for (i = 0; i < items.length; i++) {
       var it = items[i], rf = rateFor({ state: o.state, cat: it.cat, zone: o.zone, own: o.own, place: o.place, amt: it.amt });
-      var tax = r2(it.amt * rf.rate / 100);
-      var share = sum > 0 ? ship * it.amt / sum : 0;
-      if (shipTaxed) shipTax += share * rf.rate / 100;
-      if (paid != null && rf.taxable) owedRaw += (it.amt + (shipTaxed ? share : 0)) * Math.max(0, (rf.useRate != null ? rf.useRate : rf.rate) - paid) / 100;
-      lines.push({ amt: it.amt, cat: it.cat, rate: rf.rate, taxable: rf.taxable, tax: tax, ignored: rf.ignored, catObj: rf.cat });
+      var share = sum > 0 ? ship * it.amt / sum : 0, cp = rf.taxable ? rf.cap : null;
+      var tax = r2(capTax(it.amt, rf.rate, cp));
+      if (shipTaxed) shipTax += capTax(it.amt + share, rf.rate, cp) - capTax(it.amt, rf.rate, cp);
+      if (paid != null && rf.taxable) { var sale = it.amt + (shipTaxed ? share : 0), ur = rf.useRate != null ? rf.useRate : rf.rate; owedRaw += cp ? Math.max(0, capTax(sale, ur, cp) - sale * paid / 100) : sale * Math.max(0, ur - paid) / 100; }
+      lines.push({ amt: it.amt, cat: it.cat, rate: rf.rate, taxable: rf.taxable, tax: tax, ignored: rf.ignored, catObj: rf.cat, cap: cp, capped: !!(cp && it.amt > cp.limit) });
       taxSum += tax;
     }
     shipTax = r2(shipTax);
@@ -15296,8 +15325,10 @@ CalcThis.saleTaxEngine = (function () {
       if (tot < edge) return { gap: true, lo: cu.under, hi: edge, total: tot, rate: null, catObj: cu };
       rf = rateFor({ state: o.state, cat: o.cat, zone: o.zone, own: o.own, place: o.place, amt: cu.under });
     }
-    var pre = rf.rate > 0 ? r2(tot / (1 + rf.rate / 100)) : tot;
-    return { total: tot, pre: pre, tax: r2(tot - pre), rate: rf.rate, taxable: rf.taxable, ignored: rf.ignored, catObj: rf.cat };
+    var pre = rf.rate > 0 ? r2(tot / (1 + rf.rate / 100)) : tot, cp = rf.taxable && rf.rate > 0 ? rf.cap : null;
+    /* with a surtax cap the total is piecewise: up to cap.limit the full rate applies, above it only the state part does */
+    if (cp && tot > cp.limit * (1 + rf.rate / 100)) pre = r2((tot - cp.limit * (rf.rate - cp.base) / 100) / (1 + cp.base / 100));
+    return { total: tot, pre: pre, tax: r2(tot - pre), rate: rf.rate, taxable: rf.taxable, ignored: rf.ignored, catObj: rf.cat, cap: cp, capped: !!(cp && pre > cp.limit) };
   }
   function findRate(before, after) { return before > 0 ? (after - before) / before * 100 : NaN; }
   /* state rate only: the total at the state rate and at the state rate plus the maximum local add-on */
@@ -15305,7 +15336,7 @@ CalcThis.saleTaxEngine = (function () {
     var st = S[code]; if (!st) return null;
     return { lo: r2(base * (1 + st.base / 100)), hi: r2(base * (1 + (st.base + st.maxLocal) / 100)), none: st.maxLocal === 0 };
   }
-  return { STATES: S, SRC_TF: SRC_TF, r2: r2, cat: cat, zone: zone, rateFor: rateFor, add: add, reverse: reverse, findRate: findRate, range: range };
+  return { STATES: S, SRC_TF: SRC_TF, r2: r2, capTax: capTax, cat: cat, zone: zone, rateFor: rateFor, add: add, reverse: reverse, findRate: findRate, range: range };
 })();
 /* SALESTAX-ENGINE:END */
 
@@ -15365,7 +15396,7 @@ CalcThis.initSalesTaxCalc = function () {
   function placeNote() {
     var n = $('stPlaceNote'), p = st.place, s = S();
     if (!p) { n.textContent = placeState === 'loading' ? 'Loading the official rate table…' : (placeState === 'err' ? 'The rate table could not be loaded. Enter your combined rate under Go advanced instead.' : (s && s.places ? s.places.hint : '')); return; }
-    n.textContent = (p.short !== p.label ? p.label + ': ' : '') + pct(p.sales) + ' combined' + (s.places.noFood ? '' : ' on most goods') + ' (' + pct(s.base) + ' state + ' + pct(Math.round((p.sales - s.base) * 1000) / 1000) + ' local)' + (s.places.noFood ? '.' : ' · ' + pct(p.food) + ' on groceries.') + (p.note ? ' ' + p.note : '');
+    n.textContent = (p.short !== p.label ? p.label + ': ' : '') + pct(p.sales) + ' combined' + (s.places.noFood ? '' : ' on most goods') + ' (' + pct(s.base) + ' state + ' + pct(Math.round((p.sales - s.base) * 1000) / 1000) + (s.places.cap ? ' county surtax' : ' local') + ')' + (s.places.noFood ? '.' : ' · ' + pct(p.food) + ' on groceries.') + (s.places.cap && p.sales > s.base ? ' The surtax applies only to the first ' + mon(s.places.cap.limit).replace('.00', '') + ' of each item.' : '') + (p.note ? ' ' + p.note : '');
   }
   var CHEV = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
   function setPanel(root, opts, val) {
@@ -15402,10 +15433,10 @@ CalcThis.initSalesTaxCalc = function () {
     $('stOther').style.display = lv ? '' : 'none';
     $('stShipTaxFld').style.display = (!lv || (s && s.shipOpt)) && st.mode === 'add' ? '' : 'none';
     $('stShipTaxFld').querySelector('span').textContent = lv && s.shipOpt ? s.shipOptLabel : 'My state charges sales tax on shipping';
-    $('stShipTaxed').checked = false;
+    $('stShipTaxed').checked = !!(lv && s.shipDefault);
     st.place = null; $('stPlace').value = ''; closePlaceList();
     $('stPlaceFld').style.display = placed() && st.mode !== 'find' ? '' : 'none';
-    if (placed()) { $('stPlace').placeholder = s.places.ph || 'Type your city or county'; placeNote(); loadPlaces(); }
+    if (placed()) { $('stPlace').placeholder = s.places.ph || 'Type a city, e.g. Springfield'; placeNote(); loadPlaces(); }
     $('stShipNote').textContent = lv && s.shipNote ? s.shipNote : '';
     $('stShipNote').style.display = lv && s.shipNote ? '' : 'none';
     if (lv) {
@@ -15468,8 +15499,9 @@ CalcThis.initSalesTaxCalc = function () {
   /* a state whose rate depends on the place, with no place picked yet: show the official range instead of a guess */
   function needPlace(items, ship, shipChk, hints) {
     var s = S(), P = s.places, loT = 0, hiT = 0, sum = 0, taxable = 0;
-    items.forEach(function (it) { var c = E.cat(s, it.cat); sum += it.amt; if (c && !c.taxable) return; taxable += it.amt; var f = c && c.rate === 'food'; loT += it.amt * (f ? P.foodLo : P.lo) / 100; hiT += it.amt * (f ? P.foodHi : P.hi) / 100; });
-    var shT = shipChk && taxable > 0 ? ship : 0, lo = E.r2(sum + ship + loT + shT * P.lo / 100), hi = E.r2(sum + ship + hiT + shT * P.hi / 100);
+    items.forEach(function (it) { sum += it.amt; });
+    items.forEach(function (it) { var c = E.cat(s, it.cat); if (c && !c.taxable) return; taxable += it.amt; var f = c && c.rate === 'food', sale = it.amt + (shipChk && sum > 0 ? ship * it.amt / sum : 0); loT += E.capTax(sale, f ? P.foodLo : P.lo, P.cap); hiT += E.capTax(sale, f ? P.foodHi : P.hi, P.cap); });
+    var lo = E.r2(sum + ship + loT), hi = E.r2(sum + ship + hiT);
     $('stResLab').textContent = 'Total with tax'; $('stBig').textContent = '—'; $('stMVal').textContent = placeState === 'err' ? '—' : 'Pick your place';
     $('stSub').textContent = placeState === 'err' ? 'The rate table could not be loaded — enter your combined rate under Go advanced.' : (taxable > 0 ? 'Pick your place above for the exact total. It runs from ' + mon(lo) + ' to ' + mon(hi) + ' depending on where you are in ' + s.name + '.' : 'No sales tax on this purchase');
     $('stResults').style.display = 'none'; last = null; setHint(hints[0] || '');
@@ -15497,16 +15529,23 @@ CalcThis.initSalesTaxCalc = function () {
     var r = E.add({ state: code() || null, items: items, ship: ship, zone: zone, own: own, paid: paid, shipTaxed: shipChk, place: pl });
     var rate = r.rate != null ? pct(r.rate) : 'mixed rates';
     $('stResLab').textContent = 'Total with tax'; $('stBig').textContent = mon(r.total);
-    $('stSub').textContent = r.tax > 0 ? mon(r.tax) + ' of sales tax' + (r.rate != null ? ' at ' + rate : '') : 'No sales tax on this purchase';
+    var anyCap = r.lines.some(function (l) { return l.capped; });
+    $('stSub').textContent = r.tax > 0 ? mon(r.tax) + ' of sales tax' + (anyCap ? ' (county surtax on the first ' + mon(r.lines.filter(function (l) { return l.capped; })[0].cap.limit).replace('.00', '') + ' of an item only)' : (r.rate != null ? ' at ' + rate : '')) : 'No sales tax on this purchase';
     $('stMLab').textContent = 'Total with tax'; $('stMVal').textContent = mon(r.total);
     var rows = r.lines.map(function (l, i) {
       var nm = (items.length > 1 ? 'Item ' + (i + 1) : 'Item') + (l.catObj && live() ? ' · ' + esc(l.catObj.label) : '');
-      return [nm, mon(l.amt), l.taxable ? mon(l.tax) + ' <small>' + pct(l.rate) + '</small>' : 'exempt'];
+      return [nm, mon(l.amt), l.taxable ? mon(l.tax) + (l.capped ? '<small class="st-capsm">' + pct(l.rate) + ' on the first ' + mon(l.cap.limit).replace('.00', '') + ',<br>' + pct(l.cap.base) + ' above</small>' : ' <small>' + pct(l.rate) + '</small>') : 'exempt'];
     });
     if (r.ship > 0) rows.push(['Shipping', mon(r.ship), r.shipTax > 0 ? mon(r.shipTax) : (r.lines.some(function (l) { return l.taxable; }) && shipApplies ? '$0.00' : 'not taxed')]);
     rows.push(['Total', mon(r.total), mon(r.tax) + ' tax', true]);
     $('stTable').innerHTML = table(['', 'Price', 'Tax'], rows);
-    var b = bar([['ln-p', r.subtotal, 'Items'], ['ln-s', r.ship, 'Shipping'], ['ln-i', r.tax, 'Sales tax']]);
+    var surP = 0, capL = null;
+    if (s && s.places && s.places.cap && own == null) {
+      var sumI = r.subtotal; capL = s.places.cap.limit;
+      r.lines.forEach(function (l) { if (!l.taxable || !l.cap) return; var sale = l.amt + (shipChk && sumI > 0 ? r.ship * l.amt / sumI : 0); surP += Math.min(sale, l.cap.limit) * (l.rate - l.cap.base) / 100; });
+      surP = Math.min(r.tax, E.r2(surP));
+    }
+    var b = surP > 0.0049 ? bar([['ln-p', r.subtotal, 'Items'], ['ln-s', r.ship, 'Shipping'], ['ln-i', E.r2(r.tax - surP), 'State tax'], ['ln-w', surP, 'County surtax']]) : bar([['ln-p', r.subtotal, 'Items'], ['ln-s', r.ship, 'Shipping'], ['ln-i', r.tax, 'Sales tax']]);
     $('stBar').innerHTML = b[0]; $('stBarLeg').innerHTML = b[1];
     var tip = '';
     if (!s) tip = 'Using your sales tax rate of ' + pct(own) + '.';
@@ -15514,8 +15553,9 @@ CalcThis.initSalesTaxCalc = function () {
     else if (s.live && s.places) {
       var exm2 = r.lines.filter(function (l) { return !l.taxable; });
       tip = 'Rate for ' + pl.label + ': ' + pct(pl.sales) + (s.places.noFood ? ' on taxable items.' : ' on most goods and restaurant food, ' + pct(pl.food) + ' on groceries.');
+      if (capL && pl.sales > s.places.cap.base) tip += ' That is ' + pct(s.places.cap.base) + ' state tax plus a ' + pct(Math.round((pl.sales - s.places.cap.base) * 1000) / 1000) + ' county surtax that applies only to the first ' + mon(capL).replace('.00', '') + ' of each item.';
       if (exm2.length) tip += ' ' + exm2.map(function (l) { return l.catObj.label + ': ' + l.catObj.note; }).filter(function (v, k, a) { return a.indexOf(v) === k; }).join(' ');
-      if (r.ship > 0) tip += shipChk ? ' Shipping is taxed because it is billed with handling as one charge.' : ' Shipping is not taxed because it is listed separately.';
+      if (r.ship > 0) tip += shipChk ? (s.shipOnTip || ' Shipping is taxed because it is billed with handling as one charge.') : (s.shipOffTip || ' Shipping is not taxed because it is listed separately.');
     } else if (s.live) {
       var exm = r.lines.filter(function (l) { return !l.taxable; });
       tip = (s.city && r.rate === s.base && !r.mixed ? s.name + ' charges ' + s.rateNote + ', so this total is exact.' : r.rate === s.base && !r.mixed ? s.name + ' has one statewide rate of ' + pct(s.base) + ' and no city or county sales tax, so this total is exact.' : (r.rate != null && r.rate !== s.base ? 'Rate used: ' + pct(r.rate) + ' (' + (E.zone(s, $('stZone').value) || r.lines.filter(function (l) { return l.taxable; })[0].catObj).label + ').' : (r.mixed ? 'Different items have different rates.' : '')));
@@ -15546,7 +15586,29 @@ CalcThis.initSalesTaxCalc = function () {
         cityX += '<p class="res-tip">The line is per item or pair. At ' + mon(below) + ' the tax is $0.00; at ' + mon(U) + ' it jumps to ' + mon(edgeT.tax) + '.</p>';
       }
     }
-    $('stExtra').innerHTML = extra + cityX + (plain ? neighbours(r.subtotal) : '');
+    var capX = '', cmpX = '';
+    if (capL && pl && pl.sales > s.places.cap.base && r.lines.some(function (l) { return l.taxable; })) {
+      var CL = mon(capL).replace('.00', ''), sur = E.r2(pl.sales - s.places.cap.base);
+      capX = '<div class="fc-grp">The ' + CL + ' surtax limit</div>';
+      var overs = r.lines.filter(function (l) { return l.capped; });
+      if (overs.length) {
+        r.lines.forEach(function (l, i) {
+          if (!l.capped) return;
+          var nm = (items.length > 1 ? 'Item ' + (i + 1) : 'Item') + ': ' + mon(l.amt) + ' — ', bl = bar([['ln-w', capL, 'First ' + CL + ': surtax applies'], ['ln-p', l.amt - capL, 'The rest: state tax only']]);
+          capX += '<p class="res-tip">' + nm + 'the ' + pct(sur) + ' surtax is charged on the first ' + CL + ' only (' + mon(E.r2(capL * sur / 100)) + '). A flat ' + pct(pl.sales) + ' on the whole price would be ' + mon(E.r2(l.amt * pl.sales / 100)) + ', which is ' + mon(E.r2(l.amt * pl.sales / 100 - l.tax)) + ' too much.</p>' + bl[0] + '<div class="ln-leg">' + bl[1] + '</div>';
+        });
+      } else capX += '<p class="res-tip">Every item here is under ' + CL + ', so the full ' + pct(sur) + ' surtax applies. On an item above ' + CL + ' the surtax stops at the first ' + CL + ' — the most it can ever add is ' + mon(E.r2(capL * sur / 100)) + ' per item.</p>';
+    }
+    if (s && s.places && s.places.compare && own == null && placeData && r.subtotal > 0) {
+      var byLab = function (lb) { for (var k = 0; k < placeData.length; k++) if (placeData[k].label === lb) return placeData[k]; return null; };
+      var cnty = placeData.filter(function (p) { return / County$/.test(p.label) && p.label.indexOf(' — ') < 0; });
+      var lowP = cnty.reduce(function (a, p) { return p.sales < a.sales ? p : a; }, cnty[0]), highP = cnty.reduce(function (a, p) { return p.sales > a.sales ? p : a; }, cnty[0]);
+      var list = [pl], seenL = {}; seenL[pl.label] = 1;
+      s.places.compare.concat([lowP.label, highP.label]).forEach(function (lb) { var p = byLab(lb); if (p && !seenL[p.label]) { seenL[p.label] = 1; list.push(p); } });
+      var crow = list.map(function (p, k) { var t = E.add({ state: code(), items: items, ship: ship, place: p, shipTaxed: shipChk }); return [esc(p.label) + (p === lowP ? ' <small>lowest</small>' : (p === highP ? ' <small>highest</small>' : '')), mon(t.total), pct(p.sales), k === 0]; });
+      cmpX = '<div class="fc-grp">The same purchase in other counties</div><table class="dtable ln-terms st-near">' + table(['County', 'Total', 'Rate'], crow) + '</table><p class="res-tip">Same items, item types and shipping, with each county’s surtax limited to the first ' + mon(capL).replace('.00', '') + ' of an item. Your county is the first row.</p>';
+    }
+    $('stExtra').innerHTML = extra + capX + cmpX + cityX + (plain ? neighbours(r.subtotal) : '');
     $('stResults').style.display = '';
     $('stCopyWrap').style.display = '';
     last = { mode: 'add', r: r, s: s, rate: rate, place: pl && pl.label };
@@ -15561,21 +15623,22 @@ CalcThis.initSalesTaxCalc = function () {
     var zone = live() && $('stZoneFld').style.display !== 'none' ? $('stZone').value : null;
     if (placed() && own == null && !st.place) {
       var rc = E.cat(s, $('stRevCat').value), P = s.places, f = rc && rc.rate === 'food';
-      var a = E.r2(n / (1 + (f ? P.foodHi : P.hi) / 100)), b = E.r2(n / (1 + (f ? P.foodLo : P.lo) / 100));
+      var mk = function (x) { return E.reverse({ state: code(), total: n, cat: $('stRevCat').value, place: { sales: x, use: x, food: x, foodUse: x } }).pre; };
+      var a = mk(f ? P.foodHi : P.hi), b = mk(f ? P.foodLo : P.lo);
       empty('Price before tax', placeState === 'err' ? 'The rate table could not be loaded — enter your combined rate under Go advanced.' : (rc && !rc.taxable ? 'No sales tax is included — this kind of item is exempt.' : 'Pick your place above for the exact price. Before tax it is between ' + mon(a) + ' and ' + mon(b) + ' depending on where you are in ' + s.name + '.'), hints[0]); if (placeState !== 'err') $('stMVal').textContent = 'Pick your place'; return;
     }
     var pl = placed() && own == null ? st.place : null;
     var r = E.reverse({ state: code() || null, total: n, cat: live() ? $('stRevCat').value : 'general', zone: zone, own: own, place: pl });
     if (r.gap) { empty('Price before tax', 'No clothing purchase in ' + s.name + ' can total ' + mon(r.total) + '. An item under ' + mon(r.lo) + ' has no tax, so its total stays under ' + mon(r.lo) + '; an item of ' + mon(r.lo) + ' or more costs at least ' + mon(r.hi) + ' with tax.', hints[0]); return; }
     $('stResLab').textContent = 'Price before tax'; $('stBig').textContent = mon(r.pre);
-    $('stSub').textContent = r.tax > 0 ? 'Includes ' + mon(r.tax) + ' of sales tax at ' + pct(r.rate) : (r.taxable ? 'No tax is included at a 0% rate' : 'No sales tax is included — this kind of item is exempt');
+    $('stSub').textContent = r.tax > 0 ? 'Includes ' + mon(r.tax) + ' of sales tax' + (r.capped ? ' (county surtax on the first ' + mon(r.cap.limit).replace('.00', '') + ' only)' : ' at ' + pct(r.rate)) : (r.taxable ? 'No tax is included at a 0% rate' : 'No sales tax is included — this kind of item is exempt');
     $('stMLab').textContent = 'Price before tax'; $('stMVal').textContent = mon(r.pre);
-    $('stTable').innerHTML = table(['', 'Amount', ''], [['Price before tax', mon(r.pre), ''], ['Sales tax ' + pct(r.rate), mon(r.tax), ''], ['Total paid', mon(r.total), '', true]]);
+    $('stTable').innerHTML = table(['', 'Amount', ''], [['Price before tax', mon(r.pre), ''], [r.capped ? 'Sales tax (surtax capped)' : 'Sales tax ' + pct(r.rate), mon(r.tax), ''], ['Total paid', mon(r.total), '', true]]);
     var b = bar([['ln-p', r.pre, 'Price'], ['ln-i', r.tax, 'Sales tax']]); $('stBar').innerHTML = b[0]; $('stBarLeg').innerHTML = b[1];
     var tip = '';
     if (!s) tip = 'Using your sales tax rate of ' + pct(own) + '.';
     else if (own != null) tip = 'Using your own rate of ' + pct(own) + ' on this item.';
-    else if (s.live) { tip = r.taxable ? (s.city && r.rate === s.base ? s.name + ' charges ' + s.rateNote + ', so this is exact.' : r.rate === s.base ? s.name + ' has one statewide rate of ' + pct(s.base) + ' and no city or county sales tax, so this is exact.' : 'Rate used: ' + pct(r.rate) + (pl ? ' for ' + pl.label : '') + '.') : r.catObj.note; if (r.ignored) tip += ' ' + r.ignored; }
+    else if (s.live) { tip = r.taxable ? (s.city && r.rate === s.base ? s.name + ' charges ' + s.rateNote + ', so this is exact.' : r.rate === s.base ? s.name + ' has one statewide rate of ' + pct(s.base) + ' and no city or county sales tax, so this is exact.' : 'Rate used: ' + pct(r.rate) + (pl ? ' for ' + pl.label : '') + (r.cap ? ', with the county surtax limited to the first ' + mon(r.cap.limit).replace('.00', '') + ' of the item' : '') + '.') : r.catObj.note; if (r.ignored) tip += ' ' + r.ignored; }
     else if (own == null && s.maxLocal > 0) { var lowPre = E.r2(n / (1 + (s.base + s.maxLocal) / 100)); tip = 'This uses the ' + s.name + ' state rate (' + pct(s.base) + ') only. If your city or county adds up to ' + pct(s.maxLocal) + ', the price before tax would be between ' + mon(lowPre) + ' and ' + mon(r.pre) + '. Enter your exact combined rate under Go advanced to get one number.'; }
     else tip = rangeLine(s, r.pre, own, 0);
     $('stTip').textContent = tip.trim(); $('stTip').style.display = tip.trim() ? '' : 'none';
