@@ -115,3 +115,5 @@ GSC snapshot 2026-10-26: 69 indexed, 13 not indexed (8 Discovered, 1 Crawled, 1 
 | /random-number-generator-1-13/ | 2026-10-29 (v246) | GSC not yet (quota exceeded 2026-10-29); Bing submitted 2026-10-29 |
 | /random-number-generator-no-repeats/ | 2026-10-29 (v246) | GSC not yet (quota exceeded 2026-10-29); Bing submitted 2026-10-29 |
 | /random-number-generator-wheel/ | 2026-10-29 (v246) | GSC not yet (quota exceeded 2026-10-29); Bing submitted 2026-10-29 |
+
+- 2026-11-05 deployed v309: `/sales-tax-calculator/chicago/ los-angeles/ las-vegas/ michigan/ virginia/ north-carolina/` — Bing submitted manually (7 URLs incl. hub), IndexNow HTTP 200; GSC NOT requested yet: add to the queue after `/sales-tax-calculator/florida/` + `/car-sales-tax-calculator/`.

@@ -4,6 +4,9 @@ _Rewritten again 2026-11-04 at the end of the Florida + car-sales-tax session: *
 
 ---
 
+## 00000000000. UPDATE 2026-11-05 — SIX SALES TAX PAGES DEPLOYED (v309, 202 pages, commit a780f16c, Bing 7 URLs submitted)
+Chicago, Los Angeles, Las Vegas, Michigan, Virginia, North Carolina (he approved all 6 after the Ahrefs screenshots: all >100 only). Details, sources, data builders and lowest-confidence items: bottom of `md-files/calcthis-salestax-research.md` ("Batch of 6"). Parity gap flagged: no digital-goods/software/streaming categories (Zamp has them). GSC queue unchanged, new URLs appended in the tracker. Everything in §0000000000 below still stands except the live numbers (now v309 / 202 pages).
+
 ## 0000000000. START HERE — END OF THE 2026-11-03/04 SESSION (GSC retries, Florida + Car sales tax, typeahead rule) — live v308 · 72 calcs · 25 articles · 196 pages · `main` pushed (last deploy `91a41742`, docs `b58137e9`), tree clean — AUTHORITATIVE; everything below is older and valid unless this contradicts it
 
 **One-line sync to give the user first (then work silently):** "synced · live v308 / 72 calcs / 196 pages · Florida sales tax (v307) and the car sales tax calculator (v308) deployed + submitted to Bing · GSC quota exceeded again (11 unit pairs requested 11-03, queue continues on 'Start queue') · next: your call — see below."
