@@ -3,6 +3,8 @@
 _How-to for requesting indexing with Claude in Chrome + the next batch: HANDOFF.md §10. Next batch = /auto-loan-calculator/ + the "not checked yet" list below, ~10 per day._
 
 ## LIVE QUEUE (update at EVERY deploy and every request session; last updated 2026-11-02 — overtime deployed; GSC not requested since 2026-11-01 (10 done, quota hit at valet))
+**2026-11-05 (v313): NEW PAGES /calories-burned-calculator/ + /calories-burned-walking-calculator/ + /calories-burned-running-calculator/ deployed (IndexNow 209 URLs HTTP 200; live 200). Bing manual submit NOT done (signed out). Add all 3 to the END of the GSC queue (after cat age).**
+
 **2026-11-05 (v312): NEW PAGE /cat-age-calculator/ deployed (IndexNow pinged all 206, HTTP 200; live verified). Bing manual submit NOT done (signed out). Add to the END of the GSC queue (after dog age).**
 **2026-11-05 (v311): NEW PAGE /dog-age-calculator/ deployed (IndexNow pinged all 205, HTTP 200; live verified). Bing manual submit NOT done (Bing Webmaster signed out in Chrome). Add to the END of the GSC queue (after a1c + gmi).**
 **2026-11-05 (v310): NEW PAGES /a1c-calculator/ and /gmi-calculator/ deployed (IndexNow pinged all 204, HTTP 200; live verified). BING manual submit NOT done: Bing Webmaster Tools is signed out in Claude in Chrome (never sign in; ask him to sign in or submit the 2 URLs himself). Add both to the END of the GSC queue (after the newest pages).**

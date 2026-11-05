@@ -47,6 +47,9 @@ NO narration (zero text between tool calls; first reply = the one-line sync, the
 
 ---
 
+## 000000000000000a. UPDATE 2026-11-05 (latest-4) — CALORIES BURNED x3 DEPLOYED v313 (209 pages, commit 5e1d3c99)
+Hub + walking + running pages (see CLAUDE.md addendum 11 and md-files/calcthis-caloriesburned-research.md for the code map, sources, dropped items). Live 200 verified; IndexNow 209 HTTP 200; Bing manual not done (signed out); GSC: add the 3 URLs to the end of the queue. NEXT: keto + net carb, intermittent fasting, BSA, dog food, BAC (health list in calcthis-ahrefs-2026-11.md).
+
 ## 00000000000000. UPDATE 2026-11-05 (latest-2) — CAT AGE DEPLOYED v312 (206 pages, commit 27ddd5ca)
 `/cat-age-calculator/`: 15-9-4 rule with IAMS early-life points (3/6/12/18 months = 4/10/15/21), AAHA/AAFP 2021 life stages (kitten <1, young adult 1-6, mature 7-10, senior >10), timeline, DOB (datepicker), human->cat mode; dog page links to it. Notes: `md-files/calcthis-dogage-research.md` (cat section). Bing manual submit pending (signed out). GSC queue end: a1c, gmi, dog age, cat age. NEXT: calories burned, keto/net carb, fasting, BSA, dog food, BAC.
 

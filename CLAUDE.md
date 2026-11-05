@@ -211,8 +211,8 @@ must be built from the article's actual units, every time, not pasted from a tem
 
 ## Project state
 
-- **Asset version:** v308 (live; `.assetver`)
-- **Total pages:** 196 live (sitemap)
+- **Asset version:** v313 (live; `.assetver`)
+- **Total pages:** 209 live (sitemap)
 - **Model:** Sonnet 5
 
 ### New this session — global `.csel` custom-dropdown component
@@ -312,9 +312,12 @@ Recipe Converter
 ### Money & Finance (6)
 Mortgage · Loan · Auto Loan · Overtime · Paycheck · Sales Tax · Tip
 
-Total live calculators: **72** (v308, + car sales tax)
+Total live calculators: **79** (v313, + A1C, GMI, dog age, cat age, calories burned x3)
 
 ---
+
+## Last session addendum 11 (2026-11-05, DEPLOYED v313): CALORIES BURNED x3 `/calories-burned-calculator/` (hub) + `-walking-` + `-running-`
+Engine `CBURN-ENGINE` (276 activities, MET from the 2024 Compendium read live from pacompendium.com; kcal = MET x 3.5 x kg / 200; walk/run by speed+incline = ACSM equations; optional Mifflin personalised resting rate), init `CalcThis.initCburnCalc(kind)` (hub|walk|run, ids `cb*`, block `CBURN:BEGIN/END` at end of app.js), CSS `.p-cb`, generator `md-files/gen-cburn-pages.js`, notes `md-files/calcthis-caloriesburned-research.md`. Total vs extra (net) calories, same-time ranking, linked distance/time/speed/pace, goal time, my-day tally, steps->distance. DROPPED (no verified source): heart-rate (Keytel) method, ACSM downhill term. QA: ~500 UI-vs-model runs, 102 table cells re-driven, 960-step fuzz, 375px, registration audit (209 pages). Not verified: real phone, other browsers, print. Bing manual submit not done (signed out); GSC queue: add the 3 URLs at the end. NEXT in health list: keto + net carb, intermittent fasting, BSA, dog food, BAC.
 
 ## Last session addendum 10 (2026-11-04, DEPLOYED v308): CAR SALES TAX CALCULATOR `/car-sales-tax-calculator/`
 Ahrefs `car sales tax calculator` >1000 Easy. Research (CarEdge, calculator.net, Omni opened live; NerdWallet/Bankrate/Edmunds blocked) -> "Approve all". 10 states with sourced rules in `CalcThis.carTaxEngine` `RULES` (TX CA FL GA NC VA MI MO AR AZ; every rule has a quote + source; a rule the official pages did not settle = 'unknown' -> tax shown BOTH ways as a range); other states = general rate + 3 tick boxes + typed local rate; Ohio/Illinois dropped (no settled source). Taxed-amount strip, money bar, "same car in other states", per-item rule list, out-the-door total, Copy, Go advanced own rate. Generator `md-files/gen-cartax-page.js` (registers everywhere). QA: 325 UI-vs-model runs on the 10 states, 150 on estimate states, 19 text-vs-tool checks, hostile inputs, 300-step chaos with sum invariants, 375px overflow fixed, 196-page audit. **User correction: first version used a `.csel[data-search]` State dropdown -> replaced by the `.st-ta` typeahead; NEW hard rule + `build.js` `checkPickerDesign` gate + QA item 18.** Not verified: real phone, other browsers; TX rebate/doc fee, FL rebate, GA/NC manufacturer rebate, MO/AR/AZ doc fee unsettled (ranges); AR/AZ local rates typed. Bing submitted; GSC not requested (quota).
