@@ -11456,6 +11456,296 @@ CalcThis.initA1cCalc = function (kind) {
 };
 /* A1C-FAMILY:END */
 
+/* DOGAGE:BEGIN */
+/* =========================================================
+   DOG AGE — pure engine (no DOM). Marked DOGAGE-ENGINE:START/END.
+   Size chart: AAHA chart as published by Chewy (Feb 2026), ages 1-20 (giant 1-16); size by weight (AAHA/AKC): small up to 20 lb,
+   medium 21-50, large 51-90, giant over 90. AVMA rule: first year 15, second year +9, then about 4-5 a year.
+   UCSD epigenetic clock: human age = 16 ln(dog age) + 31 (Wang et al., Cell Systems 2020, 104 Labrador retrievers aged 0-16).
+   Senior age by size (AVMA, from AKC data): small 8-11, medium 8-10, large 8-9, giant 6-7 years. */
+/* DOGAGE-ENGINE:START */
+CalcThis.dogAgeEngine = (function () {
+  var CHART = {
+    small: [15, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64, 68, 72, 76, 80, 84, 88, 92, 96],
+    medium: [15, 24, 28, 33, 37, 42, 47, 51, 56, 60, 65, 69, 74, 78, 83, 87, 92, 96, 101, 105],
+    large: [15, 24, 30, 35, 40, 45, 50, 55, 61, 66, 72, 77, 82, 88, 93, 99, 104, 109, 115, 120],
+    giant: [15, 24, 32, 37, 42, 49, 56, 64, 71, 78, 86, 93, 101, 108, 115, 123]
+  };
+  var SENIOR = { small: [8, 11], medium: [8, 10], large: [8, 9], giant: [6, 7] };
+  var NAMES = { small: 'small', medium: 'medium', large: 'large', giant: 'giant' };
+  var UC_MIN = Math.exp(-31 / 16);
+  function cls(lb) { return lb <= 20 ? 'small' : (lb <= 50 ? 'medium' : (lb <= 90 ? 'large' : 'giant')); }
+  function maxAge(c) { return CHART[c].length; }
+  /* human age for a dog age in years: straight line from 0 to 15 in the first year (the chart starts at year 1), then straight lines between the yearly rows */
+  function chart(c, a) {
+    var t = CHART[c], n = t.length;
+    if (!(a > 0)) return 0;
+    if (a < 1) return 15 * a;
+    if (a > n) return NaN;
+    var i = Math.floor(a); if (i >= n) return t[n - 1];
+    return t[i - 1] + (t[i] - t[i - 1]) * (a - i);
+  }
+  function chartInv(c, h) {
+    var t = CHART[c], n = t.length;
+    if (!(h > 0)) return 0;
+    if (h <= 15) return h / 15;
+    if (h > t[n - 1]) return NaN;
+    for (var i = 1; i < n; i++) if (h <= t[i]) return i + (h - t[i - 1]) / (t[i] - t[i - 1]);
+    return n;
+  }
+  function ucsd(a) { return a >= UC_MIN ? 16 * Math.log(a) + 31 : null; }
+  function ucsdInv(h) { return Math.exp((h - 31) / 16); }
+  function avma(a) {
+    if (a < 1) { var v = 15 * a; return { lo: v, hi: v }; }
+    if (a <= 2) { var w = 15 + 9 * (a - 1); return { lo: w, hi: w }; }
+    return { lo: 24 + 4 * (a - 2), hi: 24 + 5 * (a - 2) };
+  }
+  function avmaInv(h) { if (h <= 15) return { lo: h / 15, hi: h / 15 }; if (h <= 24) { var a = 1 + (h - 15) / 9; return { lo: a, hi: a }; } return { lo: 2 + (h - 24) / 5, hi: 2 + (h - 24) / 4 }; }
+  function num(t) {
+    t = (t + '').trim().replace(/\s/g, '');
+    if (!t) return null;
+    if (/^[+-]?\d*,\d+$/.test(t)) t = t.replace(',', '.'); else t = t.replace(/,/g, '');
+    if (!/^[+-]?(\d+\.?\d*|\.\d+)$/.test(t)) return NaN;
+    return parseFloat(t);
+  }
+  /* breed list: [name, lowest typical adult weight lb, highest]; size class from the middle of the range; "straddles" when the two ends fall in different classes */
+  function breedInfo(b) {
+    var lo = b[1], hi = b[2], mid = lo == null ? hi : (hi == null ? lo : (lo + hi) / 2);
+    var cl = cls(mid);
+    return { cls: cl, straddle: lo != null && hi != null && cls(lo) !== cls(hi) };
+  }
+  return { CHART: CHART, SENIOR: SENIOR, NAMES: NAMES, UC_MIN: UC_MIN, cls: cls, maxAge: maxAge, chart: chart, chartInv: chartInv, ucsd: ucsd, ucsdInv: ucsdInv, avma: avma, avmaInv: avmaInv, num: num, breedInfo: breedInfo };
+})();
+/* DOGAGE-ENGINE:END */
+
+CalcThis.DOG_BREEDS = [
+  ['Airedale Terrier', 35, 50], ['Akita', 55, 130], ['Australian Cattle Dog', 33, 48], ['Australian Shepherd', 35, 70], ['Basenji', 21, 24], ['Basset Hound', 45, 75], ['Beagle', 20, 25], ['Bernese Mountain Dog', 75, 121], ['Bloodhound', 88, 119], ['Border Collie', 26, 55], ['Border Terrier', 12, 16], ['Boston Terrier', 6, 25], ['Boxer', 55, 70], ['Bullmastiff', 90, 130], ['Cairn Terrier', 13, 17], ['Cane Corso', 88, 110], ['Cavalier King Charles Spaniel', 12, 18], ['Cavapoo', 9, 22], ['Chesapeake Bay Retriever', 66, 100], ['Chihuahua', 2, 7], ['Chow Chow', 35, 90], ['Cockapoo', 20, 24], ['Coton de Tulear', 8, 13], ['Doberman Pinscher', 70, 99], ['Dogue de Bordeaux', 100, 150], ['French Bulldog', 18, 31], ['German Shepherd', 49, 88], ['Giant Schnauzer', 77, 104], ['Goldendoodle', 15, 80], ['Golden Retriever', 55, 75], ['Great Pyrenees', 121, 165], ['Greater Swiss Mountain Dog', 80, 140], ['Greyhound', 55, 88], ['Havanese', 7, 14], ['Irish Terrier', 24, 27], ['Irish Wolfhound', 89, 120], ['Italian Greyhound', null, 11], ['Jack Russell Terrier', 11, 13], ['Kangal Shepherd Dog', 88, 132], ['Keeshond', 33, 44], ['Labrador Retriever', 55, 80], ['Maltese', 7, 9], ['Miniature Pinscher', 9, 13], ['Miniature Poodle', 10, 15], ['Miniature Schnauzer', 9, 18], ['Neapolitan Mastiff', 110, 154], ['Newfoundland', 121, 176], ['Nova Scotia Duck Tolling Retriever', 37, 51], ['Old English Sheepdog', 66, 101], ['Pembroke Welsh Corgi', 24, 31], ['Pointer', 45, 75], ['Pomeranian', 3, 7], ['Portuguese Water Dog', 35, 55], ['Pug', 14, 18], ['Rat Terrier', 10, 25], ['Rhodesian Ridgeback', 70, 80], ['Rottweiler', 77, 132], ['Saint Bernard', 120, 180], ['Samoyed', 35, 66], ['Scottish Terrier', 18, 22], ['Shar-Pei', 35, 64], ['Shih Tzu', 9, 17], ['Siberian Husky', 35, 60], ['Soft Coated Wheaten Terrier', 30, 44], ['Spinone Italiano', 62, 82], ['Standard Poodle', 44, 71], ['Standard Schnauzer', 31, 44], ['Staffordshire Bull Terrier', 24, 37], ['American Staffordshire Terrier', 50, 80], ['Toy Poodle', 4, 7], ['Vizsla', 40, 66], ['Weimaraner', 55, 88], ['West Highland White Terrier', 15, 20], ['Whippet', 24, 40], ['Yorkshire Terrier', null, 7]
+];
+
+/* =========================================================
+   CalcThis.initDogAgeCalc() — dog age in human years. Differentiator vs. Inch Calculator, Old Farmer's Almanac, Hundeo, PupPilot and Chewy
+   (all checked live): the AAHA size chart, the AVMA rule and the UCSD epigenetic formula side by side (and the outdated 7x rule), a
+   human-age-vs-dog-age curve with your dog on it and the senior window, years + months or a date of birth, size by weight (lb/kg), breed or
+   size button, next-birthday and senior milestones, and the reverse (human age to dog age). Engine: CalcThis.dogAgeEngine. */
+CalcThis.initDogAgeCalc = function () {
+  var E = CalcThis.dogAgeEngine, B = CalcThis.DOG_BREEDS;
+  var $ = function (id) { return document.getElementById(id); };
+  var st = { mode: 'dog', unit: 'lb', cls: 'medium', how: 'default', breed: null, adv: false, dob: null };
+  var LB = 2.20462, TODAY = new Date();
+  function esc(t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+  function setHint(m) { var h = $('dgHint'); h.textContent = m || ''; h.style.display = m ? 'block' : 'none'; }
+  function r0(x) { return Math.round(x); }
+  function plural(n, w) { return n + ' ' + w + (n === 1 ? '' : 's'); }
+  function ym(a) { var y = Math.floor(a + 1e-9), m = Math.round((a - y) * 12); if (m === 12) { y++; m = 0; } return [y, m]; }
+  function ymStr(a) { if (a < 1 / 12 - 1e-9) { var dd = Math.max(1, Math.round(a * 365.25)); return plural(dd, 'day'); } var p = ym(a), s = []; if (p[0]) s.push(plural(p[0], 'year')); if (p[1] || !p[0]) s.push(plural(p[1], 'month')); return s.join(' '); }
+  function hFmt(x) { return x < 1 ? 'under 1 year' : r0(x) + ' years'; }
+  function wu(lb) { return st.unit === 'kg' ? lb / LB : lb; }
+  function wLab(lb) { return st.unit === 'kg' ? r0(lb / LB) + ' kg' : r0(lb) + ' lb'; }
+  function clsName(c) { return c.charAt(0).toUpperCase() + c.slice(1); }
+
+  /* ---------- size ---------- */
+  function chipLabels() {
+    var L = { small: 'Small · up to ' + wLab(20), medium: 'Medium · ' + (st.unit === 'kg' ? r0(21 / LB) + '–' + wLab(50) : '21–' + wLab(50)), large: 'Large · ' + (st.unit === 'kg' ? r0(51 / LB) + '–' + wLab(90) : '51–' + wLab(90)), giant: 'Giant · over ' + wLab(90) };
+    [].forEach.call($('dgChips').children, function (b) { var k = b.getAttribute('data-v'); b.textContent = L[k]; b.classList.toggle('on', k === st.cls); });
+  }
+  function sizeNote() {
+    var n = '';
+    if (st.how === 'default') n = 'Medium size assumed — pick a size, a breed or enter a weight for a closer answer.';
+    else if (st.how === 'chip') n = clsName(st.cls) + ' dog.';
+    else if (st.how === 'weight') n = 'A dog of ' + wLab(unitLb()) + ' is a ' + st.cls + ' dog.';
+    else if (st.how === 'breed' && st.breed) {
+      var b = st.breed, lo = b[1], hi = b[2], rng = lo != null && hi != null ? (st.unit === 'kg' ? r0(lo / LB) + '–' + r0(hi / LB) + ' kg' : lo + '–' + hi + ' lb') : (hi != null ? 'up to ' + wLab(hi) : wLab(lo));
+      n = b[0] + ': typical adult weight ' + rng + ' — ' + st.cls + '.' + (E.breedInfo(b).straddle ? ' Size varies within this breed, so enter your dog’s weight for a closer match.' : '');
+    }
+    $('dgSizeNote').textContent = n;
+  }
+  function unitLb() { var w = E.num($('dgW').value); return (w !== null && isFinite(w)) ? (st.unit === 'kg' ? w * LB : w) : NaN; }
+  function setCls(c, how) { st.cls = c; st.how = how; chipLabels(); sizeNote(); }
+
+  /* ---------- breed typeahead (DS .st-ta, copied from the paycheck State field) ---------- */
+  var bEl = $('dgBreed'), bIn = $('dgBreedIn'), bList = $('dgBreedList'), bVal = '', bHits = [], bAct = -1;
+  var B_OPTS = B.map(function (b) { return { v: b[0], label: b[0], s: b[0].toLowerCase(), b: b }; });
+  Object.defineProperty(bEl, 'value', { configurable: true, get: function () { return bVal; }, set: function (v) { bVal = v || ''; bIn.value = bVal; } });
+  function bRank(o, q) { if (o.label.toLowerCase().indexOf(q) === 0) return 0; if ((' ' + o.s).indexOf(' ' + q) >= 0) return 1; return o.s.indexOf(q) >= 0 ? 2 : -1; }
+  function bClose() { bList.style.display = 'none'; bIn.setAttribute('aria-expanded', 'false'); bAct = -1; }
+  function bShow(full) {
+    var q = full ? '' : bIn.value.trim().toLowerCase(), hits = [];
+    B_OPTS.forEach(function (o, i) { var r = q ? bRank(o, q) : 0; if (r >= 0) hits.push({ o: o, r: r, i: i }); });
+    hits.sort(function (x, y) { return x.r - y.r || x.i - y.i; });
+    bHits = hits.map(function (h) { return h.o; });
+    bAct = q && bHits.length ? 0 : -1;
+    bList.innerHTML = bHits.length ? bHits.map(function (o, i) { var inf = E.breedInfo(o.b); return '<button type="button" class="st-ta-opt' + (!q && o.v === bVal ? ' on' : '') + (q && i === bAct ? ' kb' : '') + '" role="option" data-i="' + i + '"><span>' + o.label + '</span><b>' + inf.cls + '</b></button>'; }).join('')
+      : '<div class="st-ta-none">No breed matches “' + esc(bIn.value) + '”. Pick a size or enter a weight instead.</div>';
+    bList.style.display = 'block'; bIn.setAttribute('aria-expanded', 'true');
+    var cur = bList.querySelector('.st-ta-opt.on'); bList.scrollTop = cur && !q ? Math.max(0, cur.offsetTop - 60) : 0;
+  }
+  function bPick(o) {
+    if (!o) return; bClose(); bEl.value = o.v; bIn.blur();
+    st.breed = o.b; $('dgW').value = ''; setCls(E.breedInfo(o.b).cls, 'breed'); render();
+  }
+  bIn.addEventListener('focus', function () { bIn.select(); bShow(true); });
+  bIn.addEventListener('input', function () {
+    if (!bIn.value.trim() && bVal) { bVal = ''; st.breed = null; if (st.how === 'breed') setCls('medium', 'default'); render(); }
+    bShow(!bIn.value.trim());
+  });
+  bIn.addEventListener('blur', function () { setTimeout(function () { bClose(); bIn.value = bVal; }, 150); });
+  bIn.addEventListener('keydown', function (e) {
+    var opts = bList.querySelectorAll('.st-ta-opt');
+    if (e.key === 'Escape') { bClose(); bIn.value = bVal; return; }
+    if (!opts.length) return;
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); bAct = e.key === 'ArrowDown' ? Math.min(opts.length - 1, bAct + 1) : Math.max(0, bAct - 1); [].forEach.call(opts, function (o, i) { o.classList.toggle('kb', i === bAct); }); opts[bAct].scrollIntoView({ block: 'nearest' }); }
+    else if (e.key === 'Enter') { e.preventDefault(); bPick(bHits[bAct >= 0 ? bAct : 0]); }
+  });
+  bList.addEventListener('mousedown', function (e) { e.preventDefault(); var bt = e.target.closest('.st-ta-opt'); if (bt) bPick(bHits[+bt.getAttribute('data-i')]); });
+
+  /* ---------- the curve ---------- */
+  var XM = 20, YM = 125, W = 290, H = 210, PL = 30, PR = 8, PT = 10, PB = 24;
+  function px(x) { return PL + x / XM * (W - PL - PR); }
+  function py(y) { return PT + (1 - y / YM) * (H - PT - PB); }
+  function curve(a, h, c) {
+    var s = '<svg class="dg-svg" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Human years against dog years for four sizes of dog">';
+    [0, 20, 40, 60, 80, 100, 120].forEach(function (y) { s += '<line x1="' + PL + '" x2="' + (W - PR) + '" y1="' + py(y) + '" y2="' + py(y) + '" stroke="#E8DFCE" stroke-width="1"/><text x="' + (PL - 6) + '" y="' + (py(y) + 4) + '" text-anchor="end" font-size="12" fill="#6b6256">' + y + '</text>'; });
+    [0, 5, 10, 15, 20].forEach(function (x) { s += '<text x="' + px(x) + '" y="' + (H - 8) + '" text-anchor="middle" font-size="12" fill="#6b6256">' + x + '</text>'; });
+    var sr = E.SENIOR[c]; s += '<rect x="' + px(sr[0]) + '" y="' + PT + '" width="' + (px(Math.min(XM, sr[1] + 1)) - px(sr[0])) + '" height="' + (H - PT - PB) + '" fill="#F0D08A" opacity=".35"/>';
+    ['small', 'medium', 'large', 'giant'].forEach(function (k) {
+      if (k === c) return;
+      var pts = '0,0 ' + E.CHART[k].map(function (v, i) { return px(i + 1) + ',' + py(v); }).join(' '); pts = pts.replace('0,0', px(0) + ',' + py(0));
+      s += '<polyline points="' + pts + '" fill="none" stroke="#CBBFA8" stroke-width="1.6" stroke-linejoin="round"/>';
+    });
+    var pts2 = px(0) + ',' + py(0) + ' ' + E.CHART[c].map(function (v, i) { return px(i + 1) + ',' + py(v); }).join(' ');
+    s += '<polyline points="' + pts2 + '" fill="none" stroke="#B5761F" stroke-width="3" stroke-linejoin="round"/>';
+    var u = []; for (var x = E.UC_MIN; x <= XM; x += 0.25) u.push(px(x) + ',' + py(Math.min(YM, 16 * Math.log(x) + 31)));
+    s += '<polyline points="' + u.join(' ') + '" fill="none" stroke="#37503F" stroke-width="2" stroke-dasharray="5 4"/>';
+    if (a != null && a <= XM && h != null && h <= YM) {
+      s += '<line x1="' + px(a) + '" x2="' + px(a) + '" y1="' + py(h) + '" y2="' + py(0) + '" stroke="#37503F" stroke-width="1" stroke-dasharray="2 3"/><line x1="' + PL + '" x2="' + px(a) + '" y1="' + py(h) + '" y2="' + py(h) + '" stroke="#37503F" stroke-width="1" stroke-dasharray="2 3"/>';
+      s += '<circle cx="' + px(a) + '" cy="' + py(h) + '" r="6" fill="#fff" stroke="#37503F" stroke-width="3"/>';
+    }
+    s += '<text x="' + ((PL + W - PR) / 2) + '" y="' + (H - 0) + '" text-anchor="middle" font-size="12" fill="#6b6256" style="display:none">dog age</text></svg>';
+    $('dgChart').innerHTML = s + '<p class="av-note" style="margin:2px 0 6px">Across: dog age in years. Up: human years.</p><div class="av-legend"><span><i class="dg-k dg-a"></i>' + clsName(c) + ' dog (size chart)</span><span><i class="dg-k dg-o"></i>Other sizes</span><span><i class="dg-k dg-u"></i>UCSD formula</span><span><i class="dg-k dg-s"></i>Senior window</span></div>';
+  }
+
+  /* ---------- render ---------- */
+  function empty(msg, sub) { $('dgBig').textContent = '—'; $('dgSub').textContent = sub || $('dgSub').getAttribute('data-empty'); $('dgBody').style.display = 'none'; $('dgMVal').textContent = '—'; setHint(msg || ''); }
+  function readAge() {
+    if (st.dob && st.dobA > 0) return { a: st.dobA };
+    var Y = E.num($('dgY').value), M = E.num($('dgM').value);
+    if (Y === null && M === null) return { none: true };
+    if ((Y !== null && (isNaN(Y) || Y < 0)) || (M !== null && (isNaN(M) || M < 0))) return { err: 'Couldn’t read the age — use whole or decimal numbers like 7 and 3.' };
+    var a = (Y || 0) + (M || 0) / 12;
+    if (!(a > 0)) return { err: 'Enter an age above zero.' };
+    if (a > 30) return { err: 'That is older than any dog on record — check the age.' };
+    return { a: a };
+  }
+  function readWeight() {
+    var raw = $('dgW').value; if (!raw.trim()) return null;
+    var w = E.num(raw); if (w === null) return null;
+    if (isNaN(w) || w <= 0) return { err: 'Couldn’t read the weight — use a number like 45.' };
+    var lb = st.unit === 'kg' ? w * LB : w;
+    if (lb < 0.5 || lb > 400) return { err: 'That weight is outside what a dog weighs — check the number and the unit.' };
+    return { lb: lb };
+  }
+  function render() {
+    var wt = readWeight();
+    if (wt && wt.err) { empty(wt.err); return; }
+    if (wt && wt.lb) { var c = E.cls(wt.lb); if (st.how !== 'weight' || st.cls !== c) { st.cls = c; st.how = 'weight'; chipLabels(); } sizeNote(); }
+    var c2 = st.cls;
+    if (st.mode === 'dog') {
+      var ag = readAge();
+      if (ag.none) { empty(''); return; }
+      if (ag.err) { empty(ag.err); return; }
+      setHint('');
+      var a = ag.a, ch = E.chart(c2, a), uc = E.ucsd(a), av = E.avma(a), top = isFinite(ch) ? ch : (uc != null ? uc : av.hi);
+      var beyond = !isFinite(ch);
+      $('dgResLab').textContent = 'Human-year equivalent';
+      $('dgBig').textContent = hFmt(top);
+      $('dgSub').textContent = 'A ' + c2 + ' dog aged ' + ymStr(a) + (beyond ? ' — past the end of the ' + E.maxAge(c2) + '-year chart, so this is the formula value' : '') + (st.how === 'default' ? ' · medium size assumed' : '');
+      $('dgMLab').textContent = 'Human years'; $('dgMVal').textContent = hFmt(top);
+      var sr = E.SENIOR[c2], tip;
+      if (a < 1) tip = 'Still a puppy: the first year of a dog’s life counts as about <strong>15 human years</strong>.';
+      else if (a >= sr[0]) tip = 'A ' + c2 + ' dog is generally treated as a <strong>senior</strong> from about ' + sr[0] + '–' + sr[1] + ' years — yours is in that window. Ask your vet about a senior check-up.';
+      else tip = 'A ' + c2 + ' dog is generally treated as a senior from about <strong>' + sr[0] + '–' + sr[1] + ' years</strong> — about ' + ymStr(sr[0] - a) + ' to go until the early end of that window.';
+      $('dgTip').innerHTML = tip;
+      curve(a, isFinite(ch) ? ch : (uc != null ? uc : null), c2);
+      var rows = [];
+      rows.push(['Size chart (' + c2 + ', AAHA)', isFinite(ch) ? r0(ch) + ' years' : 'chart ends at ' + E.maxAge(c2) + ' years']);
+      rows.push(['AVMA rule (15, then +9, then about 4–5 a year)', av.lo === av.hi ? r0(av.lo) + ' years' : r0(av.lo) + '–' + r0(av.hi) + ' years']);
+      rows.push(['UCSD epigenetic formula (16 ln(age) + 31)', uc != null ? r0(uc) + ' years' : 'not valid below about 2 months']);
+      rows.push(['Old “×7” rule (outdated)', r0(7 * a) + ' years']);
+      var nb = Math.floor(a + 1e-9) + 1, hn = E.chart(c2, nb);
+      var mo = (nb - a) * 12;
+      rows.push(['Next birthday (turns ' + nb + ')', (isFinite(hn) ? r0(hn) + ' years' : '—') + ' · in about ' + (mo < 1.5 ? 'a month' : r0(mo) + ' months')]);
+      rows.push(['Senior age for a ' + c2 + ' dog', sr[0] + '–' + sr[1] + ' years']);
+      $('dgRows').innerHTML = '<tbody>' + rows.map(function (r) { return '<tr><td>' + r[0] + '</td><td>' + r[1] + '</td></tr>'; }).join('') + '</tbody>';
+      $('dgBody').style.display = '';
+    } else {
+      var H0 = E.num($('dgH').value);
+      if (H0 === null) { empty(''); return; }
+      if (isNaN(H0) || H0 <= 0) { empty('Couldn’t read the human age — use a number like 40.'); return; }
+      if (H0 > 120) { empty('Human ages above 120 are outside the chart — check the number.'); return; }
+      setHint('');
+      var d1 = E.chartInv(c2, H0), d2 = E.ucsdInv(H0), d3 = E.avmaInv(H0);
+      var top2 = isFinite(d1) ? d1 : d2;
+      $('dgResLab').textContent = 'Equivalent dog age';
+      $('dgBig').textContent = ymStr(top2);
+      $('dgSub').textContent = 'A ' + c2 + ' dog is about ' + r0(H0) + ' in human years at this age' + (isFinite(d1) ? '' : ' (past the end of the size chart — formula value)') + (st.how === 'default' ? ' · medium size assumed' : '');
+      $('dgMLab').textContent = 'Dog age'; $('dgMVal').textContent = ymStr(top2);
+      $('dgTip').innerHTML = 'A ' + c2 + ' dog reaches <strong>' + r0(H0) + ' human years</strong> at about <strong>' + ymStr(top2) + '</strong> old.';
+      curve(top2, H0, c2);
+      var rows2 = [['Size chart (' + c2 + ', AAHA)', isFinite(d1) ? ymStr(d1) : 'chart ends at ' + (E.CHART[c2][E.maxAge(c2) - 1]) + ' human years'], ['AVMA rule', d3.lo === d3.hi ? ymStr(d3.lo) : ymStr(d3.lo) + ' to ' + ymStr(d3.hi)], ['UCSD epigenetic formula', ymStr(d2)], ['Old “×7” rule (outdated)', ymStr(H0 / 7)]];
+      $('dgRows').innerHTML = '<tbody>' + rows2.map(function (r) { return '<tr><td>' + r[0] + '</td><td>' + r[1] + '</td></tr>'; }).join('') + '</tbody>';
+      $('dgBody').style.display = '';
+    }
+  }
+
+  /* ---------- wiring ---------- */
+  ['dgY', 'dgM'].forEach(function (id) { $(id).addEventListener('input', function () { if (st.dob) { st.dob = null; $('dgDob').value = ''; } render(); }); });
+  $('dgH').addEventListener('input', render);
+  $('dgW').addEventListener('input', function () {
+    if (!$('dgW').value.trim()) { if (st.how === 'weight') setCls('medium', 'default'); else sizeNote(); }
+    else { bEl.value = ''; st.breed = null; }
+    render();
+  });
+  $('dgChips').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; $('dgW').value = ''; bEl.value = ''; st.breed = null; setCls(b.getAttribute('data-v'), 'chip'); render(); });
+  $('dgMode').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return; st.mode = b.getAttribute('data-v');
+    [].forEach.call($('dgMode').children, function (x) { x.classList.toggle('on', x === b); });
+    $('dgDogIn').style.display = st.mode === 'dog' ? '' : 'none'; $('dgHumanIn').style.display = st.mode === 'dog' ? 'none' : '';
+    $('dgDobWrap').style.display = st.adv && st.mode === 'dog' ? '' : 'none';
+    render();
+  });
+  $('dgUnit').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return; var nu = b.getAttribute('data-v'); if (nu === st.unit) return;
+    var w = E.num($('dgW').value);
+    if (w !== null && isFinite(w) && w > 0) $('dgW').value = String(Math.round((nu === 'kg' ? w / LB : w * LB) * 10) / 10);
+    st.unit = nu; [].forEach.call($('dgUnit').children, function (x) { x.classList.toggle('on', x === b); });
+    $('dgWUnit').textContent = nu; chipLabels(); sizeNote(); render();
+  });
+  $('dgAdvBtn').addEventListener('click', function () {
+    st.adv = !st.adv; $('dgAdvBtn').classList.toggle('open', st.adv); $('dgAdvBtnLab').textContent = st.adv ? 'Go simple' : 'Go advanced'; $('dgAdvIn').style.display = st.adv ? '' : 'none';
+    $('dgDobWrap').style.display = st.adv && st.mode === 'dog' ? '' : 'none';
+    if (!st.adv) { if (st.dob) { st.dob = null; $('dgDob').value = ''; } }
+    render();
+  });
+  function dobChanged() {
+    var v = $('dgDob').value.trim();
+    if (!v) { st.dob = null; render(); return; }
+    var d = window.Datepicker && $('dgDob').datepicker ? $('dgDob').datepicker.getDate() : new Date(v);
+    if (!(d instanceof Date) || isNaN(d)) { empty('Couldn’t read that date — pick one from the calendar or type it like 15 June 2019.'); return; }
+    if (d > TODAY) { empty('That date is in the future.'); return; }
+    st.dob = d;
+    var days = (TODAY - d) / 864e5, a = days / 365.25, yy = Math.floor(a), mm = Math.floor((a - yy) * 12);
+    st.dobA = a; var pm = ym(a); $('dgY').value = String(pm[0]); $('dgM').value = String(pm[1]);
+    render();
+  }
+  if (window.Datepicker) {
+    new Datepicker($('dgDob'), { format: 'd MM yyyy', autohide: true, weekStart: 0, todayHighlight: true, maxDate: new Date() });
+    $('dgDob').addEventListener('changeDate', dobChanged);
+  } else $('dgDob').addEventListener('change', dobChanged);
+  $('dgDob').addEventListener('input', function () { if (!$('dgDob').value.trim()) dobChanged(); });
+  chipLabels(); sizeNote(); render();
+};
+/* DOGAGE:END */
+
 /* =========================================================
    HOURS CALCULATOR — pure engine (no DOM). Loose clock parsing ("9", "915", "9:15a",
    "5p", "1730", "0830", noon, midnight), end-after-start resolution with overnight

@@ -152,6 +152,7 @@ const PAGES = [
   { file: 'macro-calculator/index.html',      slug: '/macro-calculator/' },
   { file: 'peptide-reconstitution-calculator/index.html', slug: '/peptide-reconstitution-calculator/' },
   { file: 'steps-to-miles-calculator/index.html', slug: '/steps-to-miles-calculator/' },
+  { file: 'dog-age-calculator/index.html', slug: '/dog-age-calculator/' },
   { file: 'protein-intake-calculator/index.html', slug: '/protein-intake-calculator/' },
   { file: 'blog/index.html',            slug: '/blog/' },
   { file: 'blog/how-much-gravel-do-i-need-for-a-driveway/index.html', slug: '/blog/how-much-gravel-do-i-need-for-a-driveway/' },

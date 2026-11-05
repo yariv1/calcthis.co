@@ -2711,3 +2711,18 @@
 .p-a1c .a1-chart tbody tr:hover td{background:#F7F1E6}
 .p-a1c .a1-chart tbody tr.on td{background:#F3E4C6;font-weight:700}
 .p-a1c .a1-note{font-size:13px;color:var(--muted);line-height:1.5;margin:6px 0 0}
+
+/* ---- Dog age calculator (.p-dog) — reuses .p-avg legend/notes, copies the DS typeahead (.st-ta) from the paycheck State field ---- */
+.p-dog .st-ta{position:relative}
+.p-dog .st-ta-list{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:40;max-height:320px;overflow-y:auto;background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:7px;scrollbar-color:var(--amber) transparent;scrollbar-width:thin}
+.p-dog .st-ta-opt{display:flex;justify-content:space-between;align-items:center;gap:12px;width:100%;text-align:left;font:inherit;font-size:14.5px;font-weight:500;color:var(--ink-soft);background:none;border:0;border-radius:8px;padding:9px 11px;cursor:pointer;transition:.12s}
+.p-dog .st-ta-opt b{flex:none;font-size:12.5px;font-weight:700;color:var(--muted);letter-spacing:.03em;text-transform:capitalize;white-space:nowrap}
+.p-dog .st-ta-opt:hover,.p-dog .st-ta-opt.on,.p-dog .st-ta-opt.kb{background:#F5EFE4;color:var(--ink)}
+.p-dog .st-ta-none{font-size:13.5px;color:var(--muted);padding:9px 11px;line-height:1.45}
+.p-dog .dg-two{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}
+.p-dog .dg-svg{width:100%;height:auto;display:block;background:#FCFAF6;border:1px solid var(--line);border-radius:10px}
+.p-dog .dg-k{display:inline-block;width:18px;height:0;margin-right:6px;vertical-align:3px;border-top:3px solid}
+.p-dog .dg-k.dg-a{border-color:#B5761F}.p-dog .dg-k.dg-o{border-color:#CBBFA8;border-top-width:2px}.p-dog .dg-k.dg-u{border-top:2px dashed #37503F}
+.p-dog .dg-k.dg-s{height:10px;width:14px;border:0;background:#F0D08A;vertical-align:-1px}
+.p-dog .a1-note{font-size:13px;color:var(--muted);line-height:1.5;margin:6px 0 0}
+.p-dog .chips button{font-size:13.5px;padding:7px 13px}

@@ -1,0 +1,108 @@
+Beagle => | maleweight = {{convert|22|-|25|lb|kg|abbr=on}} ;; | femaleweight = {{convert|20|-|23|lb|kg|abbr=on}}
+Dachshund => | weight         = Miniature Dachshund: up to {{Convert|11|lb|kg}} ;; | maleweight     = ;; | femaleweight   =
+Siberian Husky => | maleweight = {{convert|45|-|60|lb|kg}} ;; | femaleweight = {{convert|35|-|50|lb|kg}}
+Basset Hound => | weight = ;; | maleweight = {{convert|55|-|75|lb|kg|abbr=on|order=flip}} ;; | femaleweight = {{convert|45|-|65|lb|kg|abbr=on|order=flip}}
+Labrador Retriever => | maleweight     = {{convert|65|–|80|lb|kg|abbr=on|disp=flip|0}} ;; | femaleweight   = {{convert|55|–|70|lb|kg|abbr=on|disp=flip|0}}
+German Shepherd => | weight         = ;; | maleweight     = {{right|{{cvt|30|–|40|kg}}{{r|vdh}}}} ;; | femaleweight   = {{right|{{cvt|22|–|32|kg}}{{r|vdh}}}}
+Great Dane => | weight         = ;; | maleweight     = ;; | femaleweight   =
+Border Collie => | weight         = ;; | maleweight     = {{right|{{convert|14|-|25|kg|lb|abbr=on}}}} ;; | femaleweight   = {{right|{{convert|12|-|19|kg|lb|abbr=on}}}}
+Pomeranian dog => | weight = {{convert|3|to|7|lbs|kg}} ;; | maleweight = ;; | femaleweight =
+Shetland Sheepdog => | weight         = ;; | maleweight     = ;; | femaleweight   =
+Vizsla => | maleweight = {{convert|45|-|66|lb|kg|abbr=on}} ;; | femaleweight = {{convert|40|-|55|lb|kg|abbr=on}}
+Bulldog => | weight = ;; | maleweight = {{right|{{cvt|25|kg}}{{r|fci2|kc}}}} ;; | femaleweight = {{right|{{cvt|23|kg}}{{r|fci2|kc}}}}
+Boxer (dog breed) => | maleweight = {{convert|66|-|70|lb|kg|abbr=on|order=flip}}<ref>{{cite web|title=Breed Standard|url=https://www.thekennelclub.org.uk/breed-standards/working/boxer/|publisher=The Kennel Club|access-date=28 March 2022}}</ref> ;; | femaleweight = {{convert|55|-|60|lb|kg|abbr=on|order=flip}}
+Rottweiler => | maleweight = {{convert|50|–|60|kg|0|abbr=on}} ;; | femaleweight = {{convert|35|–|48|kg|0|abbr=on}}
+American Cocker Spaniel => 
+Bernese Mountain Dog => | weight = ;; | maleweight = {{right|{{cvt|36|-|55|kg|abbr=on|round=5}}}} ;; | femaleweight = {{right|{{cvt|34|-|45|kg|abbr=on|round=5}}}}
+Shih Tzu => | weight = {{convert|4|–|7.5|kg}}
+Cavalier King Charles Spaniel => | weight         = {{convert|5.4|-|8|kg|abbr=on}} ;; | maleweight     = ;; | femaleweight   =
+Yorkshire Terrier => | weight         = {{right|not over {{convert|3.2|kg|abbr=on|0}}}} ;; | maleweight     = ;; | femaleweight   =
+English Springer Spaniel => 
+Miniature Schnauzer => | weight         = {{right|{{cvt|4|–|8|kg|0}}{{r|fci2|vdh}}}} ;; | maleweight     = ;; | femaleweight   =
+Australian Shepherd => | weight         = {{cvt|35|–|70|lb|kg}} ;; | maleweight     = ;; | femaleweight   =
+Poodle => | weight         = {{unbulleted list|Standard: {{cvt|20|–|32|kg|lb}}|Medium: {{cvt|9|–|13|kg|lb}}|Miniature: {{cvt|4.5|–|7|kg|lb}}|Toy: {{cvt|2|–|3|kg|lb}}}} ;; | maleweight     = ;; | femaleweight   =
+Cardigan Welsh Corgi => 
+Pembroke Welsh Corgi => |femaleweight={{convert|24|-|28|lb|kg|0|abbr=on}} ;; |maleweight={{convert|24|-|31|lb|kg|abbr=on}}
+German Shorthaired Pointer => | weight         = ;; | maleweight     = ;; | femaleweight   =
+English Cocker Spaniel => 
+Boston Terrier => |weight = {{convert|6|-|25|lb|kg|0|abbr=on}} ;; |maleweight = ;; |femaleweight =
+French Bulldog => | weight         = ;; | maleweight     = {{cvt|9|–|14|kg}}{{r|fci2}} ;; | femaleweight   = {{cvt|8|–|13|kg}}{{r|fci2}}
+Brittany Spaniel => | weight         = ;; | maleweight     = ;; | femaleweight   =
+Mastiff => 
+Havanese dog => |weight       = {{convert|7|-|14|lb|kg|0|abbr=on}} ;; |maleweight   = ;; |femaleweight =
+Cane Corso => | weight         = ;; | maleweight     = {{right|{{cvt|45|–|50|kg|lb|round=5}}{{r|fci2}}}} ;; | femaleweight   = {{right|{{cvt|40|–|45|kg|lb|round=5}}{{r|fci2}}}}
+Standard Schnauzer => | weight         = {{right|{{convert|14|–|20|kg|abbr=on|round=5}}}} ;; | maleweight     = ;; | femaleweight   =
+Giant Schnauzer => | weight         = {{right|{{cvt|35|-|47|kg|round=5}}{{r|fci2}}}} ;; | maleweight     = ;; | femaleweight   =
+Dobermann => | maleweight    = {{right|{{cvt|40|-|45|kg|lb|round=5}}{{r|fci2}}}} ;; | femaleweight  = {{right|{{cvt|32|-|35|kg|lb|round=5}}{{r|fci2}}}}
+Golden Retriever => | weight         = {{cvt|55|–|75|lb|kg|disp=flip}} ;; | maleweight     = ;; | femaleweight   =
+Pug => | weight = 14-18 lb (6.35-8.16 kg) in males and females.
+Greyhound => | maleweight = {{convert|27|to|40|kg|lb}}* ;; | femaleweight = {{ubl|{{convert|25|to|34|kg|lb}}*<ref name=Oaks18>{{cite web|url=https://www.gbgb.org.uk/meeting/?meetingId=345467&raceId=503863|title=2018 Oaks first round results|website=Greyhound Board of Great Britain}}</ref>|*Normal weight range<ref name=Oaks18/>}}
+Irish Wolfhound => | weight         = ;; | maleweight     = {{right|minimum {{convert|54.5|kg|lb|abbr=on}}{{r|fci}}}} ;; | femaleweight   = {{right|minimum {{convert|40.5|kg|lb|abbr=on}}{{r|fci}}}}
+Italian Greyhound => | weight         = {{right|not over {{cvt|5|kg|lb|0}}{{r|enci}}}} ;; | maleweight     = ;; | femaleweight   =
+Shiba Inu => | femaleweight = {{convert|8|kg|abbr=on}}
+Whippet => | weight         = typical {{right|{{cvt|11|–|18|kg}}<ref>{{Cite web |title=Whippet Dog Breed Information |url=https://www.akc.org/dog-breeds/whippet/ |access-date=2024-09-03 |website=American Kennel Club |language=en}}</ref>}}
+Chow Chow => | maleweight      = {{convert|40|-|90|lb|kg|abbr=on}}<ref name="Wilcox1999" /> ;; | femaleweight    = {{convert|35|-|85|lb|kg|abbr=on}}<ref name="Wilcox1999" />
+Akita (dog breed) => | maleweight = {{cvt|60|-|130|lb|kg|order=flip}} ;; | femaleweight = {{cvt|55|-|100|lb|kg|order=flip}}
+English Setter => 
+Bichon Frisé => | weight        = ;; | maleweight    = ;; | femaleweight  =
+Samoyed dog => | weight = ;; | maleweight = {{convert|20|–|30|kg|lbs}} <!--source: ANKC--> ;; | femaleweight = {{convert|16|–|20|kg|lb}} <!--source: ANKC-->
+Airedale Terrier => |maleweight       = {{convert|40|-|50|lb|kg}} ;; |femaleweight = {{convert|35|-|40|lb|kg}}
+Rhodesian Ridgeback => |maleweight = {{cvt|36.5|kg}} ;; |femaleweight = {{cvt|32|kg}}
+Scottish Terrier => | maleweight = {{convert|8.5|-|10|kg|lb|abbr=on}} ;; | femaleweight = {{convert|8|-|9.5|kg|lb|abbr=on}}
+Jack Russell Terrier => | weight         = {{right|{{cvt|5|–|6|kg|0|abbr=on}}{{r|fci2}}}} ;; | maleweight     = ;; | femaleweight   =
+Bullmastiff => |weight       = ;; |maleweight   = {{right|{{convert|50|-|59|kg|abbr=on}}{{r|fci2}}}} ;; |femaleweight = {{right|{{convert|41|-|50|kg|abbr=on}}{{r|fci2}}}}
+Pyrenean Mountain Dog => | weight         = {{cvt|55|–|75|kg|lb|round=5}} ;; | maleweight     = ;; | femaleweight   =
+Staffordshire Bull Terrier => | weight         = ;; | maleweight     = {{right|{{cvt|13|-|17|kg|lb|0}}}} ;; | femaleweight   = {{right|{{cvt|11|-|15.4|kg|lb|0}}}}
+Alaskan Malamute => |maleweight      = {{convert|38|kg|0}}<ref name=FCI>{{Cite web|url=http://www.fci.be/Nomenclature/Standards/243g05-en.pdf|title=FCI-Standard N° 243: Alaskan Malamute|website=[[Fédération Cynologique Internationale]]|date=9 June 1999|access-date=22 December 2020}}</ref> ;; |femaleweight    = {{convert|34|kg|0}}<ref name=FCI/>
+Continental Toy Spaniel => | weight         = {{right|{{ubl|1.5–2.5 kg{{r|scc}}|2.5–5 kg{{r|scc}}}}}} ;; | maleweight     = ;; | femaleweight   =
+Newfoundland dog => | maleweight = {{convert|65|-|80|kg|lb|abbr=on}}<ref name="fci.be">{{Cite web |url=http://www.fci.be/Nomenclature/Standards/050g02-en.pdf |title=Archived copy |access-date=2015-04-05 |archive-date=2015-09-24 |archive-url=https://web.archive.org/web/20150924011458/http://www.fci.be/Nomenclature/Standards/050g02-en.pdf |url-status=live }}</ref> ;; | femaleweight = {{convert|55-65|kg|lb|abbr=on}}<ref name="fci.be"/>
+Australian Cattle Dog => | weight = {{convert|15|-|22|kg|lb|abbr=on}} ;; | maleweight = ;; | femaleweight =
+Maltese dog => | weight        = {{right|{{convert|3|–|4|kg|abbr=on|0}}{{sfn|AISBL|2015}}}} ;; | maleweight    = ;; | femaleweight  =
+West Highland White Terrier => |weight       = {{convert|6.8|-|9.1|kg|lb|abbr=on}}
+Goldendoodle => |weight        = Typically {{cvt|15|–|80|lb|kg}} ;; |maleweight    = 55–75 Lbs ;; |femaleweight  = 40–65 Lbs
+Labradoodle => 
+Weimaraner => | maleweight    = {{convert|30|-|40|kg|lb|abbr=on}}<ref name=fci /> ;; | femaleweight  = {{convert|25|-|35|kg|lb|abbr=on}}<ref name=fci />
+Rough Collie => | weight         = ;; | maleweight     = ;; | femaleweight   =
+St. Bernard (dog breed) => | weight = ;; | maleweight = {{convert|140|to|180|lbs|kg|abbr=on|order=flip}}<ref name=AKC>[https://www.akc.org/dog-breeds/st-bernard/#standard AKC breed standard]</ref> ;; | femaleweight = {{convert|120|to|140|lbs|kg|abbr=on|order=flip}}<ref name=AKC/>
+Belgian Shepherd => | weight         = ;; | maleweight     = {{right|≈ {{cvt|25|-|30|kg|lb|round=5}}}} ;; | femaleweight   = {{right|≈ {{cvt|20|-|25|kg|lb|round=5}}}}
+Cairn Terrier => | weight = {{right|{{convert|6|-|7.5|kg|0|abbr=on}}{{r|fci2|kc}}}} ;; | maleweight = ;; | femaleweight =
+Portuguese Water Dog => | weight = ;; | maleweight = {{convert|19|–|25|kg|lb|abbr=on}} ;; | femaleweight = {{convert|16|–|22|kg|lb|abbr=on}}
+Irish Setter => 
+Miniature Pinscher => | weight         = {{right|{{cvt|4|-|6|kg|0}}}} ;; | maleweight     = ;; | femaleweight   =
+Lhasa Apso => | weight         = ;; | maleweight     = ;; | femaleweight   =
+Pointer (dog breed) => | weight         = ;; | maleweight     = {{cvt|55|-|75|lb|kg|order=flip}} ;; | femaleweight   = {{cvt|45|-|65|lb|kg|order=flip}}
+American Pit Bull Terrier => |maleweight         = {{convert|15.8|-|27.2|kg|lb|abbr=on}} ;; |femaleweight       = {{convert|13.6|-|22.6|kg|lb|abbr=on}}
+American Staffordshire Terrier => |weight      = about {{convert|50|-|80|lb|kg|abbr=on}}
+Dalmatian dog => 
+Bloodhound => | weight       = ;; | maleweight   = {{cvt|46|-|54|kg|lb}} ;; | femaleweight = {{cvt|40|-|48|kg|lb}}
+Chihuahua (dog breed) => | weight         = {{right|{{convert|1|-|3|kg|abbr=on|0}}{{r|fci2}}}} ;; | maleweight     = ;; | femaleweight   =
+Pitsky => 
+Basenji => |weight        = ;; |maleweight    = {{cvt|11|kg}} ;; |femaleweight  = {{cvt|9.5|kg}}
+Keeshond => | weight         = {{convert|15|to|20|kg|abbr=on}}
+Chesapeake Bay Retriever => | maleweight = {{convert|75|to|100|lb|kg|abbr=on}} ;; | femaleweight = {{convert|66|to|88|lb|kg|abbr=on}}
+Boerboel => | weight         =
+Pekingese => 
+Cockapoo => | weight         = ≈ {{cvt|20|-|24|lb|kg}}
+Soft-coated Wheaten Terrier => |maleweight  = {{convert|14|-|20|kg|lb|abbr=on}} ;; |femaleweight = {{convert|13.6|-|15.9|kg|lb|abbr=on}}
+Rat Terrier => | weight = {{convert|10|-|25|lb}}
+Irish Terrier => | weight = 24 to 27 lb ;; | maleweight = {{convert|25-27|lb|kg}} ;; | femaleweight = {{convert|24-26|lb|kg}}
+Border Terrier => |weight       = ;; |maleweight   = 6–7&nbsp;kg (13–15.5 lb){{r|kc}} ;; |femaleweight = 5–6.5&nbsp;kg (11.5–14 lb){{r|kc}}
+Greater Swiss Mountain Dog => | maleweight = {{convert|90|-|140|lb|kg|abbr=on}} ;; | femaleweight = {{convert|80|-|110|lb|kg|abbr=on}}
+Old English Sheepdog => | maleweight = {{convert|36|-|46|kg|lbs}} ;; | femaleweight = {{convert|30|-|40|kg|lbs}}
+Nova Scotia Duck Tolling Retriever => | maleweight     = {{cvt|20|-|23|kg|lb}} ;; | femaleweight   = {{cvt|17|-|20|kg|lb}}
+Spinone Italiano => | weight         = ;; | maleweight     = {{cvt|32|–|37|kg|lb}}{{r|enci2}} ;; | femaleweight   = {{cvt|28|–|30|kg|lb}}{{r|enci2}}
+Tibetan Mastiff => 
+Kangal Shepherd Dog => | weight         = ;; | maleweight     = {{right|{{cvt|48|-|60|kg|lb|round=5}}{{r|fci2}}}} ;; | femaleweight   = {{right|{{cvt|40|-|50|kg|lb|round=5}}{{r|fci2}}}}
+Japanese Chin => 
+Griffon Bruxellois => 
+Bull Terrier => |maleweight   = No limits<ref name=FCI>{{Cite web|url=http://www.fci.be/Nomenclature/Standards/011g03-en.pdf|format=PDF|title=FCI Breed Standard|website=Fci.be|access-date=July 5, 2026}}</ref> ;; |femaleweight = No limits<ref name=FCI/>
+Coton de Tulear => | weight        = ;; | maleweight    = {{convert|4-6|kg|lb|abbr=on}} ;; | femaleweight  = {{convert|3.5-5|kg|lb|abbr=on}}
+Leonberger => | weight         = ;; | maleweight     = ;; | femaleweight   =
+Dogue de Bordeaux => | maleweight = {{convert|110-150|lb|kg|abbr=on}} ;; | femaleweight = {{convert|100-120|lb|kg|abbr=on}}
+Alaskan Klee Kai => | weight = Toy: up to {{convert|9|lb|kg|abbr=on}}; <br>Miniature: {{convert|10|-|15|lb|kg|abbr=on}}; <br>Standard: {{convert|16|-|22|lb|kg|abbr=on}};
+Puggle => 
+Shar Pei => | weight         = {{cvt|16|-|29|kg|lb}} ;; | maleweight     = ;; | femaleweight   =
+Neapolitan Mastiff => | weight         = ;; | maleweight     = {{cvt|60|-|70|kg|lb}} ;; | femaleweight   = {{cvt|50|-|60|kg|lb}}
+Miniature American Shepherd => 
+Cavapoo => | weight = {{cvt|4|-|10|kg|lb}}<ref name="purina"/>
+REQUESTED 109 GOT 107
