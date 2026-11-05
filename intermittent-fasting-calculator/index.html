@@ -1,0 +1,772 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Intermittent Fasting Calculator — Your Eating Window</title>
+<meta name="description" content="Intermittent fasting calculator for 16:8, 18:6, 20:4, OMAD, 5:2 and custom: set your window from your last bite or first meal and plan a week-by-week ramp-up.">
+<link rel="canonical" href="https://calcthis.co/intermittent-fasting-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Intermittent Fasting Calculator — Your Eating Window">
+<meta property="og:description" content="Intermittent fasting calculator for 16:8, 18:6, 20:4, OMAD, 5:2 and custom: set your window from your last bite or first meal and plan a week-by-week ramp-up.">
+<meta property="og:url" content="https://calcthis.co/intermittent-fasting-calculator/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/datepicker.min.css">
+<link rel="stylesheet" href="/assets/style.css?v=315">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Intermittent Fasting Calculator",
+  "url": "https://calcthis.co/intermittent-fasting-calculator/",
+  "applicationCategory": "HealthApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "Free intermittent fasting calculator: 12:12, 14:10, 16:8, 18:6, 20:4, OMAD, custom daily fasts, 5:2, alternate-day and 24-72 hour fasts. Set the eating window by last bite, first meal or bedtime, with a 24-hour clock, a live where-am-I-now status, weekday and weekend windows, meal times and a week-by-week ramp-up plan."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I calculate my intermittent fasting window?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Your fasting window starts at your last bite and lasts the hours of your method; your eating window is the rest of the 24 hours. On 16:8 with the last bite at 8:00 PM you fast 16 hours, so you eat again at 12:00 PM and the eating window is 12:00 PM – 8:00 PM. Choose First meal instead if that is the time you know: a first meal at 12:00 PM on 16:8 means the last bite is at 8:00 PM."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are the common intermittent fasting schedules?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The daily ones are 12:12, 14:10, 16:8, 18:6, 20:4 and OMAD (one meal a day, 23:1) — the first number is hours fasting, the second hours eating. 5:2 is normal eating five days a week and no more than 500 calories on two days; alternate-day fasting alternates low days (less than 25% of your usual calories) with normal days. A review of the research (Anton 2018) describes daily time-restricted eating as typically 8–12 hours of eating."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does intermittent fasting help you lose weight?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Mostly through eating fewer calories. In a 12-week trial of 116 adults, 16:8 eating (12 pm–8 pm) lost no more weight than three structured meals — −0.94 kg against −0.68 kg, a difference of −0.26 kg that was not significant (Lowe 2020). In a 12-month trial of 139 adults with obesity, adding an 8 a.m.–4 p.m. window to calorie restriction gave −8.0 kg against −6.3 kg, also not a significant difference (−1.8 kg, P = 0.11; Liu 2022). A window can make eating less easier for some people; it is not a shortcut by itself."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the metabolic switch?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It is the point in a fast when the liver’s glycogen runs low and the body shifts toward fat and ketones for fuel. A review of the research (Anton 2018) says it typically occurs between 12 and 36 hours after the last food, depending on the liver glycogen you start with and how much you exercise. The calculator shows where your fast ends against that 12–36 hour range — on 16:8 it ends 4 hours past the 12-hour point."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the 5:2 diet?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "You eat normally five days a week and eat no more than 500 calories on two days (Anton 2018). Pick the two low days in the calculator. With details added under Go advanced it shows your average calories a day and the weekly calorie gap: for someone who maintains weight on 2,400 kcal, 5:2 averages about 1857 kcal a day if the other days are eaten at maintenance — about 0.49 kg a week."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is alternate-day fasting?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Every other day is a low day with less than 25% of your usual energy (alternate-day modified fasting, Anton 2018) and the other days are eaten normally. For someone who maintains weight on 2,400 kcal a low day is up to 600 kcal. The calculator shows the 14-day pattern."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I work up to 16:8 or a longer fast?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Use Go advanced: enter the hours you fast now and the weeks you want to take. The ramp table moves the window in half-hour steps. From a 12-hour fast to 16 hours over 4 weeks with the last bite fixed at 8:00 PM, the first meal moves from 8:00 AM to 9:00 AM, 10:00 AM, 11:00 AM and 12:00 PM."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What if my weekends are different?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Under Go advanced choose “Different at weekends” and enter the weekend time; the result shows both windows, and the live status uses the weekend window on Saturday and Sunday."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I build my window around when I sleep?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Choose “My day”, enter your bedtime and how many hours before bed you want to stop eating (3 if you leave it empty). With a bedtime of 11:00 PM and a 3-hour gap on 16:8, the last bite is at 8:00 PM and the first meal at 12:00 PM."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Who should not try intermittent fasting?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Intermittent fasting is not suitable for everyone. Talk to a doctor first if you are pregnant or breastfeeding, are under 18, have had an eating disorder, have diabetes or take medication that has to be taken with food, are underweight, or are considering a fast of 24 hours or more. The calculator asks about these and does not show a schedule for the first three."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "CalcThis",
+      "item": "https://calcthis.co/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Intermittent Fasting Calculator",
+      "item": "https://calcthis.co/intermittent-fasting-calculator/"
+    }
+  ]
+}
+</script>
+<meta property="og:site_name" content="CalcThis">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://calcthis.co/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="CalcThis — free, purpose-built calculators">
+<meta name="twitter:title" content="Intermittent Fasting Calculator — Your Eating Window">
+<meta name="twitter:description" content="Intermittent fasting calculator for 16:8, 18:6, 20:4, OMAD, 5:2 and custom: set your window from your last bite or first meal and plan a week-by-week ramp-up.">
+<meta name="twitter:image" content="https://calcthis.co/assets/og-default.png">
+</head>
+<body class="p-bmr p-if">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <a class="hdr-back" href="/blog/" aria-label="Back to blog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-search"><div class="menu-sx"><input id="menuSearch" type="search" placeholder="Search calculators or states…" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Search calculators" enterkeyhint="search"></div><div class="menu-results" id="menuResults" hidden></div></div>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <span class="menu-col-head">Construction &amp; Gardening</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+          <a href="/paint-calculator/">Paint</a>
+          <a href="/wallpaper-calculator/">Wallpaper</a>
+          <a href="/square-footage-calculator/">Square Footage</a>
+          <a href="/tape-measure-fraction-calculator/">Tape Measure Fraction</a>
+          <a href="/stair-calculator/">Stair</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/vo2-max-calculator/">VO2 Max</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
+          <a href="/bmi-calculator/">BMI</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/ideal-weight-calculator/">Ideal Weight</a>
+          <a href="/lean-body-mass-calculator/">Lean Body Mass</a>
+          <a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio</a>
+          <a href="/gmi-calculator/">GMI</a>
+          <a href="/a1c-calculator/">A1C</a>
+          <a href="/calorie-calculator/">Calorie</a>
+          <a href="/calorie-deficit-calculator/">Calorie Deficit</a>
+          <a href="/bmr-calculator/">BMR</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/water-intake-calculator/">Water Intake</a>
+          <a href="/macro-calculator/">Macro</a>
+          <a href="/protein-intake-calculator/">Protein Intake</a>
+          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
+          <a href="/steps-to-miles-calculator/">Steps to Miles</a>
+          <a href="/dog-age-calculator/">Dog Age</a>
+          <a href="/cat-age-calculator/">Cat Age</a>
+          <a href="/calories-burned-calculator/">Calories Burned</a>
+          <a href="/calories-burned-walking-calculator/">Calories Burned Walking</a>
+          <a href="/calories-burned-running-calculator/">Calories Burned Running</a>
+          <a href="/keto-calculator/">Keto</a>
+          <a href="/net-carb-calculator/">Net Carb</a>
+          <a href="/intermittent-fasting-calculator/" class="current">Intermittent Fasting</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/semester-grade-calculator/">Semester Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+          <a href="/grade-curve-calculator/">Grade Curve</a>
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/fraction-calculator/">Fraction</a>
+          <a href="/standard-deviation-calculator/">Standard Deviation</a>
+          <a href="/scientific-notation-calculator/">Scientific Notation</a>
+          <a href="/average-calculator/">Average</a>
+          <a href="/batting-average-calculator/">Batting Average</a>
+          <a href="/stock-average-calculator/">Stock Average</a>
+          <a href="/dice-average-calculator/">Dice Average</a>
+          <a href="/time-average-calculator/">Time Average</a>
+          <a href="/weighted-average-calculator/">Weighted Average</a>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+          <a href="/percentage-change-calculator/">Percentage Change</a>
+          <a href="/age-calculator/">Age</a>
+          <a href="/date-calculator/">Date</a>
+          <a href="/time-calculator/">Time</a>
+          <a href="/hours-calculator/">Hours</a>
+          <a href="/triangle-calculator/">Triangle</a>
+          <a href="/random-number-generator/">Random Number</a>
+          <span class="menu-col-head">Cooking &amp; Kitchen</span>
+          <a href="/recipe-converter/">Recipe Converter</a>
+          <a href="/turkey-cooking-time-calculator/">Turkey Cooking Time</a>
+          <a href="/turkey-thawing-time-calculator/">Turkey Thawing Time</a>
+          <a href="/turkey-size-calculator/">Turkey Size</a>
+          <!--UNITNAV:START-->
+          <span class="menu-col-head">Unit Converters</span>
+          <a href="/unit-converter/">Unit Converter</a>
+          <a href="/length-converter/">Length Converter</a>
+          <a href="/weight-converter/">Weight Converter</a>
+          <a href="/volume-converter/">Volume Converter</a>
+          <a href="/temperature-converter/">Temperature Converter</a>
+          <a href="/area-converter/">Area Converter</a>
+          <a href="/speed-converter/">Speed Converter</a>
+          <a href="/data-storage-converter/">Data Storage Converter</a>
+          <a href="/cooking-converter/">Cooking Converter</a>
+          <a href="/px-to-rem-converter/">PX to REM Converter</a>
+          <!--UNITNAV:END-->
+          <span class="menu-col-head">Money &amp; Finance</span>
+          <a href="/mortgage-calculator/">Mortgage</a>
+          <a href="/loan-calculator/">Loan</a>
+          <a href="/auto-loan-calculator/">Auto Loan</a>
+          <a href="/car-sales-tax-calculator/">Car Sales Tax</a>
+          <a href="/overtime-calculator/">Overtime</a>
+          <a href="/salary-calculator/">Salary</a>
+          <!--STAXNAV:START-->
+          <a href="/sales-tax-calculator/">Sales Tax</a>
+          <a href="/sales-tax-calculator/california/">California Sales Tax</a>
+          <a href="/sales-tax-calculator/chicago/">Chicago Sales Tax</a>
+          <a href="/sales-tax-calculator/florida/">Florida Sales Tax</a>
+          <a href="/sales-tax-calculator/las-vegas/">Las Vegas Sales Tax</a>
+          <a href="/sales-tax-calculator/los-angeles/">Los Angeles Sales Tax</a>
+          <a href="/sales-tax-calculator/michigan/">Michigan Sales Tax</a>
+          <a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax</a>
+          <a href="/sales-tax-calculator/missouri/">Missouri Sales Tax</a>
+          <a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax</a>
+          <a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax</a>
+          <a href="/sales-tax-calculator/north-carolina/">North Carolina Sales Tax</a>
+          <a href="/sales-tax-calculator/ohio/">Ohio Sales Tax</a>
+          <a href="/sales-tax-calculator/texas/">Texas Sales Tax</a>
+          <a href="/sales-tax-calculator/virginia/">Virginia Sales Tax</a>
+          <!--STAXNAV:END-->
+          <a href="/tip-calculator/">Tip</a>
+          <a href="/how-much-to-tip/">How Much to Tip</a>
+        </div>
+        <!--PAYNAV:START-->
+        <div class="menu-col">
+          <span class="menu-col-head">Paycheck Calculators</span>
+          <a href="/paycheck-calculator/">Paycheck Calculator (all states)</a>
+          <a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a>
+          <a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arkansas/">Arkansas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/california/">California Paycheck Calculator</a>
+          <a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a>
+          <a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a>
+          <a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/hawaii/">Hawaii Paycheck Calculator</a>
+          <a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a>
+          <a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a>
+          <a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a>
+          <a href="/paycheck-calculator/louisiana/">Louisiana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a>
+          <a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a>
+          <a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a>
+          <a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a>
+          <a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nebraska/">Nebraska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a>
+          <a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a>
+          <a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a>
+          <a href="/paycheck-calculator/oklahoma/">Oklahoma Paycheck Calculator</a>
+          <a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a>
+          <a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a>
+          <a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a>
+          <a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/utah/">Utah Paycheck Calculator</a>
+          <a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wisconsin/">Wisconsin Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a>
+        </div>
+        <!--PAYNAV:END-->
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">16:8 · 18:6 · 20:4 · OMAD · 5:2 · by last bite, first meal or your day</div>
+    <h1>Intermittent Fasting Calculator</h1>
+    <p>Pick a method and tell the calculator your <strong>last bite</strong>, your <strong>first meal</strong> or just when you go to bed — you get your <strong>eating window</strong> on a 24-hour clock, where you are right now, and a <strong>ramp-up plan</strong> if you are building up. On 16:8 with the last bite at 8:00 PM you eat again at <strong>12:00 PM</strong>.</p>
+  </section>
+
+  <div class="grid">
+
+    <!-- INPUT -->
+    <div class="card">
+      <div class="card-pad">
+        <h2 class="card-h2">Your schedule</h2>
+        <label class="fld"><span class="lab">Method</span><div class="csel" id="ifMethod" data-value="16"><button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false"><span class="csel-val">16:8</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="csel-panel" role="listbox"><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="12">12:12</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="14">14:10</button><button type="button" class="csel-opt on" role="option" aria-selected="true" data-value="16">16:8</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="18">18:6</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="20">20:4</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="omad">OMAD — one meal a day (23:1)</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="cust">Custom daily fast</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="52">5:2 — two low-calorie days a week</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="adf">Alternate-day — every other day low</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="ext">Extended fast — 24 to 72 hours</button></div></div></label>
+        <div id="ifCustWrap" style="display:none"><label class="fld" for="ifCust"><span class="lab">Fasting hours a day <span class="unit">hours (10–23)</span></span><div class="inp"><input id="ifCust" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 15"></div></label></div>
+        <div id="ifExtWrap" style="display:none"><label class="fld" for="ifExt"><span class="lab">Length of the fast <span class="unit">hours (24–72)</span></span><div class="inp"><input id="ifExt" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 36"></div></label></div>
+        <div class="ctl-row" id="ifClkRow"><span class="ctl-lab">Clock</span><div class="seg" id="ifClk" role="group" aria-label="Clock"><button class="on" type="button" data-v="12">12-hour</button><button type="button" data-v="24">24-hour</button></div></div>
+        <div class="ctl-row" id="ifAncRow"><span class="ctl-lab">I know my</span><div class="seg" id="ifAnc" role="group" aria-label="I know my"><button class="on" type="button" data-v="last">Last bite</button><button type="button" data-v="first">First meal</button><button type="button" data-v="day">My day</button></div></div>
+        <div id="ifT1Wrap"><div class="fld if-tf" id="ifT1" data-ap="pm"><span class="lab"><span id="ifT1Lab">Last bite</span><button type="button" class="linkbtn if-now">Now</button></span><div class="time-field"><div class="time-box"><div class="time-ghost" aria-hidden="true"><span class="g-off">-</span><span class="g-off">-</span><span class="g-sep">:</span><span class="g-off">-</span><span class="g-off">-</span></div><input class="time-digits" type="text" inputmode="numeric" autocomplete="off" maxlength="5" aria-label="Last bite"></div><div class="seg ap-seg"><button type="button" data-ap="am">AM</button><button type="button" data-ap="pm">PM</button></div></div></div></div>
+        <div id="ifDayWrap" style="display:none"><div class="fld if-tf" id="ifWake" data-ap="am"><span class="lab"><span id="ifWakeLab">Wake-up time (optional)</span></span><div class="time-field"><div class="time-box"><div class="time-ghost" aria-hidden="true"><span class="g-off">-</span><span class="g-off">-</span><span class="g-sep">:</span><span class="g-off">-</span><span class="g-off">-</span></div><input class="time-digits" type="text" inputmode="numeric" autocomplete="off" maxlength="5" aria-label="Wake-up time (optional)"></div><div class="seg ap-seg"><button type="button" data-ap="am">AM</button><button type="button" data-ap="pm">PM</button></div></div></div><div class="fld if-tf" id="ifBed" data-ap="pm"><span class="lab"><span id="ifBedLab">Bedtime</span></span><div class="time-field"><div class="time-box"><div class="time-ghost" aria-hidden="true"><span class="g-off">-</span><span class="g-off">-</span><span class="g-sep">:</span><span class="g-off">-</span><span class="g-off">-</span></div><input class="time-digits" type="text" inputmode="numeric" autocomplete="off" maxlength="5" aria-label="Bedtime"></div><div class="seg ap-seg"><button type="button" data-ap="am">AM</button><button type="button" data-ap="pm">PM</button></div></div></div><label class="fld" for="ifGap"><span class="lab">Stop eating before bed <span class="unit">hours (blank = 3)</span></span><div class="inp"><input id="ifGap" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 3"></div></label></div>
+        <div id="ifDaysWrap" style="display:none"><span class="ctl-lab" style="display:block;margin:0 0 6px">Your two low-calorie days</span><div class="chips-days" id="ifDays"><button type="button" data-v="0" class="on">Mon</button><button type="button" data-v="1">Tue</button><button type="button" data-v="2">Wed</button><button type="button" data-v="3" class="on">Thu</button><button type="button" data-v="4">Fri</button><button type="button" data-v="5">Sat</button><button type="button" data-v="6">Sun</button></div></div>
+        <div id="ifAdfWrap" style="display:none"><div class="ctl-row"><span class="ctl-lab">Day 1 is a</span><div class="seg" id="ifAdf" role="group" aria-label="Day 1 is a"><button class="on" type="button" data-v="low">Low day</button><button type="button" data-v="normal">Normal day</button></div></div></div>
+        <p class="if-h" style="margin-top:6px">Before you start — tick any that apply</p>
+        <label class="dc-check"><input type="checkbox" id="ifF_preg"><span>I am pregnant or breastfeeding</span></label>
+        <label class="dc-check"><input type="checkbox" id="ifF_u18"><span>I am under 18</span></label>
+        <label class="dc-check"><input type="checkbox" id="ifF_ed"><span>I have a history of disordered eating</span></label>
+        <label class="dc-check"><input type="checkbox" id="ifF_dm"><span>I have diabetes or take medication that has to be taken with food</span></label>
+        <label class="dc-check"><input type="checkbox" id="ifF_under"><span>I have been told I am underweight</span></label>
+        <div class="res-hint" id="ifHint" style="display:none;text-align:left;margin:4px 0 8px"></div>
+        <div id="ifAdvIn" style="display:none">
+          <div class="proj-sep"></div>
+          <div class="ctl-row" id="ifWkRow"><span class="ctl-lab">Weekends</span><div class="seg" id="ifWk" role="group" aria-label="Weekends"><button class="on" type="button" data-v="same">Same</button><button type="button" data-v="diff">Different</button></div></div>
+          <div id="ifWkWrap" style="display:none"><div class="fld if-tf" id="ifT2" data-ap="pm"><span class="lab"><span id="ifT2Lab">Last bite on weekends</span></span><div class="time-field"><div class="time-box"><div class="time-ghost" aria-hidden="true"><span class="g-off">-</span><span class="g-off">-</span><span class="g-sep">:</span><span class="g-off">-</span><span class="g-off">-</span></div><input class="time-digits" type="text" inputmode="numeric" autocomplete="off" maxlength="5" aria-label="Last bite on weekends"></div><div class="seg ap-seg"><button type="button" data-ap="am">AM</button><button type="button" data-ap="pm">PM</button></div></div></div></div>
+          <div class="ctl-row" id="ifMealsRow"><span class="ctl-lab">Meals in the window</span><div class="seg" id="ifMeals" role="group" aria-label="Meals in the window"><button type="button" data-v="1">1</button><button type="button" data-v="2">2</button><button class="on" type="button" data-v="3">3</button><button type="button" data-v="4">4</button></div></div>
+          <div id="ifRampWrap"><p class="if-h">Ramp-up plan (optional)</p><div class="cb-two"><label class="fld" for="ifRampFrom"><span class="lab">Fasting now <span class="unit">hours</span></span><div class="inp"><input id="ifRampFrom" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 12"></div></label><label class="fld" for="ifRampWeeks"><span class="lab">Weeks <span class="unit">to get there</span></span><div class="inp"><input id="ifRampWeeks" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 4"></div></label></div></div>
+          <p class="if-h">Your details for calories (optional)</p>
+          <div class="ctl-row"><span class="ctl-lab">Sex</span><div class="seg" id="ifSex" role="group" aria-label="Sex"><button class="on" type="button" data-v="f">Female</button><button type="button" data-v="m">Male</button></div></div>
+          <label class="fld" for="ifAge"><span class="lab">Age <span class="unit">years</span></span><div class="inp"><input id="ifAge" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 35"></div></label>
+          <div class="ctl-row"><span class="ctl-lab">Height units</span><div class="seg" id="ifHU" role="group" aria-label="Height units"><button class="on" type="button" data-v="in">inches</button><button type="button" data-v="cm">cm</button></div></div>
+          <label class="fld" for="ifHt"><span class="lab">Height <span class="unit" id="ifHL">inches or 5'10</span></span><div class="inp"><input id="ifHt" type="text" inputmode="text" autocomplete="off" placeholder="e.g. 70 or 5'10"></div></label>
+          <div class="ctl-row"><span class="ctl-lab">Weight units</span><div class="seg" id="ifWU" role="group" aria-label="Weight units"><button class="on" type="button" data-v="lb">lb</button><button type="button" data-v="kg">kg</button><button type="button" data-v="st">st</button></div></div>
+          <label class="fld" for="ifW"><span class="lab">Weight <span class="unit" id="ifWL">lb</span></span><div class="inp"><input id="ifW" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 154"></div></label>
+          <label class="fld"><span class="lab">Activity level</span><div class="csel" id="ifAct" data-value="1.55"><button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false"><span class="csel-val">Moderate — 3–5 days/week</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="csel-panel" role="listbox"><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="1.2">Sedentary — little or no exercise</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="1.375">Light — 1–3 days/week</button><button type="button" class="csel-opt on" role="option" aria-selected="true" data-value="1.55">Moderate — 3–5 days/week</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="1.725">Active — 6–7 days/week</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="1.9">Very active — hard training / physical job</button></div></div></label>
+          <div class="ctl-row"><span class="ctl-lab">Goal</span><div class="seg" id="ifGoal" role="group" aria-label="Goal"><button class="on" type="button" data-v="lose">Lose weight</button><button type="button" data-v="maint">Maintain</button><button type="button" data-v="gain">Gain</button></div></div>
+          <div class="ctl-row" id="ifPaceRow"><span class="ctl-lab"><span id="ifPaceLab">Lose per week</span></span><div class="seg" id="ifPace" role="group" aria-label="Lose per week"><button type="button" data-v="0">0.5 lb</button><button class="on" type="button" data-v="1">1 lb</button><button type="button" data-v="2">1.5 lb</button><button type="button" data-v="3">2 lb</button></div></div>
+          <p class="av-note" style="margin:0 0 8px">Calories come from your resting rate (Mifflin-St Jeor) times your activity level and are split across your meals.</p>
+        </div>
+        <div class="add-row split" style="margin-top:16px">
+          <span></span>
+          <button class="advbtn" id="ifAdvBtn" type="button">
+            <span id="ifAdvBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div class="card">
+      <div class="card-pad">
+        <div class="bf-res">
+          <div class="res-lab" id="ifResLab">Eating window</div>
+          <div class="res-big"><span id="ifBig">—</span></div>
+          <div class="res-sub" id="ifSub" data-empty="Pick a method and enter a time.">Pick a method and enter a time.</div>
+        </div>
+        <div class="if-warn" id="ifWarn" style="display:none"></div>
+        <div id="ifBody" style="display:none">
+          <p class="res-tip adv-tip" id="ifTip"></p>
+          <div class="if-live" id="ifLive" style="display:none"></div>
+          <div id="ifRingBox"><p class="bm-h">Your 24-hour clock today</p><div class="if-ring" id="ifRing"></div></div>
+          <div id="ifSwitchBox"><p class="bm-h">Where your fast ends against the 12–36 hour range</p><div id="ifSwitch"></div><p class="cb-note">The metabolic switch typically occurs 12–36 hours after the last food, depending on liver glycogen and exercise (Anton 2018) — a range, not a stopwatch.</p></div>
+          <div id="ifStripBox" style="display:none"><p class="bm-h">Your week</p><div id="ifStrip"></div></div>
+          <div class="proj-sep"></div>
+          <table class="dtable" id="ifRows"></table>
+          <div id="ifMealBox"><p class="bm-h">Meals in your window</p><table class="dtable" id="ifMeal"></table><p class="cb-note" id="ifMealNote"></p></div>
+          <div id="ifRampBox" style="display:none"><p class="bm-h">Ramp-up plan</p><table class="dtable" id="ifRamp"></table><p class="cb-note" id="ifRampMsg" style="display:none"></p></div>
+          <p class="cb-note">For information only — not medical advice. Fasting is not suitable for everyone.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- mobile sticky bar -->
+  <div class="mbar" id="mbar">
+    <span class="mbar-lab" id="ifMLab">Eating window</span>
+    <div class="mbar-vals"><b id="ifMVal">—</b></div>
+  </div>
+
+  <div class="related-calcs">
+    <p class="related-calcs-h">More calculators that may interest you</p>
+    <div class="pills">
+      <a class="pill" href="/calorie-deficit-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12h8"/></svg>
+        Calorie Deficit Calculator
+      </a>
+      <a class="pill" href="/keto-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c4 2 7 5 7 9a7 7 0 0 1-14 0c0-4 3-7 7-9z"/><path d="M12 21V9"/></svg>
+        Keto Calculator
+      </a>
+      <a class="pill" href="/sleep-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14A8 8 0 1 1 10 4a6 6 0 0 0 10 10z"/></svg>
+        Sleep Calculator
+      </a>
+      <a class="pill" href="/tdee-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3s5 5 5 9a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3 1-5 1-8z"/></svg>
+        TDEE Calculator
+      </a>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use the intermittent fasting calculator</h2>
+        <p>Choose a <strong>method</strong>, then tell the calculator the one time you know: your <strong>last bite</strong> of the day, your <strong>first meal</strong>, or your <strong>bedtime</strong> and how long before it you want to stop eating. The result is your eating window, a 24-hour clock with your meals, where you are right now, and where your fast ends against the research range for the metabolic switch.</p>
+        <p>For <strong>5:2</strong> pick your two low-calorie days; for <strong>alternate-day</strong> see the 14-day pattern; for a <strong>24–72 hour fast</strong> see when it ends. Go advanced adds a different weekend window, meals, a ramp-up plan and calories from your own details.</p>
+
+        <h2>The fasting window maths</h2>
+        <div class="formula">
+          first meal = last bite + fasting hours · eating window = 24 − fasting hours
+          <small>16:8 = 16 HOURS FASTING, 8 HOURS EATING</small>
+        </div>
+        <p>Last bite at 8:00 PM on 16:8: 8:00 PM + 16 h = <strong>12:00 PM</strong>, so you eat 12:00 PM – 8:00 PM (8 hours). Know the first meal instead — 12:00 PM — and the last bite is 12:00 PM + 8 h = 8:00 PM. On 18:6 with the same last bite the first meal is 2:00 PM.</p>
+
+        <h2>Every daily method, with a last bite at 8:00 PM</h2>
+        <table class="dtable"><thead><tr><th>Method</th><th>Fasting</th><th>Eating</th><th>Eating window</th></tr></thead><tbody><tr><td>12:12</td><td>12 h</td><td>12 h</td><td>8:00 AM – 8:00 PM</td></tr><tr><td>14:10</td><td>14 h</td><td>10 h</td><td>10:00 AM – 8:00 PM</td></tr><tr><td>16:8</td><td>16 h</td><td>8 h</td><td>12:00 PM – 8:00 PM</td></tr><tr><td>18:6</td><td>18 h</td><td>6 h</td><td>2:00 PM – 8:00 PM</td></tr><tr><td>20:4</td><td>20 h</td><td>4 h</td><td>4:00 PM – 8:00 PM</td></tr><tr><td>OMAD</td><td>23 h</td><td>1 h</td><td>7:00 PM – 8:00 PM</td></tr></tbody></table>
+      </div>
+
+      <div>
+        <h2>Does the eating window help you lose weight?</h2>
+        <p>The two long trials found that a window on its own gave no significant extra weight loss. In the 12-week TREAT trial (Lowe 2020, 116 adults) 16:8 from 12 pm to 8 pm lost −0.94 kg against −0.68 kg for three structured meals — a difference of −0.26 kg (P = .63). In a 12-month trial (Liu 2022, 139 adults with obesity) an 8 a.m.–4 p.m. window plus calorie restriction lost −8.0 kg against −6.3 kg for calorie restriction alone, a difference of −1.8 kg (95% CI −4.0 to 0.4; P = 0.11). Total calories still decide; a window helps if it makes eating less easier for you. Work out your calories with the <a href="/calorie-deficit-calculator/">calorie deficit calculator</a>.</p>
+
+        <h2>The metabolic switch</h2>
+        <p>The review by Anton and colleagues (2018) describes the metabolic switch as the shift from glucose to fatty acids and ketones when liver glycogen is used up, and says it typically occurs between 12 and 36 hours after the last food — earlier or later depending on how much glycogen you start with and how much you exercise. A 16-hour daily fast therefore ends 4 hours past the 12-hour mark; most people’s daily windows never reach 36 hours.</p>
+
+        <h2>5:2 and alternate-day fasting</h2>
+        <p>The 5:2 diet is normal eating five days and no more than 500 calories on two days. Alternate-day modified fasting uses less than 25% of baseline energy on the low days. If you maintain your weight on 2,400 kcal, 5:2 averages 1857 kcal a day (a weekly gap of 3,800 kcal, about 0.49 kg) and alternate-day averages 1500 kcal if the normal days are eaten at maintenance.</p>
+        <h2>Sources</h2>
+        <ul>
+          <li>Anton SD, Moehl K, Donahoo WT et al., <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC5783752/" rel="noopener">Flipping the Metabolic Switch: Understanding and Applying the Health Benefits of Fasting</a>, Obesity 2018;26:254–268 — the metabolic switch “typically occurs between 12 to 36 hours after cessation of food consumption depending on the liver glycogen content at the beginning of the fast” and exercise; time-restricted feeding typically restricts eating to 8–12 hours a day; the 5:2 diet is no more than 500 calories on two days a week; alternate-day modified fasting uses less than 25% of baseline energy on low days (read November 2026).</li>
+          <li>Lowe DA et al., <a href="https://pubmed.ncbi.nlm.nih.gov/32986097/" rel="noopener">Effects of Time-Restricted Eating on Weight Loss and Other Metabolic Parameters in Women and Men With Overweight and Obesity: The TREAT Randomized Clinical Trial</a>, JAMA Internal Medicine 2020;180:1491 — 116 adults, 12 weeks of 16:8 (12 pm–8 pm) against three structured meals: −0.94 kg against −0.68 kg, no significant difference between groups (−0.26 kg, P = .63).</li>
+          <li>Liu D et al., <a href="https://pubmed.ncbi.nlm.nih.gov/35443107/" rel="noopener">Calorie Restriction with or without Time-Restricted Eating in Weight Loss</a>, New England Journal of Medicine 2022;386:1495–1504 — 139 adults with obesity, 12 months, eating 8 a.m.–4 p.m. plus calorie restriction against calorie restriction alone: −8.0 kg against −6.3 kg, difference −1.8 kg (95% CI −4.0 to 0.4; P = 0.11).</li>
+          <li>Mifflin MD et al., American Journal of Clinical Nutrition 1990;51:241 — the maintenance calories behind the optional calorie figures (times the activity level you choose); 7,700 kcal per kg of body fat is the usual rule of thumb.</li>
+        </ul>
+        <p><small>For information only, not medical advice. Intermittent fasting is not suitable for everyone — talk to a doctor first if you are pregnant or breastfeeding, under 18, have a history of disordered eating, have diabetes or take medication that has to be taken with food, or are underweight.</small></p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>How do I calculate my intermittent fasting window?</summary><p>Your fasting window starts at your last bite and lasts the hours of your method; your eating window is the rest of the 24 hours. On 16:8 with the last bite at 8:00 PM you fast 16 hours, so you eat again at 12:00 PM and the eating window is 12:00 PM – 8:00 PM. Choose First meal instead if that is the time you know: a first meal at 12:00 PM on 16:8 means the last bite is at 8:00 PM.</p></details>
+    <details class="faq"><summary>What are the common intermittent fasting schedules?</summary><p>The daily ones are 12:12, 14:10, 16:8, 18:6, 20:4 and OMAD (one meal a day, 23:1) — the first number is hours fasting, the second hours eating. 5:2 is normal eating five days a week and no more than 500 calories on two days; alternate-day fasting alternates low days (less than 25% of your usual calories) with normal days. A review of the research (Anton 2018) describes daily time-restricted eating as typically 8–12 hours of eating.</p></details>
+    <details class="faq"><summary>Does intermittent fasting help you lose weight?</summary><p>Mostly through eating fewer calories. In a 12-week trial of 116 adults, 16:8 eating (12 pm–8 pm) lost no more weight than three structured meals — −0.94 kg against −0.68 kg, a difference of −0.26 kg that was not significant (Lowe 2020). In a 12-month trial of 139 adults with obesity, adding an 8 a.m.–4 p.m. window to calorie restriction gave −8.0 kg against −6.3 kg, also not a significant difference (−1.8 kg, P = 0.11; Liu 2022). A window can make eating less easier for some people; it is not a shortcut by itself.</p></details>
+    <details class="faq"><summary>What is the metabolic switch?</summary><p>It is the point in a fast when the liver’s glycogen runs low and the body shifts toward fat and ketones for fuel. A review of the research (Anton 2018) says it typically occurs between 12 and 36 hours after the last food, depending on the liver glycogen you start with and how much you exercise. The calculator shows where your fast ends against that 12–36 hour range — on 16:8 it ends 4 hours past the 12-hour point.</p></details>
+    <details class="faq"><summary>What is the 5:2 diet?</summary><p>You eat normally five days a week and eat no more than 500 calories on two days (Anton 2018). Pick the two low days in the calculator. With details added under Go advanced it shows your average calories a day and the weekly calorie gap: for someone who maintains weight on 2,400 kcal, 5:2 averages about 1857 kcal a day if the other days are eaten at maintenance — about 0.49 kg a week.</p></details>
+    <details class="faq"><summary>What is alternate-day fasting?</summary><p>Every other day is a low day with less than 25% of your usual energy (alternate-day modified fasting, Anton 2018) and the other days are eaten normally. For someone who maintains weight on 2,400 kcal a low day is up to 600 kcal. The calculator shows the 14-day pattern.</p></details>
+    <details class="faq"><summary>How do I work up to 16:8 or a longer fast?</summary><p>Use Go advanced: enter the hours you fast now and the weeks you want to take. The ramp table moves the window in half-hour steps. From a 12-hour fast to 16 hours over 4 weeks with the last bite fixed at 8:00 PM, the first meal moves from 8:00 AM to 9:00 AM, 10:00 AM, 11:00 AM and 12:00 PM.</p></details>
+    <details class="faq"><summary>What if my weekends are different?</summary><p>Under Go advanced choose “Different at weekends” and enter the weekend time; the result shows both windows, and the live status uses the weekend window on Saturday and Sunday.</p></details>
+    <details class="faq"><summary>Can I build my window around when I sleep?</summary><p>Yes. Choose “My day”, enter your bedtime and how many hours before bed you want to stop eating (3 if you leave it empty). With a bedtime of 11:00 PM and a 3-hour gap on 16:8, the last bite is at 8:00 PM and the first meal at 12:00 PM.</p></details>
+    <details class="faq"><summary>Who should not try intermittent fasting?</summary><p>Intermittent fasting is not suitable for everyone. Talk to a doctor first if you are pregnant or breastfeeding, are under 18, have had an eating disorder, have diabetes or take medication that has to be taken with food, are underweight, or are considering a fast of 24 hours or more. The calculator asks about these and does not show a schedule for the first three.</p></details>
+  </section>
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+      <div class="footer-stack">
+<div class="footer-col" style="order:1">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+          <li><a href="/paint-calculator/">Paint Calculator</a></li>
+          <li><a href="/wallpaper-calculator/">Wallpaper Calculator</a></li>
+          <li><a href="/square-footage-calculator/">Square Footage Calculator</a></li>
+          <li><a href="/tape-measure-fraction-calculator/">Tape Measure Fraction Calculator</a></li>
+          <li><a href="/stair-calculator/">Stair Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:5">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Cooking &amp;</span> <span class="ft2">Kitchen</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/recipe-converter/">Recipe Converter</a></li>
+          <li><a href="/turkey-cooking-time-calculator/">Turkey Cooking Time Calculator</a></li>
+          <li><a href="/turkey-thawing-time-calculator/">Turkey Thawing Time Calculator</a></li>
+          <li><a href="/turkey-size-calculator/">Turkey Size Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:6">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Money &amp;</span> <span class="ft2">Finance</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/mortgage-calculator/">Mortgage Calculator</a></li>
+          <li><a href="/loan-calculator/">Loan Calculator</a></li>
+          <li><a href="/auto-loan-calculator/">Auto Loan Calculator</a></li>
+          <li><a href="/car-sales-tax-calculator/">Car Sales Tax Calculator</a></li>
+          <li><a href="/overtime-calculator/">Overtime Calculator</a></li>
+          <li><a href="/salary-calculator/">Salary Calculator</a></li>
+          <!--STAXFOOT:START-->
+          <li><a href="/sales-tax-calculator/">Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/california/">California Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/chicago/">Chicago Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/florida/">Florida Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/las-vegas/">Las Vegas Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/los-angeles/">Los Angeles Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/michigan/">Michigan Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/missouri/">Missouri Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/north-carolina/">North Carolina Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/ohio/">Ohio Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/texas/">Texas Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/virginia/">Virginia Sales Tax Calculator</a></li>
+          <!--STAXFOOT:END-->
+          <li><a href="/tip-calculator/">Tip Calculator</a></li>
+          <li><a href="/how-much-to-tip/">How Much to Tip</a></li>
+        </ul>
+      </div>
+      </div>
+
+      <div class="footer-right">
+<div class="footer-col footer-col--two" style="order:2">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/vo2-max-calculator/">VO2 Max Calculator</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/bmi-calculator/">BMI Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/ideal-weight-calculator/">Ideal Weight Calculator</a></li>
+          <li><a href="/lean-body-mass-calculator/">Lean Body Mass Calculator</a></li>
+          <li><a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio Calculator</a></li>
+          <li><a href="/gmi-calculator/">GMI Calculator</a></li>
+          <li><a href="/a1c-calculator/">A1C Calculator</a></li>
+          <li><a href="/calorie-calculator/">Calorie Calculator</a></li>
+          <li><a href="/calorie-deficit-calculator/">Calorie Deficit Calculator</a></li>
+          <li><a href="/bmr-calculator/">BMR Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/water-intake-calculator/">Water Intake Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/protein-intake-calculator/">Protein Intake Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
+          <li><a href="/steps-to-miles-calculator/">Steps to Miles Calculator</a></li>
+          <li><a href="/dog-age-calculator/">Dog Age Calculator</a></li>
+          <li><a href="/cat-age-calculator/">Cat Age Calculator</a></li>
+          <li><a href="/calories-burned-calculator/">Calories Burned Calculator</a></li>
+          <li><a href="/calories-burned-walking-calculator/">Calories Burned Walking Calculator</a></li>
+          <li><a href="/calories-burned-running-calculator/">Calories Burned Running Calculator</a></li>
+          <li><a href="/keto-calculator/">Keto Calculator</a></li>
+          <li><a href="/net-carb-calculator/">Net Carb Calculator</a></li>
+          <li><a href="/intermittent-fasting-calculator/">Intermittent Fasting Calculator</a></li>
+        </ul>
+      </div>
+
+        <div class="footer-sub">
+<div class="footer-subcol">
+<div class="footer-col" style="order:3">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/semester-grade-calculator/">Semester Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+          <li><a href="/grade-curve-calculator/">Grade Curve Calculator</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:START-->
+<div class="footer-col" style="order:7">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Unit</span> <span class="ft2">Converters</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/unit-converter/">Unit Converter</a></li>
+          <li><a href="/length-converter/">Length Converter</a></li>
+          <li><a href="/weight-converter/">Weight Converter</a></li>
+          <li><a href="/volume-converter/">Volume Converter</a></li>
+          <li><a href="/temperature-converter/">Temperature Converter</a></li>
+          <li><a href="/area-converter/">Area Converter</a></li>
+          <li><a href="/speed-converter/">Speed Converter</a></li>
+          <li><a href="/data-storage-converter/">Data Storage Converter</a></li>
+          <li><a href="/cooking-converter/">Cooking Measurement Converter</a></li>
+          <li><a href="/px-to-rem-converter/">PX to REM Converter</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:END-->
+</div>
+
+<div class="footer-col" style="order:4">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/fraction-calculator/">Fraction Calculator</a></li>
+          <li><a href="/standard-deviation-calculator/">Standard Deviation Calculator</a></li>
+          <li><a href="/scientific-notation-calculator/">Scientific Notation Calculator</a></li>
+          <li><a href="/weighted-average-calculator/">Weighted Average Calculator</a></li>
+          <li><a href="/average-calculator/">Average Calculator</a></li>
+          <li><a href="/batting-average-calculator/">Batting Average Calculator</a></li>
+          <li><a href="/stock-average-calculator/">Stock Average Calculator</a></li>
+          <li><a href="/dice-average-calculator/">Dice Average Calculator</a></li>
+          <li><a href="/time-average-calculator/">Time Average Calculator</a></li>
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+          <li><a href="/percentage-change-calculator/">Percentage Change Calculator</a></li>
+          <li><a href="/age-calculator/">Age Calculator</a></li>
+          <li><a href="/date-calculator/">Date Calculator</a></li>
+          <li><a href="/time-calculator/">Time Calculator</a></li>
+          <li><a href="/hours-calculator/">Hours Calculator</a></li>
+          <li><a href="/triangle-calculator/">Triangle Calculator</a></li>
+          <li><a href="/random-number-generator/">Random Number Generator</a></li>
+        </ul>
+      </div>
+        </div>
+      </div>
+
+      <!--PAYFOOT:START-->
+      <div class="footer-col footer-col--wide">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Paycheck</span> <span class="ft2">Calculators</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/paycheck-calculator/">Paycheck Calculator (all states)</a></li>
+          <li><a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arkansas/">Arkansas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/california/">California Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/hawaii/">Hawaii Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/louisiana/">Louisiana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nebraska/">Nebraska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/oklahoma/">Oklahoma Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/utah/">Utah Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wisconsin/">Wisconsin Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a></li>
+        </ul>
+      </div>
+      <!--PAYFOOT:END-->
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/blog/">Blog</a>
+      <span aria-hidden="true">·</span>
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+</div>
+
+<script src="/assets/app.js?v=315"></script>
+<script>CalcThis.initFastCalc();</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>

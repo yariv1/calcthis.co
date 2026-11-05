@@ -19769,3 +19769,431 @@ CalcThis.initNetCarbCalc = function () {
   render();
 };
 /* KETO:END */
+
+/* FASTING:BEGIN */
+/* =========================================================
+   INTERMITTENT FASTING calculator (/intermittent-fasting-calculator/).
+   Competitors opened live (2026-11-05): 101planners (8 methods + custom, last bite / first meal, ring, timeline, optional body details, safety ticks),
+   fatcalc.com (protocols + extended fast 24-72 h), many anonymous "protocol + start time -> window" pages. calculator.net has none; Omnicalculator 404.
+   Sources used (read live): Anton SD et al., Obesity 2018;26:254 (PMC5783752) - the metabolic switch typically occurs 12 to 36 h after the last food, depending on
+   liver glycogen and exercise; 5:2 = no more than 500 calories on two days a week; time-restricted feeding typically 8-12 h a day; alternate-day modified fasting
+   = less than 25% of baseline energy. Lowe 2020 (JAMA Intern Med, TREAT) and Liu 2022 (NEJM 386:1495) - no extra weight loss from the eating window alone.
+   Daily kcal / maintenance come from CalcThis.ketoEngine (Mifflin-St Jeor / Katch-McArdle x the site's activity levels).
+   ========================================================= */
+/* FAST-ENGINE:START */
+CalcThis.fastEngine = (function () {
+  var SW_LO = 12, SW_HI = 36, LOW52 = 500, KCAL_KG = 7700, MEAL = 45;
+  var METHODS = [
+    { id: '12', name: '12:12', fast: 12, kind: 'daily' },
+    { id: '14', name: '14:10', fast: 14, kind: 'daily' },
+    { id: '16', name: '16:8', fast: 16, kind: 'daily' },
+    { id: '18', name: '18:6', fast: 18, kind: 'daily' },
+    { id: '20', name: '20:4', fast: 20, kind: 'daily' },
+    { id: 'omad', name: 'OMAD — one meal a day (23:1)', fast: 23, kind: 'daily' },
+    { id: 'cust', name: 'Custom daily fast', fast: null, kind: 'daily' },
+    { id: '52', name: '5:2 — two low-calorie days a week', fast: null, kind: 'week' },
+    { id: 'adf', name: 'Alternate-day — every other day low', fast: null, kind: 'week' },
+    { id: 'ext', name: 'Extended fast — 24 to 72 hours', fast: null, kind: 'ext' }
+  ];
+  function num(t) {
+    t = (t + '').trim().replace(/\s/g, '');
+    if (!t) return null;
+    if (/^[+-]?\d*,\d+$/.test(t)) t = t.replace(',', '.'); else t = t.replace(/,/g, '');
+    if (!/^[+-]?(\d+\.?\d*|\.\d+)$/.test(t)) return NaN;
+    return parseFloat(t);
+  }
+  function mod(x) { return ((x % 1440) + 1440) % 1440; }
+  function fmtClock(min, c24) {
+    var d = mod(Math.round(min)), h = Math.floor(d / 60), m = d % 60, mm = (m < 10 ? '0' : '') + m;
+    if (c24) return (h < 10 ? '0' : '') + h + ':' + mm;
+    return ((h % 12) || 12) + ':' + mm + ' ' + (h < 12 ? 'AM' : 'PM');
+  }
+  function fmtH(x) { return String(parseFloat((Math.round(x * 100) / 100).toFixed(2))); }
+  function fmtDur(min) {
+    min = Math.round(min); var h = Math.floor(min / 60), m = min - h * 60;
+    return h ? h + ' h' + (m ? ' ' + m + ' min' : '') : m + ' min';
+  }
+  /* o = { anchor 'last'|'first'|'day', min (last bite or first meal), bed, gap (hours), fast (hours) } -> { last, first, fast, eat } (minutes after midnight) */
+  function daily(o) {
+    var fast = o.fast, eat = 24 - fast, last, first;
+    if (o.anchor === 'first') { first = mod(o.min); last = mod(first + eat * 60); }
+    else { last = o.anchor === 'day' ? mod(o.bed - o.gap * 60) : mod(o.min); first = mod(last + fast * 60); }
+    return { last: last, first: first, fast: fast, eat: eat };
+  }
+  /* meal start times inside the window, evenly spread; the last meal (MEAL minutes) finishes when the window closes */
+  function meals(first, eat, n) {
+    var out = [], step = n > 1 ? Math.max(0, eat * 60 - MEAL) / (n - 1) : 0;
+    for (var i = 0; i < n; i++) out.push(mod(Math.round((first + i * step) / 5) * 5));
+    return out;
+  }
+  /* where you are at clock minute `cur` */
+  function live(d, cur) {
+    var e = mod(cur - d.first);
+    if (e < d.eat * 60) return { state: 'eat', left: d.eat * 60 - e, used: e };
+    var el = e - d.eat * 60;
+    return { state: 'fast', elapsed: el, left: d.fast * 60 - el };
+  }
+  function phase(hours) { return hours < SW_LO ? 'before' : (hours <= SW_HI ? 'in' : 'after'); }
+  /* weekly ramp from `from` hours of fasting to `to`; fixed = 'last'|'first' keeps that clock time still */
+  function ramp(o) {
+    var rows = [];
+    for (var k = 0; k <= o.weeks; k++) {
+      var fast = Math.round((o.from + (o.to - o.from) * k / o.weeks) * 2) / 2, eat = 24 - fast, first, last;
+      if (o.fixed === 'first') { first = mod(o.min); last = mod(first + eat * 60); } else { last = mod(o.min); first = mod(last + fast * 60); }
+      rows.push({ week: k, fast: fast, eat: eat, first: first, last: last });
+    }
+    return rows;
+  }
+  /* weekly maths for 5:2 / alternate-day; maint = maintenance kcal a day, normal days at maintenance */
+  function week(mode, maint) {
+    var low = mode === '52' ? LOW52 : Math.round(maint * 0.25), lowDays = mode === '52' ? 2 : 3.5;
+    var intake = (mode === '52' ? (5 * maint + 2 * low) / 7 : (maint + low) / 2);
+    return { low: low, intake: intake, deficit: maint - intake, kgWeek: (maint - intake) * 7 / KCAL_KG };
+  }
+  return { SW_LO: SW_LO, SW_HI: SW_HI, LOW52: LOW52, MEAL: MEAL, METHODS: METHODS, num: num, mod: mod, fmtClock: fmtClock, fmtH: fmtH, fmtDur: fmtDur, daily: daily, meals: meals, live: live, phase: phase, ramp: ramp, week: week };
+})();
+/* FAST-ENGINE:END */
+
+/* =========================================================
+   CalcThis.initFastCalc() — ids if*. Engines: CalcThis.fastEngine (+ ketoEngine for maintenance). The time fields are the Time Calculator's
+   DS .time-field / .ap-seg (masked h:mm digits + AM/PM), same logic as the Hours calculator, with the 12/24-hour switch.
+   ========================================================= */
+CalcThis.initFastCalc = function () {
+  var E = CalcThis.fastEngine, K = CalcThis.ketoEngine, U = CalcThis._kzUtil, trim = U.trim, grp = U.grp, esc = U.esc, setSeg = U.setSeg, seg = U.seg;
+  var $ = function (id) { return document.getElementById(id); };
+  var DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  var st = { m: '16', c24: false, anc: 'last', wk: 'same', meals: 3, adv: false, days: [0, 3], adf: 'low', sex: 'f', wu: 'lb', hu: 'in', goal: 'lose', pace: 1, cur: null, flags: {} };
+  var LB = 2.20462, ST = 6.35029;
+  function setHint(m) { var h = $('ifHint'); h.textContent = m || ''; h.style.display = m ? 'block' : 'none'; }
+  function show(id, on) { var e = $(id); if (e) e.style.display = on ? '' : 'none'; }
+  function nowDate() { return CalcThis.ifNow ? CalcThis.ifNow() : new Date(); }
+
+  /* ---------- time fields ---------- */
+  function splitDigits(raw) {
+    var d = ('' + raw).replace(/\D/g, '').slice(0, 4);
+    if (!d) return { empty: true };
+    var lim = st.c24 ? '2' : '1';
+    if (d[0] > lim) return { hDig: '0' + d[0], mDig: d.slice(1, 3), hourDone: true };
+    if (st.c24 && d[0] === '2' && d.length >= 2 && d[1] > '3') return { hDig: '02', mDig: d.slice(1, 3), hourDone: true };
+    if (d.length === 1) return { hDig: d, mDig: '', hourDone: false };
+    return { hDig: d.slice(0, 2), mDig: d.slice(2, 4), hourDone: true };
+  }
+  function refreshGhost(f) {
+    var s = splitDigits(f.input.value);
+    var val = s.empty ? '' : (s.hourDone ? s.hDig + ':' + s.mDig : s.hDig);
+    if (val !== f.input.value) f.input.value = val;
+    var hc = s.empty ? '' : s.hDig, mc = s.empty ? '' : s.mDig, cells = [hc[0], hc[1], ':', mc[0], mc[1]], html = '';
+    for (var i = 0; i < 5; i++) {
+      if (i === 2) html += '<span class="g-sep">:</span>';
+      else if (cells[i] != null) html += '<span class="g-on">' + cells[i] + '</span>';
+      else html += '<span class="g-off">-</span>';
+    }
+    f.ghost.innerHTML = html;
+  }
+  /* minutes after midnight | null (empty) | NaN (typed but not a valid time) */
+  function fieldMin(f) {
+    var s = splitDigits(f.input.value);
+    if (s.empty) return null;
+    var h = +s.hDig, md = s.mDig, m = md.length === 0 ? 0 : (md.length === 1 ? (+md) * 10 : +md);
+    if (m > 59) return NaN;
+    if (st.c24) return h > 23 ? NaN : h * 60 + m;
+    if (h < 1 || h > 12) return NaN;
+    var base = h % 12; if (f.ap === 'pm') base += 12;
+    return base * 60 + m;
+  }
+  function paintAp(f) { [].forEach.call(f.seg.children, function (b) { b.classList.toggle('on', b.getAttribute('data-ap') === f.ap); }); }
+  var TF = {};
+  ['ifT1', 'ifT2', 'ifWake', 'ifBed'].forEach(function (id) {
+    var el = $(id); if (!el) return;
+    TF[id] = { el: el, input: el.querySelector('.time-digits'), ghost: el.querySelector('.time-ghost'), seg: el.querySelector('.ap-seg'), ap: el.getAttribute('data-ap') };
+    paintAp(TF[id]); refreshGhost(TF[id]);
+  });
+  function setField(f, text, ap) { f.input.value = text; if (ap) f.ap = ap; refreshGhost(f); paintAp(f); }
+  function put24(f, m) {
+    var h = Math.floor(m / 60), mi = m % 60, mm = (mi < 10 ? '0' : '') + mi;
+    if (st.c24) setField(f, (h < 10 ? '0' : '') + h + ':' + mm, f.ap); else { var h12 = (h % 12) || 12; setField(f, (h12 < 10 ? '0' : '') + h12 + ':' + mm, h < 12 ? 'am' : 'pm'); }
+  }
+  document.addEventListener('input', function (e) {
+    var t = e.target; if (!t.classList || !t.classList.contains('time-digits') || !t.closest('.p-if')) return;
+    var id = t.closest('.if-tf').id; refreshGhost(TF[id]); render();
+  });
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest ? e.target.closest('.p-if .ap-seg button') : null; if (!b) return;
+    var id = b.closest('.if-tf').id, f = TF[id], ap = b.getAttribute('data-ap'); if (f.ap !== ap) { f.ap = ap; paintAp(f); render(); }
+  });
+  document.querySelectorAll('.if-now').forEach(function (b) {
+    b.addEventListener('click', function () { var d = nowDate(); put24(TF[b.closest('.if-tf').id], d.getHours() * 60 + d.getMinutes()); render(); });
+  });
+  $('ifClk').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    var to24 = b.getAttribute('data-v') === '24'; if (to24 === st.c24) return;
+    var old = {}; Object.keys(TF).forEach(function (k) { old[k] = fieldMin(TF[k]); });
+    st.c24 = to24; setSeg('ifClk', to24 ? '24' : '12'); document.body.classList.toggle('c24', to24);
+    Object.keys(TF).forEach(function (k) { var m = old[k]; if (m == null || isNaN(m)) { setField(TF[k], '', TF[k].ap); return; } put24(TF[k], m); });
+    render();
+  });
+
+  /* ---------- body details (advanced) ---------- */
+  function toKg(n) { return st.wu === 'lb' ? n / LB : (st.wu === 'st' ? n * ST : n); }
+  function body() {
+    if (!st.adv) return null;
+    var a = K.num($('ifAge').value), hr = $('ifHt').value, w = K.num($('ifW').value);
+    var any = $('ifAge').value.trim() || hr.trim() || $('ifW').value.trim();
+    if (!any) return null;
+    if (a === null || !hr.trim() || w === null) return { err: 'Add your age, height and weight to see calories — or leave all three empty.' };
+    if (isNaN(a) || a < 18 || a > 100) return { err: 'Age should be between 18 and 100 years.' };
+    var h = st.hu === 'in' ? K.parseIn(hr) : K.num(hr);
+    if (h === null || isNaN(h) || h <= 0) return { err: 'Couldn’t read the height — use ' + (st.hu === 'in' ? 'inches (70) or feet and inches (5\'10)' : 'centimetres, like 178') + '.' };
+    var cm = st.hu === 'in' ? h * 2.54 : h;
+    if (cm < 100 || cm > 250) return { err: 'Height should be between ' + (st.hu === 'in' ? '39 and 98 inches' : '100 and 250 cm') + '.' };
+    if (isNaN(w) || w <= 0) return { err: 'Couldn’t read the weight — use a number like ' + (st.wu === 'kg' ? '70' : '154') + '.' };
+    var kg = toKg(w); if (kg < 30 || kg > 300) return { err: 'Weight should be between ' + (st.wu === 'lb' ? '66 and 660 lb' : (st.wu === 'kg' ? '30 and 300 kg' : '4.7 and 47 st')) + '.' };
+    var pace = (st.wu === 'kg' ? K.PACE_KG[st.pace] : K.PACE_LB[st.pace] / LB);
+    var R = K.solve({ male: st.sex === 'm', W: kg, H: cm, A: Math.floor(a), f: parseFloat($('ifAct').value) || 1.55, bf: null, goal: st.goal, pace: pace, cap: 25, pg: 1.5, basis: 'ideal', kcal: null, G: null, meals: 1 });
+    return { maint: R.maint, kcal: R.kcal, raised: R.raised, floor: R.floor, delta: R.delta };
+  }
+
+  /* ---------- drawing ---------- */
+  function ring(d, mealsAt, nowMin) {
+    var C = 145, R0 = 100, SW = 28;
+    function pt(min, r) { var a = (min / 1440) * 2 * Math.PI - Math.PI / 2; return [C + r * Math.cos(a), C + r * Math.sin(a)]; }
+    function arc(m1, span) {
+      if (span >= 1440) return '<circle cx="' + C + '" cy="' + C + '" r="' + R0 + '" fill="none" stroke="var(--amber)" stroke-width="' + SW + '"/>';
+      var p1 = pt(m1, R0), p2 = pt(m1 + span, R0);
+      return '<path d="M' + p1[0].toFixed(2) + ' ' + p1[1].toFixed(2) + ' A' + R0 + ' ' + R0 + ' 0 ' + (span > 720 ? 1 : 0) + ' 1 ' + p2[0].toFixed(2) + ' ' + p2[1].toFixed(2) + '" fill="none" stroke="var(--amber)" stroke-width="' + SW + '"/>';
+    }
+    var s = '<circle cx="' + C + '" cy="' + C + '" r="' + R0 + '" fill="none" stroke="var(--spruce)" stroke-width="' + SW + '"/>' + arc(d.first, d.eat * 60);
+    [[0, '12a'], [360, '6a'], [720, '12p'], [1080, '6p']].forEach(function (t) {
+      var a = pt(t[0], R0 + SW / 2 + 4), b = pt(t[0], R0 - SW / 2 - 4), tp = pt(t[0], R0 + SW / 2 + 18);
+      s += '<text x="' + tp[0].toFixed(1) + '" y="' + (tp[1] + 4).toFixed(1) + '" text-anchor="middle" font-size="12" font-weight="600" fill="var(--muted)">' + t[1] + '</text>';
+    });
+    mealsAt.forEach(function (m) { var p = pt(m, R0); s += '<circle cx="' + p[0].toFixed(1) + '" cy="' + p[1].toFixed(1) + '" r="5" fill="#fff" stroke="var(--amber-deep)" stroke-width="1.5"/>'; });
+    if (nowMin != null) { var a = pt(nowMin, R0 - SW / 2 - 2), b = pt(nowMin, R0 + SW / 2 + 2); s += '<line x1="' + a[0].toFixed(1) + '" y1="' + a[1].toFixed(1) + '" x2="' + b[0].toFixed(1) + '" y2="' + b[1].toFixed(1) + '" stroke="var(--ink)" stroke-width="3.5" stroke-linecap="round"/>'; }
+    s += '<text x="' + C + '" y="' + (C - 2) + '" text-anchor="middle" font-size="26" font-weight="700" fill="var(--ink)" font-family="Fraunces,serif">' + E.fmtH(d.eat) + ' h</text>';
+    s += '<text x="' + C + '" y="' + (C + 18) + '" text-anchor="middle" font-size="13" font-weight="600" fill="var(--muted)">eating · ' + E.fmtH(d.fast) + ' h fasting</text>';
+    return '<svg viewBox="0 0 290 290" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="24-hour clock: eating window ' + E.fmtH(d.eat) + ' hours, fasting ' + E.fmtH(d.fast) + ' hours">' + s + '</svg>' +
+      '<div class="bm-key if-key"><span><i class="c1"></i>Eating</span><span><i class="c0"></i>Fasting</span><span><i class="if-dot"></i>Meals</span>' + (nowMin != null ? '<span><i class="if-now-i"></i>Now</span>' : '') + '</div>';
+  }
+  function rowsHtml(rows) { return '<tbody>' + rows.map(function (r) { return '<tr><td>' + r[0] + '</td><td>' + r[1] + '</td></tr>'; }).join('') + '</tbody>'; }
+  function clk(m) { return E.fmtClock(m, st.c24); }
+  function dayWord(totalMin) { var n = Math.floor(totalMin / 1440); return n <= 0 ? '' : (n === 1 ? ' (next day)' : ' (' + n + ' days later)'); }
+
+  /* ---------- live panel ---------- */
+  function renderLive() {
+    var box = $('ifLive'); if (!st.cur || !st.cur.d) { box.style.display = 'none'; return; }
+    var d = st.cur.d, n = nowDate(), cur = n.getHours() * 60 + n.getMinutes(), L = E.live(d, cur), html;
+    $('ifRing').innerHTML = ring(d, st.cur.mealsAt, cur);
+    if (L.state === 'eat') html = '<b>Right now: eating window.</b> ' + E.fmtDur(L.left) + ' left until ' + clk(d.last) + ', then the fast starts.';
+    else {
+      var h = L.elapsed / 60, ph = E.phase(h);
+      html = '<b>Right now: fasting.</b> ' + E.fmtDur(L.elapsed) + ' since your last bite, ' + E.fmtDur(L.left) + ' until you can eat at ' + clk(d.first) + '. ' +
+        (ph === 'before' ? 'That is before the 12-hour point where the metabolic switch typically begins.' : (ph === 'in' ? 'You are inside the 12–36 hour range where the metabolic switch typically occurs.' : 'You are beyond 36 hours.'));
+    }
+    box.style.display = ''; box.innerHTML = html;
+  }
+
+  /* ---------- render ---------- */
+  function empty(msg, sub) { $('ifBig').textContent = '—'; $('ifSub').textContent = sub || $('ifSub').getAttribute('data-empty'); $('ifBody').style.display = 'none'; $('ifMVal').textContent = '—'; st.cur = null; setHint(msg || ''); renderLive(); }
+  function method() { for (var i = 0; i < E.METHODS.length; i++) if (E.METHODS[i].id === st.m) return E.METHODS[i]; return E.METHODS[2]; }
+  function fastHours(M) {
+    if (M.id === 'cust') {
+      var n = E.num($('ifCust').value); if (n === null) return { empty: true };
+      if (isNaN(n) || n < 10 || n > 23) return { err: 'A custom daily fast should be between 10 and 23 hours.' };
+      return { v: n };
+    }
+    if (M.id === 'ext') {
+      var x = E.num($('ifExt').value); if (x === null) return { empty: true };
+      if (isNaN(x) || x < 24 || x > 72) return { err: 'An extended fast here should be between 24 and 72 hours.' };
+      return { v: x };
+    }
+    return { v: M.fast };
+  }
+  function flagsInfo() {
+    var f = st.flags, severe = !!(f.preg || f.u18 || f.ed), any = severe || f.dm || f.under;
+    return { severe: severe, any: any };
+  }
+  function render() {
+    var M = method(), isD = M.kind === 'daily', isW = M.kind === 'week', isE = M.kind === 'ext';
+    show('ifCustWrap', M.id === 'cust'); show('ifExtWrap', isE);
+    show('ifAncRow', isD); show('ifClkRow', !isW);
+    show('ifT1Wrap', (isD && st.anc !== 'day') || isE);
+    show('ifDayWrap', isD && st.anc === 'day'); show('ifDaysWrap', M.id === '52'); show('ifAdfWrap', M.id === 'adf');
+    show('ifWkRow', isD); show('ifWkWrap', isD && st.wk === 'diff'); show('ifMealsRow', isD); show('ifRampWrap', isD);
+    var lab1 = isE ? 'Last bite' : (st.anc === 'first' ? 'First meal' : 'Last bite'); $('ifT1Lab').textContent = lab1;
+    $('ifT2Lab').textContent = (st.anc === 'first' ? 'First meal' : (st.anc === 'day' ? 'Bedtime' : 'Last bite')) + ' on weekends';
+    var fl = flagsInfo(), warn = $('ifWarn');
+    if (fl.severe) { warn.style.display = ''; warn.innerHTML = '<b>Please talk to a doctor first.</b> Intermittent fasting is not suggested for people who are pregnant or breastfeeding, under 18, or with a history of disordered eating, so no schedule is shown.'; }
+    else if (fl.any) { warn.style.display = ''; warn.innerHTML = '<b>Check with your doctor before you start.</b> If you have diabetes, take medication that must be taken with food, or are underweight, fasting can be unsafe without medical advice. The schedule below is for information only.'; }
+    else { warn.style.display = 'none'; warn.innerHTML = ''; }
+    var B = body();
+    if (B && B.err) { empty(B.err); return; }
+    if (fl.severe) { empty('', 'Not shown — see the note above.'); $('ifBody').style.display = 'none'; return; }
+    if (isW) return renderWeek(M, B);
+    var F = fastHours(M); if (F.err) { empty(F.err); return; } if (F.empty) { empty(''); return; }
+    var t1 = fieldMin(TF.ifT1);
+    if (isE) return renderExt(F.v, t1, B);
+    var anchor = st.anc, o = { anchor: anchor, fast: F.v };
+    if (anchor === 'day') {
+      var bed = fieldMin(TF.ifBed), wake = fieldMin(TF.ifWake);
+      if (bed !== null && isNaN(bed)) { empty('Couldn’t read the bedtime — ' + (st.c24 ? 'use 0–23 for the hour.' : 'use 1–12 for the hour and pick AM or PM.')); return; }
+      if (wake !== null && isNaN(wake)) { empty('Couldn’t read the wake-up time — ' + (st.c24 ? 'use 0–23 for the hour.' : 'use 1–12 for the hour and pick AM or PM.')); return; }
+      if (bed === null) { empty(''); return; }
+      var g = E.num($('ifGap').value); if (g === null) g = 3; else if (isNaN(g) || g < 0 || g > 8) { empty('Hours between your last bite and bedtime should be between 0 and 8.'); return; }
+      o.bed = bed; o.gap = g; o.wake = wake;
+    } else {
+      if (t1 === null) { empty(''); return; }
+      if (isNaN(t1)) { empty('Couldn’t read the time — ' + (st.c24 ? 'use 0–23 for the hour.' : 'use 1–12 for the hour and pick AM or PM.')); return; }
+      o.min = t1;
+    }
+    var d = E.daily(o); d.o = o;
+    var weekend = null;
+    if (st.wk === 'diff') {
+      var t2 = fieldMin(TF.ifT2);
+      if (t2 !== null && isNaN(t2)) { empty('Couldn’t read the weekend time — ' + (st.c24 ? 'use 0–23 for the hour.' : 'use 1–12 for the hour and pick AM or PM.')); return; }
+      if (t2 !== null) weekend = E.daily({ anchor: anchor === 'day' ? 'last' : anchor, min: t2, fast: F.v });
+    }
+    var big = clk(d.first) + ' – ' + clk(d.last);
+    $('ifResLab').textContent = 'Eating window';
+    $('ifBig').textContent = big; $('ifSub').textContent = E.fmtH(d.eat) + ' hours to eat · ' + E.fmtH(d.fast) + ' hours fasting';
+    $('ifMLab').textContent = 'Eating window'; $('ifMVal').textContent = big;
+    setHint(''); $('ifBody').style.display = '';
+    ['ifRingBox', 'ifSwitchBox', 'ifMealBox', 'ifRampBox'].forEach(function (id) { show(id, true); }); show('ifStripBox', false);
+    var n = nowDate(), cur = n.getHours() * 60 + n.getMinutes(), dow = n.getDay(), isWeekend = dow === 0 || dow === 6;
+    var dNow = (st.wk === 'diff' && isWeekend && weekend) ? weekend : d;
+    var mealList = E.meals(d.first, d.eat, st.meals);
+    st.cur = { d: dNow, mealsAt: E.meals(dNow.first, dNow.eat, st.meals) };
+    renderLive();
+    var notes = [];
+    if (d.fast >= 20 && M.id !== 'omad') notes.push('A fast of 20 hours or more is the hardest daily pattern — many people work up to it.');
+    var tip = 'Eat between ' + clk(d.first) + ' and ' + clk(d.last) + ' and fast the other ' + E.fmtH(d.fast) + ' hours. ' + (d.fast < 12 ? '' : (d.fast === 12 ? 'Your fast ends right at the 12-hour point at which the metabolic switch typically begins.' : 'Your fast ends ' + E.fmtH(d.fast - E.SW_LO) + ' hours past the 12-hour point at which the metabolic switch typically begins.'));
+    $('ifTip').textContent = tip.trim() + (notes.length ? ' ' + notes.join(' ') : '');
+    /* switch bar */
+    var mx = d.fast > 36 ? 72 : 36;
+    $('ifSwitch').innerHTML = U.ruler(mx, E.SW_LO, E.SW_HI, d.fast, [[0, '0 h'], [E.SW_LO, '12 h'], [E.SW_HI, '36 h']], E.fmtH(d.fast) + ' h');
+    /* rows */
+    var wraps = d.last < d.first ? ' (the window runs past midnight)' : '';
+    var rows = [];
+    rows.push(['Eating window', clk(d.first) + ' – ' + clk(d.last) + (d.last < d.first ? ' <small>ends the next day</small>' : '')]);
+    rows.push(['Fasting window', clk(d.last) + ' – ' + clk(d.first) + (d.first < d.last || d.fast >= 24 ? ' <small>next day</small>' : ' <small>same day</small>')]);
+    rows.push(['Share of the day spent eating', Math.round(d.eat / 24 * 100) + '%']);
+    rows.push(['Hour 12 of your fast', clk(d.last + 12 * 60) + (d.fast >= 12 ? '' : ' <small>your fast ends before this</small>')]);
+    if (o.anchor === 'day' && o.wake != null) { var gapW = E.mod(d.first - o.wake); rows.push(['First meal after waking', E.fmtDur(gapW)]); }
+    if (weekend) rows.push(['Weekends', clk(weekend.first) + ' – ' + clk(weekend.last)]);
+    else if (st.wk === 'diff') rows.push(['Weekends', 'Enter your weekend time above']);
+    if (B) rows.push(['Calories to maintain weight', grp(B.maint) + ' kcal']);
+    if (B) rows.push(['Daily target (' + (st.goal === 'lose' ? 'losing' : (st.goal === 'gain' ? 'gaining' : 'maintaining')) + ')', grp(B.kcal) + ' kcal' + (B.raised ? ' <small>raised to the ' + grp(B.floor) + ' kcal safe minimum</small>' : '')]);
+    $('ifRows').innerHTML = rowsHtml(rows);
+    /* meals */
+    var ml = mealList.map(function (m, i) { return '<tr><td>Meal ' + (i + 1) + '</td><td>' + clk(m) + (B ? ' · about ' + grp(B.kcal / st.meals) + ' kcal' : '') + '</td></tr>'; }).join('');
+    $('ifMeal').innerHTML = '<tbody>' + ml + '</tbody>';
+    $('ifMealNote').textContent = 'Meals are spread evenly: the first starts when the window opens and the last (' + E.MEAL + ' minutes) is finished when it closes.' + (B ? ' Calories are your daily target split evenly.' : ' Add your details under Go advanced for calories per meal.');
+    /* ramp */
+    var from = E.num($('ifRampFrom').value), wks = E.num($('ifRampWeeks').value), rb = $('ifRamp'), rh = '';
+    if (st.adv && (from !== null || wks !== null)) {
+      if (from === null || wks === null) rh = 'Enter both the hours you fast now and the weeks to get there.';
+      else if (isNaN(from) || from < 8 || from > 22) rh = 'Hours you fast now should be between 8 and 22.';
+      else if (isNaN(wks) || wks < 1 || wks > 26 || Math.floor(wks) !== wks) rh = 'Weeks should be a whole number from 1 to 26.';
+      else if (from >= d.fast) rh = 'You already fast ' + E.fmtH(from) + ' hours — at least your target of ' + E.fmtH(d.fast) + '.';
+      else {
+        var R = E.ramp({ from: from, to: d.fast, weeks: wks, fixed: o.anchor === 'first' ? 'first' : 'last', min: o.anchor === 'first' ? d.first : d.last });
+        rh = R;
+      }
+    }
+    if (Array.isArray(rh)) {
+      rb.innerHTML = '<thead><tr><th>Week</th><th>Fast</th><th>Eating window</th></tr></thead><tbody>' + rh.map(function (r) { return '<tr><td>' + (r.week === 0 ? 'Now' : 'Week ' + r.week) + '</td><td>' + E.fmtH(r.fast) + ' h</td><td>' + clk(r.first) + ' – ' + clk(r.last) + '</td></tr>'; }).join('') + '</tbody>';
+      $('ifRampMsg').textContent = ''; show('ifRampMsg', false); show('ifRamp', true);
+    } else { rb.innerHTML = ''; show('ifRamp', false); $('ifRampMsg').textContent = rh; show('ifRampMsg', !!rh); }
+    show('ifRampBox', st.adv);
+  }
+  function renderExt(L, t1, B) {
+    if (t1 === null) { empty(''); return; }
+    if (isNaN(t1)) { empty('Couldn’t read the time — ' + (st.c24 ? 'use 0–23 for the hour.' : 'use 1–12 for the hour and pick AM or PM.')); return; }
+    var endAbs = t1 + L * 60, big = clk(endAbs) + dayWord(endAbs);
+    $('ifResLab').textContent = 'Fast ends';
+    $('ifBig').textContent = clk(endAbs); $('ifSub').textContent = E.fmtH(L) + ' hours after your last bite at ' + clk(t1) + (dayWord(endAbs) ? dayWord(endAbs) : ' (same day)');
+    $('ifMLab').textContent = 'Fast ends'; $('ifMVal').textContent = clk(endAbs);
+    setHint(''); $('ifBody').style.display = ''; st.cur = null; renderLive();
+    ['ifRingBox', 'ifMealBox', 'ifRampBox', 'ifStripBox'].forEach(function (id) { show(id, false); }); show('ifSwitchBox', true);
+    var mx = L > 36 ? 72 : 36;
+    $('ifSwitch').innerHTML = U.ruler(mx, E.SW_LO, E.SW_HI, L, [[0, '0 h'], [E.SW_LO, '12 h'], [E.SW_HI, '36 h']], E.fmtH(L) + ' h');
+    $('ifTip').textContent = 'You break the fast at ' + clk(endAbs) + dayWord(endAbs) + '. Hour 12 is at ' + clk(t1 + 12 * 60) + dayWord(t1 + 12 * 60) + ' and hour 36 at ' + clk(t1 + 36 * 60) + dayWord(t1 + 36 * 60) + '. Fasts of 24 hours or more should be discussed with a doctor first.';
+    var rows = [['Last bite', clk(t1)], ['Hour 12 of the fast', clk(t1 + 720) + dayWord(t1 + 720)], ['Hour 24', clk(t1 + 1440) + dayWord(t1 + 1440)]];
+    if (L > 36) rows.push(['Hour 36', clk(t1 + 2160) + dayWord(t1 + 2160)]);
+    rows.push(['Fast ends', clk(endAbs) + dayWord(endAbs)]);
+    $('ifRows').innerHTML = rowsHtml(rows);
+  }
+  function renderWeek(M, B) {
+    var isAdf = M.id === 'adf', lowDays = isAdf ? null : st.days.slice().sort();
+    if (!isAdf && lowDays.length !== 2) { empty('Pick exactly two low-calorie days.', 'Pick two days.'); return; }
+    var W = B ? E.week(M.id, B.maint) : null, low = isAdf ? (B ? W.low : null) : E.LOW52;
+    $('ifResLab').textContent = isAdf ? 'Low days' : 'Low-calorie days';
+    var big = isAdf ? 'Every other day' : DAYS[lowDays[0]] + ' and ' + DAYS[lowDays[1]];
+    $('ifBig').textContent = big;
+    $('ifSub').textContent = isAdf ? (low ? 'up to about ' + grp(low) + ' kcal on a low day (25% of your maintenance)' : 'less than 25% of your usual calories on a low day') : 'no more than ' + grp(E.LOW52) + ' kcal on each, normal eating on the other five';
+    $('ifMLab').textContent = isAdf ? 'Low days' : 'Low days'; $('ifMVal').textContent = big;
+    setHint(''); $('ifBody').style.display = ''; st.cur = null; renderLive();
+    ['ifRingBox', 'ifSwitchBox', 'ifMealBox', 'ifRampBox'].forEach(function (id) { show(id, false); }); show('ifStripBox', true);
+    var cells = [], n = isAdf ? 14 : 7;
+    for (var i = 0; i < n; i++) {
+      var isLow = isAdf ? ((i % 2 === 0) === (st.adf === 'low')) : lowDays.indexOf(i) >= 0;
+      cells.push('<div class="if-day' + (isLow ? ' low' : '') + '" title="' + (isLow ? 'Low day' : 'Normal day') + '"><span>' + (isAdf ? (i + 1) : DAYS[i]) + '</span><b class="if-sr">' + (isLow ? 'Low' : 'Normal') + '</b></div>');
+    }
+    $('ifStrip').innerHTML = '<div class="if-strip' + (isAdf ? ' adf' : '') + '">' + cells.join('') + '</div><div class="bm-key"><span><i class="c1"></i>Low-calorie day</span><span><i class="if-norm"></i>Normal day</span>' + (isAdf ? '<span>Numbers are days from day 1</span>' : '') + '</div>';
+    var rows = [];
+    if (isAdf) rows.push(['Low day', low ? 'up to ' + grp(low) + ' kcal' : 'less than 25% of your usual calories']);
+    else rows.push(['Low days', grp(E.LOW52) + ' kcal or less, on ' + DAYS[lowDays[0]] + ' and ' + DAYS[lowDays[1]]]);
+    if (W) {
+      rows.push(['Calories to maintain weight', grp(B.maint) + ' kcal']);
+      rows.push(['Average a day, normal days at maintenance', grp(W.intake) + ' kcal']);
+      rows.push(['Weekly calorie gap', grp(W.deficit * 7) + ' kcal ≈ ' + (st.wu === 'kg' ? trim(W.kgWeek, 2) + ' kg' : trim(W.kgWeek * LB, 2) + ' lb') + ' a week <small>(7,700 kcal per kg of body fat)</small>']);
+    } else rows.push(['Your numbers', 'Add your details under Go advanced for calories and the weekly gap']);
+    $('ifRows').innerHTML = rowsHtml(rows);
+    $('ifTip').textContent = isAdf ? 'Alternate-day modified fasting uses less than 25% of your usual energy on the low days and eats freely on the other days (Anton 2018).' : 'The 5:2 diet is no more than ' + E.LOW52 + ' calories on two days a week and normal eating on the other five (Anton 2018).';
+  }
+
+  /* ---------- wiring ---------- */
+  $('ifMethod').addEventListener('change', function () { st.m = this.value || '16'; render(); });
+  ['ifCust', 'ifExt', 'ifGap', 'ifRampFrom', 'ifRampWeeks', 'ifAge', 'ifHt', 'ifW'].forEach(function (id) { $(id).addEventListener('input', render); });
+  $('ifAct').addEventListener('change', render);
+  seg('ifAnc', function (v) { st.anc = v; render(); });
+  seg('ifWk', function (v) { st.wk = v; render(); });
+  seg('ifMeals', function (v) { st.meals = +v; render(); });
+  seg('ifAdf', function (v) { st.adf = v; render(); });
+  seg('ifSex', function (v) { st.sex = v; render(); });
+  seg('ifPace', function (v) { st.pace = +v; render(); });
+  function paceLabels() { var a = st.wu === 'kg' ? K.PACE_KG : K.PACE_LB, u = st.wu === 'kg' ? ' kg' : ' lb'; [].forEach.call($('ifPace').children, function (b, i) { b.textContent = a[i] + u; }); $('ifPaceLab').textContent = (st.goal === 'gain' ? 'Gain' : 'Lose') + ' per week'; }
+  seg('ifGoal', function (v) { st.goal = v; $('ifPaceRow').style.display = v === 'maint' ? 'none' : ''; paceLabels(); render(); });
+  var ex = {};
+  function readW() { var n = K.num($('ifW').value); if (n === null || isNaN(n) || n <= 0) return n === null ? null : { err: 1 }; var kg = toKg(n); return (kg < 30 || kg > 300) ? { err: 1 } : { kg: kg }; }
+  seg('ifWU', function (v) {
+    var w = readW(), m = ex.w; if (m && m.txt === $('ifW').value) w = { kg: m.kg };
+    st.wu = v; if (w && w.err) $('ifW').value = '';
+    if (w && w.kg) { var txt = trim(v === 'lb' ? w.kg * LB : (v === 'st' ? w.kg / ST : w.kg), 2); $('ifW').value = txt; ex.w = { kg: w.kg, txt: txt }; }
+    $('ifWL').textContent = v; paceLabels(); render();
+  });
+  function readH() { var raw = $('ifHt').value; if (!raw.trim()) return null; var n = st.hu === 'in' ? K.parseIn(raw) : K.num(raw); if (n === null || isNaN(n) || n <= 0) return { err: 1 }; var cm = st.hu === 'in' ? n * 2.54 : n; return (cm < 100 || cm > 250) ? { err: 1 } : { cm: cm }; }
+  seg('ifHU', function (v) {
+    var h = readH(), m = ex.h; if (m && m.txt === $('ifHt').value) h = { cm: m.cm };
+    st.hu = v; if (h && h.err) $('ifHt').value = '';
+    if (h && h.cm) { var txt = v === 'in' ? trim(h.cm / 2.54, 2) : trim(h.cm, 2); $('ifHt').value = txt; ex.h = { cm: h.cm, txt: txt }; }
+    $('ifHL').textContent = v === 'in' ? 'inches or 5\'10' : 'cm'; $('ifHt').placeholder = v === 'in' ? 'e.g. 70 or 5\'10' : 'e.g. 178'; render();
+  });
+  $('ifDays').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return; var v = +b.getAttribute('data-v'), i = st.days.indexOf(v);
+    if (i >= 0) st.days.splice(i, 1); else { if (st.days.length >= 2) st.days.shift(); st.days.push(v); }
+    [].forEach.call($('ifDays').children, function (x) { x.classList.toggle('on', st.days.indexOf(+x.getAttribute('data-v')) >= 0); }); render();
+  });
+  ['preg', 'u18', 'ed', 'dm', 'under'].forEach(function (k) { var c = $('ifF_' + k); c.addEventListener('change', function () { st.flags[k] = c.checked; render(); }); });
+  $('ifAdvBtn').addEventListener('click', function () {
+    st.adv = !st.adv; $('ifAdvBtn').classList.toggle('open', st.adv); $('ifAdvBtnLab').textContent = st.adv ? 'Go simple' : 'Go advanced'; $('ifAdvIn').style.display = st.adv ? '' : 'none';
+    if (!st.adv) {
+      st.wk = 'same'; setSeg('ifWk', 'same'); st.meals = 3; setSeg('ifMeals', 3); ['ifRampFrom', 'ifRampWeeks', 'ifAge', 'ifHt', 'ifW'].forEach(function (id) { $(id).value = ''; });
+      setField(TF.ifT2, '', TF.ifT2.ap); st.adf = 'low'; setSeg('ifAdf', 'low');
+    }
+    render();
+  });
+  paceLabels();
+  setInterval(renderLive, 30000);
+  render();
+};
+/* FASTING:END */
