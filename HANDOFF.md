@@ -4,6 +4,9 @@ _Rewritten again 2026-11-04 at the end of the Florida + car-sales-tax session: *
 
 ---
 
+## 00000000000000. UPDATE 2026-11-05 (latest-2) — CAT AGE DEPLOYED v312 (206 pages, commit 27ddd5ca)
+`/cat-age-calculator/`: 15-9-4 rule with IAMS early-life points (3/6/12/18 months = 4/10/15/21), AAHA/AAFP 2021 life stages (kitten <1, young adult 1-6, mature 7-10, senior >10), timeline, DOB (datepicker), human->cat mode; dog page links to it. Notes: `md-files/calcthis-dogage-research.md` (cat section). Bing manual submit pending (signed out). GSC queue end: a1c, gmi, dog age, cat age. NEXT: calories burned, keto/net carb, fasting, BSA, dog food, BAC.
+
 ## 0000000000000. UPDATE 2026-11-05 (latest) — DOG AGE DEPLOYED v311 (205 pages, commit 7b68acab)
 `/dog-age-calculator/`: three methods (AAHA size chart via Chewy, AVMA rule, UCSD 16 ln(age)+31 read from the Wang 2020 PDF), curve chart with senior window, size by buttons/weight/breed typeahead, DOB (datepicker), human->dog mode. Notes + caveats: `md-files/calcthis-dogage-research.md`. Bing manual submit pending (signed out); GSC queue end: a1c, gmi, dog age. NEXT: cat age (>1000 Medium, own page), then calories burned, keto/net carb, fasting, BSA.
 
