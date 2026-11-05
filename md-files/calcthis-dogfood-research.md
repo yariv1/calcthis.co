@@ -1,0 +1,24 @@
+# Dog food calculator research (2026-11-05) — Ahrefs `dog food calculator` >1000 Medium (raw/homemade >100 Easy; by breed/weight/purina >100 Medium)
+
+## Competitors opened LIVE
+- **Omnicalculator** (omnicalculator.com/biology/dog-food, updated Aug 2026): inputs = 11 "types" in one dropdown (puppy 0-4 mo x3.0, puppy 4 mo-adult x2.0, inactive/obese prone x1.2, neutered x1.6, intact x1.8, weight loss x1.0, weight gain x1.7, working light/moderate/heavy x2/3/5, senior x1.1) + weight (g, dag, kg, lb) + optional kcal per cup. Output = RER, total daily kcal, cups. No visual, no treats, no meals split, no raw, no weight-goal. Text has an error: "Puppy (0-4 years)".
+- **APOP (Association for Pet Obesity Prevention) vet RER/MER tool** (petobesityprevention.org/veterinary-der-calculator): RER = 70 x kg^0.75; MER factor ranges: sedentary/indoor 1.0-1.4, neutered 1.4-1.6, intact 1.6-1.8, weight-loss 1.0-1.2, working 1.6-11, puppy <4 mo 3.0, puppy >=4 mo 2.0, gestation 3.0; kcal per cup/can, feedings per day, treat allowance 5% / 10% max subtracted from MER; print/PDF. Clinical wording, ranges only (no single number), no picture.
+- **Oma's Pride (raw)**: weight + life stage (puppy 8 wk-2 y / adult / pregnant-nursing / working) + goal (lose/maintain/gain) -> grams of raw food. Black box, no kcal shown.
+- Food Motivated (raw/homemade planner) is JS-only, page text empty -> not readable; The K9 Shop, Northwest Naturals, Bella+Duke, Nature's Menu seen only as search snippets (not opened).
+
+## Sources READ (verified)
+- RER = 70 x kg^0.75 and every factor above: APOP page + Omni formulas page (they agree except working-dog range and ranges vs single values).
+## Sources NOT verified (flag or drop)
+- Raw "2-3% of ideal body weight per day" and puppy 5-10%: only commercial snippets (Cotswold, Albright, Vital Raw) -> show as "common rule of thumb from raw-food sellers", compare with the calorie answer, or drop.
+- AAHA/WSAVA primary documents not opened.
+
+## Proposed differentiators (for the approval report)
+VISUAL: kcal bar of the day (food + treats), range ruler showing the factor range (low-high) with the pick marked; bowl/cup fill picture.
+FUNCTIONAL: (1) kcal -> cups / grams / cans / raw grams from the user's own food label (kcal per cup, per kg, per can; any unit), with a few meals per day split; (2) treats budget 5/10% subtracted, shown as kcal and number of typical treats; (3) goal weight mode (weight loss: RER of goal weight x 1.0-1.2 per APOP) with weeks estimate; (4) puppy: expected adult weight -> factor by age months (3.0 under 4 mo, 2.0 after); pregnancy x3.0; (5) range low-high instead of false precision + "weigh every 2 weeks and adjust" rule; (6) mixed feeding (kibble + wet + raw as % of kcal); (7) link to /dog-age-calculator/ and breed picker prefill weight.
+INPUT PARITY: weight units g/kg/lb/st-free; type list of Omni (all 11) + APOP's gestation; kcal per cup optional; feedings/day; treats.
+
+## BUILT LOCALLY 2026-11-05 (not deployed)
+Page `/dog-food-calculator/`, generator `md-files/gen-dogfood-page.js`, engine `CalcThis.dogFoodEngine` (`DOGFOOD-ENGINE:START/END`), init `CalcThis.initDogFoodCalc` (ids `fd*`, block `DOGFOOD:BEGIN/END` at end of app.js), CSS `.p-fd`. 12 types (APOP ranges, Omni single factor as headline), breed typeahead from `CalcThis.DOG_BREEDS` fills middle weight, kcal per cup/can/kg -> cups (nearest 1/8) / cans / g, meals 1-4, treats 0/5/10%, puppy age months picks 3.0/2.0, Go advanced = own factor + second food share + raw 2-3% comparison (flagged as seller rule). DROPPED (no source read): goal-weight calorie mode + weeks to goal, lactation factor. Next generator chains after prevSlug 'dog-food-calculator', prevMenu 'Dog Food', prevName 'Dog Food Calculator'.
+
+## REVISION 2026-11-05 (user feedback: "am I supposed to know kcal per cup?")
+Default view now: breed (optional) + weight + Age (Puppy/Adult/Senior, puppy months optional, neutered yes/no for adults) + Type of food (Dry / Wet / My own) + meals + treats. Dry/Wet use TYPICAL values averaged from labels READ LIVE 2026-11-05: dry = Hill's Science Diet Adult Chicken & Barley 3,675 kcal/kg, 365 kcal per 8 fl oz cup (hillspet.com/dog-food/science-diet-adult-original-dry) + Royal Canin Medium Adult (Canada page) 3,616 kcal/kg, 340 kcal per cup -> 350 per cup, 3,650 per kg; wet = Hill's SD Adult Chicken & Barley canned 369 kcal per 13 oz (370 g) can (science-diet-adult-chicken-canned) + Pedigree Choice Cuts in Gravy beef 884 kcal/kg, 332 per 13.2 oz can -> 350 per 13 oz can, 940 per kg. Raw/fresh preset DROPPED (no verified typical; stellaandchewys result was freeze-dried; purina.com blocked by Cloudflare). Go advanced = more specific type (the 12 types), own cup size in ml (default US 8 fl oz = 236.6 ml), own factor, second food share. Two products per type is a small sample - stated on the page.

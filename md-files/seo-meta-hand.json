@@ -270,6 +270,10 @@
     "t": "Intermittent Fasting Calculator — Your Eating Window",
     "d": "Intermittent fasting calculator for 16:8, 18:6, 20:4, OMAD, 5:2 and custom: set your window from your last bite or first meal and plan a week-by-week ramp-up."
   },
+  "/dog-food-calculator/": {
+    "t": "Dog Food Calculator — How Much to Feed Your Dog",
+    "d": "Dog food calculator: daily calories for your dog by weight and life stage, then cups, grams or cans from your own food, per meal, with a treat budget."
+  },
   "/bsa-calculator/": {
     "t": "BSA Calculator — Body Surface Area, Mosteller & Du Bois",
     "d": "BSA calculator: body surface area by Mosteller, Du Bois, Haycock and five more formulas side by side in m² and sq ft, plus eGFR in mL/min and dose per m²."

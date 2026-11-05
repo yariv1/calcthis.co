@@ -20338,3 +20338,248 @@ CalcThis.initBsaCalc = function () {
   render();
 };
 /* BSA:END */
+
+/* DOGFOOD:BEGIN */
+/* =========================================================
+   DOG FOOD calculator (/dog-food-calculator/).
+   Competitors opened live (2026-11-05): Omnicalculator dog food (11 types, one factor each, kcal per cup), APOP veterinary RER/MER tool
+   (petobesityprevention.org: factor RANGES, kcal per cup/can, meals, treat allowance 5%/10%), Oma's Pride raw feeding calculator (weight + stage + goal, grams).
+   RER = 70 x kg^0.75; MER = RER x factor. Factors read on both pages: neutered adult 1.4-1.6 (Omni 1.6), intact 1.6-1.8 (Omni 1.8), sedentary/obese-prone
+   1.0-1.4 (Omni 1.2), weight loss 1.0-1.2 (Omni 1.0), puppy under 4 months 3.0, puppy 4 months+ 2.0, gestation 3.0 (APOP), weight gain 1.7, senior 1.1,
+   working light/moderate/heavy 2/3/5 (Omni; APOP gives 1.6-11 for working dogs). Treats <= 10% of daily calories and subtracted from MER (APOP).
+   ========================================================= */
+/* DOGFOOD-ENGINE:START */
+CalcThis.dogFoodEngine = (function () {
+  var TYPES = [
+    { id: 'neut', label: 'Adult, neutered or spayed', lo: 1.4, hi: 1.6, f: 1.6 },
+    { id: 'intact', label: 'Adult, not neutered', lo: 1.6, hi: 1.8, f: 1.8 },
+    { id: 'inactive', label: 'Adult, inactive or prone to weight gain', lo: 1.0, hi: 1.4, f: 1.2 },
+    { id: 'loss', label: 'Adult, needs to lose weight', lo: 1.0, hi: 1.2, f: 1.0 },
+    { id: 'gain', label: 'Adult, needs to gain weight', lo: 1.7, hi: 1.7, f: 1.7 },
+    { id: 'senior', label: 'Senior dog', lo: 1.1, hi: 1.1, f: 1.1 },
+    { id: 'puppy4', label: 'Puppy under 4 months', lo: 3.0, hi: 3.0, f: 3.0 },
+    { id: 'puppy', label: 'Puppy, 4 months to adult', lo: 2.0, hi: 2.0, f: 2.0 },
+    { id: 'preg', label: 'Pregnant (gestation)', lo: 3.0, hi: 3.0, f: 3.0 },
+    { id: 'wl', label: 'Working dog, light work', lo: 2.0, hi: 2.0, f: 2.0 },
+    { id: 'wm', label: 'Working dog, moderate work', lo: 3.0, hi: 3.0, f: 3.0 },
+    { id: 'wh', label: 'Working dog, heavy work', lo: 5.0, hi: 5.0, f: 5.0 }
+  ];
+  function num(t) {
+    t = (t + '').trim().replace(/\s/g, '');
+    if (!t) return null;
+    if (/^[+-]?\d*,\d+$/.test(t)) t = t.replace(',', '.'); else t = t.replace(/,/g, '');
+    if (!/^[+-]?(\d+\.?\d*|\.\d+)$/.test(t)) return NaN;
+    return parseFloat(t);
+  }
+  function rer(kg) { return 70 * Math.pow(kg, 0.75); }
+  function type(id) { for (var i = 0; i < TYPES.length; i++) if (TYPES[i].id === id) return TYPES[i]; return TYPES[0]; }
+  function puppyId(months) { return months < 4 ? 'puppy4' : 'puppy'; }
+  function calc(kg, id, own) {
+    var t = type(id), r = rer(kg), f = own || t.f, lo = own || t.lo, hi = own || t.hi;
+    return { rer: r, f: f, lo: lo, hi: hi, mer: r * f, merLo: r * lo, merHi: r * hi, t: t };
+  }
+  var UNITS = { cup: { min: 20, max: 1500, one: 'cup', many: 'cups', ph: 'e.g. 350', lab: 'kcal per cup' }, can: { min: 10, max: 2000, one: 'can', many: 'cans', ph: 'e.g. 380', lab: 'kcal per can' }, kg: { min: 500, max: 8000, one: 'g', many: 'g', ph: 'e.g. 3600', lab: 'kcal per kg' } };
+  var FR = ['', '⅛', '¼', '⅜', '½', '⅝', '¾', '⅞'];
+  /* amount of a food in cups/cans as a mixed number to the nearest eighth, e.g. 2.3 -> "2 ¼" */
+  function frac(x) {
+    var e = Math.round(x * 8), w = Math.floor(e / 8), r = e % 8;
+    if (e === 0) return 'under ⅛';
+    return (w ? w : '') + (w && r ? ' ' : '') + FR[r];
+  }
+  /* typical foods, averaged from labels read 2026-11-05: dry = Hill's Science Diet Adult Chicken & Barley 3,675 kcal/kg, 365 kcal per 8 fl oz cup and Royal Canin Medium Adult (Canada) 3,616 kcal/kg, 340 kcal per cup;
+     wet = Hill's Science Diet Adult Chicken & Barley 369 kcal per 13 oz (370 g) can (997 kcal/kg) and Pedigree Choice Cuts in Gravy 332 kcal per 13.2 oz can (884 kcal/kg). The US cup is 8 fl oz = 236.6 ml. */
+  var FOODS = { dry: { cup: 350, kg: 3650 }, wet: { can: 350, kg: 940 } }, CUP_ML = 236.6;
+  return { TYPES: TYPES, UNITS: UNITS, FOODS: FOODS, CUP_ML: CUP_ML, num: num, rer: rer, type: type, puppyId: puppyId, calc: calc, frac: frac };
+})();
+/* DOGFOOD-ENGINE:END */
+
+/* =========================================================
+   CalcThis.initDogFoodCalc() — ids fd*. Engine: CalcThis.dogFoodEngine; breeds: CalcThis.DOG_BREEDS (from the dog age page). No shared state.
+   ========================================================= */
+CalcThis.initDogFoodCalc = function () {
+  var E = CalcThis.dogFoodEngine, B = CalcThis.DOG_BREEDS, U = CalcThis._kzUtil, trim = U.trim, esc = U.esc, setSeg = U.setSeg, seg = U.seg;
+  var $ = function (id) { return document.getElementById(id); };
+  var LB = 2.20462;
+  var st = { wu: 'kg', fu: 'cup', fb: 'cup', tr: 0, meals: 2, adv: false, age: 'adult', neu: 'y', ft: 'dry' };
+  var ex = {};
+  function grp(n) { return U.grp(n); }
+  function setHint(m) { var h = $('fdHint'); h.textContent = m || ''; h.style.display = m ? 'block' : 'none'; }
+  var WMSG = { kg: 'Weight should be between 0.3 and 150 kg — check the number and the unit.', lb: 'Weight should be between 0.7 and 330 lb — check the number and the unit.' };
+  function readW() {
+    var raw = $('fdW').value; if (!raw.trim()) return null;
+    var n = E.num(raw); if (n === null) return null;
+    if (isNaN(n) || n <= 0) return { err: 'Couldn’t read the weight — use a number like ' + (st.wu === 'kg' ? '20' : '45') + '.' };
+    var kg = st.wu === 'lb' ? n / LB : n; if (kg < 0.3 || kg > 150) return { err: WMSG[st.wu] };
+    return { kg: kg };
+  }
+  function readFood(id, unit, what) {
+    var raw = $(id).value; if (!raw.trim()) return null;
+    var n = E.num(raw), U2 = E.UNITS[unit];
+    if (n === null) return null;
+    if (isNaN(n) || n < U2.min || n > U2.max) return { err: what + ' should be a number of ' + U2.lab + ' between ' + grp(U2.min) + ' and ' + grp(U2.max) + ' — it is printed on the bag or can.' };
+    return { v: n };
+  }
+  function amt(kcal, per, unit, kgDens) {
+    var q = kcal / per, U2 = E.UNITS[unit];
+    if (unit === 'kg') return { big: grp(q * 1000) + ' g', small: (q * 1000 >= 1000 ? trim(q, 2) + ' kg' : '') };
+    return { big: E.frac(q) + ' ' + (q <= 1.0625 && q > 0.0625 ? U2.one : U2.many), small: trim(q, 2) + ' ' + (q === 1 ? U2.one : U2.many) + (kgDens ? ' · about ' + grp(kcal / kgDens * 1000) + ' g' : '') };
+  }
+  function empty(msg) { $('fdBig').textContent = '—'; $('fdSub').textContent = $('fdSub').getAttribute('data-empty'); $('fdBody').style.display = 'none'; $('fdMVal').textContent = '—'; setHint(msg || ''); }
+  function icons(q, unit) {
+    if (unit === 'kg' || q > 12 || q <= 0) return '';
+    var n = Math.ceil(q - 1e-9), out = '';
+    for (var i = 0; i < n; i++) {
+      var fr = Math.max(0, Math.min(1, q - i)), id = 'fdc' + i, h = 22 * fr;
+      var shape = unit === 'cup' ? 'M6 8h22l-3.4 22H9.4z' : 'M7 7h20a2 2 0 0 1 2 2v19a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2z';
+      out += '<svg class="fd-ico" viewBox="0 0 34 34" width="34" height="34" aria-hidden="true"><defs><clipPath id="' + id + '"><path d="' + shape + '"/></clipPath></defs><rect x="0" y="' + (30 - h) + '" width="34" height="' + h + '" fill="#B5761F" clip-path="url(#' + id + ')"/><path d="' + shape + '" fill="none" stroke="#37503F" stroke-width="1.8" stroke-linejoin="round"/></svg>';
+    }
+    return '<div class="fd-icos" aria-label="Amount per day">' + out + '</div>';
+  }
+  function ruler(R) {
+    var top = R.merHi * 1.12, step = top > 4000 ? 500 : (top > 1500 ? 250 : (top > 600 ? 100 : 50)), mx = Math.ceil(top / step) * step;
+    var p = function (v) { return Math.max(0, Math.min(100, v / mx * 100)); };
+    var band = R.hi > R.lo ? '<i class="fd-band" style="left:' + p(R.merLo) + '%;width:' + (p(R.merHi) - p(R.merLo)) + '%"></i>' : '';
+    return '<div class="fd-rule"><div class="fd-rule-t">' + band + '<i class="fd-dot" style="left:' + p(R.rer) + '%" title="At rest ' + grp(R.rer) + ' kcal"></i><i class="fd-dot on" style="left:' + p(R.mer) + '%" title="Daily need ' + grp(R.mer) + ' kcal"></i></div>' +
+      '<div class="fd-rule-l"><span style="left:0">0</span><span style="left:' + p(R.rer) + '%" class="fd-l1">At rest ' + grp(R.rer) + '</span><span style="left:100%">' + grp(mx) + ' kcal</span></div></div>';
+  }
+  function render() {
+    var w = readW(), bad = w && w.err ? w.err : '';
+    if (bad) { empty(bad); return; }
+    if (!w) { empty(''); return; }
+    var sel = $('fdType').value, tid = sel !== 'auto' ? sel : (st.age === 'puppy' ? 'puppy' : (st.age === 'senior' ? 'senior' : (st.neu === 'y' ? 'neut' : 'intact')));
+    var isPup = tid === 'puppy4' || tid === 'puppy', ageTxt = '';
+    $('fdNeuWrap').style.display = (sel === 'auto' && st.age === 'adult') ? '' : 'none';
+    $('fdAgeWrap').style.display = isPup ? '' : 'none';
+    if (isPup) {
+      var age = E.num($('fdAge').value);
+      if (age !== null) {
+        if (isNaN(age) || age < 0 || age > 24) { empty('Puppy age should be a number of months between 0 and 24 — or leave it empty and use the type above.'); return; }
+        tid = E.puppyId(age); ageTxt = ' (' + trim(age, 1) + (age === 1 ? ' month' : ' months') + ')';
+      }
+    }
+    var own = null;
+    if (st.adv) {
+      own = E.num($('fdOwn').value);
+      if (own !== null && (isNaN(own) || own < 0.5 || own > 11)) { empty('Your own factor should be a number between 0.5 and 11 (times the resting need) — or leave it empty.'); return; }
+    }
+    var cupMl = st.adv ? E.num($('fdCup').value) : null;
+    if (cupMl !== null && (isNaN(cupMl) || cupMl < 100 || cupMl > 600)) { empty('Your cup should hold between 100 and 600 ml — or leave it empty to use the standard US cup (237 ml).'); return; }
+    var cupScale = (cupMl || E.CUP_ML) / E.CUP_ML, ft = st.ft, fa = null, unit = 'cup', kgDens = 0, fb = null, share = null;
+    $('fdOwnWrap').style.display = ft === 'own' ? '' : 'none';
+    if (ft === 'dry') { fa = { v: E.FOODS.dry.cup * cupScale }; unit = 'cup'; kgDens = E.FOODS.dry.kg; }
+    else if (ft === 'wet') { fa = { v: E.FOODS.wet.can }; unit = 'can'; kgDens = E.FOODS.wet.kg; }
+    else { fa = readFood('fdFood', st.fu, 'The food’s calories'); unit = st.fu; if (fa && fa.err) { empty(fa.err); return; } if (fa && unit === 'cup') fa = { v: fa.v * cupScale }; }
+    if (st.adv) {
+      fb = readFood('fdB', st.fb, 'The second food’s calories');
+      if (fb && fb.err) { empty(fb.err); return; }
+      share = E.num($('fdShare').value);
+      if (share !== null && (isNaN(share) || share < 0 || share > 100)) { empty('The share of calories from the second food should be between 0 and 100 %.'); return; }
+    }
+    setHint('');
+    var R = E.calc(w.kg, tid, own), tpc = st.tr / 100, treatK = R.mer * tpc, foodK = R.mer - treatK;
+    var t = R.t, rng = R.hi > R.lo ? ' · typical range ' + grp(R.merLo) + '–' + grp(R.merHi) : '';
+    $('fdBig').textContent = grp(R.mer) + ' kcal';
+    $('fdSub').textContent = 'Resting need ' + grp(R.rer) + ' kcal × ' + trim(R.f, 2) + (own ? ' (your factor)' : '') + rng;
+    $('fdBody').style.display = '';
+    $('fdTip').textContent = 'A ' + trim(w.kg, 1) + ' kg (' + trim(w.kg * LB, 1) + ' lb) dog — ' + (own ? 'with your own factor' : t.label.toLowerCase() + ageTxt) + ' — needs about ' + grp(R.mer) + ' kcal a day' + (R.hi > R.lo ? ', between ' + grp(R.merLo) + ' and ' + grp(R.merHi) + ' depending on how active and how prone to weight gain it is' : '') + '. It is a starting point: adjust from your dog’s weight trend and body condition, and ask your vet.';
+    $('fdRule').innerHTML = ruler(R);
+    /* day split */
+    var segs = [['Food', foodK, 'c0']]; if (treatK > 0) segs.push(['Treats', treatK, 'c1']);
+    var bar = '', key = '';
+    segs.forEach(function (s) { var pc = s[1] / R.mer * 100; bar += '<div class="bm-seg ' + s[2] + '" style="width:' + pc + '%">' + (pc >= 14 ? grp(s[1]) : '') + '</div>'; key += '<span><i class="' + s[2] + '"></i>' + s[0] + ' ' + grp(s[1]) + ' kcal</span>'; });
+    $('fdSplit').innerHTML = '<div class="bm-bar">' + bar + '</div><div class="bm-key">' + key + '</div>';
+    /* feeding amounts */
+    var rows = '', pics = '', mv = grp(R.mer) + ' kcal', nm = st.meals, U1 = E.UNITS[st.fu], U2 = E.UNITS[st.fb];
+    var shr = (fb && share !== null) ? share / 100 : 0;
+    if (fa) {
+      var kA = foodK * (1 - (fb ? shr : 0)), a = amt(kA, fa.v, unit, kgDens), pm = amt(kA / nm, fa.v, unit, kgDens);
+      rows += '<tr><td>' + (fb && shr > 0 ? 'Food 1 · ' + Math.round((1 - shr) * 100) + '% of food calories' : (ft === 'dry' ? 'Dry food' : (ft === 'wet' ? 'Wet food' : 'Food'))) + '</td><td>' + a.big + (a.small && a.small !== a.big ? ' <small>' + a.small + '</small>' : '') + '</td><td>' + pm.big + '</td></tr>';
+      pics += icons(kA / fa.v, unit);
+      mv += ' · ' + a.big;
+    }
+    if (fa && fb && shr > 0) {
+      var kB = foodK * shr, b = amt(kB, fb.v, st.fb), pb = amt(kB / nm, fb.v, st.fb);
+      rows += '<tr><td>Food 2 · ' + Math.round(shr * 100) + '% of food calories</td><td>' + b.big + (b.small && b.small !== b.big ? ' <small>' + b.small + '</small>' : '') + '</td><td>' + pb.big + '</td></tr>';
+      mv += ' + ' + b.big;
+    }
+    if (treatK > 0) rows += '<tr><td>Treats ' + st.tr + '%</td><td>' + grp(treatK) + ' kcal</td><td>—</td></tr>';
+    $('fdFeed').innerHTML = rows ? '<thead><tr><th>Food</th><th>Amount a day</th><th>Per meal (' + nm + ')</th></tr></thead><tbody>' + rows + '</tbody>' : '';
+    $('fdFeedH').style.display = rows ? '' : 'none';
+    $('fdPics').innerHTML = pics;
+    $('fdNoFood').style.display = fa ? 'none' : '';
+    $('fdTypNote').textContent = ft === 'dry' ? 'Typical dry food: about 350 kcal per cup (' + (cupMl ? cupMl + ' ml cup' : 'US 8 fl oz cup') + ') or 3,650 kcal per kg — the average of two labels I read: Hill’s Science Diet Adult 365 and Royal Canin Medium Adult 340 kcal per cup. Your bag can differ by 15% or more, so choose “My own” and type its calories for an exact amount.' : (ft === 'wet' ? 'Typical wet food: about 350 kcal per 13 oz (370 g) can, 940 kcal per kg — the average of Hill’s Science Diet Adult (369 per can) and Pedigree Choice Cuts (332 per can). Cans come in other sizes and recipes vary, so choose “My own” for an exact amount.' : '');
+    $('fdTypNote').style.display = $('fdTypNote').textContent ? '' : 'none';
+    $('fdMLab').textContent = 'Recommended kcal a day'; $('fdMVal').textContent = mv;
+    /* advanced: raw rule of thumb */
+    var raw = '';
+    if (st.adv) raw = 'For comparison, the 2–3% of body weight a day that raw-food sellers quote would be ' + grp(w.kg * 20) + '–' + grp(w.kg * 30) + ' g for this weight. That is a seller’s rule of thumb, not a veterinary one — the calories above are the better guide.';
+    $('fdRaw').textContent = raw; $('fdRaw').style.display = raw ? '' : 'none';
+  }
+  /* ---------- breed typeahead (DS .st-ta, copied from the dog age page) ---------- */
+  var bEl = $('fdBreed'), bIn = $('fdBreedIn'), bList = $('fdBreedList'), bVal = '', bHits = [], bAct = -1;
+  var B_OPTS = B.map(function (b) { return { v: b[0], label: b[0], s: b[0].toLowerCase(), b: b }; });
+  Object.defineProperty(bEl, 'value', { configurable: true, get: function () { return bVal; }, set: function (v) { bVal = v || ''; bIn.value = bVal; } });
+  function bRank(o, q) { if (o.label.toLowerCase().indexOf(q) === 0) return 0; if ((' ' + o.s).indexOf(' ' + q) >= 0) return 1; return o.s.indexOf(q) >= 0 ? 2 : -1; }
+  function bClose() { bList.style.display = 'none'; bIn.setAttribute('aria-expanded', 'false'); bAct = -1; }
+  function mid(b) { return b[1] != null && b[2] != null ? (b[1] + b[2]) / 2 : (b[2] != null ? b[2] : b[1]); }
+  function bShow(full) {
+    var q = full ? '' : bIn.value.trim().toLowerCase(), hits = [];
+    B_OPTS.forEach(function (o, i) { var r = q ? bRank(o, q) : 0; if (r >= 0) hits.push({ o: o, r: r, i: i }); });
+    hits.sort(function (x, y) { return x.r - y.r || x.i - y.i; });
+    bHits = hits.map(function (h) { return h.o; });
+    bAct = q && bHits.length ? 0 : -1;
+    bList.innerHTML = bHits.length ? bHits.map(function (o, i) { return '<button type="button" class="st-ta-opt' + (!q && o.v === bVal ? ' on' : '') + (q && i === bAct ? ' kb' : '') + '" role="option" data-i="' + i + '"><span>' + o.label + '</span><b>' + Math.round(mid(o.b)) + ' lb</b></button>'; }).join('')
+      : '<div class="st-ta-none">No breed matches “' + esc(bIn.value) + '”. Enter your dog’s weight instead.</div>';
+    bList.style.display = 'block'; bIn.setAttribute('aria-expanded', 'true');
+    var cur = bList.querySelector('.st-ta-opt.on'); bList.scrollTop = cur && !q ? Math.max(0, cur.offsetTop - 60) : 0;
+  }
+  function bPick(o) {
+    if (!o) return; bClose(); bEl.value = o.v; bIn.blur();
+    var b = o.b, lb = mid(b), kg = lb / LB, txt = trim(st.wu === 'lb' ? lb : kg, 1);
+    $('fdW').value = txt; ex.w = { kg: kg, txt: txt };
+    var lo = b[1], hi = b[2];
+    $('fdBreedNote').textContent = o.v + ': typical adult weight ' + (lo != null && hi != null ? (st.wu === 'lb' ? lo + '–' + hi + ' lb' : trim(lo / LB, 1) + '–' + trim(hi / LB, 1) + ' kg') : 'up to ' + (st.wu === 'lb' ? hi + ' lb' : trim(hi / LB, 1) + ' kg')) + ' — the middle is filled in. Replace it with your dog’s own weight.';
+    render();
+  }
+  bIn.addEventListener('focus', function () { bIn.select(); bShow(true); });
+  bIn.addEventListener('input', function () {
+    if (!bIn.value.trim() && bVal) { bVal = ''; $('fdBreedNote').textContent = ''; }
+    bShow(!bIn.value.trim());
+  });
+  bIn.addEventListener('blur', function () { setTimeout(function () { bClose(); bIn.value = bVal; }, 150); });
+  bIn.addEventListener('keydown', function (e) {
+    var opts = bList.querySelectorAll('.st-ta-opt');
+    if (e.key === 'Escape') { bClose(); bIn.value = bVal; return; }
+    if (!opts.length) return;
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); bAct = e.key === 'ArrowDown' ? Math.min(opts.length - 1, bAct + 1) : Math.max(0, bAct - 1); [].forEach.call(opts, function (o, i) { o.classList.toggle('kb', i === bAct); }); opts[bAct].scrollIntoView({ block: 'nearest' }); }
+    else if (e.key === 'Enter') { e.preventDefault(); bPick(bHits[bAct >= 0 ? bAct : 0]); }
+  });
+  bList.addEventListener('mousedown', function (e) { e.preventDefault(); var bt = e.target.closest('.st-ta-opt'); if (bt) bPick(bHits[+bt.getAttribute('data-i')]); });
+
+  /* ---------- controls ---------- */
+  ['fdW', 'fdAge', 'fdFood', 'fdOwn', 'fdB', 'fdShare', 'fdCup'].forEach(function (id) { $(id).addEventListener('input', render); });
+  $('fdType').addEventListener('change', render);
+  seg('fdTr', function (v) { st.tr = +v; render(); });
+  seg('fdAgeSeg', function (v) { st.age = v; $('fdAgeWrap').style.display = v === 'puppy' ? '' : 'none'; if (v !== 'puppy') $('fdAge').value = ''; render(); });
+  seg('fdNeu', function (v) { st.neu = v; render(); });
+  seg('fdFT', function (v) { st.ft = v; render(); });
+  seg('fdMeals', function (v) { st.meals = +v; render(); });
+  function unitSeg(segId, inId, labId, key) {
+    seg(segId, function (v) { st[key] = v; $(inId).value = ''; $(labId).textContent = E.UNITS[v].lab; $(inId).placeholder = E.UNITS[v].ph; render(); });
+  }
+  unitSeg('fdFU', 'fdFood', 'fdFoodL', 'fu');
+  unitSeg('fdBU', 'fdB', 'fdBL', 'fb');
+  seg('fdWU', function (v) {
+    var w = readW(), m = ex.w; if (m && m.txt === $('fdW').value) w = { kg: m.kg };
+    st.wu = v; if (w && w.err) $('fdW').value = '';
+    if (w && w.kg) { var txt = trim(v === 'lb' ? w.kg * LB : w.kg, 2); $('fdW').value = txt; ex.w = { kg: w.kg, txt: txt }; }
+    $('fdWL').textContent = v; $('fdW').placeholder = v === 'lb' ? 'e.g. 45' : 'e.g. 20'; render();
+  });
+  $('fdAdvBtn').addEventListener('click', function () {
+    st.adv = !st.adv; $('fdAdvBtn').classList.toggle('open', st.adv); $('fdAdvBtnLab').textContent = st.adv ? 'Go simple' : 'Go advanced'; $('fdAdvIn').style.display = st.adv ? '' : 'none';
+    if (!st.adv) { $('fdOwn').value = ''; $('fdB').value = ''; $('fdShare').value = ''; $('fdCup').value = ''; if ($('fdType').value !== 'auto') $('fdType').value = 'auto'; }
+    render();
+  });
+  render();
+};
+/* DOGFOOD:END */

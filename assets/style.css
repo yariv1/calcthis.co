@@ -2873,3 +2873,28 @@
 .p-bsa .cb-two{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}
 @media(max-width:520px){.p-bsa .cb-two{gap:0 8px}}
 .p-bsa #bsAdv td small{display:block;margin-top:1px}
+
+/* ---- DOG FOOD calculator (.p-fd) — reuses .p-bmr result look, .dtable, .bm-bar, typeahead copied from .p-dog ---- */
+.p-fd .st-ta{position:relative}
+.p-fd .st-ta-list{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:40;max-height:320px;overflow-y:auto;background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:7px;scrollbar-color:var(--amber) transparent;scrollbar-width:thin}
+.p-fd .st-ta-opt{display:flex;justify-content:space-between;align-items:center;gap:12px;width:100%;text-align:left;font:inherit;font-size:14.5px;font-weight:500;color:var(--ink-soft);background:none;border:0;border-radius:8px;padding:9px 11px;cursor:pointer;transition:.12s}
+.p-fd .st-ta-opt b{flex:none;font-size:12.5px;font-weight:700;color:var(--muted);white-space:nowrap}
+.p-fd .st-ta-opt:hover,.p-fd .st-ta-opt.on,.p-fd .st-ta-opt.kb{background:#F5EFE4;color:var(--ink)}
+.p-fd .st-ta-none{font-size:13.5px;color:var(--muted);padding:9px 11px;line-height:1.45}
+.p-fd .fd-rule{margin:14px 0 4px;padding-bottom:24px}
+.p-fd .fd-rule-t{position:relative;height:14px;border-radius:7px;background:#EFE7D8}
+.p-fd .fd-band{position:absolute;top:0;bottom:0;background:var(--spruce);opacity:.4;border-radius:7px}
+.p-fd .fd-dot{position:absolute;top:50%;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;background:#fff;border:2px solid var(--spruce);box-sizing:border-box}
+.p-fd .fd-dot.on{background:var(--amber);border-color:var(--ink);width:18px;height:18px;margin:-9px 0 0 -9px;z-index:2}
+.p-fd .fd-rule-l{position:relative;height:18px;margin-top:10px}
+.p-fd .fd-rule-l span{position:absolute;top:0;font-size:12px;font-weight:600;color:var(--muted);white-space:nowrap}
+.p-fd .fd-rule-l span:last-child{transform:translateX(-100%)}
+.p-fd .fd-rule-l span.fd-l1{transform:translateX(-50%)}
+.p-fd .dtable td:nth-child(n+2),.p-fd .dtable th:nth-child(n+2){text-align:right}
+.p-fd .dtable td small{display:block;color:var(--muted);font-size:12.5px;font-weight:500;margin-top:2px}
+.p-fd .av-note,.p-fd .cb-note{font-size:14px;font-weight:500;color:var(--ink-soft);margin:4px 0 8px;line-height:1.45}
+.p-fd .cb-note{color:var(--muted);font-weight:400}
+.p-fd .cb-two{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}
+@media(max-width:520px){.p-fd .cb-two{gap:0 8px}}
+.p-fd .fd-icos{display:flex;flex-wrap:wrap;gap:4px;margin:8px 0 4px}
+.p-fd .fd-ico{display:block;flex:none}

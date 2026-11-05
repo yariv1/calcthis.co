@@ -1,0 +1,767 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dog Food Calculator — How Much to Feed Your Dog</title>
+<meta name="description" content="Dog food calculator: daily calories for your dog by weight and life stage, then cups, grams or cans from your own food, per meal, with a treat budget.">
+<link rel="canonical" href="https://calcthis.co/dog-food-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Dog Food Calculator — How Much to Feed Your Dog">
+<meta property="og:description" content="Dog food calculator: daily calories for your dog by weight and life stage, then cups, grams or cans from your own food, per meal, with a treat budget.">
+<meta property="og:url" content="https://calcthis.co/dog-food-calculator/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/datepicker.min.css">
+<link rel="stylesheet" href="/assets/style.css?v=317">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Dog Food Calculator",
+  "url": "https://calcthis.co/dog-food-calculator/",
+  "applicationCategory": "LifestyleApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "Free dog food calculator: daily calories for a dog by weight and life stage (adult, puppy, senior, weight loss, working, pregnant), converted to cups, grams or cans from the food label, split per meal, with a treat budget, mixed feeding and a range instead of one false number."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How much should I feed my dog?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Start from calories: a dog’s resting energy requirement is 70 × weight in kg0.75, and the daily need is that times a factor for its life stage and activity. For a 20 kg neutered adult that is 662 kcal at rest and about 927–1,059 kcal a day. Then divide by the calories in your food — a food with 350 kcal per cup means about 3 cups a day. Weigh your dog every couple of weeks and adjust from the trend."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How many calories does a dog need a day?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It depends on weight and life stage. At 5, 10, 20, 30 and 40 kg a neutered adult needs about 374, 630, 1,059, 1,436, 1,781 kcal a day (factor 1.6). Intact adults use 1.6–1.8 times the resting need and sedentary or overweight-prone dogs 1.0–1.4, so the same dog can need 662–1,192 kcal a day at 20 kg depending on the type."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I work out cups of dog food?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Divide the daily calories by the calories in a cup of your food. Dry food typically has about 350 kcal per US cup (two labels I read: Hill’s Science Diet Adult 365, Royal Canin Medium Adult 340), so 1,059 ÷ 350 = 3.03 cups, shown as about 3 cups. The calculator does this for you with a typical value; choose “My own” and type the calories from your bag for an exact figure, because foods differ. A cup is a US 8 fl oz cup (237 ml) unless you enter your own scoop size under Go advanced."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How much should a puppy eat?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Puppies use more calories for their weight: the factor is 3.0 times the resting need under 4 months and 2.0 from 4 months (APOP and Omnicalculator agree). An 8 kg puppy needs about 999 kcal a day under 4 months and 666 kcal from 4 months. The calculation uses the puppy’s current weight, so recalculate as it grows; enter the age in months and the right factor is picked for you."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How much should I feed a dog that needs to lose weight?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Veterinary guidance gives 1.0–1.2 times the resting need for weight-loss planning; this calculator uses 1.0 for the headline and shows the range. For a 30 kg dog that is about 897–1,077 kcal a day. A weight-loss plan needs a vet to set the target weight and recheck it, so treat this as a starting figure."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How many treats can my dog have?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "APOP says treats should stay at or below 10% of daily calories and be subtracted from the daily amount rather than added. For the 20 kg neutered dog, 10% is about 106 kcal, so the food drops to about 953 kcal. Pick 5% or 10% in the calculator and it does the subtraction."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why does the calculator show a range?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Dogs of the same weight differ in activity, age, coat, breed and metabolism, and the two sources give factor ranges rather than single values for adults. A range is more honest than one exact number; the headline uses the single factor Omnicalculator gives and the range comes from the APOP tool."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is the raw food rule of 2–3% of body weight right?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Raw-food sellers often quote 2–3% of body weight a day for adult dogs. That figure came from commercial pages, not from a veterinary source I could read, so it is shown only as a comparison under Go advanced. Raw and fresh foods differ a lot in calories per kg and I found no verified typical value, so choose “My own” and enter the kcal per kg from the label."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I feed two foods, like kibble and wet?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Under Go advanced add a second food with its calories and the share of the food calories it should supply; the calculator then gives the amount of each. The first food is whichever type you picked, dry, wet or your own. Treats are taken off the top first."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does this work for senior dogs?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It has a senior type with a factor of 1.1 times the resting need, taken from Omnicalculator; the APOP tool does not give a separate senior factor. Older dogs vary a lot, so use your vet and the weight trend to adjust. See the dog age calculator for when a dog counts as senior."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "CalcThis",
+      "item": "https://calcthis.co/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Dog Food Calculator",
+      "item": "https://calcthis.co/dog-food-calculator/"
+    }
+  ]
+}
+</script>
+<meta property="og:site_name" content="CalcThis">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://calcthis.co/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="CalcThis — free, purpose-built calculators">
+<meta name="twitter:title" content="Dog Food Calculator — How Much to Feed Your Dog">
+<meta name="twitter:description" content="Dog food calculator: daily calories for your dog by weight and life stage, then cups, grams or cans from your own food, per meal, with a treat budget.">
+<meta name="twitter:image" content="https://calcthis.co/assets/og-default.png">
+</head>
+<body class="p-bmr p-fd">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <a class="hdr-back" href="/blog/" aria-label="Back to blog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-search"><div class="menu-sx"><input id="menuSearch" type="search" placeholder="Search calculators or states…" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Search calculators" enterkeyhint="search"></div><div class="menu-results" id="menuResults" hidden></div></div>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <span class="menu-col-head">Construction &amp; Gardening</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+          <a href="/paint-calculator/">Paint</a>
+          <a href="/wallpaper-calculator/">Wallpaper</a>
+          <a href="/square-footage-calculator/">Square Footage</a>
+          <a href="/tape-measure-fraction-calculator/">Tape Measure Fraction</a>
+          <a href="/stair-calculator/">Stair</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/vo2-max-calculator/">VO2 Max</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
+          <a href="/bmi-calculator/">BMI</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/ideal-weight-calculator/">Ideal Weight</a>
+          <a href="/lean-body-mass-calculator/">Lean Body Mass</a>
+          <a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio</a>
+          <a href="/gmi-calculator/">GMI</a>
+          <a href="/a1c-calculator/">A1C</a>
+          <a href="/calorie-calculator/">Calorie</a>
+          <a href="/calorie-deficit-calculator/">Calorie Deficit</a>
+          <a href="/bmr-calculator/">BMR</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/water-intake-calculator/">Water Intake</a>
+          <a href="/macro-calculator/">Macro</a>
+          <a href="/protein-intake-calculator/">Protein Intake</a>
+          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
+          <a href="/steps-to-miles-calculator/">Steps to Miles</a>
+          <a href="/dog-age-calculator/">Dog Age</a>
+          <a href="/cat-age-calculator/">Cat Age</a>
+          <a href="/calories-burned-calculator/">Calories Burned</a>
+          <a href="/calories-burned-walking-calculator/">Calories Burned Walking</a>
+          <a href="/calories-burned-running-calculator/">Calories Burned Running</a>
+          <a href="/keto-calculator/">Keto</a>
+          <a href="/net-carb-calculator/">Net Carb</a>
+          <a href="/intermittent-fasting-calculator/">Intermittent Fasting</a>
+          <a href="/bsa-calculator/">BSA</a>
+          <a href="/dog-food-calculator/" class="current">Dog Food</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/semester-grade-calculator/">Semester Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+          <a href="/grade-curve-calculator/">Grade Curve</a>
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/fraction-calculator/">Fraction</a>
+          <a href="/standard-deviation-calculator/">Standard Deviation</a>
+          <a href="/scientific-notation-calculator/">Scientific Notation</a>
+          <a href="/average-calculator/">Average</a>
+          <a href="/batting-average-calculator/">Batting Average</a>
+          <a href="/stock-average-calculator/">Stock Average</a>
+          <a href="/dice-average-calculator/">Dice Average</a>
+          <a href="/time-average-calculator/">Time Average</a>
+          <a href="/weighted-average-calculator/">Weighted Average</a>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+          <a href="/percentage-change-calculator/">Percentage Change</a>
+          <a href="/age-calculator/">Age</a>
+          <a href="/date-calculator/">Date</a>
+          <a href="/time-calculator/">Time</a>
+          <a href="/hours-calculator/">Hours</a>
+          <a href="/triangle-calculator/">Triangle</a>
+          <a href="/random-number-generator/">Random Number</a>
+          <span class="menu-col-head">Cooking &amp; Kitchen</span>
+          <a href="/recipe-converter/">Recipe Converter</a>
+          <a href="/turkey-cooking-time-calculator/">Turkey Cooking Time</a>
+          <a href="/turkey-thawing-time-calculator/">Turkey Thawing Time</a>
+          <a href="/turkey-size-calculator/">Turkey Size</a>
+          <!--UNITNAV:START-->
+          <span class="menu-col-head">Unit Converters</span>
+          <a href="/unit-converter/">Unit Converter</a>
+          <a href="/length-converter/">Length Converter</a>
+          <a href="/weight-converter/">Weight Converter</a>
+          <a href="/volume-converter/">Volume Converter</a>
+          <a href="/temperature-converter/">Temperature Converter</a>
+          <a href="/area-converter/">Area Converter</a>
+          <a href="/speed-converter/">Speed Converter</a>
+          <a href="/data-storage-converter/">Data Storage Converter</a>
+          <a href="/cooking-converter/">Cooking Converter</a>
+          <a href="/px-to-rem-converter/">PX to REM Converter</a>
+          <!--UNITNAV:END-->
+          <span class="menu-col-head">Money &amp; Finance</span>
+          <a href="/mortgage-calculator/">Mortgage</a>
+          <a href="/loan-calculator/">Loan</a>
+          <a href="/auto-loan-calculator/">Auto Loan</a>
+          <a href="/car-sales-tax-calculator/">Car Sales Tax</a>
+          <a href="/overtime-calculator/">Overtime</a>
+          <a href="/salary-calculator/">Salary</a>
+          <!--STAXNAV:START-->
+          <a href="/sales-tax-calculator/">Sales Tax</a>
+          <a href="/sales-tax-calculator/california/">California Sales Tax</a>
+          <a href="/sales-tax-calculator/chicago/">Chicago Sales Tax</a>
+          <a href="/sales-tax-calculator/florida/">Florida Sales Tax</a>
+          <a href="/sales-tax-calculator/las-vegas/">Las Vegas Sales Tax</a>
+          <a href="/sales-tax-calculator/los-angeles/">Los Angeles Sales Tax</a>
+          <a href="/sales-tax-calculator/michigan/">Michigan Sales Tax</a>
+          <a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax</a>
+          <a href="/sales-tax-calculator/missouri/">Missouri Sales Tax</a>
+          <a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax</a>
+          <a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax</a>
+          <a href="/sales-tax-calculator/north-carolina/">North Carolina Sales Tax</a>
+          <a href="/sales-tax-calculator/ohio/">Ohio Sales Tax</a>
+          <a href="/sales-tax-calculator/texas/">Texas Sales Tax</a>
+          <a href="/sales-tax-calculator/virginia/">Virginia Sales Tax</a>
+          <!--STAXNAV:END-->
+          <a href="/tip-calculator/">Tip</a>
+          <a href="/how-much-to-tip/">How Much to Tip</a>
+        </div>
+        <!--PAYNAV:START-->
+        <div class="menu-col">
+          <span class="menu-col-head">Paycheck Calculators</span>
+          <a href="/paycheck-calculator/">Paycheck Calculator (all states)</a>
+          <a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a>
+          <a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arkansas/">Arkansas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/california/">California Paycheck Calculator</a>
+          <a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a>
+          <a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a>
+          <a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/hawaii/">Hawaii Paycheck Calculator</a>
+          <a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a>
+          <a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a>
+          <a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a>
+          <a href="/paycheck-calculator/louisiana/">Louisiana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a>
+          <a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a>
+          <a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a>
+          <a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a>
+          <a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nebraska/">Nebraska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a>
+          <a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a>
+          <a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a>
+          <a href="/paycheck-calculator/oklahoma/">Oklahoma Paycheck Calculator</a>
+          <a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a>
+          <a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a>
+          <a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a>
+          <a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/utah/">Utah Paycheck Calculator</a>
+          <a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wisconsin/">Wisconsin Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a>
+        </div>
+        <!--PAYNAV:END-->
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">Daily calories · cups, grams or cans · per meal · treat budget · puppies to seniors</div>
+    <h1>Dog Food Calculator</h1>
+    <p>Enter your dog’s <strong>weight</strong> and <strong>age</strong> — you get the <strong>recommended calories a day</strong>, then how many <strong>cups of dry food or cans of wet food</strong> that is, per day and per meal. A neutered adult of 20 kg (44 lb) needs about <strong>1,059 kcal a day</strong> — 3 cups of a 350 kcal-per-cup food.</p>
+  </section>
+
+  <div class="grid">
+
+    <!-- INPUT -->
+    <div class="card">
+      <div class="card-pad">
+        <h2 class="card-h2">Your dog</h2>
+        <div class="fld"><span class="lab">Breed <span class="unit">optional · fills in a typical weight</span></span><div class="st-ta"><div class="inp"><input id="fdBreedIn" type="text" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="fdBreedList" aria-label="Breed" placeholder="Type a breed"><input id="fdBreed" type="hidden" value=""></div><div class="st-ta-list" id="fdBreedList" role="listbox" style="display:none"></div></div></div>
+        <p class="av-note" id="fdBreedNote" style="margin:-6px 0 8px"></p>
+        <div class="ctl-row"><span class="ctl-lab">Weight units</span><div class="seg" id="fdWU" role="group" aria-label="Weight units"><button class="on" type="button" data-v="kg">kg</button><button type="button" data-v="lb">lb</button></div></div>
+        <label class="fld" for="fdW"><span class="lab">Your dog’s weight <span class="unit" id="fdWL">kg</span></span><div class="inp"><input id="fdW" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 20"></div></label>
+        <div class="ctl-row"><span class="ctl-lab">Age</span><div class="seg" id="fdAgeSeg" role="group" aria-label="Age"><button type="button" data-v="puppy">Puppy</button><button class="on" type="button" data-v="adult">Adult</button><button type="button" data-v="senior">Senior</button></div></div>
+        <div id="fdAgeWrap" style="display:none"><label class="fld" for="fdAge"><span class="lab">Puppy’s age <span class="unit">months · optional</span></span><div class="inp"><input id="fdAge" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 3"></div></label><p class="av-note" style="margin:-6px 0 8px">Under 4 months a puppy needs 3.0 times its resting calories, from 4 months 2.0 times. Without the age we use 2.0.</p></div>
+        <div id="fdNeuWrap"><div class="ctl-row"><span class="ctl-lab">Neutered or spayed?</span><div class="seg" id="fdNeu" role="group" aria-label="Neutered or spayed?"><button class="on" type="button" data-v="y">Yes</button><button type="button" data-v="n">No</button></div></div></div>
+        <div class="proj-sep"></div>
+        <div class="ctl-row"><span class="ctl-lab">Type of food</span><div class="seg" id="fdFT" role="group" aria-label="Type of food"><button class="on" type="button" data-v="dry">Dry</button><button type="button" data-v="wet">Wet</button><button type="button" data-v="own">My own</button></div></div>
+        <div id="fdOwnWrap" style="display:none">
+          <div class="ctl-row"><span class="ctl-lab">Measure the food in</span><div class="seg" id="fdFU" role="group" aria-label="Measure the food in"><button class="on" type="button" data-v="cup">Cups</button><button type="button" data-v="can">Cans</button><button type="button" data-v="kg">Grams</button></div></div>
+          <label class="fld" for="fdFood"><span class="lab">Calories in the food <span class="unit" id="fdFoodL">kcal per cup</span></span><div class="inp"><input id="fdFood" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 350"></div></label>
+          <p class="av-note" style="margin:0 0 8px">It is on the bag or can, under “calorie content” or “ME”. Per kg is the most reliable; a cup on the label is a US 8 fl oz cup.</p>
+        </div>
+        <div class="ctl-row"><span class="ctl-lab">Meals a day</span><div class="seg" id="fdMeals" role="group" aria-label="Meals a day"><button type="button" data-v="1">1</button><button class="on" type="button" data-v="2">2</button><button type="button" data-v="3">3</button><button type="button" data-v="4">4</button></div></div>
+        <div class="ctl-row"><span class="ctl-lab">Treats</span><div class="seg" id="fdTr" role="group" aria-label="Treats"><button class="on" type="button" data-v="0">None</button><button type="button" data-v="5">5%</button><button type="button" data-v="10">10%</button></div></div>
+        <div class="res-hint" id="fdHint" style="display:none;text-align:left;margin:4px 0 8px"></div>
+        <div id="fdAdvIn" style="display:none">
+          <div class="proj-sep"></div>
+          <label class="fld"><span class="lab">More specific type of dog</span><div class="csel" id="fdType" data-value="auto"><button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false"><span class="csel-val">Use the choices above</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="csel-panel" role="listbox"><button type="button" class="csel-opt on" role="option" aria-selected="true" data-value="auto">Use the choices above</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="neut">Adult, neutered or spayed</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="intact">Adult, not neutered</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="inactive">Adult, inactive or prone to weight gain</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="loss">Adult, needs to lose weight</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="gain">Adult, needs to gain weight</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="senior">Senior dog</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="puppy4">Puppy under 4 months</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="puppy">Puppy, 4 months to adult</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="preg">Pregnant (gestation)</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="wl">Working dog, light work</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="wm">Working dog, moderate work</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="wh">Working dog, heavy work</button></div></div></label>
+          <label class="fld" for="fdCup"><span class="lab">Your cup holds <span class="unit">ml · optional</span></span><div class="inp"><input id="fdCup" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 150"></div></label>
+          <p class="av-note" style="margin:0 0 8px">The standard US cup is 237 ml. If your scoop is smaller or larger, enter its size and the cups are counted in your scoop.</p>
+          <label class="fld" for="fdOwn"><span class="lab">Your own factor <span class="unit">× resting need</span></span><div class="inp"><input id="fdOwn" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 1.5"></div></label>
+          <p class="av-note" style="margin:0 0 8px">Replaces the type’s factor. 1.0–1.2 for weight loss, 1.6–1.8 for a typical adult — use what your vet gave you.</p>
+          <div class="ctl-row"><span class="ctl-lab">Food 2 measured in</span><div class="seg" id="fdBU" role="group" aria-label="Food 2 measured in"><button class="on" type="button" data-v="cup">Cups</button><button type="button" data-v="can">Cans</button><button type="button" data-v="kg">Grams</button></div></div>
+          <div class="cb-two"><label class="fld" for="fdB"><span class="lab">Food 2 <span class="unit" id="fdBL">kcal per cup</span></span><div class="inp"><input id="fdB" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 1000"></div></label><label class="fld" for="fdShare"><span class="lab">Share <span class="unit">% of calories</span></span><div class="inp"><input id="fdShare" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 30"></div></label></div>
+          <p class="av-note" style="margin:0 0 8px">Mix kibble with wet or raw: say what share of the food calories the second food gives and you get the amount of each. Treats come off first.</p>
+        </div>
+        <div class="add-row split" style="margin-top:16px">
+          <span></span>
+          <button class="advbtn" id="fdAdvBtn" type="button">
+            <span id="fdAdvBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div class="card">
+      <div class="card-pad">
+        <div class="bf-res">
+          <div class="res-lab">Recommended calories a day</div>
+          <div class="res-big"><span id="fdBig">—</span></div>
+          <div class="res-sub" id="fdSub" data-empty="Enter your dog’s weight.">Enter your dog’s weight.</div>
+        </div>
+        <div id="fdBody" style="display:none">
+          <p class="res-tip adv-tip" id="fdTip"></p>
+          <p class="bm-h">Resting need and your dog’s range</p>
+          <div id="fdRule"></div>
+          <p class="bm-h">Food and treats</p>
+          <div id="fdSplit"></div>
+          <p class="bm-h" id="fdFeedH" style="display:none">How much to feed</p>
+          <table class="dtable" id="fdFeed"></table>
+          <div id="fdPics"></div>
+          <p class="av-note" id="fdNoFood" style="display:none">Enter your food’s calories to see the amount.</p>
+          <p class="cb-note" id="fdTypNote" style="display:none"></p>
+          <p class="cb-note" id="fdRaw" style="display:none"></p>
+          <p class="cb-note">An estimate from weight and life stage — not veterinary advice. Weigh your dog every couple of weeks and adjust with your vet.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- mobile sticky bar -->
+  <div class="mbar" id="mbar">
+    <span class="mbar-lab" id="fdMLab">Recommended calories a day</span>
+    <div class="mbar-vals"><b id="fdMVal">—</b></div>
+  </div>
+
+  <div class="related-calcs">
+    <p class="related-calcs-h">More calculators that may interest you</p>
+    <div class="pills">
+      <a class="pill" href="/dog-age-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a3 3 0 0 1 3 3v2H9V6a3 3 0 0 1 3-3zM7 21c0-5 2-8 5-8s5 3 5 8"/></svg>
+        Dog Age Calculator
+      </a>
+      <a class="pill" href="/cat-age-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="7"/><path d="M6 8l-1-5 4 3M18 8l1-5-4 3"/></svg>
+        Cat Age Calculator
+      </a>
+      <a class="pill" href="/calories-burned-walking-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zM10 21l2-7 3 3v4M9 12l3-3 3 2"/></svg>
+        Calories Burned Walking
+      </a>
+      <a class="pill" href="/water-intake-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11z"/></svg>
+        Water Intake Calculator
+      </a>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use the dog food calculator</h2>
+        <p>Enter your dog’s <strong>weight</strong> (or pick a breed for a typical adult weight), say whether it is a <strong>puppy, adult or senior</strong>, and for an adult whether it is neutered. The headline is the recommended calories a day. Then choose the <strong>type of food</strong>: dry kibble or wet (canned) uses a typical calorie value and gives the cups or cans a day and per meal; <strong>My own</strong> lets you type the calories from your bag or can for an exact amount. Pick a <strong>treat</strong> share if you give treats.</p>
+        <p>Open <strong>Go advanced</strong> for a more specific type of dog (weight loss, working, pregnant…), your own cup size in ml, your own factor from your vet, or to split the calories between two foods, such as kibble and wet or raw.</p>
+
+        <h2>How dog calories are calculated</h2>
+        <div class="formula">
+          Resting need (kcal) = 70 × weight in kg<sup>0.75</sup> · Daily need = resting need × factor
+          <small>THE FACTOR DEPENDS ON LIFE STAGE AND ACTIVITY</small>
+        </div>
+        <table class="dtable"><thead><tr><th>Type of dog</th><th>Factor</th></tr></thead><tbody><tr><td>Adult, neutered or spayed</td><td>1.4–1.6</td></tr><tr><td>Adult, not neutered</td><td>1.6–1.8</td></tr><tr><td>Adult, inactive or prone to weight gain</td><td>1.0–1.4</td></tr><tr><td>Adult, needs to lose weight</td><td>1.0–1.2</td></tr><tr><td>Adult, needs to gain weight</td><td>1.7</td></tr><tr><td>Senior dog</td><td>1.1</td></tr><tr><td>Puppy under 4 months</td><td>3.0</td></tr><tr><td>Puppy, 4 months to adult</td><td>2.0</td></tr><tr><td>Pregnant (gestation)</td><td>3.0</td></tr><tr><td>Working dog, light work</td><td>2.0</td></tr><tr><td>Working dog, moderate work</td><td>3.0</td></tr><tr><td>Working dog, heavy work</td><td>5.0</td></tr></tbody></table>
+        <p>Adults show a range where the veterinary tool gives one; the headline uses the single factor from Omnicalculator. For a 20 kg neutered dog: 70 × 20<sup>0.75</sup> = <strong>662 kcal</strong> at rest, × 1.6 = <strong>1,059 kcal</strong> a day.</p>
+      </div>
+
+      <div>
+        <h2>Daily calories by weight</h2>
+        <table class="dtable"><thead><tr><th>Dog’s weight</th><th>At rest</th><th>Neutered adult</th><th>Not neutered</th></tr></thead><tbody><tr><td>5 kg (11 lb)</td><td>234</td><td>328–374</td><td>374–421</td></tr><tr><td>10 kg (22 lb)</td><td>394</td><td>551–630</td><td>630–709</td></tr><tr><td>20 kg (44.1 lb)</td><td>662</td><td>927–1,059</td><td>1,059–1,192</td></tr><tr><td>30 kg (66.1 lb)</td><td>897</td><td>1,256–1,436</td><td>1,436–1,615</td></tr><tr><td>40 kg (88.2 lb)</td><td>1,113</td><td>1,559–1,781</td><td>1,781–2,004</td></tr></tbody></table>
+        <p>All figures in kcal a day (neutered 1.4–1.6 × resting, not neutered 1.6–1.8 ×). Treat them as a starting point: the same weight can mean a couch dog or a working dog.</p>
+
+        <h2>Adjust from your dog, not the number</h2>
+        <p>Both sources say the figure is an estimate. If your dog is gaining or losing weight, change the amount and check again in a couple of weeks; for puppies, recalculate as they grow. For a dog that needs to lose weight, or one with a health condition, ask your vet to set the plan. See also the <a href="/dog-age-calculator/">dog age calculator</a>.</p>
+        <h2>Sources</h2>
+        <ul>
+          <li>Association for Pet Obesity Prevention (APOP), <a href="https://www.petobesityprevention.org/veterinary-der-calculator" rel="noopener">RER &amp; MER Energy Calculator</a> (opened 2026-11-05): RER = 70 × body weight in kg<sup>0.75</sup>; MER = RER × activity or life-stage factor — sedentary or indoor adult 1.0–1.4, typical neutered adult 1.4–1.6, typical intact adult 1.6–1.8, weight-loss planning 1.0–1.2, working or highly active dogs 1.6–11, puppy under 4 months 3.0, puppy 4 months and older 2.0, gestation 3.0; treats up to 10% of daily calories and subtracted from the daily amount.</li>
+          <li><a href="https://www.omnicalculator.com/biology/dog-food" rel="noopener">Omnicalculator dog food calculator</a> (opened 2026-11-05): the same RER formula with one factor per type — inactive 1.2, neutered 1.6, intact 1.8, weight loss 1.0, weight gain 1.7, senior 1.1, working dog 2, 3 and 5 for light, moderate and heavy work. The factors for weight gain, senior and the three working types come from this source only.</li>
+          <li>Typical food calories, read from product pages on 2026-11-05: <a href="https://www.hillspet.com/dog-food/science-diet-adult-original-dry" rel="noopener">Hill’s Science Diet Adult Chicken &amp; Barley dry</a> — 3,675 kcal/kg, 365 kcal per 8 fl oz cup; <a href="https://www.royalcanin.com/ca/dogs/products/retail-products/medium-adult-3004" rel="noopener">Royal Canin Medium Adult dry</a> (Canada page) — 3,616 kcal/kg, 340 kcal per cup; <a href="https://www.hillspet.com/dog-food/science-diet-adult-chicken-canned" rel="noopener">Hill’s Science Diet Adult Chicken &amp; Barley canned</a> — 369 kcal per 13 oz (370 g) can; <a href="https://www.pedigree.com/products/wet/choice-cuts-gravy-adult-wet-dog-food-can-beef" rel="noopener">Pedigree Choice Cuts in Gravy canned</a> — 884 kcal/kg, 332 kcal per 13.2 oz can. The page uses the rounded average of each pair (dry 350 kcal per cup and 3,650 per kg, wet 350 per 13 oz can and 940 per kg). Two products per type is a small sample, so the typical value is only a starting point.</li>
+          <li>Both sources say the result is a starting estimate that depends on the individual dog; the APOP tool says to adjust from current intake, weight trend, body condition, health and measured response.</li>
+        </ul>
+        <p><small>For information only. This calculator does not replace your veterinarian, who can set a feeding plan for your dog’s health, body condition and any medical condition. Nursing (lactation) dogs are not covered because no factor was verified for them.</small></p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>How much should I feed my dog?</summary><p>Start from calories: a dog’s resting energy requirement is 70 × weight in kg<sup>0.75</sup>, and the daily need is that times a factor for its life stage and activity. For a 20 kg neutered adult that is 662 kcal at rest and about 927–1,059 kcal a day. Then divide by the calories in your food — a food with 350 kcal per cup means about 3 cups a day. Weigh your dog every couple of weeks and adjust from the trend.</p></details>
+    <details class="faq"><summary>How many calories does a dog need a day?</summary><p>It depends on weight and life stage. At 5, 10, 20, 30 and 40 kg a neutered adult needs about 374, 630, 1,059, 1,436, 1,781 kcal a day (factor 1.6). Intact adults use 1.6–1.8 times the resting need and sedentary or overweight-prone dogs 1.0–1.4, so the same dog can need 662–1,192 kcal a day at 20 kg depending on the type.</p></details>
+    <details class="faq"><summary>How do I work out cups of dog food?</summary><p>Divide the daily calories by the calories in a cup of your food. Dry food typically has about 350 kcal per US cup (two labels I read: Hill’s Science Diet Adult 365, Royal Canin Medium Adult 340), so 1,059 ÷ 350 = 3.03 cups, shown as about 3 cups. The calculator does this for you with a typical value; choose “My own” and type the calories from your bag for an exact figure, because foods differ. A cup is a US 8 fl oz cup (237 ml) unless you enter your own scoop size under Go advanced.</p></details>
+    <details class="faq"><summary>How much should a puppy eat?</summary><p>Puppies use more calories for their weight: the factor is 3.0 times the resting need under 4 months and 2.0 from 4 months (APOP and Omnicalculator agree). An 8 kg puppy needs about 999 kcal a day under 4 months and 666 kcal from 4 months. The calculation uses the puppy’s current weight, so recalculate as it grows; enter the age in months and the right factor is picked for you.</p></details>
+    <details class="faq"><summary>How much should I feed a dog that needs to lose weight?</summary><p>Veterinary guidance gives 1.0–1.2 times the resting need for weight-loss planning; this calculator uses 1.0 for the headline and shows the range. For a 30 kg dog that is about 897–1,077 kcal a day. A weight-loss plan needs a vet to set the target weight and recheck it, so treat this as a starting figure.</p></details>
+    <details class="faq"><summary>How many treats can my dog have?</summary><p>APOP says treats should stay at or below 10% of daily calories and be subtracted from the daily amount rather than added. For the 20 kg neutered dog, 10% is about 106 kcal, so the food drops to about 953 kcal. Pick 5% or 10% in the calculator and it does the subtraction.</p></details>
+    <details class="faq"><summary>Why does the calculator show a range?</summary><p>Dogs of the same weight differ in activity, age, coat, breed and metabolism, and the two sources give factor ranges rather than single values for adults. A range is more honest than one exact number; the headline uses the single factor Omnicalculator gives and the range comes from the APOP tool.</p></details>
+    <details class="faq"><summary>Is the raw food rule of 2–3% of body weight right?</summary><p>Raw-food sellers often quote 2–3% of body weight a day for adult dogs. That figure came from commercial pages, not from a veterinary source I could read, so it is shown only as a comparison under Go advanced. Raw and fresh foods differ a lot in calories per kg and I found no verified typical value, so choose “My own” and enter the kcal per kg from the label.</p></details>
+    <details class="faq"><summary>Can I feed two foods, like kibble and wet?</summary><p>Yes. Under Go advanced add a second food with its calories and the share of the food calories it should supply; the calculator then gives the amount of each. The first food is whichever type you picked, dry, wet or your own. Treats are taken off the top first.</p></details>
+    <details class="faq"><summary>Does this work for senior dogs?</summary><p>It has a senior type with a factor of 1.1 times the resting need, taken from Omnicalculator; the APOP tool does not give a separate senior factor. Older dogs vary a lot, so use your vet and the weight trend to adjust. See the <a href="/dog-age-calculator/">dog age calculator</a> for when a dog counts as senior.</p></details>
+  </section>
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+      <div class="footer-stack">
+<div class="footer-col" style="order:1">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+          <li><a href="/paint-calculator/">Paint Calculator</a></li>
+          <li><a href="/wallpaper-calculator/">Wallpaper Calculator</a></li>
+          <li><a href="/square-footage-calculator/">Square Footage Calculator</a></li>
+          <li><a href="/tape-measure-fraction-calculator/">Tape Measure Fraction Calculator</a></li>
+          <li><a href="/stair-calculator/">Stair Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:5">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Cooking &amp;</span> <span class="ft2">Kitchen</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/recipe-converter/">Recipe Converter</a></li>
+          <li><a href="/turkey-cooking-time-calculator/">Turkey Cooking Time Calculator</a></li>
+          <li><a href="/turkey-thawing-time-calculator/">Turkey Thawing Time Calculator</a></li>
+          <li><a href="/turkey-size-calculator/">Turkey Size Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:6">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Money &amp;</span> <span class="ft2">Finance</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/mortgage-calculator/">Mortgage Calculator</a></li>
+          <li><a href="/loan-calculator/">Loan Calculator</a></li>
+          <li><a href="/auto-loan-calculator/">Auto Loan Calculator</a></li>
+          <li><a href="/car-sales-tax-calculator/">Car Sales Tax Calculator</a></li>
+          <li><a href="/overtime-calculator/">Overtime Calculator</a></li>
+          <li><a href="/salary-calculator/">Salary Calculator</a></li>
+          <!--STAXFOOT:START-->
+          <li><a href="/sales-tax-calculator/">Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/california/">California Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/chicago/">Chicago Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/florida/">Florida Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/las-vegas/">Las Vegas Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/los-angeles/">Los Angeles Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/michigan/">Michigan Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/missouri/">Missouri Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/north-carolina/">North Carolina Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/ohio/">Ohio Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/texas/">Texas Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/virginia/">Virginia Sales Tax Calculator</a></li>
+          <!--STAXFOOT:END-->
+          <li><a href="/tip-calculator/">Tip Calculator</a></li>
+          <li><a href="/how-much-to-tip/">How Much to Tip</a></li>
+        </ul>
+      </div>
+      </div>
+
+      <div class="footer-right">
+<div class="footer-col footer-col--two" style="order:2">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/vo2-max-calculator/">VO2 Max Calculator</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/bmi-calculator/">BMI Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/ideal-weight-calculator/">Ideal Weight Calculator</a></li>
+          <li><a href="/lean-body-mass-calculator/">Lean Body Mass Calculator</a></li>
+          <li><a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio Calculator</a></li>
+          <li><a href="/gmi-calculator/">GMI Calculator</a></li>
+          <li><a href="/a1c-calculator/">A1C Calculator</a></li>
+          <li><a href="/calorie-calculator/">Calorie Calculator</a></li>
+          <li><a href="/calorie-deficit-calculator/">Calorie Deficit Calculator</a></li>
+          <li><a href="/bmr-calculator/">BMR Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/water-intake-calculator/">Water Intake Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/protein-intake-calculator/">Protein Intake Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
+          <li><a href="/steps-to-miles-calculator/">Steps to Miles Calculator</a></li>
+          <li><a href="/dog-age-calculator/">Dog Age Calculator</a></li>
+          <li><a href="/cat-age-calculator/">Cat Age Calculator</a></li>
+          <li><a href="/calories-burned-calculator/">Calories Burned Calculator</a></li>
+          <li><a href="/calories-burned-walking-calculator/">Calories Burned Walking Calculator</a></li>
+          <li><a href="/calories-burned-running-calculator/">Calories Burned Running Calculator</a></li>
+          <li><a href="/keto-calculator/">Keto Calculator</a></li>
+          <li><a href="/net-carb-calculator/">Net Carb Calculator</a></li>
+          <li><a href="/intermittent-fasting-calculator/">Intermittent Fasting Calculator</a></li>
+          <li><a href="/bsa-calculator/">BSA Calculator</a></li>
+          <li><a href="/dog-food-calculator/">Dog Food Calculator</a></li>
+        </ul>
+      </div>
+
+        <div class="footer-sub">
+<div class="footer-subcol">
+<div class="footer-col" style="order:3">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/semester-grade-calculator/">Semester Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+          <li><a href="/grade-curve-calculator/">Grade Curve Calculator</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:START-->
+<div class="footer-col" style="order:7">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Unit</span> <span class="ft2">Converters</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/unit-converter/">Unit Converter</a></li>
+          <li><a href="/length-converter/">Length Converter</a></li>
+          <li><a href="/weight-converter/">Weight Converter</a></li>
+          <li><a href="/volume-converter/">Volume Converter</a></li>
+          <li><a href="/temperature-converter/">Temperature Converter</a></li>
+          <li><a href="/area-converter/">Area Converter</a></li>
+          <li><a href="/speed-converter/">Speed Converter</a></li>
+          <li><a href="/data-storage-converter/">Data Storage Converter</a></li>
+          <li><a href="/cooking-converter/">Cooking Measurement Converter</a></li>
+          <li><a href="/px-to-rem-converter/">PX to REM Converter</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:END-->
+</div>
+
+<div class="footer-col" style="order:4">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/fraction-calculator/">Fraction Calculator</a></li>
+          <li><a href="/standard-deviation-calculator/">Standard Deviation Calculator</a></li>
+          <li><a href="/scientific-notation-calculator/">Scientific Notation Calculator</a></li>
+          <li><a href="/weighted-average-calculator/">Weighted Average Calculator</a></li>
+          <li><a href="/average-calculator/">Average Calculator</a></li>
+          <li><a href="/batting-average-calculator/">Batting Average Calculator</a></li>
+          <li><a href="/stock-average-calculator/">Stock Average Calculator</a></li>
+          <li><a href="/dice-average-calculator/">Dice Average Calculator</a></li>
+          <li><a href="/time-average-calculator/">Time Average Calculator</a></li>
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+          <li><a href="/percentage-change-calculator/">Percentage Change Calculator</a></li>
+          <li><a href="/age-calculator/">Age Calculator</a></li>
+          <li><a href="/date-calculator/">Date Calculator</a></li>
+          <li><a href="/time-calculator/">Time Calculator</a></li>
+          <li><a href="/hours-calculator/">Hours Calculator</a></li>
+          <li><a href="/triangle-calculator/">Triangle Calculator</a></li>
+          <li><a href="/random-number-generator/">Random Number Generator</a></li>
+        </ul>
+      </div>
+        </div>
+      </div>
+
+      <!--PAYFOOT:START-->
+      <div class="footer-col footer-col--wide">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Paycheck</span> <span class="ft2">Calculators</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/paycheck-calculator/">Paycheck Calculator (all states)</a></li>
+          <li><a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arkansas/">Arkansas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/california/">California Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/hawaii/">Hawaii Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/louisiana/">Louisiana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nebraska/">Nebraska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/oklahoma/">Oklahoma Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/utah/">Utah Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wisconsin/">Wisconsin Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a></li>
+        </ul>
+      </div>
+      <!--PAYFOOT:END-->
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/blog/">Blog</a>
+      <span aria-hidden="true">·</span>
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+</div>
+
+<script src="/assets/app.js?v=317"></script>
+<script>CalcThis.initDogFoodCalc();</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>
