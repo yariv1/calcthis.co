@@ -2726,3 +2726,10 @@
 .p-dog .dg-k.dg-s{height:10px;width:14px;border:0;background:#F0D08A;vertical-align:-1px}
 .p-dog .a1-note{font-size:13px;color:var(--muted);line-height:1.5;margin:6px 0 0}
 .p-dog .chips button{font-size:13.5px;padding:7px 13px}
+
+/* ---- Cat age calculator (.p-cat) — reuses .p-dog + .p-avg scale/ticks/legend ---- */
+.p-cat .cg-b0{background:#BFD7C5}.p-cat .cg-b1{background:#F0D08A}.p-cat .cg-b2{background:#EBB98E}.p-cat .cg-b3{background:#E0A59A}
+.p-cat .cg-hum{margin-top:0;color:var(--ink-soft);font-weight:500}
+.p-cat .cg-scale{margin-top:10px}
+.p-cat .cg-k{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:5px;vertical-align:-2px}
+.p-cat .cg-k0{background:#BFD7C5}.p-cat .cg-k1{background:#F0D08A}.p-cat .cg-k2{background:#EBB98E}.p-cat .cg-k3{background:#E0A59A}

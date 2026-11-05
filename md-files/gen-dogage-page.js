@@ -170,7 +170,7 @@ ${pill('/calorie-calculator/', 'Calorie Calculator', '<circle cx="12" cy="12" r=
           <li>Breed sizes: typical adult weights from the breed standards (AKC, FCI, The Kennel Club) as summarized on each breed’s Wikipedia page, retrieved 5 November 2026; used only to pick a size.</li>
         </ul>
         <p><small>Charts are averages and sources differ slightly (the Old Farmer’s Almanac’s giant column, for example, starts at 12 and 22). For your own dog’s health, ask your vet.</small></p>
-        <p>To work out a person’s exact age, use the <a href="/age-calculator/">age calculator</a>; to count days between two dates, the <a href="/date-calculator/">date calculator</a>.</p>
+        <p>For a cat, use the <a href="/cat-age-calculator/">cat age calculator</a>; to work out a person’s exact age, the <a href="/age-calculator/">age calculator</a>; to count days between two dates, the <a href="/date-calculator/">date calculator</a>.</p>
       </div>
     </div>
 

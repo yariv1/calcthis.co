@@ -11746,6 +11746,156 @@ CalcThis.initDogAgeCalc = function () {
 };
 /* DOGAGE:END */
 
+/* CATAGE:BEGIN */
+/* =========================================================
+   CAT AGE — pure engine (no DOM). Marked CATAGE-ENGINE:START/END.
+   15-9-4 rule (first year 15, second year 9 more = 24, then 4 a year) with the early-life points published by IAMS
+   (3 months = 4, 6 months = 10, 12 months = 15, 18 months = 21, 24 months = 24); straight lines between the points.
+   Life stages: AAHA/AAFP 2021 Feline Life Stage Guidelines - kitten birth to 1 year, young adult 1-6, mature adult 7-10,
+   senior over 10 (15 and over is often called geriatric - the older six-stage labels). */
+/* CATAGE-ENGINE:START */
+CalcThis.catAgeEngine = (function () {
+  var PTS = [[0, 0], [0.25, 4], [0.5, 10], [1, 15], [1.5, 21], [2, 24]];
+  function human(a) {
+    if (!(a > 0)) return 0;
+    if (a >= 2) return 24 + 4 * (a - 2);
+    for (var i = 1; i < PTS.length; i++) if (a <= PTS[i][0]) return PTS[i - 1][1] + (PTS[i][1] - PTS[i - 1][1]) * (a - PTS[i - 1][0]) / (PTS[i][0] - PTS[i - 1][0]);
+    return 24;
+  }
+  function cat(h) {
+    if (!(h > 0)) return 0;
+    if (h >= 24) return 2 + (h - 24) / 4;
+    for (var i = 1; i < PTS.length; i++) if (h <= PTS[i][1]) return PTS[i - 1][0] + (h - PTS[i - 1][1]) * (PTS[i][0] - PTS[i - 1][0]) / (PTS[i][1] - PTS[i - 1][1]);
+    return 2;
+  }
+  function stage(a) { return a < 1 ? 'kitten' : (a < 7 ? 'young adult' : (a < 11 ? 'mature adult' : 'senior')); }
+  var STAGES = [['kitten', 0, 1], ['young adult', 1, 7], ['mature adult', 7, 11], ['senior', 11, 25]];
+  function num(t) {
+    t = (t + '').trim().replace(/\s/g, '');
+    if (!t) return null;
+    if (/^[+-]?\d*,\d+$/.test(t)) t = t.replace(',', '.'); else t = t.replace(/,/g, '');
+    if (!/^[+-]?(\d+\.?\d*|\.\d+)$/.test(t)) return NaN;
+    return parseFloat(t);
+  }
+  return { PTS: PTS, STAGES: STAGES, human: human, cat: cat, stage: stage, num: num };
+})();
+/* CATAGE-ENGINE:END */
+
+/* =========================================================
+   CalcThis.initCatAgeCalc() — cat age in human years (and back). Differentiator vs. Omnicalculator, the Old Farmer's Almanac and IAMS
+   (all checked live): months and weeks handled with the real kitten milestones, life stage by name with the time to the next stage, a
+   life-stage timeline with your cat on it, next-birthday and senior milestones, a date of birth, both directions, up to 30 years. */
+CalcThis.initCatAgeCalc = function () {
+  var E = CalcThis.catAgeEngine;
+  var $ = function (id) { return document.getElementById(id); };
+  var st = { mode: 'cat', adv: false, dob: null, dobA: 0 };
+  var TODAY = new Date();
+  function setHint(m) { var h = $('cgHint'); h.textContent = m || ''; h.style.display = m ? 'block' : 'none'; }
+  function r0(x) { return Math.round(x); }
+  function plural(n, w) { return n + ' ' + w + (n === 1 ? '' : 's'); }
+  function ym(a) { var y = Math.floor(a + 1e-9), m = Math.round((a - y) * 12); if (m === 12) { y++; m = 0; } return [y, m]; }
+  function ymStr(a) { if (a < 1 / 12 - 1e-9) { var dd = Math.max(1, Math.round(a * 365.25)); return plural(dd, 'day'); } var p = ym(a), s = []; if (p[0]) s.push(plural(p[0], 'year')); if (p[1] || !p[0]) s.push(plural(p[1], 'month')); return s.join(' '); }
+  function hFmt(x) { return x < 1 ? 'under 1 year' : r0(x) + ' years'; }
+  function empty(msg, sub) { $('cgBig').textContent = '—'; $('cgSub').textContent = sub || $('cgSub').getAttribute('data-empty'); $('cgBody').style.display = 'none'; $('cgMVal').textContent = '—'; setHint(msg || ''); }
+  function readAge() {
+    if (st.dob && st.dobA > 0) return { a: st.dobA };
+    var Y = E.num($('cgY').value), M = E.num($('cgM').value);
+    if (Y === null && M === null) return { none: true };
+    if ((Y !== null && (isNaN(Y) || Y < 0)) || (M !== null && (isNaN(M) || M < 0))) return { err: 'Couldn’t read the age — use whole or decimal numbers like 7 and 3.' };
+    var a = (Y || 0) + (M || 0) / 12;
+    if (!(a > 0)) return { err: 'Enter an age above zero.' };
+    if (a > 30) return { err: 'That is older than any cat on record — check the age.' };
+    return { a: a };
+  }
+  var AMAX = 22;
+  function pos(a) { return Math.max(0, Math.min(100, a / AMAX * 100)); }
+  function timeline(a) {
+    var cols = ['cg-b0', 'cg-b1', 'cg-b2', 'cg-b3'], h = '<div class="av-scale cg-scale">';
+    E.STAGES.forEach(function (s, i) { h += '<span class="av-band ' + cols[i] + '" style="left:' + pos(s[1]) + '%;width:' + (pos(Math.min(s[2], AMAX)) - pos(s[1])) + '%"></span>'; });
+    h += '<span class="av-mk" style="left:' + pos(a) + '%"><i></i></span></div>';
+    var T = [0, 5, 7, 11, 15, 20];
+    h += '<div class="av-ticks">' + T.map(function (t) { return '<span style="left:' + pos(t) + '%">' + t + '</span>'; }).join('') + '</div>';
+    h += '<div class="av-ticks cg-hum">' + T.map(function (t) { return '<span style="left:' + pos(t) + '%">' + r0(E.human(t)) + '</span>'; }).join('') + '</div>';
+    h += '<p class="av-note" style="margin:2px 0 6px">Top: cat age in years. Bottom: human years.</p>';
+    h += '<div class="av-legend"><span><i class="cg-k cg-k0"></i>Kitten</span><span><i class="cg-k cg-k1"></i>Young adult</span><span><i class="cg-k cg-k2"></i>Mature adult</span><span><i class="cg-k cg-k3"></i>Senior</span><span><i class="m"></i>Your cat</span></div>';
+    $('cgScale').innerHTML = h;
+  }
+  function render() {
+    if (st.mode === 'cat') {
+      var ag = readAge();
+      if (ag.none) { empty(''); return; }
+      if (ag.err) { empty(ag.err); return; }
+      setHint('');
+      var a = ag.a, h = E.human(a), s = E.stage(a);
+      $('cgResLab').textContent = 'Human-year equivalent';
+      $('cgBig').textContent = hFmt(h); $('cgSub').textContent = 'A cat aged ' + ymStr(a) + ' — ' + (s === 'kitten' ? 'a kitten' : 'a ' + s + ' cat');
+      $('cgMLab').textContent = 'Human years'; $('cgMVal').textContent = hFmt(h);
+      var tip;
+      if (s === 'kitten') tip = 'A <strong>kitten</strong> (up to 1 year). The first year of a cat’s life counts as about <strong>15 human years</strong>, and the second adds 9 more.';
+      else if (s === 'young adult') tip = 'A <strong>young adult</strong> (1 to 6 years). Your cat becomes a <strong>mature adult</strong> at 7 years — in about ' + ymStr(7 - a) + '.';
+      else if (s === 'mature adult') tip = 'A <strong>mature adult</strong> (7 to 10 years). Cats are generally treated as <strong>seniors</strong> after 10 years — in about ' + ymStr(11 - a) + '. Ask your vet about senior check-ups.';
+      else tip = 'A <strong>senior</strong> cat (over 10 years)' + (a >= 15 ? ' — often called <strong>geriatric</strong> from 15' : '') + '. Regular senior check-ups are worth asking your vet about.';
+      $('cgTip').innerHTML = tip;
+      timeline(a);
+      var nb = Math.floor(a + 1e-9) + 1, mo = (nb - a) * 12, rows = [];
+      rows.push(['Human-year equivalent', hFmt(h)]);
+      rows.push(['Life stage (AAHA/AAFP 2021)', s.charAt(0).toUpperCase() + s.slice(1)]);
+      rows.push(['Next birthday (turns ' + nb + ')', r0(E.human(nb)) + ' years · in about ' + (mo < 1.5 ? 'a month' : r0(mo) + ' months')]);
+      rows.push([a < 11 ? 'Senior (over 10 years) in about' : 'Senior since', a < 11 ? ymStr(11 - a) : 'age 11']);
+      rows.push(['Old “×7” rule (outdated)', r0(7 * a) + ' years']);
+      $('cgRows').innerHTML = '<tbody>' + rows.map(function (r) { return '<tr><td>' + r[0] + '</td><td>' + r[1] + '</td></tr>'; }).join('') + '</tbody>';
+      $('cgBody').style.display = '';
+    } else {
+      var H = E.num($('cgH').value);
+      if (H === null) { empty(''); return; }
+      if (isNaN(H) || H <= 0) { empty('Couldn’t read the human age — use a number like 40.'); return; }
+      if (H > 150) { empty('Human ages above 150 are outside the chart — check the number.'); return; }
+      setHint('');
+      var c = E.cat(H), s2 = E.stage(c);
+      $('cgResLab').textContent = 'Equivalent cat age';
+      $('cgBig').textContent = ymStr(c); $('cgSub').textContent = 'A cat is about ' + r0(H) + ' in human years at this age — ' + (s2 === 'kitten' ? 'a kitten' : 'a ' + s2 + ' cat');
+      $('cgMLab').textContent = 'Cat age'; $('cgMVal').textContent = ymStr(c);
+      $('cgTip').innerHTML = 'A cat reaches <strong>' + r0(H) + ' human years</strong> at about <strong>' + ymStr(c) + '</strong> old — ' + (s2 === 'kitten' ? 'a kitten' : 'a ' + s2 + ' cat') + '.';
+      timeline(c);
+      var rows2 = [['Cat age', ymStr(c)], ['Life stage (AAHA/AAFP 2021)', s2.charAt(0).toUpperCase() + s2.slice(1)], ['Old “×7” rule (outdated)', ymStr(H / 7)]];
+      $('cgRows').innerHTML = '<tbody>' + rows2.map(function (r) { return '<tr><td>' + r[0] + '</td><td>' + r[1] + '</td></tr>'; }).join('') + '</tbody>';
+      $('cgBody').style.display = '';
+    }
+  }
+  ['cgY', 'cgM'].forEach(function (id) { $(id).addEventListener('input', function () { if (st.dob) { st.dob = null; $('cgDob').value = ''; } render(); }); });
+  $('cgH').addEventListener('input', render);
+  $('cgMode').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return; st.mode = b.getAttribute('data-v');
+    [].forEach.call($('cgMode').children, function (x) { x.classList.toggle('on', x === b); });
+    $('cgCatIn').style.display = st.mode === 'cat' ? '' : 'none'; $('cgHumanIn').style.display = st.mode === 'cat' ? 'none' : '';
+    $('cgDobWrap').style.display = st.adv && st.mode === 'cat' ? '' : 'none';
+    render();
+  });
+  $('cgAdvBtn').addEventListener('click', function () {
+    st.adv = !st.adv; $('cgAdvBtn').classList.toggle('open', st.adv); $('cgAdvBtnLab').textContent = st.adv ? 'Go simple' : 'Go advanced'; $('cgAdvIn').style.display = st.adv ? '' : 'none';
+    $('cgDobWrap').style.display = st.adv && st.mode === 'cat' ? '' : 'none';
+    if (!st.adv && st.dob) { st.dob = null; $('cgDob').value = ''; }
+    render();
+  });
+  function dobChanged() {
+    var v = $('cgDob').value.trim();
+    if (!v) { st.dob = null; render(); return; }
+    var d = window.Datepicker && $('cgDob').datepicker ? $('cgDob').datepicker.getDate() : new Date(v);
+    if (!(d instanceof Date) || isNaN(d)) { empty('Couldn’t read that date — pick one from the calendar or type it like 15 June 2019.'); return; }
+    if (d > TODAY) { empty('That date is in the future.'); return; }
+    st.dob = d;
+    var a = (TODAY - d) / 864e5 / 365.25; st.dobA = a; var pm = ym(a); $('cgY').value = String(pm[0]); $('cgM').value = String(pm[1]);
+    render();
+  }
+  if (window.Datepicker) {
+    new Datepicker($('cgDob'), { format: 'd MM yyyy', autohide: true, weekStart: 0, todayHighlight: true, maxDate: new Date() });
+    $('cgDob').addEventListener('changeDate', dobChanged);
+  } else $('cgDob').addEventListener('change', dobChanged);
+  $('cgDob').addEventListener('input', function () { if (!$('cgDob').value.trim()) dobChanged(); });
+  render();
+};
+/* CATAGE:END */
+
 /* =========================================================
    HOURS CALCULATOR — pure engine (no DOM). Loose clock parsing ("9", "915", "9:15a",
    "5p", "1730", "0830", noon, midnight), end-after-start resolution with overnight
