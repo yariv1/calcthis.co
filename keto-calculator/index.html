@@ -1,0 +1,752 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Keto Calculator — Daily Macros and Net Carb Limit</title>
+<meta name="description" content="Keto calculator: daily calories, protein, fat and net carbs from your size, activity and weight goal, with a carb-limit scale and the grams for each meal.">
+<link rel="canonical" href="https://calcthis.co/keto-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Keto Calculator — Daily Macros and Net Carb Limit">
+<meta property="og:description" content="Keto calculator: daily calories, protein, fat and net carbs from your size, activity and weight goal, with a carb-limit scale and the grams for each meal.">
+<meta property="og:url" content="https://calcthis.co/keto-calculator/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/datepicker.min.css">
+<link rel="stylesheet" href="/assets/style.css?v=314">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Keto Calculator",
+  "url": "https://calcthis.co/keto-calculator/",
+  "applicationCategory": "HealthApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "Free keto calculator: daily calories, net carbs, protein and fat in grams from your age, height, weight and activity (Mifflin-St Jeor or Katch-McArdle), with a weight-loss, maintenance or gain pace, a net carb limit of 20-50 g, protein by ideal body weight and per-meal grams."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How many net carbs should I eat on keto?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The usual range is 20–50 grams of carbohydrate a day. A 2021 review by Volek, Phinney and colleagues describes it as a general range that varies from person to person, assuming protein is not eaten in excess. The calculator starts at 25 g and lets you pick 20, 25, 30 or 50 g — or your own number under Go advanced — and shows where your choice sits on that range. Most people count net carbs (total carbohydrate minus fiber and part of any sugar alcohol); the net carb calculator does that for a food label."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How are keto macros calculated?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Calories first: your resting rate (Mifflin-St Jeor, or Katch-McArdle if you give your body fat) times your activity level gives the calories to maintain your weight; a weight-loss or gain pace then moves it by 1,100 kcal a day per kilogram a week (7,700 kcal per kg of body fat). Net carbs are your chosen limit, protein is grams per kilogram of ideal body weight, and fat is whatever calories are left at 9 kcal a gram. For the example above: 2,163 kcal to maintain, 1,613 to lose 0.5 kg a week, 25 g carbs (100 kcal), 85 g protein (341 kcal) and 130 g fat (1171 kcal)."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How much protein should I eat on keto?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The Volek review gives 1.2–2.0 grams per kilogram of ideal body weight, typically 1.2–1.5 g/kg, and notes little evidence for more than 2.0 g/kg, which makes ketosis harder to reach. The calculator offers 1.2 (lower), 1.5 (typical) and 2.0 (higher) g/kg. At 1.5 g/kg an ideal weight of 56.9 kg gives 85 g."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why is protein based on ideal body weight and not my actual weight?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The research the ranges come from states protein per kilogram of ideal or adjusted body weight, not total weight, so someone with extra weight does not get a very large protein number. The calculator uses the Devine ideal weight for your height (or your actual weight if that is lower). Under Go advanced you can switch to your actual weight, for example if you have a lot of muscle."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How much fat should I eat on keto?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Fat is what remains after carbs and protein: calories minus 4 kcal per gram of each, divided by 9. In the example that is 130 g a day — about 73% of calories. If you are losing weight, some of that fat is meant to come from your own body, so the number is a ceiling, not a target to hit."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How fast can I lose weight on keto?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The calculator lets you pick 0.5, 1, 1.5 or 2 lb (0.25, 0.5, 0.75 or 1 kg) a week and warns when the pace is faster than 1% of your body weight a week or the calories would fall below 1,200 (women) or 1,500 (men) a day. Real loss slows over time; the calorie deficit calculator models that."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I count total carbs or net carbs?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The 20–50 g range in the research is stated as carbohydrate. In practice many people subtract fiber (and some sugar alcohols) and count net carbs, which lets more vegetables fit. If you want to be strict, count total carbs; if you count net carbs, the net carb calculator shows a strict, a best-estimate and a lenient count."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is a ketogenic diet safe?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It is not suitable for everyone. Talk to a doctor first if you have diabetes (especially if you take medication), kidney or liver disease, take any regular medication, or are pregnant or breastfeeding. This calculator is for adults and gives an estimate for information only, not medical advice."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I use the calculator to maintain or gain weight?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Choose Maintain for your maintenance calories or Gain for a surplus at the pace you pick; the carb limit and protein stay the same and fat takes the remaining calories."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "CalcThis",
+      "item": "https://calcthis.co/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Keto Calculator",
+      "item": "https://calcthis.co/keto-calculator/"
+    }
+  ]
+}
+</script>
+<meta property="og:site_name" content="CalcThis">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://calcthis.co/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="CalcThis — free, purpose-built calculators">
+<meta name="twitter:title" content="Keto Calculator — Daily Macros and Net Carb Limit">
+<meta name="twitter:description" content="Keto calculator: daily calories, protein, fat and net carbs from your size, activity and weight goal, with a carb-limit scale and the grams for each meal.">
+<meta name="twitter:image" content="https://calcthis.co/assets/og-default.png">
+</head>
+<body class="p-bmr p-kz">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <a class="hdr-back" href="/blog/" aria-label="Back to blog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-search"><div class="menu-sx"><input id="menuSearch" type="search" placeholder="Search calculators or states…" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Search calculators" enterkeyhint="search"></div><div class="menu-results" id="menuResults" hidden></div></div>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <span class="menu-col-head">Construction &amp; Gardening</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+          <a href="/paint-calculator/">Paint</a>
+          <a href="/wallpaper-calculator/">Wallpaper</a>
+          <a href="/square-footage-calculator/">Square Footage</a>
+          <a href="/tape-measure-fraction-calculator/">Tape Measure Fraction</a>
+          <a href="/stair-calculator/">Stair</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/vo2-max-calculator/">VO2 Max</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
+          <a href="/bmi-calculator/">BMI</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/ideal-weight-calculator/">Ideal Weight</a>
+          <a href="/lean-body-mass-calculator/">Lean Body Mass</a>
+          <a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio</a>
+          <a href="/gmi-calculator/">GMI</a>
+          <a href="/a1c-calculator/">A1C</a>
+          <a href="/calorie-calculator/">Calorie</a>
+          <a href="/calorie-deficit-calculator/">Calorie Deficit</a>
+          <a href="/bmr-calculator/">BMR</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/water-intake-calculator/">Water Intake</a>
+          <a href="/macro-calculator/">Macro</a>
+          <a href="/protein-intake-calculator/">Protein Intake</a>
+          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
+          <a href="/steps-to-miles-calculator/">Steps to Miles</a>
+          <a href="/dog-age-calculator/">Dog Age</a>
+          <a href="/cat-age-calculator/">Cat Age</a>
+          <a href="/calories-burned-calculator/">Calories Burned</a>
+          <a href="/calories-burned-walking-calculator/">Calories Burned Walking</a>
+          <a href="/calories-burned-running-calculator/">Calories Burned Running</a>
+          <a href="/keto-calculator/" class="current">Keto</a>
+          <a href="/net-carb-calculator/">Net Carb</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/semester-grade-calculator/">Semester Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+          <a href="/grade-curve-calculator/">Grade Curve</a>
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/fraction-calculator/">Fraction</a>
+          <a href="/standard-deviation-calculator/">Standard Deviation</a>
+          <a href="/scientific-notation-calculator/">Scientific Notation</a>
+          <a href="/average-calculator/">Average</a>
+          <a href="/batting-average-calculator/">Batting Average</a>
+          <a href="/stock-average-calculator/">Stock Average</a>
+          <a href="/dice-average-calculator/">Dice Average</a>
+          <a href="/time-average-calculator/">Time Average</a>
+          <a href="/weighted-average-calculator/">Weighted Average</a>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+          <a href="/percentage-change-calculator/">Percentage Change</a>
+          <a href="/age-calculator/">Age</a>
+          <a href="/date-calculator/">Date</a>
+          <a href="/time-calculator/">Time</a>
+          <a href="/hours-calculator/">Hours</a>
+          <a href="/triangle-calculator/">Triangle</a>
+          <a href="/random-number-generator/">Random Number</a>
+          <span class="menu-col-head">Cooking &amp; Kitchen</span>
+          <a href="/recipe-converter/">Recipe Converter</a>
+          <a href="/turkey-cooking-time-calculator/">Turkey Cooking Time</a>
+          <a href="/turkey-thawing-time-calculator/">Turkey Thawing Time</a>
+          <a href="/turkey-size-calculator/">Turkey Size</a>
+          <!--UNITNAV:START-->
+          <span class="menu-col-head">Unit Converters</span>
+          <a href="/unit-converter/">Unit Converter</a>
+          <a href="/length-converter/">Length Converter</a>
+          <a href="/weight-converter/">Weight Converter</a>
+          <a href="/volume-converter/">Volume Converter</a>
+          <a href="/temperature-converter/">Temperature Converter</a>
+          <a href="/area-converter/">Area Converter</a>
+          <a href="/speed-converter/">Speed Converter</a>
+          <a href="/data-storage-converter/">Data Storage Converter</a>
+          <a href="/cooking-converter/">Cooking Converter</a>
+          <a href="/px-to-rem-converter/">PX to REM Converter</a>
+          <!--UNITNAV:END-->
+          <span class="menu-col-head">Money &amp; Finance</span>
+          <a href="/mortgage-calculator/">Mortgage</a>
+          <a href="/loan-calculator/">Loan</a>
+          <a href="/auto-loan-calculator/">Auto Loan</a>
+          <a href="/car-sales-tax-calculator/">Car Sales Tax</a>
+          <a href="/overtime-calculator/">Overtime</a>
+          <a href="/salary-calculator/">Salary</a>
+          <!--STAXNAV:START-->
+          <a href="/sales-tax-calculator/">Sales Tax</a>
+          <a href="/sales-tax-calculator/california/">California Sales Tax</a>
+          <a href="/sales-tax-calculator/chicago/">Chicago Sales Tax</a>
+          <a href="/sales-tax-calculator/florida/">Florida Sales Tax</a>
+          <a href="/sales-tax-calculator/las-vegas/">Las Vegas Sales Tax</a>
+          <a href="/sales-tax-calculator/los-angeles/">Los Angeles Sales Tax</a>
+          <a href="/sales-tax-calculator/michigan/">Michigan Sales Tax</a>
+          <a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax</a>
+          <a href="/sales-tax-calculator/missouri/">Missouri Sales Tax</a>
+          <a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax</a>
+          <a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax</a>
+          <a href="/sales-tax-calculator/north-carolina/">North Carolina Sales Tax</a>
+          <a href="/sales-tax-calculator/ohio/">Ohio Sales Tax</a>
+          <a href="/sales-tax-calculator/texas/">Texas Sales Tax</a>
+          <a href="/sales-tax-calculator/virginia/">Virginia Sales Tax</a>
+          <!--STAXNAV:END-->
+          <a href="/tip-calculator/">Tip</a>
+          <a href="/how-much-to-tip/">How Much to Tip</a>
+        </div>
+        <!--PAYNAV:START-->
+        <div class="menu-col">
+          <span class="menu-col-head">Paycheck Calculators</span>
+          <a href="/paycheck-calculator/">Paycheck Calculator (all states)</a>
+          <a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a>
+          <a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arkansas/">Arkansas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/california/">California Paycheck Calculator</a>
+          <a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a>
+          <a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a>
+          <a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/hawaii/">Hawaii Paycheck Calculator</a>
+          <a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a>
+          <a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a>
+          <a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a>
+          <a href="/paycheck-calculator/louisiana/">Louisiana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a>
+          <a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a>
+          <a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a>
+          <a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a>
+          <a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nebraska/">Nebraska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a>
+          <a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a>
+          <a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a>
+          <a href="/paycheck-calculator/oklahoma/">Oklahoma Paycheck Calculator</a>
+          <a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a>
+          <a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a>
+          <a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a>
+          <a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/utah/">Utah Paycheck Calculator</a>
+          <a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wisconsin/">Wisconsin Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a>
+        </div>
+        <!--PAYNAV:END-->
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">Keto macros · net carb limit · lose, maintain or gain</div>
+    <h1>Keto Calculator</h1>
+    <p>Enter your <strong>size</strong>, <strong>activity</strong> and goal — you get your daily <strong>calories</strong> and the <strong>net carbs, protein and fat</strong> in grams, with the carb limit shown on the usual 20–50 g keto range. A 35-year-old woman, 165 cm and 70 kg, losing 0.5 kg a week on 25 g net carbs eats about <strong>1,613 kcal</strong>: <strong>85 g</strong> protein and <strong>130 g</strong> fat.</p>
+  </section>
+
+  <div class="grid">
+
+    <!-- INPUT -->
+    <div class="card">
+      <div class="card-pad">
+        <h2 class="card-h2">About you</h2>
+        <div class="ctl-row"><span class="ctl-lab">Sex</span><div class="seg" id="kzSex" role="group" aria-label="Sex"><button class="on" type="button" data-v="f">Female</button><button type="button" data-v="m">Male</button></div></div>
+        <label class="fld" for="kzAge"><span class="lab">Age <span class="unit">years</span></span><div class="inp"><input id="kzAge" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 35"></div></label>
+        <div class="ctl-row"><span class="ctl-lab">Height units</span><div class="seg" id="kzHU" role="group" aria-label="Height units"><button class="on" type="button" data-v="in">inches</button><button type="button" data-v="cm">cm</button></div></div>
+        <label class="fld" for="kzHt"><span class="lab">Height <span class="unit" id="kzHL">inches or 5'10</span></span><div class="inp"><input id="kzHt" type="text" inputmode="text" autocomplete="off" placeholder="e.g. 70 or 5'10"></div></label>
+        <div class="ctl-row"><span class="ctl-lab">Weight units</span><div class="seg" id="kzWU" role="group" aria-label="Weight units"><button class="on" type="button" data-v="lb">lb</button><button type="button" data-v="kg">kg</button><button type="button" data-v="st">st</button></div></div>
+        <label class="fld" for="kzW"><span class="lab">Weight <span class="unit" id="kzWL">lb</span></span><div class="inp"><input id="kzW" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 154"></div></label>
+        <label class="fld"><span class="lab">Activity level</span><div class="csel" id="kzAct" data-value="1.55"><button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false"><span class="csel-val">Moderate — 3–5 days/week</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="csel-panel" role="listbox"><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="1.2">Sedentary — little or no exercise</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="1.375">Light — 1–3 days/week</button><button type="button" class="csel-opt on" role="option" aria-selected="true" data-value="1.55">Moderate — 3–5 days/week</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="1.725">Active — 6–7 days/week</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="1.9">Very active — hard training / physical job</button></div></div></label>
+        <div class="proj-sep"></div>
+        <div class="ctl-row"><span class="ctl-lab">Goal</span><div class="seg" id="kzGoal" role="group" aria-label="Goal"><button class="on" type="button" data-v="lose">Lose weight</button><button type="button" data-v="maint">Maintain</button><button type="button" data-v="gain">Gain</button></div></div>
+        <div id="kzPaceWrap"><div class="ctl-row"><span class="ctl-lab"><span id="kzPaceLab">Lose per week</span></span><div class="seg" id="kzPace" role="group" aria-label="Lose per week"><button type="button" data-v="0">0.5 lb</button><button class="on" type="button" data-v="1">1 lb</button><button type="button" data-v="2">1.5 lb</button><button type="button" data-v="3">2 lb</button></div></div></div>
+        <div class="ctl-row"><span class="ctl-lab">Net carb limit a day</span><div class="seg" id="kzCap" role="group" aria-label="Net carb limit a day"><button type="button" data-v="20">20 g</button><button class="on" type="button" data-v="25">25 g</button><button type="button" data-v="30">30 g</button><button type="button" data-v="50">50 g</button></div></div>
+        <div class="ctl-row"><span class="ctl-lab">Protein, g per kg ideal weight</span><div class="seg" id="kzProt" role="group" aria-label="Protein, g per kg ideal weight"><button type="button" data-v="1.2">1.2</button><button class="on" type="button" data-v="1.5">1.5</button><button type="button" data-v="2">2.0</button></div></div>
+        <p class="av-note" style="margin:0 0 8px">Net carbs 20–50 g and protein 1.2–2.0 g/kg ideal weight are the ranges in the ketogenic-diet research (Volek 2021).</p>
+        <div class="res-hint" id="kzHint" style="display:none;text-align:left;margin:4px 0 8px"></div>
+        <div id="kzAdvIn" style="display:none">
+          <div class="proj-sep"></div>
+          <div class="cb-two"><label class="fld" for="kzBf"><span class="lab">Body fat <span class="unit">%</span></span><div class="inp"><input id="kzBf" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 28 (optional)"></div></label><label class="fld" for="kzKcal"><span class="lab">Your own calories <span class="unit">kcal</span></span><div class="inp"><input id="kzKcal" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 1800"></div></label></div>
+          <div class="cb-two"><label class="fld" for="kzCapOwn"><span class="lab">Your own carb limit <span class="unit">g</span></span><div class="inp"><input id="kzCapOwn" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 35"></div></label><label class="fld" for="kzTarget"><span class="lab">Target weight <span class="unit" id="kzTL">lb</span></span><div class="inp"><input id="kzTarget" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 145"></div></label></div>
+          <div class="ctl-row"><span class="ctl-lab">Protein per kg of</span><div class="seg" id="kzBasis" role="group" aria-label="Protein per kg of"><button class="on" type="button" data-v="ideal">Ideal weight</button><button type="button" data-v="actual">Actual weight</button></div></div>
+          <div class="ctl-row"><span class="ctl-lab">Meals a day</span><div class="seg" id="kzMeals" role="group" aria-label="Meals a day"><button type="button" data-v="2">2</button><button class="on" type="button" data-v="3">3</button><button type="button" data-v="4">4</button><button type="button" data-v="5">5</button></div></div>
+          <p class="av-note" style="margin:0 0 8px">Body fat switches the estimate to Katch-McArdle. Your own calories replace the target. A target weight adds the time to reach it.</p>
+        </div>
+        <div class="add-row split" style="margin-top:16px">
+          <span></span>
+          <button class="advbtn" id="kzAdvBtn" type="button">
+            <span id="kzAdvBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div class="card">
+      <div class="card-pad">
+        <div class="bf-res">
+          <div class="res-lab">Daily calories</div>
+          <div class="res-big"><span id="kzBig">—</span></div>
+          <div class="res-sub" id="kzSub" data-empty="Enter your age, height and weight.">Enter your age, height and weight.</div>
+        </div>
+        <div id="kzBody" style="display:none">
+          <p class="res-tip adv-tip" id="kzTip"></p>
+          <p class="bm-h">Where your calories come from</p>
+          <div id="kzBar"></div>
+          <p class="bm-h">Your net carb limit on the 20–50 g keto range</p>
+          <div id="kzCapRule"></div>
+          <p class="bm-h">Your protein within its range (1.2–2.0 g/kg ideal weight)</p>
+          <div id="kzProtRule"></div>
+          <div class="proj-sep"></div>
+          <table class="dtable" id="kzRows"></table>
+          <p class="bm-h" id="kzMealH">Per meal</p>
+          <table class="dtable" id="kzMeal"></table>
+          <p class="cb-note">An estimate for adults — not medical or dietary advice. Talk to a doctor before starting a ketogenic diet if you have a medical condition or take medication.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- mobile sticky bar -->
+  <div class="mbar" id="mbar">
+    <span class="mbar-lab" id="kzMLab">Calories</span>
+    <div class="mbar-vals"><b id="kzMVal">—</b></div>
+  </div>
+
+  <div class="related-calcs">
+    <p class="related-calcs-h">More calculators that may interest you</p>
+    <div class="pills">
+      <a class="pill" href="/net-carb-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c4 2 7 5 7 9a7 7 0 0 1-14 0c0-4 3-7 7-9z"/><path d="M12 21V9"/></svg>
+        Net Carb Calculator
+      </a>
+      <a class="pill" href="/macro-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+        Macro Calculator
+      </a>
+      <a class="pill" href="/calorie-deficit-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12h8"/></svg>
+        Calorie Deficit Calculator
+      </a>
+      <a class="pill" href="/protein-intake-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2 4 4 0 0 1 7 2c0 5.6-7 10-7 10z"/></svg>
+        Protein Intake Calculator
+      </a>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use the keto calculator</h2>
+        <p>Enter your <strong>age, height and weight</strong>, pick your <strong>activity level</strong> and a goal. For weight loss choose how many pounds (or kilograms) a week; the daily target drops by about 500 kcal for each pound. Choose your <strong>net carb limit</strong> (20, 25, 30 or 50 g) and a protein level. The result shows calories, grams of net carbs, protein and fat, where each sits on its research range, and the grams for each meal.</p>
+        <p>Open <strong>Go advanced</strong> to add your body fat (Katch-McArdle), your own calories or carb limit, a target weight for the time to goal, the protein basis and the number of meals.</p>
+
+        <h2>How the keto macros are worked out</h2>
+        <div class="formula">
+          kcal = maintenance ± pace × 1,100 · net carbs = your limit · protein = g/kg × ideal weight · fat = (kcal − 4 × protein − 4 × carbs) ÷ 9
+          <small>MIFFLIN-ST JEOR · VOLEK 2021 RANGES · 4 / 4 / 9 KCAL PER GRAM</small>
+        </div>
+        <p>Example: a 35-year-old woman, 165 cm and 70 kg, moderately active. Maintenance is 2,163 kcal; losing 0.5 kg a week takes 550 off, so <strong>1,613 kcal</strong>. Ideal weight (Devine) is 56.9 kg, so protein at 1.5 g/kg is <strong>85 g</strong>; net carbs are 25 g; fat is the remaining <strong>130 g</strong>. A 40-year-old man, 180 cm and 90 kg, lightly active, maintaining: 2,516 kcal, 112 g protein, 218 g fat.</p>
+
+        <h2>What share of your calories 20–50 g of carbs is</h2>
+        <table class="dtable"><thead><tr><th>Net carbs a day</th><th>1,500 kcal</th><th>1,800 kcal</th><th>2,200 kcal</th></tr></thead><tbody><tr><td>20 g</td><td>5.3%</td><td>4.4%</td><td>3.6%</td></tr><tr><td>25 g</td><td>6.7%</td><td>5.6%</td><td>4.5%</td></tr><tr><td>30 g</td><td>8%</td><td>6.7%</td><td>5.5%</td></tr><tr><td>50 g</td><td>13.3%</td><td>11.1%</td><td>9.1%</td></tr></tbody></table>
+      </div>
+
+      <div>
+        <h2>How much protein on keto</h2>
+        <p>The research range is 1.2–2.0 g of protein per kilogram of ideal body weight, typically 1.2–1.5 g/kg. Grams a day by ideal weight:</p>
+        <table class="dtable"><thead><tr><th>Ideal weight</th><th>1.2 g/kg</th><th>1.5 g/kg</th><th>2.0 g/kg</th></tr></thead><tbody><tr><td>55 kg (121 lb)</td><td>66 g</td><td>83 g</td><td>110 g</td></tr><tr><td>65 kg (143 lb)</td><td>78 g</td><td>98 g</td><td>130 g</td></tr><tr><td>75 kg (165 lb)</td><td>90 g</td><td>113 g</td><td>150 g</td></tr><tr><td>85 kg (187 lb)</td><td>102 g</td><td>128 g</td><td>170 g</td></tr></tbody></table>
+
+        <h2>Net carbs and ketosis</h2>
+        <p>Carbohydrate and, in excess, protein both limit how much ketone the liver makes. The 20–50 g range is a general one: how much you can eat and still be in ketosis varies from person to person. A blood ketone meter or urine strips can tell you where you are; this calculator cannot. For a food label use the <a href="/net-carb-calculator/">net carb calculator</a>.</p>
+
+        <h2>Keto macros for weight loss</h2>
+        <p>A weight-loss pace is a calorie deficit; the carb limit and protein stay put, so fat shrinks. If you want the deficit modelled over time, use the <a href="/calorie-deficit-calculator/">calorie deficit calculator</a>; for a non-keto split use the <a href="/macro-calculator/">macro calculator</a>.</p>
+        <h2>Sources</h2>
+        <ul>
+          <li>Volek JS, Phinney SD, Krauss RM et al., <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC8537012/" rel="noopener">Alternative Dietary Patterns for Americans: Low-Carbohydrate Diets</a>, Nutrients 2021;13(10):3299 — the 20–50 g carbohydrate range “assuming protein is not consumed in excess”, protein of 1.2–2.0 g per kg of adjusted (ideal) body weight, typically 1.2–1.5 g/kg (read November 2026).</li>
+          <li>Mifflin MD et al., A new predictive equation for resting energy expenditure, American Journal of Clinical Nutrition 1990;51:241, and the Katch–McArdle equation (370 + 21.6 × lean body mass in kg) when you enter body fat — multiplied by the activity level you choose.</li>
+          <li>Devine BJ, Gentamicin therapy, Drug Intelligence and Clinical Pharmacy 1974;8:650 — the ideal body weight (50 kg for men, 45.5 kg for women, plus 2.3 kg per inch over 5 feet) the protein target is taken from.</li>
+          <li>Regulation (EU) No 1169/2011, <a href="https://www.legislation.gov.uk/eur/2011/1169/annex/XIV" rel="noopener">Annex XIV</a> — 4 kcal per gram of protein and carbohydrate, 9 kcal per gram of fat.</li>
+          <li>The 7,700 kcal per kilogram of body fat (about 3,500 per pound) is the usual rule of thumb; real weight change varies from person to person.</li>
+        </ul>
+        <p><small>An estimate for information only. A ketogenic diet is not suitable for everyone — talk to a doctor first if you have diabetes, kidney or liver disease, take medication, or are pregnant or breastfeeding. Not medical or dietary advice.</small></p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>How many net carbs should I eat on keto?</summary><p>The usual range is 20–50 grams of carbohydrate a day. A 2021 review by Volek, Phinney and colleagues describes it as a general range that varies from person to person, assuming protein is not eaten in excess. The calculator starts at 25 g and lets you pick 20, 25, 30 or 50 g — or your own number under Go advanced — and shows where your choice sits on that range. Most people count net carbs (total carbohydrate minus fiber and part of any sugar alcohol); the <a href="/net-carb-calculator/">net carb calculator</a> does that for a food label.</p></details>
+    <details class="faq"><summary>How are keto macros calculated?</summary><p>Calories first: your resting rate (Mifflin-St Jeor, or Katch-McArdle if you give your body fat) times your activity level gives the calories to maintain your weight; a weight-loss or gain pace then moves it by 1,100 kcal a day per kilogram a week (7,700 kcal per kg of body fat). Net carbs are your chosen limit, protein is grams per kilogram of ideal body weight, and fat is whatever calories are left at 9 kcal a gram. For the example above: 2,163 kcal to maintain, 1,613 to lose 0.5 kg a week, 25 g carbs (100 kcal), 85 g protein (341 kcal) and 130 g fat (1171 kcal).</p></details>
+    <details class="faq"><summary>How much protein should I eat on keto?</summary><p>The Volek review gives 1.2–2.0 grams per kilogram of ideal body weight, typically 1.2–1.5 g/kg, and notes little evidence for more than 2.0 g/kg, which makes ketosis harder to reach. The calculator offers 1.2 (lower), 1.5 (typical) and 2.0 (higher) g/kg. At 1.5 g/kg an ideal weight of 56.9 kg gives 85 g.</p></details>
+    <details class="faq"><summary>Why is protein based on ideal body weight and not my actual weight?</summary><p>The research the ranges come from states protein per kilogram of ideal or adjusted body weight, not total weight, so someone with extra weight does not get a very large protein number. The calculator uses the Devine ideal weight for your height (or your actual weight if that is lower). Under Go advanced you can switch to your actual weight, for example if you have a lot of muscle.</p></details>
+    <details class="faq"><summary>How much fat should I eat on keto?</summary><p>Fat is what remains after carbs and protein: calories minus 4 kcal per gram of each, divided by 9. In the example that is 130 g a day — about 73% of calories. If you are losing weight, some of that fat is meant to come from your own body, so the number is a ceiling, not a target to hit.</p></details>
+    <details class="faq"><summary>How fast can I lose weight on keto?</summary><p>The calculator lets you pick 0.5, 1, 1.5 or 2 lb (0.25, 0.5, 0.75 or 1 kg) a week and warns when the pace is faster than 1% of your body weight a week or the calories would fall below 1,200 (women) or 1,500 (men) a day. Real loss slows over time; the <a href="/calorie-deficit-calculator/">calorie deficit calculator</a> models that.</p></details>
+    <details class="faq"><summary>Do I count total carbs or net carbs?</summary><p>The 20–50 g range in the research is stated as carbohydrate. In practice many people subtract fiber (and some sugar alcohols) and count net carbs, which lets more vegetables fit. If you want to be strict, count total carbs; if you count net carbs, the net carb calculator shows a strict, a best-estimate and a lenient count.</p></details>
+    <details class="faq"><summary>Is a ketogenic diet safe?</summary><p>It is not suitable for everyone. Talk to a doctor first if you have diabetes (especially if you take medication), kidney or liver disease, take any regular medication, or are pregnant or breastfeeding. This calculator is for adults and gives an estimate for information only, not medical advice.</p></details>
+    <details class="faq"><summary>Can I use the calculator to maintain or gain weight?</summary><p>Yes. Choose Maintain for your maintenance calories or Gain for a surplus at the pace you pick; the carb limit and protein stay the same and fat takes the remaining calories.</p></details>
+  </section>
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+      <div class="footer-stack">
+<div class="footer-col" style="order:1">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+          <li><a href="/paint-calculator/">Paint Calculator</a></li>
+          <li><a href="/wallpaper-calculator/">Wallpaper Calculator</a></li>
+          <li><a href="/square-footage-calculator/">Square Footage Calculator</a></li>
+          <li><a href="/tape-measure-fraction-calculator/">Tape Measure Fraction Calculator</a></li>
+          <li><a href="/stair-calculator/">Stair Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:5">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Cooking &amp;</span> <span class="ft2">Kitchen</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/recipe-converter/">Recipe Converter</a></li>
+          <li><a href="/turkey-cooking-time-calculator/">Turkey Cooking Time Calculator</a></li>
+          <li><a href="/turkey-thawing-time-calculator/">Turkey Thawing Time Calculator</a></li>
+          <li><a href="/turkey-size-calculator/">Turkey Size Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:6">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Money &amp;</span> <span class="ft2">Finance</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/mortgage-calculator/">Mortgage Calculator</a></li>
+          <li><a href="/loan-calculator/">Loan Calculator</a></li>
+          <li><a href="/auto-loan-calculator/">Auto Loan Calculator</a></li>
+          <li><a href="/car-sales-tax-calculator/">Car Sales Tax Calculator</a></li>
+          <li><a href="/overtime-calculator/">Overtime Calculator</a></li>
+          <li><a href="/salary-calculator/">Salary Calculator</a></li>
+          <!--STAXFOOT:START-->
+          <li><a href="/sales-tax-calculator/">Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/california/">California Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/chicago/">Chicago Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/florida/">Florida Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/las-vegas/">Las Vegas Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/los-angeles/">Los Angeles Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/michigan/">Michigan Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/missouri/">Missouri Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/north-carolina/">North Carolina Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/ohio/">Ohio Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/texas/">Texas Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/virginia/">Virginia Sales Tax Calculator</a></li>
+          <!--STAXFOOT:END-->
+          <li><a href="/tip-calculator/">Tip Calculator</a></li>
+          <li><a href="/how-much-to-tip/">How Much to Tip</a></li>
+        </ul>
+      </div>
+      </div>
+
+      <div class="footer-right">
+<div class="footer-col footer-col--two" style="order:2">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/vo2-max-calculator/">VO2 Max Calculator</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/bmi-calculator/">BMI Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/ideal-weight-calculator/">Ideal Weight Calculator</a></li>
+          <li><a href="/lean-body-mass-calculator/">Lean Body Mass Calculator</a></li>
+          <li><a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio Calculator</a></li>
+          <li><a href="/gmi-calculator/">GMI Calculator</a></li>
+          <li><a href="/a1c-calculator/">A1C Calculator</a></li>
+          <li><a href="/calorie-calculator/">Calorie Calculator</a></li>
+          <li><a href="/calorie-deficit-calculator/">Calorie Deficit Calculator</a></li>
+          <li><a href="/bmr-calculator/">BMR Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/water-intake-calculator/">Water Intake Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/protein-intake-calculator/">Protein Intake Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
+          <li><a href="/steps-to-miles-calculator/">Steps to Miles Calculator</a></li>
+          <li><a href="/dog-age-calculator/">Dog Age Calculator</a></li>
+          <li><a href="/cat-age-calculator/">Cat Age Calculator</a></li>
+          <li><a href="/calories-burned-calculator/">Calories Burned Calculator</a></li>
+          <li><a href="/calories-burned-walking-calculator/">Calories Burned Walking Calculator</a></li>
+          <li><a href="/calories-burned-running-calculator/">Calories Burned Running Calculator</a></li>
+          <li><a href="/keto-calculator/">Keto Calculator</a></li>
+          <li><a href="/net-carb-calculator/">Net Carb Calculator</a></li>
+        </ul>
+      </div>
+
+        <div class="footer-sub">
+<div class="footer-subcol">
+<div class="footer-col" style="order:3">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/semester-grade-calculator/">Semester Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+          <li><a href="/grade-curve-calculator/">Grade Curve Calculator</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:START-->
+<div class="footer-col" style="order:7">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Unit</span> <span class="ft2">Converters</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/unit-converter/">Unit Converter</a></li>
+          <li><a href="/length-converter/">Length Converter</a></li>
+          <li><a href="/weight-converter/">Weight Converter</a></li>
+          <li><a href="/volume-converter/">Volume Converter</a></li>
+          <li><a href="/temperature-converter/">Temperature Converter</a></li>
+          <li><a href="/area-converter/">Area Converter</a></li>
+          <li><a href="/speed-converter/">Speed Converter</a></li>
+          <li><a href="/data-storage-converter/">Data Storage Converter</a></li>
+          <li><a href="/cooking-converter/">Cooking Measurement Converter</a></li>
+          <li><a href="/px-to-rem-converter/">PX to REM Converter</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:END-->
+</div>
+
+<div class="footer-col" style="order:4">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/fraction-calculator/">Fraction Calculator</a></li>
+          <li><a href="/standard-deviation-calculator/">Standard Deviation Calculator</a></li>
+          <li><a href="/scientific-notation-calculator/">Scientific Notation Calculator</a></li>
+          <li><a href="/weighted-average-calculator/">Weighted Average Calculator</a></li>
+          <li><a href="/average-calculator/">Average Calculator</a></li>
+          <li><a href="/batting-average-calculator/">Batting Average Calculator</a></li>
+          <li><a href="/stock-average-calculator/">Stock Average Calculator</a></li>
+          <li><a href="/dice-average-calculator/">Dice Average Calculator</a></li>
+          <li><a href="/time-average-calculator/">Time Average Calculator</a></li>
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+          <li><a href="/percentage-change-calculator/">Percentage Change Calculator</a></li>
+          <li><a href="/age-calculator/">Age Calculator</a></li>
+          <li><a href="/date-calculator/">Date Calculator</a></li>
+          <li><a href="/time-calculator/">Time Calculator</a></li>
+          <li><a href="/hours-calculator/">Hours Calculator</a></li>
+          <li><a href="/triangle-calculator/">Triangle Calculator</a></li>
+          <li><a href="/random-number-generator/">Random Number Generator</a></li>
+        </ul>
+      </div>
+        </div>
+      </div>
+
+      <!--PAYFOOT:START-->
+      <div class="footer-col footer-col--wide">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Paycheck</span> <span class="ft2">Calculators</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/paycheck-calculator/">Paycheck Calculator (all states)</a></li>
+          <li><a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arkansas/">Arkansas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/california/">California Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/hawaii/">Hawaii Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/louisiana/">Louisiana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nebraska/">Nebraska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/oklahoma/">Oklahoma Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/utah/">Utah Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wisconsin/">Wisconsin Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a></li>
+        </ul>
+      </div>
+      <!--PAYFOOT:END-->
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/blog/">Blog</a>
+      <span aria-hidden="true">·</span>
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+</div>
+
+<script src="/assets/app.js?v=314"></script>
+<script>CalcThis.initKetoCalc();</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>

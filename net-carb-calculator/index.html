@@ -1,0 +1,740 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Net Carb Calculator — Label Maths and a Daily Tally</title>
+<meta name="description" content="Net carb calculator for any food label: US or EU labels, sugar alcohol by type, strict to lenient counts, and a running total against your daily carb limit.">
+<link rel="canonical" href="https://calcthis.co/net-carb-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Net Carb Calculator — Label Maths and a Daily Tally">
+<meta property="og:description" content="Net carb calculator for any food label: US or EU labels, sugar alcohol by type, strict to lenient counts, and a running total against your daily carb limit.">
+<meta property="og:url" content="https://calcthis.co/net-carb-calculator/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/datepicker.min.css">
+<link rel="stylesheet" href="/assets/style.css?v=314">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Net Carb Calculator",
+  "url": "https://calcthis.co/net-carb-calculator/",
+  "applicationCategory": "HealthApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "Free net carb calculator: total carbohydrate minus fiber and sugar alcohol for US, Canadian, UK and EU labels, per serving or per 100 g, sugar alcohol counted by type (erythritol, xylitol, sorbitol, maltitol), strict, best and lenient counts and a daily net carb tally against a 20-50 g limit."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What are net carbs?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Net carbs are the carbohydrates that raise blood sugar: total carbohydrate minus the fiber and, in part, the sugar alcohols, which are digested little or not at all. It is a counting convention rather than a line on a nutrition label, so different tools subtract different amounts — this calculator shows three counts so you can see the spread."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I calculate net carbs?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "On a US or Canadian label: net carbs = total carbohydrate − fiber − the part of the sugar alcohol that does not count. For 22 g total carbohydrate, 6 g fiber and 8 g maltitol: 22 − 6 − (8 × (1 − 0.35)) = 10.8 g. Counting all the sugar alcohol (strict) gives 16 g; counting none of it (lenient) gives 8 g."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do sugar alcohols count as carbs?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Partly, and it depends on which one. The calculator counts each by its glycaemic index relative to glucose (Livesey, 2003): erythritol 0, xylitol 13, sorbitol 9 and maltitol 35 — so 0%, 13%, 9% and 35% of the grams. For “other, mixed or not sure” it counts half, the common rule of thumb. Maltitol is the one that most often surprises people."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why do US and EU labels give different numbers?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "They define carbohydrate differently. US and Canadian labels show Total Carbohydrate, which includes dietary fiber and sugar alcohol, so you subtract the fiber. UK and EU labels show Carbohydrate without the fibre (fibre is listed separately), with sugar alcohols (polyols) inside it, so you do not subtract fibre again. A UK label saying 16 g carbohydrate, 6 g fibre and 8 g maltitol gives 10.8 g net carbs — the same food as the 22 g US label above."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Should I count net carbs or total carbs on keto?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The 20–50 g a day range in the ketogenic-diet research is stated as carbohydrate, so total carbs is the strictest reading. Counting net carbs lets more fibre-rich vegetables fit and is what most keto calculators use. If you are unsure, watch the strict figure: if it stays inside your limit, every method does."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How many net carbs per day?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "On a ketogenic diet the usual range is 20–50 g of carbohydrate a day, varying from person to person. The day tally checks what you add against 20, 25, 30 or 50 g or your own limit. The keto calculator works out the rest of your macros from it."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I rely on net carbs if I have diabetes?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Be careful. Net carb counts can understate how much a food raises blood sugar, because fiber and sugar alcohols differ in how much they are absorbed. If you take insulin or other diabetes medication, ask your care team how to count carbohydrate for dosing rather than using net carbs."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What does the “per 100 g” option do?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Many labels give values per 100 g as well as per serving. Choose Per 100 g, enter the figures from that column, and type how many grams you ate — the calculator scales the result. Leave the amount empty to see the net carbs in 100 g."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How does the day tally work?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "After each food, press Add to my day. The list adds up your net carbs (best estimate), shows how many grams are left of your daily limit and what the strict and lenient totals would be, so one mislabelled bar does not blow the day."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "CalcThis",
+      "item": "https://calcthis.co/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Net Carb Calculator",
+      "item": "https://calcthis.co/net-carb-calculator/"
+    }
+  ]
+}
+</script>
+<meta property="og:site_name" content="CalcThis">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://calcthis.co/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="CalcThis — free, purpose-built calculators">
+<meta name="twitter:title" content="Net Carb Calculator — Label Maths and a Daily Tally">
+<meta name="twitter:description" content="Net carb calculator for any food label: US or EU labels, sugar alcohol by type, strict to lenient counts, and a running total against your daily carb limit.">
+<meta name="twitter:image" content="https://calcthis.co/assets/og-default.png">
+</head>
+<body class="p-bmr p-kz">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <a class="hdr-back" href="/blog/" aria-label="Back to blog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-search"><div class="menu-sx"><input id="menuSearch" type="search" placeholder="Search calculators or states…" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Search calculators" enterkeyhint="search"></div><div class="menu-results" id="menuResults" hidden></div></div>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <span class="menu-col-head">Construction &amp; Gardening</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+          <a href="/paint-calculator/">Paint</a>
+          <a href="/wallpaper-calculator/">Wallpaper</a>
+          <a href="/square-footage-calculator/">Square Footage</a>
+          <a href="/tape-measure-fraction-calculator/">Tape Measure Fraction</a>
+          <a href="/stair-calculator/">Stair</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/vo2-max-calculator/">VO2 Max</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
+          <a href="/bmi-calculator/">BMI</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/ideal-weight-calculator/">Ideal Weight</a>
+          <a href="/lean-body-mass-calculator/">Lean Body Mass</a>
+          <a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio</a>
+          <a href="/gmi-calculator/">GMI</a>
+          <a href="/a1c-calculator/">A1C</a>
+          <a href="/calorie-calculator/">Calorie</a>
+          <a href="/calorie-deficit-calculator/">Calorie Deficit</a>
+          <a href="/bmr-calculator/">BMR</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/water-intake-calculator/">Water Intake</a>
+          <a href="/macro-calculator/">Macro</a>
+          <a href="/protein-intake-calculator/">Protein Intake</a>
+          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
+          <a href="/steps-to-miles-calculator/">Steps to Miles</a>
+          <a href="/dog-age-calculator/">Dog Age</a>
+          <a href="/cat-age-calculator/">Cat Age</a>
+          <a href="/calories-burned-calculator/">Calories Burned</a>
+          <a href="/calories-burned-walking-calculator/">Calories Burned Walking</a>
+          <a href="/calories-burned-running-calculator/">Calories Burned Running</a>
+          <a href="/keto-calculator/">Keto</a>
+          <a href="/net-carb-calculator/" class="current">Net Carb</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/semester-grade-calculator/">Semester Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+          <a href="/grade-curve-calculator/">Grade Curve</a>
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/fraction-calculator/">Fraction</a>
+          <a href="/standard-deviation-calculator/">Standard Deviation</a>
+          <a href="/scientific-notation-calculator/">Scientific Notation</a>
+          <a href="/average-calculator/">Average</a>
+          <a href="/batting-average-calculator/">Batting Average</a>
+          <a href="/stock-average-calculator/">Stock Average</a>
+          <a href="/dice-average-calculator/">Dice Average</a>
+          <a href="/time-average-calculator/">Time Average</a>
+          <a href="/weighted-average-calculator/">Weighted Average</a>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+          <a href="/percentage-change-calculator/">Percentage Change</a>
+          <a href="/age-calculator/">Age</a>
+          <a href="/date-calculator/">Date</a>
+          <a href="/time-calculator/">Time</a>
+          <a href="/hours-calculator/">Hours</a>
+          <a href="/triangle-calculator/">Triangle</a>
+          <a href="/random-number-generator/">Random Number</a>
+          <span class="menu-col-head">Cooking &amp; Kitchen</span>
+          <a href="/recipe-converter/">Recipe Converter</a>
+          <a href="/turkey-cooking-time-calculator/">Turkey Cooking Time</a>
+          <a href="/turkey-thawing-time-calculator/">Turkey Thawing Time</a>
+          <a href="/turkey-size-calculator/">Turkey Size</a>
+          <!--UNITNAV:START-->
+          <span class="menu-col-head">Unit Converters</span>
+          <a href="/unit-converter/">Unit Converter</a>
+          <a href="/length-converter/">Length Converter</a>
+          <a href="/weight-converter/">Weight Converter</a>
+          <a href="/volume-converter/">Volume Converter</a>
+          <a href="/temperature-converter/">Temperature Converter</a>
+          <a href="/area-converter/">Area Converter</a>
+          <a href="/speed-converter/">Speed Converter</a>
+          <a href="/data-storage-converter/">Data Storage Converter</a>
+          <a href="/cooking-converter/">Cooking Converter</a>
+          <a href="/px-to-rem-converter/">PX to REM Converter</a>
+          <!--UNITNAV:END-->
+          <span class="menu-col-head">Money &amp; Finance</span>
+          <a href="/mortgage-calculator/">Mortgage</a>
+          <a href="/loan-calculator/">Loan</a>
+          <a href="/auto-loan-calculator/">Auto Loan</a>
+          <a href="/car-sales-tax-calculator/">Car Sales Tax</a>
+          <a href="/overtime-calculator/">Overtime</a>
+          <a href="/salary-calculator/">Salary</a>
+          <!--STAXNAV:START-->
+          <a href="/sales-tax-calculator/">Sales Tax</a>
+          <a href="/sales-tax-calculator/california/">California Sales Tax</a>
+          <a href="/sales-tax-calculator/chicago/">Chicago Sales Tax</a>
+          <a href="/sales-tax-calculator/florida/">Florida Sales Tax</a>
+          <a href="/sales-tax-calculator/las-vegas/">Las Vegas Sales Tax</a>
+          <a href="/sales-tax-calculator/los-angeles/">Los Angeles Sales Tax</a>
+          <a href="/sales-tax-calculator/michigan/">Michigan Sales Tax</a>
+          <a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax</a>
+          <a href="/sales-tax-calculator/missouri/">Missouri Sales Tax</a>
+          <a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax</a>
+          <a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax</a>
+          <a href="/sales-tax-calculator/north-carolina/">North Carolina Sales Tax</a>
+          <a href="/sales-tax-calculator/ohio/">Ohio Sales Tax</a>
+          <a href="/sales-tax-calculator/texas/">Texas Sales Tax</a>
+          <a href="/sales-tax-calculator/virginia/">Virginia Sales Tax</a>
+          <!--STAXNAV:END-->
+          <a href="/tip-calculator/">Tip</a>
+          <a href="/how-much-to-tip/">How Much to Tip</a>
+        </div>
+        <!--PAYNAV:START-->
+        <div class="menu-col">
+          <span class="menu-col-head">Paycheck Calculators</span>
+          <a href="/paycheck-calculator/">Paycheck Calculator (all states)</a>
+          <a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a>
+          <a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arkansas/">Arkansas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/california/">California Paycheck Calculator</a>
+          <a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a>
+          <a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a>
+          <a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/hawaii/">Hawaii Paycheck Calculator</a>
+          <a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a>
+          <a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a>
+          <a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a>
+          <a href="/paycheck-calculator/louisiana/">Louisiana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a>
+          <a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a>
+          <a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a>
+          <a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a>
+          <a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nebraska/">Nebraska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a>
+          <a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a>
+          <a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a>
+          <a href="/paycheck-calculator/oklahoma/">Oklahoma Paycheck Calculator</a>
+          <a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a>
+          <a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a>
+          <a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a>
+          <a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/utah/">Utah Paycheck Calculator</a>
+          <a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wisconsin/">Wisconsin Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a>
+        </div>
+        <!--PAYNAV:END-->
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">Net carbs · US and EU labels · sugar alcohol by type · day tally</div>
+    <h1>Net Carb Calculator</h1>
+    <p>Type the <strong>total carbohydrate</strong>, <strong>fiber</strong> and <strong>sugar alcohol</strong> from a food label — you get the <strong>net carbs</strong>, with a strict and a lenient count beside the best estimate and a running total of your day. A US label showing 22 g carbohydrate, 6 g fiber and 8 g maltitol works out to about <strong>10.8 g</strong> net carbs.</p>
+  </section>
+
+  <div class="grid">
+
+    <!-- INPUT -->
+    <div class="card">
+      <div class="card-pad">
+        <h2 class="card-h2">The food label</h2>
+        <div class="ctl-row"><span class="ctl-lab">Label from</span><div class="seg" id="ncLab" role="group" aria-label="Label from"><button class="on" type="button" data-v="us">US / Canada</button><button type="button" data-v="eu">UK / EU / other</button></div></div>
+        <p class="av-note" id="ncLabNote" style="margin-top:0"></p>
+        <div class="ctl-row"><span class="ctl-lab">Values are</span><div class="seg" id="ncBasis" role="group" aria-label="Values are"><button class="on" type="button" data-v="serv">Per serving</button><button type="button" data-v="100">Per 100 g</button></div></div>
+        <label class="fld" for="ncTot"><span class="lab" id="ncTotLab">Total carbohydrate <span class="unit">g</span></span><div class="inp"><input id="ncTot" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 22"></div></label>
+        <label class="fld" for="ncFib"><span class="lab" id="ncFibLab">Dietary fiber <span class="unit">g</span></span><div class="inp"><input id="ncFib" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 6 (optional)"></div></label>
+        <label class="fld" for="ncAlc"><span class="lab">Sugar alcohol <span class="unit">g</span></span><div class="inp"><input id="ncAlc" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 8 (optional)"></div></label>
+        <div id="ncTypeWrap" style="display:none"><label class="fld"><span class="lab">Which sugar alcohol?</span><div class="csel" id="ncType" data-value="oth"><button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false"><span class="csel-val">Other, mixed or not sure</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="csel-panel" role="listbox"><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="ery">Erythritol</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="xyl">Xylitol</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="sor">Sorbitol</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="mal">Maltitol</button><button type="button" class="csel-opt on" role="option" aria-selected="true" data-value="oth">Other, mixed or not sure</button></div></div></label></div>
+        <label class="fld" for="ncEat"><span class="lab" id="ncEatLab">Servings eaten <span class="unit" id="ncEatU">servings (blank = 1)</span></span><div class="inp"><input id="ncEat" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 1 or 0.5"></div></label>
+        <div class="proj-sep"></div>
+        <div class="ctl-row"><span class="ctl-lab">Daily net carb limit</span><div class="seg" id="ncLim" role="group" aria-label="Daily net carb limit"><button type="button" data-v="20">20 g</button><button class="on" type="button" data-v="25">25 g</button><button type="button" data-v="30">30 g</button><button type="button" data-v="50">50 g</button></div></div>
+        <label class="fld" for="ncName"><span class="lab">Food name <span class="unit">for your day list (optional)</span></span><div class="inp"><input id="ncName" type="text" maxlength="40" autocomplete="off" placeholder="e.g. Protein bar"></div></label>
+        <div class="res-hint" id="ncHint" style="display:none;text-align:left;margin:4px 0 8px"></div>
+        <div id="ncAdvIn" style="display:none">
+          <div class="proj-sep"></div>
+          <div class="cb-two"><label class="fld" for="ncOwn"><span class="lab">Your own daily limit <span class="unit">g</span></span><div class="inp"><input id="ncOwn" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 35"></div></label><label class="fld" for="ncShare"><span class="lab">Sugar alcohol counted <span class="unit">%</span></span><div class="inp"><input id="ncShare" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 50"></div></label></div>
+          <p class="av-note" style="margin:0 0 8px">Your own limit replaces the 20–50 g choices. The counted share overrides the type: 0 counts none of the sugar alcohol, 100 counts all of it.</p>
+        </div>
+        <div class="add-row split" style="margin-top:16px">
+          <span></span>
+          <button class="advbtn" id="ncAdvBtn" type="button">
+            <span id="ncAdvBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div class="card">
+      <div class="card-pad">
+        <div class="bf-res">
+          <div class="res-lab" id="ncResLab">Net carbs</div>
+          <div class="res-big"><span id="ncBig">—</span></div>
+          <div class="res-sub" id="ncSub" data-empty="Enter the total carbohydrate from the label.">Enter the total carbohydrate from the label.</div>
+        </div>
+        <div id="ncBody" style="display:none">
+          <p class="res-tip adv-tip" id="ncTip"></p>
+          <p class="bm-h">Where the carbs go</p>
+          <div id="ncBar"></div>
+          <div class="proj-sep"></div>
+          <table class="dtable" id="ncRows"></table>
+          <div class="add-row" style="margin-top:16px"><button class="btn" id="ncAdd" type="button" disabled><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>Add to my day</button></div>
+          <p class="cb-note">An estimate — your body’s response to fiber and sugar alcohols varies. Not medical or dietary advice.</p>
+        </div>
+        <div class="cb-day" id="ncDay" style="display:none"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- mobile sticky bar -->
+  <div class="mbar" id="mbar">
+    <span class="mbar-lab" id="ncMLab">Net carbs</span>
+    <div class="mbar-vals"><b id="ncMVal">—</b></div>
+  </div>
+
+  <div class="related-calcs">
+    <p class="related-calcs-h">More calculators that may interest you</p>
+    <div class="pills">
+      <a class="pill" href="/keto-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c4 2 7 5 7 9a7 7 0 0 1-14 0c0-4 3-7 7-9z"/><path d="M12 21V9"/></svg>
+        Keto Calculator
+      </a>
+      <a class="pill" href="/macro-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+        Macro Calculator
+      </a>
+      <a class="pill" href="/calorie-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3s5 5 5 9a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3 1-5 1-8z"/></svg>
+        Calorie Calculator
+      </a>
+      <a class="pill" href="/tdee-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12h8"/></svg>
+        TDEE Calculator
+      </a>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use the net carb calculator</h2>
+        <p>Choose whether the label is <strong>US / Canada</strong> or <strong>UK / EU</strong>, then type the <strong>total carbohydrate</strong>, <strong>fiber</strong> and <strong>sugar alcohol</strong> in grams. If there is sugar alcohol, pick which one. The result shows the net carbs, a <strong>strict</strong> count (all sugar alcohol included) and a <strong>lenient</strong> count (none), and where the grams go. Press <strong>Add to my day</strong> to keep a running total against your daily limit.</p>
+
+        <h2>The net carbs formula</h2>
+        <div class="formula">
+          net carbs = total carbohydrate − fiber − sugar alcohol × (1 − counted share)
+          <small>US / CANADA LABEL · ON A UK / EU LABEL THE CARBOHYDRATE ALREADY EXCLUDES FIBRE</small>
+        </div>
+        <p>US label with 22 g total carbohydrate, 6 g fiber and 8 g maltitol (counted at 35%): 22 − 6 − 8 × 0.65 = <strong>10.8 g</strong>. Strict is <strong>16 g</strong>, lenient <strong>8 g</strong>. On a UK label the same food reads 16 g carbohydrate and 6 g fibre: 16 − 8 × 0.65 = <strong>10.8 g</strong>.</p>
+
+        <h2>How much of each sugar alcohol counts</h2>
+        <table class="dtable"><thead><tr><th>Sugar alcohol</th><th>Glycaemic index</th><th>Counted here</th><th>kcal per gram (EU)</th></tr></thead><tbody><tr><td>Erythritol</td><td>0</td><td>0%</td><td>0</td></tr><tr><td>Xylitol</td><td>13</td><td>13%</td><td>2.4</td></tr><tr><td>Sorbitol</td><td>9</td><td>9%</td><td>2.4</td></tr><tr><td>Maltitol</td><td>35</td><td>35%</td><td>2.4</td></tr><tr><td>Other, mixed or not sure</td><td>—</td><td>50%</td><td>2.4</td></tr></tbody></table>
+      </div>
+
+      <div>
+        <h2>US labels vs UK and EU labels</h2>
+        <table class="dtable"><thead><tr><th></th><th>US / Canada</th><th>UK / EU</th></tr></thead><tbody><tr><td>Label line</td><td>Total Carbohydrate</td><td>Carbohydrate</td></tr><tr><td>Fiber</td><td>Inside total carbohydrate</td><td>Listed separately (fibre)</td></tr><tr><td>Sugar alcohol</td><td>Inside total carbohydrate</td><td>Inside carbohydrate (polyols)</td></tr><tr><td>To get net carbs</td><td>Subtract fiber and the counted sugar alcohol</td><td>Subtract the counted sugar alcohol only</td></tr></tbody></table>
+
+        <h2>Why three counts</h2>
+        <p>Net carbs is not an official label figure, and fiber and sugar alcohols are not absorbed equally. <strong>Strict</strong> subtracts only the fiber, <strong>lenient</strong> subtracts the fiber and all the sugar alcohol, and the <strong>best estimate</strong> subtracts the fiber and the share of the sugar alcohol that is not counted. If a food fits your limit even by the strict count, it fits by every count.</p>
+
+        <h2>Net carbs and your daily limit</h2>
+        <p>On a ketogenic diet the usual range is 20–50 g of carbohydrate a day. Pick 20, 25, 30 or 50 g (or your own under Go advanced) and the tally under the result shows what is left. The <a href="/keto-calculator/">keto calculator</a> turns that limit into calories, protein and fat.</p>
+        <h2>Sources</h2>
+        <ul>
+          <li>Livesey G, <a href="https://www.cambridge.org/core/journals/nutrition-research-reviews/article/health-potential-of-polyols-as-sugar-replacers-with-emphasis-on-low-glycaemic-properties/51B0744C8573925A7A74FF2AD87429F9" rel="noopener">Health potential of polyols as sugar replacers, with emphasis on low glycaemic properties</a>, Nutrition Research Reviews 2003;16:163 — glycaemic index of erythritol 0, xylitol 13, sorbitol 9, maltitol 35 (glucose 100, sucrose 65); the share of each sugar alcohol counted here.</li>
+          <li>Regulation (EU) No 1169/2011, <a href="https://www.legislation.gov.uk/eur/2011/1169/annex/I" rel="noopener">Annex I</a> (“carbohydrate” means any carbohydrate metabolised by humans and includes polyols; fibre is defined separately) and <a href="https://www.legislation.gov.uk/eur/2011/1169/annex/XIV" rel="noopener">Annex XIV</a> (carbohydrate 4 kcal/g, polyols 2.4 kcal/g, fibre 2 kcal/g, erythritol 0 kcal/g) — why UK and EU labels differ from US and Canadian ones.</li>
+          <li>Volek JS et al., <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC8537012/" rel="noopener">Nutrients 2021;13(10):3299</a> — the 20–50 g a day carbohydrate range for a ketogenic diet.</li>
+          <li>“Other, mixed or not sure” counts half of the sugar alcohol, the common rule of thumb (net carbs = total carbohydrate − fiber − sugar alcohol ÷ 2) used by tools such as Omni Calculator and Inch Calculator — a convention, not a measured value.</li>
+        </ul>
+        <p><small>An estimate for information only — your own response to fiber and sugar alcohols varies. If you take insulin or other diabetes medication, do not use net carb counts to set doses without your care team. Not medical or dietary advice.</small></p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>What are net carbs?</summary><p>Net carbs are the carbohydrates that raise blood sugar: total carbohydrate minus the fiber and, in part, the sugar alcohols, which are digested little or not at all. It is a counting convention rather than a line on a nutrition label, so different tools subtract different amounts — this calculator shows three counts so you can see the spread.</p></details>
+    <details class="faq"><summary>How do I calculate net carbs?</summary><p>On a US or Canadian label: net carbs = total carbohydrate − fiber − the part of the sugar alcohol that does not count. For 22 g total carbohydrate, 6 g fiber and 8 g maltitol: 22 − 6 − (8 × (1 − 0.35)) = 10.8 g. Counting all the sugar alcohol (strict) gives 16 g; counting none of it (lenient) gives 8 g.</p></details>
+    <details class="faq"><summary>Do sugar alcohols count as carbs?</summary><p>Partly, and it depends on which one. The calculator counts each by its glycaemic index relative to glucose (Livesey, 2003): erythritol 0, xylitol 13, sorbitol 9 and maltitol 35 — so 0%, 13%, 9% and 35% of the grams. For “other, mixed or not sure” it counts half, the common rule of thumb. Maltitol is the one that most often surprises people.</p></details>
+    <details class="faq"><summary>Why do US and EU labels give different numbers?</summary><p>They define carbohydrate differently. US and Canadian labels show Total Carbohydrate, which includes dietary fiber and sugar alcohol, so you subtract the fiber. UK and EU labels show Carbohydrate without the fibre (fibre is listed separately), with sugar alcohols (polyols) inside it, so you do not subtract fibre again. A UK label saying 16 g carbohydrate, 6 g fibre and 8 g maltitol gives 10.8 g net carbs — the same food as the 22 g US label above.</p></details>
+    <details class="faq"><summary>Should I count net carbs or total carbs on keto?</summary><p>The 20–50 g a day range in the ketogenic-diet research is stated as carbohydrate, so total carbs is the strictest reading. Counting net carbs lets more fibre-rich vegetables fit and is what most keto calculators use. If you are unsure, watch the strict figure: if it stays inside your limit, every method does.</p></details>
+    <details class="faq"><summary>How many net carbs per day?</summary><p>On a ketogenic diet the usual range is 20–50 g of carbohydrate a day, varying from person to person. The day tally checks what you add against 20, 25, 30 or 50 g or your own limit. The <a href="/keto-calculator/">keto calculator</a> works out the rest of your macros from it.</p></details>
+    <details class="faq"><summary>Can I rely on net carbs if I have diabetes?</summary><p>Be careful. Net carb counts can understate how much a food raises blood sugar, because fiber and sugar alcohols differ in how much they are absorbed. If you take insulin or other diabetes medication, ask your care team how to count carbohydrate for dosing rather than using net carbs.</p></details>
+    <details class="faq"><summary>What does the “per 100 g” option do?</summary><p>Many labels give values per 100 g as well as per serving. Choose Per 100 g, enter the figures from that column, and type how many grams you ate — the calculator scales the result. Leave the amount empty to see the net carbs in 100 g.</p></details>
+    <details class="faq"><summary>How does the day tally work?</summary><p>After each food, press Add to my day. The list adds up your net carbs (best estimate), shows how many grams are left of your daily limit and what the strict and lenient totals would be, so one mislabelled bar does not blow the day.</p></details>
+  </section>
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+      <div class="footer-stack">
+<div class="footer-col" style="order:1">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+          <li><a href="/paint-calculator/">Paint Calculator</a></li>
+          <li><a href="/wallpaper-calculator/">Wallpaper Calculator</a></li>
+          <li><a href="/square-footage-calculator/">Square Footage Calculator</a></li>
+          <li><a href="/tape-measure-fraction-calculator/">Tape Measure Fraction Calculator</a></li>
+          <li><a href="/stair-calculator/">Stair Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:5">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Cooking &amp;</span> <span class="ft2">Kitchen</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/recipe-converter/">Recipe Converter</a></li>
+          <li><a href="/turkey-cooking-time-calculator/">Turkey Cooking Time Calculator</a></li>
+          <li><a href="/turkey-thawing-time-calculator/">Turkey Thawing Time Calculator</a></li>
+          <li><a href="/turkey-size-calculator/">Turkey Size Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:6">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Money &amp;</span> <span class="ft2">Finance</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/mortgage-calculator/">Mortgage Calculator</a></li>
+          <li><a href="/loan-calculator/">Loan Calculator</a></li>
+          <li><a href="/auto-loan-calculator/">Auto Loan Calculator</a></li>
+          <li><a href="/car-sales-tax-calculator/">Car Sales Tax Calculator</a></li>
+          <li><a href="/overtime-calculator/">Overtime Calculator</a></li>
+          <li><a href="/salary-calculator/">Salary Calculator</a></li>
+          <!--STAXFOOT:START-->
+          <li><a href="/sales-tax-calculator/">Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/california/">California Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/chicago/">Chicago Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/florida/">Florida Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/las-vegas/">Las Vegas Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/los-angeles/">Los Angeles Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/michigan/">Michigan Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/missouri/">Missouri Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/north-carolina/">North Carolina Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/ohio/">Ohio Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/texas/">Texas Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/virginia/">Virginia Sales Tax Calculator</a></li>
+          <!--STAXFOOT:END-->
+          <li><a href="/tip-calculator/">Tip Calculator</a></li>
+          <li><a href="/how-much-to-tip/">How Much to Tip</a></li>
+        </ul>
+      </div>
+      </div>
+
+      <div class="footer-right">
+<div class="footer-col footer-col--two" style="order:2">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/vo2-max-calculator/">VO2 Max Calculator</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/bmi-calculator/">BMI Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/ideal-weight-calculator/">Ideal Weight Calculator</a></li>
+          <li><a href="/lean-body-mass-calculator/">Lean Body Mass Calculator</a></li>
+          <li><a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio Calculator</a></li>
+          <li><a href="/gmi-calculator/">GMI Calculator</a></li>
+          <li><a href="/a1c-calculator/">A1C Calculator</a></li>
+          <li><a href="/calorie-calculator/">Calorie Calculator</a></li>
+          <li><a href="/calorie-deficit-calculator/">Calorie Deficit Calculator</a></li>
+          <li><a href="/bmr-calculator/">BMR Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/water-intake-calculator/">Water Intake Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/protein-intake-calculator/">Protein Intake Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
+          <li><a href="/steps-to-miles-calculator/">Steps to Miles Calculator</a></li>
+          <li><a href="/dog-age-calculator/">Dog Age Calculator</a></li>
+          <li><a href="/cat-age-calculator/">Cat Age Calculator</a></li>
+          <li><a href="/calories-burned-calculator/">Calories Burned Calculator</a></li>
+          <li><a href="/calories-burned-walking-calculator/">Calories Burned Walking Calculator</a></li>
+          <li><a href="/calories-burned-running-calculator/">Calories Burned Running Calculator</a></li>
+          <li><a href="/keto-calculator/">Keto Calculator</a></li>
+          <li><a href="/net-carb-calculator/">Net Carb Calculator</a></li>
+        </ul>
+      </div>
+
+        <div class="footer-sub">
+<div class="footer-subcol">
+<div class="footer-col" style="order:3">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/semester-grade-calculator/">Semester Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+          <li><a href="/grade-curve-calculator/">Grade Curve Calculator</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:START-->
+<div class="footer-col" style="order:7">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Unit</span> <span class="ft2">Converters</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/unit-converter/">Unit Converter</a></li>
+          <li><a href="/length-converter/">Length Converter</a></li>
+          <li><a href="/weight-converter/">Weight Converter</a></li>
+          <li><a href="/volume-converter/">Volume Converter</a></li>
+          <li><a href="/temperature-converter/">Temperature Converter</a></li>
+          <li><a href="/area-converter/">Area Converter</a></li>
+          <li><a href="/speed-converter/">Speed Converter</a></li>
+          <li><a href="/data-storage-converter/">Data Storage Converter</a></li>
+          <li><a href="/cooking-converter/">Cooking Measurement Converter</a></li>
+          <li><a href="/px-to-rem-converter/">PX to REM Converter</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:END-->
+</div>
+
+<div class="footer-col" style="order:4">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/fraction-calculator/">Fraction Calculator</a></li>
+          <li><a href="/standard-deviation-calculator/">Standard Deviation Calculator</a></li>
+          <li><a href="/scientific-notation-calculator/">Scientific Notation Calculator</a></li>
+          <li><a href="/weighted-average-calculator/">Weighted Average Calculator</a></li>
+          <li><a href="/average-calculator/">Average Calculator</a></li>
+          <li><a href="/batting-average-calculator/">Batting Average Calculator</a></li>
+          <li><a href="/stock-average-calculator/">Stock Average Calculator</a></li>
+          <li><a href="/dice-average-calculator/">Dice Average Calculator</a></li>
+          <li><a href="/time-average-calculator/">Time Average Calculator</a></li>
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+          <li><a href="/percentage-change-calculator/">Percentage Change Calculator</a></li>
+          <li><a href="/age-calculator/">Age Calculator</a></li>
+          <li><a href="/date-calculator/">Date Calculator</a></li>
+          <li><a href="/time-calculator/">Time Calculator</a></li>
+          <li><a href="/hours-calculator/">Hours Calculator</a></li>
+          <li><a href="/triangle-calculator/">Triangle Calculator</a></li>
+          <li><a href="/random-number-generator/">Random Number Generator</a></li>
+        </ul>
+      </div>
+        </div>
+      </div>
+
+      <!--PAYFOOT:START-->
+      <div class="footer-col footer-col--wide">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Paycheck</span> <span class="ft2">Calculators</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/paycheck-calculator/">Paycheck Calculator (all states)</a></li>
+          <li><a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arkansas/">Arkansas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/california/">California Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/hawaii/">Hawaii Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/louisiana/">Louisiana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nebraska/">Nebraska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/oklahoma/">Oklahoma Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/utah/">Utah Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wisconsin/">Wisconsin Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a></li>
+        </ul>
+      </div>
+      <!--PAYFOOT:END-->
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/blog/">Blog</a>
+      <span aria-hidden="true">·</span>
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+</div>
+
+<script src="/assets/app.js?v=314"></script>
+<script>CalcThis.initNetCarbCalc();</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>

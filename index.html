@@ -79,6 +79,8 @@
         { "@type": "WebApplication", "name": "Calories Burned Calculator", "url": "https://calcthis.co/calories-burned-calculator/", "applicationCategory": "HealthApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Calories Burned Walking Calculator", "url": "https://calcthis.co/calories-burned-walking-calculator/", "applicationCategory": "HealthApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Calories Burned Running Calculator", "url": "https://calcthis.co/calories-burned-running-calculator/", "applicationCategory": "HealthApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
+        { "@type": "WebApplication", "name": "Keto Calculator", "url": "https://calcthis.co/keto-calculator/", "applicationCategory": "HealthApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
+        { "@type": "WebApplication", "name": "Net Carb Calculator", "url": "https://calcthis.co/net-carb-calculator/", "applicationCategory": "HealthApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Protein Intake Calculator", "url": "https://calcthis.co/protein-intake-calculator/", "applicationCategory": "HealthApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Final Grade Calculator", "url": "https://calcthis.co/final-grade-calculator/", "applicationCategory": "EducationApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "GPA Calculator", "url": "https://calcthis.co/gpa-calculator/", "applicationCategory": "EducationApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
@@ -123,7 +125,7 @@
   ]
 }
 </script>
-<link rel="stylesheet" href="/assets/style.css?v=313">
+<link rel="stylesheet" href="/assets/style.css?v=314">
 <style>
   .cat-tabs{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
   .cat-grp--hidden{display:none}
@@ -208,6 +210,8 @@
           <a href="/calories-burned-calculator/">Calories Burned</a>
           <a href="/calories-burned-walking-calculator/">Calories Burned Walking</a>
           <a href="/calories-burned-running-calculator/">Calories Burned Running</a>
+          <a href="/keto-calculator/">Keto</a>
+          <a href="/net-carb-calculator/">Net Carb</a>
         </div>
         <div class="menu-col">
           <span class="menu-col-head">School &amp; Grades</span>
@@ -962,6 +966,34 @@
       </span>
     </a>
 
+    <a class="calc" href="/keto-calculator/">
+      <span class="ico" aria-hidden="true">
+        <svg width="30" height="30" viewBox="0 0 32 32" fill="none">
+          <path d="M16 4c6 3 10 7 10 12a10 10 0 0 1-20 0c0-5 4-9 10-12z" fill="#EFE7D8" stroke="#8F5C13" stroke-width="1.5" stroke-linejoin="round"/>
+          <path d="M16 26V12" stroke="#37503F" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <h3>Keto Calculator</h3>
+      <p>Daily keto macros — calories, net carbs, protein and fat in grams for losing, maintaining or gaining weight, with the carb limit shown on the 20–50 g range.</p>
+      <span class="go">Open calculator
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+    </a>
+
+    <a class="calc" href="/net-carb-calculator/">
+      <span class="ico" aria-hidden="true">
+        <svg width="30" height="30" viewBox="0 0 32 32" fill="none">
+          <path d="M16 4c6 3 10 7 10 12a10 10 0 0 1-20 0c0-5 4-9 10-12z" fill="#EFE7D8" stroke="#8F5C13" stroke-width="1.5" stroke-linejoin="round"/>
+          <path d="M16 26V12" stroke="#37503F" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <h3>Net Carb Calculator</h3>
+      <p>Net carbs from any food label — US or EU, per serving or per 100 g, sugar alcohol by type — with strict and lenient counts and a daily tally.</p>
+      <span class="go">Open calculator
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+    </a>
+
     <a class="calc" href="/steps-to-miles-calculator/">
       <span class="ico" aria-hidden="true">
         <svg width="30" height="30" viewBox="0 0 32 32" fill="none">
@@ -1693,6 +1725,8 @@
           <li><a href="/calories-burned-calculator/">Calories Burned</a><span> — calories burned by activity, total and extra</span></li>
           <li><a href="/calories-burned-walking-calculator/">Calories Burned Walking</a><span> — calories burned walking by speed and incline</span></li>
           <li><a href="/calories-burned-running-calculator/">Calories Burned Running</a><span> — calories burned running by pace and incline</span></li>
+          <li><a href="/keto-calculator/">Keto</a><span> — daily keto macros: calories, net carbs, protein and fat</span></li>
+          <li><a href="/net-carb-calculator/">Net Carb</a><span> — net carbs from a food label, strict to lenient, with a day tally</span></li>
           <li><a href="/peptide-reconstitution-calculator/">Peptide reconstitution</a><span> — exact syringe draw units</span></li>
         </ul>
       </article>
@@ -1891,6 +1925,8 @@
           <li><a href="/calories-burned-calculator/">Calories Burned Calculator</a></li>
           <li><a href="/calories-burned-walking-calculator/">Calories Burned Walking Calculator</a></li>
           <li><a href="/calories-burned-running-calculator/">Calories Burned Running Calculator</a></li>
+          <li><a href="/keto-calculator/">Keto Calculator</a></li>
+          <li><a href="/net-carb-calculator/">Net Carb Calculator</a></li>
         </ul>
       </div>
 
@@ -2044,7 +2080,7 @@
   });
 })();
 </script>
-<script src="/assets/app.js?v=313"></script>
+<script src="/assets/app.js?v=314"></script>
 <script src="/feedback.js" defer></script>
 </body>
 </html>

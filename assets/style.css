@@ -2763,3 +2763,32 @@
 @media(max-width:520px){.p-cb .cb-rk{grid-template-columns:minmax(0,1.3fr) 58px auto;gap:8px}.p-cb .cb-two{gap:0 8px}}
 .p-cb .av-note{font-size:14px;font-weight:500;color:var(--ink-soft);margin:4px 0 8px;line-height:1.45}
 .p-cb .cb-note{font-size:14px}
+
+/* ---- Keto + Net carb calculators (.p-kz) — reuses .p-bmr bars/table, .cb-day rows from the calories burned block ---- */
+.p-kz .kz-rule{margin:6px 0 4px;padding-bottom:22px}
+.p-kz .kz-rule-t{position:relative;height:12px;border-radius:6px;background:#EFE7D8}
+.p-kz .kz-band{position:absolute;top:0;bottom:0;background:var(--spruce);opacity:.55;border-radius:6px}
+.p-kz .kz-mk{position:absolute;top:-4px;width:4px;height:20px;margin-left:-2px;background:var(--ink);border-radius:2px}
+.p-kz .kz-mk b{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);font-size:12px;font-weight:700;color:var(--ink);white-space:nowrap;background:var(--card);padding:0 4px}
+.p-kz .kz-rule-l{position:relative;height:18px;margin-top:6px}
+.p-kz .kz-rule-l span{position:absolute;top:0;transform:translateX(-50%);font-size:12px;font-weight:600;color:var(--muted);white-space:nowrap}
+.p-kz .kz-rule-l span:first-child{transform:none}
+.p-kz .kz-rule{margin-top:26px}
+.p-kz .nc-gauge{margin:6px 0 12px}
+.p-kz .nc-gauge-t{height:14px;border-radius:7px;background:#EFE7D8;overflow:hidden}
+.p-kz .nc-gauge-t i{display:block;height:100%;background:var(--spruce);border-radius:7px}
+.p-kz .nc-gauge.over .nc-gauge-t i{background:#b23}
+.p-kz .nc-gauge-l{display:flex;justify-content:space-between;gap:10px;font-size:13.5px;font-weight:600;color:var(--ink-soft);margin-top:6px}
+.p-kz .dtable small{display:block;color:var(--muted);font-size:12.5px;font-weight:500;margin-top:1px}
+.p-kz .av-note{font-size:14px;font-weight:500;color:var(--ink-soft);margin:4px 0 8px;line-height:1.45}
+.p-kz .cb-note{font-size:14px;color:var(--muted);line-height:1.5;margin:10px 0 0}
+.p-kz .cb-day{margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
+.p-kz .cb-day-r{display:grid;grid-template-columns:minmax(0,1fr) auto 24px;gap:10px;align-items:center;padding:9px 2px;border-bottom:1px solid var(--line);font-size:13.5px;color:var(--ink-soft)}
+.p-kz .cb-day-n small{display:block;color:var(--muted);font-size:12px;margin-top:1px}
+.p-kz .cb-day-r b{font-variant-numeric:tabular-nums;color:var(--ink)}
+.p-kz .cb-day .x{background:none;border:0;color:var(--muted);cursor:pointer;font-size:18px;line-height:1;padding:2px 6px;border-radius:5px}
+.p-kz .cb-day .x:hover{color:#b23;background:#f7e9e9}
+.p-kz .tally-total{display:grid!important}
+.p-kz .cb-two{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}
+@media(max-width:520px){.p-kz .cb-two{gap:0 8px}}
+.p-kz .kz-mk b{font-style:normal}

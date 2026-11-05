@@ -258,6 +258,14 @@
     "t": "Calories Burned Running Calculator — Per Mile and Pace",
     "d": "Calories burned running calculator: enter your pace or distance and time, plus incline and weight, for total and extra calories and calories per mile."
   },
+  "/keto-calculator/": {
+    "t": "Keto Calculator — Daily Macros and Net Carb Limit",
+    "d": "Keto calculator: daily calories, protein, fat and net carbs from your size, activity and weight goal, with a carb-limit scale and the grams for each meal."
+  },
+  "/net-carb-calculator/": {
+    "t": "Net Carb Calculator — Label Maths and a Daily Tally",
+    "d": "Net carb calculator for any food label: US or EU labels, sugar alcohol by type, strict to lenient counts, and a running total against your daily carb limit."
+  },
   "/dog-age-calculator/": {
     "t": "Dog Age Calculator — Dog Years to Human Years",
     "d": "Dog age calculator: convert dog years to human years by size or breed with three methods, a curve, senior age and next birthday — or human age to dog age."

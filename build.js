@@ -157,6 +157,8 @@ const PAGES = [
   { file: 'calories-burned-calculator/index.html', slug: '/calories-burned-calculator/' },
   { file: 'calories-burned-walking-calculator/index.html', slug: '/calories-burned-walking-calculator/' },
   { file: 'calories-burned-running-calculator/index.html', slug: '/calories-burned-running-calculator/' },
+  { file: 'keto-calculator/index.html', slug: '/keto-calculator/' },
+  { file: 'net-carb-calculator/index.html', slug: '/net-carb-calculator/' },
   { file: 'protein-intake-calculator/index.html', slug: '/protein-intake-calculator/' },
   { file: 'blog/index.html',            slug: '/blog/' },
   { file: 'blog/how-much-gravel-do-i-need-for-a-driveway/index.html', slug: '/blog/how-much-gravel-do-i-need-for-a-driveway/' },

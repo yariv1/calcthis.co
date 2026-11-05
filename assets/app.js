@@ -19351,6 +19351,7 @@ CalcThis.initCburnCalc = function (kind) {
   function seg(id, fn) { $(id).addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; fn(b.getAttribute('data-v')); setSeg(id, b.getAttribute('data-v')); }); }
   seg('cbWU', function (v) {
     var w = readW(); var kg = w && w.kg; st.wu = v;
+    if (w && w.err) $('cbW').value = '';
     if (kg) $('cbW').value = trim(v === 'lb' ? kg * LB : (v === 'st' ? kg / ST : kg), 1);
     $('cbWL').textContent = v; render();
   });
@@ -19397,3 +19398,374 @@ CalcThis.initCburnCalc = function (kind) {
   render();
 };
 /* CBURN:END */
+
+/* KETO:BEGIN */
+/* =========================================================
+   KETO + NET CARB calculators.
+   Competitors opened live (2026-11-05): Omnicalculator keto + net carbs, InchCalculator net carbs, keto-calculator.ankerl.com,
+   lowcarbspark keto macro calculator (calculator.net has no keto page).
+   Keto: daily kcal from Mifflin-St Jeor / Katch-McArdle (CalcThis.deficitEngine.maint) x the site's 5 activity levels, a pace of weight change,
+   protein from ideal body weight (Volek et al., Nutrients 2021;13:3299: 1.2-2.0 g/kg, typically 1.2-1.5), net carbs capped (20-50 g/day range),
+   fat = what is left (9 kcal/g; protein and carbs 4 kcal/g).
+   Net carb: US label total carb includes fibre + sugar alcohol; EU label carbohydrate excludes fibre and includes polyols (Reg. 1169/2011 Annex I).
+   Sugar-alcohol counted share by type = glycaemic index / 100 (Livesey, Nutr Res Rev 2003;16:163: erythritol 0, xylitol 13, sorbitol 9, maltitol 35);
+   "other / mixed / not sure" = half (the common rule of thumb). Strict (count it all) and lenient (count none) shown beside the best estimate.
+   ========================================================= */
+/* KETO-ENGINE:START */
+CalcThis.ketoEngine = (function () {
+  var KCAL_KG = 7700;
+  var CAPS = [20, 25, 30, 50];
+  var PROT = [{ id: 'low', g: 1.2, name: 'Lower' }, { id: 'typ', g: 1.5, name: 'Typical' }, { id: 'high', g: 2.0, name: 'Higher' }];
+  var PACE_KG = [0.25, 0.5, 0.75, 1], PACE_LB = [0.5, 1, 1.5, 2];
+  function num(t) {
+    t = (t + '').trim().replace(/\s/g, '');
+    if (!t) return null;
+    if (/^[+-]?\d*,\d+$/.test(t)) t = t.replace(',', '.'); else t = t.replace(/,/g, '');
+    if (!/^[+-]?(\d+\.?\d*|\.\d+)$/.test(t)) return NaN;
+    return parseFloat(t);
+  }
+  /* height in inches from "70", "5'10", "5 ft 10", "5 10" -> inches | null (empty) | NaN */
+  function parseIn(t) {
+    t = (t + '').trim().toLowerCase();
+    if (!t) return null;
+    var m = t.match(/^(\d+)\s*(?:'|ft|feet|foot|\s)\s*(\d+(?:[.,]\d+)?)?\s*(?:"|in|inch|inches)?$/);
+    if (m) { var ft = parseInt(m[1], 10), inch = m[2] ? parseFloat(m[2].replace(',', '.')) : 0; return ft * 12 + inch; }
+    return num(t);
+  }
+  /* Devine 1974 ideal body weight (kg) */
+  function ibw(male, cm) { return (male ? 50 : 45.5) + 2.3 * Math.max(0, cm / 2.54 - 60); }
+  function floorKcal(male) { return male ? 1500 : 1200; }
+  /* o = { male, W (kg), H (cm), A, f, bf (% or null), goal 'lose'|'maint'|'gain', pace (kg/week), cap (g net carbs), pg (g protein per kg), basis 'ideal'|'actual', kcal (own or null), G (target kg or null), meals } */
+  function solve(o) {
+    var D = CalcThis.deficitEngine;
+    var useK = o.bf > 0 && o.bf < 100;
+    var maint = D.maint({ male: o.male, W: o.W, H: o.H, A: o.A, f: o.f, formula: useK ? 'katch' : 'mifflin', bf: useK ? o.bf : null });
+    var perDay = o.goal === 'maint' ? 0 : o.pace * KCAL_KG / 7;
+    var raw = maint + (o.goal === 'lose' ? -perDay : perDay);
+    var own = o.kcal > 0, kcal = own ? o.kcal : raw, fl = floorKcal(o.male), raised = false;
+    if (!own && kcal < fl) { kcal = fl; raised = true; }
+    var ib = ibw(o.male, o.H), ref = o.basis === 'actual' ? o.W : Math.min(o.W, ib);
+    var prot = o.pg * ref, carb = o.cap;
+    var fat = (kcal - prot * 4 - carb * 4) / 9, over = false;
+    if (fat < 0) { fat = 0; over = true; }
+    var kc = fat * 9 + prot * 4 + carb * 4;
+    var delta = kcal - maint;
+    var days = null;
+    if (o.G > 0 && o.W > 0) {
+      if (o.goal === 'lose' && o.G < o.W && delta < 0) days = (o.W - o.G) * KCAL_KG / -delta;
+      else if (o.goal === 'gain' && o.G > o.W && delta > 0) days = (o.G - o.W) * KCAL_KG / delta;
+    }
+    return {
+      maint: maint, kcal: kcal, raw: raw, raised: raised, own: own, floor: fl, delta: delta, ibw: ib, ref: ref, katch: useK,
+      protG: prot, carbG: carb, fatG: fat, over: over, kc: kc,
+      protPct: prot * 4 / kc * 100, carbPct: carb * 4 / kc * 100, fatPct: fat * 9 / kc * 100,
+      days: days, perWeekKg: delta * 7 / KCAL_KG,
+      meal: { n: o.meals, protG: prot / o.meals, carbG: carb / o.meals, fatG: fat / o.meals, kcal: kc / o.meals }
+    };
+  }
+  return { KCAL_KG: KCAL_KG, CAPS: CAPS, PROT: PROT, PACE_KG: PACE_KG, PACE_LB: PACE_LB, num: num, parseIn: parseIn, ibw: ibw, floorKcal: floorKcal, solve: solve };
+})();
+/* KETO-ENGINE:END */
+
+/* NETCARB-ENGINE:START */
+CalcThis.netcarbEngine = (function () {
+  var TYPES = [
+    { id: 'ery', name: 'Erythritol', gi: 0 },
+    { id: 'xyl', name: 'Xylitol', gi: 13 },
+    { id: 'sor', name: 'Sorbitol', gi: 9 },
+    { id: 'mal', name: 'Maltitol', gi: 35 },
+    { id: 'oth', name: 'Other, mixed or not sure', gi: null }
+  ];
+  var HALF = 0.5, KCAL = 4;
+  function num(t) {
+    t = (t + '').trim().replace(/\s/g, '');
+    if (!t) return null;
+    if (/^[+-]?\d*,\d+$/.test(t)) t = t.replace(',', '.'); else t = t.replace(/,/g, '');
+    if (!/^[+-]?(\d+\.?\d*|\.\d+)$/.test(t)) return NaN;
+    return parseFloat(t);
+  }
+  function frac(id) { for (var i = 0; i < TYPES.length; i++) if (TYPES[i].id === id) return TYPES[i].gi === null ? HALF : TYPES[i].gi / 100; return HALF; }
+  /* o = { label 'us'|'eu', total, fiber, alc, f (share of sugar alcohol that counts, 0..1) } -> grams in the amount given */
+  function split(o) {
+    var gross = o.label === 'eu' ? o.total + o.fiber : o.total;
+    var counted = o.alc * o.f;
+    return { gross: gross, fiber: o.fiber, alc: o.alc, counted: counted, free: o.alc - counted, net: gross - o.fiber - (o.alc - counted), strict: gross - o.fiber, lenient: gross - o.fiber - o.alc };
+  }
+  function check(o) {
+    if (o.label === 'us') { if (o.fiber + o.alc > o.total + 1e-9) return 'Fiber plus sugar alcohol can’t be more than the total carbohydrate on a US or Canadian label — check the numbers.'; }
+    else if (o.alc > o.total + 1e-9) return 'Sugar alcohol can’t be more than the carbohydrate on a UK or EU label (polyols are counted inside it) — check the numbers.';
+    return '';
+  }
+  return { TYPES: TYPES, HALF: HALF, KCAL: KCAL, num: num, frac: frac, split: split, check: check };
+})();
+/* NETCARB-ENGINE:END */
+
+/* ---------- shared tiny helpers for the two pages ---------- */
+CalcThis._kzUtil = {
+  f: function (x, d) { return (Math.round(x * Math.pow(10, d)) / Math.pow(10, d)).toFixed(d); },
+  trim: function (x, d) { return String(parseFloat((Math.round(x * Math.pow(10, d)) / Math.pow(10, d)).toFixed(d))); },
+  grp: function (n) { return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','); },
+  esc: function (t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'); },
+  setSeg: function (id, v) { [].forEach.call(document.getElementById(id).children, function (b) { b.classList.toggle('on', b.getAttribute('data-v') === String(v)); }); },
+  seg: function (id, fn) { document.getElementById(id).addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; var v = b.getAttribute('data-v'); fn(v); CalcThis._kzUtil.setSeg(id, v); }); },
+  /* a ruler: axis 0..mx, a shaded band lo..hi, a marker at val, ticks [[pos,label]] */
+  ruler: function (mx, lo, hi, val, ticks, mkLab) {
+    var p = function (x) { return Math.max(0, Math.min(100, x / mx * 100)); };
+    return '<div class="kz-rule"><div class="kz-rule-t"><i class="kz-band" style="left:' + p(lo) + '%;width:' + (p(hi) - p(lo)) + '%"></i><i class="kz-mk" style="left:' + p(val) + '%"><b>' + mkLab + '</b></i></div>' +
+      '<div class="kz-rule-l">' + ticks.map(function (t) { return '<span style="left:' + p(t[0]) + '%">' + t[1] + '</span>'; }).join('') + '</div></div>';
+  }
+};
+
+/* =========================================================
+   CalcThis.initKetoCalc() — ids kz*. Engine: CalcThis.ketoEngine. No shared state.
+   ========================================================= */
+CalcThis.initKetoCalc = function () {
+  var E = CalcThis.ketoEngine, U = CalcThis._kzUtil, f = U.f, trim = U.trim, grp = U.grp, esc = U.esc, setSeg = U.setSeg, seg = U.seg;
+  var $ = function (id) { return document.getElementById(id); };
+  var LB = 2.20462, ST = 6.35029;
+  var st = { sex: 'f', wu: 'lb', hu: 'in', goal: 'lose', pace: 1, cap: 25, pg: 1.5, adv: false, basis: 'ideal', meals: 3 };
+  function setHint(m) { var h = $('kzHint'); h.textContent = m || ''; h.style.display = m ? 'block' : 'none'; }
+  function wTxt(kg) { return st.wu === 'kg' ? trim(kg, 1) + ' kg' : (st.wu === 'st' ? trim(kg / ST, 1) + ' st' : trim(kg * LB, 1) + ' lb'); }
+  var WMSG = { lb: 'Weight should be between 66 and 660 lb — check the number and the unit.', kg: 'Weight should be between 30 and 300 kg — check the number and the unit.', st: 'Weight should be between 4.7 and 47 st — check the number and the unit.' };
+  function toKg(n) { return st.wu === 'lb' ? n / LB : (st.wu === 'st' ? n * ST : n); }
+  function readW(id, label) {
+    var n = E.num($(id).value); if (n === null) return null;
+    if (isNaN(n) || n <= 0) return { err: 'Couldn’t read ' + label + ' — use a number like ' + (st.wu === 'kg' ? '70' : (st.wu === 'st' ? '11' : '154')) + '.' };
+    var kg = toKg(n); if (kg < 30 || kg > 300) return { err: WMSG[st.wu] };
+    return { kg: kg };
+  }
+  function readH() {
+    var raw = $('kzHt').value; if (!raw.trim()) return null;
+    var n = st.hu === 'in' ? E.parseIn(raw) : E.num(raw);
+    if (n === null) return null;
+    if (isNaN(n) || n <= 0) return { err: 'Couldn’t read the height — use ' + (st.hu === 'in' ? 'inches (70) or feet and inches (5\'10)' : 'centimetres, like 178') + '.' };
+    var cm = st.hu === 'in' ? n * 2.54 : n;
+    if (cm < 100 || cm > 250) return { err: 'Height should be between ' + (st.hu === 'in' ? '39 and 98 inches' : '100 and 250 cm') + ' — check the number and the unit.' };
+    return { cm: cm };
+  }
+  function readA() {
+    var n = E.num($('kzAge').value); if (n === null) return null;
+    if (isNaN(n) || n <= 0) return { err: 'Couldn’t read the age — use whole years like 35.' };
+    if (n < 18) return { err: 'This calculator is for adults (18 and over). A ketogenic diet for a child or teenager should be supervised by a doctor.' };
+    if (n > 100) return { err: 'Age should be between 18 and 100 years.' };
+    return { v: Math.floor(n) };
+  }
+  function paceKg() { var a = st.wu === 'kg' ? E.PACE_KG : E.PACE_LB; return a[st.pace] / (st.wu === 'kg' ? 1 : LB); }
+  function paceLabels() {
+    var a = st.wu === 'kg' ? E.PACE_KG : E.PACE_LB, u = st.wu === 'kg' ? ' kg' : ' lb';
+    [].forEach.call($('kzPace').children, function (b, i) { b.textContent = a[i] + u; });
+    $('kzPaceLab').textContent = (st.goal === 'gain' ? 'Gain' : 'Lose') + ' per week';
+  }
+  function empty(msg) { $('kzBig').textContent = '—'; $('kzSub').textContent = $('kzSub').getAttribute('data-empty'); $('kzBody').style.display = 'none'; $('kzMVal').textContent = '—'; setHint(msg || ''); }
+  function bar(r) {
+    var segs = [['c0', r.fatPct, 'Fat', r.fatG], ['c1', r.protPct, 'Protein', r.protG], ['c3', r.carbPct, 'Net carbs', r.carbG]];
+    return '<div class="bm-bar">' + segs.map(function (s) { return '<span class="bm-seg ' + s[0] + '" style="width:' + s[1] + '%">' + (s[1] >= 9 ? Math.round(s[1]) + '%' : '') + '</span>'; }).join('') + '</div>' +
+      '<div class="bm-key">' + segs.map(function (s) { return '<span><i class="' + s[0] + '"></i>' + s[2] + ': ' + Math.round(s[3]) + ' g · ' + Math.round(s[1]) + '%</span>'; }).join('') + '</div>';
+  }
+  function render() {
+    paceLabels();
+    $('kzPaceWrap').style.display = st.goal === 'maint' ? 'none' : '';
+    var a = readA(), h = readH(), w = readW('kzW', 'the weight');
+    var bad = [a, h, w].filter(function (x) { return x && x.err; })[0];
+    if (bad) { empty(bad.err); return; }
+    if (!a || !h || !w) { empty(''); return; }
+    var bf = null, own = null, cap = st.cap, G = null, notes = [];
+    if (st.adv) {
+      var b = E.num($('kzBf').value);
+      if (b !== null) { if (isNaN(b) || b < 3 || b > 60) { empty('Body fat should be between 3 and 60 % — or leave it empty.'); return; } bf = b; }
+      var k = E.num($('kzKcal').value);
+      if (k !== null) { if (isNaN(k) || k < 800 || k > 8000) { empty('Calories should be between 800 and 8,000 a day — or leave it empty.'); return; } own = k; }
+      var c = E.num($('kzCapOwn').value);
+      if (c !== null) { if (isNaN(c) || c < 0 || c > 150) { empty('Your own carb limit should be between 0 and 150 g — or leave it empty.'); return; } cap = c; }
+      var g = readW('kzTarget', 'the target weight');
+      if (g && g.err) { empty(g.err); return; }
+      if (g) G = g.kg;
+    }
+    var R = E.solve({ male: st.sex === 'm', W: w.kg, H: h.cm, A: a.v, f: parseFloat($('kzAct').value) || 1.55, bf: bf, goal: st.goal, pace: paceKg(), cap: cap, pg: st.pg, basis: st.basis, kcal: own, G: G, meals: st.meals });
+    setHint('');
+    var bmi = w.kg / Math.pow(h.cm / 100, 2);
+    $('kzBig').textContent = grp(R.kcal) + ' kcal';
+    $('kzSub').textContent = 'a day to ' + (st.goal === 'lose' ? 'lose weight' : (st.goal === 'gain' ? 'gain weight' : 'stay at your weight')) + (R.own ? ' (your own number)' : '');
+    $('kzMVal').textContent = grp(R.kcal) + ' kcal';
+    $('kzMLab').textContent = trim(R.carbG, 1) + ' g carbs · ' + Math.round(R.protG) + ' g protein · ' + Math.round(R.fatG) + ' g fat';
+    $('kzBody').style.display = '';
+    if (R.raised) notes.push('That deficit would go below the ' + grp(R.floor) + ' kcal a day safe minimum, so the target is raised to it.');
+    else if (R.own && R.kcal < R.floor) notes.push('Your own number is below the ' + grp(R.floor) + ' kcal a day safe minimum — only eat this under medical supervision.');
+    if (R.over) notes.push('Your protein and carbs already use more than ' + grp(R.kcal) + ' kcal, so there is no room for fat — choose a lower protein level or more calories.');
+    if (st.goal === 'lose' && -R.delta * 7 / E.KCAL_KG > w.kg * 0.01 + 1e-9) notes.push('That is faster than 1% of your body weight a week — a slower pace is easier to keep.');
+    if (st.goal === 'lose' && bmi < 18.5) notes.push('Your BMI is under 18.5 (underweight) — talk to a doctor before dieting to lose weight.');
+    if (cap > 50) notes.push('A carb limit above 50 g is outside the usual ketogenic range of 20–50 g a day.');
+    if (G && st.goal === 'lose' && G >= w.kg) notes.push('Your target weight is not below your current weight, so there is no time to goal — choose Gain or a lower target.');
+    if (G && st.goal === 'gain' && G <= w.kg) notes.push('Your target weight is not above your current weight, so there is no time to goal — choose Lose weight or a higher target.');
+    if (G && st.goal === 'maint') notes.push('Your target weight is ignored while the goal is Maintain.');
+    $('kzTip').textContent = 'Eat about ' + grp(R.kcal) + ' kcal: ' + trim(R.carbG, 1) + ' g net carbs (' + Math.round(R.carbPct) + '% of calories), ' + Math.round(R.protG) + ' g protein and ' + Math.round(R.fatG) + ' g fat.' + (notes.length ? ' ' + notes.join(' ') : '');
+    $('kzBar').innerHTML = bar(R);
+    /* carb ruler */
+    var mx = Math.max(60, cap * 1.15);
+    $('kzCapRule').innerHTML = U.ruler(mx, 20, 50, cap, [[0, '0'], [20, '20 g'], [50, '50 g']], trim(cap, 1) + ' g');
+    /* protein ruler */
+    var lo = 1.2 * R.ref, hi = 2.0 * R.ref, pm = hi * 1.2;
+    $('kzProtRule').innerHTML = U.ruler(pm, lo, hi, R.protG, [[0, '0'], [lo, Math.round(lo) + ' g'], [hi, Math.round(hi) + ' g']], Math.round(R.protG) + ' g');
+    /* rows */
+    var rows = [];
+    rows.push(['Calories to maintain weight', grp(R.maint) + ' kcal' + (R.katch ? ' <small>(Katch-McArdle, from your body fat)</small>' : ' <small>(Mifflin-St Jeor)</small>')]);
+    rows.push(['Daily target', grp(R.kcal) + ' kcal' + (Math.abs(R.delta) > 0.5 ? ' <small>(' + (R.delta < 0 ? '−' : '+') + grp(Math.abs(R.delta)) + ' a day)</small>' : '')]);
+    rows.push(['Expected change', (R.delta < 0 ? '−' : '+') + (st.wu === 'kg' ? trim(Math.abs(R.perWeekKg), 2) + ' kg' : trim(Math.abs(R.perWeekKg) * LB, 2) + ' lb') + ' a week <small>(7,700 kcal per kg of body fat)</small>']);
+    rows.push(['Protein', Math.round(R.protG) + ' g <small>(' + st.pg + ' g × ' + trim(R.ref, 1) + ' kg ' + (st.basis === 'actual' ? 'actual' : 'ideal') + ' weight)</small>']);
+    rows.push(['Net carbs', trim(R.carbG, 1) + ' g <small>(' + Math.round(R.carbG * 4) + ' kcal)</small>']);
+    rows.push(['Fat — what is left', Math.round(R.fatG) + ' g <small>(' + grp(R.fatG * 9) + ' kcal)</small>']);
+    if (R.days !== null) { var wk = R.days / 7; rows.push(['Time to your target', wk < 1.5 ? 'about ' + Math.max(1, Math.round(R.days)) + ' days' : 'about ' + Math.round(wk) + ' weeks <small>(simple rule — real loss slows as you lose)</small>']); }
+    $('kzRows').innerHTML = '<tbody>' + rows.map(function (r) { return '<tr><td>' + r[0] + '</td><td>' + r[1] + '</td></tr>'; }).join('') + '</tbody>';
+    /* meals */
+    var m = R.meal;
+    $('kzMealH').textContent = 'Per meal, spread over ' + m.n + ' meals';
+    $('kzMeal').innerHTML = '<thead><tr><th></th><th>Fat</th><th>Protein</th><th>Net carbs</th><th>kcal</th></tr></thead><tbody><tr><td>Each meal</td><td>' + Math.round(m.fatG) + ' g</td><td>' + Math.round(m.protG) + ' g</td><td>' + trim(m.carbG, 1) + ' g</td><td>' + grp(m.kcal) + '</td></tr></tbody>';
+  }
+  ['kzAge', 'kzHt', 'kzW', 'kzBf', 'kzKcal', 'kzCapOwn', 'kzTarget'].forEach(function (id) { var e = $(id); if (e) e.addEventListener('input', render); });
+  $('kzAct').addEventListener('change', render);
+  seg('kzSex', function (v) { st.sex = v; render(); });
+  seg('kzGoal', function (v) { st.goal = v; render(); });
+  seg('kzPace', function (v) { st.pace = +v; render(); });
+  seg('kzCap', function (v) { st.cap = +v; $('kzCapOwn').value = ''; render(); });
+  seg('kzProt', function (v) { st.pg = +v; render(); });
+  seg('kzBasis', function (v) { st.basis = v; render(); });
+  seg('kzMeals', function (v) { st.meals = +v; render(); });
+  /* exact-value memory so repeated unit switches do not drift through rounding */
+  var ex = {};
+  function exKg(id, rd) { var m = ex[id]; if (m && m.txt === $(id).value) return { kg: m.kg }; return rd; }
+  function exWrite(id, kg, txt) { $(id).value = txt; ex[id] = { kg: kg, txt: txt }; }
+  seg('kzWU', function (v) {
+    var w = exKg('kzW', readW('kzW', '')), t = exKg('kzTarget', readW('kzTarget', ''));
+    st.wu = v;
+    if (w && w.err) $('kzW').value = ''; if (t && t.err) $('kzTarget').value = '';
+    var conv = function (kg) { return trim(v === 'lb' ? kg * LB : (v === 'st' ? kg / ST : kg), 2); };
+    if (w && w.kg) exWrite('kzW', w.kg, conv(w.kg));
+    if (t && t.kg) exWrite('kzTarget', t.kg, conv(t.kg));
+    $('kzWL').textContent = v; $('kzTL').textContent = v; render();
+  });
+  seg('kzHU', function (v) {
+    var h = readH(), m = ex.kzHt; if (m && m.txt === $('kzHt').value) h = { cm: m.cm };
+    st.hu = v;
+    if (h && h.err) $('kzHt').value = '';
+    if (h && h.cm) { var txt = v === 'in' ? trim(h.cm / 2.54, 2) : trim(h.cm, 2); $('kzHt').value = txt; ex.kzHt = { cm: h.cm, txt: txt }; }
+    $('kzHL').textContent = v === 'in' ? 'inches or 5\'10' : 'cm'; $('kzHt').placeholder = v === 'in' ? 'e.g. 70 or 5\'10' : 'e.g. 178'; render();
+  });
+  $('kzAdvBtn').addEventListener('click', function () {
+    st.adv = !st.adv; $('kzAdvBtn').classList.toggle('open', st.adv); $('kzAdvBtnLab').textContent = st.adv ? 'Go simple' : 'Go advanced'; $('kzAdvIn').style.display = st.adv ? '' : 'none';
+    if (!st.adv) { $('kzBf').value = ''; $('kzKcal').value = ''; $('kzCapOwn').value = ''; $('kzTarget').value = ''; st.basis = 'ideal'; setSeg('kzBasis', 'ideal'); st.meals = 3; setSeg('kzMeals', 3); }
+    render();
+  });
+  render();
+};
+
+/* =========================================================
+   CalcThis.initNetCarbCalc() — ids nc*. Engine: CalcThis.netcarbEngine. No shared state.
+   ========================================================= */
+CalcThis.initNetCarbCalc = function () {
+  var E = CalcThis.netcarbEngine, U = CalcThis._kzUtil, f = U.f, trim = U.trim, grp = U.grp, esc = U.esc, setSeg = U.setSeg, seg = U.seg;
+  var $ = function (id) { return document.getElementById(id); };
+  var st = { label: 'us', basis: 'serv', lim: 25, adv: false, day: [], last: null };
+  function setHint(m) { var h = $('ncHint'); h.textContent = m || ''; h.style.display = m ? 'block' : 'none'; }
+  function g1(x) { return trim(Math.max(0, x), 1) + ' g'; }
+  function limit() { var o = st.adv ? E.num($('ncOwn').value) : null; return (o !== null && isFinite(o) && o > 0 && o <= 500) ? o : st.lim; }
+  function fracNow() {
+    var t = $('ncType').value || 'oth', x = st.adv ? E.num($('ncShare').value) : null;
+    if (x !== null && isFinite(x) && x >= 0 && x <= 100) return x / 100;
+    return E.frac(t);
+  }
+  function readG(id, name, max) {
+    var n = E.num($(id).value); if (n === null) return { v: 0, empty: true };
+    if (isNaN(n) || n < 0) return { err: 'Couldn’t read ' + name + ' — use a number of grams like 12.' };
+    if (n > max) return { err: name.charAt(0).toUpperCase() + name.slice(1) + ' looks too high (over ' + max + ' g) — check the number and the unit.' };
+    return { v: n };
+  }
+  function empty(msg) { $('ncBig').textContent = '—'; $('ncSub').textContent = $('ncSub').getAttribute('data-empty'); $('ncBody').style.display = 'none'; $('ncMVal').textContent = '—'; $('ncAdd').disabled = true; st.last = null; setHint(msg || ''); }
+  function labelBar(s, scale) {
+    var tot = s.gross * scale; if (!(tot > 0)) return '';
+    var segs = [['c1', s.net * scale, 'Net carbs (count)'], ['c0', s.fiber * scale, 'Fiber (not counted)'], ['c3', s.free * scale, 'Sugar alcohol (not counted)']].filter(function (x) { return x[1] > 1e-9; });
+    return '<div class="bm-bar">' + segs.map(function (x) { var p = x[1] / tot * 100; return '<span class="bm-seg ' + x[0] + '" style="width:' + p + '%">' + (p >= 14 ? g1(x[1]) : '') + '</span>'; }).join('') + '</div>' +
+      '<div class="bm-key">' + segs.map(function (x) { return '<span><i class="' + x[0] + '"></i>' + x[2] + ': ' + g1(x[1]) + '</span>'; }).join('') + '</div>';
+  }
+  function render() {
+    var eu = st.label === 'eu', per100 = st.basis === '100';
+    $('ncLabNote').textContent = eu ? 'UK and EU labels show Carbohydrate without the fibre, which is listed separately; sugar alcohols (polyols) are already inside the carbohydrate figure.' : 'US and Canadian labels show Total Carbohydrate, with Dietary Fiber and Sugar Alcohol both counted inside it.';
+    $('ncTotLab').firstChild.nodeValue = eu ? 'Carbohydrate ' : 'Total carbohydrate ';
+    $('ncFibLab').firstChild.nodeValue = eu ? 'Fibre ' : 'Dietary fiber ';
+    $('ncEatLab').firstChild.nodeValue = per100 ? 'Amount eaten ' : 'Servings eaten ';
+    $('ncEatU').textContent = per100 ? 'grams (blank = 100 g)' : 'servings (blank = 1)';
+    $('ncEat').placeholder = per100 ? 'e.g. 150' : 'e.g. 1 or 0.5';
+    $('ncTot').placeholder = 'e.g. ' + (per100 ? '45' : '22'); $('ncFib').placeholder = 'e.g. ' + (per100 ? '10' : '6'); $('ncAlc').placeholder = 'e.g. ' + (per100 ? '20' : '8');
+    var t = readG('ncTot', 'the total carbohydrate', per100 ? 100 : 1000), fi = readG('ncFib', 'the fiber', per100 ? 100 : 1000), al = readG('ncAlc', 'the sugar alcohol', per100 ? 100 : 1000);
+    var bad = [t, fi, al].filter(function (x) { return x.err; })[0];
+    if (bad) { empty(bad.err); return; }
+    var hasAlc = al.v > 0;
+    $('ncTypeWrap').style.display = hasAlc ? '' : 'none';
+    if (t.empty) { empty(''); return; }
+    var eat = E.num($('ncEat').value), scale;
+    if (eat === null) scale = 1; else if (isNaN(eat) || eat <= 0) { empty('Couldn’t read the amount eaten — use a number like ' + (per100 ? '150' : '1.5') + '.'); return; } else if (eat > (per100 ? 5000 : 100)) { empty('That amount looks too high — check the number.'); return; } else scale = per100 ? eat / 100 : eat;
+    var o = { label: st.label, total: t.v, fiber: fi.v, alc: al.v, f: fracNow() };
+    var err = E.check(o); if (err) { empty(err); return; }
+    setHint('');
+    var s = E.split(o), lim = limit();
+    var net = s.net * scale, strict = s.strict * scale, lenient = s.lenient * scale;
+    $('ncResLab').textContent = hasAlc ? 'Net carbs (best estimate)' : 'Net carbs';
+    $('ncBig').textContent = g1(net);
+    $('ncSub').textContent = (per100 ? (eat === null ? 'in 100 g' : 'in ' + trim(eat, 1) + ' g') : (scale === 1 ? 'in one serving' : 'in ' + trim(scale, 2) + ' servings'));
+    $('ncMVal').textContent = g1(net) + ' net';
+    $('ncMLab').textContent = 'Net carbs';
+    $('ncBody').style.display = '';
+    var pct = net / lim * 100;
+    $('ncTip').textContent = 'That is ' + (pct < 1 && net > 0 ? 'under 1' : Math.round(pct)) + '% of a ' + trim(lim, 1) + ' g day' + (net <= lim ? ', leaving ' + g1(lim - net) + '.' : ' — ' + g1(net - lim) + ' over.') + (hasAlc ? ' Counting every gram of sugar alcohol it would be ' + g1(strict) + ', counting none ' + g1(lenient) + '.' : '');
+    $('ncBar').innerHTML = labelBar(s, scale);
+    var rows = [];
+    rows.push(['Total carbohydrate' + (eu ? ' (carbohydrate + fibre)' : ''), g1(s.gross * scale)]);
+    rows.push([eu ? 'Fibre (separate on the label)' : 'Dietary fiber', g1(s.fiber * scale)]);
+    if (hasAlc) {
+      var tn = ''; for (var i = 0; i < E.TYPES.length; i++) if (E.TYPES[i].id === ($('ncType').value || 'oth')) tn = E.TYPES[i].name;
+      rows.push(['Sugar alcohol (' + tn.toLowerCase() + ')', g1(s.alc * scale) + ' <small>— ' + g1(s.counted * scale) + ' counted at ' + Math.round(o.f * 100) + '%</small>']);
+      rows.push(['Strict — count all sugar alcohol', g1(strict)]);
+      rows.push(['Best estimate', '<b>' + g1(net) + '</b>']);
+      rows.push(['Lenient — count none', g1(lenient)]);
+    } else rows.push(['Net carbs', '<b>' + g1(net) + '</b> <small>(no sugar alcohol, so all methods agree)</small>']);
+    rows.push(['Calories from net carbs', Math.round(net * E.KCAL) + ' kcal']);
+    $('ncRows').innerHTML = '<tbody>' + rows.map(function (r) { return '<tr><td>' + r[0] + '</td><td>' + r[1] + '</td></tr>'; }).join('') + '</tbody>';
+    st.last = { net: net, strict: strict, lenient: lenient, gross: s.gross * scale, amount: per100 ? (eat === null ? '100 g' : trim(eat, 1) + ' g') : (trim(scale, 2) + (scale === 1 ? ' serving' : ' servings')) };
+    $('ncAdd').disabled = false;
+    renderDay();
+  }
+  function renderDay() {
+    var box = $('ncDay'), lim = limit();
+    if (!st.day.length) { box.style.display = 'none'; box.innerHTML = ''; return; }
+    var tn = 0, ts = 0, tl = 0; st.day.forEach(function (d) { tn += d.net; ts += d.strict; tl += d.lenient; });
+    var left = lim - tn, p = Math.min(100, tn / lim * 100), over = tn > lim + 1e-9;
+    var range = (Math.abs(ts - tl) > 0.05) ? ' <small>(' + g1(tl) + '–' + g1(ts) + ' by the lenient–strict counts)</small>' : '';
+    box.style.display = '';
+    box.innerHTML = '<div class="tally-head"><h3>My day</h3><button type="button" id="ncClear">Clear all</button></div>' +
+      '<div class="nc-gauge' + (over ? ' over' : '') + '"><div class="nc-gauge-t"><i style="width:' + p + '%"></i></div><div class="nc-gauge-l"><span>' + g1(tn) + ' eaten</span><span>' + (over ? g1(-left) + ' over' : g1(left) + ' left') + ' of ' + trim(lim, 1) + ' g</span></div></div>' +
+      st.day.map(function (d, i) { return '<div class="cb-day-r nc-day-r"><span class="cb-day-n">' + esc(d.name) + '<small>' + esc(d.amount) + '</small></span><b>' + g1(d.net) + '</b><button type="button" class="x" data-i="' + i + '" aria-label="Remove ' + esc(d.name) + '">×</button></div>'; }).join('') +
+      '<div class="tally-total"><span class="tl">Total net carbs</span><span class="tv">' + g1(tn) + '</span><span class="sub">' + (over ? 'Over your limit' : 'Carbs left today') + range + '</span><span class="sub" style="text-align:right">' + (over ? g1(-left) : g1(left)) + '</span></div>';
+  }
+  $('ncAdd').addEventListener('click', function () {
+    if (!st.last) return;
+    var nm = $('ncName').value.trim() || 'Food ' + (st.day.length + 1);
+    st.day.push({ name: nm, net: st.last.net, strict: st.last.strict, lenient: st.last.lenient, amount: st.last.amount });
+    $('ncName').value = ''; renderDay();
+  });
+  $('ncDay').addEventListener('click', function (e) {
+    var x = e.target.closest('.x'); if (x) { st.day.splice(+x.getAttribute('data-i'), 1); renderDay(); return; }
+    if (e.target.id === 'ncClear') { st.day = []; renderDay(); }
+  });
+  ['ncTot', 'ncFib', 'ncAlc', 'ncEat', 'ncOwn', 'ncShare'].forEach(function (id) { var e = $(id); if (e) e.addEventListener('input', render); });
+  $('ncType').addEventListener('change', render);
+  seg('ncLab', function (v) { st.label = v; render(); });
+  seg('ncBasis', function (v) { st.basis = v; $('ncEat').value = ''; render(); });
+  seg('ncLim', function (v) { st.lim = +v; $('ncOwn').value = ''; render(); renderDay(); });
+  $('ncOwn').addEventListener('input', renderDay); $('ncShare').addEventListener('input', renderDay);
+  $('ncAdvBtn').addEventListener('click', function () {
+    st.adv = !st.adv; $('ncAdvBtn').classList.toggle('open', st.adv); $('ncAdvBtnLab').textContent = st.adv ? 'Go simple' : 'Go advanced'; $('ncAdvIn').style.display = st.adv ? '' : 'none';
+    if (!st.adv) { $('ncOwn').value = ''; $('ncShare').value = ''; }
+    render(); renderDay();
+  });
+  render();
+};
+/* KETO:END */
