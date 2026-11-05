@@ -4,6 +4,9 @@ _Rewritten again 2026-11-04 at the end of the Florida + car-sales-tax session: *
 
 ---
 
+## 000000000000. UPDATE 2026-11-05 (later) — A1C + GMI DEPLOYED v310 (204 pages, commit 1bc017e9)
+Health direction approved by him ('Health & Lifestyle seems much stronger; Cooking weak; also explore Diet calculators'). Numbers + priority list: `md-files/calcthis-ahrefs-2026-11.md` (bottom). Built: `/a1c-calculator/` hub + `/gmi-calculator/` (generator `md-files/gen-a1c-pages.js`, engine `CalcThis.a1cEngine`, init `initA1cCalc(kind)`). NEXT in the list: dog age (+cat age), calories burned, keto + net carb, intermittent fasting, BSA, dog food, BAC, pregnancy weight gain (hold); check Diet phrases first. GSC queue now ends with a1c + gmi; GSC 2026-11-05: 11 requested, quota hit at las-vegas. Bing Webmaster signed out in Chrome -> manual submit of a1c/gmi pending (IndexNow done). Competitor sites that 404/blocked: calculator.net + Omnicalculator have no A1C page; diabetesjournals.org Cloudflare-blocked.
+
 ## 00000000000. UPDATE 2026-11-05 — SIX SALES TAX PAGES DEPLOYED (v309, 202 pages, commit a780f16c, Bing 7 URLs submitted)
 Chicago, Los Angeles, Las Vegas, Michigan, Virginia, North Carolina (he approved all 6 after the Ahrefs screenshots: all >100 only). Details, sources, data builders and lowest-confidence items: bottom of `md-files/calcthis-salestax-research.md` ("Batch of 6"). Parity gap flagged: no digital-goods/software/streaming categories (Zamp has them). GSC queue unchanged, new URLs appended in the tracker. Everything in §0000000000 below still stands except the live numbers (now v309 / 202 pages).
 
