@@ -4,6 +4,10 @@ _Rewritten 2026-11-05 at the end of the health-direction session (A1C, GMI, dog 
 
 ---
 
+## 000000000000000d. LATEST (2026-11-05, latest): BSA DEPLOYED v316 (213 pages, 83 calcs). Sync line: "synced · live v316 / 83 calcs / 213 pages · calories burned x3, keto, net carb, intermittent fasting, BSA deployed · Bing signed out, GSC queue has the new URLs at the end". NEXT in health list: dog food (>1000 Med), BAC (Hard + liability); also GSC queue ("Start queue"). NOTE: GitHub rejected the first two pushes ("remote rejected"); retrying works. See CLAUDE.md addendum 14.
+
+---
+
 ## 000000000000000c. LATEST (2026-11-05, latest): INTERMITTENT FASTING DEPLOYED v315 (212 pages, 82 calcs, commit c25d0ccd). Sync line: "synced · live v315 / 82 calcs / 212 pages · calories burned x3, keto, net carb, intermittent fasting deployed · Bing signed out, GSC queue has the new URLs at the end". NEXT in health list: BSA (>1000 Easy), dog food (>1000 Med), BAC (Hard); also GSC queue ("Start queue"). See CLAUDE.md addendum 13.
 
 ---

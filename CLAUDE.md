@@ -211,8 +211,8 @@ must be built from the article's actual units, every time, not pasted from a tem
 
 ## Project state
 
-- **Asset version:** v315 (live; `.assetver`)
-- **Total pages:** 212 live (sitemap)
+- **Asset version:** v316 (live; `.assetver`)
+- **Total pages:** 213 live (sitemap)
 - **Model:** Sonnet 5
 
 ### New this session — global `.csel` custom-dropdown component
@@ -312,9 +312,12 @@ Recipe Converter
 ### Money & Finance (6)
 Mortgage · Loan · Auto Loan · Overtime · Paycheck · Sales Tax · Tip
 
-Total live calculators: **82** (v315, + intermittent fasting, + A1C, GMI, dog age, cat age, calories burned x3, keto, net carb)
+Total live calculators: **83** (v316, + BSA, + intermittent fasting, + A1C, GMI, dog age, cat age, calories burned x3, keto, net carb)
 
 ---
+
+## Last session addendum 14 (2026-11-05, DEPLOYED v316): BSA `/bsa-calculator/`
+Engine `BSA-ENGINE`, init `CalcThis.initBsaCalc` (ids `bs*`, block `BSA:BEGIN/END` at end of app.js), CSS `.p-bsa`, generator `md-files/gen-bsa-page.js`, notes `md-files/calcthis-bsa-research.md`. 8 formulas (Redlarski 2016 Table 1) on one scale, click-a-row headline, eGFR de-indexing (÷1.73; wording only seen as a search snippet), dose per m2 across formulas. QA: 300 differential runs, 4000-step chaos, 375px, audit 213 pages. Not verified: real phone, other browsers. Bing not submitted; GSC not requested. NEXT in health list: dog food, BAC.
 
 ## Last session addendum 13 (2026-11-05, DEPLOYED v315): INTERMITTENT FASTING `/intermittent-fasting-calculator/`
 Engine `FAST-ENGINE`, init `CalcThis.initFastCalc` (ids `if*`, block `FASTING:BEGIN/END` at end of app.js), CSS `.p-if`, generator `md-files/gen-fasting-page.js`, notes `md-files/calcthis-fasting-research.md`. 10 methods, anchor by last bite / first meal / bedtime, DS time fields + 12/24h, 24-h ring + live status (override `CalcThis.ifNow` in tests), weekend window, meals, ramp-up plan, 5:2/ADF strips + calories, safety ticks, Anton 2018 12-36 h range, Lowe 2020 + Liu 2022. QA: ~500 window + 150 ramp runs, 2 chaos runs, 375px, audit 212 pages. Not verified: real phone, other browsers. Bing not submitted; GSC not requested. NEXT in health list: BSA, dog food, BAC.

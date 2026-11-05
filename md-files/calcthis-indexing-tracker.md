@@ -3,6 +3,8 @@
 _How-to for requesting indexing with Claude in Chrome + the next batch: HANDOFF.md §10. Next batch = /auto-loan-calculator/ + the "not checked yet" list below, ~10 per day._
 
 ## LIVE QUEUE (update at EVERY deploy and every request session; last updated 2026-11-02 — overtime deployed; GSC not requested since 2026-11-01 (10 done, quota hit at valet))
+**2026-11-05 (v316): NEW PAGE /bsa-calculator/ deployed (IndexNow 213 URLs HTTP 200; GitHub rejected the first two pushes, the third succeeded). Bing manual submit NOT done (signed out). Add to the END of the GSC queue (after intermittent fasting).**
+
 **2026-11-05 (v315): NEW PAGE /intermittent-fasting-calculator/ deployed (IndexNow 212 URLs HTTP 200; live 200). Bing manual submit NOT done (signed out). Add to the END of the GSC queue (after keto + net carb).**
 
 **2026-11-05 (v314): NEW PAGES /keto-calculator/ + /net-carb-calculator/ deployed (IndexNow 211 URLs HTTP 200; live 200). Bing manual submit NOT done (signed out). Add both to the END of the GSC queue (after calories burned).**
