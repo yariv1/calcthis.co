@@ -4,6 +4,10 @@ _Rewritten 2026-11-05 at the end of the health-direction session (A1C, GMI, dog 
 
 ---
 
+## 000000000000000b. LATEST (2026-11-05, later): KETO + NET CARB DEPLOYED v314 (211 pages, 81 calcs, commit 8e32f0b7). One-line sync: "synced · live v314 / 81 calcs / 211 pages · calories burned x3 (v313) + keto + net carb (v314) deployed · Bing signed out, GSC queue has the new URLs at the end". Code map + sources in CLAUDE.md addendum 12 and md-files/calcthis-keto-research.md. NEXT in health list: intermittent fasting, BSA, dog food, BAC (recommend intermittent fasting: >1000 Easy); also GSC queue ("Start queue") with calories burned x3 + keto + net carb at the end. Rest of this file is older context.
+
+---
+
 ## 000000000000000. START HERE — END OF THE 2026-11-05 SESSION (sales-tax x6, GSC window, HEALTH direction: A1C + GMI + dog age + cat age) — live v312 · 76 calcs · 25 articles · 206 pages · `main` pushed (last deploy `27ddd5ca`, docs `138e8032`), working tree clean — AUTHORITATIVE; everything below is older and valid unless this contradicts it
 
 **One-line sync to give the user first (then work silently):** "synced · live v312 / 76 calcs / 206 pages · six sales-tax pages (v309) + A1C, GMI (v310), dog age (v311), cat age (v312) deployed · Bing Webmaster is signed out in Chrome (4 new pages not manually submitted; IndexNow done) · GSC queue pending (11 requested today, quota hit at las-vegas) · next: your call — see below."

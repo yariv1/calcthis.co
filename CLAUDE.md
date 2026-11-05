@@ -211,8 +211,8 @@ must be built from the article's actual units, every time, not pasted from a tem
 
 ## Project state
 
-- **Asset version:** v313 (live; `.assetver`)
-- **Total pages:** 209 live (sitemap)
+- **Asset version:** v314 (live; `.assetver`)
+- **Total pages:** 211 live (sitemap)
 - **Model:** Sonnet 5
 
 ### New this session — global `.csel` custom-dropdown component
@@ -312,9 +312,12 @@ Recipe Converter
 ### Money & Finance (6)
 Mortgage · Loan · Auto Loan · Overtime · Paycheck · Sales Tax · Tip
 
-Total live calculators: **79** (v313, + A1C, GMI, dog age, cat age, calories burned x3)
+Total live calculators: **81** (v314, + A1C, GMI, dog age, cat age, calories burned x3, keto, net carb)
 
 ---
+
+## Last session addendum 12 (2026-11-05, DEPLOYED v314): KETO `/keto-calculator/` + NET CARB `/net-carb-calculator/`
+Engines `KETO-ENGINE` + `NETCARB-ENGINE` (block `KETO:BEGIN/END` at end of app.js; inits `initKetoCalc` ids `kz*`, `initNetCarbCalc` ids `nc*`; CSS `.p-kz`; generator `md-files/gen-keto-pages.js`; notes `md-files/calcthis-keto-research.md`). Keto: Mifflin/Katch x 5 activity levels, pace, net carb cap 20-50 g, protein g/kg ideal weight (Volek 2021), fat = remainder, per-meal. Net carb: US vs EU label, per serving/100 g, sugar alcohol by type (Livesey GI), strict/best/lenient, day tally. QA: 420+300 differential runs, ~2600 hostile cases, 2 chaos runs, 375px, audit 211 pages. Not verified: real phone, other browsers. Also fixed unit-switch invalid->plausible bug (live cburn weight too). Bing not submitted (signed out); GSC not requested. NEXT in health list: intermittent fasting, BSA, dog food, BAC.
 
 ## Last session addendum 11 (2026-11-05, DEPLOYED v313): CALORIES BURNED x3 `/calories-burned-calculator/` (hub) + `-walking-` + `-running-`
 Engine `CBURN-ENGINE` (276 activities, MET from the 2024 Compendium read live from pacompendium.com; kcal = MET x 3.5 x kg / 200; walk/run by speed+incline = ACSM equations; optional Mifflin personalised resting rate), init `CalcThis.initCburnCalc(kind)` (hub|walk|run, ids `cb*`, block `CBURN:BEGIN/END` at end of app.js), CSS `.p-cb`, generator `md-files/gen-cburn-pages.js`, notes `md-files/calcthis-caloriesburned-research.md`. Total vs extra (net) calories, same-time ranking, linked distance/time/speed/pace, goal time, my-day tally, steps->distance. DROPPED (no verified source): heart-rate (Keytel) method, ACSM downhill term. QA: ~500 UI-vs-model runs, 102 table cells re-driven, 960-step fuzz, 375px, registration audit (209 pages). Not verified: real phone, other browsers, print. Bing manual submit not done (signed out); GSC queue: add the 3 URLs at the end. NEXT in health list: keto + net carb, intermittent fasting, BSA, dog food, BAC.
