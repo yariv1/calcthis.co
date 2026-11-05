@@ -18711,3 +18711,689 @@ CalcThis.initCarTaxCalc = function () {
   syncState(); render();
 };
 /* CARTAX:END */
+
+/* CBURN:BEGIN */
+/* =========================================================
+   CALORIES BURNED — pure engine (no DOM). Marked CBURN-ENGINE:START/END.
+   MET values: 2024 Adult Compendium of Physical Activities (pacompendium.com), read live 2026-11-05; each activity name is a
+   plain-language form of a Compendium entry. kcal/min = MET x 3.5 x kg / 200 (ACSM convention, 1 MET = 3.5 mL O2/kg/min).
+   Walking / running by speed and incline: ACSM metabolic equations
+     walking VO2 = 0.1 S + 1.8 S G + 3.5 ; running VO2 = 0.2 S + 0.9 S G + 3.5   (S m/min, G fraction, mL/kg/min).
+   Personalised option: kcal/min = MET x resting rate / 1440 with the Mifflin-St Jeor resting rate (CalcThis.bmrEngine).
+   Fat equivalent 7,700 kcal per kg. Food energy: USDA FoodData Central SR Legacy per 100 g x typical portion. */
+/* CBURN-ENGINE:START */
+CalcThis.cburnEngine = (function () {
+  var GROUPS = { W: 'Walking & hiking', R: 'Running', C: 'Cycling', S: 'Swimming & water', G: 'Gym & fitness', P: 'Sports & games', D: 'Dancing', O: 'Outdoors & yard work', H: 'Home & everyday', Z: 'Resting' };
+  var RAW = [
+    'W|Walking, strolling (under 2 mph)|2.3|stroll slow',
+    'W|Walking, slow (2.0–2.4 mph)|2.8|',
+    'W|Walking, 2.5 mph|3.0|',
+    'W|Walking, moderate pace (2.8–3.4 mph)|3.8|',
+    'W|Walking, brisk (3.5–3.9 mph)|4.8|fitness power',
+    'W|Walking, very brisk (4.0–4.4 mph)|5.5|',
+    'W|Walking, fast (4.5–4.9 mph)|7.0|',
+    'W|Walking, 5.0–5.5 mph|8.5|',
+    'W|Walking uphill, gentle grade (1–5%)|5.3|incline hill treadmill',
+    'W|Walking uphill, 6–10% grade|7.0|incline hill treadmill',
+    'W|Walking downhill (−3% to −12%)|3.3|decline treadmill',
+    'W|Walking the dog|3.0|',
+    'W|Walking to work or class|4.0|commute',
+    'W|Pushing a stroller or walking with children|3.8|pram',
+    'W|Nordic walking, 2.5–3.5 mph|4.3|poles',
+    'W|Nordic walking, 3.6–4.4 mph|5.3|poles',
+    'W|Race walking|6.5|',
+    'W|Hiking, normal pace through fields and hills|5.3|',
+    'W|Hiking, cross country|6.0|',
+    'W|Backpacking|7.0|hiking',
+    'W|Stair climbing, slow pace|4.5|stairs',
+    'W|Stair climbing, general|6.8|stairs',
+    'W|Stair climbing, fast pace|9.3|stairs',
+    'R|Jog / walk combination|6.0|',
+    'R|Jogging, general|7.5|jog',
+    'R|Running, 4.0–4.2 mph (13 min/mile)|6.5|',
+    'R|Running, 5.0–5.2 mph (12 min/mile)|8.5|',
+    'R|Running, 5.5–5.8 mph (10.5–11 min/mile)|9.0|',
+    'R|Running, 6.0–6.3 mph (10 min/mile)|9.3|',
+    'R|Running, 6.7 mph (9 min/mile)|10.5|',
+    'R|Running, 7 mph (8.5 min/mile)|11.0|',
+    'R|Running, 7.5 mph (8 min/mile)|11.8|',
+    'R|Running, 8 mph (7.5 min/mile)|12.0|',
+    'R|Running, 8.6 mph (7 min/mile)|12.5|',
+    'R|Running, 9 mph (6.5 min/mile)|13.0|',
+    'R|Running, 10 mph (6 min/mile)|14.8|',
+    'R|Running, 11 mph (5.5 min/mile)|16.8|',
+    'R|Running, 12 mph (5 min/mile)|18.5|',
+    'R|Running, cross country|9.3|trail',
+    'R|Running, marathon pace|13.3|',
+    'R|Running uphill, 6 mph at 5% incline|13.3|hill',
+    'R|Running downhill, 6–7 mph at −10% to −15%|7.5|',
+    'R|Running up stairs|15.0|',
+    'R|Running with a jogging stroller, outdoors, 5 mph|10.0|',
+    'R|Running, track team practice|10.0|',
+    'C|Cycling, leisure (under 10 mph)|4.0|bike bicycle biking',
+    'C|Cycling, 10–11.9 mph, light effort|6.8|bike bicycle biking',
+    'C|Cycling, 12–13.9 mph, moderate effort|8.0|bike bicycle biking',
+    'C|Cycling, 14–15.9 mph, fast|10.0|bike bicycle biking',
+    'C|Cycling, 16–19 mph, very fast|12.0|bike bicycle biking racing',
+    'C|Cycling, over 20 mph, racing|16.8|bike bicycle biking',
+    'C|Cycling to or from work, self-selected pace|6.8|bike commute',
+    'C|Cycling, mountain biking|8.5|bike mtb',
+    'C|Cycling, mountain biking uphill, vigorous|14.0|bike mtb',
+    'C|Cycling, BMX|8.5|bike',
+    'C|E-bike, no electric support|6.8|bicycle',
+    'C|E-bike, light electric support|6.0|bicycle',
+    'C|E-bike, high electric support|4.0|bicycle',
+    'C|Stationary bike, general|6.8|exercise bike indoor',
+    'C|Stationary bike, 50 watts (light)|4.0|exercise bike indoor',
+    'C|Stationary bike, 90–100 watts (moderate to vigorous)|6.0|exercise bike indoor',
+    'C|Stationary bike, 126–150 watts|8.0|exercise bike indoor',
+    'C|Stationary bike, 200–229 watts (vigorous)|10.8|exercise bike indoor',
+    'C|Spin class|9.0|spinning rpm indoor cycling',
+    'C|Cycling, high-intensity interval training|8.8|hiit bike',
+    'S|Swimming laps, freestyle, slow (recreational)|5.8|swim crawl',
+    'S|Swimming laps, freestyle, fast (vigorous)|9.8|swim crawl',
+    'S|Swimming, crawl, medium speed|8.0|swim freestyle',
+    'S|Swimming, backstroke, recreational|4.8|swim',
+    'S|Swimming, backstroke, training or competition|9.5|swim',
+    'S|Swimming, breaststroke, recreational|5.3|swim',
+    'S|Swimming, breaststroke, training or competition|10.3|swim',
+    'S|Swimming, butterfly|13.8|swim',
+    'S|Swimming, sidestroke|7.0|swim',
+    'S|Swimming, leisurely (not laps)|6.0|swim pool',
+    'S|Swimming in a lake, ocean or river|6.0|swim',
+    'S|Treading water, moderate effort|3.5|swim',
+    'S|Water aerobics|5.5|pool class',
+    'S|Water jogging, vigorous|9.8|pool',
+    'S|Water walking, moderate pace|4.8|pool',
+    'S|Water polo|10.0|swim',
+    'S|Kayaking, moderate effort|5.0|paddle',
+    'S|Canoeing, for pleasure|3.5|paddle',
+    'S|Rowing or canoeing, 4.0–5.9 mph, moderate|5.8|boat',
+    'S|Stand-up paddleboarding|6.5|sup paddle',
+    'S|Surfing|3.0|',
+    'S|Sailing|3.0|boat',
+    'S|Snorkeling|5.0|',
+    'S|Scuba diving|7.0|',
+    'S|Water skiing or wakeboarding|6.0|',
+    'S|Windsurfing|5.0|',
+    'S|Whitewater rafting, kayaking or canoeing|5.0|',
+    'S|Paddle boat|4.0|pedalo',
+    'G|Aerobics, general|7.3|',
+    'G|Aerobic dance, low impact|4.8|',
+    'G|Aerobic dance, high impact|8.0|',
+    'G|Step aerobics (6–8 inch step)|7.3|',
+    'G|Elliptical trainer, moderate effort|5.0|cross trainer',
+    'G|Elliptical trainer, vigorous effort|9.0|cross trainer',
+    'G|Rowing machine, moderate (under 100 watts)|5.0|ergometer erg',
+    'G|Rowing machine, vigorous|7.3|ergometer erg',
+    'G|Rowing machine, 150–199 watts|11.0|ergometer erg',
+    'G|Stair machine (stair treadmill)|9.3|stairmaster stepper',
+    'G|Ski machine|6.8|nordictrack',
+    'G|Weight lifting, vigorous (powerlifting, bodybuilding)|6.0|strength gym lifting',
+    'G|Weight training, multiple exercises (8–15 reps)|3.5|strength gym lifting resistance',
+    'G|Weight training, squats and deadlifts|5.0|strength gym lifting',
+    'G|Body weight exercises, general|3.0|squat lunge push-up',
+    'G|Circuit training, light effort|3.5|',
+    'G|Circuit training, moderate effort|5.0|',
+    'G|Circuit training with kettlebells, vigorous|7.5|',
+    'G|Calisthenics, light (crunches, planks)|2.8|',
+    'G|Calisthenics, moderate (push-ups, sit-ups, lunges)|3.8|',
+    'G|Calisthenics, vigorous (burpees, jumping jacks)|7.5|',
+    'G|High-intensity interval training, moderate|7.0|hiit',
+    'G|High-intensity interval training, burpees and Tabata|11.0|hiit tabata',
+    'G|Kettlebell swings|9.8|',
+    'G|Jump rope, slow (under 100 skips/min)|8.3|skipping',
+    'G|Jump rope, moderate (100–120 skips/min)|11.8|skipping',
+    'G|Jump rope, fast (120–160 skips/min)|12.3|skipping',
+    'G|Boot camp|5.0|',
+    'G|Health club exercise, general|5.5|gym',
+    'G|Home exercise, general|3.8|workout',
+    'G|Exercise video, moderate effort|4.0|workout',
+    'G|Zumba class|6.5|dance',
+    'G|Hula hooping|5.8|hooping',
+    'G|Trampoline, recreational|6.3|rebounding',
+    'G|Yoga, Hatha or general|2.3|',
+    'G|Yoga, Vinyasa|2.7|flow',
+    'G|Yoga, hot|3.0|bikram',
+    'G|Yoga, power|4.0|',
+    'G|Pilates, general|2.8|',
+    'G|Stretching, mild|2.3|',
+    'G|Tai chi, general|3.3|qi gong',
+    'G|Pole dancing, exercise class|4.5|',
+    'P|Basketball, game|8.0|',
+    'P|Basketball, shooting baskets|5.0|',
+    'P|Basketball, non-game play|6.0|',
+    'P|Soccer, casual|7.0|football',
+    'P|Soccer, competitive|9.5|football',
+    'P|Tennis, singles|8.0|',
+    'P|Tennis, doubles|6.0|',
+    'P|Tennis, general, moderate effort|6.8|',
+    'P|Badminton, social|5.5|',
+    'P|Badminton, competitive|7.0|',
+    'P|Table tennis|4.0|ping pong',
+    'P|Volleyball, casual|4.0|',
+    'P|Volleyball, beach|8.0|',
+    'P|Volleyball, competitive, in a gym|6.0|',
+    'P|Racquetball, general|7.0|',
+    'P|Racquetball, competitive|10.0|',
+    'P|Squash, general play|7.3|',
+    'P|Squash|12.0|',
+    'P|Handball|12.0|',
+    'P|Baseball or softball|5.0|',
+    'P|Cricket|4.8|',
+    'P|Football, touch or flag|8.0|american',
+    'P|Football, competitive|8.0|american',
+    'P|Rugby, union, competitive|8.3|',
+    'P|Lacrosse|8.0|',
+    'P|Ice hockey|8.0|',
+    'P|Field hockey|7.8|',
+    'P|Golf, walking and carrying clubs|4.3|',
+    'P|Golf, walking and pulling clubs|4.5|',
+    'P|Golf, using a power cart|3.5|',
+    'P|Bowling|3.0|',
+    'P|Boxing, in the ring|12.3|',
+    'P|Boxing, sparring|7.8|',
+    'P|Boxing, punching bag|5.8|',
+    'P|Martial arts, moderate pace (karate, tae kwon do, Muay Thai)|10.3|karate',
+    'P|Martial arts, slower pace, novice|5.3|',
+    'P|Judo|11.3|',
+    'P|Kickboxing|7.3|',
+    'P|Wrestling, competitive|6.0|',
+    'P|Fencing|6.0|',
+    'P|Rock climbing|8.0|bouldering',
+    'P|Rock climbing, low to moderate difficulty|5.8|',
+    'P|Skateboarding|5.0|',
+    'P|Roller blading, recreational (9 mph)|7.5|inline skating',
+    'P|Roller blading, moderate (11 mph)|9.8|inline skating',
+    'P|Ice skating, general|7.0|',
+    'P|Ice skating, 9 mph or less|5.5|',
+    'P|Skiing, downhill, moderate effort|6.3|alpine',
+    'P|Skiing, cross-country, 4.0–4.9 mph|8.5|nordic',
+    'P|Snowboarding, recreational|7.5|',
+    'P|Snowshoeing, moderate effort|5.3|',
+    'P|Sledding|7.0|toboggan',
+    'P|Horseback riding, general|5.5|',
+    'P|Archery|4.3|',
+    'P|Frisbee, casual|3.0|',
+    'P|Ultimate frisbee|8.0|',
+    'P|Darts|2.5|',
+    'P|Billiards|2.5|pool snooker',
+    'P|Curling|4.0|',
+    'P|Cheerleading|6.0|',
+    'P|Gymnastics, general|3.8|',
+    'P|Orienteering|9.0|',
+    'P|Playing catch|2.5|',
+    'D|Dancing, ballroom, slow (waltz, foxtrot)|3.0|',
+    'D|Dancing, ballroom, recreational|6.0|',
+    'D|Dancing, ballroom, fast|5.5|',
+    'D|Dancing, ballroom, competitive|11.3|',
+    'D|Dancing, salsa, with a partner|4.8|',
+    'D|Dancing, ballet, modern or jazz class|5.0|',
+    'D|Dancing, folk, moderate effort|5.0|',
+    'D|Dancing, nightclub, disco or line dancing, vigorous|9.8|club',
+    'D|Dancing, tap|4.8|',
+    'D|Dancing, square or country|5.5|',
+    'D|Dancing, contemporary|3.8|',
+    'D|Dancing, jazz|4.5|',
+    'D|Dancing, flamenco|8.5|',
+    'D|Dancing, ethnic or cultural (swing, merengue, belly)|4.5|',
+    'O|Mowing the lawn, walking, power mower|5.0|',
+    'O|Mowing the lawn, walking, general|5.5|',
+    'O|Mowing the lawn, hand mower, vigorous|6.0|',
+    'O|Mowing the lawn, riding mower|2.5|',
+    'O|Raking leaves or lawn|4.0|',
+    'O|Gardening, general, moderate effort|3.8|',
+    'O|Gardening, light|2.0|',
+    'O|Weeding and cultivating the garden|4.5|',
+    'O|Digging or spading the garden|5.0|',
+    'O|Planting trees|4.5|',
+    'O|Trimming shrubs or trees, manual cutter|3.8|hedge',
+    'O|Pushing a wheelbarrow or garden cart|4.8|',
+    'O|Shoveling snow by hand, moderate effort|5.3|',
+    'O|Shoveling snow by hand, vigorous|7.5|',
+    'O|Chopping wood, moderate effort|4.5|axe logs',
+    'O|Chopping wood, vigorous|6.5|axe logs',
+    'O|Carrying and stacking wood|5.5|',
+    'O|Yard work, general, moderate effort|4.0|',
+    'O|Watering the lawn or garden|4.0|',
+    'O|Laying sod|5.0|turf',
+    'O|Clearing land, hauling brush, vigorous|6.3|',
+    'O|Operating a snow blower, walking|2.5|',
+    'O|Fishing, general|3.5|',
+    'O|Fishing in a stream, in waders|6.0|',
+    'O|Hunting, general|5.0|',
+    'H|Cleaning house, moderate effort|3.3|housework chores',
+    'H|Heavy cleaning (wash car, clean garage)|3.5|housework chores',
+    'H|Vacuuming|3.0|hoover',
+    'H|Mopping|3.5|',
+    'H|Sweeping|3.3|',
+    'H|Scrubbing floors on hands and knees, moderate|3.5|',
+    'H|Washing windows|3.3|',
+    'H|Washing and waxing the car|2.0|',
+    'H|Cooking or food preparation, moderate|3.5|kitchen',
+    'H|Cooking or food preparation, light|2.0|kitchen',
+    'H|Washing dishes|2.0|',
+    'H|Laundry, moderate effort|4.0|',
+    'H|Ironing|1.8|',
+    'H|Making the bed|3.0|',
+    'H|Moving furniture or carrying boxes|5.8|',
+    'H|Moving household items upstairs|9.0|',
+    'H|Carrying groceries|3.5|',
+    'H|Food shopping|3.3|supermarket',
+    'H|Playing with children, walking or running, moderate|3.5|kids',
+    'H|Playing with children, walking or running, vigorous|5.8|kids',
+    'H|Child care, standing (dressing, bathing, feeding)|3.5|baby',
+    'H|Painting inside the house, wallpapering|3.3|decorating',
+    'H|Painting outside the home|5.0|',
+    'H|Home repair, moderate effort|4.5|diy',
+    'H|Carpentry, general|3.0|woodwork',
+    'H|Roofing|6.0|',
+    'H|Sanding floors with a power sander|4.5|',
+    'H|Laying tile or linoleum|3.8|',
+    'H|Cleaning gutters|5.0|',
+    'H|Showering or toweling off|2.0|',
+    'H|Sexual activity, moderate effort|3.0|sex',
+    'H|Sexual activity, vigorous effort|5.8|sex',
+    'Z|Sleeping|1.0|',
+    'Z|Sitting quietly or watching TV|1.0|television',
+    'Z|Sitting at a desk, typing or writing|1.3|office computer',
+    'Z|Sitting, reading|1.0|',
+    'Z|Standing quietly (in a line)|1.3|',
+    'Z|Meditating|1.0|',
+    'Z|Eating, sitting|1.5|'
+  ];
+  var ACT = RAW.map(function (s, i) { var p = s.split('|'); return { i: i, g: GROUPS[p[0]], n: p[1], met: parseFloat(p[2]), k: (p[1] + ' ' + (p[3] || '') + ' ' + GROUPS[p[0]]).toLowerCase() }; });
+  var FOODS = [['banana', 'bananas', 105], ['can of cola', 'cans of cola', 150], ['large egg', 'large eggs', 72], ['medium apple', 'medium apples', 95], ['tablespoon of olive oil', 'tablespoons of olive oil', 119]];
+  var FAT = 7700, MPH = 1.609344, MMIN = 26.8224;
+  function num(t) {
+    t = (t + '').trim().replace(/\s/g, '');
+    if (!t) return null;
+    if (/^[+-]?\d*,\d+$/.test(t)) t = t.replace(',', '.'); else t = t.replace(/,/g, '');
+    if (!/^[+-]?(\d+\.?\d*|\.\d+)$/.test(t)) return NaN;
+    return parseFloat(t);
+  }
+  function vo2(mode, kmh, gradePct) {
+    var s = kmh * 1000 / 60, g = gradePct / 100;
+    return mode === 'run' ? 0.2 * s + 0.9 * s * g + 3.5 : 0.1 * s + 1.8 * s * g + 3.5;
+  }
+  /* kcal per minute at a MET value; rmr (kcal/day) given = personalised, else standard 3.5 mL/kg/min */
+  function perMin(met, kg, rmr) { return rmr ? met * rmr / 1440 : met * 3.5 * kg / 200; }
+  function restMin(kg, rmr) { return perMin(1, kg, rmr); }
+  /* duration text -> minutes: "45" min, "m:ss", "h:mm:ss", "1h 20m", "90 min"; null empty, NaN bad */
+  function parseDur(t) {
+    t = (t + '').trim().toLowerCase();
+    if (!t) return null;
+    var m;
+    if ((m = t.match(/^(\d+):(\d{1,2})(?::(\d{1,2}))?$/))) {
+      if (m[3] !== undefined) return +m[1] * 60 + +m[2] + +m[3] / 60;
+      return +m[1] + +m[2] / 60;
+    }
+    if ((m = t.match(/^(?:(\d+(?:[.,]\d+)?)\s*h(?:ours?|rs?)?)?\s*(?:(\d+(?:[.,]\d+)?)\s*m(?:in(?:ute)?s?)?)?$/)) && (m[1] || m[2])) return (m[1] ? parseFloat(m[1].replace(',', '.')) * 60 : 0) + (m[2] ? parseFloat(m[2].replace(',', '.')) : 0);
+    var n = num(t.replace(/min(?:ute)?s?$/, ''));
+    return n === null ? null : n;
+  }
+  function fmtDur(min) {
+    var s = Math.round(min * 60), h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), r = s % 60;
+    function p(x) { return (x < 10 ? '0' : '') + x; }
+    return h ? h + ':' + p(m) + ':' + p(r) : m + ':' + p(r);
+  }
+  function fmtPace(minPerUnit) {
+    var s = Math.round(minPerUnit * 60), m = Math.floor(s / 60), r = s % 60;
+    return m + ':' + (r < 10 ? '0' : '') + r;
+  }
+  function parsePace(t) {
+    t = (t + '').trim();
+    if (!t) return null;
+    var m = t.match(/^(\d+):(\d{1,2})$/);
+    if (m) return +m[1] + +m[2] / 60;
+    var n = num(t); return n;
+  }
+  function foods(k) {
+    var out = [];
+    FOODS.forEach(function (f) { var c = Math.round(k / f[2]); if (c >= 1) out.push(c + ' ' + (c === 1 ? f[0] : f[1])); });
+    return out.slice(0, 3);
+  }
+  function find(name) { for (var i = 0; i < ACT.length; i++) if (ACT[i].n === name) return ACT[i]; return null; }
+  return { GROUPS: GROUPS, ACT: ACT, FOODS: FOODS, FAT: FAT, MPH: MPH, MMIN: MMIN, num: num, vo2: vo2, perMin: perMin, restMin: restMin, parseDur: parseDur, fmtDur: fmtDur, fmtPace: fmtPace, parsePace: parsePace, foods: foods, find: find };
+})();
+/* CBURN-ENGINE:END */
+
+/* =========================================================
+   CalcThis.initCburnCalc(kind) — kind 'hub' (By activity + Walk or run), 'walk' or 'run' (speed mode only).
+   Competitors checked live: calculator.net (about 80 activities, number only), Omnicalculator calories burned (38 groups, compare two),
+   Omnicalculator walking (slope, any of steps/distance/time/speed), Omnicalculator running (age, resting HR, grade).
+   Differentiators: total AND extra-over-resting (net) side by side, ACSM speed + incline equations with any two of distance/time/speed/pace,
+   same-time ranking of other activities (or other speeds), time to burn a goal, optional personalised resting rate, my-day tally. */
+CalcThis.initCburnCalc = function (kind) {
+  var E = CalcThis.cburnEngine, hub = kind === 'hub';
+  var $ = function (id) { return document.getElementById(id); };
+  var st = { mode: hub ? 'act' : 'spd', mov: kind === 'run' ? 'run' : 'walk', wu: 'lb', du: 'mi', ex: {}, sex: 'f', hu: 'cm', eu: 'kcal', adv: false, act: null, drv: [], comp: null, day: [], last: null };
+  var LB = 2.20462, ST = 6.35029;
+  function esc(t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+  function f(x, d) { return (Math.round(x * Math.pow(10, d)) / Math.pow(10, d)).toFixed(d); }
+  function trim(x, d) { return String(parseFloat(f(x, d))); }
+  function grp(n) { return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+  function setHint(m) { var h = $('cbHint'); h.textContent = m || ''; h.style.display = m ? 'block' : 'none'; }
+  function fe(k) { return st.eu === 'kj' ? grp(k * 4.184) + ' kJ' : grp(k) + ' kcal'; }
+  function eu() { return st.eu === 'kj' ? 'kJ' : 'kcal'; }
+  function setSeg(id, v) { [].forEach.call($(id).children, function (b) { b.classList.toggle('on', b.getAttribute('data-v') === v); }); }
+  function minTxt(m) { var h = Math.floor(m / 60 + 1e-9), r = Math.round(m - h * 60); if (r === 60) { h++; r = 0; } return h ? h + ' h' + (r ? ' ' + r + ' min' : '') : (m < 1 ? Math.round(m * 60) + ' sec' : (Math.abs(m - Math.round(m)) < 0.05 ? Math.round(m) : f(m, 1)) + ' min'); }
+
+  /* ---------- weight ---------- */
+  var WMSG = { lb: 'Weight should be between 44 and 660 lb — check the number and the unit.', kg: 'Weight should be between 20 and 300 kg — check the number and the unit.', st: 'Weight should be between 3.2 and 47 st — check the number and the unit.' };
+  function readW() {
+    var raw = $('cbW').value; if (!raw.trim()) return null;
+    var n = E.num(raw); if (n === null) return null;
+    if (isNaN(n) || n <= 0) return { err: 'Couldn’t read the weight — use a number like ' + (st.wu === 'kg' ? '70' : (st.wu === 'st' ? '11' : '154')) + '.' };
+    var kg = st.wu === 'lb' ? n / LB : (st.wu === 'st' ? n * ST : n);
+    if (kg < 20 || kg > 300) return { err: WMSG[st.wu] };
+    return { kg: kg };
+  }
+  function readBody() {
+    if (!st.adv) return null;
+    var a = E.num($('cbAge').value), h = E.num($('cbHt').value);
+    if (a === null || h === null || isNaN(a) || isNaN(h)) return null;
+    var cm = st.hu === 'in' ? h * 2.54 : h;
+    if (a < 15 || a > 100 || cm < 100 || cm > 250) return { bad: true };
+    return { age: a, cm: cm, male: st.sex === 'm' };
+  }
+
+  /* ---------- activity typeahead (DS .st-ta, copied from the paycheck State field) ---------- */
+  var aEl = $('cbAct'), aIn = $('cbActIn'), aList = $('cbActList'), aVal = '', aHits = [], aAct = -1;
+  var OPTS = E.ACT.map(function (a) { return { v: a.n, label: a.n, s: a.k, a: a }; });
+  if (aEl) {
+    Object.defineProperty(aEl, 'value', { configurable: true, get: function () { return aVal; }, set: function (v) { aVal = v || ''; aIn.value = aVal; } });
+  }
+  function aRank(o, q) { var ws = q.split(/\s+/), sc = 0; for (var i = 0; i < ws.length; i++) { var w = ws[i]; if (!w) continue; if (o.label.toLowerCase().indexOf(w) === 0) sc += 0; else if ((' ' + o.s).indexOf(' ' + w) >= 0) sc += 1; else if (o.s.indexOf(w) >= 0) sc += 2; else return -1; } return sc; }
+  function aClose() { aList.style.display = 'none'; aIn.setAttribute('aria-expanded', 'false'); aAct = -1; }
+  function aShow(full) {
+    var q = full ? '' : aIn.value.trim().toLowerCase(), hits = [];
+    OPTS.forEach(function (o, i) { var r = q ? aRank(o, q) : 0; if (r >= 0) hits.push({ o: o, r: r, i: i }); });
+    hits.sort(function (x, y) { return x.r - y.r || x.i - y.i; });
+    if (q) hits = hits.slice(0, 60);
+    aHits = hits.map(function (h) { return h.o; });
+    aAct = q && aHits.length ? 0 : -1;
+    var html = '', lastG = '';
+    aHits.forEach(function (o, i) {
+      if (!q && o.a.g !== lastG) { lastG = o.a.g; html += '<div class="cb-grp">' + esc(lastG) + '</div>'; }
+      html += '<button type="button" class="st-ta-opt' + (!q && o.v === aVal ? ' on' : '') + (q && i === aAct ? ' kb' : '') + '" role="option" data-i="' + i + '"><span>' + esc(o.label) + '</span><b>' + f(o.a.met, 1) + ' MET</b></button>';
+    });
+    aList.innerHTML = aHits.length ? html : '<div class="st-ta-none">No activity matches “' + esc(aIn.value) + '”. Try a shorter word, like “run”, “bike” or “clean”.</div>';
+    aList.style.display = 'block'; aIn.setAttribute('aria-expanded', 'true');
+    var cur = aList.querySelector('.st-ta-opt.on'); aList.scrollTop = cur && !q ? Math.max(0, cur.offsetTop - 80) : 0;
+  }
+  function aPick(o) { if (!o) return; aClose(); aEl.value = o.v; aIn.blur(); st.act = o.a; render(); }
+  if (aIn) {
+    aIn.addEventListener('focus', function () { aIn.select(); aShow(true); });
+    aIn.addEventListener('input', function () {
+      if (!aIn.value.trim() && aVal) { aVal = ''; st.act = null; render(); }
+      aShow(!aIn.value.trim());
+    });
+    aIn.addEventListener('blur', function () { setTimeout(function () { aClose(); aIn.value = aVal; }, 150); });
+    aIn.addEventListener('keydown', function (e) {
+      var opts = aList.querySelectorAll('.st-ta-opt');
+      if (e.key === 'Escape') { aClose(); aIn.value = aVal; return; }
+      if (!opts.length) return;
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); aAct = e.key === 'ArrowDown' ? Math.min(opts.length - 1, aAct + 1) : Math.max(0, aAct - 1); [].forEach.call(opts, function (o, i) { o.classList.toggle('kb', i === aAct); }); opts[aAct].scrollIntoView({ block: 'nearest' }); }
+      else if (e.key === 'Enter') { e.preventDefault(); aPick(aHits[aAct >= 0 ? aAct : 0]); }
+    });
+    aList.addEventListener('mousedown', function (e) { e.preventDefault(); var bt = e.target.closest('.st-ta-opt'); if (bt) aPick(aHits[+bt.getAttribute('data-i')]); });
+  }
+
+  /* ---------- speed mode: linked distance / time / speed / pace ---------- */
+  function dUnitKm() { return st.du === 'mi' ? E.MPH : 1; }
+  function readD() { var n = E.num($('cbD').value); if (n === null) return null; if (isNaN(n) || n <= 0) return { err: 'Couldn’t read the distance — use a number like 3.1.' }; var km = n * dUnitKm(); if (km > 1000) return { err: 'That distance is more than 1,000 km — check the number.' }; return { v: km }; }
+  function readT() { var n = E.parseDur($('cbT').value); if (n === null) return null; if (isNaN(n) || n <= 0) return { err: 'Couldn’t read the time — use minutes (45), m:ss (24:30) or h:mm:ss (1:15:00).' }; if (n > 1440) return { err: 'A day has 24 hours — check the time.' }; return { v: n }; }
+  function readV() {
+    var n = E.num($('cbV').value);
+    if (n !== null) { if (isNaN(n) || n <= 0) return { err: 'Couldn’t read the speed — use a number like 3.5.' }; return { v: n * dUnitKm() }; }
+    var p = E.parsePace($('cbP').value);
+    if (p === null) return null;
+    if (isNaN(p) || p <= 0) return { err: 'Couldn’t read the pace — use minutes per ' + (st.du === 'mi' ? 'mile' : 'km') + ' like 9:30.' };
+    return { v: 60 / p * dUnitKm() };
+  }
+  function writeD(km) { $('cbD').value = trim(km / dUnitKm(), 2); }
+  function writeT(min) { $('cbT').value = E.fmtDur(min); }
+  function writeV(kmh) { var u = kmh / dUnitKm(); $('cbV').value = trim(u, 2); $('cbP').value = E.fmtPace(60 / u); }
+  function clearVar(v) { if (v === 'd') $('cbD').value = ''; else if (v === 't') $('cbT').value = ''; else { $('cbV').value = ''; $('cbP').value = ''; } }
+  function snapOf(k) { return k === 'd' ? $('cbD').value : (k === 't' ? $('cbT').value : $('cbV').value + '|' + $('cbP').value); }
+  function remember(k, v) { st.ex[k] = { v: v, txt: snapOf(k) }; }
+  function rdE(k) { var p = k === 'd' ? readD() : (k === 't' ? readT() : readV()); var s = st.ex[k]; if (s && s.txt === snapOf(k)) return { v: s.v }; return p; }
+  function spdLink(src, field) {
+    if (src) { st.drv = st.drv.filter(function (x) { return x !== src; }); st.drv.push(src); if (st.drv.length > 2) st.drv.shift(); }
+    var rd = { d: rdE('d'), t: rdE('t'), v: rdE('v') };
+    var errs = ['d', 't', 'v'].filter(function (k) { return rd[k] && rd[k].err; });
+    if (src) {
+      var sv = rd[src];
+      if (sv === null) { /* cleared */
+        st.drv = st.drv.filter(function (x) { return x !== src; });
+        if (st.comp && st.comp !== src) { clearVar(st.comp); st.comp = null; }
+        if (src === 'v') { $('cbV').value = ''; $('cbP').value = ''; }
+        return null;
+      }
+    }
+    if (errs.length) return rd[errs[0]].err;
+    var a = st.drv[0], b = st.drv[1];
+    if (a && b && rd[a] && rd[b]) {
+      var third = ['d', 't', 'v'].filter(function (k) { return k !== a && k !== b; })[0];
+      var d = rd.d && rd.d.v, t = rd.t && rd.t.v, v = rd.v && rd.v.v;
+      if (third === 'v') { v = d / (t / 60); writeV(v); }
+      else if (third === 't') { t = d / v * 60; if (t > 1440) { clearVar('t'); st.comp = null; return 'That works out to more than 24 hours — check the distance and speed.'; } writeT(t); }
+      else { d = v * t / 60; writeD(d); }
+      st.comp = third; remember(third, third === 'v' ? v : (third === 't' ? t : d));
+    }
+    if (field && rd.v && rd.v.v) {
+      var u = rd.v.v / dUnitKm();
+      if (field === 'cbV') $('cbP').value = E.fmtPace(60 / u); else if (field === 'cbP') $('cbV').value = trim(u, 2);
+      remember('v', rd.v.v);
+    }
+    if (rd.d && rd.d.v && st.comp !== 'd') remember('d', rd.d.v);
+    if (rd.t && rd.t.v && st.comp !== 't') remember('t', rd.t.v);
+    return null;
+  }
+
+  /* ---------- results ---------- */
+  function empty(msg, sub) { $('cbBig').textContent = '—'; $('cbResLab').textContent = 'Calories burned'; $('cbSub').textContent = sub || $('cbSub').getAttribute('data-empty'); $('cbBody').style.display = 'none'; $('cbMVal').textContent = '—'; $('cbAdd').disabled = true; st.last = null; setHint(msg || ''); }
+  function sumBar(rest, extra) {
+    var tot = rest + extra, pr = Math.max(0, Math.min(100, rest / tot * 100));
+    return '<div class="bm-bar"><span class="bm-seg c1" style="width:' + pr + '%">' + (pr >= 14 ? fe(rest) : '') + '</span><span class="bm-seg c0" style="width:' + (100 - pr) + '%">' + (100 - pr >= 14 ? fe(extra) : '') + '</span></div>' +
+      '<div class="bm-key"><span><i class="c1"></i>Burned anyway, resting: ' + fe(rest) + '</span><span><i class="c0"></i>Extra from this activity: ' + fe(extra) + '</span></div>';
+  }
+  function rankBars(items, onIdx, clickable) {
+    var mx = 0; items.forEach(function (it) { if (it.k > mx) mx = it.k; });
+    return '<div class="cb-rank">' + items.map(function (it, i) {
+      return '<' + (clickable ? 'button type="button" data-n="' + esc(it.n) + '"' : 'div') + ' class="cb-rk' + (i === onIdx ? ' on' : '') + '"><span class="cb-rk-l">' + esc(it.n) + '</span><span class="cb-rk-b"><i style="width:' + (mx > 0 ? Math.max(2, it.k / mx * 100) : 0) + '%"></i></span><b>' + fe(it.k) + '</b></' + (clickable ? 'button' : 'div') + '>';
+    }).join('') + '</div>';
+  }
+  var RANKN = ['Walking, brisk (3.5–3.9 mph)', 'Hiking, cross country', 'Running, 6.0–6.3 mph (10 min/mile)', 'Cycling, 12–13.9 mph, moderate effort', 'Swimming laps, freestyle, slow (recreational)', 'Elliptical trainer, moderate effort', 'Weight training, multiple exercises (8–15 reps)', 'High-intensity interval training, moderate', 'Jump rope, moderate (100–120 skips/min)', 'Yoga, Hatha or general', 'Dancing, nightclub, disco or line dancing, vigorous', 'Tennis, singles', 'Basketball, game', 'Rowing machine, vigorous', 'Cleaning house, moderate effort'];
+  var SPD = { walk: { mi: [2, 2.5, 3, 3.5, 4], km: [3, 4, 5, 6, 7] }, run: { mi: [5, 6, 7, 8, 9, 10], km: [8, 10, 12, 14, 16] } };
+
+  function render() {
+    var w = readW();
+    if (w && w.err) { empty(w.err); return; }
+    var body = readBody(); var bodyNote = '';
+    if (body && body.bad) { bodyNote = 'Age should be 15–100 and height 100–250 cm (39–98 in) to personalise — using the standard estimate.'; body = null; }
+    var rmr = null;
+    if (body && w) rmr = CalcThis.bmrEngine.mifflin(body.male, w.kg, body.cm, body.age);
+    var R = null, kg = w && w.kg;
+    if (st.mode === 'act') {
+      var h = E.num($('cbH').value), m = E.num($('cbM').value);
+      if (st.act == null && h === null && m === null && !kg) { empty(''); return; }
+      if ((h !== null && (isNaN(h) || h < 0)) || (m !== null && (isNaN(m) || m < 0))) { empty('Couldn’t read the time — use whole or decimal numbers like 1 and 30.'); return; }
+      var min = (h || 0) * 60 + (m || 0);
+      if (min > 1440) { empty('A day has 24 hours — check the time.'); return; }
+      if (!st.act || !(min > 0) || !kg) {
+        empty(!st.act ? '' : '', !st.act ? 'Pick an activity, a time and your weight.' : (!(min > 0) ? 'Add how long you did it.' : 'Add your weight.'));
+        return;
+      }
+      var met = st.act.met;
+      R = { name: st.act.n, met: met, min: min, kg: kg, rmr: rmr, hasT: true, per: E.perMin(met, kg, rmr) };
+    } else {
+      var mv = st.mov, hint = '';
+      var sp = rdE('v'), dd = rdE('d'), tt = rdE('t');
+      var gr = E.num($('cbG').value);
+      if (gr !== null && (isNaN(gr))) { empty('Couldn’t read the incline — use a number like 5 (percent).'); return; }
+      if (gr !== null && gr < 0) { empty('Downhill isn’t modelled by the ACSM equation — enter 0 for flat ground (this slightly overstates a downhill walk).'); return; }
+      if (gr !== null && gr > 30) { empty('Incline should be between 0% and 30% — check the number.'); return; }
+      var g = gr || 0;
+      if (!sp || sp.err || !kg) {
+        empty('', !sp ? 'Enter a speed — or a distance and a time — and your weight.' : (sp.err || 'Add your weight.'));
+        if (sp && sp.err) setHint(sp.err);
+        return;
+      }
+      var kmh = sp.v, lo = mv === 'run' ? 4.8 : 1.6, hi = mv === 'run' ? 32 : 12;
+      if (kmh < lo || kmh > hi) { empty(mv === 'run' ? 'Running speeds should be between 3 and 20 mph (4.8–32 km/h) — for slower, use Walking.' : 'Walking speeds should be between 1 and 7.5 mph (1.6–12 km/h) — for faster, use Running.'); return; }
+      var met2 = E.vo2(mv, kmh, g) / 3.5;
+      R = { name: (mv === 'run' ? 'Running' : 'Walking') + ' at ' + trim(kmh / dUnitKm(), 1) + (st.du === 'mi' ? ' mph' : ' km/h') + (g ? ', ' + trim(g, 1) + '% incline' : ''), met: met2, min: tt && !tt.err ? tt.v : null, kg: kg, rmr: rmr, hasT: !!(tt && !tt.err), per: E.perMin(met2, kg, rmr), kmh: kmh, mv: mv, g: g, dist: dd && !dd.err ? dd.v : null };
+      if (kmh > 6.4 && mv === 'walk') hint = 'Above about 4 mph (6.4 km/h) the ACSM walking equation runs low — brisk walkers change gait. For 4.5–5.5 mph walking, pick it under By activity.';
+      else if (kmh < 3 && mv === 'walk') hint = 'Below about 1.9 mph (3 km/h) the ACSM walking equation is less reliable — treat this as a rough figure.';
+      else if (kmh < 8 && mv === 'run') hint = 'Below 5 mph (8 km/h) the ACSM running equation applies to jogging only — if you are walking, use Walking.';
+      R.hint = hint;
+    }
+    setHint(bodyNote || R.hint || '');
+    var std = E.perMin(R.met, kg, null);
+    var restPer = E.restMin(kg, rmr);
+    $('cbBody').style.display = '';
+    var tip, rows = [], big, lab, sub, k, net;
+    if (R.hasT) {
+      k = R.per * R.min; net = (R.per - restPer) * R.min;
+      lab = 'Calories burned'; big = fe(k);
+      sub = (st.mode === 'act' ? R.name + ' · ' + minTxt(R.min) : R.name + ' · ' + minTxt(R.min)) + ' · ' + (st.wu === 'kg' ? f(kg, 0) + ' kg' : st.wu === 'st' ? trim(kg / ST, 1) + ' st' : f(kg * LB, 0) + ' lb');
+      tip = 'About <strong>' + fe(net) + '</strong> of that is <strong>extra</strong> — on top of the roughly ' + fe(restPer * R.min) + ' your body burns resting over the same time.';
+      if (net <= 0.5) tip = 'This is about what your body burns resting over the same time — there is almost no extra.';
+    } else {
+      k = R.per * 60; net = (R.per - restPer) * 60;
+      lab = 'Calories burned per hour'; big = fe(k);
+      sub = R.name + ' · add a time or a distance for the total';
+      tip = 'About <strong>' + fe(net) + '</strong> an hour is <strong>extra</strong> on top of the roughly ' + fe(restPer * 60) + ' you burn resting.';
+    }
+    var tmin = R.hasT ? R.min : 60;
+    $('cbResLab').textContent = lab; $('cbBig').textContent = big; $('cbSub').textContent = sub;
+    $('cbMLab').textContent = R.hasT ? 'Calories' : 'Per hour'; $('cbMVal').textContent = big;
+    $('cbTip').innerHTML = tip;
+    $('cbBar').innerHTML = sumBar(restPer * tmin, Math.max(0, net));
+    /* rows */
+    if (R.hasT) rows.push(['Total burned', fe(k)], ['Extra over resting (net)', fe(net)]);
+    rows.push(['Per hour', fe(R.per * 60) + ' total · ' + fe((R.per - restPer) * 60) + ' extra']);
+    rows.push(['Per minute', (st.eu === 'kj' ? f(R.per * 4.184, 1) + ' kJ' : f(R.per, 1) + ' kcal')]);
+    if (st.mode === 'spd') {
+      var pu = R.kmh * 1; var perKm = R.per * 60 / pu;
+      rows.push(['Per ' + (st.du === 'mi' ? 'mile' : 'kilometre'), fe(perKm * dUnitKm()) + ' total · ' + fe((R.per - restPer) * 60 / pu * dUnitKm()) + ' extra']);
+      rows.push(['Intensity (ACSM)', f(R.met, 1) + ' METs · ' + f(R.met * 3.5, 1) + ' mL O₂/kg/min']);
+    } else rows.push(['Intensity (Compendium)', f(R.met, 1) + ' METs']);
+    if (rmr) rows.push(['Standard estimate (no personalising)', R.hasT ? fe(std * R.min) : fe(std * 60) + ' an hour'], ['Your resting rate (Mifflin-St Jeor)', grp(rmr) + ' kcal a day']);
+    if (R.hasT && net > 0) {
+      var fatKg = net / E.FAT, fatTxt;
+      if (st.wu === 'kg') fatTxt = fatKg < 1 ? Math.round(fatKg * 1000) + ' g' : f(fatKg, 2) + ' kg';
+      else { var lbs = fatKg * LB; fatTxt = lbs < 0.1 ? 'under 0.1 lb' : f(lbs, 2) + ' lb'; }
+      rows.push(['Body-fat equivalent of the extra', fatTxt + ' (at 7,700 kcal per kg — a rough guide)']);
+    }
+    var fd = E.foods(k * (R.hasT ? 1 : 1)); if (fd.length) rows.push(['That is about', fd.join(', ')]);
+    var goal = st.adv ? E.num($('cbGoal').value) : null;
+    if (goal !== null) {
+      if (isNaN(goal) || goal <= 0) rows.push(['Time to burn your goal', 'Enter a calorie goal above zero.']);
+      else {
+        var gk = st.eu === 'kj' ? goal / 4.184 : goal, mins = gk / R.per;
+        rows.push(['Time to burn ' + grp(goal) + ' ' + eu(), mins > 1440 ? 'More than 24 hours of this' : minTxt(mins)]);
+      }
+    }
+    $('cbRows').innerHTML = '<tbody>' + rows.map(function (r) { return '<tr><td>' + r[0] + '</td><td>' + r[1] + '</td></tr>'; }).join('') + '</tbody>';
+    /* rank */
+    var items = [], onIdx = -1;
+    if (st.mode === 'act') {
+      var names = RANKN.slice(); if (names.indexOf(R.name) < 0) names.push(R.name);
+      names.forEach(function (n) { var a = E.find(n); if (a) items.push({ n: n, met: a.met }); });
+      items.sort(function (x, y) { return y.met - x.met; });
+      items.forEach(function (it, i) { it.k = E.perMin(it.met, kg, rmr) * tmin; if (it.n === R.name) onIdx = i; });
+      $('cbRankH').textContent = 'The same ' + minTxt(tmin) + ', other activities';
+      $('cbRank').innerHTML = rankBars(items, onIdx, true);
+    } else {
+      var arr = SPD[R.mv][st.du]; var cur = R.kmh / dUnitKm(), list = arr.slice();
+      var has = list.some(function (x) { return Math.abs(x - cur) < 0.05; }); if (!has) list.push(cur);
+      list.sort(function (x, y) { return x - y; });
+      list.forEach(function (x, i) { var mm = E.vo2(R.mv, x * dUnitKm(), R.g) / 3.5; items.push({ n: trim(x, 1) + (st.du === 'mi' ? ' mph' : ' km/h') + (Math.abs(x - cur) < 0.05 ? ' (yours)' : ''), k: E.perMin(mm, kg, rmr) * tmin }); if (Math.abs(x - cur) < 0.05) onIdx = i; });
+      $('cbRankH').textContent = 'The same ' + minTxt(tmin) + ' at other speeds' + (R.g ? ' (' + trim(R.g, 1) + '% incline)' : '');
+      $('cbRank').innerHTML = rankBars(items, onIdx, false);
+    }
+    st.last = { name: R.name, min: R.hasT ? R.min : null, k: k, net: net };
+    $('cbAdd').disabled = !R.hasT;
+    renderDay();
+  }
+
+  /* ---------- my day ---------- */
+  function renderDay() {
+    var box = $('cbDay');
+    if (!st.day.length) { box.style.display = 'none'; box.innerHTML = ''; return; }
+    var tk = 0, tn = 0, tm = 0; st.day.forEach(function (d) { tk += d.k; tn += d.net; tm += d.min; });
+    var fat = tn / E.FAT, fatTxt = st.wu === 'kg' ? (fat < 1 ? Math.round(fat * 1000) + ' g' : f(fat, 2) + ' kg') : (fat * LB < 0.1 ? 'under 0.1 lb' : f(fat * LB, 2) + ' lb');
+    box.style.display = '';
+    box.innerHTML = '<div class="tally-head"><h3>My day</h3><button type="button" id="cbClear">Clear all</button></div>' +
+      st.day.map(function (d, i) { return '<div class="cb-day-r"><span class="cb-day-n">' + esc(d.name) + '<small>' + minTxt(d.min) + '</small></span><b>' + fe(d.k) + '</b><button type="button" class="x" data-i="' + i + '" aria-label="Remove ' + esc(d.name) + '">×</button></div>'; }).join('') +
+      '<div class="tally-total"><span class="tl">Total · ' + minTxt(tm) + '</span><span class="tv">' + fe(tk) + '</span><span class="sub">Extra over resting</span><span class="sub" style="text-align:right">' + fe(tn) + ' ≈ ' + fatTxt + ' of body fat</span></div>';
+  }
+  $('cbAdd').addEventListener('click', function () { if (!st.last || st.last.min == null) return; st.day.push({ name: st.last.name, min: st.last.min, k: st.last.k, net: st.last.net }); renderDay(); });
+  $('cbDay').addEventListener('click', function (e) {
+    var x = e.target.closest('.x'); if (x) { st.day.splice(+x.getAttribute('data-i'), 1); renderDay(); return; }
+    if (e.target.id === 'cbClear') { st.day = []; renderDay(); }
+  });
+
+  /* ---------- wiring ---------- */
+  ['cbH', 'cbM', 'cbW', 'cbGoal', 'cbAge', 'cbHt'].forEach(function (id) { var e = $(id); if (e) e.addEventListener('input', function () { render(); }); });
+  ['cbD', 'cbT', 'cbV', 'cbP'].forEach(function (id) {
+    var v = id === 'cbD' ? 'd' : (id === 'cbT' ? 't' : 'v');
+    $(id).addEventListener('input', function () {
+      if (v === 'v' && !$(id).value.trim()) { $(id === 'cbV' ? 'cbP' : 'cbV').value = ''; }
+      var err = spdLink(v, id); render(); if (err) { setHint(err); }
+    });
+  });
+  $('cbG').addEventListener('input', render);
+  $('cbRank').addEventListener('click', function (e) { var b = e.target.closest('button[data-n]'); if (!b) return; var a = E.find(b.getAttribute('data-n')); if (a) { st.act = a; aEl.value = a.n; render(); } });
+  function seg(id, fn) { $(id).addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; fn(b.getAttribute('data-v')); setSeg(id, b.getAttribute('data-v')); }); }
+  seg('cbWU', function (v) {
+    var w = readW(); var kg = w && w.kg; st.wu = v;
+    if (kg) $('cbW').value = trim(v === 'lb' ? kg * LB : (v === 'st' ? kg / ST : kg), 1);
+    $('cbWL').textContent = v; render();
+  });
+  seg('cbEU', function (v) { st.eu = v; $('cbGoalU').textContent = v === 'kj' ? 'kJ' : 'kcal'; render(); });
+  seg('cbSex', function (v) { st.sex = v; render(); });
+  seg('cbHU', function (v) {
+    var n = E.num($('cbHt').value);
+    if (n !== null && isFinite(n) && n > 0) { var cm = st.hu === 'in' ? n * 2.54 : n; $('cbHt').value = trim(v === 'in' ? cm / 2.54 : cm, 1); }
+    st.hu = v; $('cbHtU').textContent = v; render();
+  });
+  seg('cbDU', function (v) {
+    if (v === st.du) return;
+    var d = rdE('d'), vv = rdE('v'), t = rdE('t'); st.du = v;
+    $('cbDL').textContent = v === 'mi' ? 'mi' : 'km'; $('cbVL').textContent = v === 'mi' ? 'mph' : 'km/h'; $('cbPL').textContent = v === 'mi' ? 'min/mi' : 'min/km';
+    if (d && !d.err) { writeD(d.v); remember('d', d.v); } if (vv && !vv.err) { writeV(vv.v); remember('v', vv.v); } if (t && !t.err) remember('t', t.v);
+    render();
+  });
+  if (hub) {
+    seg('cbMode', function (v) {
+      st.mode = v; $('cbActWrap').style.display = v === 'act' ? '' : 'none'; $('cbSpdWrap').style.display = v === 'spd' ? '' : 'none';
+      $('cbStepsFld').style.display = v === 'spd' ? '' : 'none'; setHint(''); render();
+    });
+    seg('cbMov', function (v) { st.mov = v; render(); });
+  }
+  var sIn = $('cbSteps');
+  if (sIn) sIn.addEventListener('input', function () {
+    var n = E.num(sIn.value);
+    if (n === null || isNaN(n) || n <= 0) { render(); return; }
+    var b = readBody();
+    var h = E.num($('cbHt').value);
+    if (h === null || isNaN(h) || h <= 0) { setHint('Add your height above so steps can be turned into a distance.'); return; }
+    var m = (st.hu === 'in' ? h * 0.0254 : h / 100) * (st.sex === 'm' ? 0.413 : 0.415) * n;
+    $('cbD').value = trim(m / 1000 / dUnitKm(), 2); var err = spdLink('d', 'cbD'); render(); if (err) setHint(err);
+  });
+  $('cbAdvBtn').addEventListener('click', function () {
+    st.adv = !st.adv; $('cbAdvBtn').classList.toggle('open', st.adv); $('cbAdvBtnLab').textContent = st.adv ? 'Go simple' : 'Go advanced'; $('cbAdvIn').style.display = st.adv ? '' : 'none';
+    if (!st.adv) {
+      $('cbGoal').value = ''; $('cbAge').value = ''; $('cbHt').value = ''; if (sIn) sIn.value = '';
+      st.eu = 'kcal'; setSeg('cbEU', 'kcal'); $('cbGoalU').textContent = 'kcal';
+      st.sex = 'f'; setSeg('cbSex', 'f'); st.hu = 'cm'; setSeg('cbHU', 'cm'); $('cbHtU').textContent = 'cm';
+    }
+    render();
+  });
+  render();
+};
+/* CBURN:END */

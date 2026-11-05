@@ -246,6 +246,18 @@
     "t": "Cat Age Calculator — Cat Years to Human Years",
     "d": "Cat age calculator: convert cat years and months to human years or back, see the life stage on a timeline, the next birthday and when your cat turns senior."
   },
+  "/calories-burned-calculator/": {
+    "t": "Calories Burned Calculator — Any Activity or Workout",
+    "d": "Calories burned calculator for 276 activities: total and extra calories, other activities side by side, walking and running by speed and incline."
+  },
+  "/calories-burned-walking-calculator/": {
+    "t": "Calories Burned Walking Calculator — Speed, Incline, Time",
+    "d": "Calories burned walking calculator: enter your speed or distance and time, plus incline and weight, to get total and extra calories (ACSM equation)."
+  },
+  "/calories-burned-running-calculator/": {
+    "t": "Calories Burned Running Calculator — Per Mile and Pace",
+    "d": "Calories burned running calculator: enter your pace or distance and time, plus incline and weight, for total and extra calories and calories per mile."
+  },
   "/dog-age-calculator/": {
     "t": "Dog Age Calculator — Dog Years to Human Years",
     "d": "Dog age calculator: convert dog years to human years by size or breed with three methods, a curve, senior age and next birthday — or human age to dog age."

@@ -76,6 +76,9 @@
         { "@type": "WebApplication", "name": "Steps to Miles Calculator", "url": "https://calcthis.co/steps-to-miles-calculator/", "applicationCategory": "HealthApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Dog Age Calculator", "url": "https://calcthis.co/dog-age-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Cat Age Calculator", "url": "https://calcthis.co/cat-age-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
+        { "@type": "WebApplication", "name": "Calories Burned Calculator", "url": "https://calcthis.co/calories-burned-calculator/", "applicationCategory": "HealthApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
+        { "@type": "WebApplication", "name": "Calories Burned Walking Calculator", "url": "https://calcthis.co/calories-burned-walking-calculator/", "applicationCategory": "HealthApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
+        { "@type": "WebApplication", "name": "Calories Burned Running Calculator", "url": "https://calcthis.co/calories-burned-running-calculator/", "applicationCategory": "HealthApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Protein Intake Calculator", "url": "https://calcthis.co/protein-intake-calculator/", "applicationCategory": "HealthApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Final Grade Calculator", "url": "https://calcthis.co/final-grade-calculator/", "applicationCategory": "EducationApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "GPA Calculator", "url": "https://calcthis.co/gpa-calculator/", "applicationCategory": "EducationApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
@@ -120,7 +123,7 @@
   ]
 }
 </script>
-<link rel="stylesheet" href="/assets/style.css?v=312">
+<link rel="stylesheet" href="/assets/style.css?v=313">
 <style>
   .cat-tabs{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
   .cat-grp--hidden{display:none}
@@ -202,6 +205,9 @@
           <a href="/steps-to-miles-calculator/">Steps to Miles</a>
           <a href="/dog-age-calculator/">Dog Age</a>
           <a href="/cat-age-calculator/">Cat Age</a>
+          <a href="/calories-burned-calculator/">Calories Burned</a>
+          <a href="/calories-burned-walking-calculator/">Calories Burned Walking</a>
+          <a href="/calories-burned-running-calculator/">Calories Burned Running</a>
         </div>
         <div class="menu-col">
           <span class="menu-col-head">School &amp; Grades</span>
@@ -909,6 +915,48 @@
       </span>
       <h3>Cat Age Calculator</h3>
       <p>Cat years and months to human years (or back) with real kitten milestones, the AAHA/AAFP life stage on a timeline, the age on the next birthday and the time until your cat is a senior.</p>
+      <span class="go">Open calculator
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+    </a>
+
+    <a class="calc" href="/calories-burned-calculator/">
+      <span class="ico" aria-hidden="true">
+        <svg width="30" height="30" viewBox="0 0 32 32" fill="none">
+          <path d="M16 3s8 7 8 14a8 8 0 0 1-16 0c0-3 1-5 3-7 0 3 1.5 4.5 3 4.5 0-4 1-7 2-11.5z" fill="#EFE7D8" stroke="#8F5C13" stroke-width="1.5" stroke-linejoin="round"/>
+          <path d="M16 18v6" stroke="#37503F" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <h3>Calories Burned Calculator</h3>
+      <p>Calories burned for 276 activities — total and extra, other activities side by side, walking and running by speed and incline, and a tally for your whole day.</p>
+      <span class="go">Open calculator
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+    </a>
+
+    <a class="calc" href="/calories-burned-walking-calculator/">
+      <span class="ico" aria-hidden="true">
+        <svg width="30" height="30" viewBox="0 0 32 32" fill="none">
+          <path d="M16 3s8 7 8 14a8 8 0 0 1-16 0c0-3 1-5 3-7 0 3 1.5 4.5 3 4.5 0-4 1-7 2-11.5z" fill="#EFE7D8" stroke="#8F5C13" stroke-width="1.5" stroke-linejoin="round"/>
+          <path d="M16 18v6" stroke="#37503F" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <h3>Calories Burned Walking Calculator</h3>
+      <p>Calories burned walking from your speed, distance or time and an incline — total and extra, per mile or km, with other speeds side by side.</p>
+      <span class="go">Open calculator
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+    </a>
+
+    <a class="calc" href="/calories-burned-running-calculator/">
+      <span class="ico" aria-hidden="true">
+        <svg width="30" height="30" viewBox="0 0 32 32" fill="none">
+          <path d="M16 3s8 7 8 14a8 8 0 0 1-16 0c0-3 1-5 3-7 0 3 1.5 4.5 3 4.5 0-4 1-7 2-11.5z" fill="#EFE7D8" stroke="#8F5C13" stroke-width="1.5" stroke-linejoin="round"/>
+          <path d="M16 18v6" stroke="#37503F" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <h3>Calories Burned Running Calculator</h3>
+      <p>Calories burned running from your pace, distance or time and an incline — total and extra, per mile or km, with other speeds side by side.</p>
       <span class="go">Open calculator
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </span>
@@ -1642,6 +1690,9 @@
           <li><a href="/steps-to-miles-calculator/">Steps to miles</a><span> — distance from your own stride</span></li>
           <li><a href="/dog-age-calculator/">Dog age</a><span> — dog years to human years, three methods</span></li>
           <li><a href="/cat-age-calculator/">Cat age</a><span> — cat years to human years and life stage</span></li>
+          <li><a href="/calories-burned-calculator/">Calories Burned</a><span> — calories burned by activity, total and extra</span></li>
+          <li><a href="/calories-burned-walking-calculator/">Calories Burned Walking</a><span> — calories burned walking by speed and incline</span></li>
+          <li><a href="/calories-burned-running-calculator/">Calories Burned Running</a><span> — calories burned running by pace and incline</span></li>
           <li><a href="/peptide-reconstitution-calculator/">Peptide reconstitution</a><span> — exact syringe draw units</span></li>
         </ul>
       </article>
@@ -1837,6 +1888,9 @@
           <li><a href="/steps-to-miles-calculator/">Steps to Miles Calculator</a></li>
           <li><a href="/dog-age-calculator/">Dog Age Calculator</a></li>
           <li><a href="/cat-age-calculator/">Cat Age Calculator</a></li>
+          <li><a href="/calories-burned-calculator/">Calories Burned Calculator</a></li>
+          <li><a href="/calories-burned-walking-calculator/">Calories Burned Walking Calculator</a></li>
+          <li><a href="/calories-burned-running-calculator/">Calories Burned Running Calculator</a></li>
         </ul>
       </div>
 
@@ -1990,7 +2044,7 @@
   });
 })();
 </script>
-<script src="/assets/app.js?v=312"></script>
+<script src="/assets/app.js?v=313"></script>
 <script src="/feedback.js" defer></script>
 </body>
 </html>
