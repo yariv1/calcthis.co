@@ -4,6 +4,16 @@ _Rewritten 2026-11-05 (session #2 of the day) at the end of the health-direction
 
 ---
 
+## 000000000000000f. DOG FOOD CALCULATOR DEPLOYED v317 (2026-11-05, after §e) — live v317 · 84 calcs · 214 pages; read this, then §e
+
+First reply = sync: "synced · live v317 / 84 calcs / 214 pages · health direction: A1C, GMI, dog age, cat age, calories burned x3, keto, net carb, intermittent fasting, BSA, dog food deployed · Bing Webmaster signed out (health pages not manually submitted; IndexNow done) · GSC queue pending · next: BAC (late) / diet phrases (need Ahrefs screenshots) · your call." Then ask which job (GSC "Start queue", BAC, diet phrases, other).
+- Dog food = see CLAUDE.md addendum 15 and `md-files/calcthis-dogfood-research.md` (competitors Omni / APOP vet tool / Oma's Pride, sources read, REVISION section about the typical-values redesign). Deploy was verified: Pages build `built` for `1964fc26`, `curl` 200 on `/dog-food-calculator/`.
+- GSC queue: append `/dog-food-calculator/` after `/bsa-calculator/` in the health block (tracker updated).
+- Next generator chains after `prevSlug = 'dog-food-calculator'`, `prevMenu = 'Dog Food'`, `prevName = 'Dog Food Calculator'`; the generators' seo-meta anchor is the previous page's key (`"/dog-food-calculator/": {`), homepage card anchor is the steps-to-miles card.
+- Method that worked for typical product values: Google search in the browser pane, click the first result via `document.querySelector('a h3').closest('a').click()`, then read `document.documentElement.textContent` for "kcal" (hidden tabs hold the calorie text; purina.com is blocked by Cloudflare).
+
+---
+
 ## 000000000000000e. START HERE — END OF THE 2026-11-05 SESSION #2 (HEALTH direction continued: CALORIES BURNED x3 + KETO + NET CARB + INTERMITTENT FASTING + BSA) — live v316 · 83 calcs · 25 articles · 213 pages · `main` pushed (deploy `c788d290`, docs `ad260f92`, handoff commit after it), working tree clean — AUTHORITATIVE; the older §000000000000000 below is the first half of the same day (sales-tax x6, A1C, GMI, dog age, cat age) and stays valid unless this contradicts it
 
 **One-line sync to give the user first (then work silently):** "synced · live v316 / 83 calcs / 213 pages · health direction: A1C, GMI, dog age, cat age, calories burned x3, keto, net carb, intermittent fasting, BSA all deployed · Bing Webmaster signed out (none of the health pages manually submitted; IndexNow done every deploy) · GSC queue pending (nothing requested since 11-05 morning) · next in the health list: dog food, BAC · your call."
