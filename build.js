@@ -160,6 +160,7 @@ const PAGES = [
   { file: 'keto-calculator/index.html', slug: '/keto-calculator/' },
   { file: 'net-carb-calculator/index.html', slug: '/net-carb-calculator/' },
   { file: 'intermittent-fasting-calculator/index.html', slug: '/intermittent-fasting-calculator/' },
+  { file: 'bsa-calculator/index.html', slug: '/bsa-calculator/' },
   { file: 'protein-intake-calculator/index.html', slug: '/protein-intake-calculator/' },
   { file: 'blog/index.html',            slug: '/blog/' },
   { file: 'blog/how-much-gravel-do-i-need-for-a-driveway/index.html', slug: '/blog/how-much-gravel-do-i-need-for-a-driveway/' },

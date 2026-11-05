@@ -1,0 +1,735 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BSA Calculator — Body Surface Area, Mosteller &amp; Du Bois</title>
+<meta name="description" content="BSA calculator: body surface area by Mosteller, Du Bois, Haycock and five more formulas side by side in m² and sq ft, plus eGFR in mL/min and dose per m².">
+<link rel="canonical" href="https://calcthis.co/bsa-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="BSA Calculator — Body Surface Area, Mosteller &amp; Du Bois">
+<meta property="og:description" content="BSA calculator: body surface area by Mosteller, Du Bois, Haycock and five more formulas side by side in m² and sq ft, plus eGFR in mL/min and dose per m².">
+<meta property="og:url" content="https://calcthis.co/bsa-calculator/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/datepicker.min.css">
+<link rel="stylesheet" href="/assets/style.css?v=316">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "BSA Calculator",
+  "url": "https://calcthis.co/bsa-calculator/",
+  "applicationCategory": "HealthApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "Free BSA calculator: body surface area in m² and sq ft by Mosteller, Du Bois, Haycock, Gehan & George, Boyd, Fujimoto, Takahira and Schlich side by side on one scale, kg/lb/st and cm/in/m, infants to adults, plus eGFR converted to mL/min and a dose per m² calculation."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is body surface area (BSA)?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Body surface area is the total area of the skin, in square metres, estimated from height and weight. It is used in medicine to scale some drug doses, to index measurements such as kidney function to body size, and in burn care to describe the burned fraction (Redlarski 2016 lists burns, liver-volume indexing and drug dosing among its uses). It says nothing about how much of your weight is fat or muscle."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I calculate BSA?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Mosteller: BSA (m²) = √(height in cm × weight in kg ÷ 3,600). For 170 cm and 60 kg: 170 × 60 = 10,200; ÷ 3,600 = 2.83; square root = 1.68 m². Du Bois: 0.007184 × weight^0.425 × height^0.725 gives 1.69 m² for the same person. The calculator does it for eight formulas at once, in kg or lb or st and cm or inches or metres."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which BSA formula is the most accurate?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "There is no single best one — the formulas were fitted on different groups of people and disagree. For the woman of 165 cm and 60 kg they range from 1.59 to 1.67 m² (5.1% apart), for the man of 180 cm and 80 kg from 1.92 to 2.01 m² (5.0%), and for a 120 cm, 22 kg child from 0.71 to 0.87 m² (22.4%). A 2016 comparison of 25 formulae in Scientific Reports called the ambiguity alarming. Use the formula your clinic, study or protocol specifies."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which formula is used for children and infants?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Haycock (1978) was fitted on 81 subjects from premature infants to adults, so it is the usual choice across that whole range. The calculator accepts weights from 0.5 kg and heights from 30 cm, shows every formula, and lets you make Haycock the headline by clicking its row. For babies and small children the formulas can differ a lot — check which one your protocol names."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is a normal BSA?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "There is no “normal” to aim for; BSA just describes body size. The figure 1.73 m² is the reference body surface area used to index kidney function: eGFR is reported in mL/min per 1.73 m². The scale on the calculator marks 1.73 m² so you can see where you sit against it."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I convert eGFR to mL/min with my BSA?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Under Go advanced enter the eGFR your lab reported (mL/min/1.73 m²). The calculator multiplies it by your BSA and divides by 1.73 — de-indexing it to mL/min, as in Australian Prescriber. For an eGFR of 60 and a BSA of 1.66 m² that is 58 mL/min. The result depends on the BSA formula you pick; clinical decisions belong with your doctor or pharmacist."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I calculate a dose from BSA?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Multiply the dose per m² by the BSA: 100 mg/m² for a BSA of 1.66 m² is 166 mg. Under Go advanced the calculator also shows the dose across all eight formulas, because the choice of formula can change the dose by up to 5.1% for the same person. It uses the unrounded BSA. Your protocol sets the formula, the rounding and any cap, so use it only to check arithmetic."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Should chemotherapy be dosed by actual weight in obesity?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "ASCO’s 2012 guideline (Griggs et al.) says doses of cytotoxic chemotherapy for obese adults should be based on actual body weight, with no cap or adjusted weight, for most drugs; a few (vincristine, bleomycin, carboplatin) are dosed differently. That is guidance for clinicians, not something this calculator applies — it does not cap or adjust the BSA."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is BSA the same as BMI?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. BMI is weight divided by height squared, a screening number for weight relative to height. BSA estimates the area of the skin and is used for dosing and for indexing physiological measurements. Both use only height and weight — see the BMI calculator."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "CalcThis",
+      "item": "https://calcthis.co/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "BSA Calculator",
+      "item": "https://calcthis.co/bsa-calculator/"
+    }
+  ]
+}
+</script>
+<meta property="og:site_name" content="CalcThis">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://calcthis.co/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="CalcThis — free, purpose-built calculators">
+<meta name="twitter:title" content="BSA Calculator — Body Surface Area, Mosteller &amp; Du Bois">
+<meta name="twitter:description" content="BSA calculator: body surface area by Mosteller, Du Bois, Haycock and five more formulas side by side in m² and sq ft, plus eGFR in mL/min and dose per m².">
+<meta name="twitter:image" content="https://calcthis.co/assets/og-default.png">
+</head>
+<body class="p-bmr p-bsa">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <a class="hdr-back" href="/blog/" aria-label="Back to blog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-search"><div class="menu-sx"><input id="menuSearch" type="search" placeholder="Search calculators or states…" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Search calculators" enterkeyhint="search"></div><div class="menu-results" id="menuResults" hidden></div></div>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <span class="menu-col-head">Construction &amp; Gardening</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+          <a href="/paint-calculator/">Paint</a>
+          <a href="/wallpaper-calculator/">Wallpaper</a>
+          <a href="/square-footage-calculator/">Square Footage</a>
+          <a href="/tape-measure-fraction-calculator/">Tape Measure Fraction</a>
+          <a href="/stair-calculator/">Stair</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/vo2-max-calculator/">VO2 Max</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
+          <a href="/bmi-calculator/">BMI</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/ideal-weight-calculator/">Ideal Weight</a>
+          <a href="/lean-body-mass-calculator/">Lean Body Mass</a>
+          <a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio</a>
+          <a href="/gmi-calculator/">GMI</a>
+          <a href="/a1c-calculator/">A1C</a>
+          <a href="/calorie-calculator/">Calorie</a>
+          <a href="/calorie-deficit-calculator/">Calorie Deficit</a>
+          <a href="/bmr-calculator/">BMR</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/water-intake-calculator/">Water Intake</a>
+          <a href="/macro-calculator/">Macro</a>
+          <a href="/protein-intake-calculator/">Protein Intake</a>
+          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
+          <a href="/steps-to-miles-calculator/">Steps to Miles</a>
+          <a href="/dog-age-calculator/">Dog Age</a>
+          <a href="/cat-age-calculator/">Cat Age</a>
+          <a href="/calories-burned-calculator/">Calories Burned</a>
+          <a href="/calories-burned-walking-calculator/">Calories Burned Walking</a>
+          <a href="/calories-burned-running-calculator/">Calories Burned Running</a>
+          <a href="/keto-calculator/">Keto</a>
+          <a href="/net-carb-calculator/">Net Carb</a>
+          <a href="/intermittent-fasting-calculator/">Intermittent Fasting</a>
+          <a href="/bsa-calculator/" class="current">BSA</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/semester-grade-calculator/">Semester Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+          <a href="/grade-curve-calculator/">Grade Curve</a>
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/fraction-calculator/">Fraction</a>
+          <a href="/standard-deviation-calculator/">Standard Deviation</a>
+          <a href="/scientific-notation-calculator/">Scientific Notation</a>
+          <a href="/average-calculator/">Average</a>
+          <a href="/batting-average-calculator/">Batting Average</a>
+          <a href="/stock-average-calculator/">Stock Average</a>
+          <a href="/dice-average-calculator/">Dice Average</a>
+          <a href="/time-average-calculator/">Time Average</a>
+          <a href="/weighted-average-calculator/">Weighted Average</a>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+          <a href="/percentage-change-calculator/">Percentage Change</a>
+          <a href="/age-calculator/">Age</a>
+          <a href="/date-calculator/">Date</a>
+          <a href="/time-calculator/">Time</a>
+          <a href="/hours-calculator/">Hours</a>
+          <a href="/triangle-calculator/">Triangle</a>
+          <a href="/random-number-generator/">Random Number</a>
+          <span class="menu-col-head">Cooking &amp; Kitchen</span>
+          <a href="/recipe-converter/">Recipe Converter</a>
+          <a href="/turkey-cooking-time-calculator/">Turkey Cooking Time</a>
+          <a href="/turkey-thawing-time-calculator/">Turkey Thawing Time</a>
+          <a href="/turkey-size-calculator/">Turkey Size</a>
+          <!--UNITNAV:START-->
+          <span class="menu-col-head">Unit Converters</span>
+          <a href="/unit-converter/">Unit Converter</a>
+          <a href="/length-converter/">Length Converter</a>
+          <a href="/weight-converter/">Weight Converter</a>
+          <a href="/volume-converter/">Volume Converter</a>
+          <a href="/temperature-converter/">Temperature Converter</a>
+          <a href="/area-converter/">Area Converter</a>
+          <a href="/speed-converter/">Speed Converter</a>
+          <a href="/data-storage-converter/">Data Storage Converter</a>
+          <a href="/cooking-converter/">Cooking Converter</a>
+          <a href="/px-to-rem-converter/">PX to REM Converter</a>
+          <!--UNITNAV:END-->
+          <span class="menu-col-head">Money &amp; Finance</span>
+          <a href="/mortgage-calculator/">Mortgage</a>
+          <a href="/loan-calculator/">Loan</a>
+          <a href="/auto-loan-calculator/">Auto Loan</a>
+          <a href="/car-sales-tax-calculator/">Car Sales Tax</a>
+          <a href="/overtime-calculator/">Overtime</a>
+          <a href="/salary-calculator/">Salary</a>
+          <!--STAXNAV:START-->
+          <a href="/sales-tax-calculator/">Sales Tax</a>
+          <a href="/sales-tax-calculator/california/">California Sales Tax</a>
+          <a href="/sales-tax-calculator/chicago/">Chicago Sales Tax</a>
+          <a href="/sales-tax-calculator/florida/">Florida Sales Tax</a>
+          <a href="/sales-tax-calculator/las-vegas/">Las Vegas Sales Tax</a>
+          <a href="/sales-tax-calculator/los-angeles/">Los Angeles Sales Tax</a>
+          <a href="/sales-tax-calculator/michigan/">Michigan Sales Tax</a>
+          <a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax</a>
+          <a href="/sales-tax-calculator/missouri/">Missouri Sales Tax</a>
+          <a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax</a>
+          <a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax</a>
+          <a href="/sales-tax-calculator/north-carolina/">North Carolina Sales Tax</a>
+          <a href="/sales-tax-calculator/ohio/">Ohio Sales Tax</a>
+          <a href="/sales-tax-calculator/texas/">Texas Sales Tax</a>
+          <a href="/sales-tax-calculator/virginia/">Virginia Sales Tax</a>
+          <!--STAXNAV:END-->
+          <a href="/tip-calculator/">Tip</a>
+          <a href="/how-much-to-tip/">How Much to Tip</a>
+        </div>
+        <!--PAYNAV:START-->
+        <div class="menu-col">
+          <span class="menu-col-head">Paycheck Calculators</span>
+          <a href="/paycheck-calculator/">Paycheck Calculator (all states)</a>
+          <a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a>
+          <a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arkansas/">Arkansas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/california/">California Paycheck Calculator</a>
+          <a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a>
+          <a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a>
+          <a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/hawaii/">Hawaii Paycheck Calculator</a>
+          <a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a>
+          <a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a>
+          <a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a>
+          <a href="/paycheck-calculator/louisiana/">Louisiana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a>
+          <a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a>
+          <a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a>
+          <a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a>
+          <a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nebraska/">Nebraska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a>
+          <a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a>
+          <a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a>
+          <a href="/paycheck-calculator/oklahoma/">Oklahoma Paycheck Calculator</a>
+          <a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a>
+          <a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a>
+          <a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a>
+          <a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/utah/">Utah Paycheck Calculator</a>
+          <a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wisconsin/">Wisconsin Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a>
+        </div>
+        <!--PAYNAV:END-->
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">Body surface area · 8 formulas side by side · m² and sq ft · eGFR and dose per m²</div>
+    <h1>BSA Calculator</h1>
+    <p>Enter your <strong>height</strong> and <strong>weight</strong> — you get your <strong>body surface area</strong> by the Mosteller formula and by seven others on one scale, so you can see how much the choice of formula matters. A woman of 165 cm and 60 kg has a BSA of <strong>1.66 m²</strong> (Mosteller) or <strong>1.66 m²</strong> (Du Bois).</p>
+  </section>
+
+  <div class="grid">
+
+    <!-- INPUT -->
+    <div class="card">
+      <div class="card-pad">
+        <h2 class="card-h2">Your size</h2>
+        <div class="ctl-row"><span class="ctl-lab">Sex</span><div class="seg" id="bsSex" role="group" aria-label="Sex"><button class="on" type="button" data-v="f">Female</button><button type="button" data-v="m">Male</button></div></div>
+        <div class="ctl-row"><span class="ctl-lab">Height units</span><div class="seg" id="bsHU" role="group" aria-label="Height units"><button class="on" type="button" data-v="cm">cm</button><button type="button" data-v="in">inches</button><button type="button" data-v="m">m</button></div></div>
+        <label class="fld" for="bsH"><span class="lab">Height <span class="unit" id="bsHL">cm</span></span><div class="inp"><input id="bsH" type="text" inputmode="text" autocomplete="off" placeholder="e.g. 170"></div></label>
+        <div class="ctl-row"><span class="ctl-lab">Weight units</span><div class="seg" id="bsWU" role="group" aria-label="Weight units"><button class="on" type="button" data-v="kg">kg</button><button type="button" data-v="lb">lb</button><button type="button" data-v="st">st</button></div></div>
+        <label class="fld" for="bsW"><span class="lab">Weight <span class="unit" id="bsWL">kg</span></span><div class="inp"><input id="bsW" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 70"></div></label>
+        <p class="av-note" style="margin:0 0 8px">Sex only changes the Schlich formula. Weights from 0.5 kg and heights from 30 cm work, for infants and children.</p>
+        <div class="res-hint" id="bsHint" style="display:none;text-align:left;margin:4px 0 8px"></div>
+        <div id="bsAdvIn" style="display:none">
+          <div class="proj-sep"></div>
+          <label class="fld" for="bsEgfr"><span class="lab">eGFR from your lab <span class="unit">mL/min/1.73 m²</span></span><div class="inp"><input id="bsEgfr" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 60"></div></label>
+          <div class="cb-two"><label class="fld" for="bsDose"><span class="lab">Dose per m²</span><div class="inp"><input id="bsDose" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 100"></div></label><label class="fld" for="bsDoseU"><span class="lab">Unit <span class="unit">optional</span></span><div class="inp"><input id="bsDoseU" type="text" inputmode="text" autocomplete="off" placeholder="e.g. mg"></div></label></div>
+          <p class="av-note" style="margin:0 0 8px">eGFR is converted to mL/min with your BSA (÷ 1.73). The dose is multiplied by the unrounded BSA and shown across all eight formulas.</p>
+        </div>
+        <div class="add-row split" style="margin-top:16px">
+          <span></span>
+          <button class="advbtn" id="bsAdvBtn" type="button">
+            <span id="bsAdvBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div class="card">
+      <div class="card-pad">
+        <div class="bf-res">
+          <div class="res-lab">Body surface area</div>
+          <div class="res-big"><span id="bsBig">—</span></div>
+          <div class="res-sub" id="bsSub" data-empty="Enter your height and weight.">Enter your height and weight.</div>
+        </div>
+        <div id="bsBody" style="display:none">
+          <p class="res-tip adv-tip" id="bsTip"></p>
+          <p class="bm-h">Where the eight formulas fall</p>
+          <div id="bsRule"></div>
+          <table class="dtable" id="bsRows"></table>
+          <div id="bsAdvBox" style="display:none"><p class="bm-h">Your numbers</p><table class="dtable" id="bsAdv"></table></div>
+          <p class="cb-note">An estimate from height and weight — not medical advice. Your clinic’s protocol sets the formula and the rounding.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- mobile sticky bar -->
+  <div class="mbar" id="mbar">
+    <span class="mbar-lab" id="bsMLab">Body surface area</span>
+    <div class="mbar-vals"><b id="bsMVal">—</b></div>
+  </div>
+
+  <div class="related-calcs">
+    <p class="related-calcs-h">More calculators that may interest you</p>
+    <div class="pills">
+      <a class="pill" href="/bmi-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12h8"/></svg>
+        BMI Calculator
+      </a>
+      <a class="pill" href="/ideal-weight-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+        Ideal Weight Calculator
+      </a>
+      <a class="pill" href="/body-fat-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c4 2 7 5 7 9a7 7 0 0 1-14 0c0-4 3-7 7-9z"/></svg>
+        Body Fat Calculator
+      </a>
+      <a class="pill" href="/lean-body-mass-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2 4 4 0 0 1 7 2c0 5.6-7 10-7 10z"/></svg>
+        Lean Body Mass Calculator
+      </a>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use the BSA calculator</h2>
+        <p>Enter your <strong>height</strong> and <strong>weight</strong> in the units you have — centimetres, inches (or 5'10) or metres; kilograms, pounds or stones. The headline is the <strong>Mosteller</strong> formula; the scale below it shows where the other seven fall, and the table gives each in m² and square feet. <strong>Click any row</strong> to make that formula the headline.</p>
+        <p>Open <strong>Go advanced</strong> to convert an <strong>eGFR</strong> to mL/min or to multiply a <strong>dose per m²</strong> by your BSA.</p>
+
+        <h2>The BSA formulas</h2>
+        <div class="formula">
+          Mosteller: BSA (m²) = √(height cm × weight kg ÷ 3,600)
+          <small>W IN KG, H IN CM · THE OTHERS ARE POWER LAWS OF W AND H</small>
+        </div>
+        <table class="dtable"><thead><tr><th>Formula</th><th>BSA in m²</th></tr></thead><tbody><tr><td>Mosteller (1987)</td><td>√(height × weight ÷ 3,600)</td></tr><tr><td>Du Bois (1916)</td><td>0.007184 × W^0.425 × H^0.725</td></tr><tr><td>Haycock (1978)</td><td>0.024265 × W^0.5378 × H^0.3964</td></tr><tr><td>Gehan & George (1970)</td><td>0.0235 × W^0.51456 × H^0.42246</td></tr><tr><td>Boyd (1935)</td><td>0.0003207 × H^0.3 × (1000 W)^(0.7285 − 0.0188 log₁₀(1000 W))</td></tr><tr><td>Fujimoto (1968)</td><td>0.008883 × W^0.444 × H^0.663</td></tr><tr><td>Takahira (1925)</td><td>0.007246 × W^0.425 × H^0.725</td></tr><tr><td>Schlich (2010)</td><td>men 0.000579479 × W^0.38 × H^1.24 · women 0.000975482 × W^0.46 × H^1.08</td></tr></tbody></table>
+        <p>For 170 cm and 60 kg: Mosteller √(170 × 60 ÷ 3,600) = <strong>1.68 m²</strong>, Du Bois <strong>1.69 m²</strong>, Haycock <strong>1.68 m²</strong>.</p>
+      </div>
+
+      <div>
+        <h2>BSA examples by formula</h2>
+        <table class="dtable"><thead><tr><th>Person</th><th>Mosteller</th><th>Du Bois</th><th>Haycock</th><th>All eight</th></tr></thead><tbody><tr><td>Woman, 165 cm, 60 kg</td><td>1.66</td><td>1.66</td><td>1.66</td><td>1.59–1.67</td></tr><tr><td>Man, 180 cm, 80 kg</td><td>2.00</td><td>2.00</td><td>2.01</td><td>1.92–2.01</td></tr><tr><td>Child, 120 cm, 22 kg</td><td>0.86</td><td>0.86</td><td>0.85</td><td>0.71–0.87</td></tr><tr><td>Infant, 50 cm, 3.5 kg</td><td>0.22</td><td>0.21</td><td>0.22</td><td>0.12–0.23</td></tr></tbody></table>
+        <p>All figures in m². The formulas were fitted on different groups of people, so they never agree exactly — a 2016 comparison of 25 formulae called the ambiguity alarming (Redlarski). The wider the spread, the more the formula choice matters; for infants and children it is largest.</p>
+
+        <h2>What BSA is used for</h2>
+        <p>Body surface area scales some drug doses, indexes kidney function to body size (eGFR is reported per 1.73 m²) and describes burns. Because it comes from height and weight alone, it does not tell fat from muscle. For other body measures see the <a href="/bmi-calculator/">BMI</a> and <a href="/body-fat-calculator/">body fat</a> calculators.</p>
+        <h2>Sources</h2>
+        <ul>
+          <li>Redlarski G, Palkowski A, Krawczuk M, <a href="https://www.nature.com/articles/srep27966" rel="noopener">Body surface area formulae: an alarming ambiguity</a>, Scientific Reports 2016;6:27966, Table 1 — every formula above (weight in kg, height in cm). The Takahira coefficient is 0.007246 there; the R package <em>admiral</em> lists 0.007241, a difference of 0.07% (under 0.001 m²).</li>
+          <li>Mosteller RD, Simplified calculation of body-surface area, New England Journal of Medicine 1987;317:1098. Haycock GB, Schwartz GJ, Wisotsky DH, <a href="https://pubmed.ncbi.nlm.nih.gov/650346/" rel="noopener">Geometric method for measuring body surface area: a height-weight formula validated in infants, children, and adults</a>, Journal of Pediatrics 1978;93:62 — 81 subjects from premature infants to adults.</li>
+          <li>Australian Prescriber, <em>How to adjust drug doses in chronic kidney disease</em> — the eGFR can be de-indexed to mL/min by multiplying it by the body surface area and dividing by 1.73 (the page returned an error when I opened it; the wording is as quoted in search results).</li>
+          <li>Griggs JJ et al., Appropriate chemotherapy dosing for obese adult patients with cancer: ASCO clinical practice guideline, Journal of Clinical Oncology 2012;30:1553, as summarised by <a href="https://ascopost.com/issues/may-15-2012/asco-issues-new-guideline-on-chemotherapy-dosing-for-obese-patients/" rel="noopener">The ASCO Post</a> — doses of cytotoxic chemotherapy for obese adults should use actual body weight; some drugs (vincristine, bleomycin, carboplatin) are dosed differently.</li>
+        </ul>
+        <p><small>For information only, not medical advice. This calculator does not replace your clinic’s dosing protocol, which sets the formula, the rounding and any cap.</small></p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>What is body surface area (BSA)?</summary><p>Body surface area is the total area of the skin, in square metres, estimated from height and weight. It is used in medicine to scale some drug doses, to index measurements such as kidney function to body size, and in burn care to describe the burned fraction (Redlarski 2016 lists burns, liver-volume indexing and drug dosing among its uses). It says nothing about how much of your weight is fat or muscle.</p></details>
+    <details class="faq"><summary>How do I calculate BSA?</summary><p>Mosteller: BSA (m²) = √(height in cm × weight in kg ÷ 3,600). For 170 cm and 60 kg: 170 × 60 = 10,200; ÷ 3,600 = 2.83; square root = 1.68 m². Du Bois: 0.007184 × weight^0.425 × height^0.725 gives 1.69 m² for the same person. The calculator does it for eight formulas at once, in kg or lb or st and cm or inches or metres.</p></details>
+    <details class="faq"><summary>Which BSA formula is the most accurate?</summary><p>There is no single best one — the formulas were fitted on different groups of people and disagree. For the woman of 165 cm and 60 kg they range from 1.59 to 1.67 m² (5.1% apart), for the man of 180 cm and 80 kg from 1.92 to 2.01 m² (5.0%), and for a 120 cm, 22 kg child from 0.71 to 0.87 m² (22.4%). A 2016 comparison of 25 formulae in Scientific Reports called the ambiguity alarming. Use the formula your clinic, study or protocol specifies.</p></details>
+    <details class="faq"><summary>Which formula is used for children and infants?</summary><p>Haycock (1978) was fitted on 81 subjects from premature infants to adults, so it is the usual choice across that whole range. The calculator accepts weights from 0.5 kg and heights from 30 cm, shows every formula, and lets you make Haycock the headline by clicking its row. For babies and small children the formulas can differ a lot — check which one your protocol names.</p></details>
+    <details class="faq"><summary>What is a normal BSA?</summary><p>There is no “normal” to aim for; BSA just describes body size. The figure 1.73 m² is the reference body surface area used to index kidney function: eGFR is reported in mL/min per 1.73 m². The scale on the calculator marks 1.73 m² so you can see where you sit against it.</p></details>
+    <details class="faq"><summary>How do I convert eGFR to mL/min with my BSA?</summary><p>Under Go advanced enter the eGFR your lab reported (mL/min/1.73 m²). The calculator multiplies it by your BSA and divides by 1.73 — de-indexing it to mL/min, as in Australian Prescriber. For an eGFR of 60 and a BSA of 1.66 m² that is 58 mL/min. The result depends on the BSA formula you pick; clinical decisions belong with your doctor or pharmacist.</p></details>
+    <details class="faq"><summary>How do I calculate a dose from BSA?</summary><p>Multiply the dose per m² by the BSA: 100 mg/m² for a BSA of 1.66 m² is 166 mg. Under Go advanced the calculator also shows the dose across all eight formulas, because the choice of formula can change the dose by up to 5.1% for the same person. It uses the unrounded BSA. Your protocol sets the formula, the rounding and any cap, so use it only to check arithmetic.</p></details>
+    <details class="faq"><summary>Should chemotherapy be dosed by actual weight in obesity?</summary><p>ASCO’s 2012 guideline (Griggs et al.) says doses of cytotoxic chemotherapy for obese adults should be based on actual body weight, with no cap or adjusted weight, for most drugs; a few (vincristine, bleomycin, carboplatin) are dosed differently. That is guidance for clinicians, not something this calculator applies — it does not cap or adjust the BSA.</p></details>
+    <details class="faq"><summary>Is BSA the same as BMI?</summary><p>No. BMI is weight divided by height squared, a screening number for weight relative to height. BSA estimates the area of the skin and is used for dosing and for indexing physiological measurements. Both use only height and weight — see the <a href="/bmi-calculator/">BMI calculator</a>.</p></details>
+  </section>
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+      <div class="footer-stack">
+<div class="footer-col" style="order:1">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+          <li><a href="/paint-calculator/">Paint Calculator</a></li>
+          <li><a href="/wallpaper-calculator/">Wallpaper Calculator</a></li>
+          <li><a href="/square-footage-calculator/">Square Footage Calculator</a></li>
+          <li><a href="/tape-measure-fraction-calculator/">Tape Measure Fraction Calculator</a></li>
+          <li><a href="/stair-calculator/">Stair Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:5">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Cooking &amp;</span> <span class="ft2">Kitchen</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/recipe-converter/">Recipe Converter</a></li>
+          <li><a href="/turkey-cooking-time-calculator/">Turkey Cooking Time Calculator</a></li>
+          <li><a href="/turkey-thawing-time-calculator/">Turkey Thawing Time Calculator</a></li>
+          <li><a href="/turkey-size-calculator/">Turkey Size Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:6">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Money &amp;</span> <span class="ft2">Finance</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/mortgage-calculator/">Mortgage Calculator</a></li>
+          <li><a href="/loan-calculator/">Loan Calculator</a></li>
+          <li><a href="/auto-loan-calculator/">Auto Loan Calculator</a></li>
+          <li><a href="/car-sales-tax-calculator/">Car Sales Tax Calculator</a></li>
+          <li><a href="/overtime-calculator/">Overtime Calculator</a></li>
+          <li><a href="/salary-calculator/">Salary Calculator</a></li>
+          <!--STAXFOOT:START-->
+          <li><a href="/sales-tax-calculator/">Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/california/">California Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/chicago/">Chicago Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/florida/">Florida Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/las-vegas/">Las Vegas Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/los-angeles/">Los Angeles Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/michigan/">Michigan Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/missouri/">Missouri Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/north-carolina/">North Carolina Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/ohio/">Ohio Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/texas/">Texas Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/virginia/">Virginia Sales Tax Calculator</a></li>
+          <!--STAXFOOT:END-->
+          <li><a href="/tip-calculator/">Tip Calculator</a></li>
+          <li><a href="/how-much-to-tip/">How Much to Tip</a></li>
+        </ul>
+      </div>
+      </div>
+
+      <div class="footer-right">
+<div class="footer-col footer-col--two" style="order:2">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/vo2-max-calculator/">VO2 Max Calculator</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/bmi-calculator/">BMI Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/ideal-weight-calculator/">Ideal Weight Calculator</a></li>
+          <li><a href="/lean-body-mass-calculator/">Lean Body Mass Calculator</a></li>
+          <li><a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio Calculator</a></li>
+          <li><a href="/gmi-calculator/">GMI Calculator</a></li>
+          <li><a href="/a1c-calculator/">A1C Calculator</a></li>
+          <li><a href="/calorie-calculator/">Calorie Calculator</a></li>
+          <li><a href="/calorie-deficit-calculator/">Calorie Deficit Calculator</a></li>
+          <li><a href="/bmr-calculator/">BMR Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/water-intake-calculator/">Water Intake Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/protein-intake-calculator/">Protein Intake Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
+          <li><a href="/steps-to-miles-calculator/">Steps to Miles Calculator</a></li>
+          <li><a href="/dog-age-calculator/">Dog Age Calculator</a></li>
+          <li><a href="/cat-age-calculator/">Cat Age Calculator</a></li>
+          <li><a href="/calories-burned-calculator/">Calories Burned Calculator</a></li>
+          <li><a href="/calories-burned-walking-calculator/">Calories Burned Walking Calculator</a></li>
+          <li><a href="/calories-burned-running-calculator/">Calories Burned Running Calculator</a></li>
+          <li><a href="/keto-calculator/">Keto Calculator</a></li>
+          <li><a href="/net-carb-calculator/">Net Carb Calculator</a></li>
+          <li><a href="/intermittent-fasting-calculator/">Intermittent Fasting Calculator</a></li>
+          <li><a href="/bsa-calculator/">BSA Calculator</a></li>
+        </ul>
+      </div>
+
+        <div class="footer-sub">
+<div class="footer-subcol">
+<div class="footer-col" style="order:3">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/semester-grade-calculator/">Semester Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+          <li><a href="/grade-curve-calculator/">Grade Curve Calculator</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:START-->
+<div class="footer-col" style="order:7">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Unit</span> <span class="ft2">Converters</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/unit-converter/">Unit Converter</a></li>
+          <li><a href="/length-converter/">Length Converter</a></li>
+          <li><a href="/weight-converter/">Weight Converter</a></li>
+          <li><a href="/volume-converter/">Volume Converter</a></li>
+          <li><a href="/temperature-converter/">Temperature Converter</a></li>
+          <li><a href="/area-converter/">Area Converter</a></li>
+          <li><a href="/speed-converter/">Speed Converter</a></li>
+          <li><a href="/data-storage-converter/">Data Storage Converter</a></li>
+          <li><a href="/cooking-converter/">Cooking Measurement Converter</a></li>
+          <li><a href="/px-to-rem-converter/">PX to REM Converter</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:END-->
+</div>
+
+<div class="footer-col" style="order:4">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/fraction-calculator/">Fraction Calculator</a></li>
+          <li><a href="/standard-deviation-calculator/">Standard Deviation Calculator</a></li>
+          <li><a href="/scientific-notation-calculator/">Scientific Notation Calculator</a></li>
+          <li><a href="/weighted-average-calculator/">Weighted Average Calculator</a></li>
+          <li><a href="/average-calculator/">Average Calculator</a></li>
+          <li><a href="/batting-average-calculator/">Batting Average Calculator</a></li>
+          <li><a href="/stock-average-calculator/">Stock Average Calculator</a></li>
+          <li><a href="/dice-average-calculator/">Dice Average Calculator</a></li>
+          <li><a href="/time-average-calculator/">Time Average Calculator</a></li>
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+          <li><a href="/percentage-change-calculator/">Percentage Change Calculator</a></li>
+          <li><a href="/age-calculator/">Age Calculator</a></li>
+          <li><a href="/date-calculator/">Date Calculator</a></li>
+          <li><a href="/time-calculator/">Time Calculator</a></li>
+          <li><a href="/hours-calculator/">Hours Calculator</a></li>
+          <li><a href="/triangle-calculator/">Triangle Calculator</a></li>
+          <li><a href="/random-number-generator/">Random Number Generator</a></li>
+        </ul>
+      </div>
+        </div>
+      </div>
+
+      <!--PAYFOOT:START-->
+      <div class="footer-col footer-col--wide">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Paycheck</span> <span class="ft2">Calculators</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/paycheck-calculator/">Paycheck Calculator (all states)</a></li>
+          <li><a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arkansas/">Arkansas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/california/">California Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/hawaii/">Hawaii Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/louisiana/">Louisiana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nebraska/">Nebraska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/oklahoma/">Oklahoma Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/utah/">Utah Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wisconsin/">Wisconsin Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a></li>
+        </ul>
+      </div>
+      <!--PAYFOOT:END-->
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/blog/">Blog</a>
+      <span aria-hidden="true">·</span>
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+</div>
+
+<script src="/assets/app.js?v=316"></script>
+<script>CalcThis.initBsaCalc();</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>

@@ -2849,3 +2849,27 @@
 .p-if .if-day.low span{color:#fff}
 .p-if .bm-key i.if-norm{background:#FBF6EC;border:1px solid var(--line)}
 @media(max-width:520px){.p-if .if-day{font-size:13px}}
+
+/* ---- BSA calculator (.p-bsa) — reuses .p-bmr result look, .dtable, keto-style note sizes ---- */
+.p-bsa .bs-rule{margin:28px 0 4px;padding-bottom:26px}
+.p-bsa .bs-rule-t{position:relative;height:14px;border-radius:7px;background:#EFE7D8}
+.p-bsa .bs-band{position:absolute;top:0;bottom:0;background:var(--spruce);opacity:.4;border-radius:7px}
+.p-bsa .bs-dot{position:absolute;top:50%;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;background:#fff;border:2px solid var(--spruce);box-sizing:border-box}
+.p-bsa .bs-dot.on{background:var(--amber);border-color:var(--ink);width:18px;height:18px;margin:-9px 0 0 -9px;z-index:2}
+.p-bsa .bs-ref{position:absolute;top:-6px;width:2px;height:26px;margin-left:-1px;background:var(--ink)}
+.p-bsa .bs-reflab{position:absolute;top:-26px;transform:translateX(-50%);font-size:12px;font-weight:700;color:var(--ink);white-space:nowrap}
+.p-bsa .bs-rule-l{position:relative;height:18px;margin-top:10px}
+.p-bsa .bs-rule-l span{position:absolute;top:0;font-size:12px;font-weight:600;color:var(--muted);white-space:nowrap}
+.p-bsa .bs-rule-l span:first-child{transform:none}
+.p-bsa .bs-rule-l span:last-child{transform:translateX(-100%)}
+.p-bsa .dtable tr.bs-row{cursor:pointer}
+.p-bsa .dtable tr.bs-row:hover td{background:#FCF7EE}
+.p-bsa .dtable tr.bs-row.cur td{background:#F3E4C6;font-weight:600}
+.p-bsa .dtable td small{color:var(--muted);font-size:12.5px;font-weight:500}
+.p-bsa .dtable td:nth-child(n+2),.p-bsa .dtable th:nth-child(n+2){text-align:right}
+.p-bsa #bsAdv td:nth-child(n+2){text-align:right}
+.p-bsa .av-note,.p-bsa .cb-note{font-size:14px;font-weight:500;color:var(--ink-soft);margin:4px 0 8px;line-height:1.45}
+.p-bsa .cb-note{color:var(--muted);font-weight:400}
+.p-bsa .cb-two{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}
+@media(max-width:520px){.p-bsa .cb-two{gap:0 8px}}
+.p-bsa #bsAdv td small{display:block;margin-top:1px}

@@ -20197,3 +20197,144 @@ CalcThis.initFastCalc = function () {
   render();
 };
 /* FASTING:END */
+
+/* BSA:BEGIN */
+/* =========================================================
+   BSA (body surface area) calculator (/bsa-calculator/).
+   Competitors opened live (2026-11-05): Omnicalculator BSA (Du Bois headline + Fujimoto, Gehan & George, Haycock, Mosteller; many units),
+   fitnessvolt (eight formulas incl. Boyd, Takahira, Schlich; one example + table). calculator.net has none.
+   Formulas (W kg, H cm) read live from Redlarski G, Palkowski A, Krawczuk M, Sci Rep 2016;6:27966, Table 1:
+   Du Bois 0.007184 W^0.425 H^0.725; Takahira 0.007246 W^0.425 H^0.725 (CRAN admiral lists 0.007241 - a 0.07% difference); Boyd 0.0003207 H^0.3 (1000 W)^(0.7285-0.0188 log10(1000 W));
+   Fujimoto 0.008883 W^0.444 H^0.663; Gehan & George 0.0235 W^0.51456 H^0.42246; Haycock 0.024265 W^0.5378 H^0.3964; Mosteller sqrt(W H / 3600);
+   Schlich men 0.000579479 W^0.38 H^1.24, women 0.000975482 W^0.46 H^1.08.
+   Haycock: 81 subjects from premature infants to adults (J Pediatr 1978;93:62, PubMed 650346). De-indexing eGFR: mL/min = eGFR x BSA / 1.73 (Australian Prescriber, seen as a quoted
+   snippet - the page returned an error when opened). ASCO 2012 (Griggs, J Clin Oncol 30:1553; read via ASCO Post): actual body weight for obese adults' chemotherapy doses.
+   ========================================================= */
+/* BSA-ENGINE:START */
+CalcThis.bsaEngine = (function () {
+  var FT2 = 10.7639, REF = 1.73;
+  var FORMS = [
+    { id: 'mosteller', name: 'Mosteller', year: 1987, f: function (W, H) { return Math.sqrt(W * H / 3600); }, form: '√(height × weight ÷ 3,600)' },
+    { id: 'dubois', name: 'Du Bois', year: 1916, f: function (W, H) { return 0.007184 * Math.pow(W, 0.425) * Math.pow(H, 0.725); }, form: '0.007184 × W^0.425 × H^0.725' },
+    { id: 'haycock', name: 'Haycock', year: 1978, f: function (W, H) { return 0.024265 * Math.pow(W, 0.5378) * Math.pow(H, 0.3964); }, form: '0.024265 × W^0.5378 × H^0.3964' },
+    { id: 'gehan', name: 'Gehan & George', year: 1970, f: function (W, H) { return 0.0235 * Math.pow(W, 0.51456) * Math.pow(H, 0.42246); }, form: '0.0235 × W^0.51456 × H^0.42246' },
+    { id: 'boyd', name: 'Boyd', year: 1935, f: function (W, H) { var g = W * 1000; return 0.0003207 * Math.pow(H, 0.3) * Math.pow(g, 0.7285 - 0.0188 * Math.log(g) / Math.LN10); }, form: '0.0003207 × H^0.3 × (1000 W)^(0.7285 − 0.0188 log₁₀(1000 W))' },
+    { id: 'fujimoto', name: 'Fujimoto', year: 1968, f: function (W, H) { return 0.008883 * Math.pow(W, 0.444) * Math.pow(H, 0.663); }, form: '0.008883 × W^0.444 × H^0.663' },
+    { id: 'takahira', name: 'Takahira', year: 1925, f: function (W, H) { return 0.007246 * Math.pow(W, 0.425) * Math.pow(H, 0.725); }, form: '0.007246 × W^0.425 × H^0.725' },
+    { id: 'schlich', name: 'Schlich', year: 2010, f: function (W, H, male) { return male ? 0.000579479 * Math.pow(W, 0.38) * Math.pow(H, 1.24) : 0.000975482 * Math.pow(W, 0.46) * Math.pow(H, 1.08); }, form: 'men 0.000579479 × W^0.38 × H^1.24 · women 0.000975482 × W^0.46 × H^1.08' }
+  ];
+  function num(t) {
+    t = (t + '').trim().replace(/\s/g, '');
+    if (!t) return null;
+    if (/^[+-]?\d*,\d+$/.test(t)) t = t.replace(',', '.'); else t = t.replace(/,/g, '');
+    if (!/^[+-]?(\d+\.?\d*|\.\d+)$/.test(t)) return NaN;
+    return parseFloat(t);
+  }
+  function one(id, W, H, male) { for (var i = 0; i < FORMS.length; i++) if (FORMS[i].id === id) return FORMS[i].f(W, H, male); return NaN; }
+  /* every formula for weight W (kg), height H (cm) -> [{ id, name, year, m2, ft2 }], plus min / max / spread (%) */
+  function all(W, H, male) {
+    var rows = FORMS.map(function (f) { var v = f.f(W, H, male); return { id: f.id, name: f.name, year: f.year, m2: v, ft2: v * FT2 }; });
+    var mn = Infinity, mx = -Infinity; rows.forEach(function (r) { if (r.m2 < mn) mn = r.m2; if (r.m2 > mx) mx = r.m2; });
+    return { rows: rows, min: mn, max: mx, spread: (mx / mn - 1) * 100 };
+  }
+  return { FT2: FT2, REF: REF, FORMS: FORMS, num: num, one: one, all: all };
+})();
+/* BSA-ENGINE:END */
+
+/* =========================================================
+   CalcThis.initBsaCalc() — ids bs*. Engine: CalcThis.bsaEngine (+ ketoEngine.parseIn for 5'10). No shared state.
+   ========================================================= */
+CalcThis.initBsaCalc = function () {
+  var E = CalcThis.bsaEngine, K = CalcThis.ketoEngine, U = CalcThis._kzUtil, trim = U.trim, esc = U.esc, setSeg = U.setSeg, seg = U.seg;
+  var $ = function (id) { return document.getElementById(id); };
+  var LB = 2.20462, ST = 6.35029;
+  var st = { sex: 'f', wu: 'kg', hu: 'cm', f: 'mosteller', adv: false };
+  var ex = {};
+  function f2(x) { return (Math.round(x * 100) / 100).toFixed(2); }
+  function f1(x) { return (Math.round(x * 10) / 10).toFixed(1); }
+  function setHint(m) { var h = $('bsHint'); h.textContent = m || ''; h.style.display = m ? 'block' : 'none'; }
+  var WMSG = { kg: 'Weight should be between 0.5 and 400 kg — check the number and the unit.', lb: 'Weight should be between 1.1 and 880 lb — check the number and the unit.', st: 'Weight should be between 0.08 and 63 st — check the number and the unit.' };
+  var HMSG = { cm: 'Height should be between 30 and 250 cm — check the number and the unit.', in: 'Height should be between 12 and 98 inches — check the number and the unit.', m: 'Height should be between 0.3 and 2.5 m — check the number and the unit.' };
+  function toKg(n) { return st.wu === 'lb' ? n / LB : (st.wu === 'st' ? n * ST : n); }
+  function readW() {
+    var raw = $('bsW').value; if (!raw.trim()) return null;
+    var n = E.num(raw); if (n === null) return null;
+    if (isNaN(n) || n <= 0) return { err: 'Couldn’t read the weight — use a number like ' + (st.wu === 'kg' ? '70' : (st.wu === 'st' ? '11' : '154')) + '.' };
+    var kg = toKg(n); if (kg < 0.5 || kg > 400) return { err: WMSG[st.wu] };
+    return { kg: kg };
+  }
+  function readH() {
+    var raw = $('bsH').value; if (!raw.trim()) return null;
+    var n = st.hu === 'in' ? K.parseIn(raw) : E.num(raw); if (n === null) return null;
+    if (isNaN(n) || n <= 0) return { err: 'Couldn’t read the height — use ' + (st.hu === 'in' ? 'inches (70) or feet and inches (5\'10)' : (st.hu === 'm' ? 'metres, like 1.75' : 'centimetres, like 178')) + '.' };
+    var cm = st.hu === 'in' ? n * 2.54 : (st.hu === 'm' ? n * 100 : n);
+    if (cm < 30 || cm > 250) return { err: HMSG[st.hu] };
+    return { cm: cm };
+  }
+  function empty(msg) { $('bsBig').textContent = '—'; $('bsSub').textContent = $('bsSub').getAttribute('data-empty'); $('bsBody').style.display = 'none'; $('bsMVal').textContent = '—'; setHint(msg || ''); }
+  function ruler(R, headId) {
+    var lo = Math.floor((R.min - 0.02) * 20) / 20, hi = Math.ceil((R.max + 0.02) * 20) / 20; if (hi - lo < 0.1) { lo -= 0.05; hi += 0.05; }
+    var p = function (v) { return Math.max(0, Math.min(100, (v - lo) / (hi - lo) * 100)); };
+    var dots = R.rows.map(function (r) { return '<i class="bs-dot' + (r.id === headId ? ' on' : '') + '" style="left:' + p(r.m2) + '%" title="' + esc(r.name) + ' ' + f2(r.m2) + ' m²"></i>'; }).join('');
+    var ref = (E.REF >= lo && E.REF <= hi) ? '<i class="bs-ref" style="left:' + p(E.REF) + '%"></i><span class="bs-reflab" style="left:' + p(E.REF) + '%">1.73 reference</span>' : '';
+    return '<div class="bs-rule"><div class="bs-rule-t"><i class="bs-band" style="left:' + p(R.min) + '%;width:' + (p(R.max) - p(R.min)) + '%"></i>' + dots + ref + '</div>' +
+      '<div class="bs-rule-l"><span style="left:0">' + f2(lo) + '</span><span style="left:100%">' + f2(hi) + ' m²</span></div></div>';
+  }
+  function render() {
+    var w = readW(), h = readH(), bad = [w, h].filter(function (x) { return x && x.err; })[0];
+    if (bad) { empty(bad.err); return; }
+    if (!w || !h) { empty(''); return; }
+    var male = st.sex === 'm', R = E.all(w.kg, h.cm, male), head = null;
+    R.rows.forEach(function (r) { if (r.id === st.f) head = r; });
+    setHint('');
+    $('bsBig').textContent = f2(head.m2) + ' m²';
+    $('bsSub').textContent = f1(head.ft2) + ' sq ft · ' + head.name + ' formula';
+    $('bsMLab').textContent = head.name; $('bsMVal').textContent = f2(head.m2) + ' m²';
+    $('bsBody').style.display = '';
+    $('bsTip').textContent = 'The ' + R.rows.length + ' formulas give ' + f2(R.min) + ' to ' + f2(R.max) + ' m² for you — the highest is ' + f1(R.spread) + '% above the lowest. ' + (st.f === 'schlich' ? 'Schlich has separate equations for men and women.' : 'Click any row to make it the headline.');
+    $('bsRule').innerHTML = ruler(R, head.id);
+    $('bsRows').innerHTML = '<thead><tr><th>Formula</th><th>m²</th><th>sq ft</th></tr></thead><tbody>' + R.rows.map(function (r) {
+      return '<tr class="bs-row' + (r.id === head.id ? ' cur' : '') + '" data-id="' + r.id + '" tabindex="0"><td>' + r.name + ' <small>(' + r.year + ')</small></td><td>' + f2(r.m2) + '</td><td>' + f1(r.ft2) + '</td></tr>';
+    }).join('') + '</tbody>';
+    /* advanced */
+    var ad = [], eg = st.adv ? E.num($('bsEgfr').value) : null, ds = st.adv ? E.num($('bsDose').value) : null;
+    if (eg !== null) {
+      if (isNaN(eg) || eg <= 0 || eg > 200) ad.push(['eGFR in mL/min', '<small>Enter the lab’s eGFR as a number between 1 and 200 (mL/min/1.73 m²).</small>']);
+      else ad.push(['eGFR in mL/min', '<b>' + Math.round(eg * head.m2 / E.REF) + ' mL/min</b> <small>' + trim(eg, 1) + ' × ' + f2(head.m2) + ' ÷ 1.73</small>']);
+    }
+    if (ds !== null) {
+      var un = ($('bsDoseU').value || '').replace(/[^A-Za-zµ\/ ]/g, '').slice(0, 8).trim(), u = un ? ' ' + un : '';
+      if (isNaN(ds) || ds <= 0 || ds > 1e6) ad.push(['Dose', '<small>Enter the dose per m² as a number above zero.</small>']);
+      else {
+        var tot = ds * head.m2, lo = ds * R.min, hi = ds * R.max, fm = function (x) { return trim(x, x >= 100 ? 0 : (x >= 10 ? 1 : 2)); };
+        ad.push(['Total dose (' + head.name + ')', '<b>' + fm(tot) + u + '</b> <small>' + trim(ds, 3) + ' × ' + f2(head.m2) + ' m²</small>']);
+        ad.push(['Across all formulas', fm(lo) + ' – ' + fm(hi) + u + ' <small>the formula you pick changes the dose by up to ' + f1(R.spread) + '%</small>']);
+      }
+    }
+    $('bsAdv').innerHTML = ad.length ? '<tbody>' + ad.map(function (r) { return '<tr><td>' + r[0] + '</td><td>' + r[1] + '</td></tr>'; }).join('') + '</tbody>' : '';
+    $('bsAdvBox').style.display = ad.length ? '' : 'none';
+  }
+  ['bsW', 'bsH', 'bsEgfr', 'bsDose', 'bsDoseU'].forEach(function (id) { $(id).addEventListener('input', render); });
+  seg('bsSex', function (v) { st.sex = v; render(); });
+  $('bsRows').addEventListener('click', function (e) { var tr = e.target.closest('tr.bs-row'); if (tr) { st.f = tr.getAttribute('data-id'); render(); } });
+  $('bsRows').addEventListener('keydown', function (e) { if (e.key !== 'Enter' && e.key !== ' ') return; var tr = e.target.closest('tr.bs-row'); if (tr) { e.preventDefault(); st.f = tr.getAttribute('data-id'); render(); } });
+  seg('bsWU', function (v) {
+    var w = readW(), m = ex.w; if (m && m.txt === $('bsW').value) w = { kg: m.kg };
+    st.wu = v; if (w && w.err) $('bsW').value = '';
+    if (w && w.kg) { var txt = trim(v === 'lb' ? w.kg * LB : (v === 'st' ? w.kg / ST : w.kg), 3); $('bsW').value = txt; ex.w = { kg: w.kg, txt: txt }; }
+    $('bsWL').textContent = v; render();
+  });
+  seg('bsHU', function (v) {
+    var h = readH(), m = ex.h; if (m && m.txt === $('bsH').value) h = { cm: m.cm };
+    st.hu = v; if (h && h.err) $('bsH').value = '';
+    if (h && h.cm) { var txt = v === 'in' ? trim(h.cm / 2.54, 2) : (v === 'm' ? trim(h.cm / 100, 3) : trim(h.cm, 2)); $('bsH').value = txt; ex.h = { cm: h.cm, txt: txt }; }
+    $('bsHL').textContent = v === 'in' ? 'inches or 5\'10' : v; $('bsH').placeholder = v === 'in' ? 'e.g. 70 or 5\'10' : (v === 'm' ? 'e.g. 1.75' : 'e.g. 178'); render();
+  });
+  $('bsAdvBtn').addEventListener('click', function () {
+    st.adv = !st.adv; $('bsAdvBtn').classList.toggle('open', st.adv); $('bsAdvBtnLab').textContent = st.adv ? 'Go simple' : 'Go advanced'; $('bsAdvIn').style.display = st.adv ? '' : 'none';
+    if (!st.adv) { $('bsEgfr').value = ''; $('bsDose').value = ''; $('bsDoseU').value = ''; }
+    render();
+  });
+  render();
+};
+/* BSA:END */

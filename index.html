@@ -82,6 +82,7 @@
         { "@type": "WebApplication", "name": "Keto Calculator", "url": "https://calcthis.co/keto-calculator/", "applicationCategory": "HealthApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Net Carb Calculator", "url": "https://calcthis.co/net-carb-calculator/", "applicationCategory": "HealthApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Intermittent Fasting Calculator", "url": "https://calcthis.co/intermittent-fasting-calculator/", "applicationCategory": "HealthApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
+        { "@type": "WebApplication", "name": "BSA Calculator", "url": "https://calcthis.co/bsa-calculator/", "applicationCategory": "HealthApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Protein Intake Calculator", "url": "https://calcthis.co/protein-intake-calculator/", "applicationCategory": "HealthApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Final Grade Calculator", "url": "https://calcthis.co/final-grade-calculator/", "applicationCategory": "EducationApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "GPA Calculator", "url": "https://calcthis.co/gpa-calculator/", "applicationCategory": "EducationApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
@@ -126,7 +127,7 @@
   ]
 }
 </script>
-<link rel="stylesheet" href="/assets/style.css?v=315">
+<link rel="stylesheet" href="/assets/style.css?v=316">
 <style>
   .cat-tabs{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
   .cat-grp--hidden{display:none}
@@ -214,6 +215,7 @@
           <a href="/keto-calculator/">Keto</a>
           <a href="/net-carb-calculator/">Net Carb</a>
           <a href="/intermittent-fasting-calculator/">Intermittent Fasting</a>
+          <a href="/bsa-calculator/">BSA</a>
         </div>
         <div class="menu-col">
           <span class="menu-col-head">School &amp; Grades</span>
@@ -1010,6 +1012,20 @@
       </span>
     </a>
 
+    <a class="calc" href="/bsa-calculator/">
+      <span class="ico" aria-hidden="true">
+        <svg width="30" height="30" viewBox="0 0 32 32" fill="none">
+          <path d="M16 4c3 0 5 2 5 5s-2 5-5 5-5-2-5-5 2-5 5-5zM9 28c0-6 3-10 7-10s7 4 7 10" fill="#EFE7D8" stroke="#8F5C13" stroke-width="1.5" stroke-linejoin="round"/>
+          <path d="M5 8v20M27 8v20" stroke="#37503F" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <h3>BSA Calculator</h3>
+      <p>Body surface area by eight formulas side by side — Mosteller, Du Bois, Haycock and more — in m² and sq ft, with eGFR in mL/min and dose per m².</p>
+      <span class="go">Open calculator
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+    </a>
+
     <a class="calc" href="/steps-to-miles-calculator/">
       <span class="ico" aria-hidden="true">
         <svg width="30" height="30" viewBox="0 0 32 32" fill="none">
@@ -1744,6 +1760,7 @@
           <li><a href="/keto-calculator/">Keto</a><span> — daily keto macros: calories, net carbs, protein and fat</span></li>
           <li><a href="/net-carb-calculator/">Net Carb</a><span> — net carbs from a food label, strict to lenient, with a day tally</span></li>
           <li><a href="/intermittent-fasting-calculator/">Intermittent Fasting</a><span> — your eating window for 16:8, 18:6, 20:4, OMAD and 5:2, with a ramp-up plan</span></li>
+          <li><a href="/bsa-calculator/">BSA</a><span> — body surface area by eight formulas, with eGFR in mL/min and dose per m²</span></li>
           <li><a href="/peptide-reconstitution-calculator/">Peptide reconstitution</a><span> — exact syringe draw units</span></li>
         </ul>
       </article>
@@ -1945,6 +1962,7 @@
           <li><a href="/keto-calculator/">Keto Calculator</a></li>
           <li><a href="/net-carb-calculator/">Net Carb Calculator</a></li>
           <li><a href="/intermittent-fasting-calculator/">Intermittent Fasting Calculator</a></li>
+          <li><a href="/bsa-calculator/">BSA Calculator</a></li>
         </ul>
       </div>
 
@@ -2098,7 +2116,7 @@
   });
 })();
 </script>
-<script src="/assets/app.js?v=315"></script>
+<script src="/assets/app.js?v=316"></script>
 <script src="/feedback.js" defer></script>
 </body>
 </html>
