@@ -1,0 +1,740 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>A1C Calculator — A1C to Blood Sugar (eAG) and Back</title>
+<meta name="description" content="A1C calculator: convert A1C to average blood sugar (eAG) or glucose to A1C in mg/dL, mmol/L and mmol/mol, with a scale, your goal and GMI.">
+<link rel="canonical" href="https://calcthis.co/a1c-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="A1C Calculator — A1C to Blood Sugar (eAG) and Back">
+<meta property="og:description" content="A1C calculator: convert A1C to average blood sugar (eAG) or glucose to A1C in mg/dL, mmol/L and mmol/mol, with a scale, your goal and GMI.">
+<meta property="og:url" content="https://calcthis.co/a1c-calculator/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/datepicker.min.css">
+<link rel="stylesheet" href="/assets/style.css?v=310">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "A1C Calculator",
+  "url": "https://calcthis.co/a1c-calculator/",
+  "applicationCategory": "HealthApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "Free A1C calculator: convert A1C to estimated average glucose (eAG) or average glucose to A1C in mg/dL, mmol/L and mmol/mol, with an A1C scale showing the normal, prediabetes and diabetes ranges, a goal marker, GMI for CGM users and a list of readings."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I convert A1C to average blood sugar?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Multiply the A1C by 28.7 and subtract 46.7: eAG (mg/dL) = 28.7 × A1C − 46.7. An A1C of 7.0% gives 28.7 × 7 − 46.7 = 154 mg/dL; divide by 18.016 for mmol/L, 8.6. This is the relationship from the ADAG study that the American Diabetes Association uses."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I convert average blood sugar to A1C?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Add 46.7 to the average glucose (mg/dL) and divide by 28.7. An average of 154 mg/dL gives (154 + 46.7) ÷ 28.7 = 7.0%. For mmol/L, multiply by 18.016 first: 8.6 mmol/L is 155 mg/dL, an A1C of 7.0%. Type either number into the calculator and the other fills in."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is a normal A1C?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Below 5.7% is normal, 5.7% to 6.4% is the prediabetes range and 6.5% or higher is the diabetes range — a 5.7% A1C is about 117 mg/dL and a 6.5% A1C about 140 mg/dL. A diagnosis needs a laboratory test, repeated if abnormal; a calculator cannot diagnose."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the average blood sugar for an A1C of 7?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "About 154 mg/dL (8.6 mmol/L), or 53 mmol/mol in the newer international units. The calculator also shows where 7% sits on a scale next to the normal, prediabetes and diabetes ranges."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is A1C in mmol/mol?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Many countries report A1C as mmol/mol (IFCC units) instead of %. mmol/mol = (A1C% − 2.15) × 10.929, so 7.0% is 53 mmol/mol and 6.5% is 48 mmol/mol. Type either unit and the calculator converts."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between A1C, eAG and GMI?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A1C is a lab blood test (a percentage of glycated hemoglobin). eAG is that A1C expressed in glucose units using the ADAG formula. GMI is a different estimate worked out from the average glucose of a continuous glucose monitor (CGM) — GMI = 3.31 + 0.02392 × mean glucose in mg/dL. The two formulas cross near 154 mg/dL and drift apart elsewhere: at 250 mg/dL the ADAG formula gives 10.3% and GMI 9.3%. Enter an average glucose and the calculator shows both; the GMI calculator goes deeper."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why does my meter average not match my A1C?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A1C reflects roughly the last two to three months, because red blood cells live about three months, while a meter shows single moments. The formula is also an average across many people (R² 0.84), not an exact rule for one person, and frequent highs and lows can average out to a normal-looking A1C. A gap is common — discuss it with your care team."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I enter a list of readings?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Open Go advanced, choose mg/dL or mmol/L and paste your readings, one per line or separated by commas. The calculator averages them and fills in the estimated A1C and GMI. It ignores anything that is not a plausible glucose value and tells you how many it ignored."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can this calculator diagnose diabetes?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. It converts numbers using published formulas and shows which range a value falls in. Diagnosis and treatment decisions need a laboratory test and your healthcare professional."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "CalcThis",
+      "item": "https://calcthis.co/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "A1C Calculator",
+      "item": "https://calcthis.co/a1c-calculator/"
+    }
+  ]
+}
+</script>
+<meta property="og:site_name" content="CalcThis">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://calcthis.co/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="CalcThis — free, purpose-built calculators">
+<meta name="twitter:title" content="A1C Calculator — A1C to Blood Sugar (eAG) and Back">
+<meta name="twitter:description" content="A1C calculator: convert A1C to average blood sugar (eAG) or glucose to A1C in mg/dL, mmol/L and mmol/mol, with a scale, your goal and GMI.">
+<meta name="twitter:image" content="https://calcthis.co/assets/og-default.png">
+</head>
+<body class="p-bmr p-avg p-a1c">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <a class="hdr-back" href="/blog/" aria-label="Back to blog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-search"><div class="menu-sx"><input id="menuSearch" type="search" placeholder="Search calculators or states…" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Search calculators" enterkeyhint="search"></div><div class="menu-results" id="menuResults" hidden></div></div>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <span class="menu-col-head">Construction &amp; Gardening</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+          <a href="/paint-calculator/">Paint</a>
+          <a href="/wallpaper-calculator/">Wallpaper</a>
+          <a href="/square-footage-calculator/">Square Footage</a>
+          <a href="/tape-measure-fraction-calculator/">Tape Measure Fraction</a>
+          <a href="/stair-calculator/">Stair</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/vo2-max-calculator/">VO2 Max</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
+          <a href="/bmi-calculator/">BMI</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/ideal-weight-calculator/">Ideal Weight</a>
+          <a href="/lean-body-mass-calculator/">Lean Body Mass</a>
+          <a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio</a>
+          <a href="/gmi-calculator/">GMI</a>
+          <a href="/a1c-calculator/" class="current">A1C</a>
+          <a href="/calorie-calculator/">Calorie</a>
+          <a href="/calorie-deficit-calculator/">Calorie Deficit</a>
+          <a href="/bmr-calculator/">BMR</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/water-intake-calculator/">Water Intake</a>
+          <a href="/macro-calculator/">Macro</a>
+          <a href="/protein-intake-calculator/">Protein Intake</a>
+          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
+          <a href="/steps-to-miles-calculator/">Steps to Miles</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/semester-grade-calculator/">Semester Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+          <a href="/grade-curve-calculator/">Grade Curve</a>
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/fraction-calculator/">Fraction</a>
+          <a href="/standard-deviation-calculator/">Standard Deviation</a>
+          <a href="/scientific-notation-calculator/">Scientific Notation</a>
+          <a href="/average-calculator/">Average</a>
+          <a href="/batting-average-calculator/">Batting Average</a>
+          <a href="/stock-average-calculator/">Stock Average</a>
+          <a href="/dice-average-calculator/">Dice Average</a>
+          <a href="/time-average-calculator/">Time Average</a>
+          <a href="/weighted-average-calculator/">Weighted Average</a>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+          <a href="/percentage-change-calculator/">Percentage Change</a>
+          <a href="/age-calculator/">Age</a>
+          <a href="/date-calculator/">Date</a>
+          <a href="/time-calculator/">Time</a>
+          <a href="/hours-calculator/">Hours</a>
+          <a href="/triangle-calculator/">Triangle</a>
+          <a href="/random-number-generator/">Random Number</a>
+          <span class="menu-col-head">Cooking &amp; Kitchen</span>
+          <a href="/recipe-converter/">Recipe Converter</a>
+          <a href="/turkey-cooking-time-calculator/">Turkey Cooking Time</a>
+          <a href="/turkey-thawing-time-calculator/">Turkey Thawing Time</a>
+          <a href="/turkey-size-calculator/">Turkey Size</a>
+          <!--UNITNAV:START-->
+          <span class="menu-col-head">Unit Converters</span>
+          <a href="/unit-converter/">Unit Converter</a>
+          <a href="/length-converter/">Length Converter</a>
+          <a href="/weight-converter/">Weight Converter</a>
+          <a href="/volume-converter/">Volume Converter</a>
+          <a href="/temperature-converter/">Temperature Converter</a>
+          <a href="/area-converter/">Area Converter</a>
+          <a href="/speed-converter/">Speed Converter</a>
+          <a href="/data-storage-converter/">Data Storage Converter</a>
+          <a href="/cooking-converter/">Cooking Converter</a>
+          <a href="/px-to-rem-converter/">PX to REM Converter</a>
+          <!--UNITNAV:END-->
+          <span class="menu-col-head">Money &amp; Finance</span>
+          <a href="/mortgage-calculator/">Mortgage</a>
+          <a href="/loan-calculator/">Loan</a>
+          <a href="/auto-loan-calculator/">Auto Loan</a>
+          <a href="/car-sales-tax-calculator/">Car Sales Tax</a>
+          <a href="/overtime-calculator/">Overtime</a>
+          <a href="/salary-calculator/">Salary</a>
+          <!--STAXNAV:START-->
+          <a href="/sales-tax-calculator/">Sales Tax</a>
+          <a href="/sales-tax-calculator/california/">California Sales Tax</a>
+          <a href="/sales-tax-calculator/chicago/">Chicago Sales Tax</a>
+          <a href="/sales-tax-calculator/florida/">Florida Sales Tax</a>
+          <a href="/sales-tax-calculator/las-vegas/">Las Vegas Sales Tax</a>
+          <a href="/sales-tax-calculator/los-angeles/">Los Angeles Sales Tax</a>
+          <a href="/sales-tax-calculator/michigan/">Michigan Sales Tax</a>
+          <a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax</a>
+          <a href="/sales-tax-calculator/missouri/">Missouri Sales Tax</a>
+          <a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax</a>
+          <a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax</a>
+          <a href="/sales-tax-calculator/north-carolina/">North Carolina Sales Tax</a>
+          <a href="/sales-tax-calculator/ohio/">Ohio Sales Tax</a>
+          <a href="/sales-tax-calculator/texas/">Texas Sales Tax</a>
+          <a href="/sales-tax-calculator/virginia/">Virginia Sales Tax</a>
+          <!--STAXNAV:END-->
+          <a href="/tip-calculator/">Tip</a>
+          <a href="/how-much-to-tip/">How Much to Tip</a>
+        </div>
+        <!--PAYNAV:START-->
+        <div class="menu-col">
+          <span class="menu-col-head">Paycheck Calculators</span>
+          <a href="/paycheck-calculator/">Paycheck Calculator (all states)</a>
+          <a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a>
+          <a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arkansas/">Arkansas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/california/">California Paycheck Calculator</a>
+          <a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a>
+          <a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a>
+          <a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/hawaii/">Hawaii Paycheck Calculator</a>
+          <a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a>
+          <a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a>
+          <a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a>
+          <a href="/paycheck-calculator/louisiana/">Louisiana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a>
+          <a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a>
+          <a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a>
+          <a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a>
+          <a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nebraska/">Nebraska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a>
+          <a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a>
+          <a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a>
+          <a href="/paycheck-calculator/oklahoma/">Oklahoma Paycheck Calculator</a>
+          <a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a>
+          <a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a>
+          <a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a>
+          <a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/utah/">Utah Paycheck Calculator</a>
+          <a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wisconsin/">Wisconsin Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a>
+        </div>
+        <!--PAYNAV:END-->
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">A1C · average blood sugar · both directions</div>
+    <h1>A1C Calculator</h1>
+    <p>Type <strong>any one</strong> number — A1C %, A1C in mmol/mol, or average glucose in mg/dL or mmol/L — and the others fill in. An A1C of <strong>7.0%</strong> is an estimated average glucose of <strong>154 mg/dL</strong> (8.6 mmol/L).</p>
+  </section>
+
+  <div class="grid">
+
+    <!-- INPUT -->
+    <div class="card">
+      <div class="card-pad">
+        <h2 class="card-h2">Your number</h2>
+        <div class="a1-fields"><label class="fld" for="a1AC"><span class="lab">A1C <span class="unit">%</span></span><div class="inp"><input id="a1AC" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 6.5"></div></label><label class="fld" for="a1MM"><span class="lab">A1C (IFCC) <span class="unit">mmol/mol</span></span><div class="inp"><input id="a1MM" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 48"></div></label><label class="fld" for="a1MG"><span class="lab">Average glucose <span class="unit">mg/dL</span></span><div class="inp"><input id="a1MG" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 154"></div></label><label class="fld" for="a1ML"><span class="lab">Average glucose <span class="unit">mmol/L</span></span><div class="inp"><input id="a1ML" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 8.6"></div></label></div>
+        <p class="av-note" style="margin-top:0">Type in any box — the others fill in.</p>
+        <div class="res-hint" id="a1Hint" style="display:none;text-align:left;margin:4px 0 8px"></div>
+        <div id="a1AdvIn" style="display:none">
+          <div class="proj-sep"></div>
+          <label class="fld" for="a1Goal"><span class="lab">Your A1C goal <span class="unit">%</span></span><div class="inp"><input id="a1Goal" type="text" inputmode="decimal" autocomplete="off" placeholder="7"></div></label>
+          <div class="ctl-row" style="display:block;margin-bottom:10px">
+            <span class="ctl-lab" style="display:block;margin-bottom:6px">Readings are in</span>
+            <div class="modeseg" id="a1Unit" role="group" aria-label="Readings are in" style="grid-template-columns:1fr 1fr"><button class="on" type="button" data-v="mg">mg/dL</button><button type="button" data-v="mmol">mmol/L</button></div>
+          </div>
+          <label class="av-lab" for="a1List">List of glucose readings <span style="color:var(--muted);font-weight:500">(optional)</span></label>
+          <textarea class="av-ta" id="a1List" style="min-height:84px" placeholder="e.g. 112, 145, 98, 176, 130" aria-label="List of glucose readings" spellcheck="false"></textarea>
+          <p class="av-note" id="a1ListNote"></p>
+        </div>
+        <div class="add-row split" style="margin-top:16px">
+          <span></span>
+          <button class="advbtn" id="a1AdvBtn" type="button">
+            <span id="a1AdvBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div class="card">
+      <div class="card-pad">
+        <div class="bf-res">
+          <div class="res-lab" id="a1ResLab">Estimated average glucose (eAG)</div>
+          <div class="res-big"><span id="a1Big">—</span></div>
+          <div class="res-sub" id="a1Sub" data-empty="Enter an A1C or an average glucose.">Enter an A1C or an average glucose.</div>
+        </div>
+        <div id="a1Body" style="display:none">
+          <p class="res-tip adv-tip" id="a1Tip"></p>
+          <p class="bm-h">On the scale</p>
+          <div id="a1Scale"></div>
+          <div class="proj-sep"></div>
+          <table class="dtable" id="a1Rows"></table>
+          <p class="a1-note">An estimate from published formulas — not medical advice and not a diagnosis.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- mobile sticky bar -->
+  <div class="mbar" id="mbar">
+    <span class="mbar-lab" id="a1MLab">eAG</span>
+    <div class="mbar-vals"><b id="a1MVal">—</b></div>
+  </div>
+
+  <div class="related-calcs">
+    <p class="related-calcs-h">More calculators that may interest you</p>
+    <div class="pills">
+      <a class="pill" href="/gmi-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg>
+        GMI Calculator
+      </a>
+      <a class="pill" href="/bmi-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+        BMI Calculator
+      </a>
+      <a class="pill" href="/waist-to-hip-ratio-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 17h16M9 3L7 21M17 3l-2 18"/></svg>
+        Waist-to-Hip Ratio
+      </a>
+      <a class="pill" href="/calorie-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12h8"/></svg>
+        Calorie Calculator
+      </a>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use the A1C calculator</h2>
+        <p>Type your <strong>A1C</strong> in % or in mmol/mol, or an <strong>average glucose</strong> in mg/dL or mmol/L. Whichever you type, the other three fill in — there is no mode to switch. Under the result you get a <strong>scale</strong> that marks your number against the normal, prediabetes and diabetes ranges, with your goal marker, and a line telling you where it falls.</p>
+        <p>Enter an average glucose and you also see the <strong>GMI</strong> — the estimate used for continuous glucose monitor (CGM) data — beside the ADAG-formula A1C. Under Go advanced you can set your own goal or paste a <strong>list of readings</strong> and let the calculator average them.</p>
+
+        <h2>The A1C to eAG formula</h2>
+        <div class="formula">
+          eAG (mg/dL) = 28.7 × A1C − 46.7
+          <small>ESTIMATED AVERAGE GLUCOSE · ADAG STUDY</small>
+        </div>
+        <p>For an A1C of 7.0%: 28.7 × 7 − 46.7 = <strong>154 mg/dL</strong>, or 8.6 mmol/L (divide by 18.016). Backwards, (154 + 46.7) ÷ 28.7 = <strong>7.0%</strong>. In mmol/mol the same 7.0% is <strong>53</strong>: (A1C − 2.15) × 10.929.</p>
+        
+        <h2>A1C to blood sugar chart</h2>
+        <p>Every half point from 5.0% to 12.0%. Tap any row to put it in the calculator above.</p>
+        <table class="dtable a1-chart" id="a1Chart">
+          <thead><tr><th>A1C %</th><th>mmol/mol</th><th>mg/dL</th><th>mmol/L</th></tr></thead>
+          <tbody><tr data-a="5.0"><td>5.0</td><td>31</td><td>97</td><td>5.4</td></tr><tr data-a="5.5"><td>5.5</td><td>37</td><td>111</td><td>6.2</td></tr><tr data-a="6.0"><td>6.0</td><td>42</td><td>125</td><td>7.0</td></tr><tr data-a="6.5"><td>6.5</td><td>48</td><td>140</td><td>7.8</td></tr><tr data-a="7.0"><td>7.0</td><td>53</td><td>154</td><td>8.6</td></tr><tr data-a="7.5"><td>7.5</td><td>58</td><td>169</td><td>9.4</td></tr><tr data-a="8.0"><td>8.0</td><td>64</td><td>183</td><td>10.2</td></tr><tr data-a="8.5"><td>8.5</td><td>69</td><td>197</td><td>10.9</td></tr><tr data-a="9.0"><td>9.0</td><td>75</td><td>212</td><td>11.7</td></tr><tr data-a="9.5"><td>9.5</td><td>80</td><td>226</td><td>12.5</td></tr><tr data-a="10.0"><td>10.0</td><td>86</td><td>240</td><td>13.3</td></tr><tr data-a="10.5"><td>10.5</td><td>91</td><td>255</td><td>14.1</td></tr><tr data-a="11.0"><td>11.0</td><td>97</td><td>269</td><td>14.9</td></tr><tr data-a="11.5"><td>11.5</td><td>102</td><td>283</td><td>15.7</td></tr><tr data-a="12.0"><td>12.0</td><td>108</td><td>298</td><td>16.5</td></tr></tbody>
+        </table>
+      </div>
+
+      <div>
+        <h2>A1C, eAG and GMI — not the same thing</h2>
+        <p><strong>A1C</strong> is a lab test of glycated hemoglobin. <strong>eAG</strong> is that A1C written in glucose units. <strong>GMI</strong> is computed from a CGM's average glucose with a different formula, fitted to sensor data. They agree near 154 mg/dL and drift apart elsewhere:</p>
+        <table class="dtable">
+          <thead><tr><th>Average glucose</th><th>GMI</th><th>ADAG A1C</th></tr></thead>
+          <tbody><tr><td>100 mg/dL (5.6 mmol/L)</td><td>5.7%</td><td>5.1%</td></tr><tr><td>120 mg/dL (6.7 mmol/L)</td><td>6.2%</td><td>5.8%</td></tr><tr><td>140 mg/dL (7.8 mmol/L)</td><td>6.7%</td><td>6.5%</td></tr><tr><td>154 mg/dL (8.5 mmol/L)</td><td>7.0%</td><td>7.0%</td></tr><tr><td>180 mg/dL (10.0 mmol/L)</td><td>7.6%</td><td>7.9%</td></tr><tr><td>200 mg/dL (11.1 mmol/L)</td><td>8.1%</td><td>8.6%</td></tr><tr><td>250 mg/dL (13.9 mmol/L)</td><td>9.3%</td><td>10.3%</td></tr><tr><td>300 mg/dL (16.7 mmol/L)</td><td>10.5%</td><td>12.1%</td></tr></tbody>
+        </table>
+        <p>If your number came from a CGM, use the <a href="/gmi-calculator/">GMI calculator</a>; if it came from a lab A1C or a meter average, the A1C calculator above.</p>
+
+        <h2>The A1C ranges</h2>
+        <table class="dtable">
+          <thead><tr><th>A1C</th><th>mmol/mol</th><th>Average glucose</th><th>Range</th></tr></thead>
+          <tbody>
+            <tr><td>Below 5.7%</td><td>below 39</td><td>below 117 mg/dL</td><td>Normal</td></tr>
+            <tr><td>5.7%–6.4%</td><td>39–46</td><td>117–137 mg/dL</td><td>Prediabetes</td></tr>
+            <tr><td>6.5% or higher</td><td>48 or more</td><td>140 mg/dL or more</td><td>Diabetes</td></tr>
+          </tbody>
+        </table>
+        <p>A single result does not make a diagnosis; it has to be a laboratory test and is normally repeated. The ADA's common goal for adults with diabetes is 7% or lower, but personal goals vary with age, pregnancy and other factors.</p>
+
+        <h2>Why your meter and your A1C disagree</h2>
+        <p>A1C averages roughly two to three months of glucose, while a meter shows moments. The formula is an average over many people (R² 0.84), not an exact rule for one person, and swings up and down can average out to a normal-looking A1C. Paste your readings under Go advanced to see their average against your lab result.</p>
+        <h2>Sources</h2>
+        <ul>
+          <li>American Diabetes Association, <a href="https://professional.diabetes.org/glucose_calc" rel="noopener">eAG/A1C conversion calculator</a> — the relationship eAG = 28.7 × A1C − 46.7 (checked November 2026).</li>
+          <li>Nathan DM et al., <a href="https://diabetesjournals.org/care/article/31/8/1473/28589/Translating-the-A1C-Assay-Into-Estimated-Average" rel="noopener">Translating the A1C assay into estimated average glucose values</a>, Diabetes Care 2008;31:1473 — the ADAG study behind the formula (R² = 0.84).</li>
+          <li>Bergenstal RM et al., Glucose Management Indicator (GMI), Diabetes Care 2018;41:2275 — GMI = 3.31 + 0.02392 × mean glucose (mg/dL); see the <a href="https://www.jaeb.org/gmi/" rel="noopener">Jaeb Center GMI page</a>.</li>
+          <li>Selvin E, <a href="https://diabetesjournals.org/care/article/47/6/906/154177/The-Glucose-Management-Indicator-Time-to-Change" rel="noopener">The Glucose Management Indicator: time to change course?</a>, Diabetes Care 2024;47:906 — the 28% of people whose lab A1C and GMI differ by 0.5 points or more.</li>
+          <li><a href="https://www.accu-chek.com/tools/a1c-calculator" rel="noopener">Accu-Chek A1C guide</a> — normal below 5.7%, prediabetes 5.7%–6.4%, diabetes 6.5% or above, and the ADA goal of 7% or lower for many adults with diabetes.</li>
+        </ul>
+        <p><small>For information only — not medical advice and not a diagnosis. A diagnosis needs a laboratory test, repeated if the result is abnormal. Your own goal and treatment are for you and your care team.</small></p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>How do I convert A1C to average blood sugar?</summary><p>Multiply the A1C by 28.7 and subtract 46.7: eAG (mg/dL) = 28.7 × A1C − 46.7. An A1C of 7.0% gives 28.7 × 7 − 46.7 = 154 mg/dL; divide by 18.016 for mmol/L, 8.6. This is the relationship from the ADAG study that the American Diabetes Association uses.</p></details>
+    <details class="faq"><summary>How do I convert average blood sugar to A1C?</summary><p>Add 46.7 to the average glucose (mg/dL) and divide by 28.7. An average of 154 mg/dL gives (154 + 46.7) ÷ 28.7 = 7.0%. For mmol/L, multiply by 18.016 first: 8.6 mmol/L is 155 mg/dL, an A1C of 7.0%. Type either number into the calculator and the other fills in.</p></details>
+    <details class="faq"><summary>What is a normal A1C?</summary><p>Below 5.7% is normal, 5.7% to 6.4% is the prediabetes range and 6.5% or higher is the diabetes range — a 5.7% A1C is about 117 mg/dL and a 6.5% A1C about 140 mg/dL. A diagnosis needs a laboratory test, repeated if abnormal; a calculator cannot diagnose.</p></details>
+    <details class="faq"><summary>What is the average blood sugar for an A1C of 7?</summary><p>About 154 mg/dL (8.6 mmol/L), or 53 mmol/mol in the newer international units. The calculator also shows where 7% sits on a scale next to the normal, prediabetes and diabetes ranges.</p></details>
+    <details class="faq"><summary>What is A1C in mmol/mol?</summary><p>Many countries report A1C as mmol/mol (IFCC units) instead of %. mmol/mol = (A1C% − 2.15) × 10.929, so 7.0% is 53 mmol/mol and 6.5% is 48 mmol/mol. Type either unit and the calculator converts.</p></details>
+    <details class="faq"><summary>What is the difference between A1C, eAG and GMI?</summary><p>A1C is a lab blood test (a percentage of glycated hemoglobin). eAG is that A1C expressed in glucose units using the ADAG formula. GMI is a different estimate worked out from the average glucose of a continuous glucose monitor (CGM) — GMI = 3.31 + 0.02392 × mean glucose in mg/dL. The two formulas cross near 154 mg/dL and drift apart elsewhere: at 250 mg/dL the ADAG formula gives 10.3% and GMI 9.3%. Enter an average glucose and the calculator shows both; the <a href="/gmi-calculator/">GMI calculator</a> goes deeper.</p></details>
+    <details class="faq"><summary>Why does my meter average not match my A1C?</summary><p>A1C reflects roughly the last two to three months, because red blood cells live about three months, while a meter shows single moments. The formula is also an average across many people (R² 0.84), not an exact rule for one person, and frequent highs and lows can average out to a normal-looking A1C. A gap is common — discuss it with your care team.</p></details>
+    <details class="faq"><summary>Can I enter a list of readings?</summary><p>Yes. Open Go advanced, choose mg/dL or mmol/L and paste your readings, one per line or separated by commas. The calculator averages them and fills in the estimated A1C and GMI. It ignores anything that is not a plausible glucose value and tells you how many it ignored.</p></details>
+    <details class="faq"><summary>Can this calculator diagnose diabetes?</summary><p>No. It converts numbers using published formulas and shows which range a value falls in. Diagnosis and treatment decisions need a laboratory test and your healthcare professional.</p></details>
+  </section>
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+      <div class="footer-stack">
+<div class="footer-col" style="order:1">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+          <li><a href="/paint-calculator/">Paint Calculator</a></li>
+          <li><a href="/wallpaper-calculator/">Wallpaper Calculator</a></li>
+          <li><a href="/square-footage-calculator/">Square Footage Calculator</a></li>
+          <li><a href="/tape-measure-fraction-calculator/">Tape Measure Fraction Calculator</a></li>
+          <li><a href="/stair-calculator/">Stair Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:5">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Cooking &amp;</span> <span class="ft2">Kitchen</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/recipe-converter/">Recipe Converter</a></li>
+          <li><a href="/turkey-cooking-time-calculator/">Turkey Cooking Time Calculator</a></li>
+          <li><a href="/turkey-thawing-time-calculator/">Turkey Thawing Time Calculator</a></li>
+          <li><a href="/turkey-size-calculator/">Turkey Size Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:6">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Money &amp;</span> <span class="ft2">Finance</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/mortgage-calculator/">Mortgage Calculator</a></li>
+          <li><a href="/loan-calculator/">Loan Calculator</a></li>
+          <li><a href="/auto-loan-calculator/">Auto Loan Calculator</a></li>
+          <li><a href="/car-sales-tax-calculator/">Car Sales Tax Calculator</a></li>
+          <li><a href="/overtime-calculator/">Overtime Calculator</a></li>
+          <li><a href="/salary-calculator/">Salary Calculator</a></li>
+          <!--STAXFOOT:START-->
+          <li><a href="/sales-tax-calculator/">Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/california/">California Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/chicago/">Chicago Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/florida/">Florida Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/las-vegas/">Las Vegas Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/los-angeles/">Los Angeles Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/michigan/">Michigan Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/missouri/">Missouri Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/north-carolina/">North Carolina Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/ohio/">Ohio Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/texas/">Texas Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/virginia/">Virginia Sales Tax Calculator</a></li>
+          <!--STAXFOOT:END-->
+          <li><a href="/tip-calculator/">Tip Calculator</a></li>
+          <li><a href="/how-much-to-tip/">How Much to Tip</a></li>
+        </ul>
+      </div>
+      </div>
+
+      <div class="footer-right">
+<div class="footer-col footer-col--two" style="order:2">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/vo2-max-calculator/">VO2 Max Calculator</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/bmi-calculator/">BMI Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/ideal-weight-calculator/">Ideal Weight Calculator</a></li>
+          <li><a href="/lean-body-mass-calculator/">Lean Body Mass Calculator</a></li>
+          <li><a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio Calculator</a></li>
+          <li><a href="/gmi-calculator/">GMI Calculator</a></li>
+          <li><a href="/a1c-calculator/">A1C Calculator</a></li>
+          <li><a href="/calorie-calculator/">Calorie Calculator</a></li>
+          <li><a href="/calorie-deficit-calculator/">Calorie Deficit Calculator</a></li>
+          <li><a href="/bmr-calculator/">BMR Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/water-intake-calculator/">Water Intake Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/protein-intake-calculator/">Protein Intake Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
+          <li><a href="/steps-to-miles-calculator/">Steps to Miles Calculator</a></li>
+        </ul>
+      </div>
+
+        <div class="footer-sub">
+<div class="footer-subcol">
+<div class="footer-col" style="order:3">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/semester-grade-calculator/">Semester Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+          <li><a href="/grade-curve-calculator/">Grade Curve Calculator</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:START-->
+<div class="footer-col" style="order:7">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Unit</span> <span class="ft2">Converters</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/unit-converter/">Unit Converter</a></li>
+          <li><a href="/length-converter/">Length Converter</a></li>
+          <li><a href="/weight-converter/">Weight Converter</a></li>
+          <li><a href="/volume-converter/">Volume Converter</a></li>
+          <li><a href="/temperature-converter/">Temperature Converter</a></li>
+          <li><a href="/area-converter/">Area Converter</a></li>
+          <li><a href="/speed-converter/">Speed Converter</a></li>
+          <li><a href="/data-storage-converter/">Data Storage Converter</a></li>
+          <li><a href="/cooking-converter/">Cooking Measurement Converter</a></li>
+          <li><a href="/px-to-rem-converter/">PX to REM Converter</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:END-->
+</div>
+
+<div class="footer-col" style="order:4">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/fraction-calculator/">Fraction Calculator</a></li>
+          <li><a href="/standard-deviation-calculator/">Standard Deviation Calculator</a></li>
+          <li><a href="/scientific-notation-calculator/">Scientific Notation Calculator</a></li>
+          <li><a href="/weighted-average-calculator/">Weighted Average Calculator</a></li>
+          <li><a href="/average-calculator/">Average Calculator</a></li>
+          <li><a href="/batting-average-calculator/">Batting Average Calculator</a></li>
+          <li><a href="/stock-average-calculator/">Stock Average Calculator</a></li>
+          <li><a href="/dice-average-calculator/">Dice Average Calculator</a></li>
+          <li><a href="/time-average-calculator/">Time Average Calculator</a></li>
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+          <li><a href="/percentage-change-calculator/">Percentage Change Calculator</a></li>
+          <li><a href="/age-calculator/">Age Calculator</a></li>
+          <li><a href="/date-calculator/">Date Calculator</a></li>
+          <li><a href="/time-calculator/">Time Calculator</a></li>
+          <li><a href="/hours-calculator/">Hours Calculator</a></li>
+          <li><a href="/triangle-calculator/">Triangle Calculator</a></li>
+          <li><a href="/random-number-generator/">Random Number Generator</a></li>
+        </ul>
+      </div>
+        </div>
+      </div>
+
+      <!--PAYFOOT:START-->
+      <div class="footer-col footer-col--wide">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Paycheck</span> <span class="ft2">Calculators</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/paycheck-calculator/">Paycheck Calculator (all states)</a></li>
+          <li><a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arkansas/">Arkansas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/california/">California Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/hawaii/">Hawaii Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/louisiana/">Louisiana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nebraska/">Nebraska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/oklahoma/">Oklahoma Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/utah/">Utah Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wisconsin/">Wisconsin Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a></li>
+        </ul>
+      </div>
+      <!--PAYFOOT:END-->
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/blog/">Blog</a>
+      <span aria-hidden="true">·</span>
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+</div>
+
+<script src="/assets/app.js?v=310"></script>
+<script>CalcThis.initA1cCalc('a1c');</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>

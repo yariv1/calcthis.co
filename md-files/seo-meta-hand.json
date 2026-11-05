@@ -231,6 +231,14 @@
     "t": "Sales Tax Calculator — Add, Remove or Find the Rate by State",
     "d": "Free sales tax calculator: add tax to a price, remove it from a total or find the rate. Pick your state for rates, exempt items and shipping rules."
   },
+  "/a1c-calculator/": {
+    "t": "A1C Calculator — A1C to Blood Sugar (eAG) and Back",
+    "d": "A1C calculator: convert A1C to average blood sugar (eAG) or glucose to A1C in mg/dL, mmol/L and mmol/mol, with a scale, your goal and GMI."
+  },
+  "/gmi-calculator/": {
+    "t": "GMI Calculator — Glucose Management Indicator to A1C",
+    "d": "GMI calculator: turn your CGM average glucose (mg/dL or mmol/L) into a Glucose Management Indicator and compare it with your lab A1C."
+  },
   "/waist-to-hip-ratio-calculator/": {
     "d": "Free waist-to-hip ratio calculator: your WHR on a sex-specific health-risk gauge, with a WHO waist-circumference cross-check."
   },

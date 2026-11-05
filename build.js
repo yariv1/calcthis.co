@@ -42,6 +42,8 @@ const PAGES = [
   { file: 'ideal-weight-calculator/index.html', slug: '/ideal-weight-calculator/' },
   { file: 'lean-body-mass-calculator/index.html', slug: '/lean-body-mass-calculator/' },
   { file: 'waist-to-hip-ratio-calculator/index.html', slug: '/waist-to-hip-ratio-calculator/' },
+  { file: 'gmi-calculator/index.html', slug: '/gmi-calculator/' },
+  { file: 'a1c-calculator/index.html', slug: '/a1c-calculator/' },
   { file: 'bmr-calculator/index.html',          slug: '/bmr-calculator/' },
   { file: 'calorie-deficit-calculator/index.html', slug: '/calorie-deficit-calculator/' },
   { file: 'calorie-calculator/index.html',      slug: '/calorie-calculator/' },

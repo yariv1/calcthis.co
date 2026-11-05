@@ -11246,6 +11246,216 @@ CalcThis.initPctChangeCalc = function () {
 };
 /* PCT-CHANGE:END */
 
+/* A1C-FAMILY:BEGIN */
+/* =========================================================
+   A1C — pure engine (no DOM). Marked A1C-ENGINE:START/END.
+   eAG (mg/dL) = 28.7 x A1C - 46.7  (ADAG study, Nathan et al., Diabetes Care 2008;31:1473, R2 0.84)
+   GMI (%)     = 3.31 + 0.02392 x mean glucose (mg/dL)  (Bergenstal et al., Diabetes Care 2018;41:2275)
+   A1C in mmol/mol (IFCC) = (A1C% - 2.15) x 10.929 ; glucose mg/dL = mmol/L x 18.016
+   Bands: below 5.7 normal, 5.7-6.4 prediabetes, 6.5 and above diabetes range (ADA). */
+/* A1C-ENGINE:START */
+CalcThis.a1cEngine = (function () {
+  var MG = 18.016;
+  function eag(a) { return 28.7 * a - 46.7; }
+  function a1cFromEag(g) { return (g + 46.7) / 28.7; }
+  function gmi(g) { return 3.31 + 0.02392 * g; }
+  function gFromGmi(m) { return (m - 3.31) / 0.02392; }
+  function ifcc(a) { return (a - 2.15) * 10.929; }
+  function a1cFromIfcc(m) { return m / 10.929 + 2.15; }
+  function r1(x) { return Math.round(x * 10) / 10; }
+  function band(a) { var r = r1(a); return r < 5.7 ? 'normal' : (r < 6.5 ? 'pre' : 'dm'); }
+  function num(t) {
+    t = (t + '').trim().replace(/\s/g, '');
+    if (!t) return null;
+    if (/^[+-]?\d*,\d+$/.test(t)) t = t.replace(',', '.'); else t = t.replace(/,/g, '');
+    if (!/^[+-]?(\d+\.?\d*|\.\d+)$/.test(t)) return NaN;
+    return parseFloat(t);
+  }
+  /* list of glucose readings in unit 'mg' or 'mmol' -> {n, ign, mean (mg/dL), min, max} */
+  function readings(text, unit) {
+    var lo = unit === 'mmol' ? 1.1 : 20, hi = unit === 'mmol' ? 44.4 : 800, v = [], ign = 0;
+    String(text).split(/[\s;,]+/).forEach(function (x) {
+      if (!x) return;
+      var n = num(x);
+      if (n === null) return;
+      if (isFinite(n) && n >= lo && n <= hi) v.push(unit === 'mmol' ? n * MG : n); else ign++;
+    });
+    if (!v.length) return { n: 0, ign: ign };
+    var s = 0, mn = Infinity, mx = -Infinity; v.forEach(function (x) { s += x; if (x < mn) mn = x; if (x > mx) mx = x; });
+    return { n: v.length, ign: ign, mean: s / v.length, min: mn, max: mx };
+  }
+  return { MG: MG, eag: eag, a1cFromEag: a1cFromEag, gmi: gmi, gFromGmi: gFromGmi, ifcc: ifcc, a1cFromIfcc: a1cFromIfcc, band: band, num: num, readings: readings, r1: r1 };
+})();
+/* A1C-ENGINE:END */
+
+/* =========================================================
+   CalcThis.initA1cCalc(kind) — kind 'a1c' (hub) or 'gmi'. Four (hub) or three (GMI) LINKED fields: type in any one and
+   the others fill — no mode switch. Scale with bands + marker + goal marker, ADAG vs GMI side by side, list of readings
+   under Go advanced. Competitors checked live: ADA, Accu-Chek, a1ccalculator.us, healthcalculator.io. */
+CalcThis.initA1cCalc = function (kind) {
+  var E = CalcThis.a1cEngine, hub = kind === 'a1c';
+  var $ = function (id) { return document.getElementById(id); };
+  var st = { src: null, adv: false, unit: 'mg' };
+  var F = hub ? ['AC', 'MM', 'MG', 'ML'] : ['GM', 'MG', 'ML'];
+  var LIM = { AC: [3, 20, 'A1C', '%'], MM: [9, 195, 'A1C in mmol/mol', ''], MG: [20, 800, 'average glucose in mg/dL', ''], ML: [1.1, 44.4, 'average glucose in mmol/L', ''], GM: [3.8, 22.4, 'GMI', '%'] };
+  function f(x, d) { return (Math.round(x * Math.pow(10, d)) / Math.pow(10, d)).toFixed(d); }
+  function fm(x, d) { return f(x, d).replace('-', '−'); }
+  function setHint(m) { var h = $('a1Hint'); h.textContent = m || ''; h.style.display = m ? 'block' : 'none'; }
+  function esc(t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+
+  function empty(msg, sub) {
+    $('a1Big').textContent = '—'; $('a1Sub').textContent = sub || $('a1Sub').getAttribute('data-empty'); $('a1Body').style.display = 'none';
+    $('a1MVal').textContent = '—'; setHint(msg || '');
+  }
+  function clearOthers(keep) { F.forEach(function (k) { if (k !== keep) $('a1' + k).value = ''; }); }
+  function fillAll(c, keep) {
+    var v = {};
+    if (hub) { v.AC = f(c.a, 1); v.MM = f(E.ifcc(c.a), 0); v.MG = f(c.g, 0); v.ML = f(c.g / E.MG, 1); }
+    else { v.GM = f(E.gmi(c.g), 1); v.MG = f(c.g, 0); v.ML = f(c.g / E.MG, 1); }
+    F.forEach(function (k) { if (k !== keep) $('a1' + k).value = v[k]; });
+  }
+  /* from the source field -> canonical {g, a} or {err} */
+  function canon() {
+    var s = st.src, lst = null;
+    if (st.adv && $('a1List').value.trim()) {
+      lst = E.readings($('a1List').value, st.unit);
+      if (!lst.n) return { err: 'Couldn’t use those readings — they should be glucose values in ' + (st.unit === 'mmol' ? 'mmol/L (1.1–44.4)' : 'mg/dL (20–800)') + ', one per line or separated by commas.', list: lst };
+      return { g: lst.mean, a: E.a1cFromEag(lst.mean), list: lst };
+    }
+    if (!s) return null;
+    var raw = $('a1' + s).value, n = E.num(raw);
+    if (n === null) return { cleared: true };
+    var L = LIM[s];
+    if (isNaN(n)) return { err: 'Couldn’t read the ' + L[2] + ' — use a number like ' + ({ AC: '6.5', MM: '48', MG: '154', ML: '8.6', GM: '7.0' })[s] + '.' };
+    var g;
+    if (s === 'AC') { if (n < 3 || n > 20) return { err: 'A1C is usually between 3% and 20% — check the value.' }; return { a: n, g: E.eag(n) }; }
+    if (s === 'MM') { if (n < 9 || n > 195) return { err: 'A1C in mmol/mol is usually between 9 and 195 — check the value.' }; var a = E.a1cFromIfcc(n); return { a: a, g: E.eag(a) }; }
+    if (s === 'MG') g = n;
+    else if (s === 'ML') g = n * E.MG;
+    else { g = E.gFromGmi(n); }
+    if (g < 20 || g > 800) return { err: s === 'GM' ? 'GMI between 3.8% and 22.4% please — check the value.' : (s === 'ML' ? 'Average glucose is usually between 1.1 and 44.4 mmol/L — check the value.' : 'Average glucose is usually between 20 and 800 mg/dL — check the value.') };
+    return { g: g, a: E.a1cFromEag(g) };
+  }
+
+  var TICK = [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
+  function pos(a) { return Math.max(0, Math.min(100, (a - 4) / 10 * 100)); }
+  function scale(a, lab, goal) {
+    var h = '<div class="av-scale a1-scale"><span class="av-band a1-b0" style="left:0;width:' + pos(5.7) + '%"></span><span class="av-band a1-b1" style="left:' + pos(5.7) + '%;width:' + (pos(6.5) - pos(5.7)) + '%"></span><span class="av-band a1-b2" style="left:' + pos(6.5) + '%;right:0"></span>';
+    if (goal) h += '<span class="av-mk a1-goal" style="left:' + pos(goal) + '%"><i></i></span>';
+    if (lab != null) h += '<span class="av-mk a1-labmk" style="left:' + pos(lab) + '%"><i></i></span>';
+    h += '<span class="av-mk" style="left:' + pos(a) + '%"><i></i></span></div>';
+    h += '<div class="av-ticks">' + TICK.map(function (t) { return '<span style="left:' + pos(t) + '%">' + t + '%</span>'; }).join('') + '</div>';
+    h += '<div class="av-ticks a1-glu">' + TICK.map(function (t) { var g = hub ? E.eag(t) : E.gFromGmi(t); return '<span style="left:' + pos(t) + '%">' + Math.round(g) + '</span>'; }).join('') + '</div>';
+    h += '<p class="av-note" style="margin:2px 0 6px">Top: ' + (hub ? 'A1C' : 'GMI') + ' %. Bottom: average glucose in mg/dL.</p>';
+    h += '<div class="av-legend"><span><i class="a1k a1n"></i>Below 5.7%</span><span><i class="a1k a1p"></i>5.7–6.4%</span><span><i class="a1k a1d"></i>6.5% and above</span><span><i class="m"></i>' + (hub ? 'Your A1C' : 'Your GMI') + '</span>' + (goal ? '<span><i class="a1k a1g"></i>Goal ' + fm(goal, 1) + '%</span>' : '') + (lab != null ? '<span><i class="a1k a1l"></i>Your lab A1C</span>' : '') + '</div>';
+    $('a1Scale').innerHTML = h;
+  }
+  function bandText(a) {
+    var b = E.band(a), r = fm(E.r1(a), 1);
+    return b === 'normal' ? '<strong>' + r + '%</strong> is below 5.7% — the normal range.' : (b === 'pre' ? '<strong>' + r + '%</strong> falls in the <strong>prediabetes</strong> range (5.7%–6.4%).' : '<strong>' + r + '%</strong> is in the <strong>diabetes</strong> range (6.5% or higher).');
+  }
+  function goalVal() {
+    if (!hub || !st.adv || !$('a1Goal').value.trim()) return 7;
+    var n = E.num($('a1Goal').value); return (isFinite(n) && n >= 4 && n <= 14) ? n : 7;
+  }
+
+  function render() {
+    var c = canon();
+    var lst = c && c.list;
+    $('a1ListNote').textContent = !st.adv || !$('a1List').value.trim() ? 'Paste finger-stick or meter readings — one per line, or separated by commas (use a dot for decimals). The average drives the result.' :
+      (lst && lst.n ? lst.n + ' reading' + (lst.n === 1 ? '' : 's') + ' read · average ' + f(lst.mean, 0) + ' mg/dL (' + f(lst.mean / E.MG, 1) + ' mmol/L) · lowest ' + f(lst.min, 0) + ', highest ' + f(lst.max, 0) + (lst.ign ? ' · ' + lst.ign + ' ignored' : '') : 'No usable readings yet — check the unit above (' + (st.unit === 'mmol' ? 'mmol/L' : 'mg/dL') + ').');
+    if (!c) { empty(''); return; }
+    if (c.cleared) { clearOthers(st.src); empty(''); return; }
+    if (c.err) { if (!lst) clearOthers(st.src); empty(c.err); return; }
+    setHint('');
+    var listMode = !!lst;
+    fillAll(c, listMode ? null : st.src);
+    var a = c.a, g = c.g, labA = null, labTxt = '';
+    var fromGl = listMode || st.src === 'MG' || st.src === 'ML';
+    if (!hub) {
+      var lv = E.num($('a1Lab').value);
+      if (lv !== null && isFinite(lv) && lv >= 3 && lv <= 20) labA = lv;
+    }
+    var mg = f(g, 0), mm = f(g / E.MG, 1), big, lab, sub, mlab;
+    if (hub) {
+      if (listMode || st.src === 'MG' || st.src === 'ML') {
+        lab = 'Estimated A1C'; big = fm(E.r1(a), 1) + '%'; sub = 'From an average glucose of ' + mg + ' mg/dL (' + mm + ' mmol/L) · ' + f(E.ifcc(a), 0) + ' mmol/mol';
+      } else {
+        lab = 'Estimated average glucose (eAG)'; big = f(g, 0) + ' mg/dL'; sub = mm + ' mmol/L · A1C ' + fm(E.r1(a), 1) + '% (' + f(E.ifcc(a), 0) + ' mmol/mol)';
+      }
+    } else {
+      if (st.src === 'GM') { lab = 'Average glucose'; big = f(g, 0) + ' mg/dL'; sub = mm + ' mmol/L · for a GMI of ' + f(E.gmi(g), 1) + '%'; }
+      else { lab = 'Glucose Management Indicator (GMI)'; big = f(E.gmi(g), 1) + '%'; sub = 'From a mean glucose of ' + mg + ' mg/dL (' + mm + ' mmol/L)'; }
+    }
+    mlab = lab;
+    $('a1ResLab').textContent = lab; $('a1Big').textContent = big; $('a1Sub').textContent = sub; $('a1MLab').textContent = mlab; $('a1MVal').textContent = big;
+    $('a1Body').style.display = '';
+
+    var goal = goalVal(), tip = '', rows = [];
+    if (hub) {
+      var show = a;
+      tip = bandText(show);
+      if (E.r1(a) >= 6.5 || (st.adv && $('a1Goal').value.trim())) {
+        var d = E.r1(a) - goal;
+        tip += ' A common goal for adults with diabetes is ' + (goal === 7 ? '7% or lower' : fm(goal, 1) + '% or lower') + ' — yours is ' + (Math.abs(d) < 0.05 ? 'right at it' : fm(Math.abs(d), 1) + ' point' + (Math.abs(d - 1) < 0.05 || Math.abs(d + 1) < 0.05 ? '' : 's') + (d > 0 ? ' above' : ' below') + ' it') + '. Personal goals vary.';
+      }
+      rows = [['A1C', fm(E.r1(a), 1) + ' %'], ['A1C (IFCC)', f(E.ifcc(a), 0) + ' mmol/mol'], ['Average glucose', mg + ' mg/dL'], ['Average glucose', mm + ' mmol/L']];
+      if (fromGl) rows.push(['GMI (if from a CGM)', f(E.gmi(g), 1) + ' %']);
+      scale(a, null, goal);
+    } else {
+      var gm = E.gmi(g);
+      tip = 'A GMI of <strong>' + f(gm, 1) + '%</strong> is an estimate from sensor (CGM) readings — not a lab result, and not a diagnosis.';
+      if (labA != null) {
+        var dd = labA - gm;
+        tip += ' Your lab A1C of <strong>' + fm(labA, 1) + '%</strong> is ' + (Math.abs(dd) < 0.05 ? 'the same as' : fm(Math.abs(dd), 1) + ' point' + (Math.abs(Math.abs(dd) - 1) < 0.05 ? '' : 's') + (dd > 0 ? ' above' : ' below')) + ' your GMI' + (Math.abs(dd) >= 0.5 ? ' — a gap of 0.5 or more. In the research that defined GMI, about 28% of people had a gap that large, so it is common; mention it to your care team.' : ' — within 0.5 points.');
+      } else tip += ' In published research, about 28% of people had a lab A1C that differed from their GMI by 0.5 points or more. Add your lab A1C above to compare.';
+      rows = [['GMI', f(gm, 1) + ' %'], ['Mean glucose', mg + ' mg/dL'], ['Mean glucose', mm + ' mmol/L'], ['Estimated A1C from the same average (ADAG formula)', fm(E.r1(a), 1) + ' %']];
+      if (labA != null) rows.push(['Your lab A1C', fm(labA, 1) + ' %'], ['Lab A1C minus GMI', (labA - gm >= 0 ? '+' : '−') + f(Math.abs(labA - gm), 1) + ' points']);
+      scale(gm, labA, null);
+    }
+    $('a1Tip').innerHTML = tip;
+    $('a1Rows').innerHTML = '<tbody>' + rows.map(function (r) { return '<tr><td>' + r[0] + '</td><td>' + r[1] + '</td></tr>'; }).join('') + '</tbody>';
+    if (hub) {
+      var chart = $('a1Chart');
+      if (chart) [].forEach.call(chart.querySelectorAll('tr[data-a]'), function (tr) { tr.classList.toggle('on', parseFloat(tr.getAttribute('data-a')) === Math.round(a * 2) / 2); });
+    }
+  }
+
+  F.forEach(function (k) {
+    $('a1' + k).addEventListener('input', function () {
+      st.src = k; $('a1List').value = '';
+      render();
+    });
+  });
+  if (!hub) $('a1Lab').addEventListener('input', render);
+  $('a1List').addEventListener('input', function () { if (!$('a1List').value.trim()) { st.src = null; clearOthers(null); } render(); });
+  if (hub) $('a1Goal').addEventListener('input', render);
+  $('a1Unit').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return; st.unit = b.getAttribute('data-v');
+    [].forEach.call($('a1Unit').children, function (x) { x.classList.toggle('on', x === b); }); render();
+  });
+  if (hub) {
+    var chart = $('a1Chart');
+    if (chart) chart.addEventListener('click', function (e) {
+      var tr = e.target.closest('tr[data-a]'); if (!tr) return;
+      $('a1List').value = ''; $('a1AC').value = tr.getAttribute('data-a'); st.src = 'AC'; render();
+      $('a1AC').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+  }
+  $('a1AdvBtn').addEventListener('click', function () {
+    st.adv = !st.adv; $('a1AdvBtn').classList.toggle('open', st.adv); $('a1AdvBtnLab').textContent = st.adv ? 'Go simple' : 'Go advanced'; $('a1AdvIn').style.display = st.adv ? '' : 'none';
+    if (!st.adv) {
+      var hadList = !!$('a1List').value.trim();
+      $('a1List').value = ''; if (hub) $('a1Goal').value = '';
+      st.unit = 'mg'; [].forEach.call($('a1Unit').children, function (x) { x.classList.toggle('on', x.getAttribute('data-v') === 'mg'); });
+      if (hadList) { st.src = null; clearOthers(null); }
+    }
+    render();
+  });
+  render();
+};
+/* A1C-FAMILY:END */
+
 /* =========================================================
    HOURS CALCULATOR — pure engine (no DOM). Loose clock parsing ("9", "915", "9:15a",
    "5p", "1730", "0830", noon, midnight), end-after-start resolution with overnight

@@ -2695,3 +2695,19 @@
 .csel-search:focus{border-color:var(--amber);background:#fff;box-shadow:0 0 0 3px rgba(181,118,31,.13)}
 .csel-none{padding:14px 11px;font-size:14.5px;color:var(--muted)}
 .p-sal .sl-cur .csel-panel{width:300px;max-width:86vw;max-height:min(380px,60vh)}
+
+/* ---- A1C / GMI calculators (.p-a1c) — reuses .p-avg scale/ticks/legend ---- */
+.p-a1c .a1-b0{background:#BFD7C5}.p-a1c .a1-b1{background:#F0D08A}.p-a1c .a1-b2{background:#E7A596}
+.p-a1c .a1-goal i{background:var(--spruce)}
+.p-a1c .a1-labmk i{background:#fff;border:2px solid var(--amber);box-sizing:border-box}
+.p-a1c .a1-glu{margin-top:0;color:var(--ink-soft);font-weight:500}
+.p-a1c .a1-scale{margin-top:10px}
+.p-a1c .a1k{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:5px;vertical-align:-2px}
+.p-a1c .a1k.a1n{background:#BFD7C5}.p-a1c .a1k.a1p{background:#F0D08A}.p-a1c .a1k.a1d{background:#E7A596}
+.p-a1c .a1k.a1g{background:var(--spruce);width:4px}.p-a1c .a1k.a1l{background:#fff;border:2px solid var(--amber);box-sizing:border-box;width:5px}
+.p-a1c .a1-fields{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}
+.p-a1c .a1-fields .fld{margin-bottom:15px}
+.p-a1c .a1-chart tbody tr{cursor:pointer}
+.p-a1c .a1-chart tbody tr:hover td{background:#F7F1E6}
+.p-a1c .a1-chart tbody tr.on td{background:#F3E4C6;font-weight:700}
+.p-a1c .a1-note{font-size:13px;color:var(--muted);line-height:1.5;margin:6px 0 0}

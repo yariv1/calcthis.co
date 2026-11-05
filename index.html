@@ -62,6 +62,8 @@
         { "@type": "WebApplication", "name": "Ideal Weight Calculator", "url": "https://calcthis.co/ideal-weight-calculator/", "applicationCategory": "HealthApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Lean Body Mass Calculator", "url": "https://calcthis.co/lean-body-mass-calculator/", "applicationCategory": "HealthApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Waist-to-Hip Ratio Calculator", "url": "https://calcthis.co/waist-to-hip-ratio-calculator/", "applicationCategory": "HealthApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
+        { "@type": "WebApplication", "name": "GMI Calculator", "url": "https://calcthis.co/gmi-calculator/", "applicationCategory": "HealthApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
+        { "@type": "WebApplication", "name": "A1C Calculator", "url": "https://calcthis.co/a1c-calculator/", "applicationCategory": "HealthApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Calorie Calculator", "url": "https://calcthis.co/calorie-calculator/", "applicationCategory": "HealthApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "BMR Calculator", "url": "https://calcthis.co/bmr-calculator/", "applicationCategory": "HealthApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Calorie Deficit Calculator", "url": "https://calcthis.co/calorie-deficit-calculator/", "applicationCategory": "HealthApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
@@ -116,7 +118,7 @@
   ]
 }
 </script>
-<link rel="stylesheet" href="/assets/style.css?v=309">
+<link rel="stylesheet" href="/assets/style.css?v=310">
 <style>
   .cat-tabs{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
   .cat-grp--hidden{display:none}
@@ -183,6 +185,8 @@
           <a href="/ideal-weight-calculator/">Ideal Weight</a>
           <a href="/lean-body-mass-calculator/">Lean Body Mass</a>
           <a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio</a>
+          <a href="/gmi-calculator/">GMI</a>
+          <a href="/a1c-calculator/">A1C</a>
           <a href="/calorie-calculator/">Calorie</a>
           <a href="/calorie-deficit-calculator/">Calorie Deficit</a>
           <a href="/bmr-calculator/">BMR</a>
@@ -712,6 +716,34 @@
       </span>
       <h3>Waist-to-Hip Ratio Calculator</h3>
       <p>Your WHR from a waist and hip measurement, plotted on a live sex-specific health-risk gauge, plus a WHO waist-circumference cross-check.</p>
+      <span class="go">Open calculator
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+    </a>
+
+    <a class="calc" href="/a1c-calculator/">
+      <span class="ico" aria-hidden="true">
+        <svg width="30" height="30" viewBox="0 0 32 32" fill="none">
+          <path d="M16 4s8 9 8 14a8 8 0 0 1-16 0c0-5 8-14 8-14z" fill="#EFE7D8" stroke="#8F5C13" stroke-width="1.5" stroke-linejoin="round"/>
+          <path d="M11 19h10M16 14v10" stroke="#37503F" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <h3>A1C Calculator</h3>
+      <p>Convert A1C to average blood sugar (eAG) or glucose to A1C — mg/dL, mmol/L and mmol/mol linked, on a scale with your goal, with GMI for CGM users.</p>
+      <span class="go">Open calculator
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+    </a>
+
+    <a class="calc" href="/gmi-calculator/">
+      <span class="ico" aria-hidden="true">
+        <svg width="30" height="30" viewBox="0 0 32 32" fill="none">
+          <path d="M16 4s8 9 8 14a8 8 0 0 1-16 0c0-5 8-14 8-14z" fill="#EFE7D8" stroke="#8F5C13" stroke-width="1.5" stroke-linejoin="round"/>
+          <path d="M11 19h10M16 14v10" stroke="#37503F" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <h3>GMI Calculator</h3>
+      <p>Turn your CGM average glucose into a GMI — mg/dL and mmol/L linked — and compare it with your lab A1C and the ADAG estimate on one scale.</p>
       <span class="go">Open calculator
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </span>
@@ -1563,6 +1595,8 @@
           <li><a href="/ideal-weight-calculator/">Ideal weight</a><span> — four formulas on one scale</span></li>
           <li><a href="/lean-body-mass-calculator/">Lean body mass</a><span> — lean-versus-fat composition</span></li>
           <li><a href="/waist-to-hip-ratio-calculator/">Waist-to-hip ratio</a><span> — a sex-specific health-risk gauge</span></li>
+          <li><a href="/gmi-calculator/">GMI</a><span> — CGM average glucose to GMI</span></li>
+          <li><a href="/a1c-calculator/">A1C</a><span> — A1C to average blood sugar and back</span></li>
           <li><a href="/calorie-calculator/">Calories</a><span> — a daily target for a goal weight</span></li>
           <li><a href="/bmr-calculator/">BMR</a><span> — five formulas on one scale</span></li>
           <li><a href="/calorie-deficit-calculator/">Calorie deficit</a><span> — deficit by kcal, pace, date or what you eat</span></li>
@@ -1753,6 +1787,8 @@
           <li><a href="/ideal-weight-calculator/">Ideal Weight Calculator</a></li>
           <li><a href="/lean-body-mass-calculator/">Lean Body Mass Calculator</a></li>
           <li><a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio Calculator</a></li>
+          <li><a href="/gmi-calculator/">GMI Calculator</a></li>
+          <li><a href="/a1c-calculator/">A1C Calculator</a></li>
           <li><a href="/calorie-calculator/">Calorie Calculator</a></li>
           <li><a href="/calorie-deficit-calculator/">Calorie Deficit Calculator</a></li>
           <li><a href="/bmr-calculator/">BMR Calculator</a></li>
@@ -1917,7 +1953,7 @@
   });
 })();
 </script>
-<script src="/assets/app.js?v=309"></script>
+<script src="/assets/app.js?v=310"></script>
 <script src="/feedback.js" defer></script>
 </body>
 </html>

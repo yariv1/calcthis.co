@@ -50,3 +50,22 @@ tip calculator >100K Hard · tip calculator google >10K Hard · how to calculate
 - **>1000 EASY (build candidates):** Oklahoma, Kansas, Arkansas, Idaho, Hawaii, Maine, Nebraska, Louisiana (`adp louisiana` >100 Medium). Plus South Carolina (>1000 Easy, waiting for its post-Act-110 tables).
 - **>100 Easy only (decide with him, default skip):** New Mexico, Delaware, Mississippi, Rhode Island, North Dakota, Vermont, DC (`dc paycheck calculator` and `washington dc paycheck calculator` both >100 Easy), Connecticut (>100 Easy).
 - West Virginia not checked (not sent).
+
+## Health & Lifestyle + Cooking numbers (his screenshots, 2026-11-05)
+COOKING = weak, dropped: ham cooking time >100 Easy (variants <100), prime rib <100 -> no pages.
+- a1c calculator >10,000 EASY (179 kws): gmi to a1c >1000 Medium; glucose to a1c >1000 Easy; a1c calculator app, 60 day average blood sugar, fructosamine to a1c, blood sugar to a1c, eag to a1c, a1c calculator glucose all >100 Easy.
+- dog age calculator >10,000 Medium (142): by breed >100 Med, new >100 Med, pedigree >100 Easy. cat age calculator >1000 Medium (35). dog food calculator >1000 Medium (180): raw/homemade >100 Easy, by breed/weight/purina >100 Med.
+- bac calculator >10,000 HARD (430): most accurate >1000 Hard, time to zero >100 Easy, alcohol bac >100 Easy; blood alcohol calculator >1000 Hard.
+- calories burned calculator >1000 Medium (883): walking >1000 Med (36), running >1000 Med (23), treadmill/steps/stairmaster/daily >100.
+- keto calculator >1000 Medium (290); carb calculator >1000 Hard; net carb calculator >1000 EASY; carb for diabetics/weight loss >100 Easy.
+- intermittent fasting calculator >1000 EASY (35).
+- bsa calculator >1000 EASY (121): mosteller/dubois >100 Easy.
+- pregnancy weight gain calculator >1000 Medium (51) - YMYL, hold with pregnancy/ovulation until AdSense.
+- body type calculator >1000 HARD - skip.
+PRIORITY (agreed direction: Health & Lifestyle + "Diet ..." calculators): 1 A1C (+glucose/eAG/GMI), 2 dog age (+cat age), 3 calories burned (walking/running), 4 keto + net carb, 5 intermittent fasting, 6 BSA, 7 dog food, 8 BAC (Hard + liability), 9 pregnancy weight gain (hold). DIET phrases still to check: diet calculator, weight loss calculator, weight loss percentage calculator, calorie surplus calculator, bulking calculator, carb cycling calculator, calorie cycling, weight watchers points calculator, fasting calculator, how long to lose weight calculator.
+
+## A1C research (2026-11-05, approved "Approve all") - competitors + differentiators
+Competitors opened live: ADA professional.diabetes.org eAG calculator, Accu-Chek, a1ccalculator.us, healthcalculator.io (calculator.net + Omnicalculator have no A1C page). All use eAG = 28.7 x A1C - 46.7; mostly ONE direction / mode switch; table only, no picture; only healthcalculator.io has reverse + GMI + mmol/mol.
+INPUTS to match: A1C %, A1C mmol/mol, avg glucose mg/dL + mmol/L, CGM mean glucose -> GMI.
+DIFFERENTIATORS: (visual) A1C scale with normal/prediabetes/diabetes bands + your marker + target marker + eAG ruler under it; ADAG-vs-GMI side by side. (functional) 4 linked fields, type any one -> all others fill (no mode switch); paste a list of finger-stick readings -> mean -> est. A1C + GMI; target marker (ADA 7% default, editable); clickable A1C chart rows; plain-words "why meter and lab disagree". DROPPED: numeric 95% prediction-interval band (ADAG paper blocked by Cloudflare, numbers unverified).
+SOURCES verified via search: ADAG Nathan 2008 Diabetes Care 31:1473 (R2 0.84); mmol/L form 1.59xA1C-2.59 (Klonoff 2014); GMI = 3.31 + 0.02392 x mean mg/dL (Bergenstal 2018 Diabetes Care 41:2275; jaeb.org/gmi); 28% GMI-vs-lab discordance >=0.5 (Selvin 2024 Diabetes Care 47:906); IFCC mmol/mol = (A1C - 2.15) x 10.929; ADA thresholds <5.7 / 5.7-6.4 / >=6.5 (Accu-Chek cites ADA).
