@@ -4,6 +4,9 @@ _Rewritten again 2026-11-04 at the end of the Florida + car-sales-tax session: *
 
 ---
 
+## 0000000000000. UPDATE 2026-11-05 (latest) — DOG AGE DEPLOYED v311 (205 pages, commit 7b68acab)
+`/dog-age-calculator/`: three methods (AAHA size chart via Chewy, AVMA rule, UCSD 16 ln(age)+31 read from the Wang 2020 PDF), curve chart with senior window, size by buttons/weight/breed typeahead, DOB (datepicker), human->dog mode. Notes + caveats: `md-files/calcthis-dogage-research.md`. Bing manual submit pending (signed out); GSC queue end: a1c, gmi, dog age. NEXT: cat age (>1000 Medium, own page), then calories burned, keto/net carb, fasting, BSA.
+
 ## 000000000000. UPDATE 2026-11-05 (later) — A1C + GMI DEPLOYED v310 (204 pages, commit 1bc017e9)
 Health direction approved by him ('Health & Lifestyle seems much stronger; Cooking weak; also explore Diet calculators'). Numbers + priority list: `md-files/calcthis-ahrefs-2026-11.md` (bottom). Built: `/a1c-calculator/` hub + `/gmi-calculator/` (generator `md-files/gen-a1c-pages.js`, engine `CalcThis.a1cEngine`, init `initA1cCalc(kind)`). NEXT in the list: dog age (+cat age), calories burned, keto + net carb, intermittent fasting, BSA, dog food, BAC, pregnancy weight gain (hold); check Diet phrases first. GSC queue now ends with a1c + gmi; GSC 2026-11-05: 11 requested, quota hit at las-vegas. Bing Webmaster signed out in Chrome -> manual submit of a1c/gmi pending (IndexNow done). Competitor sites that 404/blocked: calculator.net + Omnicalculator have no A1C page; diabetesjournals.org Cloudflare-blocked.
 
