@@ -131,3 +131,5 @@ GSC snapshot 2026-10-26: 69 indexed, 13 not indexed (8 Discovered, 1 Crawled, 1 
 - 2026-11-05 deployed v309: `/sales-tax-calculator/chicago/ los-angeles/ las-vegas/ michigan/ virginia/ north-carolina/` — Bing submitted manually (7 URLs incl. hub), IndexNow HTTP 200; GSC NOT requested yet: add to the queue after `/sales-tax-calculator/florida/` + `/car-sales-tax-calculator/`.
 
 - 2026-11-05 deployed v317: `/dog-food-calculator/` — IndexNow HTTP 200 (214 URLs); Bing NOT submitted (Bing Webmaster signed out in Chrome); GSC NOT requested: add to the end of the health block of the queue (after `/bsa-calculator/`).
+
+- GSC retry 2026-11-05 (after the dog food deploy, same day as the 11 requests): `/sales-tax-calculator/las-vegas/` -> "Quota Exceeded — try again tomorrow". Nothing requested; queue unchanged (next: las-vegas, michigan, virginia, north-carolina, 13 new paycheck states, 10 older, newest pages, health block incl. `/dog-food-calculator/`).
