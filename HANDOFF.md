@@ -4,6 +4,10 @@ _Rewritten 2026-11-05 at the end of the health-direction session (A1C, GMI, dog 
 
 ---
 
+## 000000000000000c. LATEST (2026-11-05, latest): INTERMITTENT FASTING DEPLOYED v315 (212 pages, 82 calcs, commit c25d0ccd). Sync line: "synced · live v315 / 82 calcs / 212 pages · calories burned x3, keto, net carb, intermittent fasting deployed · Bing signed out, GSC queue has the new URLs at the end". NEXT in health list: BSA (>1000 Easy), dog food (>1000 Med), BAC (Hard); also GSC queue ("Start queue"). See CLAUDE.md addendum 13.
+
+---
+
 ## 000000000000000b. LATEST (2026-11-05, later): KETO + NET CARB DEPLOYED v314 (211 pages, 81 calcs, commit 8e32f0b7). One-line sync: "synced · live v314 / 81 calcs / 211 pages · calories burned x3 (v313) + keto + net carb (v314) deployed · Bing signed out, GSC queue has the new URLs at the end". Code map + sources in CLAUDE.md addendum 12 and md-files/calcthis-keto-research.md. NEXT in health list: intermittent fasting, BSA, dog food, BAC (recommend intermittent fasting: >1000 Easy); also GSC queue ("Start queue") with calories burned x3 + keto + net carb at the end. Rest of this file is older context.
 
 ---

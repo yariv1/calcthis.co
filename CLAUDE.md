@@ -211,8 +211,8 @@ must be built from the article's actual units, every time, not pasted from a tem
 
 ## Project state
 
-- **Asset version:** v314 (live; `.assetver`)
-- **Total pages:** 211 live (sitemap)
+- **Asset version:** v315 (live; `.assetver`)
+- **Total pages:** 212 live (sitemap)
 - **Model:** Sonnet 5
 
 ### New this session — global `.csel` custom-dropdown component
@@ -312,9 +312,12 @@ Recipe Converter
 ### Money & Finance (6)
 Mortgage · Loan · Auto Loan · Overtime · Paycheck · Sales Tax · Tip
 
-Total live calculators: **81** (v314, + A1C, GMI, dog age, cat age, calories burned x3, keto, net carb)
+Total live calculators: **82** (v315, + intermittent fasting, + A1C, GMI, dog age, cat age, calories burned x3, keto, net carb)
 
 ---
+
+## Last session addendum 13 (2026-11-05, DEPLOYED v315): INTERMITTENT FASTING `/intermittent-fasting-calculator/`
+Engine `FAST-ENGINE`, init `CalcThis.initFastCalc` (ids `if*`, block `FASTING:BEGIN/END` at end of app.js), CSS `.p-if`, generator `md-files/gen-fasting-page.js`, notes `md-files/calcthis-fasting-research.md`. 10 methods, anchor by last bite / first meal / bedtime, DS time fields + 12/24h, 24-h ring + live status (override `CalcThis.ifNow` in tests), weekend window, meals, ramp-up plan, 5:2/ADF strips + calories, safety ticks, Anton 2018 12-36 h range, Lowe 2020 + Liu 2022. QA: ~500 window + 150 ramp runs, 2 chaos runs, 375px, audit 212 pages. Not verified: real phone, other browsers. Bing not submitted; GSC not requested. NEXT in health list: BSA, dog food, BAC.
 
 ## Last session addendum 12 (2026-11-05, DEPLOYED v314): KETO `/keto-calculator/` + NET CARB `/net-carb-calculator/`
 Engines `KETO-ENGINE` + `NETCARB-ENGINE` (block `KETO:BEGIN/END` at end of app.js; inits `initKetoCalc` ids `kz*`, `initNetCarbCalc` ids `nc*`; CSS `.p-kz`; generator `md-files/gen-keto-pages.js`; notes `md-files/calcthis-keto-research.md`). Keto: Mifflin/Katch x 5 activity levels, pace, net carb cap 20-50 g, protein g/kg ideal weight (Volek 2021), fat = remainder, per-meal. Net carb: US vs EU label, per serving/100 g, sugar alcohol by type (Livesey GI), strict/best/lenient, day tally. QA: 420+300 differential runs, ~2600 hostile cases, 2 chaos runs, 375px, audit 211 pages. Not verified: real phone, other browsers. Also fixed unit-switch invalid->plausible bug (live cburn weight too). Bing not submitted (signed out); GSC not requested. NEXT in health list: intermittent fasting, BSA, dog food, BAC.
