@@ -89,6 +89,8 @@
         { "@type": "WebApplication", "name": "Weight Loss Calculator", "url": "https://calcthis.co/weight-loss-calculator/", "applicationCategory": "HealthApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Weight Loss Percentage Calculator", "url": "https://calcthis.co/weight-loss-percentage-calculator/", "applicationCategory": "HealthApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Max Heart Rate Calculator", "url": "https://calcthis.co/max-heart-rate-calculator/", "applicationCategory": "HealthApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
+        { "@type": "WebApplication", "name": "Caffeine Calculator", "url": "https://calcthis.co/caffeine-calculator/", "applicationCategory": "HealthApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
+        { "@type": "WebApplication", "name": "Caffeine Half Life Calculator", "url": "https://calcthis.co/caffeine-half-life-calculator/", "applicationCategory": "HealthApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Protein Intake Calculator", "url": "https://calcthis.co/protein-intake-calculator/", "applicationCategory": "HealthApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Final Grade Calculator", "url": "https://calcthis.co/final-grade-calculator/", "applicationCategory": "EducationApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "GPA Calculator", "url": "https://calcthis.co/gpa-calculator/", "applicationCategory": "EducationApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
@@ -133,7 +135,7 @@
   ]
 }
 </script>
-<link rel="stylesheet" href="/assets/style.css?v=322">
+<link rel="stylesheet" href="/assets/style.css?v=323">
 <style>
   .cat-tabs{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
   .cat-grp--hidden{display:none}
@@ -228,6 +230,8 @@
           <a href="/weight-loss-calculator/">Weight Loss</a>
           <a href="/weight-loss-percentage-calculator/">Weight Loss %</a>
           <a href="/max-heart-rate-calculator/">Max Heart Rate</a>
+          <a href="/caffeine-calculator/">Caffeine</a>
+          <a href="/caffeine-half-life-calculator/">Caffeine Half Life</a>
         </div>
         <div class="menu-col">
           <span class="menu-col-head">School &amp; Grades</span>
@@ -1123,6 +1127,36 @@
       </span>
     </a>
 
+    <a class="calc" href="/caffeine-calculator/">
+      <span class="ico" aria-hidden="true">
+        <svg width="30" height="30" viewBox="0 0 32 32" fill="none">
+          <path d="M6 11h17v8a7 7 0 0 1-7 7h-3a7 7 0 0 1-7-7v-8z" stroke="#37503F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M23 13h2a3 3 0 0 1 0 6h-2" stroke="#37503F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="14.5" cy="6" r="2" fill="#B5761F"/>
+        </svg>
+      </span>
+      <h3>Caffeine Calculator</h3>
+      <p>Total the caffeine in your drinks and compare it with the daily limit for adults, or teens and children by weight.</p>
+      <span class="go">Open calculator
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+    </a>
+
+    <a class="calc" href="/caffeine-half-life-calculator/">
+      <span class="ico" aria-hidden="true">
+        <svg width="30" height="30" viewBox="0 0 32 32" fill="none">
+          <path d="M6 11h17v8a7 7 0 0 1-7 7h-3a7 7 0 0 1-7-7v-8z" stroke="#37503F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M23 13h2a3 3 0 0 1 0 6h-2" stroke="#37503F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="14.5" cy="6" r="2" fill="#B5761F"/>
+        </svg>
+      </span>
+      <h3>Caffeine Half Life Calculator</h3>
+      <p>See the caffeine in your body over the day from your drinks and times, and how much is left at bedtime.</p>
+      <span class="go">Open calculator
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+    </a>
+
     <a class="calc" href="/steps-to-miles-calculator/">
       <span class="ico" aria-hidden="true">
         <svg width="30" height="30" viewBox="0 0 32 32" fill="none">
@@ -1864,6 +1898,8 @@
           <li><a href="/weight-loss-calculator/">Weight Loss</a><span> — calories a day to reach a goal weight by a target date: weekly loss, fastest safe date, weight curve and milestone dates</span></li>
           <li><a href="/weight-loss-percentage-calculator/">Weight Loss %</a><span> — percent of body weight lost from any two of starting weight, current weight, weight lost and percent, with progress to a goal</span></li>
           <li><a href="/max-heart-rate-calculator/">Max Heart Rate</a><span> — estimated maximum heart rate from age with six formulas side by side, your measured max compared and heart rate at each percent of max</span></li>
+          <li><a href="/caffeine-calculator/">Caffeine</a><span> — total the caffeine in your drinks against the daily limit for adults, teens and children by weight</span></li>
+          <li><a href="/caffeine-half-life-calculator/">Caffeine Half Life</a><span> — the caffeine in your body through the day from your drinks and times, and what is left at bedtime</span></li>
           <li><a href="/peptide-reconstitution-calculator/">Peptide reconstitution</a><span> — exact syringe draw units</span></li>
         </ul>
       </article>
@@ -2072,6 +2108,8 @@
           <li><a href="/weight-loss-calculator/">Weight Loss Calculator</a></li>
           <li><a href="/weight-loss-percentage-calculator/">Weight Loss Percentage Calculator</a></li>
           <li><a href="/max-heart-rate-calculator/">Max Heart Rate Calculator</a></li>
+          <li><a href="/caffeine-calculator/">Caffeine Calculator</a></li>
+          <li><a href="/caffeine-half-life-calculator/">Caffeine Half Life Calculator</a></li>
         </ul>
       </div>
 
@@ -2225,7 +2263,7 @@
   });
 })();
 </script>
-<script src="/assets/app.js?v=322"></script>
+<script src="/assets/app.js?v=323"></script>
 <script src="/feedback.js" defer></script>
 </body>
 </html>

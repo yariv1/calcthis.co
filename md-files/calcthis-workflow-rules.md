@@ -200,6 +200,8 @@ Chrome links in the final message. Details: `calcthis-working-rules.md` → "Pre
 
 ## RULE 10.0 — THE QA GATE (2026-11-06): `node md-files/qa/run.js <slug>` must print QA PASS before any preview; build.js, the Stop hook and the PreToolUse hook refuse to ship a calculator without a valid pass. Full rule text: CLAUDE.md "CALCULATOR QA IS A MECHANICAL GATE". Create the fixture + oracle with `node md-files/qa/scaffold.js` BEFORE building the page logic, so the checks exist while you code.
 
+## RULE 10.1 — QA IS FUNCTIONAL + UI (user, 2026-11-07): the QA gate (`md-files/qa/run.js` = QA PASS) covers behaviour only. Every build ALSO gets a UI pass against `calcthis-design-system.md` before any preview: 15px global field spacing (no per-page overrides), only existing DS components, labels that say exactly what to enter in the user's own wording ("per day", never a vague "how much you had"), no clipped placeholders or text at 375px, text >= 14px, equal heights/alignment, and LOOK at all 12 screenshots (desktop + mobile) next to the nearest live page. A functional PASS without the UI pass is an incomplete QA.
+
 ## RULE 10 — DEEP QA AFTER EVERY BUILD, AUTOMATICALLY (user, 2026-10-14)
 
 After every build or change to a calculator/article, run the full QA below **yourself, before any preview

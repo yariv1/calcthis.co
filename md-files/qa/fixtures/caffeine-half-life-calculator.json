@@ -1,0 +1,35 @@
+{
+  "slug": "caffeine-half-life-calculator",
+  "bodyClass": "p-chl",
+  "blocks": ["CAF"],
+  "result": { "big": "chBig", "body": "chBody", "hint": "chHint" },
+  "required": ["chN1", "chM1", "chTi1"],
+  "fill": [
+    ["click", "chClear"],
+    ["seg", "chClk", "12"],
+    ["set", "chHLs", "typ"],
+    ["set", "chBedIn", ""],
+    ["set", "chHLc", ""],
+    ["set", "chTar", ""],
+    ["set", "chD1", "coffee"],
+    ["set", "chM1", ""],
+    ["seg", "chU1", "s"],
+    ["set", "chN1", "1"],
+    ["set", "chTi1", "0800"]
+  ],
+  "optionalSamples": {
+    "chBedIn": ["2230", "0615"],
+    "chHLc": ["6", "30"],
+    "chTar": ["25"]
+  },
+  "variants": [
+    [["set", "chBedIn", "1030"]],
+    [["set", "chHLs", "own"], ["set", "chHLc", "6"], ["set", "chBedIn", "1030"]],
+    [["seg", "chClk", "24"], ["set", "chBedIn", "2230"]],
+    [["seg", "chU1", "m"], ["set", "chN1", "300"]],
+    [["set", "chD1", "own"], ["set", "chM1", "120"]],
+    [["click", "chAdd"], ["set", "chN2", "1"], ["set", "chTi2", "0200"], ["set", "chBedIn", "1030"]]
+  ],
+  "scrollTo": "chCurve",
+  "errorState": [["set", "chN1", "0"]]
+}

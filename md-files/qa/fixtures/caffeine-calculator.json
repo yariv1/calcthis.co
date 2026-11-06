@@ -1,0 +1,31 @@
+{
+  "slug": "caffeine-calculator",
+  "bodyClass": "p-caf",
+  "blocks": ["CAF"],
+  "result": { "big": "cfBig", "body": "cfBody", "hint": "cfHint" },
+  "required": ["cfN1", "cfM1"],
+  "fill": [
+    ["click", "cfClear"],
+    ["set", "cfWho", "a"],
+    ["seg", "cfWu", "lb"],
+    ["set", "cfW", ""],
+    ["set", "cfLim", ""],
+    ["set", "cfD1", "coffee"],
+    ["set", "cfM1", ""],
+    ["seg", "cfU1", "s"],
+    ["set", "cfN1", "2"]
+  ],
+  "optionalSamples": {
+    "cfW": ["150", "70.5", "99"],
+    "cfLim": ["300", "50"]
+  },
+  "variants": [
+    [["set", "cfWho", "t"], ["set", "cfW", "110"]],
+    [["set", "cfWho", "p"]],
+    [["set", "cfD1", "own"], ["set", "cfM1", "80"]],
+    [["seg", "cfU1", "m"], ["set", "cfN1", "500"]],
+    [["click", "cfAdd"], ["set", "cfN2", "1"], ["set", "cfD2", "energy"]]
+  ],
+  "scrollTo": "cfTable",
+  "errorState": [["set", "cfN1", "0"]]
+}

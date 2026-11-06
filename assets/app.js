@@ -21582,3 +21582,442 @@ CalcThis.initMhCalc = function () {
   render();
 };
 /* MH:END */
+
+/* CAF:BEGIN */
+/* =========================================================
+   CAFFEINE calculator (/caffeine-calculator/) + CAFFEINE HALF-LIFE calculator (/caffeine-half-life-calculator/). Ahrefs 2026-11-06: caffeine half life calculator >1000 Easy,
+   caffeine calculator >1000 Medium, caffeine calculator by weight and age >100 Easy. Competitors opened live: Omnicalculator (3 drink rows + adult/pregnant/teen/child; no weight, no time).
+   Sources READ: FDA "Spilling the Beans: How Much Caffeine Is Too Much?" (400 mg a day for healthy adults; pregnant, trying to become pregnant or breastfeeding: ask a health care provider;
+   current as of 08/28/2024); Verster & Koenig 2018, Crit Rev Food Sci Nutr 58:1250 abstract (Health Canada 2.5 mg/kg/day children and adolescents, 400 mg/day adults; EFSA 3 mg/kg/day
+   children and adolescents, 400 mg/day adults); USDA FoodData Central SR Legacy via the public API (2026-11-06), caffeine per 100 g: brewed coffee 40, espresso 212, instant coffee prepared
+   26, black tea 20, green tea 12, cola 9, decaf coffee 1, dark chocolate 70-85% 80, energy drinks AMP 31 and Rockstar 33; serving sizes are our own (1 fl oz water = 29.57 g);
+   "Cardiovascular effects of coffee and caffeine", Am J Cardiol 1984 abstract (half-life 5.1 h non-smokers, 5.3 h non-users, 3.2 h smokers, 4.1 h heavy users); Drake et al. 2013, J Clin
+   Sleep Med 9:1195 (PMC3805807; 400 mg taken 0, 3 or 6 hours before bed each disturbed sleep vs placebo; authors cite high variability of the half-life).
+   Model: absorption is treated as instant and elimination as first order (amount halves every half-life) - the page says so.
+   ========================================================= */
+/* CAF-ENGINE:START */
+CalcThis.cafEngine = (function () {
+  var OZ = 29.5735;
+  var DRINKS = [
+    { id: 'coffee', name: 'Brewed coffee', size: '8 fl oz cup', mg: 95, v: 8 * OZ, u2: 'ml' },
+    { id: 'espresso', name: 'Espresso', size: '1 shot, 1 fl oz', mg: 63, v: 1 * OZ, u2: 'ml' },
+    { id: 'instant', name: 'Instant coffee', size: '8 fl oz cup', mg: 62, v: 8 * OZ, u2: 'ml' },
+    { id: 'decaf', name: 'Decaf coffee', size: '8 fl oz cup', mg: 2, v: 8 * OZ, u2: 'ml' },
+    { id: 'tea', name: 'Black tea', size: '8 fl oz cup', mg: 47, v: 8 * OZ, u2: 'ml' },
+    { id: 'green', name: 'Green tea', size: '8 fl oz cup', mg: 28, v: 8 * OZ, u2: 'ml' },
+    { id: 'cola', name: 'Cola', size: '12 fl oz can', mg: 32, v: 12 * OZ, u2: 'ml' },
+    { id: 'energy', name: 'Energy drink (typical)', size: '16 fl oz can', mg: 151, v: 16 * OZ, u2: 'ml' },
+    { id: 'choc', name: 'Dark chocolate 70–85%', size: '1 oz, 28 g', mg: 23, v: 28.3495, u2: 'g' },
+    { id: 'own', name: 'My own amount (mg)', size: '', mg: 0, v: 0, u2: '' }
+  ];
+  var ADULT = 400, HC = 2.5, EFSA = 3, HL = { typ: 5, smoke: 3.2 }, CUP = 95, LB = 2.20462;
+  function num(t) {
+    t = (t + '').trim().replace(/\s/g, '');
+    if (!t) return null;
+    if (/^[+-]?\d*,\d+$/.test(t)) t = t.replace(',', '.'); else t = t.replace(/,/g, '');
+    if (!/^[+-]?(\d+\.?\d*|\.\d+)$/.test(t)) return NaN;
+    return parseFloat(t);
+  }
+  function byId(id) { for (var i = 0; i < DRINKS.length; i++) if (DRINKS[i].id === id) return DRINKS[i]; return DRINKS[0]; }
+  function rd(t, lo, hi) { var n = num(t); if (n === null) return { empty: true }; if (isNaN(n) || n <= 0 || n < lo || n > hi) return { bad: true }; return { v: n }; }
+  function readCount(t) { return rd(t, 0.1, 50); }
+  function readAmt(t, unit, drinkId) {
+    var n = num(t); if (n === null) return { empty: true };
+    if (isNaN(n) || n <= 0) return { bad: true };
+    var d = byId(drinkId), sv = (unit === 'm' && d.v) ? n / d.v : n;
+    if (sv < 0.1 || sv > 50) return { bad: true };
+    return { v: sv, n: n };
+  }
+  function readMg(t) { return rd(t, 1, 2000); }
+  function readLimit(t) { return rd(t, 1, 3000); }
+  function readHL(t) { return rd(t, 1, 24); }
+  function readKg(t, unit) {
+    var n = num(t); if (n === null) return { empty: true };
+    if (isNaN(n) || n <= 0) return { bad: true };
+    var kg = unit === 'lb' ? n / LB : n; if (kg < 5 || kg > 300) return { bad: true };
+    return { v: kg };
+  }
+  function limitFor(who, kg, custom) {
+    if (custom !== null && custom !== undefined) return { mg: custom, kind: 'custom' };
+    if (who === 'a') return { mg: ADULT, kind: 'a' };
+    if (who === 't') return kg ? { mg: HC * kg, hi: EFSA * kg, kind: 't' } : { mg: null, kind: 't' };
+    return { mg: null, kind: 'p' };
+  }
+  function decay(mg, hours, hl) { return mg * Math.pow(0.5, hours / hl); }
+  function bodyAt(doses, at, hl) { var s = 0; doses.forEach(function (d) { if (at >= d.t) s += decay(d.mg, (at - d.t) / 60, hl); }); return s; }
+  function lastBy(bedMin, hl, frac) { return bedMin - hl * 60 * Math.log(1 / frac) / Math.LN2; }
+  function clock(min, c24) {
+    var m = ((Math.round(min) % 1440) + 1440) % 1440, h = Math.floor(m / 60), mi = m % 60, mm = (mi < 10 ? '0' : '') + mi;
+    if (c24) return (h < 10 ? '0' : '') + h + ':' + mm;
+    return ((h % 12) || 12) + ':' + mm + ' ' + (h < 12 ? 'am' : 'pm');
+  }
+  function dayOf(min) { return Math.floor(Math.round(min) / 1440); }
+  function dayWord(min) { var d = dayOf(min); return d <= 0 ? '' : (d === 1 ? ' (next day)' : ' (' + d + ' days later)'); }
+  function trim(x, d) { return String(parseFloat((Math.round(x * Math.pow(10, d)) / Math.pow(10, d)).toFixed(d))); }
+  function grp(n) { return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+  return { DRINKS: DRINKS, ADULT: ADULT, HC: HC, EFSA: EFSA, HL: HL, CUP: CUP, LB: LB, num: num, byId: byId, readCount: readCount, readAmt: readAmt, readMg: readMg, readLimit: readLimit, readHL: readHL, readKg: readKg,
+    limitFor: limitFor, decay: decay, bodyAt: bodyAt, lastBy: lastBy, clock: clock, dayOf: dayOf, dayWord: dayWord, trim: trim, grp: grp };
+})();
+/* CAF-ENGINE:END */
+
+/* shared drink-row pieces for both pages */
+CalcThis._cafUi = {
+  chev: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>',
+  rowHtml: function (E, p, id) {
+    var opts = E.DRINKS.map(function (d) { return '<button type="button" class="csel-opt' + (d.id === 'coffee' ? ' on' : '') + '" role="option" aria-selected="' + (d.id === 'coffee') + '" data-value="' + d.id + '">' + d.name + '</button>'; }).join('');
+    return '<div class="cf-r1"><div class="csel" id="' + p + 'D' + id + '" data-value="coffee"><button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false" aria-label="Drink"><span class="csel-val">Brewed coffee</span>' + CalcThis._cafUi.chev + '</button><div class="csel-panel" role="listbox">' + opts + '</div></div>' +
+      '<button class="x" type="button" aria-label="Remove drink">&#215;</button></div>' +
+      '<div class="fld cf-own" style="display:none"><span class="lab">Caffeine in one serving <span class="unit">mg</span></span><div class="inp"><input id="' + p + 'M' + id + '" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 80" aria-label="Caffeine in one serving, in mg"></div></div>' +
+      '<div class="fld cf-amt"><span class="lab">' + (p === 'cf' ? 'How much you have per day' : 'How much did you have today?') + '</span><div class="cf-box"><input id="' + p + 'N' + id + '" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 2" aria-label="How much you had"><div class="seg cf-u" id="' + p + 'U' + id + '" data-u="s" role="group" aria-label="Unit"><button type="button" class="on" data-v="s">cups</button><button type="button" data-v="m">ml</button></div></div></div>';
+  },
+  unit: function (id) { return { espresso: 'shots', cola: 'cans', energy: 'cans', choc: 'oz', own: 'servings' }[id] || 'cups'; },
+  note: function (E, drinkId) { var d = E.byId(drinkId); return d.id === 'own' ? 'Type the caffeine on the label, in mg, for one serving, then how many servings you had.' : 'One serving = ' + d.size + ', about ' + d.mg + ' mg. Switch to ' + d.u2 + ' for any other size.'; },
+  syncUnit: function (E, p, id) {
+    var did = document.getElementById(p + 'D' + id).value, d = E.byId(did), u = document.getElementById(p + 'U' + id), inp = document.getElementById(p + 'N' + id), cur = u.getAttribute('data-u') || 's';
+    if (!d.u2 && cur === 'm') { cur = 's'; u.setAttribute('data-u', 's'); }
+    u.children[0].textContent = this.unit(did); u.children[1].textContent = d.u2; u.style.display = d.u2 ? '' : 'none';
+    [].forEach.call(u.children, function (b) { b.classList.toggle('on', b.getAttribute('data-v') === cur); });
+    inp.placeholder = cur === 'm' ? 'e.g. ' + (d.u2 === 'g' ? '30' : '250') : 'e.g. 2';
+  },
+  bindUnit: function (E, p, id, after) {
+    var u = document.getElementById(p + 'U' + id), self = this;
+    u.addEventListener('click', function (e) {
+      var b = e.target.closest('button'); if (!b) return;
+      var v = b.getAttribute('data-v'), old = u.getAttribute('data-u') || 's'; if (v === old) return;
+      var d = E.byId(document.getElementById(p + 'D' + id).value), inp = document.getElementById(p + 'N' + id), r = E.readAmt(inp.value, old, d.id);
+      if (r.v && d.v) inp.value = v === 'm' ? E.trim(r.v * d.v, 0) : E.trim(r.v, 2);
+      u.setAttribute('data-u', v); self.syncUnit(E, p, id); after();
+    });
+  }
+};
+
+/* =========================================================
+   CalcThis.initCafLimitCalc() — ids cf*. Engine: CalcThis.cafEngine. No shared state.
+   ========================================================= */
+CalcThis.initCafLimitCalc = function () {
+  var E = CalcThis.cafEngine, U = CalcThis._kzUtil, seg = U.seg, setSeg = U.setSeg, esc = U.esc, UI = CalcThis._cafUi;
+  var $ = function (id) { return document.getElementById(id); };
+  var st = { who: 'a', wu: 'lb' }, rows = [], nextId = 0;
+  function setHint(m, at) {
+    var h = $('cfHint'); h.textContent = m || ''; h.style.display = m ? 'block' : 'none';
+    if (m && at) { var el = $(at), f = el ? el.closest('.fld, .cf-row') : null; if (f && f.nextSibling !== h) f.parentNode.insertBefore(h, f.nextSibling); }
+  }
+  function empty(msg, at) { $('cfBig').textContent = '—'; $('cfSub').textContent = $('cfSub').getAttribute('data-empty'); $('cfBody').style.display = 'none'; $('cfMVal').textContent = '—'; setHint(msg || '', at); }
+  function rowEl(id) { return document.querySelector('.cf-row[data-rid="' + id + '"]'); }
+  function syncRow(id) {
+    var d = $('cfD' + id).value, el = rowEl(id);
+    el.querySelector('.cf-own').style.display = d === 'own' ? '' : 'none';
+    el.querySelector('.cf-note').textContent = UI.note(E, d); UI.syncUnit(E, 'cf', id);
+  }
+  function addRow() {
+    var id = ++nextId, div = document.createElement('div'); div.className = 'cf-row'; div.setAttribute('data-rid', id);
+    div.innerHTML = UI.rowHtml(E, 'cf', id) + '<p class="cf-note"></p>';
+    $('cfRows').appendChild(div); rows.push(id);
+    CalcThis.initCsel($('cfD' + id)); syncRow(id);
+    $('cfD' + id).addEventListener('change', function () { syncRow(id); render(); });
+    UI.bindUnit(E, 'cf', id, render);
+    $('cfN' + id).addEventListener('input', render); $('cfM' + id).addEventListener('input', render);
+    div.querySelector('.x').addEventListener('click', function () {
+      if (rows.length === 1) { $('cfN' + id).value = ''; $('cfM' + id).value = ''; $('cfD' + id).value = 'coffee'; $('cfU' + id).setAttribute('data-u', 's'); syncRow(id); render(); return; }
+      rows = rows.filter(function (r) { return r !== id; }); setHint(''); div.parentNode.removeChild(div); render();
+    });
+    $('cfRows').classList.toggle('one', rows.length === 1);
+    return id;
+  }
+  function clearAll() {
+    setHint(''); $('cfRows').parentNode.insertBefore($('cfHint'), $('cfRows').nextSibling); $('cfRows').innerHTML = ''; rows = []; nextId = 0; addRow(); render();
+  }
+  function render() {
+    $('cfRows').classList.toggle('one', rows.length === 1);
+    var who = st.who, soft = [], items = [], i, prob = null;
+    rows.forEach(function (id, k) {
+      var d = E.byId($('cfD' + id).value), c = E.readAmt($('cfN' + id).value, $('cfU' + id).getAttribute('data-u') || 's', d.id);
+      if (c.empty) return;
+      if (c.bad) { if (!prob) prob = { m: 'Drink ' + (k + 1) + ': type how much you had, between 0.1 and 50 servings.', at: 'cfN' + id }; return; }
+      var mg = d.mg;
+      if (d.id === 'own') {
+        var m = E.readMg($('cfM' + id).value);
+        if (m.empty || m.bad) { if (!prob) prob = { m: 'Drink ' + (k + 1) + ': type the mg in one serving, from 1 to 2,000.', at: 'cfM' + id }; return; }
+        mg = m.v;
+      }
+      items.push({ id: id, name: d.name, n: c.v, mg: mg, total: c.v * mg, size: d.size, own: d.id === 'own' });
+    });
+    if (!items.length) { empty(prob ? prob.m : '', prob ? prob.at : null); return; }
+    if (prob) soft.push({ m: prob.m.replace(/\.$/, '') + '. This row is left out for now.', at: prob.at });
+    var W = E.readKg($('cfW').value, st.wu), kg = null;
+    if (W.bad) soft.push({ m: 'Weight should be between ' + (st.wu === 'lb' ? '11 and 660 lb' : '5 and 300 kg') + '. It is ignored for now.', at: 'cfW' }); else if (W.v) kg = W.v;
+    var C = E.readLimit($('cfLim').value), custom = null;
+    if (C.bad) soft.push({ m: 'Your own limit should be between 1 and 3,000 mg. The default limit is used for now.', at: 'cfLim' }); else if (C.v) custom = C.v;
+    setHint(soft.length ? soft[0].m : '', soft.length ? soft[0].at : null);
+    var total = 0; items.forEach(function (x) { total += x.total; });
+    var L = E.limitFor(who, kg, custom), cups = total / E.CUP, pct = L.mg ? Math.round(total / L.mg * 100) : null;
+    var fmt = function (x) { return E.grp(x) + ' mg'; };
+    $('cfBig').textContent = fmt(total); $('cfMLab').textContent = 'Caffeine today'; $('cfMVal').textContent = fmt(total);
+    var cupTxt = E.trim(cups, 1) + (Math.abs(cups - 1) < 0.05 ? ' cup' : ' cups') + ' of brewed coffee';
+    var sub = '= ' + cupTxt;
+    if (L.mg) sub += ' · ' + pct + '% of ' + (L.kind === 'custom' ? 'your ' + E.grp(L.mg) + ' mg limit' : (L.kind === 'a' ? 'the 400 mg daily limit' : 'the ' + E.grp(L.mg) + ' mg limit for your weight'));
+    else if (L.kind === 'p') sub += ' · ask your health care provider about a limit';
+    else sub += ' · add body weight to see the limit';
+    $('cfSub').textContent = sub;
+    /* tip */
+    var tip;
+    if (L.mg) {
+      var diff = L.mg - total, basis = L.kind === 'a' ? 'the 400 mg a day that the FDA, Health Canada and EFSA cite for healthy adults' : (L.kind === 'custom' ? 'your own limit' : 'the Health Canada limit of 2.5 mg per kg for your weight');
+      if (diff >= 0) tip = 'You are at ' + fmt(total) + ', ' + pct + '% of ' + basis + '. That leaves about ' + fmt(diff) + ' — roughly ' + E.trim(diff / E.CUP, 1) + ' cups of brewed coffee.';
+      else tip = 'You are at ' + fmt(total) + ', ' + pct + '% of ' + basis + ' — about ' + fmt(-diff) + ' over, or ' + E.trim(-diff / E.CUP, 1) + ' cups of brewed coffee too many.';
+    } else if (L.kind === 'p') tip = 'The FDA says that if you are pregnant, trying to become pregnant or breastfeeding, you should ask your health care provider whether you need to limit caffeine. This page adds up the ' + fmt(total) + ' you have had but shows no limit.';
+    else tip = 'You are at ' + fmt(total) + '. For teens and children the guidelines are per kilogram of body weight (Health Canada 2.5 mg, EFSA 3 mg), so add the weight to see the limit.';
+    $('cfTip').textContent = tip;
+    /* bar */
+    var scale = Math.max(total, L.mg || 0) || 1, html = '', key = '';
+    items.forEach(function (x, k) {
+      var pc = x.total / scale * 100, c = 'c' + (k % 6);
+      html += '<span class="cf-seg ' + c + '" style="width:' + pc + '%" title="' + esc(x.name) + '">' + (pc >= 12 ? E.grp(x.total) : '') + '</span>';
+      key += '<span><i class="' + c + '"></i>' + esc(x.name) + ' ' + fmt(x.total) + '</span>';
+    });
+    var tpos = L.mg ? L.mg / scale * 100 : 0, tick = L.mg ? '<i class="cf-tick' + (tpos > 65 ? ' r' : (tpos < 35 ? ' l' : '')) + '" style="left:' + tpos + '%"><b>' + (L.kind === 'a' ? '400' : E.grp(L.mg)) + ' mg limit</b></i>' : '';
+    $('cfBar').innerHTML = '<div class="cf-bar' + (L.mg ? ' has-t' : '') + '"><div class="cf-bar-t"><div class="cf-segs">' + html + '</div>' + tick + '</div></div><div class="bm-key cf-key">' + key + '</div>';
+    /* per-drink table */
+    var tr = '';
+    items.forEach(function (x) { tr += '<tr><td>' + esc(x.name) + '</td><td>' + E.trim(x.n, 2) + ' × ' + E.trim(x.mg, 1) + ' mg</td><td>' + fmt(x.total) + '</td></tr>'; });
+    $('cfTable').innerHTML = '<thead><tr><th>Drink</th><th>Servings</th><th>Caffeine</th></tr></thead><tbody>' + tr + '</tbody><tfoot><tr><td colspan="2">Total</td><td>' + fmt(total) + '</td></tr></tfoot>';
+    /* limits */
+    var lr = [
+      ['a', 'Healthy adult', '400 mg a day', 'FDA, Health Canada, EFSA'],
+      ['t', 'Teen or child', kg ? fmt(E.HC * kg) + ' (HC) · ' + fmt(E.EFSA * kg) + ' (EFSA)' : '2.5 mg per kg (HC) · 3 mg per kg (EFSA)', 'Health Canada, EFSA'],
+      ['p', 'Pregnant or breastfeeding', 'ask a health care provider', 'FDA']
+    ];
+    $('cfLimits').innerHTML = '<thead><tr><th>Who</th><th>Limit</th></tr></thead><tbody>' + lr.map(function (r) { return '<tr' + (r[0] === who ? ' class="on"' : '') + '><td>' + r[1] + '</td><td>' + r[2] + '<span class="bm-sub">' + r[3] + '</span></td></tr>'; }).join('') + '</tbody>';
+    $('cfKg').textContent = kg ? 'That is ' + E.trim(total / kg, 1) + ' mg per kg of body weight (' + E.trim(total / kg / E.LB, 1) + ' mg per lb of body weight' + ').' : '';
+    $('cfKg').style.display = kg ? '' : 'none';
+    $('cfBody').style.display = '';
+  }
+  /* ---------- controls ---------- */
+  $('cfWho').addEventListener('change', function () { st.who = $('cfWho').value; $('cfWOpt').textContent = st.who === 't' ? 'needed for the limit' : 'optional'; render(); });
+  seg('cfWu', function (v) {
+    if (v === st.wu) return;
+    var cur = $('cfW').value, W = E.readKg(cur, st.wu);
+    if (W.v) { var n = E.num(cur); $('cfW').value = E.trim(v === 'kg' ? n / E.LB : n * E.LB, 1); }
+    st.wu = v; $('cfWUnit').textContent = v; render();
+  });
+  $('cfW').addEventListener('input', render); $('cfLim').addEventListener('input', render);
+  $('cfAdd').addEventListener('click', function () { addRow(); render(); });
+  $('cfClear').addEventListener('click', clearAll);
+  $('cfAdvBtn').addEventListener('click', function () {
+    var open = $('cfAdvBtn').classList.toggle('open'); $('cfAdvBtnLab').textContent = open ? 'Go simple' : 'Go advanced'; $('cfAdvIn').style.display = open ? '' : 'none';
+    if (!open) $('cfLim').value = '';
+    render();
+  });
+  addRow(); render();
+};
+
+/* =========================================================
+   CalcThis.initCafHalfCalc() — ids ch*. Engine: CalcThis.cafEngine. The time fields are the Time Calculator's DS .time-field / .ap-seg
+   (masked h:mm digits + AM/PM), same logic as the Intermittent fasting calculator, with the 12/24-hour switch.
+   ========================================================= */
+CalcThis.initCafHalfCalc = function () {
+  var E = CalcThis.cafEngine, U = CalcThis._kzUtil, seg = U.seg, setSeg = U.setSeg, esc = U.esc, UI = CalcThis._cafUi;
+  var $ = function (id) { return document.getElementById(id); };
+  var st = { c24: false, hl: 'typ' }, rows = [], nextId = 0, TF = {};
+  var GHOST = '<span class="g-off">-</span><span class="g-off">-</span><span class="g-sep">:</span><span class="g-off">-</span><span class="g-off">-</span>';
+  function setHint(m, at) {
+    var h = $('chHint'); h.textContent = m || ''; h.style.display = m ? 'block' : 'none';
+    if (m && at) { var el = $(at), f = el ? el.closest('.fld, .ch-dose') : null; if (f && f.nextSibling !== h) f.parentNode.insertBefore(h, f.nextSibling); }
+  }
+  /* ---------- time fields ---------- */
+  function splitDigits(raw) {
+    var d = ('' + raw).replace(/\D/g, '').slice(0, 4);
+    if (!d) return { empty: true };
+    var lim = st.c24 ? '2' : '1';
+    if (d[0] > lim) return { hDig: '0' + d[0], mDig: d.slice(1, 3), hourDone: true };
+    if (st.c24 && d[0] === '2' && d.length >= 2 && d[1] > '3') return { hDig: '02', mDig: d.slice(1, 3), hourDone: true };
+    if (d.length === 1) return { hDig: d, mDig: '', hourDone: false };
+    return { hDig: d.slice(0, 2), mDig: d.slice(2, 4), hourDone: true };
+  }
+  function refreshGhost(f) {
+    var s = splitDigits(f.input.value), val = s.empty ? '' : (s.hourDone ? s.hDig + ':' + s.mDig : s.hDig);
+    if (val !== f.input.value) f.input.value = val;
+    var hc = s.empty ? '' : s.hDig, mc = s.empty ? '' : s.mDig, cells = [hc[0], hc[1], ':', mc[0], mc[1]], html = '';
+    for (var i = 0; i < 5; i++) {
+      if (i === 2) html += '<span class="g-sep">:</span>';
+      else if (cells[i] != null) html += '<span class="g-on">' + cells[i] + '</span>';
+      else html += '<span class="g-off">-</span>';
+    }
+    f.ghost.innerHTML = html;
+  }
+  function fieldMin(f) {
+    var s = splitDigits(f.input.value);
+    if (s.empty) return null;
+    var h = +s.hDig, md = s.mDig, m = md.length === 0 ? 0 : (md.length === 1 ? (+md) * 10 : +md);
+    if (m > 59) return NaN;
+    if (st.c24) return h > 23 ? NaN : h * 60 + m;
+    if (h < 1 || h > 12) return NaN;
+    var base = h % 12; if (f.ap === 'pm') base += 12;
+    return base * 60 + m;
+  }
+  function paintAp(f) { [].forEach.call(f.seg.children, function (b) { b.classList.toggle('on', b.getAttribute('data-ap') === f.ap); }); }
+  function setField(f, text, ap) { f.input.value = text; if (ap) f.ap = ap; refreshGhost(f); paintAp(f); }
+  function put24(f, m) {
+    var h = Math.floor(m / 60), mi = m % 60, mm = (mi < 10 ? '0' : '') + mi;
+    if (st.c24) setField(f, (h < 10 ? '0' : '') + h + ':' + mm, f.ap); else { var h12 = (h % 12) || 12; setField(f, (h12 < 10 ? '0' : '') + h12 + ':' + mm, h < 12 ? 'am' : 'pm'); }
+  }
+  function tfHtml(id, inId, label, ap) {
+    return '<div class="fld ch-tf" id="' + id + '" data-ap="' + ap + '"><span class="lab">' + label + '</span><div class="time-field"><div class="time-box"><div class="time-ghost" aria-hidden="true">' + GHOST + '</div><input id="' + inId + '" class="time-digits" type="text" inputmode="numeric" autocomplete="off" maxlength="5" aria-label="' + label + '"></div><div class="seg ap-seg"><button type="button" data-ap="am">AM</button><button type="button" data-ap="pm">PM</button></div></div></div>';
+  }
+  function regTf(id) { var el = $(id); TF[id] = { el: el, input: el.querySelector('.time-digits'), ghost: el.querySelector('.time-ghost'), seg: el.querySelector('.ap-seg'), ap: el.getAttribute('data-ap') }; paintAp(TF[id]); refreshGhost(TF[id]); }
+  document.addEventListener('input', function (e) {
+    var t = e.target; if (!t.classList || !t.classList.contains('time-digits') || !t.closest('.p-chl')) return;
+    var f = TF[t.closest('.ch-tf').id]; if (f) { refreshGhost(f); render(); }
+  });
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest ? e.target.closest('.p-chl .ap-seg button') : null; if (!b) return;
+    var f = TF[b.closest('.ch-tf').id], ap = b.getAttribute('data-ap'); if (f && f.ap !== ap) { f.ap = ap; paintAp(f); render(); }
+  });
+  seg('chClk', function (v) {
+    var to24 = v === '24'; if (to24 === st.c24) return;
+    var old = {}; Object.keys(TF).forEach(function (k) { old[k] = fieldMin(TF[k]); });
+    st.c24 = to24; document.body.classList.toggle('c24', to24);
+    Object.keys(TF).forEach(function (k) { var m = old[k]; if (m == null || isNaN(m)) { setField(TF[k], '', TF[k].ap); return; } put24(TF[k], m); });
+    render();
+  });
+  /* ---------- dose rows ---------- */
+  function rowEl(id) { return document.querySelector('.ch-dose[data-rid="' + id + '"]'); }
+  function syncRow(id) {
+    var d = $('chD' + id).value, el = rowEl(id);
+    el.querySelector('.cf-own').style.display = d === 'own' ? '' : 'none';
+    el.querySelector('.cf-note').textContent = UI.note(E, d); UI.syncUnit(E, 'ch', id);
+  }
+  function addRow() {
+    var id = ++nextId, div = document.createElement('div'); div.className = 'ch-dose cf-row'; div.setAttribute('data-rid', id);
+    div.innerHTML = UI.rowHtml(E, 'ch', id) + tfHtml('chT' + id, 'chTi' + id, 'Last time you had it?', rows.length === 0 ? 'am' : 'pm') + '<p class="cf-note"></p>';
+    $('chRows').appendChild(div); rows.push(id); regTf('chT' + id);
+    CalcThis.initCsel($('chD' + id)); syncRow(id);
+    $('chD' + id).addEventListener('change', function () { syncRow(id); render(); });
+    UI.bindUnit(E, 'ch', id, render);
+    $('chN' + id).addEventListener('input', render); $('chM' + id).addEventListener('input', render);
+    div.querySelector('.x').addEventListener('click', function () {
+      if (rows.length === 1) { $('chN' + id).value = ''; $('chM' + id).value = ''; $('chD' + id).value = 'coffee'; $('chU' + id).setAttribute('data-u', 's'); setField(TF['chT' + id], '', TF['chT' + id].ap); syncRow(id); render(); return; }
+      rows = rows.filter(function (r) { return r !== id; }); delete TF['chT' + id]; setHint(''); div.parentNode.removeChild(div); render();
+    });
+    $('chRows').classList.toggle('one', rows.length === 1);
+    return id;
+  }
+  function clearAll() {
+    setHint(''); $('chRows').parentNode.insertBefore($('chHint'), $('chRows').nextSibling); Object.keys(TF).forEach(function (k) { if (k !== 'chBed') delete TF[k]; }); $('chRows').innerHTML = ''; rows = []; nextId = 0; addRow(); render();
+  }
+  function empty(msg, at) { $('chBig').textContent = '—'; $('chSub').textContent = $('chSub').getAttribute('data-empty'); $('chBody').style.display = 'none'; $('chMVal').textContent = '—'; setHint(msg || '', at); }
+  function ticks(a, b) {
+    var span = (b - a) / 60, step = span <= 8 ? 1 : (span <= 14 ? 2 : (span <= 20 ? 3 : 4)), out = [];
+    for (var h = Math.ceil(a / 60); h * 60 <= b; h++) if (h % step === 0) out.push(h * 60);
+    return out;
+  }
+  function tickLab(m) { var x = Math.round(((m % 1440) + 1440) % 1440), h = Math.floor(x / 60); return st.c24 ? (h < 10 ? '0' : '') + h + ':00' : ((h % 12) || 12) + (h < 12 ? ' am' : ' pm'); }
+  function curve(doses, hl, B, a, b) {
+    var W = 330, H = 190, pl = 40, pr = 10, pt = 14, pb = 28, n = 90, i, pts = [], peak = 0;
+    for (i = 0; i <= n; i++) { var m = a + (b - a) * i / n, v = E.bodyAt(doses, m, hl); if (v > peak) peak = v; pts.push([m, v]); }
+    doses.forEach(function (d) { var v = E.bodyAt(doses, d.t, hl); if (v > peak) peak = v; });
+    var ymax = peak * 1.12 || 1, X = function (m) { return pl + (m - a) / (b - a) * (W - pl - pr); }, Y = function (v) { return pt + (1 - v / ymax) * (H - pt - pb); };
+    var line = pts.map(function (p, k) { return (k ? 'L' : 'M') + X(p[0]).toFixed(1) + ' ' + Y(p[1]).toFixed(1); }).join(' ');
+    var area = line + ' L' + X(b).toFixed(1) + ' ' + Y(0).toFixed(1) + ' L' + X(a).toFixed(1) + ' ' + Y(0).toFixed(1) + ' Z';
+    var s = '<path d="' + area + '" fill="var(--spruce)" opacity=".16"/><path d="' + line + '" fill="none" stroke="var(--spruce)" stroke-width="2.6" stroke-linejoin="round"/>';
+    ticks(a, b).forEach(function (m) { s += '<line x1="' + X(m).toFixed(1) + '" y1="' + (H - pb) + '" x2="' + X(m).toFixed(1) + '" y2="' + (H - pb + 4) + '" stroke="var(--muted)"/><text x="' + X(m).toFixed(1) + '" y="' + (H - 8) + '" text-anchor="middle" font-size="12" font-weight="600" fill="var(--muted)">' + tickLab(m) + '</text>'; });
+    s += '<line x1="' + pl + '" y1="' + (H - pb) + '" x2="' + (W - pr) + '" y2="' + (H - pb) + '" stroke="var(--line)"/>';
+    s += '<text x="' + (pl - 6) + '" y="' + (Y(0) + 4) + '" text-anchor="end" font-size="12" font-weight="600" fill="var(--muted)">0</text><text x="' + (pl - 6) + '" y="' + (Y(peak) + 4) + '" text-anchor="end" font-size="12" font-weight="600" fill="var(--muted)">' + Math.round(peak) + '</text>';
+    s += '<line x1="' + pl + '" y1="' + Y(peak).toFixed(1) + '" x2="' + (W - pr) + '" y2="' + Y(peak).toFixed(1) + '" stroke="var(--line)" stroke-dasharray="3 4"/>';
+    if (B !== null) {
+      if (B - 360 >= a) s += '<line x1="' + X(B - 360).toFixed(1) + '" y1="' + pt + '" x2="' + X(B - 360).toFixed(1) + '" y2="' + (H - pb) + '" stroke="var(--amber)" stroke-width="2" stroke-dasharray="5 4"/>';
+      s += '<line x1="' + X(B).toFixed(1) + '" y1="' + pt + '" x2="' + X(B).toFixed(1) + '" y2="' + (H - pb) + '" stroke="var(--ink)" stroke-width="2.4"/><circle cx="' + X(B).toFixed(1) + '" cy="' + Y(E.bodyAt(doses, B, hl)).toFixed(1) + '" r="5" fill="var(--amber)" stroke="var(--ink)" stroke-width="2"/>';
+    }
+    doses.forEach(function (d) { s += '<circle cx="' + X(d.t).toFixed(1) + '" cy="' + Y(E.bodyAt(doses, d.t, hl)).toFixed(1) + '" r="3.5" fill="#fff" stroke="var(--spruce)" stroke-width="2"/>'; });
+    return '<svg viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Caffeine in your body over the day, in mg">' + s + '</svg>' +
+      '<div class="bm-key cf-key"><span><i class="c0"></i>Caffeine in your body (mg)</span>' + (B !== null ? '<span><i class="cf-ink"></i>Bedtime</span><span><i class="cf-amb"></i>6 hours before bed</span>' : '') + '</div>';
+  }
+  function render() {
+    $('chRows').classList.toggle('one', rows.length === 1);
+    var items = [], prob = null, soft = [];
+    rows.forEach(function (id, k) {
+      var d = E.byId($('chD' + id).value), c = E.readAmt($('chN' + id).value, $('chU' + id).getAttribute('data-u') || 's', d.id);
+      if (c.empty) return;
+      if (c.bad) { if (!prob) prob = { m: 'Drink ' + (k + 1) + ': type how much you had, between 0.1 and 50 servings.', at: 'chN' + id }; return; }
+      var mg = d.mg;
+      if (d.id === 'own') {
+        var m = E.readMg($('chM' + id).value);
+        if (m.empty || m.bad) { if (!prob) prob = { m: 'Drink ' + (k + 1) + ': type the mg in one serving, from 1 to 2,000.', at: 'chM' + id }; return; }
+        mg = m.v;
+      }
+      var tm = fieldMin(TF['chT' + id]);
+      if (tm === null) { if (!prob) prob = { m: 'Drink ' + (k + 1) + ': add the time you had it.', at: 'chTi' + id }; return; }
+      if (isNaN(tm)) { if (!prob) prob = { m: 'Drink ' + (k + 1) + ': the time should look like 8:30.', at: 'chTi' + id }; return; }
+      items.push({ name: d.name, n: c.v, mg: c.v * mg, t: tm });
+    });
+    if (!items.length) { empty(prob ? prob.m : '', prob ? prob.at : null); return; }
+    if (prob) soft.push({ m: prob.m.replace(/\.$/, '') + '. This drink is left out for now.', at: prob.at });
+    var hl = E.HL.typ;
+    if (st.hl === 'smoke') hl = E.HL.smoke;
+    else if (st.hl === 'own') {
+      var H = E.readHL($('chHLc').value);
+      if (H.bad) soft.push({ m: 'Half-life should be between 1 and 24 hours. It is ignored for now, so 5 hours is used.', at: 'chHLc' }); else if (H.v) hl = H.v;
+    }
+    var bm = fieldMin(TF.chBed), B = null;
+    if (bm !== null && isNaN(bm)) soft.push({ m: 'Bedtime should look like 10:30. It is left out for now.', at: 'chBedIn' });
+    else if (bm !== null) B = bm;
+    var tg = E.readLimit($('chTar').value), target = null;
+    if (tg.bad) soft.push({ m: 'The amount you are comfortable with should be between 1 and 3,000 mg. It is ignored for now.', at: 'chTar' }); else if (tg.v) target = tg.v;
+    items.sort(function (x, y) { return x.t - y.t; });
+    var first = items[0].t, last = items[items.length - 1].t, doses = items.map(function (x) { return { t: x.t, mg: x.mg }; });
+    var nextDay = false;
+    if (B !== null && B < last) { B += 1440; nextDay = true; }
+    if (nextDay) soft.push({ m: 'Your bedtime is earlier than your last drink, so tomorrow’s bedtime is used by default.', at: 'chBedIn' });
+    setHint(soft.length ? soft[0].m : '', soft.length ? soft[0].at : null);
+    var total = 0; items.forEach(function (x) { total += x.mg; });
+    var fmt = function (x) { return E.grp(x) + ' mg'; }, ck = function (m) { return E.clock(m, st.c24) + E.dayWord(m); };
+    var lastMg = 0; items.forEach(function (x) { if (x.t === last) lastMg += x.mg; });
+    var hlTxt = E.trim(hl, 1) + ' h';
+    var left = B !== null ? E.bodyAt(doses, B, hl) : null, peakNow = E.bodyAt(doses, last, hl);
+    if (B !== null) {
+      $('chLab').textContent = 'Caffeine left at bedtime';
+      $('chBig').textContent = fmt(left); $('chMLab').textContent = 'Left at bedtime'; $('chMVal').textContent = fmt(left);
+      $('chSub').textContent = 'at ' + ck(B) + ' · ' + Math.round(left / total * 100) + '% of the ' + fmt(total) + ' you had · half-life ' + hlTxt;
+    } else {
+      $('chLab').textContent = 'Caffeine in your body after your last drink';
+      $('chBig').textContent = fmt(peakNow); $('chMLab').textContent = 'After last drink'; $('chMVal').textContent = fmt(peakNow);
+      $('chSub').textContent = 'half of your last drink is gone by ' + ck(last + hl * 60) + ' · half-life ' + hlTxt + ' · add your bedtime for more';
+    }
+    var tip;
+    if (B !== null) tip = 'At ' + ck(B) + ' about ' + fmt(left) + ' of the ' + fmt(total) + ' is still in your body (' + Math.round(left / total * 100) + '%). Your last drink was ' + E.trim((B - last) / 60, 1) + ' hours before bed. In a 2013 sleep study, 400 mg taken even 6 hours before bedtime disturbed sleep compared with placebo.';
+    else tip = 'Right after your last drink about ' + fmt(peakNow) + ' is in your body. With a ' + hlTxt + ' half-life, half of the last drink is gone by ' + ck(last + hl * 60) + '. Add your bedtime to see what is left when you go to sleep.';
+    $('chTip').textContent = tip;
+    /* curve */
+    var a = first - 60, b = Math.max(last + 3 * hl * 60, B !== null ? B + 60 : 0);
+    if (b - a > 40 * 60) b = a + 40 * 60;
+    $('chCurve').innerHTML = curve(doses, hl, B !== null && B <= b ? B : null, a, b);
+    /* last drink decay table */
+    var rowsT = [[1, '50% (1 half-life)'], [2, '25% (2 half-lives)'], [3, '12.5% (3 half-lives)'], [4, '6.25% (4 half-lives)']], tr = '';
+    rowsT.forEach(function (r) { tr += '<tr><td>' + r[1] + '</td><td>' + fmt(lastMg * Math.pow(0.5, r[0])) + '</td><td>' + ck(last + hl * 60 * r[0]) + '</td></tr>'; });
+    $('chDecay').innerHTML = '<thead><tr><th>Left of your last drink</th><th>Amount</th><th>When</th></tr></thead><tbody>' + tr + '</tbody>';
+    /* last drink by */
+    if (B !== null) {
+      var lr = '', fr = [[0.5, 'half'], [0.25, 'a quarter'], [0.125, 'an eighth']];
+      fr.forEach(function (r) { lr += '<tr><td>Only ' + r[1] + ' left at bedtime</td><td>' + ck(E.lastBy(B, hl, r[0])) + '</td><td>' + E.trim((B - E.lastBy(B, hl, r[0])) / 60, 1) + ' h before bed</td></tr>'; });
+      if (target !== null) {
+        if (target >= lastMg) lr += '<tr><td>No more than ' + fmt(target) + ' left</td><td colspan="2">any time — your last drink has ' + fmt(lastMg) + '</td></tr>';
+        else { var tm2 = E.lastBy(B, hl, target / lastMg); lr += '<tr><td>No more than ' + fmt(target) + ' left</td><td>' + ck(tm2) + '</td><td>' + E.trim((B - tm2) / 60, 1) + ' h before bed</td></tr>'; }
+      }
+      $('chBy').innerHTML = '<thead><tr><th>Finish a drink by</th><th>Clock</th><th>Before bed</th></tr></thead><tbody>' + lr + '</tbody>'; $('chByWrap').style.display = '';
+    } else $('chByWrap').style.display = 'none';
+    $('chBody').style.display = '';
+  }
+  /* ---------- controls ---------- */
+  $('chHLs').addEventListener('change', function () { st.hl = $('chHLs').value; $('chHLWrap').style.display = st.hl === 'own' ? '' : 'none'; render(); });
+  ['chHLc', 'chTar'].forEach(function (id) { $(id).addEventListener('input', render); });
+  $('chAdd').addEventListener('click', function () { addRow(); render(); });
+  $('chClear').addEventListener('click', clearAll);
+  $('chAdvBtn').addEventListener('click', function () {
+    var open = $('chAdvBtn').classList.toggle('open'); $('chAdvBtnLab').textContent = open ? 'Go simple' : 'Go advanced'; $('chAdvIn').style.display = open ? '' : 'none';
+    if (!open) $('chTar').value = '';
+    render();
+  });
+  regTf('chBed');
+  addRow(); render();
+};
+/* CAF:END */

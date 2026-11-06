@@ -167,6 +167,8 @@ const PAGES = [
   { file: 'weight-loss-calculator/index.html', slug: '/weight-loss-calculator/' },
   { file: 'weight-loss-percentage-calculator/index.html', slug: '/weight-loss-percentage-calculator/' },
   { file: 'max-heart-rate-calculator/index.html', slug: '/max-heart-rate-calculator/' },
+  { file: 'caffeine-calculator/index.html', slug: '/caffeine-calculator/' },
+  { file: 'caffeine-half-life-calculator/index.html', slug: '/caffeine-half-life-calculator/' },
   { file: 'protein-intake-calculator/index.html', slug: '/protein-intake-calculator/' },
   { file: 'blog/index.html',            slug: '/blog/' },
   { file: 'blog/how-much-gravel-do-i-need-for-a-driveway/index.html', slug: '/blog/how-much-gravel-do-i-need-for-a-driveway/' },

@@ -4,6 +4,11 @@ _Rewritten 2026-11-06 at the end of session #3 (weight loss by date, weight loss
 
 ---
 
+## 0000000000000017. UPDATE 2026-11-07: CAFFEINE x2 DEPLOYED v323 — live v323 · 91 calcs · 221 pages
+See CLAUDE.md addendum 21 (code map, sources, corrections). Read it first. Key rules from this session: QA gate = functional AND UI (CLAUDE.md QA item 6); labels in his wording; DS 15px spacing. Next: fiber, creatine, vitamin D (research report -> approval). Pending chores unchanged: GSC queue (add the 2 caffeine URLs), Bing manual submit.
+
+---
+
 ## 0000000000000016. START HERE — END OF THE 2026-11-06 SESSION #3 (WEIGHT LOSS BY DATE + WEIGHT LOSS PERCENTAGE + MAX HEART RATE built and deployed; "Maintenance" label renamed; duplication question answered) — live v322 · 89 calculators · 25 articles · 219 pages · `main` pushed (deploy `31b7ec36`, docs/handoff commit after it), working tree clean — AUTHORITATIVE; §15/§14/§13/§12 below are the same session in order and stay valid unless this contradicts them
 
 ### 0. First reply of the next session (do exactly this, then START THE JOB in §1 — he already told me the job)
