@@ -4,6 +4,16 @@ _Rewritten 2026-11-05 (session #2 of the day) at the end of the health-direction
 
 ---
 
+## 0000000000000010. FFMI CALCULATOR DEPLOYED v318 (2026-11-06, after §f) - live v318 · 85 calcs · 215 pages; read this, then §f and §e
+
+First reply = sync: "synced · live v318 / 85 calcs / 215 pages · health direction through FFMI · Bing Webmaster signed out (health pages not manually submitted; IndexNow done) · GSC quota exceeded 2026-11-05/06, queue pending · next: bulking/calorie surplus, weight loss percentage, max heart rate (check overlap), FFMI body-fat estimate, BAC late · your call."
+- FFMI = CLAUDE.md addendum 16 + `md-files/calcthis-ffmi-research.md`. Ahrefs 2026-11-06 screenshots: diet calculator too wide (no page); weight loss calculator by date >10K Easy (check /calorie-deficit-calculator/ title first); weight loss percentage calculator >1000 Easy; bulking calculator >1000 Easy + calorie surplus calculator >1000 Hard = ONE page (mirror of calorie deficit); carb cycling/calorie cycling/weight watchers points weak or unsourced -> skip; max heart rate calculator >10K Medium, target heart rate >1000, heart rate calculator >1000 (existing page = /heart-rate-zone-calculator/ titled "Heart Rate Zone Calculator — Zone 2, Karvonen & Max HR" + /zone-2-heart-rate-calculator/).
+- Suggested order: bulking/calorie surplus -> weight loss percentage -> max heart rate (only if the existing page does not cover it) -> BAC late.
+- Next generator chains after `prevSlug = 'ffmi-calculator'`, `prevMenu = 'FFMI'`, `prevName = 'FFMI Calculator'`; seo-meta anchor `"/ffmi-calculator/": {`; homepage card anchor = steps-to-miles card.
+- Method: Europe PMC REST (https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=EXT_ID:<pmid>%20AND%20SRC:MED&resultType=core&format=json) returns abstracts when PubMed is behind reCAPTCHA. Deploy verified: Pages build `built` for `9366e97f`, curl 200.
+
+---
+
 ## 000000000000000f. DOG FOOD CALCULATOR DEPLOYED v317 (2026-11-05, after §e) — live v317 · 84 calcs · 214 pages; read this, then §e
 
 First reply = sync: "synced · live v317 / 84 calcs / 214 pages · health direction: A1C, GMI, dog age, cat age, calories burned x3, keto, net carb, intermittent fasting, BSA, dog food deployed · Bing Webmaster signed out (health pages not manually submitted; IndexNow done) · GSC queue pending · next: BAC (late) / diet phrases (need Ahrefs screenshots) · your call." Then ask which job (GSC "Start queue", BAC, diet phrases, other).
