@@ -4,6 +4,16 @@ _Rewritten 2026-11-05 (session #2 of the day) at the end of the health-direction
 
 ---
 
+## 0000000000000011. BULKING DEPLOYED v319 + QA GATE (2026-11-06, after §10) — live v319 · 86 calcs · 216 pages; read this, then §10, §f, §e
+
+First reply = sync: "synced · live v319 / 86 calcs / 216 pages · bulking + FFMI + dog food deployed · NEW calculator QA gate (md-files/qa: run.js must print QA PASS, build.js + hooks enforce) · Bing signed out, GSC quota pending · older health pages not audited for the optional-field bug (card proposed) · next: weight loss percentage, max heart rate (check overlap), FFMI body-fat estimate, BAC late · your call."
+- HOW A NEW CALCULATOR IS BUILT NOW: research report -> approval -> generator + engine -> `node md-files/qa/scaffold.js <slug> <bodyClass> <BLOCK> <bigId> <bodyId> <hintId>` -> fill fixture + write an INDEPENDENT oracle (>=100 runs) -> `node md-files/qa/run.js <slug>` until QA PASS -> LOOK at the 12 screenshots in md-files/qa-passes/shots -> preview. Real `node build.js` and `git commit/push` are denied by the PreToolUse hook while a gated page is stale (run QA FIRST, then build as a separate command; the hook also blocks compound commands containing them).
+- Soft-error pattern (mandatory): `empty(msg, anchorId)` only for required fields; optional fields -> `setHint(msg, anchorId)` under the field + ignore. Hints must contain one of: ignored / for now / left out / without / default (the harness checks it).
+- Next generator chains after `prevSlug = 'bulking-calculator'`, `prevMenu = 'Bulking'`, `prevName = 'Bulking Calculator'`; seo-meta anchor `"/bulking-calculator/": {`.
+- Weight loss calculator by date (>10K Easy): check /calorie-deficit-calculator/ title/metadata first; weight loss percentage >1000 Easy next.
+
+---
+
 ## 0000000000000010. FFMI CALCULATOR DEPLOYED v318 (2026-11-06, after §f) - live v318 · 85 calcs · 215 pages; read this, then §f and §e
 
 First reply = sync: "synced · live v318 / 85 calcs / 215 pages · health direction through FFMI · Bing Webmaster signed out (health pages not manually submitted; IndexNow done) · GSC quota exceeded 2026-11-05/06, queue pending · next: bulking/calorie surplus, weight loss percentage, max heart rate (check overlap), FFMI body-fat estimate, BAC late · your call."

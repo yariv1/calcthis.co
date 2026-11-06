@@ -135,3 +135,5 @@ GSC snapshot 2026-10-26: 69 indexed, 13 not indexed (8 Discovered, 1 Crawled, 1 
 - GSC retry 2026-11-05 (after the dog food deploy, same day as the 11 requests): `/sales-tax-calculator/las-vegas/` -> "Quota Exceeded — try again tomorrow". Nothing requested; queue unchanged (next: las-vegas, michigan, virginia, north-carolina, 13 new paycheck states, 10 older, newest pages, health block incl. `/dog-food-calculator/`).
 
 - 2026-11-06 deployed v318: `/ffmi-calculator/` — IndexNow HTTP 200 (215 URLs); Bing NOT submitted (signed out); GSC NOT requested (quota still exceeded 2026-11-06): add after `/dog-food-calculator/` at the end of the health block.
+
+- 2026-11-06 deployed v319: `/bulking-calculator/` — IndexNow HTTP 200 (216 URLs); Bing NOT submitted (signed out); GSC NOT requested (quota): add after `/ffmi-calculator/` at the end of the health block.
