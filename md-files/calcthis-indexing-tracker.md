@@ -2,6 +2,17 @@
 
 _How-to for requesting indexing with Claude in Chrome + the next batch: HANDOFF.md §10. Next batch = /auto-loan-calculator/ + the "not checked yet" list below, ~10 per day._
 
+## ===== GSC STATUS — consolidated 2026-11-07 (THIS BLOCK IS AUTHORITATIVE; the dated notes below are history) =====
+**DONE ("Indexing requested"):** tips + random numbers + sales tax (CA, TX, NYC, FL, car, chicago, los-angeles, las-vegas, michigan, virginia, north-carolina) + paycheck hub + new-york-city + 18 unit pairs + paycheck states new-jersey, ohio, massachusetts, maryland, wisconsin, indiana, oregon (the last 11 requested on 2026-11-07; quota hit on the 12th).
+**TODO, in this order:**
+1. Paycheck states: utah, louisiana, nebraska, oklahoma, arkansas, hawaii
+2. The 10 older paycheck states: alaska, iowa, kentucky, missouri, montana, nevada, new-hampshire, south-dakota, tennessee, wyoming
+3. Newest pages (2026-11-01/02): /salary-calculator/, /overtime-calculator/, /average-calculator/, /batting-average-calculator/, /stock-average-calculator/, /dice-average-calculator/, /time-average-calculator/, /percentage-change-calculator/, /semester-grade-calculator/, /calorie-deficit-calculator/ and re-request /grade-calculator/
+4. Health block (all new, none requested): /a1c-calculator/, /gmi-calculator/, /dog-age-calculator/, /cat-age-calculator/, /calories-burned-calculator/, /calories-burned-walking-calculator/, /calories-burned-running-calculator/, /keto-calculator/, /net-carb-calculator/, /intermittent-fasting-calculator/, /bsa-calculator/, /dog-food-calculator/, /ffmi-calculator/, /bulking-calculator/, /weight-loss-calculator/, /weight-loss-percentage-calculator/, /max-heart-rate-calculator/, /caffeine-half-life-calculator/, /caffeine-calculator/
+5. Re-request (text changed): /heart-rate-zone-calculator/, /zone-2-heart-rate-calculator/, /calorie-calculator/
+**Bing:** all 221 sitemap URLs submitted (2026-11-07). New pages go to Bing at deploy time (Webmaster is signed in again; IndexNow pinged by every build).
+**Quota:** ~11 requests per window, resets about a day later; a request needs ~60 s end to end.
+
 ## LIVE QUEUE (update at EVERY deploy and every request session; last updated 2026-11-02 — overtime deployed; GSC not requested since 2026-11-01 (10 done, quota hit at valet))
 **2026-11-05 (v316): NEW PAGE /bsa-calculator/ deployed (IndexNow 213 URLs HTTP 200; GitHub rejected the first two pushes, the third succeeded). Bing manual submit NOT done (signed out). Add to the END of the GSC queue (after intermittent fasting).**
 
