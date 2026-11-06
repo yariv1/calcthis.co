@@ -198,3 +198,9 @@ Why each step is mandatory:
     again (happened 4 times, including once shipped at the wrong size, before this was fixed)
 
 17. A state / country / place / county picker built as a `.csel` dropdown (with or without `data-search`) instead of the `.st-ta` typeahead copied from the paycheck State field. Shipped once on the car sales tax page (2026-11-04) and the user was furious. `build.js` `checkPickerDesign` now fails the build; open the paycheck page and copy its State field BEFORE writing any such picker.
+
+## QA GATE (2026-11-06) — mandatory step before ANY preview of a new calculator
+1. `node md-files/qa/scaffold.js <slug> <bodyClass> <BLOCK> <bigId> <bodyId> <hintId>` (after the page is generated) -> fixture + oracle starters.
+2. Fill the fixture (`fill`, `required`, `optionalSamples`, `variants`) and write the INDEPENDENT oracle (>= 100 random runs).
+3. `node md-files/qa/run.js <slug>` must print `QA PASS`; fix the page (never the check) until it does. Then open the 6 screenshots per viewport in `md-files/qa-passes/shots/` and look at them.
+4. Commit the fixture, oracle, pass record and screenshots with the page. `build.js` and the hooks refuse to deploy a calculator without a valid pass.

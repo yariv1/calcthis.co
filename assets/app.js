@@ -20403,7 +20403,11 @@ CalcThis.initDogFoodCalc = function () {
   var st = { wu: 'kg', fu: 'cup', fb: 'cup', tr: 0, meals: 2, adv: false, age: 'adult', neu: 'y', ft: 'dry' };
   var ex = {};
   function grp(n) { return U.grp(n); }
-  function setHint(m) { var h = $('fdHint'); h.textContent = m || ''; h.style.display = m ? 'block' : 'none'; }
+  /* the hint sits right under the field it is about, so it is seen on a phone where the result is below */
+  function setHint(m, at) {
+    var h = $('fdHint'); h.textContent = m || ''; h.style.display = m ? 'block' : 'none';
+    if (m && at) { var f = $(at).closest('.cb-two') || $(at).closest('.fld'); if (f && f.nextSibling !== h) f.parentNode.insertBefore(h, f.nextSibling); }
+  }
   var WMSG = { kg: 'Weight should be between 0.3 and 150 kg — check the number and the unit.', lb: 'Weight should be between 0.7 and 330 lb — check the number and the unit.' };
   function readW() {
     var raw = $('fdW').value; if (!raw.trim()) return null;
@@ -20424,7 +20428,7 @@ CalcThis.initDogFoodCalc = function () {
     if (unit === 'kg') return { big: grp(q * 1000) + ' g', small: (q * 1000 >= 1000 ? trim(q, 2) + ' kg' : '') };
     return { big: E.frac(q) + ' ' + (q <= 1.0625 && q > 0.0625 ? U2.one : U2.many), small: trim(q, 2) + ' ' + (q === 1 ? U2.one : U2.many) + (kgDens ? ' · about ' + grp(kcal / kgDens * 1000) + ' g' : '') };
   }
-  function empty(msg) { $('fdBig').textContent = '—'; $('fdSub').textContent = $('fdSub').getAttribute('data-empty'); $('fdBody').style.display = 'none'; $('fdMVal').textContent = '—'; setHint(msg || ''); }
+  function empty(msg, at) { $('fdBig').textContent = '—'; $('fdSub').textContent = $('fdSub').getAttribute('data-empty'); $('fdBody').style.display = 'none'; $('fdMVal').textContent = '—'; setHint(msg || '', at); }
   function icons(q, unit) {
     if (unit === 'kg' || q > 12 || q <= 0) return '';
     var n = Math.ceil(q - 1e-9), out = '';
@@ -20444,8 +20448,11 @@ CalcThis.initDogFoodCalc = function () {
   }
   function render() {
     var w = readW(), bad = w && w.err ? w.err : '';
-    if (bad) { empty(bad); return; }
+    if (bad) { empty(bad, 'fdW'); return; }
     if (!w) { empty(''); return; }
+    /* only the weight is required: every other field that is wrong gets a hint under it and is ignored, so the result never vanishes while you type */
+    var soft = null;
+    function sf(at, msg) { if (!soft) soft = { at: at, msg: msg }; }
     var sel = $('fdType').value, tid = sel !== 'auto' ? sel : (st.age === 'puppy' ? 'puppy' : (st.age === 'senior' ? 'senior' : (st.neu === 'y' ? 'neut' : 'intact')));
     var isPup = tid === 'puppy4' || tid === 'puppy', ageTxt = '';
     $('fdNeuWrap').style.display = (sel === 'auto' && st.age === 'adult') ? '' : 'none';
@@ -20453,29 +20460,29 @@ CalcThis.initDogFoodCalc = function () {
     if (isPup) {
       var age = E.num($('fdAge').value);
       if (age !== null) {
-        if (isNaN(age) || age < 0 || age > 24) { empty('Puppy age should be a number of months between 0 and 24 — or leave it empty and use the type above.'); return; }
-        tid = E.puppyId(age); ageTxt = ' (' + trim(age, 1) + (age === 1 ? ' month' : ' months') + ')';
+        if (isNaN(age) || age < 0 || age > 24) sf('fdAge', 'Puppy age should be a number of months between 0 and 24. It is ignored for now.');
+        else { tid = E.puppyId(age); ageTxt = ' (' + trim(age, 1) + (age === 1 ? ' month' : ' months') + ')'; }
       }
     }
     var own = null;
     if (st.adv) {
       own = E.num($('fdOwn').value);
-      if (own !== null && (isNaN(own) || own < 0.5 || own > 11)) { empty('Your own factor should be a number between 0.5 and 11 (times the resting need) — or leave it empty.'); return; }
+      if (own !== null && (isNaN(own) || own < 0.5 || own > 11)) { sf('fdOwn', 'Your own factor should be a number between 0.5 and 11 (times the resting need). It is ignored for now.'); own = null; }
     }
     var cupMl = st.adv ? E.num($('fdCup').value) : null;
-    if (cupMl !== null && (isNaN(cupMl) || cupMl < 100 || cupMl > 600)) { empty('Your cup should hold between 100 and 600 ml — or leave it empty to use the standard US cup (237 ml).'); return; }
+    if (cupMl !== null && (isNaN(cupMl) || cupMl < 100 || cupMl > 600)) { sf('fdCup', 'Your cup should hold between 100 and 600 ml. The standard US cup (237 ml) is used for now.'); cupMl = null; }
     var cupScale = (cupMl || E.CUP_ML) / E.CUP_ML, ft = st.ft, fa = null, unit = 'cup', kgDens = 0, fb = null, share = null;
     $('fdOwnWrap').style.display = ft === 'own' ? '' : 'none';
     if (ft === 'dry') { fa = { v: E.FOODS.dry.cup * cupScale }; unit = 'cup'; kgDens = E.FOODS.dry.kg; }
     else if (ft === 'wet') { fa = { v: E.FOODS.wet.can }; unit = 'can'; kgDens = E.FOODS.wet.kg; }
-    else { fa = readFood('fdFood', st.fu, 'The food’s calories'); unit = st.fu; if (fa && fa.err) { empty(fa.err); return; } if (fa && unit === 'cup') fa = { v: fa.v * cupScale }; }
+    else { fa = readFood('fdFood', st.fu, 'The food’s calories'); unit = st.fu; if (fa && fa.err) { sf('fdFood', fa.err + ' The amount of food is left out for now.'); fa = null; } if (fa && unit === 'cup') fa = { v: fa.v * cupScale }; }
     if (st.adv) {
       fb = readFood('fdB', st.fb, 'The second food’s calories');
-      if (fb && fb.err) { empty(fb.err); return; }
+      if (fb && fb.err) { sf('fdB', fb.err + ' The second food is left out for now.'); fb = null; }
       share = E.num($('fdShare').value);
-      if (share !== null && (isNaN(share) || share < 0 || share > 100)) { empty('The share of calories from the second food should be between 0 and 100 %.'); return; }
+      if (share !== null && (isNaN(share) || share < 0 || share > 100)) { sf('fdShare', 'The share of calories from the second food should be between 0 and 100 %. It is ignored for now.'); share = null; }
     }
-    setHint('');
+    setHint(soft ? soft.msg : '', soft ? soft.at : null);
     var R = E.calc(w.kg, tid, own), tpc = st.tr / 100, treatK = R.mer * tpc, foodK = R.mer - treatK;
     var t = R.t, rng = R.hi > R.lo ? ' · typical range ' + grp(R.merLo) + '–' + grp(R.merHi) : '';
     $('fdBig').textContent = grp(R.mer) + ' kcal';
@@ -20638,7 +20645,11 @@ CalcThis.initFfmiCalc = function () {
   var st = { sex: 'f', wu: 'lb', hu: 'in', adv: false };
   var ex = {};
   function f1(x) { return (Math.round(x * 10) / 10).toFixed(1); }
-  function setHint(m) { var h = $('ffHint'); h.textContent = m || ''; h.style.display = m ? 'block' : 'none'; }
+  /* the hint sits right under the field it is about, so it is seen on a phone where the result is below */
+  function setHint(m, at) {
+    var h = $('ffHint'); h.textContent = m || ''; h.style.display = m ? 'block' : 'none';
+    if (m && at) { var f = $(at).closest('.cb-two') || $(at).closest('.fld'); if (f && f.nextSibling !== h) f.parentNode.insertBefore(h, f.nextSibling); }
+  }
   var WMSG = { kg: 'Weight should be between 30 and 300 kg — check the number and the unit.', lb: 'Weight should be between 66 and 660 lb — check the number and the unit.', st: 'Weight should be between 4.7 and 47 st — check the number and the unit.' };
   var HMSG = { cm: 'Height should be between 120 and 250 cm — check the number and the unit.', in: 'Height should be between 47 and 98 inches — check the number and the unit.', m: 'Height should be between 1.2 and 2.5 m — check the number and the unit.' };
   function toKg(n) { return st.wu === 'lb' ? n / LB : (st.wu === 'st' ? n * ST : n); }
@@ -20663,7 +20674,7 @@ CalcThis.initFfmiCalc = function () {
     if (isNaN(n) || n < 2 || n > 60) return { err: what + ' should be a percentage between 2 and 60.' };
     return { v: n };
   }
-  function empty(msg) { $('ffBig').textContent = '—'; $('ffSub').textContent = $('ffSub').getAttribute('data-empty'); $('ffBody').style.display = 'none'; $('ffMVal').textContent = '—'; setHint(msg || ''); }
+  function empty(msg, at) { $('ffBig').textContent = '—'; $('ffSub').textContent = $('ffSub').getAttribute('data-empty'); $('ffBody').style.display = 'none'; $('ffMVal').textContent = '—'; setHint(msg || '', at); }
   function both(kg) { return f1(kg) + ' kg · ' + f1(kg * LB) + ' lb'; }
   var COL = ['ff-b0', 'ff-b1', 'ff-b2', 'ff-b3', 'ff-b4', 'ff-b5', 'ff-b6'];
   function scale(sex, v) {
@@ -20681,15 +20692,18 @@ CalcThis.initFfmiCalc = function () {
     return '<div class="ff-rule"><div class="ff-rule-t">' + segs + refs + '<i class="ff-mk" style="left:' + p(v) + '%"><b>' + f1(v) + '</b></i></div><div class="ff-rule-l">' + tk + '</div></div><div class="ff-key">' + key + '</div>';
   }
   function render() {
-    var w = readW(), h = readH(), bf = readBf('ffBf', 'Body fat'), bad = [w, h, bf].filter(function (x) { return x && x.err; })[0];
-    if (bad) { empty(bad.err); return; }
+    var w = readW(), h = readH(), bf = readBf('ffBf', 'Body fat');
+    if (w && w.err) { empty(w.err, 'ffW'); return; }
+    if (h && h.err) { empty(h.err, 'ffH'); return; }
+    if (bf && bf.err) { empty(bf.err, 'ffBf'); return; }
     if (!w || !h || !bf) { empty(''); return; }
-    var tg = null, gb = null;
+    /* the target and the goal body fat are optional: a bad one only gets a hint under it and is ignored */
+    var tg = null, gb = null, soft = null;
     if (st.adv) {
-      var tr = $('ffT').value; if (tr.trim()) { var tn = E.num(tr); if (isNaN(tn) || tn < 10 || tn > 40) { empty('Your target FFMI should be a number between 10 and 40 — or leave it empty.'); return; } tg = tn; }
-      gb = readBf('ffGb', 'Body fat at your goal'); if (gb && gb.err) { empty(gb.err); return; }
+      var tr = $('ffT').value; if (tr.trim()) { var tn = E.num(tr); if (tn === null || isNaN(tn) || tn < 10 || tn > 40) soft = soft || { at: 'ffT', msg: 'Your target FFMI should be a number between 10 and 40. The result is shown without a target.' }; else tg = tn; }
+      gb = readBf('ffGb', 'Body fat at your goal'); if (gb && gb.err) { soft = soft || { at: 'ffGb', msg: gb.err + ' The goal body fat is ignored for now.' }; gb = null; }
     }
-    setHint('');
+    setHint(soft ? soft.msg : '', soft ? soft.at : null);
     var sx = st.sex, R = E.calc(w.kg, h.cm, bf.v), bd = E.band(sx, R.norm);
     $('ffBig').textContent = f1(R.norm);
     $('ffSub').textContent = 'FFMI ' + f1(R.ffmi) + ' · ' + bd.label;
@@ -20743,3 +20757,237 @@ CalcThis.initFfmiCalc = function () {
   render();
 };
 /* FFMI:END */
+
+/* BULK:BEGIN */
+/* =========================================================
+   BULKING / CALORIE SURPLUS calculator (/bulking-calculator/). Competitors opened live (2026-11-06): ProteinCalc, Coachway, GetHealthyCalculators lean bulk, Gravitus
+   (all: Mifflin maintenance + hard-coded kcal surplus per experience, macros, no picture). Primary sources READ (abstracts via Europe PMC):
+   Iraki, Fitschen, Espinar, Helms, Sports 2019;7:154 - hyper-energetic diet ~10-20%, target gain ~0.25-0.5% of body weight per week (novice/intermediate; advanced more conservative, no number),
+   protein 1.6-2.2 g/kg/day (0.40-0.55 g/kg per meal, 3-6 meals), fat 0.5-1.5 g/kg/day, carbohydrate >= 3-5 g/kg/day;
+   Helms et al., Sports Med Open 2023;9:102 - 17 trained lifters, 8 weeks: larger surplus (faster body-mass gain) mainly increased fat gain, not muscle thickness or 1-RM (small study).
+   Energy model: 7,700 kcal per kg (as on the calorie deficit page), maintenance rising with weight (Mifflin slope from CalcThis.deficitEngine) -> gain slows at a fixed intake.
+   ========================================================= */
+/* BULK-ENGINE:START */
+CalcThis.bulkEngine = (function () {
+  var KCAL_KG = 7700;
+  var PACE = [0.25, 0.5], PCT = [10, 20], PROT = [1.6, 2.2], PMEAL = [0.40, 0.55], FAT = [0.5, 1.5], CARB_MIN = 3;
+  var DEF = { pace: 0.25, pct: 10, kcal: 250 };
+  function num(t) {
+    t = (t + '').trim().replace(/\s/g, '');
+    if (!t) return null;
+    if (/^[+-]?\d*,\d+$/.test(t)) t = t.replace(',', '.'); else t = t.replace(/,/g, '');
+    if (!/^[+-]?(\d+\.?\d*|\.\d+)$/.test(t)) return NaN;
+    return parseFloat(t);
+  }
+  /* surplus in kcal a day from pace (% of body weight a week), percent of maintenance, or kcal */
+  function surplus(kind, v, out0, W) {
+    if (kind === 'pace') return v / 100 * W * KCAL_KG / 7;
+    if (kind === 'pct') return out0 * v / 100;
+    return v;
+  }
+  function equiv(S, out0, W) { return { S: S, pct: S / out0 * 100, pace: S * 7 / KCAL_KG / W * 100, kgWk: S * 7 / KCAL_KG }; }
+  function wSimple(S, W, d) { return W + S * d / KCAL_KG; }
+  /* maintenance rises by s kcal per kg gained: dW/dt = (S - s(w-W))/7700 -> exponential approach to W + S/s */
+  function wReal(S, s, W, d) { var wi = W + S / s; return wi - (wi - W) * Math.exp(-s * d / KCAL_KG); }
+  function daysSimple(S, W, G) { return (S > 0 && G > W) ? (G - W) * KCAL_KG / S : null; }
+  function daysReal(S, s, W, G) {
+    if (!(S > 0) || !(G > W)) return { days: null, plateau: W };
+    var wi = W + S / s;
+    if (!(G < wi)) return { days: null, plateau: wi };
+    return { days: -(KCAL_KG / s) * Math.log((wi - G) / (wi - W)), plateau: wi };
+  }
+  /* calories to eat at weight w to keep the same surplus S */
+  function eatAt(out0, s, W, S, w) { return out0 + s * (w - W) + S; }
+  function macros(kcal, W, pg, fg) { var p = pg * W, f = fg * W, c = (kcal - 4 * p - 9 * f) / 4; return { p: p, f: f, c: c, pk: 4 * p, fk: 9 * f, ck: 4 * Math.max(0, c) }; }
+  return { KCAL_KG: KCAL_KG, PACE: PACE, PCT: PCT, PROT: PROT, PMEAL: PMEAL, FAT: FAT, CARB_MIN: CARB_MIN, DEF: DEF, num: num, surplus: surplus, equiv: equiv, wSimple: wSimple, wReal: wReal, daysSimple: daysSimple, daysReal: daysReal, eatAt: eatAt, macros: macros };
+})();
+/* BULK-ENGINE:END */
+
+/* =========================================================
+   CalcThis.initBulkCalc() — ids bk*. Engines: CalcThis.bulkEngine (+ deficitEngine.maint/slope, bmrEngine). Height parser from CalcThis.ketoEngine. No shared state.
+   ========================================================= */
+CalcThis.initBulkCalc = function () {
+  var E = CalcThis.bulkEngine, D = CalcThis.deficitEngine, K = CalcThis.ketoEngine, U = CalcThis._kzUtil, trim = U.trim, grp = U.grp, esc = U.esc, seg = U.seg;
+  var $ = function (id) { return document.getElementById(id); };
+  var LB = 2.20462, ST = 6.35029, MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  var st = { sex: 'f', wu: 'lb', hu: 'in', main: 'est', kind: 'pace', adv: false, exp: 'inter', meals: 4 };
+  var ex = {};
+  function f1(x) { return (Math.round(x * 10) / 10).toFixed(1); }
+  function f2(x) { return (Math.round(x * 100) / 100).toFixed(2); }
+  /* the hint sits right under the field it is about, so it is seen on a phone where the result is below */
+  function setHint(m, at) {
+    var h = $('bkHint'); h.textContent = m || ''; h.style.display = m ? 'block' : 'none';
+    if (m && at) { var f = $(at).closest('.cb-two') || $(at).closest('.fld'); if (f && f.nextSibling !== h) f.parentNode.insertBefore(h, f.nextSibling); }
+  }
+  function toDisp(kg) { return st.wu === 'lb' ? kg * LB : (st.wu === 'st' ? kg / ST : kg); }
+  function wTxt(kg) { return trim(toDisp(kg), 1) + ' ' + st.wu; }
+  function dateTxt(days) { var d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() + Math.round(days)); return d.getDate() + ' ' + MON[d.getMonth()] + ' ' + d.getFullYear(); }
+  function durTxt(days) { if (days > 3650) return 'more than 10 years'; if (days < 14) return Math.max(1, Math.ceil(days)) + (Math.ceil(days) === 1 ? ' day' : ' days'); return Math.round(days / 7) + ' weeks'; }
+  var WMSG = { kg: 'Weight should be between 30 and 300 kg — check the number and the unit.', lb: 'Weight should be between 66 and 660 lb — check the number and the unit.', st: 'Weight should be between 4.7 and 47 st — check the number and the unit.' };
+  var HMSG = { cm: 'Height should be between 100 and 250 cm — check the number and the unit.', in: 'Height should be between 39 and 98 inches — check the number and the unit.', m: 'Height should be between 1 and 2.5 m — check the number and the unit.' };
+  function toKg(n) { return st.wu === 'lb' ? n / LB : (st.wu === 'st' ? n * ST : n); }
+  function readW(id, what) {
+    var raw = $(id).value; if (!raw.trim()) return null;
+    var n = E.num(raw); if (n === null) return null;
+    if (isNaN(n) || n <= 0) return { err: 'Couldn’t read ' + what + ' — use a number like ' + (st.wu === 'kg' ? '75' : (st.wu === 'st' ? '12' : '165')) + '.' };
+    var kg = toKg(n); if (kg < 30 || kg > 300) return { err: WMSG[st.wu] };
+    return { kg: kg };
+  }
+  function readH() {
+    var raw = $('bkH').value; if (!raw.trim()) return null;
+    var n = st.hu === 'in' ? K.parseIn(raw) : E.num(raw); if (n === null) return null;
+    if (isNaN(n) || n <= 0) return { err: 'Couldn’t read the height — use ' + (st.hu === 'in' ? 'inches (70) or feet and inches (5\'10)' : (st.hu === 'm' ? 'metres, like 1.75' : 'centimetres, like 178')) + '.' };
+    var cm = st.hu === 'in' ? n * 2.54 : (st.hu === 'm' ? n * 100 : n);
+    if (cm < 100 || cm > 250) return { err: HMSG[st.hu] };
+    return { cm: cm };
+  }
+  function readNum(id, lo, hi, msg) {
+    var raw = $(id).value; if (!raw.trim()) return null;
+    var n = E.num(raw); if (n === null) return null;
+    if (isNaN(n) || n < lo || n > hi) return { err: msg };
+    return { v: n };
+  }
+  function empty(msg, at) { $('bkBig').textContent = '—'; $('bkSub').textContent = $('bkSub').getAttribute('data-empty'); $('bkBody').style.display = 'none'; $('bkMVal').textContent = '—'; setHint(msg || '', at); }
+  var KIND = {
+    pace: { lab: 'Weight gain', unit: '% of body weight a week', ph: 'e.g. 0.25', lo: 0.05, hi: 2, msg: 'Weight gain should be between 0.05 and 2 % of body weight a week.', chips: [['0.25', '0.25% a week'], ['0.5', '0.5% a week']] },
+    pct: { lab: 'Surplus', unit: '% above maintenance', ph: 'e.g. 10', lo: 1, hi: 60, msg: 'Surplus should be between 1 and 60 % above maintenance.', chips: [['10', '10%'], ['15', '15%'], ['20', '20%']] },
+    kcal: { lab: 'Surplus', unit: 'kcal a day', ph: 'e.g. 250', lo: 50, hi: 2000, msg: 'Surplus should be between 50 and 2,000 kcal a day.', chips: [['250', '250 kcal'], ['350', '350 kcal'], ['500', '500 kcal']] }
+  };
+  function setKind(k) {
+    st.kind = k; var c = KIND[k];
+    $('bkSLab').firstChild.nodeValue = c.lab + ' '; $('bkSL').textContent = c.unit; $('bkS').placeholder = c.ph; $('bkS').value = '';
+    $('bkChips').innerHTML = c.chips.map(function (x) { return '<button type="button" data-v="' + x[0] + '">' + x[1] + '</button>'; }).join('');
+  }
+  function ruler(pace) {
+    var mx = 1, p = function (v) { return Math.max(0, Math.min(100, v / mx * 100)); };
+    return '<div class="bk-rule"><div class="bk-rule-t"><i class="bk-band" style="left:' + p(E.PACE[0]) + '%;width:' + (p(E.PACE[1]) - p(E.PACE[0])) + '%"></i><i class="bk-mk" style="left:' + p(pace) + '%"><b>' + f2(pace) + '%</b></i></div>' +
+      '<div class="bk-rule-l"><span style="left:0">0</span><span style="left:25%">0.25</span><span style="left:50%">0.5</span><span style="left:100%">1%</span></div></div>';
+  }
+  function chart(W, G, S, s, T) {
+    var X0 = 44, X1 = 292, Y0 = 14, Y1 = 148, n = 48, i, t, pa = '', pb = '', wend = Math.max(E.wSimple(S, W, T), G || 0), lo = W, hi = wend; if (hi - lo < 0.5) hi = lo + 0.5;
+    var pad = (hi - lo) * 0.08; hi += pad; lo -= pad;
+    function x(d) { return X0 + (d / T) * (X1 - X0); }
+    function y(w) { return Y1 - (w - lo) / (hi - lo) * (Y1 - Y0); }
+    for (i = 0; i <= n; i++) { t = T * i / n; pa += (i ? ' ' : '') + f1(x(t)) + ',' + f1(y(E.wSimple(S, W, t))); pb += (i ? ' ' : '') + f1(x(t)) + ',' + f1(y(E.wReal(S, s, W, t))); }
+    var svg = '';
+    if (G) svg += '<line x1="' + X0 + '" y1="' + f1(y(G)) + '" x2="' + X1 + '" y2="' + f1(y(G)) + '" stroke="var(--spruce)" stroke-width="1.2" stroke-dasharray="2 3"/>';
+    svg += '<line x1="' + X0 + '" y1="' + Y1 + '" x2="' + X1 + '" y2="' + Y1 + '" stroke="var(--line)" stroke-width="1.2"/>';
+    svg += '<polyline fill="none" stroke="var(--amber)" stroke-width="2" stroke-dasharray="5 4" points="' + pa + '"/>';
+    svg += '<polyline fill="none" stroke="var(--spruce)" stroke-width="2.4" points="' + pb + '"/>';
+    svg += '<text x="' + (X0 - 6) + '" y="' + (f1(y(W)) + 4) + '" text-anchor="end" font-size="12" font-weight="600" fill="var(--muted)">' + Math.round(toDisp(W)) + '</text>';
+    if (G) svg += '<text x="' + (X0 - 6) + '" y="' + (f1(y(G)) + 4) + '" text-anchor="end" font-size="12" font-weight="600" fill="var(--spruce)">' + Math.round(toDisp(G)) + '</text>';
+    else svg += '<text x="' + (X0 - 6) + '" y="' + (f1(y(wend)) + 4) + '" text-anchor="end" font-size="12" font-weight="600" fill="var(--muted)">' + Math.round(toDisp(wend)) + '</text>';
+    [0, 0.5, 1].forEach(function (f, k) { var d = T * f; svg += '<text x="' + f1(x(d)) + '" y="' + (Y1 + 17) + '" text-anchor="' + (k === 0 ? 'start' : (k === 2 ? 'end' : 'middle')) + '" font-size="12" font-weight="600" fill="var(--muted)">' + (k === 0 ? '0' : Math.round(d / 7) + (k === 2 ? ' wk' : '')) + '</text>'; });
+    $('bkChart').innerHTML = '<svg viewBox="0 0 300 172" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Weight over time: steady pace versus a fixed intake">' + svg + '</svg>';
+  }
+  function render() {
+    /* required fields (weight, and age + height or maintenance) end the result; every optional field (goal, surplus, body fat, protein, fat) only gets a hint under it and is ignored */
+    var soft = null;
+    function sf(at, msg) { if (!soft) soft = { at: at, msg: msg }; }
+    var w = readW('bkW', 'your weight'), g = readW('bkG', 'the goal weight');
+    if (w && w.err) { empty(w.err, 'bkW'); return; }
+    var known = st.main === 'known', a = null, h = null, mt = null;
+    if (known) { mt = readNum('bkMaint', 800, 8000, 'Maintenance should be between 800 and 8,000 kcal a day — or choose “Estimate it”.'); if (mt && mt.err) { empty(mt.err, 'bkMaint'); return; } }
+    else {
+      a = readNum('bkAge', 15, 100, 'Age should be a number between 15 and 100.'); h = readH();
+      if (a && a.err) { empty(a.err, 'bkAge'); return; }
+      if (h && h.err) { empty(h.err, 'bkH'); return; }
+    }
+    if (!w || (known ? !mt : (!a || !h))) { empty(''); return; }
+    if (g && g.err) { sf('bkG', g.err + ' The result below is shown without a goal.'); g = null; }
+    else if (g && g.kg <= w.kg) { sf('bkG', 'The goal weight should be above your current weight to bulk. The result below is shown without a goal.'); g = null; }
+    var sc = KIND[st.kind], sv = readNum('bkS', sc.lo, sc.hi, sc.msg); if (sv && sv.err) { sf('bkS', sv.err + ' The result below uses the default for now.'); sv = null; }
+    var bf = null, pg = null, fg = null;
+    if (st.adv) {
+      bf = readNum('bkBf', 3, 70, 'Body fat should be a percentage between 3 and 70.'); if (bf && bf.err) { sf('bkBf', bf.err + ' It is ignored for now.'); bf = null; }
+      pg = readNum('bkPg', 0.8, 3.5, 'Protein should be between 0.8 and 3.5 g per kg of body weight.'); if (pg && pg.err) { sf('bkPg', pg.err + ' The default is used for now.'); pg = null; }
+      fg = readNum('bkFg', 0.3, 2.5, 'Fat should be between 0.3 and 2.5 g per kg of body weight.'); if (fg && fg.err) { sf('bkFg', fg.err + ' The default is used for now.'); fg = null; }
+    }
+    setHint(soft ? soft.msg : '', soft ? soft.at : null);
+    var male = st.sex === 'm', fct = parseFloat($('bkAct').value), o = { male: male, W: w.kg, H: h ? h.cm : 0, A: a ? a.v : 0, f: fct, formula: (bf && bf.v) ? 'katch' : 'mifflin', bf: bf ? bf.v : null };
+    var out0 = known ? mt.v : D.maint(o), s = known ? D.KNOWN_SLOPE : D.slope(o);
+    var usedDef = !sv, val = sv ? sv.v : E.DEF[st.kind], S = E.surplus(st.kind, val, out0, w.kg), q = E.equiv(S, out0, w.kg), kcal = out0 + S;
+    $('bkBig').textContent = grp(kcal) + ' kcal';
+    $('bkSub').textContent = 'Maintenance ' + grp(out0) + ' · surplus +' + grp(S) + ' kcal (' + f1(q.pct) + '% above maintenance)';
+    $('bkMLab').textContent = 'Calories a day to bulk'; $('bkMVal').textContent = grp(kcal) + ' kcal · +' + grp(S);
+    $('bkBody').style.display = '';
+    var gainTxt = st.wu === 'kg' ? f2(q.kgWk) + ' kg' : (st.wu === 'lb' ? f2(q.kgWk * LB) + ' lb' : f2(q.kgWk * LB) + ' lb');
+    $('bkTip').textContent = 'Eating ' + grp(kcal) + ' kcal — ' + grp(S) + ' above your ' + grp(out0) + ' kcal maintenance — adds about ' + gainTxt + ' a week (' + f2(q.pace) + '% of your body weight), on the simple 7,700 kcal per kg rule. That is scale weight, not all muscle: the more you gain per week, the larger the share that is fat.' + (usedDef ? ' You did not enter a surplus, so this is the ' + (st.kind === 'pace' ? 'low end of the 0.25–0.5% a week range' : (st.kind === 'pct' ? '10% start of the 10–20% range' : '250 kcal starting point')) + '.' : '');
+    /* flags */
+    var fl = [];
+    if (q.pace > 1) fl.push('That is more than 1% of your body weight a week — far above the 0.25–0.5% range in the research, and mostly extra fat.');
+    else if (q.pace > E.PACE[1] + 0.005 && st.exp !== 'adv') fl.push('Above the 0.25–0.5% of body weight a week that the review recommends for novice and intermediate lifters. In a small 8-week trial (Helms 2023, 17 lifters) a larger surplus mainly added fat, not muscle.');
+    if (st.exp === 'adv' && q.pace > E.PACE[0] + 0.005) fl.push('The review says advanced lifters should be more conservative than 0.25–0.5% a week, without giving a number — consider the low end or below.');
+    if (q.pct > E.PCT[1] + 0.05) fl.push('Above the 10–20% over maintenance range the review gives.');
+    $('bkFlags').innerHTML = fl.map(function (t) { return '<p class="bk-flag">' + t + '</p>'; }).join('');
+    /* equivalents + bar */
+    $('bkEq').innerHTML = '<div class="bf-cmp"><span class="k">Surplus per day</span><span class="v">+' + grp(S) + ' kcal</span></div><div class="bf-cmp"><span class="k">Above maintenance</span><span class="v">' + f1(q.pct) + '%</span></div><div class="bf-cmp"><span class="k">Gain per week</span><span class="v">' + gainTxt + ' · ' + f2(q.pace) + '%</span></div>';
+    var pM = out0 / kcal * 100;
+    $('bkBar').innerHTML = '<div class="bm-bar"><div class="bm-seg c0" style="width:' + pM + '%">' + grp(out0) + '</div><div class="bm-seg c1" style="width:' + (100 - pM) + '%">' + (100 - pM >= 8 ? '+' + grp(S) : '') + '</div></div><div class="bm-key"><span><i class="c0"></i>Maintenance ' + grp(out0) + ' kcal</span><span><i class="c1"></i>Surplus +' + grp(S) + ' kcal</span></div>';
+    $('bkPace').innerHTML = ruler(q.pace);
+    /* time to goal + chart */
+    var rows = '', T, G = g ? g.kg : null;
+    var sd = G ? E.daysSimple(S, w.kg, G) : null, rd = G ? E.daysReal(S, s, w.kg, G) : null;
+    if (G) {
+      rows += '<div class="bf-cmp"><span class="k">Time to ' + wTxt(G) + ' — steady pace <span class="bm-sub">simple rule: gain keeps its pace, so you raise calories</span></span><span class="v">' + durTxt(sd) + '<span class="bm-sub" style="display:block;text-align:right">' + (sd > 3650 ? '' : dateTxt(sd)) + '</span></span></div>';
+      rows += '<div class="bf-cmp"><span class="k">Time to ' + wTxt(G) + ' — same food <span class="bm-sub">realistic: you burn more as you gain</span></span><span class="v">' + (rd.days == null ? 'levels off at ' + wTxt(rd.plateau) : durTxt(rd.days)) + '<span class="bm-sub" style="display:block;text-align:right">' + (rd.days == null || rd.days > 3650 ? '' : dateTxt(rd.days)) + '</span></span></div>';
+      T = Math.min(Math.max((rd.days != null ? Math.max(rd.days, sd) : sd * 1.3), 56), 728);
+    } else T = 112;
+    $('bkGoalRows').innerHTML = rows;
+    $('bkNoGoal').style.display = G ? 'none' : '';
+    chart(w.kg, G, S, s, T);
+    /* ladder: calories to keep the pace */
+    var steps = [2, 4, 6, 8, 12, 16, 26, 52, 104], stp = 4, i;
+    for (i = 0; i < steps.length; i++) { stp = steps[i]; if (T / 7 / stp <= 5.01) break; }
+    var lr = '';
+    for (var wk = 0; wk * 7 <= T + 1 && wk <= 104; wk += stp) { var wt = E.wSimple(S, w.kg, wk * 7); lr += '<tr><td>Week ' + wk + '</td><td>' + trim(toDisp(wt), 1) + ' ' + st.wu + '</td><td>' + grp(E.eatAt(out0, s, w.kg, S, wt)) + ' kcal</td></tr>'; }
+    $('bkLadder').innerHTML = '<thead><tr><th>When</th><th>Weight at the steady pace</th><th>Eat to keep the pace</th></tr></thead><tbody>' + lr + '</tbody>';
+    $('bkLadderNote').textContent = 'Maintenance rises about ' + trim(s, 0) + ' kcal for every kg you gain, so the same food gives a smaller surplus each week. This is what you would eat to keep the ' + f2(q.pace) + '% pace.';
+    /* macros */
+    var pgv = pg ? pg.v : 1.8, fgv = fg ? fg.v : 1.0, M = E.macros(kcal, w.kg, pgv, fgv), nm = st.meals, mf = [];
+    var cg = M.c / w.kg;
+    if (M.c < 0) mf.push('Protein and fat use more than all the calories — lower them or raise the surplus.');
+    else if (cg < E.CARB_MIN) mf.push('Carbohydrate is ' + f1(cg) + ' g per kg, below the 3–5 g per kg minimum the review gives for fuelling resistance training.');
+    var ppm = M.p / nm / w.kg; if (ppm < E.PMEAL[0] - 0.005 || ppm > E.PMEAL[1] + 0.005) mf.push('Protein per meal is ' + f2(ppm) + ' g per kg at ' + nm + ' meals; the review gives 0.40–0.55 g per kg per meal.');
+    if (pgv < E.PROT[0] || pgv > E.PROT[1]) mf.push('Protein is outside the 1.6–2.2 g per kg a day range in the review.');
+    if (fgv < E.FAT[0] || fgv > E.FAT[1]) mf.push('Fat is outside the 0.5–1.5 g per kg a day range in the review.');
+    var cs = Math.max(0, M.c);
+    $('bkMac').innerHTML = '<thead><tr><th>Macro</th><th>Per day</th><th>Per meal (' + nm + ')</th></tr></thead><tbody>' +
+      '<tr><td>Protein <small>' + f1(pgv) + ' g per kg · ' + grp(M.pk) + ' kcal</small></td><td>' + grp(M.p) + ' g</td><td>' + grp(M.p / nm) + ' g</td></tr>' +
+      '<tr><td>Fat <small>' + f1(fgv) + ' g per kg · ' + grp(M.fk) + ' kcal</small></td><td>' + grp(M.f) + ' g</td><td>' + grp(M.f / nm) + ' g</td></tr>' +
+      '<tr><td>Carbohydrate <small>the rest · ' + f1(Math.max(0, cg)) + ' g per kg · ' + grp(M.ck) + ' kcal</small></td><td>' + grp(cs) + ' g</td><td>' + grp(cs / nm) + ' g</td></tr></tbody>';
+    $('bkMacNote').innerHTML = mf.map(function (t) { return '<p class="bk-flag">' + t + '</p>'; }).join('');
+  }
+  /* ---------- controls ---------- */
+  ['bkW', 'bkG', 'bkAge', 'bkH', 'bkMaint', 'bkS', 'bkBf', 'bkPg', 'bkFg'].forEach(function (id) { $(id).addEventListener('input', render); });
+  $('bkAct').addEventListener('change', render);
+  seg('bkSex', function (v) { st.sex = v; render(); });
+  seg('bkMain', function (v) { st.main = v; $('bkEstWrap').style.display = v === 'est' ? '' : 'none'; $('bkKnownWrap').style.display = v === 'known' ? '' : 'none'; render(); });
+  seg('bkExp', function (v) { st.exp = v; render(); });
+  seg('bkMeals', function (v) { st.meals = +v; render(); });
+  seg('bkKind', function (v) { setKind(v); render(); });
+  $('bkChips').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; $('bkS').value = b.getAttribute('data-v'); render(); });
+  seg('bkWU', function (v) {
+    var w = readW('bkW', 'w'), g = readW('bkG', 'g'), m = ex.w, m2 = ex.g;
+    if (m && m.txt === $('bkW').value) w = { kg: m.kg }; if (m2 && m2.txt === $('bkG').value) g = { kg: m2.kg };
+    st.wu = v; if (w && w.err) $('bkW').value = ''; if (g && g.err) $('bkG').value = '';
+    function conv(kg) { return trim(v === 'lb' ? kg * LB : (v === 'st' ? kg / ST : kg), 3); }
+    if (w && w.kg) { var tx = conv(w.kg); $('bkW').value = tx; ex.w = { kg: w.kg, txt: tx }; }
+    if (g && g.kg) { var ty = conv(g.kg); $('bkG').value = ty; ex.g = { kg: g.kg, txt: ty }; }
+    $('bkWL').textContent = v; $('bkGL').textContent = v; $('bkW').placeholder = v === 'kg' ? 'e.g. 75' : (v === 'st' ? 'e.g. 12' : 'e.g. 165'); $('bkG').placeholder = v === 'kg' ? 'e.g. 80' : (v === 'st' ? 'e.g. 12.5' : 'e.g. 175'); render();
+  });
+  seg('bkHU', function (v) {
+    var h = readH(), m = ex.h; if (m && m.txt === $('bkH').value) h = { cm: m.cm };
+    st.hu = v; if (h && h.err) $('bkH').value = '';
+    if (h && h.cm) { var txt = v === 'in' ? trim(h.cm / 2.54, 2) : (v === 'm' ? trim(h.cm / 100, 3) : trim(h.cm, 2)); $('bkH').value = txt; ex.h = { cm: h.cm, txt: txt }; }
+    $('bkHL').textContent = v === 'in' ? 'inches or 5\'10' : v; $('bkH').placeholder = v === 'in' ? 'e.g. 70 or 5\'10' : (v === 'm' ? 'e.g. 1.78' : 'e.g. 178'); render();
+  });
+  $('bkAdvBtn').addEventListener('click', function () {
+    st.adv = !st.adv; $('bkAdvBtn').classList.toggle('open', st.adv); $('bkAdvBtnLab').textContent = st.adv ? 'Go simple' : 'Go advanced'; $('bkAdvIn').style.display = st.adv ? '' : 'none';
+    if (!st.adv) { $('bkBf').value = ''; $('bkPg').value = ''; $('bkFg').value = ''; st.exp = 'inter'; st.meals = 4; U.setSeg('bkExp', 'inter'); U.setSeg('bkMeals', '4'); }
+    render();
+  });
+  setKind('pace');
+  render();
+};
+/* BULK:END */

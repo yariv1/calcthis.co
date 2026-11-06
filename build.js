@@ -163,6 +163,7 @@ const PAGES = [
   { file: 'bsa-calculator/index.html', slug: '/bsa-calculator/' },
   { file: 'dog-food-calculator/index.html', slug: '/dog-food-calculator/' },
   { file: 'ffmi-calculator/index.html', slug: '/ffmi-calculator/' },
+  { file: 'bulking-calculator/index.html', slug: '/bulking-calculator/' },
   { file: 'protein-intake-calculator/index.html', slug: '/protein-intake-calculator/' },
   { file: 'blog/index.html',            slug: '/blog/' },
   { file: 'blog/how-much-gravel-do-i-need-for-a-driveway/index.html', slug: '/blog/how-much-gravel-do-i-need-for-a-driveway/' },
@@ -482,6 +483,23 @@ try { fs.readdirSync(path.join(__dirname, 'paycheck-calculator'), { withFileType
     console.error('\n\u26d4 PICKER-DESIGN GATE FAILED \u2014 build stopped, nothing was written.\n');
     failures.forEach(function (f) { console.error('  - ' + f); });
     console.error('\nUse the paycheck State picker pattern (initPayCalc: pcStateIn / pcState hidden / pcStateList) and rerun node build.js.\n');
+    process.exit(1);
+  }
+})();
+
+// ---- MANDATORY calculator QA gate (2026-11-06) ----
+// Every calculator page that is not grandfathered in md-files/qa/legacy.json needs a VALID pass record from
+// `node md-files/qa/run.js <slug>`: real headless-Chrome run at 375px mobile AND desktop (every field typed key by key, every control,
+// random chaos, floating-bar + page-width checks, screenshots) plus an independent re-implementation of the maths (the oracle).
+// The record is bound to a hash of the page, its code, css, fixture, oracle and the harness, so ANY later change needs a new pass.
+// This exists because prose rules ("do full QA") were skipped again and again; the user's time and usage are the cost.
+(function checkQaPasses() {
+  const QA = require('./md-files/qa/hash.js'), bad = [];
+  QA.gated(ROOT).forEach(function (slug) { const r = QA.check(ROOT, slug); if (!r.ok) bad.push(slug + ': ' + r.why); });
+  if (bad.length) {
+    console.error('\n⛔ CALCULATOR QA GATE FAILED — build stopped, nothing was written.\n');
+    bad.forEach(function (f) { console.error('  - ' + f); });
+    console.error('\nA new calculator needs md-files/qa/fixtures/<slug>.json + md-files/qa/oracles/<slug>.js, then: node md-files/qa/run.js <slug> (must print QA PASS), then LOOK at the screenshots.\n');
     process.exit(1);
   }
 })();

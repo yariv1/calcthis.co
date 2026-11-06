@@ -1,0 +1,136 @@
+{
+  "slug": "dog-food-calculator",
+  "bodyClass": "p-fd",
+  "blocks": [
+    "DOGFOOD"
+  ],
+  "result": {
+    "big": "fdBig",
+    "body": "fdBody",
+    "hint": "fdHint"
+  },
+  "required": [
+    "fdW"
+  ],
+  "fill": [
+    [
+      "set",
+      "fdType",
+      "auto"
+    ],
+    [
+      "seg",
+      "fdWU",
+      "kg"
+    ],
+    [
+      "seg",
+      "fdAgeSeg",
+      "adult"
+    ],
+    [
+      "seg",
+      "fdNeu",
+      "y"
+    ],
+    [
+      "seg",
+      "fdFT",
+      "dry"
+    ],
+    [
+      "seg",
+      "fdFU",
+      "cup"
+    ],
+    [
+      "seg",
+      "fdTr",
+      "0"
+    ],
+    [
+      "seg",
+      "fdMeals",
+      "2"
+    ],
+    [
+      "set",
+      "fdW",
+      "20"
+    ],
+    [
+      "set",
+      "fdAge",
+      ""
+    ],
+    [
+      "set",
+      "fdFood",
+      ""
+    ],
+    [
+      "set",
+      "fdOwn",
+      ""
+    ],
+    [
+      "set",
+      "fdB",
+      ""
+    ],
+    [
+      "set",
+      "fdShare",
+      ""
+    ],
+    [
+      "set",
+      "fdCup",
+      ""
+    ]
+  ],
+  "optionalSamples": {
+    "fdAge": [
+      "3"
+    ],
+    "fdFood": [
+      "350"
+    ],
+    "fdOwn": [
+      "1.5"
+    ],
+    "fdB": [
+      "1000"
+    ],
+    "fdShare": [
+      "30"
+    ],
+    "fdCup": [
+      "150"
+    ]
+  },
+  "variants": [
+    [
+      [
+        "seg",
+        "fdAgeSeg",
+        "puppy"
+      ]
+    ],
+    [
+      [
+        "seg",
+        "fdFT",
+        "own"
+      ]
+    ]
+  ],
+  "scrollTo": "fdFeed",
+  "errorState": [
+    [
+      "set",
+      "fdW",
+      "0"
+    ]
+  ]
+}

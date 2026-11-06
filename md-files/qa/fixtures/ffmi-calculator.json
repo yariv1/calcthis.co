@@ -1,0 +1,12 @@
+{
+  "slug": "ffmi-calculator",
+  "bodyClass": "p-ff",
+  "blocks": ["FFMI"],
+  "result": { "big": "ffBig", "body": "ffBody", "hint": "ffHint" },
+  "required": ["ffH", "ffW", "ffBf"],
+  "fill": [["seg", "ffSex", "m"], ["seg", "ffHU", "cm"], ["seg", "ffWU", "kg"], ["set", "ffH", "180"], ["set", "ffW", "75"], ["set", "ffBf", "22"], ["set", "ffT", ""], ["set", "ffGb", ""]],
+  "optionalSamples": { "ffT": ["22", "25"], "ffGb": ["12"] },
+  "variants": [],
+  "scrollTo": "ffScale",
+  "errorState": [["set", "ffBf", "1"]]
+}

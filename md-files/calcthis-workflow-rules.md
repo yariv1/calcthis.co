@@ -198,6 +198,8 @@ Chrome links in the final message. Details: `calcthis-working-rules.md` → "Pre
    implied by the summary. Fixed by making a Browser-tool visual pass mandatory for every
    competitor, every time, not just when something looks off — Rule 8.5.
 
+## RULE 10.0 — THE QA GATE (2026-11-06): `node md-files/qa/run.js <slug>` must print QA PASS before any preview; build.js, the Stop hook and the PreToolUse hook refuse to ship a calculator without a valid pass. Full rule text: CLAUDE.md "CALCULATOR QA IS A MECHANICAL GATE". Create the fixture + oracle with `node md-files/qa/scaffold.js` BEFORE building the page logic, so the checks exist while you code.
+
 ## RULE 10 — DEEP QA AFTER EVERY BUILD, AUTOMATICALLY (user, 2026-10-14)
 
 After every build or change to a calculator/article, run the full QA below **yourself, before any preview

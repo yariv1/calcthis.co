@@ -1,0 +1,782 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bulking Calculator — Calories, Macros &amp; Calorie Surplus</title>
+<meta name="description" content="Bulking calculator: calories to eat for a calorie surplus set by pace, percent or kcal, with macros and a weight curve showing the time to your goal weight.">
+<link rel="canonical" href="https://calcthis.co/bulking-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Bulking Calculator — Calories, Macros &amp; Calorie Surplus">
+<meta property="og:description" content="Bulking calculator: calories to eat for a calorie surplus set by pace, percent or kcal, with macros and a weight curve showing the time to your goal weight.">
+<meta property="og:url" content="https://calcthis.co/bulking-calculator/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/datepicker.min.css">
+<link rel="stylesheet" href="/assets/style.css?v=319">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Bulking Calculator",
+  "url": "https://calcthis.co/bulking-calculator/",
+  "applicationCategory": "HealthApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "Free bulking and calorie surplus calculator: calories to eat to gain weight from Mifflin-St Jeor maintenance, with the surplus set by pace (% of body weight a week), % of maintenance or kcal, macros per kg from a published review, a flag when the surplus is above the researched range, and a weight curve with the time to your goal weight as maintenance rises."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How many calories should I eat to bulk?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Eat your maintenance calories plus a surplus. For a man of 80 kg and 180 cm, 28 years old, with moderate activity, maintenance is about 2,775 kcal (Mifflin-St Jeor 1,790 × 1.55). A surplus of 10–20% above maintenance, the range in a 2019 review of off-season bodybuilding nutrition, is 277–555 kcal, so about 3,052–3,329 kcal a day. The calculator does this for your numbers."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I calculate a calorie surplus?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A calorie surplus is what you eat above maintenance. Step 1: maintenance = BMR × activity factor. Step 2: add the surplus. You can set the surplus as a pace — 0.25% of your body weight a week is 0.20 kg for 80 kg, which at 7,700 kcal per kg is 220 kcal a day — or as a percent of maintenance, or as kcal. Target = 2,775 + 220 = 2,995 kcal."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How big should a bulking calorie surplus be?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The 2019 review gives about 10–20% above maintenance and a target gain of 0.25–0.5% of body weight a week for novice and intermediate lifters, with advanced lifters more conservative. For the 80 kg man that is 220–440 kcal a day (7.9–15.9% of maintenance). In an 8-week trial of 17 trained lifters, larger surpluses mainly added fat rather than muscle (Helms 2023), so more is not better. The calculator flags a surplus above these ranges."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How much weight should I gain per week when bulking?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "About 0.25–0.5% of your body weight a week, from the review: 0.20–0.40 kg (0.44–0.88 lb) a week at 80 kg. The surplus for a given weight is simple: about 2.75 kcal per kg of body weight a day for 0.25% a week and 5.50 for 0.5%. This is scale weight; the calculator does not say how much is muscle, because no source I read gives a reliable split."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How many extra calories add 1 lb or 1 kg?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "About 3,500 kcal per lb or 7,700 kcal per kg of body weight is the usual rule of thumb, used here as the simple estimate. It is an approximation: the real mix of muscle, fat and water changes with training, diet and the person, and maintenance rises as you gain, which is why the calculator also shows a more realistic curve."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How much protein, fat and carbs do I need when bulking?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The 2019 review gives protein of 1.6–2.2 g/kg a day (0.40–0.55 g/kg per meal over 3–6 meals), fat of 0.5–1.5 g/kg a day and carbohydrate of at least 3–5 g/kg a day to fuel training. The calculator starts at 1.8 g/kg protein and 1.0 g/kg fat and gives carbohydrate the rest: for the 80 kg man at 2,995 kcal that is 144 g protein, 80 g fat and 425 g carbohydrate, and it warns when a figure leaves the review’s range."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why does the calculator show two times to reach my goal weight?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The simple rule assumes you keep gaining at the same pace by raising calories as you go. In reality maintenance rises by about 16 kcal for every kg you gain, so eating the same amount produces a smaller surplus each week. For the example (80 kg to 85 kg at 220 kcal of surplus) the simple rule gives about 25 weeks and the realistic one about 31 weeks. The ladder under the chart shows what to eat each few weeks to keep the pace."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is a lean bulk, and what is a dirty bulk?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A lean bulk is a small, controlled surplus, at the low end of the ranges above, so weight rises slowly. A “dirty bulk” means eating as much as possible. The only trial I read comparing surpluses (Helms 2023, small and short) found that larger surpluses mainly added fat, so the calculator defaults to the low end and has no dirty-bulk preset."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can women use this bulking calculator?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Maintenance uses the Mifflin-St Jeor equation for either sex, and the surplus is set as a percent of body weight or maintenance, so it scales with the person. The review’s ranges are not given separately for women, so the same ranges are used. Choose female or male and enter your own numbers."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Should I bulk or lose fat first?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The calculator does not decide that. A bulk adds weight; if you want to lose fat first or at the same time, use the calorie deficit calculator, and see the protein intake calculator for protein on its own."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "CalcThis",
+      "item": "https://calcthis.co/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Bulking Calculator",
+      "item": "https://calcthis.co/bulking-calculator/"
+    }
+  ]
+}
+</script>
+<meta property="og:site_name" content="CalcThis">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://calcthis.co/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="CalcThis — free, purpose-built calculators">
+<meta name="twitter:title" content="Bulking Calculator — Calories, Macros &amp; Calorie Surplus">
+<meta name="twitter:description" content="Bulking calculator: calories to eat for a calorie surplus set by pace, percent or kcal, with macros and a weight curve showing the time to your goal weight.">
+<meta name="twitter:image" content="https://calcthis.co/assets/og-default.png">
+</head>
+<body class="p-bmr p-bk">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <a class="hdr-back" href="/blog/" aria-label="Back to blog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-search"><div class="menu-sx"><input id="menuSearch" type="search" placeholder="Search calculators or states…" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Search calculators" enterkeyhint="search"></div><div class="menu-results" id="menuResults" hidden></div></div>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <span class="menu-col-head">Construction &amp; Gardening</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+          <a href="/paint-calculator/">Paint</a>
+          <a href="/wallpaper-calculator/">Wallpaper</a>
+          <a href="/square-footage-calculator/">Square Footage</a>
+          <a href="/tape-measure-fraction-calculator/">Tape Measure Fraction</a>
+          <a href="/stair-calculator/">Stair</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/vo2-max-calculator/">VO2 Max</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
+          <a href="/bmi-calculator/">BMI</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/ideal-weight-calculator/">Ideal Weight</a>
+          <a href="/lean-body-mass-calculator/">Lean Body Mass</a>
+          <a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio</a>
+          <a href="/gmi-calculator/">GMI</a>
+          <a href="/a1c-calculator/">A1C</a>
+          <a href="/calorie-calculator/">Calorie</a>
+          <a href="/calorie-deficit-calculator/">Calorie Deficit</a>
+          <a href="/bmr-calculator/">BMR</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/water-intake-calculator/">Water Intake</a>
+          <a href="/macro-calculator/">Macro</a>
+          <a href="/protein-intake-calculator/">Protein Intake</a>
+          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
+          <a href="/steps-to-miles-calculator/">Steps to Miles</a>
+          <a href="/dog-age-calculator/">Dog Age</a>
+          <a href="/cat-age-calculator/">Cat Age</a>
+          <a href="/calories-burned-calculator/">Calories Burned</a>
+          <a href="/calories-burned-walking-calculator/">Calories Burned Walking</a>
+          <a href="/calories-burned-running-calculator/">Calories Burned Running</a>
+          <a href="/keto-calculator/">Keto</a>
+          <a href="/net-carb-calculator/">Net Carb</a>
+          <a href="/intermittent-fasting-calculator/">Intermittent Fasting</a>
+          <a href="/bsa-calculator/">BSA</a>
+          <a href="/dog-food-calculator/">Dog Food</a>
+          <a href="/ffmi-calculator/">FFMI</a>
+          <a href="/bulking-calculator/" class="current">Bulking</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/semester-grade-calculator/">Semester Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+          <a href="/grade-curve-calculator/">Grade Curve</a>
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/fraction-calculator/">Fraction</a>
+          <a href="/standard-deviation-calculator/">Standard Deviation</a>
+          <a href="/scientific-notation-calculator/">Scientific Notation</a>
+          <a href="/average-calculator/">Average</a>
+          <a href="/batting-average-calculator/">Batting Average</a>
+          <a href="/stock-average-calculator/">Stock Average</a>
+          <a href="/dice-average-calculator/">Dice Average</a>
+          <a href="/time-average-calculator/">Time Average</a>
+          <a href="/weighted-average-calculator/">Weighted Average</a>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+          <a href="/percentage-change-calculator/">Percentage Change</a>
+          <a href="/age-calculator/">Age</a>
+          <a href="/date-calculator/">Date</a>
+          <a href="/time-calculator/">Time</a>
+          <a href="/hours-calculator/">Hours</a>
+          <a href="/triangle-calculator/">Triangle</a>
+          <a href="/random-number-generator/">Random Number</a>
+          <span class="menu-col-head">Cooking &amp; Kitchen</span>
+          <a href="/recipe-converter/">Recipe Converter</a>
+          <a href="/turkey-cooking-time-calculator/">Turkey Cooking Time</a>
+          <a href="/turkey-thawing-time-calculator/">Turkey Thawing Time</a>
+          <a href="/turkey-size-calculator/">Turkey Size</a>
+          <!--UNITNAV:START-->
+          <span class="menu-col-head">Unit Converters</span>
+          <a href="/unit-converter/">Unit Converter</a>
+          <a href="/length-converter/">Length Converter</a>
+          <a href="/weight-converter/">Weight Converter</a>
+          <a href="/volume-converter/">Volume Converter</a>
+          <a href="/temperature-converter/">Temperature Converter</a>
+          <a href="/area-converter/">Area Converter</a>
+          <a href="/speed-converter/">Speed Converter</a>
+          <a href="/data-storage-converter/">Data Storage Converter</a>
+          <a href="/cooking-converter/">Cooking Converter</a>
+          <a href="/px-to-rem-converter/">PX to REM Converter</a>
+          <!--UNITNAV:END-->
+          <span class="menu-col-head">Money &amp; Finance</span>
+          <a href="/mortgage-calculator/">Mortgage</a>
+          <a href="/loan-calculator/">Loan</a>
+          <a href="/auto-loan-calculator/">Auto Loan</a>
+          <a href="/car-sales-tax-calculator/">Car Sales Tax</a>
+          <a href="/overtime-calculator/">Overtime</a>
+          <a href="/salary-calculator/">Salary</a>
+          <!--STAXNAV:START-->
+          <a href="/sales-tax-calculator/">Sales Tax</a>
+          <a href="/sales-tax-calculator/california/">California Sales Tax</a>
+          <a href="/sales-tax-calculator/chicago/">Chicago Sales Tax</a>
+          <a href="/sales-tax-calculator/florida/">Florida Sales Tax</a>
+          <a href="/sales-tax-calculator/las-vegas/">Las Vegas Sales Tax</a>
+          <a href="/sales-tax-calculator/los-angeles/">Los Angeles Sales Tax</a>
+          <a href="/sales-tax-calculator/michigan/">Michigan Sales Tax</a>
+          <a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax</a>
+          <a href="/sales-tax-calculator/missouri/">Missouri Sales Tax</a>
+          <a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax</a>
+          <a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax</a>
+          <a href="/sales-tax-calculator/north-carolina/">North Carolina Sales Tax</a>
+          <a href="/sales-tax-calculator/ohio/">Ohio Sales Tax</a>
+          <a href="/sales-tax-calculator/texas/">Texas Sales Tax</a>
+          <a href="/sales-tax-calculator/virginia/">Virginia Sales Tax</a>
+          <!--STAXNAV:END-->
+          <a href="/tip-calculator/">Tip</a>
+          <a href="/how-much-to-tip/">How Much to Tip</a>
+        </div>
+        <!--PAYNAV:START-->
+        <div class="menu-col">
+          <span class="menu-col-head">Paycheck Calculators</span>
+          <a href="/paycheck-calculator/">Paycheck Calculator (all states)</a>
+          <a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a>
+          <a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arkansas/">Arkansas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/california/">California Paycheck Calculator</a>
+          <a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a>
+          <a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a>
+          <a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/hawaii/">Hawaii Paycheck Calculator</a>
+          <a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a>
+          <a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a>
+          <a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a>
+          <a href="/paycheck-calculator/louisiana/">Louisiana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a>
+          <a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a>
+          <a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a>
+          <a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a>
+          <a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nebraska/">Nebraska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a>
+          <a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a>
+          <a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a>
+          <a href="/paycheck-calculator/oklahoma/">Oklahoma Paycheck Calculator</a>
+          <a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a>
+          <a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a>
+          <a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a>
+          <a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/utah/">Utah Paycheck Calculator</a>
+          <a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wisconsin/">Wisconsin Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a>
+        </div>
+        <!--PAYNAV:END-->
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">Calorie surplus · pace, percent or kcal · macros · weight curve · time to goal</div>
+    <h1>Bulking Calculator</h1>
+    <p>Enter your <strong>weight</strong>, <strong>height</strong> and <strong>activity</strong> — you get the <strong>calories to eat to bulk</strong> and the <strong>calorie surplus</strong>, set by pace, percent or kcal, with macros and a curve that shows how long your goal weight takes. A man of 80 kg and 180 cm at maintenance of <strong>2,775 kcal</strong> eats about <strong>2,995 kcal</strong> for a 0.25% a week lean bulk.</p>
+  </section>
+
+  <div class="grid">
+
+    <!-- INPUT -->
+    <div class="card">
+      <div class="card-pad">
+        <h2 class="card-h2">About you</h2>
+        <div class="ctl-row"><span class="ctl-lab">Sex</span><div class="seg" id="bkSex" role="group" aria-label="Sex"><button class="on" type="button" data-v="f">Female</button><button type="button" data-v="m">Male</button></div></div>
+        <div class="ctl-row"><span class="ctl-lab">Maintenance</span><div class="seg" id="bkMain" role="group" aria-label="Maintenance"><button class="on" type="button" data-v="est">Estimate it</button><button type="button" data-v="known">I know it</button></div></div>
+        <div id="bkEstWrap">
+          <label class="fld" for="bkAge"><span class="lab">Age <span class="unit">years</span></span><div class="inp"><input id="bkAge" type="text" inputmode="numeric" autocomplete="off" placeholder="e.g. 28"></div></label>
+          <div class="ctl-row"><span class="ctl-lab">Height units</span><div class="seg" id="bkHU" role="group" aria-label="Height units"><button type="button" data-v="cm">cm</button><button class="on" type="button" data-v="in">inches</button><button type="button" data-v="m">m</button></div></div>
+          <label class="fld" for="bkH"><span class="lab">Height <span class="unit" id="bkHL">inches or 5'10</span></span><div class="inp"><input id="bkH" type="text" inputmode="text" autocomplete="off" placeholder="e.g. 70 or 5'10"></div></label>
+          <label class="fld"><span class="lab">Activity level</span><div class="csel" id="bkAct" data-value="1.55"><button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false"><span class="csel-val">Moderate — 3–5 days/week</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="csel-panel" role="listbox"><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="1.2">Sedentary — little or no exercise</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="1.375">Light — 1–3 days/week</button><button type="button" class="csel-opt on" role="option" aria-selected="true" data-value="1.55">Moderate — 3–5 days/week</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="1.725">Active — 6–7 days/week</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="1.9">Very active — hard training / physical job</button></div></div></label>
+        </div>
+        <div id="bkKnownWrap" style="display:none">
+          <label class="fld" for="bkMaint"><span class="lab">Maintenance <span class="unit">kcal a day</span></span><div class="inp"><input id="bkMaint" type="text" inputmode="numeric" autocomplete="off" placeholder="e.g. 2700"></div></label>
+          <p class="av-note" style="margin:0 0 8px">For example from tracking your food and weight for a few weeks. It is used as given; weight is still needed.</p>
+        </div>
+        <div class="ctl-row"><span class="ctl-lab">Weight units</span><div class="seg" id="bkWU" role="group" aria-label="Weight units"><button type="button" data-v="kg">kg</button><button class="on" type="button" data-v="lb">lb</button><button type="button" data-v="st">st</button></div></div>
+        <label class="fld" for="bkW"><span class="lab">Current weight <span class="unit" id="bkWL">lb</span></span><div class="inp"><input id="bkW" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 165"></div></label>
+        <label class="fld" for="bkG"><span class="lab">Goal weight <span class="unit" id="bkGL">lb · optional</span></span><div class="inp"><input id="bkG" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 175"></div></label>
+        <div class="proj-sep"></div>
+        <div class="ctl-row"><span class="ctl-lab">Set the surplus by</span><div class="seg" id="bkKind" role="group" aria-label="Set the surplus by"><button class="on" type="button" data-v="pace">Pace</button><button type="button" data-v="pct">Percent</button><button type="button" data-v="kcal">Kcal</button></div></div>
+        <label class="fld" for="bkS" style="margin-bottom:0"><span class="lab" id="bkSLab">Weight gain <span class="unit" id="bkSL">% of body weight a week</span></span><div class="inp"><input id="bkS" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 0.25"></div></label>
+        <div class="chips" id="bkChips"></div>
+        <p class="av-note" style="margin:8px 0 8px">Leave it empty to start at the low end of the researched range: 0.25% of body weight a week, 10% above maintenance or 250 kcal.</p>
+        <div class="res-hint" id="bkHint" style="display:none;text-align:left;margin:4px 0 8px"></div>
+        <div id="bkAdvIn" style="display:none">
+          <div class="proj-sep"></div>
+          <div class="ctl-row" style="display:block"><span class="ctl-lab" style="display:block;margin-bottom:6px">Training experience</span><div class="modeseg" id="bkExp" role="group" aria-label="Training experience"><button type="button" data-v="beg">Beginner</button><button class="on" type="button" data-v="inter">Intermediate</button><button type="button" data-v="adv">Advanced</button></div></div>
+          <p class="av-note" style="margin:0 0 8px">Beginners and intermediates: the review’s 0.25–0.5% a week. Advanced: it says to be more conservative, so anything above 0.25% is flagged.</p>
+          <label class="fld" for="bkBf"><span class="lab">Body fat <span class="unit">% · optional, uses Katch-McArdle</span></span><div class="inp"><input id="bkBf" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 15"></div></label>
+          <div class="cb-two"><label class="fld" for="bkPg"><span class="lab">Protein <span class="unit">g per kg</span></span><div class="inp"><input id="bkPg" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 1.8"></div></label><label class="fld" for="bkFg"><span class="lab">Fat <span class="unit">g per kg</span></span><div class="inp"><input id="bkFg" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 1.0"></div></label></div>
+          <div class="ctl-row"><span class="ctl-lab">Meals a day</span><div class="seg" id="bkMeals" role="group" aria-label="Meals a day"><button type="button" data-v="3">3</button><button class="on" type="button" data-v="4">4</button><button type="button" data-v="5">5</button><button type="button" data-v="6">6</button></div></div>
+        </div>
+        <div class="add-row split" style="margin-top:16px">
+          <span></span>
+          <button class="advbtn" id="bkAdvBtn" type="button">
+            <span id="bkAdvBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div class="card">
+      <div class="card-pad">
+        <div class="bf-res">
+          <div class="res-lab">Calories a day to bulk</div>
+          <div class="res-big"><span id="bkBig">—</span></div>
+          <div class="res-sub" id="bkSub" data-empty="Enter your weight and details.">Enter your weight and details.</div>
+        </div>
+        <div id="bkBody" style="display:none">
+          <p class="res-tip adv-tip" id="bkTip"></p>
+          <div id="bkFlags"></div>
+          <div id="bkEq"></div>
+          <p class="bm-h">Maintenance and surplus</p>
+          <div id="bkBar"></div>
+          <p class="bm-h">Your pace against the researched range</p>
+          <div id="bkPace"></div>
+          <p class="bm-h">Weight over time</p>
+          <div id="bkGoalRows"></div>
+          <div id="bkChart"></div>
+          <div class="bm-key"><span><i class="bk-lr"></i>Same food (maintenance rises as you gain)</span><span><i class="bk-ls"></i>Steady pace (raise calories)</span></div>
+          <p class="av-note" id="bkNoGoal" style="display:none">Add a goal weight for the time to goal. The chart shows the next 16 weeks.</p>
+          <p class="bm-h">What to eat to keep the pace</p>
+          <table class="dtable" id="bkLadder"></table>
+          <p class="cb-note" id="bkLadderNote"></p>
+          <p class="bm-h">Macros</p>
+          <table class="dtable" id="bkMac"></table>
+          <div id="bkMacNote"></div>
+          <p class="cb-note">An estimate for adults, not medical advice. The surplus ranges and macro ranges come from a published review; the 7,700 kcal per kg rule is a simplification, and the calculator does not estimate how much of the gain is muscle.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- mobile sticky bar -->
+  <div class="mbar" id="mbar">
+    <span class="mbar-lab" id="bkMLab">Calories a day to bulk</span>
+    <div class="mbar-vals"><b id="bkMVal">—</b></div>
+  </div>
+
+  <div class="related-calcs">
+    <p class="related-calcs-h">More calculators that may interest you</p>
+    <div class="pills">
+      <a class="pill" href="/calorie-deficit-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12h8"/></svg>
+        Calorie Deficit Calculator
+      </a>
+      <a class="pill" href="/tdee-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3s5 5 5 9a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3 1-5 1-8z"/></svg>
+        TDEE Calculator
+      </a>
+      <a class="pill" href="/macro-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+        Macro Calculator
+      </a>
+      <a class="pill" href="/ffmi-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 7v10M3 9v6M18 7v10M21 9v6M6 12h12"/></svg>
+        FFMI Calculator
+      </a>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use the bulking calculator</h2>
+        <p>Pick <strong>male or female</strong>, enter your <strong>age</strong>, <strong>height</strong> (centimetres, inches or 5'10, metres), <strong>activity level</strong> and <strong>weight</strong> — or choose <strong>I know it</strong> and type your maintenance calories. Then set the surplus the way you think about it: a <strong>pace</strong> in percent of body weight a week, a <strong>percent</strong> above maintenance, or <strong>kcal</strong> a day — and see all three. Add a <strong>goal weight</strong> for the time to goal.</p>
+        <p>Open <strong>Go advanced</strong> for training experience, body fat (Katch-McArdle), your own protein and fat per kg and the number of meals.</p>
+
+        <h2>The calorie surplus formula</h2>
+        <div class="formula">
+          Calories to bulk = maintenance + surplus · maintenance = BMR × activity factor
+          <small>PACE: SURPLUS = % × WEIGHT (KG) × 7,700 ÷ 7 · PERCENT: SURPLUS = % × MAINTENANCE</small>
+        </div>
+        <p>For a man of 80 kg and 180 cm, 28 years old, moderate activity: BMR (Mifflin-St Jeor) = 1,790 kcal, maintenance = 1,790 × 1.55 = <strong>2,775 kcal</strong>. A pace of 0.25% a week is 0.20 kg, a surplus of <strong>220 kcal</strong> a day, so about <strong>2,995 kcal</strong>.</p>
+      </div>
+
+      <div>
+        <h2>Surplus by body weight</h2>
+        <table class="dtable"><thead><tr><th>Body weight</th><th>0.25% a week</th><th>0.5% a week</th></tr></thead><tbody><tr><td>50 kg (110.2 lb)</td><td>+138 kcal · 0.13 kg a week</td><td>+275 kcal · 0.25 kg a week</td></tr><tr><td>60 kg (132.3 lb)</td><td>+165 kcal · 0.15 kg a week</td><td>+330 kcal · 0.30 kg a week</td></tr><tr><td>70 kg (154.3 lb)</td><td>+193 kcal · 0.18 kg a week</td><td>+385 kcal · 0.35 kg a week</td></tr><tr><td>80 kg (176.4 lb)</td><td>+220 kcal · 0.20 kg a week</td><td>+440 kcal · 0.40 kg a week</td></tr><tr><td>90 kg (198.4 lb)</td><td>+248 kcal · 0.23 kg a week</td><td>+495 kcal · 0.45 kg a week</td></tr><tr><td>100 kg (220.5 lb)</td><td>+275 kcal · 0.25 kg a week</td><td>+550 kcal · 0.50 kg a week</td></tr><tr><td>110 kg (242.5 lb)</td><td>+303 kcal · 0.28 kg a week</td><td>+605 kcal · 0.55 kg a week</td></tr></tbody></table>
+        <p>The researched pace is 0.25–0.5% of body weight a week for novice and intermediate lifters. The kcal is the surplus above maintenance at 7,700 kcal per kg; heavier people need a bigger surplus for the same pace.</p>
+
+        <h2>Why the calories must keep rising</h2>
+        <table class="dtable"><thead><tr><th>When</th><th>Weight</th><th>Eat to keep the pace</th></tr></thead><tbody><tr><td>Week 0</td><td>80.0 kg</td><td>2,995 kcal</td></tr><tr><td>Week 8</td><td>81.6 kg</td><td>3,019 kcal</td></tr><tr><td>Week 16</td><td>83.2 kg</td><td>3,044 kcal</td></tr><tr><td>Week 24</td><td>84.8 kg</td><td>3,069 kcal</td></tr></tbody></table>
+        <p>Same man, 0.25% a week: maintenance rises about 16 kcal per kg gained, so the calories needed to keep the pace go up with his weight.</p>
+
+        <h2>Bigger is not better</h2>
+        <p>In an 8-week trial of 17 trained lifters, larger surpluses mainly added fat rather than muscle thickness or squat strength (Helms 2023, small and short). That is why the calculator starts at the low end, flags anything above the review’s ranges and offers no “dirty bulk” preset. See also the <a href="/calorie-deficit-calculator/">calorie deficit calculator</a> for the other direction.</p>
+        <h2>Sources</h2>
+        <ul>
+          <li>Iraki J, Fitschen P, Espinar S, Helms E, <a href="https://pubmed.ncbi.nlm.nih.gov/31247944/" rel="noopener">Nutrition Recommendations for Bodybuilders in the Off-Season: A Narrative Review</a>, Sports 2019;7(7):154 (abstract read via Europe PMC, 2026-11-06): a hyper-energetic diet of about 10–20% above maintenance with a target weight gain of about 0.25–0.5% of body weight per week for novice and intermediate bodybuilders, advanced bodybuilders more conservative (no figure given); protein 1.6–2.2 g/kg a day, optimal 0.40–0.55 g/kg per meal over 3–6 meals; fat 0.5–1.5 g/kg a day; carbohydrate at least 3–5 g/kg a day.</li>
+          <li>Helms ER et al., <a href="https://pubmed.ncbi.nlm.nih.gov/37914977/" rel="noopener">Effect of Small and Large Energy Surpluses on Strength, Muscle, and Skinfold Thickness in Resistance-Trained Individuals</a>, Sports Medicine – Open 2023;9:102 (abstract read via Europe PMC): 21 trained lifters randomized to maintenance, a 5% or a 15% surplus for 8 weeks (17 completed); faster body-mass gain mainly increased fat gain rather than muscle thickness or squat 1-RM. A small, short study of mixed-experience lifters.</li>
+          <li>Competitor pages opened 2026-11-06 for their inputs and presets: ProteinCalc, Coachway, GetHealthyCalculators and Gravitus. Their per-experience calorie surpluses and monthly muscle-gain figures cite no study, so this calculator does not use them.</li>
+          <li>Maintenance: Mifflin-St Jeor times the activity factor (or Katch-McArdle with body fat), as on our <a href="/bmr-calculator/">BMR calculator</a>. The energy rule of 7,700 kcal per kg of body weight is the same simplification used on our <a href="/calorie-deficit-calculator/">calorie deficit calculator</a>; the real split between muscle, fat and water varies.</li>
+        </ul>
+        <p><small>For information only, not medical advice. A bulk adds weight; if you have a health condition or a history of disordered eating, talk to a clinician first. The calculator does not estimate how much of the gain is muscle.</small></p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>How many calories should I eat to bulk?</summary><p>Eat your maintenance calories plus a surplus. For a man of 80 kg and 180 cm, 28 years old, with moderate activity, maintenance is about 2,775 kcal (Mifflin-St Jeor 1,790 × 1.55). A surplus of 10–20% above maintenance, the range in a 2019 review of off-season bodybuilding nutrition, is 277–555 kcal, so about 3,052–3,329 kcal a day. The calculator does this for your numbers.</p></details>
+    <details class="faq"><summary>How do I calculate a calorie surplus?</summary><p>A calorie surplus is what you eat above maintenance. Step 1: maintenance = BMR × activity factor. Step 2: add the surplus. You can set the surplus as a pace — 0.25% of your body weight a week is 0.20 kg for 80 kg, which at 7,700 kcal per kg is 220 kcal a day — or as a percent of maintenance, or as kcal. Target = 2,775 + 220 = 2,995 kcal.</p></details>
+    <details class="faq"><summary>How big should a bulking calorie surplus be?</summary><p>The 2019 review gives about 10–20% above maintenance and a target gain of 0.25–0.5% of body weight a week for novice and intermediate lifters, with advanced lifters more conservative. For the 80 kg man that is 220–440 kcal a day (7.9–15.9% of maintenance). In an 8-week trial of 17 trained lifters, larger surpluses mainly added fat rather than muscle (Helms 2023), so more is not better. The calculator flags a surplus above these ranges.</p></details>
+    <details class="faq"><summary>How much weight should I gain per week when bulking?</summary><p>About 0.25–0.5% of your body weight a week, from the review: 0.20–0.40 kg (0.44–0.88 lb) a week at 80 kg. The surplus for a given weight is simple: about 2.75 kcal per kg of body weight a day for 0.25% a week and 5.50 for 0.5%. This is scale weight; the calculator does not say how much is muscle, because no source I read gives a reliable split.</p></details>
+    <details class="faq"><summary>How many extra calories add 1 lb or 1 kg?</summary><p>About 3,500 kcal per lb or 7,700 kcal per kg of body weight is the usual rule of thumb, used here as the simple estimate. It is an approximation: the real mix of muscle, fat and water changes with training, diet and the person, and maintenance rises as you gain, which is why the calculator also shows a more realistic curve.</p></details>
+    <details class="faq"><summary>How much protein, fat and carbs do I need when bulking?</summary><p>The 2019 review gives protein of 1.6–2.2 g/kg a day (0.40–0.55 g/kg per meal over 3–6 meals), fat of 0.5–1.5 g/kg a day and carbohydrate of at least 3–5 g/kg a day to fuel training. The calculator starts at 1.8 g/kg protein and 1.0 g/kg fat and gives carbohydrate the rest: for the 80 kg man at 2,995 kcal that is 144 g protein, 80 g fat and 425 g carbohydrate, and it warns when a figure leaves the review’s range.</p></details>
+    <details class="faq"><summary>Why does the calculator show two times to reach my goal weight?</summary><p>The simple rule assumes you keep gaining at the same pace by raising calories as you go. In reality maintenance rises by about 16 kcal for every kg you gain, so eating the same amount produces a smaller surplus each week. For the example (80 kg to 85 kg at 220 kcal of surplus) the simple rule gives about 25 weeks and the realistic one about 31 weeks. The ladder under the chart shows what to eat each few weeks to keep the pace.</p></details>
+    <details class="faq"><summary>What is a lean bulk, and what is a dirty bulk?</summary><p>A lean bulk is a small, controlled surplus, at the low end of the ranges above, so weight rises slowly. A “dirty bulk” means eating as much as possible. The only trial I read comparing surpluses (Helms 2023, small and short) found that larger surpluses mainly added fat, so the calculator defaults to the low end and has no dirty-bulk preset.</p></details>
+    <details class="faq"><summary>Can women use this bulking calculator?</summary><p>Yes. Maintenance uses the Mifflin-St Jeor equation for either sex, and the surplus is set as a percent of body weight or maintenance, so it scales with the person. The review’s ranges are not given separately for women, so the same ranges are used. Choose female or male and enter your own numbers.</p></details>
+    <details class="faq"><summary>Should I bulk or lose fat first?</summary><p>The calculator does not decide that. A bulk adds weight; if you want to lose fat first or at the same time, use the <a href="/calorie-deficit-calculator/">calorie deficit calculator</a>, and see the <a href="/protein-intake-calculator/">protein intake calculator</a> for protein on its own.</p></details>
+  </section>
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+      <div class="footer-stack">
+<div class="footer-col" style="order:1">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+          <li><a href="/paint-calculator/">Paint Calculator</a></li>
+          <li><a href="/wallpaper-calculator/">Wallpaper Calculator</a></li>
+          <li><a href="/square-footage-calculator/">Square Footage Calculator</a></li>
+          <li><a href="/tape-measure-fraction-calculator/">Tape Measure Fraction Calculator</a></li>
+          <li><a href="/stair-calculator/">Stair Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:5">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Cooking &amp;</span> <span class="ft2">Kitchen</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/recipe-converter/">Recipe Converter</a></li>
+          <li><a href="/turkey-cooking-time-calculator/">Turkey Cooking Time Calculator</a></li>
+          <li><a href="/turkey-thawing-time-calculator/">Turkey Thawing Time Calculator</a></li>
+          <li><a href="/turkey-size-calculator/">Turkey Size Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:6">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Money &amp;</span> <span class="ft2">Finance</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/mortgage-calculator/">Mortgage Calculator</a></li>
+          <li><a href="/loan-calculator/">Loan Calculator</a></li>
+          <li><a href="/auto-loan-calculator/">Auto Loan Calculator</a></li>
+          <li><a href="/car-sales-tax-calculator/">Car Sales Tax Calculator</a></li>
+          <li><a href="/overtime-calculator/">Overtime Calculator</a></li>
+          <li><a href="/salary-calculator/">Salary Calculator</a></li>
+          <!--STAXFOOT:START-->
+          <li><a href="/sales-tax-calculator/">Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/california/">California Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/chicago/">Chicago Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/florida/">Florida Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/las-vegas/">Las Vegas Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/los-angeles/">Los Angeles Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/michigan/">Michigan Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/missouri/">Missouri Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/north-carolina/">North Carolina Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/ohio/">Ohio Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/texas/">Texas Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/virginia/">Virginia Sales Tax Calculator</a></li>
+          <!--STAXFOOT:END-->
+          <li><a href="/tip-calculator/">Tip Calculator</a></li>
+          <li><a href="/how-much-to-tip/">How Much to Tip</a></li>
+        </ul>
+      </div>
+      </div>
+
+      <div class="footer-right">
+<div class="footer-col footer-col--two" style="order:2">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/vo2-max-calculator/">VO2 Max Calculator</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/bmi-calculator/">BMI Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/ideal-weight-calculator/">Ideal Weight Calculator</a></li>
+          <li><a href="/lean-body-mass-calculator/">Lean Body Mass Calculator</a></li>
+          <li><a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio Calculator</a></li>
+          <li><a href="/gmi-calculator/">GMI Calculator</a></li>
+          <li><a href="/a1c-calculator/">A1C Calculator</a></li>
+          <li><a href="/calorie-calculator/">Calorie Calculator</a></li>
+          <li><a href="/calorie-deficit-calculator/">Calorie Deficit Calculator</a></li>
+          <li><a href="/bmr-calculator/">BMR Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/water-intake-calculator/">Water Intake Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/protein-intake-calculator/">Protein Intake Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
+          <li><a href="/steps-to-miles-calculator/">Steps to Miles Calculator</a></li>
+          <li><a href="/dog-age-calculator/">Dog Age Calculator</a></li>
+          <li><a href="/cat-age-calculator/">Cat Age Calculator</a></li>
+          <li><a href="/calories-burned-calculator/">Calories Burned Calculator</a></li>
+          <li><a href="/calories-burned-walking-calculator/">Calories Burned Walking Calculator</a></li>
+          <li><a href="/calories-burned-running-calculator/">Calories Burned Running Calculator</a></li>
+          <li><a href="/keto-calculator/">Keto Calculator</a></li>
+          <li><a href="/net-carb-calculator/">Net Carb Calculator</a></li>
+          <li><a href="/intermittent-fasting-calculator/">Intermittent Fasting Calculator</a></li>
+          <li><a href="/bsa-calculator/">BSA Calculator</a></li>
+          <li><a href="/dog-food-calculator/">Dog Food Calculator</a></li>
+          <li><a href="/ffmi-calculator/">FFMI Calculator</a></li>
+          <li><a href="/bulking-calculator/">Bulking Calculator</a></li>
+        </ul>
+      </div>
+
+        <div class="footer-sub">
+<div class="footer-subcol">
+<div class="footer-col" style="order:3">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/semester-grade-calculator/">Semester Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+          <li><a href="/grade-curve-calculator/">Grade Curve Calculator</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:START-->
+<div class="footer-col" style="order:7">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Unit</span> <span class="ft2">Converters</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/unit-converter/">Unit Converter</a></li>
+          <li><a href="/length-converter/">Length Converter</a></li>
+          <li><a href="/weight-converter/">Weight Converter</a></li>
+          <li><a href="/volume-converter/">Volume Converter</a></li>
+          <li><a href="/temperature-converter/">Temperature Converter</a></li>
+          <li><a href="/area-converter/">Area Converter</a></li>
+          <li><a href="/speed-converter/">Speed Converter</a></li>
+          <li><a href="/data-storage-converter/">Data Storage Converter</a></li>
+          <li><a href="/cooking-converter/">Cooking Measurement Converter</a></li>
+          <li><a href="/px-to-rem-converter/">PX to REM Converter</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:END-->
+</div>
+
+<div class="footer-col" style="order:4">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/fraction-calculator/">Fraction Calculator</a></li>
+          <li><a href="/standard-deviation-calculator/">Standard Deviation Calculator</a></li>
+          <li><a href="/scientific-notation-calculator/">Scientific Notation Calculator</a></li>
+          <li><a href="/weighted-average-calculator/">Weighted Average Calculator</a></li>
+          <li><a href="/average-calculator/">Average Calculator</a></li>
+          <li><a href="/batting-average-calculator/">Batting Average Calculator</a></li>
+          <li><a href="/stock-average-calculator/">Stock Average Calculator</a></li>
+          <li><a href="/dice-average-calculator/">Dice Average Calculator</a></li>
+          <li><a href="/time-average-calculator/">Time Average Calculator</a></li>
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+          <li><a href="/percentage-change-calculator/">Percentage Change Calculator</a></li>
+          <li><a href="/age-calculator/">Age Calculator</a></li>
+          <li><a href="/date-calculator/">Date Calculator</a></li>
+          <li><a href="/time-calculator/">Time Calculator</a></li>
+          <li><a href="/hours-calculator/">Hours Calculator</a></li>
+          <li><a href="/triangle-calculator/">Triangle Calculator</a></li>
+          <li><a href="/random-number-generator/">Random Number Generator</a></li>
+        </ul>
+      </div>
+        </div>
+      </div>
+
+      <!--PAYFOOT:START-->
+      <div class="footer-col footer-col--wide">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Paycheck</span> <span class="ft2">Calculators</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/paycheck-calculator/">Paycheck Calculator (all states)</a></li>
+          <li><a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arkansas/">Arkansas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/california/">California Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/hawaii/">Hawaii Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/louisiana/">Louisiana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nebraska/">Nebraska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/oklahoma/">Oklahoma Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/utah/">Utah Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wisconsin/">Wisconsin Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a></li>
+        </ul>
+      </div>
+      <!--PAYFOOT:END-->
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/blog/">Blog</a>
+      <span aria-hidden="true">·</span>
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+</div>
+
+<script src="/assets/app.js?v=319"></script>
+<script>CalcThis.initBulkCalc();</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>

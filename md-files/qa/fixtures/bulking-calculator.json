@@ -1,0 +1,130 @@
+{
+  "slug": "bulking-calculator",
+  "bodyClass": "p-bk",
+  "blocks": [
+    "BULK"
+  ],
+  "result": {
+    "big": "bkBig",
+    "body": "bkBody",
+    "hint": "bkHint"
+  },
+  "required": [
+    "bkW",
+    "bkAge",
+    "bkH",
+    "bkMaint"
+  ],
+  "fill": [
+    [
+      "seg",
+      "bkSex",
+      "m"
+    ],
+    [
+      "seg",
+      "bkMain",
+      "est"
+    ],
+    [
+      "seg",
+      "bkHU",
+      "cm"
+    ],
+    [
+      "seg",
+      "bkWU",
+      "kg"
+    ],
+    [
+      "seg",
+      "bkKind",
+      "pace"
+    ],
+    [
+      "set",
+      "bkAct",
+      "1.55"
+    ],
+    [
+      "set",
+      "bkAge",
+      "28"
+    ],
+    [
+      "set",
+      "bkH",
+      "180"
+    ],
+    [
+      "set",
+      "bkW",
+      "80"
+    ],
+    [
+      "set",
+      "bkG",
+      ""
+    ],
+    [
+      "set",
+      "bkS",
+      ""
+    ]
+  ],
+  "optionalSamples": {
+    "bkG": [
+      "85",
+      "175"
+    ],
+    "bkS": [
+      "0.25",
+      "0.5"
+    ],
+    "bkBf": [
+      "15"
+    ],
+    "bkPg": [
+      "1.8"
+    ],
+    "bkFg": [
+      "1.0"
+    ]
+  },
+  "variants": [
+    [
+      [
+        "seg",
+        "bkKind",
+        "pct"
+      ]
+    ],
+    [
+      [
+        "seg",
+        "bkKind",
+        "kcal"
+      ]
+    ],
+    [
+      [
+        "seg",
+        "bkMain",
+        "known"
+      ],
+      [
+        "set",
+        "bkMaint",
+        "2800"
+      ]
+    ]
+  ],
+  "scrollTo": "bkEq",
+  "errorState": [
+    [
+      "set",
+      "bkW",
+      "1"
+    ]
+  ]
+}
