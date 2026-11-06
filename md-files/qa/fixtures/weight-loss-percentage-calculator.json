@@ -1,0 +1,30 @@
+{
+  "slug": "weight-loss-percentage-calculator",
+  "bodyClass": "p-wp",
+  "blocks": ["WP"],
+  "result": { "big": "wpBig", "body": "wpBody", "hint": "wpHint" },
+  "required": ["wpA", "wpB"],
+  "fill": [
+    ["seg", "wpUnit", "lb"],
+    ["set", "wpKnow", "sc"],
+    ["set", "wpA", "200"],
+    ["set", "wpB", "180"],
+    ["set", "wpG", ""],
+    ["set", "wpD", ""]
+  ],
+  "optionalSamples": {
+    "wpG": ["160", "170", "14 st"],
+    "wpD": ["25 September 2026", "2026-09-25"]
+  },
+  "variants": [
+    [["seg", "wpUnit", "kg"], ["set", "wpA", "90"], ["set", "wpB", "84"]],
+    [["seg", "wpUnit", "stlb"], ["set", "wpA", "14 st 4 lb"], ["set", "wpB", "12 st 11 lb"]],
+    [["set", "wpKnow", "sp"], ["set", "wpA", "200"], ["set", "wpB", "10"]],
+    [["set", "wpKnow", "cp"], ["set", "wpA", "180"], ["set", "wpB", "10"]],
+    [["set", "wpKnow", "lp"], ["set", "wpA", "20"], ["set", "wpB", "10"]],
+    [["set", "wpKnow", "sl"], ["set", "wpA", "200"], ["set", "wpB", "20"]],
+    [["set", "wpKnow", "cl"], ["set", "wpA", "180"], ["set", "wpB", "20"]]
+  ],
+  "scrollTo": "wpRows",
+  "errorState": [["set", "wpA", "1"]]
+}

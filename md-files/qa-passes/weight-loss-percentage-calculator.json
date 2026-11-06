@@ -1,0 +1,36 @@
+{
+ "slug": "weight-loss-percentage-calculator",
+ "pass": true,
+ "at": "2026-11-06T11:07:00.864Z",
+ "hash": "19ea65bfa64f8061",
+ "viewports": {
+  "mobile": {
+   "steps": 1252,
+   "fails": []
+  },
+  "desktop": {
+   "steps": 1252,
+   "fails": []
+  }
+ },
+ "oracle": {
+  "runs": 300,
+  "fails": [],
+  "errs": 0
+ },
+ "shots": [
+  "md-files/qa-passes/shots/weight-loss-percentage-calculator-1-empty-mobile.png",
+  "md-files/qa-passes/shots/weight-loss-percentage-calculator-2-filled-mobile.png",
+  "md-files/qa-passes/shots/weight-loss-percentage-calculator-3-result-mobile.png",
+  "md-files/qa-passes/shots/weight-loss-percentage-calculator-4-advanced-mobile.png",
+  "md-files/qa-passes/shots/weight-loss-percentage-calculator-5-error-mobile.png",
+  "md-files/qa-passes/shots/weight-loss-percentage-calculator-6-after-chaos-mobile.png",
+  "md-files/qa-passes/shots/weight-loss-percentage-calculator-1-empty-desktop.png",
+  "md-files/qa-passes/shots/weight-loss-percentage-calculator-2-filled-desktop.png",
+  "md-files/qa-passes/shots/weight-loss-percentage-calculator-3-result-desktop.png",
+  "md-files/qa-passes/shots/weight-loss-percentage-calculator-4-advanced-desktop.png",
+  "md-files/qa-passes/shots/weight-loss-percentage-calculator-5-error-desktop.png",
+  "md-files/qa-passes/shots/weight-loss-percentage-calculator-6-after-chaos-desktop.png"
+ ],
+ "console": []
+}

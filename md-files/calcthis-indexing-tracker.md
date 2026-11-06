@@ -138,3 +138,4 @@ GSC snapshot 2026-10-26: 69 indexed, 13 not indexed (8 Discovered, 1 Crawled, 1 
 
 - 2026-11-06 deployed v319: `/bulking-calculator/` — IndexNow HTTP 200 (216 URLs); Bing NOT submitted (signed out); GSC NOT requested (quota): add after `/ffmi-calculator/` at the end of the health block.
 - 2026-11-06 deployed v320: `/weight-loss-calculator/` (+ "Calories you burn" label rename on bulking, calorie deficit, calorie calculator) — IndexNow HTTP 200 (217 URLs); Bing NOT submitted (signed out); GSC NOT requested (quota): add after `/bulking-calculator/` at the end of the health block.
+- 2026-11-06 deployed v321: `/weight-loss-percentage-calculator/` — IndexNow HTTP 200 (218 URLs); Bing NOT submitted (signed out); GSC NOT requested (quota): add after `/weight-loss-calculator/` at the end of the health block.

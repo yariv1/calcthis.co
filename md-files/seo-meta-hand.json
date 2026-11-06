@@ -270,6 +270,10 @@
     "t": "Intermittent Fasting Calculator — Your Eating Window",
     "d": "Intermittent fasting calculator for 16:8, 18:6, 20:4, OMAD, 5:2 and custom: set your window from your last bite or first meal and plan a week-by-week ramp-up."
   },
+  "/weight-loss-percentage-calculator/": {
+    "t": "Weight Loss Percentage Calculator — % of Body Weight Lost",
+    "d": "Weight loss percentage calculator: enter your starting and current weight for the percent of body weight lost, the way to your goal and what 5% or 10% means."
+  },
   "/weight-loss-calculator/": {
     "t": "Weight Loss Calculator by Date — Calories to Reach Goal",
     "d": "Weight loss calculator by date: enter your goal weight and a target date to get the calories to eat a day, the weekly loss and the fastest safe date."

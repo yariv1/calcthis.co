@@ -21275,3 +21275,204 @@ CalcThis.initWlCalc = function () {
   render();
 };
 /* WL:END */
+
+/* WP:BEGIN */
+/* =========================================================
+   WEIGHT LOSS PERCENTAGE calculator (/weight-loss-percentage-calculator/). Competitors opened live (2026-11-06): Omnicalculator (any two of past/current/lost/percent; kg, lb, st, st+lb),
+   Inch Calculator (initial + current, lbs/kg/st), Coachway (kg/lb, optional goal + timeframe, 5-20% table). Sources READ: CDC "Steps for Losing Weight" (5% of 200 lb = 10 lb; 1 to 2 pounds
+   a week) and NHLBI "Aim for a Healthy Weight" (5% to 10% over about 6 months; 3% to 5% can lower triglycerides and glucose). Formula: (start - current) / start x 100 (arithmetic).
+   ========================================================= */
+/* WP-ENGINE:START */
+CalcThis.wpEngine = (function () {
+  var LB = 2.20462, ST = 6.35029, MARKS = [3, 5, 10, 15, 20], CAP_KG = 0.907185;
+  function num(t) {
+    t = (t + '').trim().replace(/\s/g, '');
+    if (!t) return null;
+    if (/^[+-]?\d*,\d+$/.test(t)) t = t.replace(',', '.'); else t = t.replace(/,/g, '');
+    if (!/^[+-]?(\d+\.?\d*|\.\d+)$/.test(t)) return NaN;
+    return parseFloat(t);
+  }
+  /* a weight text in unit u (kg | lb | st | stlb) -> kg, null when blank, NaN when unreadable */
+  function parseW(t, u) {
+    t = (t + '').trim(); if (!t) return null;
+    if (u === 'stlb') {
+      var m = /^(\d+(?:[.,]\d+)?)\s*(?:st|stone|stones)?\s*[,:]?\s*(?:(\d+(?:[.,]\d+)?)\s*(?:lb|lbs|pounds?)?)?$/i.exec(t);
+      if (!m) return NaN;
+      return (parseFloat(m[1].replace(',', '.')) * 14 + (m[2] ? parseFloat(m[2].replace(',', '.')) : 0)) / LB;
+    }
+    var n = num(t); if (n === null) return null; if (isNaN(n)) return NaN;
+    return u === 'lb' ? n / LB : (u === 'st' ? n * ST : n);
+  }
+  function trim(x, d) { return String(parseFloat((Math.round(x * Math.pow(10, d)) / Math.pow(10, d)).toFixed(d))); }
+  function fmtW(kg, u) {
+    if (u === 'kg') return trim(kg, 1) + ' kg';
+    if (u === 'lb') return trim(kg * LB, 1) + ' lb';
+    if (u === 'st') return trim(kg / ST, 2) + ' st';
+    var tl = kg * LB, s = Math.floor(tl / 14 + 1e-9), l = Math.round((tl - s * 14) * 10) / 10;
+    if (l >= 14) { s += 1; l = 0; }
+    return s === 0 ? trim(l, 1) + ' lb' : s + ' st ' + trim(l, 1) + ' lb';
+  }
+  function fmtP(p) { return (Math.abs(p) < 1 ? Math.round(p * 100) / 100 : Math.round(p * 10) / 10).toFixed(Math.abs(p) < 1 ? 2 : 1) + '%'; }
+  /* mode = which two values are known: sc start+current, sl start+lost, sp start+percent, cl current+lost, cp current+percent, lp lost+percent. a, b in that order (kg, kg or %). */
+  function solve(mode, a, b) {
+    var S, C, L, P;
+    if (mode === 'sc') { S = a; C = b; L = S - C; P = L / S * 100; }
+    else if (mode === 'sl') { S = a; L = b; C = S - L; P = L / S * 100; }
+    else if (mode === 'sp') { S = a; P = b; L = S * P / 100; C = S - L; }
+    else if (mode === 'cl') { C = a; L = b; S = C + L; P = L / S * 100; }
+    else if (mode === 'cp') { C = a; P = b; S = C / (1 - P / 100); L = S - C; }
+    else { L = a; P = b; S = L / (P / 100); C = S - L; }
+    return { S: S, C: C, L: L, P: P };
+  }
+  return { LB: LB, ST: ST, MARKS: MARKS, CAP_KG: CAP_KG, num: num, parseW: parseW, trim: trim, fmtW: fmtW, fmtP: fmtP, solve: solve };
+})();
+/* WP-ENGINE:END */
+
+/* =========================================================
+   CalcThis.initWpCalc() — ids wp*. Engine: CalcThis.wpEngine. No shared state.
+   ========================================================= */
+CalcThis.initWpCalc = function () {
+  var E = CalcThis.wpEngine, U = CalcThis._kzUtil, trim = U.trim, seg = U.seg;
+  var $ = function (id) { return document.getElementById(id); };
+  var MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], MONF = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  var st = { u: 'lb', mode: 'sc', adv: false }, dp = null, LB = E.LB;
+  /* the two inputs, by mode: kind w = weight, p = percent */
+  var MODES = {
+    sc: [['Starting weight', 'w'], ['Current weight', 'w']], sl: [['Starting weight', 'w'], ['Weight lost', 'w']], sp: [['Starting weight', 'w'], ['Percent lost', 'p']],
+    cl: [['Current weight', 'w'], ['Weight lost', 'w']], cp: [['Current weight', 'w'], ['Percent lost', 'p']], lp: [['Weight lost', 'w'], ['Percent lost', 'p']]
+  };
+  function setHint(m, at) {
+    var h = $('wpHint'); h.textContent = m || ''; h.style.display = m ? 'block' : 'none';
+    if (m && at) { var f = $(at).closest('.fld'); if (f && f.nextSibling !== h) f.parentNode.insertBefore(h, f.nextSibling); }
+  }
+  function empty(msg, at) { $('wpBig').textContent = '—'; $('wpSub').textContent = $('wpSub').getAttribute('data-empty'); $('wpBody').style.display = 'none'; $('wpMVal').textContent = '—'; setHint(msg || '', at); }
+  function ph() { return st.u === 'kg' ? ['90', '84'] : (st.u === 'st' ? ['14', '13'] : (st.u === 'stlb' ? ['14 st 2 lb', '13 st 5 lb'] : ['200', '180'])); }
+  function unitLab() { return st.u === 'stlb' ? 'st and lb' : st.u; }
+  function addDays(n) { var d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() + Math.round(n)); return d; }
+  function dateTxt(days) { var d = addDays(days); return d.getDate() + ' ' + MON[d.getMonth()] + ' ' + d.getFullYear(); }
+  function parseDate(raw) {
+    var t = (raw + '').trim(), m, d, mo, y, i;
+    if ((m = /^(\d{1,2})\s+([A-Za-z]+)\.?,?\s+(\d{4})$/.exec(t))) { d = +m[1]; y = +m[3]; mo = -1; for (i = 0; i < 12; i++) if (m[2].length >= 3 && MONF[i].toLowerCase().indexOf(m[2].toLowerCase()) === 0) mo = i; }
+    else if ((m = /^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(t))) { y = +m[1]; mo = +m[2] - 1; d = +m[3]; }
+    else if ((m = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/.exec(t))) { mo = +m[1] - 1; d = +m[2]; y = +m[3]; }
+    else return null;
+    if (mo < 0 || mo > 11 || d < 1 || d > 31) return null;
+    var r = new Date(y, mo, d); r.setHours(0, 0, 0, 0);
+    return (r.getFullYear() === y && r.getMonth() === mo && r.getDate() === d) ? r : null;
+  }
+  var RMSG = { kg: '30 and 300 kg', lb: '66 and 660 lb', st: '4.7 and 47 st', stlb: '4 st 9 lb and 47 st 4 lb' };
+  function exTxt() { return st.u === 'kg' ? '75' : (st.u === 'st' ? '12' : (st.u === 'stlb' ? '12 st 5 lb' : '165')); }
+  /* reads one input of the given kind; null = blank, {err}, or {kg} / {p} */
+  function read(id, kind, label) {
+    var raw = $(id).value; if (!raw.trim()) return null;
+    if (kind === 'p') {
+      var p = E.num(raw); if (p === null) return null;
+      if (isNaN(p) || p <= 0 || p >= 100) return { err: 'Percent lost should be above 0 and below 100.' };
+      return { p: p };
+    }
+    var kg = E.parseW(raw, st.u); if (kg === null) return null;
+    if (isNaN(kg) || kg <= 0) return { err: 'Couldn’t read ' + label.toLowerCase() + ' — use a number like ' + exTxt() + '.' };
+    return { kg: kg };
+  }
+  function setPh() { var p = ph(); $('wpA').placeholder = 'e.g. ' + (MODES[st.mode][0][1] === 'p' ? '10' : p[0]); $('wpB').placeholder = 'e.g. ' + (MODES[st.mode][1][1] === 'p' ? '10' : (st.mode === 'sl' || st.mode === 'cl' ? (st.u === 'kg' ? '9' : (st.u === 'st' ? '1.4' : (st.u === 'stlb' ? '1 st 6 lb' : '20'))) : p[1])); $('wpG').placeholder = 'e.g. ' + p[1]; }
+  function labels() {
+    var m = MODES[st.mode];
+    $('wpALab').firstChild.nodeValue = m[0][0] + ' '; $('wpBLab').firstChild.nodeValue = m[1][0] + ' ';
+    $('wpAU').textContent = m[0][1] === 'p' ? '%' : unitLab(); $('wpBU').textContent = m[1][1] === 'p' ? '%' : unitLab(); $('wpGU').textContent = unitLab() + ' · optional';
+    setPh();
+  }
+  function bar(P) {
+    var mx = 25, p = function (v) { return Math.max(0, Math.min(100, v / mx * 100)); };
+    var tk = [[0, '0'], [3, '3'], [5, '5'], [10, '10'], [15, '15'], [20, '20'], [25, '25%']].map(function (t) { return '<span style="left:' + p(t[0]) + '%">' + t[1] + '</span>'; }).join('');
+    return '<div class="wp-rule"><div class="wp-rule-t"><i class="wp-band" style="left:' + p(5) + '%;width:' + (p(10) - p(5)) + '%"></i><i class="wp-tick" style="left:' + p(3) + '%"></i><i class="wp-mk" style="left:' + p(P) + '%"><b>' + E.fmtP(P) + '</b></i></div><div class="wp-rule-l">' + tk + '</div></div>';
+  }
+  function render() {
+    var soft = null;
+    function sf(at, msg) { if (!soft) soft = { at: at, msg: msg }; }
+    var m = MODES[st.mode], a = read('wpA', m[0][1], m[0][0]), b = read('wpB', m[1][1], m[1][0]);
+    if (a && a.err) { empty(a.err, 'wpA'); return; }
+    if (b && b.err) { empty(b.err, 'wpB'); return; }
+    if (!a || !b) { empty(''); return; }
+    var av = a.kg !== undefined ? a.kg : a.p, bv = b.kg !== undefined ? b.kg : b.p;
+    var R = E.solve(st.mode, av, bv), S = R.S, C = R.C, L = R.L, P = R.P;
+    if (!(isFinite(S) && isFinite(C) && isFinite(L) && isFinite(P))) { empty('Those numbers do not give a result — check the fields.', 'wpB'); return; }
+    if (st.mode === 'sc' && C > S) { empty('The current weight should not be above the starting weight to measure weight loss.', 'wpB'); return; }
+    if (st.mode !== 'sc' && !(L > 0)) { empty('The weight lost should be above 0.', 'wpB'); return; }
+    if (st.mode === 'sl' && L >= S) { empty('The weight lost should be less than the starting weight.', 'wpB'); return; }
+    if (S < 30 || S > 300 || C < 30 || C > 300) { empty('That works out to a starting weight of ' + E.fmtW(S, st.u) + ' and a current weight of ' + E.fmtW(C, st.u) + ' — both should be between ' + RMSG[st.u] + '. Check the numbers and the unit.', 'wpB'); return; }
+    var g = read('wpG', 'w', 'the goal weight'), G = null;
+    if (g && g.err) sf('wpG', g.err + ' The goal is ignored for now.');
+    else if (g && (g.kg < 30 || g.kg > 300)) sf('wpG', 'The goal weight should be between ' + RMSG[st.u] + '. It is ignored for now.');
+    else if (g && g.kg >= S) sf('wpG', 'The goal weight should be below the starting weight. It is ignored for now.');
+    else if (g) G = g.kg;
+    var days = null, draw = st.adv ? $('wpD').value : '';
+    if (draw.trim()) {
+      var pd = parseDate(draw), td = new Date(); td.setHours(0, 0, 0, 0);
+      if (!pd) sf('wpD', 'Type or pick a date, like 25 September 2026. It is ignored for now.');
+      else { var dd = Math.round((td - pd) / 86400000); if (dd < 1) sf('wpD', 'The starting date should be before today. It is ignored for now.'); else days = dd; }
+    }
+    setHint(soft ? soft.msg : '', soft ? soft.at : null);
+    $('wpBig').textContent = E.fmtP(P);
+    $('wpSub').textContent = 'From ' + E.fmtW(S, st.u) + ' to ' + E.fmtW(C, st.u) + ' · ' + E.fmtW(L, st.u) + ' lost';
+    $('wpMLab').textContent = 'Body weight lost'; $('wpMVal').textContent = E.fmtP(P);
+    $('wpBody').style.display = '';
+    var tip = 'You have lost ' + E.fmtP(P) + ' of your starting body weight — ' + E.fmtW(L, st.u) + ' from ' + E.fmtW(S, st.u) + '. ';
+    if (P < 3) tip += 'NHLBI reports that a loss of 3% to 5% can lower triglycerides and blood glucose.';
+    else if (P < 5) tip += 'That is in the 3% to 5% range where NHLBI reports lower triglycerides and blood glucose.';
+    else if (P <= 10) tip += 'That is in the 5% to 10% of starting weight that health professionals recommend over about 6 months for people with overweight or obesity (NHLBI).';
+    else tip += 'That is above the 5% to 10% of starting weight that health professionals recommend over about 6 months for people with overweight or obesity (NHLBI).';
+    $('wpTip').textContent = tip;
+    var rows = '';
+    function row(k, v) { rows += '<div class="bf-cmp"><span class="k">' + k + '</span><span class="v">' + v + '</span></div>'; }
+    row('Starting weight', E.fmtW(S, st.u)); row('Current weight', E.fmtW(C, st.u)); row('Weight lost', E.fmtW(L, st.u)); row('Percent lost', E.fmtP(P) + '<span class="bm-sub" style="text-align:right">of your starting weight</span>');
+    if (G !== null) {
+      var tot = S - G, done = L / tot * 100;
+      row('Goal weight', E.fmtW(G, st.u));
+      row('Of the way to your goal', (done >= 100 ? 'goal reached' : (Math.round(done * 10) / 10).toFixed(1) + '%') + '<span class="bm-sub" style="text-align:right">' + (done >= 100 ? 'you are ' + E.fmtW(G - C, st.u) + ' past it' : E.fmtW(C - G, st.u) + ' still to lose') + '</span>');
+    }
+    if (days !== null) {
+      var wk = L / (days / 7), pu = st.u === 'kg' ? 'kg' : 'lb', wkd = pu === 'kg' ? wk : wk * LB;
+      row('Average loss a week <span class="bm-sub">over ' + days + (days === 1 ? ' day' : ' days') + '</span>', (Math.round(wkd * 100) / 100).toFixed(2) + ' ' + pu + '<span class="bm-sub" style="text-align:right">' + (Math.round(wk / S * 10000) / 100).toFixed(2) + '% of your starting weight a week</span>');
+      if (G !== null && C > G) row('At this pace you reach the goal in', Math.round((C - G) / wk) + ' weeks<span class="bm-sub" style="text-align:right">' + dateTxt((C - G) / wk * 7) + '</span>');
+    }
+    $('wpRows').innerHTML = rows;
+    var fl = [];
+    if (days !== null) { var w2 = L / (days / 7); if (w2 > E.CAP_KG + 1e-9) fl.push('That is more than 2 lb (' + (Math.round(E.CAP_KG * 100) / 100).toFixed(2) + ' kg) a week — faster than the gradual 1 to 2 pounds a week the CDC links to keeping weight off.'); else if (w2 >= 0.45359 - 1e-9) fl.push('That is within the gradual 1 to 2 pounds (0.45–0.9 kg) a week the CDC links to keeping weight off.'); }
+    $('wpFlags').innerHTML = fl.map(function (t) { return '<p class="wp-flag">' + t + '</p>'; }).join('');
+    $('wpBar').innerHTML = bar(P);
+    var tr = '';
+    E.MARKS.forEach(function (pc) { var l = S * pc / 100, w = S - l; tr += '<tr data-w="' + w + '" tabindex="0"><td>' + pc + '%</td><td>' + E.fmtW(l, st.u) + '</td><td>' + E.fmtW(w, st.u) + '</td></tr>'; });
+    $('wpTable').innerHTML = '<thead><tr><th>Lose</th><th>That is</th><th>You weigh</th></tr></thead><tbody>' + tr + '</tbody>';
+  }
+  /* ---------- controls ---------- */
+  ['wpA', 'wpB', 'wpG', 'wpD'].forEach(function (id) { $(id).addEventListener('input', render); });
+  $('wpKnow').addEventListener('change', function () {
+    var v = $('wpKnow').value, o = MODES[st.mode], n = MODES[v];
+    if (o[0][1] !== n[0][1]) $('wpA').value = ''; if (o[1][1] !== n[1][1]) $('wpB').value = '';
+    st.mode = v; labels(); render();
+  });
+  seg('wpUnit', function (v) {
+    var old = st.u, m = MODES[st.mode], ids = [['wpA', m[0][1]], ['wpB', m[1][1]], ['wpG', 'w']], kg = {};
+    ids.forEach(function (x) { if (x[1] === 'w') { st.u = old; var k = E.parseW($(x[0]).value, old); kg[x[0]] = (k && !isNaN(k) && k > 0) ? k : null; } });
+    st.u = v;
+    ids.forEach(function (x) { if (x[1] === 'w') $(x[0]).value = kg[x[0]] ? (v === 'kg' ? E.trim(kg[x[0]], 3) : (v === 'lb' ? E.trim(kg[x[0]] * LB, 3) : (v === 'st' ? E.trim(kg[x[0]] / E.ST, 3) : E.fmtW(kg[x[0]], 'stlb')))) : ''; });
+    labels(); render();
+  });
+  $('wpTable').addEventListener('click', function (e) {
+    var tr = e.target.closest('tr[data-w]'); if (!tr) return; var kg = parseFloat(tr.getAttribute('data-w'));
+    $('wpG').value = st.u === 'kg' ? E.trim(kg, 1) : (st.u === 'lb' ? E.trim(kg * LB, 1) : (st.u === 'st' ? E.trim(kg / E.ST, 2) : E.fmtW(kg, 'stlb'))); render();
+  });
+  $('wpTable').addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.target.click(); } });
+  $('wpAdvBtn').addEventListener('click', function () {
+    st.adv = !st.adv; $('wpAdvBtn').classList.toggle('open', st.adv); $('wpAdvBtnLab').textContent = st.adv ? 'Go simple' : 'Go advanced'; $('wpAdvIn').style.display = st.adv ? '' : 'none';
+    if (!st.adv) $('wpD').value = '';
+    render();
+  });
+  if (window.Datepicker) {
+    dp = new Datepicker($('wpD'), { format: 'd MM yyyy', autohide: true, weekStart: 0, todayHighlight: true, maxDate: new Date() });
+    $('wpD').addEventListener('changeDate', render);
+  }
+  labels();
+  render();
+};
+/* WP:END */

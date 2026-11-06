@@ -1,0 +1,774 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Weight Loss Percentage Calculator — % of Body Weight Lost</title>
+<meta name="description" content="Weight loss percentage calculator: enter your starting and current weight for the percent of body weight lost, the way to your goal and what 5% or 10% means.">
+<link rel="canonical" href="https://calcthis.co/weight-loss-percentage-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Weight Loss Percentage Calculator — % of Body Weight Lost">
+<meta property="og:description" content="Weight loss percentage calculator: enter your starting and current weight for the percent of body weight lost, the way to your goal and what 5% or 10% means.">
+<meta property="og:url" content="https://calcthis.co/weight-loss-percentage-calculator/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/datepicker.min.css">
+<link rel="stylesheet" href="/assets/style.css?v=321">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Weight Loss Percentage Calculator",
+  "url": "https://calcthis.co/weight-loss-percentage-calculator/",
+  "applicationCategory": "HealthApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "Free weight loss percentage calculator: percent of body weight lost from a starting and a current weight (or any two of starting weight, current weight, weight lost and percent), in kg, lb, st or st + lb, with progress toward a goal weight, a table of what 3% to 20% means for your weight, and an optional average loss per week."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I calculate weight loss percentage?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Subtract your current weight from your starting weight, divide by the starting weight and multiply by 100. For 200 lb to 180 lb: (200 − 180) ÷ 200 × 100 = 10.0%. For 90 kg to 84 kg: 6 ÷ 90 × 100 = 6.7%. The unit cancels, so it is the same in kg, lb or stones."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is a good weight loss percentage?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "For people with overweight or obesity, NHLBI says health professionals recommend losing 5% to 10% of initial weight over about 6 months, and that a loss of 3% to 5% can lower triglycerides and blood glucose; losing more than that can improve blood pressure and cholesterol. The CDC gives an example: 5% of 200 pounds is 10 pounds. Whether a percentage is right for you depends on your health, so ask your clinician."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How much is 5%, 10% or 20% of my body weight?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Multiply your weight by the percent: 5% of 200 lb is 10 lb (the CDC’s example), 10% is 20 lb and 20% is 40 lb. The calculator lists 3%, 5%, 10%, 15% and 20% for your own starting weight, and a click on a row sets it as your goal."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I find my weight after losing a percentage?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Starting weight × (1 − percent ÷ 100). For 90 kg and a 5% loss: 90 × 0.95 = 85.5 kg, which is 4.5 kg lost. In the calculator choose “Starting weight and percent lost”."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I find my starting weight from my current weight and a percentage?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Current weight ÷ (1 − percent ÷ 100). If you now weigh 180 lb after losing 10%: 180 ÷ 0.9 = 200 lb. In the calculator choose “Current weight and percent lost”."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why divide by the starting weight, not the current weight?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The percentage tells you how much of where you began you have lost, so the starting weight is the base. 200 lb to 180 lb is 20 ÷ 200 = 10% lost. Dividing by 180 would give 11.1%, which is the percentage you would have to gain back to return to 200 lb — a different question."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between percent of body weight and percent of my goal?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Percent of body weight is how much of your starting weight you lost. Percent of your goal is how much of the weight you planned to lose you have lost: starting at 200 lb with a goal of 160 lb, losing 20 lb is 10% of your body weight but 50% of the way to your goal. Add a goal weight and the calculator shows both."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How fast is it safe to lose weight?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The CDC says people who lose weight at a gradual, steady pace — about 1 to 2 pounds (0.45–0.9 kg) a week — are more likely to keep it off. Under Go advanced, enter the date you started and the calculator shows your average loss per week and as a percent of your starting weight."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is this the same as a percentage change calculator?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The arithmetic is the same percent decrease, but this page is built for body weight: it takes pounds, kilograms and stones, solves from any two values and shows progress to a goal. For any other before-and-after number use the percentage change calculator."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I plan the calories or the date for a percentage?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Use the weight loss calculator by date: it turns a goal weight and a date into calories a day and shows the fastest safe date. The calorie deficit calculator starts from a deficit instead."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I enter stones and pounds?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Choose “st + lb” and type a weight like 12 st 5 lb (or 12 5, or 12st5). A single number is read as stones."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "CalcThis",
+      "item": "https://calcthis.co/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Weight Loss Percentage Calculator",
+      "item": "https://calcthis.co/weight-loss-percentage-calculator/"
+    }
+  ]
+}
+</script>
+<meta property="og:site_name" content="CalcThis">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://calcthis.co/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="CalcThis — free, purpose-built calculators">
+<meta name="twitter:title" content="Weight Loss Percentage Calculator — % of Body Weight Lost">
+<meta name="twitter:description" content="Weight loss percentage calculator: enter your starting and current weight for the percent of body weight lost, the way to your goal and what 5% or 10% means.">
+<meta name="twitter:image" content="https://calcthis.co/assets/og-default.png">
+</head>
+<body class="p-bmr p-wp">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <a class="hdr-back" href="/blog/" aria-label="Back to blog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-search"><div class="menu-sx"><input id="menuSearch" type="search" placeholder="Search calculators or states…" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Search calculators" enterkeyhint="search"></div><div class="menu-results" id="menuResults" hidden></div></div>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <span class="menu-col-head">Construction &amp; Gardening</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+          <a href="/paint-calculator/">Paint</a>
+          <a href="/wallpaper-calculator/">Wallpaper</a>
+          <a href="/square-footage-calculator/">Square Footage</a>
+          <a href="/tape-measure-fraction-calculator/">Tape Measure Fraction</a>
+          <a href="/stair-calculator/">Stair</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/vo2-max-calculator/">VO2 Max</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
+          <a href="/bmi-calculator/">BMI</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/ideal-weight-calculator/">Ideal Weight</a>
+          <a href="/lean-body-mass-calculator/">Lean Body Mass</a>
+          <a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio</a>
+          <a href="/gmi-calculator/">GMI</a>
+          <a href="/a1c-calculator/">A1C</a>
+          <a href="/calorie-calculator/">Calorie</a>
+          <a href="/calorie-deficit-calculator/">Calorie Deficit</a>
+          <a href="/bmr-calculator/">BMR</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/water-intake-calculator/">Water Intake</a>
+          <a href="/macro-calculator/">Macro</a>
+          <a href="/protein-intake-calculator/">Protein Intake</a>
+          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
+          <a href="/steps-to-miles-calculator/">Steps to Miles</a>
+          <a href="/dog-age-calculator/">Dog Age</a>
+          <a href="/cat-age-calculator/">Cat Age</a>
+          <a href="/calories-burned-calculator/">Calories Burned</a>
+          <a href="/calories-burned-walking-calculator/">Calories Burned Walking</a>
+          <a href="/calories-burned-running-calculator/">Calories Burned Running</a>
+          <a href="/keto-calculator/">Keto</a>
+          <a href="/net-carb-calculator/">Net Carb</a>
+          <a href="/intermittent-fasting-calculator/">Intermittent Fasting</a>
+          <a href="/bsa-calculator/">BSA</a>
+          <a href="/dog-food-calculator/">Dog Food</a>
+          <a href="/ffmi-calculator/">FFMI</a>
+          <a href="/bulking-calculator/">Bulking</a>
+          <a href="/weight-loss-calculator/">Weight Loss</a>
+          <a href="/weight-loss-percentage-calculator/" class="current">Weight Loss %</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/semester-grade-calculator/">Semester Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+          <a href="/grade-curve-calculator/">Grade Curve</a>
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/fraction-calculator/">Fraction</a>
+          <a href="/standard-deviation-calculator/">Standard Deviation</a>
+          <a href="/scientific-notation-calculator/">Scientific Notation</a>
+          <a href="/average-calculator/">Average</a>
+          <a href="/batting-average-calculator/">Batting Average</a>
+          <a href="/stock-average-calculator/">Stock Average</a>
+          <a href="/dice-average-calculator/">Dice Average</a>
+          <a href="/time-average-calculator/">Time Average</a>
+          <a href="/weighted-average-calculator/">Weighted Average</a>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+          <a href="/percentage-change-calculator/">Percentage Change</a>
+          <a href="/age-calculator/">Age</a>
+          <a href="/date-calculator/">Date</a>
+          <a href="/time-calculator/">Time</a>
+          <a href="/hours-calculator/">Hours</a>
+          <a href="/triangle-calculator/">Triangle</a>
+          <a href="/random-number-generator/">Random Number</a>
+          <span class="menu-col-head">Cooking &amp; Kitchen</span>
+          <a href="/recipe-converter/">Recipe Converter</a>
+          <a href="/turkey-cooking-time-calculator/">Turkey Cooking Time</a>
+          <a href="/turkey-thawing-time-calculator/">Turkey Thawing Time</a>
+          <a href="/turkey-size-calculator/">Turkey Size</a>
+          <!--UNITNAV:START-->
+          <span class="menu-col-head">Unit Converters</span>
+          <a href="/unit-converter/">Unit Converter</a>
+          <a href="/length-converter/">Length Converter</a>
+          <a href="/weight-converter/">Weight Converter</a>
+          <a href="/volume-converter/">Volume Converter</a>
+          <a href="/temperature-converter/">Temperature Converter</a>
+          <a href="/area-converter/">Area Converter</a>
+          <a href="/speed-converter/">Speed Converter</a>
+          <a href="/data-storage-converter/">Data Storage Converter</a>
+          <a href="/cooking-converter/">Cooking Converter</a>
+          <a href="/px-to-rem-converter/">PX to REM Converter</a>
+          <!--UNITNAV:END-->
+          <span class="menu-col-head">Money &amp; Finance</span>
+          <a href="/mortgage-calculator/">Mortgage</a>
+          <a href="/loan-calculator/">Loan</a>
+          <a href="/auto-loan-calculator/">Auto Loan</a>
+          <a href="/car-sales-tax-calculator/">Car Sales Tax</a>
+          <a href="/overtime-calculator/">Overtime</a>
+          <a href="/salary-calculator/">Salary</a>
+          <!--STAXNAV:START-->
+          <a href="/sales-tax-calculator/">Sales Tax</a>
+          <a href="/sales-tax-calculator/california/">California Sales Tax</a>
+          <a href="/sales-tax-calculator/chicago/">Chicago Sales Tax</a>
+          <a href="/sales-tax-calculator/florida/">Florida Sales Tax</a>
+          <a href="/sales-tax-calculator/las-vegas/">Las Vegas Sales Tax</a>
+          <a href="/sales-tax-calculator/los-angeles/">Los Angeles Sales Tax</a>
+          <a href="/sales-tax-calculator/michigan/">Michigan Sales Tax</a>
+          <a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax</a>
+          <a href="/sales-tax-calculator/missouri/">Missouri Sales Tax</a>
+          <a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax</a>
+          <a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax</a>
+          <a href="/sales-tax-calculator/north-carolina/">North Carolina Sales Tax</a>
+          <a href="/sales-tax-calculator/ohio/">Ohio Sales Tax</a>
+          <a href="/sales-tax-calculator/texas/">Texas Sales Tax</a>
+          <a href="/sales-tax-calculator/virginia/">Virginia Sales Tax</a>
+          <!--STAXNAV:END-->
+          <a href="/tip-calculator/">Tip</a>
+          <a href="/how-much-to-tip/">How Much to Tip</a>
+        </div>
+        <!--PAYNAV:START-->
+        <div class="menu-col">
+          <span class="menu-col-head">Paycheck Calculators</span>
+          <a href="/paycheck-calculator/">Paycheck Calculator (all states)</a>
+          <a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a>
+          <a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arkansas/">Arkansas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/california/">California Paycheck Calculator</a>
+          <a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a>
+          <a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a>
+          <a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/hawaii/">Hawaii Paycheck Calculator</a>
+          <a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a>
+          <a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a>
+          <a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a>
+          <a href="/paycheck-calculator/louisiana/">Louisiana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a>
+          <a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a>
+          <a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a>
+          <a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a>
+          <a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nebraska/">Nebraska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a>
+          <a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a>
+          <a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a>
+          <a href="/paycheck-calculator/oklahoma/">Oklahoma Paycheck Calculator</a>
+          <a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a>
+          <a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a>
+          <a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a>
+          <a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/utah/">Utah Paycheck Calculator</a>
+          <a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wisconsin/">Wisconsin Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a>
+        </div>
+        <!--PAYNAV:END-->
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">Percent of body weight lost · any two values · progress to goal · what 5% or 10% means</div>
+    <h1>Weight Loss Percentage Calculator</h1>
+    <p>Enter your <strong>starting weight</strong> and your <strong>current weight</strong> — you get the <strong>percent of your body weight lost</strong>, the weight lost and how far you are toward your goal. Going from <strong>200 lb to 180 lb</strong> is <strong>10.0%</strong>; from 90 kg to 84 kg it is 6.7%. Know the percent instead? It finds the weight for you.</p>
+  </section>
+
+  <div class="grid">
+
+    <!-- INPUT -->
+    <div class="card">
+      <div class="card-pad">
+        <h2 class="card-h2">Your weights</h2>
+        <div class="ctl-row"><span class="ctl-lab">Weight units</span><div class="seg" id="wpUnit" role="group" aria-label="Weight units"><button type="button" data-v="kg">kg</button><button class="on" type="button" data-v="lb">lb</button><button type="button" data-v="st">st</button><button type="button" data-v="stlb">st + lb</button></div></div>
+        <label class="fld"><span class="lab">I know my</span><div class="csel" id="wpKnow" data-value="sc"><button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false"><span class="csel-val">Starting and current weight</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="csel-panel" role="listbox"><button type="button" class="csel-opt on" role="option" aria-selected="true" data-value="sc">Starting and current weight</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="sl">Starting weight and weight lost</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="sp">Starting weight and percent lost</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="cl">Current weight and weight lost</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="cp">Current weight and percent lost</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="lp">Weight lost and percent lost</button></div></div></label>
+        <label class="fld" for="wpA"><span class="lab" id="wpALab">Starting weight <span class="unit" id="wpAU">lb</span></span><div class="inp"><input id="wpA" type="text" inputmode="text" autocomplete="off" placeholder="e.g. 200"></div></label>
+        <label class="fld" for="wpB"><span class="lab" id="wpBLab">Current weight <span class="unit" id="wpBU">lb</span></span><div class="inp"><input id="wpB" type="text" inputmode="text" autocomplete="off" placeholder="e.g. 180"></div></label>
+        <p class="av-note" style="margin:0 0 8px">In st + lb, type like 12 st 5 lb.</p>
+        <div class="proj-sep"></div>
+        <label class="fld" for="wpG"><span class="lab">Goal weight <span class="unit" id="wpGU">lb · optional</span></span><div class="inp"><input id="wpG" type="text" inputmode="text" autocomplete="off" placeholder="e.g. 180"></div></label>
+        <div class="res-hint" id="wpHint" style="display:none;text-align:left;margin:4px 0 8px"></div>
+        <div id="wpAdvIn" style="display:none">
+          <div class="proj-sep"></div>
+          <label class="fld" for="wpD"><span class="lab">Starting date <span class="unit">optional</span></span><div class="inp"><input id="wpD" type="text" autocomplete="off" placeholder="Pick a date"></div></label>
+          <p class="av-note" style="margin:0 0 8px">With a starting date you get your average loss per week, as a percent of your starting weight, and the date you reach a goal at that pace.</p>
+        </div>
+        <div class="add-row split" style="margin-top:16px">
+          <span></span>
+          <button class="advbtn" id="wpAdvBtn" type="button">
+            <span id="wpAdvBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div class="card">
+      <div class="card-pad">
+        <div class="bf-res">
+          <div class="res-lab">Body weight lost</div>
+          <div class="res-big"><span id="wpBig">—</span></div>
+          <div class="res-sub" id="wpSub" data-empty="Enter two of your weights.">Enter two of your weights.</div>
+        </div>
+        <div id="wpBody" style="display:none">
+          <p class="res-tip adv-tip" id="wpTip"></p>
+          <div id="wpFlags"></div>
+          <div id="wpRows"></div>
+          <p class="bm-h">Where you are against the NHLBI marks</p>
+          <div id="wpBar"></div>
+          <p class="av-note" style="margin-top:0">The shaded band is the 5% to 10% of starting weight NHLBI gives; the dark tick is 3%.</p>
+          <p class="bm-h">What 3% to 20% means for your weight</p>
+          <table class="dtable" id="wpTable"></table>
+          <p class="cb-note">Click a row to use it as your goal weight.</p>
+          <p class="cb-note">An estimate for adults, not medical advice. Scale weight moves with water and meals, so read the trend over several weeks.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- mobile sticky bar -->
+  <div class="mbar" id="mbar">
+    <span class="mbar-lab" id="wpMLab">Body weight lost</span>
+    <div class="mbar-vals"><b id="wpMVal">—</b></div>
+  </div>
+
+  <div class="related-calcs">
+    <p class="related-calcs-h">More calculators that may interest you</p>
+    <div class="pills">
+      <a class="pill" href="/weight-loss-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
+        Weight Loss Calculator
+      </a>
+      <a class="pill" href="/percentage-change-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 19L19 5M7 8a1.5 1.5 0 1 0 0-.01M17 17a1.5 1.5 0 1 0 0-.01"/></svg>
+        Percentage Change Calculator
+      </a>
+      <a class="pill" href="/calorie-deficit-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12h8"/></svg>
+        Calorie Deficit Calculator
+      </a>
+      <a class="pill" href="/bmi-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v16M5 9l7-5 7 5"/></svg>
+        BMI Calculator
+      </a>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use the weight loss percentage calculator</h2>
+        <p>Pick your <strong>weight units</strong> (kg, lb, stones, or stones and pounds), then type your <strong>starting weight</strong> and your <strong>current weight</strong>. Know different numbers? Change <strong>I know my</strong> to starting weight and percent, current weight and percent, or any other pair, and the calculator finds the rest.</p>
+        <p>Add a <strong>goal weight</strong> to see how far along you are, or open <strong>Go advanced</strong> and add the date you started for your average loss per week.</p>
+
+        <h2>The weight loss percentage formula</h2>
+        <div class="formula">
+          Percent lost = (starting weight − current weight) ÷ starting weight × 100
+          <small>WEIGHT LOST = STARTING WEIGHT − CURRENT WEIGHT</small>
+        </div>
+        <p>From 200 lb to 180 lb: 200 − 180 = 20 lb lost, and 20 ÷ 200 × 100 = <strong>10.0%</strong>. From 90 kg to 84 kg: 6 ÷ 90 × 100 = <strong>6.7%</strong>. The unit cancels, so kilograms, pounds and stones all give the same percent.</p>
+
+        <h2>What counts as a good percentage?</h2>
+        <ul>
+          <li><strong>3% to 5%.</strong> NHLBI reports that a loss of 3% to 5% of current weight can lower triglycerides and blood glucose.</li>
+          <li><strong>5% to 10% over about 6 months.</strong> What health professionals recommend for people with overweight or obesity, per NHLBI. The CDC’s example: 5% of 200 pounds is 10 pounds.</li>
+          <li><strong>1 to 2 pounds a week.</strong> The gradual pace the CDC links with keeping weight off.</li>
+        </ul>
+      </div>
+
+      <div>
+        <h2>5%, 10%, 15% and 20% by starting weight</h2>
+        <table class="dtable"><thead><tr><th>Starting weight</th><th>5%</th><th>10%</th><th>15%</th><th>20%</th></tr></thead><tbody><tr><td>150 lb (68.0 kg)</td><td>7.5 lb<small>to 142.5 lb</small></td><td>15.0 lb<small>to 135.0 lb</small></td><td>22.5 lb<small>to 127.5 lb</small></td><td>30.0 lb<small>to 120.0 lb</small></td></tr><tr><td>175 lb (79.4 kg)</td><td>8.8 lb<small>to 166.3 lb</small></td><td>17.5 lb<small>to 157.5 lb</small></td><td>26.3 lb<small>to 148.8 lb</small></td><td>35.0 lb<small>to 140.0 lb</small></td></tr><tr><td>200 lb (90.7 kg)</td><td>10.0 lb<small>to 190.0 lb</small></td><td>20.0 lb<small>to 180.0 lb</small></td><td>30.0 lb<small>to 170.0 lb</small></td><td>40.0 lb<small>to 160.0 lb</small></td></tr><tr><td>225 lb (102.1 kg)</td><td>11.3 lb<small>to 213.8 lb</small></td><td>22.5 lb<small>to 202.5 lb</small></td><td>33.8 lb<small>to 191.3 lb</small></td><td>45.0 lb<small>to 180.0 lb</small></td></tr><tr><td>250 lb (113.4 kg)</td><td>12.5 lb<small>to 237.5 lb</small></td><td>25.0 lb<small>to 225.0 lb</small></td><td>37.5 lb<small>to 212.5 lb</small></td><td>50.0 lb<small>to 200.0 lb</small></td></tr></tbody></table>
+        <p>Each cell shows the pounds lost and the weight you would reach. For any other weight, type it into the calculator above.</p>
+
+        <h2>Percent of body weight or percent of goal?</h2>
+        <p>Percent of body weight compares you with where you started, so it is fair across different body sizes. Percent of your goal compares you with the weight you planned to lose: from 200 lb with a goal of 160 lb, losing 20 lb is 10% of your body weight but 50% of the way. With a goal weight entered, the calculator shows both. To plan calories or a date, use the <a href="/weight-loss-calculator/">weight loss calculator by date</a>.</p>
+        <h2>Sources</h2>
+        <ul>
+          <li>Centers for Disease Control and Prevention, <a href="https://www.cdc.gov/healthy-weight-growth/losing-weight/index.html" rel="noopener">Steps for Losing Weight</a> (updated 2025-01-17, read 2026-11-06): people who lose weight at a gradual, steady pace — about 1 to 2 pounds a week — are more likely to keep it off; a 5% weight reduction for a person who weighs 200 pounds is 10 pounds, which can lower the risk of some chronic diseases.</li>
+          <li>National Heart, Lung, and Blood Institute, <a href="https://www.nhlbi.nih.gov/health/heart-healthy-living/healthy-weight" rel="noopener">Aim for a Healthy Weight</a> (updated 2025-12-11, read 2026-11-06): for people with overweight or obesity, health professionals recommend losing 5% to 10% of initial weight over about 6 months; a loss of 3% to 5% of current weight can lower triglycerides and blood glucose, and more than that can improve blood pressure and cholesterol.</li>
+          <li>Competitor pages opened 2026-11-06 for their inputs: Omnicalculator (any two of past weight, current weight, weight lost and percent; kg, lb, st and st + lb), Inch Calculator (initial and current weight) and Coachway (optional goal and timeframe).</li>
+          <li>The formula, (starting weight − current weight) ÷ starting weight × 100, is plain arithmetic and the same on every page above.</li>
+        </ul>
+        <p><small>For information only, not medical advice. The percentages above are guidance for people with overweight or obesity; talk to a clinician about what is right for you.</small></p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>How do I calculate weight loss percentage?</summary><p>Subtract your current weight from your starting weight, divide by the starting weight and multiply by 100. For 200 lb to 180 lb: (200 − 180) ÷ 200 × 100 = <strong>10.0%</strong>. For 90 kg to 84 kg: 6 ÷ 90 × 100 = 6.7%. The unit cancels, so it is the same in kg, lb or stones.</p></details>
+    <details class="faq"><summary>What is a good weight loss percentage?</summary><p>For people with overweight or obesity, NHLBI says health professionals recommend losing 5% to 10% of initial weight over about 6 months, and that a loss of 3% to 5% can lower triglycerides and blood glucose; losing more than that can improve blood pressure and cholesterol. The CDC gives an example: 5% of 200 pounds is 10 pounds. Whether a percentage is right for you depends on your health, so ask your clinician.</p></details>
+    <details class="faq"><summary>How much is 5%, 10% or 20% of my body weight?</summary><p>Multiply your weight by the percent: 5% of 200 lb is 10 lb (the CDC’s example), 10% is 20 lb and 20% is 40 lb. The calculator lists 3%, 5%, 10%, 15% and 20% for your own starting weight, and a click on a row sets it as your goal.</p></details>
+    <details class="faq"><summary>How do I find my weight after losing a percentage?</summary><p>Starting weight × (1 − percent ÷ 100). For 90 kg and a 5% loss: 90 × 0.95 = 85.5 kg, which is 4.5 kg lost. In the calculator choose “Starting weight and percent lost”.</p></details>
+    <details class="faq"><summary>How do I find my starting weight from my current weight and a percentage?</summary><p>Current weight ÷ (1 − percent ÷ 100). If you now weigh 180 lb after losing 10%: 180 ÷ 0.9 = 200 lb. In the calculator choose “Current weight and percent lost”.</p></details>
+    <details class="faq"><summary>Why divide by the starting weight, not the current weight?</summary><p>The percentage tells you how much of where you began you have lost, so the starting weight is the base. 200 lb to 180 lb is 20 ÷ 200 = 10% lost. Dividing by 180 would give 11.1%, which is the percentage you would have to gain back to return to 200 lb — a different question.</p></details>
+    <details class="faq"><summary>What is the difference between percent of body weight and percent of my goal?</summary><p>Percent of body weight is how much of your starting weight you lost. Percent of your goal is how much of the weight you planned to lose you have lost: starting at 200 lb with a goal of 160 lb, losing 20 lb is 10% of your body weight but 50% of the way to your goal. Add a goal weight and the calculator shows both.</p></details>
+    <details class="faq"><summary>How fast is it safe to lose weight?</summary><p>The CDC says people who lose weight at a gradual, steady pace — about 1 to 2 pounds (0.45–0.9 kg) a week — are more likely to keep it off. Under Go advanced, enter the date you started and the calculator shows your average loss per week and as a percent of your starting weight.</p></details>
+    <details class="faq"><summary>Is this the same as a percentage change calculator?</summary><p>The arithmetic is the same percent decrease, but this page is built for body weight: it takes pounds, kilograms and stones, solves from any two values and shows progress to a goal. For any other before-and-after number use the <a href="/percentage-change-calculator/">percentage change calculator</a>.</p></details>
+    <details class="faq"><summary>How do I plan the calories or the date for a percentage?</summary><p>Use the <a href="/weight-loss-calculator/">weight loss calculator by date</a>: it turns a goal weight and a date into calories a day and shows the fastest safe date. The <a href="/calorie-deficit-calculator/">calorie deficit calculator</a> starts from a deficit instead.</p></details>
+    <details class="faq"><summary>How do I enter stones and pounds?</summary><p>Choose “st + lb” and type a weight like <strong>12 st 5 lb</strong> (or 12 5, or 12st5). A single number is read as stones.</p></details>
+  </section>
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+      <div class="footer-stack">
+<div class="footer-col" style="order:1">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+          <li><a href="/paint-calculator/">Paint Calculator</a></li>
+          <li><a href="/wallpaper-calculator/">Wallpaper Calculator</a></li>
+          <li><a href="/square-footage-calculator/">Square Footage Calculator</a></li>
+          <li><a href="/tape-measure-fraction-calculator/">Tape Measure Fraction Calculator</a></li>
+          <li><a href="/stair-calculator/">Stair Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:5">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Cooking &amp;</span> <span class="ft2">Kitchen</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/recipe-converter/">Recipe Converter</a></li>
+          <li><a href="/turkey-cooking-time-calculator/">Turkey Cooking Time Calculator</a></li>
+          <li><a href="/turkey-thawing-time-calculator/">Turkey Thawing Time Calculator</a></li>
+          <li><a href="/turkey-size-calculator/">Turkey Size Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:6">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Money &amp;</span> <span class="ft2">Finance</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/mortgage-calculator/">Mortgage Calculator</a></li>
+          <li><a href="/loan-calculator/">Loan Calculator</a></li>
+          <li><a href="/auto-loan-calculator/">Auto Loan Calculator</a></li>
+          <li><a href="/car-sales-tax-calculator/">Car Sales Tax Calculator</a></li>
+          <li><a href="/overtime-calculator/">Overtime Calculator</a></li>
+          <li><a href="/salary-calculator/">Salary Calculator</a></li>
+          <!--STAXFOOT:START-->
+          <li><a href="/sales-tax-calculator/">Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/california/">California Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/chicago/">Chicago Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/florida/">Florida Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/las-vegas/">Las Vegas Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/los-angeles/">Los Angeles Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/michigan/">Michigan Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/missouri/">Missouri Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/north-carolina/">North Carolina Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/ohio/">Ohio Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/texas/">Texas Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/virginia/">Virginia Sales Tax Calculator</a></li>
+          <!--STAXFOOT:END-->
+          <li><a href="/tip-calculator/">Tip Calculator</a></li>
+          <li><a href="/how-much-to-tip/">How Much to Tip</a></li>
+        </ul>
+      </div>
+      </div>
+
+      <div class="footer-right">
+<div class="footer-col footer-col--two" style="order:2">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/vo2-max-calculator/">VO2 Max Calculator</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/bmi-calculator/">BMI Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/ideal-weight-calculator/">Ideal Weight Calculator</a></li>
+          <li><a href="/lean-body-mass-calculator/">Lean Body Mass Calculator</a></li>
+          <li><a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio Calculator</a></li>
+          <li><a href="/gmi-calculator/">GMI Calculator</a></li>
+          <li><a href="/a1c-calculator/">A1C Calculator</a></li>
+          <li><a href="/calorie-calculator/">Calorie Calculator</a></li>
+          <li><a href="/calorie-deficit-calculator/">Calorie Deficit Calculator</a></li>
+          <li><a href="/bmr-calculator/">BMR Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/water-intake-calculator/">Water Intake Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/protein-intake-calculator/">Protein Intake Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
+          <li><a href="/steps-to-miles-calculator/">Steps to Miles Calculator</a></li>
+          <li><a href="/dog-age-calculator/">Dog Age Calculator</a></li>
+          <li><a href="/cat-age-calculator/">Cat Age Calculator</a></li>
+          <li><a href="/calories-burned-calculator/">Calories Burned Calculator</a></li>
+          <li><a href="/calories-burned-walking-calculator/">Calories Burned Walking Calculator</a></li>
+          <li><a href="/calories-burned-running-calculator/">Calories Burned Running Calculator</a></li>
+          <li><a href="/keto-calculator/">Keto Calculator</a></li>
+          <li><a href="/net-carb-calculator/">Net Carb Calculator</a></li>
+          <li><a href="/intermittent-fasting-calculator/">Intermittent Fasting Calculator</a></li>
+          <li><a href="/bsa-calculator/">BSA Calculator</a></li>
+          <li><a href="/dog-food-calculator/">Dog Food Calculator</a></li>
+          <li><a href="/ffmi-calculator/">FFMI Calculator</a></li>
+          <li><a href="/bulking-calculator/">Bulking Calculator</a></li>
+          <li><a href="/weight-loss-calculator/">Weight Loss Calculator</a></li>
+          <li><a href="/weight-loss-percentage-calculator/">Weight Loss Percentage Calculator</a></li>
+        </ul>
+      </div>
+
+        <div class="footer-sub">
+<div class="footer-subcol">
+<div class="footer-col" style="order:3">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/semester-grade-calculator/">Semester Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+          <li><a href="/grade-curve-calculator/">Grade Curve Calculator</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:START-->
+<div class="footer-col" style="order:7">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Unit</span> <span class="ft2">Converters</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/unit-converter/">Unit Converter</a></li>
+          <li><a href="/length-converter/">Length Converter</a></li>
+          <li><a href="/weight-converter/">Weight Converter</a></li>
+          <li><a href="/volume-converter/">Volume Converter</a></li>
+          <li><a href="/temperature-converter/">Temperature Converter</a></li>
+          <li><a href="/area-converter/">Area Converter</a></li>
+          <li><a href="/speed-converter/">Speed Converter</a></li>
+          <li><a href="/data-storage-converter/">Data Storage Converter</a></li>
+          <li><a href="/cooking-converter/">Cooking Measurement Converter</a></li>
+          <li><a href="/px-to-rem-converter/">PX to REM Converter</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:END-->
+</div>
+
+<div class="footer-col" style="order:4">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/fraction-calculator/">Fraction Calculator</a></li>
+          <li><a href="/standard-deviation-calculator/">Standard Deviation Calculator</a></li>
+          <li><a href="/scientific-notation-calculator/">Scientific Notation Calculator</a></li>
+          <li><a href="/weighted-average-calculator/">Weighted Average Calculator</a></li>
+          <li><a href="/average-calculator/">Average Calculator</a></li>
+          <li><a href="/batting-average-calculator/">Batting Average Calculator</a></li>
+          <li><a href="/stock-average-calculator/">Stock Average Calculator</a></li>
+          <li><a href="/dice-average-calculator/">Dice Average Calculator</a></li>
+          <li><a href="/time-average-calculator/">Time Average Calculator</a></li>
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+          <li><a href="/percentage-change-calculator/">Percentage Change Calculator</a></li>
+          <li><a href="/age-calculator/">Age Calculator</a></li>
+          <li><a href="/date-calculator/">Date Calculator</a></li>
+          <li><a href="/time-calculator/">Time Calculator</a></li>
+          <li><a href="/hours-calculator/">Hours Calculator</a></li>
+          <li><a href="/triangle-calculator/">Triangle Calculator</a></li>
+          <li><a href="/random-number-generator/">Random Number Generator</a></li>
+        </ul>
+      </div>
+        </div>
+      </div>
+
+      <!--PAYFOOT:START-->
+      <div class="footer-col footer-col--wide">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Paycheck</span> <span class="ft2">Calculators</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/paycheck-calculator/">Paycheck Calculator (all states)</a></li>
+          <li><a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arkansas/">Arkansas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/california/">California Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/hawaii/">Hawaii Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/louisiana/">Louisiana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nebraska/">Nebraska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/oklahoma/">Oklahoma Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/utah/">Utah Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wisconsin/">Wisconsin Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a></li>
+        </ul>
+      </div>
+      <!--PAYFOOT:END-->
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/blog/">Blog</a>
+      <span aria-hidden="true">·</span>
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+</div>
+
+<script src="/assets/datepicker.min.js"></script>
+<script src="/assets/app.js?v=321"></script>
+<script>CalcThis.initWpCalc();</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>

@@ -2976,3 +2976,24 @@
 .p-wl .chips{margin-top:8px;margin-bottom:2px}
 .p-wl .modeseg{grid-template-columns:1fr 1fr}
 .p-wl .dtable td:first-child{white-space:nowrap}
+
+/* ---- WEIGHT LOSS PERCENTAGE calculator (.p-wp) — reuses .p-bmr result look, .dtable, .bf-cmp ---- */
+.p-wp .wp-rule{margin:34px 0 4px;padding-bottom:26px}
+.p-wp .wp-rule-t{position:relative;height:16px;border-radius:8px;background:#EFE7D8}
+.p-wp .wp-band{position:absolute;top:0;bottom:0;background:var(--spruce);opacity:.45}
+.p-wp .wp-tick{position:absolute;top:-3px;bottom:-3px;width:3px;margin-left:-1px;background:var(--ink);border-radius:2px}
+.p-wp .wp-mk{position:absolute;top:50%;width:20px;height:20px;margin:-10px 0 0 -10px;border-radius:50%;background:var(--amber);border:3px solid var(--ink);box-sizing:border-box;z-index:3}
+.p-wp .wp-mk b{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);font-size:14px;font-weight:800;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:7px;padding:1px 6px;white-space:nowrap}
+.p-wp .wp-rule-l{position:relative;height:18px;margin-top:10px}
+.p-wp .wp-rule-l span{position:absolute;top:0;font-size:12px;font-weight:600;color:var(--muted);transform:translateX(-50%)}
+.p-wp .wp-rule-l span:last-child{transform:translateX(-100%)}
+.p-wp .wp-rule-l span:first-child{transform:none}
+.p-wp .wp-flag{font-size:14px;font-weight:500;color:var(--amber-deep);background:#FBF3E4;border-left:3px solid var(--amber);border-radius:6px;padding:8px 10px;margin:8px 0;line-height:1.45}
+.p-wp .dtable td:nth-child(n+2),.p-wp .dtable th:nth-child(n+2){text-align:right}
+.p-wp .dtable tr[data-w]{cursor:pointer}
+.p-wp .dtable tr[data-w]:hover td{background:#FCF7EE}
+.p-wp .dtable tr[data-w]:focus-visible{outline:2px solid var(--amber);outline-offset:-2px}
+.p-wp .bm-sub{display:block;font-size:12.5px;font-weight:500;color:var(--muted);margin-top:2px}
+.p-wp .av-note,.p-wp .cb-note{font-size:14px;font-weight:500;color:var(--ink-soft);margin:4px 0 8px;line-height:1.45}
+.p-wp .cb-note{color:var(--muted);font-weight:400}
+.p-wp .av-note a{color:#8F5C13;font-weight:600;text-decoration:underline;text-underline-offset:2px}
