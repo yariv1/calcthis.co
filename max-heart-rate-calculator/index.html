@@ -1,0 +1,761 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Max Heart Rate Calculator by Age — 6 Formulas Compared</title>
+<meta name="description" content="Max heart rate calculator by age: Tanaka, 220 − age, Nes, Gulati, Inbar and Oakland side by side, your measured max and heart rate at each percent of max.">
+<link rel="canonical" href="https://calcthis.co/max-heart-rate-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Max Heart Rate Calculator by Age — 6 Formulas Compared">
+<meta property="og:description" content="Max heart rate calculator by age: Tanaka, 220 − age, Nes, Gulati, Inbar and Oakland side by side, your measured max and heart rate at each percent of max.">
+<meta property="og:url" content="https://calcthis.co/max-heart-rate-calculator/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/datepicker.min.css">
+<link rel="stylesheet" href="/assets/style.css?v=322">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Max Heart Rate Calculator",
+  "url": "https://calcthis.co/max-heart-rate-calculator/",
+  "applicationCategory": "HealthApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "Free max heart rate calculator by age: six formulas (Tanaka 208 − 0.7 × age, Fox 220 − age, Nes/HUNT 211 − 0.64 × age, Gulati for women, Inbar, Oakland) side by side on one bpm scale, your own measured max compared with them, a beta-blocker warning, heart rate at 50–100% of max and the 4×4 field test."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I calculate my maximum heart rate?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The best known rule is 220 − age (Fox / Haskell): at 40 that is 180 bpm. The Tanaka formula, 208 − 0.7 × age, gives 180 at 40 and the Nes (HUNT) formula, 211 − 0.64 × age, gives 185. The calculator shows all six at once and lets you pick the headline."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is 220 minus age accurate?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It is a rough average. The Tanaka study found the equation had never been validated in a sample with enough older adults, and the NTNU HUNT team says it can underestimate HRmax by up to 40 beats per minute in seniors. At 35 the six formulas here differ by 14 bpm, and the HUNT study put the standard error of an age formula at 10.8 bpm for any one person."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which max heart rate formula is best?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Tanaka (208 − 0.7 × age) comes from a meta-analysis of 351 studies and was confirmed in 514 healthy adults, and Nes (211 − 0.64 × age) from 3,320 healthy adults; both found no difference between men and women. The calculator defaults to Tanaka. None of them replaces a measured value."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the max heart rate for women?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Tanaka and Nes both found no difference between men and women. The Gulati formula, 206 − 0.88 × age, was derived from 5,437 asymptomatic women: at 35 it gives 175 bpm against 184 for Tanaka. Pick Female to see it marked as the women-specific row."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I find my real max heart rate?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Use a maximal test. NTNU describes a 4×4 interval test: warm up until you sweat; do two 4-minute intervals hard enough that you are too short of breath to talk, with 3 minutes of active rest between; start a third interval and, two minutes in, push harder until you cannot continue. Your HRmax is the highest heart rate you reach. Without a monitor, hold two fingers to your neck for 30 seconds right after. Enter the number under Go advanced to compare it with the formulas."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do beta blockers change my max heart rate?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. NTNU explains that beta blockers block adrenaline and so reduce maximum heart rate, by an amount that depends on the dose. The formulas come from healthy adults, so if you take beta blockers choose Yes — the calculator warns that its numbers are too high — and ask your clinician how to exercise."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What heart rate is 70% or 85% of my max?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Multiply your max by the percent. The table under the result does it for 50% to 100% from your chosen formula, or from your measured max when you enter one. For named training zones, including Zone 2, use the heart rate zone calculator."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can my heart rate go above the formula’s number?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. The formulas are averages for a group; in the HUNT study the standard error was 10.8 bpm, so many healthy people sit more than 10 bpm above or below. That is why the calculator shows a ±10.8 bpm band and lets you add your measured max."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between max heart rate and zones?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Max heart rate is one number: the highest rate your heart reaches. Zones divide the range below it, often as percents of max or with your resting heart rate. The Zone 2 calculator and the heart rate zone calculator take it from here."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "CalcThis",
+      "item": "https://calcthis.co/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Max Heart Rate Calculator",
+      "item": "https://calcthis.co/max-heart-rate-calculator/"
+    }
+  ]
+}
+</script>
+<meta property="og:site_name" content="CalcThis">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://calcthis.co/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="CalcThis — free, purpose-built calculators">
+<meta name="twitter:title" content="Max Heart Rate Calculator by Age — 6 Formulas Compared">
+<meta name="twitter:description" content="Max heart rate calculator by age: Tanaka, 220 − age, Nes, Gulati, Inbar and Oakland side by side, your measured max and heart rate at each percent of max.">
+<meta name="twitter:image" content="https://calcthis.co/assets/og-default.png">
+</head>
+<body class="p-bmr p-mh">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <a class="hdr-back" href="/blog/" aria-label="Back to blog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-search"><div class="menu-sx"><input id="menuSearch" type="search" placeholder="Search calculators or states…" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Search calculators" enterkeyhint="search"></div><div class="menu-results" id="menuResults" hidden></div></div>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <span class="menu-col-head">Construction &amp; Gardening</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+          <a href="/paint-calculator/">Paint</a>
+          <a href="/wallpaper-calculator/">Wallpaper</a>
+          <a href="/square-footage-calculator/">Square Footage</a>
+          <a href="/tape-measure-fraction-calculator/">Tape Measure Fraction</a>
+          <a href="/stair-calculator/">Stair</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/vo2-max-calculator/">VO2 Max</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
+          <a href="/bmi-calculator/">BMI</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/ideal-weight-calculator/">Ideal Weight</a>
+          <a href="/lean-body-mass-calculator/">Lean Body Mass</a>
+          <a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio</a>
+          <a href="/gmi-calculator/">GMI</a>
+          <a href="/a1c-calculator/">A1C</a>
+          <a href="/calorie-calculator/">Calorie</a>
+          <a href="/calorie-deficit-calculator/">Calorie Deficit</a>
+          <a href="/bmr-calculator/">BMR</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/water-intake-calculator/">Water Intake</a>
+          <a href="/macro-calculator/">Macro</a>
+          <a href="/protein-intake-calculator/">Protein Intake</a>
+          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
+          <a href="/steps-to-miles-calculator/">Steps to Miles</a>
+          <a href="/dog-age-calculator/">Dog Age</a>
+          <a href="/cat-age-calculator/">Cat Age</a>
+          <a href="/calories-burned-calculator/">Calories Burned</a>
+          <a href="/calories-burned-walking-calculator/">Calories Burned Walking</a>
+          <a href="/calories-burned-running-calculator/">Calories Burned Running</a>
+          <a href="/keto-calculator/">Keto</a>
+          <a href="/net-carb-calculator/">Net Carb</a>
+          <a href="/intermittent-fasting-calculator/">Intermittent Fasting</a>
+          <a href="/bsa-calculator/">BSA</a>
+          <a href="/dog-food-calculator/">Dog Food</a>
+          <a href="/ffmi-calculator/">FFMI</a>
+          <a href="/bulking-calculator/">Bulking</a>
+          <a href="/weight-loss-calculator/">Weight Loss</a>
+          <a href="/weight-loss-percentage-calculator/">Weight Loss %</a>
+          <a href="/max-heart-rate-calculator/" class="current">Max Heart Rate</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/semester-grade-calculator/">Semester Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+          <a href="/grade-curve-calculator/">Grade Curve</a>
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/fraction-calculator/">Fraction</a>
+          <a href="/standard-deviation-calculator/">Standard Deviation</a>
+          <a href="/scientific-notation-calculator/">Scientific Notation</a>
+          <a href="/average-calculator/">Average</a>
+          <a href="/batting-average-calculator/">Batting Average</a>
+          <a href="/stock-average-calculator/">Stock Average</a>
+          <a href="/dice-average-calculator/">Dice Average</a>
+          <a href="/time-average-calculator/">Time Average</a>
+          <a href="/weighted-average-calculator/">Weighted Average</a>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+          <a href="/percentage-change-calculator/">Percentage Change</a>
+          <a href="/age-calculator/">Age</a>
+          <a href="/date-calculator/">Date</a>
+          <a href="/time-calculator/">Time</a>
+          <a href="/hours-calculator/">Hours</a>
+          <a href="/triangle-calculator/">Triangle</a>
+          <a href="/random-number-generator/">Random Number</a>
+          <span class="menu-col-head">Cooking &amp; Kitchen</span>
+          <a href="/recipe-converter/">Recipe Converter</a>
+          <a href="/turkey-cooking-time-calculator/">Turkey Cooking Time</a>
+          <a href="/turkey-thawing-time-calculator/">Turkey Thawing Time</a>
+          <a href="/turkey-size-calculator/">Turkey Size</a>
+          <!--UNITNAV:START-->
+          <span class="menu-col-head">Unit Converters</span>
+          <a href="/unit-converter/">Unit Converter</a>
+          <a href="/length-converter/">Length Converter</a>
+          <a href="/weight-converter/">Weight Converter</a>
+          <a href="/volume-converter/">Volume Converter</a>
+          <a href="/temperature-converter/">Temperature Converter</a>
+          <a href="/area-converter/">Area Converter</a>
+          <a href="/speed-converter/">Speed Converter</a>
+          <a href="/data-storage-converter/">Data Storage Converter</a>
+          <a href="/cooking-converter/">Cooking Converter</a>
+          <a href="/px-to-rem-converter/">PX to REM Converter</a>
+          <!--UNITNAV:END-->
+          <span class="menu-col-head">Money &amp; Finance</span>
+          <a href="/mortgage-calculator/">Mortgage</a>
+          <a href="/loan-calculator/">Loan</a>
+          <a href="/auto-loan-calculator/">Auto Loan</a>
+          <a href="/car-sales-tax-calculator/">Car Sales Tax</a>
+          <a href="/overtime-calculator/">Overtime</a>
+          <a href="/salary-calculator/">Salary</a>
+          <!--STAXNAV:START-->
+          <a href="/sales-tax-calculator/">Sales Tax</a>
+          <a href="/sales-tax-calculator/california/">California Sales Tax</a>
+          <a href="/sales-tax-calculator/chicago/">Chicago Sales Tax</a>
+          <a href="/sales-tax-calculator/florida/">Florida Sales Tax</a>
+          <a href="/sales-tax-calculator/las-vegas/">Las Vegas Sales Tax</a>
+          <a href="/sales-tax-calculator/los-angeles/">Los Angeles Sales Tax</a>
+          <a href="/sales-tax-calculator/michigan/">Michigan Sales Tax</a>
+          <a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax</a>
+          <a href="/sales-tax-calculator/missouri/">Missouri Sales Tax</a>
+          <a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax</a>
+          <a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax</a>
+          <a href="/sales-tax-calculator/north-carolina/">North Carolina Sales Tax</a>
+          <a href="/sales-tax-calculator/ohio/">Ohio Sales Tax</a>
+          <a href="/sales-tax-calculator/texas/">Texas Sales Tax</a>
+          <a href="/sales-tax-calculator/virginia/">Virginia Sales Tax</a>
+          <!--STAXNAV:END-->
+          <a href="/tip-calculator/">Tip</a>
+          <a href="/how-much-to-tip/">How Much to Tip</a>
+        </div>
+        <!--PAYNAV:START-->
+        <div class="menu-col">
+          <span class="menu-col-head">Paycheck Calculators</span>
+          <a href="/paycheck-calculator/">Paycheck Calculator (all states)</a>
+          <a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a>
+          <a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arkansas/">Arkansas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/california/">California Paycheck Calculator</a>
+          <a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a>
+          <a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a>
+          <a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/hawaii/">Hawaii Paycheck Calculator</a>
+          <a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a>
+          <a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a>
+          <a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a>
+          <a href="/paycheck-calculator/louisiana/">Louisiana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a>
+          <a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a>
+          <a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a>
+          <a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a>
+          <a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nebraska/">Nebraska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a>
+          <a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a>
+          <a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a>
+          <a href="/paycheck-calculator/oklahoma/">Oklahoma Paycheck Calculator</a>
+          <a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a>
+          <a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a>
+          <a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a>
+          <a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/utah/">Utah Paycheck Calculator</a>
+          <a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wisconsin/">Wisconsin Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a>
+        </div>
+        <!--PAYNAV:END-->
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">Six formulas side by side · your measured max · heart rate by percent · field test</div>
+    <h1>Max Heart Rate Calculator by Age</h1>
+    <p>Enter your <strong>age</strong> — you get your <strong>estimated maximum heart rate</strong> from six published formulas on one scale, not just one number. At 35 they give <strong>175–189 bpm</strong>: Tanaka 184, 220 − age 185, Nes 189. Add a number you measured and see how far it sits from each.</p>
+  </section>
+
+  <div class="grid">
+
+    <!-- INPUT -->
+    <div class="card">
+      <div class="card-pad">
+        <h2 class="card-h2">About you</h2>
+        <div class="ctl-row"><span class="ctl-lab">Sex</span><div class="seg" id="mhSex" role="group" aria-label="Sex"><button class="on" type="button" data-v="f">Female</button><button type="button" data-v="m">Male</button></div></div>
+        <label class="fld" for="mhAge"><span class="lab">Age <span class="unit">years</span></span><div class="inp"><input id="mhAge" type="text" inputmode="numeric" autocomplete="off" placeholder="e.g. 35"></div></label>
+        <label class="fld"><span class="lab">Headline formula</span><div class="csel" id="mhF" data-value="tanaka"><button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false"><span class="csel-val">Tanaka — 208 − 0.7 × age</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="csel-panel" role="listbox"><button type="button" class="csel-opt on" role="option" aria-selected="true" data-value="tanaka">Tanaka — 208 − 0.7 × age</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="fox">Fox / Haskell — 220 − age</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="nes">Nes (HUNT) — 211 − 0.64 × age</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="gulati">Gulati (women) — 206 − 0.88 × age</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="inbar">Inbar — 205.8 − 0.685 × age</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="oakland">Oakland nonlinear — 192 − 0.007 × age²</button></div></div></label>
+        <div class="ctl-row"><span class="ctl-lab">Taking beta blockers</span><div class="seg" id="mhBeta" role="group" aria-label="Taking beta blockers"><button class="on" type="button" data-v="n">No</button><button type="button" data-v="y">Yes</button></div></div>
+        <div class="res-hint" id="mhHint" style="display:none;text-align:left;margin:4px 0 8px"></div>
+        <div id="mhAdvIn" style="display:none">
+          <div class="proj-sep"></div>
+          <label class="fld" for="mhM"><span class="lab">Measured max heart rate <span class="unit">bpm · optional</span></span><div class="inp"><input id="mhM" type="text" inputmode="numeric" autocomplete="off" placeholder="e.g. 190"></div></label>
+          <p class="av-note" style="margin:0 0 8px">From a maximal test (see the 4×4 test below). It is compared with the formulas and used for the percent table.</p>
+        </div>
+        <div class="add-row split" style="margin-top:16px">
+          <span></span>
+          <button class="advbtn" id="mhAdvBtn" type="button">
+            <span id="mhAdvBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div class="card">
+      <div class="card-pad">
+        <div class="bf-res">
+          <div class="res-lab">Estimated maximum heart rate</div>
+          <div class="res-big"><span id="mhBig">—</span></div>
+          <div class="res-sub" id="mhSub" data-empty="Enter your age.">Enter your age.</div>
+        </div>
+        <div id="mhBody" style="display:none">
+          <p class="res-tip adv-tip" id="mhTip"></p>
+          <div id="mhFlags"></div>
+          <p class="bm-h">Every formula on one scale</p>
+          <div id="mhBar"></div>
+          <p class="av-note" style="margin-top:0">Dots are the formulas (amber = your headline). The shaded band is ±10.8 bpm, the standard error in the HUNT study.</p>
+          <p class="bm-h">Formulas side by side</p>
+          <div id="mhRows"></div>
+          <p class="cb-note">Click a formula to make it the headline.</p>
+          <p class="bm-h" id="mhPctLab">Heart rate at a percent of your max</p>
+          <table class="dtable" id="mhPct"></table>
+          <p class="cb-note">An estimate for adults, not medical advice. Formulas are averages: any one person can sit well above or below.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- mobile sticky bar -->
+  <div class="mbar" id="mbar">
+    <span class="mbar-lab" id="mhMLab">Estimated max heart rate</span>
+    <div class="mbar-vals"><b id="mhMVal">—</b></div>
+  </div>
+
+  <div class="related-calcs">
+    <p class="related-calcs-h">More calculators that may interest you</p>
+    <div class="pills">
+      <a class="pill" href="/heart-rate-zone-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h4l2-5 4 10 2-5h6"/></svg>
+        Heart Rate Zone Calculator
+      </a>
+      <a class="pill" href="/zone-2-heart-rate-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-4.5-7-10a4 4 0 0 1 7-2 4 4 0 0 1 7 2c0 5.5-7 10-7 10z"/></svg>
+        Zone 2 Heart Rate Calculator
+      </a>
+      <a class="pill" href="/vo2-max-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 18l5-6 4 3 7-9"/></svg>
+        VO2 Max Calculator
+      </a>
+      <a class="pill" href="/calories-burned-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3s5 5 5 9a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3 1-5 1-8z"/></svg>
+        Calories Burned Calculator
+      </a>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use the max heart rate calculator</h2>
+        <p>Pick <strong>female or male</strong>, enter your <strong>age</strong> and, if you take beta blockers, switch that to <strong>Yes</strong>. You get the six formulas side by side with the spread between them; click one to make it the headline, or choose it under <strong>Headline formula</strong>.</p>
+        <p>Open <strong>Go advanced</strong> and type a max heart rate you measured to see how far it is from the headline and to base the percent table on your own number.</p>
+
+        <h2>Max heart rate formulas</h2>
+        <div class="formula">
+          Tanaka: 208 − 0.7 × age · Fox: 220 − age · Nes (HUNT): 211 − 0.64 × age
+          <small>GULATI (WOMEN): 206 − 0.88 × AGE · INBAR: 205.8 − 0.685 × AGE · OAKLAND: 192 − 0.007 × AGE²</small>
+        </div>
+        <p>At 35: Tanaka 184, Fox 185, Nes 189, Gulati 175, Inbar 182, Oakland 183 bpm — 14 beats between the highest and the lowest.</p>
+
+        <h2>Find your real max: the 4×4 test</h2>
+        <ol>
+          <li>Warm up thoroughly, until you sweat.</li>
+          <li>Do two intervals of 4 minutes, hard enough that you are too short of breath to talk, with 3 minutes of active rest between them.</li>
+          <li>Start a third interval and, two minutes in, increase your speed further and keep going until you are too exhausted to continue.</li>
+          <li>Your HRmax is the highest heart rate you reach. No monitor? Hold two fingers to your neck for 30 seconds right after.</li>
+        </ol>
+        <p>This is NTNU’s description. Check with a clinician first if you have a heart condition, take heart medicines or are not sure a maximal test is safe for you.</p>
+      </div>
+
+      <div>
+        <h2>Max heart rate by age</h2>
+        <table class="dtable"><thead><tr><th>Age</th><th>Fox</th><th>Tanaka</th><th>Nes</th><th>Gulati</th></tr></thead><tbody><tr><td>20</td><td>200</td><td>194</td><td>198</td><td>188</td></tr><tr><td>30</td><td>190</td><td>187</td><td>192</td><td>180</td></tr><tr><td>40</td><td>180</td><td>180</td><td>185</td><td>171</td></tr><tr><td>50</td><td>170</td><td>173</td><td>179</td><td>162</td></tr><tr><td>60</td><td>160</td><td>166</td><td>173</td><td>153</td></tr><tr><td>70</td><td>150</td><td>159</td><td>166</td><td>144</td></tr><tr><td>80</td><td>140</td><td>152</td><td>160</td><td>136</td></tr></tbody></table>
+        <p>Beats a minute, rounded. Because 220 − age falls a full beat a year while Tanaka falls 0.7 and Nes 0.64, it is higher than both when you are young and lower than both when you are older; the lines cross somewhere between 25 and 40.</p>
+
+        <h2>Beta blockers</h2>
+        <p>NTNU explains that beta blockers block adrenaline and so reduce maximum heart rate, by an amount that depends on the dose. The formulas on this page come from healthy adults and do not apply to you if you take them — choose Yes above and ask your clinician how to exercise.</p>
+
+        <h2>Why the formulas disagree</h2>
+        <p>Each comes from a different group of people. Even the best of them is an average: in the HUNT study of 3,320 healthy adults the standard error of an age formula was 10.8 bpm, with no difference by gender, activity level, fitness or BMI. For the zones built on this number, see the <a href="/heart-rate-zone-calculator/">heart rate zone calculator</a>.</p>
+        <h2>Sources</h2>
+        <ul>
+          <li>Tanaka H, Monahan KD, Seals DR, <a href="https://pubmed.ncbi.nlm.nih.gov/11153730/" rel="noopener">Age-predicted maximal heart rate revisited</a>, J Am Coll Cardiol 2001;37:153–156 (abstract read via Europe PMC, 2026-11-06): a meta-analysis of 351 studies and 18,712 subjects gave HRmax = 208 − 0.7 × age; a laboratory study of 514 healthy subjects gave 209 − 0.7 × age; the line did not differ between men and women or with habitual activity.</li>
+          <li>Gulati M et al., <a href="https://pubmed.ncbi.nlm.nih.gov/20585008/" rel="noopener">Heart rate response to exercise stress testing in asymptomatic women: the St. James Women Take Heart Project</a>, Circulation 2010;122:130–137 (abstract read via Europe PMC): in 5,437 asymptomatic women, mean peak heart rate = 206 − 0.88 × age.</li>
+          <li>Nes BM et al., <a href="https://pubmed.ncbi.nlm.nih.gov/22376273/" rel="noopener">Age-predicted maximal heart rate in healthy subjects: the HUNT Fitness Study</a>, Scand J Med Sci Sports 2013;23:697–704 (abstract read via Europe PMC): in 3,320 healthy men and women, HRmax = 211 − 0.64 × age, standard error of the estimate 10.8 bpm, with no interaction with gender, physical activity, VO2max or BMI.</li>
+          <li>NTNU CERG, <a href="https://www.ntnu.edu/cerg/hrmax" rel="noopener">Maximum Heart Rate Calculator</a> (read 2026-11-06): beta blockers reduce maximum heart rate; the 4×4 interval test for finding your real HRmax; 220 − age can underestimate HRmax by up to 40 beats per minute in seniors.</li>
+          <li>Fox / Haskell (220 − age), Inbar (205.8 − 0.685 × age) and Oakland nonlinear (192 − 0.007 × age²): the constants are as published by Omnicalculator (opened 2026-11-06); the original papers were not read.</li>
+        </ul>
+        <p><small>For information only, not medical advice. Heart rate formulas are population averages. If you have a heart condition, take heart medicines or are unsure whether a maximal test is safe for you, talk to a clinician first.</small></p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>How do I calculate my maximum heart rate?</summary><p>The best known rule is 220 − age (Fox / Haskell): at 40 that is 180 bpm. The Tanaka formula, 208 − 0.7 × age, gives 180 at 40 and the Nes (HUNT) formula, 211 − 0.64 × age, gives 185. The calculator shows all six at once and lets you pick the headline.</p></details>
+    <details class="faq"><summary>Is 220 minus age accurate?</summary><p>It is a rough average. The Tanaka study found the equation had never been validated in a sample with enough older adults, and the NTNU HUNT team says it can underestimate HRmax by up to 40 beats per minute in seniors. At 35 the six formulas here differ by 14 bpm, and the HUNT study put the standard error of an age formula at 10.8 bpm for any one person.</p></details>
+    <details class="faq"><summary>Which max heart rate formula is best?</summary><p>Tanaka (208 − 0.7 × age) comes from a meta-analysis of 351 studies and was confirmed in 514 healthy adults, and Nes (211 − 0.64 × age) from 3,320 healthy adults; both found no difference between men and women. The calculator defaults to Tanaka. None of them replaces a measured value.</p></details>
+    <details class="faq"><summary>What is the max heart rate for women?</summary><p>Tanaka and Nes both found no difference between men and women. The Gulati formula, 206 − 0.88 × age, was derived from 5,437 asymptomatic women: at 35 it gives 175 bpm against 184 for Tanaka. Pick Female to see it marked as the women-specific row.</p></details>
+    <details class="faq"><summary>How do I find my real max heart rate?</summary><p>Use a maximal test. NTNU describes a 4×4 interval test: warm up until you sweat; do two 4-minute intervals hard enough that you are too short of breath to talk, with 3 minutes of active rest between; start a third interval and, two minutes in, push harder until you cannot continue. Your HRmax is the highest heart rate you reach. Without a monitor, hold two fingers to your neck for 30 seconds right after. Enter the number under Go advanced to compare it with the formulas.</p></details>
+    <details class="faq"><summary>Do beta blockers change my max heart rate?</summary><p>Yes. NTNU explains that beta blockers block adrenaline and so reduce maximum heart rate, by an amount that depends on the dose. The formulas come from healthy adults, so if you take beta blockers choose Yes — the calculator warns that its numbers are too high — and ask your clinician how to exercise.</p></details>
+    <details class="faq"><summary>What heart rate is 70% or 85% of my max?</summary><p>Multiply your max by the percent. The table under the result does it for 50% to 100% from your chosen formula, or from your measured max when you enter one. For named training zones, including Zone 2, use the <a href="/heart-rate-zone-calculator/">heart rate zone calculator</a>.</p></details>
+    <details class="faq"><summary>Can my heart rate go above the formula’s number?</summary><p>Yes. The formulas are averages for a group; in the HUNT study the standard error was 10.8 bpm, so many healthy people sit more than 10 bpm above or below. That is why the calculator shows a ±10.8 bpm band and lets you add your measured max.</p></details>
+    <details class="faq"><summary>What is the difference between max heart rate and zones?</summary><p>Max heart rate is one number: the highest rate your heart reaches. Zones divide the range below it, often as percents of max or with your resting heart rate. The <a href="/zone-2-heart-rate-calculator/">Zone 2 calculator</a> and the <a href="/heart-rate-zone-calculator/">heart rate zone calculator</a> take it from here.</p></details>
+  </section>
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+      <div class="footer-stack">
+<div class="footer-col" style="order:1">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+          <li><a href="/paint-calculator/">Paint Calculator</a></li>
+          <li><a href="/wallpaper-calculator/">Wallpaper Calculator</a></li>
+          <li><a href="/square-footage-calculator/">Square Footage Calculator</a></li>
+          <li><a href="/tape-measure-fraction-calculator/">Tape Measure Fraction Calculator</a></li>
+          <li><a href="/stair-calculator/">Stair Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:5">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Cooking &amp;</span> <span class="ft2">Kitchen</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/recipe-converter/">Recipe Converter</a></li>
+          <li><a href="/turkey-cooking-time-calculator/">Turkey Cooking Time Calculator</a></li>
+          <li><a href="/turkey-thawing-time-calculator/">Turkey Thawing Time Calculator</a></li>
+          <li><a href="/turkey-size-calculator/">Turkey Size Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:6">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Money &amp;</span> <span class="ft2">Finance</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/mortgage-calculator/">Mortgage Calculator</a></li>
+          <li><a href="/loan-calculator/">Loan Calculator</a></li>
+          <li><a href="/auto-loan-calculator/">Auto Loan Calculator</a></li>
+          <li><a href="/car-sales-tax-calculator/">Car Sales Tax Calculator</a></li>
+          <li><a href="/overtime-calculator/">Overtime Calculator</a></li>
+          <li><a href="/salary-calculator/">Salary Calculator</a></li>
+          <!--STAXFOOT:START-->
+          <li><a href="/sales-tax-calculator/">Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/california/">California Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/chicago/">Chicago Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/florida/">Florida Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/las-vegas/">Las Vegas Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/los-angeles/">Los Angeles Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/michigan/">Michigan Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/missouri/">Missouri Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/north-carolina/">North Carolina Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/ohio/">Ohio Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/texas/">Texas Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/virginia/">Virginia Sales Tax Calculator</a></li>
+          <!--STAXFOOT:END-->
+          <li><a href="/tip-calculator/">Tip Calculator</a></li>
+          <li><a href="/how-much-to-tip/">How Much to Tip</a></li>
+        </ul>
+      </div>
+      </div>
+
+      <div class="footer-right">
+<div class="footer-col footer-col--two" style="order:2">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/vo2-max-calculator/">VO2 Max Calculator</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/bmi-calculator/">BMI Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/ideal-weight-calculator/">Ideal Weight Calculator</a></li>
+          <li><a href="/lean-body-mass-calculator/">Lean Body Mass Calculator</a></li>
+          <li><a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio Calculator</a></li>
+          <li><a href="/gmi-calculator/">GMI Calculator</a></li>
+          <li><a href="/a1c-calculator/">A1C Calculator</a></li>
+          <li><a href="/calorie-calculator/">Calorie Calculator</a></li>
+          <li><a href="/calorie-deficit-calculator/">Calorie Deficit Calculator</a></li>
+          <li><a href="/bmr-calculator/">BMR Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/water-intake-calculator/">Water Intake Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/protein-intake-calculator/">Protein Intake Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
+          <li><a href="/steps-to-miles-calculator/">Steps to Miles Calculator</a></li>
+          <li><a href="/dog-age-calculator/">Dog Age Calculator</a></li>
+          <li><a href="/cat-age-calculator/">Cat Age Calculator</a></li>
+          <li><a href="/calories-burned-calculator/">Calories Burned Calculator</a></li>
+          <li><a href="/calories-burned-walking-calculator/">Calories Burned Walking Calculator</a></li>
+          <li><a href="/calories-burned-running-calculator/">Calories Burned Running Calculator</a></li>
+          <li><a href="/keto-calculator/">Keto Calculator</a></li>
+          <li><a href="/net-carb-calculator/">Net Carb Calculator</a></li>
+          <li><a href="/intermittent-fasting-calculator/">Intermittent Fasting Calculator</a></li>
+          <li><a href="/bsa-calculator/">BSA Calculator</a></li>
+          <li><a href="/dog-food-calculator/">Dog Food Calculator</a></li>
+          <li><a href="/ffmi-calculator/">FFMI Calculator</a></li>
+          <li><a href="/bulking-calculator/">Bulking Calculator</a></li>
+          <li><a href="/weight-loss-calculator/">Weight Loss Calculator</a></li>
+          <li><a href="/weight-loss-percentage-calculator/">Weight Loss Percentage Calculator</a></li>
+          <li><a href="/max-heart-rate-calculator/">Max Heart Rate Calculator</a></li>
+        </ul>
+      </div>
+
+        <div class="footer-sub">
+<div class="footer-subcol">
+<div class="footer-col" style="order:3">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/semester-grade-calculator/">Semester Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+          <li><a href="/grade-curve-calculator/">Grade Curve Calculator</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:START-->
+<div class="footer-col" style="order:7">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Unit</span> <span class="ft2">Converters</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/unit-converter/">Unit Converter</a></li>
+          <li><a href="/length-converter/">Length Converter</a></li>
+          <li><a href="/weight-converter/">Weight Converter</a></li>
+          <li><a href="/volume-converter/">Volume Converter</a></li>
+          <li><a href="/temperature-converter/">Temperature Converter</a></li>
+          <li><a href="/area-converter/">Area Converter</a></li>
+          <li><a href="/speed-converter/">Speed Converter</a></li>
+          <li><a href="/data-storage-converter/">Data Storage Converter</a></li>
+          <li><a href="/cooking-converter/">Cooking Measurement Converter</a></li>
+          <li><a href="/px-to-rem-converter/">PX to REM Converter</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:END-->
+</div>
+
+<div class="footer-col" style="order:4">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/fraction-calculator/">Fraction Calculator</a></li>
+          <li><a href="/standard-deviation-calculator/">Standard Deviation Calculator</a></li>
+          <li><a href="/scientific-notation-calculator/">Scientific Notation Calculator</a></li>
+          <li><a href="/weighted-average-calculator/">Weighted Average Calculator</a></li>
+          <li><a href="/average-calculator/">Average Calculator</a></li>
+          <li><a href="/batting-average-calculator/">Batting Average Calculator</a></li>
+          <li><a href="/stock-average-calculator/">Stock Average Calculator</a></li>
+          <li><a href="/dice-average-calculator/">Dice Average Calculator</a></li>
+          <li><a href="/time-average-calculator/">Time Average Calculator</a></li>
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+          <li><a href="/percentage-change-calculator/">Percentage Change Calculator</a></li>
+          <li><a href="/age-calculator/">Age Calculator</a></li>
+          <li><a href="/date-calculator/">Date Calculator</a></li>
+          <li><a href="/time-calculator/">Time Calculator</a></li>
+          <li><a href="/hours-calculator/">Hours Calculator</a></li>
+          <li><a href="/triangle-calculator/">Triangle Calculator</a></li>
+          <li><a href="/random-number-generator/">Random Number Generator</a></li>
+        </ul>
+      </div>
+        </div>
+      </div>
+
+      <!--PAYFOOT:START-->
+      <div class="footer-col footer-col--wide">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Paycheck</span> <span class="ft2">Calculators</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/paycheck-calculator/">Paycheck Calculator (all states)</a></li>
+          <li><a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arkansas/">Arkansas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/california/">California Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/hawaii/">Hawaii Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/louisiana/">Louisiana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nebraska/">Nebraska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/oklahoma/">Oklahoma Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/utah/">Utah Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wisconsin/">Wisconsin Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a></li>
+        </ul>
+      </div>
+      <!--PAYFOOT:END-->
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/blog/">Blog</a>
+      <span aria-hidden="true">·</span>
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+</div>
+
+<script src="/assets/app.js?v=322"></script>
+<script>CalcThis.initMhCalc();</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>

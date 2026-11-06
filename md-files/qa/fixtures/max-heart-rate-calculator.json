@@ -1,0 +1,25 @@
+{
+  "slug": "max-heart-rate-calculator",
+  "bodyClass": "p-mh",
+  "blocks": ["MH"],
+  "result": { "big": "mhBig", "body": "mhBody", "hint": "mhHint" },
+  "required": ["mhAge"],
+  "fill": [
+    ["seg", "mhSex", "f"],
+    ["seg", "mhBeta", "n"],
+    ["set", "mhF", "tanaka"],
+    ["set", "mhAge", "35"],
+    ["set", "mhM", ""]
+  ],
+  "optionalSamples": {
+    "mhM": ["185", "200", "99"]
+  },
+  "variants": [
+    [["set", "mhF", "fox"]],
+    [["seg", "mhSex", "m"], ["set", "mhF", "gulati"]],
+    [["seg", "mhBeta", "y"]],
+    [["set", "mhF", "oakland"], ["set", "mhM", "190"]]
+  ],
+  "scrollTo": "mhRows",
+  "errorState": [["set", "mhAge", "5"]]
+}

@@ -1,0 +1,35 @@
+{
+ "slug": "max-heart-rate-calculator",
+ "pass": true,
+ "at": "2026-11-06T11:43:31.521Z",
+ "hash": "bae63e6654b22762",
+ "viewports": {
+  "mobile": {
+   "steps": 760,
+   "fails": []
+  },
+  "desktop": {
+   "steps": 760,
+   "fails": []
+  }
+ },
+ "oracle": {
+  "runs": 300,
+  "fails": []
+ },
+ "shots": [
+  "md-files/qa-passes/shots/max-heart-rate-calculator-1-empty-mobile.png",
+  "md-files/qa-passes/shots/max-heart-rate-calculator-2-filled-mobile.png",
+  "md-files/qa-passes/shots/max-heart-rate-calculator-3-result-mobile.png",
+  "md-files/qa-passes/shots/max-heart-rate-calculator-4-advanced-mobile.png",
+  "md-files/qa-passes/shots/max-heart-rate-calculator-5-error-mobile.png",
+  "md-files/qa-passes/shots/max-heart-rate-calculator-6-after-chaos-mobile.png",
+  "md-files/qa-passes/shots/max-heart-rate-calculator-1-empty-desktop.png",
+  "md-files/qa-passes/shots/max-heart-rate-calculator-2-filled-desktop.png",
+  "md-files/qa-passes/shots/max-heart-rate-calculator-3-result-desktop.png",
+  "md-files/qa-passes/shots/max-heart-rate-calculator-4-advanced-desktop.png",
+  "md-files/qa-passes/shots/max-heart-rate-calculator-5-error-desktop.png",
+  "md-files/qa-passes/shots/max-heart-rate-calculator-6-after-chaos-desktop.png"
+ ],
+ "console": []
+}

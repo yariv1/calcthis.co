@@ -2997,3 +2997,30 @@
 .p-wp .av-note,.p-wp .cb-note{font-size:14px;font-weight:500;color:var(--ink-soft);margin:4px 0 8px;line-height:1.45}
 .p-wp .cb-note{color:var(--muted);font-weight:400}
 .p-wp .av-note a{color:#8F5C13;font-weight:600;text-decoration:underline;text-underline-offset:2px}
+
+/* ---- MAX HEART RATE calculator (.p-mh) — reuses .p-bmr result look, .dtable, .bf-cmp ---- */
+.p-mh .mh-rule{margin:34px 0 4px;padding-bottom:26px}
+.p-mh .mh-rule-t{position:relative;height:16px;border-radius:8px;background:#EFE7D8}
+.p-mh .mh-band{position:absolute;top:0;bottom:0;background:var(--spruce);opacity:.35;border-radius:8px}
+.p-mh .mh-dot{position:absolute;top:50%;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:50%;background:var(--spruce);border:2px solid var(--card);box-sizing:border-box;z-index:2}
+.p-mh .mh-dot.on{background:var(--amber)}
+.p-mh .mh-mk{position:absolute;top:50%;width:20px;height:20px;margin:-10px 0 0 -10px;border-radius:50%;background:var(--amber);border:3px solid var(--ink);box-sizing:border-box;z-index:3}
+.p-mh .mh-mk b{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);font-size:14px;font-weight:800;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:7px;padding:1px 6px;white-space:nowrap}
+.p-mh .mh-me{position:absolute;top:50%;width:14px;height:14px;margin:-7px 0 0 -7px;background:var(--ink);transform:rotate(45deg);z-index:4}
+.p-mh .mh-rule.has-me{margin-top:60px}
+.p-mh .mh-melab{position:absolute;bottom:44px;transform:translateX(-50%);font-size:13px;font-weight:800;color:var(--ink);white-space:nowrap;z-index:4}
+.p-mh .mh-rule-l{position:relative;height:18px;margin-top:10px}
+.p-mh .mh-rule-l span{position:absolute;top:0;font-size:12px;font-weight:600;color:var(--muted);transform:translateX(-50%)}
+.p-mh .mh-rule-l span:first-child{transform:none}
+.p-mh .mh-rule-l span:last-child{transform:translateX(-100%)}
+.p-mh .mh-flag{font-size:14px;font-weight:500;color:var(--amber-deep);background:#FBF3E4;border-left:3px solid var(--amber);border-radius:6px;padding:8px 10px;margin:8px 0;line-height:1.45}
+.p-mh .mh-row{cursor:pointer}
+.p-mh .mh-row:hover{background:#FCF7EE}
+.p-mh .mh-row.on{background:#F7EBD2}
+.p-mh .mh-row.on .k{font-weight:700;color:var(--ink)}
+.p-mh .mh-row:focus-visible{outline:2px solid var(--amber);outline-offset:-2px}
+.p-mh .dtable td:nth-child(n+2),.p-mh .dtable th:nth-child(n+2){text-align:right}
+.p-mh .bm-sub{display:block;font-size:12.5px;font-weight:500;color:var(--muted);margin-top:2px}
+.p-mh .av-note,.p-mh .cb-note{font-size:14px;font-weight:500;color:var(--ink-soft);margin:4px 0 8px;line-height:1.45}
+.p-mh .cb-note{color:var(--muted);font-weight:400}
+.p-mh .av-note a{color:#8F5C13;font-weight:600;text-decoration:underline;text-underline-offset:2px}

@@ -21476,3 +21476,109 @@ CalcThis.initWpCalc = function () {
   render();
 };
 /* WP:END */
+
+/* MH:BEGIN */
+/* =========================================================
+   MAX HEART RATE calculator (/max-heart-rate-calculator/). Competitors opened live (2026-11-06): Omnicalculator (5 formulas, age only), NTNU CERG (HUNT formula, beta-blocker box, 4x4 field test),
+   McMillan Running (4 formulas + field test). Sources READ (Europe PMC abstracts): Tanaka 2001 JACC 37:153 (208 - 0.7 x age; same for men and women), Gulati 2010 Circulation 122:130
+   (206 - 0.88 x age, women), Nes 2013 Scand J Med Sci Sports 23:697 (HUNT, 211 - 0.64 x age, SEE 10.8 bpm). Fox/Haskell 220 - age, Inbar 205.8 - 0.685 x age and Oakland 192 - 0.007 x age^2:
+   constants read on Omnicalculator only (originals NOT read; the page says so).
+   ========================================================= */
+/* MH-ENGINE:START */
+CalcThis.mhEngine = (function () {
+  var F = [
+    { id: 'tanaka', name: 'Tanaka', eq: '208 − 0.7 × age', f: function (a) { return 208 - 0.7 * a; } },
+    { id: 'fox', name: 'Fox / Haskell', eq: '220 − age', f: function (a) { return 220 - a; } },
+    { id: 'nes', name: 'Nes (HUNT)', eq: '211 − 0.64 × age', f: function (a) { return 211 - 0.64 * a; } },
+    { id: 'gulati', name: 'Gulati (women)', eq: '206 − 0.88 × age', f: function (a) { return 206 - 0.88 * a; } },
+    { id: 'inbar', name: 'Inbar', eq: '205.8 − 0.685 × age', f: function (a) { return 205.8 - 0.685 * a; } },
+    { id: 'oakland', name: 'Oakland nonlinear', eq: '192 − 0.007 × age²', f: function (a) { return 192 - 0.007 * a * a; } }
+  ];
+  var SEE = 10.8, MARKS = [50, 60, 70, 80, 85, 90, 95, 100];
+  function num(t) {
+    t = (t + '').trim().replace(/\s/g, '');
+    if (!t) return null;
+    if (/^[+-]?\d*,\d+$/.test(t)) t = t.replace(',', '.'); else t = t.replace(/,/g, '');
+    if (!/^[+-]?(\d+\.?\d*|\.\d+)$/.test(t)) return NaN;
+    return parseFloat(t);
+  }
+  function all(age) { return F.map(function (x) { return { id: x.id, name: x.name, eq: x.eq, v: x.f(age) }; }); }
+  function byId(id) { for (var i = 0; i < F.length; i++) if (F[i].id === id) return F[i]; return F[0]; }
+  return { F: F, SEE: SEE, MARKS: MARKS, num: num, all: all, byId: byId };
+})();
+/* MH-ENGINE:END */
+
+/* =========================================================
+   CalcThis.initMhCalc() — ids mh*. Engine: CalcThis.mhEngine. No shared state.
+   ========================================================= */
+CalcThis.initMhCalc = function () {
+  var E = CalcThis.mhEngine, U = CalcThis._kzUtil, seg = U.seg;
+  var $ = function (id) { return document.getElementById(id); };
+  var st = { sex: 'f', beta: 'n' };
+  function setHint(m, at) {
+    var h = $('mhHint'); h.textContent = m || ''; h.style.display = m ? 'block' : 'none';
+    if (m && at) { var f = $(at).closest('.fld'); if (f && f.nextSibling !== h) f.parentNode.insertBefore(h, f.nextSibling); }
+  }
+  function empty(msg, at) { $('mhBig').textContent = '—'; $('mhSub').textContent = $('mhSub').getAttribute('data-empty'); $('mhBody').style.display = 'none'; $('mhMVal').textContent = '—'; setHint(msg || '', at); }
+  function r0(x) { return Math.round(x); }
+  function render() {
+    var araw = $('mhAge').value, age = E.num(araw);
+    if (age === null) { empty(''); return; }
+    if (isNaN(age) || age < 15 || age > 100) { empty('Age should be a number between 15 and 100.', 'mhAge'); return; }
+    var soft = null, mraw = $('mhM').value, M = null;
+    if (mraw.trim()) {
+      var mv = E.num(mraw);
+      if (mv === null || isNaN(mv) || mv < 100 || mv > 230) soft = 'Your measured max should be between 100 and 230 beats a minute. It is ignored for now.';
+      else M = mv;
+    }
+    setHint(soft, 'mhM');
+    var rows = E.all(age), hf = E.byId($('mhF').value), H = null, i;
+    for (i = 0; i < rows.length; i++) if (rows[i].id === hf.id) H = rows[i];
+    var lo = Infinity, hi = -Infinity; rows.forEach(function (r) { if (r.v < lo) lo = r.v; if (r.v > hi) hi = r.v; });
+    $('mhBig').textContent = r0(H.v) + ' bpm';
+    $('mhSub').textContent = H.name + ' (' + H.eq + ') · formulas range ' + r0(lo) + '–' + r0(hi) + ' bpm';
+    $('mhMLab').textContent = 'Estimated max heart rate'; $('mhMVal').textContent = r0(H.v) + ' bpm';
+    $('mhBody').style.display = '';
+    $('mhTip').textContent = 'Your estimated maximum heart rate is about ' + r0(H.v) + ' beats a minute (' + H.name + '). It is an average for your age, not a measurement: in the HUNT study of 3,320 healthy adults the standard error of an age formula was ' + E.SEE + ' bpm, so yours can sit well above or below. A maximal test is the only way to know.';
+    var fl = [];
+    if (st.beta === 'y') fl.push('Beta blockers lower your maximum heart rate (NTNU), and these formulas come from healthy adults — treat every number here as too high and ask your clinician before using it for training.');
+    if (st.sex === 'm' && hf.id === 'gulati') fl.push('The Gulati formula was derived from women; Tanaka and Nes found no difference between men and women.');
+    $('mhFlags').innerHTML = fl.map(function (t) { return '<p class="mh-flag">' + t + '</p>'; }).join('');
+    var html = '';
+    rows.forEach(function (r) {
+      var note = r.id === 'gulati' ? (st.sex === 'f' ? ' · for women' : ' · derived from women') : '';
+      html += '<div class="bf-cmp mh-row' + (r.id === H.id ? ' on' : '') + '" data-f="' + r.id + '" tabindex="0"><span class="k">' + r.name + '<span class="bm-sub">' + r.eq + note + '</span></span><span class="v">' + r0(r.v) + ' bpm</span></div>';
+    });
+    if (M !== null) {
+      var d = r0(M) - r0(H.v);
+      html += '<div class="bf-cmp"><span class="k">Your measured max<span class="bm-sub">' + (d === 0 ? 'the same as ' : Math.abs(d) + ' bpm ' + (d > 0 ? 'above ' : 'below ')) + H.name + '</span></span><span class="v">' + r0(M) + ' bpm</span></div>';
+    }
+    $('mhRows').innerHTML = html;
+    /* dot scale */
+    var a = Math.floor((Math.min(lo, M !== null ? M : lo) - 8) / 10) * 10, b = Math.ceil((Math.max(hi, M !== null ? M : hi) + 8) / 10) * 10, p = function (x) { return Math.max(0, Math.min(100, (x - a) / (b - a) * 100)); };
+    var dots = rows.map(function (r) { return '<i class="mh-dot' + (r.id === H.id ? ' on' : '') + '" style="left:' + p(r.v) + '%" title="' + r.name + '"></i>'; }).join('');
+    var tk = ''; for (var t = a; t <= b; t += 10) tk += '<span style="left:' + p(t) + '%">' + t + '</span>';
+    var bandL = p(H.v - E.SEE), bandR = p(H.v + E.SEE);
+    $('mhBar').innerHTML = '<div class="mh-rule' + (M !== null ? ' has-me' : '') + '"><div class="mh-rule-t"><i class="mh-band" style="left:' + bandL + '%;width:' + (bandR - bandL) + '%"></i>' + dots + '<i class="mh-mk" style="left:' + p(H.v) + '%"><b>' + r0(H.v) + '</b></i>' + (M !== null ? '<i class="mh-me" style="left:' + p(M) + '%"></i><b class="mh-melab" style="left:' + p(M) + '%">you ' + r0(M) + '</b>' : '') + '</div><div class="mh-rule-l">' + tk + '</div></div>';
+    /* percent of max */
+    var basis = M !== null ? r0(M) : r0(H.v), tr = '';
+    E.MARKS.forEach(function (pc) { tr += '<tr><td>' + pc + '%</td><td>' + r0(basis * pc / 100) + ' bpm</td></tr>'; });
+    $('mhPctLab').textContent = 'Heart rate at a percent of your max (' + (M !== null ? 'your measured ' + r0(M) : H.name + ' ' + r0(H.v)) + ' bpm)';
+    $('mhPct').innerHTML = '<thead><tr><th>Percent of max</th><th>Heart rate</th></tr></thead><tbody>' + tr + '</tbody>';
+  }
+  /* ---------- controls ---------- */
+  ['mhAge', 'mhM'].forEach(function (id) { $(id).addEventListener('input', render); });
+  $('mhF').addEventListener('change', render);
+  seg('mhSex', function (v) { st.sex = v; render(); });
+  seg('mhBeta', function (v) { st.beta = v; render(); });
+  function pick(e) { var r = e.target.closest('.mh-row'); if (!r) return; $('mhF').value = r.getAttribute('data-f'); render(); }
+  $('mhRows').addEventListener('click', pick);
+  $('mhRows').addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(e); } });
+  $('mhAdvBtn').addEventListener('click', function () {
+    var open = $('mhAdvBtn').classList.toggle('open'); $('mhAdvBtnLab').textContent = open ? 'Go simple' : 'Go advanced'; $('mhAdvIn').style.display = open ? '' : 'none';
+    if (!open) { $('mhM').value = ''; }
+    render();
+  });
+  render();
+};
+/* MH:END */

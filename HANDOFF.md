@@ -4,6 +4,12 @@ _Rewritten 2026-11-06 at the end of the FFMI + bulking + QA-gate session: **§00
 
 ---
 
+## 0000000000000015. UPDATE 2026-11-06 (after §14): MAX HEART RATE DEPLOYED v322 — live v322 · 89 calcs · 219 pages
+
+First reply = sync: "synced · live v322 / 89 calcs / 219 pages · health direction through weight loss by date + percent + max heart rate · QA gate mandatory · Bing signed out, GSC quota pending · next: retune deficit/calorie/zone page titles (undecided), BAC late · your call." Code map = CLAUDE.md addendum 20. Next generator chains after `prevSlug = 'max-heart-rate-calculator'`, `prevMenu = 'Max Heart Rate'`, `prevName = 'Max Heart Rate Calculator'`. GSC: append the three new URLs (weight loss, weight loss percentage, max heart rate) + re-request the two zone pages.
+
+---
+
 ## 0000000000000014. UPDATE 2026-11-06 (after §13): WEIGHT LOSS PERCENTAGE DEPLOYED v321 — live v321 · 88 calcs · 218 pages
 
 First reply = sync: "synced · live v321 / 88 calcs / 218 pages · health direction through weight loss by date + percent · QA gate mandatory · Bing signed out, GSC quota pending · next: max heart rate overlap check, retune deficit/calorie titles (undecided), BAC late · your call." Code map = CLAUDE.md addendum 19. Next generator chains after `prevSlug = 'weight-loss-percentage-calculator'`, `prevMenu = 'Weight Loss %'`, `prevName = 'Weight Loss Percentage Calculator'`. GSC: append the two new URLs after `/bulking-calculator/`. Lesson: bash heredocs with apostrophes break — write fixtures/oracles/scripts with the Write tool.

@@ -88,6 +88,7 @@
         { "@type": "WebApplication", "name": "Bulking Calculator", "url": "https://calcthis.co/bulking-calculator/", "applicationCategory": "HealthApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Weight Loss Calculator", "url": "https://calcthis.co/weight-loss-calculator/", "applicationCategory": "HealthApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Weight Loss Percentage Calculator", "url": "https://calcthis.co/weight-loss-percentage-calculator/", "applicationCategory": "HealthApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
+        { "@type": "WebApplication", "name": "Max Heart Rate Calculator", "url": "https://calcthis.co/max-heart-rate-calculator/", "applicationCategory": "HealthApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Protein Intake Calculator", "url": "https://calcthis.co/protein-intake-calculator/", "applicationCategory": "HealthApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Final Grade Calculator", "url": "https://calcthis.co/final-grade-calculator/", "applicationCategory": "EducationApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "GPA Calculator", "url": "https://calcthis.co/gpa-calculator/", "applicationCategory": "EducationApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
@@ -132,7 +133,7 @@
   ]
 }
 </script>
-<link rel="stylesheet" href="/assets/style.css?v=321">
+<link rel="stylesheet" href="/assets/style.css?v=322">
 <style>
   .cat-tabs{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
   .cat-grp--hidden{display:none}
@@ -226,6 +227,7 @@
           <a href="/bulking-calculator/">Bulking</a>
           <a href="/weight-loss-calculator/">Weight Loss</a>
           <a href="/weight-loss-percentage-calculator/">Weight Loss %</a>
+          <a href="/max-heart-rate-calculator/">Max Heart Rate</a>
         </div>
         <div class="menu-col">
           <span class="menu-col-head">School &amp; Grades</span>
@@ -1107,6 +1109,20 @@
       </span>
     </a>
 
+    <a class="calc" href="/max-heart-rate-calculator/">
+      <span class="ico" aria-hidden="true">
+        <svg width="30" height="30" viewBox="0 0 32 32" fill="none">
+          <path d="M3 17h6l3-8 5 15 3-9h9" stroke="#37503F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="29" cy="15" r="2" fill="#B5761F"/>
+        </svg>
+      </span>
+      <h3>Max Heart Rate Calculator</h3>
+      <p>Max heart rate from age with six formulas side by side, your measured max compared and heart rate at each percent of max.</p>
+      <span class="go">Open calculator
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+    </a>
+
     <a class="calc" href="/steps-to-miles-calculator/">
       <span class="ico" aria-hidden="true">
         <svg width="30" height="30" viewBox="0 0 32 32" fill="none">
@@ -1847,6 +1863,7 @@
           <li><a href="/bulking-calculator/">Bulking</a><span> — calories to eat to bulk: a calorie surplus set by pace, percent or kcal, with macros and a weight curve with time to goal</span></li>
           <li><a href="/weight-loss-calculator/">Weight Loss</a><span> — calories a day to reach a goal weight by a target date: weekly loss, fastest safe date, weight curve and milestone dates</span></li>
           <li><a href="/weight-loss-percentage-calculator/">Weight Loss %</a><span> — percent of body weight lost from any two of starting weight, current weight, weight lost and percent, with progress to a goal</span></li>
+          <li><a href="/max-heart-rate-calculator/">Max Heart Rate</a><span> — estimated maximum heart rate from age with six formulas side by side, your measured max compared and heart rate at each percent of max</span></li>
           <li><a href="/peptide-reconstitution-calculator/">Peptide reconstitution</a><span> — exact syringe draw units</span></li>
         </ul>
       </article>
@@ -2054,6 +2071,7 @@
           <li><a href="/bulking-calculator/">Bulking Calculator</a></li>
           <li><a href="/weight-loss-calculator/">Weight Loss Calculator</a></li>
           <li><a href="/weight-loss-percentage-calculator/">Weight Loss Percentage Calculator</a></li>
+          <li><a href="/max-heart-rate-calculator/">Max Heart Rate Calculator</a></li>
         </ul>
       </div>
 
@@ -2207,7 +2225,7 @@
   });
 })();
 </script>
-<script src="/assets/app.js?v=321"></script>
+<script src="/assets/app.js?v=322"></script>
 <script src="/feedback.js" defer></script>
 </body>
 </html>
