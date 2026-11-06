@@ -1,0 +1,796 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Weight Loss Calculator by Date — Calories to Reach Goal</title>
+<meta name="description" content="Weight loss calculator by date: enter your goal weight and a target date to get the calories to eat a day, the weekly loss and the fastest safe date.">
+<link rel="canonical" href="https://calcthis.co/weight-loss-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Weight Loss Calculator by Date — Calories to Reach Goal">
+<meta property="og:description" content="Weight loss calculator by date: enter your goal weight and a target date to get the calories to eat a day, the weekly loss and the fastest safe date.">
+<meta property="og:url" content="https://calcthis.co/weight-loss-calculator/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/datepicker.min.css">
+<link rel="stylesheet" href="/assets/style.css?v=320">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Weight Loss Calculator",
+  "url": "https://calcthis.co/weight-loss-calculator/",
+  "applicationCategory": "HealthApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "Free weight loss calculator by date: calories to eat a day to reach a goal weight by a target date (or at a weekly pace), from Mifflin-St Jeor maintenance, with the simple 7,700 kcal rule and a realistic estimate side by side, the fastest date within the guidelines, a weight curve, milestone dates and calories for six target dates."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I calculate weight loss by a date?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Work out the weight to lose, turn it into calories, and spread it over the days you have. For the example (80 kg to 70 kg in 20 weeks): 10 kg × 7,700 kcal ÷ 140 days = 550 kcal a day. Your maintenance is 2,082 kcal (Mifflin-St Jeor 1,514 × 1.375), so you eat 2,082 − 550 = 1,532 kcal. The calculator does this for your numbers and checks it against the minimum and pace limits."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How many calories should I eat to lose weight by a date?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Your maintenance minus the daily deficit the date needs. In the example the date needs 550 kcal a day, so about 1,532 kcal. A closer date needs a bigger deficit: the same goal in 8 weeks would need 1,375 kcal a day, leaving 707 kcal, which the calculator flags as too fast."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How fast can I lose weight safely?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The CDC says people who lose weight at a gradual, steady pace — about 1 to 2 pounds (0.45–0.9 kg) a week — are more likely to keep it off, and NHLBI recommends 5% to 10% of initial weight over about 6 months for people with overweight or obesity. The calculator flags a plan faster than 2 lb a week or 1% of your body weight a week, or one that puts you under 1,200 kcal (women) or 1,500 kcal (men)."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What if my target date is too soon?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The calculator still shows the calories the date would need, flags them, and gives the fastest date within the guidelines — for the example, 13 weeks eating 1,202 kcal. If the date would need more calories than you burn, it says so and shows that date instead of a blank result."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why are there two numbers, simple and realistic?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The simple rule treats your body as a machine that burns the same every day: 7,700 kcal per kg, spread evenly. In real life you burn about 14 kcal less a day for every kg you lose, so the same intake becomes a smaller deficit. To still arrive on the date you have to start lower: 1,460 kcal at first instead of 1,532 for the example, rising as you lose. The calculator shows both and lets you choose the headline under Go advanced."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How many calories is 1 kg or 1 lb of weight loss?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "About 7,700 kcal per kg, or 3,500 per lb, is the usual rule of thumb used here as the simple estimate. It is an approximation: the real mix of fat, muscle and water changes with the person, and your body burns less as you lose weight, which is why the realistic estimate is shown too."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How much weight can I lose in a month?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "At the pace of 0.5 kg (1.1 lb) a week it is about 2.2 kg (4.8 lb) a month, which needs a deficit of 550 kcal a day. At 1 kg (2.2 lb) a week it is about 4.3 kg a month and 1,100 kcal a day — more than the CDC’s 1 to 2 pounds a week for most people. Use “At a pace” to see the date a pace gives."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What percentage of my body weight is this?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The calculator shows it for you: 10 kg of 80 kg is 12.5% of the example’s body weight, which is in the 5–10% range NHLBI gives for about 6 months. Our percentage change calculator works out any other before-and-after figure."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is this the same as the calorie deficit calculator?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "They use the same energy model but start from different questions. This page starts from a goal weight and a date and gives you the calories. The calorie deficit calculator starts from a deficit, a pace or what you eat, and the calorie calculator gives a pace table with a protein target."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I use it to gain weight?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No — it plans a loss. For a calorie surplus use the bulking calculator."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "CalcThis",
+      "item": "https://calcthis.co/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Weight Loss Calculator",
+      "item": "https://calcthis.co/weight-loss-calculator/"
+    }
+  ]
+}
+</script>
+<meta property="og:site_name" content="CalcThis">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://calcthis.co/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="CalcThis — free, purpose-built calculators">
+<meta name="twitter:title" content="Weight Loss Calculator by Date — Calories to Reach Goal">
+<meta name="twitter:description" content="Weight loss calculator by date: enter your goal weight and a target date to get the calories to eat a day, the weekly loss and the fastest safe date.">
+<meta name="twitter:image" content="https://calcthis.co/assets/og-default.png">
+</head>
+<body class="p-bmr p-wl">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <a class="hdr-back" href="/blog/" aria-label="Back to blog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-search"><div class="menu-sx"><input id="menuSearch" type="search" placeholder="Search calculators or states…" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Search calculators" enterkeyhint="search"></div><div class="menu-results" id="menuResults" hidden></div></div>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <span class="menu-col-head">Construction &amp; Gardening</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+          <a href="/paint-calculator/">Paint</a>
+          <a href="/wallpaper-calculator/">Wallpaper</a>
+          <a href="/square-footage-calculator/">Square Footage</a>
+          <a href="/tape-measure-fraction-calculator/">Tape Measure Fraction</a>
+          <a href="/stair-calculator/">Stair</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/vo2-max-calculator/">VO2 Max</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
+          <a href="/bmi-calculator/">BMI</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/ideal-weight-calculator/">Ideal Weight</a>
+          <a href="/lean-body-mass-calculator/">Lean Body Mass</a>
+          <a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio</a>
+          <a href="/gmi-calculator/">GMI</a>
+          <a href="/a1c-calculator/">A1C</a>
+          <a href="/calorie-calculator/">Calorie</a>
+          <a href="/calorie-deficit-calculator/">Calorie Deficit</a>
+          <a href="/bmr-calculator/">BMR</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/water-intake-calculator/">Water Intake</a>
+          <a href="/macro-calculator/">Macro</a>
+          <a href="/protein-intake-calculator/">Protein Intake</a>
+          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
+          <a href="/steps-to-miles-calculator/">Steps to Miles</a>
+          <a href="/dog-age-calculator/">Dog Age</a>
+          <a href="/cat-age-calculator/">Cat Age</a>
+          <a href="/calories-burned-calculator/">Calories Burned</a>
+          <a href="/calories-burned-walking-calculator/">Calories Burned Walking</a>
+          <a href="/calories-burned-running-calculator/">Calories Burned Running</a>
+          <a href="/keto-calculator/">Keto</a>
+          <a href="/net-carb-calculator/">Net Carb</a>
+          <a href="/intermittent-fasting-calculator/">Intermittent Fasting</a>
+          <a href="/bsa-calculator/">BSA</a>
+          <a href="/dog-food-calculator/">Dog Food</a>
+          <a href="/ffmi-calculator/">FFMI</a>
+          <a href="/bulking-calculator/">Bulking</a>
+          <a href="/weight-loss-calculator/" class="current">Weight Loss</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/semester-grade-calculator/">Semester Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+          <a href="/grade-curve-calculator/">Grade Curve</a>
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/fraction-calculator/">Fraction</a>
+          <a href="/standard-deviation-calculator/">Standard Deviation</a>
+          <a href="/scientific-notation-calculator/">Scientific Notation</a>
+          <a href="/average-calculator/">Average</a>
+          <a href="/batting-average-calculator/">Batting Average</a>
+          <a href="/stock-average-calculator/">Stock Average</a>
+          <a href="/dice-average-calculator/">Dice Average</a>
+          <a href="/time-average-calculator/">Time Average</a>
+          <a href="/weighted-average-calculator/">Weighted Average</a>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+          <a href="/percentage-change-calculator/">Percentage Change</a>
+          <a href="/age-calculator/">Age</a>
+          <a href="/date-calculator/">Date</a>
+          <a href="/time-calculator/">Time</a>
+          <a href="/hours-calculator/">Hours</a>
+          <a href="/triangle-calculator/">Triangle</a>
+          <a href="/random-number-generator/">Random Number</a>
+          <span class="menu-col-head">Cooking &amp; Kitchen</span>
+          <a href="/recipe-converter/">Recipe Converter</a>
+          <a href="/turkey-cooking-time-calculator/">Turkey Cooking Time</a>
+          <a href="/turkey-thawing-time-calculator/">Turkey Thawing Time</a>
+          <a href="/turkey-size-calculator/">Turkey Size</a>
+          <!--UNITNAV:START-->
+          <span class="menu-col-head">Unit Converters</span>
+          <a href="/unit-converter/">Unit Converter</a>
+          <a href="/length-converter/">Length Converter</a>
+          <a href="/weight-converter/">Weight Converter</a>
+          <a href="/volume-converter/">Volume Converter</a>
+          <a href="/temperature-converter/">Temperature Converter</a>
+          <a href="/area-converter/">Area Converter</a>
+          <a href="/speed-converter/">Speed Converter</a>
+          <a href="/data-storage-converter/">Data Storage Converter</a>
+          <a href="/cooking-converter/">Cooking Converter</a>
+          <a href="/px-to-rem-converter/">PX to REM Converter</a>
+          <!--UNITNAV:END-->
+          <span class="menu-col-head">Money &amp; Finance</span>
+          <a href="/mortgage-calculator/">Mortgage</a>
+          <a href="/loan-calculator/">Loan</a>
+          <a href="/auto-loan-calculator/">Auto Loan</a>
+          <a href="/car-sales-tax-calculator/">Car Sales Tax</a>
+          <a href="/overtime-calculator/">Overtime</a>
+          <a href="/salary-calculator/">Salary</a>
+          <!--STAXNAV:START-->
+          <a href="/sales-tax-calculator/">Sales Tax</a>
+          <a href="/sales-tax-calculator/california/">California Sales Tax</a>
+          <a href="/sales-tax-calculator/chicago/">Chicago Sales Tax</a>
+          <a href="/sales-tax-calculator/florida/">Florida Sales Tax</a>
+          <a href="/sales-tax-calculator/las-vegas/">Las Vegas Sales Tax</a>
+          <a href="/sales-tax-calculator/los-angeles/">Los Angeles Sales Tax</a>
+          <a href="/sales-tax-calculator/michigan/">Michigan Sales Tax</a>
+          <a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax</a>
+          <a href="/sales-tax-calculator/missouri/">Missouri Sales Tax</a>
+          <a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax</a>
+          <a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax</a>
+          <a href="/sales-tax-calculator/north-carolina/">North Carolina Sales Tax</a>
+          <a href="/sales-tax-calculator/ohio/">Ohio Sales Tax</a>
+          <a href="/sales-tax-calculator/texas/">Texas Sales Tax</a>
+          <a href="/sales-tax-calculator/virginia/">Virginia Sales Tax</a>
+          <!--STAXNAV:END-->
+          <a href="/tip-calculator/">Tip</a>
+          <a href="/how-much-to-tip/">How Much to Tip</a>
+        </div>
+        <!--PAYNAV:START-->
+        <div class="menu-col">
+          <span class="menu-col-head">Paycheck Calculators</span>
+          <a href="/paycheck-calculator/">Paycheck Calculator (all states)</a>
+          <a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a>
+          <a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arkansas/">Arkansas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/california/">California Paycheck Calculator</a>
+          <a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a>
+          <a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a>
+          <a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/hawaii/">Hawaii Paycheck Calculator</a>
+          <a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a>
+          <a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a>
+          <a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a>
+          <a href="/paycheck-calculator/louisiana/">Louisiana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a>
+          <a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a>
+          <a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a>
+          <a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a>
+          <a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nebraska/">Nebraska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a>
+          <a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a>
+          <a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a>
+          <a href="/paycheck-calculator/oklahoma/">Oklahoma Paycheck Calculator</a>
+          <a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a>
+          <a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a>
+          <a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a>
+          <a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/utah/">Utah Paycheck Calculator</a>
+          <a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wisconsin/">Wisconsin Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a>
+        </div>
+        <!--PAYNAV:END-->
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">Goal weight · target date or pace · calories a day · fastest safe date</div>
+    <h1>Weight Loss Calculator by Date</h1>
+    <p>Enter your <strong>weight</strong>, <strong>goal weight</strong> and a <strong>target date</strong> — you get the <strong>calories to eat a day</strong>, how much you lose a week and the <strong>fastest date within the guidelines</strong>. A woman of 80 kg and 168 cm who wants to reach <strong>70 kg in 20 weeks</strong> burns about <strong>2,082 kcal</strong> and eats about <strong>1,532 kcal</strong>.</p>
+  </section>
+
+  <div class="grid">
+
+    <!-- INPUT -->
+    <div class="card">
+      <div class="card-pad">
+        <h2 class="card-h2">About you</h2>
+        <div class="ctl-row"><span class="ctl-lab">Sex</span><div class="seg" id="wlSex" role="group" aria-label="Sex"><button class="on" type="button" data-v="f">Female</button><button type="button" data-v="m">Male</button></div></div>
+        <div class="ctl-row"><span class="ctl-lab">Calories you burn</span><div class="seg" id="wlMain" role="group" aria-label="Calories you burn"><button class="on" type="button" data-v="est">Estimate it</button><button type="button" data-v="known">I know it</button></div></div>
+        <div id="wlEstWrap">
+          <label class="fld" for="wlAge"><span class="lab">Age <span class="unit">years</span></span><div class="inp"><input id="wlAge" type="text" inputmode="numeric" autocomplete="off" placeholder="e.g. 35"></div></label>
+          <div class="ctl-row"><span class="ctl-lab">Height units</span><div class="seg" id="wlHU" role="group" aria-label="Height units"><button type="button" data-v="cm">cm</button><button class="on" type="button" data-v="in">inches</button><button type="button" data-v="m">m</button></div></div>
+          <label class="fld" for="wlH"><span class="lab">Height <span class="unit" id="wlHL">inches or 5'10</span></span><div class="inp"><input id="wlH" type="text" inputmode="text" autocomplete="off" placeholder="e.g. 66 or 5'6"></div></label>
+          <label class="fld"><span class="lab">Activity level</span><div class="csel" id="wlAct" data-value="1.375"><button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false"><span class="csel-val">Light — 1–3 days/week</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="csel-panel" role="listbox"><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="1.2">Sedentary — little or no exercise</button><button type="button" class="csel-opt on" role="option" aria-selected="true" data-value="1.375">Light — 1–3 days/week</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="1.55">Moderate — 3–5 days/week</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="1.725">Active — 6–7 days/week</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="1.9">Very active — hard training / physical job</button></div></div></label>
+        </div>
+        <div id="wlKnownWrap" style="display:none">
+          <label class="fld" for="wlMaint"><span class="lab">Calories you burn <span class="unit">kcal a day · your maintenance</span></span><div class="inp"><input id="wlMaint" type="text" inputmode="numeric" autocomplete="off" placeholder="e.g. 2100"></div></label>
+          <p class="av-note" style="margin:0 0 8px">The calories you burn in a day to stay at your weight (also called maintenance), for example from tracking your food and weight for a few weeks. It is used as given; weight is still needed.</p>
+        </div>
+        <div class="ctl-row"><span class="ctl-lab">Weight units</span><div class="seg" id="wlWU" role="group" aria-label="Weight units"><button type="button" data-v="kg">kg</button><button class="on" type="button" data-v="lb">lb</button><button type="button" data-v="st">st</button></div></div>
+        <label class="fld" for="wlW"><span class="lab">Current weight <span class="unit" id="wlWL">lb</span></span><div class="inp"><input id="wlW" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 185"></div></label>
+        <label class="fld" for="wlG"><span class="lab">Goal weight <span class="unit" id="wlGL">lb</span></span><div class="inp"><input id="wlG" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 165"></div></label>
+        <div class="proj-sep"></div>
+        <div class="ctl-row" style="display:block"><span class="ctl-lab" style="display:block;margin-bottom:6px">Plan by</span><div class="modeseg" id="wlPlan" role="group" aria-label="Plan by"><button class="on" type="button" data-v="date">A target date</button><button type="button" data-v="pace">A weekly pace</button></div></div>
+        <div id="wlDateWrap" style="margin-top:14px">
+          <label class="fld" for="wlDate" style="margin-bottom:0"><span class="lab">Reach my goal by</span><div class="inp"><input id="wlDate" type="text" autocomplete="off" placeholder="Pick a date"></div></label>
+        </div>
+        <div id="wlPaceWrap" style="display:none;margin-top:14px">
+          <label class="fld" for="wlPace" style="margin-bottom:0"><span class="lab">Weight loss <span class="unit" id="wlPaceL">lb a week</span></span><div class="inp"><input id="wlPace" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 1"></div></label>
+        </div>
+        <div class="chips" id="wlChips"></div>
+        <p class="av-note" id="wlPaceNote" style="display:none;margin:8px 0 8px">Leave it empty to start at 1 lb (0.5 kg) a week, the gentle end of the CDC’s 1 to 2 pounds.</p>
+        <div class="res-hint" id="wlHint" style="display:none;text-align:left;margin:4px 0 8px"></div>
+        <div id="wlAdvIn" style="display:none">
+          <div class="proj-sep"></div>
+          <div class="ctl-row" style="display:block"><span class="ctl-lab" style="display:block;margin-bottom:6px">Headline estimate</span><div class="modeseg" id="wlModel" role="group" aria-label="Headline estimate"><button class="on" type="button" data-v="simple">Simple rule</button><button type="button" data-v="real">Realistic</button></div></div>
+          <p class="av-note" style="margin:0 0 8px">Both are always shown below. Realistic allows for burning less as you lose, so it starts lower.</p>
+          <label class="fld" for="wlBf"><span class="lab">Body fat <span class="unit">% · optional, uses Katch-McArdle</span></span><div class="inp"><input id="wlBf" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 30"></div></label>
+        </div>
+        <div class="add-row split" style="margin-top:16px">
+          <span></span>
+          <button class="advbtn" id="wlAdvBtn" type="button">
+            <span id="wlAdvBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div class="card">
+      <div class="card-pad">
+        <div class="bf-res">
+          <div class="res-lab">Calories a day to reach your goal</div>
+          <div class="res-big"><span id="wlBig">—</span></div>
+          <div class="res-sub" id="wlSub" data-empty="Enter your weight, goal weight and a date.">Enter your weight, goal weight and a date.</div>
+        </div>
+        <div id="wlBody" style="display:none">
+          <p class="res-tip adv-tip" id="wlTip"></p>
+          <div id="wlFlags"></div>
+          <div id="wlRows"></div>
+          <p class="bm-h">What you eat and what you burn</p>
+          <div id="wlBar"></div>
+          <p class="bm-h">Weight over time</p>
+          <div id="wlChart"></div>
+          <div class="bm-key"><span><i class="wl-lr"></i>Realistic (you burn less as you lose)</span><span><i class="wl-ls"></i>Simple 7,700 rule</span></div>
+          <p class="av-note" id="wlNoGoal" style="display:none">Add a goal weight for the date. The chart shows the next 16 weeks.</p>
+          <div id="wlMileWrap" style="display:none">
+            <p class="bm-h">Where you should be on the way</p>
+            <table class="dtable" id="wlMile"></table>
+          </div>
+          <div id="wlByDateWrap" style="display:none">
+            <p class="bm-h">Calories for other target dates</p>
+            <table class="dtable" id="wlByDate"></table>
+            <p class="cb-note">Click a row to plan for that date.</p>
+          </div>
+          <p class="cb-note">An estimate for adults, not medical advice. The 7,700 kcal per kg rule is a simplification, and how fast you lose varies from person to person.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- mobile sticky bar -->
+  <div class="mbar" id="mbar">
+    <span class="mbar-lab" id="wlMLab">Calories a day for your goal</span>
+    <div class="mbar-vals"><b id="wlMVal">—</b></div>
+  </div>
+
+  <div class="related-calcs">
+    <p class="related-calcs-h">More calculators that may interest you</p>
+    <div class="pills">
+      <a class="pill" href="/calorie-deficit-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12h8"/></svg>
+        Calorie Deficit Calculator
+      </a>
+      <a class="pill" href="/tdee-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3s5 5 5 9a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3 1-5 1-8z"/></svg>
+        TDEE Calculator
+      </a>
+      <a class="pill" href="/calorie-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+        Calorie Calculator
+      </a>
+      <a class="pill" href="/bmi-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v16M5 9l7-5 7 5"/></svg>
+        BMI Calculator
+      </a>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use the weight loss calculator</h2>
+        <p>Pick <strong>female or male</strong>, enter your <strong>age</strong>, <strong>height</strong>, <strong>activity level</strong>, <strong>current weight</strong> and <strong>goal weight</strong> — or, next to <strong>Calories you burn</strong>, choose <strong>I know it</strong> and type the calories you burn a day (your maintenance). Then pick a <strong>target date</strong> (or tap 4 weeks, 12 weeks, 6 months), or switch to <strong>a weekly pace</strong> to see the date it gives.</p>
+        <p>You get the calories to eat a day, the loss per week as a share of your body weight, the <strong>fastest date within the guidelines</strong>, a weight curve, milestone dates and the calories for six other target dates. Open <strong>Go advanced</strong> to choose the realistic estimate as the headline or to enter your body fat.</p>
+
+        <h2>The weight loss by date formula</h2>
+        <div class="formula">
+          Calories a day = maintenance − (weight to lose × 7,700 ÷ days)
+          <small>MAINTENANCE = BMR × ACTIVITY FACTOR · 7,700 KCAL PER KG (3,500 PER LB)</small>
+        </div>
+        <p>For a woman of 35, 168 cm and 80 kg with light activity: BMR (Mifflin-St Jeor) = 1,514 kcal, maintenance = 1,514 × 1.375 = <strong>2,082 kcal</strong>. To lose 10 kg in 140 days she needs a deficit of 10 × 7,700 ÷ 140 = <strong>550 kcal</strong> a day, so she eats about <strong>1,532 kcal</strong> and loses 0.50 kg (1.10 lb) a week.</p>
+
+        <h2>Safe pace and minimums</h2>
+        <ul>
+          <li><strong>1 to 2 pounds a week.</strong> The CDC links a gradual, steady pace of about 1 to 2 pounds (0.45–0.9 kg) a week with keeping the weight off.</li>
+          <li><strong>5–10% over about 6 months.</strong> NHLBI’s recommendation for people with overweight or obesity.</li>
+          <li><strong>A floor on what you eat.</strong> The calculator flags under 1,200 kcal for women or 1,500 for men, the commonly used minimums.</li>
+          <li><strong>Under 18, pregnant or with a medical condition:</strong> talk to a doctor before cutting calories.</li>
+        </ul>
+      </div>
+
+      <div>
+        <h2>Calories for other target dates</h2>
+        <table class="dtable"><thead><tr><th>Reach 70 kg in</th><th>Eat a day</th><th>Loss a week</th></tr></thead><tbody><tr><td>8 weeks</td><td>707 kcal <small>below the 1,200 minimum</small></td><td>1.25 kg (2.76 lb)</td></tr><tr><td>12 weeks</td><td>1,165 kcal <small>below the 1,200 minimum</small></td><td>0.83 kg (1.84 lb)</td></tr><tr><td>16 weeks</td><td>1,394 kcal</td><td>0.63 kg (1.38 lb)</td></tr><tr><td>20 weeks</td><td>1,532 kcal</td><td>0.50 kg (1.10 lb)</td></tr><tr><td>6 months</td><td>1,659 kcal</td><td>0.38 kg (0.85 lb)</td></tr><tr><td>1 year</td><td>1,870 kcal</td><td>0.19 kg (0.42 lb)</td></tr></tbody></table>
+        <p>Same woman, simple rule: the shorter the time, the lower the calories — and the faster the pace. The calculator flags the rows that go below the minimum or past 2 lb (0.9 kg) a week.</p>
+
+        <h2>Calories by weekly pace</h2>
+        <table class="dtable"><thead><tr><th>Loss a week</th><th>Deficit</th><th>Eat (maintenance 2,082)</th></tr></thead><tbody><tr><td>0.25 kg (0.55 lb) a week</td><td>275 kcal</td><td>1,807 kcal</td></tr><tr><td>0.50 kg (1.10 lb) a week</td><td>550 kcal</td><td>1,532 kcal</td></tr><tr><td>0.75 kg (1.65 lb) a week</td><td>825 kcal</td><td>1,257 kcal</td></tr><tr><td>1.00 kg (2.20 lb) a week</td><td>1,100 kcal</td><td>982 kcal</td></tr></tbody></table>
+        <p>The deficit is the loss per week × 7,700 ÷ 7. About 0.45 kg (1 lb) a week needs roughly 500 kcal a day.</p>
+
+        <h2>Simple rule or realistic?</h2>
+        <p>The simple rule spreads 7,700 kcal per kg evenly. In real life you burn about <strong>14 kcal less per kg lost</strong>, so the same intake gives a smaller deficit as you get lighter. To arrive on the same date the realistic plan starts lower — 1,460 kcal instead of 1,532 in the example — and rises as you lose. The weight curve plots both. See also the <a href="/calorie-deficit-calculator/">calorie deficit calculator</a>.</p>
+        <h2>Sources</h2>
+        <ul>
+          <li>Centers for Disease Control and Prevention, <a href="https://www.cdc.gov/healthy-weight-growth/losing-weight/index.html" rel="noopener">Steps for Losing Weight</a> (updated 2025-01-17, read 2026-11-06): people who lose weight at a gradual, steady pace — about 1 to 2 pounds a week — are more likely to keep it off; a 5% weight reduction for a person who weighs 200 pounds is 10 pounds, which can lower the risk of some chronic diseases.</li>
+          <li>National Heart, Lung, and Blood Institute, <a href="https://www.nhlbi.nih.gov/health/heart-healthy-living/healthy-weight" rel="noopener">Aim for a Healthy Weight</a> (updated 2025-12-11, read 2026-11-06): for people with overweight or obesity, health professionals recommend losing 5% to 10% of initial weight over about 6 months; a loss of 3% to 5% can lower triglycerides and blood glucose.</li>
+          <li>Competitor pages opened 2026-11-06 for their inputs: FatCalc (NIH body-weight model; keeps intake at or above 1,200 kcal for women and 1,500 for men) and Alma (plan by a goal date or a weekly pace).</li>
+          <li>Maintenance: Mifflin-St Jeor times the activity factor (or Katch-McArdle with body fat), as on our <a href="/bmr-calculator/">BMR calculator</a>. The energy rule of 7,700 kcal per kg (3,500 per lb) and the “you burn less as you get lighter” estimate are the same models used on our <a href="/calorie-deficit-calculator/">calorie deficit calculator</a>; they are estimates, not measurements. The 1,200 and 1,500 kcal figures are the commonly used minimums; no single primary source was read for them.</li>
+        </ul>
+        <p><small>For information only, not medical advice. If you are under 18, pregnant or breastfeeding, have a medical condition or a history of disordered eating, talk to a clinician before cutting calories.</small></p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>How do I calculate weight loss by a date?</summary><p>Work out the weight to lose, turn it into calories, and spread it over the days you have. For the example (80 kg to 70 kg in 20 weeks): 10 kg × 7,700 kcal ÷ 140 days = <strong>550 kcal</strong> a day. Your maintenance is 2,082 kcal (Mifflin-St Jeor 1,514 × 1.375), so you eat 2,082 − 550 = <strong>1,532 kcal</strong>. The calculator does this for your numbers and checks it against the minimum and pace limits.</p></details>
+    <details class="faq"><summary>How many calories should I eat to lose weight by a date?</summary><p>Your maintenance minus the daily deficit the date needs. In the example the date needs 550 kcal a day, so about 1,532 kcal. A closer date needs a bigger deficit: the same goal in 8 weeks would need 1,375 kcal a day, leaving 707 kcal, which the calculator flags as too fast.</p></details>
+    <details class="faq"><summary>How fast can I lose weight safely?</summary><p>The CDC says people who lose weight at a gradual, steady pace — about 1 to 2 pounds (0.45–0.9 kg) a week — are more likely to keep it off, and NHLBI recommends 5% to 10% of initial weight over about 6 months for people with overweight or obesity. The calculator flags a plan faster than 2 lb a week or 1% of your body weight a week, or one that puts you under 1,200 kcal (women) or 1,500 kcal (men).</p></details>
+    <details class="faq"><summary>What if my target date is too soon?</summary><p>The calculator still shows the calories the date would need, flags them, and gives the <strong>fastest date within the guidelines</strong> — for the example, 13 weeks eating 1,202 kcal. If the date would need more calories than you burn, it says so and shows that date instead of a blank result.</p></details>
+    <details class="faq"><summary>Why are there two numbers, simple and realistic?</summary><p>The simple rule treats your body as a machine that burns the same every day: 7,700 kcal per kg, spread evenly. In real life you burn about 14 kcal less a day for every kg you lose, so the same intake becomes a smaller deficit. To still arrive on the date you have to start lower: 1,460 kcal at first instead of 1,532 for the example, rising as you lose. The calculator shows both and lets you choose the headline under Go advanced.</p></details>
+    <details class="faq"><summary>How many calories is 1 kg or 1 lb of weight loss?</summary><p>About 7,700 kcal per kg, or 3,500 per lb, is the usual rule of thumb used here as the simple estimate. It is an approximation: the real mix of fat, muscle and water changes with the person, and your body burns less as you lose weight, which is why the realistic estimate is shown too.</p></details>
+    <details class="faq"><summary>How much weight can I lose in a month?</summary><p>At the pace of 0.5 kg (1.1 lb) a week it is about 2.2 kg (4.8 lb) a month, which needs a deficit of 550 kcal a day. At 1 kg (2.2 lb) a week it is about 4.3 kg a month and 1,100 kcal a day — more than the CDC’s 1 to 2 pounds a week for most people. Use “At a pace” to see the date a pace gives.</p></details>
+    <details class="faq"><summary>What percentage of my body weight is this?</summary><p>The calculator shows it for you: 10 kg of 80 kg is 12.5% of the example’s body weight, which is in the 5–10% range NHLBI gives for about 6 months. Our <a href="/percentage-change-calculator/">percentage change calculator</a> works out any other before-and-after figure.</p></details>
+    <details class="faq"><summary>Is this the same as the calorie deficit calculator?</summary><p>They use the same energy model but start from different questions. This page starts from a goal weight and a date and gives you the calories. The <a href="/calorie-deficit-calculator/">calorie deficit calculator</a> starts from a deficit, a pace or what you eat, and the <a href="/calorie-calculator/">calorie calculator</a> gives a pace table with a protein target.</p></details>
+    <details class="faq"><summary>Can I use it to gain weight?</summary><p>No — it plans a loss. For a calorie surplus use the <a href="/bulking-calculator/">bulking calculator</a>.</p></details>
+  </section>
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+      <div class="footer-stack">
+<div class="footer-col" style="order:1">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+          <li><a href="/paint-calculator/">Paint Calculator</a></li>
+          <li><a href="/wallpaper-calculator/">Wallpaper Calculator</a></li>
+          <li><a href="/square-footage-calculator/">Square Footage Calculator</a></li>
+          <li><a href="/tape-measure-fraction-calculator/">Tape Measure Fraction Calculator</a></li>
+          <li><a href="/stair-calculator/">Stair Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:5">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Cooking &amp;</span> <span class="ft2">Kitchen</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/recipe-converter/">Recipe Converter</a></li>
+          <li><a href="/turkey-cooking-time-calculator/">Turkey Cooking Time Calculator</a></li>
+          <li><a href="/turkey-thawing-time-calculator/">Turkey Thawing Time Calculator</a></li>
+          <li><a href="/turkey-size-calculator/">Turkey Size Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:6">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Money &amp;</span> <span class="ft2">Finance</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/mortgage-calculator/">Mortgage Calculator</a></li>
+          <li><a href="/loan-calculator/">Loan Calculator</a></li>
+          <li><a href="/auto-loan-calculator/">Auto Loan Calculator</a></li>
+          <li><a href="/car-sales-tax-calculator/">Car Sales Tax Calculator</a></li>
+          <li><a href="/overtime-calculator/">Overtime Calculator</a></li>
+          <li><a href="/salary-calculator/">Salary Calculator</a></li>
+          <!--STAXFOOT:START-->
+          <li><a href="/sales-tax-calculator/">Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/california/">California Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/chicago/">Chicago Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/florida/">Florida Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/las-vegas/">Las Vegas Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/los-angeles/">Los Angeles Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/michigan/">Michigan Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/missouri/">Missouri Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/north-carolina/">North Carolina Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/ohio/">Ohio Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/texas/">Texas Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/virginia/">Virginia Sales Tax Calculator</a></li>
+          <!--STAXFOOT:END-->
+          <li><a href="/tip-calculator/">Tip Calculator</a></li>
+          <li><a href="/how-much-to-tip/">How Much to Tip</a></li>
+        </ul>
+      </div>
+      </div>
+
+      <div class="footer-right">
+<div class="footer-col footer-col--two" style="order:2">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/vo2-max-calculator/">VO2 Max Calculator</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/bmi-calculator/">BMI Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/ideal-weight-calculator/">Ideal Weight Calculator</a></li>
+          <li><a href="/lean-body-mass-calculator/">Lean Body Mass Calculator</a></li>
+          <li><a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio Calculator</a></li>
+          <li><a href="/gmi-calculator/">GMI Calculator</a></li>
+          <li><a href="/a1c-calculator/">A1C Calculator</a></li>
+          <li><a href="/calorie-calculator/">Calorie Calculator</a></li>
+          <li><a href="/calorie-deficit-calculator/">Calorie Deficit Calculator</a></li>
+          <li><a href="/bmr-calculator/">BMR Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/water-intake-calculator/">Water Intake Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/protein-intake-calculator/">Protein Intake Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
+          <li><a href="/steps-to-miles-calculator/">Steps to Miles Calculator</a></li>
+          <li><a href="/dog-age-calculator/">Dog Age Calculator</a></li>
+          <li><a href="/cat-age-calculator/">Cat Age Calculator</a></li>
+          <li><a href="/calories-burned-calculator/">Calories Burned Calculator</a></li>
+          <li><a href="/calories-burned-walking-calculator/">Calories Burned Walking Calculator</a></li>
+          <li><a href="/calories-burned-running-calculator/">Calories Burned Running Calculator</a></li>
+          <li><a href="/keto-calculator/">Keto Calculator</a></li>
+          <li><a href="/net-carb-calculator/">Net Carb Calculator</a></li>
+          <li><a href="/intermittent-fasting-calculator/">Intermittent Fasting Calculator</a></li>
+          <li><a href="/bsa-calculator/">BSA Calculator</a></li>
+          <li><a href="/dog-food-calculator/">Dog Food Calculator</a></li>
+          <li><a href="/ffmi-calculator/">FFMI Calculator</a></li>
+          <li><a href="/bulking-calculator/">Bulking Calculator</a></li>
+          <li><a href="/weight-loss-calculator/">Weight Loss Calculator</a></li>
+        </ul>
+      </div>
+
+        <div class="footer-sub">
+<div class="footer-subcol">
+<div class="footer-col" style="order:3">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/semester-grade-calculator/">Semester Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+          <li><a href="/grade-curve-calculator/">Grade Curve Calculator</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:START-->
+<div class="footer-col" style="order:7">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Unit</span> <span class="ft2">Converters</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/unit-converter/">Unit Converter</a></li>
+          <li><a href="/length-converter/">Length Converter</a></li>
+          <li><a href="/weight-converter/">Weight Converter</a></li>
+          <li><a href="/volume-converter/">Volume Converter</a></li>
+          <li><a href="/temperature-converter/">Temperature Converter</a></li>
+          <li><a href="/area-converter/">Area Converter</a></li>
+          <li><a href="/speed-converter/">Speed Converter</a></li>
+          <li><a href="/data-storage-converter/">Data Storage Converter</a></li>
+          <li><a href="/cooking-converter/">Cooking Measurement Converter</a></li>
+          <li><a href="/px-to-rem-converter/">PX to REM Converter</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:END-->
+</div>
+
+<div class="footer-col" style="order:4">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/fraction-calculator/">Fraction Calculator</a></li>
+          <li><a href="/standard-deviation-calculator/">Standard Deviation Calculator</a></li>
+          <li><a href="/scientific-notation-calculator/">Scientific Notation Calculator</a></li>
+          <li><a href="/weighted-average-calculator/">Weighted Average Calculator</a></li>
+          <li><a href="/average-calculator/">Average Calculator</a></li>
+          <li><a href="/batting-average-calculator/">Batting Average Calculator</a></li>
+          <li><a href="/stock-average-calculator/">Stock Average Calculator</a></li>
+          <li><a href="/dice-average-calculator/">Dice Average Calculator</a></li>
+          <li><a href="/time-average-calculator/">Time Average Calculator</a></li>
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+          <li><a href="/percentage-change-calculator/">Percentage Change Calculator</a></li>
+          <li><a href="/age-calculator/">Age Calculator</a></li>
+          <li><a href="/date-calculator/">Date Calculator</a></li>
+          <li><a href="/time-calculator/">Time Calculator</a></li>
+          <li><a href="/hours-calculator/">Hours Calculator</a></li>
+          <li><a href="/triangle-calculator/">Triangle Calculator</a></li>
+          <li><a href="/random-number-generator/">Random Number Generator</a></li>
+        </ul>
+      </div>
+        </div>
+      </div>
+
+      <!--PAYFOOT:START-->
+      <div class="footer-col footer-col--wide">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Paycheck</span> <span class="ft2">Calculators</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/paycheck-calculator/">Paycheck Calculator (all states)</a></li>
+          <li><a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arkansas/">Arkansas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/california/">California Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/hawaii/">Hawaii Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/louisiana/">Louisiana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nebraska/">Nebraska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/oklahoma/">Oklahoma Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/utah/">Utah Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wisconsin/">Wisconsin Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a></li>
+        </ul>
+      </div>
+      <!--PAYFOOT:END-->
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/blog/">Blog</a>
+      <span aria-hidden="true">·</span>
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+</div>
+
+<script src="/assets/datepicker.min.js"></script>
+<script src="/assets/app.js?v=320"></script>
+<script>CalcThis.initWlCalc();</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>

@@ -2956,3 +2956,23 @@
 .p-bk .chips{margin-top:8px;margin-bottom:2px}
 .p-bk .cb-two{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}
 @media(max-width:520px){.p-bk .cb-two{gap:0 8px}}
+
+/* ---- WEIGHT LOSS calculator (.p-wl) — reuses .p-bmr result look, .bm-bar, .dtable, .chips, .bf-cmp ---- */
+.p-wl #wlChart{margin:6px 0 4px}
+.p-wl #wlChart svg{display:block;width:100%;max-width:440px;height:auto;overflow:visible}
+.p-wl .bm-key i.wl-ls{width:16px;height:0;border-radius:0;border-top:2px dashed var(--amber);vertical-align:3px}
+.p-wl .bm-key i.wl-lr{width:16px;height:3px;border-radius:2px;background:var(--spruce);vertical-align:2px}
+.p-wl .wl-flag{font-size:14px;font-weight:500;color:var(--amber-deep);background:#FBF3E4;border-left:3px solid var(--amber);border-radius:6px;padding:8px 10px;margin:8px 0;line-height:1.45}
+.p-wl .dtable td:nth-child(n+2),.p-wl .dtable th:nth-child(n+2){text-align:right}
+.p-wl .dtable td small{display:block;color:var(--muted);font-size:12.5px;font-weight:500;margin-top:2px}
+.p-wl .dtable td small.wl-low{color:var(--amber-deep)}
+.p-wl .dtable tr[data-d]{cursor:pointer}
+.p-wl .dtable tr[data-d]:hover td{background:#FCF7EE}
+.p-wl .dtable tr[data-d]:focus-visible{outline:2px solid var(--amber);outline-offset:-2px}
+.p-wl .bm-sub{display:block;font-size:12.5px;font-weight:500;color:var(--muted);margin-top:2px}
+.p-wl .av-note,.p-wl .cb-note{font-size:14px;font-weight:500;color:var(--ink-soft);margin:4px 0 8px;line-height:1.45}
+.p-wl .cb-note{color:var(--muted);font-weight:400}
+.p-wl .av-note a{color:#8F5C13;font-weight:600;text-decoration:underline;text-underline-offset:2px}
+.p-wl .chips{margin-top:8px;margin-bottom:2px}
+.p-wl .modeseg{grid-template-columns:1fr 1fr}
+.p-wl .dtable td:first-child{white-space:nowrap}

@@ -91,7 +91,7 @@ function build() {
   const input = `
         <h2 class="card-h2">About you</h2>
         ${seg('bkSex', 'Sex', [['f', 'Female'], ['m', 'Male']], 'f')}
-        ${seg('bkMain', 'Maintenance', [['est', 'Estimate it'], ['known', 'I know it']], 'est')}
+        ${seg('bkMain', 'Calories you burn', [['est', 'Estimate it'], ['known', 'I know it']], 'est')}
         <div id="bkEstWrap">
           ${tfld('bkAge', 'Age', 'years', 'e.g. 28', null, 'numeric')}
           ${seg('bkHU', 'Height units', [['cm', 'cm'], ['in', 'inches'], ['m', 'm']], 'in')}
@@ -99,8 +99,8 @@ function build() {
           ${csel('bkAct', '1.55', 'Activity level', actOpts)}
         </div>
         <div id="bkKnownWrap" style="display:none">
-          ${tfld('bkMaint', 'Maintenance', 'kcal a day', 'e.g. 2700', null, 'numeric')}
-          <p class="av-note" style="margin:0 0 8px">For example from tracking your food and weight for a few weeks. It is used as given; weight is still needed.</p>
+          ${tfld('bkMaint', 'Calories you burn', 'kcal a day · your maintenance', 'e.g. 2700', null, 'numeric')}
+          <p class="av-note" style="margin:0 0 8px">The calories you burn in a day to stay at your weight (also called maintenance), for example from tracking your food and weight for a few weeks. It is used as given; weight is still needed.</p>
         </div>
         ${seg('bkWU', 'Weight units', [['kg', 'kg'], ['lb', 'lb'], ['st', 'st']], 'lb')}
         ${tfld('bkW', 'Current weight', 'lb', 'e.g. 165', 'bkWL')}
@@ -136,7 +136,7 @@ function build() {
           <p class="res-tip adv-tip" id="bkTip"></p>
           <div id="bkFlags"></div>
           <div id="bkEq"></div>
-          <p class="bm-h">Maintenance and surplus</p>
+          <p class="bm-h">What you burn and the surplus</p>
           <div id="bkBar"></div>
           <p class="bm-h">Your pace against the researched range</p>
           <div id="bkPace"></div>

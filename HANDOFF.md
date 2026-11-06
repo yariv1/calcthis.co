@@ -4,6 +4,12 @@ _Rewritten 2026-11-06 at the end of the FFMI + bulking + QA-gate session: **§00
 
 ---
 
+## 0000000000000013. UPDATE 2026-11-06 (after §12): WEIGHT LOSS CALCULATOR BY DATE DEPLOYED v320 — live v320 · 87 calcs · 217 pages
+
+First reply = sync: "synced · live v320 / 87 calcs / 217 pages · health direction through weight loss by date · QA gate mandatory · Bing signed out, GSC quota pending · next: percent weight loss page (small; CDC/NHLBI sources already read), max heart rate overlap check, retune deficit/calorie titles (undecided), BAC late · your call." Code map = CLAUDE.md addendum 18 + `md-files/calcthis-weightloss-research.md`. Next generator chains after `prevSlug = 'weight-loss-calculator'`, `prevMenu = 'Weight Loss'`, `prevName = 'Weight Loss Calculator'`. Label rule from the user: never call the burn-rate input "Maintenance" in a UI label; use "Calories you burn" (+ "your maintenance" in the unit text). GSC: append `/weight-loss-calculator/` after `/bulking-calculator/`.
+
+---
+
 ## 0000000000000012. START HERE — END OF THE 2026-11-06 SESSION (FFMI + BULKING built and deployed; the CALCULATOR QA GATE was built after the user's anger about skipped QA) — live v319 · 86 calculators · 25 articles · 216 pages · `main` pushed (deploy `29b50e8d`, docs `8a0284d8`, this handoff commit after it) — AUTHORITATIVE; §11/§10/§f/§e below are the same direction one step earlier and stay valid unless this contradicts them
 
 ### 0. First reply of the next session (do exactly this)

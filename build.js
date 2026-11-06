@@ -164,6 +164,7 @@ const PAGES = [
   { file: 'dog-food-calculator/index.html', slug: '/dog-food-calculator/' },
   { file: 'ffmi-calculator/index.html', slug: '/ffmi-calculator/' },
   { file: 'bulking-calculator/index.html', slug: '/bulking-calculator/' },
+  { file: 'weight-loss-calculator/index.html', slug: '/weight-loss-calculator/' },
   { file: 'protein-intake-calculator/index.html', slug: '/protein-intake-calculator/' },
   { file: 'blog/index.html',            slug: '/blog/' },
   { file: 'blog/how-much-gravel-do-i-need-for-a-driveway/index.html', slug: '/blog/how-much-gravel-do-i-need-for-a-driveway/' },

@@ -1,0 +1,36 @@
+{
+ "slug": "weight-loss-calculator",
+ "pass": true,
+ "at": "2026-11-06T10:34:22.492Z",
+ "hash": "40b0d3d1ae0ea04a",
+ "viewports": {
+  "mobile": {
+   "steps": 845,
+   "fails": []
+  },
+  "desktop": {
+   "steps": 845,
+   "fails": []
+  }
+ },
+ "oracle": {
+  "runs": 300,
+  "fails": [],
+  "invalid": 20
+ },
+ "shots": [
+  "md-files/qa-passes/shots/weight-loss-calculator-1-empty-mobile.png",
+  "md-files/qa-passes/shots/weight-loss-calculator-2-filled-mobile.png",
+  "md-files/qa-passes/shots/weight-loss-calculator-3-result-mobile.png",
+  "md-files/qa-passes/shots/weight-loss-calculator-4-advanced-mobile.png",
+  "md-files/qa-passes/shots/weight-loss-calculator-5-error-mobile.png",
+  "md-files/qa-passes/shots/weight-loss-calculator-6-after-chaos-mobile.png",
+  "md-files/qa-passes/shots/weight-loss-calculator-1-empty-desktop.png",
+  "md-files/qa-passes/shots/weight-loss-calculator-2-filled-desktop.png",
+  "md-files/qa-passes/shots/weight-loss-calculator-3-result-desktop.png",
+  "md-files/qa-passes/shots/weight-loss-calculator-4-advanced-desktop.png",
+  "md-files/qa-passes/shots/weight-loss-calculator-5-error-desktop.png",
+  "md-files/qa-passes/shots/weight-loss-calculator-6-after-chaos-desktop.png"
+ ],
+ "console": []
+}

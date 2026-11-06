@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/datepicker.min.css">
-<link rel="stylesheet" href="/assets/style.css?v=319">
+<link rel="stylesheet" href="/assets/style.css?v=320">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
 <script>
@@ -108,7 +108,7 @@
       "name": "What if I already know my maintenance calories?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Choose “I know it” under Maintenance and type the number — for example from tracking your intake and weight for a few weeks. The calculator then skips the estimate and uses your number as given. It still needs your weight, and a goal weight if you want a timeline."
+        "text": "Choose “I know it” under Calories you burn and type the number — for example from tracking your intake and weight for a few weeks. The calculator then skips the estimate and uses your number as given. It still needs your weight, and a goal weight if you want a timeline."
       }
     }
   ]
@@ -218,6 +218,7 @@
           <a href="/dog-food-calculator/">Dog Food</a>
           <a href="/ffmi-calculator/">FFMI</a>
           <a href="/bulking-calculator/">Bulking</a>
+          <a href="/weight-loss-calculator/">Weight Loss</a>
         </div>
         <div class="menu-col">
           <span class="menu-col-head">School &amp; Grades</span>
@@ -372,7 +373,7 @@
         </div>
 
         <div class="ctl-row">
-          <span class="ctl-lab">Maintenance</span>
+          <span class="ctl-lab">Calories you burn</span>
           <div class="seg" id="dfMainSeg" role="group" aria-label="How to get your maintenance calories">
             <button class="on" type="button" data-v="est">Estimate it</button>
             <button type="button" data-v="known">I know it</button>
@@ -418,7 +419,7 @@
 
         <div id="dfKnown" style="display:none">
           <label class="fld" for="dfMaint">
-            <span class="lab">Maintenance <span class="unit">kcal a day</span></span>
+            <span class="lab">Calories you burn <span class="unit">kcal a day · your maintenance</span></span>
             <div class="inp"><input id="dfMaint" type="number" inputmode="numeric" min="800" max="8000" step="any" placeholder="2300"></div>
           </label>
         </div>
@@ -493,7 +494,7 @@
           <div class="proj-sep"></div>
           <div id="dfAdvEst">
             <label class="fld">
-              <span class="lab">Maintenance formula</span>
+              <span class="lab">Formula for calories you burn</span>
               <div class="csel" id="dfFormula" data-value="mifflin">
               <button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false">
                 <span class="csel-val">Mifflin-St Jeor (recommended)</span>
@@ -543,7 +544,7 @@
           <p class="res-tip adv-tip" id="dfTip"></p>
           <div id="dfFlags"></div>
 
-          <div class="bf-cmp"><span class="k" id="dfMaintLab">Maintenance</span><span class="v" id="dfMaintRow">—</span></div>
+          <div class="bf-cmp"><span class="k" id="dfMaintLab">Calories you burn</span><span class="v" id="dfMaintRow">—</span></div>
           <div id="dfRows"></div>
 
           <div id="dfBarWrap">
@@ -654,7 +655,7 @@
     <details class="faq"><summary>Why is the realistic time longer than the simple rule?</summary><p>The simple rule assumes you burn the same number of calories every day. In reality maintenance falls by about 16 kcal for every kg you lose, so a fixed intake becomes a smaller deficit over time. That is why weight loss slows down and why you may need to eat a little less, or move a little more, as you go.</p></details>
     <details class="faq"><summary>Should I cut calories or exercise more?</summary><p>Either works, and many people do both. A deficit of 500 kcal could be 500 kcal less food, or 300 kcal less food plus 200 kcal burned by exercise. The calculator lets you add exercise and shows how much it raises what you can eat, with the safe minimum marked on the bar.</p></details>
     <details class="faq"><summary>Is a 1,000 calorie deficit safe?</summary><p>For many people it is too aggressive: at the example's maintenance of 2,318 kcal it would mean eating 1,318 kcal, close to the 1,200 kcal a day minimum usually advised without medical supervision. It also loses about 0.91 kg a week. Larger deficits are best discussed with a doctor or dietitian.</p></details>
-    <details class="faq"><summary>What if I already know my maintenance calories?</summary><p>Choose “I know it” under Maintenance and type the number — for example from tracking your intake and weight for a few weeks. The calculator then skips the estimate and uses your number as given. It still needs your weight, and a goal weight if you want a timeline.</p></details>
+    <details class="faq"><summary>What if I already know my maintenance calories?</summary><p>Choose “I know it” under Calories you burn and type the number — for example from tracking your intake and weight for a few weeks. The calculator then skips the estimate and uses your number as given. It still needs your weight, and a goal weight if you want a timeline.</p></details>
   </section>
 
 <!--FOOTER:START-->
@@ -773,6 +774,7 @@
           <li><a href="/dog-food-calculator/">Dog Food Calculator</a></li>
           <li><a href="/ffmi-calculator/">FFMI Calculator</a></li>
           <li><a href="/bulking-calculator/">Bulking Calculator</a></li>
+          <li><a href="/weight-loss-calculator/">Weight Loss Calculator</a></li>
         </ul>
       </div>
 
@@ -913,7 +915,7 @@
 </div>
 
 <script src="/assets/datepicker.min.js"></script>
-<script src="/assets/app.js?v=319"></script>
+<script src="/assets/app.js?v=320"></script>
 <script>CalcThis.initDeficitCalc();</script>
 <script src="/feedback.js" defer></script>
 </body>

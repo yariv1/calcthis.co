@@ -26,7 +26,7 @@ module.exports = async function (ctx) {
     const big = await ctx.text('bkBig'), sub = await ctx.text('bkSub'), lad = await ctx.eval('document.querySelector("#bkLadder tbody tr").textContent'), mac = await ctx.text('bkMac');
     const tag = JSON.stringify({ sex, hu, wu, kind, main, hv, wv, sval, f, age, bf, mt }); runs++;
     if (big !== grp(out0 + S) + ' kcal') fails.push('headline ' + big + ' expected ' + grp(out0 + S) + ' ' + tag);
-    if (sub.indexOf('Maintenance ' + grp(out0)) < 0 || sub.indexOf('+' + grp(S) + ' kcal') < 0) fails.push('sub-line ' + sub + ' ' + tag);
+    if (sub.indexOf('You burn ' + grp(out0)) < 0 || sub.indexOf('+' + grp(S) + ' kcal') < 0) fails.push('sub-line ' + sub + ' ' + tag);
     if (lad.indexOf(grp(out0 + S) + ' kcal') < 0) fails.push('ladder week 0 ' + lad + ' ' + tag);
     const P = 1.8 * wkg, Fa = 1.0 * wkg, C = ((out0 + S) - 4 * P - 9 * Fa) / 4;
     if (mac.indexOf(grp(P) + ' g') < 0) fails.push('protein grams ' + tag);

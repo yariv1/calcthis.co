@@ -37,7 +37,7 @@ const faqs = [
   ['Why is the realistic time longer than the simple rule?', `The simple rule assumes you burn the same number of calories every day. In reality maintenance falls by about ${c0(s)} kcal for every kg you lose, so a fixed intake becomes a smaller deficit over time. That is why weight loss slows down and why you may need to eat a little less, or move a little more, as you go.`],
   ['Should I cut calories or exercise more?', `Either works, and many people do both. A deficit of ${c0(a500.D)} kcal could be ${c0(a500.D)} kcal less food, or 300 kcal less food plus ${c0(a500.D - 300)} kcal burned by exercise. The calculator lets you add exercise and shows how much it raises what you can eat, with the safe minimum marked on the bar.`],
   ['Is a 1,000 calorie deficit safe?', `For many people it is too aggressive: at the example's maintenance of ${c0(M)} kcal it would mean eating ${c0(a1000.I)} kcal, ${a1000.I < 1200 ? 'below' : 'close to'} the ${c0(1200)} kcal a day minimum usually advised without medical supervision. It also loses about ${r2(a1000.wkKg)} kg a week. Larger deficits are best discussed with a doctor or dietitian.`],
-  ['What if I already know my maintenance calories?', `Choose “I know it” under Maintenance and type the number — for example from tracking your intake and weight for a few weeks. The calculator then skips the estimate and uses your number as given. It still needs your weight, and a goal weight if you want a timeline.`]
+  ['What if I already know my maintenance calories?', `Choose “I know it” under Calories you burn and type the number — for example from tracking your intake and weight for a few weeks. The calculator then skips the estimate and uses your number as given. It still needs your weight, and a goal weight if you want a timeline.`]
 ];
 const title = 'Calorie Deficit Calculator — Daily Deficit & Time to Goal';
 const desc = 'Free calorie deficit calculator: how many calories to cut and eat to lose weight. ' + c0(a500.D) + ' kcal a day is ' + r2(a500.wkKg) + ' kg a week; simple vs realistic time to goal.';
@@ -120,7 +120,7 @@ ${hero}
         </div>
 
         <div class="ctl-row">
-          <span class="ctl-lab">Maintenance</span>
+          <span class="ctl-lab">Calories you burn</span>
           <div class="seg" id="dfMainSeg" role="group" aria-label="How to get your maintenance calories">
             <button class="on" type="button" data-v="est">Estimate it</button>
             <button type="button" data-v="known">I know it</button>
@@ -154,7 +154,7 @@ ${hero}
 
         <div id="dfKnown" style="display:none">
           <label class="fld" for="dfMaint">
-            <span class="lab">Maintenance <span class="unit">kcal a day</span></span>
+            <span class="lab">Calories you burn <span class="unit">kcal a day · your maintenance</span></span>
             <div class="inp"><input id="dfMaint" type="number" inputmode="numeric" min="800" max="8000" step="any" placeholder="2300"></div>
           </label>
         </div>
@@ -207,7 +207,7 @@ ${wfields('G', 'Goal weight')}
           <div class="proj-sep"></div>
           <div id="dfAdvEst">
             <label class="fld">
-              <span class="lab">Maintenance formula</span>
+              <span class="lab">Formula for calories you burn</span>
               ${csel('dfFormula', 'mifflin', fOpts)}
             </label>
             <label class="fld" for="dfBf">
@@ -247,7 +247,7 @@ ${wfields('G', 'Goal weight')}
           <p class="res-tip adv-tip" id="dfTip"></p>
           <div id="dfFlags"></div>
 
-          <div class="bf-cmp"><span class="k" id="dfMaintLab">Maintenance</span><span class="v" id="dfMaintRow">—</span></div>
+          <div class="bf-cmp"><span class="k" id="dfMaintLab">Calories you burn</span><span class="v" id="dfMaintRow">—</span></div>
           <div id="dfRows"></div>
 
           <div id="dfBarWrap">

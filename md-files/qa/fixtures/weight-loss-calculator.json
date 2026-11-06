@@ -1,0 +1,35 @@
+{
+  "slug": "weight-loss-calculator",
+  "bodyClass": "p-wl",
+  "blocks": ["WL"],
+  "result": { "big": "wlBig", "body": "wlBody", "hint": "wlHint" },
+  "required": ["wlW", "wlAge", "wlH", "wlMaint", "wlG", "wlDate"],
+  "fill": [
+    ["seg", "wlSex", "f"],
+    ["seg", "wlMain", "est"],
+    ["seg", "wlHU", "cm"],
+    ["seg", "wlWU", "kg"],
+    ["seg", "wlPlan", "date"],
+    ["seg", "wlModel", "simple"],
+    ["set", "wlAct", "1.375"],
+    ["set", "wlAge", "35"],
+    ["set", "wlH", "168"],
+    ["set", "wlW", "80"],
+    ["set", "wlG", "70"],
+    ["set", "wlPace", ""],
+    ["set", "wlBf", ""],
+    ["set", "wlDate", "30 June 2029"]
+  ],
+  "optionalSamples": {
+    "wlPace": ["0.5", "1", "0.75"],
+    "wlBf": ["15", "30"]
+  },
+  "variants": [
+    [["seg", "wlPlan", "pace"]],
+    [["seg", "wlPlan", "pace"], ["seg", "wlModel", "real"]],
+    [["seg", "wlModel", "real"]],
+    [["seg", "wlMain", "known"], ["set", "wlMaint", "2000"]]
+  ],
+  "scrollTo": "wlRows",
+  "errorState": [["set", "wlW", "1"]]
+}
