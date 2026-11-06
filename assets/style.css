@@ -2898,3 +2898,35 @@
 @media(max-width:520px){.p-fd .cb-two{gap:0 8px}}
 .p-fd .fd-icos{display:flex;flex-wrap:wrap;gap:4px;margin:8px 0 4px}
 .p-fd .fd-ico{display:block;flex:none}
+
+/* ---- FFMI calculator (.p-ff) — reuses .p-bmr result look, .dtable ---- */
+.p-ff .ff-rule{margin:34px 0 4px;padding-bottom:26px}
+.p-ff .ff-rule-t{position:relative;height:16px;border-radius:8px;background:#EFE7D8;overflow:visible}
+.p-ff .ff-seg{position:absolute;top:0;bottom:0}
+.p-ff .ff-seg:first-of-type{border-radius:8px 0 0 8px}
+.p-ff .ff-b0{background:#EFE7D8}
+.p-ff .ff-b1{background:rgba(55,80,63,.25)}
+.p-ff .ff-b2{background:rgba(55,80,63,.45)}
+.p-ff .ff-b3{background:rgba(55,80,63,.65)}
+.p-ff .ff-b4{background:rgba(55,80,63,.9)}
+.p-ff .ff-b5{background:rgba(181,118,31,.6)}
+.p-ff .ff-b6{background:rgba(181,118,31,1)}
+.p-ff .ff-ref{position:absolute;top:-4px;bottom:-4px;width:2px;margin-left:-1px;background:var(--ink);opacity:.7}
+.p-ff .ff-mk{position:absolute;top:50%;width:20px;height:20px;margin:-10px 0 0 -10px;border-radius:50%;background:var(--amber);border:3px solid var(--ink);box-sizing:border-box;z-index:3}
+.p-ff .ff-mk b{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);font-size:14px;font-weight:800;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:7px;padding:1px 6px;white-space:nowrap}
+.p-ff .ff-rule-l{position:relative;height:18px;margin-top:10px}
+.p-ff .ff-rule-l span{position:absolute;top:0;font-size:12px;font-weight:600;color:var(--muted);transform:translateX(-50%)}
+.p-ff .ff-key{display:flex;flex-wrap:wrap;gap:4px 14px;margin:2px 0 6px;font-size:13px;color:var(--ink-soft)}
+.p-ff .ff-key span{display:inline-flex;align-items:center;gap:6px}
+.p-ff .ff-key i{display:inline-block;width:12px;height:12px;border-radius:3px;border:1px solid rgba(0,0,0,.12)}
+.p-ff .ff-key b{color:var(--muted);font-weight:600}
+.p-ff .dtable td:nth-child(n+2),.p-ff .dtable th:nth-child(n+2){text-align:right}
+.p-ff #ffErr td:first-child{white-space:nowrap}
+.p-ff #ffNums td:nth-child(2),.p-ff #ffErr td:nth-child(2),.p-ff #ffRef td:nth-child(n+2){white-space:nowrap}
+.p-ff .dtable td small{display:block;color:var(--muted);font-size:12.5px;font-weight:500;margin-top:2px}
+.p-ff .dtable tr.cur td{background:#F3E4C6;font-weight:600}
+.p-ff .av-note,.p-ff .cb-note{font-size:14px;font-weight:500;color:var(--ink-soft);margin:4px 0 8px;line-height:1.45}
+.p-ff .cb-note{color:var(--muted);font-weight:400}
+.p-ff .av-note a{color:#8F5C13;font-weight:600;text-decoration:underline;text-underline-offset:2px}
+.p-ff .cb-two{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}
+@media(max-width:520px){.p-ff .cb-two{gap:0 8px}.p-ff .ff-key{font-size:12.5px;gap:4px 10px}}

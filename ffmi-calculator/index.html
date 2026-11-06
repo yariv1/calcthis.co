@@ -1,0 +1,751 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FFMI Calculator — Fat-Free Mass Index &amp; Normalized FFMI</title>
+<meta name="description" content="FFMI calculator: your fat-free mass index and normalized FFMI from height, weight and body fat, on a scale with the 25 reference and a body-fat error range.">
+<link rel="canonical" href="https://calcthis.co/ffmi-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="FFMI Calculator — Fat-Free Mass Index &amp; Normalized FFMI">
+<meta property="og:description" content="FFMI calculator: your fat-free mass index and normalized FFMI from height, weight and body fat, on a scale with the 25 reference and a body-fat error range.">
+<meta property="og:url" content="https://calcthis.co/ffmi-calculator/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/datepicker.min.css">
+<link rel="stylesheet" href="/assets/style.css?v=318">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "FFMI Calculator",
+  "url": "https://calcthis.co/ffmi-calculator/",
+  "applicationCategory": "HealthApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "Free FFMI calculator: fat-free mass index and normalized FFMI (Kouri 1995, 6.3 constant) from height, weight and body fat %, kg/lb/st and cm/in/m, on a scale with the 25.0 reference and 28.1 football percentile, a range for body fat error of 3 points, and a target FFMI mode."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is FFMI?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "FFMI, the fat-free mass index, is your fat-free mass in kilograms divided by your height in metres squared. Fat-free mass is everything that is not fat: muscle, bone, organs and water. Unlike BMI, FFMI separates fat from the rest, so extra muscle raises it while extra fat does not. It was used in Kouri et al. (1995) to compare athletes of different heights."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I calculate FFMI?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Fat-free mass = weight × (1 − body fat %). FFMI = fat-free mass ÷ height². For 75 kg, 180 cm and 22% body fat: fat-free mass = 75 × 0.78 = 58.5 kg; FFMI = 58.5 ÷ 1.80² = 18.1. At exactly 1.80 m the normalized FFMI is the same, 18.1. A man of 190 cm, 90 kg and 12% body fat has 79.2 kg of fat-free mass, an FFMI of 21.9 and a normalized FFMI of 21.3."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is normalized FFMI, and why 6.3?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Fat-free mass grows faster than height squared, so taller people score higher. Kouri et al. added a correction of 6.3 × (1.80 − height in m) to put everyone on the scale of a 1.80 m man. Another calculator uses 6.1; the difference is only 0.04 of an FFMI point at 1.60 m and 0.04 at 2.00 m, but this page uses the 6.3 from the paper. For 190 cm: 21.9 + 6.3 × (1.80 − 1.90) = 21.3."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is a good FFMI?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "On Omnicalculator’s bands, which cite no study, a man is below average under 18, average at 18–20, above average at 20–22, excellent at 22–23 and superior at 23–26. For women the bands are shifted down: average 15–17, above average 17–18, excellent 18–19 and superior 19–21.5. The reference averages quoted on Menno Henselmans’ page are 18.9 for men and 15.4 for women. The bands describe a typical range; they are not a health target."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is 25 the natural limit of FFMI?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Not as a hard ceiling. Kouri et al. (1995) found that the normalized FFMI of non-users among 157 male athletes reached a limit of 25.0, and Mr. America winners from before the steroid era averaged 25.4; the authors called this preliminary. A later study of 235 American college football players (Trexler 2017) found 26.4% above 25, a 97.5th percentile of 28.1 and a maximum of 31.7, although that abstract does not say the players were drug tested. A value above 25 is unusual in the drug-free samples, not proof of anything about one person."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What FFMI do women have?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Women carry less fat-free mass per height squared, so their scale sits lower; the average quoted on Menno Henselmans’ page is 15.4 against 18.9 for men, and Omnicalculator’s bands run about 3 points lower. The 25.0, 25.4 and 28.1 reference points come from male athletes and are not shown for women. I did not find a women’s study I could read, so the calculator gives women the bands and the average only."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How accurate is an FFMI calculation?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Only as accurate as the body-fat percentage you enter. Skinfolds, bioimpedance scales and DEXA can differ by several points. Try it: 90 kg at 190 cm gives a normalized FFMI of 21.3 at 12% body fat, 22.1 at 9% and 20.6 at 15%. The calculator shows this ±3 point range for your own numbers."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between FFMI and BMI?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "BMI divides total weight by height squared, so muscle and fat count the same. FFMI divides only the fat-free part, which is why a muscular person can have an “overweight” BMI and a normal body fat. For the 190 cm, 90 kg man above BMI is 24.9; FFMI is 21.9. See the BMI calculator and the body fat calculator for the body-fat figure you need."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How much fat-free mass is a target FFMI?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Under Go advanced enter a target normalized FFMI. At 180 cm a normalized FFMI of 22 needs 71.3 kg of fat-free mass and 25 needs 81.0 kg. The calculator subtracts what you have and shows what is left to add, and the body weight that would give at your body fat or one you choose. It makes no claim about how long that takes."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "CalcThis",
+      "item": "https://calcthis.co/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "FFMI Calculator",
+      "item": "https://calcthis.co/ffmi-calculator/"
+    }
+  ]
+}
+</script>
+<meta property="og:site_name" content="CalcThis">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://calcthis.co/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="CalcThis — free, purpose-built calculators">
+<meta name="twitter:title" content="FFMI Calculator — Fat-Free Mass Index &amp; Normalized FFMI">
+<meta name="twitter:description" content="FFMI calculator: your fat-free mass index and normalized FFMI from height, weight and body fat, on a scale with the 25 reference and a body-fat error range.">
+<meta name="twitter:image" content="https://calcthis.co/assets/og-default.png">
+</head>
+<body class="p-bmr p-ff">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <a class="hdr-back" href="/blog/" aria-label="Back to blog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-search"><div class="menu-sx"><input id="menuSearch" type="search" placeholder="Search calculators or states…" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Search calculators" enterkeyhint="search"></div><div class="menu-results" id="menuResults" hidden></div></div>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <span class="menu-col-head">Construction &amp; Gardening</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+          <a href="/paint-calculator/">Paint</a>
+          <a href="/wallpaper-calculator/">Wallpaper</a>
+          <a href="/square-footage-calculator/">Square Footage</a>
+          <a href="/tape-measure-fraction-calculator/">Tape Measure Fraction</a>
+          <a href="/stair-calculator/">Stair</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/vo2-max-calculator/">VO2 Max</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
+          <a href="/bmi-calculator/">BMI</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/ideal-weight-calculator/">Ideal Weight</a>
+          <a href="/lean-body-mass-calculator/">Lean Body Mass</a>
+          <a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio</a>
+          <a href="/gmi-calculator/">GMI</a>
+          <a href="/a1c-calculator/">A1C</a>
+          <a href="/calorie-calculator/">Calorie</a>
+          <a href="/calorie-deficit-calculator/">Calorie Deficit</a>
+          <a href="/bmr-calculator/">BMR</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/water-intake-calculator/">Water Intake</a>
+          <a href="/macro-calculator/">Macro</a>
+          <a href="/protein-intake-calculator/">Protein Intake</a>
+          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
+          <a href="/steps-to-miles-calculator/">Steps to Miles</a>
+          <a href="/dog-age-calculator/">Dog Age</a>
+          <a href="/cat-age-calculator/">Cat Age</a>
+          <a href="/calories-burned-calculator/">Calories Burned</a>
+          <a href="/calories-burned-walking-calculator/">Calories Burned Walking</a>
+          <a href="/calories-burned-running-calculator/">Calories Burned Running</a>
+          <a href="/keto-calculator/">Keto</a>
+          <a href="/net-carb-calculator/">Net Carb</a>
+          <a href="/intermittent-fasting-calculator/">Intermittent Fasting</a>
+          <a href="/bsa-calculator/">BSA</a>
+          <a href="/dog-food-calculator/">Dog Food</a>
+          <a href="/ffmi-calculator/" class="current">FFMI</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/semester-grade-calculator/">Semester Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+          <a href="/grade-curve-calculator/">Grade Curve</a>
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/fraction-calculator/">Fraction</a>
+          <a href="/standard-deviation-calculator/">Standard Deviation</a>
+          <a href="/scientific-notation-calculator/">Scientific Notation</a>
+          <a href="/average-calculator/">Average</a>
+          <a href="/batting-average-calculator/">Batting Average</a>
+          <a href="/stock-average-calculator/">Stock Average</a>
+          <a href="/dice-average-calculator/">Dice Average</a>
+          <a href="/time-average-calculator/">Time Average</a>
+          <a href="/weighted-average-calculator/">Weighted Average</a>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+          <a href="/percentage-change-calculator/">Percentage Change</a>
+          <a href="/age-calculator/">Age</a>
+          <a href="/date-calculator/">Date</a>
+          <a href="/time-calculator/">Time</a>
+          <a href="/hours-calculator/">Hours</a>
+          <a href="/triangle-calculator/">Triangle</a>
+          <a href="/random-number-generator/">Random Number</a>
+          <span class="menu-col-head">Cooking &amp; Kitchen</span>
+          <a href="/recipe-converter/">Recipe Converter</a>
+          <a href="/turkey-cooking-time-calculator/">Turkey Cooking Time</a>
+          <a href="/turkey-thawing-time-calculator/">Turkey Thawing Time</a>
+          <a href="/turkey-size-calculator/">Turkey Size</a>
+          <!--UNITNAV:START-->
+          <span class="menu-col-head">Unit Converters</span>
+          <a href="/unit-converter/">Unit Converter</a>
+          <a href="/length-converter/">Length Converter</a>
+          <a href="/weight-converter/">Weight Converter</a>
+          <a href="/volume-converter/">Volume Converter</a>
+          <a href="/temperature-converter/">Temperature Converter</a>
+          <a href="/area-converter/">Area Converter</a>
+          <a href="/speed-converter/">Speed Converter</a>
+          <a href="/data-storage-converter/">Data Storage Converter</a>
+          <a href="/cooking-converter/">Cooking Converter</a>
+          <a href="/px-to-rem-converter/">PX to REM Converter</a>
+          <!--UNITNAV:END-->
+          <span class="menu-col-head">Money &amp; Finance</span>
+          <a href="/mortgage-calculator/">Mortgage</a>
+          <a href="/loan-calculator/">Loan</a>
+          <a href="/auto-loan-calculator/">Auto Loan</a>
+          <a href="/car-sales-tax-calculator/">Car Sales Tax</a>
+          <a href="/overtime-calculator/">Overtime</a>
+          <a href="/salary-calculator/">Salary</a>
+          <!--STAXNAV:START-->
+          <a href="/sales-tax-calculator/">Sales Tax</a>
+          <a href="/sales-tax-calculator/california/">California Sales Tax</a>
+          <a href="/sales-tax-calculator/chicago/">Chicago Sales Tax</a>
+          <a href="/sales-tax-calculator/florida/">Florida Sales Tax</a>
+          <a href="/sales-tax-calculator/las-vegas/">Las Vegas Sales Tax</a>
+          <a href="/sales-tax-calculator/los-angeles/">Los Angeles Sales Tax</a>
+          <a href="/sales-tax-calculator/michigan/">Michigan Sales Tax</a>
+          <a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax</a>
+          <a href="/sales-tax-calculator/missouri/">Missouri Sales Tax</a>
+          <a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax</a>
+          <a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax</a>
+          <a href="/sales-tax-calculator/north-carolina/">North Carolina Sales Tax</a>
+          <a href="/sales-tax-calculator/ohio/">Ohio Sales Tax</a>
+          <a href="/sales-tax-calculator/texas/">Texas Sales Tax</a>
+          <a href="/sales-tax-calculator/virginia/">Virginia Sales Tax</a>
+          <!--STAXNAV:END-->
+          <a href="/tip-calculator/">Tip</a>
+          <a href="/how-much-to-tip/">How Much to Tip</a>
+        </div>
+        <!--PAYNAV:START-->
+        <div class="menu-col">
+          <span class="menu-col-head">Paycheck Calculators</span>
+          <a href="/paycheck-calculator/">Paycheck Calculator (all states)</a>
+          <a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a>
+          <a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arkansas/">Arkansas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/california/">California Paycheck Calculator</a>
+          <a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a>
+          <a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a>
+          <a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/hawaii/">Hawaii Paycheck Calculator</a>
+          <a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a>
+          <a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a>
+          <a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a>
+          <a href="/paycheck-calculator/louisiana/">Louisiana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a>
+          <a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a>
+          <a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a>
+          <a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a>
+          <a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nebraska/">Nebraska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a>
+          <a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a>
+          <a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a>
+          <a href="/paycheck-calculator/oklahoma/">Oklahoma Paycheck Calculator</a>
+          <a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a>
+          <a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a>
+          <a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a>
+          <a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/utah/">Utah Paycheck Calculator</a>
+          <a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wisconsin/">Wisconsin Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a>
+        </div>
+        <!--PAYNAV:END-->
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">Fat-free mass index · normalized FFMI · scale with reference points · body-fat error range · target FFMI</div>
+    <h1>FFMI Calculator</h1>
+    <p>Enter your <strong>height</strong>, <strong>weight</strong> and <strong>body fat %</strong> — you get your <strong>FFMI</strong> and your <strong>normalized FFMI</strong> (adjusted to 1.80 m) on a scale with the reference points from the studies. A man of 180 cm and 75 kg with 22% body fat has an FFMI of <strong>18.1</strong>, average on the usual bands.</p>
+  </section>
+
+  <div class="grid">
+
+    <!-- INPUT -->
+    <div class="card">
+      <div class="card-pad">
+        <h2 class="card-h2">Your body</h2>
+        <div class="ctl-row"><span class="ctl-lab">Sex</span><div class="seg" id="ffSex" role="group" aria-label="Sex"><button class="on" type="button" data-v="f">Female</button><button type="button" data-v="m">Male</button></div></div>
+        <div class="ctl-row"><span class="ctl-lab">Height units</span><div class="seg" id="ffHU" role="group" aria-label="Height units"><button type="button" data-v="cm">cm</button><button class="on" type="button" data-v="in">inches</button><button type="button" data-v="m">m</button></div></div>
+        <label class="fld" for="ffH"><span class="lab">Height <span class="unit" id="ffHL">inches or 5'10</span></span><div class="inp"><input id="ffH" type="text" inputmode="text" autocomplete="off" placeholder="e.g. 70 or 5'10"></div></label>
+        <div class="ctl-row"><span class="ctl-lab">Weight units</span><div class="seg" id="ffWU" role="group" aria-label="Weight units"><button type="button" data-v="kg">kg</button><button class="on" type="button" data-v="lb">lb</button><button type="button" data-v="st">st</button></div></div>
+        <label class="fld" for="ffW"><span class="lab">Weight <span class="unit" id="ffWL">lb</span></span><div class="inp"><input id="ffW" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 165"></div></label>
+        <label class="fld" for="ffBf"><span class="lab">Body fat <span class="unit">%</span></span><div class="inp"><input id="ffBf" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 15"></div></label>
+        <p class="av-note" style="margin:0 0 8px">Don’t know your body fat? Use the <a href="/body-fat-calculator/">body fat calculator</a>. It is the weakest number here, so the results show what a 3-point error does.</p>
+        <div class="res-hint" id="ffHint" style="display:none;text-align:left;margin:4px 0 8px"></div>
+        <div id="ffAdvIn" style="display:none">
+          <div class="proj-sep"></div>
+          <div class="cb-two"><label class="fld" for="ffT"><span class="lab">Target FFMI <span class="unit">normalized</span></span><div class="inp"><input id="ffT" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 22"></div></label><label class="fld" for="ffGb"><span class="lab">Body fat at goal <span class="unit">% · optional</span></span><div class="inp"><input id="ffGb" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 12"></div></label></div>
+          <p class="av-note" style="margin:0 0 8px">Shows the fat-free mass that FFMI needs at your height, what you would add, and the body weight that gives at your body fat or the one you choose.</p>
+        </div>
+        <div class="add-row split" style="margin-top:16px">
+          <span></span>
+          <button class="advbtn" id="ffAdvBtn" type="button">
+            <span id="ffAdvBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div class="card">
+      <div class="card-pad">
+        <div class="bf-res">
+          <div class="res-lab">Normalized FFMI</div>
+          <div class="res-big"><span id="ffBig">—</span></div>
+          <div class="res-sub" id="ffSub" data-empty="Enter your height, weight and body fat.">Enter your height, weight and body fat.</div>
+        </div>
+        <div id="ffBody" style="display:none">
+          <p class="res-tip adv-tip" id="ffTip"></p>
+          <p class="bm-h">Where you are on the scale</p>
+          <div id="ffScale"></div>
+          <table class="dtable" id="ffNums"></table>
+          <p class="bm-h">If your body fat is off by 3 points</p>
+          <table class="dtable" id="ffErr"></table>
+          <p class="bm-h">Reference points</p>
+          <table class="dtable" id="ffRef"></table>
+          <p class="cb-note" id="ffRefNote" style="display:none">The 25.0, 25.4 and 28.1 reference points come from studies of male athletes, so they are not shown for women.</p>
+          <div id="ffAdvBox" style="display:none"><p class="bm-h">Your target</p><table class="dtable" id="ffAdv"></table></div>
+          <p class="cb-note">The bands are Omnicalculator’s, which cite no study; the references come from the papers listed below. An estimate for adults, not medical advice.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- mobile sticky bar -->
+  <div class="mbar" id="mbar">
+    <span class="mbar-lab" id="ffMLab">Normalized FFMI</span>
+    <div class="mbar-vals"><b id="ffMVal">—</b></div>
+  </div>
+
+  <div class="related-calcs">
+    <p class="related-calcs-h">More calculators that may interest you</p>
+    <div class="pills">
+      <a class="pill" href="/body-fat-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c4 2 7 5 7 9a7 7 0 0 1-14 0c0-4 3-7 7-9z"/></svg>
+        Body Fat Calculator
+      </a>
+      <a class="pill" href="/lean-body-mass-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2 4 4 0 0 1 7 2c0 5.6-7 10-7 10z"/></svg>
+        Lean Body Mass Calculator
+      </a>
+      <a class="pill" href="/bmi-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12h8"/></svg>
+        BMI Calculator
+      </a>
+      <a class="pill" href="/protein-intake-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-4-7-10a4 4 0 0 1 7-2 4 4 0 0 1 7 2c0 6-7 10-7 10z"/></svg>
+        Protein Intake Calculator
+      </a>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use the FFMI calculator</h2>
+        <p>Pick <strong>male or female</strong>, enter your <strong>height</strong> (centimetres, inches or 5'10, metres) and <strong>weight</strong> (kg, lb or stones) and your <strong>body fat percentage</strong>. The headline is your <strong>normalized FFMI</strong>; the scale shows where it falls on the usual bands, the table below it shows the raw FFMI, your fat-free mass and fat mass in kg and lb, and a second table shows what a 3-point error in your body fat would do.</p>
+        <p>Open <strong>Go advanced</strong> and type a <strong>target FFMI</strong> to see the fat-free mass it needs at your height, how much you would have to add, and the body weight that gives.</p>
+
+        <h2>The FFMI formula</h2>
+        <div class="formula">
+          Fat-free mass = weight × (1 − body fat %) · FFMI = fat-free mass (kg) ÷ height (m)²
+          <small>NORMALIZED FFMI = FFMI + 6.3 × (1.80 − HEIGHT IN M) · KOURI 1995</small>
+        </div>
+        <p>For a 180 cm, 75 kg man with 22% body fat: fat-free mass = <strong>58.5 kg</strong>, FFMI = <strong>18.1</strong>, normalized FFMI = <strong>18.1</strong> (the same, because he is exactly 1.80 m tall).</p>
+        <h2>FFMI bands</h2>
+        <table class="dtable"><thead><tr><th>Band (Omnicalculator)</th><th>Men</th><th>Women</th></tr></thead><tbody><tr><td>Below average</td><td>under 18</td><td>under 15</td></tr><tr><td>Average</td><td>18–20</td><td>15–17</td></tr><tr><td>Above average</td><td>20–22</td><td>17–18</td></tr><tr><td>Excellent</td><td>22–23</td><td>18–19</td></tr><tr><td>Superior</td><td>23–26</td><td>19–21.5</td></tr><tr><td>Rare in drug-free samples</td><td>26–28</td><td>21.5–25</td></tr><tr><td>Very rare in drug-free samples</td><td>over 28</td><td>over 25</td></tr></tbody></table>
+        <p>The last two bands are named “rare in drug-free samples” here because the bands cite no study; the research below shows values above 25 do occur in some drug-free athletes.</p>
+      </div>
+
+      <div>
+        <h2>Normalized FFMI by height and fat-free mass</h2>
+        <table class="dtable"><thead><tr><th>Height</th><th>55 kg</th><th>65 kg</th><th>75 kg</th><th>85 kg</th></tr></thead><tbody><tr><td>165 cm</td><td>21.1</td><td>24.8</td><td>28.5</td><td>32.2</td></tr><tr><td>175 cm</td><td>18.3</td><td>21.5</td><td>24.8</td><td>28.1</td></tr><tr><td>185 cm</td><td>15.8</td><td>18.7</td><td>21.6</td><td>24.5</td></tr><tr><td>195 cm</td><td>13.5</td><td>16.1</td><td>18.8</td><td>21.4</td></tr></tbody></table>
+        <p>Columns are fat-free mass; a person of that fat-free mass at 10% body fat weighs about 61, 72, 83, 94 kg. Taller people need more fat-free mass for the same score.</p>
+
+        <h2>Reference points from the research</h2>
+        <table class="dtable"><thead><tr><th>Reference (men)</th><th>FFMI</th></tr></thead><tbody><tr><td>Average man <small>Schutz 2002, quoted by Menno Henselmans</small></td><td>18.9</td></tr><tr><td>Highest value in Kouri’s drug-free athletes <small>Kouri 1995</small></td><td>25.0</td></tr><tr><td>Pre-steroid-era Mr. America winners, mean <small>Kouri 1995</small></td><td>25.4</td></tr><tr><td>97.5th percentile of college football players <small>Trexler 2017</small></td><td>28.1</td></tr></tbody></table>
+        <p>These are normalized values from athletes, not targets. Kouri et al. called their 25.0 limit preliminary, and the football players in Trexler et al. went well beyond it.</p>
+
+        <h2>Don’t trust a single body-fat number</h2>
+        <p>FFMI depends on a body-fat estimate that skinfolds, scales and DEXA can get several points wrong. A man of 190 cm and 90 kg scores 22.1 at 9% body fat and 20.6 at 15% — a -1.5-point spread from the estimate alone, which is why the calculator shows the ±3 point range.</p>
+        <p>See also the <a href="/lean-body-mass-calculator/">lean body mass calculator</a> and the <a href="/bmi-calculator/">BMI calculator</a>.</p>
+        <h2>Sources</h2>
+        <ul>
+          <li>Kouri EM, Pope HG, Katz DL, Oliva P, <a href="https://pubmed.ncbi.nlm.nih.gov/7496846/" rel="noopener">Fat-free mass index in users and nonusers of anabolic-androgenic steroids</a>, Clinical Journal of Sport Medicine 1995;5:223–228 (abstract read via Europe PMC, 2026-11-06): FFMI = fat-free body mass in kg ÷ height in metres squared, normalized to a 1.80 m man with a correction of 6.3 × (1.80 − height in m); in 157 male athletes the normalized FFMI of non-users reached a limit of 25.0, 20 Mr. America winners from 1939–1959 averaged 25.4, and many steroid users exceeded 25, some 30. The authors call the findings preliminary.</li>
+          <li>Trexler ET et al., <a href="https://pubmed.ncbi.nlm.nih.gov/27930454/" rel="noopener">Fat-Free Mass Index in NCAA Division I and II Collegiate American Football Players</a>, Journal of Strength and Conditioning Research 2017;31(10):2719–2727 (abstract read via Europe PMC): 235 players, DEXA, FFMI normalized to 180 cm; 26.4% were above 25, the mean was 23.7 ± 2.1, the 97.5th percentile was 28.1 and the maximum 31.7. Drug use was not tested in that study as far as the abstract says.</li>
+          <li><a href="https://www.omnicalculator.com/health/ffmi" rel="noopener">Omnicalculator FFMI calculator</a> (opened 2026-11-06): the descriptive bands for men and women used on this page — it cites no study for them — and a normalization constant of 6.1, which differs from the 6.3 in Kouri’s paper. <a href="https://ffmicalculator.org" rel="noopener">ffmicalculator.org</a> uses 6.3.</li>
+          <li><a href="https://mennohenselmans.com/ffmi-calculator/" rel="noopener">Menno Henselmans’ FFMI calculator</a> (opened 2026-11-06): the average values of 18.9 for men and 15.4 for women, which he attributes to Schutz et al. 2002 (that paper was not opened).</li>
+        </ul>
+        <p><small>For information only, not medical advice. FFMI depends on a body-fat estimate that can be several points off, and no study sets a hard natural limit.</small></p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>What is FFMI?</summary><p>FFMI, the fat-free mass index, is your fat-free mass in kilograms divided by your height in metres squared. Fat-free mass is everything that is not fat: muscle, bone, organs and water. Unlike BMI, FFMI separates fat from the rest, so extra muscle raises it while extra fat does not. It was used in Kouri et al. (1995) to compare athletes of different heights.</p></details>
+    <details class="faq"><summary>How do I calculate FFMI?</summary><p>Fat-free mass = weight × (1 − body fat %). FFMI = fat-free mass ÷ height². For 75 kg, 180 cm and 22% body fat: fat-free mass = 75 × 0.78 = 58.5 kg; FFMI = 58.5 ÷ 1.80² = 18.1. At exactly 1.80 m the normalized FFMI is the same, 18.1. A man of 190 cm, 90 kg and 12% body fat has 79.2 kg of fat-free mass, an FFMI of 21.9 and a normalized FFMI of 21.3.</p></details>
+    <details class="faq"><summary>What is normalized FFMI, and why 6.3?</summary><p>Fat-free mass grows faster than height squared, so taller people score higher. Kouri et al. added a correction of 6.3 × (1.80 − height in m) to put everyone on the scale of a 1.80 m man. Another calculator uses 6.1; the difference is only 0.04 of an FFMI point at 1.60 m and 0.04 at 2.00 m, but this page uses the 6.3 from the paper. For 190 cm: 21.9 + 6.3 × (1.80 − 1.90) = 21.3.</p></details>
+    <details class="faq"><summary>What is a good FFMI?</summary><p>On Omnicalculator’s bands, which cite no study, a man is below average under 18, average at 18–20, above average at 20–22, excellent at 22–23 and superior at 23–26. For women the bands are shifted down: average 15–17, above average 17–18, excellent 18–19 and superior 19–21.5. The reference averages quoted on Menno Henselmans’ page are 18.9 for men and 15.4 for women. The bands describe a typical range; they are not a health target.</p></details>
+    <details class="faq"><summary>Is 25 the natural limit of FFMI?</summary><p>Not as a hard ceiling. Kouri et al. (1995) found that the normalized FFMI of non-users among 157 male athletes reached a limit of 25.0, and Mr. America winners from before the steroid era averaged 25.4; the authors called this preliminary. A later study of 235 American college football players (Trexler 2017) found 26.4% above 25, a 97.5th percentile of 28.1 and a maximum of 31.7, although that abstract does not say the players were drug tested. A value above 25 is unusual in the drug-free samples, not proof of anything about one person.</p></details>
+    <details class="faq"><summary>What FFMI do women have?</summary><p>Women carry less fat-free mass per height squared, so their scale sits lower; the average quoted on Menno Henselmans’ page is 15.4 against 18.9 for men, and Omnicalculator’s bands run about 3 points lower. The 25.0, 25.4 and 28.1 reference points come from male athletes and are not shown for women. I did not find a women’s study I could read, so the calculator gives women the bands and the average only.</p></details>
+    <details class="faq"><summary>How accurate is an FFMI calculation?</summary><p>Only as accurate as the body-fat percentage you enter. Skinfolds, bioimpedance scales and DEXA can differ by several points. Try it: 90 kg at 190 cm gives a normalized FFMI of 21.3 at 12% body fat, 22.1 at 9% and 20.6 at 15%. The calculator shows this ±3 point range for your own numbers.</p></details>
+    <details class="faq"><summary>What is the difference between FFMI and BMI?</summary><p>BMI divides total weight by height squared, so muscle and fat count the same. FFMI divides only the fat-free part, which is why a muscular person can have an “overweight” BMI and a normal body fat. For the 190 cm, 90 kg man above BMI is 24.9; FFMI is 21.9. See the <a href="/bmi-calculator/">BMI calculator</a> and the <a href="/body-fat-calculator/">body fat calculator</a> for the body-fat figure you need.</p></details>
+    <details class="faq"><summary>How much fat-free mass is a target FFMI?</summary><p>Under Go advanced enter a target normalized FFMI. At 180 cm a normalized FFMI of 22 needs 71.3 kg of fat-free mass and 25 needs 81.0 kg. The calculator subtracts what you have and shows what is left to add, and the body weight that would give at your body fat or one you choose. It makes no claim about how long that takes.</p></details>
+  </section>
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+      <div class="footer-stack">
+<div class="footer-col" style="order:1">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+          <li><a href="/paint-calculator/">Paint Calculator</a></li>
+          <li><a href="/wallpaper-calculator/">Wallpaper Calculator</a></li>
+          <li><a href="/square-footage-calculator/">Square Footage Calculator</a></li>
+          <li><a href="/tape-measure-fraction-calculator/">Tape Measure Fraction Calculator</a></li>
+          <li><a href="/stair-calculator/">Stair Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:5">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Cooking &amp;</span> <span class="ft2">Kitchen</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/recipe-converter/">Recipe Converter</a></li>
+          <li><a href="/turkey-cooking-time-calculator/">Turkey Cooking Time Calculator</a></li>
+          <li><a href="/turkey-thawing-time-calculator/">Turkey Thawing Time Calculator</a></li>
+          <li><a href="/turkey-size-calculator/">Turkey Size Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:6">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Money &amp;</span> <span class="ft2">Finance</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/mortgage-calculator/">Mortgage Calculator</a></li>
+          <li><a href="/loan-calculator/">Loan Calculator</a></li>
+          <li><a href="/auto-loan-calculator/">Auto Loan Calculator</a></li>
+          <li><a href="/car-sales-tax-calculator/">Car Sales Tax Calculator</a></li>
+          <li><a href="/overtime-calculator/">Overtime Calculator</a></li>
+          <li><a href="/salary-calculator/">Salary Calculator</a></li>
+          <!--STAXFOOT:START-->
+          <li><a href="/sales-tax-calculator/">Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/california/">California Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/chicago/">Chicago Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/florida/">Florida Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/las-vegas/">Las Vegas Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/los-angeles/">Los Angeles Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/michigan/">Michigan Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/missouri/">Missouri Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/north-carolina/">North Carolina Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/ohio/">Ohio Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/texas/">Texas Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/virginia/">Virginia Sales Tax Calculator</a></li>
+          <!--STAXFOOT:END-->
+          <li><a href="/tip-calculator/">Tip Calculator</a></li>
+          <li><a href="/how-much-to-tip/">How Much to Tip</a></li>
+        </ul>
+      </div>
+      </div>
+
+      <div class="footer-right">
+<div class="footer-col footer-col--two" style="order:2">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/vo2-max-calculator/">VO2 Max Calculator</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/bmi-calculator/">BMI Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/ideal-weight-calculator/">Ideal Weight Calculator</a></li>
+          <li><a href="/lean-body-mass-calculator/">Lean Body Mass Calculator</a></li>
+          <li><a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio Calculator</a></li>
+          <li><a href="/gmi-calculator/">GMI Calculator</a></li>
+          <li><a href="/a1c-calculator/">A1C Calculator</a></li>
+          <li><a href="/calorie-calculator/">Calorie Calculator</a></li>
+          <li><a href="/calorie-deficit-calculator/">Calorie Deficit Calculator</a></li>
+          <li><a href="/bmr-calculator/">BMR Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/water-intake-calculator/">Water Intake Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/protein-intake-calculator/">Protein Intake Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
+          <li><a href="/steps-to-miles-calculator/">Steps to Miles Calculator</a></li>
+          <li><a href="/dog-age-calculator/">Dog Age Calculator</a></li>
+          <li><a href="/cat-age-calculator/">Cat Age Calculator</a></li>
+          <li><a href="/calories-burned-calculator/">Calories Burned Calculator</a></li>
+          <li><a href="/calories-burned-walking-calculator/">Calories Burned Walking Calculator</a></li>
+          <li><a href="/calories-burned-running-calculator/">Calories Burned Running Calculator</a></li>
+          <li><a href="/keto-calculator/">Keto Calculator</a></li>
+          <li><a href="/net-carb-calculator/">Net Carb Calculator</a></li>
+          <li><a href="/intermittent-fasting-calculator/">Intermittent Fasting Calculator</a></li>
+          <li><a href="/bsa-calculator/">BSA Calculator</a></li>
+          <li><a href="/dog-food-calculator/">Dog Food Calculator</a></li>
+          <li><a href="/ffmi-calculator/">FFMI Calculator</a></li>
+        </ul>
+      </div>
+
+        <div class="footer-sub">
+<div class="footer-subcol">
+<div class="footer-col" style="order:3">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/semester-grade-calculator/">Semester Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+          <li><a href="/grade-curve-calculator/">Grade Curve Calculator</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:START-->
+<div class="footer-col" style="order:7">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Unit</span> <span class="ft2">Converters</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/unit-converter/">Unit Converter</a></li>
+          <li><a href="/length-converter/">Length Converter</a></li>
+          <li><a href="/weight-converter/">Weight Converter</a></li>
+          <li><a href="/volume-converter/">Volume Converter</a></li>
+          <li><a href="/temperature-converter/">Temperature Converter</a></li>
+          <li><a href="/area-converter/">Area Converter</a></li>
+          <li><a href="/speed-converter/">Speed Converter</a></li>
+          <li><a href="/data-storage-converter/">Data Storage Converter</a></li>
+          <li><a href="/cooking-converter/">Cooking Measurement Converter</a></li>
+          <li><a href="/px-to-rem-converter/">PX to REM Converter</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:END-->
+</div>
+
+<div class="footer-col" style="order:4">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/fraction-calculator/">Fraction Calculator</a></li>
+          <li><a href="/standard-deviation-calculator/">Standard Deviation Calculator</a></li>
+          <li><a href="/scientific-notation-calculator/">Scientific Notation Calculator</a></li>
+          <li><a href="/weighted-average-calculator/">Weighted Average Calculator</a></li>
+          <li><a href="/average-calculator/">Average Calculator</a></li>
+          <li><a href="/batting-average-calculator/">Batting Average Calculator</a></li>
+          <li><a href="/stock-average-calculator/">Stock Average Calculator</a></li>
+          <li><a href="/dice-average-calculator/">Dice Average Calculator</a></li>
+          <li><a href="/time-average-calculator/">Time Average Calculator</a></li>
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+          <li><a href="/percentage-change-calculator/">Percentage Change Calculator</a></li>
+          <li><a href="/age-calculator/">Age Calculator</a></li>
+          <li><a href="/date-calculator/">Date Calculator</a></li>
+          <li><a href="/time-calculator/">Time Calculator</a></li>
+          <li><a href="/hours-calculator/">Hours Calculator</a></li>
+          <li><a href="/triangle-calculator/">Triangle Calculator</a></li>
+          <li><a href="/random-number-generator/">Random Number Generator</a></li>
+        </ul>
+      </div>
+        </div>
+      </div>
+
+      <!--PAYFOOT:START-->
+      <div class="footer-col footer-col--wide">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Paycheck</span> <span class="ft2">Calculators</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/paycheck-calculator/">Paycheck Calculator (all states)</a></li>
+          <li><a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arkansas/">Arkansas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/california/">California Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/hawaii/">Hawaii Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/louisiana/">Louisiana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nebraska/">Nebraska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/oklahoma/">Oklahoma Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/utah/">Utah Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wisconsin/">Wisconsin Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a></li>
+        </ul>
+      </div>
+      <!--PAYFOOT:END-->
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/blog/">Blog</a>
+      <span aria-hidden="true">·</span>
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+</div>
+
+<script src="/assets/app.js?v=318"></script>
+<script>CalcThis.initFfmiCalc();</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>

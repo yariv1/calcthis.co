@@ -162,6 +162,7 @@ const PAGES = [
   { file: 'intermittent-fasting-calculator/index.html', slug: '/intermittent-fasting-calculator/' },
   { file: 'bsa-calculator/index.html', slug: '/bsa-calculator/' },
   { file: 'dog-food-calculator/index.html', slug: '/dog-food-calculator/' },
+  { file: 'ffmi-calculator/index.html', slug: '/ffmi-calculator/' },
   { file: 'protein-intake-calculator/index.html', slug: '/protein-intake-calculator/' },
   { file: 'blog/index.html',            slug: '/blog/' },
   { file: 'blog/how-much-gravel-do-i-need-for-a-driveway/index.html', slug: '/blog/how-much-gravel-do-i-need-for-a-driveway/' },

@@ -20583,3 +20583,163 @@ CalcThis.initDogFoodCalc = function () {
   render();
 };
 /* DOGFOOD:END */
+
+/* FFMI:BEGIN */
+/* =========================================================
+   FFMI calculator (/ffmi-calculator/). Competitors opened live (2026-11-06): ffmicalculator.org (6.3 constant, two tables, no sex input),
+   Omnicalculator (sex + many units, 6.1 constant, bands without a cited study), Menno Henselmans (natural-potential estimator, reference ladder),
+   Built With Science (5-step quiz, result page not read). Primary sources READ (abstracts via Europe PMC): Kouri 1995 (FFMI = FFM kg / height m^2,
+   normalised with 6.3 x (1.80 - height m); non-user athletes up to 25.0; pre-steroid Mr America winners mean 25.4) and Trexler 2017 (235 college football
+   players, normalised to 180 cm, 26.4% above 25, 97.5th percentile 28.1). The descriptive bands are Omnicalculator's table (no study cited there);
+   the average 18.9 (men) / 15.4 (women) are quoted from Schutz 2002 on Menno Henselmans' page (paper not read).
+   ========================================================= */
+/* FFMI-ENGINE:START */
+CalcThis.ffmiEngine = (function () {
+  var KC = 6.3;
+  var BANDS = {
+    m: [[0, 18, 'Below average'], [18, 20, 'Average'], [20, 22, 'Above average'], [22, 23, 'Excellent'], [23, 26, 'Superior'], [26, 28, 'Rare in drug-free samples'], [28, 99, 'Very rare in drug-free samples']],
+    f: [[0, 15, 'Below average'], [15, 17, 'Average'], [17, 18, 'Above average'], [18, 19, 'Excellent'], [19, 21.5, 'Superior'], [21.5, 25, 'Rare in drug-free samples'], [25, 99, 'Very rare in drug-free samples']]
+  };
+  var AXIS = { m: [12, 32], f: [10, 28] };
+  var REFS = {
+    m: [[18.9, 'Average man', 'Schutz 2002, quoted by Menno Henselmans'], [25.0, 'Highest value in Kouri’s drug-free athletes', 'Kouri 1995'], [25.4, 'Pre-steroid-era Mr. America winners, mean', 'Kouri 1995'], [28.1, '97.5th percentile of college football players', 'Trexler 2017']],
+    f: [[15.4, 'Average woman', 'Schutz 2002, quoted by Menno Henselmans']]
+  };
+  function num(t) {
+    t = (t + '').trim().replace(/\s/g, '');
+    if (!t) return null;
+    if (/^[+-]?\d*,\d+$/.test(t)) t = t.replace(',', '.'); else t = t.replace(/,/g, '');
+    if (!/^[+-]?(\d+\.?\d*|\.\d+)$/.test(t)) return NaN;
+    return parseFloat(t);
+  }
+  /* kg, cm, bf in % -> fat mass, fat-free mass, FFMI, normalised FFMI (to 1.80 m) */
+  function calc(kg, cm, bf) {
+    var h = cm / 100, fm = kg * bf / 100, ffm = kg - fm, ffmi = ffm / (h * h);
+    return { kg: kg, cm: cm, h: h, bf: bf, fm: fm, ffm: ffm, ffmi: ffmi, norm: ffmi + KC * (1.8 - h) };
+  }
+  function band(sex, v) {
+    var b = BANDS[sex === 'm' ? 'm' : 'f'];
+    for (var i = 0; i < b.length; i++) if (v < b[i][1]) return { i: i, label: b[i][2], lo: b[i][0], hi: b[i][1] };
+    return { i: b.length - 1, label: b[b.length - 1][2], lo: b[b.length - 1][0], hi: b[b.length - 1][1] };
+  }
+  /* fat-free mass (kg) that gives a normalised FFMI of t at height cm */
+  function needFfm(t, cm) { var h = cm / 100; return (t - KC * (1.8 - h)) * h * h; }
+  return { KC: KC, BANDS: BANDS, AXIS: AXIS, REFS: REFS, num: num, calc: calc, band: band, needFfm: needFfm };
+})();
+/* FFMI-ENGINE:END */
+
+/* =========================================================
+   CalcThis.initFfmiCalc() — ids ff*. Engine: CalcThis.ffmiEngine (height parser from CalcThis.ketoEngine). No shared state.
+   ========================================================= */
+CalcThis.initFfmiCalc = function () {
+  var E = CalcThis.ffmiEngine, K = CalcThis.ketoEngine, U = CalcThis._kzUtil, trim = U.trim, esc = U.esc, seg = U.seg;
+  var $ = function (id) { return document.getElementById(id); };
+  var LB = 2.20462, ST = 6.35029;
+  var st = { sex: 'f', wu: 'lb', hu: 'in', adv: false };
+  var ex = {};
+  function f1(x) { return (Math.round(x * 10) / 10).toFixed(1); }
+  function setHint(m) { var h = $('ffHint'); h.textContent = m || ''; h.style.display = m ? 'block' : 'none'; }
+  var WMSG = { kg: 'Weight should be between 30 and 300 kg — check the number and the unit.', lb: 'Weight should be between 66 and 660 lb — check the number and the unit.', st: 'Weight should be between 4.7 and 47 st — check the number and the unit.' };
+  var HMSG = { cm: 'Height should be between 120 and 250 cm — check the number and the unit.', in: 'Height should be between 47 and 98 inches — check the number and the unit.', m: 'Height should be between 1.2 and 2.5 m — check the number and the unit.' };
+  function toKg(n) { return st.wu === 'lb' ? n / LB : (st.wu === 'st' ? n * ST : n); }
+  function readW() {
+    var raw = $('ffW').value; if (!raw.trim()) return null;
+    var n = E.num(raw); if (n === null) return null;
+    if (isNaN(n) || n <= 0) return { err: 'Couldn’t read the weight — use a number like ' + (st.wu === 'kg' ? '75' : (st.wu === 'st' ? '12' : '165')) + '.' };
+    var kg = toKg(n); if (kg < 30 || kg > 300) return { err: WMSG[st.wu] };
+    return { kg: kg };
+  }
+  function readH() {
+    var raw = $('ffH').value; if (!raw.trim()) return null;
+    var n = st.hu === 'in' ? K.parseIn(raw) : E.num(raw); if (n === null) return null;
+    if (isNaN(n) || n <= 0) return { err: 'Couldn’t read the height — use ' + (st.hu === 'in' ? 'inches (70) or feet and inches (5\'10)' : (st.hu === 'm' ? 'metres, like 1.78' : 'centimetres, like 178')) + '.' };
+    var cm = st.hu === 'in' ? n * 2.54 : (st.hu === 'm' ? n * 100 : n);
+    if (cm < 120 || cm > 250) return { err: HMSG[st.hu] };
+    return { cm: cm };
+  }
+  function readBf(id, what) {
+    var raw = $(id).value; if (!raw.trim()) return null;
+    var n = E.num(raw); if (n === null) return null;
+    if (isNaN(n) || n < 2 || n > 60) return { err: what + ' should be a percentage between 2 and 60.' };
+    return { v: n };
+  }
+  function empty(msg) { $('ffBig').textContent = '—'; $('ffSub').textContent = $('ffSub').getAttribute('data-empty'); $('ffBody').style.display = 'none'; $('ffMVal').textContent = '—'; setHint(msg || ''); }
+  function both(kg) { return f1(kg) + ' kg · ' + f1(kg * LB) + ' lb'; }
+  var COL = ['ff-b0', 'ff-b1', 'ff-b2', 'ff-b3', 'ff-b4', 'ff-b5', 'ff-b6'];
+  function scale(sex, v) {
+    var ax = E.AXIS[sex], a = ax[0], b = ax[1], span = b - a, bands = E.BANDS[sex];
+    var p = function (x) { return Math.max(0, Math.min(100, (x - a) / span * 100)); };
+    var segs = '', key = '';
+    bands.forEach(function (bd, i) {
+      var lo = Math.max(a, bd[0]), hi = Math.min(b, bd[1]);
+      if (hi > lo) segs += '<i class="ff-seg ' + COL[i] + '" style="left:' + p(lo) + '%;width:' + (p(hi) - p(lo)) + '%" title="' + bd[2] + '"></i>';
+      key += '<span><i class="' + COL[i] + '"></i>' + bd[2] + ' <b>' + (bd[0] <= a ? 'under ' + bd[1] : (bd[1] >= 90 ? 'over ' + bd[0] : bd[0] + '–' + bd[1])) + '</b></span>';
+    });
+    var refs = E.REFS[sex].map(function (r) { return '<i class="ff-ref" style="left:' + p(r[0]) + '%" title="' + esc(r[1]) + ' ' + r[0] + '"></i>'; }).join('');
+    var tk = '';
+    for (var t = Math.ceil(a / 2) * 2; t <= b; t += 2) tk += '<span style="left:' + p(t) + '%">' + t + '</span>';
+    return '<div class="ff-rule"><div class="ff-rule-t">' + segs + refs + '<i class="ff-mk" style="left:' + p(v) + '%"><b>' + f1(v) + '</b></i></div><div class="ff-rule-l">' + tk + '</div></div><div class="ff-key">' + key + '</div>';
+  }
+  function render() {
+    var w = readW(), h = readH(), bf = readBf('ffBf', 'Body fat'), bad = [w, h, bf].filter(function (x) { return x && x.err; })[0];
+    if (bad) { empty(bad.err); return; }
+    if (!w || !h || !bf) { empty(''); return; }
+    var tg = null, gb = null;
+    if (st.adv) {
+      var tr = $('ffT').value; if (tr.trim()) { var tn = E.num(tr); if (isNaN(tn) || tn < 10 || tn > 40) { empty('Your target FFMI should be a number between 10 and 40 — or leave it empty.'); return; } tg = tn; }
+      gb = readBf('ffGb', 'Body fat at your goal'); if (gb && gb.err) { empty(gb.err); return; }
+    }
+    setHint('');
+    var sx = st.sex, R = E.calc(w.kg, h.cm, bf.v), bd = E.band(sx, R.norm);
+    $('ffBig').textContent = f1(R.norm);
+    $('ffSub').textContent = 'FFMI ' + f1(R.ffmi) + ' · ' + bd.label;
+    $('ffMLab').textContent = 'Normalized FFMI'; $('ffMVal').textContent = f1(R.norm) + ' · ' + bd.label;
+    $('ffBody').style.display = '';
+    var lo = bf.v - 3 >= 2 ? E.calc(w.kg, h.cm, bf.v - 3) : null, hi = bf.v + 3 <= 60 ? E.calc(w.kg, h.cm, bf.v + 3) : null;
+    $('ffTip').textContent = 'At ' + trim(h.cm, 0) + ' cm and ' + trim(w.kg, 1) + ' kg with ' + trim(bf.v, 1) + '% body fat you carry ' + f1(R.ffm) + ' kg of fat-free mass — an FFMI of ' + f1(R.ffmi) + ', or ' + f1(R.norm) + ' adjusted to 1.80 m. On Omnicalculator’s bands that is “' + bd.label.toLowerCase() + '”.' + (lo && hi ? ' Body fat is the weakest input: 3 points either way moves it between ' + f1(hi.norm) + ' and ' + f1(lo.norm) + '.' : '');
+    $('ffScale').innerHTML = scale(sx, R.norm);
+    $('ffNums').innerHTML = '<tbody><tr><td>Fat-free mass</td><td>' + both(R.ffm) + '</td></tr><tr><td>Fat mass</td><td>' + both(R.fm) + '</td></tr><tr><td>FFMI <small>fat-free mass ÷ height²</small></td><td>' + f1(R.ffmi) + ' kg/m²</td></tr><tr><td>Normalized FFMI <small>adjusted to 1.80 m</small></td><td><b>' + f1(R.norm) + ' kg/m²</b></td></tr></tbody>';
+    var rows = '';
+    [[hi, '+3 points'], [R, 'as entered'], [lo, '−3 points']].forEach(function (r) {
+      if (!r[0]) return; var b2 = E.band(sx, r[0].norm);
+      rows += '<tr' + (r[0] === R ? ' class="cur"' : '') + '><td>' + trim(r[0].bf, 1) + '% <small>' + r[1] + '</small></td><td>' + f1(r[0].norm) + '</td><td>' + b2.label + '</td></tr>';
+    });
+    $('ffErr').innerHTML = '<thead><tr><th>Body fat</th><th>Normalized FFMI</th><th>Band</th></tr></thead><tbody>' + rows + '</tbody>';
+    var rf = '';
+    E.REFS[sx].forEach(function (r) { var d = R.norm - r[0]; rf += '<tr><td>' + r[1] + ' <small>' + r[2] + '</small></td><td>' + f1(r[0]) + '</td><td>' + (d >= 0 ? '+' : '−') + f1(Math.abs(d)) + '</td></tr>'; });
+    $('ffRef').innerHTML = '<thead><tr><th>Reference point' + (sx === 'm' ? ' (men)' : ' (women)') + '</th><th>FFMI</th><th>You</th></tr></thead><tbody>' + rf + '</tbody>';
+    $('ffRefNote').style.display = sx === 'f' ? '' : 'none';
+    /* goal */
+    var ad = [];
+    if (tg !== null) {
+      var needF = E.needFfm(tg, h.cm), add = needF - R.ffm, gbf = gb ? gb.v : bf.v, wt = needF / (1 - gbf / 100), tb = E.band(sx, tg);
+      ad.push(['Fat-free mass needed', '<b>' + both(needF) + '</b> <small>for a normalized FFMI of ' + trim(tg, 1) + ' at ' + trim(h.cm, 0) + ' cm</small>']);
+      ad.push(['Fat-free mass to add', add > 0.05 ? '<b>+' + both(add) + '</b>' : 'None — you are already at or above ' + trim(tg, 1)]);
+      if (add > 0.05) ad.push(['Body weight at that goal', both(wt) + ' <small>at ' + trim(gbf, 1) + '% body fat' + (gb ? '' : ' (your current)') + (wt > R.kg + 0.05 ? ', ' + f1(wt - R.kg) + ' kg above today' : (wt < R.kg - 0.05 ? ', ' + f1(R.kg - wt) + ' kg below today' : '')) + '</small>']);
+      ad.push(['Where that target sits', '“' + tb.label + '” <small>' + (sx === 'm' && tg > 25 ? 'Above the 25.0 that Kouri found in drug-free athletes; Trexler found 26.4% of college football players above it, so it is rare, not impossible.' : 'Omnicalculator’s band for ' + (sx === 'm' ? 'men' : 'women') + '.') + '</small>']);
+    }
+    $('ffAdv').innerHTML = ad.length ? '<tbody>' + ad.map(function (r) { return '<tr><td>' + r[0] + '</td><td>' + r[1] + '</td></tr>'; }).join('') + '</tbody>' : '';
+    $('ffAdvBox').style.display = ad.length ? '' : 'none';
+  }
+  ['ffW', 'ffH', 'ffBf', 'ffT', 'ffGb'].forEach(function (id) { $(id).addEventListener('input', render); });
+  seg('ffSex', function (v) { st.sex = v; render(); });
+  seg('ffWU', function (v) {
+    var w = readW(), m = ex.w; if (m && m.txt === $('ffW').value) w = { kg: m.kg };
+    st.wu = v; if (w && w.err) $('ffW').value = '';
+    if (w && w.kg) { var txt = trim(v === 'lb' ? w.kg * LB : (v === 'st' ? w.kg / ST : w.kg), 3); $('ffW').value = txt; ex.w = { kg: w.kg, txt: txt }; }
+    $('ffWL').textContent = v; $('ffW').placeholder = v === 'kg' ? 'e.g. 75' : (v === 'st' ? 'e.g. 12' : 'e.g. 165'); render();
+  });
+  seg('ffHU', function (v) {
+    var h = readH(), m = ex.h; if (m && m.txt === $('ffH').value) h = { cm: m.cm };
+    st.hu = v; if (h && h.err) $('ffH').value = '';
+    if (h && h.cm) { var txt = v === 'in' ? trim(h.cm / 2.54, 2) : (v === 'm' ? trim(h.cm / 100, 3) : trim(h.cm, 2)); $('ffH').value = txt; ex.h = { cm: h.cm, txt: txt }; }
+    $('ffHL').textContent = v === 'in' ? 'inches or 5\'10' : v; $('ffH').placeholder = v === 'in' ? 'e.g. 70 or 5\'10' : (v === 'm' ? 'e.g. 1.78' : 'e.g. 178'); render();
+  });
+  $('ffAdvBtn').addEventListener('click', function () {
+    st.adv = !st.adv; $('ffAdvBtn').classList.toggle('open', st.adv); $('ffAdvBtnLab').textContent = st.adv ? 'Go simple' : 'Go advanced'; $('ffAdvIn').style.display = st.adv ? '' : 'none';
+    if (!st.adv) { $('ffT').value = ''; $('ffGb').value = ''; }
+    render();
+  });
+  render();
+};
+/* FFMI:END */
