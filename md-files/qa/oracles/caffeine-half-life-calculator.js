@@ -64,7 +64,7 @@ module.exports = async function (ctx) {
     }
     const hint = await ctx.text('chHint'); let want = false;
     spec.forEach((x) => { const n = servings(x); if (n === null) return; if (isNaN(n)) want = true; else if (x.d === 'own' && !(num(x.own) >= 1)) want = true; else if (!x.time) want = true; });
-    if (hlk === 'own' && hlraw !== '' && !hlOk) want = true; if (bed === 'junk' || nextDay) want = true; if (tarraw !== '' && !(num(tarraw) >= 1 && num(tarraw) <= 3000)) want = true;
+    if (hlk === 'own' && hlraw !== '' && !hlOk) want = true; if (bed === 'junk' || nextDay) want = true; if (tarraw !== '' && !(num(tarraw) >= 1 && num(tarraw) <= 3000)) want = true; { const t2 = num(tarraw); if (t2 !== null && !isNaN(t2) && t2 >= 1 && t2 <= 3000 && (bed === null || bed === 'junk')) want = true; }
     if (want !== !!hint) fails.push('hint ' + (hint ? '"' + hint + '"' : 'none') + ' but expected ' + (want ? 'one' : 'none') + ' ' + tag);
     const svgOk = await ctx.eval('!!document.querySelector("#chCurve svg path")'); if (!svgOk) fails.push('no curve drawn ' + tag);
   }

@@ -32,5 +32,10 @@ module.exports = async function (ctx) {
       await ctx.set('ffT', '');
     }
   }
+  /* QA item 19: a field whose prerequisite is empty must say so */
+  await ctx.fill(); { const open = await ctx.eval('document.getElementById("ffAdvIn").style.display'); if (open === 'none') await ctx.click('ffAdvBtn'); }
+  await ctx.set('ffT', ''); await ctx.set('ffGb', '12'); { const h = await ctx.text('ffHint'); if ((await ctx.text('ffBig')) === '—' || !/target FFMI first/.test(h)) fails.push('goal body fat without a target must explain, got "' + h + '"'); }
+  await ctx.set('ffGb', ''); await ctx.set('ffT', '22'); { const h = await ctx.text('ffHint'); if (h) fails.push('no hint expected with a target and no goal body fat, got "' + h + '"'); }
+  await ctx.set('ffT', '');
   return { runs, fails: fails.slice(0, 25) };
 };

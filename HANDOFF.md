@@ -4,6 +4,11 @@ _Rewritten 2026-11-07 at the end of session #4 (vitamin research -> caffeine x2 
 
 ---
 
+## 000000000000001c. UPDATE 2026-11-07 (after §1b): SILENT-FIELD AUDIT DEPLOYED v327 — live v327 · 94 calcs · 224 pages
+He said "Yes, audit" -> `md-files/qa/audit-silent.js` built; 20 older health pages audited; 4 real silent fields fixed (FFMI, dog food, caffeine half life, fiber) and deployed. Findings + false positives: `md-files/qa/silent-field-audit-2026-11-07.md`. OPEN (his call): fix the legacy pages that still have silent fields (calories burned walking/running, net carb, intermittent fasting ramp-up, keto) = each needs fixture + oracle and leaves `legacy.json`. Other open: BAC late. No new pages this step.
+
+---
+
 ## 000000000000001b. UPDATE 2026-11-07 (after §1a): VITAMIN D DEPLOYED v326 — live v326 · 94 calcs · 224 pages
 Vitamin D research approved ("proceed") -> built -> QA gate PASS (300 oracle runs) -> deployed with the creatine silent-field fix. Code map: engine `VITD-ENGINE` (`CalcThis.vitdEngine`), init `CalcThis.initVitDCalc` (ids `vd*`, block `VITD:BEGIN/END`), css `.p-vd`, generator `md-files/gen-vitamind-page.js`, notes `md-files/calcthis-vitamind-research.md`; details in CLAUDE.md addendum 24. **New QA item 19: every input must visibly react (user furious that "How many do you take?" did nothing with an empty amount).** Europe (EFSA) added after he asked "is that only UK?". NEXT: ask him; remaining list = BAC calculator (>10K Hard, liability, late), pregnancy weight gain HOLD, optional audit of older health pages for silent fields (proposed to him, no answer). Next generator chains after `vitamin-d-calculator` (prev menu 'Vitamin D', name 'Vitamin D Calculator', llms anchor '- [Vitamin D Calculator', seo-meta anchor `"/vitamin-d-calculator/": {`). Bing: URL submitted at deploy; GSC queue unchanged (utah next).
 

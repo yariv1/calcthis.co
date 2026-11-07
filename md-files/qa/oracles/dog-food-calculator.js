@@ -20,5 +20,10 @@ module.exports = async function (ctx) {
     if (Math.abs(day - eighth(food / per)) > 0.01 && !(food / per < 0.0625)) fails.push('amount a day ' + row[0][1] + ' expected ' + eighth(food / per) + ' ' + tag);
     if (Math.abs(meal - eighth(food / per / parseInt(meals, 10))) > 0.01 && !(food / per / parseInt(meals, 10) < 0.0625)) fails.push('amount per meal ' + row[0][2] + ' expected ' + eighth(food / per / parseInt(meals, 10)) + ' ' + tag);
   }
+  /* QA item 19: the second food and its share need each other */
+  await ctx.fill(); { const open = await ctx.eval('document.getElementById("fdAdvIn") ? document.getElementById("fdAdvIn").style.display : ""'); if (open === 'none') await ctx.click('fdAdvBtn'); }
+  await ctx.set('fdB', ''); await ctx.set('fdShare', '30'); { const h = await ctx.text('fdHint'); if (!/second food.s calories first/.test(h)) fails.push('share without a second food must explain, got "' + h + '"'); }
+  await ctx.set('fdShare', ''); await ctx.set('fdB', '350'); { const h = await ctx.text('fdHint'); if (!/share of calories/.test(h)) fails.push('second food without a share must explain, got "' + h + '"'); }
+  await ctx.set('fdB', '');
   return { runs, fails: fails.slice(0, 25) };
 };

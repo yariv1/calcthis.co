@@ -68,7 +68,7 @@ module.exports = async function (ctx) {
     const hint = await ctx.text('fbHint'); let hw = false;
     if (mode === 'type' && kraw !== '' && kcal === null) hw = true;
     if (mode === 'calc') { const h = hu === 'in' ? inch(hraw) : num(hraw), cm = (h !== null && !isNaN(h) && h > 0) ? (hu === 'in' ? h * 2.54 : h) : null; if (hraw !== '' && !(cm !== null && cm >= 100 && cm <= 250)) hw = true; else { const w = num(wraw), kg = (w !== null && !isNaN(w) && w > 0) ? (wu === 'lb' ? w / 2.20462 : (wu === 'st' ? w * 6.35029 : w)) : null; if (wraw !== '' && !(kg !== null && kg >= 30 && kg <= 300)) hw = true; } }
-    if (pk !== '' && !(pkn !== null && !isNaN(pkn) && pkn >= 5 && pkn <= 30)) hw = true;
+    if (pk !== '' && !(pkn !== null && !isNaN(pkn) && pkn >= 5 && pkn <= 30)) hw = true; if (pkn !== null && !isNaN(pkn) && pkn >= 5 && pkn <= 30 && kcal === null) hw = true;
     spec.forEach((x) => { const sv = amt(x); if (sv === null) return; if (isNaN(sv)) hw = true; else if (x.f === 'own') { const m = num(x.own); if (m === null || isNaN(m) || m < 0.1 || m > 100) hw = true; } });
     if (hw !== !!hint) fails.push('hint ' + (hint ? '"' + hint + '"' : 'none') + ' but expected ' + (hw ? 'one' : 'none') + ' ' + tag);
   }

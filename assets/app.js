@@ -20481,6 +20481,8 @@ CalcThis.initDogFoodCalc = function () {
       if (fb && fb.err) { sf('fdB', fb.err + ' The second food is left out for now.'); fb = null; }
       share = E.num($('fdShare').value);
       if (share !== null && (isNaN(share) || share < 0 || share > 100)) { sf('fdShare', 'The share of calories from the second food should be between 0 and 100 %. It is ignored for now.'); share = null; }
+      if (share !== null && !fb && !$('fdB').value.trim()) sf('fdShare', 'Type the second food’s calories first. The share is ignored for now.');
+      if (fb && share === null && !$('fdShare').value.trim()) sf('fdB', 'Type the share of calories that comes from the second food. The second food is left out for now.');
     }
     setHint(soft ? soft.msg : '', soft ? soft.at : null);
     var R = E.calc(w.kg, tid, own), tpc = st.tr / 100, treatK = R.mer * tpc, foodK = R.mer - treatK;
@@ -20702,6 +20704,7 @@ CalcThis.initFfmiCalc = function () {
     if (st.adv) {
       var tr = $('ffT').value; if (tr.trim()) { var tn = E.num(tr); if (tn === null || isNaN(tn) || tn < 10 || tn > 40) soft = soft || { at: 'ffT', msg: 'Your target FFMI should be a number between 10 and 40. The result is shown without a target.' }; else tg = tn; }
       gb = readBf('ffGb', 'Body fat at your goal'); if (gb && gb.err) { soft = soft || { at: 'ffGb', msg: gb.err + ' The goal body fat is ignored for now.' }; gb = null; }
+      if (gb && tg === null) soft = soft || { at: 'ffGb', msg: 'Type your target FFMI first. The goal body fat is ignored for now.' };
     }
     setHint(soft ? soft.msg : '', soft ? soft.at : null);
     var sx = st.sex, R = E.calc(w.kg, h.cm, bf.v), bd = E.band(sx, R.norm);
@@ -21962,7 +21965,7 @@ CalcThis.initCafHalfCalc = function () {
     if (bm !== null && isNaN(bm)) soft.push({ m: 'Bedtime should look like 10:30. It is left out for now.', at: 'chBedIn' });
     else if (bm !== null) B = bm;
     var tg = E.readLimit($('chTar').value), target = null;
-    if (tg.bad) soft.push({ m: 'The amount you are comfortable with should be between 1 and 3,000 mg. It is ignored for now.', at: 'chTar' }); else if (tg.v) target = tg.v;
+    if (tg.bad) soft.push({ m: 'The amount you are comfortable with should be between 1 and 3,000 mg. It is ignored for now.', at: 'chTar' }); else if (tg.v) { target = tg.v; if (B === null) soft.push({ m: 'Add your bedtime first. The amount you are comfortable with is ignored for now.', at: 'chTar' }); }
     items.sort(function (x, y) { return x.t - y.t; });
     var first = items[0].t, last = items[items.length - 1].t, doses = items.map(function (x) { return { t: x.t, mg: x.mg }; });
     var nextDay = false;
@@ -22186,7 +22189,7 @@ CalcThis.initFiberCalc = function () {
       else if (Hc.v && Wk.v) kcal = E.kcalFrom(st.sex, A.v, Hc.v, Wk.v, parseFloat($('fbAct').value) || 1.55);
     }
     var P = E.readPerK($('fbPK').value), perK = E.PERK;
-    if (P.bad) soft.push({ m: 'Grams per 1,000 kcal should be between 5 and 30. It is ignored for now, so 14 is used.', at: 'fbPK' }); else if (P.v) perK = P.v;
+    if (P.bad) soft.push({ m: 'Grams per 1,000 kcal should be between 5 and 30. It is ignored for now, so 14 is used.', at: 'fbPK' }); else if (P.v) { perK = P.v; if (kcal === null) soft.push({ m: 'Add your calories first. The grams per 1,000 kcal are ignored for now.', at: 'fbPK' }); }
     /* tally */
     var items = [], prob = null;
     rows.forEach(function (id, k) {
