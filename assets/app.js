@@ -22363,6 +22363,7 @@ CalcThis.initCreatineCalc = function () {
     if (tub.bad) soft.push({ m: 'Tub size should be between 20 and 10,000 g. The tub costs are left out for now.', at: 'crTub' });
     else if (pr.bad && tub.v) soft.push({ m: 'Price should be a number up to 100,000. The cost lines are left out for now.', at: 'crPr' });
     else if (sc.bad && tub.v) soft.push({ m: 'Scoop size should be between 0.5 and 50 g. The scoop lines are left out for now.', at: 'crSc' });
+    else if (tub.empty && (!pr.empty || !sc.empty)) soft.push({ m: 'Type the tub size first. The price and the scoop are ignored for now.', at: 'crTub' });
     setHint(soft.length ? soft[0].m : '', soft.length ? soft[0].at : null);
     descs(daily, L, maint);
     var wTxt = E.trim(W.n, 1) + ' ' + st.wu, g = function (x) { return t1(x) + ' g'; };
@@ -22436,3 +22437,216 @@ CalcThis.initCreatineCalc = function () {
   render();
 };
 /* CREATINE:END */
+
+/* VITD:BEGIN */
+/* =========================================================
+   VITAMIN D calculator (/vitamin-d-calculator/). Ahrefs 2026-11-06: vitamin d calculator >100 Easy, vitamin d iu to mcg >100 Easy (ONE page, title carries both).
+   Competitors opened live (2026-11-07): Omnicalculator (age, serum yes/no, height, weight, BMI), GetHealthyCalculators (weight, blood level, target, skin tone, sun minutes; unsourced formula),
+   GrassrootsHealth D*calculator (serum known, weight, current supplement IU/mcg, serum, desired serum) + their mcg<->IU converter.
+   Sources READ: NLM MedlinePlus vitamin D (reviewed 1/21/2025): RDA/AI 0-12 months 400 IU (10 mcg) AI, 1-13 y 600 (15), 14-18 y 600 (15), 19-70 y 600 (15), over 70 y 800 IU (20 mcg), pregnancy and
+   breastfeeding 600 IU (15 mcg); UL 0-6 months 1,000 IU (25 mcg), 7-12 months 1,500 IU (38 mcg), 1-3 y 2,500 IU (63 mcg), 4-8 y 3,000 IU (75 mcg), 9+ y 4,000 IU (100 mcg). NHS (reviewed 3 Aug 2020):
+   10 mcg (400 IU) a day from age 1 and adults, babies 8.5-10 mcg; upper limit 100 mcg (4,000 IU) for 11+, 50 mcg (2,000 IU) ages 1-10, 25 mcg (1,000 IU) under 12 months. LPI + Harvard agree on the RDA.
+   1 mcg = 40 IU: every read official page pairs 10 mcg = 400 IU ... 100 mcg = 4,000 IU (x40); the rule itself is only stated by secondary pages -> the page says it is implied by the pairs.
+   Serum ng/mL x 2.5 = nmol/L: Omnicalculator (20 ng/mL = 50 nmol/L) + GrassrootsHealth (40-60 ng/mL = 100-150 nmol/L), both read live.
+   NOT used (no read source / clinical): treatment or loading doses, deficiency verdicts, sun / skin-tone synthesis, food amounts.
+   ========================================================= */
+/* VITD-ENGINE:START */
+CalcThis.vitdEngine = (function () {
+  var PER = 40, SER = 2.5;
+  var BANDS = {
+    us: [
+      { id: 'u0', name: '0–6 months', ai: true, rda: { iu: [400, 400], mcg: [10, 10] }, ul: { iu: 1000, mcg: 25 } },
+      { id: 'u1', name: '7–12 months', ai: true, rda: { iu: [400, 400], mcg: [10, 10] }, ul: { iu: 1500, mcg: 38 } },
+      { id: 'u2', name: '1–3 years', rda: { iu: [600, 600], mcg: [15, 15] }, ul: { iu: 2500, mcg: 63 } },
+      { id: 'u3', name: '4–8 years', rda: { iu: [600, 600], mcg: [15, 15] }, ul: { iu: 3000, mcg: 75 } },
+      { id: 'u4', name: '9–70 years', rda: { iu: [600, 600], mcg: [15, 15] }, ul: { iu: 4000, mcg: 100 } },
+      { id: 'u5', name: 'over 70 years', rda: { iu: [800, 800], mcg: [20, 20] }, ul: { iu: 4000, mcg: 100 } }
+    ],
+    uk: [
+      { id: 'k0', name: 'under 1 year', rda: { iu: [340, 400], mcg: [8.5, 10] }, ul: { iu: 1000, mcg: 25 } },
+      { id: 'k1', name: '1–10 years', rda: { iu: [400, 400], mcg: [10, 10] }, ul: { iu: 2000, mcg: 50 } },
+      { id: 'k2', name: '11 years and over', rda: { iu: [400, 400], mcg: [10, 10] }, ul: { iu: 4000, mcg: 100 } }
+    ],
+    eu: [
+      { id: 'e0', name: '0–6 months', rda: null, ul: { iu: 1000, mcg: 25 } },
+      { id: 'e1', name: '7–11 months', rda: { iu: [400, 400], mcg: [10, 10] }, ul: { iu: 1400, mcg: 35 } },
+      { id: 'e2', name: '1–10 years', rda: { iu: [600, 600], mcg: [15, 15] }, ul: { iu: 2000, mcg: 50 } },
+      { id: 'e3', name: '11–17 years', rda: { iu: [600, 600], mcg: [15, 15] }, ul: { iu: 4000, mcg: 100 } },
+      { id: 'e4', name: '18 years and over', rda: { iu: [600, 600], mcg: [15, 15] }, ul: { iu: 4000, mcg: 100 } }
+    ]
+  };
+  function num(t) {
+    t = (t + '').trim().replace(/\s/g, '');
+    if (!t) return null;
+    if (/^\d{1,3}(,\d{3})+(\.\d+)?$/.test(t)) t = t.replace(/,/g, ''); else if (/^[+-]?\d*,\d+$/.test(t)) t = t.replace(',', '.'); else t = t.replace(/,/g, '');
+    if (!/^[+-]?(\d+\.?\d*|\.\d+)$/.test(t)) return NaN;
+    return parseFloat(t);
+  }
+  function readAge(t, unit) {
+    var n = num(t); if (n === null) return { empty: true };
+    if (isNaN(n) || n < 0 || n > (unit === 'y' ? 120 : 1440)) return { bad: true };
+    return { v: n, m: unit === 'y' ? n * 12 : n };
+  }
+  function band(std, m) {
+    var i;
+    if (std === 'us') { if (m < 7) i = 0; else if (m < 12) i = 1; else { var y = Math.floor(m / 12); i = y <= 3 ? 2 : (y <= 8 ? 3 : (y <= 70 ? 4 : 5)); } }
+    else if (std === 'uk') { if (m < 12) i = 0; else { var y2 = Math.floor(m / 12); i = y2 <= 10 ? 1 : 2; } }
+    else { if (m < 7) i = 0; else if (m < 12) i = 1; else { var y3 = Math.floor(m / 12); i = y3 <= 10 ? 2 : (y3 <= 17 ? 3 : 4); } }
+    return BANDS[std][i];
+  }
+  function readAmt(t, unit) {
+    var n = num(t); if (n === null) return { empty: true };
+    if (isNaN(n) || n <= 0) return { bad: true };
+    var iu = unit === 'mcg' ? n * PER : n; if (iu < 0.1 || iu > 5000000) return { bad: true };
+    return { v: n, iu: iu };
+  }
+  function readCnt(t) { var n = num(t); if (n === null) return { v: 1, dflt: true }; if (isNaN(n) || n < 0.01 || n > 1000) return { bad: true }; return { v: n }; }
+  function readSerum(t, unit) { var n = num(t); if (n === null) return { empty: true }; if (isNaN(n) || n <= 0 || n > (unit === 'ng' ? 500 : 1250)) return { bad: true }; return { v: n }; }
+  function perDay(iu, cnt, per) { return iu * cnt / (per === 'w' ? 7 : 1); }
+  function zone(total, rdaIU, ulIU) { return total < rdaIU ? 'below' : (total <= ulIU ? 'within' : 'above'); }
+  function trim(x, d) { return String(parseFloat((Math.round(x * Math.pow(10, d)) / Math.pow(10, d)).toFixed(d))); }
+  function grp(n) { return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+  function nt(n, d) { var p = trim(n, d == null ? 3 : d).split('.'); p[0] = p[0].replace(/\B(?=(\d{3})+(?!\d))/g, ','); return p.join('.'); }
+  return { PER: PER, SER: SER, BANDS: BANDS, num: num, readAge: readAge, band: band, readAmt: readAmt, readCnt: readCnt, readSerum: readSerum, perDay: perDay, zone: zone, trim: trim, grp: grp, nt: nt };
+})();
+/* VITD-ENGINE:END */
+
+/* =========================================================
+   CalcThis.initVitDCalc() — ids vd*. Engine: CalcThis.vitdEngine. Amount fields = the caffeine/fiber/creatine DS pattern (input + inline unit toggle).
+   ========================================================= */
+CalcThis.initVitDCalc = function () {
+  var E = CalcThis.vitdEngine, U = CalcThis._kzUtil, seg = U.seg, setSeg = U.setSeg, esc = U.esc;
+  var $ = function (id) { return document.getElementById(id); };
+  var st = { std: 'us', au: 'y', su: 'ng' }, rows = [], nextId = 0;
+  function t1(x) { return E.trim(x, 1); }
+  function setHint(m, at) {
+    var h = $('vdHint'); h.textContent = m || ''; h.style.display = m ? 'block' : 'none';
+    if (m && at) { var el = $(at), f = el ? el.closest('.fld') : null; if (f && f.nextSibling !== h) f.parentNode.insertBefore(h, f.nextSibling); }
+  }
+  function empty(msg, at) { $('vdBig').textContent = '—'; $('vdSub').textContent = $('vdSub').getAttribute('data-empty'); $('vdBody').style.display = 'none'; $('vdMVal').textContent = '—'; setHint(msg || '', at); }
+  function labOf(std, bd) { return std === 'uk' ? 'NHS advice' : (std === 'eu' ? 'EFSA adequate intake' : (bd.ai ? 'adequate intake' : 'RDA')); }
+  function shareOf(std, bd) { return std === 'uk' ? 'NHS amount' : (std === 'eu' ? 'adequate intake' : (bd.ai ? 'adequate intake' : 'RDA')); }
+  function range(r, unit) { return r[0] === r[1] ? E.grp(r[0]) : E.grp(r[0]) + '–' + E.grp(r[1]); }
+  function rangeM(r) { return r[0] === r[1] ? E.nt(r[0]) : E.nt(r[0]) + '–' + E.nt(r[1]); }
+  function table(id, head, rows2, tfoot) { $(id).innerHTML = '<thead><tr>' + head.map(function (h) { return '<th>' + h + '</th>'; }).join('') + '</tr></thead><tbody>' + rows2.map(function (r) { return '<tr>' + r.map(function (c) { return '<td>' + c + '</td>'; }).join('') + '</tr>'; }).join('') + '</tbody>' + (tfoot || ''); }
+  /* ---------- supplement rows ---------- */
+  function rowEl(id) { return document.querySelector('.cf-row[data-rid="' + id + '"]'); }
+  function addRow() {
+    var id = ++nextId, div = document.createElement('div'); div.className = 'cf-row'; div.setAttribute('data-rid', id);
+    div.innerHTML = '<div class="cf-r1"><span class="lab vd-rl">Supplement ' + id + '</span><button class="x" type="button" aria-label="Remove supplement">&#215;</button></div>' +
+      '<div class="fld"><span class="lab">Amount on the label <span class="unit">one capsule, drop or tablet</span></span><div class="cf-box"><input id="vdA' + id + '" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 1,000" aria-label="Amount on the label"><div class="seg cf-u" id="vdU' + id + '" data-u="iu" role="group" aria-label="Unit"><button type="button" class="on" data-v="iu">IU</button><button type="button" data-v="mcg">mcg</button></div></div></div>' +
+      '<div class="fld"><span class="lab">How many do you take?</span><div class="cf-box"><input id="vdC' + id + '" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 1" aria-label="How many do you take"><div class="seg cf-u" id="vdP' + id + '" data-u="d" role="group" aria-label="How often"><button type="button" class="on" data-v="d">a day</button><button type="button" data-v="w">a week</button></div></div></div>' +
+      '<p class="cf-note"></p>';
+    $('vdRows').appendChild(div); rows.push(id);
+    $('vdA' + id).addEventListener('input', render); $('vdC' + id).addEventListener('input', render);
+    $('vdU' + id).addEventListener('click', function (e) {
+      var b = e.target.closest('button'); if (!b) return; var v = b.getAttribute('data-v'), u = $('vdU' + id), old = u.getAttribute('data-u'); if (v === old) return;
+      var r = E.readAmt($('vdA' + id).value, old); if (r.v) $('vdA' + id).value = E.trim(v === 'mcg' ? r.v / E.PER : r.v * E.PER, 3);
+      u.setAttribute('data-u', v); setSeg('vdU' + id, v); render();
+    });
+    $('vdP' + id).addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; var v = b.getAttribute('data-v'); $('vdP' + id).setAttribute('data-u', v); setSeg('vdP' + id, v); render(); });
+    div.querySelector('.x').addEventListener('click', function () {
+      if (rows.length === 1) { $('vdA' + id).value = ''; $('vdC' + id).value = ''; $('vdU' + id).setAttribute('data-u', 'iu'); setSeg('vdU' + id, 'iu'); $('vdP' + id).setAttribute('data-u', 'd'); setSeg('vdP' + id, 'd'); render(); return; }
+      rows = rows.filter(function (r) { return r !== id; }); setHint(''); div.parentNode.removeChild(div);
+      rows.forEach(function (r, k) { rowEl(r).querySelector('.vd-rl').textContent = 'Supplement ' + (k + 1); });
+      render();
+    });
+    $('vdRows').classList.toggle('one', rows.length === 1);
+    return id;
+  }
+  function clearAll() { setHint(''); $('vdRows').parentNode.insertBefore($('vdHint'), $('vdRows').nextSibling); $('vdRows').innerHTML = ''; rows = []; nextId = 0; addRow(); render(); }
+  /* ---------- serum converter ---------- */
+  function serumOut() {
+    var S = E.readSerum($('vdS').value, st.su), o = $('vdSOut');
+    if (S.empty || S.bad) { o.style.display = 'none'; o.textContent = ''; return S; }
+    o.textContent = st.su === 'ng' ? E.nt(S.v, 2) + ' ng/mL = ' + E.nt(S.v * E.SER, 2) + ' nmol/L' : E.nt(S.v, 2) + ' nmol/L = ' + E.nt(S.v / E.SER, 2) + ' ng/mL';
+    o.style.display = ''; return S;
+  }
+  $('vdSu').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return; var v = b.getAttribute('data-v'); if (v === st.su) return;
+    var r = E.readSerum($('vdS').value, st.su); if (r.v) $('vdS').value = E.trim(v === 'nmol' ? r.v * E.SER : r.v / E.SER, 2);
+    st.su = v; $('vdSu').setAttribute('data-u', v); setSeg('vdSu', v); $('vdS').placeholder = v === 'ng' ? 'e.g. 30' : 'e.g. 75'; render();
+  });
+  /* ---------- age unit toggle ---------- */
+  $('vdAu').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return; var v = b.getAttribute('data-v'); if (v === st.au) return;
+    var r = E.readAge($('vdAge').value, st.au); if (r.v != null) $('vdAge').value = E.trim(v === 'm' ? r.v * 12 : r.v / 12, 2);
+    st.au = v; $('vdAu').setAttribute('data-u', v); setSeg('vdAu', v); $('vdAge').placeholder = v === 'y' ? 'e.g. 35' : 'e.g. 8'; render();
+  });
+  /* what each supplement row adds up to — shown under the row, never silent */
+  function readRows(bd, soft) {
+    var items = [], total = 0;
+    rows.forEach(function (id, k) {
+      var unit = $('vdU' + id).getAttribute('data-u') || 'iu', per = $('vdP' + id).getAttribute('data-u') || 'd', a = E.readAmt($('vdA' + id).value, unit), cRaw = $('vdC' + id).value, c = E.readCnt(cRaw), note = rowEl(id).querySelector('.cf-note');
+      note.className = 'cf-note';
+      if (a.empty) {
+        if (cRaw.trim()) { note.textContent = 'Type the amount on the label first, then the number you take counts.'; soft.push({ m: 'Supplement ' + (k + 1) + ': type the amount on the label. The number you take is ignored for now.', at: 'vdA' + id }); }
+        else note.textContent = 'Type the amount the label gives for one capsule, drop or tablet. 1 mcg = 40 IU.';
+        return;
+      }
+      if (a.bad) { note.textContent = '1 mcg = 40 IU.'; soft.push({ m: 'Supplement ' + (k + 1) + ': the amount should be a number above 0 (up to 5,000,000 IU). This supplement is left out for now.', at: 'vdA' + id }); return; }
+      var cnt = c.v;
+      if (c.bad) { cnt = 1; soft.push({ m: 'Supplement ' + (k + 1) + ': how many should be between 0.01 and 1,000. It is ignored for now, so 1 is used.', at: 'vdC' + id }); }
+      var pd = E.perDay(a.iu, cnt, per), other = unit === 'iu' ? E.nt(a.v / E.PER) + ' mcg' : E.nt(a.v * E.PER) + ' IU';
+      var txt = E.nt(a.v) + ' ' + (unit === 'iu' ? 'IU' : 'mcg') + ' = ' + other + ' each · ' + E.nt(cnt) + ' a ' + (per === 'w' ? 'week' : 'day') + ' = ' + E.grp(pd) + ' IU (' + E.nt(pd / E.PER, 1) + ' mcg) a day';
+      if (bd) { txt += ' · ' + Math.round(pd / bd.ul.iu * 100) + '% of the upper limit'; if (pd > bd.ul.iu) { txt += ' — above the limit'; note.className = 'cf-note vd-warn'; } }
+      note.textContent = txt;
+      items.push({ k: k + 1, a: a, unit: unit, cnt: cnt, per: per, pd: pd }); total += pd;
+    });
+    return { items: items, total: total };
+  }
+  /* ---------- render ---------- */
+  function render() {
+    $('vdRows').classList.toggle('one', rows.length === 1);
+    var S = serumOut();
+    var A = E.readAge($('vdAge').value, st.au);
+    if (A.empty) { readRows(null, []); empty(''); return; }
+    if (A.bad) { readRows(null, []); empty('Age should be a number from 0 to ' + (st.au === 'y' ? '120 years' : '1,440 months') + '.', 'vdAge'); return; }
+    var soft = [], bd = E.band(st.std, A.m), rda = bd.rda, ul = bd.ul, rdaHi = rda ? rda.iu[1] : 0;
+    if (S.bad) soft.push({ m: 'Serum level should be between 0 and ' + (st.su === 'ng' ? '500 ng/mL' : '1,250 nmol/L') + '. It is left out for now.', at: 'vdS' });
+    /* supplements */
+    var RR = readRows(bd, soft), items = RR.items, total = RR.total;
+    setHint(soft.length ? soft[0].m : '', soft.length ? soft[0].at : null);
+    /* headline */
+    var stdName = { us: 'US', uk: 'UK', eu: 'EU' }[st.std], rdaLab = labOf(st.std, bd);
+    var big = rda ? range(rda.iu) + ' IU' : 'Not set';
+    $('vdBig').textContent = big; $('vdMLab').textContent = 'Vitamin D recommended a day'; $('vdMVal').textContent = big;
+    $('vdSub').textContent = rda ? rangeM(rda.mcg) + ' mcg a day · ' + rdaLab + ', ' + bd.name + ' (' + stdName + ')' : 'EFSA sets no adequate intake for ' + bd.name + ' (EU)';
+    /* tip */
+    var tip = 'The upper limit for ' + bd.name + ' is ' + E.grp(ul.iu) + ' IU (' + ul.mcg + ' mcg) a day.' + (rda ? ' 1 mcg = 40 IU, so ' + E.grp(rdaHi) + ' IU = ' + E.nt(rdaHi / E.PER) + ' mcg.' : '');
+    var zn = null;
+    if (items.length) {
+      zn = E.zone(total, rdaHi, ul.iu);
+      tip = 'You take ' + E.grp(total) + ' IU (' + E.nt(total / E.PER, 1) + ' mcg) a day: ' + (rda ? Math.round(total / rdaHi * 100) + '% of the ' + shareOf(st.std, bd) + ' and ' : '') + Math.round(total / ul.iu * 100) + '% of the upper limit.' +
+        (!rda && zn === 'within' ? ' That is within the upper limit.' : zn === 'below' ? ' That is below the recommended amount.' : (zn === 'within' ? ' That is between the recommended amount and the upper limit.' : ' That is above the upper limit. Ask a clinician, especially if a doctor prescribed it.'));
+    }
+    $('vdTip').textContent = tip;
+    /* bar */
+    var scale = Math.max(ul.iu * 1.25, Math.min(total * 1.05, ul.iu * 3)), P = function (x) { return Math.min(100, x / scale * 100); };
+    var fill = items.length ? '<span class="cf-seg vd-z-' + zn + '" style="width:' + P(total) + '%"></span>' : '';
+    var tk = function (x, lab, cls) { var p = P(x); return '<i class="cf-tick vd-tk ' + cls + (p > 65 ? ' r' : (p < 35 ? ' l' : '')) + '" style="left:' + p + '%"><b>' + lab + '</b></i>'; };
+    $('vdBar').innerHTML = '<div class="cf-bar has-t"><div class="cf-bar-t"><div class="cf-segs">' + fill + '</div>' + (rda ? tk(rdaHi, (st.std === 'uk' ? 'NHS ' : (st.std === 'eu' || bd.ai ? 'AI ' : 'RDA ')) + E.grp(rdaHi), 'rd') : '') + tk(ul.iu, 'Limit ' + E.grp(ul.iu), 'ul') + '</div></div>' +
+      '<div class="bm-key cf-key">' + (items.length ? '<span><i class="vd-ky vd-z-' + zn + '"></i>You take ' + E.grp(total) + ' IU</span>' : '') + (rda ? '<span><i class="vd-ky rd"></i>Recommended ' + range(rda.iu) + ' IU</span>' : '') + '<span><i class="vd-ky ul"></i>Upper limit ' + E.grp(ul.iu) + ' IU</span></div>';
+    /* targets */
+    table('vdTargets', ['Level', 'IU a day', 'mcg a day'], [[st.std === 'uk' ? 'Recommended (NHS)' : (st.std === 'eu' ? 'Adequate intake (EFSA)' : (bd.ai ? 'Adequate intake (AI)' : 'Recommended (RDA)')), rda ? range(rda.iu) : 'not set', rda ? rangeM(rda.mcg) : 'not set'], ['Upper limit (UL)', E.grp(ul.iu), String(ul.mcg)]]);
+    /* tally */
+    if (items.length) {
+      var tr = items.map(function (x) { return ['Supplement ' + x.k + ': ' + E.nt(x.a.v) + ' ' + (x.unit === 'iu' ? 'IU' : 'mcg') + ' × ' + E.nt(x.cnt) + ' a ' + (x.per === 'w' ? 'week' : 'day'), E.grp(x.pd), E.nt(x.pd / E.PER, 1)]; });
+      var tf = '<tfoot><tr><td>Total a day</td><td>' + E.grp(total) + '</td><td>' + E.nt(total / E.PER, 1) + '</td></tr>' + (rda ? '<tr><td colspan="2">Share of the recommended amount</td><td>' + Math.round(total / rdaHi * 100) + '%</td></tr>' : '') + '<tr><td colspan="2">Share of the upper limit</td><td>' + Math.round(total / ul.iu * 100) + '%</td></tr></tfoot>';
+      table('vdTally', ['What you take', 'IU a day', 'mcg a day'], tr, tf); $('vdTallyWrap').style.display = '';
+    } else $('vdTallyWrap').style.display = 'none';
+    $('vdBody').style.display = '';
+  }
+  /* ---------- controls ---------- */
+  seg('vdStd', function (v) { st.std = v; render(); });
+  ['vdAge', 'vdS'].forEach(function (id) { $(id).addEventListener('input', render); });
+  $('vdAdd').addEventListener('click', function () { addRow(); render(); });
+  $('vdClear').addEventListener('click', clearAll);
+  $('vdAdvBtn').addEventListener('click', function () {
+    var open = $('vdAdvBtn').classList.toggle('open'); $('vdAdvBtnLab').textContent = open ? 'Go simple' : 'Go advanced'; $('vdAdvIn').style.display = open ? '' : 'none';
+    if (!open) { $('vdS').value = ''; st.su = 'ng'; $('vdSu').setAttribute('data-u', 'ng'); setSeg('vdSu', 'ng'); $('vdS').placeholder = 'e.g. 30'; }
+    render();
+  });
+  addRow(); render();
+};
+/* VITD:END */

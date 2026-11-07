@@ -270,6 +270,10 @@
     "t": "Intermittent Fasting Calculator — Your Eating Window",
     "d": "Intermittent fasting calculator for 16:8, 18:6, 20:4, OMAD, 5:2 and custom: set your window from your last bite or first meal and plan a week-by-week ramp-up."
   },
+  "/vitamin-d-calculator/": {
+    "t": "Vitamin D Calculator — IU to mcg, RDA and Upper Limit",
+    "d": "Vitamin D calculator: recommended amount and upper limit by age (US, UK, EU), IU to mcg both ways, and a total of every supplement you take."
+  },
   "/creatine-calculator/": {
     "t": "Creatine Calculator — Loading and Daily Dose by Weight",
     "d": "Creatine calculator: your loading dose and daily maintenance dose by body weight (ISSN), load vs skip loading, a plan by date and your tub cost."

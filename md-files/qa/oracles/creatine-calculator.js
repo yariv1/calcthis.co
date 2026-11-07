@@ -74,7 +74,7 @@ module.exports = async function (ctx) {
       if (JSON.stringify(tt) !== JSON.stringify(wt)) fails.push('tub ' + JSON.stringify(tt) + ' expected ' + JSON.stringify(wt) + ' ' + tag);
     }
     /* hints for optional fields must keep the result */
-    const hint = await ctx.text('crHint'); const wantHint = (mraw !== '' && (mn === null || isNaN(mn) || mn < 2 || mn > 10)) || dateHint || (traw !== '' && !tubOk) || (tubOk && praw !== '' && !prOk) || (tubOk && (praw === '' || prOk) && sraw !== '' && !scOk);
+    const hint = await ctx.text('crHint'); const wantHint = (mraw !== '' && (mn === null || isNaN(mn) || mn < 2 || mn > 10)) || dateHint || (traw !== '' && !tubOk) || (tubOk && praw !== '' && !prOk) || (tubOk && (praw === '' || prOk) && sraw !== '' && !scOk) || (traw === '' && (praw !== '' || sraw !== ''));
     if (wantHint && !hint) fails.push('missing hint ' + tag);
     if (!wantHint && hint) fails.push('unexpected hint "' + hint + '" ' + tag);
   }

@@ -4,6 +4,11 @@ _Rewritten 2026-11-07 at the end of session #4 (vitamin research -> caffeine x2 
 
 ---
 
+## 000000000000001b. UPDATE 2026-11-07 (after §1a): VITAMIN D DEPLOYED v326 — live v326 · 94 calcs · 224 pages
+Vitamin D research approved ("proceed") -> built -> QA gate PASS (300 oracle runs) -> deployed with the creatine silent-field fix. Code map: engine `VITD-ENGINE` (`CalcThis.vitdEngine`), init `CalcThis.initVitDCalc` (ids `vd*`, block `VITD:BEGIN/END`), css `.p-vd`, generator `md-files/gen-vitamind-page.js`, notes `md-files/calcthis-vitamind-research.md`; details in CLAUDE.md addendum 24. **New QA item 19: every input must visibly react (user furious that "How many do you take?" did nothing with an empty amount).** Europe (EFSA) added after he asked "is that only UK?". NEXT: ask him; remaining list = BAC calculator (>10K Hard, liability, late), pregnancy weight gain HOLD, optional audit of older health pages for silent fields (proposed to him, no answer). Next generator chains after `vitamin-d-calculator` (prev menu 'Vitamin D', name 'Vitamin D Calculator', llms anchor '- [Vitamin D Calculator', seo-meta anchor `"/vitamin-d-calculator/": {`). Bing: URL submitted at deploy; GSC queue unchanged (utah next).
+
+---
+
 ## 000000000000001a. UPDATE 2026-11-07 (after §19): CREATINE DEPLOYED v325 — live v325 · 93 calcs · 223 pages
 Creatine research report approved ("Approve all") -> built -> QA gate PASS (300 oracle runs) -> deployed. Code map: engine `CREATINE-ENGINE` (`CalcThis.creatineEngine`), init `CalcThis.initCreatineCalc` (ids `cr*`, block `CREATINE:BEGIN/END`), css `.p-cr`, generator `md-files/gen-creatine-page.js`, notes `md-files/calcthis-creatine-research.md`. Details in CLAUDE.md addendum 23. **New global DS component `.radgrp/.radopt` (radio options with a one-line explanation each) + global `.res-big` spacing fix.** User corrections: "Plan" unclear -> "Start with" radio options (his wording); he wants clear selected state in DS colours. **NEXT JOB: VITAMIN D + IU<->mcg as ONE page (blocker: readable RDA/UL source — ask him to paste the ODS table); then BAC late.** Next generator chains after `creatine-calculator` (prev menu 'Creatine', name 'Creatine Calculator', llms anchor '- [Creatine Calculator', seo-meta anchor `"/creatine-calculator/": {`). Bing: URL submitted at deploy; GSC queue unchanged (utah next).
 

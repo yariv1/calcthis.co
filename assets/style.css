@@ -3155,3 +3155,45 @@
 .radopt.on{border-color:var(--amber);background:#FBF3E4;box-shadow:0 0 0 3px rgba(181,118,31,.13)}
 .radopt.on .rd{border-color:var(--amber)}
 .radopt.on .rd::after{content:'';position:absolute;inset:3px;border-radius:50%;background:var(--amber)}
+
+/* ---- VITAMIN D calculator (.p-vd) — same row / amount-box / bar rules as the caffeine, fiber and creatine pages ---- */
+.p-vd .modeseg{grid-template-columns:repeat(3,1fr)}
+.p-vd .cf-row{padding:8px 0 12px;border-bottom:1px dashed var(--line)}
+.p-vd .cf-r1{display:grid;grid-template-columns:minmax(0,1fr) 28px;gap:8px;align-items:center;margin-bottom:10px}
+.p-vd .cf-r1 .vd-rl{margin:0;font-weight:700;color:var(--ink)}
+.p-vd .cf-r1 .x{background:none;border:0;color:var(--muted);cursor:pointer;font-size:18px;line-height:1;padding:2px 4px;border-radius:5px;justify-self:center}
+.p-vd .cf-r1 .x:hover{color:#b23;background:#f7e9e9}
+.p-vd .cf-rows.one .x{display:none}
+.p-vd .cf-rows.one .cf-r1{grid-template-columns:minmax(0,1fr)}
+.p-vd .cf-note{font-size:14px;font-weight:400;color:var(--muted);margin:-6px 0 0;line-height:1.4}
+.p-vd .cf-note.vd-warn{font-weight:600;color:var(--amber-deep);background:#FBF3E4;border-left:3px solid var(--amber);border-radius:6px;padding:8px 10px;margin:0 0 4px}
+.p-vd .cf-box{display:flex;align-items:center;gap:8px;background:#FBF6EC;border:1px solid var(--line);border-radius:11px;padding:6px 8px;transition:.15s}
+.p-vd .cf-box:focus-within{border-color:var(--amber);background:#fff;box-shadow:0 0 0 3px rgba(181,118,31,.13)}
+.p-vd .cf-box input{flex:1;min-width:0;width:100%;border:0;background:none;font:inherit;font-size:19px;font-weight:600;color:var(--ink);padding:4px 4px;margin:0;outline:none}
+.p-vd .cf-box .seg{flex:none;padding:2px}
+.p-vd .cf-box .seg button{padding:6px 11px;font-size:12.5px}
+.p-vd .cf-bar{margin:6px 0 4px}
+.p-vd .cf-bar.has-t{margin-top:36px}
+.p-vd .cf-bar-t{position:relative;height:28px;border-radius:8px;background:#EFE7D8}
+.p-vd .cf-segs{display:flex;height:100%;border-radius:8px;overflow:hidden}
+.p-vd .cf-seg{display:block;height:100%;min-width:0}
+.p-vd .vd-z-below{background:#6B7A9E}
+.p-vd .vd-z-within{background:var(--spruce)}
+.p-vd .vd-z-above{background:var(--amber-deep)}
+.p-vd .cf-tick{position:absolute;top:-8px;bottom:-8px;width:3px;margin-left:-1.5px;border-radius:2px;background:var(--ink)}
+.p-vd .cf-tick{font-style:normal;box-shadow:0 0 0 1.5px #fff}
+.p-vd .cf-tick.rd{background:var(--spruce)}
+.p-vd .cf-tick.ul{background:var(--amber-deep)}
+.p-vd .cf-tick b{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);margin-bottom:3px;font-size:13px;font-weight:800;color:var(--ink);white-space:nowrap;background:var(--card);padding:0 4px}
+.p-vd .cf-tick.r b{left:auto;right:-1.5px;transform:none}
+.p-vd .cf-tick.l b{left:-1.5px;transform:none}
+.p-vd .cf-key{display:flex;flex-wrap:wrap;gap:6px 14px;margin:12px 0 4px;font-size:14px;color:var(--ink-soft)}
+.p-vd .cf-key i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.p-vd .vd-ky.rd{background:var(--spruce)}
+.p-vd .vd-ky.ul{background:var(--amber-deep)}
+.p-vd .dtable td:nth-child(n+2),.p-vd .dtable th:nth-child(n+2){text-align:right}
+.p-vd .dtable tfoot td{font-weight:700;border-top:2px solid var(--line)}
+.p-vd .vd-out{font-size:16px;font-weight:700;color:var(--ink);margin:-4px 0 12px}
+.p-vd .av-note,.p-vd .cb-note{font-size:14px;font-weight:500;color:var(--ink-soft);margin:4px 0 8px;line-height:1.45}
+.p-vd .cb-note{color:var(--muted);font-weight:400}
+.p-vd .bm-sub{display:block;font-size:12.5px;font-weight:500;color:var(--muted);margin-top:2px}

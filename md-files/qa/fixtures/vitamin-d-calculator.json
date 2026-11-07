@@ -1,0 +1,34 @@
+{
+  "slug": "vitamin-d-calculator",
+  "bodyClass": "p-vd",
+  "blocks": ["VITD"],
+  "result": { "big": "vdBig", "body": "vdBody", "hint": "vdHint" },
+  "required": ["vdAge"],
+  "fill": [
+    ["click", "vdClear"],
+    ["seg", "vdStd", "us"],
+    ["seg", "vdAu", "y"],
+    ["seg", "vdSu", "ng"],
+    ["seg", "vdU1", "iu"],
+    ["seg", "vdP1", "d"],
+    ["set", "vdS", ""],
+    ["set", "vdA1", ""],
+    ["set", "vdC1", ""],
+    ["set", "vdAge", "35"]
+  ],
+  "optionalSamples": {
+    "vdA1": ["1000", "5000", "2.5"],
+    "vdC1": ["1", "2", "0.5"],
+    "vdS": ["30", "75"]
+  },
+  "variants": [
+    [["seg", "vdStd", "uk"]],
+    [["seg", "vdAu", "m"], ["set", "vdAge", "8"]],
+    [["set", "vdA1", "1000"], ["set", "vdC1", "2"]],
+    [["click", "vdAdd"], ["set", "vdA2", "5"], ["seg", "vdU2", "mcg"], ["set", "vdC2", "3"]],
+    [["seg", "vdP1", "w"], ["set", "vdA1", "50000"]],
+    [["click", "vdAdvBtn"], ["set", "vdS", "30"]]
+  ],
+  "scrollTo": "vdTargets",
+  "errorState": [["set", "vdAge", "200"]]
+}

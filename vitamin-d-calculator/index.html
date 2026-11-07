@@ -1,0 +1,760 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Vitamin D Calculator — IU to mcg, RDA and Upper Limit</title>
+<meta name="description" content="Vitamin D calculator: recommended amount and upper limit by age (US, UK, EU), IU to mcg both ways, and a total of every supplement you take.">
+<link rel="canonical" href="https://calcthis.co/vitamin-d-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Vitamin D Calculator — IU to mcg, RDA and Upper Limit">
+<meta property="og:description" content="Vitamin D calculator: recommended amount and upper limit by age (US, UK, EU), IU to mcg both ways, and a total of every supplement you take.">
+<meta property="og:url" content="https://calcthis.co/vitamin-d-calculator/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/datepicker.min.css">
+<link rel="stylesheet" href="/assets/style.css?v=326">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Vitamin D Calculator",
+  "url": "https://calcthis.co/vitamin-d-calculator/",
+  "applicationCategory": "HealthApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "Free vitamin D calculator: recommended daily amount and upper limit by age from MedlinePlus (US), the NHS (UK) and EFSA (EU), IU to mcg conversion both ways (1 mcg = 40 IU), several supplements added up per day or per week, and a blood level unit converter (ng/mL and nmol/L)."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How many IU is 1 mcg of vitamin D?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "1 mcg of vitamin D is 40 IU, so IU ÷ 40 = mcg and mcg × 40 = IU. 1,000 IU = 25 mcg, 2,000 IU = 50 mcg and 5,000 IU = 125 mcg. The official pages list the two together (for example 600 IU (15 mcg)), which is a factor of 40."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How much vitamin D do I need a day?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "MedlinePlus lists 600 IU (15 mcg) a day for ages 1 to 70, 800 IU (20 mcg) over 70, and 400 IU (10 mcg) for babies. The NHS advises 10 micrograms (400 IU) a day from age 1. EFSA sets an adequate intake of 15 micrograms (600 IU) a day for adults and children from 1 to 17. The calculator shows the one you choose for your age."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the upper limit for vitamin D?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "For ages 9 and over the upper limit is 4,000 IU (100 mcg) a day in the US; the NHS gives the same 100 micrograms from age 11, 50 micrograms (2,000 IU) at ages 1–10 and 25 micrograms (1,000 IU) under 12 months, and EFSA gives 100 micrograms from age 11, 50 micrograms at ages 1–10, 35 micrograms at 7–11 months and 25 micrograms under 7 months. It is the highest daily amount not expected to cause harm in most people."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is 5,000 IU of vitamin D too much?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "5,000 IU is 125 mcg, above the 4,000 IU (100 mcg) upper limit for ages 9 and over. If a doctor prescribed it, follow that advice; if you chose it yourself, ask a clinician. The calculator shows the share of the upper limit for what you take."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I convert a weekly vitamin D dose to a daily amount?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Divide by 7. A 50,000 IU capsule once a week is 7,143 IU (178.6 mcg) a day on average. Choose “a week” next to how many you take and the calculator does it, then compares the daily average with the upper limit. The upper limit is a daily figure, so ask your clinician about a prescribed weekly dose."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between IU and mcg?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "IU (international units) and mcg (micrograms) are two ways to write the same amount of vitamin D: IU is based on biological effect and mcg on weight. Labels in the US now list micrograms, often with IU in brackets."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I convert ng/mL to nmol/L?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Multiply ng/mL by 2.5: 20 ng/mL = 50 nmol/L and 40 ng/mL = 100 nmol/L. Open Go advanced to convert a blood test result either way. The page does not say what a level means; ask your clinician."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Should I take a vitamin D supplement?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The NHS advises everyone to consider 10 micrograms a day in autumn and winter, and all year for people who rarely go outdoors, cover most of their skin outdoors or have dark skin. That is UK advice; ask a clinician what suits you."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "CalcThis",
+      "item": "https://calcthis.co/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Vitamin D Calculator",
+      "item": "https://calcthis.co/vitamin-d-calculator/"
+    }
+  ]
+}
+</script>
+<meta property="og:site_name" content="CalcThis">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://calcthis.co/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="CalcThis — free, purpose-built calculators">
+<meta name="twitter:title" content="Vitamin D Calculator — IU to mcg, RDA and Upper Limit">
+<meta name="twitter:description" content="Vitamin D calculator: recommended amount and upper limit by age (US, UK, EU), IU to mcg both ways, and a total of every supplement you take.">
+<meta name="twitter:image" content="https://calcthis.co/assets/og-default.png">
+</head>
+<body class="p-bmr p-vd">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <a class="hdr-back" href="/blog/" aria-label="Back to blog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-search"><div class="menu-sx"><input id="menuSearch" type="search" placeholder="Search calculators or states…" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Search calculators" enterkeyhint="search"></div><div class="menu-results" id="menuResults" hidden></div></div>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <span class="menu-col-head">Construction &amp; Gardening</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+          <a href="/paint-calculator/">Paint</a>
+          <a href="/wallpaper-calculator/">Wallpaper</a>
+          <a href="/square-footage-calculator/">Square Footage</a>
+          <a href="/tape-measure-fraction-calculator/">Tape Measure Fraction</a>
+          <a href="/stair-calculator/">Stair</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/vo2-max-calculator/">VO2 Max</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
+          <a href="/bmi-calculator/">BMI</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/ideal-weight-calculator/">Ideal Weight</a>
+          <a href="/lean-body-mass-calculator/">Lean Body Mass</a>
+          <a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio</a>
+          <a href="/gmi-calculator/">GMI</a>
+          <a href="/a1c-calculator/">A1C</a>
+          <a href="/calorie-calculator/">Calorie</a>
+          <a href="/calorie-deficit-calculator/">Calorie Deficit</a>
+          <a href="/bmr-calculator/">BMR</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/water-intake-calculator/">Water Intake</a>
+          <a href="/macro-calculator/">Macro</a>
+          <a href="/protein-intake-calculator/">Protein Intake</a>
+          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
+          <a href="/steps-to-miles-calculator/">Steps to Miles</a>
+          <a href="/dog-age-calculator/">Dog Age</a>
+          <a href="/cat-age-calculator/">Cat Age</a>
+          <a href="/calories-burned-calculator/">Calories Burned</a>
+          <a href="/calories-burned-walking-calculator/">Calories Burned Walking</a>
+          <a href="/calories-burned-running-calculator/">Calories Burned Running</a>
+          <a href="/keto-calculator/">Keto</a>
+          <a href="/net-carb-calculator/">Net Carb</a>
+          <a href="/intermittent-fasting-calculator/">Intermittent Fasting</a>
+          <a href="/bsa-calculator/">BSA</a>
+          <a href="/dog-food-calculator/">Dog Food</a>
+          <a href="/ffmi-calculator/">FFMI</a>
+          <a href="/bulking-calculator/">Bulking</a>
+          <a href="/weight-loss-calculator/">Weight Loss</a>
+          <a href="/weight-loss-percentage-calculator/">Weight Loss %</a>
+          <a href="/max-heart-rate-calculator/">Max Heart Rate</a>
+          <a href="/caffeine-calculator/">Caffeine</a>
+          <a href="/caffeine-half-life-calculator/">Caffeine Half Life</a>
+          <a href="/fiber-calculator/">Fiber</a>
+          <a href="/creatine-calculator/">Creatine</a>
+          <a href="/vitamin-d-calculator/" class="current">Vitamin D</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/semester-grade-calculator/">Semester Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+          <a href="/grade-curve-calculator/">Grade Curve</a>
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/fraction-calculator/">Fraction</a>
+          <a href="/standard-deviation-calculator/">Standard Deviation</a>
+          <a href="/scientific-notation-calculator/">Scientific Notation</a>
+          <a href="/average-calculator/">Average</a>
+          <a href="/batting-average-calculator/">Batting Average</a>
+          <a href="/stock-average-calculator/">Stock Average</a>
+          <a href="/dice-average-calculator/">Dice Average</a>
+          <a href="/time-average-calculator/">Time Average</a>
+          <a href="/weighted-average-calculator/">Weighted Average</a>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+          <a href="/percentage-change-calculator/">Percentage Change</a>
+          <a href="/age-calculator/">Age</a>
+          <a href="/date-calculator/">Date</a>
+          <a href="/time-calculator/">Time</a>
+          <a href="/hours-calculator/">Hours</a>
+          <a href="/triangle-calculator/">Triangle</a>
+          <a href="/random-number-generator/">Random Number</a>
+          <span class="menu-col-head">Cooking &amp; Kitchen</span>
+          <a href="/recipe-converter/">Recipe Converter</a>
+          <a href="/turkey-cooking-time-calculator/">Turkey Cooking Time</a>
+          <a href="/turkey-thawing-time-calculator/">Turkey Thawing Time</a>
+          <a href="/turkey-size-calculator/">Turkey Size</a>
+          <!--UNITNAV:START-->
+          <span class="menu-col-head">Unit Converters</span>
+          <a href="/unit-converter/">Unit Converter</a>
+          <a href="/length-converter/">Length Converter</a>
+          <a href="/weight-converter/">Weight Converter</a>
+          <a href="/volume-converter/">Volume Converter</a>
+          <a href="/temperature-converter/">Temperature Converter</a>
+          <a href="/area-converter/">Area Converter</a>
+          <a href="/speed-converter/">Speed Converter</a>
+          <a href="/data-storage-converter/">Data Storage Converter</a>
+          <a href="/cooking-converter/">Cooking Converter</a>
+          <a href="/px-to-rem-converter/">PX to REM Converter</a>
+          <!--UNITNAV:END-->
+          <span class="menu-col-head">Money &amp; Finance</span>
+          <a href="/mortgage-calculator/">Mortgage</a>
+          <a href="/loan-calculator/">Loan</a>
+          <a href="/auto-loan-calculator/">Auto Loan</a>
+          <a href="/car-sales-tax-calculator/">Car Sales Tax</a>
+          <a href="/overtime-calculator/">Overtime</a>
+          <a href="/salary-calculator/">Salary</a>
+          <!--STAXNAV:START-->
+          <a href="/sales-tax-calculator/">Sales Tax</a>
+          <a href="/sales-tax-calculator/california/">California Sales Tax</a>
+          <a href="/sales-tax-calculator/chicago/">Chicago Sales Tax</a>
+          <a href="/sales-tax-calculator/florida/">Florida Sales Tax</a>
+          <a href="/sales-tax-calculator/las-vegas/">Las Vegas Sales Tax</a>
+          <a href="/sales-tax-calculator/los-angeles/">Los Angeles Sales Tax</a>
+          <a href="/sales-tax-calculator/michigan/">Michigan Sales Tax</a>
+          <a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax</a>
+          <a href="/sales-tax-calculator/missouri/">Missouri Sales Tax</a>
+          <a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax</a>
+          <a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax</a>
+          <a href="/sales-tax-calculator/north-carolina/">North Carolina Sales Tax</a>
+          <a href="/sales-tax-calculator/ohio/">Ohio Sales Tax</a>
+          <a href="/sales-tax-calculator/texas/">Texas Sales Tax</a>
+          <a href="/sales-tax-calculator/virginia/">Virginia Sales Tax</a>
+          <!--STAXNAV:END-->
+          <a href="/tip-calculator/">Tip</a>
+          <a href="/how-much-to-tip/">How Much to Tip</a>
+        </div>
+        <!--PAYNAV:START-->
+        <div class="menu-col">
+          <span class="menu-col-head">Paycheck Calculators</span>
+          <a href="/paycheck-calculator/">Paycheck Calculator (all states)</a>
+          <a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a>
+          <a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arkansas/">Arkansas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/california/">California Paycheck Calculator</a>
+          <a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a>
+          <a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a>
+          <a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/hawaii/">Hawaii Paycheck Calculator</a>
+          <a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a>
+          <a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a>
+          <a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a>
+          <a href="/paycheck-calculator/louisiana/">Louisiana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a>
+          <a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a>
+          <a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a>
+          <a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a>
+          <a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nebraska/">Nebraska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a>
+          <a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a>
+          <a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a>
+          <a href="/paycheck-calculator/oklahoma/">Oklahoma Paycheck Calculator</a>
+          <a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a>
+          <a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a>
+          <a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a>
+          <a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/utah/">Utah Paycheck Calculator</a>
+          <a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wisconsin/">Wisconsin Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a>
+        </div>
+        <!--PAYNAV:END-->
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">Vitamin D per day · IU to mcg · upper limit · your supplements added up</div>
+    <h1>Vitamin D Calculator</h1>
+    <p>Type your <strong>age</strong> and see how much <strong>vitamin D</strong> is recommended a day — <strong>600 IU (15 mcg)</strong> for most adults in the US, <strong>10 mcg (400 IU)</strong> in the UK, <strong>15 mcg</strong> in the EU — and the <strong>upper limit</strong>. Then add the supplements you take: the calculator converts <strong>IU to mcg</strong> both ways, adds them up (even a weekly capsule) and shows where you stand.</p>
+  </section>
+
+  <div class="grid">
+
+    <!-- INPUT -->
+    <div class="card">
+      <div class="card-pad">
+        <h2 class="card-h2">Your details</h2>
+        <div class="ctl-row" style="display:block"><span class="ctl-lab" style="display:block;margin-bottom:6px">Recommendation from</span><div class="modeseg" id="vdStd" role="group" aria-label="Recommendation from"><button class="on" type="button" data-v="us">United States</button><button type="button" data-v="uk">United Kingdom</button><button type="button" data-v="eu">Europe</button></div></div>
+        <div class="fld"><span class="lab">Age</span><div class="cf-box"><input id="vdAge" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 35" aria-label="Age"><div class="seg cf-u" id="vdAu" data-u="y" role="group" aria-label="Age unit"><button type="button" class="on" data-v="y">years</button><button type="button" data-v="m">months</button></div></div></div>
+        <div class="res-hint" id="vdHint" style="display:none;text-align:left;margin:4px 0 8px"></div>
+        <div class="proj-sep"></div>
+        <p class="bm-h">What you take</p>
+        <div id="vdRows" class="cf-rows one"></div>
+        <div class="add-row split" style="margin-top:10px"><button class="btn" id="vdAdd" type="button"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg> Add supplement</button><button class="linkbtn" id="vdClear" type="button">Clear all</button></div>
+        <div id="vdAdvIn" style="display:none">
+          <div class="proj-sep"></div>
+          <p class="bm-h">Blood test unit converter</p>
+          <div class="fld"><span class="lab">Vitamin D blood level</span><div class="cf-box"><input id="vdS" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 30" aria-label="Vitamin D blood level"><div class="seg cf-u" id="vdSu" data-u="ng" role="group" aria-label="Vitamin D blood level unit"><button type="button" class="on" data-v="ng">ng/mL</button><button type="button" data-v="nmol">nmol/L</button></div></div></div>
+          <p class="vd-out" id="vdSOut" style="display:none"></p>
+        </div>
+        <div class="add-row split" style="margin-top:16px">
+          <span></span>
+          <button class="advbtn" id="vdAdvBtn" type="button">
+            <span id="vdAdvBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div class="card">
+      <div class="card-pad">
+        <div class="bf-res">
+          <div class="res-lab">Vitamin D recommended a day</div>
+          <div class="res-big"><span id="vdBig">—</span></div>
+          <div class="res-sub" id="vdSub" data-empty="Enter your age.">Enter your age.</div>
+        </div>
+        <div id="vdBody" style="display:none">
+          <p class="res-tip adv-tip" id="vdTip"></p>
+          <p class="bm-h">Where you stand</p>
+          <div id="vdBar"></div>
+          <p class="bm-h">Your targets</p>
+          <table class="dtable" id="vdTargets"></table>
+          <div id="vdTallyWrap" style="display:none">
+            <p class="bm-h">What you take</p>
+            <table class="dtable" id="vdTally"></table>
+          </div>
+          <p class="cb-note">For information only, not medical advice. The recommended amount is the same in pregnancy and while breastfeeding (600 IU / 15 mcg in the US, 10 mcg in the UK, 15 mcg in the EU); ask your clinician about your own dose.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- mobile sticky bar -->
+  <div class="mbar" id="mbar">
+    <span class="mbar-lab" id="vdMLab">Vitamin D recommended a day</span>
+    <div class="mbar-vals"><b id="vdMVal">—</b></div>
+  </div>
+
+  <div class="related-calcs">
+    <p class="related-calcs-h">More calculators that may interest you</p>
+    <div class="pills">
+      <a class="pill" href="/creatine-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9v6M6 7v10M18 7v10M21 9v6M6 12h12"/></svg>
+        Creatine Calculator
+      </a>
+      <a class="pill" href="/fiber-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21V8M12 14c-3 0-5-2-5-5 3 0 5 2 5 5zM12 12c0-3 2-5 5-5 0 3-2 5-5 5z"/></svg>
+        Fiber Calculator
+      </a>
+      <a class="pill" href="/caffeine-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 9h11v5a5 5 0 0 1-5 5 5 5 0 0 1-6-5V9zM16 10h2a2 2 0 0 1 0 4h-2"/></svg>
+        Caffeine Calculator
+      </a>
+      <a class="pill" href="/protein-intake-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-4.5-7-10a4 4 0 0 1 7-2 4 4 0 0 1 7 2c0 5.5-7 10-7 10z"/></svg>
+        Protein Intake Calculator
+      </a>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use the vitamin D calculator</h2>
+        <p>Choose the <strong>US, UK or European</strong> recommendation and type your <strong>age</strong>. You get the recommended amount and the upper limit at once, in IU and in mcg.</p>
+        <p>Then add what you take: type the <strong>amount on the label</strong> for one capsule, drop or tablet, pick <strong>IU or mcg</strong>, and say <strong>how many you take a day or a week</strong>. Add as many supplements as you like; the calculator adds them up and shows the share of the recommended amount and of the upper limit.</p>
+        <p>Under <strong>Go advanced</strong> you can convert a blood test result between ng/mL and nmol/L.</p>
+
+        <h2>IU to mcg</h2>
+        <div class="formula">
+          mcg = IU ÷ 40 · IU = mcg × 40
+          <small>1 MCG OF VITAMIN D = 40 IU</small>
+        </div>
+        <table class="dtable"><thead><tr><th>IU</th><th>mcg</th></tr></thead><tbody><tr><td>100 IU</td><td>2.5 mcg</td></tr><tr><td>200 IU</td><td>5 mcg</td></tr><tr><td>400 IU</td><td>10 mcg</td></tr><tr><td>600 IU</td><td>15 mcg</td></tr><tr><td>800 IU</td><td>20 mcg</td></tr><tr><td>1,000 IU</td><td>25 mcg</td></tr><tr><td>2,000 IU</td><td>50 mcg</td></tr><tr><td>4,000 IU</td><td>100 mcg</td></tr><tr><td>5,000 IU</td><td>125 mcg</td></tr><tr><td>10,000 IU</td><td>250 mcg</td></tr><tr><td>50,000 IU</td><td>1,250 mcg</td></tr></tbody></table>
+        <p>The 40 comes from the way official pages pair the two units; see the sources.</p>
+      </div>
+
+      <div>
+        <h2>How much vitamin D do I need?</h2>
+        <p>The US recommended amounts and upper limits by age (MedlinePlus):</p>
+        <table class="dtable"><thead><tr><th>Age</th><th>Recommended a day</th><th>Upper limit a day</th></tr></thead><tbody><tr><td>0–6 months</td><td>400 IU (10 mcg)</td><td>1,000 IU (25 mcg)</td></tr><tr><td>7–12 months</td><td>400 IU (10 mcg)</td><td>1,500 IU (38 mcg)</td></tr><tr><td>1–3 years</td><td>600 IU (15 mcg)</td><td>2,500 IU (63 mcg)</td></tr><tr><td>4–8 years</td><td>600 IU (15 mcg)</td><td>3,000 IU (75 mcg)</td></tr><tr><td>9–70 years</td><td>600 IU (15 mcg)</td><td>4,000 IU (100 mcg)</td></tr><tr><td>over 70 years</td><td>800 IU (20 mcg)</td><td>4,000 IU (100 mcg)</td></tr></tbody></table>
+        <p>The NHS advice in the UK:</p>
+        <table class="dtable"><thead><tr><th>Age</th><th>Recommended a day</th><th>Upper limit a day</th></tr></thead><tbody><tr><td>under 1 year</td><td>340–400 IU (8.5–10 mcg)</td><td>1,000 IU (25 mcg)</td></tr><tr><td>1–10 years</td><td>400 IU (10 mcg)</td><td>2,000 IU (50 mcg)</td></tr><tr><td>11 years and over</td><td>400 IU (10 mcg)</td><td>4,000 IU (100 mcg)</td></tr></tbody></table>
+        <p>The EFSA values in the EU:</p>
+        <table class="dtable"><thead><tr><th>Age</th><th>Adequate intake a day</th><th>Upper limit a day</th></tr></thead><tbody><tr><td>0–6 months</td><td>not set</td><td>1,000 IU (25 mcg)</td></tr><tr><td>7–11 months</td><td>400 IU (10 mcg)</td><td>1,400 IU (35 mcg)</td></tr><tr><td>1–10 years</td><td>600 IU (15 mcg)</td><td>2,000 IU (50 mcg)</td></tr><tr><td>11–17 years</td><td>600 IU (15 mcg)</td><td>4,000 IU (100 mcg)</td></tr><tr><td>18 years and over</td><td>600 IU (15 mcg)</td><td>4,000 IU (100 mcg)</td></tr></tbody></table>
+
+        <h2>Weekly capsules</h2>
+        <p>A 50,000 IU capsule once a week averages 7,143 IU (178.6 mcg) a day. Choose “a week” in the calculator and it divides by 7 for you.</p>
+        <p>More nutrition tools: the <a href="/creatine-calculator/">creatine calculator</a>, the <a href="/fiber-calculator/">fiber calculator</a> and the <a href="/protein-intake-calculator/">protein intake calculator</a>.</p>
+        <h2>Sources</h2>
+        <ul>
+          <li>US recommended amounts and upper limits: MedlinePlus (US National Library of Medicine), Vitamin D, reviewed 21 January 2025 (read 2026-11-07): adequate intake 400 IU (10 mcg) from birth to 12 months; RDA 600 IU (15 mcg) from 1 to 70 years, in pregnancy and while breastfeeding; 800 IU (20 mcg) over 70; upper limits 1,000 IU (25 mcg) at 0–6 months, 1,500 IU (38 mcg) at 7–12 months, 2,500 IU (63 mcg) at 1–3 years, 3,000 IU (75 mcg) at 4–8 years and 4,000 IU (100 mcg) from 9 years. The mcg values for the upper limits are rounded in the source. The same RDA values appear on the Harvard T.H. Chan Nutrition Source (last reviewed March 2023) and the Linus Pauling Institute micronutrient page.</li>
+          <li>UK advice: NHS, Vitamin D (reviewed 3 August 2020, read 2026-11-07): 10 micrograms (400 IU) a day for children from 1 year and adults; 8.5–10 micrograms for babies up to 1 year; do not take more than 100 micrograms (4,000 IU) a day from age 11, 50 micrograms (2,000 IU) at ages 1–10 and 25 micrograms (1,000 IU) under 12 months. The IU for the baby range (340–400) is worked out here with the same factor.</li>
+          <li>EU values: EFSA (European Food Safety Authority). Adequate intakes from the EFSA scientific opinion on dietary reference values for vitamin D (2016; abstract read on the University of Dundee repository record, 2026-11-07): 15 µg a day for adults and for children aged 1–17, 10 µg a day for infants aged 7–11 months, and 15 µg a day in pregnancy and lactation; EFSA sets no adequate intake for younger infants in that abstract. Upper limits from the EFSA overview of tolerable upper intake levels (version 1.1, August 2025, citing the EFSA NDA Panel 2018 and 2023 opinions; read 2026-11-07): 25 µg a day at 0–6 months, 35 µg at 7–11 months, 50 µg at 1–10 years and 100 µg from 11 years, in adults, pregnancy and lactation. The EFSA topic page confirms the 100 µg adult limit was kept in August 2023. The IU for EU values are worked out here with the factor of 40.</li>
+          <li>IU and mcg: the pages above always list the two together (10 mcg = 400 IU, 15 mcg = 600 IU, 20 mcg = 800 IU, 25 mcg = 1,000 IU, 100 mcg = 4,000 IU), which is a factor of 40. No page I could open states the rule in words, so the factor is implied by those pairs; the US FDA guidance page returned an error and the NIH Office of Dietary Supplements site refused the request.</li>
+          <li>Blood level units: 1 ng/mL = 2.5 nmol/L, from the pairs 20 ng/mL = 50 nmol/L (Omnicalculator) and 40–60 ng/mL = 100–150 nmol/L (GrassrootsHealth), both read 2026-11-07. This is a unit conversion only; the page gives no verdict on a level.</li>
+          <li>Not on this page because I found no source I could read: treatment or loading doses, what counts as deficient, sunshine and skin-tone estimates, and the vitamin D in foods.</li>
+        </ul>
+        <p><small>For information only, not medical advice. The upper limit is the highest daily intake not expected to cause harm in most people; do not change a prescribed dose without asking the clinician who prescribed it.</small></p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>How many IU is 1 mcg of vitamin D?</summary><p>1 mcg of vitamin D is 40 IU, so IU ÷ 40 = mcg and mcg × 40 = IU. 1,000 IU = 25 mcg, 2,000 IU = 50 mcg and 5,000 IU = 125 mcg. The official pages list the two together (for example 600 IU (15 mcg)), which is a factor of 40.</p></details>
+    <details class="faq"><summary>How much vitamin D do I need a day?</summary><p>MedlinePlus lists 600 IU (15 mcg) a day for ages 1 to 70, 800 IU (20 mcg) over 70, and 400 IU (10 mcg) for babies. The NHS advises 10 micrograms (400 IU) a day from age 1. EFSA sets an adequate intake of 15 micrograms (600 IU) a day for adults and children from 1 to 17. The calculator shows the one you choose for your age.</p></details>
+    <details class="faq"><summary>What is the upper limit for vitamin D?</summary><p>For ages 9 and over the upper limit is 4,000 IU (100 mcg) a day in the US; the NHS gives the same 100 micrograms from age 11, 50 micrograms (2,000 IU) at ages 1–10 and 25 micrograms (1,000 IU) under 12 months, and EFSA gives 100 micrograms from age 11, 50 micrograms at ages 1–10, 35 micrograms at 7–11 months and 25 micrograms under 7 months. It is the highest daily amount not expected to cause harm in most people.</p></details>
+    <details class="faq"><summary>Is 5,000 IU of vitamin D too much?</summary><p>5,000 IU is 125 mcg, above the 4,000 IU (100 mcg) upper limit for ages 9 and over. If a doctor prescribed it, follow that advice; if you chose it yourself, ask a clinician. The calculator shows the share of the upper limit for what you take.</p></details>
+    <details class="faq"><summary>How do I convert a weekly vitamin D dose to a daily amount?</summary><p>Divide by 7. A 50,000 IU capsule once a week is 7,143 IU (178.6 mcg) a day on average. Choose “a week” next to how many you take and the calculator does it, then compares the daily average with the upper limit. The upper limit is a daily figure, so ask your clinician about a prescribed weekly dose.</p></details>
+    <details class="faq"><summary>What is the difference between IU and mcg?</summary><p>IU (international units) and mcg (micrograms) are two ways to write the same amount of vitamin D: IU is based on biological effect and mcg on weight. Labels in the US now list micrograms, often with IU in brackets.</p></details>
+    <details class="faq"><summary>How do I convert ng/mL to nmol/L?</summary><p>Multiply ng/mL by 2.5: 20 ng/mL = 50 nmol/L and 40 ng/mL = 100 nmol/L. Open Go advanced to convert a blood test result either way. The page does not say what a level means; ask your clinician.</p></details>
+    <details class="faq"><summary>Should I take a vitamin D supplement?</summary><p>The NHS advises everyone to consider 10 micrograms a day in autumn and winter, and all year for people who rarely go outdoors, cover most of their skin outdoors or have dark skin. That is UK advice; ask a clinician what suits you.</p></details>
+  </section>
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+      <div class="footer-stack">
+<div class="footer-col" style="order:1">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+          <li><a href="/paint-calculator/">Paint Calculator</a></li>
+          <li><a href="/wallpaper-calculator/">Wallpaper Calculator</a></li>
+          <li><a href="/square-footage-calculator/">Square Footage Calculator</a></li>
+          <li><a href="/tape-measure-fraction-calculator/">Tape Measure Fraction Calculator</a></li>
+          <li><a href="/stair-calculator/">Stair Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:5">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Cooking &amp;</span> <span class="ft2">Kitchen</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/recipe-converter/">Recipe Converter</a></li>
+          <li><a href="/turkey-cooking-time-calculator/">Turkey Cooking Time Calculator</a></li>
+          <li><a href="/turkey-thawing-time-calculator/">Turkey Thawing Time Calculator</a></li>
+          <li><a href="/turkey-size-calculator/">Turkey Size Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:6">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Money &amp;</span> <span class="ft2">Finance</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/mortgage-calculator/">Mortgage Calculator</a></li>
+          <li><a href="/loan-calculator/">Loan Calculator</a></li>
+          <li><a href="/auto-loan-calculator/">Auto Loan Calculator</a></li>
+          <li><a href="/car-sales-tax-calculator/">Car Sales Tax Calculator</a></li>
+          <li><a href="/overtime-calculator/">Overtime Calculator</a></li>
+          <li><a href="/salary-calculator/">Salary Calculator</a></li>
+          <!--STAXFOOT:START-->
+          <li><a href="/sales-tax-calculator/">Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/california/">California Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/chicago/">Chicago Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/florida/">Florida Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/las-vegas/">Las Vegas Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/los-angeles/">Los Angeles Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/michigan/">Michigan Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/missouri/">Missouri Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/north-carolina/">North Carolina Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/ohio/">Ohio Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/texas/">Texas Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/virginia/">Virginia Sales Tax Calculator</a></li>
+          <!--STAXFOOT:END-->
+          <li><a href="/tip-calculator/">Tip Calculator</a></li>
+          <li><a href="/how-much-to-tip/">How Much to Tip</a></li>
+        </ul>
+      </div>
+      </div>
+
+      <div class="footer-right">
+<div class="footer-col footer-col--two" style="order:2">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/vo2-max-calculator/">VO2 Max Calculator</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/bmi-calculator/">BMI Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/ideal-weight-calculator/">Ideal Weight Calculator</a></li>
+          <li><a href="/lean-body-mass-calculator/">Lean Body Mass Calculator</a></li>
+          <li><a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio Calculator</a></li>
+          <li><a href="/gmi-calculator/">GMI Calculator</a></li>
+          <li><a href="/a1c-calculator/">A1C Calculator</a></li>
+          <li><a href="/calorie-calculator/">Calorie Calculator</a></li>
+          <li><a href="/calorie-deficit-calculator/">Calorie Deficit Calculator</a></li>
+          <li><a href="/bmr-calculator/">BMR Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/water-intake-calculator/">Water Intake Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/protein-intake-calculator/">Protein Intake Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
+          <li><a href="/steps-to-miles-calculator/">Steps to Miles Calculator</a></li>
+          <li><a href="/dog-age-calculator/">Dog Age Calculator</a></li>
+          <li><a href="/cat-age-calculator/">Cat Age Calculator</a></li>
+          <li><a href="/calories-burned-calculator/">Calories Burned Calculator</a></li>
+          <li><a href="/calories-burned-walking-calculator/">Calories Burned Walking Calculator</a></li>
+          <li><a href="/calories-burned-running-calculator/">Calories Burned Running Calculator</a></li>
+          <li><a href="/keto-calculator/">Keto Calculator</a></li>
+          <li><a href="/net-carb-calculator/">Net Carb Calculator</a></li>
+          <li><a href="/intermittent-fasting-calculator/">Intermittent Fasting Calculator</a></li>
+          <li><a href="/bsa-calculator/">BSA Calculator</a></li>
+          <li><a href="/dog-food-calculator/">Dog Food Calculator</a></li>
+          <li><a href="/ffmi-calculator/">FFMI Calculator</a></li>
+          <li><a href="/bulking-calculator/">Bulking Calculator</a></li>
+          <li><a href="/weight-loss-calculator/">Weight Loss Calculator</a></li>
+          <li><a href="/weight-loss-percentage-calculator/">Weight Loss Percentage Calculator</a></li>
+          <li><a href="/max-heart-rate-calculator/">Max Heart Rate Calculator</a></li>
+          <li><a href="/caffeine-calculator/">Caffeine Calculator</a></li>
+          <li><a href="/caffeine-half-life-calculator/">Caffeine Half Life Calculator</a></li>
+          <li><a href="/fiber-calculator/">Fiber Calculator</a></li>
+          <li><a href="/creatine-calculator/">Creatine Calculator</a></li>
+          <li><a href="/vitamin-d-calculator/">Vitamin D Calculator</a></li>
+        </ul>
+      </div>
+
+        <div class="footer-sub">
+<div class="footer-subcol">
+<div class="footer-col" style="order:3">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/semester-grade-calculator/">Semester Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+          <li><a href="/grade-curve-calculator/">Grade Curve Calculator</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:START-->
+<div class="footer-col" style="order:7">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Unit</span> <span class="ft2">Converters</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/unit-converter/">Unit Converter</a></li>
+          <li><a href="/length-converter/">Length Converter</a></li>
+          <li><a href="/weight-converter/">Weight Converter</a></li>
+          <li><a href="/volume-converter/">Volume Converter</a></li>
+          <li><a href="/temperature-converter/">Temperature Converter</a></li>
+          <li><a href="/area-converter/">Area Converter</a></li>
+          <li><a href="/speed-converter/">Speed Converter</a></li>
+          <li><a href="/data-storage-converter/">Data Storage Converter</a></li>
+          <li><a href="/cooking-converter/">Cooking Measurement Converter</a></li>
+          <li><a href="/px-to-rem-converter/">PX to REM Converter</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:END-->
+</div>
+
+<div class="footer-col" style="order:4">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/fraction-calculator/">Fraction Calculator</a></li>
+          <li><a href="/standard-deviation-calculator/">Standard Deviation Calculator</a></li>
+          <li><a href="/scientific-notation-calculator/">Scientific Notation Calculator</a></li>
+          <li><a href="/weighted-average-calculator/">Weighted Average Calculator</a></li>
+          <li><a href="/average-calculator/">Average Calculator</a></li>
+          <li><a href="/batting-average-calculator/">Batting Average Calculator</a></li>
+          <li><a href="/stock-average-calculator/">Stock Average Calculator</a></li>
+          <li><a href="/dice-average-calculator/">Dice Average Calculator</a></li>
+          <li><a href="/time-average-calculator/">Time Average Calculator</a></li>
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+          <li><a href="/percentage-change-calculator/">Percentage Change Calculator</a></li>
+          <li><a href="/age-calculator/">Age Calculator</a></li>
+          <li><a href="/date-calculator/">Date Calculator</a></li>
+          <li><a href="/time-calculator/">Time Calculator</a></li>
+          <li><a href="/hours-calculator/">Hours Calculator</a></li>
+          <li><a href="/triangle-calculator/">Triangle Calculator</a></li>
+          <li><a href="/random-number-generator/">Random Number Generator</a></li>
+        </ul>
+      </div>
+        </div>
+      </div>
+
+      <!--PAYFOOT:START-->
+      <div class="footer-col footer-col--wide">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Paycheck</span> <span class="ft2">Calculators</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/paycheck-calculator/">Paycheck Calculator (all states)</a></li>
+          <li><a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arkansas/">Arkansas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/california/">California Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/hawaii/">Hawaii Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/louisiana/">Louisiana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nebraska/">Nebraska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/oklahoma/">Oklahoma Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/utah/">Utah Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wisconsin/">Wisconsin Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a></li>
+        </ul>
+      </div>
+      <!--PAYFOOT:END-->
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/blog/">Blog</a>
+      <span aria-hidden="true">·</span>
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+</div>
+
+<script src="/assets/app.js?v=326"></script>
+<script>CalcThis.initVitDCalc();</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>
