@@ -1,0 +1,35 @@
+{
+ "slug": "fiber-calculator",
+ "pass": true,
+ "at": "2026-11-07T09:20:50.771Z",
+ "hash": "29a80c650d1ddf6e",
+ "viewports": {
+  "mobile": {
+   "steps": 1238,
+   "fails": []
+  },
+  "desktop": {
+   "steps": 1238,
+   "fails": []
+  }
+ },
+ "oracle": {
+  "runs": 300,
+  "fails": []
+ },
+ "shots": [
+  "md-files/qa-passes/shots/fiber-calculator-1-empty-mobile.png",
+  "md-files/qa-passes/shots/fiber-calculator-2-filled-mobile.png",
+  "md-files/qa-passes/shots/fiber-calculator-3-result-mobile.png",
+  "md-files/qa-passes/shots/fiber-calculator-4-advanced-mobile.png",
+  "md-files/qa-passes/shots/fiber-calculator-5-error-mobile.png",
+  "md-files/qa-passes/shots/fiber-calculator-6-after-chaos-mobile.png",
+  "md-files/qa-passes/shots/fiber-calculator-1-empty-desktop.png",
+  "md-files/qa-passes/shots/fiber-calculator-2-filled-desktop.png",
+  "md-files/qa-passes/shots/fiber-calculator-3-result-desktop.png",
+  "md-files/qa-passes/shots/fiber-calculator-4-advanced-desktop.png",
+  "md-files/qa-passes/shots/fiber-calculator-5-error-desktop.png",
+  "md-files/qa-passes/shots/fiber-calculator-6-after-chaos-desktop.png"
+ ],
+ "console": []
+}

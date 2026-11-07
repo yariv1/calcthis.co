@@ -22021,3 +22021,225 @@ CalcThis.initCafHalfCalc = function () {
   addRow(); render();
 };
 /* CAF:END */
+
+/* FIBER:BEGIN */
+/* =========================================================
+   FIBER calculator (/fiber-calculator/). Ahrefs 2026-11-06: fiber calculator >1000 Easy (+ food >100). Competitors opened live (2026-11-07): Omnicalculator (sex, height, weight, age, activity -> calories -> fiber g/day),
+   Coachway (sex, age, optional calories; calorie-based 14 g/1,000 kcal AND fixed standard side by side; food examples), Tate & Lyle (8-question food-frequency quiz -> low/medium/high).
+   Sources READ: Dahl WJ & Stewart ML, Position of the Academy of Nutrition and Dietetics: Health Implications of Dietary Fiber, J Acad Nutr Diet 2015;115:1861 (abstract via Europe PMC): Adequate Intake 14 g total
+   fiber per 1,000 kcal, or 25 g adult women and 38 g adult men; mean US intake 17 g/day, about 5% meet the AI. Reynolds A et al., Lancet 2019;393:434 (abstract): biggest risk reduction at 25-29 g/day.
+   Food fiber per 100 g from USDA FoodData Central SR Legacy (public API, read 2026-11-07): apples raw golden delicious with skin 2.4, bananas raw 2.6, raspberries raw 6.5, pears raw 3.1, oranges raw 2.4, avocados raw 6.7,
+   broccoli cooked boiled 3.3, carrots raw 2.8, lentils cooked 7.9, black beans cooked 8.7, chickpeas cooked 7.6, rolled oats dry 10.1, whole-wheat bread 6.0. Serving sizes are ours (typical).
+   NOT read: the lower Adequate Intake values some tables list from age 51 (page says so); any ramp-up or water advice (not used).
+   ========================================================= */
+/* FIBER-ENGINE:START */
+CalcThis.fiberEngine = (function () {
+  var FOODS = [
+    { id: 'apple', name: 'Apple, with skin', per100: 2.4, g: 180, size: '1 medium apple, about 180 g' },
+    { id: 'banana', name: 'Banana', per100: 2.6, g: 120, size: '1 medium banana, about 120 g' },
+    { id: 'raspberry', name: 'Raspberries', per100: 6.5, g: 100, size: '100 g' },
+    { id: 'pear', name: 'Pear', per100: 3.1, g: 180, size: '1 medium pear, about 180 g' },
+    { id: 'orange', name: 'Orange', per100: 2.4, g: 130, size: '1 medium orange, about 130 g' },
+    { id: 'avocado', name: 'Avocado', per100: 6.7, g: 100, size: 'half an avocado, about 100 g' },
+    { id: 'broccoli', name: 'Broccoli, cooked', per100: 3.3, g: 90, size: '90 g cooked' },
+    { id: 'carrot', name: 'Carrot, raw', per100: 2.8, g: 60, size: '1 medium carrot, about 60 g' },
+    { id: 'lentils', name: 'Lentils, cooked', per100: 7.9, g: 100, size: '100 g cooked' },
+    { id: 'beans', name: 'Black beans, cooked', per100: 8.7, g: 90, size: '90 g cooked' },
+    { id: 'chickpeas', name: 'Chickpeas, cooked', per100: 7.6, g: 80, size: '80 g cooked' },
+    { id: 'oats', name: 'Rolled oats, dry', per100: 10.1, g: 40, size: '40 g dry' },
+    { id: 'bread', name: 'Whole-wheat bread', per100: 6.0, g: 30, size: '1 slice, about 30 g' },
+    { id: 'own', name: 'My own food', per100: 0, g: 0, size: '' }
+  ];
+  var PERK = 14, FIX = { f: 25, m: 38 }, USAVG = 17, LO = 25, HI = 29, PAL = [1.2, 1.375, 1.55, 1.725, 1.9], LB = 2.20462, ST = 6.35029;
+  function num(t) {
+    t = (t + '').trim().replace(/\s/g, '');
+    if (!t) return null;
+    if (/^[+-]?\d*,\d+$/.test(t)) t = t.replace(',', '.'); else t = t.replace(/,/g, '');
+    if (!/^[+-]?(\d+\.?\d*|\.\d+)$/.test(t)) return NaN;
+    return parseFloat(t);
+  }
+  function parseIn(t) {
+    t = (t + '').trim();
+    if (!t) return null;
+    var m = t.match(/^(\d+)\s*(?:'|ft|feet)\s*(\d+(?:\.\d+)?)?\s*(?:"|in|inches)?$/i);
+    if (m) return parseInt(m[1], 10) * 12 + (m[2] ? parseFloat(m[2]) : 0);
+    return num(t);
+  }
+  function byId(id) { for (var i = 0; i < FOODS.length; i++) if (FOODS[i].id === id) return FOODS[i]; return FOODS[0]; }
+  function rd(t, lo, hi) { var n = num(t); if (n === null) return { empty: true }; if (isNaN(n) || n <= 0 || n < lo || n > hi) return { bad: true }; return { v: n }; }
+  function readAge(t) { var r = rd(t, 19, 100); if (r.v) r.v = Math.floor(r.v); return r; }
+  function readKcal(t) { return rd(t, 800, 8000); }
+  function readPerK(t) { return rd(t, 5, 30); }
+  function readFib(t) { return rd(t, 0.1, 100); }
+  function readCm(t, unit) {
+    var n = unit === 'in' ? parseIn(t) : num(t); if (n === null) return { empty: true };
+    if (isNaN(n) || n <= 0) return { bad: true };
+    var cm = unit === 'in' ? n * 2.54 : n; if (cm < 100 || cm > 250) return { bad: true };
+    return { v: cm };
+  }
+  function readKg(t, unit) {
+    var n = num(t); if (n === null) return { empty: true };
+    if (isNaN(n) || n <= 0) return { bad: true };
+    var kg = unit === 'lb' ? n / LB : (unit === 'st' ? n * ST : n); if (kg < 30 || kg > 300) return { bad: true };
+    return { v: kg };
+  }
+  function kcalFrom(sex, age, cm, kg, pal) { return (10 * kg + 6.25 * cm - 5 * age + (sex === 'm' ? 5 : -161)) * pal; }
+  /* servings from what was typed (unit s = servings, g = grams); own food has servings only */
+  function readAmt(t, unit, foodId) {
+    var n = num(t); if (n === null) return { empty: true };
+    if (isNaN(n) || n <= 0) return { bad: true };
+    var f = byId(foodId), sv = (unit === 'g' && f.g) ? n / f.g : n;
+    if (sv < 0.1 || sv > 50) return { bad: true };
+    return { v: sv };
+  }
+  function fiberOf(foodId, servings, own) { var f = byId(foodId); return f.id === 'own' ? servings * own : servings * f.g * f.per100 / 100; }
+  function trim(x, d) { return String(parseFloat((Math.round(x * Math.pow(10, d)) / Math.pow(10, d)).toFixed(d))); }
+  function grp(n) { return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+  return { FOODS: FOODS, PERK: PERK, FIX: FIX, USAVG: USAVG, LO: LO, HI: HI, PAL: PAL, LB: LB, ST: ST, num: num, parseIn: parseIn, byId: byId, readAge: readAge, readKcal: readKcal, readPerK: readPerK, readFib: readFib,
+    readCm: readCm, readKg: readKg, kcalFrom: kcalFrom, readAmt: readAmt, fiberOf: fiberOf, trim: trim, grp: grp };
+})();
+/* FIBER-ENGINE:END */
+
+/* =========================================================
+   CalcThis.initFiberCalc() — ids fb*. Engine: CalcThis.fiberEngine. The amount fields reuse the caffeine pages' DS pattern (input + inline unit toggle).
+   ========================================================= */
+CalcThis.initFiberCalc = function () {
+  var E = CalcThis.fiberEngine, U = CalcThis._kzUtil, seg = U.seg, setSeg = U.setSeg, esc = U.esc;
+  var $ = function (id) { return document.getElementById(id); };
+  var CHEV = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
+  var st = { sex: 'f', cal: 'type', hu: 'in', wu: 'lb' }, rows = [], nextId = 0;
+  function setHint(m, at) {
+    var h = $('fbHint'); h.textContent = m || ''; h.style.display = m ? 'block' : 'none';
+    if (m && at) { var el = $(at), f = el ? el.closest('.fld, .cf-row') : null; if (f && f.nextSibling !== h) f.parentNode.insertBefore(h, f.nextSibling); }
+  }
+  function empty(msg, at) { $('fbBig').textContent = '—'; $('fbSub').textContent = $('fbSub').getAttribute('data-empty'); $('fbBody').style.display = 'none'; $('fbMVal').textContent = '—'; setHint(msg || '', at); }
+  /* ---------- unit toggles (inline, like the caffeine amount field) ---------- */
+  var UNITS = {
+    fbHu: { ph: { 'in': 'e.g. 70 or 5\'10', cm: 'e.g. 178' }, inp: 'fbH' },
+    fbWu: { ph: { lb: 'e.g. 154', kg: 'e.g. 70', st: 'e.g. 11' }, inp: 'fbW' }
+  };
+  function phSync(id) { var u = $(id), cur = u.getAttribute('data-u'); $(UNITS[id].inp).placeholder = UNITS[id].ph[cur]; }
+  function convert(id, v) {
+    var u = $(id), old = u.getAttribute('data-u'), inp = $(UNITS[id].inp), r;
+    if (v === old) return;
+    if (id === 'fbHu') { r = E.readCm(inp.value, old); if (r.v) inp.value = v === 'cm' ? E.trim(r.v, 0) : E.trim(r.v / 2.54, 1); }
+    else { r = E.readKg(inp.value, old); if (r.v) inp.value = E.trim(v === 'lb' ? r.v * E.LB : (v === 'st' ? r.v / E.ST : r.v), 1); }
+    u.setAttribute('data-u', v); if (id === 'fbHu') st.hu = v; else st.wu = v; phSync(id);
+  }
+  ['fbHu', 'fbWu'].forEach(function (id) {
+    $(id).addEventListener('click', function (e) {
+      var b = e.target.closest('button'); if (!b) return; var v = b.getAttribute('data-v');
+      convert(id, v); setSeg(id, v); render();
+    });
+  });
+  /* ---------- food rows ---------- */
+  function rowEl(id) { return document.querySelector('.cf-row[data-rid="' + id + '"]'); }
+  function note(fid) { var f = E.byId(fid); return f.id === 'own' ? 'Type the fiber on the label, in grams, for one serving, then how many servings you ate.' : 'One serving = ' + f.size + ', about ' + E.trim(f.g * f.per100 / 100, 1) + ' g of fiber. Switch to g for any other amount.'; }
+  function syncRow(id) {
+    var fid = $('fbF' + id).value, f = E.byId(fid), u = $('fbU' + id), cur = u.getAttribute('data-u') || 's', el = rowEl(id);
+    if (!f.g && cur === 'g') { cur = 's'; u.setAttribute('data-u', 's'); }
+    u.style.display = f.g ? '' : 'none'; setSeg('fbU' + id, cur);
+    el.querySelector('.cf-own').style.display = fid === 'own' ? '' : 'none';
+    el.querySelector('.cf-note').textContent = note(fid);
+    $('fbN' + id).placeholder = cur === 'g' ? 'e.g. 150' : 'e.g. 2';
+  }
+  function addRow() {
+    var id = ++nextId, div = document.createElement('div'); div.className = 'cf-row'; div.setAttribute('data-rid', id);
+    var opts = E.FOODS.map(function (f) { return '<button type="button" class="csel-opt' + (f.id === 'oats' ? ' on' : '') + '" role="option" aria-selected="' + (f.id === 'oats') + '" data-value="' + f.id + '">' + f.name + '</button>'; }).join('');
+    div.innerHTML = '<div class="cf-r1"><div class="csel" id="fbF' + id + '" data-value="oats"><button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false" aria-label="Food"><span class="csel-val">Rolled oats, dry</span>' + CHEV + '</button><div class="csel-panel" role="listbox">' + opts + '</div></div>' +
+      '<button class="x" type="button" aria-label="Remove food">&#215;</button></div>' +
+      '<div class="fld cf-own" style="display:none"><span class="lab">Fiber in one serving <span class="unit">g</span></span><div class="inp"><input id="fbM' + id + '" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 3" aria-label="Fiber in one serving, in grams"></div></div>' +
+      '<div class="fld cf-amt"><span class="lab">How much did you eat today?</span><div class="cf-box"><input id="fbN' + id + '" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 2" aria-label="How much did you eat today"><div class="seg cf-u" id="fbU' + id + '" data-u="s" role="group" aria-label="Unit"><button type="button" class="on" data-v="s">servings</button><button type="button" data-v="g">g</button></div></div></div>' +
+      '<p class="cf-note"></p>';
+    $('fbRows').appendChild(div); rows.push(id);
+    CalcThis.initCsel($('fbF' + id)); syncRow(id);
+    $('fbF' + id).addEventListener('change', function () { syncRow(id); render(); });
+    $('fbN' + id).addEventListener('input', render); $('fbM' + id).addEventListener('input', render);
+    $('fbU' + id).addEventListener('click', function (e) {
+      var b = e.target.closest('button'); if (!b) return; var v = b.getAttribute('data-v'), u = $('fbU' + id), old = u.getAttribute('data-u') || 's'; if (v === old) return;
+      var f = E.byId($('fbF' + id).value), inp = $('fbN' + id), r = E.readAmt(inp.value, old, f.id);
+      if (r.v && f.g) inp.value = v === 'g' ? E.trim(r.v * f.g, 0) : E.trim(r.v, 2);
+      u.setAttribute('data-u', v); syncRow(id); render();
+    });
+    div.querySelector('.x').addEventListener('click', function () {
+      if (rows.length === 1) { $('fbN' + id).value = ''; $('fbM' + id).value = ''; $('fbF' + id).value = 'oats'; $('fbU' + id).setAttribute('data-u', 's'); syncRow(id); render(); return; }
+      rows = rows.filter(function (r) { return r !== id; }); setHint(''); div.parentNode.removeChild(div); render();
+    });
+    $('fbRows').classList.toggle('one', rows.length === 1);
+    return id;
+  }
+  function clearAll() { setHint(''); $('fbRows').parentNode.insertBefore($('fbHint'), $('fbRows').nextSibling); $('fbRows').innerHTML = ''; rows = []; nextId = 0; addRow(); render(); }
+  /* ---------- render ---------- */
+  function render() {
+    $('fbRows').classList.toggle('one', rows.length === 1);
+    var A = E.readAge($('fbAge').value);
+    if (A.empty) { empty(''); return; }
+    if (A.bad) { empty('Age should be a number from 19 to 100 — this calculator is for adults.', 'fbAge'); return; }
+    var soft = [], kcal = null;
+    if (st.cal === 'type') {
+      var K = E.readKcal($('fbK').value);
+      if (K.bad) soft.push({ m: 'Calories should be between 800 and 8,000 a day. They are ignored for now, so the fixed standard is used.', at: 'fbK' }); else if (K.v) kcal = K.v;
+    } else {
+      var Hc = E.readCm($('fbH').value, st.hu), Wk = E.readKg($('fbW').value, st.wu);
+      if (Hc.bad) soft.push({ m: 'Height should be between ' + (st.hu === 'in' ? '39 and 98 inches' : '100 and 250 cm') + '. It is ignored for now, so the fixed standard is used.', at: 'fbH' });
+      else if (Wk.bad) soft.push({ m: 'Weight should be between ' + (st.wu === 'lb' ? '66 and 660 lb' : (st.wu === 'kg' ? '30 and 300 kg' : '4.7 and 47 st')) + '. It is ignored for now, so the fixed standard is used.', at: 'fbW' });
+      else if (Hc.v && Wk.v) kcal = E.kcalFrom(st.sex, A.v, Hc.v, Wk.v, parseFloat($('fbAct').value) || 1.55);
+    }
+    var P = E.readPerK($('fbPK').value), perK = E.PERK;
+    if (P.bad) soft.push({ m: 'Grams per 1,000 kcal should be between 5 and 30. It is ignored for now, so 14 is used.', at: 'fbPK' }); else if (P.v) perK = P.v;
+    /* tally */
+    var items = [], prob = null;
+    rows.forEach(function (id, k) {
+      var f = E.byId($('fbF' + id).value), c = E.readAmt($('fbN' + id).value, $('fbU' + id).getAttribute('data-u') || 's', f.id);
+      if (c.empty) return;
+      if (c.bad) { if (!prob) prob = { m: 'Food ' + (k + 1) + ': type how much you ate, between 0.1 and 50 servings. This food is left out for now.', at: 'fbN' + id }; return; }
+      var own = 0;
+      if (f.id === 'own') { var m = E.readFib($('fbM' + id).value); if (m.empty || m.bad) { if (!prob) prob = { m: 'Food ' + (k + 1) + ': type the fiber in one serving, from 0.1 to 100 g. This food is left out for now.', at: 'fbM' + id }; return; } own = m.v; }
+      items.push({ name: f.name, sv: c.v, fib: E.fiberOf(f.id, c.v, own), f: f });
+    });
+    if (prob) soft.push(prob);
+    setHint(soft.length ? soft[0].m : '', soft.length ? soft[0].at : null);
+    /* targets */
+    var fixed = E.FIX[st.sex], calT = kcal ? kcal / 1000 * perK : null, T = calT !== null ? calT : fixed;
+    var g = function (x) { return E.trim(x, 0) + ' g'; };
+    $('fbBig').textContent = g(T); $('fbMLab').textContent = 'Fiber a day'; $('fbMVal').textContent = g(T);
+    $('fbSub').textContent = calT !== null ? E.trim(perK, 1) + ' g per 1,000 kcal × ' + E.grp(kcal) + ' kcal · the fixed adult standard is ' + fixed + ' g' : 'the fixed adult standard for ' + (st.sex === 'f' ? 'women' : 'men') + ' · add your calories for the calorie-based target';
+    var total = 0; items.forEach(function (x) { total += x.fib; });
+    var tip = calT !== null ? 'At ' + E.grp(kcal) + ' kcal a day the calorie-based target is ' + g(calT) + '; the fixed standard for ' + (st.sex === 'f' ? 'women' : 'men') + ' is ' + fixed + ' g. ' : 'The fixed standard for ' + (st.sex === 'f' ? 'women' : 'men') + ' is ' + fixed + ' g a day. ';
+    tip += 'The average US adult eats about ' + E.USAVG + ' g, so most people have a gap to close.';
+    if (items.length) tip = 'You have had ' + E.trim(total, 1) + ' g of fiber today, ' + Math.round(total / T * 100) + '% of your ' + g(T) + (total >= T ? ' — you have reached it.' : ' — ' + E.trim(T - total, 1) + ' g still to go.');
+    $('fbTip').textContent = tip;
+    /* bar */
+    var scale = Math.max(T, total, 40) * 1.05, segs = '', key = '';
+    items.forEach(function (x, k) { var pc = x.fib / scale * 100, c = 'c' + (k % 6); segs += '<span class="cf-seg ' + c + '" style="width:' + pc + '%" title="' + esc(x.name) + '">' + (pc >= 9 ? E.trim(x.fib, 1) : '') + '</span>'; key += '<span><i class="' + c + '"></i>' + esc(x.name) + ' ' + E.trim(x.fib, 1) + ' g</span>'; });
+    var P_ = function (x) { return Math.min(100, x / scale * 100); }, tpos = P_(T);
+    var ticks = '<i class="fb-mk us" style="left:' + P_(E.USAVG) + '%"></i><i class="fb-mk fx" style="left:' + P_(fixed) + '%"></i><i class="cf-tick' + (tpos > 65 ? ' r' : (tpos < 35 ? ' l' : '')) + '" style="left:' + tpos + '%"><b>' + g(T) + ' target</b></i>';
+    $('fbBar').innerHTML = '<div class="cf-bar has-t"><div class="cf-bar-t"><div class="cf-segs">' + segs + '</div>' + ticks + '</div></div><div class="bm-key cf-key">' + key + '<span><i class="fb-ky us"></i>US average ' + E.USAVG + ' g</span><span><i class="fb-ky fx"></i>Fixed standard ' + fixed + ' g</span></div>';
+    /* targets table */
+    var tr = '', rowT = function (cls, a, b) { return '<tr' + (cls ? ' class="' + cls + '"' : '') + '><td>' + a + '</td><td>' + b + '</td></tr>'; };
+    if (calT !== null) tr += rowT(calT === T ? 'on' : '', E.trim(perK, 1) + ' g per 1,000 kcal (your calories)', g(calT));
+    tr += rowT(calT === null ? 'on' : '', 'Fixed adult standard, ' + (st.sex === 'f' ? 'women' : 'men'), fixed + ' g');
+    tr += rowT('', 'Average US adult', E.USAVG + ' g') + rowT('', 'Intake linked to the biggest risk reduction', E.LO + '–' + E.HI + ' g');
+    $('fbTargets').innerHTML = '<thead><tr><th>Target</th><th>Fiber a day</th></tr></thead><tbody>' + tr + '</tbody>';
+    /* tally table */
+    if (items.length) {
+      var tt = ''; items.forEach(function (x) { tt += '<tr><td>' + esc(x.name) + '</td><td>' + E.trim(x.sv, 2) + ' serving' + (x.sv === 1 ? '' : 's') + '</td><td>' + E.trim(x.fib, 1) + ' g</td></tr>'; });
+      $('fbTally').innerHTML = '<thead><tr><th>Food</th><th>Amount</th><th>Fiber</th></tr></thead><tbody>' + tt + '</tbody><tfoot><tr><td colspan="2">Total today</td><td>' + E.trim(total, 1) + ' g</td></tr><tr><td colspan="2">' + (total >= T ? 'Over your target by' : 'Still to go') + '</td><td>' + E.trim(Math.abs(T - total), 1) + ' g</td></tr></tfoot>'; $('fbTallyWrap').style.display = '';
+    } else $('fbTallyWrap').style.display = 'none';
+    $('fbBody').style.display = '';
+  }
+  /* ---------- controls ---------- */
+  seg('fbSex', function (v) { st.sex = v; render(); });
+  seg('fbCal', function (v) { st.cal = v; $('fbKWrap').style.display = v === 'type' ? '' : 'none'; $('fbCalcWrap').style.display = v === 'calc' ? '' : 'none'; render(); });
+  ['fbAge', 'fbK', 'fbH', 'fbW', 'fbPK'].forEach(function (id) { $(id).addEventListener('input', render); });
+  $('fbAct').addEventListener('change', render);
+  $('fbAdd').addEventListener('click', function () { addRow(); render(); });
+  $('fbClear').addEventListener('click', clearAll);
+  $('fbAdvBtn').addEventListener('click', function () {
+    var open = $('fbAdvBtn').classList.toggle('open'); $('fbAdvBtnLab').textContent = open ? 'Go simple' : 'Go advanced'; $('fbAdvIn').style.display = open ? '' : 'none';
+    if (!open) { $('fbPK').value = ''; clearAll(); }
+    render();
+  });
+  phSync('fbHu'); phSync('fbWu'); addRow(); render();
+};
+/* FIBER:END */

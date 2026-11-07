@@ -1,0 +1,42 @@
+{
+  "slug": "fiber-calculator",
+  "bodyClass": "p-fb",
+  "blocks": ["FIBER"],
+  "result": { "big": "fbBig", "body": "fbBody", "hint": "fbHint" },
+  "required": ["fbAge"],
+  "fill": [
+    ["click", "fbClear"],
+    ["seg", "fbSex", "f"],
+    ["seg", "fbCal", "type"],
+    ["seg", "fbHu", "in"],
+    ["seg", "fbWu", "lb"],
+    ["set", "fbAct", "1.55"],
+    ["set", "fbH", ""],
+    ["set", "fbW", ""],
+    ["set", "fbK", ""],
+    ["set", "fbPK", ""],
+    ["set", "fbF1", "oats"],
+    ["seg", "fbU1", "s"],
+    ["set", "fbM1", ""],
+    ["set", "fbN1", ""],
+    ["set", "fbAge", "35"]
+  ],
+  "optionalSamples": {
+    "fbK": ["2000", "1500", "99"],
+    "fbH": ["70", "5'10"],
+    "fbW": ["154", "70"],
+    "fbPK": ["14", "20"],
+    "fbN1": ["2", "150"],
+    "fbM1": ["3"]
+  },
+  "variants": [
+    [["set", "fbK", "2000"]],
+    [["seg", "fbCal", "calc"], ["set", "fbH", "66"], ["set", "fbW", "154"], ["set", "fbAct", "1.375"]],
+    [["seg", "fbSex", "m"], ["set", "fbK", "2500"], ["set", "fbN1", "2"]],
+    [["set", "fbF1", "lentils"], ["seg", "fbU1", "g"], ["set", "fbN1", "150"], ["set", "fbK", "1800"]],
+    [["set", "fbF1", "own"], ["set", "fbM1", "3"], ["set", "fbN1", "2"]],
+    [["click", "fbAdd"], ["set", "fbN2", "1"], ["set", "fbF2", "banana"], ["set", "fbN1", "2"]]
+  ],
+  "scrollTo": "fbTargets",
+  "errorState": [["set", "fbAge", "15"]]
+}

@@ -47,6 +47,8 @@
     var de = document.documentElement;
     if (de.scrollWidth > de.clientWidth + 1) fail(tag, 'page wider than the screen: scrollWidth ' + de.scrollWidth + ' > clientWidth ' + de.clientWidth + ' (offenders: ' + Q.wide().join(', ') + ')');
     if (Q.mobile && $('mbar') && Math.abs($('mbar').getBoundingClientRect().bottom - innerHeight) > 1) fail(tag, 'floating bar not at the bottom edge: ' + $('mbar').getBoundingClientRect().bottom + ' vs ' + innerHeight);
+    /* UI: nothing may poke out of its card (a control wider than the card, like a toggle that does not fit at 375px) */
+    [].forEach.call(document.querySelectorAll('.card'), function (c) { var cr = c.getBoundingClientRect(); [].forEach.call(c.querySelectorAll('input,button,.seg,.csel,.cf-box,.time-field,table'), function (e) { var er = e.getBoundingClientRect(); if (er.width && er.right > cr.right + 1) fail(tag, 'UI: ' + (e.id ? '#' + e.id : e.className || e.tagName) + ' pokes out of its card by ' + Math.round(er.right - cr.right) + 'px'); }); });
     if (st.hint) {
       var h = $(r.hint), p = h.previousElementSibling;
       if (!p || !(p.querySelector('input') || p.matches('.chips,.cb-two,.fld'))) fail(tag, 'hint is not directly under a field (previous sibling: ' + (p ? p.className || p.tagName : 'none') + ')');

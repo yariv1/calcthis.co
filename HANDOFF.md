@@ -4,6 +4,11 @@ _Rewritten 2026-11-06 at the end of session #3 (weight loss by date, weight loss
 
 ---
 
+## 0000000000000018. UPDATE 2026-11-07 (later): FIBER DEPLOYED v324 — live v324 · 92 calcs · 222 pages
+See CLAUDE.md addendum 22. Next: creatine, vitamin D (research report -> approval). Bing: fiber submitted (see tracker); GSC: queue in the consolidated block of md-files/calcthis-indexing-tracker.md.
+
+---
+
 ## 0000000000000017. UPDATE 2026-11-07: CAFFEINE x2 DEPLOYED v323 — live v323 · 91 calcs · 221 pages
 See CLAUDE.md addendum 21 (code map, sources, corrections). Read it first. Key rules from this session: QA gate = functional AND UI (CLAUDE.md QA item 6); labels in his wording; DS 15px spacing. Next: fiber, creatine, vitamin D (research report -> approval). Pending chores unchanged: GSC queue (add the 2 caffeine URLs), Bing manual submit.
 
