@@ -69,3 +69,7 @@ Competitors opened live: ADA professional.diabetes.org eAG calculator, Accu-Chek
 INPUTS to match: A1C %, A1C mmol/mol, avg glucose mg/dL + mmol/L, CGM mean glucose -> GMI.
 DIFFERENTIATORS: (visual) A1C scale with normal/prediabetes/diabetes bands + your marker + target marker + eAG ruler under it; ADAG-vs-GMI side by side. (functional) 4 linked fields, type any one -> all others fill (no mode switch); paste a list of finger-stick readings -> mean -> est. A1C + GMI; target marker (ADA 7% default, editable); clickable A1C chart rows; plain-words "why meter and lab disagree". DROPPED: numeric 95% prediction-interval band (ADAG paper blocked by Cloudflare, numbers unverified).
 SOURCES verified via search: ADAG Nathan 2008 Diabetes Care 31:1473 (R2 0.84); mmol/L form 1.59xA1C-2.59 (Klonoff 2014); GMI = 3.31 + 0.02392 x mean mg/dL (Bergenstal 2018 Diabetes Care 41:2275; jaeb.org/gmi); 28% GMI-vs-lab discordance >=0.5 (Selvin 2024 Diabetes Care 47:906); IFCC mmol/mol = (A1C - 2.15) x 10.929; ADA thresholds <5.7 / 5.7-6.4 / >=6.5 (Accu-Chek cites ADA).
+
+## Body recomposition + protein retitle (his screenshots, 2026-11-07)
+- `body recomposition calculator` >1000 EASY (16 kws; all variants <100) -> QUEUED to build (memory calcthis-benched-ideas).
+- `protein calculator` >10,000 Medium; `... for weight loss` >1000 Medium; others >100 -> page exists (/protein-intake-calculator/); retitle BENCHED by him.
