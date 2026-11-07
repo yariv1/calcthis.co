@@ -58,3 +58,11 @@ Reading rule: build only head terms >1000 with KD Easy/Medium (or >10K Hard on a
 
 ## 7. Process once he sends numbers
 Re-rank by (volume x ease x adjacency x CPC for money pages) -> research report per page (competitors opened live, visual + functional differentiator, inputs parity, sources READ) -> his approval -> build with the QA gate. Law-driven tax pages (no tax on tips, car-loan interest) need IRS primary sources read first, like the overtime page.
+
+## 8. Ahrefs numbers received 2026-11-07 (first 5 of the batch; phrase match, his screenshots)
+- compound interest calculator >100K Hard (2,322 kws): daily / monthly / investor.gov / nerdwallet / bankrate / continuous / monthly (reordered) all >1000 Hard; `compound interest calculator with withdrawals` >1000 MEDIUM.
+- amortization calculator >100K Hard (1,893 kws): loan amortization >10K Hard, mortgage amortization >10K Hard; amortization calculator mortgage / auto loan / car loan / with extra payments / car / simple monthly all >1000 Hard.
+- retirement calculator >100K Hard (4,519 kws): `dave ramsey retirement calculator` >10K EASY (brand), `fers retirement calculator` >1000 EASY (federal pension, niche); best / nerdwallet / ramsey / early / 401k / social security variants >1000 Hard.
+- no tax on tips calculator >1000 MEDIUM (only 2 kws; reddit variant <100).
+- p value calculator >1000 MEDIUM (633 kws): `p value calculator from t` >1000 Medium; chi square / t test / from z / t value to p / z score to p all <100.
+Reading: p-value = one page (head + "from t"), Medium. No tax on tips = small but Medium and sits next to the overtime page. Compound interest and amortization = huge but ALL Hard (long-term bets; amortization can reuse loanEngine). Retirement head Hard; brand (ramsey) not targetable, FERS niche Easy needs OPM sources.
