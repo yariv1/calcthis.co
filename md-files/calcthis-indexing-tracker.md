@@ -13,6 +13,8 @@ _How-to for requesting indexing with Claude in Chrome + the next batch: HANDOFF.
 **Bing:** all 221 sitemap URLs submitted (2026-11-07). New pages go to Bing at deploy time (Webmaster is signed in again; IndexNow pinged by every build).
 **Quota:** ~11 requests per window, resets about a day later; a request needs ~60 s end to end.
 
+**GSC 2026-11-07 (later, "Start queue"): 0 requested — "Quota Exceeded" on the very first URL (/paycheck-calculator/utah/, status "Discovered - currently not indexed", no referring page). Quota had not reset since the morning batch of 11. Next attempt: after the quota resets (roughly a day after 2026-11-07 first batch); queue order unchanged, starts with utah.**
+
 ## LIVE QUEUE (update at EVERY deploy and every request session; last updated 2026-11-02 — overtime deployed; GSC not requested since 2026-11-01 (10 done, quota hit at valet))
 **2026-11-05 (v316): NEW PAGE /bsa-calculator/ deployed (IndexNow 213 URLs HTTP 200; GitHub rejected the first two pushes, the third succeeded). Bing manual submit NOT done (signed out). Add to the END of the GSC queue (after intermittent fasting).**
 
