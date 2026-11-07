@@ -66,3 +66,11 @@ Re-rank by (volume x ease x adjacency x CPC for money pages) -> research report 
 - no tax on tips calculator >1000 MEDIUM (only 2 kws; reddit variant <100).
 - p value calculator >1000 MEDIUM (633 kws): `p value calculator from t` >1000 Medium; chi square / t test / from z / t value to p / z score to p all <100.
 Reading: p-value = one page (head + "from t"), Medium. No tax on tips = small but Medium and sits next to the overtime page. Compound interest and amortization = huge but ALL Hard (long-term bets; amortization can reuse loanEngine). Retirement head Hard; brand (ramsey) not targetable, FERS niche Easy needs OPM sources.
+
+## 9. Ahrefs numbers batch 2 (his screenshots, 2026-11-07)
+- income tax calculator >100K Hard (8,537 kws): federal >10K Hard; california >1000 Hard; `income tax calculator nevada` >1000 EASY; 2025 >1000 Hard; `texas income tax calculator` >1000 MEDIUM; nyc >1000 Hard; `income tax calculator california` >1000 Hard. (Nevada/Texas = no state income tax -> a federal-only answer.)
+- percent off calculator >10,000 MEDIUM (74 kws): every number variant (10/20/25/30/40/50 percent off, with tax, price) <100 -> one page.
+- confidence interval calculator >1000 MEDIUM (724 kws): `95 confidence interval calculator` >1000 Medium; 90 / 95% / 99 / two samples / sample size / ti 84 / clopper pearson <100 Easy.
+- amps to watts calculator >100 MEDIUM (41 kws): all variants <100 -> weak, skip.
+- house affordability calculator >1000 HARD (77 kws): va >100 Hard; the rest <100 -> skip.
+Reading: percent off = best of this batch (>10K Medium, one page, covers discount/sale price/with tax). Confidence interval pairs with p-value (one stats cluster, both Medium). Income tax head Hard but Nevada (>1000 Easy) and Texas (>1000 Medium) are no-state-tax queries a federal calculator answers. Amps->watts and house affordability: skip.
