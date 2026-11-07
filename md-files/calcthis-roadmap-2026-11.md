@@ -74,3 +74,11 @@ Reading: p-value = one page (head + "from t"), Medium. No tax on tips = small bu
 - amps to watts calculator >100 MEDIUM (41 kws): all variants <100 -> weak, skip.
 - house affordability calculator >1000 HARD (77 kws): va >100 Hard; the rest <100 -> skip.
 Reading: percent off = best of this batch (>10K Medium, one page, covers discount/sale price/with tax). Confidence interval pairs with p-value (one stats cluster, both Medium). Income tax head Hard but Nevada (>1000 Easy) and Texas (>1000 Medium) are no-state-tax queries a federal calculator answers. Amps->watts and house affordability: skip.
+
+## 10. Ahrefs numbers batch 3 (his screenshots, 2026-11-07)
+- markup calculator >10,000 EASY (213 kws): margin markup >100 Medium; percent markup / margin to markup / percentage markup / retail markup >100 Easy; margin vs markup >100 Medium; hvac service markup >100.
+- discount calculator >10,000 MEDIUM (455 kws): percentage discount >1000 Medium; percent discount / online >100 Medium; with tax >100 Easy; double discount >100 Medium; triple discount >100 Easy; price discount >100 Medium.
+- z score calculator >1000 MEDIUM (621 kws): all variants <100 (altman, normal distribution, p value to z, percentile to z, critical z).
+- bmi for kids calculator <100 Hard (1 kw) -> skip.
+- time zone calculator >1000 HARD (87 kws): for meetings >100 Hard; rest <100 -> skip.
+Reading: SALES CLUSTER = markup (>10K EASY, best number of all batches) + discount (>10K Medium) + percent off (>10K Medium, batch 2); one engine, three intent pages, cross-linked (margin vs markup + double/triple discount become sections; "margin calculator" still to check). z score joins p-value + confidence interval as the stats cluster. BMI for kids, time zone: skip.
