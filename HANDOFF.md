@@ -4,6 +4,11 @@ _Rewritten 2026-11-07 at the end of session #4 (vitamin research -> caffeine x2 
 
 ---
 
+## 000000000000001d. UPDATE 2026-11-07 (after §1c): LEGACY SILENT-FIELD HINTS DEPLOYED v328 — live v328 · 94 calcs · 224 pages
+He said "Fix them" -> hints on keto, net carb, calories burned x3 (fasting needed none), verified in the live page, deployed. Pages remain legacy (no oracle). OPEN: BAC calculator (late), optional full fixture+oracle for the legacy pages, ask him for the next job.
+
+---
+
 ## 000000000000001c. UPDATE 2026-11-07 (after §1b): SILENT-FIELD AUDIT DEPLOYED v327 — live v327 · 94 calcs · 224 pages
 He said "Yes, audit" -> `md-files/qa/audit-silent.js` built; 20 older health pages audited; 4 real silent fields fixed (FFMI, dog food, caffeine half life, fiber) and deployed. Findings + false positives: `md-files/qa/silent-field-audit-2026-11-07.md`. OPEN (his call): fix the legacy pages that still have silent fields (calories burned walking/running, net carb, intermittent fasting ramp-up, keto) = each needs fixture + oracle and leaves `legacy.json`. Other open: BAC late. No new pages this step.
 

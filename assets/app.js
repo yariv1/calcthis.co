@@ -19213,6 +19213,7 @@ CalcThis.initCburnCalc = function (kind) {
     if (w && w.err) { empty(w.err); return; }
     var body = readBody(); var bodyNote = '';
     if (body && body.bad) { bodyNote = 'Age should be 15–100 and height 100–250 cm (39–98 in) to personalise — using the standard estimate.'; body = null; }
+    if (st.adv && !body && !bodyNote) { var ag0 = ($('cbAge').value || '').trim(), ht0 = ($('cbHt').value || '').trim(); if (ag0 || ht0) bodyNote = (!ag0 || !ht0) ? 'Add both your age and your height to personalise the resting rate — the standard estimate is used for now.' : 'Age and height should be numbers to personalise the resting rate — the standard estimate is used for now.'; }
     var rmr = null;
     if (body && w) rmr = CalcThis.bmrEngine.mifflin(body.male, w.kg, body.cm, body.age);
     var R = null, kg = w && w.kg;
@@ -19568,7 +19569,11 @@ CalcThis.initKetoCalc = function () {
     var a = readA(), h = readH(), w = readW('kzW', 'the weight');
     var bad = [a, h, w].filter(function (x) { return x && x.err; })[0];
     if (bad) { empty(bad.err); return; }
-    if (!a || !h || !w) { empty(''); return; }
+    if (!a || !h || !w) {
+      var anyIn = ['kzAge', 'kzHt', 'kzW'].some(function (id) { return $(id).value.trim(); }) || (st.adv && ['kzBf', 'kzKcal', 'kzCapOwn', 'kzTarget'].some(function (id) { return $(id).value.trim(); })), miss = [];
+      if (!a) miss.push('age'); if (!h) miss.push('height'); if (!w) miss.push('weight');
+      empty(anyIn ? 'Add your ' + miss.join(', ').replace(/, ([^,]*)$/, ' and $1') + ' to see your plan — what you typed counts once you do.' : ''); return;
+    }
     var bf = null, own = null, cap = st.cap, G = null, notes = [];
     if (st.adv) {
       var b = E.num($('kzBf').value);
@@ -19700,12 +19705,13 @@ CalcThis.initNetCarbCalc = function () {
     if (bad) { empty(bad.err); return; }
     var hasAlc = al.v > 0;
     $('ncTypeWrap').style.display = hasAlc ? '' : 'none';
-    if (t.empty) { empty(''); return; }
+    if (t.empty) { var other = !fi.empty || !al.empty || $('ncEat').value.trim() || (st.adv && ($('ncShare').value.trim() || $('ncOwn').value.trim())); empty(other ? 'Type the total carbohydrate from the label first — the fiber, sugar alcohol and amount you typed count once you do.' : ''); return; }
     var eat = E.num($('ncEat').value), scale;
     if (eat === null) scale = 1; else if (isNaN(eat) || eat <= 0) { empty('Couldn’t read the amount eaten — use a number like ' + (per100 ? '150' : '1.5') + '.'); return; } else if (eat > (per100 ? 5000 : 100)) { empty('That amount looks too high — check the number.'); return; } else scale = per100 ? eat / 100 : eat;
     var o = { label: st.label, total: t.v, fiber: fi.v, alc: al.v, f: fracNow() };
     var err = E.check(o); if (err) { empty(err); return; }
-    setHint('');
+    var shv = st.adv ? E.num($('ncShare').value) : null;
+    setHint(shv !== null && !hasAlc ? 'The share counted only matters when the label has sugar alcohol. It is ignored for now.' : '');
     var s = E.split(o), lim = limit();
     var net = s.net * scale, strict = s.strict * scale, lenient = s.lenient * scale;
     $('ncResLab').textContent = hasAlc ? 'Net carbs (best estimate)' : 'Net carbs';

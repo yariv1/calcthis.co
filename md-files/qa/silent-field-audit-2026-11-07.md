@@ -9,12 +9,12 @@ Tool: `node md-files/qa/audit-silent.js <slug> ...` (headless Chrome, desktop). 
 - **Fiber**: "Fiber per 1,000 kcal I use" without calories did nothing -> "Add your calories first. ..."
 - **Creatine** (earlier): tub price / scoop without tub size -> hint. **Vitamin D**: row notes + hints (built with the rule).
 
-## Real findings NOT fixed (legacy pages, would have to leave `legacy.json` and get a fixture + oracle — his call)
-- **Calories burned walking / running**: distance without time (and height without age / age without height) show nothing; "pace needs steps".
-- **Net carb**: fiber / alcohol / amount eaten / share typed before the total carbs show nothing; "amount eaten" depends on a share.
-- **Intermittent fasting**: ramp-up "from" hours / "weeks" typed alone show nothing (needs both).
-- **Keto**: custom net carb cap / target weight / calories typed with no body data show nothing (page needs the body fields first, no hint).
-- **Weight loss / percentage / max HR / caffeine limit / bulking**: only alone-silent on pages whose required fields are empty (no result yet) — acceptable by the old convention, but a hint "Enter X first" would be friendlier.
+## Legacy pages fixed afterwards (2026-11-07, hints only; pages stay in legacy.json = no fixture/oracle; each verified in the browser)
+- **Calories burned walking / running / hub**: age without height (or height without age) under Go advanced now says "Add both your age and your height to personalise the resting rate — the standard estimate is used for now." (the distance/time/speed trio is "any two of three" and fills the third field itself — not a bug; the hub's flags were false positives).
+- **Net carb**: fiber / sugar alcohol / amount eaten / share / own limit typed before the total carbohydrate now say "Type the total carbohydrate from the label first ..."; a share typed when the label has no sugar alcohol says it is ignored.
+- **Keto**: any field typed while age, height or weight is missing now says which of the three to add.
+- **Intermittent fasting**: no change needed — the ramp-up already says "Enter both the hours you fast now and the weeks"; the audit flag was only because no result exists on an empty page.
+- Pages with a required field and no result yet (weight loss, weight loss %, max HR, caffeine limit, bulking) keep the old convention (nothing until the required fields are filled).
 
 ## False positives checked by hand
 Dog / cat age date of birth (sample not a date), BSA dose-unit text, calories burned hub (needs an activity chosen from the list), bulking protein/fat g per kg (macro table always shows), fiber PK (sample equals the default 14), vitamin D / creatine (hint already visible).
