@@ -227,7 +227,7 @@ must be built from the article's actual units, every time, not pasted from a tem
 
 ## Project state
 
-- **Asset version:** v328 (live; `.assetver`)
+- **Asset version:** v329 (live; `.assetver`)
 - **Total pages:** 216 live (sitemap)
 - **Model:** Sonnet 5
 
@@ -332,8 +332,8 @@ Total live calculators: **89** (v322, + max heart rate, v321, + weight loss perc
 
 ---
 
-## Last session addendum 27 (2026-11-07 #6, BUILT + QA PASS, NOT DEPLOYED): BODY RECOMPOSITION `/body-recomposition-calculator/`
-Engine `RECOMP-ENGINE` (`CalcThis.recompEngine`: targets 0 / -200 / -400 kcal held at the 1,200 F / 1,500 M minimum, protein 2.0 + fat 1.0 g per kg, Navy body fat, fat plan), init `CalcThis.initRecompCalc` (ids `rc*`, block `RECOMP:BEGIN/END` at end of app.js), css `.p-rc`, generator `md-files/gen-recomp-page.js` (chains after vitamin-d; already registered in sitemap/build.js/llms/header/footer/homepage/seo-meta), notes `md-files/calcthis-recomp-research.md`. Inputs: sex, weight (lb|kg|st), height (in|cm), age, activity, Your focus = 3 `.radopt` (fat / both / muscle, selected shows kcal), body fat optional + in-page Navy estimate (waist, neck, hip) with a Use button; Go advanced = own calories, target body fat (fat to lose + weeks per focus), strength sessions a week (note only), meals. Outputs: headline, calorie ruler (500 kcal limit, minimum, three dots), three-goals table, per-meal table, fat-to-lose. Every field shows a note (QA item 19). QA gate PASS (300 oracle runs), audit-silent only the expected false positive (own calories make age/height unused, note says so), no-ping build + audit-registration PASS, dup-check <= 0.3%. Not verified: real phone, other browsers, print. Not deployed: needs his "Deploy"; then Bing submit + GSC tracker + version bump.
+## Last session addendum 27 (2026-11-07 #6, DEPLOYED v329): BODY RECOMPOSITION `/body-recomposition-calculator/`
+Engine `RECOMP-ENGINE` (`CalcThis.recompEngine`: targets 0 / -200 / -400 kcal held at the 1,200 F / 1,500 M minimum, protein 2.0 + fat 1.0 g per kg, Navy body fat, fat plan), init `CalcThis.initRecompCalc` (ids `rc*`, block `RECOMP:BEGIN/END` at end of app.js), css `.p-rc`, generator `md-files/gen-recomp-page.js` (chains after vitamin-d; already registered in sitemap/build.js/llms/header/footer/homepage/seo-meta), notes `md-files/calcthis-recomp-research.md`. Inputs: sex, weight (lb|kg|st), height (in|cm), age, activity, Your focus = 3 `.radopt` (fat / both / muscle, selected shows kcal), body fat optional + in-page Navy estimate (waist, neck, hip) with a Use button; Go advanced = own calories, target body fat (fat to lose + weeks per focus), strength sessions a week (note only), meals. Outputs: headline, calorie ruler (500 kcal limit, minimum, three dots), three-goals table, per-meal table, fat-to-lose. Every field shows a note (QA item 19). QA gate PASS (300 oracle runs), audit-silent only the expected false positive (own calories make age/height unused, note says so), no-ping build + audit-registration PASS, dup-check <= 0.3%. Not verified: real phone, other browsers, print. Deployed v329 (first Pages build errored, empty retrigger commit fixed it). Bing submit + GSC queue (add to health block) still to do.
 
 ## Last session addendum 26 (2026-11-07, DEPLOYED v328): LEGACY SILENT-FIELD HINTS
 Hints only (pages stay in `legacy.json`, no fixture/oracle; each verified by typing into the live page): keto (says which of age/height/weight is missing), net carb (typed before the total -> "Type the total carbohydrate first"; share without sugar alcohol ignored), calories burned walking/running/hub (age without height or the reverse). Intermittent fasting needed no change. Details: `md-files/qa/silent-field-audit-2026-11-07.md`. Full fixture + oracle for these pages = a bigger job if he wants it.
