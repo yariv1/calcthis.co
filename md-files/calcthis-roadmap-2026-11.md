@@ -82,3 +82,29 @@ Reading: percent off = best of this batch (>10K Medium, one page, covers discoun
 - bmi for kids calculator <100 Hard (1 kw) -> skip.
 - time zone calculator >1000 HARD (87 kws): for meetings >100 Hard; rest <100 -> skip.
 Reading: SALES CLUSTER = markup (>10K EASY, best number of all batches) + discount (>10K Medium) + percent off (>10K Medium, batch 2); one engine, three intent pages, cross-linked (margin vs markup + double/triple discount become sections; "margin calculator" still to check). z score joins p-value + confidence interval as the stats cluster. BMI for kids, time zone: skip.
+
+## 11. Ahrefs numbers batch 4 (his screenshots, 2026-11-07) — LAST batch
+- margin calculator >10,000 MEDIUM (1,463 kws): profit margin >10K Medium; gross margin >1000 Medium; gross profit margin >1000 Hard; net profit margin >100 Hard; formula >100 Hard.
+- profit margin calculator >10,000 MEDIUM (175 kws): gross >1000 Hard; net >100 Hard; amazon profit margin >100 Medium; shopify >100 EASY; amazon fba <100 Easy.
+- sale price calculator >100 HARD (51 kws) -> skip (covered by the discount page).
+- commission calculator >1000 MEDIUM (681 kws): `realtor commission calculator` >1000 EASY; real estate commission >100 Easy; real estate agent >100 Medium; sales commission >100 Medium; life insurance commission >100 Easy.
+- unit price calculator >1000 EASY (37 kws; all variants <100).
+
+## 12. FINAL ROADMAP v2 (ranked by his Ahrefs numbers; all 20 phrases checked)
+| # | Page | Numbers | Notes |
+|---|---|---|---|
+| 1 | markup calculator | >10K EASY | + margin to markup, retail markup; hub of the sales cluster |
+| 2 | profit margin calculator (margin calculator) | >10K Medium x2, gross margin >1000 Medium | ONE page unless the SERPs differ (check before splitting); gross/net/markup link-ups |
+| 3 | percent off calculator | >10K Medium | with tax, price after discount |
+| 4 | discount calculator | >10K Medium | percentage discount >1000, double/triple discount, with tax |
+| 5 | commission calculator | >1000 Medium (realtor >1000 Easy) | sales + real estate modes; split realtor page only if SERP differs |
+| 6 | unit price calculator | >1000 EASY | price per ounce / pound / unit, compare two products |
+| 7 | p value calculator | >1000 Medium | t / z / chi-square / F modes |
+| 8 | confidence interval calculator | >1000 Medium | 95 >1000 Medium; shares the stats engine |
+| 9 | z score calculator | >1000 Medium | shares the stats engine |
+| 10 | no tax on tips calculator | >1000 Medium | read IRS rules first; next to overtime page |
+| 11 | compound interest calculator | >100K Hard | long-term bet; hub for daily / monthly / continuous / withdrawals (Medium) |
+| 12 | amortization calculator | >100K Hard | reuses loanEngine; cheap build |
+| 13 | income tax calculator | >100K Hard; Nevada >1000 Easy, Texas >1000 Medium | later, reuse paycheck engine + IRS tables |
+SKIP: bmi for kids (<100), time zone (Hard), amps to watts (>100), house affordability (>1000 Hard, variants <100), sale price (>100 Hard), retirement head (Hard; ramsey brand; FERS >1000 Easy niche needs OPM sources).
+Build order logic: items 1-6 = ONE shared sales engine (no YMYL, standard formulas, no source risk, cross-linked cluster, adjacent to sales tax + tip + percentage change); items 7-9 = ONE stats engine; each page still gets its own research report (competitors opened live, visual + functional differentiator) + approval + QA gate.
