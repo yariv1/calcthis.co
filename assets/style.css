@@ -3197,3 +3197,48 @@
 .p-vd .av-note,.p-vd .cb-note{font-size:14px;font-weight:500;color:var(--ink-soft);margin:4px 0 8px;line-height:1.45}
 .p-vd .cb-note{color:var(--muted);font-weight:400}
 .p-vd .bm-sub{display:block;font-size:12.5px;font-weight:500;color:var(--muted);margin-top:2px}
+
+/* ---- BODY RECOMPOSITION calculator (.p-rc) — reuses .p-bmr result look, .dtable, .seg, .radgrp, the caffeine/fiber amount box ---- */
+.p-rc .cf-box{display:flex;align-items:center;gap:8px;background:#FBF6EC;border:1px solid var(--line);border-radius:11px;padding:6px 8px;transition:.15s}
+.p-rc .cf-box:focus-within{border-color:var(--amber);background:#fff;box-shadow:0 0 0 3px rgba(181,118,31,.13)}
+.p-rc .cf-box input{flex:1;min-width:0;width:100%;border:0;background:none;font:inherit;font-size:19px;font-weight:600;color:var(--ink);padding:4px 4px;margin:0;outline:none}
+.p-rc .cf-box .seg{flex:none;padding:2px}
+.p-rc .cf-box .seg button{padding:6px 11px;font-size:12.5px}
+.p-rc .rc-k{font-weight:600;color:var(--amber-deep)}
+.p-rc .rc-rule{margin:4px 0 4px}
+.p-rc .rc-rule-t{position:relative;height:18px;border-radius:9px;background:#EFE7D8;margin:8px 0 0}
+.p-rc .rc-band{position:absolute;top:0;bottom:0}
+.p-rc .rc-band.rc-no{background:#E9C98F;border-radius:9px 0 0 9px}
+.p-rc .rc-band.rc-ok{background:#B9CDBE;border-radius:0 9px 9px 0}
+.p-rc .rc-tick{position:absolute;top:-5px;bottom:-5px;width:0;border-left:2px solid var(--ink);margin-left:-1px;z-index:2}
+.p-rc .rc-tick.fl{border-left:2px dashed #8a8372}
+.p-rc .rc-dot{position:absolute;top:50%;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;background:#fff;border:2.5px solid var(--spruce);box-sizing:border-box;z-index:3}
+.p-rc .rc-dot.on{width:22px;height:22px;margin:-11px 0 0 -11px;background:var(--amber);border:3px solid var(--ink)}
+.p-rc .rc-rule-l{position:relative;margin-top:12px}
+.p-rc .rc-rule-l.up{margin:0}
+.p-rc .rc-rule-l span{position:absolute;transform:translateX(-50%);font-size:12.5px;font-weight:500;color:var(--muted);line-height:1.2;white-space:nowrap;text-align:center}
+.p-rc .rc-rule-l span b{display:block;font-size:14px;font-weight:700;color:var(--ink)}
+.p-rc .rc-rule-l span.on b{color:var(--amber-deep)}
+.p-rc .bm-key i.rc-ky{width:16px;height:10px;border-radius:3px;vertical-align:-1px}
+.p-rc .bm-key i.rc-ky.no{background:#E9C98F}
+.p-rc .bm-key i.rc-ky.ok{background:#B9CDBE}
+.p-rc .rc-flag{font-size:14px;font-weight:500;color:var(--amber-deep);background:#FBF3E4;border-left:3px solid var(--amber);border-radius:6px;padding:8px 10px;margin:8px 0;line-height:1.45}
+.p-rc .dtable td:nth-child(n+2),.p-rc .dtable th:nth-child(n+2){text-align:right}
+.p-rc #rcCmp th,.p-rc #rcCmp td{padding-left:6px;padding-right:6px}
+.p-rc #rcCmp td:first-child{font-size:13.5px;color:var(--ink-soft)}
+.p-rc #rcCmp .rc-cur{background:#FCF7EE;color:var(--ink);font-weight:700}
+.p-rc #rcCmp th.rc-cur{color:var(--amber-deep)}
+.p-rc .dtable td small{display:block;color:var(--muted);font-size:12.5px;font-weight:500;margin-top:2px}
+.p-rc #rcMac td:nth-child(n+2){white-space:nowrap}
+.p-rc .bm-sub{display:block;font-size:12.5px;font-weight:500;color:var(--muted);margin-top:2px}
+.p-rc .av-note,.p-rc .cb-note{font-size:14px;font-weight:500;color:var(--ink-soft);margin:4px 0 8px;line-height:1.45}
+.p-rc .cb-note{color:var(--muted);font-weight:400}
+.p-rc .cb-note.rc-est-res{color:var(--ink-soft);font-weight:500}
+.p-rc .rc-use{margin-top:0}
+.p-rc .chips{margin-top:2px;margin-bottom:6px}
+.p-rc .rc-est{border-left:3px solid var(--line);padding-left:12px;margin:8px 0 14px}
+.p-rc #rcCmp td:nth-child(n+2){white-space:nowrap}
+.p-rc .rc-rule-l.up span{display:flex;flex-direction:column-reverse;align-items:center}
+.p-rc .rc-rule-l span.a-l{transform:none;text-align:left}
+.p-rc .rc-rule-l.up span.a-l{align-items:flex-start}
+.p-rc #rcBfNote,.p-rc #rcMaintNote,.p-rc #rcTbfNote,.p-rc #rcDaysNote{margin:-6px 0 15px}

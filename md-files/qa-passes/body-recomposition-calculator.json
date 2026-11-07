@@ -1,0 +1,35 @@
+{
+ "slug": "body-recomposition-calculator",
+ "pass": true,
+ "at": "2026-11-07T15:39:18.432Z",
+ "hash": "deab61c062ece7f4",
+ "viewports": {
+  "mobile": {
+   "steps": 1288,
+   "fails": []
+  },
+  "desktop": {
+   "steps": 1288,
+   "fails": []
+  }
+ },
+ "oracle": {
+  "runs": 300,
+  "fails": []
+ },
+ "shots": [
+  "md-files/qa-passes/shots/body-recomposition-calculator-1-empty-mobile.png",
+  "md-files/qa-passes/shots/body-recomposition-calculator-2-filled-mobile.png",
+  "md-files/qa-passes/shots/body-recomposition-calculator-3-result-mobile.png",
+  "md-files/qa-passes/shots/body-recomposition-calculator-4-advanced-mobile.png",
+  "md-files/qa-passes/shots/body-recomposition-calculator-5-error-mobile.png",
+  "md-files/qa-passes/shots/body-recomposition-calculator-6-after-chaos-mobile.png",
+  "md-files/qa-passes/shots/body-recomposition-calculator-1-empty-desktop.png",
+  "md-files/qa-passes/shots/body-recomposition-calculator-2-filled-desktop.png",
+  "md-files/qa-passes/shots/body-recomposition-calculator-3-result-desktop.png",
+  "md-files/qa-passes/shots/body-recomposition-calculator-4-advanced-desktop.png",
+  "md-files/qa-passes/shots/body-recomposition-calculator-5-error-desktop.png",
+  "md-files/qa-passes/shots/body-recomposition-calculator-6-after-chaos-desktop.png"
+ ],
+ "console": []
+}

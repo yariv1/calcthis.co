@@ -22659,3 +22659,283 @@ CalcThis.initVitDCalc = function () {
   addRow(); render();
 };
 /* VITD:END */
+
+/* RECOMP:BEGIN */
+/* =========================================================
+   BODY RECOMPOSITION calculator (/body-recomposition-calculator/). Competitors opened live (2026-11-07): Fitness Volt, FatCalc, Bony to Beastly, Healthy Eater, Coachway
+   (all: calories + macros + a text timeline; none draws the research limit or the three goals side by side). Notes: md-files/calcthis-recomp-research.md.
+   Primary sources READ (abstracts via Europe PMC): Murphy C, Koehler K, Scand J Med Sci Sports 2022;32(1):125-137 (meta-analysis: a deficit of ~500 kcal/day prevented gains in lean mass,
+   strength gains comparable; avoid deficits >500 kcal/day when lifting to preserve lean mass); Ribeiro AS et al., J Hum Kinet 2019;70:125-134 (pilot, 11 male bodybuilders);
+   Iraki 2019 (protein 1.6-2.2 g/kg, fat 0.5-1.5 g/kg, carbohydrate >= 3 g/kg). The three focus presets (0 / about -200 / about -400 kcal) are OUR presets, said so on the page.
+   Calorie floor 1,200 F / 1,500 M and 7,700 kcal per kg are the same simplifications as the calorie deficit page. Navy body fat = the formula of the Body Fat calculator.
+   ========================================================= */
+/* RECOMP-ENGINE:START */
+CalcThis.recompEngine = (function () {
+  var KCAL_KG = 7700, LIMIT = 500, PROT = [1.6, 2.2], FAT = [0.5, 1.5], CARB_MIN = 3, PROT_DEF = 2.0, FAT_DEF = 1.0;
+  var PRESETS = [{ k: 'fat', name: 'Lose fat', d: 400 }, { k: 'both', name: 'Both', d: 200 }, { k: 'muscle', name: 'Build muscle', d: 0 }];
+  function num(t) {
+    t = (t + '').trim().replace(/\s/g, '');
+    if (!t) return null;
+    if (/^[+-]?\d*,\d+$/.test(t)) t = t.replace(',', '.'); else t = t.replace(/,/g, '');
+    if (!/^[+-]?(\d+\.?\d*|\.\d+)$/.test(t)) return NaN;
+    return parseFloat(t);
+  }
+  function floor(male) { return male ? 1500 : 1200; }
+  /* the three targets from maintenance M: calories held at the minimum (and never above what you burn) */
+  function targets(M, male) {
+    var fl = floor(male), Mr = Math.round(M);
+    return PRESETS.map(function (p) {
+      var raw = Mr - p.d, cal = Math.min(Mr, Math.max(fl, raw));
+      return { k: p.k, name: p.name, d: p.d, cal: cal, cut: Mr - cal, held: raw < fl && cal !== raw };
+    });
+  }
+  function macros(cal, W, pg, fg) { var p = pg * W, f = fg * W, c = (cal - 4 * p - 9 * f) / 4; return { p: p, f: f, c: c, pk: 4 * p, fk: 9 * f, ck: 4 * Math.max(0, c) }; }
+  /* US Navy body fat from centimetres; null when the numbers cannot work */
+  function navy(male, h, waist, neck, hip) {
+    var l = function (x) { return Math.log(x) / Math.LN10; }, bf, d;
+    if (!(h > 0 && waist > 0 && neck > 0)) return null;
+    if (male) { d = waist - neck; if (!(d > 0)) return null; bf = 495 / (1.0324 - 0.19077 * l(d) + 0.15456 * l(h)) - 450; }
+    else { if (!(hip > 0)) return null; d = waist + hip - neck; if (!(d > 0)) return null; bf = 495 / (1.29579 - 0.35004 * l(d) + 0.22100 * l(h)) - 450; }
+    if (!isFinite(bf)) return null;
+    return Math.min(75, Math.max(1, bf));
+  }
+  /* keep the lean mass, reach body fat t: target weight and the fat to lose */
+  function fatPlan(W, bf, t) {
+    var L = W * (1 - bf / 100), Tw = L / (1 - t / 100);
+    return { lean: L, fatNow: W - L, tw: Tw, fatTarget: Tw - L, lose: W - Tw };
+  }
+  function weeks(lose, cut) { return cut > 0 ? lose * KCAL_KG / cut / 7 : null; }
+  return { KCAL_KG: KCAL_KG, LIMIT: LIMIT, PROT: PROT, FAT: FAT, CARB_MIN: CARB_MIN, PROT_DEF: PROT_DEF, FAT_DEF: FAT_DEF, PRESETS: PRESETS, num: num, floor: floor, targets: targets, macros: macros, navy: navy, fatPlan: fatPlan, weeks: weeks };
+})();
+/* RECOMP-ENGINE:END */
+
+/* =========================================================
+   CalcThis.initRecompCalc() — ids rc*. Engines: CalcThis.recompEngine, deficitEngine.maint (Mifflin / Katch), ketoEngine.parseIn. No shared state.
+   ========================================================= */
+CalcThis.initRecompCalc = function () {
+  var E = CalcThis.recompEngine, D = CalcThis.deficitEngine, K = CalcThis.ketoEngine, U = CalcThis._kzUtil, trim = U.trim, grp = U.grp, seg = U.seg, setSeg = U.setSeg;
+  var $ = function (id) { return document.getElementById(id); };
+  var LB = 2.20462, ST = 6.35029, MINUS = '−';
+  var st = { sex: 'f', wu: 'lb', hu: 'in', focus: 'both', adv: false, est: false, days: 3, meals: 4 };
+  var ex = {};
+  function f1(x) { return (Math.round(x * 10) / 10).toFixed(1); }
+  function f2(x) { return (Math.round(x * 100) / 100).toFixed(2); }
+  function setHint(m, at) {
+    var h = $('rcHint'); h.textContent = m || ''; h.style.display = m ? 'block' : 'none';
+    if (m && at) { var f = $(at).closest('.fld'); if (f && f.nextSibling !== h) f.parentNode.insertBefore(h, f.nextSibling); }
+  }
+  function toDisp(kg) { return st.wu === 'lb' ? kg * LB : (st.wu === 'st' ? kg / ST : kg); }
+  function wTxt(kg) { return trim(toDisp(kg), 1) + ' ' + st.wu; }
+  function wkTxt(kg) { return st.wu === 'kg' ? f2(kg) + ' kg' : f2(kg * LB) + ' lb'; }
+  function toKg(n) { return st.wu === 'lb' ? n / LB : (st.wu === 'st' ? n * ST : n); }
+  var WMSG = { kg: 'Weight should be between 30 and 300 kg — check the number and the unit.', lb: 'Weight should be between 66 and 660 lb — check the number and the unit.', st: 'Weight should be between 4.7 and 47 st — check the number and the unit.' };
+  function readW() {
+    var raw = $('rcW').value; if (!raw.trim()) return null;
+    var n = E.num(raw); if (n === null) return null;
+    if (isNaN(n) || n <= 0) return { err: 'Couldn’t read your weight — use a number like ' + (st.wu === 'kg' ? '75' : (st.wu === 'st' ? '12' : '165')) + '.' };
+    var kg = toKg(n); if (kg < 30 || kg > 300) return { err: WMSG[st.wu] };
+    return { kg: kg };
+  }
+  /* a length in cm from a field in the chosen unit; the height accepts 5'10 */
+  var LEN = { rcH: [100, 250, 'Height', 'height'], rcWa: [40, 250, 'Waist', 'waist'], rcNe: [20, 80, 'Neck', 'neck'], rcHi: [50, 250, 'Hip', 'hip'] };
+  function readLen(id) {
+    var raw = $(id).value; if (!raw.trim()) return null;
+    var c = LEN[id], inch = st.hu === 'in', n = (id === 'rcH' && inch) ? K.parseIn(raw) : E.num(raw); if (n === null) return null;
+    if (isNaN(n) || n <= 0) return { err: 'Couldn’t read the ' + c[3] + ' — use ' + (inch ? 'inches' + (id === 'rcH' ? ' (70) or feet and inches (5\'10)' : ' like 34') : 'centimetres, like ' + (id === 'rcH' ? '178' : '86')) + '.' };
+    var cm = inch ? n * 2.54 : n;
+    if (cm < c[0] || cm > c[1]) return { err: c[2] + ' should be between ' + (inch ? Math.round(c[0] / 2.54) + ' and ' + Math.round(c[1] / 2.54) + ' inches' : c[0] + ' and ' + c[1] + ' cm') + ' — check the number and the unit.' };
+    return { cm: cm };
+  }
+  function readNum(id, lo, hi, msg) {
+    var raw = $(id).value; if (!raw.trim()) return null;
+    var n = E.num(raw); if (n === null) return null;
+    if (isNaN(n) || n < lo || n > hi) return { err: msg };
+    return { v: n };
+  }
+  var ok = function (r) { return r && !r.err ? r : null; };
+  function dur(days) { if (days > 3650) return 'more than 10 years'; if (days < 14) return Math.max(1, Math.ceil(days)) + (Math.ceil(days) === 1 ? ' day' : ' days'); return Math.round(days / 7) + ' weeks'; }
+  var SEX = function () { return st.sex === 'm'; };
+  var BFMSG = 'Body fat should be a percentage between 3 and 70.';
+
+  /* ---------- the notes that sit under single fields: every field shows what it did ---------- */
+  function notes() {
+    var w = ok(readW()), bf = ok(readNum('rcBf', 3, 70, BFMSG)), mt = ok(readNum('rcMaint', 800, 8000, 'm')), a = ok(readNum('rcAge', 15, 100, 'a')), h = ok(readLen('rcH')), n, t;
+    var bfN = $('rcBfNote');
+    if (bf) {
+      if (!w) n = 'Type your weight first — the body fat percentage is applied to it.';
+      else n = mt ? 'Not used for the calories while you give your own number under Go advanced; it is used for the fat-to-lose figures.' : 'Calories use your lean mass of ' + wTxt(w.kg * (1 - bf.v / 100)) + ' (Katch-McArdle) instead of the age-and-height estimate.';
+    } else n = '';
+    bfN.textContent = n; bfN.style.display = n ? '' : 'none';
+    var mN = $('rcMaintNote');
+    if (mt) {
+      if (!w) n = 'Type your weight too — protein and the scale change are worked out from it.';
+      else if (a && h) { var est = Math.round(D.maint({ male: SEX(), W: w.kg, H: h.cm, A: a.v, f: parseFloat($('rcAct').value), formula: bf ? 'katch' : 'mifflin', bf: bf ? bf.v : null })); n = 'Used instead of the estimate (the estimate would be ' + grp(est) + ' kcal). Age and height are not needed.'; }
+      else n = 'Used as given — age and height are not needed.';
+    } else n = 'Know it already, for example from tracking your food and weight? Type it here and it replaces the estimate from age and height.';
+    mN.textContent = n; mN.style.display = '';
+    var tb = readNum('rcTbf', 3, 60, 'Target body fat should be a percentage between 3 and 60.'), tN = $('rcTbfNote');
+    if (tb && !tb.err) {
+      if (!bf) n = 'Type your current body fat first (above) — the fat to lose is worked out from it.';
+      else if (tb.v >= bf.v) n = 'Your target is not below your current ' + f1(bf.v) + '% — there is no fat to lose.';
+      else if (!w) n = 'Type your weight first.';
+      else n = '';
+    } else n = '';
+    tN.textContent = n; tN.style.display = n ? '' : 'none';
+    var dN = $('rcDaysNote');
+    dN.textContent = st.days < 3 ? st.days + ' strength sessions a week. Most recomposition guides suggest at least 3 to build or keep muscle; the studies read for this page give no number. This note does not change the calories.' : st.days + ' strength sessions a week — that meets the usual guide minimum of 3. It does not change the calories; it is a reminder that these numbers assume you train.';
+    /* body fat estimate */
+    var eN = $('rcEstNote'), eB = $('rcUse'), male = SEX(), wa = readLen('rcWa'), ne = readLen('rcNe'), hi = male ? null : readLen('rcHi'), anyTyped = ['rcWa', 'rcNe', 'rcHi'].some(function (id) { return $(id).value.trim() && (id !== 'rcHi' || !male); });
+    eB.style.display = 'none'; eN.className = 'cb-note';
+    var errE = (wa && wa.err) || (ne && ne.err) || (hi && hi.err) || null;
+    if (!st.est) { eN.textContent = ''; eN.style.display = 'none'; return; }
+    eN.style.display = '';
+    if (errE) { eN.textContent = errE; return; }
+    var miss = []; if (!h) miss.push('your height (above)'); if (!wa) miss.push('your waist'); if (!ne) miss.push('your neck'); if (!male && !hi) miss.push('your hip');
+    if (miss.length) { eN.textContent = anyTyped || h ? 'Still needed for the estimate: ' + miss.join(', ') + '.' : 'Type your waist and neck' + (male ? '' : ' and hip') + ' to get an estimate. Your height above is used too.'; return; }
+    var v = E.navy(male, h.cm, wa.cm, ne.cm, hi ? hi.cm : 0);
+    if (v === null) { eN.textContent = 'These measurements don’t work together — the waist has to be larger than the neck. Check the numbers.'; return; }
+    if (v < 3 || v > 70) { eN.textContent = 'These measurements give ' + f1(v) + '% body fat, outside the 3–70% this page accepts — check the numbers.'; return; }
+    eN.className = 'cb-note rc-est-res'; eN.innerHTML = 'Estimated body fat: <b>' + f1(v) + '%</b> (US Navy method — an estimate from a tape measure, not a measurement).';
+    eB.style.display = ''; eB.textContent = 'Use ' + f1(v) + '%'; eB.setAttribute('data-v', f1(v));
+  }
+  function empty(msg, at, need) {
+    $('rcBig').textContent = '—'; $('rcSub').textContent = need ? 'Still needed: ' + need + '.' : $('rcSub').getAttribute('data-empty'); $('rcBody').style.display = 'none'; $('rcMVal').textContent = '—'; setHint(msg || '', at);
+    ['rcK1', 'rcK2', 'rcK3'].forEach(function (id) { $(id).textContent = ''; });
+    notes();
+  }
+  /* ---------- the calorie ruler ---------- */
+  function ruler(M, T, male, pick) {
+    var fl = E.floor(male), lim = M - E.LIMIT, vals = [fl, lim, M].concat(T.map(function (x) { return x.cal; })), lo = Math.max(0, Math.min.apply(null, vals) - 90), hi = M + 120;
+    var p = function (v) { return Math.max(0, Math.min(100, (v - lo) / (hi - lo) * 100)); };
+    function place(items) {
+      var rows = [], W = 300;
+      items.sort(function (x, y) { return x.v - y.v; });
+      items.forEach(function (it) {
+        var w = Math.max(it.a.length * 8, it.b.length * 6.6) + 10, x = p(it.v) / 100 * W, l = x - w / 2, r = x + w / 2, i = 0;
+        while (rows[i] && rows[i] > l - 4) i++;
+        rows[i] = r; it.row = i;
+      });
+      return rows.length;
+    }
+    var below = T.map(function (x) { return { v: x.cal, a: grp(x.cal), b: x.name, cls: x.k === pick ? 'on' : '' }; });
+    var above = [{ v: lim, a: grp(lim), b: 'limit in the research', cls: 'lim' }, { v: fl, a: grp(fl), b: 'your minimum', cls: 'fl' }];
+    var nb = place(below), na = place(above);
+    function lab(items, n, up) {
+      return '<div class="rc-rule-l' + (up ? ' up' : '') + '" style="height:' + (n * 38) + 'px">' + items.map(function (it) {
+        return '<span class="' + (it.cls + (p(it.v) < 14 ? ' a-l' : '')).trim() + '" style="left:' + p(it.v) + '%;' + (up ? 'bottom:' : 'top:') + (it.row * 38) + 'px"><b>' + it.a + '</b>' + it.b + '</span>';
+      }).join('') + '</div>';
+    }
+    var h = '<div class="rc-rule">' + lab(above, na, true) + '<div class="rc-rule-t">';
+    h += '<i class="rc-band rc-no" style="left:0;width:' + p(lim) + '%"></i><i class="rc-band rc-ok" style="left:' + p(lim) + '%;width:' + (100 - p(lim)) + '%"></i>';
+    h += '<i class="rc-tick" style="left:' + p(lim) + '%"></i><i class="rc-tick fl" style="left:' + p(fl) + '%"></i>';
+    T.forEach(function (x) { h += '<i class="rc-dot' + (x.k === pick ? ' on' : '') + '" style="left:' + p(x.cal) + '%"></i>'; });
+    return h + '</div>' + lab(below, nb, false) + '</div>';
+  }
+  function render() {
+    var soft = null;
+    function sf(at, msg) { if (!soft) soft = { at: at, msg: msg }; }
+    var w = readW();
+    if (w && w.err) { empty(w.err, 'rcW'); return; }
+    var mt = readNum('rcMaint', 800, 8000, 'Calories you burn should be between 800 and 8,000 kcal a day — or clear it to use the estimate.'), known = !!ok(mt);
+    var a = readNum('rcAge', 15, 100, 'Age should be a number between 15 and 100.'), h = readLen('rcH');
+    if (!known) {
+      if (a && a.err) { empty(a.err, 'rcAge'); return; }
+      if (h && h.err) { empty(h.err, 'rcH'); return; }
+      if (mt && mt.err) { if (a && h) sf('rcMaint', mt.err.replace(' — or clear it to use the estimate.', '.') + ' It is ignored for now, so the estimate is used.'); else { empty(mt.err, 'rcMaint'); return; } }
+    } else { if (a && a.err) { sf('rcAge', a.err + ' It is not needed while you give your own calories, so it is ignored.'); a = null; } if (h && h.err) { sf('rcH', h.err + ' It is not needed while you give your own calories, so it is ignored.'); h = null; } }
+    if (!w || (!known && (!a || !h))) {
+      var need = []; if (!w) need.push('weight'); if (!known) { if (!a) need.push('age'); if (!h) need.push('height'); }
+      empty('', null, need.join(', ').replace(/, ([^,]*)$/, ' and $1')); return;
+    }
+    var bf = readNum('rcBf', 3, 70, BFMSG); if (bf && bf.err) { sf('rcBf', bf.err + ' It is ignored for now.'); bf = null; }
+    var tb = readNum('rcTbf', 3, 60, 'Target body fat should be a percentage between 3 and 60.'); if (tb && tb.err) { sf('rcTbf', tb.err + ' It is ignored for now.'); tb = null; }
+    setHint(soft ? soft.msg : '', soft ? soft.at : null);
+    var male = SEX(), fct = parseFloat($('rcAct').value), method = known ? 'your own number' : (bf ? 'Katch-McArdle' : 'Mifflin-St Jeor');
+    var M = known ? mt.v : D.maint({ male: male, W: w.kg, H: h.cm, A: a.v, f: fct, formula: bf ? 'katch' : 'mifflin', bf: bf ? bf.v : null }), Mr = Math.round(M);
+    var T = E.targets(M, male), cur = T.filter(function (x) { return x.k === st.focus; })[0], W = w.kg, i;
+    var Mc = T.map(function (x) { return E.macros(x.cal, W, E.PROT_DEF, E.FAT_DEF); }), mc = Mc[T.indexOf(cur)];
+    $('rcBig').textContent = grp(cur.cal) + ' kcal';
+    $('rcSub').textContent = 'You burn ' + grp(Mr) + ' kcal · ' + (cur.cut > 0 ? grp(cur.cut) + ' kcal under that' : 'eating what you burn') + ' · ' + method;
+    $('rcMLab').textContent = 'Calories a day'; $('rcMVal').textContent = grp(cur.cal) + ' kcal';
+    $('rcBody').style.display = '';
+    ['rcK1', 'rcK2', 'rcK3'].forEach(function (id, k) { $(id).textContent = ' · ' + grp(T[k].cal) + ' kcal'; });
+    /* the sentence that states the result */
+    var sc = cur.cut * 7 / E.KCAL_KG, tip;
+    if (cur.k === 'muscle') tip = 'Eating ' + grp(cur.cal) + ' kcal — what you burn — keeps your weight about flat. With strength training, any change shows in your waist, photos and the weights you lift, not on the scale.';
+    else tip = 'Eating ' + grp(cur.cal) + ' kcal — ' + grp(cur.cut) + ' under the ' + grp(Mr) + ' you burn — is below the ~' + E.LIMIT + ' kcal a day where lean-mass gains were prevented in a 2022 meta-analysis. On the simple 7,700 kcal per kg rule that is about ' + wkTxt(sc) + ' a week on the scale (fat only; muscle gained would hide some of it)' + (cur.k === 'both' ? ', so the scale alone will barely show it: also track your waist, photos and the weights you lift.' : '.');
+    $('rcTip').textContent = tip;
+    var fl = [];
+    T.forEach(function (x) { if (x.held) fl.push((x.cal === Mr ? '' : '') + x.name + ' is held at your ' + grp(E.floor(male)) + ' kcal minimum, ' + (x.cut > 0 ? 'only ' + grp(x.cut) + ' kcal under what you burn' : 'which is what you burn or more, so there is no cut') + ' — the minimum is a simple rule with no primary source.'); });
+    var cg = mc.c / W;
+    if (mc.c < 0) fl.push('Protein and fat use more than all the calories of your pick — it is too low for these amounts; choose a smaller cut or type more calories you burn.');
+    else if (cg < E.CARB_MIN) fl.push('Carbohydrate is ' + f1(cg) + ' g per kg for your pick, below the 3 g per kg minimum a review gives for fuelling resistance training.');
+    $('rcFlags').innerHTML = fl.map(function (t) { return '<p class="rc-flag">' + t + '</p>'; }).join('');
+    /* ruler */
+    $('rcRuler').innerHTML = ruler(M, T, male, st.focus);
+    $('rcRuleNote').textContent = 'The right end is the ' + grp(Mr) + ' kcal you burn — “Build muscle” eats exactly that. Your pick is the amber dot.';
+    /* three goals side by side */
+    var head = '<tr><th></th>' + T.map(function (x) { return '<th class="' + (x.k === st.focus ? 'rc-cur' : '') + '">' + x.name + '</th>'; }).join('') + '</tr>';
+    function row(lab, fn) { return '<tr><td>' + lab + '</td>' + T.map(function (x, k) { return '<td class="' + (x.k === st.focus ? 'rc-cur' : '') + '">' + fn(x, Mc[k]) + '</td>'; }).join('') + '</tr>'; }
+    $('rcCmp').innerHTML = '<thead>' + head + '</thead><tbody>' +
+      row('Calories cut', function (x) { return x.cut > 0 ? MINUS + grp(x.cut) : '0'; }) +
+      row('Calories', function (x) { return '<b>' + grp(x.cal) + '</b>'; }) +
+      row('Protein', function (x, m) { return grp(m.p) + ' g'; }) +
+      row('Carbs', function (x, m) { return grp(Math.max(0, m.c)) + ' g'; }) +
+      row('Fat', function (x, m) { return grp(m.f) + ' g'; }) +
+      row('Scale a week*', function (x) { return x.cut > 0 ? MINUS + wkTxt(x.cut * 7 / E.KCAL_KG) : '0'; }) + '</tbody>';
+    /* per meal for the pick */
+    var nm = st.meals, mf = [];
+    $('rcMac').innerHTML = '<thead><tr><th>' + cur.name + '</th><th>Per day</th><th>Per meal (' + nm + ')</th></tr></thead><tbody>' +
+      '<tr><td>Calories</td><td>' + grp(cur.cal) + '</td><td>' + grp(cur.cal / nm) + '</td></tr>' +
+      '<tr><td>Protein <small>' + f1(E.PROT_DEF) + ' g per kg · ' + grp(mc.pk) + ' kcal</small></td><td>' + grp(mc.p) + ' g</td><td>' + grp(mc.p / nm) + ' g</td></tr>' +
+      '<tr><td>Fat <small>' + f1(E.FAT_DEF) + ' g per kg · ' + grp(mc.fk) + ' kcal</small></td><td>' + grp(mc.f) + ' g</td><td>' + grp(mc.f / nm) + ' g</td></tr>' +
+      '<tr><td>Carbohydrate <small>the rest · ' + f1(Math.max(0, cg)) + ' g per kg · ' + grp(mc.ck) + ' kcal</small></td><td>' + grp(Math.max(0, mc.c)) + ' g</td><td>' + grp(Math.max(0, mc.c) / nm) + ' g</td></tr></tbody>';
+    /* fat to lose */
+    var fw = $('rcFatWrap'), fr = '';
+    if (bf && tb && tb.v < bf.v) {
+      var fp = E.fatPlan(W, bf.v, tb.v);
+      fr += '<div class="bf-cmp"><span class="k">Fat now</span><span class="v">' + wTxt(fp.fatNow) + '</span></div>';
+      fr += '<div class="bf-cmp"><span class="k">Lean mass <span class="bm-sub">everything that is not fat</span></span><span class="v">' + wTxt(fp.lean) + '</span></div>';
+      fr += '<div class="bf-cmp"><span class="k">Weight at ' + trim(tb.v, 1) + '% body fat <span class="bm-sub">if you keep all your muscle</span></span><span class="v">' + wTxt(fp.tw) + '</span></div>';
+      fr += '<div class="bf-cmp"><span class="k">Fat to lose</span><span class="v">' + wTxt(fp.lose) + '</span></div>';
+      T.forEach(function (x) { var wk = E.weeks(fp.lose, x.cut); fr += '<div class="bf-cmp"><span class="k">' + x.name + '<span class="bm-sub">at ' + (x.cut > 0 ? grp(x.cut) + ' kcal under, simple rule' : 'no cut: this focus does not lose fat by itself') + '</span></span><span class="v">' + (wk == null ? '—' : dur(wk * 7)) + '</span></div>'; });
+      fw.style.display = ''; $('rcFatRows').innerHTML = fr;
+    } else fw.style.display = 'none';
+    notes();
+  }
+  /* ---------- controls ---------- */
+  ['rcW', 'rcH', 'rcAge', 'rcBf', 'rcMaint', 'rcTbf', 'rcWa', 'rcNe', 'rcHi'].forEach(function (id) { $(id).addEventListener('input', render); });
+  $('rcAct').addEventListener('change', render);
+  seg('rcSex', function (v) { st.sex = v; $('rcHipFld').style.display = v === 'f' ? '' : 'none'; render(); });
+  $('rcFocus').addEventListener('click', function (e) {
+    var b = e.target.closest('.radopt'); if (!b) return; st.focus = b.getAttribute('data-v');
+    [].forEach.call($('rcFocus').children, function (x) { var on = x === b; x.classList.toggle('on', on); x.setAttribute('aria-checked', on ? 'true' : 'false'); }); render();
+  });
+  seg('rcDays', function (v) { st.days = +v; render(); });
+  seg('rcMeals', function (v) { st.meals = +v; render(); });
+  seg('rcWu', function (v) {
+    var w = readW(), m = ex.w; if (m && m.txt === $('rcW').value) w = { kg: m.kg };
+    st.wu = v; if (w && w.err) $('rcW').value = '';
+    if (w && w.kg) { var tx = trim(v === 'lb' ? w.kg * LB : (v === 'st' ? w.kg / ST : w.kg), 3); $('rcW').value = tx; ex.w = { kg: w.kg, txt: tx }; }
+    $('rcW').placeholder = v === 'kg' ? 'e.g. 75' : (v === 'st' ? 'e.g. 12' : 'e.g. 165'); render();
+  });
+  seg('rcHu', function (v) {
+    var old = {}; Object.keys(LEN).forEach(function (id) { var r = readLen(id), m = ex[id]; if (m && m.txt === $(id).value) r = { cm: m.cm }; old[id] = r; });
+    st.hu = v;
+    Object.keys(LEN).forEach(function (id) {
+      var r = old[id]; if (r && r.err) $(id).value = '';
+      if (r && r.cm) { var tx = v === 'in' ? trim(r.cm / 2.54, 2) : trim(r.cm, 2); $(id).value = tx; ex[id] = { cm: r.cm, txt: tx }; }
+    });
+    $('rcH').placeholder = v === 'in' ? 'e.g. 70 or 5\'10' : 'e.g. 178'; $('rcWa').placeholder = v === 'in' ? 'e.g. 34' : 'e.g. 86'; $('rcNe').placeholder = v === 'in' ? 'e.g. 14' : 'e.g. 36'; $('rcHi').placeholder = v === 'in' ? 'e.g. 40' : 'e.g. 100';
+    render();
+  });
+  $('rcEstBtn').addEventListener('click', function () { st.est = !st.est; $('rcEstIn').style.display = st.est ? '' : 'none'; $('rcEstBtn').textContent = st.est ? 'Hide the estimate' : 'Estimate it from my measurements'; render(); });
+  $('rcUse').addEventListener('click', function () { $('rcBf').value = $('rcUse').getAttribute('data-v'); render(); });
+  $('rcAdvBtn').addEventListener('click', function () {
+    st.adv = !st.adv; $('rcAdvBtn').classList.toggle('open', st.adv); $('rcAdvBtnLab').textContent = st.adv ? 'Go simple' : 'Go advanced'; $('rcAdvIn').style.display = st.adv ? '' : 'none';
+    if (!st.adv) { $('rcMaint').value = ''; $('rcTbf').value = ''; st.days = 3; st.meals = 4; setSeg('rcDays', '3'); setSeg('rcMeals', '4'); }
+    render();
+  });
+  render();
+};
+/* RECOMP:END */

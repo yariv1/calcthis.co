@@ -1,0 +1,798 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Body Recomposition Calculator — Calories &amp; Macros</title>
+<meta name="description" content="Body recomposition calculator: calories and protein to lose fat and build muscle, three goals side by side and the 500-calorie research limit on a ruler.">
+<link rel="canonical" href="https://calcthis.co/body-recomposition-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Body Recomposition Calculator — Calories &amp; Macros">
+<meta property="og:description" content="Body recomposition calculator: calories and protein to lose fat and build muscle, three goals side by side and the 500-calorie research limit on a ruler.">
+<meta property="og:url" content="https://calcthis.co/body-recomposition-calculator/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/datepicker.min.css">
+<link rel="stylesheet" href="/assets/style.css?v=329">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Body Recomposition Calculator",
+  "url": "https://calcthis.co/body-recomposition-calculator/",
+  "applicationCategory": "HealthApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "Free body recomposition calculator: calories, protein, carbs and fat for losing fat, building muscle or both at once, shown side by side from Mifflin-St Jeor or Katch-McArdle, with a calorie ruler against the 500 kcal deficit where lean-mass gains were prevented in a 2022 meta-analysis, the scale change a week, and a US Navy body fat estimate."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is body recomposition?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Body recomposition means losing fat and keeping or building muscle at the same time, so your shape changes more than your weight. It needs strength training, enough protein and a calorie intake near what you burn rather than a large cut."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How many calories should I eat for body recomposition?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Start from the calories you burn and eat a little under them, or exactly that. For a woman of 70 kg and 168 cm, 35 years old, with moderate activity, you burn about 2,192 kcal (Mifflin-St Jeor 1,414 × 1.55). This calculator’s three presets are 1,792 kcal (400 under, more fat loss), 1,992 kcal (200 under, both) and 2,192 kcal (what you burn, more muscle focus). They are presets of this page, not from a study."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can you lose fat and build muscle at the same time?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The 2022 meta-analysis I read found that an energy deficit of about 500 kcal a day prevented gains in lean mass, while strength gains stayed comparable. That is why the presets here stay under 500 kcal under what you burn, and why the ruler marks that line. How much muscle a given person gains while losing fat I did not find a source for, so the calculator gives no muscle-gain projection."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How big a calorie deficit is too big for recomposition?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "In the 2022 meta-analysis, a deficit of about 500 kcal a day prevented gains in lean mass, and the authors say people who lift to preserve lean mass during weight loss should avoid deficits larger than 500 kcal a day. The calculator’s biggest preset is 400 kcal under what you burn."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How much protein for body recomposition?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "This calculator uses 2 g per kg of body weight a day, inside the 1.6–2.2 g per kg range from a 2019 review of off-season nutrition. For 70 kg that is 140 g a day, the same every day, split across your meals. That review is about gaining; I found no readable source specific to cutting, so I did not push the number higher."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why does the scale barely move on body recomposition?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "On the simple rule of 7,700 kcal per kg, a 200 kcal cut is about 0.18 kg a week of fat and no cut is none, and any muscle you gain hides part of that. So watch your waist, photos and the weights you lift as well as the scale."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need to know my body fat?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Without it, calories you burn come from your age, height, weight and activity (Mifflin-St Jeor). If you give a body fat percentage, the calculator uses Katch-McArdle, which is based on lean mass. You can also estimate it from your waist and neck (and hip for women) with the US Navy method, right on the page."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How long will it take to reach my target body fat?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Type your current and target body fat under Go advanced. The calculator keeps your lean mass the same and works out the fat to lose. For example 70 kg at 30% body fat and a target of 25% means about 4.7 kg of fat to lose, about 13 weeks at 400 kcal under what you burn or 26 weeks at 200 kcal under, on the simple rule. Building muscle would change the result."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How many days a week should I lift?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Most recomposition guides suggest at least 3 strength sessions a week. The studies I read give no number, so the calculator shows it as a reminder under Go advanced and does not change the calories with it."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is body recomposition safe for everyone?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "This page is for information only. If you are pregnant or breastfeeding, take a GLP-1 or other weight medicine, have kidney disease or a history of disordered eating, ask a clinician; the calculator gives no numbers for those cases."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "CalcThis",
+      "item": "https://calcthis.co/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Body Recomposition Calculator",
+      "item": "https://calcthis.co/body-recomposition-calculator/"
+    }
+  ]
+}
+</script>
+<meta property="og:site_name" content="CalcThis">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://calcthis.co/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="CalcThis — free, purpose-built calculators">
+<meta name="twitter:title" content="Body Recomposition Calculator — Calories &amp; Macros">
+<meta name="twitter:description" content="Body recomposition calculator: calories and protein to lose fat and build muscle, three goals side by side and the 500-calorie research limit on a ruler.">
+<meta name="twitter:image" content="https://calcthis.co/assets/og-default.png">
+</head>
+<body class="p-bmr p-rc">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <a class="hdr-back" href="/blog/" aria-label="Back to blog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-search"><div class="menu-sx"><input id="menuSearch" type="search" placeholder="Search calculators or states…" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Search calculators" enterkeyhint="search"></div><div class="menu-results" id="menuResults" hidden></div></div>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <span class="menu-col-head">Construction &amp; Gardening</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+          <a href="/paint-calculator/">Paint</a>
+          <a href="/wallpaper-calculator/">Wallpaper</a>
+          <a href="/square-footage-calculator/">Square Footage</a>
+          <a href="/tape-measure-fraction-calculator/">Tape Measure Fraction</a>
+          <a href="/stair-calculator/">Stair</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/vo2-max-calculator/">VO2 Max</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
+          <a href="/bmi-calculator/">BMI</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/ideal-weight-calculator/">Ideal Weight</a>
+          <a href="/lean-body-mass-calculator/">Lean Body Mass</a>
+          <a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio</a>
+          <a href="/gmi-calculator/">GMI</a>
+          <a href="/a1c-calculator/">A1C</a>
+          <a href="/calorie-calculator/">Calorie</a>
+          <a href="/calorie-deficit-calculator/">Calorie Deficit</a>
+          <a href="/bmr-calculator/">BMR</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/water-intake-calculator/">Water Intake</a>
+          <a href="/macro-calculator/">Macro</a>
+          <a href="/protein-intake-calculator/">Protein Intake</a>
+          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
+          <a href="/steps-to-miles-calculator/">Steps to Miles</a>
+          <a href="/dog-age-calculator/">Dog Age</a>
+          <a href="/cat-age-calculator/">Cat Age</a>
+          <a href="/calories-burned-calculator/">Calories Burned</a>
+          <a href="/calories-burned-walking-calculator/">Calories Burned Walking</a>
+          <a href="/calories-burned-running-calculator/">Calories Burned Running</a>
+          <a href="/keto-calculator/">Keto</a>
+          <a href="/net-carb-calculator/">Net Carb</a>
+          <a href="/intermittent-fasting-calculator/">Intermittent Fasting</a>
+          <a href="/bsa-calculator/">BSA</a>
+          <a href="/dog-food-calculator/">Dog Food</a>
+          <a href="/ffmi-calculator/">FFMI</a>
+          <a href="/bulking-calculator/">Bulking</a>
+          <a href="/weight-loss-calculator/">Weight Loss</a>
+          <a href="/weight-loss-percentage-calculator/">Weight Loss %</a>
+          <a href="/max-heart-rate-calculator/">Max Heart Rate</a>
+          <a href="/caffeine-calculator/">Caffeine</a>
+          <a href="/caffeine-half-life-calculator/">Caffeine Half Life</a>
+          <a href="/fiber-calculator/">Fiber</a>
+          <a href="/creatine-calculator/">Creatine</a>
+          <a href="/vitamin-d-calculator/">Vitamin D</a>
+          <a href="/body-recomposition-calculator/" class="current">Body Recomposition</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/semester-grade-calculator/">Semester Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+          <a href="/grade-curve-calculator/">Grade Curve</a>
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/fraction-calculator/">Fraction</a>
+          <a href="/standard-deviation-calculator/">Standard Deviation</a>
+          <a href="/scientific-notation-calculator/">Scientific Notation</a>
+          <a href="/average-calculator/">Average</a>
+          <a href="/batting-average-calculator/">Batting Average</a>
+          <a href="/stock-average-calculator/">Stock Average</a>
+          <a href="/dice-average-calculator/">Dice Average</a>
+          <a href="/time-average-calculator/">Time Average</a>
+          <a href="/weighted-average-calculator/">Weighted Average</a>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+          <a href="/percentage-change-calculator/">Percentage Change</a>
+          <a href="/age-calculator/">Age</a>
+          <a href="/date-calculator/">Date</a>
+          <a href="/time-calculator/">Time</a>
+          <a href="/hours-calculator/">Hours</a>
+          <a href="/triangle-calculator/">Triangle</a>
+          <a href="/random-number-generator/">Random Number</a>
+          <span class="menu-col-head">Cooking &amp; Kitchen</span>
+          <a href="/recipe-converter/">Recipe Converter</a>
+          <a href="/turkey-cooking-time-calculator/">Turkey Cooking Time</a>
+          <a href="/turkey-thawing-time-calculator/">Turkey Thawing Time</a>
+          <a href="/turkey-size-calculator/">Turkey Size</a>
+          <!--UNITNAV:START-->
+          <span class="menu-col-head">Unit Converters</span>
+          <a href="/unit-converter/">Unit Converter</a>
+          <a href="/length-converter/">Length Converter</a>
+          <a href="/weight-converter/">Weight Converter</a>
+          <a href="/volume-converter/">Volume Converter</a>
+          <a href="/temperature-converter/">Temperature Converter</a>
+          <a href="/area-converter/">Area Converter</a>
+          <a href="/speed-converter/">Speed Converter</a>
+          <a href="/data-storage-converter/">Data Storage Converter</a>
+          <a href="/cooking-converter/">Cooking Converter</a>
+          <a href="/px-to-rem-converter/">PX to REM Converter</a>
+          <!--UNITNAV:END-->
+          <span class="menu-col-head">Money &amp; Finance</span>
+          <a href="/mortgage-calculator/">Mortgage</a>
+          <a href="/loan-calculator/">Loan</a>
+          <a href="/auto-loan-calculator/">Auto Loan</a>
+          <a href="/car-sales-tax-calculator/">Car Sales Tax</a>
+          <a href="/overtime-calculator/">Overtime</a>
+          <a href="/salary-calculator/">Salary</a>
+          <!--STAXNAV:START-->
+          <a href="/sales-tax-calculator/">Sales Tax</a>
+          <a href="/sales-tax-calculator/california/">California Sales Tax</a>
+          <a href="/sales-tax-calculator/chicago/">Chicago Sales Tax</a>
+          <a href="/sales-tax-calculator/florida/">Florida Sales Tax</a>
+          <a href="/sales-tax-calculator/las-vegas/">Las Vegas Sales Tax</a>
+          <a href="/sales-tax-calculator/los-angeles/">Los Angeles Sales Tax</a>
+          <a href="/sales-tax-calculator/michigan/">Michigan Sales Tax</a>
+          <a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax</a>
+          <a href="/sales-tax-calculator/missouri/">Missouri Sales Tax</a>
+          <a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax</a>
+          <a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax</a>
+          <a href="/sales-tax-calculator/north-carolina/">North Carolina Sales Tax</a>
+          <a href="/sales-tax-calculator/ohio/">Ohio Sales Tax</a>
+          <a href="/sales-tax-calculator/texas/">Texas Sales Tax</a>
+          <a href="/sales-tax-calculator/virginia/">Virginia Sales Tax</a>
+          <!--STAXNAV:END-->
+          <a href="/tip-calculator/">Tip</a>
+          <a href="/how-much-to-tip/">How Much to Tip</a>
+        </div>
+        <!--PAYNAV:START-->
+        <div class="menu-col">
+          <span class="menu-col-head">Paycheck Calculators</span>
+          <a href="/paycheck-calculator/">Paycheck Calculator (all states)</a>
+          <a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a>
+          <a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arkansas/">Arkansas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/california/">California Paycheck Calculator</a>
+          <a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a>
+          <a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a>
+          <a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/hawaii/">Hawaii Paycheck Calculator</a>
+          <a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a>
+          <a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a>
+          <a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a>
+          <a href="/paycheck-calculator/louisiana/">Louisiana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a>
+          <a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a>
+          <a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a>
+          <a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a>
+          <a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nebraska/">Nebraska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a>
+          <a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a>
+          <a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a>
+          <a href="/paycheck-calculator/oklahoma/">Oklahoma Paycheck Calculator</a>
+          <a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a>
+          <a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a>
+          <a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a>
+          <a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/utah/">Utah Paycheck Calculator</a>
+          <a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wisconsin/">Wisconsin Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a>
+        </div>
+        <!--PAYNAV:END-->
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">Lose fat and build muscle · three goals side by side · calorie ruler · macros</div>
+    <h1>Body Recomposition Calculator</h1>
+    <p>Enter your <strong>weight</strong>, <strong>height</strong>, <strong>age</strong> and <strong>activity</strong> — you get the <strong>calories and protein</strong> for losing fat, building muscle or both at once, side by side, with a ruler that shows where each sits against the <strong>500-calorie deficit limit</strong> from the research. A woman of 70 kg and 168 cm burning <strong>2,192 kcal</strong> eats about <strong>1,992 kcal</strong> to do both.</p>
+  </section>
+
+  <div class="grid">
+
+    <!-- INPUT -->
+    <div class="card">
+      <div class="card-pad">
+        <h2 class="card-h2">About you</h2>
+        <div class="ctl-row"><span class="ctl-lab">Sex</span><div class="seg" id="rcSex" role="group" aria-label="Sex"><button class="on" type="button" data-v="f">Female</button><button type="button" data-v="m">Male</button></div></div>
+        <div class="fld"><span class="lab">Weight</span><div class="cf-box"><input id="rcW" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 165" aria-label="Weight"><div class="seg cf-u" id="rcWu" data-u="lb" role="group" aria-label="Weight unit"><button type="button" class="on" data-v="lb">lb</button><button type="button" data-v="kg">kg</button><button type="button" data-v="st">st</button></div></div></div>
+        <div class="fld"><span class="lab">Height</span><div class="cf-box"><input id="rcH" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 70 or 5'10" aria-label="Height"><div class="seg cf-u" id="rcHu" data-u="in" role="group" aria-label="Height unit"><button type="button" class="on" data-v="in">inches</button><button type="button" data-v="cm">cm</button></div></div></div>
+        <label class="fld" for="rcAge"><span class="lab">Age <span class="unit">years</span></span><div class="inp"><input id="rcAge" type="text" inputmode="numeric" autocomplete="off" placeholder="e.g. 35"></div></label>
+        <label class="fld"><span class="lab">Activity level</span><div class="csel" id="rcAct" data-value="1.55"><button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false"><span class="csel-val">Moderate — 3–5 days/week</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="csel-panel" role="listbox"><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="1.2">Sedentary — little or no exercise</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="1.375">Light — 1–3 days/week</button><button type="button" class="csel-opt on" role="option" aria-selected="true" data-value="1.55">Moderate — 3–5 days/week</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="1.725">Active — 6–7 days/week</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="1.9">Very active — hard training / physical job</button></div></div></label>
+        <div class="ctl-row" style="display:block"><span class="ctl-lab" style="display:block;margin-bottom:6px">Your focus</span><div class="radgrp" id="rcFocus" role="radiogroup" aria-label="Your focus"><button class="radopt" type="button" role="radio" aria-checked="false" data-v="fat"><i class="rd"></i><span class="t"><b>Lose more fat<span class="rc-k" id="rcK1"></span></b><span class="d">Eat about 400 calories under what you burn. The biggest cut here, still under the ~500 limit from the research.</span></span></button><button class="radopt on" type="button" role="radio" aria-checked="true" data-v="both"><i class="rd"></i><span class="t"><b>Lose fat and build muscle<span class="rc-k" id="rcK2"></span></b><span class="d">Eat about 200 calories under what you burn. A small cut.</span></span></button><button class="radopt" type="button" role="radio" aria-checked="false" data-v="muscle"><i class="rd"></i><span class="t"><b>Build more muscle<span class="rc-k" id="rcK3"></span></b><span class="d">Eat what you burn. No cut: the scale stays about flat while you lift.</span></span></button></div></div>
+        <div class="proj-sep"></div>
+        <label class="fld" for="rcBf"><span class="lab">Body fat <span class="unit">% · optional</span></span><div class="inp"><input id="rcBf" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 22"></div></label>
+        <p class="av-note" id="rcBfNote" style="display:none"></p>
+        <div class="chips"><button type="button" id="rcEstBtn">Estimate it from my measurements</button></div>
+        <div class="rc-est" id="rcEstIn" style="display:none">
+          <label class="fld" for="rcWa"><span class="lab">Waist <span class="unit">at the belly button</span></span><div class="inp"><input id="rcWa" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 34"></div></label>
+          <label class="fld" for="rcNe"><span class="lab">Neck <span class="unit">narrowest part</span></span><div class="inp"><input id="rcNe" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 14"></div></label>
+          <div id="rcHipFld"><label class="fld" for="rcHi"><span class="lab">Hip <span class="unit">widest part</span></span><div class="inp"><input id="rcHi" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 40"></div></label></div>
+          <p class="cb-note" id="rcEstNote" style="display:none"></p>
+          <div class="chips"><button type="button" id="rcUse" style="display:none"></button></div>
+        </div>
+        <div class="res-hint" id="rcHint" style="display:none;text-align:left;margin:4px 0 8px"></div>
+        <div id="rcAdvIn" style="display:none">
+          <div class="proj-sep"></div>
+          <label class="fld" for="rcMaint"><span class="lab">Calories you burn <span class="unit">kcal a day · optional</span></span><div class="inp"><input id="rcMaint" type="text" inputmode="numeric" autocomplete="off" placeholder="e.g. 2200"></div></label>
+          <p class="av-note" id="rcMaintNote"></p>
+          <label class="fld" for="rcTbf"><span class="lab">Target body fat <span class="unit">% · optional</span></span><div class="inp"><input id="rcTbf" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 18"></div></label>
+          <p class="av-note" id="rcTbfNote" style="display:none"></p>
+          <div class="ctl-row" style="display:block"><span class="ctl-lab" style="display:block;margin-bottom:6px">Strength sessions a week</span><div class="seg" id="rcDays" role="group" aria-label="Strength sessions a week"><button type="button" data-v="2">2</button><button class="on" type="button" data-v="3">3</button><button type="button" data-v="4">4</button><button type="button" data-v="5">5</button><button type="button" data-v="6">6</button></div></div>
+          <p class="av-note" id="rcDaysNote"></p>
+          <div class="ctl-row"><span class="ctl-lab">Meals a day</span><div class="seg" id="rcMeals" role="group" aria-label="Meals a day"><button type="button" data-v="3">3</button><button class="on" type="button" data-v="4">4</button><button type="button" data-v="5">5</button><button type="button" data-v="6">6</button></div></div>
+        </div>
+        <div class="add-row split" style="margin-top:16px">
+          <span></span>
+          <button class="advbtn" id="rcAdvBtn" type="button">
+            <span id="rcAdvBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div class="card">
+      <div class="card-pad">
+        <div class="bf-res">
+          <div class="res-lab">Calories a day for your focus</div>
+          <div class="res-big"><span id="rcBig">—</span></div>
+          <div class="res-sub" id="rcSub" data-empty="Enter your weight, age and height.">Enter your weight, age and height.</div>
+        </div>
+        <div id="rcBody" style="display:none">
+          <p class="res-tip adv-tip" id="rcTip"></p>
+          <div id="rcFlags"></div>
+          <p class="bm-h">Your calories against the research limit</p>
+          <div id="rcRuler"></div>
+          <div class="bm-key"><span><i class="rc-ky no"></i>~500 kcal or more under what you burn: lean-mass gains were prevented</span><span><i class="rc-ky ok"></i>Less than that</span></div>
+          <p class="cb-note" id="rcRuleNote"></p>
+          <p class="bm-h">The three goals side by side</p>
+          <table class="dtable" id="rcCmp"></table>
+          <p class="cb-note">*The scale change is the simple 7,700 kcal per kg rule for fat only; muscle you gain would hide part of it, so also measure your waist, take photos and track the weights you lift. The three focuses are this page’s own presets, not from a study.</p>
+          <p class="bm-h">Your pick, per meal</p>
+          <table class="dtable" id="rcMac"></table>
+          <div id="rcFatWrap" style="display:none">
+            <p class="bm-h">Fat to lose to reach your target body fat</p>
+            <div id="rcFatRows"></div>
+            <p class="cb-note">Keeps your lean mass the same and uses the simple rule; building muscle would change it.</p>
+          </div>
+          <p class="cb-note">For information only, not medical advice. Pregnant, breastfeeding, taking a GLP-1 or other weight medicine, kidney disease or a history of disordered eating: ask a clinician first.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- mobile sticky bar -->
+  <div class="mbar" id="mbar">
+    <span class="mbar-lab" id="rcMLab">Calories a day</span>
+    <div class="mbar-vals"><b id="rcMVal">—</b></div>
+  </div>
+
+  <div class="related-calcs">
+    <p class="related-calcs-h">More calculators that may interest you</p>
+    <div class="pills">
+      <a class="pill" href="/calorie-deficit-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12h8"/></svg>
+        Calorie Deficit Calculator
+      </a>
+      <a class="pill" href="/macro-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+        Macro Calculator
+      </a>
+      <a class="pill" href="/protein-intake-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-4.5-7-10a4 4 0 0 1 7-2 4 4 0 0 1 7 2c0 5.5-7 10-7 10z"/></svg>
+        Protein Intake Calculator
+      </a>
+      <a class="pill" href="/body-fat-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 7v10M3 9v6M18 7v10M21 9v6M6 12h12"/></svg>
+        Body Fat Calculator
+      </a>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use the body recomposition calculator</h2>
+        <p>Type your <strong>weight</strong>, <strong>height</strong>, <strong>age</strong> and <strong>activity level</strong>, then choose your <strong>focus</strong>: lose more fat, lose fat and build muscle, or build more muscle. All three are always shown side by side, so you can compare without running it again.</p>
+        <p>Know your body fat? Type it and the calories use your lean mass (Katch-McArdle). Don’t? Press <em>Estimate it from my measurements</em> and the page works it out from your waist, neck and (for women) hip. Open <strong>Go advanced</strong> to type the calories you burn if you know them, set a target body fat to see the fat to lose, and choose your meals a day.</p>
+
+        <h2>The numbers</h2>
+        <div class="formula">
+          calories = what you burn − cut (0, 200 or 400 kcal), never below 1,200 (women) or 1,500 (men)
+          <small>PROTEIN 2 G PER KG · FAT 1 G PER KG · CARBOHYDRATE THE REST</small>
+        </div>
+        <p>A woman of 70 kg, 168 cm, 35 years old with moderate activity burns about 2,192 kcal:</p>
+        <table class="dtable"><thead><tr><th></th><th>Lose fat</th><th>Both</th><th>Build muscle</th></tr></thead><tbody><tr><td>Calories cut</td><td>−400</td><td>−200</td><td>0</td></tr><tr><td>Calories</td><td>1,792</td><td>1,992</td><td>2,192</td></tr><tr><td>Protein</td><td>140 g</td><td>140 g</td><td>140 g</td></tr><tr><td>Carbs</td><td>151 g</td><td>201 g</td><td>251 g</td></tr><tr><td>Fat</td><td>70 g</td><td>70 g</td><td>70 g</td></tr><tr><td>Scale a week (fat only)</td><td>−0.36 kg</td><td>−0.18 kg</td><td>0</td></tr></tbody></table>
+      </div>
+
+      <div>
+        <h2>What body recomposition means</h2>
+        <p>Body recomposition is losing fat and keeping or building muscle at the same time, so your shape changes more than your weight. The research on it is thin, which is why this page shows the one hard number I could read: a 2022 meta-analysis found that a deficit of about 500 kcal a day prevented gains in lean mass, and the ruler marks that line.</p>
+
+        <h2>Why the scale barely moves</h2>
+        <p>A small cut is a small number on the scale (0.18 kg a week at 200 kcal under, on the simple rule) and any muscle gained hides part of it. Measure your waist, take photos and track the weights you lift as well.</p>
+
+        <h2>Related tools</h2>
+        <p>For the full macro split see the <a href="/macro-calculator/">macro calculator</a>, for a plain fat-loss plan the <a href="/calorie-deficit-calculator/">calorie deficit calculator</a>, and for gaining the <a href="/bulking-calculator/">bulking calculator</a>.</p>
+        <h2>Sources</h2>
+        <ul>
+          <li>Murphy C, Koehler K, <a href="https://pubmed.ncbi.nlm.nih.gov/34623701/" rel="noopener">Energy deficiency impairs resistance training gains in lean mass but not strength: a meta-analysis and meta-regression</a>, Scandinavian Journal of Medicine &amp; Science in Sports 2022;32(1):125–137 (abstract read via Europe PMC, 2026-11-07): an energy deficit of about 500 kcal a day prevented gains in lean mass; lean-mass gains were impaired in the deficit group compared with controls while strength gains were comparable; people who lift to preserve lean mass during weight loss should avoid deficits larger than 500 kcal a day. This is the “~500 kcal line” on the ruler.</li>
+          <li>Ribeiro AS et al., Effects of different dietary energy intake following resistance training on muscle mass and body fat in bodybuilders: a pilot study, Journal of Human Kinetics 2019;70:125–134 (abstract read via Europe PMC): 11 male bodybuilders over 4 weeks; the group eating more (about 67.5 kcal per kg a day against about 50.1) gained more body fat (+7.4% against +0.8%) and more muscle (+2.7% against +1.1%). A pilot in 11 men, so it is not used to set any number here.</li>
+          <li>Protein 1.6–2.2 g per kg a day, fat 0.5–1.5 g per kg and carbohydrate of at least 3 g per kg to fuel training: Iraki J et al., Nutrition Recommendations for Bodybuilders in the Off-Season, Sports 2019;7(7):154 (abstract read). That review is about gaining, not cutting; I found no source I could read for protein in a deficit, so this calculator uses 2 g per kg for all three focuses, inside that range, and the same 1 g per kg of fat.</li>
+          <li>The three focuses are this calculator’s own presets (−400, −200, what you burn kcal), chosen to stay under the ~500 kcal line. They are not from a study. Calories you burn: Mifflin-St Jeor times the activity factor, or Katch-McArdle when you give a body fat percentage, as on our <a href="/bmr-calculator/">BMR calculator</a>. The minimum of 1,200 kcal (women) or 1,500 kcal (men) and the 7,700 kcal per kg of body weight rule are the same simple rules as on our <a href="/calorie-deficit-calculator/">calorie deficit calculator</a>; the minimum has no primary source.</li>
+          <li>The body fat estimate is the US Navy method, the same formula as our <a href="/body-fat-calculator/">body fat calculator</a>: an estimate from a tape measure, not a measurement.</li>
+          <li>Competitor pages opened 2026-11-07 for their inputs and presets: Fitness Volt, FatCalc, Bony to Beastly, Healthy Eater and Coachway. Not used because I found no source I could read: muscle-gain projections by training experience, extra calories on training days, and any number for pregnancy, breastfeeding, GLP-1 medicines or kidney disease.</li>
+        </ul>
+        <p><small>For information only, not medical advice. If you are pregnant or breastfeeding, take a GLP-1 or other weight medicine, have kidney disease or a history of disordered eating, ask a clinician before changing how you eat; this page gives no numbers for those cases.</small></p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>What is body recomposition?</summary><p>Body recomposition means losing fat and keeping or building muscle at the same time, so your shape changes more than your weight. It needs strength training, enough protein and a calorie intake near what you burn rather than a large cut.</p></details>
+    <details class="faq"><summary>How many calories should I eat for body recomposition?</summary><p>Start from the calories you burn and eat a little under them, or exactly that. For a woman of 70 kg and 168 cm, 35 years old, with moderate activity, you burn about 2,192 kcal (Mifflin-St Jeor 1,414 × 1.55). This calculator’s three presets are 1,792 kcal (400 under, more fat loss), 1,992 kcal (200 under, both) and 2,192 kcal (what you burn, more muscle focus). They are presets of this page, not from a study.</p></details>
+    <details class="faq"><summary>Can you lose fat and build muscle at the same time?</summary><p>The 2022 meta-analysis I read found that an energy deficit of about 500 kcal a day prevented gains in lean mass, while strength gains stayed comparable. That is why the presets here stay under 500 kcal under what you burn, and why the ruler marks that line. How much muscle a given person gains while losing fat I did not find a source for, so the calculator gives no muscle-gain projection.</p></details>
+    <details class="faq"><summary>How big a calorie deficit is too big for recomposition?</summary><p>In the 2022 meta-analysis, a deficit of about 500 kcal a day prevented gains in lean mass, and the authors say people who lift to preserve lean mass during weight loss should avoid deficits larger than 500 kcal a day. The calculator’s biggest preset is 400 kcal under what you burn.</p></details>
+    <details class="faq"><summary>How much protein for body recomposition?</summary><p>This calculator uses 2 g per kg of body weight a day, inside the 1.6–2.2 g per kg range from a 2019 review of off-season nutrition. For 70 kg that is 140 g a day, the same every day, split across your meals. That review is about gaining; I found no readable source specific to cutting, so I did not push the number higher.</p></details>
+    <details class="faq"><summary>Why does the scale barely move on body recomposition?</summary><p>On the simple rule of 7,700 kcal per kg, a 200 kcal cut is about 0.18 kg a week of fat and no cut is none, and any muscle you gain hides part of that. So watch your waist, photos and the weights you lift as well as the scale.</p></details>
+    <details class="faq"><summary>Do I need to know my body fat?</summary><p>No. Without it, calories you burn come from your age, height, weight and activity (Mifflin-St Jeor). If you give a body fat percentage, the calculator uses Katch-McArdle, which is based on lean mass. You can also estimate it from your waist and neck (and hip for women) with the US Navy method, right on the page.</p></details>
+    <details class="faq"><summary>How long will it take to reach my target body fat?</summary><p>Type your current and target body fat under Go advanced. The calculator keeps your lean mass the same and works out the fat to lose. For example 70 kg at 30% body fat and a target of 25% means about 4.7 kg of fat to lose, about 13 weeks at 400 kcal under what you burn or 26 weeks at 200 kcal under, on the simple rule. Building muscle would change the result.</p></details>
+    <details class="faq"><summary>How many days a week should I lift?</summary><p>Most recomposition guides suggest at least 3 strength sessions a week. The studies I read give no number, so the calculator shows it as a reminder under Go advanced and does not change the calories with it.</p></details>
+    <details class="faq"><summary>Is body recomposition safe for everyone?</summary><p>This page is for information only. If you are pregnant or breastfeeding, take a GLP-1 or other weight medicine, have kidney disease or a history of disordered eating, ask a clinician; the calculator gives no numbers for those cases.</p></details>
+  </section>
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+      <div class="footer-stack">
+<div class="footer-col" style="order:1">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+          <li><a href="/paint-calculator/">Paint Calculator</a></li>
+          <li><a href="/wallpaper-calculator/">Wallpaper Calculator</a></li>
+          <li><a href="/square-footage-calculator/">Square Footage Calculator</a></li>
+          <li><a href="/tape-measure-fraction-calculator/">Tape Measure Fraction Calculator</a></li>
+          <li><a href="/stair-calculator/">Stair Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:5">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Cooking &amp;</span> <span class="ft2">Kitchen</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/recipe-converter/">Recipe Converter</a></li>
+          <li><a href="/turkey-cooking-time-calculator/">Turkey Cooking Time Calculator</a></li>
+          <li><a href="/turkey-thawing-time-calculator/">Turkey Thawing Time Calculator</a></li>
+          <li><a href="/turkey-size-calculator/">Turkey Size Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:6">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Money &amp;</span> <span class="ft2">Finance</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/mortgage-calculator/">Mortgage Calculator</a></li>
+          <li><a href="/loan-calculator/">Loan Calculator</a></li>
+          <li><a href="/auto-loan-calculator/">Auto Loan Calculator</a></li>
+          <li><a href="/car-sales-tax-calculator/">Car Sales Tax Calculator</a></li>
+          <li><a href="/overtime-calculator/">Overtime Calculator</a></li>
+          <li><a href="/salary-calculator/">Salary Calculator</a></li>
+          <!--STAXFOOT:START-->
+          <li><a href="/sales-tax-calculator/">Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/california/">California Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/chicago/">Chicago Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/florida/">Florida Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/las-vegas/">Las Vegas Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/los-angeles/">Los Angeles Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/michigan/">Michigan Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/missouri/">Missouri Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/north-carolina/">North Carolina Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/ohio/">Ohio Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/texas/">Texas Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/virginia/">Virginia Sales Tax Calculator</a></li>
+          <!--STAXFOOT:END-->
+          <li><a href="/tip-calculator/">Tip Calculator</a></li>
+          <li><a href="/how-much-to-tip/">How Much to Tip</a></li>
+        </ul>
+      </div>
+      </div>
+
+      <div class="footer-right">
+<div class="footer-col footer-col--two" style="order:2">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/vo2-max-calculator/">VO2 Max Calculator</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/bmi-calculator/">BMI Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/ideal-weight-calculator/">Ideal Weight Calculator</a></li>
+          <li><a href="/lean-body-mass-calculator/">Lean Body Mass Calculator</a></li>
+          <li><a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio Calculator</a></li>
+          <li><a href="/gmi-calculator/">GMI Calculator</a></li>
+          <li><a href="/a1c-calculator/">A1C Calculator</a></li>
+          <li><a href="/calorie-calculator/">Calorie Calculator</a></li>
+          <li><a href="/calorie-deficit-calculator/">Calorie Deficit Calculator</a></li>
+          <li><a href="/bmr-calculator/">BMR Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/water-intake-calculator/">Water Intake Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/protein-intake-calculator/">Protein Intake Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
+          <li><a href="/steps-to-miles-calculator/">Steps to Miles Calculator</a></li>
+          <li><a href="/dog-age-calculator/">Dog Age Calculator</a></li>
+          <li><a href="/cat-age-calculator/">Cat Age Calculator</a></li>
+          <li><a href="/calories-burned-calculator/">Calories Burned Calculator</a></li>
+          <li><a href="/calories-burned-walking-calculator/">Calories Burned Walking Calculator</a></li>
+          <li><a href="/calories-burned-running-calculator/">Calories Burned Running Calculator</a></li>
+          <li><a href="/keto-calculator/">Keto Calculator</a></li>
+          <li><a href="/net-carb-calculator/">Net Carb Calculator</a></li>
+          <li><a href="/intermittent-fasting-calculator/">Intermittent Fasting Calculator</a></li>
+          <li><a href="/bsa-calculator/">BSA Calculator</a></li>
+          <li><a href="/dog-food-calculator/">Dog Food Calculator</a></li>
+          <li><a href="/ffmi-calculator/">FFMI Calculator</a></li>
+          <li><a href="/bulking-calculator/">Bulking Calculator</a></li>
+          <li><a href="/weight-loss-calculator/">Weight Loss Calculator</a></li>
+          <li><a href="/weight-loss-percentage-calculator/">Weight Loss Percentage Calculator</a></li>
+          <li><a href="/max-heart-rate-calculator/">Max Heart Rate Calculator</a></li>
+          <li><a href="/caffeine-calculator/">Caffeine Calculator</a></li>
+          <li><a href="/caffeine-half-life-calculator/">Caffeine Half Life Calculator</a></li>
+          <li><a href="/fiber-calculator/">Fiber Calculator</a></li>
+          <li><a href="/creatine-calculator/">Creatine Calculator</a></li>
+          <li><a href="/vitamin-d-calculator/">Vitamin D Calculator</a></li>
+          <li><a href="/body-recomposition-calculator/">Body Recomposition Calculator</a></li>
+        </ul>
+      </div>
+
+        <div class="footer-sub">
+<div class="footer-subcol">
+<div class="footer-col" style="order:3">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/semester-grade-calculator/">Semester Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+          <li><a href="/grade-curve-calculator/">Grade Curve Calculator</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:START-->
+<div class="footer-col" style="order:7">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Unit</span> <span class="ft2">Converters</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/unit-converter/">Unit Converter</a></li>
+          <li><a href="/length-converter/">Length Converter</a></li>
+          <li><a href="/weight-converter/">Weight Converter</a></li>
+          <li><a href="/volume-converter/">Volume Converter</a></li>
+          <li><a href="/temperature-converter/">Temperature Converter</a></li>
+          <li><a href="/area-converter/">Area Converter</a></li>
+          <li><a href="/speed-converter/">Speed Converter</a></li>
+          <li><a href="/data-storage-converter/">Data Storage Converter</a></li>
+          <li><a href="/cooking-converter/">Cooking Measurement Converter</a></li>
+          <li><a href="/px-to-rem-converter/">PX to REM Converter</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:END-->
+</div>
+
+<div class="footer-col" style="order:4">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/fraction-calculator/">Fraction Calculator</a></li>
+          <li><a href="/standard-deviation-calculator/">Standard Deviation Calculator</a></li>
+          <li><a href="/scientific-notation-calculator/">Scientific Notation Calculator</a></li>
+          <li><a href="/weighted-average-calculator/">Weighted Average Calculator</a></li>
+          <li><a href="/average-calculator/">Average Calculator</a></li>
+          <li><a href="/batting-average-calculator/">Batting Average Calculator</a></li>
+          <li><a href="/stock-average-calculator/">Stock Average Calculator</a></li>
+          <li><a href="/dice-average-calculator/">Dice Average Calculator</a></li>
+          <li><a href="/time-average-calculator/">Time Average Calculator</a></li>
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+          <li><a href="/percentage-change-calculator/">Percentage Change Calculator</a></li>
+          <li><a href="/age-calculator/">Age Calculator</a></li>
+          <li><a href="/date-calculator/">Date Calculator</a></li>
+          <li><a href="/time-calculator/">Time Calculator</a></li>
+          <li><a href="/hours-calculator/">Hours Calculator</a></li>
+          <li><a href="/triangle-calculator/">Triangle Calculator</a></li>
+          <li><a href="/random-number-generator/">Random Number Generator</a></li>
+        </ul>
+      </div>
+        </div>
+      </div>
+
+      <!--PAYFOOT:START-->
+      <div class="footer-col footer-col--wide">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Paycheck</span> <span class="ft2">Calculators</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/paycheck-calculator/">Paycheck Calculator (all states)</a></li>
+          <li><a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arkansas/">Arkansas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/california/">California Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/hawaii/">Hawaii Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/louisiana/">Louisiana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nebraska/">Nebraska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/oklahoma/">Oklahoma Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/utah/">Utah Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wisconsin/">Wisconsin Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a></li>
+        </ul>
+      </div>
+      <!--PAYFOOT:END-->
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/blog/">Blog</a>
+      <span aria-hidden="true">·</span>
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+</div>
+
+<script src="/assets/app.js?v=329"></script>
+<script>CalcThis.initRecompCalc();</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>

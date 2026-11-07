@@ -1,0 +1,42 @@
+{
+  "slug": "body-recomposition-calculator",
+  "bodyClass": "p-rc",
+  "blocks": ["RECOMP"],
+  "result": { "big": "rcBig", "body": "rcBody", "hint": "rcHint" },
+  "required": ["rcW", "rcAge", "rcH"],
+  "fill": [
+    ["seg", "rcSex", "f"],
+    ["seg", "rcHu", "in"],
+    ["seg", "rcWu", "lb"],
+    ["seg", "rcFocus", "both"],
+    ["set", "rcAct", "1.55"],
+    ["set", "rcAge", "35"],
+    ["set", "rcH", "66"],
+    ["set", "rcW", "154"],
+    ["set", "rcBf", ""],
+    ["set", "rcMaint", ""],
+    ["set", "rcTbf", ""],
+    ["set", "rcWa", ""],
+    ["set", "rcNe", ""],
+    ["set", "rcHi", ""]
+  ],
+  "optionalSamples": {
+    "rcBf": ["22", "35"],
+    "rcMaint": ["2200", "1500"],
+    "rcTbf": ["18", "25"],
+    "rcWa": ["34", "86"],
+    "rcNe": ["14", "36"],
+    "rcHi": ["40", "100"]
+  },
+  "variants": [
+    [["seg", "rcFocus", "fat"]],
+    [["seg", "rcFocus", "muscle"]],
+    [["seg", "rcSex", "m"], ["seg", "rcHu", "cm"], ["set", "rcH", "180"], ["seg", "rcWu", "kg"], ["set", "rcW", "85"]],
+    [["seg", "rcWu", "st"], ["set", "rcW", "11"]],
+    [["set", "rcBf", "28"], ["click", "rcAdvBtn"], ["set", "rcTbf", "20"]],
+    [["click", "rcEstBtn"], ["set", "rcWa", "34"], ["set", "rcNe", "14"], ["set", "rcHi", "40"]],
+    [["click", "rcAdvBtn"], ["set", "rcMaint", "2600"]]
+  ],
+  "scrollTo": "rcCmp",
+  "errorState": [["set", "rcW", "1"]]
+}
