@@ -1,0 +1,778 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Creatine Calculator — Loading and Daily Dose by Weight</title>
+<meta name="description" content="Creatine calculator: your loading dose and daily maintenance dose by body weight (ISSN), load vs skip loading, a plan by date and your tub cost.">
+<link rel="canonical" href="https://calcthis.co/creatine-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Creatine Calculator — Loading and Daily Dose by Weight">
+<meta property="og:description" content="Creatine calculator: your loading dose and daily maintenance dose by body weight (ISSN), load vs skip loading, a plan by date and your tub cost.">
+<meta property="og:url" content="https://calcthis.co/creatine-calculator/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/datepicker.min.css">
+<link rel="stylesheet" href="/assets/style.css?v=325">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Creatine Calculator",
+  "url": "https://calcthis.co/creatine-calculator/",
+  "applicationCategory": "HealthApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "Free creatine calculator: loading dose (0.3 g per kg a day for 5–7 days) and daily maintenance dose (3–5 g) by body weight from the ISSN position stand, load first or skip loading side by side with a muscle-stores chart, a plan by date, and tub, scoop and cost lines."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How much creatine should I take per day?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The ISSN position stand says stores are maintained with 3–5 g of creatine monohydrate a day once they are full, and larger athletes may need 5–10 g. For 80 kg this calculator gives 3 g a day."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How much creatine per kg of body weight?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Loading uses about 0.3 g per kg a day for 5–7 days: 24 g a day at 80 kg, split into four doses of 6 g. For maintenance many calculators use 0.03 g per kg; the calculator holds that between 3 and 5 g, so 80 kg gets 3 g, and you can type your own dose under Go advanced."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need to load creatine?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Loading fills muscle stores in 5–7 days. Taking 3 g a day from day 1 raises them gradually over about 28 days, with less effect on training until they are full. The calculator shows both side by side: 231 g in the first 28 days with a 7-day load, 84 g without."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How long does creatine take to work?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "About 5–7 days with a loading phase and about 28 days at 3 g a day, according to the ISSN position stand. If you need to be full by a date, enter it under Go advanced to see when to start."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How much water should I drink on creatine?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The position stand reports that loading can retain about 0.5–1.0 L of fluid, in proportion to the weight gained. The text I read gives no extra water target, so this page does not invent one; for a general daily target use the water intake calculator."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does creatine cause water weight?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, a little at first: the ISSN position stand reports short-term fluid retention of about 0.5–1.0 L during loading, in proportion to the weight gained. That is water in the muscle, not fat."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is creatine safe?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "In the position stand, up to 30 g a day for 5 years was safe and well tolerated in healthy people, and collegiate football players taking 5–10 g a day for 21 months showed no clinically significant change in kidney markers. People with kidney disease, who are pregnant or breastfeeding, or who take medication should ask a clinician; this page gives no dose for them."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "When should I take creatine?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The position stand reports that taking creatine with carbohydrate, or carbohydrate and protein, promoted more consistent retention. I found no read source for a best time of day, so take it when you will remember."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What happens when I stop taking creatine?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Muscle creatine takes 4–6 weeks to return to baseline, and the position stand found no evidence that your own creatine production falls below baseline afterwards."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "CalcThis",
+      "item": "https://calcthis.co/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Creatine Calculator",
+      "item": "https://calcthis.co/creatine-calculator/"
+    }
+  ]
+}
+</script>
+<meta property="og:site_name" content="CalcThis">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://calcthis.co/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="CalcThis — free, purpose-built calculators">
+<meta name="twitter:title" content="Creatine Calculator — Loading and Daily Dose by Weight">
+<meta name="twitter:description" content="Creatine calculator: your loading dose and daily maintenance dose by body weight (ISSN), load vs skip loading, a plan by date and your tub cost.">
+<meta name="twitter:image" content="https://calcthis.co/assets/og-default.png">
+</head>
+<body class="p-bmr p-cr">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <a class="hdr-back" href="/blog/" aria-label="Back to blog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-search"><div class="menu-sx"><input id="menuSearch" type="search" placeholder="Search calculators or states…" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Search calculators" enterkeyhint="search"></div><div class="menu-results" id="menuResults" hidden></div></div>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <span class="menu-col-head">Construction &amp; Gardening</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+          <a href="/paint-calculator/">Paint</a>
+          <a href="/wallpaper-calculator/">Wallpaper</a>
+          <a href="/square-footage-calculator/">Square Footage</a>
+          <a href="/tape-measure-fraction-calculator/">Tape Measure Fraction</a>
+          <a href="/stair-calculator/">Stair</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/vo2-max-calculator/">VO2 Max</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
+          <a href="/bmi-calculator/">BMI</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/ideal-weight-calculator/">Ideal Weight</a>
+          <a href="/lean-body-mass-calculator/">Lean Body Mass</a>
+          <a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio</a>
+          <a href="/gmi-calculator/">GMI</a>
+          <a href="/a1c-calculator/">A1C</a>
+          <a href="/calorie-calculator/">Calorie</a>
+          <a href="/calorie-deficit-calculator/">Calorie Deficit</a>
+          <a href="/bmr-calculator/">BMR</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/water-intake-calculator/">Water Intake</a>
+          <a href="/macro-calculator/">Macro</a>
+          <a href="/protein-intake-calculator/">Protein Intake</a>
+          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
+          <a href="/steps-to-miles-calculator/">Steps to Miles</a>
+          <a href="/dog-age-calculator/">Dog Age</a>
+          <a href="/cat-age-calculator/">Cat Age</a>
+          <a href="/calories-burned-calculator/">Calories Burned</a>
+          <a href="/calories-burned-walking-calculator/">Calories Burned Walking</a>
+          <a href="/calories-burned-running-calculator/">Calories Burned Running</a>
+          <a href="/keto-calculator/">Keto</a>
+          <a href="/net-carb-calculator/">Net Carb</a>
+          <a href="/intermittent-fasting-calculator/">Intermittent Fasting</a>
+          <a href="/bsa-calculator/">BSA</a>
+          <a href="/dog-food-calculator/">Dog Food</a>
+          <a href="/ffmi-calculator/">FFMI</a>
+          <a href="/bulking-calculator/">Bulking</a>
+          <a href="/weight-loss-calculator/">Weight Loss</a>
+          <a href="/weight-loss-percentage-calculator/">Weight Loss %</a>
+          <a href="/max-heart-rate-calculator/">Max Heart Rate</a>
+          <a href="/caffeine-calculator/">Caffeine</a>
+          <a href="/caffeine-half-life-calculator/">Caffeine Half Life</a>
+          <a href="/fiber-calculator/">Fiber</a>
+          <a href="/creatine-calculator/" class="current">Creatine</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/semester-grade-calculator/">Semester Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+          <a href="/grade-curve-calculator/">Grade Curve</a>
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/fraction-calculator/">Fraction</a>
+          <a href="/standard-deviation-calculator/">Standard Deviation</a>
+          <a href="/scientific-notation-calculator/">Scientific Notation</a>
+          <a href="/average-calculator/">Average</a>
+          <a href="/batting-average-calculator/">Batting Average</a>
+          <a href="/stock-average-calculator/">Stock Average</a>
+          <a href="/dice-average-calculator/">Dice Average</a>
+          <a href="/time-average-calculator/">Time Average</a>
+          <a href="/weighted-average-calculator/">Weighted Average</a>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+          <a href="/percentage-change-calculator/">Percentage Change</a>
+          <a href="/age-calculator/">Age</a>
+          <a href="/date-calculator/">Date</a>
+          <a href="/time-calculator/">Time</a>
+          <a href="/hours-calculator/">Hours</a>
+          <a href="/triangle-calculator/">Triangle</a>
+          <a href="/random-number-generator/">Random Number</a>
+          <span class="menu-col-head">Cooking &amp; Kitchen</span>
+          <a href="/recipe-converter/">Recipe Converter</a>
+          <a href="/turkey-cooking-time-calculator/">Turkey Cooking Time</a>
+          <a href="/turkey-thawing-time-calculator/">Turkey Thawing Time</a>
+          <a href="/turkey-size-calculator/">Turkey Size</a>
+          <!--UNITNAV:START-->
+          <span class="menu-col-head">Unit Converters</span>
+          <a href="/unit-converter/">Unit Converter</a>
+          <a href="/length-converter/">Length Converter</a>
+          <a href="/weight-converter/">Weight Converter</a>
+          <a href="/volume-converter/">Volume Converter</a>
+          <a href="/temperature-converter/">Temperature Converter</a>
+          <a href="/area-converter/">Area Converter</a>
+          <a href="/speed-converter/">Speed Converter</a>
+          <a href="/data-storage-converter/">Data Storage Converter</a>
+          <a href="/cooking-converter/">Cooking Converter</a>
+          <a href="/px-to-rem-converter/">PX to REM Converter</a>
+          <!--UNITNAV:END-->
+          <span class="menu-col-head">Money &amp; Finance</span>
+          <a href="/mortgage-calculator/">Mortgage</a>
+          <a href="/loan-calculator/">Loan</a>
+          <a href="/auto-loan-calculator/">Auto Loan</a>
+          <a href="/car-sales-tax-calculator/">Car Sales Tax</a>
+          <a href="/overtime-calculator/">Overtime</a>
+          <a href="/salary-calculator/">Salary</a>
+          <!--STAXNAV:START-->
+          <a href="/sales-tax-calculator/">Sales Tax</a>
+          <a href="/sales-tax-calculator/california/">California Sales Tax</a>
+          <a href="/sales-tax-calculator/chicago/">Chicago Sales Tax</a>
+          <a href="/sales-tax-calculator/florida/">Florida Sales Tax</a>
+          <a href="/sales-tax-calculator/las-vegas/">Las Vegas Sales Tax</a>
+          <a href="/sales-tax-calculator/los-angeles/">Los Angeles Sales Tax</a>
+          <a href="/sales-tax-calculator/michigan/">Michigan Sales Tax</a>
+          <a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax</a>
+          <a href="/sales-tax-calculator/missouri/">Missouri Sales Tax</a>
+          <a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax</a>
+          <a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax</a>
+          <a href="/sales-tax-calculator/north-carolina/">North Carolina Sales Tax</a>
+          <a href="/sales-tax-calculator/ohio/">Ohio Sales Tax</a>
+          <a href="/sales-tax-calculator/texas/">Texas Sales Tax</a>
+          <a href="/sales-tax-calculator/virginia/">Virginia Sales Tax</a>
+          <!--STAXNAV:END-->
+          <a href="/tip-calculator/">Tip</a>
+          <a href="/how-much-to-tip/">How Much to Tip</a>
+        </div>
+        <!--PAYNAV:START-->
+        <div class="menu-col">
+          <span class="menu-col-head">Paycheck Calculators</span>
+          <a href="/paycheck-calculator/">Paycheck Calculator (all states)</a>
+          <a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a>
+          <a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arkansas/">Arkansas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/california/">California Paycheck Calculator</a>
+          <a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a>
+          <a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a>
+          <a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/hawaii/">Hawaii Paycheck Calculator</a>
+          <a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a>
+          <a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a>
+          <a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a>
+          <a href="/paycheck-calculator/louisiana/">Louisiana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a>
+          <a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a>
+          <a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a>
+          <a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a>
+          <a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nebraska/">Nebraska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a>
+          <a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a>
+          <a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a>
+          <a href="/paycheck-calculator/oklahoma/">Oklahoma Paycheck Calculator</a>
+          <a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a>
+          <a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a>
+          <a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a>
+          <a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/utah/">Utah Paycheck Calculator</a>
+          <a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wisconsin/">Wisconsin Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a>
+        </div>
+        <!--PAYNAV:END-->
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">Loading dose · daily dose · plan by date · tub cost</div>
+    <h1>Creatine Calculator</h1>
+    <p>Enter your <strong>body weight</strong> and see how much <strong>creatine</strong> to take. A person of 80 kg loads with <strong>24 g a day</strong> for 5–7 days, then takes <strong>3 g a day</strong>, or skips loading and takes 3 g from day 1. Under <em>Go advanced</em> you can plan back from a date and work out what your tub costs.</p>
+  </section>
+
+  <div class="grid">
+
+    <!-- INPUT -->
+    <div class="card">
+      <div class="card-pad">
+        <h2 class="card-h2">Your details</h2>
+        <div class="fld"><span class="lab">Body weight</span><div class="cf-box"><input id="crW" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 176" aria-label="Body weight"><div class="seg cf-u" id="crWu" data-u="lb" role="group" aria-label="Body weight unit"><button type="button" class="on" data-v="lb">lb</button><button type="button" data-v="kg">kg</button></div></div></div>
+        <div class="ctl-row" style="display:block"><span class="ctl-lab" style="display:block;margin-bottom:6px">Start with</span><div class="radgrp" id="crPlan" role="radiogroup" aria-label="Start with"><button class="radopt on" type="button" role="radio" aria-checked="true" data-v="load"><i class="rd"></i><span class="t"><b>A loading week</b><span class="d" id="crD1">A higher dose for 5–7 days, then the daily dose. Your stores fill in about a week.</span></span></button><button class="radopt" type="button" role="radio" aria-checked="false" data-v="skip"><i class="rd"></i><span class="t"><b>Daily dose only</b><span class="d" id="crD2">The daily dose from day 1. It gets there more slowly, in about 28 days.</span></span></button><button class="radopt" type="button" role="radio" aria-checked="false" data-v="taking"><i class="rd"></i><span class="t"><b>Already taking it</b><span class="d" id="crD3">Shows only the daily dose.</span></span></button></div></div>
+        <div class="res-hint" id="crHint" style="display:none;text-align:left;margin:4px 0 8px"></div>
+        <div id="crAdvIn" style="display:none">
+          <div class="proj-sep"></div>
+          <div class="ctl-row" style="display:block"><span class="ctl-lab" style="display:block;margin-bottom:6px">Loading length</span><div class="modeseg" id="crLd" role="group" aria-label="Loading length"><button type="button" data-v="5">5 days</button><button type="button" data-v="6">6 days</button><button class="on" type="button" data-v="7">7 days</button></div></div>
+          <div class="ctl-row" style="display:block"><span class="ctl-lab" style="display:block;margin-bottom:6px">Doses a day while loading</span><div class="modeseg" id="crDs" role="group" aria-label="Doses a day while loading"><button type="button" data-v="3">3 doses</button><button class="on" type="button" data-v="4">4 doses</button><button type="button" data-v="5">5 doses</button></div></div>
+          <label class="fld" for="crM"><span class="lab">Maintenance dose I use <span class="unit">g a day · optional</span></span><div class="inp"><input id="crM" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 5"></div></label>
+          <div class="proj-sep"></div>
+          <label class="fld" for="crDate"><span class="lab">I want full stores by <span class="unit">date · optional</span></span><div class="inp"><input id="crDate" type="text" autocomplete="off" placeholder="Pick a date"></div></label>
+          <div class="proj-sep"></div>
+          <p class="bm-h">Your tub</p>
+          <label class="fld" for="crTub"><span class="lab">Tub size <span class="unit">g · optional</span></span><div class="inp"><input id="crTub" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 500"></div></label>
+          <label class="fld" for="crPr"><span class="lab">Tub price <span class="unit">your currency · optional</span></span><div class="inp"><input id="crPr" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 25"></div></label>
+          <label class="fld" for="crSc"><span class="lab">Scoop size <span class="unit">g · optional</span></span><div class="inp"><input id="crSc" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 5"></div></label>
+        </div>
+        <div class="add-row split" style="margin-top:16px">
+          <span></span>
+          <button class="advbtn" id="crAdvBtn" type="button">
+            <span id="crAdvBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div class="card">
+      <div class="card-pad">
+        <div class="bf-res">
+          <div class="res-lab">Creatine you take a day</div>
+          <div class="res-big"><span id="crBig">—</span></div>
+          <div class="res-sub" id="crSub" data-empty="Enter your body weight.">Enter your body weight.</div>
+        </div>
+        <div id="crBody" style="display:none">
+          <p class="res-tip adv-tip" id="crTip"></p>
+          <p class="bm-h">Your plan</p>
+          <p class="cr-flag" id="crFlag" style="display:none"></p>
+          <table class="dtable" id="crSched"></table>
+          <div id="crCmpWrap">
+            <p class="bm-h">With or without a loading week</p>
+            <table class="dtable" id="crCmp"></table>
+          </div>
+          <div id="crChartWrap">
+            <p class="bm-h">Muscle creatine stores (schematic)</p>
+            <div id="crChart"></div>
+            <div class="bm-key"><span><i class="cr-ky ld"></i>With loading</span><span><i class="cr-ky sk"></i>Daily dose only</span><span><i class="cr-ky no"></i>No creatine</span></div>
+            <p class="cb-note">Starts at 70%, the middle of the 60–80% a normal diet gives. The straight lines are a simplification between the sourced points: full after 5–7 days of loading or about 28 days at 3 g a day.</p>
+          </div>
+          <div id="crTubWrap" style="display:none">
+            <p class="bm-h">Your tub</p>
+            <table class="dtable" id="crTubT"></table>
+          </div>
+          <p class="cb-note">For information only, not medical advice. Loading can retain about 0.5–1.0 L of water in the muscle for a while; that is not fat.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- mobile sticky bar -->
+  <div class="mbar" id="mbar">
+    <span class="mbar-lab" id="crMLab">Creatine a day</span>
+    <div class="mbar-vals"><b id="crMVal">—</b></div>
+  </div>
+
+  <div class="related-calcs">
+    <p class="related-calcs-h">More calculators that may interest you</p>
+    <div class="pills">
+      <a class="pill" href="/protein-intake-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-4.5-7-10a4 4 0 0 1 7-2 4 4 0 0 1 7 2c0 5.5-7 10-7 10z"/></svg>
+        Protein Intake Calculator
+      </a>
+      <a class="pill" href="/water-intake-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/></svg>
+        Water Intake Calculator
+      </a>
+      <a class="pill" href="/macro-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h4l2-5 4 10 2-5h6"/></svg>
+        Macro Calculator
+      </a>
+      <a class="pill" href="/one-rep-max-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9v6M6 7v10M18 7v10M21 9v6M6 12h12"/></svg>
+        One Rep Max Calculator
+      </a>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use the creatine calculator</h2>
+        <p>Type your <strong>body weight</strong> and choose how to start: <strong>a loading week</strong> (a higher dose for 5–7 days, then the daily dose), <strong>daily dose only</strong> (the daily dose from day 1, slower) or <strong>already taking it</strong>. You get the dose, the schedule, the two routes side by side and a chart of how muscle stores fill.</p>
+        <p>Open <strong>Go advanced</strong> to change the loading length and doses a day, type your own maintenance dose, pick the date you want full stores by, or enter your tub size, price and scoop to see how long it lasts and what it costs.</p>
+
+        <h2>The numbers</h2>
+        <div class="formula">
+          loading = 0.3 g × body weight (kg) a day for 5–7 days, to the whole gram
+          <small>MAINTENANCE: 3–5 G A DAY ONCE STORES ARE FULL (ISSN)</small>
+        </div>
+        <p>80 kg → 24 g a day, four doses of 6 g, then 3 g a day. In the first 28 days that is 231 g with a 7-day load or 84 g without.</p>
+
+        <h2>Creatine dose by body weight</h2>
+        <table class="dtable"><thead><tr><th>Body weight</th><th>Loading a day</th><th>Per dose (4 a day)</th><th>Maintenance</th></tr></thead><tbody><tr><td>50 kg (110 lb)</td><td>15 g</td><td>3.8 g</td><td>3 g</td></tr><tr><td>60 kg (132 lb)</td><td>18 g</td><td>4.5 g</td><td>3 g</td></tr><tr><td>70 kg (154 lb)</td><td>21 g</td><td>5.3 g</td><td>3 g</td></tr><tr><td>80 kg (176 lb)</td><td>24 g</td><td>6 g</td><td>3 g</td></tr><tr><td>90 kg (198 lb)</td><td>27 g</td><td>6.8 g</td><td>3 g</td></tr><tr><td>100 kg (220 lb)</td><td>30 g</td><td>7.5 g</td><td>3 g</td></tr><tr><td>110 kg (243 lb)</td><td>33 g</td><td>8.3 g</td><td>3.5 g</td></tr></tbody></table>
+        <p>Loading at 0.3 g per kg a day for 5–7 days; maintenance at 0.03 g per kg a day, held between 3 and 5 g and rounded to 0.5 g.</p>
+      </div>
+
+      <div>
+        <h2>How much creatine should I take?</h2>
+        <p>The ISSN position stand describes loading (about 0.3 g per kg a day, as four doses, for 5–7 days) and maintenance (3–5 g a day, 5–10 g for larger athletes). Taking 3 g a day for 28 days reaches full stores more slowly.</p>
+
+        <h2>Creatine and water</h2>
+        <p>Creatine holds a little water in the muscle. The position stand reports about 0.5–1.0 L of short-term fluid retention during loading, in proportion to the weight gained. It gives no extra water target, so neither does this page; for a general daily amount see the <a href="/water-intake-calculator/">water intake calculator</a>.</p>
+
+        <h2>Pair it with protein and training</h2>
+        <p>Creatine works with training. For a daily protein target use the <a href="/protein-intake-calculator/">protein intake calculator</a>, and for the full split the <a href="/macro-calculator/">macro calculator</a>.</p>
+        <h2>Sources</h2>
+        <ul>
+          <li>Kreider RB, Kalman DS, Antonio J, et al., International Society of Sports Nutrition position stand: safety and efficacy of creatine supplementation in exercise, sport, and medicine, J Int Soc Sports Nutr 2017;14:18 (full text read via Europe PMC, 2026-11-07): a normal diet with 1–2 g a day of creatine leaves muscle creatine about 60–80% saturated; the most effective way to raise stores is 5 g of creatine monohydrate (approximately 0.3 g/kg body weight) four times a day for 5–7 days; once stores are full they are maintained with 3–5 g a day, although larger athletes may need 5–10 g a day; an alternative is 3 g a day for 28 days, a gradual increase; stores take 4–6 weeks to return to baseline after stopping; loading can retain about 0.5–1.0 L of fluid, in proportion to the weight gained; up to 30 g a day for 5 years was safe and well tolerated in healthy people; carbohydrate or carbohydrate with protein promoted more consistent creatine retention.</li>
+          <li>The 0.03 g per kg a day maintenance rule of thumb is used by other creatine calculators; it is not in the position stand text I read. This calculator applies it only as a starting point, held between 3 and 5 g, and lets you type your own dose.</li>
+          <li>The ISSN text prints the loading dose as 5 g (approximately 0.3 g/kg) four times a day; four doses of 5 g make 20 g a day, about 0.3 g per kg a day for a 70 kg person, so this page uses 0.3 g per kg per day like other creatine calculators.</li>
+          <li>The chart is a schematic: it starts at 70%, the middle of the 60–80% diet range, and rises in a straight line to full at day 5–7 (loading) or day 28 (3 g a day). Real curves differ between people.</li>
+          <li>Not used because I found no source I could read: doses for kidney disease, pregnancy or children, creatine hydrochloride, and any change of dose with activity, goal or body fat.</li>
+        </ul>
+        <p><small>For information only, not medical advice. Anyone with kidney disease, who is pregnant or breastfeeding, or who takes medication should ask a clinician before using a supplement.</small></p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>How much creatine should I take per day?</summary><p>The ISSN position stand says stores are maintained with 3–5 g of creatine monohydrate a day once they are full, and larger athletes may need 5–10 g. For 80 kg this calculator gives 3 g a day.</p></details>
+    <details class="faq"><summary>How much creatine per kg of body weight?</summary><p>Loading uses about 0.3 g per kg a day for 5–7 days: 24 g a day at 80 kg, split into four doses of 6 g. For maintenance many calculators use 0.03 g per kg; the calculator holds that between 3 and 5 g, so 80 kg gets 3 g, and you can type your own dose under Go advanced.</p></details>
+    <details class="faq"><summary>Do I need to load creatine?</summary><p>No. Loading fills muscle stores in 5–7 days. Taking 3 g a day from day 1 raises them gradually over about 28 days, with less effect on training until they are full. The calculator shows both side by side: 231 g in the first 28 days with a 7-day load, 84 g without.</p></details>
+    <details class="faq"><summary>How long does creatine take to work?</summary><p>About 5–7 days with a loading phase and about 28 days at 3 g a day, according to the ISSN position stand. If you need to be full by a date, enter it under Go advanced to see when to start.</p></details>
+    <details class="faq"><summary>How much water should I drink on creatine?</summary><p>The position stand reports that loading can retain about 0.5–1.0 L of fluid, in proportion to the weight gained. The text I read gives no extra water target, so this page does not invent one; for a general daily target use the <a href="/water-intake-calculator/">water intake calculator</a>.</p></details>
+    <details class="faq"><summary>Does creatine cause water weight?</summary><p>Yes, a little at first: the ISSN position stand reports short-term fluid retention of about 0.5–1.0 L during loading, in proportion to the weight gained. That is water in the muscle, not fat.</p></details>
+    <details class="faq"><summary>Is creatine safe?</summary><p>In the position stand, up to 30 g a day for 5 years was safe and well tolerated in healthy people, and collegiate football players taking 5–10 g a day for 21 months showed no clinically significant change in kidney markers. People with kidney disease, who are pregnant or breastfeeding, or who take medication should ask a clinician; this page gives no dose for them.</p></details>
+    <details class="faq"><summary>When should I take creatine?</summary><p>The position stand reports that taking creatine with carbohydrate, or carbohydrate and protein, promoted more consistent retention. I found no read source for a best time of day, so take it when you will remember.</p></details>
+    <details class="faq"><summary>What happens when I stop taking creatine?</summary><p>Muscle creatine takes 4–6 weeks to return to baseline, and the position stand found no evidence that your own creatine production falls below baseline afterwards.</p></details>
+  </section>
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+      <div class="footer-stack">
+<div class="footer-col" style="order:1">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+          <li><a href="/paint-calculator/">Paint Calculator</a></li>
+          <li><a href="/wallpaper-calculator/">Wallpaper Calculator</a></li>
+          <li><a href="/square-footage-calculator/">Square Footage Calculator</a></li>
+          <li><a href="/tape-measure-fraction-calculator/">Tape Measure Fraction Calculator</a></li>
+          <li><a href="/stair-calculator/">Stair Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:5">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Cooking &amp;</span> <span class="ft2">Kitchen</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/recipe-converter/">Recipe Converter</a></li>
+          <li><a href="/turkey-cooking-time-calculator/">Turkey Cooking Time Calculator</a></li>
+          <li><a href="/turkey-thawing-time-calculator/">Turkey Thawing Time Calculator</a></li>
+          <li><a href="/turkey-size-calculator/">Turkey Size Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:6">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Money &amp;</span> <span class="ft2">Finance</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/mortgage-calculator/">Mortgage Calculator</a></li>
+          <li><a href="/loan-calculator/">Loan Calculator</a></li>
+          <li><a href="/auto-loan-calculator/">Auto Loan Calculator</a></li>
+          <li><a href="/car-sales-tax-calculator/">Car Sales Tax Calculator</a></li>
+          <li><a href="/overtime-calculator/">Overtime Calculator</a></li>
+          <li><a href="/salary-calculator/">Salary Calculator</a></li>
+          <!--STAXFOOT:START-->
+          <li><a href="/sales-tax-calculator/">Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/california/">California Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/chicago/">Chicago Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/florida/">Florida Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/las-vegas/">Las Vegas Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/los-angeles/">Los Angeles Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/michigan/">Michigan Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/missouri/">Missouri Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/north-carolina/">North Carolina Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/ohio/">Ohio Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/texas/">Texas Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/virginia/">Virginia Sales Tax Calculator</a></li>
+          <!--STAXFOOT:END-->
+          <li><a href="/tip-calculator/">Tip Calculator</a></li>
+          <li><a href="/how-much-to-tip/">How Much to Tip</a></li>
+        </ul>
+      </div>
+      </div>
+
+      <div class="footer-right">
+<div class="footer-col footer-col--two" style="order:2">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/vo2-max-calculator/">VO2 Max Calculator</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/bmi-calculator/">BMI Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/ideal-weight-calculator/">Ideal Weight Calculator</a></li>
+          <li><a href="/lean-body-mass-calculator/">Lean Body Mass Calculator</a></li>
+          <li><a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio Calculator</a></li>
+          <li><a href="/gmi-calculator/">GMI Calculator</a></li>
+          <li><a href="/a1c-calculator/">A1C Calculator</a></li>
+          <li><a href="/calorie-calculator/">Calorie Calculator</a></li>
+          <li><a href="/calorie-deficit-calculator/">Calorie Deficit Calculator</a></li>
+          <li><a href="/bmr-calculator/">BMR Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/water-intake-calculator/">Water Intake Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/protein-intake-calculator/">Protein Intake Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
+          <li><a href="/steps-to-miles-calculator/">Steps to Miles Calculator</a></li>
+          <li><a href="/dog-age-calculator/">Dog Age Calculator</a></li>
+          <li><a href="/cat-age-calculator/">Cat Age Calculator</a></li>
+          <li><a href="/calories-burned-calculator/">Calories Burned Calculator</a></li>
+          <li><a href="/calories-burned-walking-calculator/">Calories Burned Walking Calculator</a></li>
+          <li><a href="/calories-burned-running-calculator/">Calories Burned Running Calculator</a></li>
+          <li><a href="/keto-calculator/">Keto Calculator</a></li>
+          <li><a href="/net-carb-calculator/">Net Carb Calculator</a></li>
+          <li><a href="/intermittent-fasting-calculator/">Intermittent Fasting Calculator</a></li>
+          <li><a href="/bsa-calculator/">BSA Calculator</a></li>
+          <li><a href="/dog-food-calculator/">Dog Food Calculator</a></li>
+          <li><a href="/ffmi-calculator/">FFMI Calculator</a></li>
+          <li><a href="/bulking-calculator/">Bulking Calculator</a></li>
+          <li><a href="/weight-loss-calculator/">Weight Loss Calculator</a></li>
+          <li><a href="/weight-loss-percentage-calculator/">Weight Loss Percentage Calculator</a></li>
+          <li><a href="/max-heart-rate-calculator/">Max Heart Rate Calculator</a></li>
+          <li><a href="/caffeine-calculator/">Caffeine Calculator</a></li>
+          <li><a href="/caffeine-half-life-calculator/">Caffeine Half Life Calculator</a></li>
+          <li><a href="/fiber-calculator/">Fiber Calculator</a></li>
+          <li><a href="/creatine-calculator/">Creatine Calculator</a></li>
+        </ul>
+      </div>
+
+        <div class="footer-sub">
+<div class="footer-subcol">
+<div class="footer-col" style="order:3">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/semester-grade-calculator/">Semester Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+          <li><a href="/grade-curve-calculator/">Grade Curve Calculator</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:START-->
+<div class="footer-col" style="order:7">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Unit</span> <span class="ft2">Converters</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/unit-converter/">Unit Converter</a></li>
+          <li><a href="/length-converter/">Length Converter</a></li>
+          <li><a href="/weight-converter/">Weight Converter</a></li>
+          <li><a href="/volume-converter/">Volume Converter</a></li>
+          <li><a href="/temperature-converter/">Temperature Converter</a></li>
+          <li><a href="/area-converter/">Area Converter</a></li>
+          <li><a href="/speed-converter/">Speed Converter</a></li>
+          <li><a href="/data-storage-converter/">Data Storage Converter</a></li>
+          <li><a href="/cooking-converter/">Cooking Measurement Converter</a></li>
+          <li><a href="/px-to-rem-converter/">PX to REM Converter</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:END-->
+</div>
+
+<div class="footer-col" style="order:4">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/fraction-calculator/">Fraction Calculator</a></li>
+          <li><a href="/standard-deviation-calculator/">Standard Deviation Calculator</a></li>
+          <li><a href="/scientific-notation-calculator/">Scientific Notation Calculator</a></li>
+          <li><a href="/weighted-average-calculator/">Weighted Average Calculator</a></li>
+          <li><a href="/average-calculator/">Average Calculator</a></li>
+          <li><a href="/batting-average-calculator/">Batting Average Calculator</a></li>
+          <li><a href="/stock-average-calculator/">Stock Average Calculator</a></li>
+          <li><a href="/dice-average-calculator/">Dice Average Calculator</a></li>
+          <li><a href="/time-average-calculator/">Time Average Calculator</a></li>
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+          <li><a href="/percentage-change-calculator/">Percentage Change Calculator</a></li>
+          <li><a href="/age-calculator/">Age Calculator</a></li>
+          <li><a href="/date-calculator/">Date Calculator</a></li>
+          <li><a href="/time-calculator/">Time Calculator</a></li>
+          <li><a href="/hours-calculator/">Hours Calculator</a></li>
+          <li><a href="/triangle-calculator/">Triangle Calculator</a></li>
+          <li><a href="/random-number-generator/">Random Number Generator</a></li>
+        </ul>
+      </div>
+        </div>
+      </div>
+
+      <!--PAYFOOT:START-->
+      <div class="footer-col footer-col--wide">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Paycheck</span> <span class="ft2">Calculators</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/paycheck-calculator/">Paycheck Calculator (all states)</a></li>
+          <li><a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arkansas/">Arkansas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/california/">California Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/hawaii/">Hawaii Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/louisiana/">Louisiana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nebraska/">Nebraska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/oklahoma/">Oklahoma Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/utah/">Utah Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wisconsin/">Wisconsin Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a></li>
+        </ul>
+      </div>
+      <!--PAYFOOT:END-->
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/blog/">Blog</a>
+      <span aria-hidden="true">·</span>
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+</div>
+
+<script src="/assets/datepicker.min.js"></script>
+<script src="/assets/app.js?v=325"></script>
+<script>CalcThis.initCreatineCalc();</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>

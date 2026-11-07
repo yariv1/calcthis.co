@@ -1,0 +1,35 @@
+{
+ "slug": "creatine-calculator",
+ "pass": true,
+ "at": "2026-11-07T09:57:29.222Z",
+ "hash": "3532be9a0aba2927",
+ "viewports": {
+  "mobile": {
+   "steps": 1506,
+   "fails": []
+  },
+  "desktop": {
+   "steps": 1506,
+   "fails": []
+  }
+ },
+ "oracle": {
+  "runs": 300,
+  "fails": []
+ },
+ "shots": [
+  "md-files/qa-passes/shots/creatine-calculator-1-empty-mobile.png",
+  "md-files/qa-passes/shots/creatine-calculator-2-filled-mobile.png",
+  "md-files/qa-passes/shots/creatine-calculator-3-result-mobile.png",
+  "md-files/qa-passes/shots/creatine-calculator-4-advanced-mobile.png",
+  "md-files/qa-passes/shots/creatine-calculator-5-error-mobile.png",
+  "md-files/qa-passes/shots/creatine-calculator-6-after-chaos-mobile.png",
+  "md-files/qa-passes/shots/creatine-calculator-1-empty-desktop.png",
+  "md-files/qa-passes/shots/creatine-calculator-2-filled-desktop.png",
+  "md-files/qa-passes/shots/creatine-calculator-3-result-desktop.png",
+  "md-files/qa-passes/shots/creatine-calculator-4-advanced-desktop.png",
+  "md-files/qa-passes/shots/creatine-calculator-5-error-desktop.png",
+  "md-files/qa-passes/shots/creatine-calculator-6-after-chaos-desktop.png"
+ ],
+ "console": []
+}

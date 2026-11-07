@@ -279,6 +279,19 @@ Each tab is a standalone mode with its own pane; do not nest one mode's inputs u
 
 ---
 
+## Radio options — `.radgrp` / `.radopt` (GLOBAL, added 2026-11-07, creatine calculator)
+
+Use when 2-4 choices each need a one-line explanation (a `.seg`/`.modeseg` only fits short labels). Stacked full-width option cards; exactly ONE is always selected: amber border + `#FBF3E4` tint + filled amber dot (unselected = grey ring). Markup (buttons so the shared `CalcThis._kzUtil.seg/setSeg` works; also set `aria-checked` in the handler):
+
+```html
+<div class="radgrp" id="x" role="radiogroup" aria-label="Start with">
+  <button class="radopt on" type="button" role="radio" aria-checked="true" data-v="a"><i class="rd"></i><span class="t"><b>Title</b><span class="d">One-line explanation.</span></span></button>
+  ...
+</div>
+```
+
+Wrap in `<div class="ctl-row" style="display:block"><span class="ctl-lab" ...>Label</span>...</div>`. Descriptions may be filled with live numbers. Never invent another radio look.
+
 ## Disabled Field
 Wrap the entire `<label class="fld">` with an id, init `style="opacity:.4;pointer-events:none"`.
 JS toggles opacity + pointer-events on the WRAPPER — never just the input.

@@ -22243,3 +22243,196 @@ CalcThis.initFiberCalc = function () {
   phSync('fbHu'); phSync('fbWu'); addRow(); render();
 };
 /* FIBER:END */
+
+/* CREATINE:BEGIN */
+/* =========================================================
+   CREATINE calculator (/creatine-calculator/). Ahrefs 2026-11-06: creatine calculator >100 Easy (the ">1000" water question phrase = a section of the page).
+   Competitors opened live (2026-11-07): Coachway (units, weight, load / skip), GetHealthyCalculators (weight, load / skip / maintenance only, already taking, cost), freecreatinecalculator.com (weight, activity, goal,
+   type, phase, body fat), myproteincalc (weight, load / no load), FatCalc (weight, load / maintenance). Bodybuilding.com tool = 404.
+   Sources READ: ISSN position stand, Kreider RB et al., J Int Soc Sports Nutr 2017;14:18 (full text PMC5469049 via Europe PMC, 2026-11-07): diet 1-2 g/day = muscle creatine about 60-80% saturated; supplements raise
+   muscle creatine 20-40%; load 5 g (approx 0.3 g/kg) four times daily for 5-7 days; maintain 3-5 g/day, larger athletes 5-10 g/day; 3 g/day for 28 days = gradual rise; 4-6 weeks back to baseline after stopping;
+   fluid retention about 0.5-1.0 L; up to 30 g/day for 5 years safe in healthy people. The 0.03 g/kg maintenance rule of thumb is the competitors' (not in the ISSN text I read) -> clamped to 3-5 g and flagged.
+   Curve SHAPE between the sourced points is schematic (70% start = middle of 60-80%).
+   NOT used (no read source): kidney/pregnancy/children doses, HCl, activity/goal multipliers, hydration litres.
+   ========================================================= */
+/* CREATINE-ENGINE:START */
+CalcThis.creatineEngine = (function () {
+  var LB = 2.20462, LOADK = 0.3, MAINTK = 0.03, MMIN = 3, MMAX = 5, SKIP = 28, SAT0 = 70, SAFE = 30;
+  function num(t) {
+    t = (t + '').trim().replace(/\s/g, '');
+    if (!t) return null;
+    if (/^[+-]?\d*,\d+$/.test(t)) t = t.replace(',', '.'); else t = t.replace(/,/g, '');
+    if (!/^[+-]?(\d+\.?\d*|\.\d+)$/.test(t)) return NaN;
+    return parseFloat(t);
+  }
+  function readKg(t, unit) {
+    var n = num(t); if (n === null) return { empty: true };
+    if (isNaN(n) || n <= 0) return { bad: true };
+    var kg = unit === 'lb' ? n / LB : n; if (kg < 30 || kg > 300) return { bad: true };
+    return { v: kg, n: n };
+  }
+  function rd(t, lo, hi) { var n = num(t); if (n === null) return { empty: true }; if (isNaN(n) || n < lo || n > hi) return { bad: true }; return { v: n }; }
+  function loadDaily(kg) { return Math.round(LOADK * kg); }
+  function maintFor(kg) { var m = Math.min(MMAX, Math.max(MMIN, MAINTK * kg)); return Math.round(m * 2) / 2; }
+  function first28(kg, L, maint) { return L * loadDaily(kg) + (SKIP - L) * maint; }
+  function tubDays(tub, plan, daily, L, maint) { if (plan === 'load') { var lt = L * daily; return tub <= lt ? Math.floor(tub / daily) : L + Math.floor((tub - lt) / maint); } return Math.floor(tub / maint); }
+  function level(route, L, d) { var full = route === 'load' ? L : SKIP; return SAT0 + (100 - SAT0) * Math.min(d / full, 1); }
+  function trim(x, d) { return String(parseFloat((Math.round(x * Math.pow(10, d)) / Math.pow(10, d)).toFixed(d))); }
+  function grp(n) { return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+  return { LB: LB, LOADK: LOADK, MAINTK: MAINTK, MMIN: MMIN, MMAX: MMAX, SKIP: SKIP, SAT0: SAT0, SAFE: SAFE, num: num, readKg: readKg, rd: rd, loadDaily: loadDaily, maintFor: maintFor, first28: first28, tubDays: tubDays, level: level, trim: trim, grp: grp };
+})();
+/* CREATINE-ENGINE:END */
+
+/* =========================================================
+   CalcThis.initCreatineCalc() — ids cr*. Engine: CalcThis.creatineEngine. Weight field = the caffeine/fiber DS pattern (input + inline unit toggle).
+   ========================================================= */
+CalcThis.initCreatineCalc = function () {
+  var E = CalcThis.creatineEngine, U = CalcThis._kzUtil, seg = U.seg, setSeg = U.setSeg;
+  var $ = function (id) { return document.getElementById(id); };
+  var MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  var MONF = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  var st = { plan: 'load', wu: 'lb', ld: 7, ds: 4 }, dp = null;
+  function t1(x) { return E.trim(x, 1); }
+  function f2(x) { return (Math.round(x * 100) / 100).toFixed(2); }
+  function today() { var d = new Date(); d.setHours(0, 0, 0, 0); return d; }
+  function plusDays(d, n) { var r = new Date(d.getTime()); r.setDate(r.getDate() + n); r.setHours(0, 0, 0, 0); return r; }
+  function dt(d) { return d.getDate() + ' ' + MON[d.getMonth()] + ' ' + d.getFullYear(); }
+  function parseDate(raw) {
+    var t = (raw + '').trim(), m, d, mo, y, i;
+    if ((m = /^(\d{1,2})\s+([A-Za-z]+)\.?,?\s+(\d{4})$/.exec(t))) { d = +m[1]; y = +m[3]; mo = -1; for (i = 0; i < 12; i++) if (m[2].length >= 3 && MONF[i].toLowerCase().indexOf(m[2].toLowerCase()) === 0) mo = i; }
+    else if ((m = /^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(t))) { y = +m[1]; mo = +m[2] - 1; d = +m[3]; }
+    else if ((m = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/.exec(t))) { mo = +m[1] - 1; d = +m[2]; y = +m[3]; }
+    else return null;
+    if (mo < 0 || mo > 11 || d < 1 || d > 31) return null;
+    var r = new Date(y, mo, d); r.setHours(0, 0, 0, 0);
+    return (r.getFullYear() === y && r.getMonth() === mo && r.getDate() === d) ? r : null;
+  }
+  function setHint(m, at) {
+    var h = $('crHint'); h.textContent = m || ''; h.style.display = m ? 'block' : 'none';
+    if (m && at) { var el = $(at), f = el ? el.closest('.fld') : null; if (f && f.nextSibling !== h) f.parentNode.insertBefore(h, f.nextSibling); }
+  }
+  function descs(daily, L, maint) {
+    $('crD1').textContent = daily == null ? 'A higher dose for 5–7 days, then the daily dose. Your stores fill in about a week.' : t1(daily) + ' g a day for ' + L + ' days, then ' + t1(maint) + ' g a day. Your stores fill in about a week.';
+    $('crD2').textContent = daily == null ? 'The daily dose from day 1. It gets there more slowly, in about ' + E.SKIP + ' days.' : t1(maint) + ' g a day from day 1. It gets there more slowly, in about ' + E.SKIP + ' days.';
+  }
+  function empty(msg, at) { descs(null); $('crBig').textContent = '—'; $('crSub').textContent = $('crSub').getAttribute('data-empty'); $('crBody').style.display = 'none'; $('crMVal').textContent = '—'; setHint(msg || '', at); }
+  function table(id, head, rows, tfoot) {
+    $(id).innerHTML = '<thead><tr>' + head.map(function (h) { return '<th>' + h + '</th>'; }).join('') + '</tr></thead><tbody>' + rows.map(function (r) { return '<tr>' + r.map(function (c) { return '<td>' + c + '</td>'; }).join('') + '</tr>'; }).join('') + '</tbody>' + (tfoot || '');
+  }
+  function chart(L) {
+    var X0 = 40, X1 = 304, Y0 = 26, Y1 = 150, D = 42, i, s;
+    function x(d) { return X0 + d / D * (X1 - X0); }
+    function y(v) { return Y1 - (v - 50) / 50 * (Y1 - Y0); }
+    function p(route) { var a = E.level(route, L, 0), pts = [[0, a], [route === 'load' ? L : E.SKIP, 100], [D, 100]]; return pts.map(function (q, k) { return (k ? 'L' : 'M') + x(q[0]).toFixed(1) + ',' + y(q[1]).toFixed(1); }).join(' '); }
+    s = '<svg viewBox="0 0 320 190" role="img" aria-label="Schematic of muscle creatine stores over 42 days for loading, a daily dose without loading, and no creatine">';
+    s += '<rect x="' + X0 + '" y="' + y(80).toFixed(1) + '" width="' + (X1 - X0) + '" height="' + (y(60) - y(80)).toFixed(1) + '" fill="rgba(55,80,63,.10)"/>';
+    [60, 80, 100].forEach(function (v) { s += '<line x1="' + X0 + '" x2="' + X1 + '" y1="' + y(v).toFixed(1) + '" y2="' + y(v).toFixed(1) + '" stroke="#E4DCCB" stroke-width="1"/><text x="' + (X0 - 6) + '" y="' + (y(v) + 4).toFixed(1) + '" text-anchor="end" font-size="12" fill="#6b6558">' + v + '%</text>'; });
+    for (i = 0; i <= D; i += 7) s += '<text x="' + x(i).toFixed(1) + '" y="' + (Y1 + 16) + '" text-anchor="middle" font-size="12" fill="#6b6558">' + i + '</text>';
+    s += '<text x="' + X1 + '" y="' + (Y1 + 33) + '" text-anchor="end" font-size="12" fill="#6b6558">days from the start</text>';
+    s += '<line x1="' + X0 + '" x2="' + X1 + '" y1="' + y(E.SAT0).toFixed(1) + '" y2="' + y(E.SAT0).toFixed(1) + '" stroke="#8a8372" stroke-width="2" stroke-dasharray="5 4"/>';
+    s += '<text x="' + (X1 - 6) + '" y="' + (y(60) - 6).toFixed(1) + '" text-anchor="end" font-size="12" fill="#37503F">usual diet 60–80%</text>';
+    var sel = st.plan;
+    s += '<path d="' + p('skip') + '" fill="none" stroke="#37503F" stroke-width="' + (sel === 'skip' ? 3.5 : 2) + '" stroke-linejoin="round"/>';
+    s += '<path d="' + p('load') + '" fill="none" stroke="#B5761F" stroke-width="' + (sel === 'load' ? 3.5 : 2) + '" stroke-linejoin="round"/>';
+    s += '<circle cx="' + x(L).toFixed(1) + '" cy="' + y(100).toFixed(1) + '" r="4" fill="#B5761F"/><text x="' + x(L).toFixed(1) + '" y="' + (Y0 - 10) + '" text-anchor="middle" font-size="12" font-weight="700" fill="#8F5C13">day ' + L + '</text>';
+    s += '<circle cx="' + x(E.SKIP).toFixed(1) + '" cy="' + y(100).toFixed(1) + '" r="4" fill="#37503F"/><text x="' + x(E.SKIP).toFixed(1) + '" y="' + (Y0 - 10) + '" text-anchor="middle" font-size="12" font-weight="700" fill="#37503F">day ' + E.SKIP + '</text>';
+    return s + '</svg>';
+  }
+  /* ---------- weight unit toggle (inline, like the caffeine amount field) ---------- */
+  $('crWu').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return; var v = b.getAttribute('data-v'), old = $('crWu').getAttribute('data-u'); if (v === old) return;
+    var r = E.readKg($('crW').value, old); if (r.v) $('crW').value = E.trim(v === 'lb' ? r.v * E.LB : r.v, 1);
+    $('crWu').setAttribute('data-u', v); st.wu = v; setSeg('crWu', v); $('crW').placeholder = v === 'lb' ? 'e.g. 176' : 'e.g. 80'; render();
+  });
+  /* ---------- render ---------- */
+  function render() {
+    var W = E.readKg($('crW').value, st.wu);
+    if (W.empty) { empty(''); return; }
+    if (W.bad) { empty('Body weight should be between ' + (st.wu === 'lb' ? '66 and 660 lb' : '30 and 300 kg') + ' — check the number and the unit.', 'crW'); return; }
+    var soft = [], kg = W.v, L = st.ld, N = st.ds, daily = E.loadDaily(kg), per = daily / N, maint = E.maintFor(kg), plan = st.plan;
+    var M = E.rd($('crM').value, 2, 10);
+    if (M.bad) soft.push({ m: 'Maintenance should be between 2 and 10 g a day. It is ignored for now, so ' + t1(maint) + ' g is used.', at: 'crM' }); else if (M.v) maint = M.v;
+    var T = null, draw = $('crDate').value.trim();
+    if (draw && plan !== 'taking') {
+      var pd = parseDate(draw);
+      if (!pd) soft.push({ m: 'Type or pick a date, like 25 December 2026. It is left out for now, so the plan starts on day 1.', at: 'crDate' });
+      else if (pd.getTime() <= today().getTime()) soft.push({ m: 'Pick a date after today. It is left out for now, so the plan starts on day 1.', at: 'crDate' });
+      else T = pd;
+    }
+    var tub = E.rd($('crTub').value, 20, 10000), pr = E.rd($('crPr').value, 0.01, 100000), sc = E.rd($('crSc').value, 0.5, 50);
+    if (tub.bad) soft.push({ m: 'Tub size should be between 20 and 10,000 g. The tub costs are left out for now.', at: 'crTub' });
+    else if (pr.bad && tub.v) soft.push({ m: 'Price should be a number up to 100,000. The cost lines are left out for now.', at: 'crPr' });
+    else if (sc.bad && tub.v) soft.push({ m: 'Scoop size should be between 0.5 and 50 g. The scoop lines are left out for now.', at: 'crSc' });
+    setHint(soft.length ? soft[0].m : '', soft.length ? soft[0].at : null);
+    descs(daily, L, maint);
+    var wTxt = E.trim(W.n, 1) + ' ' + st.wu, g = function (x) { return t1(x) + ' g'; };
+    /* headline */
+    var big, sub, tip;
+    if (plan === 'load') {
+      big = g(daily); sub = 'a day for ' + L + ' days (' + N + ' × ' + g(per) + '), then ' + g(maint) + ' a day';
+      tip = 'At ' + wTxt + ', loading is ' + E.LOADK + ' g per kg of body weight: ' + g(daily) + ' a day, split into ' + N + ' doses of ' + g(per) + ', for ' + L + ' days. Then ' + g(maint) + ' a day keeps your stores full.';
+    } else if (plan === 'skip') {
+      big = g(maint); sub = 'a day from day 1 · stores are full in about ' + E.SKIP + ' days';
+      tip = 'Take ' + g(maint) + ' a day from the first day. Muscle stores fill in about ' + E.SKIP + ' days — the same level loading reaches in ' + L + ' days at ' + g(daily) + ' a day.';
+    } else {
+      big = g(maint); sub = 'a day, any time · your stores are already full';
+      tip = g(maint) + ' a day keeps stores full. If you stop, they take 4–6 weeks to return to baseline.';
+    }
+    if (plan === 'load' && daily > E.SAFE) tip += ' That is above the ' + E.SAFE + ' g a day covered by the long-term safety data (up to 5 years); consider the no-loading route.';
+    $('crBig').textContent = big; $('crSub').textContent = sub; $('crMLab').textContent = 'Creatine a day'; $('crMVal').textContent = big; $('crTip').textContent = tip;
+    /* schedule + dates */
+    var feasible = false, startD = null, flag = '';
+    if (T) {
+      var need = plan === 'load' ? L : E.SKIP, startOff = Math.round((T.getTime() - today().getTime()) / 864e5) - need;
+      if (startOff >= 0) { feasible = true; startD = plusDays(today(), startOff); }
+      else flag = 'To be full by ' + dt(T) + ' you would have had to start ' + (plan === 'load' ? 'loading' : 'the daily dose') + ' ' + (-startOff) + ' day' + (-startOff === 1 ? '' : 's') + ' ago. Starting today, your stores are full on ' + dt(plusDays(today(), need)) + '.';
+    }
+    var rows = [], head = ['When', 'Take'];
+    if (plan === 'load') {
+      rows.push(['Days 1–' + L, N + ' × ' + g(per) + ' = ' + g(daily) + ' a day'], ['From day ' + (L + 1), g(maint) + ' a day']);
+      if (feasible) { head.push('Dates'); rows[0].push(dt(startD) + ' to ' + dt(plusDays(startD, L - 1))); rows[1].push('from ' + dt(plusDays(startD, L))); }
+    } else {
+      rows.push(['Every day', g(maint) + ' a day']);
+      if (feasible) { head.push('Dates'); rows[0].push('from ' + dt(startD)); }
+    }
+    table('crSched', head, rows);
+    $('crFlag').textContent = flag; $('crFlag').style.display = flag ? '' : 'none';
+    /* two routes compared + chart (not when already taking) */
+    var both = plan !== 'taking';
+    $('crCmpWrap').style.display = both ? '' : 'none'; $('crChartWrap').style.display = both ? '' : 'none';
+    if (both) {
+      var crow = [['Dose a day at the start', g(daily), g(maint)], ['Stores full after', L + ' days', E.SKIP + ' days'], ['Creatine in the first ' + E.SKIP + ' days', g(E.first28(kg, L, maint)), g(E.SKIP * maint)]];
+      if (T) { var so = function (n) { var o = Math.round((T.getTime() - today().getTime()) / 864e5) - n; return o >= 0 ? 'by ' + dt(plusDays(today(), o)) : 'too late — earliest ' + dt(plusDays(today(), n)); }; crow.push(['To be full by ' + dt(T) + ', start', so(L), so(E.SKIP)]); }
+      table('crCmp', ['', 'With loading', 'Daily dose only'], crow);
+      $('crChart').innerHTML = chart(L);
+    }
+    /* tub */
+    if (tub.v) {
+      var tr = [['This tub lasts', E.tubDays(tub.v, plan, daily, L, maint) + ' days' + (plan === 'load' ? ' (loading, then ' + g(maint) + ' a day)' : ' at ' + g(maint) + ' a day')]];
+      if (sc.v) { tr.push(['Scoops a day (' + E.trim(sc.v, 2) + ' g each)', E.trim(maint / sc.v, 2)]); if (plan === 'load') tr.push(['Scoops per loading dose', E.trim(per / sc.v, 2)]); }
+      if (pr.v) {
+        var perG = pr.v / tub.v;
+        tr.push(['Cost a day (maintenance)', f2(perG * maint)], ['Cost of 30 days (maintenance)', f2(perG * maint * 30)]);
+        if (plan === 'load') tr.push(['Cost of the loading phase (' + L + ' days)', f2(perG * daily * L)]);
+      }
+      table('crTubT', ['Your tub (' + E.grp(tub.v) + ' g)', ''], tr); $('crTubWrap').style.display = '';
+    } else $('crTubWrap').style.display = 'none';
+    $('crBody').style.display = '';
+  }
+  /* ---------- controls ---------- */
+  seg('crPlan', function (v) { st.plan = v; [].forEach.call($('crPlan').children, function (b) { b.setAttribute('aria-checked', b.getAttribute('data-v') === v ? 'true' : 'false'); }); render(); });
+  seg('crLd', function (v) { st.ld = +v; render(); });
+  seg('crDs', function (v) { st.ds = +v; render(); });
+  ['crW', 'crM', 'crDate', 'crTub', 'crPr', 'crSc'].forEach(function (id) { $(id).addEventListener('input', render); });
+  $('crAdvBtn').addEventListener('click', function () {
+    var open = $('crAdvBtn').classList.toggle('open'); $('crAdvBtnLab').textContent = open ? 'Go simple' : 'Go advanced'; $('crAdvIn').style.display = open ? '' : 'none';
+    if (!open) { ['crM', 'crDate', 'crTub', 'crPr', 'crSc'].forEach(function (id) { $(id).value = ''; }); st.ld = 7; st.ds = 4; setSeg('crLd', '7'); setSeg('crDs', '4'); }
+    render();
+  });
+  if (window.Datepicker) {
+    dp = new Datepicker($('crDate'), { format: 'd MM yyyy', autohide: true, weekStart: 0, todayHighlight: true, minDate: new Date() });
+    $('crDate').addEventListener('changeDate', render);
+  }
+  render();
+};
+/* CREATINE:END */

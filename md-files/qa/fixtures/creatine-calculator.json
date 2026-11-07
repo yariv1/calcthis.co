@@ -1,0 +1,36 @@
+{
+  "slug": "creatine-calculator",
+  "bodyClass": "p-cr",
+  "blocks": ["CREATINE"],
+  "result": { "big": "crBig", "body": "crBody", "hint": "crHint" },
+  "required": ["crW"],
+  "fill": [
+    ["seg", "crWu", "lb"],
+    ["seg", "crPlan", "load"],
+    ["seg", "crLd", "7"],
+    ["seg", "crDs", "4"],
+    ["set", "crM", ""],
+    ["set", "crDate", ""],
+    ["set", "crTub", ""],
+    ["set", "crPr", ""],
+    ["set", "crSc", ""],
+    ["set", "crW", "176"]
+  ],
+  "optionalSamples": {
+    "crM": ["3.5", "5", "8"],
+    "crDate": ["25 December 2026", "2027-02-01"],
+    "crTub": ["500", "1000"],
+    "crPr": ["25", "19.99"],
+    "crSc": ["5", "3.5"]
+  },
+  "variants": [
+    [["seg", "crPlan", "skip"]],
+    [["seg", "crPlan", "taking"]],
+    [["seg", "crWu", "kg"], ["set", "crW", "80"]],
+    [["seg", "crLd", "5"], ["seg", "crDs", "5"], ["set", "crTub", "500"], ["set", "crPr", "25"], ["set", "crSc", "5"]],
+    [["set", "crDate", "25 December 2026"]],
+    [["click", "crAdvBtn"], ["set", "crM", "5"]]
+  ],
+  "scrollTo": "crSched",
+  "errorState": [["set", "crW", "20"]]
+}

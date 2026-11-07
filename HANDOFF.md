@@ -4,6 +4,11 @@ _Rewritten 2026-11-07 at the end of session #4 (vitamin research -> caffeine x2 
 
 ---
 
+## 000000000000001a. UPDATE 2026-11-07 (after §19): CREATINE DEPLOYED v325 — live v325 · 93 calcs · 223 pages
+Creatine research report approved ("Approve all") -> built -> QA gate PASS (300 oracle runs) -> deployed. Code map: engine `CREATINE-ENGINE` (`CalcThis.creatineEngine`), init `CalcThis.initCreatineCalc` (ids `cr*`, block `CREATINE:BEGIN/END`), css `.p-cr`, generator `md-files/gen-creatine-page.js`, notes `md-files/calcthis-creatine-research.md`. Details in CLAUDE.md addendum 23. **New global DS component `.radgrp/.radopt` (radio options with a one-line explanation each) + global `.res-big` spacing fix.** User corrections: "Plan" unclear -> "Start with" radio options (his wording); he wants clear selected state in DS colours. **NEXT JOB: VITAMIN D + IU<->mcg as ONE page (blocker: readable RDA/UL source — ask him to paste the ODS table); then BAC late.** Next generator chains after `creatine-calculator` (prev menu 'Creatine', name 'Creatine Calculator', llms anchor '- [Creatine Calculator', seo-meta anchor `"/creatine-calculator/": {`). Bing: URL submitted at deploy; GSC queue unchanged (utah next).
+
+---
+
 ## 0000000000000019. START HERE — END OF THE 2026-11-07 SESSION #4 (vitamin demand research -> CAFFEINE x2 + FIBER built and deployed; QA gate is now functional AND UI; Bing fully submitted; GSC queue 11 requested) — live v324 · 92 calculators · 25 articles · 222 pages · `main` pushed (last deploy commit `b69def33`, docs commit after it), working tree clean — AUTHORITATIVE; §18/§17/§16 below are the same session in order and stay valid unless this contradicts them
 
 ### 0. First reply of the next session (do exactly this, then START THE JOB in §1 — he already told me the order, never ask which job)

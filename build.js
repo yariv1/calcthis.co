@@ -170,6 +170,7 @@ const PAGES = [
   { file: 'caffeine-calculator/index.html', slug: '/caffeine-calculator/' },
   { file: 'caffeine-half-life-calculator/index.html', slug: '/caffeine-half-life-calculator/' },
   { file: 'fiber-calculator/index.html', slug: '/fiber-calculator/' },
+  { file: 'creatine-calculator/index.html', slug: '/creatine-calculator/' },
   { file: 'protein-intake-calculator/index.html', slug: '/protein-intake-calculator/' },
   { file: 'blog/index.html',            slug: '/blog/' },
   { file: 'blog/how-much-gravel-do-i-need-for-a-driveway/index.html', slug: '/blog/how-much-gravel-do-i-need-for-a-driveway/' },
