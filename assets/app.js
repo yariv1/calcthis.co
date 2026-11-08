@@ -169,6 +169,64 @@ window.CalcThis = window.CalcThis || {};
   CalcThis.initCsel = initCsel;
   CalcThis.initAllCsel = function (root) { [].forEach.call((root || document).querySelectorAll('.csel'), initCsel); };
   CalcThis.initAllCsel();
+
+  /* FIELD SYMBOLS (global, 2026-11-08): a field whose label unit starts with a currency symbol or % shows
+     that symbol inside the field next to the value, only while the field has a value ($ before, % after).
+     The symbol is read live from the label, and follows a currency picker (#...Cur) when the page has one. */
+  (function () {
+    var SYM = /^\s*([$€£¥%])(?=[\s·—\/]|$)/;
+    var cv = document.createElement('canvas').getContext('2d');
+    var curCache = {};
+    function curSym(code) {
+      if (!code) return '';
+      if (curCache[code] !== undefined) return curCache[code];
+      var s = '';
+      try { var p = new Intl.NumberFormat('en', { style: 'currency', currency: code, currencyDisplay: 'narrowSymbol' }).formatToParts(0); for (var i = 0; i < p.length; i++) if (p[i].type === 'currency') s = p[i].value; } catch (e) {}
+      return (curCache[code] = s);
+    }
+    function pickerSym() {
+      var c = document.querySelector('.csel[id$="Cur"]');
+      return c && c.value ? curSym(c.value) : '';
+    }
+    function sync() {
+      var ps = pickerSym();
+      [].forEach.call(document.querySelectorAll('.fld .lab .unit'), function (u) {
+        var lab = u.closest('.fld'); if (!lab) return;
+        var box = lab.querySelector('.inp'); var inp = box && box.querySelector('input');
+        if (!inp || box.querySelector('.suf')) return;
+        var t = u.textContent, m = SYM.exec(t);
+        if (!m || /\bor\b/.test(t)) { if (inp._symEl) { inp._symEl.style.display = 'none'; inp.style.paddingLeft = ''; } return; }
+        var s = m[1];
+        if (s === '$' && ps) { s = ps; if (!u._cur) { u._cur = 1; } if (t.indexOf(s) !== 0) { u.textContent = t.replace(/^\s*\$/, s); } }
+        else if (s === '$' && u._cur) { /* picker gone: leave as is */ }
+        var el = inp._symEl;
+        if (!el) { el = document.createElement('span'); el.className = 'fsym'; el.setAttribute('aria-hidden', 'true'); box.appendChild(el); inp._symEl = el; inp._pad = parseFloat(getComputedStyle(inp).paddingLeft) || 13; }
+        var has = inp.value !== '';
+        if (!has) { el.style.display = 'none'; inp.style.paddingLeft = ''; return; }
+        var cs = getComputedStyle(inp);
+        cv.font = cs.fontWeight + ' ' + cs.fontSize + ' ' + cs.fontFamily;
+        el.textContent = s; el.style.display = '';
+        if (m[1] === '%') {
+          inp.style.paddingLeft = '';
+          var w = cv.measureText(inp.value).width;
+          el.style.left = (inp._pad + w + 3) + 'px';
+          el.style.visibility = (inp._pad + w + 3 + 14 > inp.clientWidth - 8) ? 'hidden' : '';
+        } else {
+          var sw = cv.measureText(s).width;
+          el.style.left = inp._pad + 'px'; el.style.visibility = '';
+          inp.style.paddingLeft = (inp._pad + sw + 4) + 'px';
+        }
+      });
+    }
+    var q = 0;
+    function later() { if (q) return; q = requestAnimationFrame(function () { q = 0; sync(); }); }
+    ['input', 'change', 'click', 'keyup', 'focusin', 'focusout'].forEach(function (ev) { document.addEventListener(ev, function () { later(); setTimeout(later, 60); }, true); });
+    new MutationObserver(later).observe(document.body || document.documentElement, { subtree: true, childList: true, characterData: true });
+    window.addEventListener('resize', later);
+    setInterval(sync, 700);
+    CalcThis.syncFieldSymbols = sync;
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', later); else later();
+  })();
 })();
 
 /* ---- shared: clear (X) button inside any text field that has a value, shown while the field is focused (design system, 2026-10-29) ----
@@ -23599,3 +23657,409 @@ CalcThis.initProfitMarginCalc = function () {
   render();
 };
 /* PROFITMARGIN:END */
+/* DISCOUNT:BEGIN */
+/* =========================================================
+   DISCOUNT calculator (/discount-calculator/). Competitors opened live (2026-11-08): calculator.net (percent off), Omnicalculator (discount, percent off), GigaCalculator,
+   miniwebtool - all numbers; none compares offers and none draws the effective total percent. Notes: md-files/calcthis-discount-research.md.
+   Formulas: savings = price x pct / 100; final = price x (1 - pct/100); stacked discounts apply one after another, each on the price left by the one before; an amount off comes off
+   the price left; buy X get Y free = Y free items per X+Y; every Nth item at p% off. Tax on the final price (added) or already inside it.
+   Pairs of the four boxes (original price, percent off = the FIRST discount, final price = after all discounts, you save = in total) are solved by an affine reverse:
+   final = A x (price x (1 - p1/100)) + B for the extra rows. The original price stays put when a third value is typed.
+   ========================================================= */
+/* DISCOUNT-ENGINE:START */
+CalcThis.discountEngine = (function () {
+  var PCTS = [5, 10, 15, 20, 25, 30, 40, 50, 60, 70];
+  /* rows: [{ k: 'pct' | 'amt', v }] -> final = A x x1 + B where x1 is the price after the first discount */
+  function aff(rows) {
+    var A = 1, B = 0;
+    rows.forEach(function (r) { if (r.k === 'pct') { var m = 1 - r.v / 100; A *= m; B *= m; } else B -= r.v; });
+    return { A: A, B: B };
+  }
+  /* forward: the original price o, the first discount p1 (%), then the rows */
+  function forward(o, p1, rows) {
+    var x = o * (1 - p1 / 100), steps = [{ k: 'pct', v: p1, amt: o - x, after: x }], i, r, a;
+    for (i = 0; i < rows.length; i++) {
+      r = rows[i];
+      if (r.k === 'pct') a = x * r.v / 100;
+      else { a = r.v; if (a > x + 1e-9 * Math.max(1, x)) return { ok: false, at: i, v: a, left: x }; }
+      x = x - a; if (x < 0 && x > -1e-9) x = 0;
+      steps.push({ k: r.k, v: r.v, amt: a, after: x });
+    }
+    return { ok: true, f: x, steps: steps };
+  }
+  /* t = [[key, value], ...] with keys orig pct final save; rows = the extra discounts */
+  function solve(t, rows) {
+    var v = {}, n = t.length, af = aff(rows), A = af.A, B = af.B, o, p, x1, d;
+    t.forEach(function (x) { v[x[0]] = x[1]; });
+    var has = function (a, b) { return v[a] !== undefined && v[b] !== undefined; };
+    if (n === 0) return { state: 'none' };
+    if (n === 1) {
+      if (t[0][0] === 'pct' && B === 0) { var pay = (1 - v.pct / 100) * A * 100; return { state: 'lone', pay: pay, eff: 100 - pay, p: v.pct }; }
+      return { state: 'need', typed: t[0][0] };
+    }
+    var fromFinal = function (oo, fin, at) {
+      if (!(oo > 0)) return { state: 'err', err: { code: 'zeroOrig', at: 'orig' } };
+      if (!(A > 1e-12)) return { state: 'err', err: { code: 'flat', at: 'rows' } };
+      var xx = (fin - B) / A, pp = (1 - xx / oo) * 100;
+      if (pp < -1e-9) return { state: 'err', err: { code: 'finalHigh', at: at } };
+      if (pp > 100 + 1e-9) return { state: 'err', err: { code: 'finalLow', at: at } };
+      return { p: Math.min(100, Math.max(0, pp)) };
+    }, r;
+    if (has('orig', 'pct')) { o = v.orig; p = v.pct; }
+    else if (has('orig', 'final')) { o = v.orig; r = fromFinal(o, v.final, 'final'); if (r.state) return r; p = r.p; }
+    else if (has('orig', 'save')) { o = v.orig; if (v.save > o + 1e-9) return { state: 'err', err: { code: 'saveHigh', at: 'save' } }; r = fromFinal(o, o - v.save, 'save'); if (r.state) return r; p = r.p; }
+    else if (has('pct', 'final')) {
+      p = v.pct; if (p >= 100) return { state: 'err', err: { code: 'pct100', at: 'pct' } };
+      if (!(A > 1e-12)) return { state: 'err', err: { code: 'flat', at: 'rows' } };
+      x1 = (v.final - B) / A; o = x1 / (1 - p / 100);
+    }
+    else if (has('pct', 'save')) {
+      p = v.pct; d = 1 - A * (1 - p / 100);
+      if (Math.abs(d) < 1e-12) return { state: 'err', err: { code: 'noDisc', at: 'pct' } };
+      o = (v.save + B) / d; if (o < -1e-9) return { state: 'err', err: { code: 'negOrig', at: 'save' } };
+      if (o < 0) o = 0;
+    }
+    else { o = v.final + v.save; r = fromFinal(o, v.final, 'final'); if (r.state) return r; p = r.p; }
+    var F = forward(o, p, rows);
+    if (!F.ok) return { state: 'err', err: { code: 'over', at: 'rows', i: F.at, v: F.v, left: F.left } };
+    var f = F.f, s = o - f;
+    if (Math.abs(s) < 1e-9 * Math.max(1, o)) s = 0;
+    return { state: 'ok', o: o, p: p, f: f, s: s, steps: F.steps, eff: o > 0 ? s / o * 100 : null };
+  }
+  function ladder(o, rows) {
+    return PCTS.map(function (x) { var row = { x: x }; if (o > 0) { var F = forward(o, x, rows); if (F.ok) { row.f = F.f; row.s = o - F.f; } } return row; });
+  }
+  /* one offer for q items at price P each: { t: 'pct' | 'amt' | 'bxgy' | 'n2' | 'n3', a, b } -> amount to pay (null when an amount off is more than the total) */
+  function offerPay(P, q, of) {
+    var tot = P * q;
+    if (of.t === 'pct') return tot * (1 - of.a / 100);
+    if (of.t === 'amt') return of.a > tot + 1e-9 * Math.max(1, tot) ? null : Math.max(0, tot - of.a);
+    if (of.t === 'bxgy') { var gs = of.a + of.b; return (Math.floor(q / gs) * of.a + Math.min(of.a, q % gs)) * P; }
+    var N = of.t === 'n2' ? 2 : 3, k = Math.floor(q / N);
+    return (q - k) * P + k * P * (1 - of.a / 100);
+  }
+  function autoQty(offers) {
+    var q = 1; offers.forEach(function (of) { var s = of.t === 'bxgy' ? of.a + of.b : (of.t === 'n2' ? 2 : (of.t === 'n3' ? 3 : 1)); if (s > q) q = s; });
+    return q;
+  }
+  return { PCTS: PCTS, aff: aff, forward: forward, solve: solve, ladder: ladder, offerPay: offerPay, autoQty: autoQty };
+})();
+/* DISCOUNT-ENGINE:END */
+
+/* =========================================================
+   CalcThis.initDiscountCalc() - ids dc*. Engines: CalcThis.salesEngine (parse), CalcThis.discountEngine, CalcThis.salaryEngine (currency list only, display only).
+   ========================================================= */
+CalcThis.initDiscountCalc = function () {
+  var E = CalcThis.salesEngine, D = CalcThis.discountEngine, SE = CalcThis.salaryEngine;
+  var $ = function (id) { return document.getElementById(id); };
+  if (!$('dcOrig')) return;
+  var CHEV = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
+  var CORE = ['orig', 'pct', 'final', 'save'];
+  var FM = { orig: { id: 'dcOrig', d: 'before any discount', money: 1, kind: 'price' }, pct: { id: 'dcPct', d: 'first discount', kind: 'disc' }, final: { id: 'dcFinal', d: 'after all discounts', money: 1, kind: 'price' }, save: { id: 'dcSave', d: 'in total', money: 1, kind: 'cost' } };
+  var LAB = { orig: 'Original price', pct: 'Percent off', final: 'Final price', save: 'You save', qty: 'Quantity', tax: 'Sales tax / VAT', items: 'Items you buy' };
+  var NAME = { orig: 'original price', pct: 'percent off', final: 'final price', save: 'amount saved' };
+  var EG = { orig: '120', pct: '20', final: '84', save: '36', qty: '12', tax: '8.5', items: '3', pctrow: '15', amt: '10', bxgy: '2', free: '1' };
+  var KL = { pct: '% off', amt: 'Amount off', bxgy: 'Buy X get Y free', n2: '% off every 2nd item', n3: '% off every 3rd item' };
+  var KPH = { pct: 'Percent, e.g. 15', amt: 'Amount, e.g. 10', bxgy: 'Buy, e.g. 2', n2: 'Percent, e.g. 50', n3: 'Percent, e.g. 50' };
+  var ORD = ['1st', '2nd', '3rd', '4th', '5th', '6th'];
+  var st = { cur: 'USD', dec: 2, typed: [], last: null, coreErr: null, extra: '', adv: false, taxMode: 'add', seq: {} };
+  var NF = {}, DN = null;
+  try { DN = new Intl.DisplayNames(['en'], { type: 'currency' }); } catch (e) { DN = null; }
+  var CN = { SLE: 'Sierra Leonean Leone' };
+  function curName(c) { try { var n = DN && DN.of(c); return (n && n !== c) ? n : (CN[c] || c); } catch (e) { return CN[c] || c; } }
+  function decOf(c) { try { return Math.min(2, new Intl.NumberFormat('en-US', { style: 'currency', currency: c }).resolvedOptions().maximumFractionDigits); } catch (e) { return 2; } }
+  function sym(c) { try { return new Intl.NumberFormat('en-US', { style: 'currency', currency: c, currencyDisplay: 'narrowSymbol' }).format(0).replace(/[0-9.,\s]/g, ''); } catch (e) { return c; } }
+  function cf(x, d) {
+    var k = st.cur + d;
+    if (!NF[k]) NF[k] = new Intl.NumberFormat('en-US', { style: 'currency', currency: st.cur, currencyDisplay: 'narrowSymbol', minimumFractionDigits: d, maximumFractionDigits: d });
+    return (x < 0 ? '−' : '') + NF[k].format(Math.abs(x));
+  }
+  function fm(x) { if (x == null || !isFinite(x)) return '—'; if (Math.abs(x) < Math.pow(10, -st.dec) / 2) x = 0; return cf(x, st.dec); }
+  function pc(x) { var r = Math.round(x * 100) / 100; if (r === 0) r = 0; return (r < 0 ? '−' : '') + Math.abs(r).toLocaleString('en-US', { maximumFractionDigits: 2 }); }
+  function fp(x) { return x == null || !isFinite(x) ? '—' : pc(x) + '%'; }
+  function qn(x) { return (Math.round(x * 1000) / 1000).toLocaleString('en-US', { maximumFractionDigits: 3 }); }
+  function ft(x, money) {
+    var d = money ? st.dec : 2, r = Math.round(x * Math.pow(10, d)) / Math.pow(10, d); if (r === 0) r = 0;
+    return (r < 0 ? '-' : '') + Math.abs(r).toLocaleString('en-US', { maximumFractionDigits: d });
+  }
+  function nm(k) { return NAME[k]; }
+  function join(a) { return a.length < 2 ? a.join('') : a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1]; }
+  function others(k) { return join(CORE.filter(function (x) { return x !== k; }).map(nm)).replace(' and ', ' or '); }
+  function ordFor(i, n) { return n > 1 ? ORD[i] + ' discount' : 'Discount'; }
+
+  /* ---------- error wording ---------- */
+  function errMsg(label, kind, code, raw, eg) {
+    var r = String(raw).trim().slice(0, 14), tail = ' It is ignored for now.';
+    if (code === 'junk') return 'Couldn’t read “' + r + '” in ' + label + ' — type a number like ' + eg + '.' + tail;
+    if (code === 'neg') return label + ' can’t be negative — type 0 or more.' + tail;
+    if (code === 'big') return label + ' is too large — keep it under 1,000,000,000,000.' + tail;
+    if (code === 'pct') return label + ' should be a percent from 0 to 100.' + tail;
+    if (code === 'qty') return label + ' should be a number above 0 and up to 1,000,000,000.' + tail;
+    if (code === 'int') return label + ' should be a whole number, 1 or more.' + tail;
+    return label + ' can’t be used.' + tail;
+  }
+  function solveMsg(e) {
+    var c = e.code;
+    if (c === 'zeroOrig') return 'With an original price of 0 the percent off can’t be worked out — type the original price or the percent off.';
+    if (c === 'flat') return 'A 100% extra discount makes the final price zero whatever else you type — change or remove it.';
+    if (c === 'finalHigh') return 'After your extra discounts the final price can’t be higher than the original price — lower it.';
+    if (c === 'finalLow') return 'Even 100% off the original price leaves more than this — raise it or change your extra discounts.';
+    if (c === 'saveHigh') return 'You can’t save more than the original price — lower the amount you save.';
+    if (c === 'pct100') return '100% off leaves nothing, so the original price can’t be worked out from this — type the original price instead.';
+    if (c === 'noDisc') return 'A 0% first discount can’t show the original price from the amount you save — type the original price instead.';
+    if (c === 'negOrig') return 'The amount saved is less than the amounts off you added. Raise it or change those discounts.';
+    if (c === 'over') return 'The ' + fm(e.v) + ' off is more than the ' + fm(e.left) + ' left after the earlier discounts. Lower it or remove it.';
+    return 'These values don’t fit together.';
+  }
+
+  /* ---------- hint placement: directly under the field (or the rows) it is about ---------- */
+  function setHint(m, at) {
+    var h = $('dcHint'); h.textContent = m || ''; h.style.display = m ? 'block' : 'none';
+    if (m && at) { var el = $(at), f = el.closest('.fld') || el; if (f && f.nextSibling !== h) f.parentNode.insertBefore(h, f.nextSibling); }
+  }
+  function setNote(id, t) { var e = $(id); e.textContent = t || ''; e.style.display = t ? '' : 'none'; }
+
+  /* ---------- typed values: the two most recent valid ones are the pair; the original price stays put ---------- */
+  function rawOf(k) { return $(FM[k].id).value; }
+  function removeTyped(k) { st.typed = st.typed.filter(function (x) { return x[0] !== k; }); }
+  function onEdit(k) {
+    var r = E.parse(rawOf(k), FM[k].kind); st.last = k;
+    if (r.partial) { render(); return; }
+    st.extra = ''; st.coreErr = null;
+    if (r.empty) removeTyped(k);
+    else if (r.err) { removeTyped(k); st.coreErr = { msg: errMsg(LAB[k], FM[k].kind, r.err, rawOf(k), EG[k]), at: FM[k].id }; }
+    else {
+      removeTyped(k); st.typed.push([k, r.v]);
+      if (st.typed.length > 2) {
+        var gi = 0, pin = k !== 'orig' && st.typed.some(function (x) { return x[0] === 'orig'; });
+        if (pin) gi = st.typed[0][0] === 'orig' ? 1 : 0;
+        var gone = st.typed.splice(gi, 1)[0][0];
+        st.extra = pin ? 'The original price stays, so ' + nm(gone) + ' is now worked out.' : 'A third value replaces the oldest, so ' + nm(gone) + ' is now worked out.';
+      }
+    }
+    render();
+  }
+
+  /* ---------- rows: the extra discounts and the offers to compare ---------- */
+  var KINDS_STACK = ['pct', 'amt'], KINDS_OFFER = ['pct', 'amt', 'bxgy', 'n2', 'n3'];
+  function mkRow(box, kinds, onChange, pre) {
+    var n = pre + (st.seq[pre] = (st.seq[pre] || 0) + 1);
+    var def = 'pct', div = document.createElement('div'); div.className = 'dc-row';
+    var opts = kinds.map(function (k) { return '<button type="button" class="csel-opt' + (k === def ? ' on' : '') + '" role="option" data-value="' + k + '">' + KL[k] + '</button>'; }).join('');
+    div.innerHTML = '<div class="csel dc-kind" id="' + n + 'k" data-value="' + def + '" aria-label="Kind of discount"><button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false"><span class="csel-val">' + KL[def] + '</span>' + CHEV + '</button><div class="csel-panel" role="listbox">' + opts + '</div></div>' +
+      '<div class="inp dc-in a"><input id="' + n + 'a" type="text" inputmode="decimal" autocomplete="off" placeholder="' + KPH[def] + '" aria-label="Discount value"></div>' +
+      '<div class="inp dc-in b" style="display:none"><input id="' + n + 'b" type="text" inputmode="decimal" autocomplete="off" placeholder="Get free, e.g. 1" aria-label="Items free"></div>' +
+      '<button class="x" type="button" aria-label="Remove this discount">&#215;</button>';
+    box.appendChild(div);
+    var cs = div.querySelector('.csel'), ia = div.querySelector('.a input'), ib = div.querySelector('.b input');
+    CalcThis.initCsel(cs);
+    cs.addEventListener('change', function () {
+      var k = cs.value || def; ia.placeholder = KPH[k]; div.querySelector('.b').style.display = k === 'bxgy' ? '' : 'none'; div.querySelector('.a').classList.toggle('half', k === 'bxgy'); onChange();
+    });
+    ia.addEventListener('input', onChange); ib.addEventListener('input', onChange);
+    div.querySelector('.x').addEventListener('click', function () { div.parentNode.removeChild(div); onChange(); });
+    return div;
+  }
+  /* read the rows of a box: { list: [{ t, a, b }], bad: { msg, at } | null, count, filled } */
+  function readRows(box, boxId, offers) {
+    var list = [], bad = null, rows = box.querySelectorAll('.dc-row'), filled = 0;
+    [].forEach.call(rows, function (div, i) {
+      var k = div.querySelector('.csel').value || 'pct', ra = div.querySelector('.a input').value, rb = div.querySelector('.b input').value;
+      var label = offers ? 'Offer ' + (i + 1) : ORD[i + 1] + ' discount', pa, pb, ea, eb;
+      if (k === 'bxgy') {
+        pa = E.parse(ra, 'qty'); pb = E.parse(rb, 'qty'); ea = pa.empty || pa.partial; eb = pb.empty || pb.partial;
+        if (ea && eb) return;
+        if (pa.err) { if (!bad) bad = { msg: errMsg(label, 'qty', pa.err, ra, EG.bxgy), at: boxId }; return; }
+        if (pb.err) { if (!bad) bad = { msg: errMsg(label, 'qty', pb.err, rb, EG.free), at: boxId }; return; }
+        if (ea || eb) return;
+        if (pa.v % 1 !== 0 || pb.v % 1 !== 0) { if (!bad) bad = { msg: errMsg(label, 'qty', 'int', ra, EG.bxgy), at: boxId }; return; }
+        list.push({ t: 'bxgy', a: pa.v, b: pb.v }); filled++; return;
+      }
+      pa = E.parse(ra, k === 'amt' ? 'cost' : 'disc');
+      if (pa.empty || pa.partial) return;
+      if (pa.err) { if (!bad) bad = { msg: errMsg(label, 'x', pa.err, ra, k === 'amt' ? EG.amt : EG.pctrow), at: boxId }; return; }
+      list.push({ t: k, a: pa.v }); filled++;
+    });
+    return { list: list, bad: bad, count: rows.length, filled: filled };
+  }
+  function offerLabel(of) {
+    if (of.t === 'pct') return pc(of.a) + '% off';
+    if (of.t === 'amt') return fm(of.a) + ' off';
+    if (of.t === 'bxgy') return 'Buy ' + qn(of.a) + ' get ' + qn(of.b) + ' free';
+    return pc(of.a) + '% off every ' + (of.t === 'n2' ? '2nd' : '3rd') + ' item';
+  }
+
+  /* ---------- the picture: the original price, what you pay and each discount ---------- */
+  function bars(S, rows) {
+    var o = S.o, h = '', k = '', n = S.steps.length, seg = function (cls, w) { return '<i class="dc-seg ' + cls + '" style="flex:' + (w / o * 100).toFixed(3) + ' 1 0;min-width:' + (w / o * 100 < 1.5 ? 6 : 0) + 'px"></i>'; };
+    if (S.f > 0) { h += seg('pay', S.f); k += '<span><i class="dc-ky pay"></i>You pay ' + fp(S.f / o * 100) + '</span>'; }
+    S.steps.forEach(function (s, i) {
+      if (!(s.amt > 0)) return;
+      h += seg('d' + (i % 6), s.amt);
+      k += '<span><i class="dc-ky d' + (i % 6) + '"></i>' + ordFor(i, n) + ' (' + (s.k === 'pct' ? pc(s.v) + '% off' : fm(s.v) + ' off') + ') ' + fp(s.amt / o * 100) + '</span>';
+    });
+    return '<div class="dc-bar" aria-hidden="true">' + h + '</div><div class="bm-key">' + k + '</div>';
+  }
+  function stepTable(S, o2) {
+    var rows = [], add = function (l, a, b, strong) { rows.push('<tr' + (strong ? ' class="dc-strong"' : '') + '><td>' + l + '</td><td>' + a + '</td><td>' + b + '</td></tr>'); };
+    add('Original price', '', fm(S.o));
+    S.steps.forEach(function (s) { add(s.k === 'pct' ? pc(s.v) + '% off' : fm(s.v) + ' off', '−' + fm(s.amt), fm(s.after)); });
+    add('Final price', '', fm(S.f), true);
+    if (o2.tax != null) {
+      if (st.taxMode === 'add') { var ta = S.f * o2.tax / 100; add('Sales tax ' + pc(o2.tax) + '%', '+' + fm(ta), fm(S.f + ta)); add('You pay', '', fm(S.f + ta), true); }
+      else { var ti = S.f - S.f / (1 + o2.tax / 100); add('Tax included (' + pc(o2.tax) + '%)', fm(ti), ''); add('Price before tax', '', fm(S.f - ti), true); }
+    }
+    return '<thead><tr><th></th><th>Amount</th><th>Price</th></tr></thead><tbody>' + rows.join('') + '</tbody>';
+  }
+  function ladder(S, rowsList) {
+    var hasO = S.state === 'ok' && S.o > 0, rows = D.ladder(hasO ? S.o : 0, rowsList), cur = S.state === 'ok' ? S.p : (S.state === 'lone' ? S.p : null);
+    var h = '<thead><tr><th>Percent off</th>' + (hasO ? '<th>Final price</th><th>You save</th>' : '') + '</tr></thead><tbody>';
+    rows.forEach(function (r) {
+      var on = cur != null && Math.abs(cur - r.x) < 1e-9;
+      h += '<tr class="dc-lrow' + (on ? ' on' : '') + '" data-v="' + r.x + '" tabindex="0"><td>' + r.x + '%</td>' + (hasO ? '<td>' + fm(r.f) + '</td><td>' + fm(r.s) + '</td>' : '') + '</tr>';
+    });
+    $('dcLad').innerHTML = h + '</tbody>';
+    $('dcLadNote').textContent = hasO ? 'For your original price of ' + fm(S.o) + (rowsList.length ? ', with your extra discounts after it' : '') + '. Click a row to use that percent off.' : 'Add the original price to see the final price and saving for each row. Click a row to use that percent off.';
+  }
+
+  var PRE = 'Type two of the four boxes above first — then this applies.';
+  function qtyRead() { var raw = $('dcQty').value, r = E.parse(raw, 'qty'); return { raw: raw, r: r }; }
+
+  /* ---------- render ---------- */
+  function render() {
+    var RS = readRows($('dcRows'), 'dcRows', false), rowsList = RS.list.map(function (x) { return { k: x.t, v: x.a }; });
+    var S = D.solve(st.typed, rowsList), vals = {}, calc = {}, rowsMsg = null;
+    if (S.state === 'err' && rowsList.length) { var S2 = D.solve(st.typed, []); if (S2.state !== 'err') { rowsMsg = solveMsg(S.err) + ' The extra discounts are ignored for now.'; S = S2; rowsList = []; } }
+    if (S.state === 'ok') vals = { orig: S.o, pct: S.p, final: S.f, save: S.s };
+    var typedK = st.typed.map(function (x) { return x[0]; });
+    CORE.forEach(function (k) {
+      var inp = $(FM[k].id), isT = typedK.indexOf(k) >= 0;
+      if (!isT) {
+        var hasV = vals[k] !== undefined && vals[k] !== null;
+        if (!(st.last === k)) inp.value = hasV ? ft(vals[k], FM[k].money) : '';
+        calc[k] = hasV && st.last !== k;
+      }
+      var fld = inp.closest('.fld'); fld.classList.toggle('dc-calc', !!calc[k]);
+      var u = fld.querySelector('.unit'); u.innerHTML = (FM[k].money ? sym(st.cur) : '%') + ' · ' + (calc[k] ? '<b>calculated</b>' : FM[k].d);
+    });
+    var from = '';
+    if (S.state === 'ok' || S.state === 'err') from = 'From ' + join(typedK.map(nm)) + '.' + (st.extra ? ' ' + st.extra : '');
+    else if (S.state === 'need') from = 'You typed ' + nm(typedK[0]) + '. Type one more: ' + others(typedK[0]) + '.';
+    else if (S.state === 'lone') from = 'You typed percent off. Type the original price, final price or amount saved to get amounts.' + (st.extra ? ' ' + st.extra : '');
+    setNote('dcFrom', from);
+    /* the extra discounts */
+    setNote('dcRowsNote', RS.filled === 0 ? (RS.count ? 'Type a percent or an amount for each extra discount.' : 'Got a coupon or a second sale? Add it here — it comes off the price after the first discount.') : (rowsMsg ? 'The extra discounts are not applied while they don’t fit.' : S.state === 'ok' || S.state === 'err' ? 'Applied one after another, each on the price left by the one before.' : 'Type two of the four boxes above first — then the extra discounts apply.'));
+    $('dcRowAdd').style.display = RS.count >= 5 ? 'none' : '';
+    /* advanced */
+    var qo = qtyRead(), tx = E.parse($('dcTax').value, 'tax'), o2 = { qty: qo.r.v !== undefined ? qo.r.v : null, tax: tx.v !== undefined ? tx.v : null }, advBad = null;
+    if (qo.r.err) advBad = { msg: errMsg(LAB.qty, 'qty', qo.r.err, qo.raw, EG.qty), at: 'dcQty' };
+    if (tx.err && !advBad) advBad = { msg: errMsg(LAB.tax, 'tax', tx.err, $('dcTax').value, EG.tax), at: 'dcTax' };
+    var ok = S.state === 'ok';
+    setNote('dcQtyNote', o2.qty == null ? 'Buying more than one? Type how many and the totals appear.' : (ok ? 'For ' + qn(o2.qty) + (o2.qty === 1 ? ' item' : ' items') + ': original ' + fm(S.o * o2.qty) + ', you save ' + fm(S.s * o2.qty) + ', you pay ' + fm(S.f * o2.qty) + (o2.tax != null && st.taxMode === 'add' ? ', ' + fm(S.f * (1 + o2.tax / 100) * o2.qty) + ' with tax' : '') + '.' : 'Type two of the four boxes above first — then the totals for ' + qn(o2.qty) + (o2.qty === 1 ? ' item' : ' items') + ' appear.'));
+    if (o2.tax == null) setNote('dcTaxNote', st.taxMode === 'add' ? 'Tax is added on top of the final price. Type the rate to see what you pay.' : 'The price already includes tax. Type the rate to see how much of it is tax.');
+    else if (!ok) setNote('dcTaxNote', PRE);
+    else if (st.taxMode === 'add') setNote('dcTaxNote', 'Sales tax of ' + pc(o2.tax) + '% on the final price is ' + fm(S.f * o2.tax / 100) + ', so you pay ' + fm(S.f * (1 + o2.tax / 100)) + '.');
+    else setNote('dcTaxNote', 'With ' + pc(o2.tax) + '% tax already in the price, your final price holds ' + fm(S.f - S.f / (1 + o2.tax / 100)) + ' of tax (price before tax ' + fm(S.f / (1 + o2.tax / 100)) + ').');
+    /* compare deals */
+    var OS = readRows($('dcOffers'), 'dcOffers', true), it = E.parse($('dcItems').value, 'qty'), itBad = null, items = null;
+    if (it.err) itBad = { msg: errMsg(LAB.items, 'qty', it.err, $('dcItems').value, EG.items), at: 'dcItems' };
+    else if (it.v !== undefined) { if (it.v % 1 !== 0) itBad = { msg: errMsg(LAB.items, 'qty', 'int', $('dcItems').value, EG.items), at: 'dcItems' }; else items = it.v; }
+    $('dcOffAdd').style.display = OS.count >= 3 ? 'none' : '';
+    var P0 = E.parse($('dcOrig').value, 'price'), cmpRows = '', cmpNote = '', Pu = P0.v !== undefined ? P0.v : null;
+    $('dcCmpWrap').style.display = 'none';
+    if (OS.filled === 0 && items != null) setNote('dcOffNote', 'The offers will be compared on ' + qn(items) + (items === 1 ? ' item' : ' items') + '. ' + (OS.count ? 'Type a value for each offer.' : 'Add an offer above to compare them.'));
+    else if (OS.filled === 0) setNote('dcOffNote', OS.count ? 'Type a value for each offer.' : 'Not sure which deal is best? Add up to three offers — 30% off, $25 off, buy 2 get 1 free — and see which costs least.');
+    else if (Pu == null) setNote('dcOffNote', 'Type the original price above first — then the offers are compared.');
+    else {
+      var Q = items != null ? items : D.autoQty(OS.list), res = OS.list.map(function (of) { var pay = D.offerPay(Pu, Q, of); return { of: of, pay: pay }; }), best = null;
+      res.forEach(function (x) { if (x.pay != null && (best === null || x.pay < best - 1e-9)) best = x.pay; });
+      var tot = Pu * Q;
+      cmpRows = res.map(function (x) {
+        if (x.pay == null) return '<tr><td>' + offerLabel(x.of) + '</td><td>—</td><td>—</td><td>—</td></tr>';
+        var isB = Math.abs(x.pay - best) < 1e-9 * Math.max(1, tot);
+        return '<tr' + (isB ? ' class="dc-strong"' : '') + '><td>' + offerLabel(x.of) + (isB && res.length > 1 ? ' <span class="dc-best">Best deal</span>' : '') + '</td><td>' + fm(x.pay) + '</td><td>' + fm(tot - x.pay) + '</td><td>' + (tot > 0 ? fp((tot - x.pay) / tot * 100) : '—') + '</td></tr>';
+      }).join('');
+      $('dcCmp').innerHTML = '<thead><tr><th>Offer</th><th>You pay</th><th>You save</th><th>Total off</th></tr></thead><tbody>' + cmpRows + '</tbody>';
+      cmpNote = 'Compared on ' + qn(Q) + (Q === 1 ? ' item' : ' items') + (items != null ? '' : (Q > 1 ? ' — the largest bundle among your offers —' : '')) + ' at ' + fm(Pu) + ' each.';
+      setNote('dcOffNote', cmpNote);
+      $('dcCmpWrap').style.display = '';
+    }
+    /* the hint: a typed-field problem first, then a pair that does not fit, then the extras */
+    var hm = null, hat = null;
+    if (st.coreErr) { hm = st.coreErr.msg; hat = st.coreErr.at; }
+    else if (S.state === 'err') { hm = solveMsg(S.err); hat = S.err.at === 'rows' ? 'dcRows' : FM[S.err.at].id; }
+    else if (rowsMsg) { hm = rowsMsg; hat = 'dcRows'; }
+    else if (RS.bad) { hm = RS.bad.msg; hat = RS.bad.at; }
+    else if (advBad) { hm = advBad.msg; hat = advBad.at; }
+    else if (itBad) { hm = itBad.msg; hat = itBad.at; }
+    else if (OS.bad) { hm = OS.bad.msg; hat = OS.bad.at; }
+    setHint(hm, hat);
+    /* result */
+    var big = '—', sub = $('dcSub').getAttribute('data-empty'), lab = 'Answer', tip = '', showBody = false;
+    $('dcBars').innerHTML = ''; $('dcBarsWrap').style.display = 'none'; $('dcStepWrap').style.display = 'none';
+    if (S.state === 'ok') {
+      showBody = true; big = fm(S.f); lab = 'Final price';
+      sub = 'Original price ' + fm(S.o) + ' · Percent off ' + fp(S.p) + ' · You save ' + fm(S.s) + (rowsList.length ? ' · Total discount ' + fp(S.eff) : '') + (o2.tax != null ? (st.taxMode === 'add' ? ' · With tax ' + fm(S.f * (1 + o2.tax / 100)) : ' · Includes tax ' + fm(S.f - S.f / (1 + o2.tax / 100))) : '');
+      var allPct = rowsList.every(function (r) { return r.k === 'pct'; }), sum = S.p + rowsList.reduce(function (a, r) { return a + (r.k === 'pct' ? r.v : 0); }, 0);
+      if (S.o === 0) tip = 'An original price of ' + fm(0) + ' leaves nothing to discount.';
+      else if (S.f === 0) tip = 'The discounts take the whole price off ' + fm(S.o) + ': you pay nothing.';
+      else if (!rowsList.length) tip = 'A ' + pc(S.p) + '% discount on ' + fm(S.o) + ' saves ' + fm(S.s) + ': you pay ' + fm(S.f) + '.';
+      else tip = 'Your discounts together take ' + fm(S.s) + ' off ' + fm(S.o) + ': a total discount of ' + fp(S.eff) + (allPct && sum - S.eff > 1e-9 ? ', not the ' + fp(sum) + ' you get by adding the percents' : '') + '. You pay ' + fm(S.f) + '.';
+      if (S.o > 0) {
+        $('dcBars').innerHTML = bars(S, rowsList); $('dcBarsWrap').style.display = '';
+        $('dcStep').innerHTML = stepTable(S, o2); $('dcStepWrap').style.display = '';
+      }
+    } else if (S.state === 'lone') {
+      showBody = true; big = fp(S.eff); lab = 'Total discount';
+      sub = 'You pay ' + fp(S.pay) + ' of the price. Type the original price to get amounts.';
+      tip = rowsList.length ? 'Your discounts together take ' + fp(S.eff) + ' off the price: you pay ' + fp(S.pay) + ' of it.' : 'A ' + pc(S.p) + '% discount takes ' + fp(S.p) + ' off the price: you pay ' + fp(S.pay) + ' of it.';
+    } else if (S.state === 'need') {
+      sub = 'Type one more value: ' + others(typedK[0]) + '.';
+    }
+    $('dcBig').textContent = big; $('dcBig').parentNode.classList.toggle('dc-long', big.length > 11); $('dcLab').textContent = lab; $('dcSub').textContent = sub; $('dcBody').style.display = (showBody || $('dcCmpWrap').style.display === '') ? '' : 'none'; $('dcLadWrap').style.display = showBody ? '' : 'none';
+    $('dcMLab').textContent = showBody ? lab : 'Answer'; $('dcMVal').textContent = big;
+    $('dcTip').textContent = tip;
+    if (showBody) ladder(S, rowsList);
+  }
+
+  /* ---------- controls ---------- */
+  CORE.forEach(function (k) {
+    var inp = $(FM[k].id);
+    inp.addEventListener('input', function () { onEdit(k); });
+    inp.addEventListener('focus', function () { if (inp.closest('.fld').classList.contains('dc-calc')) setTimeout(function () { try { inp.select(); } catch (e) { /* not selectable */ } }, 0); });
+  });
+  ['dcQty', 'dcTax', 'dcItems'].forEach(function (id) { $(id).addEventListener('input', render); });
+  $('dcRowAdd').addEventListener('click', function () { if ($('dcRows').children.length < 5) mkRow($('dcRows'), KINDS_STACK, render, 'dcRs'); render(); var l = $('dcRows').lastChild; if (l) l.querySelector('.a input').focus(); });
+  $('dcOffAdd').addEventListener('click', function () { if ($('dcOffers').children.length < 3) mkRow($('dcOffers'), KINDS_OFFER, render, 'dcOf'); render(); var l = $('dcOffers').lastChild; if (l) l.querySelector('.a input').focus(); });
+  function pickRow(e) {
+    var r = e.target.closest('.dc-lrow'); if (!r) return;
+    $(FM.pct.id).value = r.getAttribute('data-v'); onEdit('pct');
+  }
+  $('dcLad').addEventListener('click', pickRow);
+  $('dcLad').addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pickRow(e); } });
+  [].forEach.call($('dcTaxMode').children, function (b) { b.addEventListener('click', function () { st.taxMode = b.getAttribute('data-v'); [].forEach.call($('dcTaxMode').children, function (x) { x.classList.toggle('on', x === b); }); render(); }); });
+  function wipeRows(box) { while (box.firstChild) box.removeChild(box.firstChild); st.seq[box.id === 'dcRows' ? 'dcRs' : 'dcOf'] = 0; }
+  $('dcClear').addEventListener('click', function () {
+    CORE.forEach(function (k) { $(FM[k].id).value = ''; });
+    ['dcQty', 'dcTax', 'dcItems'].forEach(function (id) { $(id).value = ''; });
+    wipeRows($('dcRows')); wipeRows($('dcOffers'));
+    st.typed = []; st.last = null; st.extra = ''; st.coreErr = null; render(); $(FM.orig.id).focus();
+  });
+  $('dcAdvBtn').addEventListener('click', function () {
+    st.adv = !st.adv; $('dcAdvBtn').classList.toggle('open', st.adv); $('dcAdvBtnLab').textContent = st.adv ? 'Go simple' : 'Go advanced'; $('dcAdvIn').style.display = st.adv ? '' : 'none';
+    if (!st.adv) { ['dcQty', 'dcTax', 'dcItems'].forEach(function (id) { $(id).value = ''; }); wipeRows($('dcOffers')); }
+    render();
+  });
+  /* the currency picker: the salary page's searchable list, display only */
+  (function () {
+    var opt = function (c, pop) { var n = curName(c); return '<button type="button" class="csel-opt' + (pop ? ' csel-pop' : '') + (c === 'USD' ? ' on' : '') + '" role="option" aria-selected="' + (c === 'USD') + '" data-value="' + c + '" data-p="' + (SE.RANK.indexOf(c) + 1) + '" data-s="' + (c + ' ' + n + ' ' + sym(c)).toLowerCase() + '"><span class="n">' + n + '</span><span class="c">' + c + '</span></button>'; };
+    var all = SE.CURRENCIES.slice().sort(function (a, b) { return curName(a) < curName(b) ? -1 : 1; });
+    $('dcCur').querySelector('.csel-panel').innerHTML = '<div class="csel-sbox"><input class="csel-search" type="text" placeholder="Search currency" aria-label="Search currency" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="go"></div><div class="csel-group">Popular</div>' +
+      SE.POPULAR.map(function (c) { return opt(c, true); }).join('') + '<div class="csel-group">All currencies</div>' + all.map(function (c) { return opt(c, false); }).join('') + '<div class="csel-none" style="display:none">No currency found</div>';
+    CalcThis.initCsel($('dcCur'));
+    $('dcCur').querySelector('.csel-val').textContent = 'USD';
+  })();
+  $('dcCur').addEventListener('change', function () { st.cur = $('dcCur').value || 'USD'; st.dec = decOf(st.cur); $('dcCur').querySelector('.csel-val').textContent = st.cur; render(); });
+  render();
+};
+/* DISCOUNT:END */

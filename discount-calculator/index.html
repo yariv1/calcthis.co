@@ -1,0 +1,806 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Discount Calculator — Percent Off, Sale Price &amp; Savings</title>
+<meta name="description" content="Discount calculator: type any two of price, percent off, final price or saving, stack coupons, add tax and compare deals. Percent off made easy. Any currency.">
+<link rel="canonical" href="https://calcthis.co/discount-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Discount Calculator — Percent Off, Sale Price &amp; Savings">
+<meta property="og:description" content="Discount calculator: type any two of price, percent off, final price or saving, stack coupons, add tax and compare deals. Percent off made easy. Any currency.">
+<meta property="og:url" content="https://calcthis.co/discount-calculator/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/datepicker.min.css">
+<link rel="stylesheet" href="/assets/style.css?v=332">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Discount Calculator",
+  "url": "https://calcthis.co/discount-calculator/",
+  "applicationCategory": "FinanceApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "Free discount and percent off calculator: type any two of original price, percent off, final price and amount saved and get the rest, stack coupons and second sales with the true total discount, add sales tax or VAT, and compare deals such as 30% off, an amount off and buy 2 get 1 free to see which costs least. Works in any currency."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I calculate percent off?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Multiply the price by the percent off and divide by 100 to get the saving, then subtract it. 20% off $120.00 saves $24.00, so you pay $96.00. In the calculator, type the original price and the percent off and the rest fills in."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I find the discount percentage from the original and sale price?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Percent off = (original price − final price) ÷ original price × 100. A price that falls from $120.00 to $84.00 is 30% off. In the calculator, type the original price and the final price and the percent off appears."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I find the original price from the sale price and the percent off?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Divide the final price by (1 − percent off ÷ 100). A final price of $84.00 at 30% off means an original price of $120.00. In the calculator, type the percent off and the final price."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do two discounts stack?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Each discount comes off the price left by the one before, so the percents do not simply add. 20% off $279.00 leaves $223.20, and a further 15% off that leaves $189.72: a total discount of 32%, not 35%. Use “Add a discount” under the boxes for any number of coupons or sales."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is 20% off and then 10% off the same as 30% off?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. 20% off then 10% off $100.00 leaves $72.00, a total discount of 28%. The order of two percent discounts does not change the result, but an amount off in between does."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How is sales tax added to a discounted price?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The discount comes first and the tax is charged on the lower price. $96.00 after a discount plus 8.5% tax is $8.16 of tax and $104.16 to pay. If the shelf price already includes tax, choose “Included” and the calculator shows how much of the final price is tax."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which is better: 30% off, $25.00 off or buy 2 get 1 free?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It depends on the price and how many items you buy, so the calculator compares them. On 3 items at $100.00 each: 30% off costs $210.00, $25.00 off costs $275.00 and buy 2 get 1 free costs $200.00, so the free item wins here. Open Go advanced, add the offers under “Compare deals” and the best one is marked."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What does 50% off every 2nd item mean?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The 2nd, 4th, 6th … item is half price and the others are full price. For 2 items at $100.00 you pay $150.00, a saving of 25% overall. “Every 3rd item” works the same way with items 3, 6, 9 …."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can a discount be more than 100%?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. 100% off is free, so the calculator accepts percents from 0 to 100, and an amount off can never be more than the price left."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does the currency selector convert my numbers?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. It only changes the symbol and the decimals shown. Type your numbers in the currency you use."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "CalcThis",
+      "item": "https://calcthis.co/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Discount Calculator",
+      "item": "https://calcthis.co/discount-calculator/"
+    }
+  ]
+}
+</script>
+<meta property="og:site_name" content="CalcThis">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://calcthis.co/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="CalcThis — free, purpose-built calculators">
+<meta name="twitter:title" content="Discount Calculator — Percent Off, Sale Price &amp; Savings">
+<meta name="twitter:description" content="Discount calculator: type any two of price, percent off, final price or saving, stack coupons, add tax and compare deals. Percent off made easy. Any currency.">
+<meta name="twitter:image" content="https://calcthis.co/assets/og-default.png">
+</head>
+<body class="p-bmr p-dc">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <a class="hdr-back" href="/blog/" aria-label="Back to blog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-search"><div class="menu-sx"><input id="menuSearch" type="search" placeholder="Search calculators or states…" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Search calculators" enterkeyhint="search"></div><div class="menu-results" id="menuResults" hidden></div></div>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <span class="menu-col-head">Construction &amp; Gardening</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+          <a href="/paint-calculator/">Paint</a>
+          <a href="/wallpaper-calculator/">Wallpaper</a>
+          <a href="/square-footage-calculator/">Square Footage</a>
+          <a href="/tape-measure-fraction-calculator/">Tape Measure Fraction</a>
+          <a href="/stair-calculator/">Stair</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/vo2-max-calculator/">VO2 Max</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
+          <a href="/bmi-calculator/">BMI</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/ideal-weight-calculator/">Ideal Weight</a>
+          <a href="/lean-body-mass-calculator/">Lean Body Mass</a>
+          <a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio</a>
+          <a href="/gmi-calculator/">GMI</a>
+          <a href="/a1c-calculator/">A1C</a>
+          <a href="/calorie-calculator/">Calorie</a>
+          <a href="/calorie-deficit-calculator/">Calorie Deficit</a>
+          <a href="/bmr-calculator/">BMR</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/water-intake-calculator/">Water Intake</a>
+          <a href="/macro-calculator/">Macro</a>
+          <a href="/protein-intake-calculator/">Protein Intake</a>
+          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
+          <a href="/steps-to-miles-calculator/">Steps to Miles</a>
+          <a href="/dog-age-calculator/">Dog Age</a>
+          <a href="/cat-age-calculator/">Cat Age</a>
+          <a href="/calories-burned-calculator/">Calories Burned</a>
+          <a href="/calories-burned-walking-calculator/">Calories Burned Walking</a>
+          <a href="/calories-burned-running-calculator/">Calories Burned Running</a>
+          <a href="/keto-calculator/">Keto</a>
+          <a href="/net-carb-calculator/">Net Carb</a>
+          <a href="/intermittent-fasting-calculator/">Intermittent Fasting</a>
+          <a href="/bsa-calculator/">BSA</a>
+          <a href="/dog-food-calculator/">Dog Food</a>
+          <a href="/ffmi-calculator/">FFMI</a>
+          <a href="/bulking-calculator/">Bulking</a>
+          <a href="/weight-loss-calculator/">Weight Loss</a>
+          <a href="/weight-loss-percentage-calculator/">Weight Loss %</a>
+          <a href="/max-heart-rate-calculator/">Max Heart Rate</a>
+          <a href="/caffeine-calculator/">Caffeine</a>
+          <a href="/caffeine-half-life-calculator/">Caffeine Half Life</a>
+          <a href="/fiber-calculator/">Fiber</a>
+          <a href="/creatine-calculator/">Creatine</a>
+          <a href="/vitamin-d-calculator/">Vitamin D</a>
+          <a href="/body-recomposition-calculator/">Body Recomposition</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/semester-grade-calculator/">Semester Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+          <a href="/grade-curve-calculator/">Grade Curve</a>
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/fraction-calculator/">Fraction</a>
+          <a href="/standard-deviation-calculator/">Standard Deviation</a>
+          <a href="/scientific-notation-calculator/">Scientific Notation</a>
+          <a href="/average-calculator/">Average</a>
+          <a href="/batting-average-calculator/">Batting Average</a>
+          <a href="/stock-average-calculator/">Stock Average</a>
+          <a href="/dice-average-calculator/">Dice Average</a>
+          <a href="/time-average-calculator/">Time Average</a>
+          <a href="/weighted-average-calculator/">Weighted Average</a>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+          <a href="/percentage-change-calculator/">Percentage Change</a>
+          <a href="/age-calculator/">Age</a>
+          <a href="/date-calculator/">Date</a>
+          <a href="/time-calculator/">Time</a>
+          <a href="/hours-calculator/">Hours</a>
+          <a href="/triangle-calculator/">Triangle</a>
+          <a href="/random-number-generator/">Random Number</a>
+          <span class="menu-col-head">Cooking &amp; Kitchen</span>
+          <a href="/recipe-converter/">Recipe Converter</a>
+          <a href="/turkey-cooking-time-calculator/">Turkey Cooking Time</a>
+          <a href="/turkey-thawing-time-calculator/">Turkey Thawing Time</a>
+          <a href="/turkey-size-calculator/">Turkey Size</a>
+          <!--UNITNAV:START-->
+          <span class="menu-col-head">Unit Converters</span>
+          <a href="/unit-converter/">Unit Converter</a>
+          <a href="/length-converter/">Length Converter</a>
+          <a href="/weight-converter/">Weight Converter</a>
+          <a href="/volume-converter/">Volume Converter</a>
+          <a href="/temperature-converter/">Temperature Converter</a>
+          <a href="/area-converter/">Area Converter</a>
+          <a href="/speed-converter/">Speed Converter</a>
+          <a href="/data-storage-converter/">Data Storage Converter</a>
+          <a href="/cooking-converter/">Cooking Converter</a>
+          <a href="/px-to-rem-converter/">PX to REM Converter</a>
+          <!--UNITNAV:END-->
+          <span class="menu-col-head">Money &amp; Finance</span>
+          <a href="/mortgage-calculator/">Mortgage</a>
+          <a href="/loan-calculator/">Loan</a>
+          <a href="/auto-loan-calculator/">Auto Loan</a>
+          <a href="/car-sales-tax-calculator/">Car Sales Tax</a>
+          <a href="/overtime-calculator/">Overtime</a>
+          <a href="/salary-calculator/">Salary</a>
+          <a href="/markup-calculator/">Markup</a>
+          <a href="/profit-margin-calculator/">Profit Margin</a>
+          <a href="/discount-calculator/" class="current">Discount</a>
+          <!--STAXNAV:START-->
+          <a href="/sales-tax-calculator/">Sales Tax</a>
+          <a href="/sales-tax-calculator/california/">California Sales Tax</a>
+          <a href="/sales-tax-calculator/chicago/">Chicago Sales Tax</a>
+          <a href="/sales-tax-calculator/florida/">Florida Sales Tax</a>
+          <a href="/sales-tax-calculator/las-vegas/">Las Vegas Sales Tax</a>
+          <a href="/sales-tax-calculator/los-angeles/">Los Angeles Sales Tax</a>
+          <a href="/sales-tax-calculator/michigan/">Michigan Sales Tax</a>
+          <a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax</a>
+          <a href="/sales-tax-calculator/missouri/">Missouri Sales Tax</a>
+          <a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax</a>
+          <a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax</a>
+          <a href="/sales-tax-calculator/north-carolina/">North Carolina Sales Tax</a>
+          <a href="/sales-tax-calculator/ohio/">Ohio Sales Tax</a>
+          <a href="/sales-tax-calculator/texas/">Texas Sales Tax</a>
+          <a href="/sales-tax-calculator/virginia/">Virginia Sales Tax</a>
+          <!--STAXNAV:END-->
+          <a href="/tip-calculator/">Tip</a>
+          <a href="/how-much-to-tip/">How Much to Tip</a>
+        </div>
+        <!--PAYNAV:START-->
+        <div class="menu-col">
+          <span class="menu-col-head">Paycheck Calculators</span>
+          <a href="/paycheck-calculator/">Paycheck Calculator (all states)</a>
+          <a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a>
+          <a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arkansas/">Arkansas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/california/">California Paycheck Calculator</a>
+          <a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a>
+          <a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a>
+          <a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/hawaii/">Hawaii Paycheck Calculator</a>
+          <a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a>
+          <a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a>
+          <a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a>
+          <a href="/paycheck-calculator/louisiana/">Louisiana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a>
+          <a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a>
+          <a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a>
+          <a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a>
+          <a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nebraska/">Nebraska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a>
+          <a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a>
+          <a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a>
+          <a href="/paycheck-calculator/oklahoma/">Oklahoma Paycheck Calculator</a>
+          <a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a>
+          <a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a>
+          <a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a>
+          <a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/utah/">Utah Paycheck Calculator</a>
+          <a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wisconsin/">Wisconsin Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a>
+        </div>
+        <!--PAYNAV:END-->
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">Percent off, sale price and savings · stack coupons · compare deals · any currency</div>
+    <h1>Discount Calculator</h1>
+    <p>Type any <strong>two</strong> of the <strong>original price</strong>, <strong>percent off</strong>, <strong>final price</strong> or what you <strong>save</strong> — the other two fill in. <strong>20% off $120.00</strong> is <strong>$96.00</strong>, a saving of $24.00. Add a coupon on top and see the real total: <strong>20% then 15% off is 32%, not 35%</strong>.</p>
+  </section>
+
+  <div class="grid">
+
+    <!-- INPUT -->
+    <div class="card">
+      <div class="card-pad">
+        <div class="sl-head"><h2 class="card-h2">Your price</h2><div class="csel sl-cur" id="dcCur" data-value="USD" data-search="1" aria-label="Currency"><button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false"><span class="csel-val">USD</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="csel-panel" role="listbox"></div></div></div>
+        <p class="dc-intro">Type any two of these four — the other two fill in. The original price stays put; any other third value replaces the one before it.</p>
+        <div id="dcFields">
+          <label class="fld" for="dcOrig"><span class="lab">Original price <span class="unit">$ · before any discount</span></span><div class="inp"><input id="dcOrig" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 120"></div></label>
+          <label class="fld" for="dcPct"><span class="lab">Percent off <span class="unit">% · first discount</span></span><div class="inp"><input id="dcPct" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 20"></div></label>
+          <label class="fld" for="dcFinal"><span class="lab">Final price <span class="unit">$ · after all discounts</span></span><div class="inp"><input id="dcFinal" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 96"></div></label>
+          <label class="fld" for="dcSave"><span class="lab">You save <span class="unit">$ · in total</span></span><div class="inp"><input id="dcSave" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 24"></div></label>
+          <div class="res-hint" id="dcHint" style="display:none;text-align:left;margin:4px 0 8px"></div>
+        </div>
+        <p class="av-note" id="dcFrom" style="display:none"></p>
+        <p class="dc-sech">Another discount after it <span>· optional</span></p>
+        <div id="dcRows" class="dc-rows"></div>
+        <p class="av-note" id="dcRowsNote"></p>
+        <div class="add-row"><button class="btn" id="dcRowAdd" type="button"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg> Add a discount</button></div>
+        <div id="dcAdvIn" style="display:none">
+          <div class="proj-sep"></div>
+          <label class="fld" for="dcQty"><span class="lab">Quantity <span class="unit">how many you buy · optional</span></span><div class="inp"><input id="dcQty" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 12"></div></label>
+          <p class="av-note" id="dcQtyNote"></p>
+          <div class="fld"><span class="lab">Tax is</span><div class="seg" id="dcTaxMode" role="group" aria-label="Tax is"><button class="on" type="button" data-v="add">On top</button><button type="button" data-v="incl">Included</button></div></div>
+          <label class="fld" for="dcTax"><span class="lab">Sales tax / VAT <span class="unit">% · optional</span></span><div class="inp"><input id="dcTax" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 8.5"></div></label>
+          <p class="av-note" id="dcTaxNote"></p>
+          <div class="proj-sep"></div>
+          <p class="dc-sech">Compare deals <span>· optional</span></p>
+          <div id="dcOffers" class="dc-rows"></div>
+          <div class="add-row"><button class="btn" id="dcOffAdd" type="button"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg> Add an offer</button></div>
+          <div style="height:15px"></div>
+          <label class="fld" for="dcItems"><span class="lab">Items you buy <span class="unit">for the comparison · optional</span></span><div class="inp"><input id="dcItems" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 3"></div></label>
+          <p class="av-note" id="dcOffNote"></p>
+        </div>
+        <div class="add-row split" style="margin-top:16px">
+          <button class="linkbtn" id="dcClear" type="button">Clear fields</button>
+          <button class="advbtn" id="dcAdvBtn" type="button">
+            <span id="dcAdvBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div class="card">
+      <div class="card-pad">
+        <div class="bf-res">
+          <div class="res-lab" id="dcLab">Answer</div>
+          <div class="res-big"><span id="dcBig">—</span></div>
+          <div class="res-sub" id="dcSub" data-empty="Type any two of original price, percent off, final price or amount saved.">Type any two of original price, percent off, final price or amount saved.</div>
+        </div>
+        <div id="dcBody" style="display:none">
+          <p class="res-tip adv-tip" id="dcTip"></p>
+          <div id="dcBarsWrap" style="display:none">
+            <p class="bm-h">Where the price goes</p>
+            <div id="dcBars"></div>
+          </div>
+          <div id="dcStepWrap" style="display:none">
+            <p class="bm-h">Step by step</p>
+            <table class="dtable" id="dcStep"></table>
+          </div>
+          <div id="dcCmpWrap" style="display:none">
+            <p class="bm-h">Which deal is best?</p>
+            <table class="dtable" id="dcCmp"></table>
+            <p class="cb-note">An amount off counts as one coupon for the whole purchase. “Every 2nd item” discounts items 2, 4, 6 …; in every group of X + Y items, the first X are paid and the other Y are free.</p>
+          </div>
+          <div id="dcLadWrap">
+            <p class="bm-h">Percent off ladder</p>
+            <table class="dtable" id="dcLad"></table>
+            <p class="cb-note" id="dcLadNote"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- mobile sticky bar -->
+  <div class="mbar" id="mbar">
+    <span class="mbar-lab" id="dcMLab">Answer</span>
+    <div class="mbar-vals"><b id="dcMVal">—</b></div>
+  </div>
+
+  <div class="related-calcs">
+    <p class="related-calcs-h">More calculators that may interest you</p>
+    <div class="pills">
+      <a class="pill" href="/markup-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17l6-6 4 4 6-8"/><path d="M15 7h5v5"/></svg>
+        Markup Calculator
+      </a>
+      <a class="pill" href="/percentage-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 5L5 19"/><circle cx="7" cy="7" r="2.5"/><circle cx="17" cy="17" r="2.5"/></svg>
+        Percentage Calculator
+      </a>
+      <a class="pill" href="/percentage-change-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17l6-6 4 4 6-8"/></svg>
+        Percentage Change Calculator
+      </a>
+      <a class="pill" href="/sales-tax-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+        Sales Tax Calculator
+      </a>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use the discount calculator</h2>
+        <p>Type any <strong>two</strong> of the four boxes — <strong>original price</strong>, <strong>percent off</strong>, <strong>final price</strong> or <strong>you save</strong> — and the other two fill in. The line under the boxes says which two were used. Type a third value and it replaces the other one you typed, never the original price.</p>
+        <p>Got a coupon on top of a sale? Press <strong>Add a discount</strong>: each extra discount (a percent or an amount) comes off the price left by the one before, and the page shows the true total discount. Open <strong>Go advanced</strong> for a quantity, sales tax or VAT (on top of the price or included in it) and <strong>Compare deals</strong>: add up to three offers — a percent off, an amount off, buy X get Y free or a percent off every 2nd or 3rd item — and the cheapest is marked.</p>
+
+        <h2>The formulas</h2>
+        <div class="formula">
+          final price = price × (1 − percent off ÷ 100)
+          <small>PERCENT OFF = (PRICE − FINAL PRICE) ÷ PRICE × 100</small>
+        </div>
+        <p>For two discounts: final price = price × (1 − first ÷ 100) × (1 − second ÷ 100). Examples, all worked out by this calculator:</p>
+        <table class="dtable"><thead><tr><th>Example</th><th>Final price</th><th>You save</th></tr></thead><tbody><tr><td>20% off $120.00</td><td>$96.00</td><td>$24.00 (20%)</td></tr><tr><td>20% off then 15% off $279.00</td><td>$189.72</td><td>$89.28 (32%)</td></tr><tr><td>20% off then 10% off $100.00</td><td>$72.00</td><td>$28.00 (28%)</td></tr></tbody></table>
+      </div>
+
+      <div>
+        <h2>Why 20% off then 15% off is not 35% off</h2>
+        <p>The second discount is taken from the price that is already reduced, so it is worth less than the first. 20% off $279.00 leaves $223.20; 15% off that leaves $189.72, a total discount of 32%. The bar and the table in the calculator show every step.</p>
+        <h2>Which deal is best?</h2>
+        <p>Percent off, an amount off and “buy 2 get 1 free” are hard to compare in your head. On 3 items at $100.00 each the calculator gives:</p>
+        <table class="dtable"><thead><tr><th>Offer on 3 items at $100.00</th><th>You pay</th><th>You save</th></tr></thead><tbody><tr><td>30% off</td><td>$210.00</td><td>$90.00</td></tr><tr><td>$25.00 off</td><td>$275.00</td><td>$25.00</td></tr><tr><td>Buy 2 get 1 free</td><td>$200.00</td><td>$100.00</td></tr></tbody></table>
+        <h2>Common percents on $120.00</h2>
+        <table class="dtable"><thead><tr><th>Percent off</th><th>Final price</th><th>You save</th></tr></thead><tbody><tr><td>5%</td><td>$114.00</td><td>$6.00</td></tr><tr><td>10%</td><td>$108.00</td><td>$12.00</td></tr><tr><td>15%</td><td>$102.00</td><td>$18.00</td></tr><tr><td>20%</td><td>$96.00</td><td>$24.00</td></tr><tr><td>25%</td><td>$90.00</td><td>$30.00</td></tr><tr><td>30%</td><td>$84.00</td><td>$36.00</td></tr><tr><td>40%</td><td>$72.00</td><td>$48.00</td></tr><tr><td>50%</td><td>$60.00</td><td>$60.00</td></tr><tr><td>60%</td><td>$48.00</td><td>$72.00</td></tr><tr><td>70%</td><td>$36.00</td><td>$84.00</td></tr></tbody></table>
+
+        <h2>Related tools</h2>
+        <p>To work out a percentage of a number use the <a href="/percentage-calculator/">percentage calculator</a>, to see how much a price rose or fell the <a href="/percentage-change-calculator/">percentage change calculator</a>, to add tax to a price the <a href="/sales-tax-calculator/">sales tax calculator</a>, and to set a selling price from a cost the <a href="/markup-calculator/">markup calculator</a>.</p>
+        <h2>Sources</h2>
+        <ul>
+          <li>The formulas — savings = price × percent ÷ 100, final price = price × (1 − percent ÷ 100), stacked discounts applied one after another, buy X get Y free and a percent off every 2nd or 3rd item — are the ones stated on the pages of calculator.net’s percent off calculator, Omnicalculator’s discount and percent off calculators, GigaCalculator’s discount calculator and miniwebtool’s discount calculator, all opened 2026-11-08. Everything else on this page is arithmetic done by the calculator itself, which you can check with the examples.</li>
+          <li>Order used here: the first discount comes off the original price, each extra discount comes off the price left by the one before, and an amount off counts as it is typed. Sales tax is charged on the final price, or taken out of it when you choose “Included”. This is this page’s convention, not a tax rule; type the rate that applies to you.</li>
+          <li>Compare deals treats an amount off as one coupon for the whole purchase, a percent off every 2nd or 3rd item as applying to items 2, 4, 6 … (or 3, 6, 9 …), and buy X get Y free as the first X items of every group of X + Y paid and the other Y free.</li>
+          <li>The currency selector only changes the symbol and the number of decimals; nothing is converted.</li>
+        </ul>
+        <p><small>For information only. Check the shop’s own terms: some sales exclude items or cap the discount.</small></p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>How do I calculate percent off?</summary><p>Multiply the price by the percent off and divide by 100 to get the saving, then subtract it. 20% off $120.00 saves $24.00, so you pay $96.00. In the calculator, type the original price and the percent off and the rest fills in.</p></details>
+    <details class="faq"><summary>How do I find the discount percentage from the original and sale price?</summary><p>Percent off = (original price − final price) ÷ original price × 100. A price that falls from $120.00 to $84.00 is 30% off. In the calculator, type the original price and the final price and the percent off appears.</p></details>
+    <details class="faq"><summary>How do I find the original price from the sale price and the percent off?</summary><p>Divide the final price by (1 − percent off ÷ 100). A final price of $84.00 at 30% off means an original price of $120.00. In the calculator, type the percent off and the final price.</p></details>
+    <details class="faq"><summary>How do two discounts stack?</summary><p>Each discount comes off the price left by the one before, so the percents do not simply add. 20% off $279.00 leaves $223.20, and a further 15% off that leaves $189.72: a total discount of 32%, not 35%. Use “Add a discount” under the boxes for any number of coupons or sales.</p></details>
+    <details class="faq"><summary>Is 20% off and then 10% off the same as 30% off?</summary><p>No. 20% off then 10% off $100.00 leaves $72.00, a total discount of 28%. The order of two percent discounts does not change the result, but an amount off in between does.</p></details>
+    <details class="faq"><summary>How is sales tax added to a discounted price?</summary><p>The discount comes first and the tax is charged on the lower price. $96.00 after a discount plus 8.5% tax is $8.16 of tax and $104.16 to pay. If the shelf price already includes tax, choose “Included” and the calculator shows how much of the final price is tax.</p></details>
+    <details class="faq"><summary>Which is better: 30% off, $25.00 off or buy 2 get 1 free?</summary><p>It depends on the price and how many items you buy, so the calculator compares them. On 3 items at $100.00 each: 30% off costs $210.00, $25.00 off costs $275.00 and buy 2 get 1 free costs $200.00, so the free item wins here. Open Go advanced, add the offers under “Compare deals” and the best one is marked.</p></details>
+    <details class="faq"><summary>What does 50% off every 2nd item mean?</summary><p>The 2nd, 4th, 6th … item is half price and the others are full price. For 2 items at $100.00 you pay $150.00, a saving of 25% overall. “Every 3rd item” works the same way with items 3, 6, 9 ….</p></details>
+    <details class="faq"><summary>Can a discount be more than 100%?</summary><p>No. 100% off is free, so the calculator accepts percents from 0 to 100, and an amount off can never be more than the price left.</p></details>
+    <details class="faq"><summary>Does the currency selector convert my numbers?</summary><p>No. It only changes the symbol and the decimals shown. Type your numbers in the currency you use.</p></details>
+  </section>
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+      <div class="footer-stack">
+<div class="footer-col" style="order:1">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+          <li><a href="/paint-calculator/">Paint Calculator</a></li>
+          <li><a href="/wallpaper-calculator/">Wallpaper Calculator</a></li>
+          <li><a href="/square-footage-calculator/">Square Footage Calculator</a></li>
+          <li><a href="/tape-measure-fraction-calculator/">Tape Measure Fraction Calculator</a></li>
+          <li><a href="/stair-calculator/">Stair Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:5">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Cooking &amp;</span> <span class="ft2">Kitchen</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/recipe-converter/">Recipe Converter</a></li>
+          <li><a href="/turkey-cooking-time-calculator/">Turkey Cooking Time Calculator</a></li>
+          <li><a href="/turkey-thawing-time-calculator/">Turkey Thawing Time Calculator</a></li>
+          <li><a href="/turkey-size-calculator/">Turkey Size Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:6">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Money &amp;</span> <span class="ft2">Finance</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/mortgage-calculator/">Mortgage Calculator</a></li>
+          <li><a href="/loan-calculator/">Loan Calculator</a></li>
+          <li><a href="/auto-loan-calculator/">Auto Loan Calculator</a></li>
+          <li><a href="/car-sales-tax-calculator/">Car Sales Tax Calculator</a></li>
+          <li><a href="/overtime-calculator/">Overtime Calculator</a></li>
+          <li><a href="/salary-calculator/">Salary Calculator</a></li>
+          <li><a href="/markup-calculator/">Markup Calculator</a></li>
+          <li><a href="/profit-margin-calculator/">Profit Margin Calculator</a></li>
+          <li><a href="/discount-calculator/">Discount Calculator</a></li>
+          <!--STAXFOOT:START-->
+          <li><a href="/sales-tax-calculator/">Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/california/">California Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/chicago/">Chicago Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/florida/">Florida Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/las-vegas/">Las Vegas Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/los-angeles/">Los Angeles Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/michigan/">Michigan Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/missouri/">Missouri Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/north-carolina/">North Carolina Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/ohio/">Ohio Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/texas/">Texas Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/virginia/">Virginia Sales Tax Calculator</a></li>
+          <!--STAXFOOT:END-->
+          <li><a href="/tip-calculator/">Tip Calculator</a></li>
+          <li><a href="/how-much-to-tip/">How Much to Tip</a></li>
+        </ul>
+      </div>
+      </div>
+
+      <div class="footer-right">
+<div class="footer-col footer-col--two" style="order:2">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/vo2-max-calculator/">VO2 Max Calculator</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/bmi-calculator/">BMI Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/ideal-weight-calculator/">Ideal Weight Calculator</a></li>
+          <li><a href="/lean-body-mass-calculator/">Lean Body Mass Calculator</a></li>
+          <li><a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio Calculator</a></li>
+          <li><a href="/gmi-calculator/">GMI Calculator</a></li>
+          <li><a href="/a1c-calculator/">A1C Calculator</a></li>
+          <li><a href="/calorie-calculator/">Calorie Calculator</a></li>
+          <li><a href="/calorie-deficit-calculator/">Calorie Deficit Calculator</a></li>
+          <li><a href="/bmr-calculator/">BMR Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/water-intake-calculator/">Water Intake Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/protein-intake-calculator/">Protein Intake Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
+          <li><a href="/steps-to-miles-calculator/">Steps to Miles Calculator</a></li>
+          <li><a href="/dog-age-calculator/">Dog Age Calculator</a></li>
+          <li><a href="/cat-age-calculator/">Cat Age Calculator</a></li>
+          <li><a href="/calories-burned-calculator/">Calories Burned Calculator</a></li>
+          <li><a href="/calories-burned-walking-calculator/">Calories Burned Walking Calculator</a></li>
+          <li><a href="/calories-burned-running-calculator/">Calories Burned Running Calculator</a></li>
+          <li><a href="/keto-calculator/">Keto Calculator</a></li>
+          <li><a href="/net-carb-calculator/">Net Carb Calculator</a></li>
+          <li><a href="/intermittent-fasting-calculator/">Intermittent Fasting Calculator</a></li>
+          <li><a href="/bsa-calculator/">BSA Calculator</a></li>
+          <li><a href="/dog-food-calculator/">Dog Food Calculator</a></li>
+          <li><a href="/ffmi-calculator/">FFMI Calculator</a></li>
+          <li><a href="/bulking-calculator/">Bulking Calculator</a></li>
+          <li><a href="/weight-loss-calculator/">Weight Loss Calculator</a></li>
+          <li><a href="/weight-loss-percentage-calculator/">Weight Loss Percentage Calculator</a></li>
+          <li><a href="/max-heart-rate-calculator/">Max Heart Rate Calculator</a></li>
+          <li><a href="/caffeine-calculator/">Caffeine Calculator</a></li>
+          <li><a href="/caffeine-half-life-calculator/">Caffeine Half Life Calculator</a></li>
+          <li><a href="/fiber-calculator/">Fiber Calculator</a></li>
+          <li><a href="/creatine-calculator/">Creatine Calculator</a></li>
+          <li><a href="/vitamin-d-calculator/">Vitamin D Calculator</a></li>
+          <li><a href="/body-recomposition-calculator/">Body Recomposition Calculator</a></li>
+        </ul>
+      </div>
+
+        <div class="footer-sub">
+<div class="footer-subcol">
+<div class="footer-col" style="order:3">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/semester-grade-calculator/">Semester Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+          <li><a href="/grade-curve-calculator/">Grade Curve Calculator</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:START-->
+<div class="footer-col" style="order:7">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Unit</span> <span class="ft2">Converters</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/unit-converter/">Unit Converter</a></li>
+          <li><a href="/length-converter/">Length Converter</a></li>
+          <li><a href="/weight-converter/">Weight Converter</a></li>
+          <li><a href="/volume-converter/">Volume Converter</a></li>
+          <li><a href="/temperature-converter/">Temperature Converter</a></li>
+          <li><a href="/area-converter/">Area Converter</a></li>
+          <li><a href="/speed-converter/">Speed Converter</a></li>
+          <li><a href="/data-storage-converter/">Data Storage Converter</a></li>
+          <li><a href="/cooking-converter/">Cooking Measurement Converter</a></li>
+          <li><a href="/px-to-rem-converter/">PX to REM Converter</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:END-->
+</div>
+
+<div class="footer-col" style="order:4">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/fraction-calculator/">Fraction Calculator</a></li>
+          <li><a href="/standard-deviation-calculator/">Standard Deviation Calculator</a></li>
+          <li><a href="/scientific-notation-calculator/">Scientific Notation Calculator</a></li>
+          <li><a href="/weighted-average-calculator/">Weighted Average Calculator</a></li>
+          <li><a href="/average-calculator/">Average Calculator</a></li>
+          <li><a href="/batting-average-calculator/">Batting Average Calculator</a></li>
+          <li><a href="/stock-average-calculator/">Stock Average Calculator</a></li>
+          <li><a href="/dice-average-calculator/">Dice Average Calculator</a></li>
+          <li><a href="/time-average-calculator/">Time Average Calculator</a></li>
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+          <li><a href="/percentage-change-calculator/">Percentage Change Calculator</a></li>
+          <li><a href="/age-calculator/">Age Calculator</a></li>
+          <li><a href="/date-calculator/">Date Calculator</a></li>
+          <li><a href="/time-calculator/">Time Calculator</a></li>
+          <li><a href="/hours-calculator/">Hours Calculator</a></li>
+          <li><a href="/triangle-calculator/">Triangle Calculator</a></li>
+          <li><a href="/random-number-generator/">Random Number Generator</a></li>
+        </ul>
+      </div>
+        </div>
+      </div>
+
+      <!--PAYFOOT:START-->
+      <div class="footer-col footer-col--wide">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Paycheck</span> <span class="ft2">Calculators</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/paycheck-calculator/">Paycheck Calculator (all states)</a></li>
+          <li><a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arkansas/">Arkansas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/california/">California Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/hawaii/">Hawaii Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/louisiana/">Louisiana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nebraska/">Nebraska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/oklahoma/">Oklahoma Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/utah/">Utah Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wisconsin/">Wisconsin Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a></li>
+        </ul>
+      </div>
+      <!--PAYFOOT:END-->
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/blog/">Blog</a>
+      <span aria-hidden="true">·</span>
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+</div>
+
+<script src="/assets/app.js?v=332"></script>
+<script>CalcThis.initDiscountCalc();</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>

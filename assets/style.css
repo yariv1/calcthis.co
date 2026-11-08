@@ -3325,3 +3325,54 @@
 .p-pm .pm-strong td{font-weight:700;color:var(--ink)}
 /* GLOBAL: an explanation directly under a field sits close to it (field 15px bottom spacing - 6px = about 9px) so it clearly belongs to the field above (user 2026-11-08) */
 body .fld + .av-note,body .fld + .cb-note{margin-top:-6px}
+/* ---- DISCOUNT calculator (.p-dc) — reuses .p-bmr result look, .dtable, .seg, the salary page's searchable currency .csel ---- */
+.p-dc .sl-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:6px}
+.p-dc .sl-head .card-h2{margin:0}
+.p-dc .sl-cur{width:auto;min-width:110px;flex:0 0 auto}
+.p-dc .sl-cur .csel-panel{left:auto;right:0;width:300px;max-width:86vw;max-height:min(380px,60vh)}
+.p-dc .dc-intro{font-size:14px;font-weight:500;color:var(--ink-soft);margin:0 0 14px;line-height:1.45}
+.p-dc .av-note,.p-dc .cb-note{font-size:14px;font-weight:500;color:var(--ink-soft);margin:4px 0 8px;line-height:1.45}
+.p-dc .cb-note{color:var(--muted);font-weight:400}
+.p-dc .fld.dc-calc .inp input{background:#F5EEDF;border-color:#E3D3AE}
+.p-dc .fld.dc-calc .unit b{color:var(--amber-deep);font-weight:700}
+.p-dc .dc-bt{font-size:14px;font-weight:600;color:var(--ink);margin:12px 0 6px}
+.p-dc .dtable td:nth-child(n+2),.p-dc .dtable th:nth-child(n+2){text-align:right}
+.p-dc .dtable td,.p-dc .dtable th{padding-left:6px;padding-right:6px}
+.p-dc .dtable td{font-variant-numeric:tabular-nums}
+.p-dc #dcLad td,.p-dc #dcStep td{overflow-wrap:anywhere}
+.p-dc .card{min-width:0}
+.p-dc .res-big{font-size:clamp(34px,8vw,52px)}
+.p-dc .res-big.dc-long{font-size:26px;overflow-wrap:anywhere}
+.p-dc .mbar-vals b{font-size:20px;overflow-wrap:anywhere}
+.p-dc .res-sub{overflow-wrap:anywhere}
+.p-dc .dc-lrow{cursor:pointer}
+.p-dc .dc-lrow:hover{background:#FCF7EE}
+.p-dc .dc-lrow.on{background:#F7EBD2}
+.p-dc .dc-lrow.on td{color:var(--ink);font-weight:700}
+.p-dc #dcCmp td,.p-dc #dcStep td{overflow-wrap:anywhere}
+.p-dc .dc-strong td{font-weight:700;color:var(--ink)}
+.p-dc .dc-best{display:inline-block;margin-left:6px;font-size:14px;font-weight:700;color:var(--amber-deep)}
+.p-dc .dc-sech{font-size:14px;font-weight:600;color:var(--ink);margin:14px 0 8px}
+.p-dc .dc-sech span{font-weight:400;color:var(--muted)}
+.p-dc .dc-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 28px;gap:8px;align-items:center;margin-bottom:8px}
+.p-dc .dc-row .dc-kind{grid-column:1 / 3;grid-row:1;width:100%;min-width:0}
+.p-dc .dc-row .x{grid-column:3;grid-row:1;background:none;border:0;color:var(--muted);cursor:pointer;font-size:20px;line-height:1;padding:2px 4px;border-radius:5px;justify-self:center}
+.p-dc .dc-row .x:hover{color:#b23;background:#f7e9e9}
+.p-dc .dc-row .dc-in{min-width:0}
+.p-dc .dc-row .dc-in.a{grid-column:1 / 3;grid-row:2}
+.p-dc .dc-row .dc-in.a.half{grid-column:1}
+.p-dc .dc-row .dc-in.b{grid-column:2;grid-row:2}
+.p-dc .dc-bar{display:flex;height:26px;border-radius:8px;overflow:hidden;background:#EFE7D8}
+.p-dc .dc-seg{display:block;height:100%}
+.p-dc .dc-seg.pay,.p-dc .bm-key i.dc-ky.pay{background:#37503F}
+.p-dc .dc-seg.d0,.p-dc .bm-key i.dc-ky.d0{background:var(--amber)}
+.p-dc .dc-seg.d1,.p-dc .bm-key i.dc-ky.d1{background:#D9A24A}
+.p-dc .dc-seg.d2,.p-dc .bm-key i.dc-ky.d2{background:#E9C27E}
+.p-dc .dc-seg.d3,.p-dc .bm-key i.dc-ky.d3{background:#B5761F}
+.p-dc .dc-seg.d4,.p-dc .bm-key i.dc-ky.d4{background:#A4795A}
+.p-dc .dc-seg.d5,.p-dc .bm-key i.dc-ky.d5{background:#6B7A9E}
+.p-dc .bm-key i.dc-ky{width:16px;height:10px;border-radius:3px;vertical-align:-1px}
+
+  /* Field symbol overlay (global): currency symbol / % shown inside a field that has a value (app.js FIELD SYMBOLS) */
+  .inp .fsym{position:absolute;top:50%;transform:translateY(-50%);font-size:16px;font-weight:500;color:var(--ink-soft);pointer-events:none;line-height:1}
+  .inp input:focus ~ .fsym{color:var(--amber-deep)}

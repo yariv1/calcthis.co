@@ -1,3 +1,5 @@
+> 2026-11-08 #6 later: v332 DEPLOYED = discount calculator + global field symbols (CLAUDE.md addendum 30). Next: commission / unit price (research report + approval first); Bing submit for markup, profit margin, discount; GSC queue on request.
+
 # SESSION HANDOFF — read this FIRST, then CLAUDE.md hard rules
 
 > **UPDATE 2026-11-08 (latest): PROFIT MARGIN DEPLOYED v331 (`/profit-margin-calculator/`, 97 calcs, 227 pages) - CLAUDE.md addendum 29. NEXT: percent off / discount / commission / unit price (roadmap v2 §12; research report + approval first each). Bing submit + GSC queue pending. New global rule: note under a field sits 9px from it.**

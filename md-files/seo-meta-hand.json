@@ -186,6 +186,10 @@
     "t": "Overtime Calculator — Pay, Take-Home & No Tax on Overtime",
     "d": "Free overtime calculator: your hourly rate and hours give overtime pay, take-home after tax, California daily rules and the no-tax-on-overtime deduction."
   },
+  "/discount-calculator/": {
+    "t": "Discount Calculator — Percent Off, Sale Price & Savings",
+    "d": "Discount calculator: type any two of price, percent off, final price or saving, stack coupons, add tax and compare deals. Percent off made easy. Any currency."
+  },
   "/profit-margin-calculator/": {
     "t": "Profit Margin Calculator — Gross, Net & Margin %",
     "d": "Profit margin calculator: type revenue and cost, add your other costs, and get gross, operating and net margin and profit. Any currency."
