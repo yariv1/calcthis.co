@@ -184,7 +184,7 @@ window.CalcThis = window.CalcThis || {};
       IDR:'id-ID',MYR:'ms-MY',PHP:'en-PH',SGD:'en-SG',HKD:'zh-HK',TWD:'zh-TW',AED:'en-AE',SAR:'en-SA',EGP:'en-EG',NGN:'en-NG',KES:'en-KE',
       PKR:'en-PK',BDT:'en-BD',ISK:'is-IS',HRK:'hr-HR',RSD:'sr-RS',GEL:'ka-GE',KZT:'kk-KZ',MAD:'fr-MA',DZD:'fr-DZ',TND:'fr-TN',QAR:'en-QA',
       KWD:'en-KW',BHD:'en-BH',OMR:'en-OM',JOD:'en-JO',LKR:'en-LK',NPR:'en-NP',GHS:'en-GH',TZS:'en-TZ',UGX:'en-UG' };
-    var curCache = {};
+    var curCache = {}, SYMS = { '$': 1, '€': 1, '£': 1, '¥': 1, '₹': 1, '₪': 1 };
     function curInfo(code) {
       if (!code) return null;
       if (curCache[code] !== undefined) return curCache[code];
@@ -195,7 +195,7 @@ window.CalcThis = window.CalcThis || {};
         var s = '', ci = -1, ii = -1;
         for (var i = 0; i < p.length; i++) { if (p[i].type === 'currency') { s = p[i].value; ci = i; } else if (p[i].type === 'integer' && ii < 0) ii = i; }
         s = s.replace(/[‎‏؜ \s]/g, '');
-        if (s) info = { sym: s, after: ci > ii };
+        if (s) { info = { sym: s, after: ci > ii }; SYMS[s] = 1; }
       } catch (e) {}
       return (curCache[code] = info);
     }
@@ -205,7 +205,7 @@ window.CalcThis = window.CalcThis || {};
       for (var i = 0; i < parts.length; i++) if (parts[i].type !== 'currency' && parts[i].type !== 'literal') num += parts[i].value;
       if (!info) return nf.format(v);
       var wordy = /[A-Za-z]/.test(info.sym);
-      return info.after ? num + ' ' + info.sym : info.sym + (wordy ? ' ' : '') + num;
+      return info.after ? num + (wordy ? '\u00a0' : '') + info.sym : info.sym + (wordy ? '\u00a0' : '') + num;
     };
     function picker() { var c = document.querySelector('.csel[id$="Cur"]'); return c && c.value ? curInfo(c.value) : null; }
     var mo = null;
@@ -215,22 +215,26 @@ window.CalcThis = window.CalcThis || {};
         var lab = u.closest('.fld'); if (!lab) return;
         var box = lab.querySelector('.inp'); var inp = box && box.querySelector('input');
         if (!inp || box.querySelector('.suf')) return;
-        var t = u.textContent, m = SYM.exec(t);
-        if (u._rest === undefined && m && !/\bor\b/.test(t)) { u._rest = t.slice(m[0].length); u._mark = m[1]; }
-        var mark = u._mark;
+        var t = u.textContent, m = SYM.exec(t), lead = null, rest = '';
+        if (u._mark !== undefined) {
+          var tk = /^\s*([^\s·—\/]+)(?=[\s·—\/]|$)/.exec(t);
+          if (tk && (SYMS[tk[1]] || tk[1] === u._wrote || tk[1] === u._mark)) { lead = tk[1]; rest = t.slice(tk[0].length); }
+        } else if (m && !/\bor\b/.test(t)) { lead = m[1]; rest = t.slice(m[0].length); u._mark = m[1]; }
+        var mark = lead ? u._mark : null;
         var el = inp._symEl;
         if (!mark) { if (el) { el.style.display = 'none'; inp.style.paddingLeft = ''; } return; }
         var s = mark, after = (mark === '%');
-        if (mark === '$' && pk) {
-          s = pk.sym; after = pk.after;
-          var want = s + u._rest; if (t !== want) u.textContent = want;
-        } else if (mark === '$' && t !== '$' + u._rest) { u.textContent = '$' + u._rest; }
+        if (mark === '$') {
+          if (pk) { s = pk.sym; after = pk.after; }
+          var want = s + rest; if (t !== want) u.textContent = want;
+          u._wrote = s;
+        }
         if (!el) { el = document.createElement('span'); el.className = 'fsym'; el.setAttribute('aria-hidden', 'true'); box.appendChild(el); inp._symEl = el; inp._pad = parseFloat(getComputedStyle(inp).paddingLeft) || 13; }
         if (inp.value === '') { el.style.display = 'none'; inp.style.paddingLeft = ''; return; }
         var cs = getComputedStyle(inp);
         cv.font = cs.fontWeight + ' ' + cs.fontSize + ' ' + cs.fontFamily;
         if (el.textContent !== s) el.textContent = s; if (el.style.display) el.style.display = '';
-        var wordy = /[A-Za-z]/.test(s), gap = wordy ? 6 : 3;
+        var wordy = /[A-Za-z]/.test(s), gap = wordy ? 6 : 0;
         if (after) {
           inp.style.paddingLeft = '';
           var w = cv.measureText(inp.value).width, sw2 = cv.measureText(s).width;
@@ -239,7 +243,7 @@ window.CalcThis = window.CalcThis || {};
         } else {
           var sw = cv.measureText(s).width;
           el.style.left = inp._pad + 'px'; el.style.visibility = '';
-          inp.style.paddingLeft = (inp._pad + sw + (wordy ? 6 : 4)) + 'px';
+          inp.style.paddingLeft = (inp._pad + sw + (wordy ? 6 : 2)) + 'px';
         }
       });
     }

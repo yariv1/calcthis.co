@@ -337,6 +337,9 @@ Total live calculators: **89** (v322, + max heart rate, v321, + weight loss perc
 
 ---
 
+## Last session addendum 34 (2026-11-08, DEPLOYED v336): SYMBOL SPACING + LABEL FIX
+One spacing rule for money and % everywhere (fields + results): symbol-only glyphs sit tight on either side; letter symbols (kr, CHF, zl) get one nbsp on either side. `CalcThis.fmtMoney` + FIELD SYMBOLS block. Label rewrite no longer reverts text pages write themselves (rest is re-read each sync, SYMS set of known symbols). Lesson: never use String.replace with a replacement containing a dollar sign in node -e (the dollar-quote pattern duplicated the file); use the Edit tool or a Write-d script.
+
 ## Last session addendum 33 (2026-11-08, DEPLOYED v335): SPEED FIX FOR FIELD SYMBOLS
 The FIELD SYMBOLS observer fed itself (it rewrote text each pass, which re-triggered it) and slowed every page. Now: write only on change, observer records dropped after each sync (`mo.takeRecords()`), mutation checks debounced 250 ms, safety interval 1.5 s. Lesson: any global MutationObserver must never mutate what it observes unguarded; measure idle CPU after adding one.
 
