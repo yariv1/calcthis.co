@@ -22939,3 +22939,365 @@ CalcThis.initRecompCalc = function () {
   render();
 };
 /* RECOMP:END */
+
+/* MARKUP:BEGIN */
+/* =========================================================
+   MARKUP calculator (/markup-calculator/). Competitors opened live (2026-11-07): Omnicalculator, calculator.net (margin), CalculatorSoup, GigaCalculator, Corporate Finance Institute
+   (all numbers only; none lets you type any two of the five quantities and none draws markup and margin side by side). Notes: md-files/calcthis-markup-research.md.
+   Formulas (all read): profit = price - cost; markup = profit / cost; margin = profit / price; price = cost x (1 + markup) = cost / (1 - margin);
+   markup = margin / (1 - margin); margin = markup / (1 + markup).
+   SALES-ENGINE is pure and meant to be shared later by profit margin / percent off / discount / commission / unit price pages.
+   ========================================================= */
+/* SALES-ENGINE:START */
+CalcThis.salesEngine = (function () {
+  var LIM = 1e12, LIMR = 1e7, QMAX = 1e9;
+  var LABEL = { cost: 'Cost', price: 'Selling price', profit: 'Profit', markup: 'Markup', margin: 'Margin', qty: 'Units', tax: 'Sales tax / VAT', fee: 'Fees', disc: 'Discount' };
+  var LAD_MU = [10, 20, 25, 30, 40, 50, 60, 70, 80, 90, 100], LAD_MG = [10, 20, 25, 30, 40, 50, 60, 70, 75, 80, 90];
+  /* text -> { empty } | { partial } | { v } | { err: code }; kind picks the allowed range */
+  function parse(t, kind) {
+    t = String(t == null ? '' : t).replace(/\s/g, '').replace(/[$€£¥₹₪₩₽₺฿₦%]/g, '').replace(/[−–]/g, '-');
+    if (!t) return { empty: true };
+    if (/^[+-]?\.?$/.test(t)) return { partial: true };
+    if (t.indexOf(',') >= 0) { if (!/^[+-]?\d{1,3}(,\d{3})+(\.\d*)?$/.test(t)) return { err: 'junk' }; t = t.replace(/,/g, ''); }
+    if (!/^[+-]?(\d+\.?\d*|\.\d+)$/.test(t)) return { err: 'junk' };
+    var v = parseFloat(t); if (v === 0) v = 0;
+    if (kind === 'cost' || kind === 'price') { if (v < 0) return { err: 'neg' }; if (v > LIM) return { err: 'big' }; }
+    else if (kind === 'profit') { if (Math.abs(v) > LIM) return { err: 'big' }; }
+    else if (kind === 'markup') { if (v < -100) return { err: 'mfloor' }; if (v > LIMR) return { err: 'big' }; }
+    else if (kind === 'margin') { if (v >= 100) return { err: 'mceil' }; if (v < -LIMR) return { err: 'big' }; }
+    else if (kind === 'qty') { if (!(v > 0) || v > QMAX) return { err: 'qty' }; }
+    else if (kind === 'tax' || kind === 'fee' || kind === 'disc') { if (v < 0 || v > 100) return { err: 'pct' }; }
+    return { v: v };
+  }
+  /* t = [[key, value], [key, value]] (the two typed values); keys: cost price profit markup margin */
+  function solve(t) {
+    var v = {}, n = t.length, c, p, pr, mu, mg, e = null;
+    t.forEach(function (x) { v[x[0]] = x[1]; });
+    var has = function (a, b) { return v[a] !== undefined && v[b] !== undefined; };
+    if (n === 0) return { state: 'none' };
+    if (n === 1) {
+      var k = t[0][0];
+      if (k === 'markup') return { state: 'lone', kind: 'markup', mu: v.markup, mg: v.markup <= -100 ? null : v.markup / (100 + v.markup) * 100 };
+      if (k === 'margin') return { state: 'lone', kind: 'margin', mg: v.margin, mu: v.margin / (100 - v.margin) * 100 };
+      return { state: 'need', typed: k };
+    }
+    mu = v.markup; mg = v.margin;
+    if (has('cost', 'price')) { c = v.cost; p = v.price; pr = p - c; }
+    else if (has('cost', 'profit')) { c = v.cost; pr = v.profit; p = c + pr; if (p < -1e-9) e = { code: 'lossTooBig', at: 'profit' }; }
+    else if (has('cost', 'markup')) { c = v.cost; p = c * (1 + mu / 100); pr = p - c; }
+    else if (has('cost', 'margin')) { c = v.cost; p = c / (1 - mg / 100); pr = p - c; }
+    else if (has('price', 'profit')) { p = v.price; pr = v.profit; c = p - pr; if (c < -1e-9) e = { code: 'profitTooBig', at: 'profit' }; }
+    else if (has('price', 'markup')) { p = v.price; if (mu <= -100) e = { code: 'markupFloor', at: 'markup' }; else { c = p / (1 + mu / 100); pr = p - c; } }
+    else if (has('price', 'margin')) { p = v.price; pr = p * mg / 100; c = p - pr; }
+    else if (has('profit', 'markup')) {
+      pr = v.profit;
+      if (mu === 0) e = { code: pr === 0 ? 'zeroMarkup0' : 'zeroMarkup', at: 'markup' };
+      else { c = pr / (mu / 100); if (c < 0) e = { code: 'signMarkup', at: 'markup' }; else p = c + pr; }
+    }
+    else if (has('profit', 'margin')) {
+      pr = v.profit;
+      if (mg === 0) e = { code: pr === 0 ? 'zeroMargin0' : 'zeroMargin', at: 'margin' };
+      else { p = pr / (mg / 100); if (p < 0) e = { code: 'signMargin', at: 'margin' }; else c = p - pr; }
+    }
+    else return { state: 'err', err: { code: 'ratios', at: 'margin' } };
+    if (e) return { state: 'err', err: e };
+    if (c < 0) c = 0; if (p < 0) p = 0;
+    if (Math.abs(pr) < 1e-9 * Math.max(1, Math.abs(p), Math.abs(c))) pr = 0;
+    var muU = !(c > 0), mgU = !(p > 0);
+    if (v.markup === undefined) mu = muU ? null : pr / c * 100;
+    if (v.margin === undefined) mg = mgU ? null : pr / p * 100;
+    if (mu === 0) mu = 0; if (mg === 0) mg = 0;
+    return { state: 'ok', c: c, p: p, pr: pr, mu: mu, mg: mg, muU: muU, mgU: mgU };
+  }
+  /* advanced: discount first, then tax and fees on the discounted price; o = { qty, tax, fee, disc } (null when empty) */
+  function adv(c, p, o) {
+    var disc = o.disc || 0, tax = o.tax || 0, fee = o.fee || 0, q = o.qty == null ? 1 : o.qty;
+    var d = p * disc / 100, pa = p - d, taxA = pa * tax / 100, pay = pa + taxA, feeA = pa * fee / 100, net = pa - feeA - c;
+    if (Math.abs(net) < 1e-9 * Math.max(1, Math.abs(pa), Math.abs(c))) net = 0;
+    return { q: q, d: d, pa: pa, taxA: taxA, pay: pay, feeA: feeA, net: net, nmu: c > 0 ? net / c * 100 : null, nmg: pa > 0 ? net / pa * 100 : null };
+  }
+  /* the ladder rows for a cost (null when the cost is unknown or zero) */
+  function ladder(c, mode) {
+    return (mode === 'mg' ? LAD_MG : LAD_MU).map(function (x) {
+      var mu = mode === 'mg' ? x / (100 - x) * 100 : x, mg = mode === 'mg' ? x : x / (100 + x) * 100, row = { x: x, mu: mu, mg: mg };
+      if (c > 0) { row.p = c * (1 + mu / 100); row.pr = row.p - c; }
+      return row;
+    });
+  }
+  return { LIM: LIM, LIMR: LIMR, QMAX: QMAX, LABEL: LABEL, LAD_MU: LAD_MU, LAD_MG: LAD_MG, parse: parse, solve: solve, adv: adv, ladder: ladder };
+})();
+/* SALES-ENGINE:END */
+
+/* =========================================================
+   CalcThis.initMarkupCalc() - ids mk*. Engines: CalcThis.salesEngine, CalcThis.salaryEngine (currency list only, display only - nothing is converted).
+   ========================================================= */
+CalcThis.initMarkupCalc = function () {
+  var E = CalcThis.salesEngine, SE = CalcThis.salaryEngine;
+  var $ = function (id) { return document.getElementById(id); };
+  if (!$('mkCost')) return;
+  var CORE = ['cost', 'price', 'profit', 'markup', 'margin'];
+  var FM = { cost: { id: 'mkCost', d: 'what you pay', money: 1 }, price: { id: 'mkPrice', d: 'what they pay', money: 1 }, profit: { id: 'mkProfit', d: 'price − cost', money: 1 }, markup: { id: 'mkMarkup', d: 'profit ÷ cost' }, margin: { id: 'mkMargin', d: 'profit ÷ price' } };
+  var ADVK = { qty: 'mkQty', tax: 'mkTax', fee: 'mkFee', disc: 'mkDisc' };
+  var EG = { cost: '100', price: '150', profit: '50', markup: '50', margin: '33.3', qty: '100', tax: '8.5', fee: '2.9', disc: '10' };
+  var NAME = { cost: 'cost', price: 'selling price', profit: 'profit', markup: 'markup', margin: 'margin' };
+  var st = { cur: 'USD', dec: 2, typed: [], last: null, coreErr: null, extra: '', adv: false, lad: 'mu' };
+  var NF = {}, DN = null;
+  try { DN = new Intl.DisplayNames(['en'], { type: 'currency' }); } catch (e) { DN = null; }
+  var CN = { SLE: 'Sierra Leonean Leone' };
+  function curName(c) { try { var n = DN && DN.of(c); return (n && n !== c) ? n : (CN[c] || c); } catch (e) { return CN[c] || c; } }
+  function decOf(c) { try { return Math.min(2, new Intl.NumberFormat('en-US', { style: 'currency', currency: c }).resolvedOptions().maximumFractionDigits); } catch (e) { return 2; } }
+  function sym(c) { try { return new Intl.NumberFormat('en-US', { style: 'currency', currency: c, currencyDisplay: 'narrowSymbol' }).format(0).replace(/[0-9.,\s]/g, ''); } catch (e) { return c; } }
+  function cf(x, d) {
+    var k = st.cur + d;
+    if (!NF[k]) NF[k] = new Intl.NumberFormat('en-US', { style: 'currency', currency: st.cur, currencyDisplay: 'narrowSymbol', minimumFractionDigits: d, maximumFractionDigits: d });
+    return (x < 0 ? '−' : '') + NF[k].format(Math.abs(x));
+  }
+  function fm(x) { if (x == null || !isFinite(x)) return '—'; if (Math.abs(x) < Math.pow(10, -st.dec) / 2) x = 0; return cf(x, st.dec); }
+  function pc(x, d) { var r = Math.round(x * 100) / 100; if (r === 0) r = 0; return (r < 0 ? '−' : '') + Math.abs(r).toLocaleString('en-US', { maximumFractionDigits: d == null ? 2 : d }); }
+  function fp(x) { return x == null || !isFinite(x) ? '—' : pc(x) + '%'; }
+  function grp(x) { return Math.round(x).toLocaleString('en-US'); }
+  function qn(x) { return (Math.round(x * 1000) / 1000).toLocaleString('en-US', { maximumFractionDigits: 3 }); }
+  /* the text put into a computed box: plain, grouped, no symbol */
+  function ft(x, money) {
+    var d = money ? st.dec : 2, r = Math.round(x * Math.pow(10, d)) / Math.pow(10, d); if (r === 0) r = 0;
+    return (r < 0 ? '-' : '') + Math.abs(r).toLocaleString('en-US', { maximumFractionDigits: d });
+  }
+  function nm(k) { return NAME[k]; }
+  function others(k) { return join(CORE.filter(function (x) { return x !== k; }).map(nm)).replace(' and ', ' or '); }
+  function join(a) { return a.length < 2 ? a.join('') : a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1]; }
+
+  /* ---------- error wording ---------- */
+  function errMsg(k, code, raw) {
+    var L = E.LABEL[k], r = String(raw).trim().slice(0, 14), tail = ' It is ignored for now.';
+    if (code === 'junk') return 'Couldn’t read “' + r + '” in ' + L + ' — type a number like ' + EG[k] + '.' + tail;
+    if (code === 'neg') return L + ' can’t be negative — type 0 or more.' + tail;
+    if (code === 'big') return L + ' is too large — keep it under ' + (k === 'markup' || k === 'margin' ? '10,000,000%' : '1,000,000,000,000') + '.' + tail;
+    if (code === 'mfloor') return 'Markup can’t go below −100% — the selling price would be negative.' + tail;
+    if (code === 'mceil') return 'Margin can’t reach 100% — that would need a cost of zero or less. Type a number below 100.' + tail;
+    if (code === 'qty') return 'Units should be a number above 0 and up to 1,000,000,000.' + tail;
+    if (code === 'pct') return L + ' should be a percent from 0 to 100.' + tail;
+    return L + ' can’t be used.' + tail;
+  }
+  function solveMsg(e, S) {
+    var c = e.code;
+    if (c === 'lossTooBig') return 'A loss can’t be bigger than the cost — the selling price would be negative. Change the profit.';
+    if (c === 'profitTooBig') return 'Profit can’t be more than the selling price — the cost would be negative. Change the profit.';
+    if (c === 'markupFloor') return 'A markup of −100% means a selling price of zero, so the cost can’t be worked out from a price. Change the markup.';
+    if (c === 'zeroMarkup0') return 'Zero profit at a 0% markup fits any cost — type the cost or the selling price instead.';
+    if (c === 'zeroMarkup') return 'A profit can’t come from a 0% markup. Change the markup or the profit.';
+    if (c === 'signMarkup') return 'A profit goes with a positive markup and a loss with a negative one. Change the markup or the profit.';
+    if (c === 'zeroMargin0') return 'Zero profit at a 0% margin fits any price — type the cost or the selling price instead.';
+    if (c === 'zeroMargin') return 'A profit can’t come from a 0% margin. Change the margin or the profit.';
+    if (c === 'signMargin') return 'A profit goes with a positive margin and a loss with a negative one. Change the margin or the profit.';
+    return 'These two values don’t fit together.';
+  }
+
+  /* ---------- hint placement: directly under the field it is about ---------- */
+  function setHint(m, at) {
+    var h = $('mkHint'); h.textContent = m || ''; h.style.display = m ? 'block' : 'none';
+    if (m && at) { var f = $(at).closest('.fld'); if (f && f.nextSibling !== h) f.parentNode.insertBefore(h, f.nextSibling); }
+  }
+  function setNote(id, t) { var e = $(id); e.textContent = t || ''; e.style.display = t ? '' : 'none'; }
+
+  /* ---------- typed values: the two most recent valid ones are the pair ---------- */
+  function rawOf(k) { return $(FM[k].id).value; }
+  function removeTyped(k) { st.typed = st.typed.filter(function (x) { return x[0] !== k; }); }
+  function onEdit(k) {
+    var r = E.parse(rawOf(k), k); st.last = k;
+    if (r.partial) { render(); return; }
+    st.extra = '';
+    st.coreErr = null;
+    if (r.empty) removeTyped(k);
+    else if (r.err) { removeTyped(k); st.coreErr = { msg: errMsg(k, r.err, rawOf(k)), at: FM[k].id }; }
+    else {
+      removeTyped(k);
+      if (k === 'markup' || k === 'margin') {
+        var o = k === 'markup' ? 'margin' : 'markup';
+        if (st.typed.some(function (x) { return x[0] === o; })) { removeTyped(o); st.extra = nm(k).charAt(0).toUpperCase() + nm(k).slice(1) + ' replaced ' + nm(o) + ' — they tell each other, so only one can be typed.'; }
+      }
+      st.typed.push([k, r.v]);
+      if (st.typed.length > 2) {
+        /* the cost stays put: a third value (other than the cost) replaces the other member of the pair, never the cost */
+        var gi = 0, pin = k !== 'cost' && st.typed.some(function (x) { return x[0] === 'cost'; });
+        if (pin) gi = st.typed[0][0] === 'cost' ? 1 : 0;
+        var gone = st.typed.splice(gi, 1)[0][0];
+        st.extra = pin ? 'The cost stays, so ' + nm(gone) + ' is now worked out.' : 'A third value replaces the oldest, so ' + nm(gone) + ' is now worked out.';
+      }
+    }
+    render();
+  }
+
+  /* ---------- the bars: the same sale twice, 100% is the cost on top and the selling price below ---------- */
+  function bars(S) {
+    var c = S.c, p = S.p, pr = S.pr, tot = Math.max(c, p), h = '', seg = function (cls, w) { return w > 0 ? '<i class="mk-seg ' + cls + '" style="flex:' + (w / tot * 100).toFixed(3) + ' 1 0;min-width:' + (w / tot * 100 < 1.5 ? 6 : 0) + 'px"></i>' : ''; };
+    var key = function (a) { return '<div class="bm-key">' + a.map(function (x) { return '<span><i class="mk-ky ' + x[0] + '"></i>' + x[1] + '</span>'; }).join('') + '</div>'; };
+    var A, B;
+    if (pr > 0) { A = seg('cost', c) + seg('gain', pr); }
+    else if (pr < 0) { A = seg('cost', p) + seg('loss', -pr); }
+    else A = seg('cost', c);
+    var bar = '<div class="mk-bar" aria-hidden="true">' + A + '</div>';
+    if (!S.muU) {
+      h += '<p class="mk-bt">Markup — profit as a share of the cost</p>' + bar;
+      if (pr > 0) h += key([['cost', 'Cost 100%'], ['gain', 'Profit +' + fp(S.mu) + ' (the markup)']]);
+      else if (pr < 0) h += key([['cost', 'Selling price ' + fp(p / c * 100) + ' of the cost'], ['loss', 'Loss ' + fp(S.mu) + ' (the markup)']]);
+      else h += key([['cost', 'Cost 100%'], ['gain', 'Profit 0% (the markup)']]);
+    }
+    if (!S.mgU) {
+      h += '<p class="mk-bt">Margin — profit as a share of the selling price</p>' + bar;
+      if (pr > 0) h += key([['cost', 'Cost ' + fp(100 - S.mg)], ['gain', 'Profit ' + fp(S.mg) + ' (the margin)']]);
+      else if (pr < 0) h += key([['cost', 'Selling price 100%'], ['loss', 'Loss ' + fp(S.mg) + ' (the margin)']]);
+      else h += key([['cost', 'Cost 100%'], ['gain', 'Profit 0% (the margin)']]);
+    }
+    return h;
+  }
+  /* ---------- the ladder ---------- */
+  function ladder(S) {
+    var hasC = S.state === 'ok' && S.c > 0, rows = E.ladder(hasC ? S.c : 0, st.lad), cur = st.lad === 'mg' ? S.mg : S.mu;
+    var first = st.lad === 'mg' ? 'Margin' : 'Markup', other = st.lad === 'mg' ? 'Markup' : 'Margin';
+    var h = '<thead><tr><th>' + first + '</th>' + (hasC ? '<th>Selling price</th><th>Profit</th>' : '') + '<th>' + other + '</th></tr></thead><tbody>';
+    rows.forEach(function (r) {
+      var on = cur != null && Math.abs(cur - r.x) < 1e-9;
+      h += '<tr class="mk-row' + (on ? ' on' : '') + '" data-v="' + r.x + '" tabindex="0"><td>' + r.x + '%</td>' + (hasC ? '<td>' + fm(r.p) + '</td><td>' + fm(r.pr) + '</td>' : '') + '<td>' + fp(st.lad === 'mg' ? r.mu : r.mg) + '</td></tr>';
+    });
+    $('mkLad').innerHTML = h + '</tbody>';
+    $('mkLadNote').textContent = hasC ? 'For your cost of ' + fm(S.c) + '. Click a row to use that ' + first.toLowerCase() + '.' : 'Add a cost, price or profit to see the selling price and profit for each row. Click a row to use that ' + first.toLowerCase() + '.';
+  }
+
+  function advRead() {
+    var o = { qty: null, tax: null, fee: null, disc: null }, bad = null, any = false;
+    Object.keys(ADVK).forEach(function (k) {
+      var raw = $(ADVK[k]).value, r = E.parse(raw, k);
+      if (r.err) { if (!bad) bad = { msg: errMsg(k, r.err, raw), at: ADVK[k] }; }
+      else if (r.v !== undefined) { o[k] = r.v; any = true; }
+    });
+    o.any = any; o.bad = bad; return o;
+  }
+  var PRE = 'Type two of the five boxes above first — then this applies.';
+  function advNotes(S, o) {
+    var ok = S.state === 'ok', A = ok ? E.adv(S.c, S.p, o) : null;
+    setNote('mkQtyNote', o.qty == null ? 'Selling more than one? Type how many and the totals appear below.' : (ok ? qn(o.qty) + (o.qty === 1 ? ' unit' : ' units') + ' at the selling price: cost ' + fm(S.c * o.qty) + ', revenue ' + fm(S.p * o.qty) + ', profit ' + fm(S.pr * o.qty) + '.' : 'Type two of the five boxes above first — then the totals for ' + qn(o.qty) + (o.qty === 1 ? ' unit' : ' units') + ' appear.'));
+    setNote('mkTaxNote', o.tax == null ? 'Charging sales tax or VAT? Type the rate and see what the customer pays.' : (ok ? 'The customer pays ' + fm(A.pay) + ' per unit including ' + pc(o.tax) + '% tax (' + fm(A.taxA) + '). Your profit is unchanged — the tax is passed on.' : PRE));
+    setNote('mkFeeNote', o.fee == null ? 'Payment or platform fees, as a percent of the price? Type the rate for your net profit.' : (ok ? 'Fees take ' + fm(A.feeA) + ' per unit, leaving a net profit of ' + fm(A.net) + ' — a ' + fp(A.nmu) + ' markup and a ' + fp(A.nmg) + ' margin.' : PRE));
+    setNote('mkDiscNote', o.disc == null ? 'Giving a discount? Type the percent off to see what is left of your profit.' : (ok ? 'After ' + pc(o.disc) + '% off the price is ' + fm(A.pa) + (A.pa - S.c < 0 ? ': a loss of ' + fm(S.c - A.pa) + ' per unit' : ': profit ' + fm(A.pa - S.c) + ' per unit') + ', a ' + fp(S.c > 0 ? (A.pa - S.c) / S.c * 100 : null) + ' markup and a ' + fp(A.pa > 0 ? (A.pa - S.c) / A.pa * 100 : null) + ' margin.' : PRE));
+  }
+  function advTable(S, o) {
+    var w = $('mkAdvWrap');
+    if (S.state !== 'ok' || !(o.any)) { w.style.display = 'none'; return; }
+    var A = E.adv(S.c, S.p, o), q = o.qty, two = q != null, rows = [], hasD = o.disc != null, hasT = o.tax != null, hasF = o.fee != null;
+    var m = function (lab, v) { rows.push([lab, fm(v), two ? fm(v * q) : null]); }, pcr = function (lab, t) { rows.push([lab, t, two ? t : null]); };
+    m(hasD ? 'Selling price, before discount' : 'Selling price', S.p);
+    if (hasD) { m('Discount ' + pc(o.disc) + '%', -A.d); m('Price after discount', A.pa); }
+    if (hasT) { m('Sales tax / VAT ' + pc(o.tax) + '%', A.taxA); m('Customer pays', A.pay); }
+    m('Cost', S.c);
+    if (hasF) m('Fees ' + pc(o.fee) + '%', A.feeA);
+    m(hasD || hasF ? 'Net profit' : 'Profit', A.net);
+    if (hasD || hasF) { pcr('Net markup', fp(A.nmu)); pcr('Net margin', fp(A.nmg)); }
+    $('mkAdvTbl').innerHTML = '<thead><tr><th></th><th>Per unit</th>' + (two ? '<th>All ' + qn(q) + '</th>' : '') + '</tr></thead><tbody>' + rows.map(function (r) { return '<tr><td>' + r[0] + '</td><td>' + r[1] + '</td>' + (two ? '<td>' + r[2] + '</td>' : '') + '</tr>'; }).join('') + '</tbody>';
+    w.style.display = '';
+  }
+
+  /* ---------- render ---------- */
+  function render() {
+    var S = E.solve(st.typed), vals = {}, calc = {};
+    if (S.state === 'ok') {
+      vals = { cost: S.c, price: S.p, profit: S.pr, markup: S.mu, margin: S.mg };
+    } else if (S.state === 'lone') vals = S.kind === 'markup' ? { margin: S.mg } : { markup: S.mu };
+    var typedK = st.typed.map(function (x) { return x[0]; });
+    CORE.forEach(function (k) {
+      var inp = $(FM[k].id), isT = typedK.indexOf(k) >= 0;
+      if (!isT) {
+        var hasV = vals[k] !== undefined && vals[k] !== null;
+        if (!(st.last === k)) inp.value = hasV ? ft(vals[k], FM[k].money) : '';
+        calc[k] = hasV && st.last !== k;
+      }
+      var fld = inp.closest('.fld'); fld.classList.toggle('mk-calc', !!calc[k]);
+      var u = fld.querySelector('.unit'); u.innerHTML = (FM[k].money ? sym(st.cur) : '%') + ' · ' + (calc[k] ? '<b>calculated</b>' : FM[k].d);
+    });
+    /* the from-line */
+    var from = '';
+    if (S.state === 'ok' || S.state === 'err') from = 'From ' + join(typedK.map(nm)) + '.' + (st.extra ? ' ' + st.extra : '');
+    else if (S.state === 'need') from = 'You typed ' + nm(typedK[0]) + '. Type one more: ' + others(typedK[0]) + '.';
+    else if (S.state === 'lone') from = 'You typed ' + nm(typedK[0]) + '. The ' + (S.kind === 'markup' ? 'margin' : 'markup') + ' is worked out from it — add a cost, selling price or profit to get amounts.' + (st.extra ? ' ' + st.extra : '');
+    setNote('mkFrom', from);
+    /* advanced */
+    var o = advRead();
+    advNotes(S, o);
+    /* the hint: a typed-field problem first, then a pair that does not fit, then an advanced field */
+    var hm = null, hat = null;
+    if (st.coreErr) { hm = st.coreErr.msg; hat = st.coreErr.at; }
+    else if (S.state === 'err') { hm = solveMsg(S.err, S); hat = FM[S.err.at].id; }
+    else if (o.bad) { hm = o.bad.msg; hat = o.bad.at; }
+    setHint(hm, hat);
+    /* result */
+    var big = '—', sub = $('mkSub').getAttribute('data-empty'), lab = 'Answer', tip = '', showBody = false;
+    $('mkBars').innerHTML = ''; $('mkBarsWrap').style.display = 'none';
+    if (S.state === 'ok') {
+      showBody = true;
+      var order = ['price', 'margin', 'profit', 'cost'], head = (vals.markup !== null && vals.markup !== undefined) ? 'markup' : null;
+      order.forEach(function (k) { if (!head && typedK.indexOf(k) < 0 && vals[k] !== null && vals[k] !== undefined) head = k; });
+      if (!head) head = 'price';
+      var txt = { cost: fm(S.c), price: fm(S.p), profit: fm(S.pr), markup: fp(S.mu), margin: fp(S.mg) };
+      big = txt[head]; lab = E.LABEL[head];
+      sub = CORE.filter(function (k) { return k !== head; }).map(function (k) { return E.LABEL[k] + ' ' + txt[k]; }).join(' · ');
+      if (S.c === 0 && S.p === 0) tip = 'Cost and selling price are both zero, so there is no profit to measure.';
+      else if (S.c === 0) tip = 'With a cost of ' + fm(0) + ' the whole ' + fm(S.p) + ' is profit. A markup needs a cost above zero.';
+      else if (S.p === 0) tip = 'Selling for ' + fm(0) + ' against a cost of ' + fm(S.c) + ' loses everything: a ' + fp(-100) + ' markup. A margin needs a selling price above zero.';
+      else if (S.pr > 0) tip = 'A cost of ' + fm(S.c) + ' sold at ' + fm(S.p) + ' earns ' + fm(S.pr) + ' profit: that is a ' + fp(S.mu) + ' markup and a ' + fp(S.mg) + ' margin.';
+      else if (S.pr === 0) tip = 'A cost of ' + fm(S.c) + ' sold at ' + fm(S.p) + ' breaks even: a 0% markup and a 0% margin.';
+      else tip = 'A cost of ' + fm(S.c) + ' sold at ' + fm(S.p) + ' loses ' + fm(-S.pr) + ': that is a ' + fp(S.mu) + ' markup and a ' + fp(S.mg) + ' margin.';
+      if (!S.muU || !S.mgU) { $('mkBars').innerHTML = bars(S); $('mkBarsWrap').style.display = ''; }
+    } else if (S.state === 'lone' && S.kind === 'markup' && S.mg == null) {
+      sub = 'A −100% markup means the selling price is zero, so there is no margin. Type a cost or a selling price to go on.';
+    } else if (S.state === 'lone') {
+      showBody = true;
+      var kk = S.kind === 'markup' ? 'margin' : 'markup', vv = S.kind === 'markup' ? S.mg : S.mu;
+      big = fp(vv); lab = E.LABEL[kk];
+      sub = S.kind === 'markup' ? (S.mg == null ? 'A −100% markup means a price of zero.' : 'A ' + fp(S.mu) + ' markup is a ' + fp(S.mg) + ' margin.') : 'A ' + fp(S.mg) + ' margin needs a ' + fp(S.mu) + ' markup.';
+      sub += ' Add a cost, selling price or profit to get amounts.';
+      tip = S.kind === 'markup' ? (S.mg == null ? 'A markup of −100% means the selling price is zero, so there is no margin.' : 'A ' + fp(S.mu) + ' markup is a ' + fp(S.mg) + ' margin: the profit is ' + fp(S.mu) + ' of the cost but only ' + fp(S.mg) + ' of the selling price.') : 'A ' + fp(S.mg) + ' margin needs a ' + fp(S.mu) + ' markup: the profit is ' + fp(S.mg) + ' of the selling price but ' + fp(S.mu) + ' of the cost.';
+    } else if (S.state === 'need') {
+      sub = 'Type one more value: ' + others(typedK[0]) + '.';
+    }
+    $('mkBig').textContent = big; $('mkBig').parentNode.classList.toggle('mk-long', big.length > 11); $('mkLab').textContent = lab; $('mkSub').textContent = sub; $('mkBody').style.display = showBody ? '' : 'none';
+    $('mkMLab').textContent = showBody ? lab : 'Answer'; $('mkMVal').textContent = big;
+    $('mkTip').textContent = tip;
+    if (showBody) { ladder(S); advTable(S, o); } else $('mkAdvWrap').style.display = 'none';
+  }
+
+  /* ---------- controls ---------- */
+  CORE.forEach(function (k) {
+    var inp = $(FM[k].id);
+    inp.addEventListener('input', function () { onEdit(k); });
+    inp.addEventListener('focus', function () { if (inp.closest('.fld').classList.contains('mk-calc')) setTimeout(function () { try { inp.select(); } catch (e) { /* not selectable */ } }, 0); });
+  });
+  Object.keys(ADVK).forEach(function (k) { $(ADVK[k]).addEventListener('input', render); });
+  function pickRow(e) {
+    var r = e.target.closest('.mk-row'); if (!r) return;
+    var k = st.lad === 'mg' ? 'margin' : 'markup'; $(FM[k].id).value = r.getAttribute('data-v'); onEdit(k);
+  }
+  $('mkLad').addEventListener('click', pickRow);
+  $('mkLad').addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pickRow(e); } });
+  [].forEach.call($('mkLadMode').children, function (b) { b.addEventListener('click', function () { st.lad = b.getAttribute('data-v'); [].forEach.call($('mkLadMode').children, function (x) { x.classList.toggle('on', x === b); }); render(); }); });
+  $('mkClear').addEventListener('click', function () {
+    CORE.forEach(function (k) { $(FM[k].id).value = ''; });
+    Object.keys(ADVK).forEach(function (k) { $(ADVK[k]).value = ''; });
+    st.typed = []; st.last = null; st.extra = ''; st.coreErr = null; render(); $(FM.cost.id).focus();
+  });
+  $('mkAdvBtn').addEventListener('click', function () {
+    st.adv = !st.adv; $('mkAdvBtn').classList.toggle('open', st.adv); $('mkAdvBtnLab').textContent = st.adv ? 'Go simple' : 'Go advanced'; $('mkAdvIn').style.display = st.adv ? '' : 'none';
+    if (!st.adv) Object.keys(ADVK).forEach(function (k) { $(ADVK[k]).value = ''; });
+    render();
+  });
+  /* the currency picker: the salary page's searchable list, display only */
+  (function () {
+    var opt = function (c, pop) { var n = curName(c); return '<button type="button" class="csel-opt' + (pop ? ' csel-pop' : '') + (c === 'USD' ? ' on' : '') + '" role="option" aria-selected="' + (c === 'USD') + '" data-value="' + c + '" data-p="' + (SE.RANK.indexOf(c) + 1) + '" data-s="' + (c + ' ' + n + ' ' + sym(c)).toLowerCase() + '"><span class="n">' + n + '</span><span class="c">' + c + '</span></button>'; };
+    var all = SE.CURRENCIES.slice().sort(function (a, b) { return curName(a) < curName(b) ? -1 : 1; });
+    $('mkCur').querySelector('.csel-panel').innerHTML = '<div class="csel-sbox"><input class="csel-search" type="text" placeholder="Search currency" aria-label="Search currency" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="go"></div><div class="csel-group">Popular</div>' +
+      SE.POPULAR.map(function (c) { return opt(c, true); }).join('') + '<div class="csel-group">All currencies</div>' + all.map(function (c) { return opt(c, false); }).join('') + '<div class="csel-none" style="display:none">No currency found</div>';
+    CalcThis.initCsel($('mkCur'));
+    $('mkCur').querySelector('.csel-val').textContent = 'USD';
+  })();
+  $('mkCur').addEventListener('change', function () { st.cur = $('mkCur').value || 'USD'; st.dec = decOf(st.cur); $('mkCur').querySelector('.csel-val').textContent = st.cur; render(); });
+  render();
+};
+/* MARKUP:END */

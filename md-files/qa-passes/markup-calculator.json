@@ -1,0 +1,36 @@
+{
+ "slug": "markup-calculator",
+ "pass": true,
+ "at": "2026-11-08T00:01:51.922Z",
+ "hash": "dea29a20e8854620",
+ "viewports": {
+  "mobile": {
+   "steps": 1719,
+   "fails": []
+  },
+  "desktop": {
+   "steps": 1719,
+   "fails": []
+  }
+ },
+ "oracle": {
+  "runs": 447,
+  "fails": [],
+  "note": "fuzzy ties 20 of 10358 comparisons"
+ },
+ "shots": [
+  "md-files/qa-passes/shots/markup-calculator-1-empty-mobile.png",
+  "md-files/qa-passes/shots/markup-calculator-2-filled-mobile.png",
+  "md-files/qa-passes/shots/markup-calculator-3-result-mobile.png",
+  "md-files/qa-passes/shots/markup-calculator-4-advanced-mobile.png",
+  "md-files/qa-passes/shots/markup-calculator-5-error-mobile.png",
+  "md-files/qa-passes/shots/markup-calculator-6-after-chaos-mobile.png",
+  "md-files/qa-passes/shots/markup-calculator-1-empty-desktop.png",
+  "md-files/qa-passes/shots/markup-calculator-2-filled-desktop.png",
+  "md-files/qa-passes/shots/markup-calculator-3-result-desktop.png",
+  "md-files/qa-passes/shots/markup-calculator-4-advanced-desktop.png",
+  "md-files/qa-passes/shots/markup-calculator-5-error-desktop.png",
+  "md-files/qa-passes/shots/markup-calculator-6-after-chaos-desktop.png"
+ ],
+ "console": []
+}

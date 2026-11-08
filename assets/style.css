@@ -3242,3 +3242,39 @@
 .p-rc .rc-rule-l span.a-l{transform:none;text-align:left}
 .p-rc .rc-rule-l.up span.a-l{align-items:flex-start}
 .p-rc #rcBfNote,.p-rc #rcMaintNote,.p-rc #rcTbfNote,.p-rc #rcDaysNote{margin:-6px 0 15px}
+
+/* ---- MARKUP calculator (.p-mk) — reuses .p-bmr result look, .dtable, .seg, the salary page's searchable currency .csel ---- */
+.p-mk .sl-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:6px}
+.p-mk .sl-head .card-h2{margin:0}
+.p-mk .sl-cur{width:auto;min-width:110px;flex:0 0 auto}
+.p-mk .sl-cur .csel-panel{left:auto;right:0;width:300px;max-width:86vw;max-height:min(380px,60vh)}
+.p-mk .mk-intro{font-size:14px;font-weight:500;color:var(--ink-soft);margin:0 0 14px;line-height:1.45}
+.p-mk .av-note,.p-mk .cb-note{font-size:14px;font-weight:500;color:var(--ink-soft);margin:4px 0 8px;line-height:1.45}
+.p-mk .cb-note{color:var(--muted);font-weight:400}
+.p-mk .fld.mk-calc .inp input{background:#F5EEDF;border-color:#E3D3AE}
+.p-mk .fld.mk-calc .unit b{color:var(--amber-deep);font-weight:700}
+.p-mk .mk-bt{font-size:14px;font-weight:600;color:var(--ink);margin:12px 0 6px}
+.p-mk .mk-bar{display:flex;height:26px;border-radius:8px;overflow:hidden;background:#EFE7D8}
+.p-mk .mk-seg{display:block;height:100%}
+.p-mk .mk-seg.cost{background:var(--spruce)}
+.p-mk .mk-seg.gain{background:var(--amber)}
+.p-mk .mk-seg.loss{background:repeating-linear-gradient(45deg,#D9776B,#D9776B 6px,#E9A59B 6px,#E9A59B 12px)}
+.p-mk .bm-key i.mk-ky{width:16px;height:10px;border-radius:3px;vertical-align:-1px}
+.p-mk .bm-key i.mk-ky.cost{background:var(--spruce)}
+.p-mk .bm-key i.mk-ky.gain{background:var(--amber)}
+.p-mk .bm-key i.mk-ky.loss{background:#D9776B}
+.p-mk .dtable td:nth-child(n+2),.p-mk .dtable th:nth-child(n+2){text-align:right}
+.p-mk .dtable td,.p-mk .dtable th{padding-left:6px;padding-right:6px}
+.p-mk .dtable td{font-variant-numeric:tabular-nums}
+.p-mk #mkLad td,.p-mk #mkAdvTbl td{overflow-wrap:anywhere}
+.p-mk .card{min-width:0}
+.p-mk .res-big{font-size:clamp(34px,8vw,52px)}
+.p-mk .res-big.mk-long{font-size:26px;overflow-wrap:anywhere}
+.p-mk .mbar-vals b{font-size:20px;overflow-wrap:anywhere}
+.p-mk .res-sub{overflow-wrap:anywhere}
+.p-mk .mk-row{cursor:pointer}
+.p-mk .mk-row:hover{background:#FCF7EE}
+.p-mk .mk-row.on{background:#F7EBD2}
+.p-mk .mk-row.on td{color:var(--ink);font-weight:700}
+.p-mk .mk-lad-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin:16px 0 4px}
+.p-mk .mk-lad-head .bm-h{margin:0}

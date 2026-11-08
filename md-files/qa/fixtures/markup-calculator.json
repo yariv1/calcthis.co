@@ -1,0 +1,51 @@
+{
+  "slug": "markup-calculator",
+  "bodyClass": "p-mk",
+  "blocks": ["MARKUP"],
+  "result": { "big": "mkBig", "body": "mkBody", "hint": "mkHint" },
+  "required": ["mkCost", "mkPrice", "mkProfit", "mkMarkup", "mkMargin"],
+  "fill": [
+    ["set", "mkQty", ""],
+    ["set", "mkDisc", ""],
+    ["set", "mkTax", ""],
+    ["set", "mkFee", ""],
+    ["seg", "mkLadMode", "mu"],
+    ["set", "mkCur", "USD"],
+    ["set", "mkCost", ""],
+    ["set", "mkPrice", ""],
+    ["set", "mkProfit", ""],
+    ["set", "mkMarkup", ""],
+    ["set", "mkMargin", ""],
+    ["set", "mkCost", "100"],
+    ["set", "mkMarkup", "50"]
+  ],
+  "optionalSamples": {
+    "mkQty": ["100", "1,000"],
+    "mkDisc": ["10", "25"],
+    "mkTax": ["8.5", "20"],
+    "mkFee": ["2.9", "5"]
+  },
+  "pools": {
+    "mkCost": ["100", "80.5", "1,000", "0", "250000", "0.01"],
+    "mkPrice": ["150", "80", "1,200.50", "0", "99999999999"],
+    "mkProfit": ["50", "-20", "0", "-500", "12.5"],
+    "mkMarkup": ["50", "-20", "100", "0", "250", "-100", "-100.5"],
+    "mkMargin": ["33.3", "-25", "90", "0", "99.9", "100", "-250"],
+    "mkQty": ["100", "2.5", "0", "1000000"],
+    "mkDisc": ["10", "25", "100", "101"],
+    "mkTax": ["8.5", "20", "0"],
+    "mkFee": ["2.9", "5", "100"]
+  },
+  "variants": [
+    [["set", "mkCost", ""], ["set", "mkMarkup", ""], ["set", "mkPrice", "80"], ["set", "mkCost", "100"]],
+    [["set", "mkCost", ""], ["set", "mkMarkup", ""], ["set", "mkPrice", "200"], ["set", "mkMargin", "40"]],
+    [["set", "mkCost", ""], ["set", "mkMarkup", ""], ["set", "mkProfit", "40"], ["set", "mkMargin", "25"]],
+    [["set", "mkCost", ""], ["set", "mkProfit", "40"]],
+    [["set", "mkCost", ""], ["set", "mkMarkup", ""], ["set", "mkMargin", "25"]],
+    [["seg", "mkLadMode", "mg"]],
+    [["set", "mkCur", "JPY"]],
+    [["set", "mkCur", "EUR"], ["set", "mkQty", "12"], ["set", "mkTax", "20"]]
+  ],
+  "scrollTo": "mkLad",
+  "errorState": [["set", "mkMargin", "150"]]
+}
