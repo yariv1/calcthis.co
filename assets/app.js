@@ -199,6 +199,14 @@ window.CalcThis = window.CalcThis || {};
       } catch (e) {}
       return (curCache[code] = info);
     }
+    /* money text with the symbol on the side that currency uses (same rule as the field symbols) */
+    CalcThis.fmtMoney = function (nf, code, v) {
+      var info = curInfo(code), parts = nf.formatToParts(v), num = '';
+      for (var i = 0; i < parts.length; i++) if (parts[i].type !== 'currency' && parts[i].type !== 'literal') num += parts[i].value;
+      if (!info) return nf.format(v);
+      var wordy = /[A-Za-z]/.test(info.sym);
+      return info.after ? num + ' ' + info.sym : info.sym + (wordy ? ' ' : '') + num;
+    };
     function picker() { var c = document.querySelector('.csel[id$="Cur"]'); return c && c.value ? curInfo(c.value) : null; }
     function sync() {
       var pk = picker();
@@ -235,7 +243,7 @@ window.CalcThis = window.CalcThis || {};
       });
     }
     var q = 0;
-    function later() { if (q) return; q = requestAnimationFrame(function () { q = 0; sync(); }); }
+    function later() { if (q) return; q = 1; var go = function () { if (!q) return; q = 0; sync(); }; requestAnimationFrame(go); setTimeout(go, 50); }
     ['input', 'change', 'click', 'keyup', 'focusin', 'focusout'].forEach(function (ev) { document.addEventListener(ev, function () { later(); setTimeout(later, 60); }, true); });
     new MutationObserver(later).observe(document.body || document.documentElement, { subtree: true, childList: true, characterData: true });
     window.addEventListener('resize', later);
@@ -18293,7 +18301,7 @@ CalcThis.initSalaryCalc = function () {
   function cf(x, d) {
     var k = st.cur + d;
     if (!NF[k]) NF[k] = new Intl.NumberFormat('en-US', { style: 'currency', currency: st.cur, currencyDisplay: 'narrowSymbol', minimumFractionDigits: d, maximumFractionDigits: d });
-    return (x < 0 ? '−' : '') + NF[k].format(Math.abs(x));
+    return (x < 0 ? '−' : '') + CalcThis.fmtMoney(NF[k], st.cur, Math.abs(x));
   }
   function fmt(x) {
     if (!isFinite(x)) return '—';
@@ -23124,7 +23132,7 @@ CalcThis.initMarkupCalc = function () {
   function cf(x, d) {
     var k = st.cur + d;
     if (!NF[k]) NF[k] = new Intl.NumberFormat('en-US', { style: 'currency', currency: st.cur, currencyDisplay: 'narrowSymbol', minimumFractionDigits: d, maximumFractionDigits: d });
-    return (x < 0 ? '−' : '') + NF[k].format(Math.abs(x));
+    return (x < 0 ? '−' : '') + CalcThis.fmtMoney(NF[k], st.cur, Math.abs(x));
   }
   function fm(x) { if (x == null || !isFinite(x)) return '—'; if (Math.abs(x) < Math.pow(10, -st.dec) / 2) x = 0; return cf(x, st.dec); }
   function pc(x, d) { var r = Math.round(x * 100) / 100; if (r === 0) r = 0; return (r < 0 ? '−' : '') + Math.abs(r).toLocaleString('en-US', { maximumFractionDigits: d == null ? 2 : d }); }
@@ -23439,7 +23447,7 @@ CalcThis.initProfitMarginCalc = function () {
   function cf(x, d) {
     var k = st.cur + d;
     if (!NF[k]) NF[k] = new Intl.NumberFormat('en-US', { style: 'currency', currency: st.cur, currencyDisplay: 'narrowSymbol', minimumFractionDigits: d, maximumFractionDigits: d });
-    return (x < 0 ? '−' : '') + NF[k].format(Math.abs(x));
+    return (x < 0 ? '−' : '') + CalcThis.fmtMoney(NF[k], st.cur, Math.abs(x));
   }
   function fm(x) { if (x == null || !isFinite(x)) return '—'; if (Math.abs(x) < Math.pow(10, -st.dec) / 2) x = 0; return cf(x, st.dec); }
   function pc(x, d) { var r = Math.round(x * 100) / 100; if (r === 0) r = 0; return (r < 0 ? '−' : '') + Math.abs(r).toLocaleString('en-US', { maximumFractionDigits: d == null ? 2 : d }); }
@@ -23788,7 +23796,7 @@ CalcThis.initDiscountCalc = function () {
   function cf(x, d) {
     var k = st.cur + d;
     if (!NF[k]) NF[k] = new Intl.NumberFormat('en-US', { style: 'currency', currency: st.cur, currencyDisplay: 'narrowSymbol', minimumFractionDigits: d, maximumFractionDigits: d });
-    return (x < 0 ? '−' : '') + NF[k].format(Math.abs(x));
+    return (x < 0 ? '−' : '') + CalcThis.fmtMoney(NF[k], st.cur, Math.abs(x));
   }
   function fm(x) { if (x == null || !isFinite(x)) return '—'; if (Math.abs(x) < Math.pow(10, -st.dec) / 2) x = 0; return cf(x, st.dec); }
   function pc(x) { var r = Math.round(x * 100) / 100; if (r === 0) r = 0; return (r < 0 ? '−' : '') + Math.abs(r).toLocaleString('en-US', { maximumFractionDigits: 2 }); }

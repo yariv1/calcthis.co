@@ -1,8 +1,8 @@
 {
  "slug": "discount-calculator",
  "pass": true,
- "at": "2026-11-08T12:40:30.315Z",
- "hash": "24e5addb8a698ef5",
+ "at": "2026-11-08T13:48:30.484Z",
+ "hash": "aeba46362f522045",
  "viewports": {
   "mobile": {
    "steps": 1346,
@@ -14,7 +14,7 @@
   }
  },
  "oracle": {
-  "runs": 492,
+  "runs": 494,
   "fails": [],
   "note": "fuzzy ties 39 of 9710 comparisons; skipped 0"
  },

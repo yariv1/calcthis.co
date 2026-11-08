@@ -337,6 +337,9 @@ Total live calculators: **89** (v322, + max heart rate, v321, + weight loss perc
 
 ---
 
+## Last session addendum 32 (2026-11-08, DEPLOYED v334): MONEY TEXT FOLLOWS THE FIELD SYMBOL SIDE
+`CalcThis.fmtMoney` (app.js FIELD SYMBOLS block) now formats every money figure on the currency-picker pages (discount, markup, profit margin, salary) with the symbol on the same side as the field symbol (EUR/SEK/ILS after, USD/INR/GBP before). Oracles of the three gated pages updated (EUR/SEK/ILS after). User caught that results still used the US layout.
+
 ## Last session addendum 31 (2026-11-08, DEPLOYED v333): FIELD SYMBOLS FOR ALL CURRENCIES
 Global field symbols now use Intl per currency with a home-locale table (LOC in app.js FIELD SYMBOLS): symbol side follows the currency (ILS, EUR, SEK, PLN, CZK, VND after; USD, INR, GBP, JPY before); about 50 currencies without a symbol show the 3-letter code; the label unit follows the picker and reverts to $ for USD. No new pages.
 

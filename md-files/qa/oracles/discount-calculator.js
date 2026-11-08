@@ -198,9 +198,9 @@ module.exports = async function (ctx) {
   if ((await ctx.eval('document.getElementById("dcQty").value + document.getElementById("dcTax").value')) !== '') fails.push('Go simple did not clear the extras'); if (d.step.length !== 3) fails.push('tax rows still counted after Go simple: ' + d.step.length);
 
   /* ---- 8. currencies: symbol and decimals follow the selector, nothing is converted ---- */
-  for (const [cur, sym, dec] of [['EUR', '€', 2], ['GBP', '£', 2], ['JPY', '¥', 0], ['USD', '$', 2], ['CHF', 'CHF', 2], ['INR', '₹', 2]]) {
+  for (const [cur, sym, dec] of [['EUR', '€', 2], ['GBP', '£', 2], ['JPY', '¥', 0], ['USD', '$', 2], ['CHF', 'CHF', 2], ['INR', '₹', 2], ['SEK', 'kr', 2], ['ILS', '₪', 2]]) {
     await clear(); await ctx.set('dcCur', cur); await typeVal('orig', 1234.5); await typeVal('pct', 20); d = await read(); runs++;
-    const f = 1234.5 * 0.8, fmc = (x) => { const r = money(x, sym, dec); return cur === 'CHF' ? r.replace('CHF', 'CHF ') : r; };
+    const f = 1234.5 * 0.8, fmc = (x) => { let r = money(x, sym, dec); if (['EUR', 'SEK', 'ILS'].includes(cur)) r = r.replace(sym, '') + sym; return cur === 'CHF' ? r.replace('CHF', 'CHF ') : r; };
     const bigT = d.big.replace(/[\s  ]/g, ''), exp = fmc(f).replace(/[\s  ]/g, ''); if (bigT !== exp) fails.push('currency ' + cur + ' headline [' + d.big + '] expected [' + fmc(f) + ']');
     if (d.box.final !== plain(f, dec)) fails.push('currency ' + cur + ' computed final box [' + d.box.final + '] expected [' + plain(f, dec) + ']');
     if (d.u[0].indexOf(sym) !== 0) fails.push('currency ' + cur + ' label unit [' + d.u[0] + '] should start with ' + sym);

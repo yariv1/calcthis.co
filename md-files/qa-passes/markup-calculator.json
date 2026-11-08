@@ -1,8 +1,8 @@
 {
  "slug": "markup-calculator",
  "pass": true,
- "at": "2026-11-08T07:05:38.796Z",
- "hash": "e3512ed59b6a729b",
+ "at": "2026-11-08T13:49:29.490Z",
+ "hash": "f00e5237bc2e521b",
  "viewports": {
   "mobile": {
    "steps": 1719,
@@ -14,7 +14,7 @@
   }
  },
  "oracle": {
-  "runs": 447,
+  "runs": 449,
   "fails": [],
   "note": "fuzzy ties 20 of 10358 comparisons"
  },

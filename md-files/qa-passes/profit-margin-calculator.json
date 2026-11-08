@@ -1,8 +1,8 @@
 {
  "slug": "profit-margin-calculator",
  "pass": true,
- "at": "2026-11-08T12:40:56.670Z",
- "hash": "fb4a689de62adc63",
+ "at": "2026-11-08T13:48:56.109Z",
+ "hash": "22418bd5cbb51b70",
  "viewports": {
   "mobile": {
    "steps": 1766,
@@ -14,7 +14,7 @@
   }
  },
  "oracle": {
-  "runs": 419,
+  "runs": 421,
   "fails": [],
   "note": "fuzzy ties 131 of 13271 comparisons"
  },
