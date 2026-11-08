@@ -164,3 +164,4 @@ GSC snapshot 2026-10-26: 69 indexed, 13 not indexed (8 Discovered, 1 Crawled, 1 
 - 2026-11-08 deployed v330: `/markup-calculator/` - IndexNow HTTP 200 (226 URLs); Bing submit pending (manual); GSC NOT requested (quota): add to the money block / end of queue.
 - 2026-11-08 deployed v331: `/profit-margin-calculator/` - IndexNow HTTP 200 (227 URLs); Bing submit pending (manual); GSC NOT requested (quota): add to the money block / end of queue.
 - 2026-11-08 deployed v332: `/discount-calculator/` (+ global field symbols) - IndexNow HTTP 200 (228 URLs); Bing submit pending (manual, also markup + profit margin); GSC NOT requested (quota): add to the money block / end of queue.
+- 2026-11-08 v333: global field symbols now cover all picker currencies (side per currency: ILS/EUR/SEK after, USD/INR/GBP before; no-symbol currencies show the code); app.js FIELD SYMBOLS block. No new pages.

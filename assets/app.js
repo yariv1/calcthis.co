@@ -171,50 +171,66 @@ window.CalcThis = window.CalcThis || {};
   CalcThis.initAllCsel();
 
   /* FIELD SYMBOLS (global, 2026-11-08): a field whose label unit starts with a currency symbol or % shows
-     that symbol inside the field next to the value, only while the field has a value ($ before, % after).
-     The symbol is read live from the label, and follows a currency picker (#...Cur) when the page has one. */
+     that symbol inside the field next to the value, only while the field has a value. Currency goes on the
+     side that currency uses at home (before: $ £ ₹ ₪ ...; after: kr zł Kč ₫ € in most of Europe ...).
+     The symbol is read live from the label; on a page with a currency picker (#...Cur) every "$" label
+     follows the chosen currency (symbol, side and the label unit). */
   (function () {
-    var SYM = /^\s*([$€£¥%])(?=[\s·—\/]|$)/;
+    var SYM = /^\s*([$€£¥₹₪%])(?=[\s·—\/]|$)/;
     var cv = document.createElement('canvas').getContext('2d');
+    var LOC = { USD:'en-US',CAD:'en-CA',AUD:'en-AU',NZD:'en-NZ',GBP:'en-GB',EUR:'de-DE',JPY:'en-US',CNY:'zh-CN',INR:'en-IN',ILS:'he-IL',CHF:'de-CH',
+      SEK:'sv-SE',NOK:'nb-NO',DKK:'da-DK',PLN:'pl-PL',CZK:'cs-CZ',HUF:'hu-HU',RON:'ro-RO',BGN:'bg-BG',TRY:'tr-TR',RUB:'ru-RU',UAH:'uk-UA',
+      BRL:'pt-BR',MXN:'es-MX',ARS:'es-AR',CLP:'es-CL',COP:'es-CO',PEN:'es-PE',UYU:'es-UY',ZAR:'en-ZA',KRW:'ko-KR',THB:'th-TH',VND:'vi-VN',
+      IDR:'id-ID',MYR:'ms-MY',PHP:'en-PH',SGD:'en-SG',HKD:'zh-HK',TWD:'zh-TW',AED:'en-AE',SAR:'en-SA',EGP:'en-EG',NGN:'en-NG',KES:'en-KE',
+      PKR:'en-PK',BDT:'en-BD',ISK:'is-IS',HRK:'hr-HR',RSD:'sr-RS',GEL:'ka-GE',KZT:'kk-KZ',MAD:'fr-MA',DZD:'fr-DZ',TND:'fr-TN',QAR:'en-QA',
+      KWD:'en-KW',BHD:'en-BH',OMR:'en-OM',JOD:'en-JO',LKR:'en-LK',NPR:'en-NP',GHS:'en-GH',TZS:'en-TZ',UGX:'en-UG' };
     var curCache = {};
-    function curSym(code) {
-      if (!code) return '';
+    function curInfo(code) {
+      if (!code) return null;
       if (curCache[code] !== undefined) return curCache[code];
-      var s = '';
-      try { var p = new Intl.NumberFormat('en', { style: 'currency', currency: code, currencyDisplay: 'narrowSymbol' }).formatToParts(0); for (var i = 0; i < p.length; i++) if (p[i].type === 'currency') s = p[i].value; } catch (e) {}
-      return (curCache[code] = s);
+      var info = null;
+      try {
+        var loc = (LOC[code] || 'en') + '-u-nu-latn';
+        var p = new Intl.NumberFormat(loc, { style: 'currency', currency: code, currencyDisplay: 'narrowSymbol' }).formatToParts(1234.5);
+        var s = '', ci = -1, ii = -1;
+        for (var i = 0; i < p.length; i++) { if (p[i].type === 'currency') { s = p[i].value; ci = i; } else if (p[i].type === 'integer' && ii < 0) ii = i; }
+        s = s.replace(/[‎‏؜ \s]/g, '');
+        if (s) info = { sym: s, after: ci > ii };
+      } catch (e) {}
+      return (curCache[code] = info);
     }
-    function pickerSym() {
-      var c = document.querySelector('.csel[id$="Cur"]');
-      return c && c.value ? curSym(c.value) : '';
-    }
+    function picker() { var c = document.querySelector('.csel[id$="Cur"]'); return c && c.value ? curInfo(c.value) : null; }
     function sync() {
-      var ps = pickerSym();
+      var pk = picker();
       [].forEach.call(document.querySelectorAll('.fld .lab .unit'), function (u) {
         var lab = u.closest('.fld'); if (!lab) return;
         var box = lab.querySelector('.inp'); var inp = box && box.querySelector('input');
         if (!inp || box.querySelector('.suf')) return;
         var t = u.textContent, m = SYM.exec(t);
-        if (!m || /\bor\b/.test(t)) { if (inp._symEl) { inp._symEl.style.display = 'none'; inp.style.paddingLeft = ''; } return; }
-        var s = m[1];
-        if (s === '$' && ps) { s = ps; if (!u._cur) { u._cur = 1; } if (t.indexOf(s) !== 0) { u.textContent = t.replace(/^\s*\$/, s); } }
-        else if (s === '$' && u._cur) { /* picker gone: leave as is */ }
+        if (u._rest === undefined && m && !/\bor\b/.test(t)) { u._rest = t.slice(m[0].length); u._mark = m[1]; }
+        var mark = u._mark;
         var el = inp._symEl;
+        if (!mark) { if (el) { el.style.display = 'none'; inp.style.paddingLeft = ''; } return; }
+        var s = mark, after = (mark === '%');
+        if (mark === '$' && pk) {
+          s = pk.sym; after = pk.after;
+          var want = s + u._rest; if (t !== want) u.textContent = want;
+        } else if (mark === '$' && t !== '$' + u._rest) { u.textContent = '$' + u._rest; }
         if (!el) { el = document.createElement('span'); el.className = 'fsym'; el.setAttribute('aria-hidden', 'true'); box.appendChild(el); inp._symEl = el; inp._pad = parseFloat(getComputedStyle(inp).paddingLeft) || 13; }
-        var has = inp.value !== '';
-        if (!has) { el.style.display = 'none'; inp.style.paddingLeft = ''; return; }
+        if (inp.value === '') { el.style.display = 'none'; inp.style.paddingLeft = ''; return; }
         var cs = getComputedStyle(inp);
         cv.font = cs.fontWeight + ' ' + cs.fontSize + ' ' + cs.fontFamily;
         el.textContent = s; el.style.display = '';
-        if (m[1] === '%') {
+        var wordy = /[A-Za-z]/.test(s), gap = wordy ? 6 : 3;
+        if (after) {
           inp.style.paddingLeft = '';
-          var w = cv.measureText(inp.value).width;
-          el.style.left = (inp._pad + w + 3) + 'px';
-          el.style.visibility = (inp._pad + w + 3 + 14 > inp.clientWidth - 8) ? 'hidden' : '';
+          var w = cv.measureText(inp.value).width, sw2 = cv.measureText(s).width;
+          el.style.left = (inp._pad + w + gap) + 'px';
+          el.style.visibility = (inp._pad + w + gap + sw2 > inp.clientWidth - 8) ? 'hidden' : '';
         } else {
           var sw = cv.measureText(s).width;
           el.style.left = inp._pad + 'px'; el.style.visibility = '';
-          inp.style.paddingLeft = (inp._pad + sw + 4) + 'px';
+          inp.style.paddingLeft = (inp._pad + sw + (wordy ? 6 : 4)) + 'px';
         }
       });
     }

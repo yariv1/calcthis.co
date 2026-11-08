@@ -337,6 +337,9 @@ Total live calculators: **89** (v322, + max heart rate, v321, + weight loss perc
 
 ---
 
+## Last session addendum 31 (2026-11-08, DEPLOYED v333): FIELD SYMBOLS FOR ALL CURRENCIES
+Global field symbols now use Intl per currency with a home-locale table (LOC in app.js FIELD SYMBOLS): symbol side follows the currency (ILS, EUR, SEK, PLN, CZK, VND after; USD, INR, GBP, JPY before); about 50 currencies without a symbol show the 3-letter code; the label unit follows the picker and reverts to $ for USD. No new pages.
+
 ## Last session addendum 30 (2026-11-08 #6, DEPLOYED v332): DISCOUNT `/discount-calculator/` + GLOBAL FIELD SYMBOLS
 Engine `DISCOUNT-ENGINE` (`CalcThis.discountEngine`: aff, forward, solve, ladder, offerPay, autoQty), init `CalcThis.initDiscountCalc` (ids `dc*`, block `DISCOUNT:BEGIN/END` at end of app.js), css `.p-dc`, generator `md-files/gen-discount-page.js` (chains after profit-margin), notes `md-files/calcthis-discount-research.md`. Four boxes (original price pinned, percent off, final price, you save) any two fill the rest, stacked extra discount rows (% or amount) with the true combined percent, tax on top/included, quantity, compare up to 3 deals (best marked), price bar, step table, percent ladder, currency picker `dcCur`. Optional rows never hide the result. QA gate PASS (492 oracle runs), audit-silent + registration audit PASS, dup-check 0.0%. **User request: GLOBAL FIELD SYMBOLS** - any `.fld .lab .unit` starting with $ € £ ¥ or % shows the symbol inside the field next to the value only while it has a value (app.js FIELD SYMBOLS block, `CalcThis.syncFieldSymbols`, `.inp .fsym`); follows currency pickers; design system section "Field symbols". Not verified: real phone, other browsers, print, every older page with the new symbols. Bing manual submit for markup, profit margin, discount + GSC queue still to do. NEXT: commission (>1000 Medium) / unit price (>1000 Easy), each needs its own research report + approval.
 
