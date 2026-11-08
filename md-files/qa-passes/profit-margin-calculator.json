@@ -1,0 +1,36 @@
+{
+ "slug": "profit-margin-calculator",
+ "pass": true,
+ "at": "2026-11-08T07:05:08.524Z",
+ "hash": "fb4a689de62adc63",
+ "viewports": {
+  "mobile": {
+   "steps": 1766,
+   "fails": []
+  },
+  "desktop": {
+   "steps": 1766,
+   "fails": []
+  }
+ },
+ "oracle": {
+  "runs": 419,
+  "fails": [],
+  "note": "fuzzy ties 131 of 13271 comparisons"
+ },
+ "shots": [
+  "md-files/qa-passes/shots/profit-margin-calculator-1-empty-mobile.png",
+  "md-files/qa-passes/shots/profit-margin-calculator-2-filled-mobile.png",
+  "md-files/qa-passes/shots/profit-margin-calculator-3-result-mobile.png",
+  "md-files/qa-passes/shots/profit-margin-calculator-4-advanced-mobile.png",
+  "md-files/qa-passes/shots/profit-margin-calculator-5-error-mobile.png",
+  "md-files/qa-passes/shots/profit-margin-calculator-6-after-chaos-mobile.png",
+  "md-files/qa-passes/shots/profit-margin-calculator-1-empty-desktop.png",
+  "md-files/qa-passes/shots/profit-margin-calculator-2-filled-desktop.png",
+  "md-files/qa-passes/shots/profit-margin-calculator-3-result-desktop.png",
+  "md-files/qa-passes/shots/profit-margin-calculator-4-advanced-desktop.png",
+  "md-files/qa-passes/shots/profit-margin-calculator-5-error-desktop.png",
+  "md-files/qa-passes/shots/profit-margin-calculator-6-after-chaos-desktop.png"
+ ],
+ "console": []
+}

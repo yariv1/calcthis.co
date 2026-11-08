@@ -3278,3 +3278,50 @@
 .p-mk .mk-row.on td{color:var(--ink);font-weight:700}
 .p-mk .mk-lad-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin:16px 0 4px}
 .p-mk .mk-lad-head .bm-h{margin:0}
+/* ---- PROFIT MARGIN calculator (.p-pm) — reuses .p-bmr result look, .dtable, .seg, the salary page's searchable currency .csel ---- */
+.p-pm .sl-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:6px}
+.p-pm .sl-head .card-h2{margin:0}
+.p-pm .sl-cur{width:auto;min-width:110px;flex:0 0 auto}
+.p-pm .sl-cur .csel-panel{left:auto;right:0;width:300px;max-width:86vw;max-height:min(380px,60vh)}
+.p-pm .pm-intro{font-size:14px;font-weight:500;color:var(--ink-soft);margin:0 0 14px;line-height:1.45}
+.p-pm .av-note,.p-pm .cb-note{font-size:14px;font-weight:500;color:var(--ink-soft);margin:4px 0 8px;line-height:1.45}
+.p-pm .cb-note{color:var(--muted);font-weight:400}
+.p-pm .fld.pm-calc .inp input{background:#F5EEDF;border-color:#E3D3AE}
+.p-pm .fld.pm-calc .unit b{color:var(--amber-deep);font-weight:700}
+.p-pm .pm-bt{font-size:14px;font-weight:600;color:var(--ink);margin:12px 0 6px}
+.p-pm .dtable td:nth-child(n+2),.p-pm .dtable th:nth-child(n+2){text-align:right}
+.p-pm .dtable td,.p-pm .dtable th{padding-left:6px;padding-right:6px}
+.p-pm .dtable td{font-variant-numeric:tabular-nums}
+.p-pm #pmLad td,.p-pm #pmPl td{overflow-wrap:anywhere}
+.p-pm .card{min-width:0}
+.p-pm .res-big{font-size:clamp(34px,8vw,52px)}
+.p-pm .res-big.pm-long{font-size:26px;overflow-wrap:anywhere}
+.p-pm .mbar-vals b{font-size:20px;overflow-wrap:anywhere}
+.p-pm .res-sub{overflow-wrap:anywhere}
+.p-pm .pm-row{cursor:pointer}
+.p-pm .pm-row:hover{background:#FCF7EE}
+.p-pm .pm-row.on{background:#F7EBD2}
+.p-pm .pm-row.on td{color:var(--ink);font-weight:700}
+.p-pm .pm-lad-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin:16px 0 4px}
+.p-pm .pm-lad-head .bm-h{margin:0}
+.p-pm .pm-bar{position:relative;display:flex;height:26px;border-radius:8px;overflow:hidden;background:#EFE7D8}
+.p-pm .pm-seg{display:block;height:100%}
+.p-pm .pm-seg.cogs{background:#37503F}
+.p-pm .pm-seg.opx{background:#5F7F6B}
+.p-pm .pm-seg.oth{background:#8FA89A}
+.p-pm .pm-seg.int{background:#B7C7BC}
+.p-pm .pm-seg.tax{background:#C8A15B}
+.p-pm .pm-seg.gain{background:var(--amber)}
+.p-pm .pm-rev{position:absolute;top:0;bottom:0;width:3px;margin-left:-1px;background:var(--ink)}
+.p-pm .bm-key i.pm-ky{width:16px;height:10px;border-radius:3px;vertical-align:-1px}
+.p-pm .bm-key i.pm-ky.cogs{background:#37503F}
+.p-pm .bm-key i.pm-ky.opx{background:#5F7F6B}
+.p-pm .bm-key i.pm-ky.oth{background:#8FA89A}
+.p-pm .bm-key i.pm-ky.int{background:#B7C7BC}
+.p-pm .bm-key i.pm-ky.tax{background:#C8A15B}
+.p-pm .bm-key i.pm-ky.gain{background:var(--amber)}
+.p-pm .bm-key i.pm-ky.rev{width:3px;background:var(--ink)}
+.p-pm #pmWi td,.p-pm #pmPl td{overflow-wrap:anywhere}
+.p-pm .pm-strong td{font-weight:700;color:var(--ink)}
+/* GLOBAL: an explanation directly under a field sits close to it (field 15px bottom spacing - 6px = about 9px) so it clearly belongs to the field above (user 2026-11-08) */
+body .fld + .av-note,body .fld + .cb-note{margin-top:-6px}

@@ -58,7 +58,7 @@ const P = {
     ['Do sales tax, VAT and fees change my markup?', 'Sales tax and VAT are paid by the customer and passed on, so they do not change your profit; the calculator shows what the customer pays. Fees and discounts do reduce your profit: under Go advanced, type them in and the table shows your net profit, net markup and net margin. The discount comes off first, then tax and fees are charged on the discounted price.'],
     ['Does the currency selector convert my numbers?', 'No. It only changes the symbol and the decimals shown. Type your numbers in the currency you use.']
   ],
-  pills: [['/percentage-calculator/', 'Percentage Calculator', '<path d="M19 5L5 19"/><circle cx="7" cy="7" r="2.5"/><circle cx="17" cy="17" r="2.5"/>'], ['/percentage-change-calculator/', 'Percentage Change Calculator', '<path d="M4 17l6-6 4 4 6-8"/>'], ['/sales-tax-calculator/', 'Sales Tax Calculator', '<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/>'], ['/ratio-calculator/', 'Ratio Calculator', '<path d="M5 9h14M5 15h14"/>']]
+  pills: [['/profit-margin-calculator/', 'Profit Margin Calculator', '<circle cx="12" cy="12" r="9"/><path d="M12 12V3M12 12l7 6"/>'], ['/percentage-calculator/', 'Percentage Calculator', '<path d="M19 5L5 19"/><circle cx="7" cy="7" r="2.5"/><circle cx="17" cy="17" r="2.5"/>'], ['/percentage-change-calculator/', 'Percentage Change Calculator', '<path d="M4 17l6-6 4 4 6-8"/>'], ['/sales-tax-calculator/', 'Sales Tax Calculator', '<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/>'], ['/ratio-calculator/', 'Ratio Calculator', '<path d="M5 9h14M5 15h14"/>']]
 };
 
 const tfld = (id, label, unit, ph, mode) => `<label class="fld" for="${id}"><span class="lab">${label}${unit ? ' <span class="unit">' + unit + '</span>' : ''}</span><div class="inp"><input id="${id}" type="text" inputmode="${mode || 'decimal'}" autocomplete="off" placeholder="${ph}"></div></label>`;
@@ -155,7 +155,7 @@ function build() {
         ${tbl}
 
         <h2>Related tools</h2>
-        <p>To work out a percentage of a number use the <a href="/percentage-calculator/">percentage calculator</a>, to see how much a price rose or fell the <a href="/percentage-change-calculator/">percentage change calculator</a>, and to add tax to a price the <a href="/sales-tax-calculator/">sales tax calculator</a>.</p>
+        <p>To turn a cost and your other costs into gross, operating and net margin use the <a href="/profit-margin-calculator/">profit margin calculator</a>, to work out a percentage of a number use the <a href="/percentage-calculator/">percentage calculator</a>, to see how much a price rose or fell the <a href="/percentage-change-calculator/">percentage change calculator</a>, and to add tax to a price the <a href="/sales-tax-calculator/">sales tax calculator</a>.</p>
         ${SRC}`;
 
   const body = `<body class="${P.body}">

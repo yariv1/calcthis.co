@@ -23301,3 +23301,301 @@ CalcThis.initMarkupCalc = function () {
   render();
 };
 /* MARKUP:END */
+/* PROFITMARGIN:BEGIN */
+/* =========================================================
+   PROFIT MARGIN calculator (/profit-margin-calculator/). Competitors opened live (2026-11-08): calculator.net (margin), Omnicalculator (margin, gross margin), CalculatorSoup,
+   Shopify, Xero, businessinitiative.org - all numbers only. Notes: md-files/calcthis-profitmargin-research.md.
+   Formulas: gross profit = revenue - COGS; gross margin = gross profit / revenue; operating profit = gross profit - operating expenses - other costs - fees (% of revenue);
+   profit before tax = operating profit - interest; tax = rate x profit before tax (none when it is not above zero); net profit = profit before tax - tax;
+   markup = gross profit / COGS; price for a margin = COGS / (1 - margin).
+   Pairs of the four boxes are solved by CalcThis.salesEngine (shared with the markup page; no markup box here).
+   ========================================================= */
+/* MARGIN-ENGINE:START */
+CalcThis.marginEngine = (function () {
+  /* o = { opex, other, fee, int, tax } (numbers or null) */
+  function pl(rev, cogs, o) {
+    o = o || {};
+    var opex = o.opex || 0, other = o.other || 0, fee = o.fee || 0, intr = o.int || 0, tax = o.tax || 0;
+    var gp = rev - cogs, feeA = rev * fee / 100, op = gp - opex - other - feeA, pre = op - intr, taxA = pre > 0 ? pre * tax / 100 : 0, net = pre - taxA;
+    var sc = Math.max(1, Math.abs(rev), Math.abs(cogs), opex, other, intr), z = function (x) { return Math.abs(x) < 1e-9 * sc ? 0 : x; };
+    gp = z(gp); op = z(op); pre = z(pre); net = z(net);
+    var m = function (x) { return rev > 0 ? x / rev * 100 : null; };
+    return { rev: rev, cogs: cogs, gp: gp, opex: opex, other: other, feeA: feeA, op: op, intr: intr, pre: pre, taxA: taxA, net: net, gm: m(gp), om: m(op), nm: m(net), mu: cogs > 0 ? gp / cogs * 100 : null };
+  }
+  function sg(x) { return x > 0 ? '+' + x : '−' + Math.abs(x); }
+  /* price and cost moved by 10 / 5 percent either way, everything else as it is */
+  function whatif(rev, cogs, o) {
+    var d = [10, 5, -5, -10], rows = [{ lab: 'Today', r: pl(rev, cogs, o) }];
+    d.forEach(function (x) { rows.push({ lab: 'Price ' + sg(x) + '%', r: pl(rev * (1 + x / 100), cogs, o) }); });
+    d.forEach(function (x) { rows.push({ lab: 'Cost ' + sg(x) + '%', r: pl(rev, cogs * (1 + x / 100), o) }); });
+    return rows;
+  }
+  /* fixed costs = operating expenses + other costs + interest; COGS and fees grow with sales; tax ignored (before tax) */
+  function breakeven(rev, cogs, o) {
+    o = o || {};
+    var fixed = (o.opex || 0) + (o.other || 0) + (o.int || 0), ratio = rev > 0 ? 1 - cogs / rev - (o.fee || 0) / 100 : 0;
+    if (!(fixed > 0) || !(ratio > 1e-9)) return null;
+    return { fixed: fixed, ratio: ratio, be: fixed / ratio };
+  }
+  return { pl: pl, whatif: whatif, breakeven: breakeven };
+})();
+/* MARGIN-ENGINE:END */
+
+/* =========================================================
+   CalcThis.initProfitMarginCalc() - ids pm*. Engines: CalcThis.salesEngine, CalcThis.marginEngine, CalcThis.salaryEngine (currency list only, display only - nothing is converted).
+   ========================================================= */
+CalcThis.initProfitMarginCalc = function () {
+  var E = CalcThis.salesEngine, M = CalcThis.marginEngine, SE = CalcThis.salaryEngine;
+  var $ = function (id) { return document.getElementById(id); };
+  if (!$('pmRev')) return;
+  var CORE = ['price', 'cost', 'profit', 'margin'];
+  var FM = { price: { id: 'pmRev', d: 'what you sell for', money: 1 }, cost: { id: 'pmCogs', d: 'what it costs you', money: 1 }, profit: { id: 'pmProfit', d: 'revenue − cost', money: 1 }, margin: { id: 'pmMargin', d: 'profit ÷ revenue' } };
+  var ADVK = { opex: 'pmOpex', other: 'pmOther', fee: 'pmFee', int: 'pmInt', tax: 'pmTax' };
+  var ADVKIND = { opex: 'cost', other: 'cost', fee: 'fee', int: 'cost', tax: 'tax' };
+  var LAB = { price: 'Revenue', cost: 'Cost of goods sold', profit: 'Gross profit', margin: 'Gross margin', opex: 'Operating expenses', other: 'Other costs', fee: 'Fees', int: 'Interest', tax: 'Tax rate' };
+  var EG = { price: '50000', cost: '30000', profit: '20000', margin: '40', opex: '10000', other: '1000', fee: '2.9', int: '500', tax: '25' };
+  var NAME = { price: 'revenue', cost: 'cost of goods sold', profit: 'gross profit', margin: 'gross margin' };
+  var st = { cur: 'USD', dec: 2, typed: [], last: null, coreErr: null, extra: '', adv: false };
+  var NF = {}, DN = null;
+  try { DN = new Intl.DisplayNames(['en'], { type: 'currency' }); } catch (e) { DN = null; }
+  var CN = { SLE: 'Sierra Leonean Leone' };
+  function curName(c) { try { var n = DN && DN.of(c); return (n && n !== c) ? n : (CN[c] || c); } catch (e) { return CN[c] || c; } }
+  function decOf(c) { try { return Math.min(2, new Intl.NumberFormat('en-US', { style: 'currency', currency: c }).resolvedOptions().maximumFractionDigits); } catch (e) { return 2; } }
+  function sym(c) { try { return new Intl.NumberFormat('en-US', { style: 'currency', currency: c, currencyDisplay: 'narrowSymbol' }).format(0).replace(/[0-9.,\s]/g, ''); } catch (e) { return c; } }
+  function cf(x, d) {
+    var k = st.cur + d;
+    if (!NF[k]) NF[k] = new Intl.NumberFormat('en-US', { style: 'currency', currency: st.cur, currencyDisplay: 'narrowSymbol', minimumFractionDigits: d, maximumFractionDigits: d });
+    return (x < 0 ? '−' : '') + NF[k].format(Math.abs(x));
+  }
+  function fm(x) { if (x == null || !isFinite(x)) return '—'; if (Math.abs(x) < Math.pow(10, -st.dec) / 2) x = 0; return cf(x, st.dec); }
+  function pc(x, d) { var r = Math.round(x * 100) / 100; if (r === 0) r = 0; return (r < 0 ? '−' : '') + Math.abs(r).toLocaleString('en-US', { maximumFractionDigits: d == null ? 2 : d }); }
+  function fp(x) { return x == null || !isFinite(x) ? '—' : pc(x) + '%'; }
+  function ft(x, money) {
+    var d = money ? st.dec : 2, r = Math.round(x * Math.pow(10, d)) / Math.pow(10, d); if (r === 0) r = 0;
+    return (r < 0 ? '-' : '') + Math.abs(r).toLocaleString('en-US', { maximumFractionDigits: d });
+  }
+  function nm(k) { return NAME[k]; }
+  function join(a) { return a.length < 2 ? a.join('') : a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1]; }
+  function others(k) { return join(CORE.filter(function (x) { return x !== k; }).map(nm)).replace(' and ', ' or '); }
+  function cap(t) { return t.charAt(0).toUpperCase() + t.slice(1); }
+
+  /* ---------- error wording ---------- */
+  function errMsg(k, code, raw) {
+    var L = LAB[k], r = String(raw).trim().slice(0, 14), tail = ' It is ignored for now.';
+    if (code === 'junk') return 'Couldn’t read “' + r + '” in ' + L + ' — type a number like ' + EG[k] + '.' + tail;
+    if (code === 'neg') return L + ' can’t be negative — type 0 or more.' + tail;
+    if (code === 'big') return L + ' is too large — keep it under ' + (k === 'margin' ? '10,000,000%' : '1,000,000,000,000') + '.' + tail;
+    if (code === 'mceil') return 'Gross margin can’t reach 100% — that would need a cost of zero or less. Type a number below 100.' + tail;
+    if (code === 'pct') return L + ' should be a percent from 0 to 100.' + tail;
+    return L + ' can’t be used.' + tail;
+  }
+  function solveMsg(e) {
+    var c = e.code;
+    if (c === 'lossTooBig') return 'A loss can’t be bigger than the cost of goods sold — the revenue would be negative. Change the gross profit.';
+    if (c === 'profitTooBig') return 'Gross profit can’t be more than the revenue — the cost of goods sold would be negative. Change the gross profit.';
+    if (c === 'zeroMargin0') return 'Zero profit at a 0% margin fits any revenue — type the revenue or the cost of goods sold instead.';
+    if (c === 'zeroMargin') return 'A profit can’t come from a 0% margin. Change the margin or the gross profit.';
+    if (c === 'signMargin') return 'A profit goes with a positive margin and a loss with a negative one. Change the margin or the gross profit.';
+    return 'These two values don’t fit together.';
+  }
+
+  /* ---------- hint placement: directly under the field it is about ---------- */
+  function setHint(m, at) {
+    var h = $('pmHint'); h.textContent = m || ''; h.style.display = m ? 'block' : 'none';
+    if (m && at) { var f = $(at).closest('.fld'); if (f && f.nextSibling !== h) f.parentNode.insertBefore(h, f.nextSibling); }
+  }
+  function setNote(id, t) { var e = $(id); e.textContent = t || ''; e.style.display = t ? '' : 'none'; }
+
+  /* ---------- typed values: the two most recent valid ones are the pair; the cost stays put ---------- */
+  function rawOf(k) { return $(FM[k].id).value; }
+  function removeTyped(k) { st.typed = st.typed.filter(function (x) { return x[0] !== k; }); }
+  function onEdit(k) {
+    var r = E.parse(rawOf(k), k); st.last = k;
+    if (r.partial) { render(); return; }
+    st.extra = ''; st.coreErr = null;
+    if (r.empty) removeTyped(k);
+    else if (r.err) { removeTyped(k); st.coreErr = { msg: errMsg(k, r.err, rawOf(k)), at: FM[k].id }; }
+    else {
+      removeTyped(k); st.typed.push([k, r.v]);
+      if (st.typed.length > 2) {
+        var gi = 0, pin = k !== 'cost' && st.typed.some(function (x) { return x[0] === 'cost'; });
+        if (pin) gi = st.typed[0][0] === 'cost' ? 1 : 0;
+        var gone = st.typed.splice(gi, 1)[0][0];
+        st.extra = pin ? 'The cost of goods sold stays, so ' + nm(gone) + ' is now worked out.' : 'A third value replaces the oldest, so ' + nm(gone) + ' is now worked out.';
+      }
+    }
+    render();
+  }
+
+  function advRead() {
+    var o = { opex: null, other: null, fee: null, int: null, tax: null }, bad = null, any = false;
+    Object.keys(ADVK).forEach(function (k) {
+      var raw = $(ADVK[k]).value, r = E.parse(raw, ADVKIND[k]);
+      if (r.err) { if (!bad) bad = { msg: errMsg(k, r.err, raw), at: ADVK[k] }; }
+      else if (r.v !== undefined) { o[k] = r.v; any = true; }
+    });
+    o.any = any; o.bad = bad; return o;
+  }
+  var PRE = 'Type two of the four boxes above first — then this applies.';
+  function advNotes(S, P, o) {
+    var ok = S.state === 'ok', rv = ok ? S.p : 0, of = function (x) { return rv > 0 ? ' — ' + fp(x / rv * 100) + ' of revenue.' : '.'; };
+    setNote('pmOpexNote', o.opex == null ? 'Rent, wages, advertising, software? Type the total for the same period as the revenue.' : (ok ? 'Operating expenses of ' + fm(o.opex) + of(o.opex) : PRE));
+    setNote('pmOtherNote', o.other == null ? 'Shipping, customer acquisition cost or other costs? Type the total for the same period.' : (ok ? 'Other costs of ' + fm(o.other) + of(o.other) : PRE));
+    setNote('pmFeeNote', o.fee == null ? 'Payment or platform fees, as a percent of the revenue? Type the rate.' : (ok ? 'Fees of ' + pc(o.fee) + '% of the revenue come to ' + fm(P.feeA) + '.' : PRE));
+    setNote('pmIntNote', o.int == null ? 'Interest on loans? Type the amount for the same period.' : (ok ? 'Interest of ' + fm(o.int) + ' comes off before tax, leaving a profit before tax of ' + fm(P.pre) + '.' : PRE));
+    setNote('pmTaxNote', o.tax == null ? 'Income tax on the profit, as a percent? Type your rate.' : (ok ? (P.pre > 0 ? 'Tax of ' + pc(o.tax) + '% on a profit before tax of ' + fm(P.pre) + ' is ' + fm(P.taxA) + ', leaving a net profit of ' + fm(P.net) + '.' : 'There is no profit before tax, so no tax is due.') : PRE));
+  }
+
+  /* ---------- the picture: where every unit of revenue goes ---------- */
+  function bars(P, ex, o) {
+    var costT = P.cogs + P.opex + P.other + P.feeA + P.intr + P.taxA, tot = Math.max(P.rev, costT);
+    var segs = [['cogs', 'Cost of goods sold', P.cogs]];
+    if (o.opex != null) segs.push(['opx', 'Operating expenses', P.opex]);
+    if (o.other != null || o.fee != null) segs.push(['oth', 'Other costs and fees', P.other + P.feeA]);
+    if (o.int != null) segs.push(['int', 'Interest', P.intr]);
+    if (o.tax != null) segs.push(['tax', 'Tax', P.taxA]);
+    var gain = ex ? P.net : P.gp;
+    if (gain > 0) segs.push(['gain', ex ? 'Net profit' : 'Gross profit', gain]);
+    var h = '', k = '';
+    segs.forEach(function (s) {
+      if (!(s[2] > 0)) return;
+      var w = s[2] / tot * 100;
+      h += '<i class="pm-seg ' + s[0] + '" style="flex:' + w.toFixed(3) + ' 1 0;min-width:' + (w < 1.5 ? 6 : 0) + 'px"></i>';
+      k += '<span><i class="pm-ky ' + s[0] + '"></i>' + s[1] + ' ' + fp(s[2] / P.rev * 100) + '</span>';
+    });
+    var loss = (ex ? P.net : P.gp) < 0;
+    if (loss) { h += '<i class="pm-rev" style="left:' + (P.rev / tot * 100).toFixed(3) + '%"></i>'; k += '<span><i class="pm-ky rev"></i>Revenue 100% ends here — the rest is a loss of ' + fm(-(ex ? P.net : P.gp)) + '</span>'; }
+    return '<div class="pm-bar" aria-hidden="true">' + h + '</div><div class="bm-key">' + k + '</div>';
+  }
+  /* the table behind the picture */
+  function plTable(P, o, ex) {
+    var rows = [], pr = function (x) { return P.rev > 0 ? fp(x / P.rev * 100) : '—'; }, add = function (l, v, strong) { rows.push('<tr' + (strong ? ' class="pm-strong"' : '') + '><td>' + l + '</td><td>' + fm(v) + '</td><td>' + pr(v) + '</td></tr>'); };
+    var hasOp = o.opex != null || o.other != null || o.fee != null;
+    add('Revenue', P.rev); add('Cost of goods sold', -P.cogs); add('Gross profit', P.gp, true);
+    if (o.opex != null) add('Operating expenses', -P.opex);
+    if (o.other != null) add('Other costs', -P.other);
+    if (o.fee != null) add('Fees ' + pc(o.fee) + '%', -P.feeA);
+    if (hasOp) add('Operating profit', P.op, true);
+    if (o.int != null) add('Interest', -P.intr);
+    if (o.tax != null) add('Tax ' + pc(o.tax) + '%', -P.taxA);
+    if (ex) add('Net profit', P.net, true);
+    return '<thead><tr><th></th><th>Amount</th><th>% of revenue</th></tr></thead><tbody>' + rows.join('') + '</tbody>';
+  }
+  function wiTable(S, o, ex) {
+    var rows = M.whatif(S.p, S.c, o), h = '<thead><tr><th>If</th><th>Gross margin</th><th>Gross profit</th>' + (ex ? '<th>Net margin</th>' : '') + '</tr></thead><tbody>';
+    rows.forEach(function (x) { h += '<tr' + (x.lab === 'Today' ? ' class="pm-strong"' : '') + '><td>' + x.lab + '</td><td>' + fp(x.r.gm) + '</td><td>' + fm(x.r.gp) + '</td>' + (ex ? '<td>' + fp(x.r.nm) + '</td>' : '') + '</tr>'; });
+    return h + '</tbody>';
+  }
+  /* the margin ladder: the revenue a given margin needs for your cost of goods sold */
+  function ladder(S) {
+    var hasC = S.state === 'ok' && S.c > 0, rows = E.ladder(hasC ? S.c : 0, 'mg'), cur = S.state === 'ok' ? S.mg : (S.state === 'lone' ? S.mg : null);
+    var h = '<thead><tr><th>Margin</th>' + (hasC ? '<th>Revenue needed</th><th>Gross profit</th>' : '') + '<th>Markup</th></tr></thead><tbody>';
+    rows.forEach(function (r) {
+      var on = cur != null && Math.abs(cur - r.x) < 1e-9;
+      h += '<tr class="pm-row' + (on ? ' on' : '') + '" data-v="' + r.x + '" tabindex="0"><td>' + r.x + '%</td>' + (hasC ? '<td>' + fm(r.p) + '</td><td>' + fm(r.pr) + '</td>' : '') + '<td>' + fp(r.mu) + '</td></tr>';
+    });
+    $('pmLad').innerHTML = h + '</tbody>';
+    $('pmLadNote').textContent = hasC ? 'For your cost of goods sold of ' + fm(S.c) + '. Click a row to use that margin.' : 'Add revenue, cost of goods sold or gross profit to see the revenue and profit for each row. Click a row to use that margin.';
+  }
+
+  /* ---------- render ---------- */
+  function render() {
+    var S = E.solve(st.typed), vals = {}, calc = {};
+    if (S.state === 'ok') vals = { price: S.p, cost: S.c, profit: S.pr, margin: S.mg };
+    var typedK = st.typed.map(function (x) { return x[0]; });
+    CORE.forEach(function (k) {
+      var inp = $(FM[k].id), isT = typedK.indexOf(k) >= 0;
+      if (!isT) {
+        var hasV = vals[k] !== undefined && vals[k] !== null;
+        if (!(st.last === k)) inp.value = hasV ? ft(vals[k], FM[k].money) : '';
+        calc[k] = hasV && st.last !== k;
+      }
+      var fld = inp.closest('.fld'); fld.classList.toggle('pm-calc', !!calc[k]);
+      var u = fld.querySelector('.unit'); u.innerHTML = (FM[k].money ? sym(st.cur) : '%') + ' · ' + (calc[k] ? '<b>calculated</b>' : FM[k].d);
+    });
+    ['opex', 'other', 'int'].forEach(function (k) { var u = $(ADVK[k]).closest('.fld').querySelector('.unit'); u.textContent = sym(st.cur) + ' · ' + u.getAttribute('data-d'); });
+    var from = '';
+    if (S.state === 'ok' || S.state === 'err') from = 'From ' + join(typedK.map(nm)) + '.' + (st.extra ? ' ' + st.extra : '');
+    else if (S.state === 'need') from = 'You typed ' + nm(typedK[0]) + '. Type one more: ' + others(typedK[0]) + '.';
+    else if (S.state === 'lone') from = 'You typed ' + nm(typedK[0]) + '. The markup is worked out from it — add revenue, cost of goods sold or gross profit to get amounts.' + (st.extra ? ' ' + st.extra : '');
+    setNote('pmFrom', from);
+    var o = advRead(), P = S.state === 'ok' ? M.pl(S.p, S.c, o) : null;
+    advNotes(S, P, o);
+    var hm = null, hat = null;
+    if (st.coreErr) { hm = st.coreErr.msg; hat = st.coreErr.at; }
+    else if (S.state === 'err') { hm = solveMsg(S.err); hat = FM[S.err.at].id; }
+    else if (o.bad) { hm = o.bad.msg; hat = o.bad.at; }
+    setHint(hm, hat);
+    var big = '—', sub = $('pmSub').getAttribute('data-empty'), lab = 'Answer', tip = '', showBody = false, ex = !!(P && o.any);
+    $('pmBars').innerHTML = ''; $('pmBarsWrap').style.display = 'none'; $('pmPlWrap').style.display = 'none'; $('pmWiWrap').style.display = 'none'; setNote('pmBE', '');
+    if (S.state === 'ok') {
+      showBody = true;
+      var head = S.mg !== null && S.mg !== undefined ? 'margin' : 'profit';
+      var txt = { price: fm(S.p), cost: fm(S.c), profit: fm(S.pr), margin: fp(S.mg) };
+      big = txt[head]; lab = LAB[head];
+      sub = CORE.filter(function (k) { return k !== head; }).map(function (k) { return LAB[k] + ' ' + txt[k]; }).concat(['Markup ' + fp(S.mu)]).join(' · ');
+      if (ex) sub += ' · Net margin ' + fp(P.nm);
+      if (S.c === 0 && S.p === 0) tip = 'Revenue and cost of goods sold are both zero, so there is no profit to measure.';
+      else if (S.p === 0) tip = 'Revenue of ' + fm(0) + ' against a cost of goods sold of ' + fm(S.c) + ' is a gross loss of ' + fm(S.c) + '. A margin needs revenue above zero.';
+      else if (S.c === 0) tip = 'With no cost of goods sold the whole revenue of ' + fm(S.p) + ' is gross profit: a gross margin of ' + fp(100) + '. A markup needs a cost above zero.';
+      else if (S.pr > 0) tip = 'Revenue of ' + fm(S.p) + ' against a cost of goods sold of ' + fm(S.c) + ' leaves a gross profit of ' + fm(S.pr) + ': a gross margin of ' + fp(S.mg) + ' and a markup of ' + fp(S.mu) + '.';
+      else if (S.pr === 0) tip = 'Revenue of ' + fm(S.p) + ' just covers the cost of goods sold of ' + fm(S.c) + ': a gross margin of 0%.';
+      else tip = 'Revenue of ' + fm(S.p) + ' against a cost of goods sold of ' + fm(S.c) + ' is a gross loss of ' + fm(-S.pr) + ': a gross margin of ' + fp(S.mg) + ' and a markup of ' + fp(S.mu) + '.';
+      if (ex && S.p > 0) tip += ' After the costs and tax you entered, the ' + (P.net < 0 ? 'net result is a loss of ' + fm(-P.net) : 'net profit is ' + fm(P.net)) + ': a net margin of ' + fp(P.nm) + '.';
+      if (S.p > 0) {
+        $('pmBars').innerHTML = bars(P, ex, o); $('pmBarsWrap').style.display = '';
+        $('pmPl').innerHTML = plTable(P, o, ex); $('pmPlWrap').style.display = '';
+        $('pmWi').innerHTML = wiTable(S, o, ex); $('pmWiWrap').style.display = '';
+        var B = M.breakeven(S.p, S.c, o);
+        if (B && !o.bad) setNote('pmBE', 'Break-even: your fixed costs (operating expenses, other costs and interest) are ' + fm(B.fixed) + '. If the cost of goods sold and fees grow with sales, you break even before tax at a revenue of ' + fm(B.be) + '. Your revenue is ' + fp(S.p / B.be * 100) + ' of that.');
+      }
+    } else if (S.state === 'lone') {
+      showBody = true;
+      big = fp(S.mu); lab = 'Markup';
+      sub = 'A ' + fp(S.mg) + ' gross margin needs a ' + fp(S.mu) + ' markup. Add revenue, cost of goods sold or gross profit to get amounts.';
+      tip = 'A ' + fp(S.mg) + ' gross margin needs a ' + fp(S.mu) + ' markup: the profit is ' + fp(S.mg) + ' of the revenue but ' + fp(S.mu) + ' of the cost of goods sold.';
+    } else if (S.state === 'need') {
+      sub = 'Type one more value: ' + others(typedK[0]) + '.';
+    }
+    $('pmBig').textContent = big; $('pmBig').parentNode.classList.toggle('pm-long', big.length > 11); $('pmLab').textContent = lab; $('pmSub').textContent = sub; $('pmBody').style.display = showBody ? '' : 'none';
+    $('pmMLab').textContent = showBody ? lab : 'Answer'; $('pmMVal').textContent = big;
+    $('pmTip').textContent = tip;
+    if (showBody) ladder(S);
+  }
+
+  /* ---------- controls ---------- */
+  CORE.forEach(function (k) {
+    var inp = $(FM[k].id);
+    inp.addEventListener('input', function () { onEdit(k); });
+    inp.addEventListener('focus', function () { if (inp.closest('.fld').classList.contains('pm-calc')) setTimeout(function () { try { inp.select(); } catch (e) { /* not selectable */ } }, 0); });
+  });
+  Object.keys(ADVK).forEach(function (k) { $(ADVK[k]).addEventListener('input', render); });
+  function pickRow(e) {
+    var r = e.target.closest('.pm-row'); if (!r) return;
+    $(FM.margin.id).value = r.getAttribute('data-v'); onEdit('margin');
+  }
+  $('pmLad').addEventListener('click', pickRow);
+  $('pmLad').addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pickRow(e); } });
+  $('pmClear').addEventListener('click', function () {
+    CORE.forEach(function (k) { $(FM[k].id).value = ''; });
+    Object.keys(ADVK).forEach(function (k) { $(ADVK[k]).value = ''; });
+    st.typed = []; st.last = null; st.extra = ''; st.coreErr = null; render(); $(FM.price.id).focus();
+  });
+  $('pmAdvBtn').addEventListener('click', function () {
+    st.adv = !st.adv; $('pmAdvBtn').classList.toggle('open', st.adv); $('pmAdvBtnLab').textContent = st.adv ? 'Go simple' : 'Go advanced'; $('pmAdvIn').style.display = st.adv ? '' : 'none';
+    if (!st.adv) Object.keys(ADVK).forEach(function (k) { $(ADVK[k]).value = ''; });
+    render();
+  });
+  /* the currency picker: the salary page's searchable list, display only */
+  (function () {
+    var opt = function (c, pop) { var n = curName(c); return '<button type="button" class="csel-opt' + (pop ? ' csel-pop' : '') + (c === 'USD' ? ' on' : '') + '" role="option" aria-selected="' + (c === 'USD') + '" data-value="' + c + '" data-p="' + (SE.RANK.indexOf(c) + 1) + '" data-s="' + (c + ' ' + n + ' ' + sym(c)).toLowerCase() + '"><span class="n">' + n + '</span><span class="c">' + c + '</span></button>'; };
+    var all = SE.CURRENCIES.slice().sort(function (a, b) { return curName(a) < curName(b) ? -1 : 1; });
+    $('pmCur').querySelector('.csel-panel').innerHTML = '<div class="csel-sbox"><input class="csel-search" type="text" placeholder="Search currency" aria-label="Search currency" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="go"></div><div class="csel-group">Popular</div>' +
+      SE.POPULAR.map(function (c) { return opt(c, true); }).join('') + '<div class="csel-group">All currencies</div>' + all.map(function (c) { return opt(c, false); }).join('') + '<div class="csel-none" style="display:none">No currency found</div>';
+    CalcThis.initCsel($('pmCur'));
+    $('pmCur').querySelector('.csel-val').textContent = 'USD';
+  })();
+  $('pmCur').addEventListener('change', function () { st.cur = $('pmCur').value || 'USD'; st.dec = decOf(st.cur); $('pmCur').querySelector('.csel-val').textContent = st.cur; render(); });
+  render();
+};
+/* PROFITMARGIN:END */

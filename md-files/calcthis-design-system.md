@@ -135,6 +135,10 @@ mobile at 430px, exactly wrong for a field pair that must stay joined). `.two-c`
 </div>
 ```
 
+## Explanation under a field — GLOBAL (user 2026-11-08)
+
+A note directly under a field (`<p class="av-note">` or `cb-note` right after a `.fld`) sits close to the field so it reads as belonging to it: one global rule, `body .fld + .av-note, body .fld + .cb-note{margin-top:-6px}` (the field keeps its 15px bottom spacing, so the gap is about 9px instead of 19px). Nothing to add per page; only notes that are the DIRECT next sibling of a `.fld` are affected.
+
 ## Field spacing — GLOBAL, SOLVED FOR GOOD (2026-10-05)
 
 Every `.fld` — a `<label class="fld">` **or** a `<div class="fld">` — gets its bottom

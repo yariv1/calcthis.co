@@ -162,3 +162,4 @@ GSC snapshot 2026-10-26: 69 indexed, 13 not indexed (8 Discovered, 1 Crawled, 1 
 - 2026-11-07 deployed v329: `/body-recomposition-calculator/` - IndexNow HTTP 200 (225 URLs); Bing SUBMITTED 2026-11-07 (Success: URL submitted Successfully); GSC NOT requested (quota): add after `/vitamin-d-calculator/` at the end of the health block.
 
 - 2026-11-08 deployed v330: `/markup-calculator/` - IndexNow HTTP 200 (226 URLs); Bing submit pending (manual); GSC NOT requested (quota): add to the money block / end of queue.
+- 2026-11-08 deployed v331: `/profit-margin-calculator/` - IndexNow HTTP 200 (227 URLs); Bing submit pending (manual); GSC NOT requested (quota): add to the money block / end of queue.

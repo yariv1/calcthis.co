@@ -1,0 +1,791 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Profit Margin Calculator — Gross, Net &amp; Margin %</title>
+<meta name="description" content="Profit margin calculator: type revenue and cost, add your other costs, and get gross, operating and net margin and profit. Any currency.">
+<link rel="canonical" href="https://calcthis.co/profit-margin-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Profit Margin Calculator — Gross, Net &amp; Margin %">
+<meta property="og:description" content="Profit margin calculator: type revenue and cost, add your other costs, and get gross, operating and net margin and profit. Any currency.">
+<meta property="og:url" content="https://calcthis.co/profit-margin-calculator/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/datepicker.min.css">
+<link rel="stylesheet" href="/assets/style.css?v=331">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Profit Margin Calculator",
+  "url": "https://calcthis.co/profit-margin-calculator/",
+  "applicationCategory": "FinanceApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "Free profit margin calculator: type any two of revenue, cost of goods sold, gross profit and gross margin and get the rest, plus gross, operating and net margin once you add operating expenses, other costs, fees, interest and tax. Shows where your revenue goes in one bar, what happens if price or cost moves, the revenue a margin needs and your break-even revenue. Works in any currency."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is profit margin?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Profit margin is the share of your revenue that is left as profit. With revenue of $50,000.00 and a cost of goods sold of $30,000.00, the gross profit is $20,000.00, which is a 40% gross margin."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the profit margin formula?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Gross margin % = (revenue − cost of goods sold) ÷ revenue × 100. For revenue of $50,000.00 and a cost of $30,000.00 that is $20,000.00 ÷ $50,000.00 = 40%. In the calculator, type the revenue and the cost and the margin fills in."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between gross, operating and net margin?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "They use the same revenue but subtract more each time. Gross margin takes off only the cost of goods sold (40% in the example). Operating margin also takes off operating expenses, other costs and fees (15.1%). Net margin also takes off interest and tax (10.58%)."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I calculate the price I need for a target margin?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Revenue = cost ÷ (1 − margin ÷ 100). A cost of $60.00 at a 40% margin needs revenue of $100.00. In the calculator, type the cost of goods sold and the margin you want and the revenue fills in; the ladder lists the revenue for ten common margins."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between margin and markup?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Both measure the same profit, but margin divides it by revenue and markup divides it by the cost. A cost of $30,000.00 sold at $50,000.00 is a 40% margin and a 66.67% markup. A 25% margin needs a 33.33% markup. The markup calculator on this site works the other way round."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can a profit margin be negative?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. If the cost is higher than the revenue you make a loss and the margin is negative: a cost of $100.00 sold at $80.00 loses $20.00, a −25% margin. The bar then shows where the revenue runs out. A margin can never reach 100%, because that would need a cost of zero, so the calculator does not accept it."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do operating expenses, interest and tax change the margin?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Type them under Go advanced and the table shows each step. In the example, $10,000.00 of operating expenses, $1,000.00 of other costs, 2.9% fees, $500.00 of interest and 25% tax turn a $20,000.00 gross profit into a net profit of $5,287.50: a net margin of 10.58%."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is break-even revenue?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It is the revenue at which you stop losing money. If your fixed costs (operating expenses, other costs and interest) are $11,500.00 and each $1 of revenue leaves 37.1% after the cost of goods sold and fees, you break even at $30,997.30 before tax. The calculator shows it when you type your fixed costs."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does the currency selector convert my numbers?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. It only changes the symbol and the decimals shown. Type your numbers in the currency you use."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "CalcThis",
+      "item": "https://calcthis.co/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Profit Margin Calculator",
+      "item": "https://calcthis.co/profit-margin-calculator/"
+    }
+  ]
+}
+</script>
+<meta property="og:site_name" content="CalcThis">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://calcthis.co/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="CalcThis — free, purpose-built calculators">
+<meta name="twitter:title" content="Profit Margin Calculator — Gross, Net &amp; Margin %">
+<meta name="twitter:description" content="Profit margin calculator: type revenue and cost, add your other costs, and get gross, operating and net margin and profit. Any currency.">
+<meta name="twitter:image" content="https://calcthis.co/assets/og-default.png">
+</head>
+<body class="p-bmr p-pm">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <a class="hdr-back" href="/blog/" aria-label="Back to blog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-search"><div class="menu-sx"><input id="menuSearch" type="search" placeholder="Search calculators or states…" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Search calculators" enterkeyhint="search"></div><div class="menu-results" id="menuResults" hidden></div></div>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <span class="menu-col-head">Construction &amp; Gardening</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+          <a href="/paint-calculator/">Paint</a>
+          <a href="/wallpaper-calculator/">Wallpaper</a>
+          <a href="/square-footage-calculator/">Square Footage</a>
+          <a href="/tape-measure-fraction-calculator/">Tape Measure Fraction</a>
+          <a href="/stair-calculator/">Stair</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/vo2-max-calculator/">VO2 Max</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
+          <a href="/bmi-calculator/">BMI</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/ideal-weight-calculator/">Ideal Weight</a>
+          <a href="/lean-body-mass-calculator/">Lean Body Mass</a>
+          <a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio</a>
+          <a href="/gmi-calculator/">GMI</a>
+          <a href="/a1c-calculator/">A1C</a>
+          <a href="/calorie-calculator/">Calorie</a>
+          <a href="/calorie-deficit-calculator/">Calorie Deficit</a>
+          <a href="/bmr-calculator/">BMR</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/water-intake-calculator/">Water Intake</a>
+          <a href="/macro-calculator/">Macro</a>
+          <a href="/protein-intake-calculator/">Protein Intake</a>
+          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
+          <a href="/steps-to-miles-calculator/">Steps to Miles</a>
+          <a href="/dog-age-calculator/">Dog Age</a>
+          <a href="/cat-age-calculator/">Cat Age</a>
+          <a href="/calories-burned-calculator/">Calories Burned</a>
+          <a href="/calories-burned-walking-calculator/">Calories Burned Walking</a>
+          <a href="/calories-burned-running-calculator/">Calories Burned Running</a>
+          <a href="/keto-calculator/">Keto</a>
+          <a href="/net-carb-calculator/">Net Carb</a>
+          <a href="/intermittent-fasting-calculator/">Intermittent Fasting</a>
+          <a href="/bsa-calculator/">BSA</a>
+          <a href="/dog-food-calculator/">Dog Food</a>
+          <a href="/ffmi-calculator/">FFMI</a>
+          <a href="/bulking-calculator/">Bulking</a>
+          <a href="/weight-loss-calculator/">Weight Loss</a>
+          <a href="/weight-loss-percentage-calculator/">Weight Loss %</a>
+          <a href="/max-heart-rate-calculator/">Max Heart Rate</a>
+          <a href="/caffeine-calculator/">Caffeine</a>
+          <a href="/caffeine-half-life-calculator/">Caffeine Half Life</a>
+          <a href="/fiber-calculator/">Fiber</a>
+          <a href="/creatine-calculator/">Creatine</a>
+          <a href="/vitamin-d-calculator/">Vitamin D</a>
+          <a href="/body-recomposition-calculator/">Body Recomposition</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/semester-grade-calculator/">Semester Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+          <a href="/grade-curve-calculator/">Grade Curve</a>
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/fraction-calculator/">Fraction</a>
+          <a href="/standard-deviation-calculator/">Standard Deviation</a>
+          <a href="/scientific-notation-calculator/">Scientific Notation</a>
+          <a href="/average-calculator/">Average</a>
+          <a href="/batting-average-calculator/">Batting Average</a>
+          <a href="/stock-average-calculator/">Stock Average</a>
+          <a href="/dice-average-calculator/">Dice Average</a>
+          <a href="/time-average-calculator/">Time Average</a>
+          <a href="/weighted-average-calculator/">Weighted Average</a>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+          <a href="/percentage-change-calculator/">Percentage Change</a>
+          <a href="/age-calculator/">Age</a>
+          <a href="/date-calculator/">Date</a>
+          <a href="/time-calculator/">Time</a>
+          <a href="/hours-calculator/">Hours</a>
+          <a href="/triangle-calculator/">Triangle</a>
+          <a href="/random-number-generator/">Random Number</a>
+          <span class="menu-col-head">Cooking &amp; Kitchen</span>
+          <a href="/recipe-converter/">Recipe Converter</a>
+          <a href="/turkey-cooking-time-calculator/">Turkey Cooking Time</a>
+          <a href="/turkey-thawing-time-calculator/">Turkey Thawing Time</a>
+          <a href="/turkey-size-calculator/">Turkey Size</a>
+          <!--UNITNAV:START-->
+          <span class="menu-col-head">Unit Converters</span>
+          <a href="/unit-converter/">Unit Converter</a>
+          <a href="/length-converter/">Length Converter</a>
+          <a href="/weight-converter/">Weight Converter</a>
+          <a href="/volume-converter/">Volume Converter</a>
+          <a href="/temperature-converter/">Temperature Converter</a>
+          <a href="/area-converter/">Area Converter</a>
+          <a href="/speed-converter/">Speed Converter</a>
+          <a href="/data-storage-converter/">Data Storage Converter</a>
+          <a href="/cooking-converter/">Cooking Converter</a>
+          <a href="/px-to-rem-converter/">PX to REM Converter</a>
+          <!--UNITNAV:END-->
+          <span class="menu-col-head">Money &amp; Finance</span>
+          <a href="/mortgage-calculator/">Mortgage</a>
+          <a href="/loan-calculator/">Loan</a>
+          <a href="/auto-loan-calculator/">Auto Loan</a>
+          <a href="/car-sales-tax-calculator/">Car Sales Tax</a>
+          <a href="/overtime-calculator/">Overtime</a>
+          <a href="/salary-calculator/">Salary</a>
+          <a href="/markup-calculator/">Markup</a>
+          <a href="/profit-margin-calculator/" class="current">Profit Margin</a>
+          <!--STAXNAV:START-->
+          <a href="/sales-tax-calculator/">Sales Tax</a>
+          <a href="/sales-tax-calculator/california/">California Sales Tax</a>
+          <a href="/sales-tax-calculator/chicago/">Chicago Sales Tax</a>
+          <a href="/sales-tax-calculator/florida/">Florida Sales Tax</a>
+          <a href="/sales-tax-calculator/las-vegas/">Las Vegas Sales Tax</a>
+          <a href="/sales-tax-calculator/los-angeles/">Los Angeles Sales Tax</a>
+          <a href="/sales-tax-calculator/michigan/">Michigan Sales Tax</a>
+          <a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax</a>
+          <a href="/sales-tax-calculator/missouri/">Missouri Sales Tax</a>
+          <a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax</a>
+          <a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax</a>
+          <a href="/sales-tax-calculator/north-carolina/">North Carolina Sales Tax</a>
+          <a href="/sales-tax-calculator/ohio/">Ohio Sales Tax</a>
+          <a href="/sales-tax-calculator/texas/">Texas Sales Tax</a>
+          <a href="/sales-tax-calculator/virginia/">Virginia Sales Tax</a>
+          <!--STAXNAV:END-->
+          <a href="/tip-calculator/">Tip</a>
+          <a href="/how-much-to-tip/">How Much to Tip</a>
+        </div>
+        <!--PAYNAV:START-->
+        <div class="menu-col">
+          <span class="menu-col-head">Paycheck Calculators</span>
+          <a href="/paycheck-calculator/">Paycheck Calculator (all states)</a>
+          <a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a>
+          <a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arkansas/">Arkansas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/california/">California Paycheck Calculator</a>
+          <a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a>
+          <a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a>
+          <a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/hawaii/">Hawaii Paycheck Calculator</a>
+          <a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a>
+          <a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a>
+          <a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a>
+          <a href="/paycheck-calculator/louisiana/">Louisiana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a>
+          <a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a>
+          <a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a>
+          <a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a>
+          <a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nebraska/">Nebraska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a>
+          <a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a>
+          <a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a>
+          <a href="/paycheck-calculator/oklahoma/">Oklahoma Paycheck Calculator</a>
+          <a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a>
+          <a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a>
+          <a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a>
+          <a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/utah/">Utah Paycheck Calculator</a>
+          <a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wisconsin/">Wisconsin Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a>
+        </div>
+        <!--PAYNAV:END-->
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">Revenue, cost, gross profit and margin · gross, operating and net · any currency</div>
+    <h1>Profit Margin Calculator</h1>
+    <p>Type any <strong>two</strong> of <strong>revenue</strong>, <strong>cost of goods sold</strong>, <strong>gross profit</strong> and <strong>gross margin</strong> — the other two fill in, with a picture of where your revenue goes. Revenue of <strong>$50,000.00</strong> against a cost of <strong>$30,000.00</strong> is a <strong>40% gross margin</strong>. Open Go advanced for operating costs, interest and tax to get your <strong>net margin</strong>.</p>
+  </section>
+
+  <div class="grid">
+
+    <!-- INPUT -->
+    <div class="card">
+      <div class="card-pad">
+        <div class="sl-head"><h2 class="card-h2">Your numbers</h2><div class="csel sl-cur" id="pmCur" data-value="USD" data-search="1" aria-label="Currency"><button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false"><span class="csel-val">USD</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="csel-panel" role="listbox"></div></div></div>
+        <p class="pm-intro">Type any two of these four — the other two fill in. The cost of goods sold stays put; any other third value replaces the one before it.</p>
+        <div id="pmFields">
+          <label class="fld" for="pmRev"><span class="lab">Revenue <span class="unit">$ · what you sell for</span></span><div class="inp"><input id="pmRev" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 50000"></div></label>
+          <label class="fld" for="pmCogs"><span class="lab">Cost of goods sold <span class="unit">$ · what it costs you</span></span><div class="inp"><input id="pmCogs" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 30000"></div></label>
+          <label class="fld" for="pmProfit"><span class="lab">Gross profit <span class="unit">$ · revenue − cost</span></span><div class="inp"><input id="pmProfit" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 20000"></div></label>
+          <label class="fld" for="pmMargin"><span class="lab">Gross margin <span class="unit">% · profit ÷ revenue</span></span><div class="inp"><input id="pmMargin" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 40"></div></label>
+          <div class="res-hint" id="pmHint" style="display:none;text-align:left;margin:4px 0 8px"></div>
+        </div>
+        <p class="av-note" id="pmFrom" style="display:none"></p>
+        <div id="pmAdvIn" style="display:none">
+          <div class="proj-sep"></div>
+          <label class="fld" for="pmOpex"><span class="lab">Operating expenses <span class="unit" data-d="optional">$ · optional</span></span><div class="inp"><input id="pmOpex" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 10000"></div></label>
+          <p class="av-note" id="pmOpexNote"></p>
+          <label class="fld" for="pmOther"><span class="lab">Other costs <span class="unit" data-d="optional">$ · optional</span></span><div class="inp"><input id="pmOther" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 1000"></div></label>
+          <p class="av-note" id="pmOtherNote"></p>
+          <label class="fld" for="pmFee"><span class="lab">Fees <span class="unit">% of the revenue · optional</span></span><div class="inp"><input id="pmFee" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 2.9"></div></label>
+          <p class="av-note" id="pmFeeNote"></p>
+          <label class="fld" for="pmInt"><span class="lab">Interest <span class="unit" data-d="optional">$ · optional</span></span><div class="inp"><input id="pmInt" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 500"></div></label>
+          <p class="av-note" id="pmIntNote"></p>
+          <label class="fld" for="pmTax"><span class="lab">Tax rate <span class="unit">% on the profit · optional</span></span><div class="inp"><input id="pmTax" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 25"></div></label>
+          <p class="av-note" id="pmTaxNote"></p>
+        </div>
+        <div class="add-row split" style="margin-top:16px">
+          <button class="linkbtn" id="pmClear" type="button">Clear fields</button>
+          <button class="advbtn" id="pmAdvBtn" type="button">
+            <span id="pmAdvBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div class="card">
+      <div class="card-pad">
+        <div class="bf-res">
+          <div class="res-lab" id="pmLab">Answer</div>
+          <div class="res-big"><span id="pmBig">—</span></div>
+          <div class="res-sub" id="pmSub" data-empty="Type any two of revenue, cost of goods sold, gross profit or gross margin.">Type any two of revenue, cost of goods sold, gross profit or gross margin.</div>
+        </div>
+        <div id="pmBody" style="display:none">
+          <p class="res-tip adv-tip" id="pmTip"></p>
+          <div id="pmBarsWrap" style="display:none">
+            <p class="bm-h">Where your revenue goes</p>
+            <div id="pmBars"></div>
+          </div>
+          <div id="pmPlWrap" style="display:none">
+            <p class="bm-h">Step by step</p>
+            <table class="dtable" id="pmPl"></table>
+            <p class="cb-note" id="pmBE" style="display:none"></p>
+          </div>
+          <div id="pmWiWrap" style="display:none">
+            <p class="bm-h">What if the price or the cost changes?</p>
+            <table class="dtable" id="pmWi"></table>
+            <p class="cb-note">Price and cost move by the percent shown; every other figure stays as you typed it.</p>
+          </div>
+          <div class="pm-lad-head"><p class="bm-h">Margin ladder</p></div>
+          <table class="dtable" id="pmLad"></table>
+          <p class="cb-note" id="pmLadNote"></p>
+          <p class="cb-note">Margin divides the profit by the revenue; markup divides the same profit by the cost. That is why the margin is always the smaller number for a profit.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- mobile sticky bar -->
+  <div class="mbar" id="mbar">
+    <span class="mbar-lab" id="pmMLab">Answer</span>
+    <div class="mbar-vals"><b id="pmMVal">—</b></div>
+  </div>
+
+  <div class="related-calcs">
+    <p class="related-calcs-h">More calculators that may interest you</p>
+    <div class="pills">
+      <a class="pill" href="/markup-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17l6-6 4 4 6-8"/><path d="M15 7h5v5"/></svg>
+        Markup Calculator
+      </a>
+      <a class="pill" href="/percentage-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 5L5 19"/><circle cx="7" cy="7" r="2.5"/><circle cx="17" cy="17" r="2.5"/></svg>
+        Percentage Calculator
+      </a>
+      <a class="pill" href="/percentage-change-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17l6-6 4 4 6-8"/></svg>
+        Percentage Change Calculator
+      </a>
+      <a class="pill" href="/sales-tax-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+        Sales Tax Calculator
+      </a>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use the profit margin calculator</h2>
+        <p>Type any <strong>two</strong> of the four boxes — <strong>revenue</strong>, <strong>cost of goods sold</strong>, <strong>gross profit</strong> or <strong>gross margin</strong> — and the other two fill in; the markup is shown with the answer. The line under the boxes says which two were used. Type a third value and it replaces the other one you typed, never the cost of goods sold, so changing the margin or the profit moves the revenue.</p>
+        <p>Need the price for a margin you want? Type the cost of goods sold and the margin, and the revenue appears; click a row of the ladder to try another margin. Open <strong>Go advanced</strong> to add operating expenses, other costs, fees, interest and a tax rate: the picture and the table then show your gross, operating and net margin, and the break-even revenue.</p>
+
+        <h2>The formulas</h2>
+        <div class="formula">
+          gross margin % = (revenue − cost of goods sold) ÷ revenue × 100
+          <small>NET MARGIN % = NET PROFIT ÷ REVENUE × 100</small>
+        </div>
+        <p>To go the other way: revenue = cost of goods sold ÷ (1 − margin ÷ 100). Example, worked out by this calculator:</p>
+        <p>Revenue $50,000.00, cost of goods sold $30,000.00, operating expenses $10,000.00, other costs $1,000.00, fees 2.9%, interest $500.00, tax 25%:</p>
+        <table class="dtable"><thead><tr><th></th><th>Amount</th><th>% of revenue</th></tr></thead><tbody><tr><td>Revenue</td><td>$50,000.00</td><td>100%</td></tr><tr><td>Cost of goods sold</td><td>−$30,000.00</td><td>−60%</td></tr><tr><td>Gross profit</td><td>$20,000.00</td><td>40%</td></tr><tr><td>Operating expenses</td><td>−$10,000.00</td><td>−20%</td></tr><tr><td>Other costs</td><td>−$1,000.00</td><td>−2%</td></tr><tr><td>Fees 2.9%</td><td>−$1,450.00</td><td>−2.9%</td></tr><tr><td>Operating profit</td><td>$7,550.00</td><td>15.1%</td></tr><tr><td>Interest</td><td>−$500.00</td><td>−1%</td></tr><tr><td>Tax 25%</td><td>−$1,762.50</td><td>−3.52%</td></tr><tr><td>Net profit</td><td>$5,287.50</td><td>10.58%</td></tr></tbody></table>
+      </div>
+
+      <div>
+        <h2>Gross, operating and net margin</h2>
+        <p>The three margins use the same revenue but subtract more costs each time. <strong>Gross margin</strong> counts only the cost of goods sold: 40% in the example. <strong>Operating margin</strong> also counts operating expenses, other costs and fees: 15.1%. <strong>Net margin</strong> also counts interest and tax: 10.58%. A business can have a healthy gross margin and a thin net margin, which is why the bar and the table show every step.</p>
+        <h2>Margin versus markup</h2>
+        <p>Margin and markup describe the same profit with a different base. Revenue of $50,000.00 on a cost of $30,000.00 is a 40% margin but a 66.67% markup. A 50% margin needs a 100% markup, not 50%. The <a href="/markup-calculator/">markup calculator</a> goes the other way: type the cost and the markup you want and get the selling price.</p>
+        <table class="dtable"><thead><tr><th>Margin</th><th>Markup</th></tr></thead><tbody><tr><td>10%</td><td>11.11%</td></tr><tr><td>20%</td><td>25%</td></tr><tr><td>25%</td><td>33.33%</td></tr><tr><td>30%</td><td>42.86%</td></tr><tr><td>40%</td><td>66.67%</td></tr><tr><td>50%</td><td>100%</td></tr><tr><td>60%</td><td>150%</td></tr><tr><td>70%</td><td>233.33%</td></tr><tr><td>75%</td><td>300%</td></tr><tr><td>80%</td><td>400%</td></tr><tr><td>90%</td><td>900%</td></tr></tbody></table>
+        <h2>What if the price or cost changes?</h2>
+        <p>A 10% higher price moves the example’s gross margin from 40% to 45.45%; a 10% higher cost drops it to 34%. The calculator shows all eight cases for your own numbers.</p>
+
+        <h2>Related tools</h2>
+        <p>To set a selling price from a cost use the <a href="/markup-calculator/">markup calculator</a>, to work out a percentage of a number the <a href="/percentage-calculator/">percentage calculator</a>, to see how much a figure rose or fell the <a href="/percentage-change-calculator/">percentage change calculator</a>, and to add tax to a price the <a href="/sales-tax-calculator/">sales tax calculator</a>.</p>
+        <h2>Sources</h2>
+        <ul>
+          <li>Gross profit = revenue − cost of goods sold and gross margin = gross profit ÷ revenue are the formulas stated on the pages of Omnicalculator (gross margin and margin calculators), calculator.net’s margin calculator, CalculatorSoup’s profit margin calculator and Xero’s gross margin calculator; net margin as the share of revenue left after all costs and expenses is how businessinitiative.org’s profit margin calculator describes it. All opened 2026-11-08.</li>
+          <li>Operating profit here = gross profit − operating expenses − other costs − fees, and fees are a percent of revenue. Profit before tax = operating profit − interest; tax = your rate × profit before tax (nothing when there is no profit); net profit = profit before tax − tax. Those steps are this page’s convention for turning the typed amounts into three margins; check them against your own accounts.</li>
+          <li>Break-even assumes your operating expenses, other costs and interest stay the same however much you sell, while the cost of goods sold and fees grow in step with revenue, and ignores tax. Real businesses are rarely that tidy; treat it as a guide.</li>
+          <li>The currency selector only changes the symbol and the number of decimals; nothing is converted.</li>
+          <li>Not used because I found no source for them: “good profit margin” benchmarks by industry.</li>
+        </ul>
+        <p><small>For information only. Check your own figures and ask an accountant before you act on them.</small></p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>What is profit margin?</summary><p>Profit margin is the share of your revenue that is left as profit. With revenue of $50,000.00 and a cost of goods sold of $30,000.00, the gross profit is $20,000.00, which is a 40% gross margin.</p></details>
+    <details class="faq"><summary>What is the profit margin formula?</summary><p>Gross margin % = (revenue − cost of goods sold) ÷ revenue × 100. For revenue of $50,000.00 and a cost of $30,000.00 that is $20,000.00 ÷ $50,000.00 = 40%. In the calculator, type the revenue and the cost and the margin fills in.</p></details>
+    <details class="faq"><summary>What is the difference between gross, operating and net margin?</summary><p>They use the same revenue but subtract more each time. Gross margin takes off only the cost of goods sold (40% in the example). Operating margin also takes off operating expenses, other costs and fees (15.1%). Net margin also takes off interest and tax (10.58%).</p></details>
+    <details class="faq"><summary>How do I calculate the price I need for a target margin?</summary><p>Revenue = cost ÷ (1 − margin ÷ 100). A cost of $60.00 at a 40% margin needs revenue of $100.00. In the calculator, type the cost of goods sold and the margin you want and the revenue fills in; the ladder lists the revenue for ten common margins.</p></details>
+    <details class="faq"><summary>What is the difference between margin and markup?</summary><p>Both measure the same profit, but margin divides it by revenue and markup divides it by the cost. A cost of $30,000.00 sold at $50,000.00 is a 40% margin and a 66.67% markup. A 25% margin needs a 33.33% markup. The markup calculator on this site works the other way round.</p></details>
+    <details class="faq"><summary>Can a profit margin be negative?</summary><p>Yes. If the cost is higher than the revenue you make a loss and the margin is negative: a cost of $100.00 sold at $80.00 loses $20.00, a −25% margin. The bar then shows where the revenue runs out. A margin can never reach 100%, because that would need a cost of zero, so the calculator does not accept it.</p></details>
+    <details class="faq"><summary>How do operating expenses, interest and tax change the margin?</summary><p>Type them under Go advanced and the table shows each step. In the example, $10,000.00 of operating expenses, $1,000.00 of other costs, 2.9% fees, $500.00 of interest and 25% tax turn a $20,000.00 gross profit into a net profit of $5,287.50: a net margin of 10.58%.</p></details>
+    <details class="faq"><summary>What is break-even revenue?</summary><p>It is the revenue at which you stop losing money. If your fixed costs (operating expenses, other costs and interest) are $11,500.00 and each $1 of revenue leaves 37.1% after the cost of goods sold and fees, you break even at $30,997.30 before tax. The calculator shows it when you type your fixed costs.</p></details>
+    <details class="faq"><summary>Does the currency selector convert my numbers?</summary><p>No. It only changes the symbol and the decimals shown. Type your numbers in the currency you use.</p></details>
+  </section>
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+      <div class="footer-stack">
+<div class="footer-col" style="order:1">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+          <li><a href="/paint-calculator/">Paint Calculator</a></li>
+          <li><a href="/wallpaper-calculator/">Wallpaper Calculator</a></li>
+          <li><a href="/square-footage-calculator/">Square Footage Calculator</a></li>
+          <li><a href="/tape-measure-fraction-calculator/">Tape Measure Fraction Calculator</a></li>
+          <li><a href="/stair-calculator/">Stair Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:5">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Cooking &amp;</span> <span class="ft2">Kitchen</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/recipe-converter/">Recipe Converter</a></li>
+          <li><a href="/turkey-cooking-time-calculator/">Turkey Cooking Time Calculator</a></li>
+          <li><a href="/turkey-thawing-time-calculator/">Turkey Thawing Time Calculator</a></li>
+          <li><a href="/turkey-size-calculator/">Turkey Size Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:6">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Money &amp;</span> <span class="ft2">Finance</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/mortgage-calculator/">Mortgage Calculator</a></li>
+          <li><a href="/loan-calculator/">Loan Calculator</a></li>
+          <li><a href="/auto-loan-calculator/">Auto Loan Calculator</a></li>
+          <li><a href="/car-sales-tax-calculator/">Car Sales Tax Calculator</a></li>
+          <li><a href="/overtime-calculator/">Overtime Calculator</a></li>
+          <li><a href="/salary-calculator/">Salary Calculator</a></li>
+          <li><a href="/markup-calculator/">Markup Calculator</a></li>
+          <li><a href="/profit-margin-calculator/">Profit Margin Calculator</a></li>
+          <!--STAXFOOT:START-->
+          <li><a href="/sales-tax-calculator/">Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/california/">California Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/chicago/">Chicago Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/florida/">Florida Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/las-vegas/">Las Vegas Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/los-angeles/">Los Angeles Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/michigan/">Michigan Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/missouri/">Missouri Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/north-carolina/">North Carolina Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/ohio/">Ohio Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/texas/">Texas Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/virginia/">Virginia Sales Tax Calculator</a></li>
+          <!--STAXFOOT:END-->
+          <li><a href="/tip-calculator/">Tip Calculator</a></li>
+          <li><a href="/how-much-to-tip/">How Much to Tip</a></li>
+        </ul>
+      </div>
+      </div>
+
+      <div class="footer-right">
+<div class="footer-col footer-col--two" style="order:2">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/vo2-max-calculator/">VO2 Max Calculator</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/bmi-calculator/">BMI Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/ideal-weight-calculator/">Ideal Weight Calculator</a></li>
+          <li><a href="/lean-body-mass-calculator/">Lean Body Mass Calculator</a></li>
+          <li><a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio Calculator</a></li>
+          <li><a href="/gmi-calculator/">GMI Calculator</a></li>
+          <li><a href="/a1c-calculator/">A1C Calculator</a></li>
+          <li><a href="/calorie-calculator/">Calorie Calculator</a></li>
+          <li><a href="/calorie-deficit-calculator/">Calorie Deficit Calculator</a></li>
+          <li><a href="/bmr-calculator/">BMR Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/water-intake-calculator/">Water Intake Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/protein-intake-calculator/">Protein Intake Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
+          <li><a href="/steps-to-miles-calculator/">Steps to Miles Calculator</a></li>
+          <li><a href="/dog-age-calculator/">Dog Age Calculator</a></li>
+          <li><a href="/cat-age-calculator/">Cat Age Calculator</a></li>
+          <li><a href="/calories-burned-calculator/">Calories Burned Calculator</a></li>
+          <li><a href="/calories-burned-walking-calculator/">Calories Burned Walking Calculator</a></li>
+          <li><a href="/calories-burned-running-calculator/">Calories Burned Running Calculator</a></li>
+          <li><a href="/keto-calculator/">Keto Calculator</a></li>
+          <li><a href="/net-carb-calculator/">Net Carb Calculator</a></li>
+          <li><a href="/intermittent-fasting-calculator/">Intermittent Fasting Calculator</a></li>
+          <li><a href="/bsa-calculator/">BSA Calculator</a></li>
+          <li><a href="/dog-food-calculator/">Dog Food Calculator</a></li>
+          <li><a href="/ffmi-calculator/">FFMI Calculator</a></li>
+          <li><a href="/bulking-calculator/">Bulking Calculator</a></li>
+          <li><a href="/weight-loss-calculator/">Weight Loss Calculator</a></li>
+          <li><a href="/weight-loss-percentage-calculator/">Weight Loss Percentage Calculator</a></li>
+          <li><a href="/max-heart-rate-calculator/">Max Heart Rate Calculator</a></li>
+          <li><a href="/caffeine-calculator/">Caffeine Calculator</a></li>
+          <li><a href="/caffeine-half-life-calculator/">Caffeine Half Life Calculator</a></li>
+          <li><a href="/fiber-calculator/">Fiber Calculator</a></li>
+          <li><a href="/creatine-calculator/">Creatine Calculator</a></li>
+          <li><a href="/vitamin-d-calculator/">Vitamin D Calculator</a></li>
+          <li><a href="/body-recomposition-calculator/">Body Recomposition Calculator</a></li>
+        </ul>
+      </div>
+
+        <div class="footer-sub">
+<div class="footer-subcol">
+<div class="footer-col" style="order:3">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/semester-grade-calculator/">Semester Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+          <li><a href="/grade-curve-calculator/">Grade Curve Calculator</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:START-->
+<div class="footer-col" style="order:7">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Unit</span> <span class="ft2">Converters</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/unit-converter/">Unit Converter</a></li>
+          <li><a href="/length-converter/">Length Converter</a></li>
+          <li><a href="/weight-converter/">Weight Converter</a></li>
+          <li><a href="/volume-converter/">Volume Converter</a></li>
+          <li><a href="/temperature-converter/">Temperature Converter</a></li>
+          <li><a href="/area-converter/">Area Converter</a></li>
+          <li><a href="/speed-converter/">Speed Converter</a></li>
+          <li><a href="/data-storage-converter/">Data Storage Converter</a></li>
+          <li><a href="/cooking-converter/">Cooking Measurement Converter</a></li>
+          <li><a href="/px-to-rem-converter/">PX to REM Converter</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:END-->
+</div>
+
+<div class="footer-col" style="order:4">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/fraction-calculator/">Fraction Calculator</a></li>
+          <li><a href="/standard-deviation-calculator/">Standard Deviation Calculator</a></li>
+          <li><a href="/scientific-notation-calculator/">Scientific Notation Calculator</a></li>
+          <li><a href="/weighted-average-calculator/">Weighted Average Calculator</a></li>
+          <li><a href="/average-calculator/">Average Calculator</a></li>
+          <li><a href="/batting-average-calculator/">Batting Average Calculator</a></li>
+          <li><a href="/stock-average-calculator/">Stock Average Calculator</a></li>
+          <li><a href="/dice-average-calculator/">Dice Average Calculator</a></li>
+          <li><a href="/time-average-calculator/">Time Average Calculator</a></li>
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+          <li><a href="/percentage-change-calculator/">Percentage Change Calculator</a></li>
+          <li><a href="/age-calculator/">Age Calculator</a></li>
+          <li><a href="/date-calculator/">Date Calculator</a></li>
+          <li><a href="/time-calculator/">Time Calculator</a></li>
+          <li><a href="/hours-calculator/">Hours Calculator</a></li>
+          <li><a href="/triangle-calculator/">Triangle Calculator</a></li>
+          <li><a href="/random-number-generator/">Random Number Generator</a></li>
+        </ul>
+      </div>
+        </div>
+      </div>
+
+      <!--PAYFOOT:START-->
+      <div class="footer-col footer-col--wide">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Paycheck</span> <span class="ft2">Calculators</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/paycheck-calculator/">Paycheck Calculator (all states)</a></li>
+          <li><a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arkansas/">Arkansas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/california/">California Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/hawaii/">Hawaii Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/louisiana/">Louisiana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nebraska/">Nebraska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/oklahoma/">Oklahoma Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/utah/">Utah Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wisconsin/">Wisconsin Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a></li>
+        </ul>
+      </div>
+      <!--PAYFOOT:END-->
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/blog/">Blog</a>
+      <span aria-hidden="true">·</span>
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+</div>
+
+<script src="/assets/app.js?v=331"></script>
+<script>CalcThis.initProfitMarginCalc();</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>
