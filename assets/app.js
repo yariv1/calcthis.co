@@ -208,6 +208,7 @@ window.CalcThis = window.CalcThis || {};
       return info.after ? num + ' ' + info.sym : info.sym + (wordy ? ' ' : '') + num;
     };
     function picker() { var c = document.querySelector('.csel[id$="Cur"]'); return c && c.value ? curInfo(c.value) : null; }
+    var mo = null;
     function sync() {
       var pk = picker();
       [].forEach.call(document.querySelectorAll('.fld .lab .unit'), function (u) {
@@ -228,7 +229,7 @@ window.CalcThis = window.CalcThis || {};
         if (inp.value === '') { el.style.display = 'none'; inp.style.paddingLeft = ''; return; }
         var cs = getComputedStyle(inp);
         cv.font = cs.fontWeight + ' ' + cs.fontSize + ' ' + cs.fontFamily;
-        el.textContent = s; el.style.display = '';
+        if (el.textContent !== s) el.textContent = s; if (el.style.display) el.style.display = '';
         var wordy = /[A-Za-z]/.test(s), gap = wordy ? 6 : 3;
         if (after) {
           inp.style.paddingLeft = '';
@@ -242,12 +243,13 @@ window.CalcThis = window.CalcThis || {};
         }
       });
     }
+    function syncQ() { sync(); if (mo) mo.takeRecords(); }
     var q = 0;
-    function later() { if (q) return; q = 1; var go = function () { if (!q) return; q = 0; sync(); }; requestAnimationFrame(go); setTimeout(go, 50); }
+    function later() { if (q) return; q = 1; var go = function () { if (!q) return; q = 0; syncQ(); }; requestAnimationFrame(go); setTimeout(go, 50); }
     ['input', 'change', 'click', 'keyup', 'focusin', 'focusout'].forEach(function (ev) { document.addEventListener(ev, function () { later(); setTimeout(later, 60); }, true); });
-    new MutationObserver(later).observe(document.body || document.documentElement, { subtree: true, childList: true, characterData: true });
+    var mq = 0; mo = new MutationObserver(function () { if (mq) return; mq = setTimeout(function () { mq = 0; later(); }, 250); }); mo.observe(document.body || document.documentElement, { subtree: true, childList: true, characterData: true });
     window.addEventListener('resize', later);
-    setInterval(sync, 700);
+    setInterval(syncQ, 1500);
     CalcThis.syncFieldSymbols = sync;
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', later); else later();
   })();

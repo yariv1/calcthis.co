@@ -337,6 +337,9 @@ Total live calculators: **89** (v322, + max heart rate, v321, + weight loss perc
 
 ---
 
+## Last session addendum 33 (2026-11-08, DEPLOYED v335): SPEED FIX FOR FIELD SYMBOLS
+The FIELD SYMBOLS observer fed itself (it rewrote text each pass, which re-triggered it) and slowed every page. Now: write only on change, observer records dropped after each sync (`mo.takeRecords()`), mutation checks debounced 250 ms, safety interval 1.5 s. Lesson: any global MutationObserver must never mutate what it observes unguarded; measure idle CPU after adding one.
+
 ## Last session addendum 32 (2026-11-08, DEPLOYED v334): MONEY TEXT FOLLOWS THE FIELD SYMBOL SIDE
 `CalcThis.fmtMoney` (app.js FIELD SYMBOLS block) now formats every money figure on the currency-picker pages (discount, markup, profit margin, salary) with the symbol on the same side as the field symbol (EUR/SEK/ILS after, USD/INR/GBP before). Oracles of the three gated pages updated (EUR/SEK/ILS after). User caught that results still used the US layout.
 
