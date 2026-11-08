@@ -1,0 +1,822 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Commission Calculator — Sales, Tiered &amp; Split Commission</title>
+<meta name="description" content="Commission calculator: any two of sales, rate and commission, tiered and per-item plans, base pay, split, fees, take-home and sales needed. Any currency.">
+<link rel="canonical" href="https://calcthis.co/commission-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Commission Calculator — Sales, Tiered &amp; Split Commission">
+<meta property="og:description" content="Commission calculator: any two of sales, rate and commission, tiered and per-item plans, base pay, split, fees, take-home and sales needed. Any currency.">
+<meta property="og:url" content="https://calcthis.co/commission-calculator/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/datepicker.min.css">
+<link rel="stylesheet" href="/assets/style.css?v=337">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Commission Calculator",
+  "url": "https://calcthis.co/commission-calculator/",
+  "applicationCategory": "FinanceApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "Free commission calculator: type any two of sales, commission rate and commission for the third; tiered plans where each slice of sales earns its own rate or the reached tier pays on all sales; a flat amount per item; several sales added up; base pay, your share of a split, fees and a fixed deduction to see your take-home; who pays (seller or buyer); and the sales you need to reach a take-home goal. Works in any currency."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I calculate commission?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Multiply the sales by the commission rate and divide by 100. 3% of $200,000.00 is $6,000.00. In the calculator, type the sales and the rate and the commission fills in."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I find the commission rate?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Commission rate = commission ÷ sales × 100. A commission of $1,500.00 on $50,000.00 of sales is 3%. Type the sales and the commission and the rate appears."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How does a tiered commission work?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Each slice of your sales earns the rate of the tier it falls in. With 3% up to $20,000.00, 5% from there to $25,000.00 and 10% above, sales of $27,000.00 earn $1,050.00: only the $2,000.00 above $25,000.00 earns 10%. Choose “Tiered — each slice at its own rate”, type the limits and rates and the bar shows every slice."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What if the whole sale is paid at the rate of the tier I reach?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Some plans pay one rate on all your sales, decided by the tier your total reaches. The same $27,000.00 of sales then earns 10% of everything, which is $2,700.00. Choose “Tiered — whole sale at the reached rate” to compare the two plans on the same sales."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I add a base salary to commission?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Open Go advanced and type the base pay. It is added after the commission and any deductions: $500.00 base plus 1.5% of $25,000.00 is $875.00 in total pay."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I work out my take-home after a split and fees?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Open Go advanced. Type your share of the commission, the fees as a percent of your share and any fixed deduction. A $6,000.00 commission with a 70% share and 2% fees leaves you $4,116.00 ($4,200.00 share, $84.00 fees)."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How much do I need to sell to earn a goal?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Type the amount you want to take home under “Take-home goal” in Go advanced. At 3% with nothing else deducted, $5,000.00 takes $166,666.67 of sales. With tiers, the calculator finds the smallest sales that reach the goal."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Who pays the commission, the seller or the buyer?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Usually the seller: the commission comes out of the price, so the seller keeps the price minus the commission. Sometimes the buyer pays it on top, so the buyer pays the price plus the commission. Choose which in Go advanced and the page shows both totals."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I add several sales together?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Open Go advanced and use “More sales” to add up to six extra sales; they are added to the sales above and the tiers, if you use them, work on the total."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does the currency selector convert my numbers?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. It only changes the symbol and the decimals shown. Type your numbers in the currency you use."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "CalcThis",
+      "item": "https://calcthis.co/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Commission Calculator",
+      "item": "https://calcthis.co/commission-calculator/"
+    }
+  ]
+}
+</script>
+<meta property="og:site_name" content="CalcThis">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://calcthis.co/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="CalcThis — free, purpose-built calculators">
+<meta name="twitter:title" content="Commission Calculator — Sales, Tiered &amp; Split Commission">
+<meta name="twitter:description" content="Commission calculator: any two of sales, rate and commission, tiered and per-item plans, base pay, split, fees, take-home and sales needed. Any currency.">
+<meta name="twitter:image" content="https://calcthis.co/assets/og-default.png">
+</head>
+<body class="p-bmr p-cm">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <a class="hdr-back" href="/blog/" aria-label="Back to blog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-search"><div class="menu-sx"><input id="menuSearch" type="search" placeholder="Search calculators or states…" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Search calculators" enterkeyhint="search"></div><div class="menu-results" id="menuResults" hidden></div></div>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <span class="menu-col-head">Construction &amp; Gardening</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+          <a href="/paint-calculator/">Paint</a>
+          <a href="/wallpaper-calculator/">Wallpaper</a>
+          <a href="/square-footage-calculator/">Square Footage</a>
+          <a href="/tape-measure-fraction-calculator/">Tape Measure Fraction</a>
+          <a href="/stair-calculator/">Stair</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/vo2-max-calculator/">VO2 Max</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
+          <a href="/bmi-calculator/">BMI</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/ideal-weight-calculator/">Ideal Weight</a>
+          <a href="/lean-body-mass-calculator/">Lean Body Mass</a>
+          <a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio</a>
+          <a href="/gmi-calculator/">GMI</a>
+          <a href="/a1c-calculator/">A1C</a>
+          <a href="/calorie-calculator/">Calorie</a>
+          <a href="/calorie-deficit-calculator/">Calorie Deficit</a>
+          <a href="/bmr-calculator/">BMR</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/water-intake-calculator/">Water Intake</a>
+          <a href="/macro-calculator/">Macro</a>
+          <a href="/protein-intake-calculator/">Protein Intake</a>
+          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
+          <a href="/steps-to-miles-calculator/">Steps to Miles</a>
+          <a href="/dog-age-calculator/">Dog Age</a>
+          <a href="/cat-age-calculator/">Cat Age</a>
+          <a href="/calories-burned-calculator/">Calories Burned</a>
+          <a href="/calories-burned-walking-calculator/">Calories Burned Walking</a>
+          <a href="/calories-burned-running-calculator/">Calories Burned Running</a>
+          <a href="/keto-calculator/">Keto</a>
+          <a href="/net-carb-calculator/">Net Carb</a>
+          <a href="/intermittent-fasting-calculator/">Intermittent Fasting</a>
+          <a href="/bsa-calculator/">BSA</a>
+          <a href="/dog-food-calculator/">Dog Food</a>
+          <a href="/ffmi-calculator/">FFMI</a>
+          <a href="/bulking-calculator/">Bulking</a>
+          <a href="/weight-loss-calculator/">Weight Loss</a>
+          <a href="/weight-loss-percentage-calculator/">Weight Loss %</a>
+          <a href="/max-heart-rate-calculator/">Max Heart Rate</a>
+          <a href="/caffeine-calculator/">Caffeine</a>
+          <a href="/caffeine-half-life-calculator/">Caffeine Half Life</a>
+          <a href="/fiber-calculator/">Fiber</a>
+          <a href="/creatine-calculator/">Creatine</a>
+          <a href="/vitamin-d-calculator/">Vitamin D</a>
+          <a href="/body-recomposition-calculator/">Body Recomposition</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/semester-grade-calculator/">Semester Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+          <a href="/grade-curve-calculator/">Grade Curve</a>
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/fraction-calculator/">Fraction</a>
+          <a href="/standard-deviation-calculator/">Standard Deviation</a>
+          <a href="/scientific-notation-calculator/">Scientific Notation</a>
+          <a href="/average-calculator/">Average</a>
+          <a href="/batting-average-calculator/">Batting Average</a>
+          <a href="/stock-average-calculator/">Stock Average</a>
+          <a href="/dice-average-calculator/">Dice Average</a>
+          <a href="/time-average-calculator/">Time Average</a>
+          <a href="/weighted-average-calculator/">Weighted Average</a>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+          <a href="/percentage-change-calculator/">Percentage Change</a>
+          <a href="/age-calculator/">Age</a>
+          <a href="/date-calculator/">Date</a>
+          <a href="/time-calculator/">Time</a>
+          <a href="/hours-calculator/">Hours</a>
+          <a href="/triangle-calculator/">Triangle</a>
+          <a href="/random-number-generator/">Random Number</a>
+          <span class="menu-col-head">Cooking &amp; Kitchen</span>
+          <a href="/recipe-converter/">Recipe Converter</a>
+          <a href="/turkey-cooking-time-calculator/">Turkey Cooking Time</a>
+          <a href="/turkey-thawing-time-calculator/">Turkey Thawing Time</a>
+          <a href="/turkey-size-calculator/">Turkey Size</a>
+          <!--UNITNAV:START-->
+          <span class="menu-col-head">Unit Converters</span>
+          <a href="/unit-converter/">Unit Converter</a>
+          <a href="/length-converter/">Length Converter</a>
+          <a href="/weight-converter/">Weight Converter</a>
+          <a href="/volume-converter/">Volume Converter</a>
+          <a href="/temperature-converter/">Temperature Converter</a>
+          <a href="/area-converter/">Area Converter</a>
+          <a href="/speed-converter/">Speed Converter</a>
+          <a href="/data-storage-converter/">Data Storage Converter</a>
+          <a href="/cooking-converter/">Cooking Converter</a>
+          <a href="/px-to-rem-converter/">PX to REM Converter</a>
+          <!--UNITNAV:END-->
+          <span class="menu-col-head">Money &amp; Finance</span>
+          <a href="/mortgage-calculator/">Mortgage</a>
+          <a href="/loan-calculator/">Loan</a>
+          <a href="/auto-loan-calculator/">Auto Loan</a>
+          <a href="/car-sales-tax-calculator/">Car Sales Tax</a>
+          <a href="/overtime-calculator/">Overtime</a>
+          <a href="/salary-calculator/">Salary</a>
+          <a href="/markup-calculator/">Markup</a>
+          <a href="/profit-margin-calculator/">Profit Margin</a>
+          <a href="/discount-calculator/">Discount</a>
+          <a href="/commission-calculator/" class="current">Commission</a>
+          <a href="/realtor-commission-calculator/">Realtor Commission</a>
+          <!--STAXNAV:START-->
+          <a href="/sales-tax-calculator/">Sales Tax</a>
+          <a href="/sales-tax-calculator/california/">California Sales Tax</a>
+          <a href="/sales-tax-calculator/chicago/">Chicago Sales Tax</a>
+          <a href="/sales-tax-calculator/florida/">Florida Sales Tax</a>
+          <a href="/sales-tax-calculator/las-vegas/">Las Vegas Sales Tax</a>
+          <a href="/sales-tax-calculator/los-angeles/">Los Angeles Sales Tax</a>
+          <a href="/sales-tax-calculator/michigan/">Michigan Sales Tax</a>
+          <a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax</a>
+          <a href="/sales-tax-calculator/missouri/">Missouri Sales Tax</a>
+          <a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax</a>
+          <a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax</a>
+          <a href="/sales-tax-calculator/north-carolina/">North Carolina Sales Tax</a>
+          <a href="/sales-tax-calculator/ohio/">Ohio Sales Tax</a>
+          <a href="/sales-tax-calculator/texas/">Texas Sales Tax</a>
+          <a href="/sales-tax-calculator/virginia/">Virginia Sales Tax</a>
+          <!--STAXNAV:END-->
+          <a href="/tip-calculator/">Tip</a>
+          <a href="/how-much-to-tip/">How Much to Tip</a>
+        </div>
+        <!--PAYNAV:START-->
+        <div class="menu-col">
+          <span class="menu-col-head">Paycheck Calculators</span>
+          <a href="/paycheck-calculator/">Paycheck Calculator (all states)</a>
+          <a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a>
+          <a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arkansas/">Arkansas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/california/">California Paycheck Calculator</a>
+          <a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a>
+          <a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a>
+          <a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/hawaii/">Hawaii Paycheck Calculator</a>
+          <a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a>
+          <a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a>
+          <a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a>
+          <a href="/paycheck-calculator/louisiana/">Louisiana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a>
+          <a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a>
+          <a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a>
+          <a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a>
+          <a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nebraska/">Nebraska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a>
+          <a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a>
+          <a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a>
+          <a href="/paycheck-calculator/oklahoma/">Oklahoma Paycheck Calculator</a>
+          <a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a>
+          <a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a>
+          <a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a>
+          <a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/utah/">Utah Paycheck Calculator</a>
+          <a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wisconsin/">Wisconsin Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a>
+        </div>
+        <!--PAYNAV:END-->
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">Sales commission, tiered plans and your take-home · the sales you need for a goal · any currency</div>
+    <h1>Commission Calculator</h1>
+    <p>Type any <strong>two</strong> of the <strong>sales</strong>, the <strong>commission rate</strong> or the <strong>commission</strong> — the third fills in. <strong>3% of $200,000.00</strong> is <strong>$6,000.00</strong>. Pick a tiered plan to see each slice of your sales earn its own rate, add a base pay, a split and fees to see what you take home, and type a goal to see the sales you need.</p>
+  </section>
+
+  <div class="grid">
+
+    <!-- INPUT -->
+    <div class="card">
+      <div class="card-pad">
+        <div class="sl-head"><h2 class="card-h2">Your sale</h2><div class="csel sl-cur" id="cmCur" data-value="USD" data-search="1" aria-label="Currency"><button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false"><span class="csel-val">USD</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="csel-panel" role="listbox"></div></div></div>
+        <div class="fld"><span class="lab">Commission plan</span><div class="csel" id="cmPlan" data-value="pct" aria-label="Commission plan"><button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false"><span class="csel-val">Percent of sales</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="csel-panel" role="listbox"><button type="button" class="csel-opt on" role="option" aria-selected="true" data-value="pct">Percent of sales</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="tier">Tiered — each slice at its own rate</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="whole">Tiered — whole sale at the reached rate</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="item">Flat amount per item sold</button></div></div></div>
+        <div id="cmFields">
+          <label class="fld" id="cmSalesFld" for="cmSales"><span class="lab">Sales <span class="unit">$ · total sold</span></span><div class="inp"><input id="cmSales" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 50000"></div></label>
+          <div id="cmPctBox">
+            <label class="fld" for="cmRate"><span class="lab">Commission rate <span class="unit">% · of sales</span></span><div class="inp"><input id="cmRate" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 3"></div></label>
+            <label class="fld" for="cmComm"><span class="lab">Commission <span class="unit">$ · you earn</span></span><div class="inp"><input id="cmComm" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 1500"></div></label>
+          </div>
+          <div id="cmTierBox" style="display:none">
+            <p class="cm-sech">Your tiers</p>
+            <div id="cmTiers"></div>
+            <div class="add-row"><button class="btn" id="cmTierAdd" type="button"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg> Add a tier</button></div>
+            <p class="av-note" id="cmTierNote"></p>
+          </div>
+          <div id="cmItemBox" style="display:none">
+            <label class="fld" for="cmItems"><span class="lab">Items sold <span class="unit">how many</span></span><div class="inp"><input id="cmItems" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 12"></div></label>
+            <label class="fld" for="cmPer"><span class="lab">Commission per item <span class="unit">$ · each</span></span><div class="inp"><input id="cmPer" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 25"></div></label>
+          </div>
+          <div class="res-hint" id="cmHint" style="display:none;text-align:left;margin:4px 0 8px"></div>
+        </div>
+        <p class="av-note" id="cmFrom" style="display:none"></p>
+        <div id="cmAdvIn" style="display:none">
+          <div class="proj-sep"></div>
+          <div id="cmMoreWrap">
+            <p class="cm-sech">More sales <span>· optional</span></p>
+            <div id="cmMore"></div>
+            <div class="add-row"><button class="btn" id="cmMoreAdd" type="button"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg> Add another sale</button></div>
+            <p class="av-note" id="cmMoreNote"></p>
+          </div>
+          <div class="proj-sep"></div>
+          <label class="fld" for="cmBase"><span class="lab">Base pay <span class="unit">$ · added on top · optional</span></span><div class="inp"><input id="cmBase" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 500"></div></label>
+          <p class="av-note" id="cmBaseNote"></p>
+          <label class="fld" for="cmShare"><span class="lab">Your share <span class="unit">% · of the commission · optional</span></span><div class="inp"><input id="cmShare" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 70"></div></label>
+          <p class="av-note" id="cmShareNote"></p>
+          <label class="fld" for="cmFee"><span class="lab">Fees <span class="unit">% · of your share · optional</span></span><div class="inp"><input id="cmFee" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 2"></div></label>
+          <p class="av-note" id="cmFeeNote"></p>
+          <label class="fld" for="cmFix"><span class="lab">Fixed deduction <span class="unit">$ · draw or expense · optional</span></span><div class="inp"><input id="cmFix" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 100"></div></label>
+          <p class="av-note" id="cmFixNote"></p>
+          <div class="fld" id="cmWhoFld"><span class="lab">Who pays the commission</span><div class="seg" id="cmWho" role="group" aria-label="Who pays the commission"><button class="on" type="button" data-v="seller">Seller</button><button type="button" data-v="buyer">Buyer</button></div></div>
+          <p class="av-note" id="cmWhoNote"></p>
+          <div class="proj-sep"></div>
+          <label class="fld" for="cmGoal"><span class="lab">Take-home goal <span class="unit">$ · total pay you want · optional</span></span><div class="inp"><input id="cmGoal" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 5000"></div></label>
+          <p class="av-note" id="cmGoalNote"></p>
+        </div>
+        <div class="add-row split" style="margin-top:16px">
+          <button class="linkbtn" id="cmClear" type="button">Clear fields</button>
+          <button class="advbtn" id="cmAdvBtn" type="button">
+            <span id="cmAdvBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div class="card">
+      <div class="card-pad">
+        <div class="bf-res">
+          <div class="res-lab" id="cmLab">Commission</div>
+          <div class="res-big"><span id="cmBig">—</span></div>
+          <div class="res-sub" id="cmSub">Type any two of sales, commission rate and commission.</div>
+        </div>
+        <div id="cmBody" style="display:none">
+          <p class="res-tip adv-tip" id="cmTip"></p>
+          <p class="res-tip adv-tip" id="cmGoalTip" style="display:none"></p>
+          <div id="cmBarsWrap" style="display:none">
+            <p class="bm-h">Where your sales go</p>
+            <div id="cmBars"></div>
+          </div>
+          <div id="cmStepWrap" style="display:none">
+            <p class="bm-h">From sales to take-home</p>
+            <table class="dtable" id="cmStep"></table>
+          </div>
+          <div id="cmLadWrap" style="display:none">
+            <p class="bm-h">What other sales would earn</p>
+            <table class="dtable" id="cmLad"></table>
+            <p class="cb-note" id="cmLadNote"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- mobile sticky bar -->
+  <div class="mbar" id="mbar">
+    <span class="mbar-lab" id="cmMLab">Commission</span>
+    <div class="mbar-vals"><b id="cmMVal">—</b></div>
+  </div>
+
+  <div class="related-calcs">
+    <p class="related-calcs-h">More calculators that may interest you</p>
+    <div class="pills">
+      <a class="pill" href="/discount-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 6h12l10 10-10 10L5 16z" transform="scale(.75)"/><circle cx="9" cy="9" r="1.5"/></svg>
+        Discount Calculator
+      </a>
+      <a class="pill" href="/markup-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17l6-6 4 4 6-8"/><path d="M15 7h5v5"/></svg>
+        Markup Calculator
+      </a>
+      <a class="pill" href="/salary-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/></svg>
+        Salary Calculator
+      </a>
+      <a class="pill" href="/percentage-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 5L5 19"/><circle cx="7" cy="7" r="2.5"/><circle cx="17" cy="17" r="2.5"/></svg>
+        Percentage Calculator
+      </a>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use the commission calculator</h2>
+        <p>With <strong>Percent of sales</strong> selected, type any <strong>two</strong> of the three boxes — <strong>sales</strong>, <strong>commission rate</strong> or <strong>commission</strong> — and the third fills in. The line under the boxes says which two were used. Type a third value and it replaces the oldest one, never the sales.</p>
+        <p>Paid on tiers? Choose <strong>Tiered — each slice at its own rate</strong> (each slice of your sales earns the rate of its tier) or <strong>Tiered — whole sale at the reached rate</strong> (the tier your total reaches sets the rate for all of it), type each tier's limit and a percent or a flat amount, and the bar shows every slice. <strong>Flat amount per item sold</strong> multiplies the items by your amount.</p>
+        <p>Open <strong>Go advanced</strong> to add more sales, a base pay, your share of a split, fees, a fixed deduction, who pays the commission and a take-home goal — the sales you need to reach it.</p>
+
+        <h2>The formulas</h2>
+        <div class="formula">
+          commission = sales × commission rate ÷ 100
+          <small>RATE = COMMISSION ÷ SALES × 100</small>
+        </div>
+        <p>With a base pay: total pay = base + commission. Tiered, each slice: commission = Σ (sales inside the tier × its rate). Examples, all worked out by this calculator:</p>
+        <table class="dtable"><thead><tr><th>Plan</th><th>Sales</th><th>Commission</th></tr></thead><tbody><tr><td>3% of sales</td><td>$200,000.00</td><td>$6,000.00</td></tr><tr><td>$500 base + 1.5% of sales</td><td>$25,000.00</td><td>$875.00</td></tr><tr><td>Tiers 3% / 5% / 10%, each slice at its rate</td><td>$27,000.00</td><td>$1,050.00</td></tr><tr><td>Tiers 3% / 5% / 10%, whole sale at the reached rate</td><td>$27,000.00</td><td>$2,700.00</td></tr><tr><td>$25 per item, 12 items</td><td>12 items</td><td>$300.00</td></tr></tbody></table>
+      </div>
+
+      <div>
+        <h2>Tiered commission, slice by slice</h2>
+        <p>With 3% up to $20,000.00, 5% from $20,000.00 to $25,000.00 and 10% above $25,000.00, sales of $27,000.00 earn $1,050.00. Only the $2,000.00 above $25,000.00 earns 10%:</p>
+        <table class="dtable"><thead><tr><th>Slice of the $27,000.00</th><th>Rate</th><th>Commission</th></tr></thead><tbody><tr><td>$0.00 to $20,000.00</td><td>3%</td><td>$600.00</td></tr><tr><td>$20,000.00 to $25,000.00</td><td>5%</td><td>$250.00</td></tr><tr><td>$25,000.00 to $27,000.00</td><td>10%</td><td>$200.00</td></tr><tr><td><strong>Total</strong></td><td></td><td><strong>$1,050.00</strong></td></tr></tbody></table>
+        <p>If the same plan paid the rate of the tier you reach on all sales, the $27,000.00 would earn 10% of everything: $2,700.00. Plans differ in this, so check your agreement and compare both in the calculator.</p>
+        <h2>From commission to take-home</h2>
+        <p>Your pay is often less than the commission. A $6,000.00 commission with a 70% share, 2% fees and no other deduction leaves $4,116.00: $4,200.00 after the split minus $84.00 in fees. Add a base pay and the total pay shows next to it.</p>
+        <h2>How much do I need to sell?</h2>
+        <p>Type what you want to take home. At 3% with nothing deducted, $5,000.00 takes $166,666.67 of sales. For tiers the calculator searches your tiers for the smallest sales that reach the goal.</p>
+
+        <h2>Related tools</h2>
+        <p>To take a percent off a price use the <a href="/discount-calculator/">discount calculator</a>, to set a selling price from a cost the <a href="/markup-calculator/">markup calculator</a>, to turn an hourly rate into a yearly pay the <a href="/salary-calculator/">salary calculator</a>, to work out a percentage of a number the <a href="/percentage-calculator/">percentage calculator</a>, and for a home sale the <a href="/realtor-commission-calculator/">realtor commission calculator</a>.</p>
+        <h2>Sources</h2>
+        <ul>
+          <li>The formulas — commission = sales × rate ÷ 100, the rate = commission ÷ sales × 100, a base amount added to the commission, tiered commission where each slice of sales earns its own rate (20,000 × 3% + 5,000 × 5% + 2,000 × 10% = 1,050), a percent taken from the seller's proceeds or added on top for the buyer, and fees and a fixed deduction taken from the gross commission — are the ones stated on the pages of calculator.net's commission and tiered commission calculators, Omnicalculator's commission calculator, Inch Calculator's real estate commission calculator, GigaCalculator's commission calculator and Yotpo's commission calculator, all opened 2026-11-08. Everything else on this page is arithmetic done by the calculator itself, which you can check with the examples.</li>
+          <li>Conventions used here, which are this page's choice and not a rule: a tier covers the sales above its start up to and including its “up to” limit; a flat-amount tier pays its full amount once your sales are above its start; your share is taken first, then fees as a percent of your share, then the fixed deduction, and base pay is added at the end and is never split. No commission rate is quoted as normal for any industry — type the rate in your own agreement.</li>
+          <li>The currency selector only changes the symbol and the number of decimals; nothing is converted.</li>
+        </ul>
+        <p><small>For information only. Your pay plan or contract decides what you are actually paid.</small></p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>How do I calculate commission?</summary><p>Multiply the sales by the commission rate and divide by 100. 3% of $200,000.00 is $6,000.00. In the calculator, type the sales and the rate and the commission fills in.</p></details>
+    <details class="faq"><summary>How do I find the commission rate?</summary><p>Commission rate = commission ÷ sales × 100. A commission of $1,500.00 on $50,000.00 of sales is 3%. Type the sales and the commission and the rate appears.</p></details>
+    <details class="faq"><summary>How does a tiered commission work?</summary><p>Each slice of your sales earns the rate of the tier it falls in. With 3% up to $20,000.00, 5% from there to $25,000.00 and 10% above, sales of $27,000.00 earn $1,050.00: only the $2,000.00 above $25,000.00 earns 10%. Choose “Tiered — each slice at its own rate”, type the limits and rates and the bar shows every slice.</p></details>
+    <details class="faq"><summary>What if the whole sale is paid at the rate of the tier I reach?</summary><p>Some plans pay one rate on all your sales, decided by the tier your total reaches. The same $27,000.00 of sales then earns 10% of everything, which is $2,700.00. Choose “Tiered — whole sale at the reached rate” to compare the two plans on the same sales.</p></details>
+    <details class="faq"><summary>How do I add a base salary to commission?</summary><p>Open Go advanced and type the base pay. It is added after the commission and any deductions: $500.00 base plus 1.5% of $25,000.00 is $875.00 in total pay.</p></details>
+    <details class="faq"><summary>How do I work out my take-home after a split and fees?</summary><p>Open Go advanced. Type your share of the commission, the fees as a percent of your share and any fixed deduction. A $6,000.00 commission with a 70% share and 2% fees leaves you $4,116.00 ($4,200.00 share, $84.00 fees).</p></details>
+    <details class="faq"><summary>How much do I need to sell to earn a goal?</summary><p>Type the amount you want to take home under “Take-home goal” in Go advanced. At 3% with nothing else deducted, $5,000.00 takes $166,666.67 of sales. With tiers, the calculator finds the smallest sales that reach the goal.</p></details>
+    <details class="faq"><summary>Who pays the commission, the seller or the buyer?</summary><p>Usually the seller: the commission comes out of the price, so the seller keeps the price minus the commission. Sometimes the buyer pays it on top, so the buyer pays the price plus the commission. Choose which in Go advanced and the page shows both totals.</p></details>
+    <details class="faq"><summary>Can I add several sales together?</summary><p>Yes. Open Go advanced and use “More sales” to add up to six extra sales; they are added to the sales above and the tiers, if you use them, work on the total.</p></details>
+    <details class="faq"><summary>Does the currency selector convert my numbers?</summary><p>No. It only changes the symbol and the decimals shown. Type your numbers in the currency you use.</p></details>
+  </section>
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+      <div class="footer-stack">
+<div class="footer-col" style="order:1">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+          <li><a href="/paint-calculator/">Paint Calculator</a></li>
+          <li><a href="/wallpaper-calculator/">Wallpaper Calculator</a></li>
+          <li><a href="/square-footage-calculator/">Square Footage Calculator</a></li>
+          <li><a href="/tape-measure-fraction-calculator/">Tape Measure Fraction Calculator</a></li>
+          <li><a href="/stair-calculator/">Stair Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:5">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Cooking &amp;</span> <span class="ft2">Kitchen</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/recipe-converter/">Recipe Converter</a></li>
+          <li><a href="/turkey-cooking-time-calculator/">Turkey Cooking Time Calculator</a></li>
+          <li><a href="/turkey-thawing-time-calculator/">Turkey Thawing Time Calculator</a></li>
+          <li><a href="/turkey-size-calculator/">Turkey Size Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:6">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Money &amp;</span> <span class="ft2">Finance</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/mortgage-calculator/">Mortgage Calculator</a></li>
+          <li><a href="/loan-calculator/">Loan Calculator</a></li>
+          <li><a href="/auto-loan-calculator/">Auto Loan Calculator</a></li>
+          <li><a href="/car-sales-tax-calculator/">Car Sales Tax Calculator</a></li>
+          <li><a href="/overtime-calculator/">Overtime Calculator</a></li>
+          <li><a href="/salary-calculator/">Salary Calculator</a></li>
+          <li><a href="/markup-calculator/">Markup Calculator</a></li>
+          <li><a href="/profit-margin-calculator/">Profit Margin Calculator</a></li>
+          <li><a href="/discount-calculator/">Discount Calculator</a></li>
+          <li><a href="/commission-calculator/">Commission Calculator</a></li>
+          <li><a href="/realtor-commission-calculator/">Realtor Commission Calculator</a></li>
+          <!--STAXFOOT:START-->
+          <li><a href="/sales-tax-calculator/">Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/california/">California Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/chicago/">Chicago Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/florida/">Florida Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/las-vegas/">Las Vegas Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/los-angeles/">Los Angeles Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/michigan/">Michigan Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/missouri/">Missouri Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/north-carolina/">North Carolina Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/ohio/">Ohio Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/texas/">Texas Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/virginia/">Virginia Sales Tax Calculator</a></li>
+          <!--STAXFOOT:END-->
+          <li><a href="/tip-calculator/">Tip Calculator</a></li>
+          <li><a href="/how-much-to-tip/">How Much to Tip</a></li>
+        </ul>
+      </div>
+      </div>
+
+      <div class="footer-right">
+<div class="footer-col footer-col--two" style="order:2">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/vo2-max-calculator/">VO2 Max Calculator</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/bmi-calculator/">BMI Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/ideal-weight-calculator/">Ideal Weight Calculator</a></li>
+          <li><a href="/lean-body-mass-calculator/">Lean Body Mass Calculator</a></li>
+          <li><a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio Calculator</a></li>
+          <li><a href="/gmi-calculator/">GMI Calculator</a></li>
+          <li><a href="/a1c-calculator/">A1C Calculator</a></li>
+          <li><a href="/calorie-calculator/">Calorie Calculator</a></li>
+          <li><a href="/calorie-deficit-calculator/">Calorie Deficit Calculator</a></li>
+          <li><a href="/bmr-calculator/">BMR Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/water-intake-calculator/">Water Intake Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/protein-intake-calculator/">Protein Intake Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
+          <li><a href="/steps-to-miles-calculator/">Steps to Miles Calculator</a></li>
+          <li><a href="/dog-age-calculator/">Dog Age Calculator</a></li>
+          <li><a href="/cat-age-calculator/">Cat Age Calculator</a></li>
+          <li><a href="/calories-burned-calculator/">Calories Burned Calculator</a></li>
+          <li><a href="/calories-burned-walking-calculator/">Calories Burned Walking Calculator</a></li>
+          <li><a href="/calories-burned-running-calculator/">Calories Burned Running Calculator</a></li>
+          <li><a href="/keto-calculator/">Keto Calculator</a></li>
+          <li><a href="/net-carb-calculator/">Net Carb Calculator</a></li>
+          <li><a href="/intermittent-fasting-calculator/">Intermittent Fasting Calculator</a></li>
+          <li><a href="/bsa-calculator/">BSA Calculator</a></li>
+          <li><a href="/dog-food-calculator/">Dog Food Calculator</a></li>
+          <li><a href="/ffmi-calculator/">FFMI Calculator</a></li>
+          <li><a href="/bulking-calculator/">Bulking Calculator</a></li>
+          <li><a href="/weight-loss-calculator/">Weight Loss Calculator</a></li>
+          <li><a href="/weight-loss-percentage-calculator/">Weight Loss Percentage Calculator</a></li>
+          <li><a href="/max-heart-rate-calculator/">Max Heart Rate Calculator</a></li>
+          <li><a href="/caffeine-calculator/">Caffeine Calculator</a></li>
+          <li><a href="/caffeine-half-life-calculator/">Caffeine Half Life Calculator</a></li>
+          <li><a href="/fiber-calculator/">Fiber Calculator</a></li>
+          <li><a href="/creatine-calculator/">Creatine Calculator</a></li>
+          <li><a href="/vitamin-d-calculator/">Vitamin D Calculator</a></li>
+          <li><a href="/body-recomposition-calculator/">Body Recomposition Calculator</a></li>
+        </ul>
+      </div>
+
+        <div class="footer-sub">
+<div class="footer-subcol">
+<div class="footer-col" style="order:3">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/semester-grade-calculator/">Semester Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+          <li><a href="/grade-curve-calculator/">Grade Curve Calculator</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:START-->
+<div class="footer-col" style="order:7">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Unit</span> <span class="ft2">Converters</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/unit-converter/">Unit Converter</a></li>
+          <li><a href="/length-converter/">Length Converter</a></li>
+          <li><a href="/weight-converter/">Weight Converter</a></li>
+          <li><a href="/volume-converter/">Volume Converter</a></li>
+          <li><a href="/temperature-converter/">Temperature Converter</a></li>
+          <li><a href="/area-converter/">Area Converter</a></li>
+          <li><a href="/speed-converter/">Speed Converter</a></li>
+          <li><a href="/data-storage-converter/">Data Storage Converter</a></li>
+          <li><a href="/cooking-converter/">Cooking Measurement Converter</a></li>
+          <li><a href="/px-to-rem-converter/">PX to REM Converter</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:END-->
+</div>
+
+<div class="footer-col" style="order:4">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/fraction-calculator/">Fraction Calculator</a></li>
+          <li><a href="/standard-deviation-calculator/">Standard Deviation Calculator</a></li>
+          <li><a href="/scientific-notation-calculator/">Scientific Notation Calculator</a></li>
+          <li><a href="/weighted-average-calculator/">Weighted Average Calculator</a></li>
+          <li><a href="/average-calculator/">Average Calculator</a></li>
+          <li><a href="/batting-average-calculator/">Batting Average Calculator</a></li>
+          <li><a href="/stock-average-calculator/">Stock Average Calculator</a></li>
+          <li><a href="/dice-average-calculator/">Dice Average Calculator</a></li>
+          <li><a href="/time-average-calculator/">Time Average Calculator</a></li>
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+          <li><a href="/percentage-change-calculator/">Percentage Change Calculator</a></li>
+          <li><a href="/age-calculator/">Age Calculator</a></li>
+          <li><a href="/date-calculator/">Date Calculator</a></li>
+          <li><a href="/time-calculator/">Time Calculator</a></li>
+          <li><a href="/hours-calculator/">Hours Calculator</a></li>
+          <li><a href="/triangle-calculator/">Triangle Calculator</a></li>
+          <li><a href="/random-number-generator/">Random Number Generator</a></li>
+        </ul>
+      </div>
+        </div>
+      </div>
+
+      <!--PAYFOOT:START-->
+      <div class="footer-col footer-col--wide">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Paycheck</span> <span class="ft2">Calculators</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/paycheck-calculator/">Paycheck Calculator (all states)</a></li>
+          <li><a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arkansas/">Arkansas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/california/">California Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/hawaii/">Hawaii Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/louisiana/">Louisiana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nebraska/">Nebraska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/oklahoma/">Oklahoma Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/utah/">Utah Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wisconsin/">Wisconsin Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a></li>
+        </ul>
+      </div>
+      <!--PAYFOOT:END-->
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/blog/">Blog</a>
+      <span aria-hidden="true">·</span>
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+</div>
+
+<script src="/assets/app.js?v=337"></script>
+<script>CalcThis.initCommissionCalc();</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>

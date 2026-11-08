@@ -1,0 +1,36 @@
+{
+ "slug": "realtor-commission-calculator",
+ "pass": true,
+ "at": "2026-11-08T15:35:27.978Z",
+ "hash": "fda90e28c0c459e5",
+ "viewports": {
+  "mobile": {
+   "steps": 1227,
+   "fails": []
+  },
+  "desktop": {
+   "steps": 1227,
+   "fails": []
+  }
+ },
+ "oracle": {
+  "runs": 333,
+  "fails": [],
+  "note": "fuzzy ties 0 of 7301 comparisons; skipped 0"
+ },
+ "shots": [
+  "md-files/qa-passes/shots/realtor-commission-calculator-1-empty-mobile.png",
+  "md-files/qa-passes/shots/realtor-commission-calculator-2-filled-mobile.png",
+  "md-files/qa-passes/shots/realtor-commission-calculator-3-result-mobile.png",
+  "md-files/qa-passes/shots/realtor-commission-calculator-4-advanced-mobile.png",
+  "md-files/qa-passes/shots/realtor-commission-calculator-5-error-mobile.png",
+  "md-files/qa-passes/shots/realtor-commission-calculator-6-after-chaos-mobile.png",
+  "md-files/qa-passes/shots/realtor-commission-calculator-1-empty-desktop.png",
+  "md-files/qa-passes/shots/realtor-commission-calculator-2-filled-desktop.png",
+  "md-files/qa-passes/shots/realtor-commission-calculator-3-result-desktop.png",
+  "md-files/qa-passes/shots/realtor-commission-calculator-4-advanced-desktop.png",
+  "md-files/qa-passes/shots/realtor-commission-calculator-5-error-desktop.png",
+  "md-files/qa-passes/shots/realtor-commission-calculator-6-after-chaos-desktop.png"
+ ],
+ "console": []
+}

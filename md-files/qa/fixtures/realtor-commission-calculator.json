@@ -1,0 +1,38 @@
+{
+  "slug": "realtor-commission-calculator",
+  "bodyClass": "p-cm",
+  "blocks": ["COMMISSION", "REALTOR"],
+  "result": { "big": "rtBig", "body": "rtBody", "hint": "rtHint" },
+  "required": ["rtPrice", "rtRate", "rtComm"],
+  "fill": [
+    ["click", "rtClear"],
+    ["set", "rtCur", "USD"],
+    ["seg", "rtWho", "seller"],
+    ["set", "rtPrice", "300000"],
+    ["set", "rtRate", "6"]
+  ],
+  "optionalSamples": {
+    "rtSp": ["50", "25"],
+    "rtList": ["50", "60"],
+    "rtBrok": ["70", "100"],
+    "rtClose": ["2", "5"],
+    "rtPay": ["150000", "1,000"]
+  },
+  "pools": {
+    "rtPrice": ["300000", "1,200.50", "0", "99999999999"],
+    "rtRate": ["6", "0", "100", "2.5"],
+    "rtComm": ["18000", "0", "99999"],
+    "rtSp": ["50", "0", "100", "101"],
+    "rtList": ["50", "0", "100", "101"],
+    "rtBrok": ["70", "0", "100", "101"],
+    "rtClose": ["2", "0", "100", "101"],
+    "rtPay": ["150000", "0", "99999999"]
+  },
+  "variants": [
+    [["seg", "rtWho", "shared"], ["set", "rtSp", "40"]],
+    [["seg", "rtWho", "buyer"]],
+    [["set", "rtCur", "JPY"]]
+  ],
+  "scrollTo": "rtLad",
+  "errorState": [["set", "rtRate", "150"]]
+}

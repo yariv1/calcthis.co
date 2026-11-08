@@ -241,9 +241,10 @@ window.CalcThis = window.CalcThis || {};
           el.style.left = (inp._pad + w + gap) + 'px';
           el.style.visibility = (inp._pad + w + gap + sw2 > inp.clientWidth - 8) ? 'hidden' : '';
         } else {
+          cv.font = '500 ' + cs.fontSize + ' ' + cs.fontFamily;
           var sw = cv.measureText(s).width;
           el.style.left = inp._pad + 'px'; el.style.visibility = '';
-          inp.style.paddingLeft = (inp._pad + sw + (wordy ? 6 : 2)) + 'px';
+          inp.style.paddingLeft = (inp._pad + sw + (wordy ? 6 : 0)) + 'px';
         }
       });
     }
@@ -24093,3 +24094,718 @@ CalcThis.initDiscountCalc = function () {
   render();
 };
 /* DISCOUNT:END */
+
+/* COMMISSION:BEGIN */
+/* =========================================================
+   COMMISSION calculator (/commission-calculator/). Competitors opened live (2026-11-08): calculator.net (simple + tiered), Omnicalculator (commission, real estate),
+   Inch Calculator, GigaCalculator, Yotpo - all numbers only; none draws the tiers and none shows the take-home after a split. Notes: md-files/calcthis-commission-research.md.
+   Plans: percent of sales (any two of sales / rate / commission), tiered (each slice at its own rate or a flat amount), tiered whole-sale (the reached tier's rate or amount
+   applies to all sales), flat amount per item. A tier covers sales above its start up to and including its "up to" limit (the last tier may have no limit).
+   Chain: commission -> your share % -> fees % of your share -> fixed deduction -> take-home; total pay = base + take-home.
+   ========================================================= */
+/* COMMISSION-ENGINE:START */
+CalcThis.commissionEngine = (function () {
+  var MULTS = [0.5, 0.75, 1, 1.25, 1.5, 2], ITEMS = [1, 5, 10, 25, 50, 100];
+  /* tiers: [{ to: number | Infinity, k: 'pct' | 'amt', v }] contiguous from 0 -> segments where commission = a x S + b on (from, to] */
+  function segs(tiers, whole) {
+    var out = [], from = 0, acc = 0, i, t, a, b;
+    for (i = 0; i < tiers.length; i++) {
+      t = tiers[i];
+      if (whole) { a = t.k === 'pct' ? t.v / 100 : 0; b = t.k === 'pct' ? 0 : t.v; }
+      else if (t.k === 'pct') { a = t.v / 100; b = acc - a * from; }
+      else { a = 0; b = acc + t.v; }
+      out.push({ from: from, to: t.to, k: t.k, v: t.v, a: a, b: b });
+      if (t.to !== Infinity) { acc += t.k === 'pct' ? t.v / 100 * (t.to - from) : t.v; from = t.to; }
+    }
+    return out;
+  }
+  function covered(sg, S) { return !(S > sg[sg.length - 1].to); }
+  function gross(sg, S) {
+    if (!(S > 0)) return 0;
+    for (var i = 0; i < sg.length; i++) if (S > sg[i].from && S <= sg[i].to) return sg[i].a * S + sg[i].b;
+    return null;
+  }
+  function pick(sg, S) { for (var i = 0; i < sg.length; i++) if (S > sg[i].from && S <= sg[i].to) return i; return -1; }
+  /* the commission one tier slice adds at sales S (marginal plans) */
+  function slice(s, S) { var top = Math.min(S, s.to); if (!(top > s.from)) return 0; return s.k === 'pct' ? s.v / 100 * (top - s.from) : s.v; }
+  function chain(G, o) { var mine = G * o.share / 100, feeA = mine * o.fee / 100, net = mine - feeA - o.fix; return { mine: mine, company: G - mine, feeA: feeA, net: net, total: o.base + net }; }
+  /* the commission needed so that base + take-home reaches T (null when the share and fees leave nothing) */
+  function goalGross(T, o) { var k = o.share / 100 * (1 - o.fee / 100); if (!(k > 1e-12)) return null; return (T - o.base + o.fix) / k; }
+  /* smallest sales (in cents) whose commission reaches Gneed; null when the tiers never do */
+  function needSales(sg, Gneed) {
+    var i, s, S0, c, k;
+    if (Gneed <= 1e-12) return 0;
+    for (i = 0; i < sg.length; i++) {
+      s = sg[i];
+      if (s.a > 0) { S0 = (Gneed - s.b) / s.a; c = S0 > s.from ? S0 : s.from + 0.01; }
+      else { if (s.b < Gneed - 1e-9) continue; c = s.from + 0.01; }
+      c = Math.ceil(c * 100 - 1e-7) / 100;
+      for (k = 0; k < 4 && c <= s.to + 1e-9 && gross(sg, c) < Gneed - 1e-9; k++) c = Math.round((c + 0.01) * 100) / 100;
+      if (c <= s.to + 1e-9) return c;
+    }
+    return null;
+  }
+  /* percent plan: t = [[key, value], ...] with keys sales / rate / comm; ex = the sum of the extra sales */
+  function solvePct(t, ex) {
+    var v = {}, n = t.length, S, r, G, box;
+    t.forEach(function (x) { v[x[0]] = x[1]; });
+    if (n === 0) return { state: 'none' };
+    if (n === 1) return { state: 'need', typed: t[0][0] };
+    if (v.sales !== undefined && v.rate !== undefined) { box = v.sales; S = box + ex; r = v.rate; G = S * r / 100; }
+    else if (v.sales !== undefined) {
+      box = v.sales; S = box + ex; if (!(S > 0)) return { state: 'err', err: { code: 'zeroSales', at: 'sales' } };
+      G = v.comm; r = G / S * 100; if (r > 100 + 1e-9) return { state: 'err', err: { code: 'commHigh', at: 'comm' } };
+      r = Math.min(100, r);
+    } else {
+      if (!(v.rate > 0)) return { state: 'err', err: { code: 'zeroRate', at: 'rate' } };
+      G = v.comm; r = v.rate; S = G / (r / 100); box = S - ex;
+      if (box < -1e-9) return { state: 'err', err: { code: 'extrasOver', at: 'more' } };
+      if (box < 0) box = 0;
+    }
+    if (Math.abs(G) < 1e-9 * Math.max(1, S)) G = 0;
+    return { state: 'ok', box: box, S: S, r: r, G: G };
+  }
+  return { MULTS: MULTS, ITEMS: ITEMS, segs: segs, covered: covered, gross: gross, pick: pick, slice: slice, chain: chain, goalGross: goalGross, needSales: needSales, solvePct: solvePct };
+})();
+/* COMMISSION-ENGINE:END */
+
+/* =========================================================
+   CalcThis.initCommissionCalc() - ids cm*. Engines: CalcThis.salesEngine (parse), CalcThis.commissionEngine, CalcThis.salaryEngine (currency list only, display only).
+   ========================================================= */
+CalcThis.initCommissionCalc = function () {
+  var E = CalcThis.salesEngine, C = CalcThis.commissionEngine, SE = CalcThis.salaryEngine;
+  var $ = function (id) { return document.getElementById(id); };
+  if (!$('cmSales')) return;
+  var CHEV = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
+  var CORE = ['sales', 'rate', 'comm'];
+  var FM = { sales: { id: 'cmSales', d: 'total sold', money: 1, kind: 'price' }, rate: { id: 'cmRate', d: 'of sales', kind: 'disc' }, comm: { id: 'cmComm', d: 'you earn', money: 1, kind: 'cost' } };
+  var LAB = { sales: 'Sales', rate: 'Commission rate', comm: 'Commission', items: 'Items sold', per: 'Commission per item', base: 'Base pay', share: 'Your share', fee: 'Fees', fix: 'Fixed deduction', goal: 'Take-home goal' };
+  var NAME = { sales: 'sales', rate: 'commission rate', comm: 'commission' };
+  var EG = { sales: '50000', rate: '3', comm: '1500', items: '12', per: '25', base: '500', share: '70', fee: '2', fix: '100', goal: '5000', more: '10000', tierPct: '3', tierAmt: '500', up: '5000' };
+  var st = { cur: 'USD', dec: 2, plan: 'pct', typed: [], last: null, coreErr: null, extra: '', adv: false, who: 'seller', seq: {} };
+  var NF = {}, DN = null;
+  try { DN = new Intl.DisplayNames(['en'], { type: 'currency' }); } catch (e) { DN = null; }
+  var CN = { SLE: 'Sierra Leonean Leone' };
+  function curName(c) { try { var n = DN && DN.of(c); return (n && n !== c) ? n : (CN[c] || c); } catch (e) { return CN[c] || c; } }
+  function decOf(c) { try { return Math.min(2, new Intl.NumberFormat('en-US', { style: 'currency', currency: c }).resolvedOptions().maximumFractionDigits); } catch (e) { return 2; } }
+  function sym(c) { try { return new Intl.NumberFormat('en-US', { style: 'currency', currency: c, currencyDisplay: 'narrowSymbol' }).format(0).replace(/[0-9.,\s]/g, ''); } catch (e) { return c; } }
+  function cf(x, d) {
+    var k = st.cur + d;
+    if (!NF[k]) NF[k] = new Intl.NumberFormat('en-US', { style: 'currency', currency: st.cur, currencyDisplay: 'narrowSymbol', minimumFractionDigits: d, maximumFractionDigits: d });
+    return (x < 0 ? '−' : '') + CalcThis.fmtMoney(NF[k], st.cur, Math.abs(x));
+  }
+  function fm(x) { if (x == null || !isFinite(x)) return '—'; if (Math.abs(x) < Math.pow(10, -st.dec) / 2) x = 0; return cf(x, st.dec); }
+  function pc(x) { var r = Math.round(x * 100) / 100; if (r === 0) r = 0; return (r < 0 ? '−' : '') + Math.abs(r).toLocaleString('en-US', { maximumFractionDigits: 2 }); }
+  function fp(x) { return x == null || !isFinite(x) ? '—' : pc(x) + '%'; }
+  function qn(x) { return (Math.round(x * 1000) / 1000).toLocaleString('en-US', { maximumFractionDigits: 3 }); }
+  function ft(x, money) {
+    var d = money ? st.dec : 2, r = Math.round(x * Math.pow(10, d)) / Math.pow(10, d); if (r === 0) r = 0;
+    return (r < 0 ? '-' : '') + Math.abs(r).toLocaleString('en-US', { maximumFractionDigits: d });
+  }
+  function nm(k) { return NAME[k]; }
+  function join(a) { return a.length < 2 ? a.join('') : a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1]; }
+  function others(k) { return join(CORE.filter(function (x) { return x !== k; }).map(nm)).replace(' and ', ' or '); }
+  var PRE = 'Type your sales and commission plan above first — then this applies.';
+
+  /* ---------- error wording ---------- */
+  function errMsg(label, code, raw, eg, tail) {
+    var r = String(raw).trim().slice(0, 14);
+    tail = tail === undefined ? ' It is ignored for now.' : tail;
+    if (code === 'junk') return 'Couldn’t read “' + r + '” in ' + label + ' — type a number like ' + eg + '.' + tail;
+    if (code === 'neg') return label + ' can’t be negative — type 0 or more.' + tail;
+    if (code === 'big') return label + ' is too large — keep it under 1,000,000,000,000.' + tail;
+    if (code === 'pct') return label + ' should be a percent from 0 to 100.' + tail;
+    if (code === 'qty') return label + ' should be a number above 0 and up to 1,000,000,000.' + tail;
+    return label + ' can’t be used.' + tail;
+  }
+  function solveMsg(e) {
+    var c = e.code;
+    if (c === 'zeroSales') return 'With sales of 0 the commission rate can’t be worked out — type the sales or the commission rate.';
+    if (c === 'commHigh') return 'The commission can’t be more than the sales — lower it.';
+    if (c === 'zeroRate') return 'A commission rate of 0% can’t show the sales — type the sales instead.';
+    return 'These values don’t fit together.';
+  }
+  function setHint(m, at) {
+    var h = $('cmHint'); h.textContent = m || ''; h.style.display = m ? 'block' : 'none';
+    if (m && at) { var el = $(at), f = el.closest('.fld') || el; if (f && f.nextSibling !== h) f.parentNode.insertBefore(h, f.nextSibling); }
+  }
+  function setNote(id, t) { var e = $(id); e.textContent = t || ''; e.style.display = t ? '' : 'none'; }
+
+  /* ---------- the typed pair (percent plan): the two most recent valid values; the sales stay put ---------- */
+  function rawOf(k) { return $(FM[k].id).value; }
+  function removeTyped(k) { st.typed = st.typed.filter(function (x) { return x[0] !== k; }); }
+  function onEdit(k) {
+    var r = E.parse(rawOf(k), FM[k].kind); st.last = k;
+    if (r.partial) { render(); return; }
+    st.extra = ''; st.coreErr = null;
+    if (r.empty) removeTyped(k);
+    else if (r.err) { removeTyped(k); st.coreErr = { msg: errMsg(LAB[k], r.err, rawOf(k), EG[k]), at: FM[k].id }; }
+    else {
+      removeTyped(k); st.typed.push([k, r.v]);
+      if (st.typed.length > 2) {
+        var gi = 0, pin = k !== 'sales' && st.typed.some(function (x) { return x[0] === 'sales'; });
+        if (pin) gi = st.typed[0][0] === 'sales' ? 1 : 0;
+        var gone = st.typed.splice(gi, 1)[0][0];
+        st.extra = pin ? 'The sales stay, so ' + nm(gone) + ' is now worked out.' : 'A third value replaces the oldest, so ' + nm(gone) + ' is now worked out.';
+      }
+    }
+    render();
+  }
+
+  /* ---------- tiers ---------- */
+  function mkTier() {
+    var n = 'cmTr' + (st.seq.tr = (st.seq.tr || 0) + 1), div = document.createElement('div'); div.className = 'cm-tier';
+    div.innerHTML = '<div class="cm-th"></div>' +
+      '<div class="seg cm-tk" id="' + n + 'k" role="group" aria-label="Tier pays"><button class="on" type="button" data-v="pct">Percent</button><button type="button" data-v="amt">Flat amount</button></div>' +
+      '<label class="fld cm-u" for="' + n + 'u"><span class="lab">Up to <span class="unit">$</span></span><div class="inp"><input id="' + n + 'u" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. ' + EG.up + '"></div></label>' +
+      '<label class="fld cm-v" for="' + n + 'v"><span class="lab">Rate <span class="unit">%</span></span><div class="inp"><input id="' + n + 'v" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. ' + EG.tierPct + '"></div></label>' +
+      '<button class="x" type="button" aria-label="Remove this tier">&#215;</button>';
+    $('cmTiers').appendChild(div);
+    var seg = div.querySelector('.seg'), iv = div.querySelector('.cm-v input');
+    seg.setAttribute('data-kind', 'pct');
+    [].forEach.call(seg.children, function (b) {
+      b.addEventListener('click', function () {
+        seg.setAttribute('data-kind', b.getAttribute('data-v'));
+        [].forEach.call(seg.children, function (x) { x.classList.toggle('on', x === b); });
+        iv.placeholder = 'e.g. ' + (b.getAttribute('data-v') === 'amt' ? EG.tierAmt : EG.tierPct); render();
+      });
+    });
+    div.querySelector('.cm-u input').addEventListener('input', render); iv.addEventListener('input', render);
+    div.querySelector('.x').addEventListener('click', function () { div.parentNode.removeChild(div); render(); });
+    return div;
+  }
+  /* -> { list: [{ to, k, v }], bad: { msg, at } | null, count, filled } ; a half-typed row is skipped quietly */
+  function readTiers() {
+    var rows = $('cmTiers').querySelectorAll('.cm-tier'), list = [], bad = null, count = rows.length, prev = 0, i, div, k, ru, rv, pu, pv, n, lastFinite = -1;
+    function fail(m) { if (!bad) bad = { msg: m, at: 'cmTiers' }; }
+    for (i = 0; i < count; i++) {
+      div = rows[i]; n = i + 1; k = div.querySelector('.seg').getAttribute('data-kind') || 'pct';
+      ru = div.querySelector('.cm-u input').value; rv = div.querySelector('.cm-v input').value;
+      pu = E.parse(ru, 'price'); pv = E.parse(rv, k === 'pct' ? 'disc' : 'cost');
+      if (pu.partial || pv.partial) continue;
+      if (pu.empty && pv.empty) continue;
+      if (pv.err) { fail(errMsg('Tier ' + n + (k === 'pct' ? ' rate' : ' amount'), pv.err, rv, k === 'pct' ? EG.tierPct : EG.tierAmt, '')); continue; }
+      if (pu.err) { fail(errMsg('Tier ' + n + ' limit', pu.err, ru, EG.up, '')); continue; }
+      if (pv.empty) { fail('Tier ' + n + ' needs a rate or an amount.'); continue; }
+      list.push({ to: pu.empty ? Infinity : pu.v, k: k, v: pv.v, n: n });
+    }
+    list.forEach(function (t, j) {
+      if (bad) return;
+      if (t.to === Infinity && j < list.length - 1) { fail('Tier ' + t.n + ' has no upper limit, so it must be the last tier — type an upper limit or remove the tiers after it.'); return; }
+      var lo = j ? list[j - 1].to : 0;
+      if (t.to !== Infinity && !(t.to > lo)) fail(j ? 'Tier ' + t.n + ' must go up to more than ' + fm(lo) + ' (the limit of the tier before it).' : 'Tier ' + t.n + ' must go up to more than ' + fm(0) + '.');
+    });
+    return { list: list, bad: bad, count: count, filled: list.length };
+  }
+  function tierHeads() {
+    var rows = $('cmTiers').querySelectorAll('.cm-tier'), prev = 0, ok = true;
+    [].forEach.call(rows, function (div, i) {
+      var pu = E.parse(div.querySelector('.cm-u input').value, 'price'), txt;
+      txt = i === 0 ? 'Tier 1 · from ' + fm(0) : (prev != null ? 'Tier ' + (i + 1) + ' · from ' + fm(prev) : 'Tier ' + (i + 1) + ' · from the limit above');
+      var th = div.querySelector('.cm-th'); if (th.textContent !== txt) th.textContent = txt;
+      var amt = div.querySelector('.seg').getAttribute('data-kind') === 'amt', vl = div.querySelector('.cm-v .lab'), ul = div.querySelector('.cm-u .lab');
+      var vh = (amt ? 'Amount' : 'Rate') + ' <span class="unit">' + (amt ? sym(st.cur) : '%') + '</span>', uh = 'Up to <span class="unit">' + sym(st.cur) + '</span>';
+      if (vl.innerHTML !== vh) vl.innerHTML = vh; if (ul.innerHTML !== uh) ul.innerHTML = uh;
+      prev = pu.v !== undefined ? pu.v : null;
+    });
+  }
+  function rng(s) { return s.to === Infinity ? 'above ' + fm(s.from) : (s.from === 0 ? 'up to ' + fm(s.to) : fm(s.from) + ' to ' + fm(s.to)); }
+  function val(s) { return s.k === 'pct' ? pc(s.v) + '%' : fm(s.v) + ' flat'; }
+
+  /* ---------- extra sales ---------- */
+  function mkMore() {
+    var n = 'cmMr' + (st.seq.mr = (st.seq.mr || 0) + 1), div = document.createElement('div'); div.className = 'cm-more';
+    div.innerHTML = '<div class="inp"><input id="' + n + '" type="text" inputmode="decimal" autocomplete="off" placeholder="Sale amount, e.g. ' + EG.more + '" aria-label="Extra sale"></div><button class="x" type="button" aria-label="Remove this sale">&#215;</button>';
+    $('cmMore').appendChild(div);
+    div.querySelector('input').addEventListener('input', render);
+    div.querySelector('.x').addEventListener('click', function () { div.parentNode.removeChild(div); render(); });
+    return div;
+  }
+  function readMore() {
+    var rows = $('cmMore').querySelectorAll('.cm-more'), sum = 0, filled = 0, bad = null;
+    [].forEach.call(rows, function (div, i) {
+      var raw = div.querySelector('input').value, p = E.parse(raw, 'price');
+      if (p.empty || p.partial) return;
+      if (p.err) { if (!bad) bad = { msg: errMsg('Extra sale ' + (i + 1), p.err, raw, EG.more), at: 'cmMore' }; return; }
+      sum += p.v; filled++;
+    });
+    return { sum: sum, filled: filled, count: rows.length, bad: bad };
+  }
+
+  /* ---------- the pictures ---------- */
+  function seg(cls, w, tot) { return '<i class="cm-seg ' + cls + '" style="flex:' + (w / tot * 100).toFixed(3) + ' 1 0;min-width:' + (w / tot * 100 < 1.5 ? 6 : 0) + 'px"></i>'; }
+  function bars(S, parts) {
+    var h = '', k = '';
+    parts.forEach(function (p, i) { if (!(p[1] > 0)) return; h += seg(p[2], p[1], S); k += '<span><i class="cm-ky ' + p[2] + '"></i>' + p[0] + ' ' + fp(p[1] / S * 100) + '</span>'; });
+    return '<div class="cm-bar" aria-hidden="true">' + h + '</div><div class="bm-key">' + k + '</div>';
+  }
+  function tierBars(S, sg) {
+    var h = '', k = '', i, s, w, c;
+    for (i = 0; i < sg.length; i++) {
+      s = sg[i]; if (!(S > s.from)) continue;
+      w = Math.min(S, s.to) - s.from; c = C.slice(s, S);
+      h += seg('d' + (i % 6), w, S);
+      k += '<span><i class="cm-ky d' + (i % 6) + '"></i>Tier ' + (i + 1) + ' · ' + val(s) + ' · ' + fm(c) + '</span>';
+    }
+    return '<div class="cm-bar" aria-hidden="true">' + h + '</div><div class="bm-key">' + k + '</div>';
+  }
+
+  function emptySub() {
+    if (st.plan === 'pct') return 'Type any two of sales, commission rate and commission.';
+    if (st.plan === 'item') return 'Type the items sold and the commission per item.';
+    return 'Type your sales and your tiers.';
+  }
+
+  /* ---------- render ---------- */
+  function render() {
+    var plan = st.plan, tp = plan === 'tier' || plan === 'whole', i;
+    $('cmPctBox').style.display = plan === 'pct' ? '' : 'none';
+    $('cmTierBox').style.display = tp ? '' : 'none';
+    $('cmItemBox').style.display = plan === 'item' ? '' : 'none';
+    $('cmSalesFld').style.display = plan === 'item' ? 'none' : '';
+    $('cmMoreWrap').style.display = plan === 'item' ? 'none' : '';
+    $('cmWhoFld').style.display = plan === 'item' ? 'none' : '';
+    var MR = plan === 'item' ? { sum: 0, filled: 0, count: 0, bad: null } : readMore();
+    tierHeads();
+    var R = { state: 'none' }, coreBad = null, rowsMsg = null, TR = null, itemBad = null, sg = null, typedK = st.typed.map(function (x) { return x[0]; });
+    var S = null, G = null, rate = null, box = null, items = null, per = null, sp, ip, pp;
+    if (plan === 'pct') {
+      var S0 = C.solvePct(st.typed, MR.sum);
+      if (S0.state === 'err' && S0.err.code === 'extrasOver') { var S1 = C.solvePct(st.typed, 0); if (S1.state !== 'err') { rowsMsg = 'The extra sales are more than the total sales these values give. They are ignored for now.'; S0 = S1; MR = { sum: 0, filled: 0, count: MR.count, bad: MR.bad }; } }
+      R = S0;
+      if (R.state === 'ok') { S = R.S; G = R.G; rate = R.r; box = R.box; }
+      CORE.forEach(function (k) {
+        var inp = $(FM[k].id), isT = typedK.indexOf(k) >= 0, calc = false;
+        if (!isT) {
+          var vals = R.state === 'ok' ? { sales: R.box, rate: R.r, comm: R.G } : {}, hasV = vals[k] !== undefined;
+          if (!(st.last === k)) inp.value = hasV ? ft(vals[k], FM[k].money) : '';
+          calc = hasV && st.last !== k;
+        }
+        var fld = inp.closest('.fld'); fld.classList.toggle('cm-calc', calc);
+        var u = fld.querySelector('.unit'), d = (k === 'sales' && MR.filled > 0) ? 'this sale' : FM[k].d;
+        u.innerHTML = (FM[k].money ? sym(st.cur) : '%') + ' · ' + (calc ? '<b>calculated</b>' : d);
+      });
+      var from = '';
+      if (R.state === 'ok' || R.state === 'err') from = 'From ' + join(typedK.map(nm)) + '.' + (st.extra ? ' ' + st.extra : '');
+      else if (R.state === 'need') from = 'You typed ' + nm(typedK[0]) + '. Type one more: ' + others(typedK[0]) + '.';
+      setNote('cmFrom', from);
+    } else {
+      setNote('cmFrom', '');
+      var fS = $('cmSales').closest('.fld'); fS.classList.remove('cm-calc');
+      fS.querySelector('.unit').innerHTML = sym(st.cur) + ' · ' + (MR.filled > 0 ? 'this sale' : FM.sales.d);
+      if (tp) {
+        sp = E.parse($('cmSales').value, 'price');
+        if (sp.err) coreBad = { msg: errMsg(LAB.sales, sp.err, $('cmSales').value, EG.sales), at: 'cmSales' };
+        TR = readTiers();
+        if (TR.bad) R = { state: 'tbad' };
+        else if (sp.v === undefined) R = { state: 'nosales' };
+        else if (!TR.list.length) R = { state: 'notiers' };
+        else {
+          sg = C.segs(TR.list, plan === 'whole'); box = sp.v; S = box + MR.sum;
+          if (!C.covered(sg, S)) { R = { state: 'tbad' }; TR = { bad: { msg: 'Your sales of ' + fm(S) + ' are above the last tier’s limit of ' + fm(sg[sg.length - 1].to) + ', and no tier covers the rest — leave the last “up to” empty or add a tier.', at: 'cmTiers' } }; }
+          else { G = C.gross(sg, S); R = { state: 'ok' }; }
+        }
+      } else {
+        ip = E.parse($('cmItems').value, 'qty'); pp = E.parse($('cmPer').value, 'cost');
+        if (ip.err) itemBad = { msg: errMsg(LAB.items, ip.err, $('cmItems').value, EG.items, ''), at: 'cmItems' };
+        else if (pp.err) itemBad = { msg: errMsg(LAB.per, pp.err, $('cmPer').value, EG.per, ''), at: 'cmPer' };
+        items = ip.v !== undefined ? ip.v : null; per = pp.v !== undefined ? pp.v : null;
+        if (items != null && per != null) { G = items * per; R = { state: 'ok' }; } else R = { state: 'needitem' };
+      }
+    }
+    var ok = R.state === 'ok';
+    /* tier rows buttons and notes */
+    $('cmTierAdd').style.display = (TR ? TR.count : $('cmTiers').querySelectorAll('.cm-tier').length) >= 8 ? 'none' : '';
+    if (tp) {
+      var tc = $('cmTiers').querySelectorAll('.cm-tier').length;
+      setNote('cmTierNote', !tc ? 'Add your tiers — a limit and a rate for each.' : (TR && TR.filled ? (plan === 'tier' ? 'Each tier pays on the part of your sales inside it. Leave the last “up to” empty for no limit.' : 'The tier your total sales reach decides the rate for all sales. Leave the last “up to” empty for no limit.') : 'Type an upper limit and a rate for each tier. Leave the last “up to” empty for no limit.'));
+    }
+    $('cmMoreAdd').style.display = MR.count >= 6 ? 'none' : '';
+    /* advanced settings */
+    var bs = E.parse($('cmBase').value, 'cost'), sh = E.parse($('cmShare').value, 'disc'), fe = E.parse($('cmFee').value, 'disc'), fx = E.parse($('cmFix').value, 'cost'), gl = E.parse($('cmGoal').value, 'cost'), advBad = null;
+    [['base', 'cmBase', bs], ['share', 'cmShare', sh], ['fee', 'cmFee', fe], ['fix', 'cmFix', fx], ['goal', 'cmGoal', gl]].forEach(function (a) { if (a[2].err && !advBad) advBad = { msg: errMsg(LAB[a[0]], a[2].err, $(a[1]).value, EG[a[0]]), at: a[1] }; });
+    var o = { base: bs.v || 0, share: sh.v === undefined ? 100 : sh.v, fee: fe.v || 0, fix: fx.v || 0 }, fixMsg = null;
+    var K, T = gl.v !== undefined ? gl.v : null;
+    if (ok) {
+      var mine0 = G * o.share / 100, avail = mine0 - mine0 * o.fee / 100;
+      if (o.fix > avail + 1e-9) { fixMsg = 'Your fixed deduction of ' + fm(o.fix) + ' is more than your commission after fees (' + fm(avail) + '). It is ignored for now.'; o.fix = 0; }
+    }
+    var hasDed = o.share < 100 || o.fee > 0 || o.fix > 0, ch = ok ? C.chain(G, o) : null;
+    /* notes for the advanced fields */
+    if (!MR.count) setNote('cmMoreNote', 'Sold more than once? Add each sale here and they are added to the sales above.');
+    else if (rowsMsg) setNote('cmMoreNote', 'The extra sales are not applied while they don’t fit.');
+    else if (!MR.filled) setNote('cmMoreNote', 'Type an amount for each extra sale.');
+    else if (ok) setNote('cmMoreNote', 'Total sales ' + fm(S) + ' = ' + fm(box) + ' + ' + fm(MR.sum) + ' from ' + MR.filled + ' extra ' + (MR.filled === 1 ? 'sale' : 'sales') + '.');
+    else setNote('cmMoreNote', 'Type your sales and commission plan above first — then the extra sales are added.');
+    setNote('cmBaseNote', bs.v === undefined ? 'Do you get a base pay on top? Type it and it is added to your total pay.' : (ok ? 'Base pay ' + fm(o.base) + ' + commission after deductions ' + fm(ch.net) + ' = total pay ' + fm(ch.total) + '.' : PRE));
+    setNote('cmShareNote', sh.v === undefined ? 'Split with a company or agent? Type your share of the commission — blank means 100%.' : (ok ? 'You keep ' + fm(ch.mine) + ' of the ' + fm(G) + ' commission; the other ' + fm(ch.company) + ' goes to the company or agent.' : PRE));
+    setNote('cmFeeNote', fe.v === undefined ? 'Fees taken from your share of the commission, as a percent. Blank means none.' : (ok ? 'Fees of ' + pc(o.fee) + '% take ' + fm(ch.feeA) + ' from your ' + fm(ch.mine) + '.' : PRE));
+    setNote('cmFixNote', fx.v === undefined ? 'A draw or a flat expense taken from your commission. Blank means none.' : (ok ? (fixMsg ? 'Your commission after fees is too small for this deduction.' : 'A fixed deduction of ' + fm(o.fix) + ' leaves you ' + fm(ch.net) + '.') : PRE));
+    var whoNote;
+    if (plan === 'item') whoNote = '';
+    else if (!ok) whoNote = 'Type your sales and commission plan above first — then who pays is shown.';
+    else if (st.who === 'seller') whoNote = 'If the seller pays: the seller keeps ' + fm(S - G) + ' of the ' + fm(S) + ' sale.';
+    else whoNote = 'If the buyer pays: the buyer pays ' + fm(S + G) + ' in total (' + fm(S) + ' sale + ' + fm(G) + ' commission).';
+    setNote('cmWhoNote', whoNote);
+    /* the goal: sales (or items) needed to reach a take-home total */
+    var goalMsg = null, goalLine = '';
+    var rateK = plan === 'pct' ? (ok ? rate : (typedK.indexOf('rate') >= 0 ? st.typed[typedK.indexOf('rate')][1] : null)) : null;
+    if (plan === 'pct' || tp || plan === 'item') {
+      if (T === null) goalMsg = 'Want a target? Type what you want to take home and the ' + (plan === 'item' ? 'items' : 'sales') + ' needed appear.';
+      else {
+        var Gn = C.goalGross(T, o), unit = plan === 'item' ? 'items' : 'sales';
+        if (plan === 'pct' && rateK === null) goalMsg = 'Type the commission rate first — then the sales needed appear.';
+        else if (tp && !(TR && !TR.bad && TR.list.length)) goalMsg = 'Add your tiers first — then the sales needed appear.';
+        else if (plan === 'item' && per === null) goalMsg = 'Type the commission per item first — then the items needed appear.';
+        else if (Gn === null) goalMsg = 'With a share of 0% or fees of 100% nothing is left, so this goal can’t be reached.';
+        else if (Gn <= 1e-12) goalMsg = 'Nothing to sell: ' + fm(T) + ' is already covered by your base pay.';
+        else if (plan === 'pct') {
+          if (!(rateK > 0)) goalMsg = 'A rate of 0% never reaches your goal — type a higher rate.';
+          else { var Sg = Math.ceil(Gn / (rateK / 100) * 100 - 1e-7) / 100; goalMsg = 'To take home ' + fm(T) + ' you need sales of ' + fm(Sg) + '.' + (ok ? (Sg > S + 0.004 ? ' That is ' + fm(Sg - S) + ' more than your sales now.' : ' You are already there.') : ''); }
+        } else if (tp) {
+          var gsg = C.segs(TR.list, plan === 'whole'), Sn = C.needSales(gsg, Gn);
+          goalMsg = Sn === null ? 'These tiers can’t reach ' + fm(T) + ' — change the tiers or the goal.' : 'To take home ' + fm(T) + ' you need sales of ' + fm(Sn) + '.' + (ok ? (Sn > S + 0.004 ? ' That is ' + fm(Sn - S) + ' more than your sales now.' : ' You are already there.') : '');
+        } else {
+          if (!(per > 0)) goalMsg = 'A commission of ' + fm(0) + ' per item never reaches your goal.';
+          else { var N = Math.ceil(Gn / per - 1e-9); goalMsg = 'To take home ' + fm(T) + ' you need to sell ' + qn(N) + (N === 1 ? ' item' : ' items') + '.'; }
+        }
+        goalLine = goalMsg;
+      }
+    }
+    setNote('cmGoalNote', goalMsg);
+    /* hint: a typed-field problem first, then a plan that does not fit, then the extras */
+    var hm = null, hat = null;
+    if (st.coreErr && plan === 'pct') { hm = st.coreErr.msg; hat = st.coreErr.at; }
+    else if (coreBad) { hm = coreBad.msg; hat = coreBad.at; }
+    else if (R.state === 'err') { hm = solveMsg(R.err); hat = FM[R.err.at] ? FM[R.err.at].id : 'cmMore'; }
+    else if (TR && TR.bad) { hm = TR.bad.msg; hat = TR.bad.at; }
+    else if (itemBad) { hm = itemBad.msg; hat = itemBad.at; }
+    else if (rowsMsg) { hm = rowsMsg; hat = 'cmMore'; }
+    else if (MR.bad) { hm = MR.bad.msg; hat = MR.bad.at; }
+    else if (advBad) { hm = advBad.msg; hat = advBad.at; }
+    else if (fixMsg) { hm = fixMsg; hat = 'cmFix'; }
+    setHint(hm, hat);
+    /* result */
+    var big = '—', sub = emptySub(), lab = 'Commission', tip = '', showBody = false;
+    $('cmBars').innerHTML = ''; $('cmBarsWrap').style.display = 'none'; $('cmStepWrap').style.display = 'none'; $('cmLadWrap').style.display = 'none';
+    if (ok) {
+      showBody = true; big = fm(G);
+      var eff = S != null && S > 0 ? G / S * 100 : null, parts = [];
+      if (S != null) parts.push('Sales ' + fm(S));
+      if (plan === 'pct') parts.push('Rate ' + fp(rate)); else if (tp) { if (eff != null) parts.push('Effective rate ' + fp(eff)); } else parts.push('Items ' + qn(items) + ' · ' + fm(per) + ' each');
+      if (hasDed) parts.push('Take-home ' + fm(ch.net));
+      if (o.base > 0) parts.push('Total pay ' + fm(ch.total));
+      sub = parts.join(' · ');
+      if (plan === 'pct') tip = 'A ' + pc(rate) + '% commission on ' + fm(S) + ' is ' + fm(G) + '.';
+      else if (plan === 'tier') tip = S > 0 ? 'Your ' + fm(S) + ' of sales earns ' + fm(G) + ', an effective rate of ' + fp(eff) + '.' : 'No sales, no commission.';
+      else if (plan === 'whole') { var ix = C.pick(sg, S); tip = S > 0 ? 'At ' + fm(S) + ' you reach the tier ' + rng(sg[ix]) + ', so all sales earn ' + val(sg[ix]) + ': ' + fm(G) + '.' : 'No sales, no commission.'; }
+      else tip = qn(items) + (items === 1 ? ' item' : ' items') + ' at ' + fm(per) + ' each earn ' + fm(G) + '.';
+      if (hasDed) tip += ' After your share, fees and deduction you take home ' + fm(ch.net) + '.';
+      if (o.base > 0) tip += ' With ' + fm(o.base) + ' base pay your total pay is ' + fm(ch.total) + '.';
+      /* picture */
+      if (plan === 'tier' && S > 0) { $('cmBars').innerHTML = tierBars(S, sg); $('cmBarsWrap').style.display = ''; }
+      else if ((plan === 'pct' || plan === 'whole') && S > 0 && G <= S + 1e-9) {
+        var rest = S - G, pr = hasDed ? [['You take home', ch.net, 'pay'], ['Company or agent share', ch.company, 'd0'], ['Fees and deduction', ch.feeA + o.fix, 'd1'], ['The rest of the sale', rest, 'd2']] : [['Your commission', G, 'pay'], ['The rest of the sale', rest, 'd2']];
+        $('cmBars').innerHTML = bars(S, pr); $('cmBarsWrap').style.display = '';
+      }
+      /* step table */
+      var rows = [], add = function (l, a, strong) { rows.push('<tr' + (strong ? ' class="cm-strong"' : '') + '><td>' + l + '</td><td>' + a + '</td></tr>'); };
+      if (plan === 'item') { add('Items sold', qn(items)); add('Per item', fm(per)); }
+      else {
+        add('Sales', fm(S));
+        if (plan === 'pct') add('Commission ' + pc(rate) + '%', fm(G), true);
+        else if (plan === 'tier') sg.forEach(function (s) { if (S > s.from) add(fm(s.from) + ' to ' + fm(Math.min(S, s.to)) + ' · ' + val(s), fm(C.slice(s, S))); });
+        else { var sx = sg[C.pick(sg, S)]; if (S > 0) add('Tier reached (' + rng(sx) + ')', val(sx)); }
+      }
+      if (plan !== 'pct') add('Commission', fm(G), true);
+      if (hasDed) {
+        if (o.share < 100) add('Your share ' + pc(o.share) + '%', fm(ch.mine));
+        if (o.fee > 0) add('Fees ' + pc(o.fee) + '%', '−' + fm(ch.feeA));
+        if (o.fix > 0) add('Fixed deduction', '−' + fm(o.fix));
+        add('Take-home commission', fm(ch.net), true);
+      }
+      if (o.base > 0) { add('Base pay', '+' + fm(o.base)); add('Total pay', fm(ch.total), true); }
+      $('cmStep').innerHTML = '<thead><tr><th></th><th>Amount</th></tr></thead><tbody>' + rows.join('') + '</tbody>'; $('cmStepWrap').style.display = '';
+      /* ladder */
+      var lh = '', cur = plan === 'item' ? items : S, lrows = [];
+      if (plan === 'item') lrows = C.ITEMS.map(function (x) { return { x: x, label: qn(x), Gx: x * per, on: x === items }; });
+      else if (S > 0) lrows = C.MULTS.map(function (m) { var Sx = S * m, Gx = plan === 'pct' ? Sx * rate / 100 : (C.covered(sg, Sx) ? C.gross(sg, Sx) : null); return { x: Sx, label: fm(Sx), Gx: Gx, on: m === 1 }; });
+      if (lrows.length) {
+        lh = '<thead><tr><th>' + (plan === 'item' ? 'Items sold' : 'Sales') + '</th><th>Commission</th>' + (hasDed ? '<th>You take home</th>' : '') + '</tr></thead><tbody>';
+        lrows.forEach(function (r) {
+          lh += '<tr class="cm-lrow' + (r.on ? ' on' : '') + '" data-v="' + (Math.round(r.x * 100) / 100) + '" tabindex="0"><td>' + r.label + '</td><td>' + fm(r.Gx) + '</td>' + (hasDed ? '<td>' + (r.Gx == null ? '—' : fm(C.chain(r.Gx, o).net)) + '</td>' : '') + '</tr>';
+        });
+        $('cmLad').innerHTML = lh + '</tbody>';
+        $('cmLadNote').textContent = plan === 'item' ? 'For ' + fm(per) + ' per item. Click a row to use that many items.' : 'For your sales of ' + fm(S) + '. Click a row to use those sales.';
+        $('cmLadWrap').style.display = '';
+      }
+    } else if (R.state === 'need') sub = 'Type one more value: ' + others(typedK[0]) + '.';
+    else if (R.state === 'nosales') sub = 'Type your sales to see the commission.';
+    else if (R.state === 'notiers') sub = 'Add at least one tier: type an upper limit and a rate.';
+    else if (R.state === 'needitem') sub = items === null && per === null ? emptySub() : (items === null ? 'Type the items sold.' : 'Type the commission per item.');
+    $('cmBig').textContent = big; $('cmBig').parentNode.classList.toggle('cm-long', big.length > 11); $('cmLab').textContent = lab; $('cmSub').textContent = sub;
+    $('cmBody').style.display = showBody ? '' : 'none';
+    $('cmMLab').textContent = lab; $('cmMVal').textContent = big;
+    $('cmTip').textContent = tip; $('cmTip').style.display = tip ? '' : 'none';
+    $('cmGoalTip').textContent = goalLine; $('cmGoalTip').style.display = goalLine ? '' : 'none';
+  }
+
+  /* ---------- controls ---------- */
+  CORE.forEach(function (k) {
+    var inp = $(FM[k].id);
+    inp.addEventListener('input', function () { if (st.plan === 'pct') onEdit(k); else render(); });
+    inp.addEventListener('focus', function () { if (inp.closest('.fld').classList.contains('cm-calc')) setTimeout(function () { try { inp.select(); } catch (e) { /* not selectable */ } }, 0); });
+  });
+  ['cmItems', 'cmPer', 'cmBase', 'cmShare', 'cmFee', 'cmFix', 'cmGoal'].forEach(function (id) { $(id).addEventListener('input', render); });
+  function setPlan(p) {
+    st.plan = p; st.coreErr = null; st.extra = ''; st.last = null;
+    if ((p === 'tier' || p === 'whole') && !$('cmTiers').children.length) { mkTier(); mkTier(); mkTier(); }
+    render();
+  }
+  $('cmPlan').addEventListener('change', function () { setPlan($('cmPlan').value || 'pct'); });
+  $('cmTierAdd').addEventListener('click', function () { if ($('cmTiers').children.length < 8) mkTier(); render(); var l = $('cmTiers').lastChild; if (l) l.querySelector('.cm-u input').focus(); });
+  $('cmMoreAdd').addEventListener('click', function () { if ($('cmMore').children.length < 6) mkMore(); render(); var l = $('cmMore').lastChild; if (l) l.querySelector('input').focus(); });
+  function pickRow(e) {
+    var r = e.target.closest('.cm-lrow'); if (!r) return;
+    var v = parseFloat(r.getAttribute('data-v'));
+    if (st.plan === 'item') { $('cmItems').value = String(v); render(); return; }
+    var ex = readMore().sum, b = Math.round((v - ex) * 100) / 100; if (b < 0) return;
+    $('cmSales').value = String(b); if (st.plan === 'pct') onEdit('sales'); else render();
+  }
+  $('cmLad').addEventListener('click', pickRow);
+  $('cmLad').addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pickRow(e); } });
+  [].forEach.call($('cmWho').children, function (b) { b.addEventListener('click', function () { st.who = b.getAttribute('data-v'); [].forEach.call($('cmWho').children, function (x) { x.classList.toggle('on', x === b); }); render(); }); });
+  function wipe(box) { while (box.firstChild) box.removeChild(box.firstChild); }
+  var ADV = ['cmBase', 'cmShare', 'cmFee', 'cmFix', 'cmGoal'];
+  $('cmClear').addEventListener('click', function () {
+    CORE.forEach(function (k) { $(FM[k].id).value = ''; }); ['cmItems', 'cmPer'].concat(ADV).forEach(function (id) { $(id).value = ''; });
+    wipe($('cmTiers')); wipe($('cmMore')); st.seq.tr = 0; st.seq.mr = 0;
+    mkTier(); mkTier(); mkTier();
+    st.typed = []; st.last = null; st.extra = ''; st.coreErr = null; render(); $('cmSales').focus();
+  });
+  $('cmAdvBtn').addEventListener('click', function () {
+    st.adv = !st.adv; $('cmAdvBtn').classList.toggle('open', st.adv); $('cmAdvBtnLab').textContent = st.adv ? 'Go simple' : 'Go advanced'; $('cmAdvIn').style.display = st.adv ? '' : 'none';
+    if (!st.adv) { ADV.forEach(function (id) { $(id).value = ''; }); wipe($('cmMore')); st.seq.mr = 0; }
+    render();
+  });
+  /* the currency picker: the salary page's searchable list, display only */
+  (function () {
+    var opt = function (c, pop) { var n = curName(c); return '<button type="button" class="csel-opt' + (pop ? ' csel-pop' : '') + (c === 'USD' ? ' on' : '') + '" role="option" aria-selected="' + (c === 'USD') + '" data-value="' + c + '" data-p="' + (SE.RANK.indexOf(c) + 1) + '" data-s="' + (c + ' ' + n + ' ' + sym(c)).toLowerCase() + '"><span class="n">' + n + '</span><span class="c">' + c + '</span></button>'; };
+    var all = SE.CURRENCIES.slice().sort(function (a, b) { return curName(a) < curName(b) ? -1 : 1; });
+    $('cmCur').querySelector('.csel-panel').innerHTML = '<div class="csel-sbox"><input class="csel-search" type="text" placeholder="Search currency" aria-label="Search currency" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="go"></div><div class="csel-group">Popular</div>' +
+      SE.POPULAR.map(function (c) { return opt(c, true); }).join('') + '<div class="csel-group">All currencies</div>' + all.map(function (c) { return opt(c, false); }).join('') + '<div class="csel-none" style="display:none">No currency found</div>';
+    CalcThis.initCsel($('cmCur'));
+    $('cmCur').querySelector('.csel-val').textContent = 'USD';
+  })();
+  $('cmCur').addEventListener('change', function () { st.cur = $('cmCur').value || 'USD'; st.dec = decOf(st.cur); $('cmCur').querySelector('.csel-val').textContent = st.cur; render(); });
+  mkTier(); mkTier(); mkTier();
+  render();
+};
+/* COMMISSION:END */
+
+/* REALTOR:BEGIN */
+/* =========================================================
+   REALTOR commission calculator (/realtor-commission-calculator/). Competitors opened live (2026-11-08): Omnicalculator real estate (price, %, amount, owner receives), Inch Calculator
+   (price, rate, closing costs -> amount to the seller), GigaCalculator (who pays), Houwzer / RentSpree / Clever (blog posts). Notes: md-files/calcthis-commission-research.md.
+   Commission = price x rate. Who pays: the seller (it comes out of the sale), the buyer (on top of the price) or shared (the seller pays a typed percent, blank = half).
+   The seller keeps price - their part of the commission - closing costs (% of the price) - mortgage payoff. The listing agent's share (%) and an agent's brokerage split (%) are typed by the user.
+   ========================================================= */
+/* REALTOR-ENGINE:START */
+CalcThis.realtorEngine = (function () {
+  var RATES = [1, 2, 3, 4, 5, 6, 7];
+  /* P price, r rate %, who 'seller' | 'buyer' | 'shared', sp the seller's percent when shared (null = 50), close % of the price, pay mortgage payoff */
+  function outcome(P, r, who, sp, close, pay) {
+    var C = P * r / 100, f = who === 'seller' ? 1 : (who === 'buyer' ? 0 : (sp == null ? 50 : sp) / 100), Cs = C * f, Cc = P * close / 100;
+    return { C: C, f: f, Cs: Cs, Cb: C - Cs, Cc: Cc, pay: pay, net: P - Cs - Cc - pay, buyerTotal: P + (C - Cs) };
+  }
+  return { RATES: RATES, outcome: outcome };
+})();
+/* REALTOR-ENGINE:END */
+
+/* =========================================================
+   CalcThis.initRealtorCalc() - ids rt*. Engines: CalcThis.salesEngine (parse), CalcThis.commissionEngine (solvePct: price / rate / commission pairs), CalcThis.realtorEngine,
+   CalcThis.salaryEngine (currency list only, display only).
+   ========================================================= */
+CalcThis.initRealtorCalc = function () {
+  var E = CalcThis.salesEngine, C = CalcThis.commissionEngine, RE = CalcThis.realtorEngine, SE = CalcThis.salaryEngine;
+  var $ = function (id) { return document.getElementById(id); };
+  if (!$('rtPrice')) return;
+  var CHEV = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
+  var CORE = ['sales', 'rate', 'comm'];
+  var FM = { sales: { id: 'rtPrice', d: 'what it sells for', money: 1, kind: 'price' }, rate: { id: 'rtRate', d: 'of the price', kind: 'disc' }, comm: { id: 'rtComm', d: 'in total', money: 1, kind: 'cost' } };
+  var LAB = { sales: 'Home price', rate: 'Commission rate', comm: 'Commission', sp: 'Seller’s share', list: 'Listing agent’s share', brok: 'Agent’s split', close: 'Closing costs', pay: 'Mortgage payoff' };
+  var NAME = { sales: 'home price', rate: 'commission rate', comm: 'commission' };
+  var EG = { sales: '300000', rate: '6', comm: '18000', sp: '50', list: '50', brok: '70', close: '2', pay: '150000' };
+  var st = { cur: 'USD', dec: 2, typed: [], last: null, coreErr: null, extra: '', adv: false, who: 'seller' };
+  var NF = {}, DN = null;
+  try { DN = new Intl.DisplayNames(['en'], { type: 'currency' }); } catch (e) { DN = null; }
+  var CN = { SLE: 'Sierra Leonean Leone' };
+  function curName(c) { try { var n = DN && DN.of(c); return (n && n !== c) ? n : (CN[c] || c); } catch (e) { return CN[c] || c; } }
+  function decOf(c) { try { return Math.min(2, new Intl.NumberFormat('en-US', { style: 'currency', currency: c }).resolvedOptions().maximumFractionDigits); } catch (e) { return 2; } }
+  function sym(c) { try { return new Intl.NumberFormat('en-US', { style: 'currency', currency: c, currencyDisplay: 'narrowSymbol' }).format(0).replace(/[0-9.,\s]/g, ''); } catch (e) { return c; } }
+  function cf(x, d) {
+    var k = st.cur + d;
+    if (!NF[k]) NF[k] = new Intl.NumberFormat('en-US', { style: 'currency', currency: st.cur, currencyDisplay: 'narrowSymbol', minimumFractionDigits: d, maximumFractionDigits: d });
+    return (x < 0 ? '−' : '') + CalcThis.fmtMoney(NF[k], st.cur, Math.abs(x));
+  }
+  function fm(x) { if (x == null || !isFinite(x)) return '—'; if (Math.abs(x) < Math.pow(10, -st.dec) / 2) x = 0; return cf(x, st.dec); }
+  function pc(x) { var r = Math.round(x * 100) / 100; if (r === 0) r = 0; return (r < 0 ? '−' : '') + Math.abs(r).toLocaleString('en-US', { maximumFractionDigits: 2 }); }
+  function fp(x) { return x == null || !isFinite(x) ? '—' : pc(x) + '%'; }
+  function ft(x, money) {
+    var d = money ? st.dec : 2, r = Math.round(x * Math.pow(10, d)) / Math.pow(10, d); if (r === 0) r = 0;
+    return (r < 0 ? '-' : '') + Math.abs(r).toLocaleString('en-US', { maximumFractionDigits: d });
+  }
+  function nm(k) { return NAME[k]; }
+  function join(a) { return a.length < 2 ? a.join('') : a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1]; }
+  function others(k) { return join(CORE.filter(function (x) { return x !== k; }).map(nm)).replace(' and ', ' or '); }
+  var PRE = 'Type your home price and commission above first — then this applies.';
+  function errMsg(label, code, raw, eg) {
+    var r = String(raw).trim().slice(0, 14), tail = ' It is ignored for now.';
+    if (code === 'junk') return 'Couldn’t read “' + r + '” in ' + label + ' — type a number like ' + eg + '.' + tail;
+    if (code === 'neg') return label + ' can’t be negative — type 0 or more.' + tail;
+    if (code === 'big') return label + ' is too large — keep it under 1,000,000,000,000.' + tail;
+    if (code === 'pct') return label + ' should be a percent from 0 to 100.' + tail;
+    return label + ' can’t be used.' + tail;
+  }
+  function solveMsg(e) {
+    var c = e.code;
+    if (c === 'zeroSales') return 'With a home price of 0 the commission rate can’t be worked out — type the home price or the commission rate.';
+    if (c === 'commHigh') return 'The commission can’t be more than the home price — lower it.';
+    if (c === 'zeroRate') return 'A commission rate of 0% can’t show the home price — type the home price instead.';
+    return 'These values don’t fit together.';
+  }
+  function setHint(m, at) {
+    var h = $('rtHint'); h.textContent = m || ''; h.style.display = m ? 'block' : 'none';
+    if (m && at) { var el = $(at), f = el.closest('.fld') || el; if (f && f.nextSibling !== h) f.parentNode.insertBefore(h, f.nextSibling); }
+  }
+  function setNote(id, t) { var e = $(id); e.textContent = t || ''; e.style.display = t ? '' : 'none'; }
+  function rawOf(k) { return $(FM[k].id).value; }
+  function removeTyped(k) { st.typed = st.typed.filter(function (x) { return x[0] !== k; }); }
+  function onEdit(k) {
+    var r = E.parse(rawOf(k), FM[k].kind); st.last = k;
+    if (r.partial) { render(); return; }
+    st.extra = ''; st.coreErr = null;
+    if (r.empty) removeTyped(k);
+    else if (r.err) { removeTyped(k); st.coreErr = { msg: errMsg(LAB[k], r.err, rawOf(k), EG[k]), at: FM[k].id }; }
+    else {
+      removeTyped(k); st.typed.push([k, r.v]);
+      if (st.typed.length > 2) {
+        var gi = 0, pin = k !== 'sales' && st.typed.some(function (x) { return x[0] === 'sales'; });
+        if (pin) gi = st.typed[0][0] === 'sales' ? 1 : 0;
+        var gone = st.typed.splice(gi, 1)[0][0];
+        st.extra = pin ? 'The home price stays, so ' + nm(gone) + ' is now worked out.' : 'A third value replaces the oldest, so ' + nm(gone) + ' is now worked out.';
+      }
+    }
+    render();
+  }
+  function seg(cls, w, tot) { return '<i class="cm-seg ' + cls + '" style="flex:' + (w / tot * 100).toFixed(3) + ' 1 0;min-width:' + (w / tot * 100 < 1.5 ? 6 : 0) + 'px"></i>'; }
+  function render() {
+    var typedK = st.typed.map(function (x) { return x[0]; });
+    var R = C.solvePct(st.typed, 0), P = null, Cm = null, rate = null, i;
+    if (R.state === 'ok') { P = R.S; Cm = R.G; rate = R.r; }
+    CORE.forEach(function (k) {
+      var inp = $(FM[k].id), isT = typedK.indexOf(k) >= 0, calc = false;
+      if (!isT) {
+        var vals = R.state === 'ok' ? { sales: R.box, rate: R.r, comm: R.G } : {}, hasV = vals[k] !== undefined;
+        if (!(st.last === k)) inp.value = hasV ? ft(vals[k], FM[k].money) : '';
+        calc = hasV && st.last !== k;
+      }
+      var fld = inp.closest('.fld'); fld.classList.toggle('cm-calc', calc);
+      var u = fld.querySelector('.unit'); u.innerHTML = (FM[k].money ? sym(st.cur) : '%') + ' · ' + (calc ? '<b>calculated</b>' : FM[k].d);
+    });
+    var from = '';
+    if (R.state === 'ok' || R.state === 'err') from = 'From ' + join(typedK.map(nm)) + '.' + (st.extra ? ' ' + st.extra : '');
+    else if (R.state === 'need') from = 'You typed ' + nm(typedK[0]) + '. Type one more: ' + others(typedK[0]) + '.';
+    setNote('rtFrom', from);
+    var ok = R.state === 'ok';
+    $('rtSharedFld').style.display = st.who === 'shared' ? '' : 'none';
+    /* advanced settings */
+    var spP = E.parse($('rtSp').value, 'disc'), lsP = E.parse($('rtList').value, 'disc'), bkP = E.parse($('rtBrok').value, 'disc'), clP = E.parse($('rtClose').value, 'disc'), pyP = E.parse($('rtPay').value, 'cost'), advBad = null;
+    [['sp', 'rtSp', spP], ['list', 'rtList', lsP], ['brok', 'rtBrok', bkP], ['close', 'rtClose', clP], ['pay', 'rtPay', pyP]].forEach(function (a) { if (a[2].err && !advBad) advBad = { msg: errMsg(LAB[a[0]], a[2].err, $(a[1]).value, EG[a[0]]), at: a[1] }; });
+    var sp = st.who === 'shared' && spP.v !== undefined ? spP.v : null, ls = lsP.v !== undefined ? lsP.v : null, bk = bkP.v !== undefined ? bkP.v : null, cl = clP.v || 0, py = pyP.v || 0;
+    var O = ok ? RE.outcome(P, rate, st.who, sp, cl, py) : null;
+    /* notes */
+    var wn;
+    if (!ok) wn = 'Type your home price and commission above first — then who pays is shown.';
+    else if (st.who === 'seller') wn = 'The seller pays: ' + fm(Cm) + ' comes out of the sale, so the buyer pays ' + fm(P) + ' in total.';
+    else if (st.who === 'buyer') wn = 'The buyer pays: ' + fm(Cm) + ' is added on top, so the buyer pays ' + fm(P + Cm) + ' in total.';
+    else wn = 'Shared: the seller pays ' + fm(O.Cs) + ' and the buyer pays ' + fm(O.Cb) + ', so the buyer pays ' + fm(O.buyerTotal) + ' in total.';
+    setNote('rtWhoNote', wn);
+    setNote('rtSpNote', spP.v === undefined ? 'Type the seller’s share of the commission as a percent. Blank means half each.' : (ok ? 'The seller pays ' + fm(O.Cs) + ' and the buyer pays ' + fm(O.Cb) + '.' : PRE));
+    setNote('rtListNote', ls === null ? 'The listing agent’s share of the commission, as a percent — the buyer’s agent gets the rest.' : (ok ? 'The listing agent gets ' + fm(Cm * ls / 100) + ' and the buyer’s agent ' + fm(Cm - Cm * ls / 100) + '.' : PRE));
+    setNote('rtBrokNote', bk === null ? 'What an agent keeps of their commission after the brokerage split, as a percent.' : (!ok ? PRE : (ls !== null ? 'The listing agent keeps ' + fm(Cm * ls / 100 * bk / 100) + ' and the buyer’s agent ' + fm((Cm - Cm * ls / 100) * bk / 100) + ' after the brokerage split.' : 'An agent keeps ' + fm(Cm * bk / 100) + ' of the whole ' + fm(Cm) + ' commission after the brokerage split.')));
+    setNote('rtCloseNote', clP.v === undefined ? 'Other costs you pay when you sell, as a percent of the price. Blank means none.' : (ok ? 'Closing costs of ' + pc(cl) + '% are ' + fm(O.Cc) + '.' : PRE));
+    setNote('rtPayNote', pyP.v === undefined ? 'What you still owe on the mortgage — it is paid from the sale. Blank means none.' : (ok ? 'The mortgage payoff of ' + fm(py) + ' comes out of the sale.' : PRE));
+    /* hint */
+    var hm = null, hat = null;
+    if (st.coreErr) { hm = st.coreErr.msg; hat = st.coreErr.at; }
+    else if (R.state === 'err') { hm = solveMsg(R.err); hat = FM[R.err.at].id; }
+    else if (advBad) { hm = advBad.msg; hat = advBad.at; }
+    setHint(hm, hat);
+    /* result */
+    var big = '—', sub = 'Type any two of home price, commission rate and commission.', lab = 'Commission', tip = '', showBody = false;
+    $('rtBars').innerHTML = ''; $('rtBarsWrap').style.display = 'none'; $('rtAgWrap').style.display = 'none'; $('rtLadWrap').style.display = 'none';
+    if (ok) {
+      showBody = true; big = fm(Cm);
+      sub = 'Price ' + fm(P) + ' · Rate ' + fp(rate) + ' · You keep ' + fm(O.net);
+      tip = 'A ' + pc(rate) + '% commission on a ' + fm(P) + ' home is ' + fm(Cm) + '.' + (st.who === 'seller' ? ' You pay it out of the sale.' : (st.who === 'buyer' ? ' The buyer pays it on top of the price: ' + fm(P + Cm) + ' in total.' : ' You pay ' + fm(O.Cs) + ' of it and the buyer pays ' + fm(O.Cb) + '.'));
+      if (O.net < 0) tip += ' The costs and the mortgage payoff are more than the price: you would need ' + fm(-O.net) + ' more to close.';
+      if (P > 0 && O.net >= 0) {
+        var parts = [['You keep', O.net, 'pay'], ['Commission you pay', O.Cs, 'd0'], ['Closing costs', O.Cc, 'd1'], ['Mortgage payoff', O.pay, 'd2']], h = '', k = '';
+        parts.forEach(function (p) { if (!(p[1] > 0)) return; h += seg(p[2], p[1], P); k += '<span><i class="cm-ky ' + p[2] + '"></i>' + p[0] + ' ' + fp(p[1] / P * 100) + '</span>'; });
+        $('rtBars').innerHTML = '<div class="cm-bar" aria-hidden="true">' + h + '</div><div class="bm-key">' + k + '</div>'; $('rtBarsWrap').style.display = '';
+      }
+      var rows = [], add = function (l, a, strong) { rows.push('<tr' + (strong ? ' class="cm-strong"' : '') + '><td>' + l + '</td><td>' + a + '</td></tr>'); };
+      add('Home price', fm(P)); add('Commission you pay', '−' + fm(O.Cs));
+      if (cl > 0) add('Closing costs ' + pc(cl) + '%', '−' + fm(O.Cc));
+      if (py > 0) add('Mortgage payoff', '−' + fm(py));
+      add('You keep', fm(O.net), true);
+      if (O.Cb > 0) add('Buyer pays in total', fm(O.buyerTotal));
+      $('rtStep').innerHTML = '<thead><tr><th></th><th>Amount</th></tr></thead><tbody>' + rows.join('') + '</tbody>';
+      if (ls !== null) {
+        var l1 = Cm * ls / 100, l2 = Cm - l1, hd = '<thead><tr><th></th><th>Commission</th>' + (bk !== null ? '<th>After brokerage split</th>' : '') + '</tr></thead><tbody>';
+        hd += '<tr><td>Listing agent (' + pc(ls) + '%)</td><td>' + fm(l1) + '</td>' + (bk !== null ? '<td>' + fm(l1 * bk / 100) + '</td>' : '') + '</tr>';
+        hd += '<tr><td>Buyer’s agent (' + pc(100 - ls) + '%)</td><td>' + fm(l2) + '</td>' + (bk !== null ? '<td>' + fm(l2 * bk / 100) + '</td>' : '') + '</tr>';
+        $('rtAg').innerHTML = hd + '</tbody>'; $('rtAgWrap').style.display = '';
+      }
+      if (P > 0) {
+        var lh = '<thead><tr><th>Commission rate</th><th>Commission</th><th>You keep</th></tr></thead><tbody>';
+        RE.RATES.forEach(function (x) { var o2 = RE.outcome(P, x, st.who, sp, cl, py); lh += '<tr class="cm-lrow' + (x === rate ? ' on' : '') + '" data-v="' + x + '" tabindex="0"><td>' + x + '%</td><td>' + fm(o2.C) + '</td><td>' + fm(o2.net) + '</td></tr>'; });
+        $('rtLad').innerHTML = lh + '</tbody>'; $('rtLadNote').textContent = 'For your ' + fm(P) + ' home. Click a row to use that commission rate.'; $('rtLadWrap').style.display = '';
+      }
+    } else if (R.state === 'need') sub = 'Type one more value: ' + others(typedK[0]) + '.';
+    $('rtBig').textContent = big; $('rtBig').parentNode.classList.toggle('cm-long', big.length > 11); $('rtLab').textContent = lab; $('rtSub').textContent = sub;
+    $('rtBody').style.display = showBody ? '' : 'none'; $('rtMLab').textContent = lab; $('rtMVal').textContent = big; $('rtTip').textContent = tip;
+  }
+  CORE.forEach(function (k) {
+    var inp = $(FM[k].id);
+    inp.addEventListener('input', function () { onEdit(k); });
+    inp.addEventListener('focus', function () { if (inp.closest('.fld').classList.contains('cm-calc')) setTimeout(function () { try { inp.select(); } catch (e) { /* not selectable */ } }, 0); });
+  });
+  ['rtSp', 'rtList', 'rtBrok', 'rtClose', 'rtPay'].forEach(function (id) { $(id).addEventListener('input', render); });
+  function pickRow(e) { var r = e.target.closest('.cm-lrow'); if (!r) return; $(FM.rate.id).value = r.getAttribute('data-v'); onEdit('rate'); }
+  $('rtLad').addEventListener('click', pickRow);
+  $('rtLad').addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pickRow(e); } });
+  [].forEach.call($('rtWho').children, function (b) { b.addEventListener('click', function () { st.who = b.getAttribute('data-v'); [].forEach.call($('rtWho').children, function (x) { x.classList.toggle('on', x === b); }); render(); }); });
+  var ADV = ['rtSp', 'rtList', 'rtBrok', 'rtClose', 'rtPay'];
+  $('rtClear').addEventListener('click', function () {
+    CORE.forEach(function (k) { $(FM[k].id).value = ''; }); ADV.forEach(function (id) { $(id).value = ''; });
+    st.typed = []; st.last = null; st.extra = ''; st.coreErr = null; render(); $('rtPrice').focus();
+  });
+  $('rtAdvBtn').addEventListener('click', function () {
+    st.adv = !st.adv; $('rtAdvBtn').classList.toggle('open', st.adv); $('rtAdvBtnLab').textContent = st.adv ? 'Go simple' : 'Go advanced'; $('rtAdvIn').style.display = st.adv ? '' : 'none';
+    if (!st.adv) { ADV.forEach(function (id) { $(id).value = ''; }); st.who = 'seller'; [].forEach.call($('rtWho').children, function (x) { x.classList.toggle('on', x.getAttribute('data-v') === 'seller'); }); }
+    render();
+  });
+  (function () {
+    var opt = function (c, pop) { var n = curName(c); return '<button type="button" class="csel-opt' + (pop ? ' csel-pop' : '') + (c === 'USD' ? ' on' : '') + '" role="option" aria-selected="' + (c === 'USD') + '" data-value="' + c + '" data-p="' + (SE.RANK.indexOf(c) + 1) + '" data-s="' + (c + ' ' + n + ' ' + sym(c)).toLowerCase() + '"><span class="n">' + n + '</span><span class="c">' + c + '</span></button>'; };
+    var all = SE.CURRENCIES.slice().sort(function (a, b) { return curName(a) < curName(b) ? -1 : 1; });
+    $('rtCur').querySelector('.csel-panel').innerHTML = '<div class="csel-sbox"><input class="csel-search" type="text" placeholder="Search currency" aria-label="Search currency" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="go"></div><div class="csel-group">Popular</div>' +
+      SE.POPULAR.map(function (c) { return opt(c, true); }).join('') + '<div class="csel-group">All currencies</div>' + all.map(function (c) { return opt(c, false); }).join('') + '<div class="csel-none" style="display:none">No currency found</div>';
+    CalcThis.initCsel($('rtCur'));
+    $('rtCur').querySelector('.csel-val').textContent = 'USD';
+  })();
+  $('rtCur').addEventListener('change', function () { st.cur = $('rtCur').value || 'USD'; st.dec = decOf(st.cur); $('rtCur').querySelector('.csel-val').textContent = st.cur; render(); });
+  render();
+};
+/* REALTOR:END */

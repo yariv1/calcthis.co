@@ -1,0 +1,51 @@
+{
+  "slug": "commission-calculator",
+  "bodyClass": "p-cm",
+  "blocks": ["COMMISSION"],
+  "result": { "big": "cmBig", "body": "cmBody", "hint": "cmHint" },
+  "required": ["cmSales", "cmRate", "cmComm", "cmItems", "cmPer", "cmTr1u", "cmTr1v", "cmTr2u", "cmTr2v", "cmTr3u", "cmTr3v"],
+  "fill": [
+    ["click", "cmClear"],
+    ["set", "cmCur", "USD"],
+    ["set", "cmPlan", "pct"],
+    ["seg", "cmWho", "seller"],
+    ["set", "cmSales", "50000"],
+    ["set", "cmRate", "3"]
+  ],
+  "optionalSamples": {
+    "cmBase": ["500", "1,200"],
+    "cmShare": ["70", "100"],
+    "cmFee": ["2", "10"],
+    "cmFix": ["100", "10"],
+    "cmGoal": ["5000", "20000"]
+  },
+  "pools": {
+    "cmSales": ["50000", "1,200.50", "0", "99999999999"],
+    "cmRate": ["3", "0", "100", "12.5"],
+    "cmComm": ["1500", "0", "99999"],
+    "cmItems": ["12", "0", "1000000"],
+    "cmPer": ["25", "0", "1,000"],
+    "cmBase": ["500", "0", "99999"],
+    "cmShare": ["70", "0", "100", "101"],
+    "cmFee": ["2", "0", "100", "101"],
+    "cmFix": ["100", "0", "99999"],
+    "cmGoal": ["5000", "0", "20000"],
+    "cmTr1u": ["20000", "5", "0"],
+    "cmTr1v": ["3", "0", "100", "500"],
+    "cmTr2u": ["25000", "30000", ""],
+    "cmTr2v": ["5", "0", "100"],
+    "cmTr3u": ["", "40000"],
+    "cmTr3v": ["10", "0"],
+    "cmMr1": ["10000", "0", "5"]
+  },
+  "variants": [
+    [["set", "cmPlan", "tier"], ["set", "cmTr1u", "20000"], ["set", "cmTr1v", "3"], ["set", "cmTr2u", "25000"], ["set", "cmTr2v", "5"], ["set", "cmTr3v", "10"], ["set", "cmSales", "27000"]],
+    [["set", "cmPlan", "whole"], ["set", "cmTr1u", "20000"], ["set", "cmTr1v", "3"], ["set", "cmTr2u", "25000"], ["set", "cmTr2v", "5"], ["set", "cmTr3v", "10"], ["set", "cmSales", "27000"]],
+    [["set", "cmPlan", "item"], ["set", "cmItems", "12"], ["set", "cmPer", "25"]],
+    [["set", "cmPlan", "tier"], ["seg", "cmTr1k", "amt"], ["set", "cmTr1u", "10000"], ["set", "cmTr1v", "200"], ["set", "cmTr2v", "4"], ["set", "cmSales", "30000"]],
+    [["click", "cmMoreAdd"], ["set", "cmMr1", "10000"]],
+    [["set", "cmCur", "JPY"]]
+  ],
+  "scrollTo": "cmLad",
+  "errorState": [["set", "cmRate", "150"]]
+}

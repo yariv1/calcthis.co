@@ -186,6 +186,14 @@
     "t": "Overtime Calculator — Pay, Take-Home & No Tax on Overtime",
     "d": "Free overtime calculator: your hourly rate and hours give overtime pay, take-home after tax, California daily rules and the no-tax-on-overtime deduction."
   },
+  "/realtor-commission-calculator/": {
+    "t": "Realtor Commission Calculator — Net Proceeds & Agent Split",
+    "d": "Realtor commission calculator: any two of home price, rate and commission, who pays, the agents’ split, closing costs and mortgage payoff for what you keep."
+  },
+  "/commission-calculator/": {
+    "t": "Commission Calculator — Sales, Tiered & Split Commission",
+    "d": "Commission calculator: any two of sales, rate and commission, tiered and per-item plans, base pay, split, fees, take-home and sales needed. Any currency."
+  },
   "/discount-calculator/": {
     "t": "Discount Calculator — Percent Off, Sale Price & Savings",
     "d": "Discount calculator: type any two of price, percent off, final price or saving, stack coupons, add tax and compare deals. Percent off made easy. Any currency."
