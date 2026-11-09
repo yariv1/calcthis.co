@@ -24947,3 +24947,303 @@ CalcThis.initRealtorCalc = function () {
   render();
 };
 /* REALTOR:END */
+
+/* UNITPRICE:BEGIN */
+/* =========================================================
+   UNIT PRICE calculator (/unit-price-calculator/). Competitors opened live (2026-11-09): Omnicalculator (unit price: 2 products, 5 types), Inch Calculator (unit price: any number
+   of items, 6 tabs) - both give a bare number; none ranks the products, none draws the difference, none rounds up to whole packs. Notes: md-files/calcthis-unitprice-research.md.
+   Formulas: unit price = price paid / (amount x count x unit factor); price paid = (price x (1 - sale%/100) - amount off) x (1 + tax%/100); price per chosen unit = unit price x its factor.
+   Factors are exact definitions (1 lb = 453.59237 g, 1 oz = 28.349523125 g, 1 US gal = 3785.411784 ml, 1 US fl oz = 29.5735295625 ml, 1 in = 0.0254 m, 1 ft = 0.3048 m).
+   Time: 1 year = 365 days, 1 month = 1/12 of a year. Buying a given amount rounds up to whole packs.
+   ========================================================= */
+/* UNITPRICE-ENGINE:START */
+CalcThis.unitPriceEngine = (function () {
+  function L(a) { return a.map(function (x) { return { k: x[0], l: x[1], f: x[2] }; }); }
+  var U = {
+    weight: { row: L([['g', 'g', 1], ['kg', 'kg', 1000], ['oz', 'oz', 28.349523125], ['lb', 'lb', 453.59237]]), per: L([['oz', 'oz', 28.349523125], ['lb', 'lb', 453.59237], ['g100', '100 g', 100], ['kg', 'kg', 1000]]), map: { g: 'g100', kg: 'kg', oz: 'oz', lb: 'lb' }, dflt: 'oz', noun: 'weight' },
+    volume: { row: L([['ml', 'ml', 1], ['L', 'L', 1000], ['floz', 'fl oz', 29.5735295625], ['cup', 'cup', 236.5882365], ['pint', 'pint', 473.176473], ['quart', 'quart', 946.352946], ['gal', 'gallon', 3785.411784]]), per: L([['floz', 'fl oz', 29.5735295625], ['ml100', '100 ml', 100], ['L', 'L', 1000], ['gal', 'gallon', 3785.411784]]), map: { ml: 'ml100', L: 'L', floz: 'floz', cup: 'floz', pint: 'floz', quart: 'L', gal: 'gal' }, dflt: 'floz', noun: 'volume' },
+    count: { row: L([['item', 'items', 1], ['dozen', 'dozen', 12]]), per: L([['item', 'item', 1], ['dozen', 'dozen', 12], ['item100', '100 items', 100]]), map: { item: 'item', dozen: 'dozen' }, dflt: 'item', noun: 'count' },
+    length: { row: L([['cm', 'cm', 0.01], ['m', 'm', 1], ['in', 'in', 0.0254], ['ft', 'ft', 0.3048], ['yd', 'yd', 0.9144]]), per: L([['ft', 'ft', 0.3048], ['m', 'm', 1], ['yd', 'yd', 0.9144], ['ft100', '100 ft', 30.48]]), map: { cm: 'm', m: 'm', 'in': 'ft', ft: 'ft', yd: 'yd' }, dflt: 'ft', noun: 'length' },
+    area: { row: L([['sqcm', 'sq cm', 0.0001], ['sqm', 'sq m', 1], ['sqin', 'sq in', 0.00064516], ['sqft', 'sq ft', 0.09290304], ['sqyd', 'sq yd', 0.83612736]]), per: L([['sqft', 'sq ft', 0.09290304], ['sqm', 'sq m', 1], ['sqyd', 'sq yd', 0.83612736]]), map: { sqcm: 'sqm', sqm: 'sqm', sqin: 'sqft', sqft: 'sqft', sqyd: 'sqyd' }, dflt: 'sqft', noun: 'area' },
+    time: { row: L([['min', 'minute', 60], ['hour', 'hour', 3600], ['day', 'day', 86400], ['week', 'week', 604800], ['month', 'month', 2628000], ['year', 'year', 31536000]]), per: L([['hour', 'hour', 3600], ['day', 'day', 86400], ['week', 'week', 604800], ['month', 'month', 2628000], ['year', 'year', 31536000]]), map: { min: 'hour', hour: 'hour', day: 'day', week: 'week', month: 'month', year: 'year' }, dflt: 'month', noun: 'time' }
+  };
+  function find(list, k) { for (var i = 0; i < list.length; i++) if (list[i].k === k) return list[i]; return null; }
+  /* price actually paid: sale percent first, then the amount off, then tax */
+  function paid(price, pct, off, tax) { var p = price * (1 - (pct || 0) / 100); if (off) p -= off; if (tax) p *= 1 + tax / 100; return p; }
+  function baseOf(kind, unit, amt, cnt) { return amt * find(U[kind].row, unit).f * (cnt || 1); }
+  /* one product: r = { price, pct, off, tax, amt, unit, cnt, srv } -> { eff, base, ub (price per base unit), serv } */
+  function line(kind, r) { var e = paid(r.price, r.pct, r.off, r.tax), b = baseOf(kind, r.unit, r.amt, r.cnt); return { eff: e, base: b, ub: e / b, serv: r.srv ? e / r.srv : null }; }
+  function perOf(kind, perK, ub) { return ub * find(U[kind].per, perK).f; }
+  function same(a, b) { return Math.abs(a - b) <= 1e-9 * Math.max(Math.abs(a), Math.abs(b), 1e-300); }
+  /* ranks ready lines cheapest first (ties keep their order); returns { list, best, worst, tie } */
+  function rank(lines) {
+    var list = lines.map(function (l, i) { return { i: i, l: l }; }).sort(function (a, b) { return same(a.l.ub, b.l.ub) ? a.i - b.i : a.l.ub - b.l.ub; });
+    var best = list[0], worst = list[list.length - 1];
+    return { list: list, best: best, worst: worst, tie: list.length > 1 && same(best.l.ub, worst.l.ub) };
+  }
+  /* buying needBase base units: whole packs rounded up */
+  function plan(lines, needBase) {
+    return lines.map(function (l, i) {
+      var packs = Math.ceil(needBase / l.base - 1e-9); if (packs < 1) packs = 1;
+      return { i: i, packs: packs, pay: packs * l.eff, left: packs * l.base - needBase, exact: l.ub * needBase };
+    });
+  }
+  return { U: U, find: find, paid: paid, baseOf: baseOf, line: line, perOf: perOf, rank: rank, plan: plan, same: same };
+})();
+/* UNITPRICE-ENGINE:END */
+
+/* =========================================================
+   CalcThis.initUnitPriceCalc() - ids up*. Engines: CalcThis.salesEngine (parse), CalcThis.unitPriceEngine, CalcThis.salaryEngine (currency list only, display only).
+   ========================================================= */
+CalcThis.initUnitPriceCalc = function () {
+  var E = CalcThis.salesEngine, X = CalcThis.unitPriceEngine, SE = CalcThis.salaryEngine;
+  var $ = function (id) { return document.getElementById(id); };
+  if (!$('upRows')) return;
+  var CHEV = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
+  var KINDS = [['weight', 'Weight'], ['volume', 'Volume'], ['count', 'Count'], ['length', 'Length'], ['area', 'Area'], ['time', 'Time']];
+  var EGA = { weight: '16', volume: '64', count: '12', length: '50', area: '100', time: '12' };
+  var KNOTE = { weight: 'Packs are measured by weight: grams, kilograms, ounces or pounds.', volume: 'Packs are measured by volume: millilitres, litres, fluid ounces, cups, pints, quarts or US gallons.', count: 'Packs are counted: type how many items are in each pack.', length: 'Packs are measured by length: centimetres, metres, inches, feet or yards.', area: 'Packs are measured by area: square centimetres, metres, inches, feet or yards.', time: 'Plans are measured by time: minutes up to years (a month is one twelfth of a 365-day year).' };
+  var LET = 'ABCDEFGHIJKLMNOPQRST', MAXROWS = 20;
+  var st = { cur: 'USD', dec: 2, kind: 'weight', per: 'oz', perAuto: true, needU: 'oz', adv: false, seq: 0 };
+  var NF = {}, DN = null;
+  try { DN = new Intl.DisplayNames(['en'], { type: 'currency' }); } catch (e) { DN = null; }
+  var CN = { SLE: 'Sierra Leonean Leone' };
+  function curName(c) { try { var n = DN && DN.of(c); return (n && n !== c) ? n : (CN[c] || c); } catch (e) { return CN[c] || c; } }
+  function decOf(c) { try { return Math.min(2, new Intl.NumberFormat('en-US', { style: 'currency', currency: c }).resolvedOptions().maximumFractionDigits); } catch (e) { return 2; } }
+  function sym(c) { try { return new Intl.NumberFormat('en-US', { style: 'currency', currency: c, currencyDisplay: 'narrowSymbol' }).format(0).replace(/[0-9.,\s]/g, ''); } catch (e) { return c; } }
+  function cf(x, d) {
+    var k = st.cur + d;
+    if (!NF[k]) NF[k] = new Intl.NumberFormat('en-US', { style: 'currency', currency: st.cur, currencyDisplay: 'narrowSymbol', minimumFractionDigits: d, maximumFractionDigits: d });
+    return (x < 0 ? '−' : '') + CalcThis.fmtMoney(NF[k], st.cur, Math.abs(x));
+  }
+  function fm(x) { if (x == null || !isFinite(x)) return '—'; if (Math.abs(x) < Math.pow(10, -st.dec) / 2) x = 0; return cf(x, st.dec); }
+  /* a price per unit needs more decimals when it is small: $0.249 per oz, $0.0023 per g */
+  function fu(x) {
+    if (x == null || !isFinite(x)) return '—';
+    var a = Math.abs(x), d = st.dec;
+    if (a < 100) { if (d === 0) d = a >= 10 ? 1 : a >= 1 ? 2 : 3; else d = a >= 1 ? d : a >= 0.1 ? d + 1 : d + 2; }
+    return cf(x, d);
+  }
+  function pc(x) { var r = Math.round(x * 10) / 10; if (r === 0) r = 0; return (r < 0 ? '−' : '') + Math.abs(r).toLocaleString('en-US', { maximumFractionDigits: 1 }); }
+  function qn(x) { return (Math.round(x * 1000) / 1000).toLocaleString('en-US', { maximumFractionDigits: 3 }); }
+  function perL(k) { return X.find(X.U[st.kind].per, k).l; }
+  function rowL(k) { return X.find(X.U[st.kind].row, k).l; }
+  function opts(list, sel) { return list.map(function (u) { return '<button type="button" class="csel-opt' + (u.k === sel ? ' on' : '') + '" role="option" aria-selected="' + (u.k === sel) + '" data-value="' + u.k + '">' + u.l + '</button>'; }).join(''); }
+  function setOpts(cs, list, sel) {
+    cs.setAttribute('data-value', sel); cs.querySelector('.csel-panel').innerHTML = opts(list, sel);
+    cs.querySelector('.csel-val').textContent = X.find(list, sel).l; CalcThis.initCsel(cs); cs.value = sel;
+  }
+  function rowDflt() { return X.U[st.kind].dflt; }
+  function rowUnitDflt() { var d = { weight: 'oz', volume: 'floz', count: 'item', length: 'ft', area: 'sqft', time: 'month' }; return d[st.kind]; }
+  function setHint(m, at) {
+    var h = $('upHint'); h.textContent = m || ''; h.style.display = m ? 'block' : 'none';
+    if (m && at) { var el = $(at), f = el && (el.closest('.up-row') || el.closest('.fld') || el); if (f && f.nextSibling !== h) f.parentNode.insertBefore(h, f.nextSibling); }
+  }
+  function setNote(id, t) { var e = $(id); e.textContent = t || ''; e.style.display = t ? '' : 'none'; }
+
+  /* ---------- the product rows ---------- */
+  function tf(id, lab, unit, ph) { return '<label class="fld" for="' + id + '"><span class="lab">' + lab + (unit ? ' <span class="unit">' + unit + '</span>' : '') + '</span><div class="inp"><input id="' + id + '" type="text" inputmode="decimal" autocomplete="off" placeholder="' + ph + '"></div></label>'; }
+  function mkRow() {
+    var n = ++st.seq, div = document.createElement('div'); div.className = 'up-row'; div.id = 'upRow' + n; div.setAttribute('data-n', n);
+    div.innerHTML = '<div class="up-head"><span class="up-t"></span><button class="x" type="button" aria-label="Remove this product">&#215;</button></div>' +
+      '<label class="fld" for="upName' + n + '"><span class="lab">Name <span class="unit">optional</span></span><div class="inp"><input id="upName' + n + '" type="text" autocomplete="off" placeholder="e.g. Brand A" maxlength="40"></div></label>' +
+      '<div class="fld up-basisw"><span class="lab">The price is for</span><div class="seg up-basis" id="upBasis' + n + '" role="group" aria-label="The price is for"><button class="on" type="button" id="upBasisPack' + n + '" data-v="pack">The whole pack</button><button type="button" id="upBasisItem' + n + '" data-v="item">One item</button></div></div>' +
+      '<div class="up-two">' + tf('upPrice' + n, '<span class="up-pl">Price</span>', '$', 'e.g. 3.99') +
+      tf('upAmt' + n, '<span class="up-amtl">Size of one item</span>', '', 'e.g. ' + EGA[st.kind]) + '</div>' +
+      '<div class="up-two up-unitrow"><div class="fld"><span class="lab">Measured in</span><div class="csel" id="upUnit' + n + '" data-value="' + rowUnitDflt() + '" aria-label="Unit"><button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false"><span class="csel-val"></span>' + CHEV + '</button><div class="csel-panel" role="listbox"></div></div></div>' +
+      '<span class="up-cntw">' + tf('upCnt' + n, 'Items in pack', '', 'e.g. 6') + '</span></div>' +
+      '<div class="up-adv" style="display:' + (st.adv ? '' : 'none') + '"><div class="up-two">' + tf('upSrv' + n, 'Servings', 'in pack', 'e.g. 8') + tf('upPct' + n, 'Sale', '% off', 'e.g. 20') + '</div>' +
+      '<div class="up-two">' + tf('upOff' + n, 'Coupon', '$ off', 'e.g. 1') + tf('upTax' + n, 'Sales tax', '%', 'e.g. 8.5') + '</div></div>' +
+      '<p class="av-note up-rn" id="upRn' + n + '"></p>';
+    $('upRows').appendChild(div);
+    var cs = $('upUnit' + n); setOpts(cs, X.U[st.kind].row, rowUnitDflt());
+    cs.addEventListener('change', render);
+    [].forEach.call(div.querySelectorAll('input'), function (i) { i.addEventListener('input', render); });
+    [].forEach.call(div.querySelectorAll('.up-basis button'), function (b) { b.addEventListener('click', function () { [].forEach.call(div.querySelectorAll('.up-basis button'), function (x) { x.classList.toggle('on', x === b); }); syncKind(div); render(); }); });
+    div.querySelector('.x').addEventListener('click', function () { div.parentNode.removeChild(div); render(); });
+    syncKind(div);
+    return div;
+  }
+  function basisOf(div) { var b = div.querySelector('.up-basis button.on'); return b ? b.getAttribute('data-v') : 'pack'; }
+  function rowsEls() { return [].slice.call($('upRows').querySelectorAll('.up-row')); }
+  function syncKind(div) {
+    var n = div.getAttribute('data-n'), c = st.kind === 'count', t = st.kind === 'time', item = basisOf(div) === 'item';
+    div.querySelector('.up-basisw').style.display = (c || t) ? 'none' : '';
+    div.querySelector('.up-cntw').style.display = (c || t || item) ? 'none' : '';
+    div.querySelector('.up-unitrow').style.display = c ? 'none' : '';
+    div.querySelector('.up-pl').textContent = c ? 'Price of the pack' : (!t && item ? 'Price of one item' : (t ? 'Price' : 'Price of the pack'));
+    div.querySelector('.up-amtl').textContent = c ? 'Items in pack' : (t ? 'Plan length' : 'Size of one item');
+    $('upAmt' + n).placeholder = 'e.g. ' + EGA[st.kind];
+  }
+  function setKind(k) {
+    st.kind = k; st.perAuto = true; $('upKind').querySelector('.csel-val').textContent = KINDS.filter(function (x) { return x[0] === k; })[0][1];
+    rowsEls().forEach(function (div) { var n = div.getAttribute('data-n'); setOpts($('upUnit' + n), X.U[k].row, rowUnitDflt()); if (k === 'count') $('upCnt' + n).value = ''; syncKind(div); });
+    st.needU = rowUnitDflt(); setOpts($('upNeedU'), X.U[k].row, st.needU);
+    autoPer(); setOpts($('upPer'), X.U[k].per, st.per);
+  }
+  function autoPer() {
+    if (!st.perAuto) return;
+    var first = rowsEls()[0], u = first ? $('upUnit' + first.getAttribute('data-n')).value : rowUnitDflt();
+    var m = X.U[st.kind].map[u]; st.per = m && X.find(X.U[st.kind].per, m) ? m : X.U[st.kind].dflt;
+  }
+
+  /* ---------- reading one row ---------- */
+  function err(label, code, raw, eg) {
+    var r = String(raw).trim().slice(0, 14), tail = ' It is ignored for now.';
+    if (code === 'junk') return 'Couldn’t read “' + r + '” in ' + label + ' — type a number like ' + eg + '.' + tail;
+    if (code === 'neg') return label + ' can’t be negative — type 0 or more.' + tail;
+    if (code === 'big') return label + ' is too large — keep it under 1,000,000,000,000.' + tail;
+    if (code === 'pct') return label + ' should be a percent from 0 to 100.' + tail;
+    if (code === 'qty') return label + ' should be a number above 0 and up to 1,000,000,000.' + tail;
+    if (code === 'int') return label + ' should be a whole number, 1 or more.' + tail;
+    if (code === 'zero') return label + ' should be above 0 — a free pack has no price to compare.' + tail;
+    return label + ' can’t be used.' + tail;
+  }
+  var EG = { price: '3.99', amt: '16', cnt: '6', srv: '8', pct: '20', off: '1', tax: '8.5' };
+  /* returns { name, price, amt, unit, cnt, srv, pct, off, tax, ok, miss, bad: {msg, at} | null, soft: msg | null } */
+  function readRow(div, idx) {
+    var n = div.getAttribute('data-n'), g = function (k) { return $('up' + k + n).value; }, nm = g('Name').trim() || 'Product ' + LET.charAt(idx);
+    var o = { n: n, idx: idx, name: nm, unit: $('upUnit' + n).value, basis: basisOf(div), bad: null, soft: null, miss: [] }, pre = nm + ': ';
+    var amtW = st.kind === 'count' ? 'items in the pack' : (st.kind === 'time' ? 'plan length' : 'size of one item');
+    var pp = E.parse(g('Price'), 'price'), pa = E.parse(g('Amt'), 'qty');
+    if (pp.err) o.bad = { msg: err(pre + 'price', pp.err, g('Price'), EG.price), at: 'upRow' + n }; else if (pp.v !== undefined && pp.v === 0) o.bad = { msg: err(pre + 'price', 'zero', g('Price'), EG.price), at: 'upRow' + n }; else if (pp.v !== undefined) o.price = pp.v; else o.miss.push('price');
+    if (pa.err) { if (!o.bad) o.bad = { msg: err(pre + amtW, pa.err, g('Amt'), EG.amt), at: 'upRow' + n }; } else if (pa.v !== undefined) o.amt = pa.v; else o.miss.push('amount');
+    var soft = function (k, label, kind, eg, int) {
+      var r = E.parse(g(k), kind); if (r.empty || r.partial) return undefined;
+      if (r.err) { if (!o.soft) o.soft = { msg: err(pre + label, r.err, g(k), eg), at: 'upRow' + n }; return undefined; }
+      if (int && r.v % 1 !== 0) { if (!o.soft) o.soft = { msg: err(pre + label, 'int', g(k), eg), at: 'upRow' + n }; return undefined; }
+      return r.v;
+    };
+    o.cnt = (st.kind === 'count' || st.kind === 'time' || o.basis === 'item') ? undefined : soft('Cnt', 'items in the pack', 'qty', EG.cnt, true);
+    o.srv = soft('Srv', 'servings in the pack', 'qty', EG.srv);
+    o.pct = soft('Pct', 'the sale percent', 'disc', EG.pct);
+    o.off = soft('Off', 'the coupon', 'cost', EG.off);
+    o.tax = soft('Tax', 'the sales tax', 'tax', EG.tax);
+    if (o.price !== undefined && (o.pct !== undefined || o.off !== undefined)) {
+      var after = X.paid(o.price, o.pct, o.off, 0);
+      if (!(after > 0)) { if (!o.soft) o.soft = { msg: pre + 'the sale and coupon take the whole price off — they are ignored for now.', at: 'upRow' + n }; o.pct = undefined; o.off = undefined; }
+    }
+    o.ok = o.price !== undefined && o.amt !== undefined && !o.bad;
+    return o;
+  }
+  function rowNote(o, ln) {
+    if (!o.ok) {
+      var need = 'Fix the value above to see its price per ' + perL(st.per) + '.';
+      var pw = st.kind === 'time' ? 'the price' : (st.kind === 'count' || o.basis !== 'item' ? 'the price of the pack' : 'the price of one item'), aw = st.kind === 'count' ? 'how many items are in the pack' : (st.kind === 'time' ? 'the plan length' : 'the size of one item');
+      if (o.miss.length === 2) need = 'Type ' + pw + ' and ' + aw + ' to see its price per ' + perL(st.per) + '.';
+      else if (o.miss[0] === 'price') need = 'Type ' + pw + ' to see its price per ' + perL(st.per) + '.';
+      else if (o.miss[0] === 'amount') need = 'Type ' + aw + ' to see its price per ' + perL(st.per) + '.';
+      var ex = []; if (o.cnt !== undefined) ex.push(qn(o.cnt) + ' items in the pack will multiply the amount.'); if (o.srv !== undefined) ex.push(qn(o.srv) + ' servings will give the price per serving.'); if (o.pct !== undefined) ex.push('The ' + qn(o.pct) + '% sale comes off the price.'); if (o.off !== undefined) ex.push('The ' + fm(o.off) + ' coupon comes off the price.'); if (o.tax !== undefined) ex.push('Sales tax of ' + qn(o.tax) + '% is added.');
+      return o.name + ': ' + need + (ex.length ? ' ' + ex.join(' ') : '');
+    }
+    var amtT = (o.cnt && o.cnt > 1 ? qn(o.cnt) + ' × ' : '') + qn(o.amt) + ' ' + rowL(o.unit);
+    var adj = (o.pct !== undefined || o.off !== undefined || o.tax !== undefined) ? ' (' + fm(ln.eff) + ' after ' + [o.pct !== undefined ? 'the sale' : '', o.off !== undefined ? 'the coupon' : '', o.tax !== undefined ? 'tax' : ''].filter(Boolean).join(' and ') + ')' : '';
+    return o.name + ': ' + fm(o.price) + ' for ' + amtT + adj + ' = ' + fu(X.perOf(st.kind, st.per, ln.ub)) + ' per ' + perL(st.per) + (ln.serv != null ? ' · ' + fu(ln.serv) + ' per serving' : '') + '.';
+  }
+
+  /* ---------- render ---------- */
+  function render() {
+    var els = rowsEls(), RS, i;
+    RS = els.map(function (d, ix) { return readRow(d, ix); });
+    autoPer(); var per = st.per;
+    if ($('upPer').value !== per) { $('upPer').value = per; }
+    var ready = [], lines = [];
+    RS.forEach(function (o, ix) {
+      els[ix].querySelector('.up-t').textContent = o.name;
+      els[ix].querySelector('.x').style.visibility = els.length > 1 ? '' : 'hidden';
+      if (o.ok) { var ln = X.line(st.kind, o); ready.push(o); lines.push(ln); o.ln = ln; }
+      setNote('upRn' + o.n, rowNote(o, o.ln));
+    });
+    $('upAdd').style.display = els.length >= MAXROWS ? 'none' : '';
+    setNote('upKindNote', KNOTE[st.kind]);
+    /* the optional "how much will you buy" */
+    var nd = E.parse($('upNeed').value, 'qty'), needBad = null, needV = null;
+    if (nd.err) needBad = { msg: err('Amount to buy', nd.err, $('upNeed').value, '3'), at: 'upNeed' }; else if (nd.v !== undefined) needV = nd.v;
+    /* hint: the first problem found */
+    var hm = null, hat = null;
+    for (i = 0; i < RS.length && !hm; i++) if (RS[i].bad) { hm = RS[i].bad.msg; hat = RS[i].bad.at; }
+    for (i = 0; i < RS.length && !hm; i++) if (RS[i].soft) { hm = RS[i].soft.msg; hat = RS[i].soft.at; }
+    if (!hm && needBad) { hm = needBad.msg; hat = needBad.at; }
+    setHint(hm, hat);
+    /* result */
+    var big = '—', lab = 'Best buy', sub = $('upSub').getAttribute('data-empty'), tip = '', body = false, pl = perL(per);
+    $('upBarsWrap').style.display = 'none'; $('upPlanWrap').style.display = 'none'; $('upUnitsWrap').style.display = 'none';
+    if (ready.length) {
+      body = true; var R = X.rank(lines), best = R.best, worst = R.worst, bu = X.perOf(st.kind, per, best.l.ub), wu = X.perOf(st.kind, per, worst.l.ub);
+      if (ready.length === 1) {
+        lab = 'Price per ' + pl; big = fu(bu); sub = ready[0].name + ': ' + fm(ready[0].price) + ' for ' + qn(ready[0].amt * (ready[0].cnt || 1)) + ' ' + rowL(ready[0].unit) + '. Add a second product to compare.';
+        tip = ready[0].name + ' costs ' + fu(bu) + ' per ' + pl + '.';
+      } else if (R.tie) {
+        big = 'All the same'; sub = 'Every product costs ' + fu(bu) + ' per ' + pl + '.'; tip = 'The ' + ready.length + ' products cost the same per ' + pl + ', so pick on anything else that matters to you.';
+      } else {
+        var bn = ready[best.i].name, wn = ready[worst.i].name, cheap = (1 - bu / wu) * 100;
+        big = bn; sub = fu(bu) + ' per ' + pl + ' · ' + pc(cheap) + '% cheaper than ' + (ready.length === 2 ? wn : 'the most expensive') + ' (' + fu(wu) + ')';
+        tip = bn + ' is the best buy at ' + fu(bu) + ' per ' + pl + ', ' + pc(cheap) + '% cheaper than ' + wn + ' at ' + fu(wu) + ' per ' + pl + ' (' + wn + ' costs ' + pc((wu / bu - 1) * 100) + '% more).';
+      }
+      if (ready.length > 1) {
+        var mx = worst.l.ub, bh = '';
+        R.list.forEach(function (it, rk) {
+          var u = X.perOf(st.kind, per, it.l.ub), nm2 = ready[it.i].name, more = (it.l.ub / best.l.ub - 1) * 100, isB = rk === 0 || X.same(it.l.ub, best.l.ub);
+          bh += '<div class="up-brow' + (isB ? ' best' : '') + '"><div class="up-bt"><span class="up-bn">' + nm2.replace(/&/g, '&amp;').replace(/</g, '&lt;') + (isB ? ' <span class="up-best">Best buy</span>' : '') + '</span><span class="up-bp">' + fu(u) + ' per ' + pl + '</span></div>' +
+            '<div class="up-bar" aria-hidden="true"><i style="width:' + Math.max(2, it.l.ub / mx * 100).toFixed(2) + '%"></i></div>' +
+            '<div class="up-bv">' + (isB ? 'Lowest price per ' + pl : pc(more) + '% more than the best') + (it.l.serv != null ? ' · ' + fu(it.l.serv) + ' per serving' : '') + '</div></div>';
+        });
+        $('upBars').innerHTML = bh; $('upBarsHead').textContent = 'Price per ' + pl + ', cheapest first'; $('upBarsWrap').style.display = '';
+      }
+      /* buying a given amount: whole packs */
+      if (needV != null) {
+        var nb = needV * X.find(X.U[st.kind].row, $('upNeedU').value).f, P = X.plan(lines, nb), bestPay = Math.min.apply(null, P.map(function (p) { return p.pay; })), nu = rowL($('upNeedU').value);
+        var ph = '<thead><tr><th>Product</th><th>Packs</th><th>You pay</th><th>Left over</th></tr></thead><tbody>';
+        P.slice().sort(function (a, b) { return a.pay - b.pay || a.i - b.i; }).forEach(function (p) {
+          var isB = X.same(p.pay, bestPay);
+          ph += '<tr' + (isB ? ' class="up-strong"' : '') + '><td>' + ready[p.i].name.replace(/&/g, '&amp;').replace(/</g, '&lt;') + (isB && P.length > 1 ? ' <span class="up-best">Cheapest</span>' : '') + '</td><td>' + qn(p.packs) + '</td><td>' + fm(p.pay) + '</td><td>' + qn(p.left / X.find(X.U[st.kind].row, $('upNeedU').value).f) + ' ' + nu + '</td></tr>';
+        });
+        $('upPlan').innerHTML = ph + '</tbody>'; $('upPlanHead').textContent = 'To buy ' + qn(needV) + ' ' + nu;
+        var worstPay = Math.max.apply(null, P.map(function (p) { return p.pay; })), bi = P.filter(function (p) { return X.same(p.pay, bestPay); })[0];
+        setNote('upPlanNote', P.length > 1 ? (worstPay - bestPay > 0.005 * Math.pow(10, -st.dec + 2) ? ready[bi.i].name + ' is cheapest for ' + qn(needV) + ' ' + nu + ' — ' + fm(worstPay - bestPay) + ' less than the dearest. ' : 'Every product costs the same for ' + qn(needV) + ' ' + nu + '. ') + 'Packs are whole: you cannot buy part of one.' : 'You need ' + qn(P[0].packs) + (P[0].packs === 1 ? ' pack' : ' packs') + '. Packs are whole: you cannot buy part of one.');
+        $('upPlanWrap').style.display = '';
+        setNote('upNeedNote', 'For ' + qn(needV) + ' ' + nu + ': ' + ready.length + (ready.length === 1 ? ' product' : ' products') + ' compared, whole packs rounded up.');
+      } else if (!needBad) setNote('upNeedNote', 'Type how much you plan to buy and the cost of whole packs of each product appears below.');
+      else setNote('upNeedNote', '');
+      /* the same prices in every unit; a click switches the whole page to that unit */
+      var uh = '<thead><tr><th>Price per</th><th>' + (ready.length > 1 ? 'Best buy' : ready[0].name.replace(/&/g, '&amp;').replace(/</g, '&lt;')) + '</th>' + (ready.length > 1 ? '<th>Most expensive</th>' : '') + '</tr></thead><tbody>';
+      X.U[st.kind].per.forEach(function (u) {
+        uh += '<tr class="up-urow' + (u.k === per ? ' on' : '') + '" data-v="' + u.k + '" tabindex="0"><td>' + u.l + '</td><td>' + fu(X.perOf(st.kind, u.k, best.l.ub)) + '</td>' + (ready.length > 1 ? '<td>' + fu(X.perOf(st.kind, u.k, worst.l.ub)) + '</td>' : '') + '</tr>';
+      });
+      $('upUnits').innerHTML = uh + '</tbody>'; $('upUnitsWrap').style.display = '';
+    } else {
+      setNote('upNeedNote', needV != null ? 'Type a price and an amount for a product first — then the cost of ' + qn(needV) + ' ' + rowL($('upNeedU').value) + ' appears.' : 'Type a product’s price and amount first, then how much you plan to buy.');
+    }
+    $('upBig').textContent = big; $('upBig').parentNode.classList.toggle('up-long', big.length > 11); $('upLab').textContent = lab; $('upSub').textContent = sub; $('upBody').style.display = body ? '' : 'none';
+    $('upMLab').textContent = body ? lab : 'Best buy'; $('upMVal').textContent = big; $('upTip').textContent = tip;
+  }
+
+  /* ---------- controls ---------- */
+  CalcThis.initCsel($('upKind'));
+  $('upKind').addEventListener('change', function () { var k = $('upKind').value; if (k && k !== st.kind) { setKind(k); render(); } });
+  $('upPer').addEventListener('change', function () { var v = $('upPer').value; if (v && v !== st.per) { st.per = v; st.perAuto = false; render(); } });
+  $('upNeedU').addEventListener('change', render); $('upNeed').addEventListener('input', render);
+  $('upAdd').addEventListener('click', function () { if (rowsEls().length < MAXROWS) { var d = mkRow(); render(); d.querySelector('input').focus(); } });
+  $('upUnits').addEventListener('click', function (e) { var r = e.target.closest('.up-urow'); if (r) { st.per = r.getAttribute('data-v'); st.perAuto = false; render(); } });
+  $('upUnits').addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { var r = e.target.closest('.up-urow'); if (r) { e.preventDefault(); st.per = r.getAttribute('data-v'); st.perAuto = false; render(); } } });
+  function clearAdv() { rowsEls().forEach(function (d) { var n = d.getAttribute('data-n'); ['Srv', 'Pct', 'Off', 'Tax'].forEach(function (k) { $('up' + k + n).value = ''; }); }); $('upNeed').value = ''; }
+  function wipe() { var h = $('upHint'); if (h && $('upRows').contains(h)) $('upAdd').parentNode.parentNode.insertBefore(h, $('upAdd').parentNode.nextSibling); while ($('upRows').firstChild) $('upRows').removeChild($('upRows').firstChild); st.seq = 0; mkRow(); mkRow(); }
+  $('upClear').addEventListener('click', function () { wipe(); $('upNeed').value = ''; st.perAuto = true; setKind(st.kind); render(); $('upPrice1').focus(); });
+  $('upAdvBtn').addEventListener('click', function () {
+    st.adv = !st.adv; $('upAdvBtn').classList.toggle('open', st.adv); $('upAdvBtnLab').textContent = st.adv ? 'Go simple' : 'Go advanced'; $('upAdvIn').style.display = st.adv ? '' : 'none';
+    rowsEls().forEach(function (d) { d.querySelector('.up-adv').style.display = st.adv ? '' : 'none'; });
+    if (!st.adv) clearAdv(); render();
+  });
+  /* the currency picker: the salary page's searchable list, display only */
+  (function () {
+    var opt = function (c, pop) { var n = curName(c); return '<button type="button" class="csel-opt' + (pop ? ' csel-pop' : '') + (c === 'USD' ? ' on' : '') + '" role="option" aria-selected="' + (c === 'USD') + '" data-value="' + c + '" data-p="' + (SE.RANK.indexOf(c) + 1) + '" data-s="' + (c + ' ' + n + ' ' + sym(c)).toLowerCase() + '"><span class="n">' + n + '</span><span class="c">' + c + '</span></button>'; };
+    var all = SE.CURRENCIES.slice().sort(function (a, b) { return curName(a) < curName(b) ? -1 : 1; });
+    $('upCur').querySelector('.csel-panel').innerHTML = '<div class="csel-sbox"><input class="csel-search" type="text" placeholder="Search currency" aria-label="Search currency" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="go"></div><div class="csel-group">Popular</div>' +
+      SE.POPULAR.map(function (c) { return opt(c, true); }).join('') + '<div class="csel-group">All currencies</div>' + all.map(function (c) { return opt(c, false); }).join('') + '<div class="csel-none" style="display:none">No currency found</div>';
+    CalcThis.initCsel($('upCur'));
+    $('upCur').querySelector('.csel-val').textContent = 'USD';
+  })();
+  $('upCur').addEventListener('change', function () { st.cur = $('upCur').value || 'USD'; st.dec = decOf(st.cur); $('upCur').querySelector('.csel-val').textContent = st.cur; render(); });
+  mkRow(); mkRow(); setKind('weight'); render();
+};
+/* UNITPRICE:END */

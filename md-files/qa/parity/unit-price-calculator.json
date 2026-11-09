@@ -1,0 +1,80 @@
+{
+ "slug": "unit-price-calculator",
+ "research": "md-files/calcthis-unitprice-research.md",
+ "competitors": [
+  {
+   "name": "Omnicalculator unit price",
+   "url": "https://www.omnicalculator.com/everyday-life/unit-price",
+   "openedLive": true,
+   "date": "2026-11-09",
+   "inputs": [
+    "type: weight, volume, items, items with weight, items with volume",
+    "weight / volume with its own unit dropdown per option",
+    "cost with currency dropdown",
+    "unit price shown per a chosen unit",
+    "two options (A and B) compared",
+    "which one is cheaper and the saving per unit"
+   ]
+  },
+  {
+   "name": "Inch Calculator unit price",
+   "url": "https://www.inchcalculator.com/unit-price-calculator/",
+   "openedLive": true,
+   "date": "2026-11-09",
+   "inputs": [
+    "tabs: items, area, length, time, volume, weight",
+    "item name, quantity, total price",
+    "add item (any number of products)",
+    "unit price per item result"
+   ]
+  }
+ ],
+ "features": [
+  {
+   "covers": [
+    "Omnicalculator unit price: type: weight, volume, items, items with weight, items with volume",
+    "Inch Calculator unit price: tabs: items, area, length, time, volume, weight"
+   ],
+   "status": "exceed",
+   "ids": ["upKind", "upRows"]
+  },
+  {
+   "covers": [
+    "Omnicalculator unit price: weight / volume with its own unit dropdown per option",
+    "Inch Calculator unit price: item name, quantity, total price"
+   ],
+   "status": "exceed",
+   "ids": ["upRows"]
+  },
+  {
+   "covers": [
+    "Omnicalculator unit price: cost with currency dropdown"
+   ],
+   "status": "match",
+   "ids": ["upCur"]
+  },
+  {
+   "covers": [
+    "Omnicalculator unit price: unit price shown per a chosen unit",
+    "Inch Calculator unit price: unit price per item result"
+   ],
+   "status": "exceed",
+   "ids": ["upPer", "upUnits"]
+  },
+  {
+   "covers": [
+    "Omnicalculator unit price: two options (A and B) compared",
+    "Inch Calculator unit price: add item (any number of products)"
+   ],
+   "status": "exceed",
+   "ids": ["upAdd", "upRows"]
+  },
+  {
+   "covers": [
+    "Omnicalculator unit price: which one is cheaper and the saving per unit"
+   ],
+   "status": "exceed",
+   "ids": ["upBars", "upPlan", "upNeed"]
+  }
+ ]
+}

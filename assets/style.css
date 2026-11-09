@@ -3433,3 +3433,47 @@ body .fld + .av-note,body .fld + .cb-note{margin-top:-6px}
   body.p-fd .grid{display:block}
   body.p-fd{padding-bottom:0}
 }
+
+/* ---- UNIT PRICE calculator (.p-up) — reuses .p-bmr result look, .dtable, .csel, the salary page's searchable currency .csel ---- */
+.p-up .sl-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:6px}
+.p-up .sl-head .card-h2{margin:0}
+.p-up .sl-cur{width:auto;min-width:110px;flex:0 0 auto}
+.p-up .sl-cur .csel-panel{left:auto;right:0;width:300px;max-width:86vw;max-height:min(380px,60vh)}
+.p-up .av-note,.p-up .cb-note{font-size:14px;font-weight:500;color:var(--ink-soft);margin:4px 0 8px;line-height:1.45}
+.p-up .cb-note{color:var(--muted);font-weight:400}
+.p-up .card{min-width:0}
+.p-up .res-big{font-size:clamp(34px,8vw,52px);overflow-wrap:anywhere}
+.p-up .res-big.up-long{font-size:26px}
+.p-up .mbar-vals b{font-size:20px;overflow-wrap:anywhere}
+.p-up .res-sub{overflow-wrap:anywhere}
+.p-up .dtable td:nth-child(n+2),.p-up .dtable th:nth-child(n+2){text-align:right}
+.p-up .dtable td,.p-up .dtable th{padding-left:6px;padding-right:6px}
+.p-up .dtable td{font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.p-up .up-row{border:1px solid var(--line);border-radius:12px;padding:12px 14px 4px;margin-bottom:12px;background:#FFFDF8}
+.p-up .up-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.p-up .up-t{font-size:14px;font-weight:700;color:var(--ink);overflow-wrap:anywhere}
+.p-up .up-head .x{background:none;border:0;color:var(--muted);cursor:pointer;font-size:20px;line-height:1;padding:2px 6px;border-radius:5px}
+.p-up .up-head .x:hover{color:#b23;background:#f7e9e9}
+.p-up .up-two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+.p-up .up-two > *{min-width:0}
+.p-up .up-cntw{display:block;min-width:0}
+.p-up .up-basis{display:flex;width:100%}
+.p-up .up-basis button{flex:1 1 0;min-width:0}
+.p-up .up-rn{margin:-4px 0 10px}
+.p-up .up-sech{font-size:14px;font-weight:600;color:var(--ink);margin:14px 0 8px}
+.p-up .up-sech span{font-weight:400;color:var(--muted)}
+.p-up .up-brow{margin-bottom:12px}
+.p-up .up-bt{display:flex;justify-content:space-between;gap:10px;font-size:14px;font-weight:600;color:var(--ink);margin-bottom:4px}
+.p-up .up-bn{min-width:0;overflow-wrap:anywhere}
+.p-up .up-bp{flex:0 0 auto;font-variant-numeric:tabular-nums}
+.p-up .up-bar{height:16px;border-radius:8px;background:#EFE7D8;overflow:hidden}
+.p-up .up-bar i{display:block;height:100%;border-radius:8px;background:#D9A24A}
+.p-up .up-brow.best .up-bar i{background:#37503F}
+.p-up .up-bv{font-size:14px;color:var(--muted);margin-top:3px}
+.p-up .up-best{display:inline-block;margin-left:6px;font-size:14px;font-weight:700;color:var(--amber-deep)}
+.p-up .up-strong td{font-weight:700;color:var(--ink)}
+.p-up .up-urow{cursor:pointer}
+.p-up .up-urow:hover{background:#FCF7EE}
+.p-up .up-urow.on{background:#F7EBD2}
+.p-up .up-urow.on td{color:var(--ink);font-weight:700}
+@media print{body.p-up .mbar{display:none!important}}

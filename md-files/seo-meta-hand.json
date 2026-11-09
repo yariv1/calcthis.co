@@ -186,6 +186,10 @@
     "t": "Overtime Calculator — Pay, Take-Home & No Tax on Overtime",
     "d": "Free overtime calculator: your hourly rate and hours give overtime pay, take-home after tax, California daily rules and the no-tax-on-overtime deduction."
   },
+  "/unit-price-calculator/": {
+    "t": "Unit Price Calculator — Compare Price per Ounce, lb & More",
+    "d": "Unit price calculator: compare any number of products by price per ounce, lb, gram, litre or item, find the best buy and the whole packs you need."
+  },
   "/realtor-commission-calculator/": {
     "t": "Realtor Commission Calculator — Net Proceeds & Agent Split",
     "d": "Realtor commission calculator: any two of home price, rate and commission, who pays, the agents’ split, closing costs and mortgage payoff for what you keep."

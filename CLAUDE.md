@@ -245,7 +245,7 @@ must be built from the article's actual units, every time, not pasted from a tem
 
 ## Project state
 
-- **Asset version:** v338 (live; `.assetver`)
+- **Asset version:** v339 (live; `.assetver`; unit price deployed, 101 calculators, 231 pages)
 - **Total pages:** 230 live (sitemap)
 - **Model:** Sonnet 5
 
@@ -349,6 +349,9 @@ Mortgage · Loan · Auto Loan · Overtime · Paycheck · Sales Tax · Tip
 Total live calculators: **89** (v322, + max heart rate, v321, + weight loss percentage, v320, + weight loss by date, v319, + bulking, + FFMI, + dog food, + BSA, + intermittent fasting, + A1C, GMI, dog age, cat age, calories burned x3, keto, net carb)
 
 ---
+
+## Last session addendum 35 (2026-11-09 #7, DEPLOYED v339): UNIT PRICE `/unit-price-calculator/`
+Engine `UNITPRICE-ENGINE` (`CalcThis.unitPriceEngine`: unit tables for weight, volume, count, length, area, time; paid = sale, then coupon, then tax; whole packs for an amount to buy), init `CalcThis.initUnitPriceCalc` (ids `up*`, block `UNITPRICE:BEGIN/END` at end of app.js), css `.p-up`, generator `md-files/gen-unitprice-page.js` (chains after realtor-commission), notes `md-files/calcthis-unitprice-research.md`. Any number of product rows (max 20), each: name, **"The price is for" toggle (The whole pack / One item)**, price, **"Size of one item"** + "Measured in" unit, "Items in pack" (hidden for One item, Count and Time), Go advanced = servings, sale %, coupon, tax, "Amount to buy" (whole packs). Count kind has NO unit dropdown (always items; dozen only under "Show price per"). Outputs: best buy headline, ranked bars, price in every unit table (click a row = switch unit), whole-packs table, one searchable currency picker `upCur` (per-row currency dropped: needs exchange rates). **User corrections: "Amount in pack" and "Measured in items/dozen" were confusing -> the toggle + "Size of one item" + dozen removed from inputs.** QA gate PASS (280 oracle runs), audit-silent ok, no-ping audit PASS, parity file passes, dup-check 1.0% vs discount. Not verified: real phone, other browsers, print, currency popup in a real browser. Bing manual submit + GSC queue still to do. NEXT: ask him (roadmap v2 order in `md-files/calcthis-roadmap-2026-11.md` §12).
 
 ## Last session addendum 34 (2026-11-08, DEPLOYED v336): SYMBOL SPACING + LABEL FIX
 One spacing rule for money and % everywhere (fields + results): symbol-only glyphs sit tight on either side; letter symbols (kr, CHF, zl) get one nbsp on either side. `CalcThis.fmtMoney` + FIELD SYMBOLS block. Label rewrite no longer reverts text pages write themselves (rest is re-read each sync, SYMS set of known symbols). Lesson: never use String.replace with a replacement containing a dollar sign in node -e (the dollar-quote pattern duplicated the file); use the Edit tool or a Write-d script.

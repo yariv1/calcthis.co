@@ -1,0 +1,52 @@
+{
+  "slug": "unit-price-calculator",
+  "bodyClass": "p-up",
+  "blocks": ["UNITPRICE"],
+  "result": { "big": "upBig", "body": "upBody", "hint": "upHint" },
+  "required": ["upPrice1", "upAmt1", "upPrice2", "upAmt2"],
+  "fill": [
+    ["click", "upClear"],
+    ["set", "upCur", "USD"],
+    ["set", "upKind", "weight"],
+    ["set", "upUnit1", "oz"],
+    ["set", "upUnit2", "oz"],
+    ["set", "upPrice1", "3.99"],
+    ["set", "upAmt1", "16"],
+    ["set", "upPrice2", "5.49"],
+    ["set", "upAmt2", "24"],
+    ["set", "upNeed", ""]
+  ],
+  "optionalSamples": {
+    "upName1": ["Brand A", "Tom & Jerry"],
+    "upCnt1": ["6", "2.5", "1,000"],
+    "upSrv1": ["8", "2.5"],
+    "upPct1": ["20", "100", "150"],
+    "upOff1": ["1", "100"],
+    "upTax1": ["8.5", "100", "101"],
+    "upNeed": ["32", "0.5", "1,000"]
+  },
+  "pools": {
+    "upPrice1": ["3.99", "0.5", "1,200.50", "99999999999"],
+    "upAmt1": ["16", "0.25", "1000"],
+    "upPrice2": ["5.49", "12", "0.01"],
+    "upAmt2": ["24", "500", "0.5"],
+    "upCnt1": ["6", "12"],
+    "upSrv1": ["8", "100"],
+    "upPct1": ["20", "50"],
+    "upOff1": ["1", "0.5"],
+    "upTax1": ["8.5", "20"],
+    "upNeed": ["32", "5", "100"]
+  },
+  "variants": [
+    [["click", "upAdd"], ["set", "upPrice3", "2.5"], ["set", "upAmt3", "1"], ["set", "upUnit3", "lb"]],
+    [["set", "upSrv1", "8"], ["set", "upPct1", "20"], ["set", "upOff1", "1"], ["set", "upTax1", "8.5"], ["set", "upNeed", "32"]],
+    [["set", "upKind", "volume"], ["set", "upUnit1", "ml"], ["set", "upUnit2", "ml"], ["set", "upPrice1", "4.20"], ["set", "upAmt1", "330"], ["set", "upCnt1", "6"], ["set", "upPrice2", "7.80"], ["set", "upAmt2", "330"], ["set", "upCnt2", "12"]],
+    [["set", "upKind", "count"], ["set", "upPrice1", "3"], ["set", "upAmt1", "12"], ["set", "upPrice2", "5"], ["set", "upAmt2", "2"]],
+    [["set", "upKind", "time"], ["set", "upPrice1", "120"], ["set", "upAmt1", "1"], ["set", "upUnit1", "year"], ["set", "upPrice2", "10"], ["set", "upAmt2", "1"], ["set", "upUnit2", "month"]],
+    [["click", "upBasisItem1"], ["set", "upCnt1", "6"]],
+    [["set", "upCur", "JPY"]],
+    [["set", "upPer", "lb"]]
+  ],
+  "scrollTo": "upUnits",
+  "errorState": [["set", "upPrice1", "abc"]]
+}
