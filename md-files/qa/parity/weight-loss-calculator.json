@@ -1,0 +1,105 @@
+{
+ "slug": "weight-loss-calculator",
+ "research": "md-files/calcthis-weightloss-research.md",
+ "competitors": [
+  {
+   "name": "FatCalc bwp",
+   "url": "https://fatcalc.com/bwp",
+   "openedLive": true,
+   "date": "2026-11-06",
+   "inputs": [
+    "Lose / Maintain / Gain",
+    "sex, age",
+    "activity 1.4-2.3",
+    "imperial/metric, height",
+    "start weight",
+    "goal weight",
+    "start date",
+    "target date",
+    "1,200/1,500 floor moves the date"
+   ]
+  },
+  {
+   "name": "Alma timeline",
+   "url": "https://www.almalife.com/calculate/timeline",
+   "openedLive": true,
+   "date": "2026-11-06",
+   "inputs": [
+    "plan by goal date or weekly pace",
+    "lb/kg, current and goal weight",
+    "start date",
+    "goal date",
+    "weekly pace + slower timeline comparison"
+   ]
+  }
+ ],
+ "features": [
+  {
+   "covers": [
+    "FatCalc bwp: sex, age",
+    "FatCalc bwp: activity 1.4-2.3",
+    "FatCalc bwp: imperial/metric, height",
+    "FatCalc bwp: start weight",
+    "FatCalc bwp: goal weight",
+    "FatCalc bwp: target date",
+    "FatCalc bwp: 1,200/1,500 floor moves the date"
+   ],
+   "status": "match",
+   "ids": [
+    "wlSex",
+    "wlAge",
+    "wlAct",
+    "wlHU",
+    "wlH",
+    "wlW",
+    "wlG",
+    "wlDate",
+    "wlFlags"
+   ]
+  },
+  {
+   "covers": [
+    "FatCalc bwp: Lose / Maintain / Gain"
+   ],
+   "status": "match",
+   "ids": [
+    "wlGoal"
+   ]
+  },
+  {
+   "covers": [
+    "FatCalc bwp: start date"
+   ],
+   "status": "match",
+   "ids": [
+    "wlStart"
+   ]
+  },
+  {
+   "covers": [
+    "Alma timeline: plan by goal date or weekly pace",
+    "Alma timeline: lb/kg, current and goal weight",
+    "Alma timeline: goal date",
+    "Alma timeline: weekly pace + slower timeline comparison"
+   ],
+   "status": "match",
+   "ids": [
+    "wlPlan",
+    "wlPace",
+    "wlW",
+    "wlG",
+    "wlDate",
+    "wlByDate"
+   ]
+  },
+  {
+   "covers": [
+    "Alma timeline: start date"
+   ],
+   "status": "match",
+   "ids": [
+    "wlStart"
+   ]
+  }
+ ]
+}

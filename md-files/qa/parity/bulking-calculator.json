@@ -1,0 +1,163 @@
+{
+ "slug": "bulking-calculator",
+ "research": "md-files/calcthis-bulking-research.md",
+ "competitors": [
+  {
+   "name": "ProteinCalc",
+   "url": "https://myproteincalc.com/bulking-calculator",
+   "openedLive": true,
+   "date": "2026-11-06",
+   "inputs": [
+    "sex, age, weight, height",
+    "activity (5)",
+    "training experience (3)",
+    "custom surplus",
+    "maintenance + lean vs moderate bulk",
+    "macros",
+    "muscle gain projection per month"
+   ]
+  },
+  {
+   "name": "Coachway",
+   "url": "https://coachway.io/tools/calorie-surplus-calculator",
+   "openedLive": true,
+   "date": "2026-11-06",
+   "inputs": [
+    "units",
+    "sex, age, height, weight, activity",
+    "surplus size lean/standard/aggressive",
+    "optional goal weight",
+    "weekly gain table",
+    "protein 1.6-2.2 g/kg"
+   ]
+  },
+  {
+   "name": "GetHealthyCalculators lean bulk",
+   "url": "https://gethealthycalculators.com/",
+   "openedLive": true,
+   "date": "2026-11-06",
+   "inputs": [
+    "experience-based surplus 300/200/150",
+    "optional body fat",
+    "protein / fat 25% / carbs rest"
+   ]
+  },
+  {
+   "name": "Gravitus",
+   "url": "https://gravitus.com/tools/bulking-calculator",
+   "openedLive": true,
+   "date": "2026-11-06",
+   "inputs": [
+    "basic vs advanced (Katch-McArdle)",
+    "weekly weight-gain goal",
+    "fat % of calories",
+    "calories + macros"
+   ]
+  }
+ ],
+ "features": [
+  {
+   "covers": [
+    "ProteinCalc: sex, age, weight, height",
+    "ProteinCalc: activity (5)",
+    "ProteinCalc: custom surplus",
+    "ProteinCalc: maintenance + lean vs moderate bulk",
+    "ProteinCalc: macros"
+   ],
+   "status": "match",
+   "ids": [
+    "bkSex",
+    "bkAge",
+    "bkW",
+    "bkH",
+    "bkAct",
+    "bkS",
+    "bkEq",
+    "bkMac"
+   ]
+  },
+  {
+   "covers": [
+    "ProteinCalc: training experience (3)"
+   ],
+   "status": "match",
+   "ids": [
+    "bkExp"
+   ]
+  },
+  {
+   "covers": [
+    "ProteinCalc: muscle gain projection per month"
+   ],
+   "status": "match",
+   "ids": [
+    "bkRules"
+   ]
+  },
+  {
+   "covers": [
+    "Coachway: units",
+    "Coachway: sex, age, height, weight, activity",
+    "Coachway: optional goal weight",
+    "Coachway: weekly gain table",
+    "Coachway: protein 1.6-2.2 g/kg"
+   ],
+   "status": "match",
+   "ids": [
+    "bkHU",
+    "bkWU",
+    "bkSex",
+    "bkG",
+    "bkLadder",
+    "bkMac"
+   ]
+  },
+  {
+   "covers": [
+    "Coachway: surplus size lean/standard/aggressive"
+   ],
+   "status": "match",
+   "ids": [
+    "bkChips",
+    "bkKind"
+   ]
+  },
+  {
+   "covers": [
+    "GetHealthyCalculators lean bulk: experience-based surplus 300/200/150"
+   ],
+   "status": "match",
+   "ids": [
+    "bkRules"
+   ]
+  },
+  {
+   "covers": [
+    "GetHealthyCalculators lean bulk: optional body fat",
+    "GetHealthyCalculators lean bulk: protein / fat 25% / carbs rest"
+   ],
+   "status": "match",
+   "ids": [
+    "bkBf",
+    "bkPg",
+    "bkFg",
+    "bkMac"
+   ]
+  },
+  {
+   "covers": [
+    "Gravitus: basic vs advanced (Katch-McArdle)",
+    "Gravitus: weekly weight-gain goal",
+    "Gravitus: fat % of calories",
+    "Gravitus: calories + macros"
+   ],
+   "status": "match",
+   "ids": [
+    "bkBf",
+    "bkS",
+    "bkFg",
+    "bkMac"
+   ]
+  }
+ ]
+}

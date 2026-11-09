@@ -1,0 +1,119 @@
+{
+ "slug": "commission-calculator",
+ "research": "md-files/calcthis-commission-research.md",
+ "competitors": [
+  {
+   "name": "calculator.net commission",
+   "url": "https://www.calculator.net/commission-calculator.html",
+   "openedLive": true,
+   "date": "2026-11-08",
+   "inputs": [
+    "sales price, commission rate, commission (any two)",
+    "tiered table From/To/% or $",
+    "base commission",
+    "varies with price"
+   ]
+  },
+  {
+   "name": "Omnicalculator commission",
+   "url": "https://www.omnicalculator.com/finance/commission",
+   "openedLive": true,
+   "date": "2026-11-08",
+   "inputs": [
+    "sale price, commission %, commission amount",
+    "seller pays / buyer pays",
+    "currency (21)"
+   ]
+  },
+  {
+   "name": "Yotpo commission",
+   "url": "https://www.yotpo.com/tools/commission-calculator/",
+   "openedLive": true,
+   "date": "2026-11-08",
+   "inputs": [
+    "currency",
+    "global fee %",
+    "fixed deduction",
+    "list of sale items (description, amount, rate)",
+    "total sales, gross, fees, net commission"
+   ]
+  },
+  {
+   "name": "GigaCalculator commission",
+   "url": "https://www.gigacalculator.com/calculators/commission-calculator.php",
+   "openedLive": true,
+   "date": "2026-11-08",
+   "inputs": [
+    "mode sales commission / realtor",
+    "sales, commission rate or amount",
+    "who pays seller/buyer/both"
+   ]
+  }
+ ],
+ "features": [
+  {
+   "covers": [
+    "calculator.net commission: sales price, commission rate, commission (any two)",
+    "calculator.net commission: tiered table From/To/% or $",
+    "calculator.net commission: base commission",
+    "calculator.net commission: varies with price"
+   ],
+   "status": "match",
+   "ids": [
+    "cmSales",
+    "cmRate",
+    "cmComm",
+    "cmTiers",
+    "cmBase",
+    "cmPlan"
+   ]
+  },
+  {
+   "covers": [
+    "Omnicalculator commission: sale price, commission %, commission amount",
+    "Omnicalculator commission: seller pays / buyer pays",
+    "Omnicalculator commission: currency (21)"
+   ],
+   "status": "match",
+   "ids": [
+    "cmSales",
+    "cmRate",
+    "cmComm",
+    "cmWho",
+    "cmCur"
+   ]
+  },
+  {
+   "covers": [
+    "Yotpo commission: currency",
+    "Yotpo commission: global fee %",
+    "Yotpo commission: fixed deduction",
+    "Yotpo commission: list of sale items (description, amount, rate)",
+    "Yotpo commission: total sales, gross, fees, net commission"
+   ],
+   "status": "match",
+   "ids": [
+    "cmCur",
+    "cmFee",
+    "cmFix",
+    "cmItems",
+    "cmMore",
+    "cmBig"
+   ]
+  },
+  {
+   "covers": [
+    "GigaCalculator commission: mode sales commission / realtor",
+    "GigaCalculator commission: sales, commission rate or amount",
+    "GigaCalculator commission: who pays seller/buyer/both"
+   ],
+   "status": "match",
+   "ids": [
+    "cmPlan",
+    "cmSales",
+    "cmRate",
+    "cmWho"
+   ]
+  }
+ ]
+}

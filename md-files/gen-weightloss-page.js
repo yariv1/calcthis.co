@@ -102,9 +102,11 @@ function build() {
           ${tfld('wlMaint', 'Calories you burn', 'kcal a day · your maintenance', 'e.g. 2100', null, 'numeric')}
           <p class="av-note" style="margin:0 0 8px">The calories you burn in a day to stay at your weight (also called maintenance), for example from tracking your food and weight for a few weeks. It is used as given; weight is still needed.</p>
         </div>
+        ${seg('wlGoal', 'Goal', [['lose', 'Lose'], ['maintain', 'Maintain'], ['gain', 'Gain']], 'lose')}
         ${seg('wlWU', 'Weight units', [['kg', 'kg'], ['lb', 'lb'], ['st', 'st']], 'lb')}
         ${tfld('wlW', 'Current weight', 'lb', 'e.g. 185', 'wlWL')}
         ${tfld('wlG', 'Goal weight', 'lb', 'e.g. 165', 'wlGL')}
+        <div id="wlGoalBox">
         <div class="proj-sep"></div>
         <div class="ctl-row" style="display:block"><span class="ctl-lab" style="display:block;margin-bottom:6px">Plan by</span><div class="modeseg" id="wlPlan" role="group" aria-label="Plan by"><button class="on" type="button" data-v="date">A target date</button><button type="button" data-v="pace">A weekly pace</button></div></div>
         <div id="wlDateWrap" style="margin-top:14px">
@@ -115,11 +117,14 @@ function build() {
         </div>
         <div class="chips" id="wlChips"></div>
         <p class="av-note" id="wlPaceNote" style="display:none;margin:8px 0 8px">Leave it empty to start at 1 lb (0.5 kg) a week, the gentle end of the CDC’s 1 to 2 pounds.</p>
+        </div>
         <div class="res-hint" id="wlHint" style="display:none;text-align:left;margin:4px 0 8px"></div>
         <div id="wlAdvIn" style="display:none">
           <div class="proj-sep"></div>
           <div class="ctl-row" style="display:block"><span class="ctl-lab" style="display:block;margin-bottom:6px">Headline estimate</span><div class="modeseg" id="wlModel" role="group" aria-label="Headline estimate"><button class="on" type="button" data-v="simple">Simple rule</button><button type="button" data-v="real">Realistic</button></div></div>
           <p class="av-note" style="margin:0 0 8px">Both are always shown below. Realistic allows for burning less as you lose, so it starts lower.</p>
+          <label class="fld" for="wlStart"><span class="lab">Start date <span class="unit">optional · today if empty</span></span><div class="inp"><input id="wlStart" type="text" autocomplete="off" placeholder="Pick a date"></div></label>
+          <p class="av-note" id="wlStartNote">Starting later? Pick the day you begin. Until then you eat what you burn, and the plan runs from that day to your target date.</p>
           ${tfld('wlBf', 'Body fat', '% · optional, uses Katch-McArdle', 'e.g. 30')}
         </div>
         <div class="add-row split" style="margin-top:16px">
@@ -139,6 +144,7 @@ function build() {
           <p class="res-tip adv-tip" id="wlTip"></p>
           <div id="wlFlags"></div>
           <div id="wlRows"></div>
+          <div id="wlLoseOnly">
           <p class="bm-h">What you eat and what you burn</p>
           <div id="wlBar"></div>
           <p class="bm-h">Weight over time</p>
@@ -153,6 +159,7 @@ function build() {
             <p class="bm-h">Calories for other target dates</p>
             <table class="dtable" id="wlByDate"></table>
             <p class="cb-note">Click a row to plan for that date.</p>
+          </div>
           </div>
           <p class="cb-note">An estimate for adults, not medical advice. The 7,700 kcal per kg rule is a simplification, and how fast you lose varies from person to person.</p>
         </div>`;

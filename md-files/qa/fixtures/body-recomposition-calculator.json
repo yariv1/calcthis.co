@@ -15,6 +15,7 @@
     ["set", "rcW", "154"],
     ["set", "rcBf", ""],
     ["set", "rcMaint", ""],
+    ["set", "rcEx", ""],
     ["set", "rcTbf", ""],
     ["set", "rcWa", ""],
     ["set", "rcNe", ""],
@@ -23,6 +24,7 @@
   "optionalSamples": {
     "rcBf": ["22", "35"],
     "rcMaint": ["2200", "1500"],
+    "rcEx": ["1500", "700"],
     "rcTbf": ["18", "25"],
     "rcWa": ["34", "86"],
     "rcNe": ["14", "36"],

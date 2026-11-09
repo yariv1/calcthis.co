@@ -151,6 +151,9 @@ function build() {
           <p class="bm-h">Macros</p>
           <table class="dtable" id="bkMac"></table>
           <div id="bkMacNote"></div>
+          <p class="bm-h">What other bulking calculators assume</p>
+          <table class="dtable" id="bkRules"></table>
+          <p class="cb-note">Rules of thumb from GetHealthyCalculators (surplus by experience) and ProteinCalc (muscle gain per month). Neither cites a study, so they are not used for the numbers above, which follow the Iraki 2019 review. Not verified by us.</p>
           <p class="cb-note">An estimate for adults, not medical advice. The surplus ranges and macro ranges come from a published review; the 7,700 kcal per kg rule is a simplification, and the calculator does not estimate how much of the gain is muscle.</p>
         </div>`;
 

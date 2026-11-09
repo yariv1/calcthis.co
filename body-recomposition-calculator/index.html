@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/datepicker.min.css">
-<link rel="stylesheet" href="/assets/style.css?v=337">
+<link rel="stylesheet" href="/assets/style.css?v=338">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
 <script>
@@ -405,6 +405,12 @@
           <div class="proj-sep"></div>
           <label class="fld" for="rcMaint"><span class="lab">Calories you burn <span class="unit">kcal a day · optional</span></span><div class="inp"><input id="rcMaint" type="text" inputmode="numeric" autocomplete="off" placeholder="e.g. 2200"></div></label>
           <p class="av-note" id="rcMaintNote"></p>
+          <label class="fld"><span class="lab">Anything that changes your needs</span><div class="csel" id="rcHealth" data-value="none"><button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false"><span class="csel-val">None of these</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="csel-panel" role="listbox"><button type="button" class="csel-opt on" role="option" aria-selected="true" data-value="none">None of these</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="preg">I am pregnant</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="bf">I am breastfeeding</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="glp">I take a GLP-1 medicine</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="kid">I have kidney disease</button></div></div></label>
+          <p class="av-note" id="rcHealthNote"></p>
+          <label class="fld"><span class="lab">Training experience</span><div class="csel" id="rcExp" data-value="none"><button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false"><span class="csel-val">Not set</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="csel-panel" role="listbox"><button type="button" class="csel-opt on" role="option" aria-selected="true" data-value="none">Not set</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="beg">Beginner — under 1 year of lifting</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="inter">Intermediate — 1 to 3 years</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="adv">Advanced — 3 to 7 years</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="elite">Elite — over 7 years</button></div></div></label>
+          <p class="av-note" id="rcExpNote"></p>
+          <label class="fld" for="rcEx"><span class="lab">Extra exercise <span class="unit">kcal a week · optional</span></span><div class="inp"><input id="rcEx" type="text" inputmode="numeric" autocomplete="off" placeholder="e.g. 1500"></div></label>
+          <p class="av-note" id="rcExNote"></p>
           <label class="fld" for="rcTbf"><span class="lab">Target body fat <span class="unit">% · optional</span></span><div class="inp"><input id="rcTbf" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 18"></div></label>
           <p class="av-note" id="rcTbfNote" style="display:none"></p>
           <div class="ctl-row" style="display:block"><span class="ctl-lab" style="display:block;margin-bottom:6px">Strength sessions a week</span><div class="seg" id="rcDays" role="group" aria-label="Strength sessions a week"><button type="button" data-v="2">2</button><button class="on" type="button" data-v="3">3</button><button type="button" data-v="4">4</button><button type="button" data-v="5">5</button><button type="button" data-v="6">6</button></div></div>
@@ -441,6 +447,14 @@
           <p class="cb-note">*The scale change is the simple 7,700 kcal per kg rule for fat only; muscle you gain would hide part of it, so also measure your waist, take photos and track the weights you lift. The three focuses are this page’s own presets, not from a study.</p>
           <p class="bm-h">Your pick, per meal</p>
           <table class="dtable" id="rcMac"></table>
+          <p class="bm-h">Training days and rest days</p>
+          <table class="dtable" id="rcCycle"></table>
+          <p class="cb-note" id="rcCycleNote"></p>
+          <div id="rcPotWrap" style="display:none">
+            <p class="bm-h">Expected muscle gain</p>
+            <table class="dtable" id="rcPot"></table>
+            <p class="cb-note" id="rcPotNote"></p>
+          </div>
           <div id="rcFatWrap" style="display:none">
             <p class="bm-h">Fat to lose to reach your target body fat</p>
             <div id="rcFatRows"></div>
@@ -801,7 +815,7 @@
 
 </div>
 
-<script src="/assets/app.js?v=337"></script>
+<script src="/assets/app.js?v=338"></script>
 <script>CalcThis.initRecompCalc();</script>
 <script src="/feedback.js" defer></script>
 </body>

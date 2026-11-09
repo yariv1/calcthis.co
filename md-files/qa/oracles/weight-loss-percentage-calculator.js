@@ -38,16 +38,27 @@ module.exports = async function (ctx) {
     const trs = JSON.parse(await ctx.eval('JSON.stringify([...document.querySelectorAll("#wpTable tbody tr")].map(r=>[r.children[0].textContent,r.children[1].textContent,r.children[2].textContent]))'));
     if (trs.length !== 5) fails.push('table rows ' + trs.length + ' ' + tag);
     [3, 5, 10, 15, 20].forEach((pc, k) => { const l = S * pc / 100; if (!trs[k] || trs[k][0] !== pc + '%' || trs[k][1] !== fmtW(l, u) || trs[k][2] !== fmtW(S - l, u)) fails.push('table ' + pc + '% ' + JSON.stringify(trs[k]) + ' expected ' + fmtW(l, u) + ' / ' + fmtW(S - l, u) + ' ' + tag); });
+    let Gv = null;
     if (R() < 0.4) {
       const gk = C - (1 + R() * 0.7 * (C - 30)), gt = text(gk, u), G = back(gt, u);
       await ctx.set('wpG', gt);
       if (G >= 30 && G < S) {
+        Gv = G;
         const rows2 = await rowsOf(), done = L / (S - G) * 100, want = done >= 100 ? 'goal reached' : (Math.round(done * 10) / 10).toFixed(1) + '%', v = find(rows2, 'Of the way to your goal');
         if (find(rows2, 'Goal weight') === null || find(rows2, 'Goal weight').indexOf(fmtW(G, u)) !== 0) fails.push('goal row ' + find(rows2, 'Goal weight') + ' ' + tag);
         if (v === null || v.indexOf(want) !== 0) fails.push('of the way ' + v + ' expected ' + want + ' ' + tag);
       }
     }
     if (adv) {
+      const wk0 = 1 + Math.floor(R() * 52);
+      await ctx.set('wpT', String(wk0));
+      if (Gv === null) { const h = await ctx.text('wpHint'); if (h.indexOf('Type a goal weight first') < 0) fails.push('weeks without a goal: no hint ' + h + ' ' + tag); }
+      else if (C > Gv) {
+        const rowsT = await rowsOf(), vT = find(rowsT, 'To reach your goal in'), need = (C - Gv) / wk0, pu0 = u === 'kg' ? 'kg' : 'lb', nd = pu0 === 'kg' ? need : need * LB;
+        if (vT === null || vT.indexOf((Math.round(nd * 100) / 100).toFixed(2) + ' ' + pu0 + ' a week') !== 0) fails.push('need a week ' + vT + ' expected ' + (Math.round(nd * 100) / 100).toFixed(2) + ' ' + pu0 + ' ' + tag);
+        if (vT !== null && vT.indexOf((Math.round(need / S * 10000) / 100).toFixed(2) + '% of your starting weight a week') < 0) fails.push('need percent ' + vT + ' ' + tag);
+      }
+      await ctx.set('wpT', '');
       const days = 7 + Math.round(R() * 200), d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() - days);
       await ctx.set('wpD', d.getDate() + ' ' + MONF[d.getMonth()] + ' ' + d.getFullYear());
       const rows3 = await rowsOf(), v = find(rows3, 'Average loss a week'), pu = u === 'kg' ? 'kg' : 'lb', wk = L / (days / 7), wkd = pu === 'kg' ? wk : wk * LB;

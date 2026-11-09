@@ -11,6 +11,7 @@
     ["set", "chBedIn", ""],
     ["set", "chHLc", ""],
     ["set", "chTar", ""],
+    ["set", "chW", ""],
     ["set", "chD1", "coffee"],
     ["set", "chM1", ""],
     ["seg", "chU1", "s"],
@@ -20,7 +21,8 @@
   "optionalSamples": {
     "chBedIn": ["2230", "0615"],
     "chHLc": ["6", "30"],
-    "chTar": ["25"]
+    "chTar": ["25"],
+    "chW": ["70", "150"]
   },
   "variants": [
     [["set", "chBedIn", "1030"]],

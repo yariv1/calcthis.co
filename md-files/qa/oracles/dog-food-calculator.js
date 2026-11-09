@@ -25,5 +25,8 @@ module.exports = async function (ctx) {
   await ctx.set('fdB', ''); await ctx.set('fdShare', '30'); { const h = await ctx.text('fdHint'); if (!/second food.s calories first/.test(h)) fails.push('share without a second food must explain, got "' + h + '"'); }
   await ctx.set('fdShare', ''); await ctx.set('fdB', '350'); { const h = await ctx.text('fdHint'); if (!/share of calories/.test(h)) fails.push('second food without a share must explain, got "' + h + '"'); }
   await ctx.set('fdB', '');
+  /* lactation type (Pet Nutrition Alliance 2-6 x RER, middle 4.0) */
+  await ctx.fill(); { const open = await ctx.eval('document.getElementById("fdAdvIn").style.display'); if (open === 'none') await ctx.click('fdAdvBtn'); }
+  await ctx.seg('fdWU', 'kg'); await ctx.set('fdW', '20'); await ctx.set('fdType', 'lact'); { const big = await ctx.text('fdBig'), want = grp(70 * Math.pow(20, 0.75) * 4.0) + ' kcal'; if (big.indexOf(want) !== 0) fails.push('lactation headline ' + big + ' expected ' + want); } await ctx.set('fdType', 'auto');
   return { runs, fails: fails.slice(0, 25) };
 };

@@ -1,0 +1,153 @@
+{
+ "slug": "ffmi-calculator",
+ "research": "md-files/calcthis-ffmi-research.md",
+ "competitors": [
+  {
+   "name": "ffmicalculator.org",
+   "url": "https://ffmicalculator.org/",
+   "openedLive": true,
+   "date": "2026-11-06",
+   "inputs": [
+    "imperial/metric",
+    "height ft+in",
+    "weight",
+    "body fat %",
+    "FFM, fat mass, FFMI, normalized FFMI",
+    "FFMI scale strip",
+    "men and women tables"
+   ]
+  },
+  {
+   "name": "Omnicalculator",
+   "url": "https://www.omnicalculator.com/health/ffmi",
+   "openedLive": true,
+   "date": "2026-11-06",
+   "inputs": [
+    "sex",
+    "height in 8 units",
+    "weight in 7 units",
+    "body fat",
+    "interpretation tables men and women"
+   ]
+  },
+  {
+   "name": "Menno Henselmans",
+   "url": "https://mennohenselmans.com/ffmi-calculator/",
+   "openedLive": true,
+   "date": "2026-11-06",
+   "inputs": [
+    "natural potential (Casey Butt tape-measure formulas)",
+    "natty-or-not probability",
+    "reference ladder of FFMI values",
+    "sex and units"
+   ]
+  },
+  {
+   "name": "Built With Science",
+   "url": "https://builtwithscience.com/",
+   "openedLive": true,
+   "date": "2026-11-06",
+   "inputs": [
+    "percentile vs the American population",
+    "wizard with roadmap"
+   ]
+  }
+ ],
+ "features": [
+  {
+   "covers": [
+    "ffmicalculator.org: imperial/metric",
+    "ffmicalculator.org: height ft+in",
+    "ffmicalculator.org: weight",
+    "ffmicalculator.org: body fat %",
+    "ffmicalculator.org: FFM, fat mass, FFMI, normalized FFMI",
+    "ffmicalculator.org: FFMI scale strip"
+   ],
+   "status": "match",
+   "ids": [
+    "ffHU",
+    "ffH",
+    "ffW",
+    "ffBf",
+    "ffBig",
+    "ffScale"
+   ]
+  },
+  {
+   "covers": [
+    "ffmicalculator.org: men and women tables"
+   ],
+   "status": "match",
+   "ids": [
+    "ffRef",
+    "ffScale"
+   ]
+  },
+  {
+   "covers": [
+    "Omnicalculator: sex",
+    "Omnicalculator: height in 8 units",
+    "Omnicalculator: weight in 7 units",
+    "Omnicalculator: body fat",
+    "Omnicalculator: interpretation tables men and women"
+   ],
+   "status": "match",
+   "ids": [
+    "ffSex",
+    "ffH",
+    "ffW",
+    "ffBf",
+    "ffRef"
+   ]
+  },
+  {
+   "covers": [
+    "Menno Henselmans: reference ladder of FFMI values",
+    "Menno Henselmans: sex and units"
+   ],
+   "status": "match",
+   "ids": [
+    "ffRef",
+    "ffSex",
+    "ffHU"
+   ]
+  },
+  {
+   "covers": [
+    "Menno Henselmans: natural potential (Casey Butt tape-measure formulas)"
+   ],
+   "status": "match",
+   "ids": [
+    "ffPot"
+   ]
+  },
+  {
+   "covers": [
+    "Menno Henselmans: natty-or-not probability"
+   ],
+   "status": "match",
+   "ids": [
+    "ffOdds"
+   ]
+  },
+  {
+   "covers": [
+    "Built With Science: percentile vs the American population"
+   ],
+   "status": "match",
+   "ids": [
+    "ffOdds"
+   ]
+  },
+  {
+   "covers": [
+    "Built With Science: wizard with roadmap"
+   ],
+   "status": "match",
+   "ids": [
+    "ffPot",
+    "ffAdv"
+   ]
+  }
+ ]
+}

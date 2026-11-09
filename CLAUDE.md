@@ -135,6 +135,11 @@ Every new calculator follows this exact order, no skipping or reordering:
 
 Do not fold steps together, skip the report, or start building before approval.
 
+## ⛔ HARD RULE — COMPETITOR PARITY IS A MECHANICAL GATE (user, 2026-11-09: "we cant fall short from our competitors ... its a gate you cant pass")
+
+Triggered when the unit price research report first dropped Inch Calculator's Time tab without asking. Now enforced by code (`md-files/qa/parity.js`, called from `hash.js` check(), so `build.js`, the Stop hook and the PreToolUse hook (commit / push / node build.js) all block):
+every gated calculator needs `md-files/qa/parity/<slug>.json` — >= 2 competitors opened LIVE (url + date + `openedLive:true`), EVERY competitor input/mode/output listed as a string, each mapped to a feature (`match` / `exceed` with real element ids that exist in the page, or `dropped` with the user's QUOTED sign-off + date). An unmapped competitor input, a missing id, or a drop without sign-off fails the gate. `scaffold.js` writes the starter. AUDIT 2026-11-09 (md-files/qa/build-parity-audit.js, competitor lists from the research mds + live opens): ALL 17 pages now have a passing parity file; md-files/qa/parity-legacy.json is EMPTY. Fixes built: markup copy, wl% weeks-to-goal, fiber 6th activity + typical intake, recomp (extra exercise, health flags, training/rest days, experience + 12-week muscle gain), dog food (print, lactation, name), weight loss (start date, lose/maintain/gain), FFMI (potential + rank in Trexler sample), bulking (experience rules table), caffeine half life (metabolizer presets, biggest contributor, weight + peak). Numbers taken from competitors are labelled on the page as not verified by us. SKIPPED with his quoted sign-off (2026-11-09, health numbers I cannot verify): vitamin D serum/dose features, creatine activity/goal/HCl/hydration inputs, fiber goal chips + ramp-up advice. Build more: nothing; re-audit any new competitor feature at the next build.
+
 ## ⛔ HARD RULE — NEVER SHIP A CALCULATOR WITH FEWER INPUTS THAN COMPETITORS
 
 Full rule: `md-files/calcthis-workflow-rules.md` Rule 8.5. Two parts, both mandatory:

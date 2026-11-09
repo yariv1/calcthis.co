@@ -1,0 +1,151 @@
+{
+ "slug": "discount-calculator",
+ "research": "md-files/calcthis-discount-research.md",
+ "competitors": [
+  {
+   "name": "calculator.net percent off",
+   "url": "https://www.calculator.net/percent-off-calculator.html",
+   "openedLive": true,
+   "date": "2026-11-08",
+   "inputs": [
+    "original price, percent off, final price, saved (any two)",
+    "stackable additional discount"
+   ]
+  },
+  {
+   "name": "Omnicalculator discount",
+   "url": "https://www.omnicalculator.com/finance/discount",
+   "openedLive": true,
+   "date": "2026-11-08",
+   "inputs": [
+    "10 deal types (% off, 2nd/3rd product, fixed, 2 for 1, 3 for 2, 4 for 3, double, triple, multiple units)",
+    "original price, discount, tax included yes/no",
+    "currency (21)"
+   ]
+  },
+  {
+   "name": "Omnicalculator percent off",
+   "url": "https://www.omnicalculator.com/finance/percent-off",
+   "openedLive": true,
+   "date": "2026-11-08",
+   "inputs": [
+    "original price, percent off",
+    "second stackable percent off",
+    "sales tax"
+   ]
+  },
+  {
+   "name": "GigaCalculator discount",
+   "url": "https://www.gigacalculator.com/calculators/discount-calculator.php",
+   "openedLive": true,
+   "date": "2026-11-08",
+   "inputs": [
+    "type (% off, 2nd/3rd product, fixed, 2 for 1, 3 for 2)",
+    "original price, discount"
+   ]
+  },
+  {
+   "name": "miniwebtool discount",
+   "url": "https://miniwebtool.com/discount-calculator/",
+   "openedLive": true,
+   "date": "2026-11-08",
+   "inputs": [
+    "mode simple/stacked/buy X get Y free",
+    "quantity",
+    "percent or fixed value",
+    "sales tax %",
+    "presets 20/25/30/50%, 20%+10%, B1G1, B2G1",
+    "pie chart pay vs save",
+    "receipt-style steps"
+   ]
+  }
+ ],
+ "features": [
+  {
+   "covers": [
+    "calculator.net percent off: original price, percent off, final price, saved (any two)",
+    "calculator.net percent off: stackable additional discount"
+   ],
+   "status": "match",
+   "ids": [
+    "dcOrig",
+    "dcPct",
+    "dcFinal",
+    "dcSave",
+    "dcRows"
+   ]
+  },
+  {
+   "covers": [
+    "Omnicalculator discount: 10 deal types (% off, 2nd/3rd product, fixed, 2 for 1, 3 for 2, 4 for 3, double, triple, multiple units)",
+    "Omnicalculator discount: original price, discount, tax included yes/no",
+    "Omnicalculator discount: currency (21)"
+   ],
+   "status": "match",
+   "ids": [
+    "dcOffers",
+    "dcOffAdd",
+    "dcRows",
+    "dcOrig",
+    "dcPct",
+    "dcTaxMode",
+    "dcCur",
+    "dcQty"
+   ]
+  },
+  {
+   "covers": [
+    "Omnicalculator percent off: original price, percent off",
+    "Omnicalculator percent off: second stackable percent off",
+    "Omnicalculator percent off: sales tax"
+   ],
+   "status": "match",
+   "ids": [
+    "dcOrig",
+    "dcPct",
+    "dcRowAdd",
+    "dcTax"
+   ]
+  },
+  {
+   "covers": [
+    "GigaCalculator discount: type (% off, 2nd/3rd product, fixed, 2 for 1, 3 for 2)",
+    "GigaCalculator discount: original price, discount"
+   ],
+   "status": "match",
+   "ids": [
+    "dcOffers",
+    "dcOrig",
+    "dcPct"
+   ]
+  },
+  {
+   "covers": [
+    "miniwebtool discount: mode simple/stacked/buy X get Y free",
+    "miniwebtool discount: quantity",
+    "miniwebtool discount: percent or fixed value",
+    "miniwebtool discount: sales tax %",
+    "miniwebtool discount: presets 20/25/30/50%, 20%+10%, B1G1, B2G1",
+    "miniwebtool discount: receipt-style steps"
+   ],
+   "status": "match",
+   "ids": [
+    "dcRows",
+    "dcOffers",
+    "dcQty",
+    "dcTax",
+    "dcLad",
+    "dcStep"
+   ]
+  },
+  {
+   "covers": [
+    "miniwebtool discount: pie chart pay vs save"
+   ],
+   "status": "match",
+   "ids": [
+    "dcBars"
+   ]
+  }
+ ]
+}

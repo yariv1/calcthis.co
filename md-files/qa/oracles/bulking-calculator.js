@@ -45,5 +45,14 @@ module.exports = async function (ctx) {
       }
     }
   }
+  /* rules-of-thumb table by experience */
+  await ctx.fill();
+  for (const [v, want] of [['beg', ['+300 kcal', '0.75\u20131.0 kg']], ['inter', ['+200 kcal', '0.4\u20130.6 kg']], ['adv', ['+150 kcal', '0.1\u20130.3 kg']]]) {
+    await ctx.seg('bkExp', v);
+    const rows = JSON.parse(await ctx.eval('JSON.stringify([...document.querySelectorAll("#bkRules tbody tr")].map(r=>[r.className,...[...r.children].map(c=>c.textContent.replace(/\\s+/g," ").trim())]))'));
+    const idx = ['beg', 'inter', 'adv'].indexOf(v);
+    if (rows.length !== 3 || rows[idx][0] !== 'cur' || rows[idx][2] !== want[0] || rows[idx][3] !== want[1]) fails.push('rules table ' + v + ' ' + JSON.stringify(rows));
+  }
+  await ctx.seg('bkExp', 'inter');
   return { runs, fails: fails.slice(0, 25) };
 };

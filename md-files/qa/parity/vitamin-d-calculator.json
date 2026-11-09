@@ -1,0 +1,146 @@
+{
+ "slug": "vitamin-d-calculator",
+ "research": "md-files/calcthis-vitamind-research.md",
+ "competitors": [
+  {
+   "name": "Omnicalculator",
+   "url": "https://www.omnicalculator.com/health/vitamin-d",
+   "openedLive": true,
+   "date": "2026-11-07",
+   "inputs": [
+    "age in years/weeks/months",
+    "know your serum level yes/no",
+    "height, weight -> BMI",
+    "recommended IU for adults",
+    "dose to raise blood level above 30 ng/ml",
+    "deficiency/insufficiency bands"
+   ]
+  },
+  {
+   "name": "GetHealthyCalculators",
+   "url": "https://gethealthycalculators.com/vitamin-d-calculator",
+   "openedLive": true,
+   "date": "2026-11-07",
+   "inputs": [
+    "kg/lb weight",
+    "blood level ng/mL",
+    "target level",
+    "skin tone Fitzpatrick 1-6",
+    "minutes of midday sun",
+    "maintenance IU by weight bands",
+    "correction dose over 8 weeks"
+   ]
+  },
+  {
+   "name": "GrassrootsHealth D*calculator",
+   "url": "https://www.grassrootshealth.net/dcalculator/",
+   "openedLive": true,
+   "date": "2026-11-07",
+   "inputs": [
+    "serum known yes/no",
+    "weight lb/kg",
+    "current supplement amount IU/mcg",
+    "current serum ng/ml or nmol/L",
+    "desired serum",
+    "dose to reach target"
+   ]
+  },
+  {
+   "name": "GrassrootsHealth mcg-IU converter",
+   "url": "https://www.grassrootshealth.net/mcg-iu-converter/",
+   "openedLive": true,
+   "date": "2026-11-07",
+   "inputs": [
+    "value",
+    "direction mcg->IU / IU->mcg"
+   ]
+  }
+ ],
+ "features": [
+  {
+   "covers": [
+    "Omnicalculator: age in years/weeks/months"
+   ],
+   "status": "match",
+   "ids": [
+    "vdAge",
+    "vdAu"
+   ]
+  },
+  {
+   "covers": [
+    "Omnicalculator: recommended IU for adults"
+   ],
+   "status": "match",
+   "ids": [
+    "vdBig",
+    "vdTargets",
+    "vdBar"
+   ]
+  },
+  {
+   "covers": [
+    "Omnicalculator: know your serum level yes/no",
+    "Omnicalculator: height, weight -> BMI",
+    "Omnicalculator: dose to raise blood level above 30 ng/ml",
+    "Omnicalculator: deficiency/insufficiency bands"
+   ],
+   "status": "dropped",
+   "signoff": {
+    "quote": "if you think that is better to skip, than we will (clinical / health numbers I cannot verify; skip recommended and accepted)",
+    "date": "2026-11-09"
+   }
+  },
+  {
+   "covers": [
+    "GetHealthyCalculators: kg/lb weight",
+    "GetHealthyCalculators: blood level ng/mL",
+    "GetHealthyCalculators: target level",
+    "GetHealthyCalculators: skin tone Fitzpatrick 1-6",
+    "GetHealthyCalculators: minutes of midday sun",
+    "GetHealthyCalculators: maintenance IU by weight bands",
+    "GetHealthyCalculators: correction dose over 8 weeks"
+   ],
+   "status": "dropped",
+   "signoff": {
+    "quote": "if you think that is better to skip, than we will (clinical / health numbers I cannot verify; skip recommended and accepted)",
+    "date": "2026-11-09"
+   }
+  },
+  {
+   "covers": [
+    "GrassrootsHealth D*calculator: current supplement amount IU/mcg"
+   ],
+   "status": "match",
+   "ids": [
+    "vdRows",
+    "vdTally"
+   ]
+  },
+  {
+   "covers": [
+    "GrassrootsHealth D*calculator: serum known yes/no",
+    "GrassrootsHealth D*calculator: weight lb/kg",
+    "GrassrootsHealth D*calculator: current serum ng/ml or nmol/L",
+    "GrassrootsHealth D*calculator: desired serum",
+    "GrassrootsHealth D*calculator: dose to reach target"
+   ],
+   "status": "dropped",
+   "signoff": {
+    "quote": "if you think that is better to skip, than we will (clinical / health numbers I cannot verify; skip recommended and accepted)",
+    "date": "2026-11-09"
+   }
+  },
+  {
+   "covers": [
+    "GrassrootsHealth mcg-IU converter: value",
+    "GrassrootsHealth mcg-IU converter: direction mcg->IU / IU->mcg"
+   ],
+   "status": "exceed",
+   "ids": [
+    "vdRows",
+    "vdS"
+   ]
+  }
+ ]
+}

@@ -122,6 +122,9 @@ function build() {
           <p class="bm-h">Reference points</p>
           <table class="dtable" id="ffRef"></table>
           <p class="cb-note" id="ffRefNote" style="display:none">The 25.0, 25.4 and 28.1 reference points come from studies of male athletes, so they are not shown for women.</p>
+          <p class="bm-h">Your natural potential at your height</p>
+          <table class="dtable" id="ffPot"></table>
+          <p class="cb-note" id="ffOdds"></p>
           <div id="ffAdvBox" style="display:none"><p class="bm-h">Your target</p><table class="dtable" id="ffAdv"></table></div>
           <p class="cb-note">The bands are Omnicalculator’s, which cite no study; the references come from the papers listed below. An estimate for adults, not medical advice.</p>
         </div>`;

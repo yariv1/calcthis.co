@@ -22,28 +22,28 @@ module.exports = async function (ctx) {
     const wv = conv(kg), W = back(wv);
     const lossFrac = 0.03 + R() * 0.25, gv = conv(Math.round(kg * (1 - lossFrac) * 10) / 10), G = back(gv);
     const hasG = plan === 'date' ? true : R() < 0.6;
-    const days = 20 + Math.round(R() * 500);
+    const days = 20 + Math.round(R() * 500), so = (plan === 'date' && R() < 0.3) ? 1 + Math.floor(R() * 14) : 0;
     const pu = wu === 'kg' ? 'kg' : 'lb', pv = pick(['0.3', '0.5', '0.75', '1', '1.5']), pace = plan === 'pace' ? pick([pv, '']) : '';
     await ctx.fill();
     await ctx.seg('wlSex', sex); await ctx.seg('wlWU', wu); await ctx.seg('wlHU', hu); await ctx.seg('wlMain', main); await ctx.seg('wlPlan', plan); await ctx.seg('wlModel', model);
     await ctx.eval('document.getElementById("wlAct").value="' + f + '"');
-    const adv = bf !== null; const open = await ctx.eval('document.getElementById("wlAdvIn").style.display');
+    const adv = bf !== null || so > 0; const open = await ctx.eval('document.getElementById("wlAdvIn").style.display');
     if (adv && open === 'none') await ctx.click('wlAdvBtn'); if (!adv && open !== 'none') await ctx.click('wlAdvBtn');
     await ctx.seg('wlModel', model);
     await ctx.set('wlAge', String(age)); await ctx.set('wlH', hv); await ctx.set('wlW', wv); await ctx.set('wlG', hasG ? gv : '');
-    if (adv) await ctx.set('wlBf', String(bf));
+    if (bf !== null) await ctx.set('wlBf', String(bf)); if (so > 0) { const sd = inDays(so); await ctx.set('wlStart', sd.getDate() + ' ' + MONF[sd.getMonth()] + ' ' + sd.getFullYear()); }
     let mt = null; if (main === 'known') { mt = 1500 + Math.round(R() * 1800); await ctx.set('wlMaint', String(mt)); }
     let out0, slope;
-    if (main === 'known') { out0 = mt; slope = 14; } else if (adv) { out0 = (370 + 21.6 * W * (1 - bf / 100)) * f; slope = 21.6 * (1 - bf / 100) * f; } else { out0 = (10 * W + 6.25 * hcm - 5 * age + (sex === 'm' ? 5 : -161)) * f; slope = 10 * f; }
+    if (main === 'known') { out0 = mt; slope = 14; } else if (bf !== null) { out0 = (370 + 21.6 * W * (1 - bf / 100)) * f; slope = 21.6 * (1 - bf / 100) * f; } else { out0 = (10 * W + 6.25 * hcm - 5 * age + (sex === 'm' ? 5 : -161)) * f; slope = 10 * f; }
     const male = sex === 'm', floor = male ? 1500 : 1200;
-    const tag = JSON.stringify({ sex, hu, wu, plan, model, main, hv, wv, gv: hasG ? gv : '', f, age, bf, mt, days, pace });
+    const tag = JSON.stringify({ sex, hu, wu, plan, model, main, hv, wv, gv: hasG ? gv : '', f, age, bf, mt, days, so, pace });
     runs++;
     let Dd, I;
     if (plan === 'date') {
       const d = inDays(days), ds = pick(['full', 'full', 'iso', 'us', 'short']);
       const txt = ds === 'iso' ? d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() : (ds === 'us' ? (d.getMonth() + 1) + '/' + d.getDate() + '/' + d.getFullYear() : (ds === 'short' ? d.getDate() + ' ' + MON[d.getMonth()] + ' ' + d.getFullYear() : d.getDate() + ' ' + MONF[d.getMonth()] + ' ' + d.getFullYear()));
       await ctx.set('wlDate', txt);
-      const simple = (W - G) * KG / days, e = Math.exp(-slope * days / KG), wInf = (G - W * e) / (1 - e), real = slope * (W - wInf);
+      const dE = days - so, simple = (W - G) * KG / dE, e = Math.exp(-slope * dE / KG), wInf = (G - W * e) / (1 - e), real = slope * (W - wInf);
       Dd = model === 'real' ? real : simple; I = out0 - Dd;
       const big = await ctx.text('wlBig');
       if (!(I >= 500) || Dd >= out0) { invalid++; const hint = await ctx.text('wlHint'); if (big !== '—' || hint.indexOf('you would need a deficit') < 0) fails.push('impossible date should explain ' + big + ' | ' + hint + ' ' + tag); continue; }
@@ -94,5 +94,12 @@ module.exports = async function (ctx) {
   await ctx.fill();
   await ctx.set('wlDate', '1 January 2020'); if ((await ctx.text('wlBig')) !== '—' || (await ctx.text('wlHint')).indexOf('after today') < 0) fails.push('past date should ask for a later date');
   await ctx.set('wlDate', '31 February 2030'); if ((await ctx.text('wlBig')) !== '—' || (await ctx.text('wlHint')).indexOf('like 25 December 2026') < 0) fails.push('31 February should be rejected');
+  /* maintain and gain goals */
+  await ctx.fill(); await ctx.seg('wlGoal', 'maintain');
+  { const out0 = (10 * 80 + 6.25 * 168 - 5 * 35 - 161) * 1.375, big = await ctx.text('wlBig'); if (big !== grp(out0) + ' kcal') fails.push('maintain headline ' + big + ' expected ' + grp(out0) + ' kcal'); }
+  await ctx.seg('wlGoal', 'gain'); await ctx.set('wlG', '85');
+  { const out0 = (10 * 80 + 6.25 * 168 - 5 * 35 - 161) * 1.375, t0 = new Date(); t0.setHours(0, 0, 0, 0); const days = Math.round((new Date(2029, 5, 30) - t0) / 86400000), I = out0 + 5 * 7700 / days, big = await ctx.text('wlBig'); if (big !== grp(I) + ' kcal') fails.push('gain headline ' + big + ' expected ' + grp(I) + ' kcal'); }
+  await ctx.set('wlG', '70'); { const h = await ctx.text('wlHint'); if (h.indexOf('above your current weight') < 0) fails.push('gain goal below weight must explain: ' + h); }
+  await ctx.seg('wlGoal', 'lose'); await ctx.set('wlG', '70');
   return { runs, fails: fails.slice(0, 25), invalid };
 };

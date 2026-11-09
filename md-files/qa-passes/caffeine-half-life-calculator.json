@@ -1,15 +1,15 @@
 {
  "slug": "caffeine-half-life-calculator",
  "pass": true,
- "at": "2026-11-07T11:01:29.371Z",
- "hash": "d847e463cebc08b4",
+ "at": "2026-11-09T07:47:42.948Z",
+ "hash": "30aee7bed7b86ac5",
  "viewports": {
   "mobile": {
-   "steps": 1056,
+   "steps": 1236,
    "fails": []
   },
   "desktop": {
-   "steps": 1056,
+   "steps": 1236,
    "fails": []
   }
  },

@@ -1,0 +1,164 @@
+{
+ "slug": "creatine-calculator",
+ "research": "md-files/calcthis-creatine-research.md",
+ "competitors": [
+  {
+   "name": "Coachway",
+   "url": "https://coachway.io/tools/creatine-dosage-calculator/",
+   "openedLive": true,
+   "date": "2026-11-07",
+   "inputs": [
+    "units lb/kg",
+    "body weight",
+    "loading approach",
+    "maintenance 3 g, loading 0.3 g/kg",
+    "days to saturation",
+    "lookup table by weight"
+   ]
+  },
+  {
+   "name": "GetHealthyCalculators",
+   "url": "https://gethealthycalculators.com/creatine-calculator",
+   "openedLive": true,
+   "date": "2026-11-07",
+   "inputs": [
+    "imperial/metric weight",
+    "protocol phase loading/skip/maintenance only",
+    "already taking creatine checkbox",
+    "saturation timeline",
+    "monthly cost"
+   ]
+  },
+  {
+   "name": "freecreatinecalculator.com",
+   "url": "https://freecreatinecalculator.com/",
+   "openedLive": true,
+   "date": "2026-11-07",
+   "inputs": [
+    "kg/lb weight",
+    "activity level (5)",
+    "primary goal (5 incl. vegan, cognitive)",
+    "creatine type monohydrate/HCl",
+    "phase focus",
+    "body fat % optional",
+    "7-day loading plan",
+    "hydration target"
+   ]
+  },
+  {
+   "name": "myproteincalc.com",
+   "url": "https://myproteincalc.com/creatine-calculator",
+   "openedLive": true,
+   "date": "2026-11-07",
+   "inputs": [
+    "kg/lb weight",
+    "protocol loading/no loading",
+    "loading vs no-load comparison"
+   ]
+  },
+  {
+   "name": "FatCalc",
+   "url": "https://fatcalc.com/creatine-calculator",
+   "openedLive": true,
+   "date": "2026-11-07",
+   "inputs": [
+    "imperial/metric weight",
+    "phase loading/maintenance",
+    "doses ~4 h apart"
+   ]
+  }
+ ],
+ "features": [
+  {
+   "covers": [
+    "Coachway: units lb/kg",
+    "Coachway: body weight",
+    "Coachway: loading approach",
+    "Coachway: maintenance 3 g, loading 0.3 g/kg",
+    "Coachway: days to saturation",
+    "Coachway: lookup table by weight"
+   ],
+   "status": "match",
+   "ids": [
+    "crW",
+    "crWu",
+    "crPlan",
+    "crBig",
+    "crSched",
+    "crChart"
+   ]
+  },
+  {
+   "covers": [
+    "GetHealthyCalculators: imperial/metric weight",
+    "GetHealthyCalculators: protocol phase loading/skip/maintenance only",
+    "GetHealthyCalculators: already taking creatine checkbox",
+    "GetHealthyCalculators: saturation timeline",
+    "GetHealthyCalculators: monthly cost"
+   ],
+   "status": "match",
+   "ids": [
+    "crWu",
+    "crPlan",
+    "crChart",
+    "crTub",
+    "crPr",
+    "crTubT"
+   ]
+  },
+  {
+   "covers": [
+    "freecreatinecalculator.com: kg/lb weight",
+    "freecreatinecalculator.com: phase focus",
+    "freecreatinecalculator.com: 7-day loading plan"
+   ],
+   "status": "match",
+   "ids": [
+    "crWu",
+    "crPlan",
+    "crSched"
+   ]
+  },
+  {
+   "covers": [
+    "freecreatinecalculator.com: activity level (5)",
+    "freecreatinecalculator.com: primary goal (5 incl. vegan, cognitive)",
+    "freecreatinecalculator.com: creatine type monohydrate/HCl",
+    "freecreatinecalculator.com: body fat % optional",
+    "freecreatinecalculator.com: hydration target"
+   ],
+   "status": "dropped",
+   "signoff": {
+    "quote": "if you think that is better to skip, than we will (clinical / health numbers I cannot verify; skip recommended and accepted)",
+    "date": "2026-11-09"
+   }
+  },
+  {
+   "covers": [
+    "myproteincalc.com: kg/lb weight",
+    "myproteincalc.com: protocol loading/no loading",
+    "myproteincalc.com: loading vs no-load comparison"
+   ],
+   "status": "match",
+   "ids": [
+    "crW",
+    "crPlan",
+    "crCmp"
+   ]
+  },
+  {
+   "covers": [
+    "FatCalc: imperial/metric weight",
+    "FatCalc: phase loading/maintenance",
+    "FatCalc: doses ~4 h apart"
+   ],
+   "status": "match",
+   "ids": [
+    "crWu",
+    "crPlan",
+    "crDs",
+    "crSched"
+   ]
+  }
+ ]
+}

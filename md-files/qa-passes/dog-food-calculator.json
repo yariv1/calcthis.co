@@ -1,15 +1,15 @@
 {
  "slug": "dog-food-calculator",
  "pass": true,
- "at": "2026-11-07T11:02:19.682Z",
- "hash": "c953d480b929296e",
+ "at": "2026-11-09T07:24:29.921Z",
+ "hash": "efab19511be78580",
  "viewports": {
   "mobile": {
-   "steps": 1023,
+   "steps": 1084,
    "fails": []
   },
   "desktop": {
-   "steps": 1023,
+   "steps": 1084,
    "fails": []
   }
  },

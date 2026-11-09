@@ -1,0 +1,113 @@
+{
+ "slug": "dog-food-calculator",
+ "research": "md-files/calcthis-dogfood-research.md",
+ "competitors": [
+  {
+   "name": "Omnicalculator",
+   "url": "https://www.omnicalculator.com/biology/dog-food",
+   "openedLive": true,
+   "date": "2026-11-05",
+   "inputs": [
+    "11 life-stage/activity types",
+    "weight in g/dag/kg/lb",
+    "optional kcal per cup",
+    "RER + daily kcal + cups output"
+   ]
+  },
+  {
+   "name": "APOP vet RER/MER tool",
+   "url": "https://petobesityprevention.org/veterinary-der-calculator",
+   "openedLive": true,
+   "date": "2026-11-05",
+   "inputs": [
+    "RER = 70 x kg^0.75",
+    "MER factor ranges per type",
+    "kcal per cup/can",
+    "feedings per day",
+    "treat allowance 5%/10%",
+    "gestation factor",
+    "print / PDF"
+   ]
+  },
+  {
+   "name": "Oma's Pride (raw)",
+   "url": "https://omaspride.com/",
+   "openedLive": true,
+   "date": "2026-11-05",
+   "inputs": [
+    "weight",
+    "life stage incl. pregnant/nursing and working",
+    "goal lose/maintain/gain",
+    "grams of RAW food per day"
+   ]
+  }
+ ],
+ "features": [
+  {
+   "covers": [
+    "Omnicalculator: 11 life-stage/activity types",
+    "Omnicalculator: weight in g/dag/kg/lb",
+    "Omnicalculator: optional kcal per cup",
+    "Omnicalculator: RER + daily kcal + cups output"
+   ],
+   "status": "exceed",
+   "ids": [
+    "fdType",
+    "fdW",
+    "fdWU",
+    "fdFood",
+    "fdBig"
+   ]
+  },
+  {
+   "covers": [
+    "APOP vet RER/MER tool: RER = 70 x kg^0.75",
+    "APOP vet RER/MER tool: MER factor ranges per type",
+    "APOP vet RER/MER tool: kcal per cup/can",
+    "APOP vet RER/MER tool: feedings per day",
+    "APOP vet RER/MER tool: treat allowance 5%/10%",
+    "APOP vet RER/MER tool: gestation factor"
+   ],
+   "status": "match",
+   "ids": [
+    "fdBody",
+    "fdType",
+    "fdFood",
+    "fdMeals",
+    "fdTr"
+   ]
+  },
+  {
+   "covers": [
+    "APOP vet RER/MER tool: print / PDF"
+   ],
+   "status": "match",
+   "ids": [
+    "fdPrint",
+    "fdName"
+   ]
+  },
+  {
+   "covers": [
+    "Oma's Pride (raw): weight",
+    "Oma's Pride (raw): life stage incl. pregnant/nursing and working",
+    "Oma's Pride (raw): goal lose/maintain/gain"
+   ],
+   "status": "match",
+   "ids": [
+    "fdW",
+    "fdAge",
+    "fdType"
+   ]
+  },
+  {
+   "covers": [
+    "Oma's Pride (raw): grams of RAW food per day"
+   ],
+   "status": "match",
+   "ids": [
+    "fdRaw"
+   ]
+  }
+ ]
+}

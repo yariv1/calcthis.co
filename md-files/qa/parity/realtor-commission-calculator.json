@@ -1,0 +1,84 @@
+{
+ "slug": "realtor-commission-calculator",
+ "research": "md-files/calcthis-commission-research.md",
+ "competitors": [
+  {
+   "name": "Omnicalculator real estate",
+   "url": "https://www.omnicalculator.com/finance/real-estate-commission",
+   "openedLive": true,
+   "date": "2026-11-08",
+   "inputs": [
+    "house price, commission %, commission amount",
+    "owner receives",
+    "currency"
+   ]
+  },
+  {
+   "name": "Inch Calculator real estate",
+   "url": "https://www.inchcalculator.com/real-estate-commission-calculator/",
+   "openedLive": true,
+   "date": "2026-11-08",
+   "inputs": [
+    "sale price, commission rate",
+    "closing costs %",
+    "amount to seller"
+   ]
+  },
+  {
+   "name": "GigaCalculator realtor mode",
+   "url": "https://www.gigacalculator.com/calculators/commission-calculator.php",
+   "openedLive": true,
+   "date": "2026-11-08",
+   "inputs": [
+    "realtor mode",
+    "commission rate or amount",
+    "who pays seller/buyer/both"
+   ]
+  }
+ ],
+ "features": [
+  {
+   "covers": [
+    "Omnicalculator real estate: house price, commission %, commission amount",
+    "Omnicalculator real estate: owner receives",
+    "Omnicalculator real estate: currency"
+   ],
+   "status": "match",
+   "ids": [
+    "rtPrice",
+    "rtRate",
+    "rtComm",
+    "rtBig",
+    "rtCur"
+   ]
+  },
+  {
+   "covers": [
+    "Inch Calculator real estate: sale price, commission rate",
+    "Inch Calculator real estate: closing costs %",
+    "Inch Calculator real estate: amount to seller"
+   ],
+   "status": "match",
+   "ids": [
+    "rtPrice",
+    "rtRate",
+    "rtClose",
+    "rtBig"
+   ]
+  },
+  {
+   "covers": [
+    "GigaCalculator realtor mode: realtor mode",
+    "GigaCalculator realtor mode: commission rate or amount",
+    "GigaCalculator realtor mode: who pays seller/buyer/both"
+   ],
+   "status": "match",
+   "ids": [
+    "rtPrice",
+    "rtRate",
+    "rtComm",
+    "rtWho"
+   ]
+  }
+ ]
+}

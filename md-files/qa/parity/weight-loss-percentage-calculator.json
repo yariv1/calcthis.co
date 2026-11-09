@@ -1,0 +1,97 @@
+{
+ "slug": "weight-loss-percentage-calculator",
+ "research": "md-files/calcthis-weightlosspct-research.md",
+ "competitors": [
+  {
+   "name": "Omnicalculator",
+   "url": "https://www.omnicalculator.com/health/weight-loss-percentage",
+   "openedLive": true,
+   "date": "2026-11-06",
+   "inputs": [
+    "past weight, current weight, total loss, percent (any direction)",
+    "units kg/lb/st/st+lb"
+   ]
+  },
+  {
+   "name": "Inch Calculator",
+   "url": "https://www.inchcalculator.com/weight-loss-percentage-calculator/",
+   "openedLive": true,
+   "date": "2026-11-06",
+   "inputs": [
+    "initial and current weight",
+    "units lbs/kg/st",
+    "percent and total lost"
+   ]
+  },
+  {
+   "name": "Coachway",
+   "url": "https://coachway.io/tools/weight-loss-percentage-calculator",
+   "openedLive": true,
+   "date": "2026-11-06",
+   "inputs": [
+    "starting, current weight, kg/lb",
+    "optional goal weight",
+    "optional timeframe (weeks)",
+    "percent lost + percent of the way to goal",
+    "required weekly rate as % of body weight",
+    "table of 5/10/15/20% by starting weight"
+   ]
+  }
+ ],
+ "features": [
+  {
+   "covers": [
+    "Omnicalculator: past weight, current weight, total loss, percent (any direction)",
+    "Omnicalculator: units kg/lb/st/st+lb"
+   ],
+   "status": "match",
+   "ids": [
+    "wpKnow",
+    "wpA",
+    "wpB",
+    "wpG",
+    "wpUnit"
+   ]
+  },
+  {
+   "covers": [
+    "Inch Calculator: initial and current weight",
+    "Inch Calculator: units lbs/kg/st",
+    "Inch Calculator: percent and total lost"
+   ],
+   "status": "match",
+   "ids": [
+    "wpA",
+    "wpB",
+    "wpUnit",
+    "wpBig"
+   ]
+  },
+  {
+   "covers": [
+    "Coachway: starting, current weight, kg/lb",
+    "Coachway: optional goal weight",
+    "Coachway: percent lost + percent of the way to goal",
+    "Coachway: table of 5/10/15/20% by starting weight"
+   ],
+   "status": "match",
+   "ids": [
+    "wpA",
+    "wpB",
+    "wpG",
+    "wpBig",
+    "wpTable"
+   ]
+  },
+  {
+   "covers": [
+    "Coachway: optional timeframe (weeks)",
+    "Coachway: required weekly rate as % of body weight"
+   ],
+   "status": "match",
+   "ids": [
+    "wpT"
+   ]
+  }
+ ]
+}

@@ -92,6 +92,7 @@ function build() {
         <div id="wpAdvIn" style="display:none">
           <div class="proj-sep"></div>
           <label class="fld" for="wpD"><span class="lab">Starting date <span class="unit">optional</span></span><div class="inp"><input id="wpD" type="text" autocomplete="off" placeholder="Pick a date"></div></label>
+          <label class="fld" for="wpT"><span class="lab">Weeks to reach your goal <span class="unit">optional</span></span><div class="inp"><input id="wpT" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 12"></div></label>
           <p class="av-note" style="margin:0 0 8px">With a starting date you get your average loss per week, as a percent of your starting weight, and the date you reach a goal at that pace.</p>
         </div>
         <div class="add-row split" style="margin-top:16px">

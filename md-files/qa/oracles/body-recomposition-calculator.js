@@ -17,22 +17,23 @@ module.exports = async function (ctx) {
   for (let i = 0; i < 260; i++) {
     const male = R() < 0.5, hu = pick(['in', 'cm']), wu = pick(['kg', 'lb', 'st']), f = pick([1.2, 1.375, 1.55, 1.725, 1.9]), focus = pick(['fat', 'both', 'muscle']), meals = pick([3, 4, 4, 5, 6]);
     const age = 15 + Math.round(R() * 70), cm = Math.round((145 + R() * 60) * 10) / 10, kg = Math.round((45 + R() * 90) * 10) / 10;
-    const bf = pick([null, null, 12, 22, 30, 41]), maint = pick([null, null, null, 1400, 2200, 3400]), tbf = pick([null, null, 15, 20, 26]);
+    const bf = pick([null, null, 12, 22, 30, 41]), maint = pick([null, null, null, 1400, 2200, 3400]), tbf = pick([null, null, 15, 20, 26]), ex = pick([null, null, null, 700, 2000, 5000, 14000]);
     const hv = hu === 'in' ? String(Math.round(cm / 2.54 * 100) / 100) : String(cm), hcm = hu === 'in' ? parseFloat(hv) * 2.54 : parseFloat(hv);
     const wv = wu === 'lb' ? String(Math.round(kg * LB * 10) / 10) : (wu === 'st' ? String(Math.round(kg / ST * 100) / 100) : String(kg));
     const wkg = wu === 'lb' ? parseFloat(wv) / LB : (wu === 'st' ? parseFloat(wv) * ST : parseFloat(wv));
     await ctx.fill();
     await ctx.seg('rcSex', male ? 'm' : 'f'); await ctx.seg('rcHu', hu); await ctx.seg('rcWu', wu); await ctx.seg('rcFocus', focus);
     await ctx.eval('document.getElementById("rcAct").value="' + f + '"');
-    const adv = maint !== null || tbf !== null || meals !== 4, isOpen = await open('rcAdvIn');
+    const adv = maint !== null || tbf !== null || ex !== null || meals !== 4, isOpen = await open('rcAdvIn');
     if (adv && !isOpen) await ctx.click('rcAdvBtn'); if (!adv && isOpen) await ctx.click('rcAdvBtn');
     if (adv) await ctx.seg('rcMeals', String(meals));
     await ctx.set('rcAge', String(age)); await ctx.set('rcH', hv); await ctx.set('rcW', wv);
-    if (bf !== null) await ctx.set('rcBf', String(bf)); if (maint !== null) await ctx.set('rcMaint', String(maint)); if (tbf !== null) await ctx.set('rcTbf', String(tbf));
+    if (bf !== null) await ctx.set('rcBf', String(bf)); if (maint !== null) await ctx.set('rcMaint', String(maint)); if (tbf !== null) await ctx.set('rcTbf', String(tbf)); if (ex !== null) await ctx.set('rcEx', String(ex));
     const nm = adv ? meals : 4;
     let M; if (maint !== null) M = maint; else if (bf !== null) M = (370 + 21.6 * wkg * (1 - bf / 100)) * f; else M = (10 * wkg + 6.25 * hcm - 5 * age + (male ? 5 : -161)) * f;
+    if (maint === null && ex !== null) M += ex / 7;
     const Mr = Math.round(M), fl = male ? 1500 : 1200, T = [400, 200, 0].map((d) => { const c = Math.min(Mr, Math.max(fl, Mr - d)); return { cal: c, cut: Mr - c }; });
-    const cur = T[['fat', 'both', 'muscle'].indexOf(focus)], tag = JSON.stringify({ male, hu, wu, f, focus, hv, wv, age, bf, maint, tbf, meals }); runs++;
+    const cur = T[['fat', 'both', 'muscle'].indexOf(focus)], tag = JSON.stringify({ male, hu, wu, f, focus, hv, wv, age, bf, maint, tbf, ex, meals }); runs++;
     const big = await ctx.text('rcBig'), sub = await ctx.text('rcSub');
     if (big !== grp(cur.cal) + ' kcal') fails.push('headline ' + big + ' expected ' + grp(cur.cal) + ' ' + tag);
     if (sub.indexOf('You burn ' + grp(Mr) + ' kcal') !== 0) fails.push('sub-line ' + sub + ' ' + tag);
@@ -109,5 +110,28 @@ module.exports = async function (ctx) {
   await ctx.fill(); await ctx.seg('rcSex', 'm'); await ensure('rcEstIn', 'rcEstBtn', true); await ctx.set('rcH', '');
   t = await ctx.text('rcEstNote'); if (t.indexOf('Type your waist and neck') !== 0) fails.push('estimate empty note: ' + t);
   await ctx.set('rcWa', '34'); t = await ctx.text('rcEstNote'); if (t.indexOf('Still needed for the estimate: your height (above), your neck') !== 0) fails.push('estimate partial note: ' + t);
+  /* health flags: each choice adds a clinician note and the field says what it did */
+  await ctx.fill(); await ensure('rcAdvIn', 'rcAdvBtn', true);
+  { const hn0 = await ctx.text('rcHealthNote'); if (hn0.indexOf('Pregnancy, breastfeeding, a GLP-1') !== 0) fails.push('health note default: ' + hn0); }
+  for (const [v, w] of [['preg', 'Pregnancy changes'], ['bf', 'Breastfeeding raises'], ['glp', 'A GLP-1 medicine'], ['kid', 'Kidney disease can limit']]) { await ctx.set('rcHealth', v); const fl = await ctx.text('rcFlags'), hn = await ctx.text('rcHealthNote'); if (fl.indexOf(w) < 0) fails.push('health flag ' + v + ': ' + fl.slice(0, 80)); if (hn.indexOf('Ask a clinician or dietitian') < 0) fails.push('health note ' + v + ': ' + hn); }
+  await ctx.set('rcHealth', 'none');
+  /* training/rest days and expected muscle gain */
+  for (const sex of ['m', 'f']) {
+    await ctx.fill(); await ctx.seg('rcSex', sex); await ensure('rcAdvIn', 'rcAdvBtn', true); await ctx.set('rcMaint', '2600'); await ctx.seg('rcDays', '3');
+    await ctx.click('rcK1');
+    const cyc = JSON.parse(await ctx.eval('JSON.stringify([...document.querySelectorAll("#rcCycle tbody tr")].map(r=>[...r.children].map(c=>c.textContent.replace(/\\s+/g," ").trim())))'));
+    const avg = 2200, tr = Math.min(avg * 1.1, 2600), rest = (avg * 7 - tr * 3) / 4;
+    if (cyc.length !== 3 || cyc[0][1] !== grp(tr) + ' kcal' || cyc[1][1] !== grp(rest) + ' kcal' || cyc[2][1] !== grp(avg) + ' kcal') fails.push('cycle ' + sex + ' ' + JSON.stringify(cyc) + ' expected ' + grp(tr) + ' / ' + grp(rest) + ' / ' + grp(avg));
+    let pw = await ctx.eval('document.getElementById("rcPotWrap").style.display'); if (pw !== 'none') fails.push('potential shown before experience is set');
+    const RT = sex === 'm' ? { beg: [0.75, 0.95], inter: [0.2, 0.45], adv: [0.08, 0.11] } : { beg: [0.38, 0.48], inter: [0.1, 0.23], adv: [0.04, 0.06] }, MO = 12 / 4.345, f1x = (x) => (Math.round(x * 10) / 10).toFixed(1);
+    for (const v of ['beg', 'inter', 'adv']) {
+      await ctx.set('rcExp', v);
+      const rows = JSON.parse(await ctx.eval('JSON.stringify([...document.querySelectorAll("#rcPot tbody tr")].map(r=>[r.className,...[...r.children].map(c=>c.textContent.replace(/\\s+/g," ").trim())]))'));
+      const k = ['beg', 'inter', 'adv'].indexOf(v), r = RT[v], want = f1x(r[0] * MO) + '\u2013' + f1x(r[1] * MO) + ' kg';
+      if (rows.length !== 4 || rows[k][0] !== 'cur' || rows[k][3].indexOf(want) !== 0) fails.push('potential ' + sex + ' ' + v + ' ' + JSON.stringify(rows[k]) + ' expected ' + want);
+    }
+    await ctx.set('rcExp', 'none');
+  }
+  await ctx.seg('rcSex', 'f');
   return { runs, fails: fails.slice(0, 25) };
 };

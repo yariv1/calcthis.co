@@ -63,7 +63,7 @@ const tfld = (id, label, unit, ph, mode) => `<label class="fld" for="${id}"><spa
 const pill = (href, label, p) => `      <a class="pill" href="${href}">\n        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>\n        ${label}\n      </a>`;
 const seg = (id, label, opts, on) => `<div class="ctl-row"><span class="ctl-lab">${label}</span><div class="seg" id="${id}" role="group" aria-label="${label}">${opts.map((o) => `<button${String(o[0]) === String(on) ? ' class="on"' : ''} type="button" data-v="${o[0]}">${o[1]}</button>`).join('')}</div></div>`;
 const csel = (id, val, label, opts) => `<label class="fld"><span class="lab">${label}</span><div class="csel" id="${id}" data-value="${val}"><button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false"><span class="csel-val">${opts.filter((o) => String(o[0]) === String(val))[0][1]}</span>${chev}</button><div class="csel-panel" role="listbox">${opts.map((o) => `<button type="button" class="csel-opt${String(o[0]) === String(val) ? ' on' : ''}" role="option" aria-selected="${String(o[0]) === String(val)}" data-value="${o[0]}">${o[1]}</button>`).join('')}</div></div></label>`;
-const ACT = [[1.2, 'Sedentary — little or no exercise'], [1.375, 'Light — 1–3 days/week'], [1.55, 'Moderate — 3–5 days/week'], [1.725, 'Active — 6–7 days/week'], [1.9, 'Very active — hard training / physical job']];
+const ACT = [[1.2, 'Sedentary — little or no exercise'], [1.375, 'Light — 1–2 days/week'], [1.465, 'Light to moderate — 2–3 days/week'], [1.55, 'Moderate — 3–5 days/week'], [1.725, 'Active — 6–7 days/week'], [1.9, 'Very active — hard training / physical job']];
 const plus = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>';
 const box = (fid, label, id, ph, uid, u, btns, mode) => `<div class="fld"><span class="lab">${label}</span><div class="cf-box"><input id="${id}" type="text" inputmode="${mode || 'decimal'}" autocomplete="off" placeholder="${ph}" aria-label="${label}"><div class="seg cf-u" id="${uid}" data-u="${u}" role="group" aria-label="${label} unit">${btns.map((b) => `<button type="button"${b[0] === u ? ' class="on"' : ''} data-v="${b[0]}">${b[1]}</button>`).join('')}</div></div></div>`;
 
@@ -122,6 +122,7 @@ function build() {
           <p class="res-tip adv-tip" id="fbTip"></p>
           <p class="bm-h">Where you stand</p>
           <div id="fbBar"></div>
+          <p class="cb-note" id="fbTypical">For comparison: the mean fiber intake in the United States is 17 g a day, and only 5% of the population meets the Adequate Intake (Academy of Nutrition and Dietetics position paper, 2015).</p>
           <p class="bm-h">Your targets</p>
           <table class="dtable" id="fbTargets"></table>
           <div id="fbTallyWrap" style="display:none">

@@ -28,12 +28,13 @@ const tr10 = X.mer * 0.10;
 
 const SRC = `<h2>Sources</h2>
         <ul>
+          <li>Pet Nutrition Alliance, <a href="https://petnutritionalliance.org/wp-content/uploads/2023/03/MER.RER_.PNA_.pdf" rel="noopener">Calculating Calories Based on Pet Needs</a> (opened 2026-11-09): lactation 2–6 × RER for dogs and cats, gestation 1.6–2.0 × RER for dogs.</li>
           <li>Association for Pet Obesity Prevention (APOP), <a href="https://www.petobesityprevention.org/veterinary-der-calculator" rel="noopener">RER &amp; MER Energy Calculator</a> (opened 2026-11-05): RER = 70 × body weight in kg<sup>0.75</sup>; MER = RER × activity or life-stage factor — sedentary or indoor adult 1.0–1.4, typical neutered adult 1.4–1.6, typical intact adult 1.6–1.8, weight-loss planning 1.0–1.2, working or highly active dogs 1.6–11, puppy under 4 months 3.0, puppy 4 months and older 2.0, gestation 3.0; treats up to 10% of daily calories and subtracted from the daily amount.</li>
           <li><a href="https://www.omnicalculator.com/biology/dog-food" rel="noopener">Omnicalculator dog food calculator</a> (opened 2026-11-05): the same RER formula with one factor per type — inactive 1.2, neutered 1.6, intact 1.8, weight loss 1.0, weight gain 1.7, senior 1.1, working dog 2, 3 and 5 for light, moderate and heavy work. The factors for weight gain, senior and the three working types come from this source only.</li>
           <li>Typical food calories, read from product pages on 2026-11-05: <a href="https://www.hillspet.com/dog-food/science-diet-adult-original-dry" rel="noopener">Hill’s Science Diet Adult Chicken &amp; Barley dry</a> — 3,675 kcal/kg, 365 kcal per 8 fl oz cup; <a href="https://www.royalcanin.com/ca/dogs/products/retail-products/medium-adult-3004" rel="noopener">Royal Canin Medium Adult dry</a> (Canada page) — 3,616 kcal/kg, 340 kcal per cup; <a href="https://www.hillspet.com/dog-food/science-diet-adult-chicken-canned" rel="noopener">Hill’s Science Diet Adult Chicken &amp; Barley canned</a> — 369 kcal per 13 oz (370 g) can; <a href="https://www.pedigree.com/products/wet/choice-cuts-gravy-adult-wet-dog-food-can-beef" rel="noopener">Pedigree Choice Cuts in Gravy canned</a> — 884 kcal/kg, 332 kcal per 13.2 oz can. The page uses the rounded average of each pair (dry 350 kcal per cup and 3,650 per kg, wet 350 per 13 oz can and 940 per kg). Two products per type is a small sample, so the typical value is only a starting point.</li>
           <li>Both sources say the result is a starting estimate that depends on the individual dog; the APOP tool says to adjust from current intake, weight trend, body condition, health and measured response.</li>
         </ul>
-        <p><small>For information only. This calculator does not replace your veterinarian, who can set a feeding plan for your dog’s health, body condition and any medical condition. Nursing (lactation) dogs are not covered because no factor was verified for them.</small></p>`;
+        <p><small>For information only. This calculator does not replace your veterinarian, who can set a feeding plan for your dog’s health, body condition and any medical condition. For a nursing mother the factor depends on the litter size and the week of nursing, so the page uses the middle of the 2–6 range; ask your vet.</small></p>`;
 
 const P = {
   slug: 'dog-food-calculator', name: 'Dog Food Calculator', menu: 'Dog Food',
@@ -104,6 +105,8 @@ function build() {
         <div id="fdAdvIn" style="display:none">
           <div class="proj-sep"></div>
           ${csel('fdType', 'auto', 'More specific type of dog', [['auto', 'Use the choices above']].concat(E.TYPES.map((t) => [t.id, t.label])))}
+          <label class="fld" for="fdName"><span class="lab">Dog’s name <span class="unit">optional</span></span><div class="inp"><input id="fdName" type="text" autocomplete="off" placeholder="e.g. Max"></div></label>
+          <p class="av-note" id="fdNameNote">Shown at the top of the printout, with today’s date.</p>
           ${tfld('fdCup', 'Your cup holds', 'ml · optional', 'e.g. 150')}
           <p class="av-note" style="margin:0 0 8px">The standard US cup is 237 ml. If your scoop is smaller or larger, enter its size and the cups are counted in your scoop.</p>
           ${tfld('fdOwn', 'Your own factor', '× resting need', 'e.g. 1.5')}
@@ -126,6 +129,7 @@ function build() {
           <div class="res-sub" id="fdSub" data-empty="Enter your dog’s weight.">Enter your dog’s weight.</div>
         </div>
         <div id="fdBody" style="display:none">
+          <p class="print-only" id="fdPrintHead"></p>
           <p class="res-tip adv-tip" id="fdTip"></p>
           <p class="bm-h">Resting need and your dog’s range</p>
           <div id="fdRule"></div>
@@ -137,6 +141,7 @@ function build() {
           <p class="av-note" id="fdNoFood" style="display:none">Enter your food’s calories to see the amount.</p>
           <p class="cb-note" id="fdTypNote" style="display:none"></p>
           <p class="cb-note" id="fdRaw" style="display:none"></p>
+          <button class="btn" id="fdPrint" type="button" data-print="fdPrintHead|fdName|Dog food plan" style="margin-top:6px">Print / save PDF</button>
           <p class="cb-note">An estimate from weight and life stage — not veterinary advice. Weigh your dog every couple of weeks and adjust with your vet.</p>
         </div>`;
 

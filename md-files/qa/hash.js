@@ -26,6 +26,8 @@ function pageHash(root, slug) {
 }
 /* is a pass record present and still valid? -> { ok, why } */
 function check(root, slug) {
+  const par = require('./parity.js').check(root, slug);
+  if (!par.ok) return par;
   const h = pageHash(root, slug);
   if (!h) return { ok: false, why: 'no fixture md-files/qa/fixtures/' + slug + '.json' };
   const rf = path.join(root, 'md-files/qa-passes/' + slug + '.json');

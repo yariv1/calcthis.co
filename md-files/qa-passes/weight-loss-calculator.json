@@ -1,22 +1,22 @@
 {
  "slug": "weight-loss-calculator",
  "pass": true,
- "at": "2026-11-07T09:22:13.705Z",
- "hash": "4d7fcf1d1e23a0cd",
+ "at": "2026-11-09T07:33:05.635Z",
+ "hash": "4892cae3b6c0d99a",
  "viewports": {
   "mobile": {
-   "steps": 845,
+   "steps": 1078,
    "fails": []
   },
   "desktop": {
-   "steps": 845,
+   "steps": 1078,
    "fails": []
   }
  },
  "oracle": {
   "runs": 300,
   "fails": [],
-  "invalid": 20
+  "invalid": 16
  },
  "shots": [
   "md-files/qa-passes/shots/weight-loss-calculator-1-empty-mobile.png",

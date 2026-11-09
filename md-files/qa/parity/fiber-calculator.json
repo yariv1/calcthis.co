@@ -1,0 +1,142 @@
+{
+ "slug": "fiber-calculator",
+ "research": "md-files/calcthis-fiber-research.md",
+ "competitors": [
+  {
+   "name": "Omnicalculator",
+   "url": "https://www.omnicalculator.com/health/fiber",
+   "openedLive": true,
+   "date": "2026-11-07",
+   "inputs": [
+    "sex",
+    "height in cm/m/in/ft",
+    "weight kg/lb/st",
+    "age",
+    "activity factor (6 levels)",
+    "recommended daily calories",
+    "fiber per day"
+   ]
+  },
+  {
+   "name": "Coachway",
+   "url": "https://coachway.io/tools/fiber-intake-calculator",
+   "openedLive": true,
+   "date": "2026-11-07",
+   "inputs": [
+    "sex, age",
+    "daily calories optional",
+    "goal chips general/weight loss/gut health",
+    "both 14 g/1000 kcal and fixed 25/38 g",
+    "typical intake 15-17 g",
+    "what 28 g looks like food list",
+    "ramp-up advice"
+   ]
+  },
+  {
+   "name": "Tate & Lyle",
+   "url": "https://www.tateandlyle.com/",
+   "openedLive": true,
+   "date": "2026-11-07",
+   "inputs": [
+    "8-question food-frequency quiz",
+    "low/medium/high fibre diet result"
+   ]
+  }
+ ],
+ "features": [
+  {
+   "covers": [
+    "Omnicalculator: sex",
+    "Omnicalculator: height in cm/m/in/ft",
+    "Omnicalculator: weight kg/lb/st",
+    "Omnicalculator: age",
+    "Omnicalculator: recommended daily calories",
+    "Omnicalculator: fiber per day"
+   ],
+   "status": "match",
+   "ids": [
+    "fbSex",
+    "fbH",
+    "fbHu",
+    "fbW",
+    "fbWu",
+    "fbAge",
+    "fbCal",
+    "fbBig"
+   ]
+  },
+  {
+   "covers": [
+    "Omnicalculator: activity factor (6 levels)"
+   ],
+   "status": "match",
+   "ids": [
+    "fbAct"
+   ]
+  },
+  {
+   "covers": [
+    "Coachway: sex, age",
+    "Coachway: daily calories optional",
+    "Coachway: both 14 g/1000 kcal and fixed 25/38 g"
+   ],
+   "status": "match",
+   "ids": [
+    "fbSex",
+    "fbAge",
+    "fbCal",
+    "fbTargets"
+   ]
+  },
+  {
+   "covers": [
+    "Coachway: what 28 g looks like food list"
+   ],
+   "status": "exceed",
+   "ids": [
+    "fbRows",
+    "fbTally"
+   ]
+  },
+  {
+   "covers": [
+    "Coachway: goal chips general/weight loss/gut health"
+   ],
+   "status": "dropped",
+   "signoff": {
+    "quote": "if you think that is better to skip, than we will (clinical / health numbers I cannot verify; skip recommended and accepted)",
+    "date": "2026-11-09"
+   }
+  },
+  {
+   "covers": [
+    "Coachway: typical intake 15-17 g"
+   ],
+   "status": "match",
+   "ids": [
+    "fbTypical"
+   ]
+  },
+  {
+   "covers": [
+    "Coachway: ramp-up advice"
+   ],
+   "status": "dropped",
+   "signoff": {
+    "quote": "if you think that is better to skip, than we will (clinical / health numbers I cannot verify; skip recommended and accepted)",
+    "date": "2026-11-09"
+   }
+  },
+  {
+   "covers": [
+    "Tate & Lyle: 8-question food-frequency quiz",
+    "Tate & Lyle: low/medium/high fibre diet result"
+   ],
+   "status": "exceed",
+   "ids": [
+    "fbRows",
+    "fbTally"
+   ]
+  }
+ ]
+}

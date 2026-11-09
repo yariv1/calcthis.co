@@ -134,6 +134,7 @@ function build() {
             <p class="cb-note">The discount comes off first; tax and fees are charged on the discounted price. Tax is passed on to the customer, so it does not change your profit.</p>
           </div>
           <p class="cb-note">Markup divides the profit by the cost; margin divides the same profit by the selling price. That is why the margin is always the smaller number for a profit.</p>
+          <button class="btn" id="mkCopy" type="button" data-copy="mkBig,mkSub,mkTip" style="margin-top:6px">Copy results</button>
         </div>`;
   const left = `
         <h2>How to use the markup calculator</h2>

@@ -1,0 +1,105 @@
+{
+ "slug": "caffeine-half-life-calculator",
+ "research": "md-files/calcthis-vitamins-research.md",
+ "competitors": [
+  {
+   "name": "FatCalc caffeine",
+   "url": "https://fatcalc.com/caffeine-calculator",
+   "openedLive": true,
+   "date": "2026-11-09",
+   "inputs": [
+    "body weight lb/kg",
+    "bedtime",
+    "metabolism fast / normal / slow / pregnant / smoker",
+    "sources with servings and time",
+    "caffeine left at bedtime",
+    "latest safe time for a typical coffee",
+    "biggest contributor",
+    "hourly chart and peak timing",
+    "warning above 6 mg/kg peak"
+   ]
+  },
+  {
+   "name": "Slumber Studios cutoff",
+   "url": "https://slumberstudios.com/tools/caffeine-cutoff/",
+   "openedLive": true,
+   "date": "2026-11-09",
+   "inputs": [
+    "bedtime picker",
+    "usual drink picker",
+    "cutoff window 6 to 10 hours before bed"
+   ]
+  }
+ ],
+ "features": [
+  {
+   "covers": [
+    "FatCalc caffeine: body weight lb/kg",
+    "FatCalc caffeine: warning above 6 mg/kg peak"
+   ],
+   "status": "match",
+   "ids": [
+    "chW",
+    "chWu",
+    "chWNote"
+   ]
+  },
+  {
+   "covers": [
+    "FatCalc caffeine: bedtime",
+    "FatCalc caffeine: sources with servings and time",
+    "FatCalc caffeine: caffeine left at bedtime",
+    "FatCalc caffeine: hourly chart and peak timing"
+   ],
+   "status": "match",
+   "ids": [
+    "chBed",
+    "chRows",
+    "chBig",
+    "chCurve",
+    "chTip"
+   ]
+  },
+  {
+   "covers": [
+    "FatCalc caffeine: metabolism fast / normal / slow / pregnant / smoker"
+   ],
+   "status": "match",
+   "ids": [
+    "chHLs",
+    "chHLc"
+   ]
+  },
+  {
+   "covers": [
+    "FatCalc caffeine: latest safe time for a typical coffee"
+   ],
+   "status": "match",
+   "ids": [
+    "chBy"
+   ]
+  },
+  {
+   "covers": [
+    "FatCalc caffeine: biggest contributor"
+   ],
+   "status": "match",
+   "ids": [
+    "chTip"
+   ]
+  },
+  {
+   "covers": [
+    "Slumber Studios cutoff: bedtime picker",
+    "Slumber Studios cutoff: usual drink picker",
+    "Slumber Studios cutoff: cutoff window 6 to 10 hours before bed"
+   ],
+   "status": "match",
+   "ids": [
+    "chBed",
+    "chRows",
+    "chBy"
+   ]
+  }
+ ]
+}

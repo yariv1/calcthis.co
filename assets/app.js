@@ -168,6 +168,19 @@ window.CalcThis = window.CalcThis || {};
   }
   CalcThis.initCsel = initCsel;
   CalcThis.initAllCsel = function (root) { [].forEach.call((root || document).querySelectorAll('.csel'), initCsel); };
+  /* generic "Print / save PDF" button: <button data-print="headId|nameId|Title"> fills the print-only heading (title, optional name, date) and opens the print dialog (parity: APOP tool) */
+  function fillPrintHeads() { [].forEach.call(document.querySelectorAll("[data-print]"), function (b) { var p = b.getAttribute("data-print").split("|"), h = document.getElementById(p[0]), n = p[1] ? document.getElementById(p[1]) : null; if (!h) return; var nm = n ? n.value.trim() : ""; h.textContent = p[2] + (nm ? " for " + nm : "") + " — " + new Date().toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" }); }); }
+  window.addEventListener("beforeprint", fillPrintHeads);
+  document.addEventListener("click", function (e) { var b = e.target.closest ? e.target.closest("[data-print]") : null; if (!b) return; fillPrintHeads(); window.print(); });
+  /* generic "Copy results" button: <button data-copy="id1,id2,..."> copies the text of those elements (parity gate: GigaCalculator has copy buttons) */
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest ? e.target.closest('[data-copy]') : null; if (!b) return;
+    var txt = b.getAttribute('data-copy').split(',').map(function (id) { var n = document.getElementById(id); return n ? (n.innerText || n.textContent || '').trim() : ''; }).filter(Boolean).join('\n');
+    var label = b.getAttribute('data-copy-label') || b.textContent, done = function (ok) { b.textContent = ok ? 'Copied' : 'Copy failed'; setTimeout(function () { b.textContent = label; }, 1600); };
+    b.setAttribute('data-copy-label', label);
+    var legacy = function () { try { var ta = document.createElement('textarea'); ta.value = txt; ta.setAttribute('readonly', ''); ta.style.cssText = 'position:fixed;left:-9999px;top:0'; document.body.appendChild(ta); ta.select(); var ok = document.execCommand('copy'); document.body.removeChild(ta); done(ok); } catch (x) { done(false); } };
+    try { navigator.clipboard.writeText(txt).then(function () { done(true); }, legacy); } catch (x) { legacy(); }
+  });
   CalcThis.initAllCsel();
 
   /* FIELD SYMBOLS (global, 2026-11-08): a field whose label unit starts with a currency symbol or % shows
@@ -20455,6 +20468,7 @@ CalcThis.dogFoodEngine = (function () {
     { id: 'puppy4', label: 'Puppy under 4 months', lo: 3.0, hi: 3.0, f: 3.0 },
     { id: 'puppy', label: 'Puppy, 4 months to adult', lo: 2.0, hi: 2.0, f: 2.0 },
     { id: 'preg', label: 'Pregnant (gestation)', lo: 3.0, hi: 3.0, f: 3.0 },
+    { id: 'lact', label: 'Nursing mother (lactation)', lo: 2.0, hi: 6.0, f: 4.0 },
     { id: 'wl', label: 'Working dog, light work', lo: 2.0, hi: 2.0, f: 2.0 },
     { id: 'wm', label: 'Working dog, moderate work', lo: 3.0, hi: 3.0, f: 3.0 },
     { id: 'wh', label: 'Working dog, heavy work', lo: 5.0, hi: 5.0, f: 5.0 }
@@ -20539,7 +20553,7 @@ CalcThis.initDogFoodCalc = function () {
     var p = function (v) { return Math.max(0, Math.min(100, v / mx * 100)); };
     var band = R.hi > R.lo ? '<i class="fd-band" style="left:' + p(R.merLo) + '%;width:' + (p(R.merHi) - p(R.merLo)) + '%"></i>' : '';
     return '<div class="fd-rule"><div class="fd-rule-t">' + band + '<i class="fd-dot" style="left:' + p(R.rer) + '%" title="At rest ' + grp(R.rer) + ' kcal"></i><i class="fd-dot on" style="left:' + p(R.mer) + '%" title="Daily need ' + grp(R.mer) + ' kcal"></i></div>' +
-      '<div class="fd-rule-l"><span style="left:0">0</span><span style="left:' + p(R.rer) + '%" class="fd-l1">At rest ' + grp(R.rer) + '</span><span style="left:100%">' + grp(mx) + ' kcal</span></div></div>';
+      '<div class="fd-rule-l"><span style="left:0">0</span><span style="left:' + p(R.rer) + '%' + (p(R.rer) > 80 ? ';transform:translateX(-100%)' : (p(R.rer) < 12 ? ';transform:none' : '')) + '" class="fd-l1">At rest ' + grp(R.rer) + '</span><span style="left:100%">' + grp(mx) + ' kcal</span></div></div>';
   }
   function render() {
     var w = readW(), bad = w && w.err ? w.err : '';
@@ -20821,6 +20835,13 @@ CalcThis.initFfmiCalc = function () {
     E.REFS[sx].forEach(function (r) { var d = R.norm - r[0]; rf += '<tr><td>' + r[1] + ' <small>' + r[2] + '</small></td><td>' + f1(r[0]) + '</td><td>' + (d >= 0 ? '+' : '−') + f1(Math.abs(d)) + '</td></tr>'; });
     $('ffRef').innerHTML = '<thead><tr><th>Reference point' + (sx === 'm' ? ' (men)' : ' (women)') + '</th><th>FFMI</th><th>You</th></tr></thead><tbody>' + rf + '</tbody>';
     $('ffRefNote').style.display = sx === 'f' ? '' : 'none';
+    /* natural potential at this height: the lean mass at the FFMI reference points, and where you rank in Trexler's sample */
+    var pts = sx === 'm' ? [[25.0, 'Kouri 1995 limit for drug-free athletes'], [25.4, 'Pre-steroid-era Mr. America mean (Kouri 1995)'], [28.1, '97.5th percentile of college football players (Trexler 2017)']] : [[20.0, 'Women\u2019s maximum, quoted by Menno Henselmans from Chappell 2018 (not verified by us)']], pr = '';
+    pts.forEach(function (p) { var fm2 = E.needFfm(p[0], h.cm), wt = fm2 / (1 - bf.v / 100); pr += '<tr><td>FFMI ' + f1(p[0]) + ' <small>' + p[1] + '</small></td><td>' + both(fm2) + '</td><td>' + both(wt) + (fm2 > R.ffm ? '<small>' + both(fm2 - R.ffm) + ' more lean mass than you have</small>' : '<small>you are past this point</small>') + '</td></tr>'; });
+    $('ffPot').innerHTML = '<thead><tr><th>Reference</th><th>Fat-free mass</th><th>Body weight at ' + trim(bf.v, 1) + '% fat</th></tr></thead><tbody>' + pr + '</tbody>';
+    if (sx === 'm') { var z = (R.norm - 23.7) / 2.1, cdf = 0.5 * (1 + (function (x) { var t = 1 / (1 + 0.3275911 * Math.abs(x)), y = 1 - (((((1.061405429 * t - 1.453152027) * t) + 1.421413741) * t - 0.284496736) * t + 0.254829592) * t * Math.exp(-x * x); return x >= 0 ? y : -y; })(z / Math.SQRT2)) * 100;
+      $('ffOdds').textContent = 'Where you rank: about ' + (cdf < 1 ? 'under 1%' : (cdf > 99 ? 'over 99%' : Math.round(cdf) + '%')) + ' of the 235 college football players in Trexler 2017 (DEXA, mean normalized FFMI 23.7, standard deviation 2.1) had a lower normalized FFMI than yours. This is a normal-curve estimate from those two numbers, not a test of whether a physique is natural; Menno Henselmans offers a similar \u201cnatty or not\u201d odds estimate built on his own data, which is not published, so it is not copied here.'; }
+    else $('ffOdds').textContent = 'No ranking is shown for women: the studies read for this page (Kouri 1995, Trexler 2017) measured men only.';
     /* goal */
     var ad = [];
     if (tg !== null) {
@@ -21055,6 +21076,8 @@ CalcThis.initBulkCalc = function () {
       '<tr><td>Fat <small>' + f1(fgv) + ' g per kg · ' + grp(M.fk) + ' kcal</small></td><td>' + grp(M.f) + ' g</td><td>' + grp(M.f / nm) + ' g</td></tr>' +
       '<tr><td>Carbohydrate <small>the rest · ' + f1(Math.max(0, cg)) + ' g per kg · ' + grp(M.ck) + ' kcal</small></td><td>' + grp(cs) + ' g</td><td>' + grp(cs / nm) + ' g</td></tr></tbody>';
     $('bkMacNote').innerHTML = mf.map(function (t) { return '<p class="bk-flag">' + t + '</p>'; }).join('');
+    var RU = [['beg', 'Beginner', 300, '0.75\u20131.0 kg'], ['inter', 'Intermediate', 200, '0.4\u20130.6 kg'], ['adv', 'Advanced', 150, '0.1\u20130.3 kg']];
+    $('bkRules').innerHTML = '<thead><tr><th>Experience</th><th>Surplus</th><th>Muscle a month</th></tr></thead><tbody>' + RU.map(function (r) { return '<tr' + (r[0] === st.exp ? ' class="cur"' : '') + '><td>' + r[1] + (r[0] === st.exp ? '<small>your choice \u00b7 yours is +' + grp(S) + ' kcal</small>' : '') + '</td><td>+' + r[2] + ' kcal</td><td>' + r[3] + '</td></tr>'; }).join('') + '</tbody>';
   }
   /* ---------- controls ---------- */
   ['bkW', 'bkG', 'bkAge', 'bkH', 'bkMaint', 'bkS', 'bkBf', 'bkPg', 'bkFg'].forEach(function (id) { $(id).addEventListener('input', render); });
@@ -21128,7 +21151,7 @@ CalcThis.initWlCalc = function () {
   var $ = function (id) { return document.getElementById(id); };
   var LB = 2.20462, ST = 6.35029, MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   var MONF = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-  var st = { sex: 'f', wu: 'lb', hu: 'in', main: 'est', plan: 'date', adv: false, model: 'simple' };
+  var st = { sex: 'f', wu: 'lb', hu: 'in', main: 'est', plan: 'date', adv: false, model: 'simple', goal: 'lose' };
   var ex = {}, dp = null;
   function f1(x) { return (Math.round(x * 10) / 10).toFixed(1); }
   function f2(x) { return (Math.round(x * 100) / 100).toFixed(2); }
@@ -21142,7 +21165,8 @@ CalcThis.initWlCalc = function () {
   function pDisp(kg) { return pU() === 'kg' ? kg : kg * LB; }
   function pTxt(kg) { return f2(pDisp(kg)) + ' ' + pU(); }
   function addDays(n) { var d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() + Math.round(n)); return d; }
-  function dateTxt(days) { var d = addDays(days); return d.getDate() + ' ' + MON[d.getMonth()] + ' ' + d.getFullYear(); }
+  var SO = 0;
+  function dateTxt(days) { var d = addDays(days + SO); return d.getDate() + ' ' + MON[d.getMonth()] + ' ' + d.getFullYear(); }
   function fullDate(d) { return d.getDate() + ' ' + MONF[d.getMonth()] + ' ' + d.getFullYear(); }
   function durTxt(days) { if (days > 3650) return 'more than 10 years'; if (days < 14) return Math.max(1, Math.ceil(days)) + (Math.ceil(days) === 1 ? ' day' : ' days'); return Math.round(days / 7) + ' weeks'; }
   function parseDate(raw) {
@@ -21206,6 +21230,50 @@ CalcThis.initWlCalc = function () {
     [0, 0.5, 1].forEach(function (f, k) { var d = T * f; svg += '<text x="' + f1(x(d)) + '" y="' + (Y1 + 17) + '" text-anchor="' + (k === 0 ? 'start' : (k === 2 ? 'end' : 'middle')) + '" font-size="12" font-weight="600" fill="var(--muted)">' + (k === 0 ? '0' : Math.round(d / 7) + (k === 2 ? ' wk' : '')) + '</text>'; });
     $('wlChart').innerHTML = '<svg viewBox="0 0 300 172" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Weight over time: simple rule versus realistic">' + svg + '</svg>';
   }
+  /* maintain / gain goals (FatCalc offers Lose / Maintain / Gain): maintain = what you burn; gain = a surplus to a heavier goal by a date or at a pace */
+  function renderOther(w, g, a, h, mt, known, soft, sf) {
+    var gain = st.goal === 'gain', bf = null;
+    if (st.adv) { bf = readNum('wlBf', 3, 70, 'Body fat should be a percentage between 3 and 70.'); if (bf && bf.err) { sf('wlBf', bf.err + ' It is ignored for now.'); bf = null; } }
+    var male = st.sex === 'm', fct = parseFloat($('wlAct').value), o = { male: male, W: w.kg, H: h ? h.cm : 0, A: a ? a.v : 0, f: fct, formula: (bf && bf.v) ? 'katch' : 'mifflin', bf: bf ? bf.v : null };
+    var out0 = known ? mt.v : D.maint(o), s = known ? D.KNOWN_SLOPE : D.slope(o), W = w.kg;
+    $('wlLoseOnly').style.display = 'none';
+    var rows = '', fg = [];
+    function row(k, v) { rows += '<div class="bf-cmp"><span class="k">' + k + '</span><span class="v">' + v + '</span></div>'; }
+    if (!gain) {
+      setHint(soft ? soft.msg : '', soft ? soft.at : null);
+      $('wlBig').textContent = grp(out0) + ' kcal'; $('wlSub').textContent = 'To stay at ' + wTxt(W) + ' \u00b7 what you burn in a day';
+      $('wlMLab').textContent = 'Calories to maintain'; $('wlMVal').textContent = grp(out0) + ' kcal';
+      $('wlTip').textContent = 'To stay at ' + wTxt(W) + ', eat about ' + grp(out0) + ' kcal a day \u2014 what you burn. Your weight moves with water and meals, so read the trend over several weeks.';
+      row('Eat a day', grp(out0) + ' kcal'); row('Your weight', wTxt(W));
+      $('wlRows').innerHTML = rows; $('wlFlags').innerHTML = ''; $('wlBody').style.display = ''; return;
+    }
+    if (g && g.err) { empty(g.err, 'wlG'); return; }
+    if (!g) { empty(''); return; }
+    if (g.kg <= W) { empty('The goal weight should be above your current weight to gain weight.', 'wlG'); return; }
+    var G = g.kg, byDate = st.plan === 'date', days, surplus, kgWk;
+    if (byDate) {
+      var draw = $('wlDate').value; if (!draw.trim()) { empty(''); return; }
+      var pd = parseDate(draw); if (!pd) { empty('Type or pick a date, like 25 December 2026.', 'wlDate'); return; }
+      var td = new Date(); td.setHours(0, 0, 0, 0); days = Math.round((pd - td) / 86400000) - SO;
+      if (days < 1) { empty(SO ? 'Pick a target date after your start date.' : 'Pick a date after today.', 'wlDate'); return; }
+      if (days > 3650) { empty('Pick a date within the next 10 years.', 'wlDate'); return; }
+      if (st.model === 'real') { var k = s * days / D.KCAL_KG, e = Math.exp(-k), wInf = (G - W * e) / (1 - e); surplus = -s * (W - wInf); } else surplus = (G - W) * D.KCAL_KG / days;
+      kgWk = surplus * 7 / D.KCAL_KG;
+    } else {
+      var pv = readNum('wlPace', 0.01, 100, 'x'); kgWk = pU() === 'kg' ? 0.25 : 0.5 / LB;
+      if (pv && !pv.err) kgWk = pU() === 'kg' ? pv.v : pv.v / LB; else if (pv && pv.err) sf('wlPace', 'Couldn\u2019t read the pace \u2014 the default is used for now.');
+      surplus = kgWk * D.KCAL_KG / 7; days = (G - W) * D.KCAL_KG / surplus;
+    }
+    setHint(soft ? soft.msg : '', soft ? soft.at : null);
+    var I = out0 + surplus, pct = kgWk / W * 100;
+    $('wlBig').textContent = grp(I) + ' kcal';
+    $('wlSub').textContent = 'You burn ' + grp(out0) + ' \u00b7 surplus ' + grp(surplus) + ' kcal \u00b7 gain ' + pTxt(kgWk) + ' a week \u00b7 goal ' + dateTxt(days);
+    $('wlMLab').textContent = 'Calories a day to gain'; $('wlMVal').textContent = grp(I) + ' kcal';
+    $('wlTip').textContent = 'To go from ' + wTxt(W) + ' to ' + wTxt(G) + (byDate ? ' by ' + dateTxt(days) : '') + ', eat about ' + grp(I) + ' kcal a day \u2014 ' + grp(surplus) + ' over the ' + grp(out0) + ' you burn. That gains about ' + pTxt(kgWk) + ' a week (' + f1(pct) + '% of your body weight), simple 7,700 kcal per kg rule' + (st.model === 'real' ? ' with the extra calories you burn as you get heavier allowed for' : '') + '. For a muscle-focused plan with macros see the bulking calculator.';
+    if (pct > 0.5 + 1e-9) fg.push('That is faster than 0.25% to 0.5% of body weight a week, the range a bodybuilding off-season review (Iraki 2019) gives for novice and intermediate lifters \u2014 more of the gain is likely to be fat.');
+    row('Weight to gain', wTxt(G - W)); row('Eat a day', grp(I) + ' kcal'); row('Surplus a day', grp(surplus) + ' kcal'); row('Gain a week', pTxt(kgWk) + '<span class="bm-sub" style="text-align:right">' + f1(pct) + '% of your body weight</span>'); row('Goal date', dateTxt(days) + '<span class="bm-sub" style="text-align:right">' + durTxt(days) + '</span>');
+    $('wlRows').innerHTML = rows; $('wlFlags').innerHTML = fg.map(function (t) { return '<p class="wl-flag">' + t + '</p>'; }).join(''); $('wlBody').style.display = '';
+  }
   function render() {
     /* required: weight, age + height (or maintenance) and, by date, the goal and the date. Everything else only gets a hint under it and is ignored. */
     var soft = null;
@@ -21221,6 +21289,14 @@ CalcThis.initWlCalc = function () {
       if (h && h.err) { empty(h.err, 'wlH'); return; }
     }
     if (!w || (known ? !mt : (!a || !h))) { empty(''); return; }
+    SO = 0; var sraw = st.adv ? $('wlStart').value.trim() : '';
+    if (sraw) {
+      var sd0 = parseDate(sraw), t00 = new Date(); t00.setHours(0, 0, 0, 0);
+      if (!sd0) sf('wlStart', 'Type or pick a date, like 25 December 2026. It is ignored for now, so the plan starts today.');
+      else { var so0 = Math.round((sd0 - t00) / 86400000); if (so0 < 0) sf('wlStart', 'Pick today or a later date. It is ignored for now, so the plan starts today.'); else if (so0 > 3650) sf('wlStart', 'Pick a start date within the next 10 years. It is ignored for now, so the plan starts today.'); else SO = so0; }
+    }
+    $('wlLoseOnly').style.display = '';
+    if (st.goal !== 'lose') { renderOther(w, g, a, h, mt, known, soft, sf); return; }
     var days = null;
     if (byDate) {
       if (g && g.err) { empty(g.err, 'wlG'); return; }
@@ -21230,8 +21306,8 @@ CalcThis.initWlCalc = function () {
       if (!draw.trim()) { empty(''); return; }
       var pd = parseDate(draw);
       if (!pd) { empty('Type or pick a date, like 25 December 2026.', 'wlDate'); return; }
-      var td = new Date(); td.setHours(0, 0, 0, 0); days = Math.round((pd - td) / 86400000);
-      if (days < 1) { empty('Pick a date after today.', 'wlDate'); return; }
+      var td = new Date(); td.setHours(0, 0, 0, 0); days = Math.round((pd - td) / 86400000) - SO;
+      if (days < 1) { empty(SO ? 'Pick a target date after your start date.' : 'Pick a date after today.', 'wlDate'); return; }
       if (days > 3650) { empty('Pick a date within the next 10 years.', 'wlDate'); return; }
     } else {
       if (g && g.err) { sf('wlG', g.err + ' The result below is shown without a goal for now.'); g = null; }
@@ -21270,6 +21346,7 @@ CalcThis.initWlCalc = function () {
     if (G) tip = 'To ' + (byDate ? 'go from ' + wTxt(W) + ' to ' + wTxt(G) + ' by ' + dateTxt(days) + ' (' + durTxt(days) + ')' : 'lose ' + pTxt(kgWkR) + ' a week toward ' + wTxt(G)) + ', eat about ' + grp(I) + ' kcal a day — ' + grp(Dd) + ' under the ' + grp(out0) + ' you burn. That loses about ' + pTxt(kgWkR) + ' a week (' + f1(pctBW) + '% of your body weight)' + (byDate ? '' : (hdays != null ? ' and reaches your goal in about ' + durTxt(hdays) + (hdays <= 3650 ? ' (' + dateTxt(hdays) + ')' : '') : ' — but at this intake your weight levels off before the goal')) + '.';
     else tip = 'Eat about ' + grp(I) + ' kcal a day — ' + grp(Dd) + ' under the ' + grp(out0) + ' you burn — to lose about ' + pTxt(kgWkR) + ' a week (' + f1(pctBW) + '% of your body weight).' + (usedDef ? ' You did not enter a pace, so this is ' + (pU() === 'kg' ? '0.5 kg' : '1 lb') + ' a week.' : '') + ' Add a goal weight to see the date.';
     if (!known && a && a.v < 18) tip += ' Under 18: talk to a doctor before cutting calories.';
+    if (SO) tip += ' The plan starts on ' + dateTxt(0) + '; until then, eat about ' + grp(out0) + ' kcal (what you burn).';
     $('wlTip').textContent = tip;
     /* flags */
     var fg = [];
@@ -21308,7 +21385,7 @@ CalcThis.initWlCalc = function () {
     if (G && Tg != null && Tg <= 3650) {
       [0, 0.25, 0.5, 0.75, 1].forEach(function (f) {
         var t = Tg * f, wt = (f === 1) ? G : E.wAt(model, out0, I, s, W, t);
-        mr += '<tr><td>' + (f === 0 ? 'Today' : 'Week ' + Math.round(t / 7)) + '<small>' + dateTxt(t) + '</small></td><td>' + trim(toDisp(wt), 1) + ' ' + st.wu + '</td><td>' + (f === 0 ? '—' : trim(toDisp(W - wt), 1) + ' ' + st.wu + ' · ' + f1((W - wt) / W * 100) + '%') + '</td></tr>';
+        mr += '<tr><td>' + (f === 0 ? (SO ? 'Start' : 'Today') : 'Week ' + Math.round(t / 7)) + '<small>' + dateTxt(t) + '</small></td><td>' + trim(toDisp(wt), 1) + ' ' + st.wu + '</td><td>' + (f === 0 ? '—' : trim(toDisp(W - wt), 1) + ' ' + st.wu + ' · ' + f1((W - wt) / W * 100) + '%') + '</td></tr>';
       });
       $('wlMile').innerHTML = '<thead><tr><th>When</th><th>Weight</th><th>Lost so far</th></tr></thead><tbody>' + mr + '</tbody>';
       $('wlMileWrap').style.display = '';
@@ -21326,9 +21403,10 @@ CalcThis.initWlCalc = function () {
     } else $('wlByDateWrap').style.display = 'none';
   }
   /* ---------- controls ---------- */
-  ['wlW', 'wlG', 'wlAge', 'wlH', 'wlMaint', 'wlDate', 'wlPace', 'wlBf'].forEach(function (id) { $(id).addEventListener('input', render); });
+  ['wlW', 'wlG', 'wlAge', 'wlH', 'wlMaint', 'wlDate', 'wlPace', 'wlBf', 'wlStart'].forEach(function (id) { $(id).addEventListener('input', render); });
   $('wlAct').addEventListener('change', render);
   seg('wlSex', function (v) { st.sex = v; render(); });
+  seg('wlGoal', function (v) { st.goal = v; $('wlG').closest('label').style.display = v === 'maintain' ? 'none' : ''; $('wlGoalBox').style.display = v === 'maintain' ? 'none' : ''; $('wlPace').closest('label').querySelector('.lab').firstChild.nodeValue = (v === 'gain' ? 'Weight gain ' : 'Weight loss '); chips(); render(); });
   seg('wlMain', function (v) { st.main = v; $('wlEstWrap').style.display = v === 'est' ? '' : 'none'; $('wlKnownWrap').style.display = v === 'known' ? '' : 'none'; render(); });
   seg('wlModel', function (v) { st.model = v; render(); });
   seg('wlPlan', function (v) {
@@ -21337,11 +21415,11 @@ CalcThis.initWlCalc = function () {
   });
   $('wlChips').addEventListener('click', function (e) {
     var b = e.target.closest('button'); if (!b) return;
-    if (b.hasAttribute('data-d')) setDate(addDays(+b.getAttribute('data-d'))); else $('wlPace').value = b.getAttribute('data-v');
+    if (b.hasAttribute('data-d')) setDate(addDays(+b.getAttribute('data-d') + SO)); else $('wlPace').value = b.getAttribute('data-v');
     render();
   });
-  function pickRow(e) { var tr = e.target.closest('tr[data-d]'); if (!tr) return; if (st.plan !== 'date') { st.plan = 'date'; U.setSeg('wlPlan', 'date'); $('wlDateWrap').style.display = ''; $('wlPaceWrap').style.display = 'none'; $('wlPaceNote').style.display = 'none'; $('wlGL').textContent = st.wu; chips(); } setDate(addDays(+tr.getAttribute('data-d'))); render(); }
-  $('wlByDate').addEventListener('click', pickRow);
+  function pickRow(e) { var tr = e.target.closest('tr[data-d]'); if (!tr) return; if (st.plan !== 'date') { st.plan = 'date'; U.setSeg('wlPlan', 'date'); $('wlDateWrap').style.display = ''; $('wlPaceWrap').style.display = 'none'; $('wlPaceNote').style.display = 'none'; $('wlGL').textContent = st.wu; chips(); } setDate(addDays(+tr.getAttribute('data-d') + SO)); render(); }
+$('wlByDate').addEventListener('click', pickRow);
   $('wlByDate').addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pickRow(e); } });
   seg('wlWU', function (v) {
     var w = readW('wlW', 'w'), g = readW('wlG', 'g'), m = ex.w, m2 = ex.g;
@@ -21362,12 +21440,13 @@ CalcThis.initWlCalc = function () {
   });
   $('wlAdvBtn').addEventListener('click', function () {
     st.adv = !st.adv; $('wlAdvBtn').classList.toggle('open', st.adv); $('wlAdvBtnLab').textContent = st.adv ? 'Go simple' : 'Go advanced'; $('wlAdvIn').style.display = st.adv ? '' : 'none';
-    if (!st.adv) { $('wlBf').value = ''; st.model = 'simple'; U.setSeg('wlModel', 'simple'); }
+    if (!st.adv) { $('wlBf').value = ''; $('wlStart').value = ''; st.model = 'simple'; U.setSeg('wlModel', 'simple'); }
     render();
   });
   if (window.Datepicker) {
     dp = new Datepicker($('wlDate'), { format: 'd MM yyyy', autohide: true, weekStart: 0, todayHighlight: true, minDate: new Date() });
     $('wlDate').addEventListener('changeDate', render);
+    new Datepicker($('wlStart'), { format: 'd MM yyyy', autohide: true, weekStart: 0, todayHighlight: true, minDate: new Date() }).element.addEventListener('changeDate', render);
   }
   chips();
   render();
@@ -21509,6 +21588,14 @@ CalcThis.initWpCalc = function () {
       if (!pd) sf('wpD', 'Type or pick a date, like 25 September 2026. It is ignored for now.');
       else { var dd = Math.round((td - pd) / 86400000); if (dd < 1) sf('wpD', 'The starting date should be before today. It is ignored for now.'); else days = dd; }
     }
+    var wks = null, traw = st.adv ? $('wpT').value.trim() : '';
+    if (traw) {
+      var tn = parseFloat(traw.replace(',', '.'));
+      if (!/^\d*\.?\d+$/.test(traw.replace(',', '.')) || !(tn >= 1 && tn <= 520)) sf('wpT', 'Type the number of weeks, between 1 and 520. It is ignored for now.');
+      else if (G === null) sf('wpT', 'Type a goal weight first, then the weeks give the loss you need each week. The weeks are ignored for now.');
+      else if (C <= G) sf('wpT', 'You are already at or below the goal weight, so there is nothing left to lose. The weeks are ignored for now.');
+      else wks = tn;
+    }
     setHint(soft ? soft.msg : '', soft ? soft.at : null);
     $('wpBig').textContent = E.fmtP(P);
     $('wpSub').textContent = 'From ' + E.fmtW(S, st.u) + ' to ' + E.fmtW(C, st.u) + ' · ' + E.fmtW(L, st.u) + ' lost';
@@ -21533,8 +21620,13 @@ CalcThis.initWpCalc = function () {
       row('Average loss a week <span class="bm-sub">over ' + days + (days === 1 ? ' day' : ' days') + '</span>', (Math.round(wkd * 100) / 100).toFixed(2) + ' ' + pu + '<span class="bm-sub" style="text-align:right">' + (Math.round(wk / S * 10000) / 100).toFixed(2) + '% of your starting weight a week</span>');
       if (G !== null && C > G) row('At this pace you reach the goal in', Math.round((C - G) / wk) + ' weeks<span class="bm-sub" style="text-align:right">' + dateTxt((C - G) / wk * 7) + '</span>');
     }
+    if (wks !== null) {
+      var need = (C - G) / wks, pu2 = st.u === 'kg' ? 'kg' : 'lb', needd = pu2 === 'kg' ? need : need * LB;
+      row('To reach your goal in ' + E.trim(wks, 2) + (wks === 1 ? ' week' : ' weeks') + ' you need to lose', (Math.round(needd * 100) / 100).toFixed(2) + ' ' + pu2 + ' a week<span class="bm-sub" style="text-align:right">' + (Math.round(need / S * 10000) / 100).toFixed(2) + '% of your starting weight a week</span>');
+    }
     $('wpRows').innerHTML = rows;
     var fl = [];
+    if (wks !== null) { var w3 = (C - G) / wks; if (w3 > E.CAP_KG + 1e-9) fl.push('That is more than 2 lb (' + (Math.round(E.CAP_KG * 100) / 100).toFixed(2) + ' kg) a week — faster than the gradual 1 to 2 pounds a week the CDC links to keeping weight off.'); }
     if (days !== null) { var w2 = L / (days / 7); if (w2 > E.CAP_KG + 1e-9) fl.push('That is more than 2 lb (' + (Math.round(E.CAP_KG * 100) / 100).toFixed(2) + ' kg) a week — faster than the gradual 1 to 2 pounds a week the CDC links to keeping weight off.'); else if (w2 >= 0.45359 - 1e-9) fl.push('That is within the gradual 1 to 2 pounds (0.45–0.9 kg) a week the CDC links to keeping weight off.'); }
     $('wpFlags').innerHTML = fl.map(function (t) { return '<p class="wp-flag">' + t + '</p>'; }).join('');
     $('wpBar').innerHTML = bar(P);
@@ -21543,7 +21635,7 @@ CalcThis.initWpCalc = function () {
     $('wpTable').innerHTML = '<thead><tr><th>Lose</th><th>That is</th><th>You weigh</th></tr></thead><tbody>' + tr + '</tbody>';
   }
   /* ---------- controls ---------- */
-  ['wpA', 'wpB', 'wpG', 'wpD'].forEach(function (id) { $(id).addEventListener('input', render); });
+  ['wpA', 'wpB', 'wpG', 'wpD', 'wpT'].forEach(function (id) { $(id).addEventListener('input', render); });
   $('wpKnow').addEventListener('change', function () {
     var v = $('wpKnow').value, o = MODES[st.mode], n = MODES[v];
     if (o[0][1] !== n[0][1]) $('wpA').value = ''; if (o[1][1] !== n[1][1]) $('wpB').value = '';
@@ -21563,7 +21655,7 @@ CalcThis.initWpCalc = function () {
   $('wpTable').addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.target.click(); } });
   $('wpAdvBtn').addEventListener('click', function () {
     st.adv = !st.adv; $('wpAdvBtn').classList.toggle('open', st.adv); $('wpAdvBtnLab').textContent = st.adv ? 'Go simple' : 'Go advanced'; $('wpAdvIn').style.display = st.adv ? '' : 'none';
-    if (!st.adv) $('wpD').value = '';
+    if (!st.adv) { $('wpD').value = ''; $('wpT').value = ''; }
     render();
   });
   if (window.Datepicker) {
@@ -21708,7 +21800,7 @@ CalcThis.cafEngine = (function () {
     { id: 'choc', name: 'Dark chocolate 70–85%', size: '1 oz, 28 g', mg: 23, v: 28.3495, u2: 'g' },
     { id: 'own', name: 'My own amount (mg)', size: '', mg: 0, v: 0, u2: '' }
   ];
-  var ADULT = 400, HC = 2.5, EFSA = 3, HL = { typ: 5, smoke: 3.2 }, CUP = 95, LB = 2.20462;
+  var ADULT = 400, HC = 2.5, EFSA = 3, HL = { typ: 5, smoke: 3.2, fast: 3, slow: 8, preg: 11.5 }, CUP = 95, LB = 2.20462;
   function num(t) {
     t = (t + '').trim().replace(/\s/g, '');
     if (!t) return null;
@@ -21916,7 +22008,7 @@ CalcThis.initCafLimitCalc = function () {
 CalcThis.initCafHalfCalc = function () {
   var E = CalcThis.cafEngine, U = CalcThis._kzUtil, seg = U.seg, setSeg = U.setSeg, esc = U.esc, UI = CalcThis._cafUi;
   var $ = function (id) { return document.getElementById(id); };
-  var st = { c24: false, hl: 'typ' }, rows = [], nextId = 0, TF = {};
+  var st = { cw: 'lb', c24: false, hl: 'typ' }, rows = [], nextId = 0, TF = {};
   var GHOST = '<span class="g-off">-</span><span class="g-off">-</span><span class="g-sep">:</span><span class="g-off">-</span><span class="g-off">-</span>';
   function setHint(m, at) {
     var h = $('chHint'); h.textContent = m || ''; h.style.display = m ? 'block' : 'none';
@@ -22051,7 +22143,7 @@ CalcThis.initCafHalfCalc = function () {
     if (!items.length) { empty(prob ? prob.m : '', prob ? prob.at : null); return; }
     if (prob) soft.push({ m: prob.m.replace(/\.$/, '') + '. This drink is left out for now.', at: prob.at });
     var hl = E.HL.typ;
-    if (st.hl === 'smoke') hl = E.HL.smoke;
+    if (st.hl !== 'own' && E.HL[st.hl]) hl = E.HL[st.hl];
     else if (st.hl === 'own') {
       var H = E.readHL($('chHLc').value);
       if (H.bad) soft.push({ m: 'Half-life should be between 1 and 24 hours. It is ignored for now, so 5 hours is used.', at: 'chHLc' }); else if (H.v) hl = H.v;
@@ -22084,6 +22176,17 @@ CalcThis.initCafHalfCalc = function () {
     var tip;
     if (B !== null) tip = 'At ' + ck(B) + ' about ' + fmt(left) + ' of the ' + fmt(total) + ' is still in your body (' + Math.round(left / total * 100) + '%). Your last drink was ' + E.trim((B - last) / 60, 1) + ' hours before bed. In a 2013 sleep study, 400 mg taken even 6 hours before bedtime disturbed sleep compared with placebo.';
     else tip = 'Right after your last drink about ' + fmt(peakNow) + ' is in your body. With a ' + hlTxt + ' half-life, half of the last drink is gone by ' + ck(last + hl * 60) + '. Add your bedtime to see what is left when you go to sleep.';
+    if (B !== null && items.length) { var bc = null; items.forEach(function (x) { var v = E.bodyAt([{ t: x.t, mg: x.mg }], B, hl); if (!bc || v > bc.v) bc = { v: v, name: x.name, t: x.t }; }); tip += ' The biggest contributor to that is ' + bc.name + ' at ' + ck(bc.t) + ' (' + fmt(bc.v) + ').'; }
+    if (st.hl === 'preg') tip += ' The 11.5-hour half-life is a cautious late-pregnancy figure from FatCalc (not verified by us), so it overstates early pregnancy. Ask your provider how much caffeine suits you.';
+    else if (st.hl === 'fast' || st.hl === 'slow') tip += ' The ' + (st.hl === 'fast' ? '3' : '8') + '-hour preset follows FatCalc\u2019s metabolizer settings (not verified by us); your real half-life can differ a lot.';
+    var wk = E.readKg($('chW').value, st.cw), wN = $('chWNote');
+    if (wk.empty) wN.textContent = 'Add your weight and the tip shows your largest drink and your peak in mg per kg of body weight.';
+    else if (wk.bad) { wN.textContent = 'Body weight should be between 5 and 300 kg (11 to 660 lb). It is ignored for now.'; }
+    else {
+      var big1 = 0, pk = 0, pkT = 0; items.forEach(function (x) { if (x.mg > big1) big1 = x.mg; var v = E.bodyAt(doses, x.t, hl); if (v > pk) { pk = v; pkT = x.t; } });
+      wN.textContent = 'Your largest drink is ' + E.trim(big1 / wk.v, 1) + ' mg per kg and your peak is ' + E.trim(pk / wk.v, 1) + ' mg per kg.';
+      tip += ' Your level peaks right after ' + ck(pkT) + ' at about ' + fmt(pk) + ' (' + E.trim(pk / wk.v, 1) + ' mg per kg). EFSA\u2019s single-dose figure is about 3 mg per kg (200 mg), and FatCalc warns above a 6 mg per kg peak (both quoted from FatCalc, not verified by us).';
+    }
     $('chTip').textContent = tip;
     /* curve */
     var a = first - 60, b = Math.max(last + 3 * hl * 60, B !== null ? B + 60 : 0);
@@ -22107,12 +22210,13 @@ CalcThis.initCafHalfCalc = function () {
   }
   /* ---------- controls ---------- */
   $('chHLs').addEventListener('change', function () { st.hl = $('chHLs').value; $('chHLWrap').style.display = st.hl === 'own' ? '' : 'none'; render(); });
-  ['chHLc', 'chTar'].forEach(function (id) { $(id).addEventListener('input', render); });
+  ['chHLc', 'chTar', 'chW'].forEach(function (id) { $(id).addEventListener('input', render); });
+  seg('chWu', function (v) { st.cw = v; $('chWUnit').textContent = v; render(); });
   $('chAdd').addEventListener('click', function () { addRow(); render(); });
   $('chClear').addEventListener('click', clearAll);
   $('chAdvBtn').addEventListener('click', function () {
     var open = $('chAdvBtn').classList.toggle('open'); $('chAdvBtnLab').textContent = open ? 'Go simple' : 'Go advanced'; $('chAdvIn').style.display = open ? '' : 'none';
-    if (!open) $('chTar').value = '';
+    if (!open) { $('chTar').value = ''; $('chW').value = ''; }
     render();
   });
   regTf('chBed');
@@ -22862,6 +22966,15 @@ CalcThis.initRecompCalc = function () {
       else n = 'Used as given — age and height are not needed.';
     } else n = 'Know it already, for example from tracking your food and weight? Type it here and it replaces the estimate from age and height.';
     mN.textContent = n; mN.style.display = '';
+    var hv0 = $('rcHealth').value, hN = $('rcHealthNote');
+    hN.textContent = hv0 === 'none' ? 'Pregnancy, breastfeeding, a GLP-1 medicine or kidney disease change calorie and protein needs. Pick one and the page adds a note to ask a clinician first.' : 'These numbers are a starting estimate for a healthy adult and do not account for this. Ask a clinician or dietitian before using them.'; hN.style.display = '';
+    var ex = readNum('rcEx', 0, 20000, 'm'), exN = $('rcExNote');
+    if (!ex) n = 'Hard workouts on top of your activity level? Type the calories you burn in extra exercise in a week and a seventh of it is added to your calories each day.';
+    else if (ex.err) n = 'Extra exercise should be between 0 and 20,000 kcal a week. It is ignored for now.';
+    else if (mt) n = 'Not used while you give your own calories — they already include your exercise.';
+    else if (!a || !h || !w) n = 'Type your weight, age and height first — the extra exercise is added to the estimate.';
+    else n = 'Adds ' + grp(Math.round(ex.v / 7)) + ' kcal a day to the estimate.';
+    exN.textContent = n; exN.style.display = '';
     var tb = readNum('rcTbf', 3, 60, 'Target body fat should be a percentage between 3 and 60.'), tN = $('rcTbfNote');
     if (tb && !tb.err) {
       if (!bf) n = 'Type your current body fat first (above) — the fat to lose is worked out from it.';
@@ -22940,7 +23053,8 @@ CalcThis.initRecompCalc = function () {
     var tb = readNum('rcTbf', 3, 60, 'Target body fat should be a percentage between 3 and 60.'); if (tb && tb.err) { sf('rcTbf', tb.err + ' It is ignored for now.'); tb = null; }
     setHint(soft ? soft.msg : '', soft ? soft.at : null);
     var male = SEX(), fct = parseFloat($('rcAct').value), method = known ? 'your own number' : (bf ? 'Katch-McArdle' : 'Mifflin-St Jeor');
-    var M = known ? mt.v : D.maint({ male: male, W: w.kg, H: h.cm, A: a.v, f: fct, formula: bf ? 'katch' : 'mifflin', bf: bf ? bf.v : null }), Mr = Math.round(M);
+    var exr = readNum('rcEx', 0, 20000, 'Extra exercise should be between 0 and 20,000 kcal a week.'); if (exr && exr.err) { sf('rcEx', exr.err + ' It is ignored for now.'); exr = null; }
+    var M = known ? mt.v : D.maint({ male: male, W: w.kg, H: h.cm, A: a.v, f: fct, formula: bf ? 'katch' : 'mifflin', bf: bf ? bf.v : null }) + (exr ? exr.v / 7 : 0), Mr = Math.round(M);
     var T = E.targets(M, male), cur = T.filter(function (x) { return x.k === st.focus; })[0], W = w.kg, i;
     var Mc = T.map(function (x) { return E.macros(x.cal, W, E.PROT_DEF, E.FAT_DEF); }), mc = Mc[T.indexOf(cur)];
     $('rcBig').textContent = grp(cur.cal) + ' kcal';
@@ -22958,6 +23072,30 @@ CalcThis.initRecompCalc = function () {
     var cg = mc.c / W;
     if (mc.c < 0) fl.push('Protein and fat use more than all the calories of your pick — it is too low for these amounts; choose a smaller cut or type more calories you burn.');
     else if (cg < E.CARB_MIN) fl.push('Carbohydrate is ' + f1(cg) + ' g per kg for your pick, below the 3 g per kg minimum a review gives for fuelling resistance training.');
+    var hv1 = $('rcHealth').value; if (hv1 !== 'none') fl.push({ preg: 'Pregnancy changes calorie and protein needs, and a calorie deficit is not advised — ask a clinician before using these numbers.', bf: 'Breastfeeding raises calorie and protein needs, so a deficit may not suit you — ask a clinician before using these numbers.', glp: 'A GLP-1 medicine changes appetite and what you can safely eat — ask your clinician or dietitian before using these numbers.', kid: 'Kidney disease can limit protein and other nutrients — ask your clinician or dietitian before using these numbers.' }[hv1]);
+    /* training days and rest days (Fitness Volt rule): training days up to 10% above the average, never above maintenance while you are under it; rest days give it back */
+    (function () {
+      var avg = cur.cal, D7 = st.days, fl0 = E.floor(male), tr = avg * 1.1;
+      if (cur.cut > 0) tr = Math.min(tr, Mr);
+      var rest = (avg * 7 - tr * D7) / (7 - D7);
+      if (rest < fl0) { rest = fl0; tr = (avg * 7 - rest * (7 - D7)) / D7; }
+      $('rcCycle').innerHTML = '<thead><tr><th>Day</th><th>Calories</th></tr></thead><tbody><tr><td>Training days <small>' + D7 + ' a week</small></td><td>' + grp(tr) + ' kcal</td></tr><tr><td>Rest days <small>' + (7 - D7) + ' a week</small></td><td>' + grp(rest) + ' kcal</td></tr><tr><td>Weekly average</td><td>' + grp(avg) + ' kcal</td></tr></tbody>';
+      $('rcCycleNote').textContent = 'The rule is Fitness Volt\u2019s (not verified by us): training days get up to 10% more than the average, never above what you burn while you eat less than that, and rest days give it back. Change the strength sessions under Go advanced.';
+    })();
+    (function () {
+      var ev = $('rcExp').value, wrap = $('rcPotWrap'), exN = $('rcExpNote');
+      exN.textContent = ev === 'none' ? 'Pick your lifting experience to see the muscle gain a lifter at that level can expect in 12 weeks.' : 'Shown under the results as the expected muscle gain for this level.';
+      if (ev === 'none') { wrap.style.display = 'none'; return; }
+      var RT = { m: { beg: [0.75, 0.95], inter: [0.2, 0.45], adv: [0.08, 0.11], elite: [0, 0.08] }, f: { beg: [0.38, 0.48], inter: [0.1, 0.23], adv: [0.04, 0.06], elite: [0, 0.04] } }[male ? 'm' : 'f'];
+      var NM = { beg: 'Beginner', inter: 'Intermediate', adv: 'Advanced', elite: 'Elite' }, MO = 12 / 4.345, rows = '';
+      ['beg', 'inter', 'adv', 'elite'].forEach(function (k) {
+        var r = RT[k], lo = r[0] * MO, hi = r[1] * MO;
+        rows += '<tr' + (k === ev ? ' class="cur"' : '') + '><td>' + NM[k] + '</td><td>' + (k === 'elite' ? 'under ' + f2(r[1]) : f2(r[0]) + '\u2013' + f2(r[1])) + ' kg</td><td>' + (k === 'elite' ? 'under ' + f1(hi) + ' kg' : f1(lo) + '\u2013' + f1(hi) + ' kg') + '<small>' + (k === 'elite' ? 'under ' + f1(hi * 2.20462) : f1(lo * 2.20462) + '\u2013' + f1(hi * 2.20462)) + ' lb</small></td></tr>';
+      });
+      $('rcPot').innerHTML = '<thead><tr><th>Experience' + (male ? ' (men)' : ' (women)') + '</th><th>A month</th><th>In 12 weeks</th></tr></thead><tbody>' + rows + '</tbody>';
+      $('rcPotNote').textContent = 'Best-case rates from FatCalc\u2019s table of McDonald\u2019s model, for consistent training and enough protein. Not verified by us; individual results vary a lot.';
+      wrap.style.display = '';
+    })();
     $('rcFlags').innerHTML = fl.map(function (t) { return '<p class="rc-flag">' + t + '</p>'; }).join('');
     /* ruler */
     $('rcRuler').innerHTML = ruler(M, T, male, st.focus);
@@ -22993,8 +23131,8 @@ CalcThis.initRecompCalc = function () {
     notes();
   }
   /* ---------- controls ---------- */
-  ['rcW', 'rcH', 'rcAge', 'rcBf', 'rcMaint', 'rcTbf', 'rcWa', 'rcNe', 'rcHi'].forEach(function (id) { $(id).addEventListener('input', render); });
-  $('rcAct').addEventListener('change', render);
+  ['rcW', 'rcH', 'rcAge', 'rcBf', 'rcMaint', 'rcEx', 'rcTbf', 'rcWa', 'rcNe', 'rcHi'].forEach(function (id) { $(id).addEventListener('input', render); });
+  $('rcAct').addEventListener('change', render); $('rcHealth').addEventListener('change', render); $('rcExp').addEventListener('change', render);
   seg('rcSex', function (v) { st.sex = v; $('rcHipFld').style.display = v === 'f' ? '' : 'none'; render(); });
   $('rcFocus').addEventListener('click', function (e) {
     var b = e.target.closest('.radopt'); if (!b) return; st.focus = b.getAttribute('data-v');
@@ -23022,7 +23160,7 @@ CalcThis.initRecompCalc = function () {
   $('rcUse').addEventListener('click', function () { $('rcBf').value = $('rcUse').getAttribute('data-v'); render(); });
   $('rcAdvBtn').addEventListener('click', function () {
     st.adv = !st.adv; $('rcAdvBtn').classList.toggle('open', st.adv); $('rcAdvBtnLab').textContent = st.adv ? 'Go simple' : 'Go advanced'; $('rcAdvIn').style.display = st.adv ? '' : 'none';
-    if (!st.adv) { $('rcMaint').value = ''; $('rcTbf').value = ''; st.days = 3; st.meals = 4; setSeg('rcDays', '3'); setSeg('rcMeals', '4'); }
+    if (!st.adv) { $('rcMaint').value = ''; $('rcEx').value = ''; $('rcHealth').value = 'none'; $('rcExp').value = 'none'; $('rcTbf').value = ''; st.days = 3; st.meals = 4; setSeg('rcDays', '3'); setSeg('rcMeals', '4'); }
     render();
   });
   render();

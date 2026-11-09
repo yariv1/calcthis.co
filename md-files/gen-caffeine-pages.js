@@ -187,11 +187,14 @@ function build(P) {
         ${addRow('ch')}
         <div class="proj-sep"></div>
         ${tfield('chBed', 'chBedIn', 'Your bedtime · optional', 'pm')}
-        ${csel('chHLs', 'typ', 'Half-life', [['typ', 'Typical adult — 5 hours'], ['smoke', 'Smoker — 3.2 hours'], ['own', 'My own']])}
+        ${csel('chHLs', 'typ', 'Half-life', [['typ', 'Typical adult — 5 hours'], ['smoke', 'Smoker — 3.2 hours'], ['fast', 'Fast metabolizer — about 3 hours'], ['slow', 'Slow metabolizer — about 8 hours'], ['preg', 'Pregnant — about 11.5 hours'], ['own', 'My own']])}
         <div id="chHLWrap" style="display:none">${tfld('chHLc', 'Half-life', 'hours', 'e.g. 6')}</div>
         <div id="chAdvIn" style="display:none">
           ${tfld('chTar', 'Most caffeine I am comfortable with at bedtime', 'mg · optional', 'e.g. 25')}
           <p class="av-note" style="margin:0 0 8px">Adds the clock time to finish your last drink by so that no more than this is left from it at bedtime.</p>
+          <div class="ctl-row"><span class="ctl-lab">Weight unit</span><div class="seg" id="chWu" role="group" aria-label="Weight unit"><button class="on" type="button" data-v="lb">lb</button><button type="button" data-v="kg">kg</button></div></div>
+          <label class="fld" for="chW"><span class="lab">Body weight <span class="unit"><span id="chWUnit">lb</span> · optional</span></span><div class="inp"><input id="chW" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 150"></div></label>
+          <p class="av-note" id="chWNote"></p>
         </div>
         <div class="add-row split" style="margin-top:16px">
           <span></span>

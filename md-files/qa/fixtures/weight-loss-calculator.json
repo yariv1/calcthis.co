@@ -18,11 +18,13 @@
     ["set", "wlG", "70"],
     ["set", "wlPace", ""],
     ["set", "wlBf", ""],
+    ["set", "wlStart", ""],
     ["set", "wlDate", "30 June 2029"]
   ],
   "optionalSamples": {
     "wlPace": ["0.5", "1", "0.75"],
-    "wlBf": ["15", "30"]
+    "wlBf": ["15", "30"],
+    "wlStart": ["25 December 2028", "2028-12-25"]
   },
   "variants": [
     [["seg", "wlPlan", "pace"]],

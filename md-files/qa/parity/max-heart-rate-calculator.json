@@ -1,0 +1,97 @@
+{
+ "slug": "max-heart-rate-calculator",
+ "research": "md-files/calcthis-maxhr-research.md",
+ "competitors": [
+  {
+   "name": "Omnicalculator",
+   "url": "https://www.omnicalculator.com/sports/max-heart-rate",
+   "openedLive": true,
+   "date": "2026-11-06",
+   "inputs": [
+    "age",
+    "formula select: Inbar, Haskell & Fox, Nes, Oakland, Tanaka",
+    "example table",
+    "over 85% of max advice"
+   ]
+  },
+  {
+   "name": "NTNU CERG HRmax",
+   "url": "https://www.ntnu.edu/cerg/hrmax",
+   "openedLive": true,
+   "date": "2026-11-06",
+   "inputs": [
+    "sex, age, height, weight",
+    "beta blockers checkbox",
+    "HUNT formula",
+    "4x4 field test"
+   ]
+  },
+  {
+   "name": "McMillan Running",
+   "url": "https://www.mcmillanrunning.com/",
+   "openedLive": true,
+   "date": "2026-11-06",
+   "inputs": [
+    "4 formulas Fox/Tanaka/Gulati/+1",
+    "field test to measure HRmax",
+    "formulas can be off 10-30 bpm"
+   ]
+  }
+ ],
+ "features": [
+  {
+   "covers": [
+    "Omnicalculator: age",
+    "Omnicalculator: formula select: Inbar, Haskell & Fox, Nes, Oakland, Tanaka",
+    "Omnicalculator: example table"
+   ],
+   "status": "exceed",
+   "ids": [
+    "mhAge",
+    "mhRows",
+    "mhM",
+    "mhBar"
+   ]
+  },
+  {
+   "covers": [
+    "Omnicalculator: over 85% of max advice"
+   ],
+   "status": "match",
+   "ids": [
+    "mhPct",
+    "mhTip"
+   ]
+  },
+  {
+   "covers": [
+    "NTNU CERG HRmax: sex, age, height, weight",
+    "NTNU CERG HRmax: beta blockers checkbox",
+    "NTNU CERG HRmax: HUNT formula",
+    "NTNU CERG HRmax: 4x4 field test"
+   ],
+   "status": "match",
+   "ids": [
+    "mhSex",
+    "mhAge",
+    "mhBeta",
+    "mhRows",
+    "mhBody"
+   ]
+  },
+  {
+   "covers": [
+    "McMillan Running: 4 formulas Fox/Tanaka/Gulati/+1",
+    "McMillan Running: field test to measure HRmax",
+    "McMillan Running: formulas can be off 10-30 bpm"
+   ],
+   "status": "match",
+   "ids": [
+    "mhRows",
+    "mhF",
+    "mhBody",
+    "mhBar"
+   ]
+  }
+ ]
+}

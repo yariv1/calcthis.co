@@ -1,0 +1,231 @@
+{
+ "slug": "body-recomposition-calculator",
+ "research": "md-files/calcthis-recomp-research.md",
+ "competitors": [
+  {
+   "name": "Fitness Volt",
+   "url": "https://fitnessvolt.com/body-recomposition-calculator/",
+   "openedLive": true,
+   "date": "2026-11-07",
+   "inputs": [
+    "weight, height, age, sex, activity (5)",
+    "emphasis lose fat / both / build muscle",
+    "weight-training days",
+    "meals 3-6",
+    "health flags pregnant/GLP-1/kidney",
+    "optional body fat",
+    "training-day and rest-day calories",
+    "per-meal table"
+   ]
+  },
+  {
+   "name": "FatCalc",
+   "url": "https://fatcalc.com/body-recomp-calculator",
+   "openedLive": true,
+   "date": "2026-11-07",
+   "inputs": [
+    "sex, age, body fat, height, weight",
+    "training experience (4)",
+    "activity",
+    "goal recomp/lean bulk/cut",
+    "recomposition potential",
+    "12-week projection"
+   ]
+  },
+  {
+   "name": "Bony to Beastly",
+   "url": "https://www.bonytobeastly.com/body-recomposition-calorie-calculator/",
+   "openedLive": true,
+   "date": "2026-11-07",
+   "inputs": [
+    "units, weight, body fat %",
+    "lifestyle (3)",
+    "workouts (4)",
+    "weight change slight deficit/none/surplus",
+    "Cunningham RMR from body fat"
+   ]
+  },
+  {
+   "name": "Healthy Eater",
+   "url": "https://www.healthyeater.com/body-recomposition-calculator",
+   "openedLive": true,
+   "date": "2026-11-07",
+   "inputs": [
+    "age, sex, weight, height",
+    "formula normal / lean mass + body fat",
+    "exercise",
+    "extra weekly calories burned",
+    "goal more fat loss/even/more muscle",
+    "calories per day or per meal"
+   ]
+  },
+  {
+   "name": "Coachway",
+   "url": "https://coachway.io/tools/body-recomposition-calculator/",
+   "openedLive": true,
+   "date": "2026-11-07",
+   "inputs": [
+    "weight lb/kg, body fat",
+    "target body fat",
+    "activity (4)",
+    "maintenance Katch-McArdle",
+    "lean/fat mass split, fat to lose",
+    "6-12 month timeline"
+   ]
+  }
+ ],
+ "features": [
+  {
+   "covers": [
+    "Fitness Volt: weight, height, age, sex, activity (5)",
+    "Fitness Volt: emphasis lose fat / both / build muscle",
+    "Fitness Volt: weight-training days",
+    "Fitness Volt: meals 3-6",
+    "Fitness Volt: optional body fat",
+    "Fitness Volt: per-meal table"
+   ],
+   "status": "match",
+   "ids": [
+    "rcW",
+    "rcH",
+    "rcAge",
+    "rcSex",
+    "rcAct",
+    "rcFocus",
+    "rcDays",
+    "rcMeals",
+    "rcBf",
+    "rcMac"
+   ]
+  },
+  {
+   "covers": [
+    "Fitness Volt: health flags pregnant/GLP-1/kidney"
+   ],
+   "status": "match",
+   "ids": [
+    "rcHealth"
+   ]
+  },
+  {
+   "covers": [
+    "Fitness Volt: training-day and rest-day calories"
+   ],
+   "status": "match",
+   "ids": [
+    "rcCycle"
+   ]
+  },
+  {
+   "covers": [
+    "FatCalc: sex, age, body fat, height, weight",
+    "FatCalc: activity",
+    "FatCalc: goal recomp/lean bulk/cut"
+   ],
+   "status": "match",
+   "ids": [
+    "rcSex",
+    "rcAge",
+    "rcBf",
+    "rcH",
+    "rcW",
+    "rcAct",
+    "rcFocus"
+   ]
+  },
+  {
+   "covers": [
+    "FatCalc: training experience (4)",
+    "FatCalc: recomposition potential",
+    "FatCalc: 12-week projection"
+   ],
+   "status": "match",
+   "ids": [
+    "rcExp",
+    "rcPot"
+   ]
+  },
+  {
+   "covers": [
+    "Bony to Beastly: units, weight, body fat %",
+    "Bony to Beastly: weight change slight deficit/none/surplus",
+    "Bony to Beastly: lifestyle (3)",
+    "Bony to Beastly: workouts (4)"
+   ],
+   "status": "match",
+   "ids": [
+    "rcWu",
+    "rcW",
+    "rcBf",
+    "rcFocus",
+    "rcAct",
+    "rcDays"
+   ]
+  },
+  {
+   "covers": [
+    "Bony to Beastly: Cunningham RMR from body fat"
+   ],
+   "status": "match",
+   "ids": [
+    "rcBf",
+    "rcMaint"
+   ]
+  },
+  {
+   "covers": [
+    "Healthy Eater: age, sex, weight, height",
+    "Healthy Eater: goal more fat loss/even/more muscle",
+    "Healthy Eater: calories per day or per meal",
+    "Healthy Eater: exercise"
+   ],
+   "status": "match",
+   "ids": [
+    "rcAge",
+    "rcSex",
+    "rcW",
+    "rcH",
+    "rcFocus",
+    "rcMac",
+    "rcAct"
+   ]
+  },
+  {
+   "covers": [
+    "Healthy Eater: formula normal / lean mass + body fat"
+   ],
+   "status": "match",
+   "ids": [
+    "rcBf"
+   ]
+  },
+  {
+   "covers": [
+    "Healthy Eater: extra weekly calories burned"
+   ],
+   "status": "match",
+   "ids": [
+    "rcEx"
+   ]
+  },
+  {
+   "covers": [
+    "Coachway: weight lb/kg, body fat",
+    "Coachway: target body fat",
+    "Coachway: activity (4)",
+    "Coachway: maintenance Katch-McArdle",
+    "Coachway: lean/fat mass split, fat to lose",
+    "Coachway: 6-12 month timeline"
+   ],
+   "status": "match",
+   "ids": [
+    "rcWu",
+    "rcBf",
+    "rcTbf",
+    "rcAct",
+    "rcMaint",
+    "rcFatRows"
+   ]
+  }
+ ]
+}

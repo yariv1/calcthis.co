@@ -3424,3 +3424,12 @@ body .fld + .av-note,body .fld + .cb-note{margin-top:-6px}
 .p-cm .cm-seg.d5,.p-cm .bm-key i.cm-ky.d5{background:#6B7A9E}
 .p-cm .bm-key i.cm-ky{width:16px;height:10px;border-radius:3px;vertical-align:-1px}
 .p-cm #rtLad td,.p-cm #rtStep td,.p-cm #rtAg td{overflow-wrap:anywhere}
+
+/* print-only heading used by [data-print] buttons (APOP-style printout) */
+.print-only{display:none}
+@media print{
+  .print-only{display:block;font-size:18px;font-weight:700;margin:0 0 12px}
+  body.p-fd header,body.p-fd .site-footer,body.p-fd .mbar,body.p-fd .related-calcs,body.p-fd .content,body.p-fd .hero,body.p-fd [data-print],body.p-fd .grid>.card:first-child,body.p-fd #fdAdvBtn{display:none!important}
+  body.p-fd .grid{display:block}
+  body.p-fd{padding-bottom:0}
+}

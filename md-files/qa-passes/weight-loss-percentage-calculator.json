@@ -1,15 +1,15 @@
 {
  "slug": "weight-loss-percentage-calculator",
  "pass": true,
- "at": "2026-11-07T09:22:32.552Z",
- "hash": "d441a33499962a95",
+ "at": "2026-11-09T07:17:12.723Z",
+ "hash": "5e45b3bbf14c02d9",
  "viewports": {
   "mobile": {
-   "steps": 1252,
+   "steps": 1444,
    "fails": []
   },
   "desktop": {
-   "steps": 1252,
+   "steps": 1444,
    "fails": []
   }
  },

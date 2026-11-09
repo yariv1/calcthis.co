@@ -1,0 +1,190 @@
+{
+ "slug": "profit-margin-calculator",
+ "research": "md-files/calcthis-profitmargin-research.md",
+ "competitors": [
+  {
+   "name": "calculator.net margin",
+   "url": "https://www.calculator.net/margin-calculator.html",
+   "openedLive": true,
+   "date": "2026-11-08",
+   "inputs": [
+    "cost, revenue, margin, profit (any two)",
+    "margin, profit, markup + bar",
+    "stock margin calculator",
+    "currency margin calculator"
+   ]
+  },
+  {
+   "name": "Omnicalculator margin",
+   "url": "https://www.omnicalculator.com/finance/margin",
+   "openedLive": true,
+   "date": "2026-11-08",
+   "inputs": [
+    "cost, margin, revenue, profit (any two)",
+    "currency (21)"
+   ]
+  },
+  {
+   "name": "Omnicalculator gross margin",
+   "url": "https://www.omnicalculator.com/finance/gross-margin",
+   "openedLive": true,
+   "date": "2026-11-08",
+   "inputs": [
+    "revenue, COGS -> gross profit, gross margin"
+   ]
+  },
+  {
+   "name": "CalculatorSoup profit margin",
+   "url": "https://www.calculatorsoup.com/calculators/financial/profit-margin-calculator.php",
+   "openedLive": true,
+   "date": "2026-11-08",
+   "inputs": [
+    "cost, revenue",
+    "net margin, net profit, profit %"
+   ]
+  },
+  {
+   "name": "Shopify",
+   "url": "https://www.shopify.com/tools/profit-margin-calculator",
+   "openedLive": true,
+   "date": "2026-11-08",
+   "inputs": [
+    "cost per item",
+    "markup slider 0-300%",
+    "shipping",
+    "customer acquisition cost",
+    "margin + profit per item"
+   ]
+  },
+  {
+   "name": "Xero",
+   "url": "https://www.xero.com/us/calculators/margin-calculator/",
+   "openedLive": true,
+   "date": "2026-11-08",
+   "inputs": [
+    "sales, cost",
+    "gross margin %",
+    "markup needed for the margin you want table"
+   ]
+  },
+  {
+   "name": "businessinitiative.org",
+   "url": "https://www.businessinitiative.org/",
+   "openedLive": true,
+   "date": "2026-11-08",
+   "inputs": [
+    "revenue, COGS, operating expenses",
+    "gross margin, net margin, net profit"
+   ]
+  }
+ ],
+ "features": [
+  {
+   "covers": [
+    "calculator.net margin: cost, revenue, margin, profit (any two)",
+    "calculator.net margin: margin, profit, markup + bar"
+   ],
+   "status": "exceed",
+   "ids": [
+    "pmCogs",
+    "pmRev",
+    "pmMargin",
+    "pmProfit",
+    "pmBars"
+   ]
+  },
+  {
+   "covers": [
+    "calculator.net margin: stock margin calculator",
+    "calculator.net margin: currency margin calculator"
+   ],
+   "status": "dropped",
+   "signoff": {
+    "quote": "i approve all (approved the research report that listed this drop)",
+    "date": "2026-11-08"
+   }
+  },
+  {
+   "covers": [
+    "Omnicalculator margin: cost, margin, revenue, profit (any two)",
+    "Omnicalculator margin: currency (21)"
+   ],
+   "status": "exceed",
+   "ids": [
+    "pmCogs",
+    "pmMargin",
+    "pmRev",
+    "pmProfit",
+    "pmCur"
+   ]
+  },
+  {
+   "covers": [
+    "Omnicalculator gross margin: revenue, COGS -> gross profit, gross margin"
+   ],
+   "status": "match",
+   "ids": [
+    "pmRev",
+    "pmCogs",
+    "pmProfit",
+    "pmMargin"
+   ]
+  },
+  {
+   "covers": [
+    "CalculatorSoup profit margin: cost, revenue",
+    "CalculatorSoup profit margin: net margin, net profit, profit %"
+   ],
+   "status": "match",
+   "ids": [
+    "pmCogs",
+    "pmRev",
+    "pmPl"
+   ]
+  },
+  {
+   "covers": [
+    "Shopify: cost per item",
+    "Shopify: markup slider 0-300%",
+    "Shopify: shipping",
+    "Shopify: customer acquisition cost",
+    "Shopify: margin + profit per item"
+   ],
+   "status": "match",
+   "ids": [
+    "pmCogs",
+    "pmOther",
+    "pmFee",
+    "pmPl",
+    "pmWi"
+   ]
+  },
+  {
+   "covers": [
+    "Xero: sales, cost",
+    "Xero: gross margin %",
+    "Xero: markup needed for the margin you want table"
+   ],
+   "status": "match",
+   "ids": [
+    "pmRev",
+    "pmCogs",
+    "pmMargin",
+    "pmLad"
+   ]
+  },
+  {
+   "covers": [
+    "businessinitiative.org: revenue, COGS, operating expenses",
+    "businessinitiative.org: gross margin, net margin, net profit"
+   ],
+   "status": "match",
+   "ids": [
+    "pmRev",
+    "pmCogs",
+    "pmOpex",
+    "pmPl"
+   ]
+  }
+ ]
+}

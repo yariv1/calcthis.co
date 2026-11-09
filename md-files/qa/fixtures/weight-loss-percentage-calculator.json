@@ -10,11 +10,13 @@
     ["set", "wpA", "200"],
     ["set", "wpB", "180"],
     ["set", "wpG", ""],
-    ["set", "wpD", ""]
+    ["set", "wpD", ""],
+    ["set", "wpT", ""]
   ],
   "optionalSamples": {
     "wpG": ["160", "170", "14 st"],
-    "wpD": ["25 September 2026", "2026-09-25"]
+    "wpD": ["25 September 2026", "2026-09-25"],
+    "wpT": ["12", "26"]
   },
   "variants": [
     [["seg", "wpUnit", "kg"], ["set", "wpA", "90"], ["set", "wpB", "84"]],

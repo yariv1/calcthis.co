@@ -117,6 +117,12 @@ function build() {
           <div class="proj-sep"></div>
           ${tfld('rcMaint', 'Calories you burn', 'kcal a day · optional', 'e.g. 2200', 'numeric')}
           <p class="av-note" id="rcMaintNote"></p>
+          ${csel('rcHealth', 'none', 'Anything that changes your needs', [['none', 'None of these'], ['preg', 'I am pregnant'], ['bf', 'I am breastfeeding'], ['glp', 'I take a GLP-1 medicine'], ['kid', 'I have kidney disease']])}
+          <p class="av-note" id="rcHealthNote"></p>
+          ${csel('rcExp', 'none', 'Training experience', [['none', 'Not set'], ['beg', 'Beginner — under 1 year of lifting'], ['inter', 'Intermediate — 1 to 3 years'], ['adv', 'Advanced — 3 to 7 years'], ['elite', 'Elite — over 7 years']])}
+          <p class="av-note" id="rcExpNote"></p>
+          ${tfld('rcEx', 'Extra exercise', 'kcal a week · optional', 'e.g. 1500', 'numeric')}
+          <p class="av-note" id="rcExNote"></p>
           ${tfld('rcTbf', 'Target body fat', '% · optional', 'e.g. 18')}
           <p class="av-note" id="rcTbfNote" style="display:none"></p>
           <div class="ctl-row" style="display:block"><span class="ctl-lab" style="display:block;margin-bottom:6px">Strength sessions a week</span><div class="seg" id="rcDays" role="group" aria-label="Strength sessions a week"><button type="button" data-v="2">2</button><button class="on" type="button" data-v="3">3</button><button type="button" data-v="4">4</button><button type="button" data-v="5">5</button><button type="button" data-v="6">6</button></div></div>
@@ -148,6 +154,14 @@ function build() {
           <p class="cb-note">*The scale change is the simple 7,700 kcal per kg rule for fat only; muscle you gain would hide part of it, so also measure your waist, take photos and track the weights you lift. The three focuses are this page’s own presets, not from a study.</p>
           <p class="bm-h">Your pick, per meal</p>
           <table class="dtable" id="rcMac"></table>
+          <p class="bm-h">Training days and rest days</p>
+          <table class="dtable" id="rcCycle"></table>
+          <p class="cb-note" id="rcCycleNote"></p>
+          <div id="rcPotWrap" style="display:none">
+            <p class="bm-h">Expected muscle gain</p>
+            <table class="dtable" id="rcPot"></table>
+            <p class="cb-note" id="rcPotNote"></p>
+          </div>
           <div id="rcFatWrap" style="display:none">
             <p class="bm-h">Fat to lose to reach your target body fat</p>
             <div id="rcFatRows"></div>

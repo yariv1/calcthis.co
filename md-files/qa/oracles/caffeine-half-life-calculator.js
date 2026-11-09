@@ -16,7 +16,7 @@ module.exports = async function (ctx) {
   const drinks = Object.keys(SERV), p2 = (n) => (n < 10 ? '0' : '') + n;
   const makeTime = (c24) => { const m = Math.floor(R() * 60); if (c24) { const h = Math.floor(R() * 24); return { typed: p2(h) + p2(m), min: h * 60 + m }; } const h12 = 1 + Math.floor(R() * 12), ap = pick(['am', 'pm']); return { typed: p2(h12) + p2(m), ap, min: (h12 % 12) * 60 + m + (ap === 'pm' ? 720 : 0) }; };
   for (let i = 0; i < 300; i++) {
-    const c24 = R() < 0.3, hlk = pick(['typ', 'typ', 'smoke', 'own']), hlraw = pick(['6', '2.5', '12', '0', '30', 'abc', '']), hasBed = R() < 0.7, tarraw = pick(['', '', '25', '100', '0', 'x']);
+    const c24 = R() < 0.3, hlk = pick(['typ', 'typ', 'smoke', 'fast', 'slow', 'preg', 'own']), hlraw = pick(['6', '2.5', '12', '0', '30', 'abc', '']), hasBed = R() < 0.7, tarraw = pick(['', '', '25', '100', '0', 'x']);
     const nrows = pick([1, 1, 2, 3]), spec = [];
     for (let k = 0; k < nrows; k++) { const d = pick(drinks.concat(['own'])), u = d === 'own' ? 's' : pick(['s', 's', 'm']); spec.push({ d, u, n: pick(u === 's' ? ['1', '2', '0.5', '1.5', '3', 'abc', '60'] : ['250', '500', '100', '355', 'abc', '20000', '5']), own: pick(['80', '150', '12.5', '']), time: R() < 0.1 ? null : makeTime(c24) }); }
     spec[0].n = pick(spec[0].u === 's' ? ['1', '2', '0.5', '1.5', '3'] : ['250', '500', '355', '100']); if (spec[0].d === 'own') spec[0].own = pick(['80', '150', '12.5']); if (!spec[0].time) spec[0].time = makeTime(c24);
@@ -39,7 +39,7 @@ module.exports = async function (ctx) {
     });
     const big = await ctx.text('chBig');
     if (!doses.length) { if (big !== '—') fails.push('no valid drink but headline ' + big + ' ' + tag); continue; }
-    let hl = hlk === 'smoke' ? 3.2 : 5; const hv = num(hlraw), hlOk = hv !== null && !isNaN(hv) && hv >= 1 && hv <= 24; if (hlk === 'own' && hlOk) hl = hv;
+    let hl = ({ smoke: 3.2, fast: 3, slow: 8, preg: 11.5 })[hlk] || 5; const hv = num(hlraw), hlOk = hv !== null && !isNaN(hv) && hv >= 1 && hv <= 24; if (hlk === 'own' && hlOk) hl = hv;
     const last = Math.max.apply(null, doses.map((d) => d.t)); let B = (bed && bed !== 'junk') ? bed.min : null, nextDay = false; if (B !== null && B < last) { B += 1440; nextDay = true; }
     const at = (m) => doses.reduce((a, d) => a + (m >= d.t ? d.mg * Math.pow(0.5, (m - d.t) / (hl * 60)) : 0), 0);
     let total = 0; doses.forEach((d) => { total += d.mg; });
@@ -72,5 +72,11 @@ module.exports = async function (ctx) {
   await ctx.fill(); await ctx.set('chN1', '0'); if ((await ctx.text('chBig')) !== '—' || !(await ctx.text('chHint'))) fails.push('0 servings should explain');
   await ctx.fill(); await ctx.set('chTi1', ''); if ((await ctx.text('chBig')) !== '—' || !(await ctx.text('chHint'))) fails.push('missing time should explain');
   await ctx.fill(); await ctx.set('chBedIn', '1030'); await setAp('chBed', 'pm'); if ((await ctx.text('chBig')) !== '13 mg') fails.push('95 mg at 8 am, bed 10:30 pm, 5 h half-life expected 13 mg, got ' + (await ctx.text('chBig')));
+  /* body weight: the note must always say what it did */
+  await ctx.fill(); { const open = await ctx.eval('document.getElementById("chAdvIn").style.display'); if (open === 'none') await ctx.click('chAdvBtn'); }
+  { const n0 = await ctx.text('chWNote'); if (n0.indexOf('Add your weight') !== 0) fails.push('weight note empty: ' + n0); }
+  await ctx.seg('chWu', 'kg'); await ctx.set('chW', '3'); { const n1 = await ctx.text('chWNote'); if (n1.indexOf('Body weight should be between 5') !== 0) fails.push('weight note bad: ' + n1); }
+  await ctx.set('chW', '70'); { const n2 = await ctx.text('chWNote'), t2 = await ctx.text('chTip'); if (!/^Your largest drink is [0-9.]+ mg per kg and your peak is [0-9.]+ mg per kg.$/.test(n2)) fails.push('weight note ok: ' + n2); if (t2.indexOf('Your level peaks right after') < 0) fails.push('peak sentence missing: ' + t2.slice(-120)); }
+  await ctx.set('chW', ''); await ctx.seg('chWu', 'lb');
   return { runs, fails: fails.slice(0, 25) };
 };

@@ -1,0 +1,88 @@
+{
+ "slug": "caffeine-calculator",
+ "research": "md-files/calcthis-vitamins-research.md",
+ "competitors": [
+  {
+   "name": "Omnicalculator caffeine",
+   "url": "https://www.omnicalculator.com/health/caffeine",
+   "openedLive": true,
+   "date": "2026-11-09",
+   "inputs": [
+    "drink rows from 7 sources",
+    "quantity per drink",
+    "daily caffeine intake result",
+    "I am adult / pregnant / teenager / child",
+    "editable maximum daily dose"
+   ]
+  },
+  {
+   "name": "FatCalc caffeine",
+   "url": "https://fatcalc.com/caffeine-calculator",
+   "openedLive": true,
+   "date": "2026-11-09",
+   "inputs": [
+    "body weight lb/kg",
+    "sources with servings",
+    "safe limits 400 mg adult / 200 mg pregnancy",
+    "single-dose 200 mg (3 mg/kg) guideline"
+   ]
+  }
+ ],
+ "features": [
+  {
+   "covers": [
+    "Omnicalculator caffeine: drink rows from 7 sources",
+    "Omnicalculator caffeine: quantity per drink",
+    "Omnicalculator caffeine: daily caffeine intake result"
+   ],
+   "status": "exceed",
+   "ids": [
+    "cfRows",
+    "cfAdd",
+    "cfBig"
+   ]
+  },
+  {
+   "covers": [
+    "Omnicalculator caffeine: I am adult / pregnant / teenager / child"
+   ],
+   "status": "match",
+   "ids": [
+    "cfWho"
+   ]
+  },
+  {
+   "covers": [
+    "Omnicalculator caffeine: editable maximum daily dose"
+   ],
+   "status": "match",
+   "ids": [
+    "cfLim"
+   ]
+  },
+  {
+   "covers": [
+    "FatCalc caffeine: body weight lb/kg",
+    "FatCalc caffeine: sources with servings"
+   ],
+   "status": "match",
+   "ids": [
+    "cfW",
+    "cfWu",
+    "cfRows"
+   ]
+  },
+  {
+   "covers": [
+    "FatCalc caffeine: safe limits 400 mg adult / 200 mg pregnancy",
+    "FatCalc caffeine: single-dose 200 mg (3 mg/kg) guideline"
+   ],
+   "status": "match",
+   "ids": [
+    "cfLimits",
+    "cfKg",
+    "cfWho"
+   ]
+  }
+ ]
+}

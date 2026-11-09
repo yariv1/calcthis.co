@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/datepicker.min.css">
-<link rel="stylesheet" href="/assets/style.css?v=337">
+<link rel="stylesheet" href="/assets/style.css?v=338">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
 <script>
@@ -395,9 +395,11 @@
           <label class="fld" for="wlMaint"><span class="lab">Calories you burn <span class="unit">kcal a day · your maintenance</span></span><div class="inp"><input id="wlMaint" type="text" inputmode="numeric" autocomplete="off" placeholder="e.g. 2100"></div></label>
           <p class="av-note" style="margin:0 0 8px">The calories you burn in a day to stay at your weight (also called maintenance), for example from tracking your food and weight for a few weeks. It is used as given; weight is still needed.</p>
         </div>
+        <div class="ctl-row"><span class="ctl-lab">Goal</span><div class="seg" id="wlGoal" role="group" aria-label="Goal"><button class="on" type="button" data-v="lose">Lose</button><button type="button" data-v="maintain">Maintain</button><button type="button" data-v="gain">Gain</button></div></div>
         <div class="ctl-row"><span class="ctl-lab">Weight units</span><div class="seg" id="wlWU" role="group" aria-label="Weight units"><button type="button" data-v="kg">kg</button><button class="on" type="button" data-v="lb">lb</button><button type="button" data-v="st">st</button></div></div>
         <label class="fld" for="wlW"><span class="lab">Current weight <span class="unit" id="wlWL">lb</span></span><div class="inp"><input id="wlW" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 185"></div></label>
         <label class="fld" for="wlG"><span class="lab">Goal weight <span class="unit" id="wlGL">lb</span></span><div class="inp"><input id="wlG" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 165"></div></label>
+        <div id="wlGoalBox">
         <div class="proj-sep"></div>
         <div class="ctl-row" style="display:block"><span class="ctl-lab" style="display:block;margin-bottom:6px">Plan by</span><div class="modeseg" id="wlPlan" role="group" aria-label="Plan by"><button class="on" type="button" data-v="date">A target date</button><button type="button" data-v="pace">A weekly pace</button></div></div>
         <div id="wlDateWrap" style="margin-top:14px">
@@ -408,11 +410,14 @@
         </div>
         <div class="chips" id="wlChips"></div>
         <p class="av-note" id="wlPaceNote" style="display:none;margin:8px 0 8px">Leave it empty to start at 1 lb (0.5 kg) a week, the gentle end of the CDC’s 1 to 2 pounds.</p>
+        </div>
         <div class="res-hint" id="wlHint" style="display:none;text-align:left;margin:4px 0 8px"></div>
         <div id="wlAdvIn" style="display:none">
           <div class="proj-sep"></div>
           <div class="ctl-row" style="display:block"><span class="ctl-lab" style="display:block;margin-bottom:6px">Headline estimate</span><div class="modeseg" id="wlModel" role="group" aria-label="Headline estimate"><button class="on" type="button" data-v="simple">Simple rule</button><button type="button" data-v="real">Realistic</button></div></div>
           <p class="av-note" style="margin:0 0 8px">Both are always shown below. Realistic allows for burning less as you lose, so it starts lower.</p>
+          <label class="fld" for="wlStart"><span class="lab">Start date <span class="unit">optional · today if empty</span></span><div class="inp"><input id="wlStart" type="text" autocomplete="off" placeholder="Pick a date"></div></label>
+          <p class="av-note" id="wlStartNote">Starting later? Pick the day you begin. Until then you eat what you burn, and the plan runs from that day to your target date.</p>
           <label class="fld" for="wlBf"><span class="lab">Body fat <span class="unit">% · optional, uses Katch-McArdle</span></span><div class="inp"><input id="wlBf" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 30"></div></label>
         </div>
         <div class="add-row split" style="margin-top:16px">
@@ -437,6 +442,7 @@
           <p class="res-tip adv-tip" id="wlTip"></p>
           <div id="wlFlags"></div>
           <div id="wlRows"></div>
+          <div id="wlLoseOnly">
           <p class="bm-h">What you eat and what you burn</p>
           <div id="wlBar"></div>
           <p class="bm-h">Weight over time</p>
@@ -451,6 +457,7 @@
             <p class="bm-h">Calories for other target dates</p>
             <table class="dtable" id="wlByDate"></table>
             <p class="cb-note">Click a row to plan for that date.</p>
+          </div>
           </div>
           <p class="cb-note">An estimate for adults, not medical advice. The 7,700 kcal per kg rule is a simplification, and how fast you lose varies from person to person.</p>
         </div>
@@ -815,7 +822,7 @@
 </div>
 
 <script src="/assets/datepicker.min.js"></script>
-<script src="/assets/app.js?v=337"></script>
+<script src="/assets/app.js?v=338"></script>
 <script>CalcThis.initWlCalc();</script>
 <script src="/feedback.js" defer></script>
 </body>

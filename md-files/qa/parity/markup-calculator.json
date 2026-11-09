@@ -1,0 +1,129 @@
+{
+ "slug": "markup-calculator",
+ "research": "md-files/calcthis-markup-research.md",
+ "competitors": [
+  {
+   "name": "Omnicalculator markup",
+   "url": "https://www.omnicalculator.com/finance/markup",
+   "openedLive": true,
+   "date": "2026-11-07",
+   "inputs": [
+    "cost, markup %, revenue, profit (any two)",
+    "currency selector (21)"
+   ]
+  },
+  {
+   "name": "calculator.net margin",
+   "url": "https://www.calculator.net/margin-calculator.html",
+   "openedLive": true,
+   "date": "2026-11-07",
+   "inputs": [
+    "cost, revenue, margin, profit (any two)",
+    "markup output",
+    "stacked cost vs profit bar",
+    "stock margin calculator",
+    "currency margin calculator"
+   ]
+  },
+  {
+   "name": "CalculatorSoup markup",
+   "url": "https://www.calculatorsoup.com/calculators/financial/markup-calculator.php",
+   "openedLive": true,
+   "date": "2026-11-07",
+   "inputs": [
+    "cost + gross margin %",
+    "markup %, revenue, gross profit"
+   ]
+  },
+  {
+   "name": "GigaCalculator markup",
+   "url": "https://www.gigacalculator.com/calculators/markup-calculator.php",
+   "openedLive": true,
+   "date": "2026-11-07",
+   "inputs": [
+    "cost + one of profit/revenue/markup",
+    "margin output",
+    "copy buttons"
+   ]
+  }
+ ],
+ "features": [
+  {
+   "covers": [
+    "Omnicalculator markup: cost, markup %, revenue, profit (any two)",
+    "Omnicalculator markup: currency selector (21)"
+   ],
+   "status": "exceed",
+   "ids": [
+    "mkCost",
+    "mkMarkup",
+    "mkPrice",
+    "mkProfit",
+    "mkCur"
+   ]
+  },
+  {
+   "covers": [
+    "calculator.net margin: cost, revenue, margin, profit (any two)",
+    "calculator.net margin: markup output",
+    "calculator.net margin: stacked cost vs profit bar"
+   ],
+   "status": "exceed",
+   "ids": [
+    "mkCost",
+    "mkPrice",
+    "mkMargin",
+    "mkProfit",
+    "mkBars"
+   ]
+  },
+  {
+   "covers": [
+    "calculator.net margin: stock margin calculator",
+    "calculator.net margin: currency margin calculator"
+   ],
+   "status": "dropped",
+   "signoff": {
+    "quote": "i approve all (approved the research report that listed this drop)",
+    "date": "2026-11-08"
+   }
+  },
+  {
+   "covers": [
+    "CalculatorSoup markup: cost + gross margin %",
+    "CalculatorSoup markup: markup %, revenue, gross profit"
+   ],
+   "status": "match",
+   "ids": [
+    "mkCost",
+    "mkMargin",
+    "mkMarkup",
+    "mkPrice",
+    "mkProfit"
+   ]
+  },
+  {
+   "covers": [
+    "GigaCalculator markup: cost + one of profit/revenue/markup",
+    "GigaCalculator markup: margin output"
+   ],
+   "status": "match",
+   "ids": [
+    "mkCost",
+    "mkProfit",
+    "mkPrice",
+    "mkMarkup",
+    "mkMargin"
+   ]
+  },
+  {
+   "covers": [
+    "GigaCalculator markup: copy buttons"
+   ],
+   "status": "match",
+   "ids": [
+    "mkCopy"
+   ]
+  }
+ ]
+}
