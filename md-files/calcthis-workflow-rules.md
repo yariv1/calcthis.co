@@ -136,6 +136,10 @@ a genuinely useful extra output. **Functional value counts as much as the visual
 view stays minimal. No bloat — nothing ships "just in case".
 Full checklist: `calcthis-design-system.md` → "PRODUCT PHILOSOPHY".
 
+## ⛔ RULE 8.6 — NEVER FALL SHORT OF COMPETITORS IN ANYTHING; ALWAYS BEAT THEM (user, 2026-11-09, "costed us a lot time and usage money")
+
+Not only inputs: every mode, option, output, table, chart, unit, preset, explanation, worked example and extra of every top competitor (opened live) is listed and mapped to a CalcThis feature that equals or beats it (skips need his quoted sign-off; list outputs/extras in the parity file too). Every page ships at least one VISUAL and one FUNCTIONAL differentiator no checked competitor has; the research report names them and what each competitor lacks. Before any preview, reopen the nearest competitor beside the finished page and compare line by line (clarity of inputs and labels, result readability, mobile, content depth); fix every gap first and list what we do better (and any gap left) in the final summary. No preview or deploy while a known gap is open.
+
 ## ⛔ RULE 8.5 — NEVER SHIP WITH FEWER INPUTS THAN COMPETITORS. VERIFY BY SCREENSHOT, NOT TEXT-FETCH ALONE.
 
 This exists after the Protein Intake Calculator shipped **without Age or Sex** even though the
