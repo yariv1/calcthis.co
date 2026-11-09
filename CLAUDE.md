@@ -203,7 +203,9 @@ must be built from the article's actual units, every time, not pasted from a tem
 
 ## ⛔ SESSION HANDOFF — START HERE (rewritten 2026-11-08, end of session #6 PART 2: markup/profit margin/discount deployed, GLOBAL FIELD SYMBOLS v332-v336; full detail in `HANDOFF.md` §0000000000000020 = the FIRST section of the file — read it in full before replying)
 
-**NEWEST (2026-11-08, v336 live, 98 calculators, 228 pages): Read `HANDOFF.md` §0000000000000020 in full; first reply = its one-line sync, then START THE JOB WITHOUT ASKING: COMMISSION CALCULATOR RESEARCH REPORT (roadmap v2 #5, `md-files/calcthis-roadmap-2026-11.md` §12): open every competitor LIVE, list all inputs (parity), ONE visual + ONE functional differentiator, save to `md-files/calcthis-commission-research.md`, short report, WAIT for "Approve all", then build like discount (reuse `CalcThis.salesEngine`), QA gate, preview link only on request, deploy only on his "Deploy". Then unit price (#6). Pending: Bing manual submit for markup, profit margin, discount; GSC queue only on "Start queue". GLOBAL SYSTEMS to respect: field symbols + `CalcThis.fmtMoney` (every money page's `cf()` must call it; symbol-only glyphs tight, letter symbols one nbsp, side per currency), note-under-field spacing, currency picker id must end in `Cur` + be in `checkPickerDesign`. LESSONS: a global change must be checked on EVERY consumer + QA-gated pages + a non-USD screenshot (he said "you violated the full QA rule"); never edit app.js with node -e String.replace containing a dollar sign (doubled the file) — use Edit/Write-d scripts and re-run the syntax check; any MutationObserver must not retrigger itself (caused a site-wide slowdown, v335).**
+**NEWEST (2026-11-09, v338 live, 100 calculators, 230 pages): Read `HANDOFF.md` §0000000000000021 in full; first reply = its one-line sync, then work silently. NEXT JOB: UNIT PRICE calculator (`/unit-price-calculator/`, roadmap v2 #6): research report is DONE in `md-files/calcthis-unitprice-research.md`; WAIT for his "Approve all", then build (must pass the PARITY gate `md-files/qa/parity/<slug>.json` + QA gate + audit-silent; currency picker id ends in `Cur`; use `CalcThis.fmtMoney`). Commission + realtor commission (v337) and the parity gate + 12 page fixes (v338) are DEPLOYED. Pending: GSC "Start queue" only on his word; Bing for the 12 updated pages not needed. Rules: NO narration, SHORT precise answers, never fewer inputs than competitors (mechanical gate), skipped features need his quoted sign-off.**
+
+**(Older, DONE) NEWEST (2026-11-08, v336 live, 98 calculators, 228 pages): Read `HANDOFF.md` §0000000000000020 in full; first reply = its one-line sync, then START THE JOB WITHOUT ASKING: COMMISSION CALCULATOR RESEARCH REPORT (roadmap v2 #5, `md-files/calcthis-roadmap-2026-11.md` §12): open every competitor LIVE, list all inputs (parity), ONE visual + ONE functional differentiator, save to `md-files/calcthis-commission-research.md`, short report, WAIT for "Approve all", then build like discount (reuse `CalcThis.salesEngine`), QA gate, preview link only on request, deploy only on his "Deploy". Then unit price (#6). Pending: Bing manual submit for markup, profit margin, discount; GSC queue only on "Start queue". GLOBAL SYSTEMS to respect: field symbols + `CalcThis.fmtMoney` (every money page's `cf()` must call it; symbol-only glyphs tight, letter symbols one nbsp, side per currency), note-under-field spacing, currency picker id must end in `Cur` + be in `checkPickerDesign`. LESSONS: a global change must be checked on EVERY consumer + QA-gated pages + a non-USD screenshot (he said "you violated the full QA rule"); never edit app.js with node -e String.replace containing a dollar sign (doubled the file) — use Edit/Write-d scripts and re-run the syntax check; any MutationObserver must not retrigger itself (caused a site-wide slowdown, v335).**
 
 **(Older, DONE) Markup job from §000000000000001f: deployed v330.** 
 
@@ -243,8 +245,8 @@ must be built from the article's actual units, every time, not pasted from a tem
 
 ## Project state
 
-- **Asset version:** v336 (live; `.assetver`)
-- **Total pages:** 228 live (sitemap)
+- **Asset version:** v338 (live; `.assetver`)
+- **Total pages:** 230 live (sitemap)
 - **Model:** Sonnet 5
 
 ### New this session — global `.csel` custom-dropdown component
