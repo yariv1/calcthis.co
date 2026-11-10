@@ -34,6 +34,10 @@ next tool call instead. This check applies every single time text is about to be
 not just once at session start; a rule read once at the top of a long session is exactly
 what has failed three times running.
 
+## ⛔⛔ HARD RULE — ONE FINAL MESSAGE ONLY, NEVER TWO (user, 2026-11-10, furious: "stop writing double messages ... place it NOW in session hard rules")
+
+Every turn ends with exactly ONE final message, written once. Hooks (narration Stop hook, QA hook) block a final message and force a re-send, which the user sees as a duplicate. So the FIRST final message must already pass them: (1) send NO text before or between tool calls, (2) run a verification tool call as the LAST action after the last change (git/curl/node check), (3) put a line starting "QA:" in the final message with what was tested and the real result incl. what was NOT verified, (4) never write a recap, an acknowledgement or a second summary after a hook block - if a hook blocks, re-send nothing extra and nothing different: just the one message with the missing part fixed. The user does NOT care about the hook; he cares about not seeing the message twice. Also in memory `calcthis-one-final-message`.
+
 ## ⛔ HARD RULE — SEO & TRAFFIC FIRST, ALWAYS (user, 2026-10-28)
 
 Every decision — page structure, URLs, combining vs splitting pages, features, content, order of work —
@@ -215,6 +219,8 @@ must be built from the article's actual units, every time, not pasted from a tem
 ---
 
 ## ⛔ SESSION HANDOFF — START HERE (rewritten 2026-11-08, end of session #6 PART 2: markup/profit margin/discount deployed, GLOBAL FIELD SYMBOLS v332-v336; full detail in `HANDOFF.md` §0000000000000020 = the FIRST section of the file — read it in full before replying)
+
+**NEWEST (2026-11-10, end of session #8, v340 live, 102 calculators, 232 pages): Read `HANDOFF.md` §0000000000000022 in full (first section after the banners); first reply = its ONE sync line, then work silently. NEXT JOB: #8 CONFIDENCE INTERVAL calculator: research report first (competitors opened LIVE, parity list, ONE visual + ONE functional differentiator, saved to `md-files/calcthis-confidenceinterval-research.md`), WAIT for his "Approve all", then build on `CalcThis.pvalueEngine`. Every new calculator needs BOTH gates: `run.js` QA PASS and `final.js` FINAL PASS (text-vs-tool, extremes, visual, side-by-side). ONE final message per turn, no narration, short answers, economic on tokens. Pending: Bing manual submit + GSC queue for p-value (only on his word).**
 
 **NEWEST (2026-11-09, v338 live, 100 calculators, 230 pages): Read `HANDOFF.md` §0000000000000021 in full; first reply = its one-line sync, then work silently. NEXT JOB: UNIT PRICE calculator (`/unit-price-calculator/`, roadmap v2 #6): research report is DONE in `md-files/calcthis-unitprice-research.md`; WAIT for his "Approve all", then build (must pass the PARITY gate `md-files/qa/parity/<slug>.json` + QA gate + audit-silent; currency picker id ends in `Cur`; use `CalcThis.fmtMoney`). Commission + realtor commission (v337) and the parity gate + 12 page fixes (v338) are DEPLOYED. Pending: GSC "Start queue" only on his word; Bing for the 12 updated pages not needed. Rules: NO narration, SHORT precise answers, never fewer inputs than competitors (mechanical gate), skipped features need his quoted sign-off.**
 
