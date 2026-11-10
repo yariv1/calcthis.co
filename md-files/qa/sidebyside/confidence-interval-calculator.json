@@ -1,0 +1,42 @@
+{
+ "date": "2026-11-10",
+ "competitors": [
+  {
+   "name": "calculator.net confidence interval",
+   "url": "https://www.calculator.net/confidence-interval-calculator.html",
+   "reopenedAfterBuild": true,
+   "gaps": []
+  },
+  {
+   "name": "Omnicalculator confidence interval",
+   "url": "https://www.omnicalculator.com/statistics/confidence-interval",
+   "reopenedAfterBuild": true,
+   "gaps": []
+  },
+  {
+   "name": "GraphPad QuickCalcs confidence interval",
+   "url": "https://www.graphpad.com/quickcalcs/confinterval1/",
+   "reopenedAfterBuild": true,
+   "gaps": []
+  },
+  {
+   "name": "Social Science Statistics confidence interval t",
+   "url": "https://www.socscistatistics.com/confidenceinterval/tstat/",
+   "reopenedAfterBuild": true,
+   "gaps": []
+  }
+ ],
+ "weBeat": [
+  "visual: one picture with the bell curve, the interval shaded, the same interval at 90/95/99% and with 4 times the data on one scale (no competitor draws anything)",
+  "functional: mean, proportion and count in one page; t and z side by side with the right one chosen; Wald, Wilson and exact for proportions; raw data list; two groups; level from z or p; the sample size for a margin of error you want; margin of error table for 2, 4 and 10 times the data; every step shown",
+  "every competitor feature kept: n, mean, SD or SE, level typed or from z / p (Omni), proportion by yes answers or p-hat, Poisson count (GraphPad), raw list (SocSci), +- / +-% / range forms and z table (calculator.net)"
+ ],
+ "gapsLeft": [],
+ "unverified": [
+  "real phone",
+  "other browsers (Chrome only)",
+  "print",
+  "Copy result button in a real clipboard session",
+  "SocSci result layout was not run (only the calculator form inputs were read); Omnicalculator article was read, its mode switch checked for proportion only"
+ ]
+}

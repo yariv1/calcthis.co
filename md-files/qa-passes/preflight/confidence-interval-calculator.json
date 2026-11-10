@@ -1,0 +1,12 @@
+{
+ "slug": "confidence-interval-calculator",
+ "pass": true,
+ "failed": [],
+ "hash": "e7c2e1cd75686c49",
+ "at": "2026-11-10T19:43:03.081Z",
+ "results": {
+  "silent": "ok   confidence-interval-calculator  fields 6",
+  "duplicate": "most overlap 1.0% with /p-value-calculator/ (limit 12%)",
+  "registration": "sitemap urls 236 | confidence-interval-calculator cards 1 inbound 235 ld WebApplication,FAQPage,BreadcrumbList | AUDIT PASS"
+ }
+}

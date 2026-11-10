@@ -112,6 +112,10 @@
     "t": "Fraction Calculator — Add, Subtract, Multiply & Divide",
     "d": "Free fraction calculator: add, subtract, multiply and divide fractions, mixed numbers and decimals, simplify and convert, with a live bar diagram and steps."
   },
+  "/confidence-interval-calculator/": {
+    "t": "Confidence Interval Calculator: Mean, Proportion, Count",
+    "d": "Confidence interval calculator: get the 90%, 95% or 99% interval for a mean, proportion or count, with t or z, a live curve and the sample size you need."
+  },
   "/p-value-calculator/": {
     "t": "P-Value Calculator: From Z, t, Chi-Square or F Score",
     "d": "P value calculator: get the p-value from a z, t, chi-square, F or r statistic for any tail, with a live curve, the critical value and a plain verdict."

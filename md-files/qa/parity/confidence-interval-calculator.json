@@ -1,0 +1,176 @@
+{
+ "slug": "confidence-interval-calculator",
+ "research": "md-files/calcthis-confidenceinterval-research.md",
+ "competitors": [
+  {
+   "name": "calculator.net confidence interval",
+   "url": "https://www.calculator.net/confidence-interval-calculator.html",
+   "openedLive": true,
+   "date": "2026-11-10",
+   "inputs": [
+    "sample size n",
+    "sample mean",
+    "standard deviation sigma or s",
+    "confidence level percent",
+    "result: confidence interval and margin of error",
+    "result written as mean ± error, ± percent and [low – high]",
+    "worked example with the formula steps",
+    "z-value table by confidence level 70% to 99.999%",
+    "formula and definition text (z only)"
+   ]
+  },
+  {
+   "name": "Omnicalculator confidence interval",
+   "url": "https://www.omnicalculator.com/statistics/confidence-interval",
+   "openedLive": true,
+   "date": "2026-11-10",
+   "inputs": [
+    "population mean or population proportion mode",
+    "standard deviation or standard error choice",
+    "sample mean",
+    "standard deviation or standard error value",
+    "sample size n",
+    "sample proportion p-hat",
+    "set the level by confidence level, z-score or right-tailed p-value",
+    "results: lower bound, upper bound, margin of error",
+    "dataset worked example (99% interval from a list)",
+    "formula and by-hand steps"
+   ]
+  },
+  {
+   "name": "GraphPad QuickCalcs confidence interval",
+   "url": "https://www.graphpad.com/quickcalcs/confinterval1/",
+   "openedLive": true,
+   "date": "2026-11-10",
+   "inputs": [
+    "proportion: numerator and denominator (95% only)",
+    "count: number counted, Poisson interval (95% only)",
+    "explanations of proportion and count intervals"
+   ]
+  },
+  {
+   "name": "Social Science Statistics confidence interval t",
+   "url": "https://www.socscistatistics.com/confidenceinterval/tstat/",
+   "openedLive": true,
+   "date": "2026-11-10",
+   "inputs": [
+    "single sample interval from raw data using the t distribution",
+    "shows sample mean, sum of squares, standard deviation and the interval step by step",
+    "when to use guidance and the t formula",
+    "calculator form: sample data list and confidence level 90%, 95% or 99%"
+   ]
+  }
+ ],
+ "features": [
+  {
+   "covers": [
+    "calculator.net confidence interval: sample size n",
+    "calculator.net confidence interval: sample mean",
+    "calculator.net confidence interval: standard deviation sigma or s",
+    "Omnicalculator confidence interval: sample mean",
+    "Omnicalculator confidence interval: standard deviation or standard error value",
+    "Omnicalculator confidence interval: sample size n",
+    "Omnicalculator confidence interval: standard deviation or standard error choice"
+   ],
+   "status": "exceed",
+   "ids": [
+    "ciMean",
+    "ciSd",
+    "ciN",
+    "ciSpread",
+    "ciNums"
+   ]
+  },
+  {
+   "covers": [
+    "calculator.net confidence interval: confidence level percent",
+    "Omnicalculator confidence interval: set the level by confidence level, z-score or right-tailed p-value",
+    "Social Science Statistics confidence interval t: calculator form: sample data list and confidence level 90%, 95% or 99%"
+   ],
+   "status": "exceed",
+   "ids": [
+    "ciLevel",
+    "ciChips",
+    "ciBy",
+    "ciByVal"
+   ]
+  },
+  {
+   "covers": [
+    "calculator.net confidence interval: result: confidence interval and margin of error",
+    "calculator.net confidence interval: result written as mean ± error, ± percent and [low – high]",
+    "Omnicalculator confidence interval: results: lower bound, upper bound, margin of error"
+   ],
+   "status": "exceed",
+   "ids": [
+    "ciBig",
+    "ciNums",
+    "ciSub"
+   ]
+  },
+  {
+   "covers": [
+    "Omnicalculator confidence interval: population mean or population proportion mode",
+    "Omnicalculator confidence interval: sample proportion p-hat",
+    "GraphPad QuickCalcs confidence interval: proportion: numerator and denominator (95% only)"
+   ],
+   "status": "exceed",
+   "ids": [
+    "ciMode",
+    "ciX",
+    "ciPn",
+    "ciPhat",
+    "ciMethod",
+    "ciMeth"
+   ]
+  },
+  {
+   "covers": [
+    "GraphPad QuickCalcs confidence interval: count: number counted, Poisson interval (95% only)"
+   ],
+   "status": "exceed",
+   "ids": [
+    "ciK",
+    "ciMode"
+   ]
+  },
+  {
+   "covers": [
+    "Social Science Statistics confidence interval t: single sample interval from raw data using the t distribution",
+    "Omnicalculator confidence interval: dataset worked example (99% interval from a list)"
+   ],
+   "status": "exceed",
+   "ids": [
+    "ciHave",
+    "ciList",
+    "ciSpread",
+    "ciMeth"
+   ]
+  },
+  {
+   "covers": [
+    "calculator.net confidence interval: worked example with the formula steps",
+    "Omnicalculator confidence interval: formula and by-hand steps",
+    "Social Science Statistics confidence interval t: shows sample mean, sum of squares, standard deviation and the interval step by step"
+   ],
+   "status": "exceed",
+   "ids": [
+    "ciSteps",
+    "ciNums"
+   ]
+  },
+  {
+   "covers": [
+    "calculator.net confidence interval: z-value table by confidence level 70% to 99.999%",
+    "calculator.net confidence interval: formula and definition text (z only)",
+    "Social Science Statistics confidence interval t: when to use guidance and the t formula",
+    "GraphPad QuickCalcs confidence interval: explanations of proportion and count intervals"
+   ],
+   "status": "match",
+   "ids": [
+    "ciZTable",
+    "ciFormulas"
+   ]
+  }
+ ]
+}

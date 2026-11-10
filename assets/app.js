@@ -25873,3 +25873,507 @@ CalcThis.initTimeConvCalc = function (kind) {
   render();
 };
 /* TIMECONV:END */
+
+/* CI:BEGIN */
+/* =========================================================
+   CONFIDENCE INTERVAL calculator (/confidence-interval-calculator/). Competitors opened live (2026-11-10): calculator.net (mean only, z, level typed),
+   Omnicalculator (mean or proportion, SD or SE, level / z / right-tail p), GraphPad QuickCalcs (proportion and Poisson count, 95% only), Social Science Statistics (t from raw data).
+   Notes: md-files/calcthis-confidenceinterval-research.md. Maths (all from CalcThis.pvalueEngine quantiles): mean = x-bar +- crit * s / sqrt(n) (t with n - 1 df for a sample SD, z for a known sigma),
+   proportion = Wald / Wilson score / exact Clopper-Pearson (beta quantiles), count = exact Poisson (chi-square quantiles), differences of two means (Welch or pooled) and two proportions (Wald).
+   ========================================================= */
+/* CI-ENGINE:START */
+CalcThis.ciEngine = (function () {
+  var X = CalcThis.pvalueEngine;
+  var BIGDF = 1e6; /* above this t and z agree to 6 digits, use z */
+  function zc(level) { return X.inv('z', {}, (1 - level) / 2, 'R'); }
+  function tc(level, df) { return X.inv('t', { df: df }, (1 - level) / 2, 'R'); }
+  function crit(level, df) { return (!df || df > BIGDF) ? zc(level) : tc(level, df); }
+  function levelFromZ(z) { return 1 - 2 * X.cdf('z', {}, z).hi; }
+  function levelFromP(p) { return 1 - 2 * p; }
+  /* quantile of the Beta(a, b) distribution at probability p (lower tail) */
+  function betaInv(a, b, p) {
+    var lo = 0, hi = 1, i, mid;
+    for (i = 0; i < 300; i++) { mid = (lo + hi) / 2; if (X.betaPQ(a, b, mid).p < p) lo = mid; else hi = mid; if (hi - lo < 1e-16) break; }
+    return (lo + hi) / 2;
+  }
+  /* one mean (or any estimate with a standard error): m, se, df (0 or undefined = z) */
+  function est(m, se, df, level) { var c = crit(level, df), me = c * se; return { est: m, se: se, df: (!df || df > BIGDF) ? 0 : df, c: c, me: me, lo: m - me, hi: m + me }; }
+  /* mean from a standard deviation: s with t (df n - 1) or sigma with z */
+  function mean(m, sd, n, useT, level) { return est(m, sd / Math.sqrt(n), useT ? n - 1 : 0, level); }
+  /* difference of two means. a, b = { m, se, n (may be 0), s }. kind: 'welch' | 'pooled' | 'z' */
+  function diffMeans(a, b, kind, level) {
+    var d = a.m - b.m, v1 = a.se * a.se, v2 = b.se * b.se, se, df;
+    if (kind === 'z') return est(d, Math.sqrt(v1 + v2), 0, level);
+    if (kind === 'pooled') { var sp2 = ((a.n - 1) * a.s * a.s + (b.n - 1) * b.s * b.s) / (a.n + b.n - 2); se = Math.sqrt(sp2 * (1 / a.n + 1 / b.n)); df = a.n + b.n - 2; return est(d, se, df, level); }
+    se = Math.sqrt(v1 + v2); df = Math.pow(v1 + v2, 2) / (v1 * v1 / (a.n - 1) + v2 * v2 / (b.n - 1));
+    return est(d, se, df, level);
+  }
+  /* one proportion: x successes out of n (x may be fractional for Wald / Wilson). method: wald | wilson | exact */
+  function prop(x, n, method, level) {
+    var p = x / n, c = zc(level), al = 1 - level, lo, hi, se = Math.sqrt(p * (1 - p) / n), clip = false, z2 = c * c, den, ctr, half;
+    if (method === 'wilson') { den = 1 + z2 / n; ctr = (p + z2 / (2 * n)) / den; half = c / den * Math.sqrt(p * (1 - p) / n + z2 / (4 * n * n)); lo = ctr - half; hi = ctr + half; }
+    else if (method === 'exact') { lo = x === 0 ? 0 : betaInv(x, n - x + 1, al / 2); hi = x === n ? 1 : 1 - betaInv(n - x, x + 1, al / 2); }
+    else { lo = p - c * se; hi = p + c * se; if (lo < 0) { lo = 0; clip = true; } if (hi > 1) { hi = 1; clip = true; } }
+    if (lo < 0) lo = 0; if (hi > 1) hi = 1;
+    return { est: p, se: se, c: c, me: (hi - lo) / 2, lo: lo, hi: hi, clip: clip, method: method };
+  }
+  /* difference of two proportions (unpooled Wald) */
+  function diffProps(x1, n1, x2, n2, level) {
+    var p1 = x1 / n1, p2 = x2 / n2, se = Math.sqrt(p1 * (1 - p1) / n1 + p2 * (1 - p2) / n2), c = zc(level), d = p1 - p2;
+    return { est: d, se: se, c: c, me: c * se, lo: d - c * se, hi: d + c * se };
+  }
+  /* exact Poisson interval for a count k, and the normal approximation k +- z sqrt(k) */
+  function poisson(k, level) {
+    var al = 1 - level, lo = k === 0 ? 0 : X.inv('chi', { df: 2 * k }, 1 - al / 2, 'R') / 2, hi = X.inv('chi', { df: 2 * k + 2 }, al / 2, 'R') / 2;
+    return { est: k, se: Math.sqrt(k), c: 0, me: (hi - lo) / 2, lo: lo, hi: hi };
+  }
+  function poissonNormal(k, level) { var c = zc(level), me = c * Math.sqrt(k); return { lo: k - me, hi: k + me, me: me, c: c }; }
+  /* sample size for a wanted margin of error E: mean (z, sigma estimate s), proportion (p, E as a fraction) */
+  function needMean(s, E, level) { var c = zc(level); return Math.ceil(Math.pow(c * s / E, 2) - 1e-9); }
+  function needProp(p, E, level) { var c = zc(level); return Math.ceil(c * c * p * (1 - p) / (E * E) - 1e-9); }
+  /* numbers from a pasted list: { vals, junk } */
+  function parseList(text) {
+    var tk = String(text == null ? '' : text).replace(/−/g, '-').split(/[\s,;]+/), vals = [], junk = 0, i;
+    for (i = 0; i < tk.length; i++) { var t = tk[i]; if (t === '') continue; if (/^[+-]?(\d+\.?\d*|\.\d+)(e[+-]?\d+)?$/i.test(t)) { var v = parseFloat(t); if (isFinite(v) && Math.abs(v) <= 1e9) vals.push(v); else junk++; } else junk++; }
+    return { vals: vals, junk: junk };
+  }
+  function listStats(v) {
+    var n = v.length, i, m = 0, ss = 0; for (i = 0; i < n; i++) m += v[i]; m /= n; for (i = 0; i < n; i++) ss += (v[i] - m) * (v[i] - m);
+    return { n: n, m: m, s: n > 1 ? Math.sqrt(ss / (n - 1)) : 0 };
+  }
+  return { zc: zc, tc: tc, crit: crit, levelFromZ: levelFromZ, levelFromP: levelFromP, betaInv: betaInv, est: est, mean: mean, diffMeans: diffMeans, prop: prop, diffProps: diffProps, poisson: poisson, poissonNormal: poissonNormal, needMean: needMean, needProp: needProp, parseList: parseList, listStats: listStats, BIGDF: BIGDF };
+})();
+/* CI-ENGINE:END */
+
+/* =========================================================
+   CalcThis.initCiCalc() - ids ci*. Engine CalcThis.ciEngine.
+   ========================================================= */
+CalcThis.initCiCalc = function () {
+  var E = CalcThis.ciEngine;
+  var $ = function (id) { return document.getElementById(id); };
+  if (!$('ciLevel')) return;
+  var st = { mode: 'mean', have: 'sum', spread: 's', groups: 'one', by: 'level', method: 'wald', adv: false };
+  var NUM = /^[+-]?(\d+\.?\d*|\.\d+)(e[+-]?\d+)?$/i;
+  function num(raw) {
+    var s = String(raw == null ? '' : raw).replace(/[\s ]/g, '').replace(/−/g, '-');
+    if (s === '') return { empty: true };
+    var pc = false; if (/%$/.test(s)) { pc = true; s = s.slice(0, -1); }
+    if (/^[+-]?\d{1,3}(,\d{3})+(\.\d*)?$/.test(s)) s = s.replace(/,/g, '');
+    if (/^[+-]?\.?$/.test(s) || /^[+-]?(\d+\.?\d*|\.\d+)e[+-]?$/i.test(s)) return { partial: true };
+    if (!NUM.test(s)) return { err: 'junk' };
+    var v = parseFloat(s); if (!isFinite(v)) return { err: 'big' };
+    if (Math.abs(v) > 1e9) return { err: 'big' };
+    return { v: v, pc: pc };
+  }
+  function short(raw) { return String(raw).trim().slice(0, 14); }
+  function setNote(id, t) { var e = $(id); if (!e) return; e.textContent = t || ''; e.style.display = t ? '' : 'none'; }
+  function show(id, on) { var e = $(id); if (e) e.style.display = on ? '' : 'none'; }
+  function setHint(m, at) {
+    var h = $('ciHint'); h.textContent = m || ''; h.style.display = m ? 'block' : 'none';
+    if (m && at) {
+      var el = $(at), f = el && (el.closest('.fld') || el), par = f && f.parentNode;
+      if (par && par.classList && par.classList.contains('ci-two')) f = par;
+      if (at === 'ciLevel' && $('ciChips')) f = $('ciChips');
+      if (f && f.nextSibling !== h && f.parentNode) f.parentNode.insertBefore(h, f.nextSibling);
+    }
+  }
+  function sg(x) { return String(x).replace('-', '−'); }
+  var BIG = 'is too large — keep it under 1,000,000,000.';
+  function readVal(id, label, eg, opt) {
+    var r = num($(id).value);
+    if (r.empty) return { miss: true };
+    if (r.partial) return { miss: true, partial: true };
+    if (r.err) return { bad: r.err === 'junk' ? 'Couldn’t read “' + short($(id).value) + '” in ' + label + ' — type a number like ' + eg + '.' : label + ' ' + BIG };
+    var v = r.v;
+    if (opt.min !== undefined && (opt.minEx ? v <= opt.min : v < opt.min)) return { bad: label + (opt.minMsg || ' must be above ' + opt.min + '.') };
+    if (opt.max !== undefined && v > opt.max) return { bad: label + (opt.maxMsg || ' must be at most ' + opt.max + '.') };
+    if (opt.int && v % 1 !== 0) return { bad: label + ' must be a whole number.' };
+    return { v: v };
+  }
+  /* a required field: fills R.bad (hard) or R.miss; returns the value or undefined */
+  function req(R, id, label, eg, opt, key) {
+    var v = readVal(id, label, eg, opt);
+    if (v.bad) { if (!R.bad) R.bad = { msg: v.bad + ' Fix it to see the interval.', at: id }; return; }
+    if (v.miss) { R.miss.push(key || label); if (v.partial && !R.bad) R.bad = { msg: 'Keep typing — “' + short($(id).value) + '” isn’t a complete number yet.', at: id }; return; }
+    return v.v;
+  }
+  /* an optional field: bad -> soft hint (ignored for now), returns the value or undefined */
+  function opt(R, id, label, eg, o) {
+    var v = readVal(id, label, eg, o);
+    if (v.bad) { if (!R.soft) R.soft = { msg: v.bad + ' It is ignored for now.', at: id }; return; }
+    if (v.miss) return;
+    return v.v;
+  }
+
+  var COUNTLIM = 1000000;
+  var PN = 1e9;
+  /* ---------- level ---------- */
+  function readLevel(R) {
+    var r = num($('ciLevel').value), lv = null, src = 'default';
+    if (r.err) R.softL = { msg: 'Couldn’t read “' + short($('ciLevel').value) + '” in the confidence level — type 95 or 95%. It is ignored for now.', at: 'ciLevel' };
+    else if (r.v !== undefined) {
+      var p = r.pc ? r.v : (r.v > 1 ? r.v : (r.v < 1 ? r.v * 100 : NaN));
+      if (!isFinite(p)) R.softL = { msg: 'A level of 1 could mean 1% or 100% — type 1% or 100%. It is ignored for now.', at: 'ciLevel' };
+      else if (p <= 0 || p >= 100) R.softL = { msg: 'The confidence level should be above 0% and below 100% (for example 95). It is ignored for now.', at: 'ciLevel' };
+      else { lv = p / 100; src = 'typed'; }
+    }
+    if (st.by !== 'level') {
+      var br = num($('ciByVal').value), bl = null;
+      if (br.err) R.softL = R.softL || { msg: 'Couldn’t read “' + short($('ciByVal').value) + '” — type a number. It is ignored for now.', at: 'ciByVal' };
+      else if (br.v !== undefined) {
+        if (st.by === 'z') { if (br.v <= 0 || br.v > 10) R.softL = R.softL || { msg: 'The z-score should be above 0 and at most 10 (for example 1.96). It is ignored for now.', at: 'ciByVal' }; else bl = E.levelFromZ(br.v); }
+        else { var pv = br.pc ? br.v / 100 : br.v; if (pv <= 0 || pv >= 0.5) R.softL = R.softL || { msg: 'The right-tailed p-value should be above 0 and below 0.5 (for example 0.025). It is ignored for now.', at: 'ciByVal' }; else bl = E.levelFromP(pv); }
+      }
+      if (bl !== null) { lv = bl; src = st.by; }
+    }
+    if (lv === null) { lv = 0.95; src = 'default'; }
+    R.level = lv; R.lsrc = src;
+  }
+
+  /* ---------- group reads ---------- */
+  function readGroup1Mean(R) {
+    var useT, m, s, n, se, df;
+    if (st.have === 'list') {
+      var pl = E.parseList($('ciList').value);
+      if (!pl.vals.length && !pl.junk) { R.miss.push('list'); return; }
+      if (pl.vals.length < 2) { if (!R.bad) R.bad = { msg: pl.vals.length ? 'Type at least 2 numbers — one number has no spread to work with.' : 'Couldn’t find a number in your list — separate numbers with commas, spaces or new lines.', at: 'ciList' }; R.miss.push('list'); return; }
+      var ls = E.listStats(pl.vals); R.listN = ls.n; R.listJunk = pl.junk;
+      return { m: ls.m, s: ls.s, n: ls.n, se: ls.s / Math.sqrt(ls.n), useT: true, from: 'list' };
+    }
+    m = req(R, 'ciMean', 'the sample mean', '20.6', {}, 'mean');
+    var sp = st.spread, lab = sp === 'se' ? 'the standard error' : sp === 'sigma' ? 'the population standard deviation' : 'the standard deviation';
+    s = req(R, 'ciSd', lab, '3.2', { min: 0, minEx: true, minMsg: ' must be above 0.' }, 'sd');
+    if (sp === 'se') {
+      var nr = readVal('ciN', 'the sample size', '50', { min: 2, int: true, max: PN, minMsg: ' must be a whole number of at least 2.' });
+      if (nr.bad) { if (!R.soft) R.soft = { msg: nr.bad + ' It is ignored for now, so z is used.', at: 'ciN' }; n = 0; } else n = nr.miss ? 0 : nr.v;
+    } else n = req(R, 'ciN', 'the sample size', '50', { min: sp === 'sigma' ? 1 : 2, int: true, max: PN, minMsg: ' must be a whole number of at least ' + (sp === 'sigma' ? 1 : 2) + '.' }, 'n');
+    if (m === undefined || s === undefined || (sp !== 'se' && n === undefined)) return;
+    if (sp === 'se') return { m: m, s: n ? s * Math.sqrt(n) : 0, n: n, se: s, useT: n > 0, from: 'sum' };
+    return { m: m, s: s, n: n, se: s / Math.sqrt(n), useT: sp === 's', from: 'sum' };
+  }
+  function readGroup2Mean(R) {
+    var ids = ['ciMean2', 'ciSd2', 'ciN2'], any = ids.some(function (i) { return $(i).value.trim() !== ''; });
+    if (!any) { R.g2empty = true; return; }
+    var m = opt(R, 'ciMean2', 'group 2 mean', '19.8', {}), sp = st.spread, s, n;
+    s = opt(R, 'ciSd2', sp === 'se' ? 'group 2 standard error' : 'group 2 standard deviation', '3.4', { min: 0, minEx: true, minMsg: ' must be above 0.' });
+    n = opt(R, 'ciN2', 'group 2 size', '40', { min: sp === 'sigma' ? 1 : 2, int: true, max: PN, minMsg: ' must be a whole number of at least ' + (sp === 'sigma' ? 1 : 2) + '.' });
+    if (m === undefined || s === undefined || (n === undefined && sp !== 'se')) { R.g2partial = true; return; }
+    if (sp === 'se') return { m: m, s: n ? s * Math.sqrt(n) : 0, n: n || 0, se: s };
+    return { m: m, s: s, n: n, se: s / Math.sqrt(n) };
+  }
+
+  /* ---------- formatting ---------- */
+  var LAB = { mean: 'the mean', prop: 'the proportion', count: 'the count', dmean: 'the difference between the means', dprop: 'the difference between the proportions' };
+  function decOf(me, dec) {
+    if (dec !== null && dec !== undefined) return dec;
+    if (!(me > 0) || !isFinite(me)) return 2;
+    var d = 3 - Math.floor(Math.log(me) / Math.LN10 + 1e-9);
+    return Math.max(0, Math.min(10, d));
+  }
+  function fixed(x, d) { var s = x.toFixed(d); if (/^-0(\.0*)?$/.test(s)) s = s.slice(1); return sg(s); }
+  function levelTxt(l) { return String(Math.round(l * 1e8) / 1e6); }
+  function fnum(x) { return sg(String(Math.round(x * 1e6) / 1e6)); }
+
+  /* ---------- the main compute ---------- */
+  function compute() {
+    var R = { miss: [], bad: null, soft: null, notes: {}, ready: false }, dr, dec = null;
+    readLevel(R);
+    dr = num($('ciDec').value);
+    if (dr.err || (dr.v !== undefined && (dr.v % 1 !== 0 || dr.v < 0 || dr.v > 10))) { R.softD = { msg: 'Decimal places should be a whole number from 0 to 10. It is ignored for now.', at: 'ciDec' }; }
+    else if (dr.v !== undefined) dec = dr.v;
+    R.dec = dec; R.mode = st.mode; R.two = st.groups === 'two' && st.mode !== 'count';
+    if (st.mode === 'mean') {
+      var g1 = readGroup1Mean(R);
+      if (g1 && !R.bad) {
+        R.g1 = g1; var res;
+        if (R.two) {
+          var g2 = readGroup2Mean(R);
+          if (g2) {
+            R.g2 = g2; R.kind = 'dmean';
+            var bothT = g1.useT && g2.n > 0 && g1.n > 0, a = { m: g1.m, se: g1.se, n: g1.n, s: g1.s }, b = { m: g2.m, se: g2.se, n: g2.n, s: g2.s };
+            R.diffKind = (st.spread === 'sigma' || !bothT) ? 'z' : 'welch';
+            res = E.diffMeans(a, b, R.diffKind, R.level); R.a = a; R.b = b;
+            R.at = function (lv) { return E.diffMeans(a, b, R.diffKind, lv); };
+            R.alt = []; if (R.diffKind === 'welch') { R.alt.push({ name: 'Welch (unequal variances)', r: res, on: true }); if (a.n + b.n > 3) R.alt.push({ name: 'Pooled (equal variances)', r: E.diffMeans(a, b, 'pooled', R.level) }); R.alt.push({ name: 'z (normal)', r: E.diffMeans(a, b, 'z', R.level) }); } else R.alt.push({ name: 'z (normal)', r: res, on: true });
+          }
+        }
+        if (!res) {
+          R.kind = 'mean'; var df = g1.useT ? g1.n - 1 : 0;
+          res = E.est(g1.m, g1.se, df, R.level);
+          R.at = function (lv, mult) { var nn = g1.n * (mult || 1), se2 = g1.se / Math.sqrt(mult || 1); return E.est(g1.m, se2, g1.useT ? nn - 1 : 0, lv); };
+          R.alt = []; var ck = (g1.from === 'sum' && st.spread !== 'se');
+          if (g1.n > 1) R.alt.push({ name: 't distribution (' + fnum(g1.n - 1) + ' degrees of freedom)', r: g1.useT ? res : E.est(g1.m, g1.se, g1.n - 1, R.level), on: g1.useT, key: ck ? 's' : '' });
+          R.alt.push({ name: 'z (normal)', r: g1.useT ? E.est(g1.m, g1.se, 0, R.level) : res, on: !g1.useT, key: ck ? 'sigma' : '' });
+        }
+        R.res = res; R.ready = true;
+      }
+    } else if (st.mode === 'prop') {
+      var x = null, n = req(R, 'ciPn', 'the sample size', '100', { min: 1, int: true, max: PN, minMsg: ' must be a whole number of at least 1.' }, 'n');
+      var xv = readVal('ciX', 'the number of yes answers', '40', { min: 0, int: true, max: PN, minMsg: ' can’t be negative — it starts at 0.' });
+      var ph, pr = num($('ciPhat').value);
+      var phMsg = null;
+      if (pr.err) phMsg = 'Couldn’t read “' + short($('ciPhat').value) + '” in the sample proportion — type 0.4 or 40%.';
+      else if (pr.v !== undefined) { var pvv = pr.pc ? pr.v / 100 : pr.v; if (pvv < 0 || pvv > 1) phMsg = 'The sample proportion should be between 0 and 1 (or 0% and 100%).'; else ph = pvv; }
+      if (phMsg) { if (xv.miss) { if (!R.bad) R.bad = { msg: phMsg + ' Fix it to see the interval.', at: 'ciPhat' }; } else if (!R.soft) R.soft = { msg: phMsg + ' It is ignored for now.', at: 'ciPhat' }; }
+      if (xv.bad) { if (!R.bad) R.bad = { msg: xv.bad + ' Fix it to see the interval.', at: 'ciX' }; }
+      else if (xv.miss) { if (ph === undefined) { R.miss.push('x'); if (xv.partial && !R.bad) R.bad = { msg: 'Keep typing — “' + short($('ciX').value) + '” isn’t a complete number yet.', at: 'ciX' }; } else if (n !== undefined) { x = ph * n; R.fromPhat = true; } }
+      else x = xv.v;
+      if (x !== null && n !== undefined) {
+        if (x > n) { if (!R.bad) R.bad = { msg: 'The number of yes answers (' + fnum(x) + ') can’t be bigger than the sample size (' + fnum(n) + '). Fix it to see the interval.', at: 'ciX' }; }
+        else {
+          R.kind = 'prop'; R.x = x; R.n = n; R.method = R.two ? 'wald' : st.method;
+          if (R.method === 'exact' && x % 1 !== 0) { x = Math.round(x); R.roundedX = x; R.x = x; }
+          var res2;
+          if (R.two) {
+            var gd = readGroup2Prop(R);
+            if (gd) { R.kind = 'dprop'; R.x2 = gd.x; R.n2 = gd.n; res2 = E.diffProps(x, n, gd.x, gd.n, R.level); R.at = function (lv) { return E.diffProps(x, n, gd.x, gd.n, lv); }; R.alt = [{ name: 'Normal approximation (Wald)', r: res2, on: true }]; }
+          }
+          if (!res2) {
+            res2 = E.prop(x, n, R.method, R.level);
+            R.at = function (lv, mult) { var m2 = mult || 1, xx = x * m2, nn = n * m2; return E.prop(xx, nn, R.method, lv); };
+            R.alt = [['wald', 'Normal approximation (Wald)'], ['wilson', 'Wilson score'], ['exact', 'Exact (Clopper-Pearson)']].map(function (mm) { var xx = mm[0] === 'exact' ? Math.round(x) : x; return { name: mm[1], r: mm[0] === R.method ? res2 : E.prop(xx, n, mm[0], R.level), on: mm[0] === R.method, key: mm[0] }; });
+          }
+          R.res = res2; R.ready = true;
+        }
+      }
+    } else {
+      var k = req(R, 'ciK', 'the number counted', '12', { min: 0, int: true, max: COUNTLIM, minMsg: ' can’t be negative — it starts at 0.', maxMsg: ' is too large here — keep it at 1,000,000 or less.' }, 'k');
+      if (k !== undefined && !R.bad) {
+        R.kind = 'count'; R.k = k; R.res = E.poisson(k, R.level);
+        R.at = function (lv, mult) { return E.poisson(k * (mult || 1), lv); };
+        R.alt = [{ name: 'Exact (Poisson)', r: R.res, on: true }]; if (k > 0) { var pn = E.poissonNormal(k, R.level); R.alt.push({ name: 'Normal approximation (k ± z√k)', r: { lo: pn.lo, hi: pn.hi, me: pn.me } }); }
+        R.ready = true;
+      }
+    }
+    return R;
+  }
+  function readGroup2Prop(R) {
+    var any = ['ciX2', 'ciPn2'].some(function (i) { return $(i).value.trim() !== ''; });
+    if (!any) { R.g2empty = true; return; }
+    var n2 = opt(R, 'ciPn2', 'group 2 size', '120', { min: 1, int: true, max: PN, minMsg: ' must be a whole number of at least 1.' });
+    var x2 = opt(R, 'ciX2', 'group 2 yes answers', '55', { min: 0, int: true, max: PN, minMsg: ' can’t be negative.' });
+    if (n2 === undefined || x2 === undefined) { R.g2partial = true; return; }
+    if (x2 > n2) { if (!R.soft) R.soft = { msg: 'Group 2 yes answers can’t be bigger than group 2 size. It is ignored for now.', at: 'ciX2' }; R.g2partial = true; return; }
+    return { x: x2, n: n2 };
+  }
+
+  /* ---------- the picture: curve + nested bars on one scale ---------- */
+  var VW = 280, PL = 40, PR = 270, CT = 20, CB = 112, BT = 148, RH = 22;
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+  function draw(R, d, pct) {
+    var r = R.res, k = pct ? 100 : 1, se = r.se;
+    if (!(se > 0) || !isFinite(se) || !(r.hi > r.lo)) return null;
+    var lvls = [0.90, 0.95, 0.99], i, hasL = false; lvls.forEach(function (l) { if (Math.abs(l - R.level) < 1e-9) hasL = true; }); if (!hasL) { lvls.push(R.level); lvls.sort(function (a, b) { return a - b; }); }
+    var rows = lvls.map(function (l) { var q = Math.abs(l - R.level) < 1e-9 ? r : R.at(l); return { l: l, lo: q.lo, hi: q.hi, on: Math.abs(l - R.level) < 1e-9 }; });
+    var gh = R.at(R.level, 4); if (gh && isFinite(gh.lo)) rows.push({ l: R.level, lo: R.kind === 'count' ? gh.lo / 4 : gh.lo, hi: R.kind === 'count' ? gh.hi / 4 : gh.hi, ghost: true });
+    var df = r.df, dens = function (u) { return df ? CalcThis.pvalueEngine.dens('t', { df: df }, u) : CalcThis.pvalueEngine.dens('z', {}, u); };
+    var xmin = r.est - 4.2 * se, xmax = r.est + 4.2 * se; rows.forEach(function (q) { xmin = Math.min(xmin, q.lo); xmax = Math.max(xmax, q.hi); });
+    if (R.kind === 'prop' || R.kind === 'count') { if (R.kind === 'prop') { xmin = Math.max(xmin, -0.05); xmax = Math.min(xmax, 1.05); rows.forEach(function (q) { xmin = Math.min(xmin, q.lo); xmax = Math.max(xmax, q.hi); }); } else xmin = Math.max(xmin, -0.5); }
+    var pad = (xmax - xmin) * 0.03; xmin -= pad; xmax += pad;
+    var px = function (v) { return PL + (v - xmin) / (xmax - xmin) * (PR - PL); };
+    var peak = dens(0), py = function (u) { return CB - dens(u) / peak * (CB - CT); };
+    var N = 140, line = '', area = '', j;
+    for (j = 0; j <= N; j++) { var xv = xmin + (xmax - xmin) * j / N, u = (xv - r.est) / se; line += (j ? 'L' : 'M') + px(xv).toFixed(1) + ',' + py(u).toFixed(1); }
+    var a0 = Math.max(r.lo, xmin), b0 = Math.min(r.hi, xmax), M = 60;
+    area = 'M' + px(a0).toFixed(1) + ',' + CB; for (j = 0; j <= M; j++) { var xa = a0 + (b0 - a0) * j / M; area += 'L' + px(xa).toFixed(1) + ',' + py((xa - r.est) / se).toFixed(1); } area += 'L' + px(b0).toFixed(1) + ',' + CB + 'Z';
+    var lab = function (v) { return fixed(v * k, d) + (pct ? '%' : ''); };
+    var cx = px(r.est), lx = px(r.lo), hx = px(r.hi);
+    var svg = '<svg viewBox="0 0 ' + VW + ' ' + (BT + rows.length * RH + 4) + '" width="100%" role="img" aria-label="Curve of the estimate with the confidence interval shaded, and the interval at several confidence levels" xmlns="http://www.w3.org/2000/svg">';
+    svg += '<path d="' + area + '" fill="#B5761F" fill-opacity=".34" stroke="none"/><line x1="' + PL + '" y1="' + CB + '" x2="' + PR + '" y2="' + CB + '" stroke="#CDBFA5" stroke-width="1.2"/><path d="' + line + '" fill="none" stroke="#241A11" stroke-width="1.8" stroke-linejoin="round"/>';
+    svg += '<line x1="' + cx.toFixed(1) + '" y1="' + (CT - 2) + '" x2="' + cx.toFixed(1) + '" y2="' + (BT + rows.length * RH - 8) + '" stroke="#8F5C13" stroke-width="1.4" stroke-dasharray="3 3"/>';
+    svg += '<line x1="' + lx.toFixed(1) + '" y1="' + (CT + 10) + '" x2="' + lx.toFixed(1) + '" y2="' + (CB + 4) + '" stroke="#37503F" stroke-width="1.6"/><line x1="' + hx.toFixed(1) + '" y1="' + (CT + 10) + '" x2="' + hx.toFixed(1) + '" y2="' + (CB + 4) + '" stroke="#37503F" stroke-width="1.6"/>';
+    var anL = lx < PL + 26 ? 'start' : 'middle', anH = hx > PR - 26 ? 'end' : 'middle';
+    svg += '<text x="' + lx.toFixed(1) + '" y="' + (CB + 20) + '" text-anchor="' + anL + '" font-size="12" fill="#37503F" font-weight="700">' + esc(lab(r.lo)) + '</text><text x="' + hx.toFixed(1) + '" y="' + (CB + 20) + '" text-anchor="' + anH + '" font-size="12" fill="#37503F" font-weight="700">' + esc(lab(r.hi)) + '</text>';
+    svg += '<text x="' + cx.toFixed(1) + '" y="12" text-anchor="' + (cx > PR - 40 ? 'end' : cx < PL + 40 ? 'start' : 'middle') + '" font-size="12" fill="#8F5C13" font-weight="700">' + esc(lab(r.est)) + '</text>';
+    rows.forEach(function (q, ix) {
+      var y = BT + ix * RH + 6, x1 = px(q.lo), x2 = px(q.hi);
+      svg += '<text x="' + (PL - 6) + '" y="' + (y + 4) + '" text-anchor="end" font-size="12" fill="' + (q.on ? '#8F5C13' : '#5B4B3B') + '" font-weight="' + (q.on ? '700' : '500') + '">' + (q.ghost ? '4× n' : esc(levelTxt(q.l)) + '%') + '</text>';
+      if (q.ghost) svg += '<rect x="' + x1.toFixed(1) + '" y="' + (y - 3) + '" width="' + Math.max(1, x2 - x1).toFixed(1) + '" height="6" rx="3" fill="none" stroke="#37503F" stroke-width="1.4" stroke-dasharray="4 3"/>';
+      else svg += '<line x1="' + x1.toFixed(1) + '" y1="' + y + '" x2="' + x2.toFixed(1) + '" y2="' + y + '" stroke="' + (q.on ? '#B5761F' : '#37503F') + '" stroke-opacity="' + (q.on ? '1' : '.5') + '" stroke-width="8" stroke-linecap="round"/>';
+    });
+    return svg + '</svg>';
+  }
+
+  /* ---------- render ---------- */
+  function render() {
+    var R = compute(), i, hm = null, hat = null;
+    var sp = st.spread;
+    /* labels and visible fields follow the mode */
+    show('ciMeanW', st.mode === 'mean'); show('ciPropW', st.mode === 'prop'); show('ciCountW', st.mode === 'count');
+    show('ciSumW', st.mode === 'mean' && st.have === 'sum'); show('ciListW', st.mode === 'mean' && st.have === 'list'); show('ciHaveW', st.mode === 'mean');
+    show('ciSecGroups', st.mode !== 'count'); show('ciSecSpread', st.mode === 'mean' && st.have === 'sum'); show('ciSecProp', st.mode === 'prop'); show('ciMethodW', st.mode === 'prop' && st.groups !== 'two'); show('ciPhatW', st.mode === 'prop');
+    show('ciG2MeanW', st.mode === 'mean' && st.groups === 'two'); show('ciG2PropW', st.mode === 'prop' && st.groups === 'two'); show('ciByValW', st.by !== 'level');
+    $('ciSdLab').textContent = sp === 'se' ? 'Standard error' : sp === 'sigma' ? 'Population standard deviation (σ)' : 'Standard deviation (s)';
+    $('ciSd2Lab').textContent = sp === 'se' ? 'Group 2 standard error' : 'Group 2 standard deviation';
+    $('ciByValLab').textContent = st.by === 'z' ? 'z-score' : 'Right-tailed p-value';
+    $('ciByVal').placeholder = st.by === 'z' ? 'e.g. 1.96' : 'e.g. 0.025';
+    $('ciTargetLab').textContent = st.mode === 'prop' ? 'Margin of error I want (percentage points)' : 'Margin of error I want';
+    $('ciTarget').placeholder = st.mode === 'prop' ? 'e.g. 3' : 'e.g. 0.5';
+    $('ciNLab').textContent = (st.mode === 'mean' && sp === 'se') ? 'Sample size (n) · optional' : 'Sample size (n)';
+    /* hint: the first problem wins */
+    if (R.bad) { hm = R.bad.msg; hat = R.bad.at; } else if (R.softL) { hm = R.softL.msg; hat = R.softL.at; } else if (R.softD) { hm = R.softD.msg; hat = R.softD.at; } else if (R.soft) { hm = R.soft.msg; hat = R.soft.at; }
+    var tg = targetRender(R); if (!hm && tg.soft) { hm = tg.soft; hat = 'ciTarget'; }
+    setHint(hm, hat);
+    /* notes under the fields (every field reacts) */
+    var ln = '';
+    if (R.lsrc === 'default') ln = R.softL ? '' : 'No level typed, so 95% is used. Type your own (for example 99) or tap a chip.';
+    else if (R.lsrc === 'typed') ln = levelTxt(R.level) + '% confidence: about ' + levelTxt(R.level) + ' of every 100 intervals built this way would contain the true value.' + (st.by !== 'level' && $('ciByVal').value.trim() ? '' : '');
+    else ln = 'The level comes from the ' + (R.lsrc === 'z' ? 'z-score' : 'right-tailed p-value') + ' you typed in Go advanced: ' + levelTxt(R.level) + '%. The level field above is not used.';
+    setNote('ciLevelNote', ln);
+    var mn = '';
+    if (st.mode === 'mean') {
+      if (R.g1) mn = R.g1.from === 'list' ? 'Worked out from your list: n = ' + R.g1.n + ', mean ' + fnum(R.g1.m) + ', standard deviation ' + fnum(R.g1.s) + (R.listJunk ? ' (' + (R.listJunk === 1 ? '1 item that is not a number' : R.listJunk + ' items that are not numbers') + ' left out).' : '.') : (R.g1.useT ? 'Using the t distribution with ' + fnum(R.g1.n - 1) + ' degrees of freedom, because the spread comes from a sample.' : (R.g1.n ? 'Using the normal (z) distribution, because the population standard deviation is known.' : 'No sample size typed, so the normal (z) distribution is used.'));
+      else if (!R.bad) { var need = R.miss.map(function (k2) { return { mean: 'the sample mean', sd: 'the spread', n: 'the sample size', list: 'your list of numbers' }[k2] || k2; }); mn = 'Type ' + (need.length > 1 ? need.slice(0, -1).join(', ') + ' and ' + need[need.length - 1] : need[0]) + ' to see the interval.'; }
+    } else if (st.mode === 'prop') {
+      if (R.ready) mn = 'p̂ = ' + fnum(R.x) + ' ÷ ' + fnum(R.n) + ' = ' + fnum(R.x / R.n) + ' (' + fnum(Math.round(R.x / R.n * 1e6) / 1e4) + '%).' + (R.fromPhat ? ' The number of yes answers is worked out from your sample proportion.' : '') + (R.roundedX !== undefined ? ' The exact method needs a whole number, so ' + R.roundedX + ' yes answers are used.' : '');
+      else if (!R.bad) mn = 'Type the number of yes answers and the sample size to see the interval.';
+    } else mn = R.ready ? 'The exact Poisson method gives a lower limit of ' + fnum(Math.round(R.res.lo * 1e4) / 1e4) + ' and an upper limit of ' + fnum(Math.round(R.res.hi * 1e4) / 1e4) + ' for the average count.' : (R.bad ? '' : 'Type the number you counted to see the interval.');
+    setNote('ciMainNote', mn);
+    var gn = '';
+    if (st.groups === 'two' && st.mode !== 'count') { if (R.g2empty) gn = 'Type group 2 below to see the difference between the two groups; for now the interval for group 1 alone is shown.'; else if (R.g2partial) gn = 'Group 2 is not complete yet, so only group 1 is shown for now.'; else gn = 'The interval is for the difference: group 1 minus group 2.'; }
+    else if (st.mode === 'count' && st.groups === 'two') gn = 'Two groups work for means and proportions.';
+    else gn = st.groups === 'two' ? '' : 'Choose “Two groups” to get an interval for the difference between two groups.';
+    setNote('ciGroupNote', gn);
+    setNote('ciSpreadNote', st.mode !== 'mean' ? 'The standard deviation choice only applies to a mean.' : st.have === 'list' ? 'A list always uses its own sample standard deviation.' : sp === 's' ? 'Standard deviation of your sample: the t distribution is used.' : sp === 'sigma' ? 'Standard deviation of the whole population: the normal (z) distribution is used.' : 'Standard error = standard deviation ÷ √n; with a sample size typed the t distribution is used, without one z.');
+    setNote('ciByNote', st.by === 'level' ? 'The level is the percentage typed above. Choose z-score or right-tailed p-value to set it that way instead.' : ($('ciByVal').value.trim() === '' ? 'Type the ' + (st.by === 'z' ? 'z-score' : 'right-tailed p-value') + ' to set the level; until then the level above is used.' : ''));
+    setNote('ciMethodNote', st.mode !== 'prop' ? 'The method only applies to a proportion.' : st.groups === 'two' ? 'The difference between two proportions uses the normal approximation.' : ({ wald: 'The normal approximation: fine for large samples, too narrow when p̂ is close to 0 or 1 or n is small.', wilson: 'Wilson score: more reliable than the normal approximation for small samples and extreme proportions.', exact: 'Exact (Clopper-Pearson): never narrower than it should be, can be a little wide.' }[st.method]));
+    setNote('ciPhatNote', st.mode !== 'prop' ? 'Only used for a proportion.' : (R.fromPhat ? 'Used instead of the number of yes answers: p̂ × n = ' + fnum(R.x) + '.' : ($('ciPhat').value.trim() && $('ciX').value.trim() ? 'The number of yes answers above is used; this is ignored.' : 'If you only know the proportion (0.4 or 40%), type it here and leave the yes answers empty.')));
+    setNote('ciTargetNote', tg.note);
+    var dn = R.softD ? '' : (R.dec !== null ? 'Numbers are shown with ' + R.dec + ' decimal places.' : 'Leave empty for automatic: four significant digits of the margin of error.');
+    setNote('ciDecNote', dn);
+    /* result */
+    var big = '—', lab = 'Confidence interval', sub = $('ciSub').getAttribute('data-empty'), tip = '', body = false;
+    show('ciVisWrap', false); show('ciMethWrap', false); show('ciNeedWrap', false);
+    if (R.ready) {
+      body = true; var r = R.res, pct = R.kind === 'prop' || R.kind === 'dprop', k = pct ? 100 : 1, d = decOf(r.me * k, R.dec), sfx = pct ? '%' : '';
+      var F = function (v) { return fixed(v * k, d) + sfx; };
+      var lv = levelTxt(R.level), nm = LAB[R.kind];
+      big = F(r.lo) + ' to ' + F(r.hi); lab = lv + '% confidence interval for ' + nm;
+      var half = (R.kind === 'prop' && R.method !== 'wald') || R.kind === 'count', plus = half ? 'Half-width ' : 'Margin of error ±';
+      var estTxt = R.kind === 'mean' ? 'mean ' + F(r.est) : R.kind === 'prop' ? 'p̂ ' + F(r.est) : R.kind === 'count' ? 'count ' + fnum(r.est) : 'difference ' + F(r.est);
+      sub = plus + F(r.me).replace(/^−/, '') + ' · ' + estTxt;
+      var inc0 = (R.kind === 'dmean' || R.kind === 'dprop') && r.lo <= 0 && r.hi >= 0;
+      tip = 'If you repeated this study many times, about ' + lv + ' of every 100 intervals built this way would contain the true ' + (R.kind === 'dmean' || R.kind === 'dprop' ? 'difference' : R.kind === 'mean' ? 'mean' : R.kind === 'prop' ? 'proportion' : 'average count') + '.' + (R.kind === 'dmean' || R.kind === 'dprop' ? (inc0 ? ' The interval includes 0, so the data do not rule out no difference.' : ' The interval does not include 0, so the two groups differ at this level.') : '');
+      if (R.res.clip) tip += ' The interval was cut at 0% or 100%.';
+      /* numbers table */
+      var rows = [];
+      rows.push([R.kind === 'mean' ? 'Sample mean' : R.kind === 'prop' ? 'Sample proportion (p̂)' : R.kind === 'count' ? 'Number counted' : 'Difference (group 1 − group 2)', R.kind === 'count' ? fnum(r.est) : F(r.est)]);
+      rows.push(['Standard error', pct ? fixed(r.se * 100, decOf(r.se * 100, R.dec)) + '%' : fixed(r.se, decOf(r.se, R.dec))]);
+      var critTxt = null;
+      if (R.kind === 'mean' || R.kind === 'dmean') critTxt = r.df ? 't = ' + fixed(r.c, 4) + ' (' + fnum(r.df) + ' degrees of freedom)' : 'z = ' + fixed(r.c, 4);
+      else if (R.kind === 'prop' && R.method !== 'exact' || R.kind === 'dprop') critTxt = 'z = ' + fixed(r.c, 4);
+      if (critTxt) rows.push(['Critical value', critTxt]);
+      rows.push([half ? 'Half-width of the interval' : 'Margin of error', '±' + F(r.me).replace(/^−/, '')]);
+      if (R.kind === 'mean' && r.est !== 0) rows.push(['Margin of error as a percentage of the mean', '±' + fixed(Math.abs(r.me / r.est) * 100, 2) + '%']);
+      rows.push(['Interval written as a range', '[' + F(r.lo) + ' – ' + F(r.hi) + ']']);
+      if (R.kind !== 'count') rows.push(['Sample size (n)', R.kind === 'mean' ? fnum(R.g1.n) : R.kind === 'prop' ? fnum(R.n) : R.kind === 'dmean' ? fnum(R.g1.n) + ' and ' + fnum(R.g2.n) : R.kind === 'dprop' ? fnum(R.n) + ' and ' + fnum(R.n2) : '—']);
+      $('ciNums').innerHTML = '<tbody>' + rows.map(function (rw) { return '<tr><td>' + rw[0] + '</td><td>' + rw[1] + '</td></tr>'; }).join('') + '</tbody>';
+      $('ciCopyTxt').textContent = lab + ': ' + big + ' (' + sub + ')';
+      /* steps */
+      $('ciSteps').innerHTML = steps(R, F, d, pct).map(function (s) { return '<li>' + s + '</li>'; }).join('');
+      /* picture */
+      var sv = draw(R, d, pct);
+      if (sv) { $('ciVis').innerHTML = sv; show('ciVisWrap', true); $('ciVisKey').textContent = 'The curve is the spread of the estimate; the amber area between the two green lines is your ' + lv + '% interval. Below it, the same interval at 90%, 95% and 99% (and the level you chose): higher confidence means a wider interval. The dashed bar is your ' + lv + '% interval with 4 times as much data.'; } else { $('ciVis').innerHTML = ''; }
+      /* methods table */
+      if (R.alt && R.alt.length) {
+        var th = '<thead><tr><th>Method</th><th>Interval</th></tr></thead><tbody>';
+        R.alt.forEach(function (a) { var q = a.r, clickable = !!a.key; th += '<tr class="ci-mrow' + (a.on ? ' on' : '') + '"' + (clickable ? ' data-v="' + a.key + '" tabindex="0"' : '') + '><td>' + a.name + '</td><td>' + F(q.lo) + ' to ' + F(q.hi) + '</td></tr>'; });
+        $('ciMeth').innerHTML = th + '</tbody>'; show('ciMethWrap', true);
+        setNote('ciMethNote', R.kind === 'mean' ? 'Click a row to use it. The z row is what calculators that ignore the sample size compute.' : R.kind === 'prop' ? 'Click a row to use that method.' : '');
+      }
+      /* more data */
+      if (R.kind !== 'dmean' && R.kind !== 'dprop') {
+        var nh = '<thead><tr><th>' + (R.kind === 'count' ? 'Counted over' : 'Sample size') + '</th><th>Margin of error</th><th>Interval</th></tr></thead><tbody>';
+        var baseN = R.kind === 'mean' ? R.g1.n : R.kind === 'prop' ? R.n : null;
+        [1, 2, 4, 10].forEach(function (m) { var q = m === 1 ? r : R.at(R.level, m); if (R.kind === 'count' && m > 1) q = { lo: q.lo / m, hi: q.hi / m, me: q.me / m }; nh += '<tr><td>' + (R.kind === 'count' ? (m === 1 ? 'your period' : m + '× as long') : (m === 1 ? 'n = ' + fnum(baseN) : fnum(baseN * m) + ' (' + m + '×)')) + '</td><td>±' + F(q.me).replace(/^−/, '') + '</td><td>' + F(q.lo) + ' to ' + F(q.hi) + '</td></tr>'; });
+        if (tg.n) nh += '<tr class="ci-mrow on"><td>' + fnum(tg.n) + ' (target)</td><td>±' + tg.eTxt + '</td><td>' + tg.rng + '</td></tr>';
+        $('ciNeed').innerHTML = nh + '</tbody>'; show('ciNeedWrap', true);
+        $('ciNeedKey').textContent = R.kind === 'count' ? 'Counting over a longer period (or a larger area) with the same rate gives a tighter interval.' : 'Same estimate and spread, more people: the margin of error shrinks with the square root of n, so halving it takes 4 times as many.';
+      }
+    }
+    [].forEach.call($('ciChips').children, function (b) { b.classList.toggle('on', R.lsrc === 'typed' && Math.abs(R.level * 100 - parseFloat(b.getAttribute('data-v'))) < 1e-9); });
+    $('ciBig').textContent = big; $('ciBig').parentNode.classList.toggle('ci-long', big.length > 18); $('ciLab').textContent = lab; $('ciSub').textContent = sub; $('ciBody').style.display = body ? '' : 'none'; $('ciTip').textContent = tip;
+    $('ciMLab').textContent = body ? levelTxt(R.level) + '% interval' : 'Confidence interval'; $('ciMVal').textContent = big;
+    st.last = R;
+  }
+  /* sample size for a wanted margin of error */
+  function targetRender(R) {
+    var out = { soft: null, note: '', n: 0 }, raw = $('ciTarget').value.trim(), pctMode = st.mode === 'prop';
+    if (st.mode === 'count') { out.note = 'A target margin of error is not available for counts.'; return out; }
+    if (R.two) { out.note = 'The needed sample size is worked out for one group — choose “One group”.'; return out; }
+    if (!raw) { out.note = pctMode ? 'Type the margin of error you want (3 means ±3 percentage points) to see how many people you need.' : 'Type the margin of error you want (in the same units as the mean) to see how many people you need.'; return out; }
+    var tv = num(raw.replace(/%$/, ''));
+    if (tv.partial) return out;
+    if (tv.err || tv.v === undefined || tv.v <= 0 || (pctMode && tv.v >= 100)) { out.soft = 'The margin of error should be a number above 0' + (pctMode ? ' and below 100 percentage points' : '') + '. It is ignored for now.'; return out; }
+    var level = R.level, nn, p, eTxt;
+    if (st.mode === 'mean') { if (!R.g1 || !(R.g1.s > 0)) { out.note = 'Type the standard deviation (or a list) first — the sample size you need depends on the spread.'; return out; } nn = E.needMean(R.g1.s, tv.v, level); eTxt = fnum(tv.v); out.note = 'With a standard deviation of ' + fnum(R.g1.s) + ' you need at least ' + nn.toLocaleString('en-US') + ' people for a margin of error of ±' + eTxt + ' at ' + levelTxt(level) + '% confidence' + (R.g1 ? ' (you have ' + fnum(R.g1.n) + ').' : '.'); }
+    else { p = R.ready && R.kind === 'prop' ? R.x / R.n : 0.5; nn = E.needProp(p, tv.v / 100, level); eTxt = fnum(tv.v) + ' points'; out.note = 'With p̂ = ' + fnum(Math.round(p * 1e6) / 1e6) + (R.ready ? '' : ' (the worst case when nothing is typed)') + ' you need at least ' + nn.toLocaleString('en-US') + ' people for ±' + fnum(tv.v) + ' percentage points at ' + levelTxt(level) + '% confidence. At p̂ = 0.5 (the worst case) it is ' + E.needProp(0.5, tv.v / 100, level).toLocaleString('en-US') + '.'; }
+    out.n = nn; out.eTxt = eTxt;
+    if (R.ready && R.res) {
+      var q, pct2 = R.kind === 'prop', kk = pct2 ? 100 : 1, d2 = decOf(R.res.me * kk, R.dec), sf = pct2 ? '%' : '';
+      if (R.kind === 'mean') { var g = R.g1; q = E.est(g.m, g.se * Math.sqrt(g.n / nn), g.useT ? nn - 1 : 0, level); }
+      else { var m2 = nn / R.n; q = E.prop(R.x * m2, nn, R.method, level); }
+      out.rng = fixed(q.lo * kk, d2) + sf + ' to ' + fixed(q.hi * kk, d2) + sf;
+      if (R.kind === 'prop') out.eTxt = fnum(tv.v) + ' points';
+    } else out.rng = '—';
+    if (!R.ready) out.n = 0;
+    return out;
+  }
+  function steps(R, F, d, pct) {
+    var r = R.res, lv = levelTxt(R.level), a = 1 - R.level, f4 = function (v) { return fixed(v, 4); }, o = [], vv = function (v) { return pct ? fixed(v * 100, d) + '%' : fixed(v, d); };
+    if (R.kind === 'mean') {
+      var g = R.g1;
+      o.push('Standard error = ' + (g.from === 'sum' && st.spread === 'se' ? 'the standard error you typed = ' + fnum(g.se) : (st.spread === 'sigma' ? 'σ' : 's') + ' ÷ √n = ' + fnum(g.s) + ' ÷ √' + fnum(g.n) + ' = ' + f4(r.se)) + '.');
+      o.push('Critical value: ' + (r.df ? 't(' + fnum(Math.round((1 - a / 2) * 1e8) / 1e8) + ', ' + fnum(r.df) + ') = ' + f4(r.c) : 'z(' + fnum(Math.round((1 - a / 2) * 1e8) / 1e8) + ') = ' + f4(r.c)) + ' for ' + lv + '% confidence' + (r.df ? ' and n − 1 = ' + fnum(r.df) + ' degrees of freedom.' : '.'));
+      o.push('Margin of error = ' + f4(r.c) + ' × ' + f4(r.se) + ' = ' + f4(r.me) + '.');
+      o.push('Interval = ' + fnum(r.est) + ' ± ' + f4(r.me) + ' = ' + vv(r.lo) + ' to ' + vv(r.hi) + '.');
+    } else if (R.kind === 'dmean') {
+      o.push('Difference = ' + fnum(R.a.m) + ' − ' + fnum(R.b.m) + ' = ' + fnum(r.est) + '.');
+      o.push('Standard error = √(se₁² + se₂²) = ' + f4(r.se) + '.');
+      o.push('Critical value = ' + (r.df ? 't = ' + f4(r.c) + ' (' + fnum(Math.round(r.df * 100) / 100) + ' degrees of freedom, Welch)' : 'z = ' + f4(r.c)) + ' and margin of error = ' + f4(r.me) + '.');
+      o.push('Interval = ' + fnum(r.est) + ' ± ' + f4(r.me) + ' = ' + vv(r.lo) + ' to ' + vv(r.hi) + '.');
+    } else if (R.kind === 'prop') {
+      var p = R.x / R.n;
+      if (R.method === 'wald') { o.push('p̂ = ' + fnum(R.x) + ' ÷ ' + fnum(R.n) + ' = ' + f4(p) + '; standard error = √(p̂(1 − p̂) ÷ n) = ' + f4(r.se) + '.'); o.push('Critical value z = ' + f4(r.c) + ' for ' + lv + '% confidence, so the margin of error is ' + f4(r.c) + ' × ' + f4(r.se) + ' = ' + f4(r.me) + '.'); o.push('Interval = ' + f4(p) + ' ± ' + f4(r.me) + ' = ' + vv(r.lo) + ' to ' + vv(r.hi) + (r.clip ? ' (cut at 0% or 100%).' : '.')); }
+      else if (R.method === 'wilson') { o.push('p̂ = ' + fnum(R.x) + ' ÷ ' + fnum(R.n) + ' = ' + f4(p) + ' and z = ' + f4(r.c) + ' for ' + lv + '% confidence.'); o.push('Wilson interval = (p̂ + z²/2n ± z√(p̂(1 − p̂)/n + z²/4n²)) ÷ (1 + z²/n).'); o.push('Interval = ' + vv(r.lo) + ' to ' + vv(r.hi) + '.'); }
+      else { o.push('p̂ = ' + fnum(R.x) + ' ÷ ' + fnum(R.n) + ' = ' + f4(p) + '.'); o.push('Exact (Clopper-Pearson): the limits are the ' + fnum(Math.round(a / 2 * 1e8) / 1e8) + ' and ' + fnum(Math.round((1 - a / 2) * 1e8) / 1e8) + ' quantiles of the beta distribution.'); o.push('Interval = ' + vv(r.lo) + ' to ' + vv(r.hi) + '.'); }
+    } else if (R.kind === 'dprop') {
+      o.push('p̂₁ = ' + fnum(R.x) + ' ÷ ' + fnum(R.n) + ' and p̂₂ = ' + fnum(R.x2) + ' ÷ ' + fnum(R.n2) + '; difference = ' + f4(r.est) + '.');
+      o.push('Standard error = √(p̂₁(1 − p̂₁)/n₁ + p̂₂(1 − p̂₂)/n₂) = ' + f4(r.se) + '; z = ' + f4(r.c) + '.');
+      o.push('Interval = ' + f4(r.est) + ' ± ' + f4(r.me) + ' = ' + vv(r.lo) + ' to ' + vv(r.hi) + '.');
+    } else {
+      o.push('You counted k = ' + fnum(R.k) + '.');
+      o.push('Exact Poisson limits: lower = χ²(' + fnum(Math.round(a / 2 * 1e8) / 1e8) + ', 2k) ÷ 2, upper = χ²(' + fnum(Math.round((1 - a / 2) * 1e8) / 1e8) + ', 2k + 2) ÷ 2.');
+      o.push('Interval = ' + fixed(r.lo, d) + ' to ' + fixed(r.hi, d) + '.');
+    }
+    return o;
+  }
+
+  /* ---------- controls ---------- */
+  function segSet(id, key, v) { st[key] = v; [].forEach.call($(id).children, function (b) { var on = b.getAttribute('data-v') === v; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); }); }
+  [['ciMode', 'mode'], ['ciHave', 'have'], ['ciSpread', 'spread'], ['ciGroups', 'groups']].forEach(function (p) {
+    [].forEach.call($(p[0]).children, function (b) { b.addEventListener('click', function () { segSet(p[0], p[1], b.getAttribute('data-v')); render(); }); });
+  });
+  CalcThis.initCsel($('ciBy')); CalcThis.initCsel($('ciMethod'));
+  var BYN = { level: 'Confidence level', z: 'z-score', p: 'Right-tailed p-value' }, METN = { wald: 'Normal approximation (Wald)', wilson: 'Wilson score', exact: 'Exact (Clopper-Pearson)' };
+  function cselSet(id, v, names) { $(id).setAttribute('data-value', v); $(id).querySelector('.csel-val').textContent = names[v]; [].forEach.call($(id).querySelectorAll('.csel-opt'), function (o) { var on = o.getAttribute('data-value') === v; o.classList.toggle('on', on); o.setAttribute('aria-selected', on ? 'true' : 'false'); }); }
+  $('ciBy').addEventListener('change', function () { var v = $('ciBy').value; if (BYN[v] && v !== st.by) { st.by = v; $('ciByVal').value = ''; cselSet('ciBy', v, BYN); render(); } });
+  $('ciMethod').addEventListener('change', function () { var v = $('ciMethod').value; if (METN[v] && v !== st.method) { st.method = v; cselSet('ciMethod', v, METN); render(); } });
+  [].forEach.call(document.querySelectorAll('.p-ci input[type=text]'), function (i) { i.addEventListener('input', render); });
+  $('ciList').addEventListener('input', render);
+  $('ciChips').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; if (st.by !== 'level') { st.by = 'level'; cselSet('ciBy', 'level', BYN); } $('ciLevel').value = b.getAttribute('data-v'); render(); });
+  $('ciMeth').addEventListener('click', function (e) { var r = e.target.closest('.ci-mrow[data-v]'); if (r) pickRow(r.getAttribute('data-v')); });
+  $('ciMeth').addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { var r = e.target.closest('.ci-mrow[data-v]'); if (r) { e.preventDefault(); pickRow(r.getAttribute('data-v')); } } });
+  function pickRow(v) { if (st.mode === 'mean') { if (v === 's' || v === 'sigma') segSet('ciSpread', 'spread', v); } else if (st.mode === 'prop') { st.method = v; cselSet('ciMethod', v, METN); } render(); }
+  $('ciClear').addEventListener('click', function () {
+    ['ciMean', 'ciSd', 'ciN', 'ciX', 'ciPn', 'ciK', 'ciLevel', 'ciMean2', 'ciSd2', 'ciN2', 'ciX2', 'ciPn2', 'ciByVal', 'ciPhat', 'ciTarget', 'ciDec'].forEach(function (id) { $(id).value = ''; }); $('ciList').value = '';
+    segSet('ciSpread', 'spread', 's'); segSet('ciGroups', 'groups', 'one'); st.by = 'level'; cselSet('ciBy', 'level', BYN); st.method = 'wald'; cselSet('ciMethod', 'wald', METN); render(); (st.mode === 'mean' && st.have === 'list' ? $('ciList') : $(st.mode === 'mean' ? 'ciMean' : st.mode === 'prop' ? 'ciX' : 'ciK')).focus();
+  });
+  $('ciAdvBtn').addEventListener('click', function () {
+    st.adv = !st.adv; $('ciAdvBtn').classList.toggle('open', st.adv); $('ciAdvBtnLab').textContent = st.adv ? 'Go simple' : 'Go advanced'; $('ciAdvIn').style.display = st.adv ? '' : 'none';
+    if (!st.adv) { ['ciMean2', 'ciSd2', 'ciN2', 'ciX2', 'ciPn2', 'ciByVal', 'ciPhat', 'ciTarget', 'ciDec'].forEach(function (id) { $(id).value = ''; }); segSet('ciSpread', 'spread', 's'); segSet('ciGroups', 'groups', 'one'); st.by = 'level'; cselSet('ciBy', 'level', BYN); st.method = 'wald'; cselSet('ciMethod', 'wald', METN); }
+    render();
+  });
+  render();
+};
+/* CI:END */

@@ -1,0 +1,19 @@
+{
+ "slug": "confidence-interval-calculator",
+ "hash": "e7c2e1cd75686c49",
+ "shots": [
+  "confidence-interval-calculator-1-empty-mobile.png",
+  "confidence-interval-calculator-2-filled-mobile.png",
+  "confidence-interval-calculator-3-result-mobile.png",
+  "confidence-interval-calculator-4-advanced-mobile.png",
+  "confidence-interval-calculator-5-error-mobile.png",
+  "confidence-interval-calculator-6-after-chaos-mobile.png",
+  "confidence-interval-calculator-1-empty-desktop.png",
+  "confidence-interval-calculator-2-filled-desktop.png",
+  "confidence-interval-calculator-3-result-desktop.png",
+  "confidence-interval-calculator-4-advanced-desktop.png",
+  "confidence-interval-calculator-5-error-desktop.png",
+  "confidence-interval-calculator-6-after-chaos-desktop.png"
+ ],
+ "at": "2026-11-10T19:42:01.904Z"
+}

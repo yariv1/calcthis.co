@@ -1,0 +1,14 @@
+{
+ "slug": "confidence-interval-calculator",
+ "pass": true,
+ "at": "2026-11-10T19:42:10.826Z",
+ "passHash": "e7c2e1cd75686c49",
+ "scriptHash": "c016c24922088271",
+ "cats": {
+  "textVsTool": 102,
+  "extremes": 56,
+  "visual": 144
+ },
+ "runs": 174,
+ "fails": []
+}

@@ -171,3 +171,5 @@ GSC snapshot 2026-10-26: 69 indexed, 13 not indexed (8 Discovered, 1 Crawled, 1 
 
 - 2026-11-10 v341: /seconds-to-hours-calculator/, /minutes-to-hours-calculator/, /seconds-to-minutes-calculator/ deployed; IndexNow sent; Bing manual submit NOT yet done; GSC not requested.
 - 2026-11-10 v340: /p-value-calculator/ deployed; IndexNow sent; Bing manual submit NOT yet done; GSC not requested.
+
+- 2026-11-10: confidence-interval-calculator deployed v342, NOT yet submitted to Bing or GSC.

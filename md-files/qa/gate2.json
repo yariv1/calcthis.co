@@ -2,5 +2,6 @@
  "p-value-calculator",
  "seconds-to-hours-calculator",
  "minutes-to-hours-calculator",
- "seconds-to-minutes-calculator"
+ "seconds-to-minutes-calculator",
+ "confidence-interval-calculator"
 ]

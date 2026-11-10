@@ -16,6 +16,11 @@ _Rewritten 2026-11-08 at the end of session #6 PART 2 (profit margin v331, disco
 
 ---
 
+## 0000000000000024. START HERE — 2026-11-10 #8 PART 3: CONFIDENCE INTERVAL DEPLOYED v342 (106 calculators, 236 pages)
+
+**First reply = ONE line: "synced: v342, confidence interval live, next = #9 z score research report", then work. One final message with a QA: line, no text before tool calls.**
+Shipped `/confidence-interval-calculator/` (CLAUDE.md addendum 38 has the code map). Order for the next page is unchanged: research report -> "Approve all" -> build -> scaffold -> fixture/oracle/parity/text/sidebyside -> run.js -> Read 12 screenshots -> viewed.js -> final.js -> preflight.js -> preview -> his "Deploy". Preflight gotcha: the copy build needs an existing preflight record, so write a provisional pass record (slug, pass:true, hash from the QA pass) first; the real run overwrites it. Pending on his word: Bing manual submit + GSC "Start queue" for p-value, 3 time pages, confidence interval. NEXT: #9 z score calculator (>1000 Medium, shares pvalueEngine/ciEngine), then #10 no tax on tips.
+
 ## 0000000000000023. START HERE — END OF THE 2026-11-10 SESSION #8 PART 2 (3 TIME PAGES v341, screenshot + preflight GATES, hook fix) — LIVE v341 · 105 calculators · 25 articles · 235 pages — AUTHORITATIVE; §22 below is the first half of the same day and stays valid unless this contradicts it
 
 **First reply of the next session = ONE line: "synced: v341, 3 time pages live, next = #8 confidence interval research report", then work. ONE final message per turn with a "QA:" line, NO text before or between tool calls.**

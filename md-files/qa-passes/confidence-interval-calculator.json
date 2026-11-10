@@ -1,0 +1,35 @@
+{
+ "slug": "confidence-interval-calculator",
+ "pass": true,
+ "at": "2026-11-10T19:41:04.746Z",
+ "hash": "e7c2e1cd75686c49",
+ "viewports": {
+  "mobile": {
+   "steps": 1943,
+   "fails": []
+  },
+  "desktop": {
+   "steps": 1943,
+   "fails": []
+  }
+ },
+ "oracle": {
+  "runs": 398,
+  "fails": []
+ },
+ "shots": [
+  "md-files/qa-passes/shots/confidence-interval-calculator-1-empty-mobile.png",
+  "md-files/qa-passes/shots/confidence-interval-calculator-2-filled-mobile.png",
+  "md-files/qa-passes/shots/confidence-interval-calculator-3-result-mobile.png",
+  "md-files/qa-passes/shots/confidence-interval-calculator-4-advanced-mobile.png",
+  "md-files/qa-passes/shots/confidence-interval-calculator-5-error-mobile.png",
+  "md-files/qa-passes/shots/confidence-interval-calculator-6-after-chaos-mobile.png",
+  "md-files/qa-passes/shots/confidence-interval-calculator-1-empty-desktop.png",
+  "md-files/qa-passes/shots/confidence-interval-calculator-2-filled-desktop.png",
+  "md-files/qa-passes/shots/confidence-interval-calculator-3-result-desktop.png",
+  "md-files/qa-passes/shots/confidence-interval-calculator-4-advanced-desktop.png",
+  "md-files/qa-passes/shots/confidence-interval-calculator-5-error-desktop.png",
+  "md-files/qa-passes/shots/confidence-interval-calculator-6-after-chaos-desktop.png"
+ ],
+ "console": []
+}

@@ -1,0 +1,849 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Confidence Interval Calculator: Mean, Proportion, Count</title>
+<meta name="description" content="Confidence interval calculator: get the 90%, 95% or 99% interval for a mean, proportion or count, with t or z, a live curve and the sample size you need.">
+<link rel="canonical" href="https://calcthis.co/confidence-interval-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Confidence Interval Calculator: Mean, Proportion, Count">
+<meta property="og:description" content="Confidence interval calculator: get the 90%, 95% or 99% interval for a mean, proportion or count, with t or z, a live curve and the sample size you need.">
+<meta property="og:url" content="https://calcthis.co/confidence-interval-calculator/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/datepicker.min.css">
+<link rel="stylesheet" href="/assets/style.css?v=342">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Confidence Interval Calculator",
+  "url": "https://calcthis.co/confidence-interval-calculator/",
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "Free confidence interval calculator: the confidence interval and margin of error for a mean (t or z), a proportion (normal approximation, Wilson or exact), a Poisson count, and the difference between two means or two proportions; a live curve with the interval shaded and the interval at 90, 95 and 99%; raw data list; the level from a z-score or p-value; and the sample size needed for a target margin of error."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I calculate a confidence interval?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "For a mean, take the sample mean, divide the standard deviation by √n to get the standard error, multiply it by the critical value for your confidence level (t or z), then add and subtract that margin of error. A mean of 20.6, a standard deviation of 3.2 and n = 50 gives 0.9094 as the margin of error at 95% and an interval of 19.69 to 21.51."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What does a 95% confidence interval mean?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "If you repeated the study many times and built an interval each time, about 95 of every 100 of those intervals would contain the true value. It does not mean there is a 95% chance that this one interval contains it — the true value is fixed, the interval is what varies."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I find a 90% or 99% confidence interval?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Tap the 90 or 99 chip (or type the level). The critical z value grows with the level: 1.645 at 90%, 1.960 at 95% and 2.576 at 99%, so the same data give a wider interval. For the mean above: 19.84 to 21.36 at 90% and 19.39 to 21.81 at 99%."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Should I use t or z?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Use t when the standard deviation comes from your sample (almost always), and z when the population standard deviation is known. The calculator picks t for a sample standard deviation and shows the z answer in a second row; with n = 100 the two margins are 0.5357 (t) and 0.5292 (z), and they converge as n grows."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I get a confidence interval for a proportion?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Switch to Proportion and type the number of yes answers and the sample size. 40 yes out of 100 gives 30.4% to 49.6% with the normal approximation, 30.9% to 49.8% with Wilson and 30.3% to 50.3% with the exact method. For small samples or proportions near 0% or 100% prefer Wilson or exact: 3 out of 40 gives 0.0% to 15.7% with the normal approximation (which would reach below 0%) but 2.6% to 19.9% with Wilson."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How big a sample do I need for a margin of error?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Go advanced and type the margin of error you want. For a proportion, ±3 percentage points at 95% needs 1,068 people in the worst case (p̂ = 50%), and ±5 points needs 385. For a mean with a standard deviation of 15, a margin of ±2 needs 217 people."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I get an interval for the difference between two groups?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Go advanced and choose Two groups, then type group 2. For two means the Welch method (no equal-variance assumption) is used: 52.3 (s = 4.5, n = 25) against 49.1 (s = 5.1, n = 25) gives a difference of 3.20 with a 95% interval of 0.46 to 5.94. If the interval includes 0 the data do not rule out no difference."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What if I only have the raw numbers?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Choose “List of numbers” and paste them separated by commas, spaces or new lines. The calculator works out n, the mean and the sample standard deviation, and uses the t distribution."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What if I know the standard error, a z-score or a p-value instead?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Go advanced: pick “Standard error” under how the spread is known, and set the confidence level from a z-score (for example 1.96) or a right-tailed p-value (0.025) instead of a percentage."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I get a confidence interval for a count?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Choose Count and type the number you counted: the exact Poisson interval for the average count is shown. A count of 10 gives 4.80 to 18.39 at 95%, while the normal approximation k ± z√k would give 3.80 to 16.20."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "CalcThis",
+      "item": "https://calcthis.co/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Confidence Interval Calculator",
+      "item": "https://calcthis.co/confidence-interval-calculator/"
+    }
+  ]
+}
+</script>
+<meta property="og:site_name" content="CalcThis">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://calcthis.co/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="CalcThis — free, purpose-built calculators">
+<meta name="twitter:title" content="Confidence Interval Calculator: Mean, Proportion, Count">
+<meta name="twitter:description" content="Confidence interval calculator: get the 90%, 95% or 99% interval for a mean, proportion or count, with t or z, a live curve and the sample size you need.">
+<meta name="twitter:image" content="https://calcthis.co/assets/og-default.png">
+</head>
+<body class="p-bmr p-ci">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <a class="hdr-back" href="/blog/" aria-label="Back to blog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-search"><div class="menu-sx"><input id="menuSearch" type="search" placeholder="Search calculators or states…" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Search calculators" enterkeyhint="search"></div><div class="menu-results" id="menuResults" hidden></div></div>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <span class="menu-col-head">Construction &amp; Gardening</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+          <a href="/paint-calculator/">Paint</a>
+          <a href="/wallpaper-calculator/">Wallpaper</a>
+          <a href="/square-footage-calculator/">Square Footage</a>
+          <a href="/tape-measure-fraction-calculator/">Tape Measure Fraction</a>
+          <a href="/stair-calculator/">Stair</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/vo2-max-calculator/">VO2 Max</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
+          <a href="/bmi-calculator/">BMI</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/ideal-weight-calculator/">Ideal Weight</a>
+          <a href="/lean-body-mass-calculator/">Lean Body Mass</a>
+          <a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio</a>
+          <a href="/gmi-calculator/">GMI</a>
+          <a href="/a1c-calculator/">A1C</a>
+          <a href="/calorie-calculator/">Calorie</a>
+          <a href="/calorie-deficit-calculator/">Calorie Deficit</a>
+          <a href="/bmr-calculator/">BMR</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/water-intake-calculator/">Water Intake</a>
+          <a href="/macro-calculator/">Macro</a>
+          <a href="/protein-intake-calculator/">Protein Intake</a>
+          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
+          <a href="/steps-to-miles-calculator/">Steps to Miles</a>
+          <a href="/dog-age-calculator/">Dog Age</a>
+          <a href="/cat-age-calculator/">Cat Age</a>
+          <a href="/calories-burned-calculator/">Calories Burned</a>
+          <a href="/calories-burned-walking-calculator/">Calories Burned Walking</a>
+          <a href="/calories-burned-running-calculator/">Calories Burned Running</a>
+          <a href="/keto-calculator/">Keto</a>
+          <a href="/net-carb-calculator/">Net Carb</a>
+          <a href="/intermittent-fasting-calculator/">Intermittent Fasting</a>
+          <a href="/bsa-calculator/">BSA</a>
+          <a href="/dog-food-calculator/">Dog Food</a>
+          <a href="/ffmi-calculator/">FFMI</a>
+          <a href="/bulking-calculator/">Bulking</a>
+          <a href="/weight-loss-calculator/">Weight Loss</a>
+          <a href="/weight-loss-percentage-calculator/">Weight Loss %</a>
+          <a href="/max-heart-rate-calculator/">Max Heart Rate</a>
+          <a href="/caffeine-calculator/">Caffeine</a>
+          <a href="/caffeine-half-life-calculator/">Caffeine Half Life</a>
+          <a href="/fiber-calculator/">Fiber</a>
+          <a href="/creatine-calculator/">Creatine</a>
+          <a href="/vitamin-d-calculator/">Vitamin D</a>
+          <a href="/body-recomposition-calculator/">Body Recomposition</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/semester-grade-calculator/">Semester Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+          <a href="/grade-curve-calculator/">Grade Curve</a>
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/fraction-calculator/">Fraction</a>
+          <a href="/standard-deviation-calculator/">Standard Deviation</a>
+          <a href="/p-value-calculator/">P-Value</a>
+          <a href="/confidence-interval-calculator/" class="current">Confidence Interval</a>
+          <a href="/scientific-notation-calculator/">Scientific Notation</a>
+          <a href="/average-calculator/">Average</a>
+          <a href="/batting-average-calculator/">Batting Average</a>
+          <a href="/stock-average-calculator/">Stock Average</a>
+          <a href="/dice-average-calculator/">Dice Average</a>
+          <a href="/time-average-calculator/">Time Average</a>
+          <a href="/weighted-average-calculator/">Weighted Average</a>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+          <a href="/percentage-change-calculator/">Percentage Change</a>
+          <a href="/age-calculator/">Age</a>
+          <a href="/date-calculator/">Date</a>
+          <a href="/time-calculator/">Time</a>
+          <a href="/hours-calculator/">Hours</a>
+          <a href="/seconds-to-hours-calculator/">Seconds to Hours</a>
+          <a href="/minutes-to-hours-calculator/">Minutes to Hours</a>
+          <a href="/seconds-to-minutes-calculator/">Seconds to Minutes</a>
+          <a href="/triangle-calculator/">Triangle</a>
+          <a href="/random-number-generator/">Random Number</a>
+          <span class="menu-col-head">Cooking &amp; Kitchen</span>
+          <a href="/recipe-converter/">Recipe Converter</a>
+          <a href="/turkey-cooking-time-calculator/">Turkey Cooking Time</a>
+          <a href="/turkey-thawing-time-calculator/">Turkey Thawing Time</a>
+          <a href="/turkey-size-calculator/">Turkey Size</a>
+          <!--UNITNAV:START-->
+          <span class="menu-col-head">Unit Converters</span>
+          <a href="/unit-converter/">Unit Converter</a>
+          <a href="/length-converter/">Length Converter</a>
+          <a href="/weight-converter/">Weight Converter</a>
+          <a href="/volume-converter/">Volume Converter</a>
+          <a href="/temperature-converter/">Temperature Converter</a>
+          <a href="/area-converter/">Area Converter</a>
+          <a href="/speed-converter/">Speed Converter</a>
+          <a href="/data-storage-converter/">Data Storage Converter</a>
+          <a href="/cooking-converter/">Cooking Converter</a>
+          <a href="/px-to-rem-converter/">PX to REM Converter</a>
+          <!--UNITNAV:END-->
+          <span class="menu-col-head">Money &amp; Finance</span>
+          <a href="/mortgage-calculator/">Mortgage</a>
+          <a href="/loan-calculator/">Loan</a>
+          <a href="/auto-loan-calculator/">Auto Loan</a>
+          <a href="/car-sales-tax-calculator/">Car Sales Tax</a>
+          <a href="/overtime-calculator/">Overtime</a>
+          <a href="/salary-calculator/">Salary</a>
+          <a href="/markup-calculator/">Markup</a>
+          <a href="/profit-margin-calculator/">Profit Margin</a>
+          <a href="/discount-calculator/">Discount</a>
+          <a href="/commission-calculator/">Commission</a>
+          <a href="/realtor-commission-calculator/">Realtor Commission</a>
+          <a href="/unit-price-calculator/">Unit Price</a>
+          <!--STAXNAV:START-->
+          <a href="/sales-tax-calculator/">Sales Tax</a>
+          <a href="/sales-tax-calculator/california/">California Sales Tax</a>
+          <a href="/sales-tax-calculator/chicago/">Chicago Sales Tax</a>
+          <a href="/sales-tax-calculator/florida/">Florida Sales Tax</a>
+          <a href="/sales-tax-calculator/las-vegas/">Las Vegas Sales Tax</a>
+          <a href="/sales-tax-calculator/los-angeles/">Los Angeles Sales Tax</a>
+          <a href="/sales-tax-calculator/michigan/">Michigan Sales Tax</a>
+          <a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax</a>
+          <a href="/sales-tax-calculator/missouri/">Missouri Sales Tax</a>
+          <a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax</a>
+          <a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax</a>
+          <a href="/sales-tax-calculator/north-carolina/">North Carolina Sales Tax</a>
+          <a href="/sales-tax-calculator/ohio/">Ohio Sales Tax</a>
+          <a href="/sales-tax-calculator/texas/">Texas Sales Tax</a>
+          <a href="/sales-tax-calculator/virginia/">Virginia Sales Tax</a>
+          <!--STAXNAV:END-->
+          <a href="/tip-calculator/">Tip</a>
+          <a href="/how-much-to-tip/">How Much to Tip</a>
+        </div>
+        <!--PAYNAV:START-->
+        <div class="menu-col">
+          <span class="menu-col-head">Paycheck Calculators</span>
+          <a href="/paycheck-calculator/">Paycheck Calculator (all states)</a>
+          <a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a>
+          <a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arkansas/">Arkansas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/california/">California Paycheck Calculator</a>
+          <a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a>
+          <a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a>
+          <a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/hawaii/">Hawaii Paycheck Calculator</a>
+          <a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a>
+          <a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a>
+          <a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a>
+          <a href="/paycheck-calculator/louisiana/">Louisiana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a>
+          <a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a>
+          <a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a>
+          <a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a>
+          <a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nebraska/">Nebraska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a>
+          <a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a>
+          <a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a>
+          <a href="/paycheck-calculator/oklahoma/">Oklahoma Paycheck Calculator</a>
+          <a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a>
+          <a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a>
+          <a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a>
+          <a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/utah/">Utah Paycheck Calculator</a>
+          <a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wisconsin/">Wisconsin Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a>
+        </div>
+        <!--PAYNAV:END-->
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">For a mean, proportion or count · 90, 95 or 99% · live curve</div>
+    <h1>Confidence Interval Calculator</h1>
+    <p>Type your <strong>sample mean, standard deviation and sample size</strong> (or a list of numbers, a number of yes answers, or a count) and get the <strong>confidence interval</strong> with the margin of error and a picture of it. A mean of <strong>22.8</strong> with a standard deviation of <strong>2.7</strong> from <strong>100</strong> people gives a 95% interval of <strong>22.26 to 23.34</strong>. Choose 90%, 95% or 99%, see how much more data would narrow it, and what sample size you need for a margin of error you want.</p>
+  </section>
+
+  <div class="grid">
+
+    <!-- INPUT -->
+    <div class="card">
+      <div class="card-pad">
+        <h2 class="card-h2">Your sample</h2>
+        <div class="fld"><span class="lab">What do you want an interval for?</span><div class="seg ci-seg" id="ciMode" role="group" aria-label="What do you want an interval for?"><button type="button" data-v="mean" class="on">Average</button><button type="button" data-v="prop">Proportion</button><button type="button" data-v="count">Count</button></div></div>
+        <div id="ciMeanW">
+          <div id="ciHaveW"><div class="fld"><span class="lab">I have</span><div class="seg ci-seg" id="ciHave" role="group" aria-label="I have"><button type="button" data-v="sum" class="on">Summary</button><button type="button" data-v="list">A list</button></div></div></div>
+          <div id="ciSumW">
+            <label class="fld" for="ciMean"><span class="lab">Sample mean (average)</span><div class="inp"><input id="ciMean" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 20.6"></div></label>
+            <div class="ci-two"><label class="fld" for="ciSd"><span class="lab" id="ciSdLab">Standard deviation (s)</span><div class="inp"><input id="ciSd" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 3.2"></div></label><label class="fld" for="ciN"><span class="lab" id="ciNLab">Sample size (n)</span><div class="inp"><input id="ciN" type="text" inputmode="numeric" autocomplete="off" placeholder="e.g. 50"></div></label></div>
+          </div>
+          <div id="ciListW" style="display:none"><div class="fld"><label class="lab" for="ciList">Your numbers</label><textarea class="ci-ta" id="ciList" placeholder="e.g. 21, 13, 11, 14, 52, 23&#10;or paste a column from Excel" aria-label="Your numbers" spellcheck="false"></textarea></div></div>
+        </div>
+        <div id="ciPropW" style="display:none"><div class="ci-two"><label class="fld" for="ciX"><span class="lab">Number of yes answers</span><div class="inp"><input id="ciX" type="text" inputmode="numeric" autocomplete="off" placeholder="e.g. 40"></div></label><label class="fld" for="ciPn"><span class="lab">Sample size (n)</span><div class="inp"><input id="ciPn" type="text" inputmode="numeric" autocomplete="off" placeholder="e.g. 100"></div></label></div></div>
+        <div id="ciCountW" style="display:none"><label class="fld" for="ciK"><span class="lab">Number counted</span><div class="inp"><input id="ciK" type="text" inputmode="numeric" autocomplete="off" placeholder="e.g. 12"></div></label></div>
+        <p class="av-note" id="ciMainNote"></p>
+        <label class="fld" for="ciLevel"><span class="lab">Confidence level <span class="unit">%</span></span><div class="inp"><input id="ciLevel" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 95"></div></label>
+        <div class="chips" id="ciChips" role="group" aria-label="Common confidence levels"><button type="button" data-v="90">90%</button><button type="button" data-v="95">95%</button><button type="button" data-v="99">99%</button></div>
+        <p class="av-note" id="ciLevelNote"></p>
+        <div class="res-hint" id="ciHint" style="display:none;text-align:left;margin:4px 0 8px"></div>
+        <div id="ciAdvIn" style="display:none">
+          <div class="proj-sep"></div>
+          <div id="ciSecGroups">
+          <p class="ci-sech">Compare two groups <span>· optional</span></p>
+          <div id="ciGroupsW"><div class="fld"><span class="lab">Groups</span><div class="seg ci-seg" id="ciGroups" role="group" aria-label="Groups"><button type="button" data-v="one" class="on">One group</button><button type="button" data-v="two">Two groups</button></div></div></div>
+          <p class="av-note" id="ciGroupNote"></p>
+          <div id="ciG2MeanW" style="display:none"><label class="fld" for="ciMean2"><span class="lab">Group 2 mean</span><div class="inp"><input id="ciMean2" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 19.8"></div></label><div class="ci-two"><label class="fld" for="ciSd2"><span class="lab" id="ciSd2Lab">Group 2 standard deviation</span><div class="inp"><input id="ciSd2" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 3.4"></div></label><label class="fld" for="ciN2"><span class="lab">Group 2 size</span><div class="inp"><input id="ciN2" type="text" inputmode="numeric" autocomplete="off" placeholder="e.g. 40"></div></label></div></div>
+          <div id="ciG2PropW" style="display:none"><div class="ci-two"><label class="fld" for="ciX2"><span class="lab">Group 2 yes answers</span><div class="inp"><input id="ciX2" type="text" inputmode="numeric" autocomplete="off" placeholder="e.g. 55"></div></label><label class="fld" for="ciPn2"><span class="lab">Group 2 size</span><div class="inp"><input id="ciPn2" type="text" inputmode="numeric" autocomplete="off" placeholder="e.g. 120"></div></label></div></div>
+          </div>
+          <div id="ciSecSpread">
+          <p class="ci-sech">How your spread is known <span>· optional</span></p>
+          <div id="ciSpreadW"><div class="fld"><span class="lab">The spread you typed is</span><div class="seg ci-seg" id="ciSpread" role="group" aria-label="The spread you typed is"><button type="button" data-v="s" class="on">Sample</button><button type="button" data-v="sigma">Population</button><button type="button" data-v="se">Std. error</button></div></div></div>
+          <p class="av-note" id="ciSpreadNote"></p>
+          </div>
+          <p class="ci-sech">Set the level another way <span>· optional</span></p>
+          <div class="fld"><span class="lab">Set the level by</span><div class="csel" id="ciBy" data-value="level" aria-label="Set the level by"><button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false"><span class="csel-val">Confidence level</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="csel-panel" role="listbox"><button type="button" class="csel-opt on" role="option" aria-selected="true" data-value="level">Confidence level</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="z">z-score</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="p">Right-tailed p-value</button></div></div></div>
+          <div id="ciByValW" style="display:none"><label class="fld" for="ciByVal"><span class="lab" id="ciByValLab">z-score</span><div class="inp"><input id="ciByVal" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 1.96"></div></label></div>
+          <p class="av-note" id="ciByNote"></p>
+          <div id="ciSecProp">
+          <p class="ci-sech">Proportion options <span>· optional</span></p>
+          <div id="ciMethodW"><div class="fld"><span class="lab">Method</span><div class="csel" id="ciMethod" data-value="wald" aria-label="Method"><button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false"><span class="csel-val">Normal approximation (Wald)</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="csel-panel" role="listbox"><button type="button" class="csel-opt on" role="option" aria-selected="true" data-value="wald">Normal approximation (Wald)</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="wilson">Wilson score</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="exact">Exact (Clopper-Pearson)</button></div></div></div></div>
+          <p class="av-note" id="ciMethodNote"></p>
+          <div id="ciPhatW"><label class="fld" for="ciPhat"><span class="lab">Sample proportion instead of yes answers</span><div class="inp"><input id="ciPhat" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 0.4 or 40%"></div></label></div>
+          <p class="av-note" id="ciPhatNote"></p>
+          </div>
+          <p class="ci-sech">How many people do I need? <span>· optional</span></p>
+          <label class="fld" for="ciTarget"><span class="lab" id="ciTargetLab">Margin of error I want</span><div class="inp"><input id="ciTarget" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 0.5"></div></label>
+          <p class="av-note" id="ciTargetNote"></p>
+          <p class="ci-sech">Display <span>· optional</span></p>
+          <label class="fld" for="ciDec"><span class="lab">Decimal places</span><div class="inp"><input id="ciDec" type="text" inputmode="numeric" autocomplete="off" placeholder="e.g. 4"></div></label>
+          <p class="av-note" id="ciDecNote"></p>
+        </div>
+        <div class="add-row split" style="margin-top:16px">
+          <button class="linkbtn" id="ciClear" type="button">Clear fields</button>
+          <button class="advbtn" id="ciAdvBtn" type="button">
+            <span id="ciAdvBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div class="card">
+      <div class="card-pad">
+        <div class="bf-res">
+          <div class="res-lab" id="ciLab">Confidence interval</div>
+          <div class="res-big"><span id="ciBig">—</span></div>
+          <div class="res-sub" id="ciSub" data-empty="Type your sample to see the confidence interval.">Type your sample to see the confidence interval.</div>
+        </div>
+        <div id="ciBody" style="display:none">
+          <p class="res-tip adv-tip" id="ciTip"></p>
+          <p class="bm-h">The numbers <button class="linkbtn" type="button" data-copy="ciCopyTxt" style="margin-left:8px">Copy result</button></p>
+          <table class="dtable" id="ciNums"></table>
+          <div id="ciCopyTxt" style="display:none"></div>
+          <div id="ciVisWrap" style="display:none">
+            <p class="bm-h">Where the true value likely sits</p>
+            <div class="ci-vis" id="ciVis"></div>
+            <p class="cb-note" id="ciVisKey"></p>
+          </div>
+          <div id="ciMethWrap" style="display:none">
+            <p class="bm-h">Same data, other methods</p>
+            <table class="dtable" id="ciMeth"></table>
+            <p class="cb-note" id="ciMethNote"></p>
+          </div>
+          <div id="ciNeedWrap" style="display:none">
+            <p class="bm-h">What more data would give you</p>
+            <table class="dtable" id="ciNeed"></table>
+            <p class="cb-note" id="ciNeedKey"></p>
+          </div>
+          <p class="bm-h">How it is worked out</p>
+          <ol class="ci-steps" id="ciSteps"></ol>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- mobile sticky bar -->
+  <div class="mbar" id="mbar">
+    <span class="mbar-lab" id="ciMLab">Confidence interval</span>
+    <div class="mbar-vals"><b id="ciMVal">—</b></div>
+  </div>
+
+  <div class="related-calcs">
+    <p class="related-calcs-h">More calculators that may interest you</p>
+    <div class="pills">
+      <a class="pill" href="/p-value-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 24c4 0 6-16 13-16s9 16 13 16"/><path d="M3 24h26"/></svg>
+        P-Value Calculator
+      </a>
+      <a class="pill" href="/standard-deviation-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 18c3 0 4-12 9-12s6 12 9 12"/><path d="M12 6v14"/></svg>
+        Standard Deviation Calculator
+      </a>
+      <a class="pill" href="/average-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg>
+        Average Calculator
+      </a>
+      <a class="pill" href="/percentage-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 5L5 19"/><circle cx="7" cy="7" r="2.5"/><circle cx="17" cy="17" r="2.5"/></svg>
+        Percentage Calculator
+      </a>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use the confidence interval calculator</h2>
+        <p>Choose what you want an interval for: an <strong>average</strong> (type the sample mean, standard deviation and sample size, or paste a list of numbers), a <strong>proportion</strong> (the number of yes answers and the sample size) or a <strong>count</strong> (the number you counted). Leave the confidence level empty for 95%, type your own, or tap 90% or 99%.</p>
+        <p>The result gives the interval, the margin of error, the critical value used and every step. The picture shows the curve of the estimate with your interval shaded, the same interval at 90, 95 and 99%, and what 4 times as much data would give. Go advanced to compare two groups, give a standard error instead of a standard deviation, set the level from a z-score or p-value, pick a proportion method, or find the sample size for a margin of error you want.</p>
+
+        <h2 id="ciFormulas">The formulas</h2>
+        <div class="formula">
+          interval = estimate ± critical value × standard error
+          <small>MEAN: x̄ ± t × s ÷ √n · PROPORTION: p̂ ± z × √(p̂(1 − p̂) ÷ n)</small>
+        </div>
+        <p>The critical value comes from the t distribution (n − 1 degrees of freedom) when the standard deviation is from a sample, or the normal z distribution when the population standard deviation is known. Worked out with this calculator: a mean of 22.8, s = 2.7, n = 100 gives a standard error of 0.2700, t = 1.9842, a margin of error of 0.5357 and a 95% interval of 22.26 to 23.34; with z = 1.9600 the margin is 0.5292.</p>
+        <h2>z critical values by confidence level</h2>
+        <table class="dtable" id="ciZTable"><thead><tr><th>Confidence level</th><th>z critical value</th></tr></thead><tbody><tr><td>80%</td><td>1.282</td></tr><tr><td>85%</td><td>1.440</td></tr><tr><td>90%</td><td>1.645</td></tr><tr><td>95%</td><td>1.960</td></tr><tr><td>98%</td><td>2.326</td></tr><tr><td>99%</td><td>2.576</td></tr><tr><td>99.9%</td><td>3.291</td></tr></tbody></table>
+        <h2>t critical values</h2>
+        <p>With a small sample the t value is larger than z, which widens the interval.</p>
+        <table class="dtable"><thead><tr><th>Degrees of freedom</th><th>90%</th><th>95%</th><th>99%</th></tr></thead><tbody><tr><td>2</td><td>2.920</td><td>4.303</td><td>9.925</td></tr><tr><td>5</td><td>2.015</td><td>2.571</td><td>4.032</td></tr><tr><td>10</td><td>1.812</td><td>2.228</td><td>3.169</td></tr><tr><td>20</td><td>1.725</td><td>2.086</td><td>2.845</td></tr><tr><td>30</td><td>1.697</td><td>2.042</td><td>2.750</td></tr><tr><td>60</td><td>1.671</td><td>2.000</td><td>2.660</td></tr><tr><td>120</td><td>1.658</td><td>1.980</td><td>2.617</td></tr><tr><td>z (infinite)</td><td>1.645</td><td>1.960</td><td>2.576</td></tr></tbody></table>
+      </div>
+
+      <div>
+        <h2>Three proportion methods</h2>
+        <p>The normal approximation (Wald) is the textbook formula but is too narrow for small samples and proportions near 0% or 100%. Wilson score and the exact Clopper-Pearson interval do better. For 40 yes out of 100:</p>
+        <table class="dtable"><thead><tr><th>Method (40 yes out of 100, 95%)</th><th>Interval</th></tr></thead><tbody><tr><td>Normal approximation (Wald)</td><td>30.4% to 49.6%</td></tr><tr><td>Wilson score</td><td>30.9% to 49.8%</td></tr><tr><td>Exact (Clopper-Pearson)</td><td>30.3% to 50.3%</td></tr></tbody></table>
+        <p>For a small sample the normal approximation can fail outright:</p>
+        <table class="dtable"><thead><tr><th>Method (3 yes out of 40, 95%)</th><th>Interval</th></tr></thead><tbody><tr><td>Normal approximation (Wald)</td><td>0.0% to 15.7%</td></tr><tr><td>Wilson score</td><td>2.6% to 19.9%</td></tr><tr><td>Exact (Clopper-Pearson)</td><td>1.6% to 20.4%</td></tr></tbody></table>
+        <h2>How wide should the interval be?</h2>
+        <p>The margin of error shrinks with the square root of the sample size: four times as many people halves it. The “What more data would give you” table shows 2, 4 and 10 times your sample, and Go advanced finds the sample size for a margin you pick: ±3 percentage points at 95% needs 1,068 people in the worst case, ±5 points needs 385.</p>
+        <h2>Worked example</h2>
+        <p>A sample of 50 measurements has a mean of 20.6 and a standard deviation of 3.2. The standard error is 0.4525, the 95% critical value is t = 2.0096 (49 degrees of freedom), the margin of error is 0.9094, and the interval is 19.69 to 21.51. At 90% it is 19.84 to 21.36; at 99% it is 19.39 to 21.81.</p>
+
+        <h2>Related tools</h2>
+        <p>To test a result against a hypothesis use the <a href="/p-value-calculator/">p-value calculator</a>; for the spread of your data the <a href="/standard-deviation-calculator/">standard deviation calculator</a>; to average a list the <a href="/average-calculator/">average calculator</a>; and for percentages the <a href="/percentage-calculator/">percentage calculator</a>.</p>
+        <h2>Sources</h2>
+        <ul>
+          <li>The mean interval x̄ ± critical value × s/√n, the 95% z value 1.960 and the z table by level are the ones shown by calculator.net's and Omnicalculator's confidence interval calculators; the proportion interval p̂ ± z√(p̂(1 − p̂)/n) is Omnicalculator's; GraphPad QuickCalcs gives exact intervals for a proportion and a Poisson count. All opened on 2026-11-10.</li>
+          <li>The t distribution is used when the standard deviation comes from your sample, the normal (z) distribution when the population standard deviation is known — the usual textbook rule; calculators that always use z are close for large samples (the table above shows the gap). Wilson, Clopper-Pearson and the exact Poisson interval are standard methods, checked against an independent calculation. Quantiles come from the t, normal, beta and chi-square distributions.</li>
+          <li>A confidence level describes the method, not one interval: it is the share of intervals built this way that would contain the true value if you repeated the study many times.</li>
+        </ul>
+        <p><small>For information only. Check your own study design before drawing conclusions.</small></p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>How do I calculate a confidence interval?</summary><p>For a mean, take the sample mean, divide the standard deviation by √n to get the standard error, multiply it by the critical value for your confidence level (t or z), then add and subtract that margin of error. A mean of 20.6, a standard deviation of 3.2 and n = 50 gives 0.9094 as the margin of error at 95% and an interval of 19.69 to 21.51.</p></details>
+    <details class="faq"><summary>What does a 95% confidence interval mean?</summary><p>If you repeated the study many times and built an interval each time, about 95 of every 100 of those intervals would contain the true value. It does not mean there is a 95% chance that this one interval contains it — the true value is fixed, the interval is what varies.</p></details>
+    <details class="faq"><summary>How do I find a 90% or 99% confidence interval?</summary><p>Tap the 90 or 99 chip (or type the level). The critical z value grows with the level: 1.645 at 90%, 1.960 at 95% and 2.576 at 99%, so the same data give a wider interval. For the mean above: 19.84 to 21.36 at 90% and 19.39 to 21.81 at 99%.</p></details>
+    <details class="faq"><summary>Should I use t or z?</summary><p>Use t when the standard deviation comes from your sample (almost always), and z when the population standard deviation is known. The calculator picks t for a sample standard deviation and shows the z answer in a second row; with n = 100 the two margins are 0.5357 (t) and 0.5292 (z), and they converge as n grows.</p></details>
+    <details class="faq"><summary>How do I get a confidence interval for a proportion?</summary><p>Switch to Proportion and type the number of yes answers and the sample size. 40 yes out of 100 gives 30.4% to 49.6% with the normal approximation, 30.9% to 49.8% with Wilson and 30.3% to 50.3% with the exact method. For small samples or proportions near 0% or 100% prefer Wilson or exact: 3 out of 40 gives 0.0% to 15.7% with the normal approximation (which would reach below 0%) but 2.6% to 19.9% with Wilson.</p></details>
+    <details class="faq"><summary>How big a sample do I need for a margin of error?</summary><p>Go advanced and type the margin of error you want. For a proportion, ±3 percentage points at 95% needs 1,068 people in the worst case (p̂ = 50%), and ±5 points needs 385. For a mean with a standard deviation of 15, a margin of ±2 needs 217 people.</p></details>
+    <details class="faq"><summary>How do I get an interval for the difference between two groups?</summary><p>Go advanced and choose Two groups, then type group 2. For two means the Welch method (no equal-variance assumption) is used: 52.3 (s = 4.5, n = 25) against 49.1 (s = 5.1, n = 25) gives a difference of 3.20 with a 95% interval of 0.46 to 5.94. If the interval includes 0 the data do not rule out no difference.</p></details>
+    <details class="faq"><summary>What if I only have the raw numbers?</summary><p>Choose “List of numbers” and paste them separated by commas, spaces or new lines. The calculator works out n, the mean and the sample standard deviation, and uses the t distribution.</p></details>
+    <details class="faq"><summary>What if I know the standard error, a z-score or a p-value instead?</summary><p>Go advanced: pick “Standard error” under how the spread is known, and set the confidence level from a z-score (for example 1.96) or a right-tailed p-value (0.025) instead of a percentage.</p></details>
+    <details class="faq"><summary>Can I get a confidence interval for a count?</summary><p>Yes. Choose Count and type the number you counted: the exact Poisson interval for the average count is shown. A count of 10 gives 4.80 to 18.39 at 95%, while the normal approximation k ± z√k would give 3.80 to 16.20.</p></details>
+  </section>
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+      <div class="footer-stack">
+<div class="footer-col" style="order:1">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+          <li><a href="/paint-calculator/">Paint Calculator</a></li>
+          <li><a href="/wallpaper-calculator/">Wallpaper Calculator</a></li>
+          <li><a href="/square-footage-calculator/">Square Footage Calculator</a></li>
+          <li><a href="/tape-measure-fraction-calculator/">Tape Measure Fraction Calculator</a></li>
+          <li><a href="/stair-calculator/">Stair Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:5">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Cooking &amp;</span> <span class="ft2">Kitchen</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/recipe-converter/">Recipe Converter</a></li>
+          <li><a href="/turkey-cooking-time-calculator/">Turkey Cooking Time Calculator</a></li>
+          <li><a href="/turkey-thawing-time-calculator/">Turkey Thawing Time Calculator</a></li>
+          <li><a href="/turkey-size-calculator/">Turkey Size Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:6">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Money &amp;</span> <span class="ft2">Finance</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/mortgage-calculator/">Mortgage Calculator</a></li>
+          <li><a href="/loan-calculator/">Loan Calculator</a></li>
+          <li><a href="/auto-loan-calculator/">Auto Loan Calculator</a></li>
+          <li><a href="/car-sales-tax-calculator/">Car Sales Tax Calculator</a></li>
+          <li><a href="/overtime-calculator/">Overtime Calculator</a></li>
+          <li><a href="/salary-calculator/">Salary Calculator</a></li>
+          <li><a href="/markup-calculator/">Markup Calculator</a></li>
+          <li><a href="/profit-margin-calculator/">Profit Margin Calculator</a></li>
+          <li><a href="/discount-calculator/">Discount Calculator</a></li>
+          <li><a href="/commission-calculator/">Commission Calculator</a></li>
+          <li><a href="/realtor-commission-calculator/">Realtor Commission Calculator</a></li>
+          <li><a href="/unit-price-calculator/">Unit Price Calculator</a></li>
+          <!--STAXFOOT:START-->
+          <li><a href="/sales-tax-calculator/">Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/california/">California Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/chicago/">Chicago Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/florida/">Florida Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/las-vegas/">Las Vegas Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/los-angeles/">Los Angeles Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/michigan/">Michigan Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/missouri/">Missouri Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/north-carolina/">North Carolina Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/ohio/">Ohio Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/texas/">Texas Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/virginia/">Virginia Sales Tax Calculator</a></li>
+          <!--STAXFOOT:END-->
+          <li><a href="/tip-calculator/">Tip Calculator</a></li>
+          <li><a href="/how-much-to-tip/">How Much to Tip</a></li>
+        </ul>
+      </div>
+      </div>
+
+      <div class="footer-right">
+<div class="footer-col footer-col--two" style="order:2">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/vo2-max-calculator/">VO2 Max Calculator</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/bmi-calculator/">BMI Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/ideal-weight-calculator/">Ideal Weight Calculator</a></li>
+          <li><a href="/lean-body-mass-calculator/">Lean Body Mass Calculator</a></li>
+          <li><a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio Calculator</a></li>
+          <li><a href="/gmi-calculator/">GMI Calculator</a></li>
+          <li><a href="/a1c-calculator/">A1C Calculator</a></li>
+          <li><a href="/calorie-calculator/">Calorie Calculator</a></li>
+          <li><a href="/calorie-deficit-calculator/">Calorie Deficit Calculator</a></li>
+          <li><a href="/bmr-calculator/">BMR Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/water-intake-calculator/">Water Intake Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/protein-intake-calculator/">Protein Intake Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
+          <li><a href="/steps-to-miles-calculator/">Steps to Miles Calculator</a></li>
+          <li><a href="/dog-age-calculator/">Dog Age Calculator</a></li>
+          <li><a href="/cat-age-calculator/">Cat Age Calculator</a></li>
+          <li><a href="/calories-burned-calculator/">Calories Burned Calculator</a></li>
+          <li><a href="/calories-burned-walking-calculator/">Calories Burned Walking Calculator</a></li>
+          <li><a href="/calories-burned-running-calculator/">Calories Burned Running Calculator</a></li>
+          <li><a href="/keto-calculator/">Keto Calculator</a></li>
+          <li><a href="/net-carb-calculator/">Net Carb Calculator</a></li>
+          <li><a href="/intermittent-fasting-calculator/">Intermittent Fasting Calculator</a></li>
+          <li><a href="/bsa-calculator/">BSA Calculator</a></li>
+          <li><a href="/dog-food-calculator/">Dog Food Calculator</a></li>
+          <li><a href="/ffmi-calculator/">FFMI Calculator</a></li>
+          <li><a href="/bulking-calculator/">Bulking Calculator</a></li>
+          <li><a href="/weight-loss-calculator/">Weight Loss Calculator</a></li>
+          <li><a href="/weight-loss-percentage-calculator/">Weight Loss Percentage Calculator</a></li>
+          <li><a href="/max-heart-rate-calculator/">Max Heart Rate Calculator</a></li>
+          <li><a href="/caffeine-calculator/">Caffeine Calculator</a></li>
+          <li><a href="/caffeine-half-life-calculator/">Caffeine Half Life Calculator</a></li>
+          <li><a href="/fiber-calculator/">Fiber Calculator</a></li>
+          <li><a href="/creatine-calculator/">Creatine Calculator</a></li>
+          <li><a href="/vitamin-d-calculator/">Vitamin D Calculator</a></li>
+          <li><a href="/body-recomposition-calculator/">Body Recomposition Calculator</a></li>
+        </ul>
+      </div>
+
+        <div class="footer-sub">
+<div class="footer-subcol">
+<div class="footer-col" style="order:3">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/semester-grade-calculator/">Semester Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+          <li><a href="/grade-curve-calculator/">Grade Curve Calculator</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:START-->
+<div class="footer-col" style="order:7">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Unit</span> <span class="ft2">Converters</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/unit-converter/">Unit Converter</a></li>
+          <li><a href="/length-converter/">Length Converter</a></li>
+          <li><a href="/weight-converter/">Weight Converter</a></li>
+          <li><a href="/volume-converter/">Volume Converter</a></li>
+          <li><a href="/temperature-converter/">Temperature Converter</a></li>
+          <li><a href="/area-converter/">Area Converter</a></li>
+          <li><a href="/speed-converter/">Speed Converter</a></li>
+          <li><a href="/data-storage-converter/">Data Storage Converter</a></li>
+          <li><a href="/cooking-converter/">Cooking Measurement Converter</a></li>
+          <li><a href="/px-to-rem-converter/">PX to REM Converter</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:END-->
+</div>
+
+<div class="footer-col" style="order:4">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/fraction-calculator/">Fraction Calculator</a></li>
+          <li><a href="/standard-deviation-calculator/">Standard Deviation Calculator</a></li>
+          <li><a href="/p-value-calculator/">P-Value Calculator</a></li>
+          <li><a href="/confidence-interval-calculator/">Confidence Interval Calculator</a></li>
+          <li><a href="/scientific-notation-calculator/">Scientific Notation Calculator</a></li>
+          <li><a href="/weighted-average-calculator/">Weighted Average Calculator</a></li>
+          <li><a href="/average-calculator/">Average Calculator</a></li>
+          <li><a href="/batting-average-calculator/">Batting Average Calculator</a></li>
+          <li><a href="/stock-average-calculator/">Stock Average Calculator</a></li>
+          <li><a href="/dice-average-calculator/">Dice Average Calculator</a></li>
+          <li><a href="/time-average-calculator/">Time Average Calculator</a></li>
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+          <li><a href="/percentage-change-calculator/">Percentage Change Calculator</a></li>
+          <li><a href="/age-calculator/">Age Calculator</a></li>
+          <li><a href="/date-calculator/">Date Calculator</a></li>
+          <li><a href="/time-calculator/">Time Calculator</a></li>
+          <li><a href="/hours-calculator/">Hours Calculator</a></li>
+          <li><a href="/seconds-to-hours-calculator/">Seconds to Hours Calculator</a></li>
+          <li><a href="/minutes-to-hours-calculator/">Minutes to Hours Calculator</a></li>
+          <li><a href="/seconds-to-minutes-calculator/">Seconds to Minutes Calculator</a></li>
+          <li><a href="/triangle-calculator/">Triangle Calculator</a></li>
+          <li><a href="/random-number-generator/">Random Number Generator</a></li>
+        </ul>
+      </div>
+        </div>
+      </div>
+
+      <!--PAYFOOT:START-->
+      <div class="footer-col footer-col--wide">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Paycheck</span> <span class="ft2">Calculators</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/paycheck-calculator/">Paycheck Calculator (all states)</a></li>
+          <li><a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arkansas/">Arkansas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/california/">California Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/hawaii/">Hawaii Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/louisiana/">Louisiana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nebraska/">Nebraska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/oklahoma/">Oklahoma Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/utah/">Utah Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wisconsin/">Wisconsin Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a></li>
+        </ul>
+      </div>
+      <!--PAYFOOT:END-->
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/blog/">Blog</a>
+      <span aria-hidden="true">·</span>
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+</div>
+
+<script src="/assets/app.js?v=342"></script>
+<script>CalcThis.initCiCalc();</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>
