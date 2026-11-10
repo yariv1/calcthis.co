@@ -112,6 +112,10 @@
     "t": "Fraction Calculator — Add, Subtract, Multiply & Divide",
     "d": "Free fraction calculator: add, subtract, multiply and divide fractions, mixed numbers and decimals, simplify and convert, with a live bar diagram and steps."
   },
+  "/p-value-calculator/": {
+    "t": "P-Value Calculator: From Z, t, Chi-Square or F Score",
+    "d": "P value calculator: get the p-value from a z, t, chi-square, F or r statistic for any tail, with a live curve, the critical value and a plain verdict."
+  },
   "/standard-deviation-calculator/": {
     "t": "Standard Deviation Calculator — Sample & Population SD",
     "d": "Free standard deviation calculator: sample and population SD side by side, plus mean, variance, step-by-step working and a live number line."

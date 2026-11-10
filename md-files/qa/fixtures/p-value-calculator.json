@@ -1,0 +1,312 @@
+{
+  "slug": "p-value-calculator",
+  "bodyClass": "p-pv",
+  "blocks": [
+    "PVALUE"
+  ],
+  "result": {
+    "big": "pvBig",
+    "body": "pvBody",
+    "hint": "pvHint"
+  },
+  "required": [
+    "pvVal",
+    "pvDf",
+    "pvDf1",
+    "pvDf2",
+    "pvN"
+  ],
+  "fill": [
+    [
+      "click",
+      "pvClear"
+    ],
+    [
+      "set",
+      "pvStat",
+      "t"
+    ],
+    [
+      "click",
+      "pvTail2"
+    ],
+    [
+      "set",
+      "pvVal",
+      "2.1"
+    ],
+    [
+      "set",
+      "pvDf",
+      "20"
+    ],
+    [
+      "set",
+      "pvAlpha",
+      "0.05"
+    ]
+  ],
+  "optionalSamples": {
+    "pvAlpha": [
+      "0.01",
+      "5%",
+      "0.5",
+      "0.10"
+    ],
+    "pvDec": [
+      "4",
+      "8",
+      "0"
+    ],
+    "pvRev": [
+      "0.03",
+      "0.5",
+      "1",
+      "0.0001"
+    ],
+    "pvM1": [
+      "52.3",
+      "-4.5"
+    ],
+    "pvS1": [
+      "4.5",
+      "0.5"
+    ],
+    "pvN1": [
+      "25",
+      "2"
+    ],
+    "pvM0": [
+      "50",
+      "-1"
+    ]
+  },
+  "pools": {
+    "pvVal": [
+      "2.1",
+      "-1.5",
+      "0",
+      "10",
+      "1,000"
+    ],
+    "pvDf": [
+      "20",
+      "1",
+      "2.5",
+      "1000"
+    ],
+    "pvAlpha": [
+      "0.05",
+      "0.01",
+      "5%",
+      "0.5"
+    ],
+    "pvDec": [
+      "4",
+      "8"
+    ],
+    "pvRev": [
+      "0.03",
+      "0.5"
+    ],
+    "pvM1": [
+      "52.3",
+      "-4.5"
+    ],
+    "pvS1": [
+      "4.5",
+      "0.5"
+    ],
+    "pvN1": [
+      "25",
+      "2"
+    ],
+    "pvM0": [
+      "50",
+      "-1"
+    ]
+  },
+  "variants": [
+    [
+      [
+        "set",
+        "pvStat",
+        "z"
+      ],
+      [
+        "set",
+        "pvVal",
+        "1.96"
+      ]
+    ],
+    [
+      [
+        "set",
+        "pvStat",
+        "chi"
+      ],
+      [
+        "set",
+        "pvVal",
+        "3.84"
+      ],
+      [
+        "set",
+        "pvDf",
+        "1"
+      ]
+    ],
+    [
+      [
+        "set",
+        "pvStat",
+        "f"
+      ],
+      [
+        "set",
+        "pvVal",
+        "4.96"
+      ],
+      [
+        "set",
+        "pvDf1",
+        "1"
+      ],
+      [
+        "set",
+        "pvDf2",
+        "10"
+      ]
+    ],
+    [
+      [
+        "set",
+        "pvStat",
+        "r"
+      ],
+      [
+        "set",
+        "pvVal",
+        "0.45"
+      ],
+      [
+        "set",
+        "pvN",
+        "25"
+      ]
+    ],
+    [
+      [
+        "click",
+        "pvTailL"
+      ]
+    ],
+    [
+      [
+        "click",
+        "pvTailR"
+      ]
+    ],
+    [
+      [
+        "set",
+        "pvRev",
+        "0.03"
+      ],
+      [
+        "set",
+        "pvDec",
+        "4"
+      ]
+    ],
+    [
+      [
+        "set",
+        "pvM1",
+        "52.3"
+      ],
+      [
+        "set",
+        "pvS1",
+        "4.5"
+      ],
+      [
+        "set",
+        "pvN1",
+        "25"
+      ],
+      [
+        "set",
+        "pvM0",
+        "50"
+      ]
+    ],
+    [
+      [
+        "set",
+        "pvBuild",
+        "t2"
+      ],
+      [
+        "set",
+        "pvM1",
+        "5"
+      ],
+      [
+        "set",
+        "pvS1",
+        "2"
+      ],
+      [
+        "set",
+        "pvN1",
+        "10"
+      ],
+      [
+        "set",
+        "pvM2",
+        "4"
+      ],
+      [
+        "set",
+        "pvS2",
+        "3"
+      ],
+      [
+        "set",
+        "pvN2",
+        "12"
+      ]
+    ],
+    [
+      [
+        "set",
+        "pvStat",
+        "z"
+      ],
+      [
+        "set",
+        "pvVal",
+        "1.96"
+      ],
+      [
+        "set",
+        "pvRevKind",
+        "between"
+      ],
+      [
+        "set",
+        "pvRev",
+        "0.95"
+      ]
+    ]
+  ],
+  "scrollTo": "pvTails",
+  "errorState": [
+    [
+      "set",
+      "pvVal",
+      "abc"
+    ]
+  ]
+}

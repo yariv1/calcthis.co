@@ -1,0 +1,154 @@
+{
+ "slug": "p-value-calculator",
+ "research": "md-files/calcthis-pvalue-research.md",
+ "competitors": [
+  {
+   "name": "Omnicalculator p-value",
+   "url": "https://www.omnicalculator.com/statistics/p-value",
+   "openedLive": true,
+   "date": "2026-11-10",
+   "inputs": [
+    "what do you know: z-score, t-score, chi-square score, F-score",
+    "score value",
+    "degrees of freedom",
+    "significance level alpha (default 0.05)",
+    "type of p-value: two-tailed, left-tailed, right-tailed",
+    "i don't know which score i need helper",
+    "result: p-value",
+    "static example picture of a two-tailed area"
+   ]
+  },
+  {
+   "name": "calculator.net p-value",
+   "url": "https://www.calculator.net/p-value-calculator.html",
+   "openedLive": true,
+   "date": "2026-11-10",
+   "inputs": [
+    "z-score (normal distribution only)",
+    "p-value from any one of five boxes goes backwards to z",
+    "p-value left tail, right tail, from centre, between -z and z, two tails"
+   ]
+  },
+  {
+   "name": "GraphPad QuickCalcs p value",
+   "url": "https://www.graphpad.com/quickcalcs/pvalue1/",
+   "openedLive": true,
+   "date": "2026-11-10",
+   "inputs": [
+    "p from z",
+    "p from t with df",
+    "p from F with DFn and DFd",
+    "p from r with df",
+    "p from chi-square with df",
+    "two-tailed only",
+    "explanations of z, t, F, r, chi-square and how to interpret p"
+   ]
+  },
+  {
+   "name": "Social Science Statistics t and z to p",
+   "url": "https://www.socscistatistics.com/pvalues/tdistribution.aspx",
+   "openedLive": true,
+   "date": "2026-11-10",
+   "inputs": [
+    "t-statistic and degrees of freedom",
+    "z score page",
+    "one-tailed and two-tailed p-values shown together"
+   ]
+  },
+  {
+   "name": "Statology t score to p value",
+   "url": "https://www.statology.org/t-score-p-value-calculator/",
+   "openedLive": true,
+   "date": "2026-11-10",
+   "inputs": [
+    "t score and degrees of freedom",
+    "one-tailed or two-tailed choice",
+    "significance level chips 0.01, 0.05, 0.10",
+    "significant or not significant verdict",
+    "worked example and FAQ"
+   ]
+  }
+ ],
+ "features": [
+  {
+   "covers": [
+    "Omnicalculator p-value: what do you know: z-score, t-score, chi-square score, F-score",
+    "GraphPad QuickCalcs p value: p from z",
+    "GraphPad QuickCalcs p value: p from t with df",
+    "GraphPad QuickCalcs p value: p from F with DFn and DFd",
+    "GraphPad QuickCalcs p value: p from r with df",
+    "GraphPad QuickCalcs p value: p from chi-square with df",
+    "calculator.net p-value: z-score (normal distribution only)",
+    "Social Science Statistics t and z to p: z score page",
+    "Statology t score to p value: t score and degrees of freedom"
+   ],
+   "status": "exceed",
+   "ids": ["pvStat", "pvVal"]
+  },
+  {
+   "covers": [
+    "Omnicalculator p-value: score value",
+    "Omnicalculator p-value: degrees of freedom",
+    "Social Science Statistics t and z to p: t-statistic and degrees of freedom"
+   ],
+   "status": "exceed",
+   "ids": ["pvVal", "pvDf", "pvDf1", "pvDf2", "pvN"]
+  },
+  {
+   "covers": [
+    "Omnicalculator p-value: significance level alpha (default 0.05)",
+    "Statology t score to p value: significance level chips 0.01, 0.05, 0.10"
+   ],
+   "status": "match",
+   "ids": ["pvAlpha"]
+  },
+  {
+   "covers": [
+    "Omnicalculator p-value: type of p-value: two-tailed, left-tailed, right-tailed",
+    "Statology t score to p value: one-tailed or two-tailed choice",
+    "calculator.net p-value: p-value left tail, right tail, from centre, between -z and z, two tails",
+    "Social Science Statistics t and z to p: one-tailed and two-tailed p-values shown together",
+    "GraphPad QuickCalcs p value: two-tailed only"
+   ],
+   "status": "exceed",
+   "ids": ["pvTail", "pvTails", "pvRevKind"]
+  },
+  {
+   "covers": [
+    "Omnicalculator p-value: result: p-value"
+   ],
+   "status": "match",
+   "ids": ["pvBig"]
+  },
+  {
+   "covers": [
+    "Statology t score to p value: significant or not significant verdict"
+   ],
+   "status": "exceed",
+   "ids": ["pvSub", "pvTip", "pvTails"]
+  },
+  {
+   "covers": [
+    "Omnicalculator p-value: static example picture of a two-tailed area"
+   ],
+   "status": "exceed",
+   "ids": ["pvCurve", "pvCurveKey"]
+  },
+  {
+   "covers": [
+    "calculator.net p-value: p-value from any one of five boxes goes backwards to z"
+   ],
+   "status": "exceed",
+   "ids": ["pvRev", "pvRevNote", "pvRevKind"]
+  },
+  {
+   "covers": [
+    "Omnicalculator p-value: i don't know which score i need helper",
+    "GraphPad QuickCalcs p value: explanations of z, t, F, r, chi-square and how to interpret p",
+    "Statology t score to p value: worked example and FAQ"
+   ],
+   "status": "exceed",
+   "ids": ["pvDfNote", "pvValNote"]
+  }
+ ]
+}

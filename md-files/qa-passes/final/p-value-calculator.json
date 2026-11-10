@@ -1,0 +1,14 @@
+{
+ "slug": "p-value-calculator",
+ "pass": true,
+ "at": "2026-11-10T16:25:48.679Z",
+ "passHash": "0e17cdc981fe0451",
+ "scriptHash": "c1688c375a5426fc",
+ "cats": {
+  "textVsTool": 112,
+  "extremes": 102,
+  "visual": 866
+ },
+ "runs": 282,
+ "fails": []
+}

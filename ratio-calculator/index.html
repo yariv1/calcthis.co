@@ -52,7 +52,7 @@
   ]
 }
 </script>
-<link rel="stylesheet" href="/assets/style.css?v=339">
+<link rel="stylesheet" href="/assets/style.css?v=340">
 <style>
 .presets-label{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
 .presets{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px}
@@ -227,6 +227,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
           <span class="menu-col-head">Math &amp; Numbers</span>
           <a href="/fraction-calculator/">Fraction</a>
           <a href="/standard-deviation-calculator/">Standard Deviation</a>
+          <a href="/p-value-calculator/">P-Value</a>
           <a href="/scientific-notation-calculator/">Scientific Notation</a>
           <a href="/average-calculator/">Average</a>
           <a href="/batting-average-calculator/">Batting Average</a>
@@ -795,6 +796,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
         <ul class="footer-links">
           <li><a href="/fraction-calculator/">Fraction Calculator</a></li>
           <li><a href="/standard-deviation-calculator/">Standard Deviation Calculator</a></li>
+          <li><a href="/p-value-calculator/">P-Value Calculator</a></li>
           <li><a href="/scientific-notation-calculator/">Scientific Notation Calculator</a></li>
           <li><a href="/weighted-average-calculator/">Weighted Average Calculator</a></li>
           <li><a href="/average-calculator/">Average Calculator</a></li>
@@ -883,7 +885,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
   </footer>
 <!--FOOTER:END-->
 
-<script src="/assets/app.js?v=339"></script>
+<script src="/assets/app.js?v=340"></script>
 <script>
 function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){var t=b;b=a%b;a=t;}return a;}
 function toInts(a,b){var sa=(''+a).split('.')[1]||'',sb=(''+b).split('.')[1]||'';var s=Math.pow(10,Math.max(sa.length,sb.length));var ai=Math.round(a*s),bi=Math.round(b*s);var g=gcd(ai,bi);return[ai/g,bi/g];}

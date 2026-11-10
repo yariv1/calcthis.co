@@ -37,7 +37,7 @@ function check(root, slug) {
   if (rec.hash !== h.hash) return { ok: false, why: 'the page, its code, css, fixture, oracle or the harness changed after the last QA pass - run: node md-files/qa/run.js ' + slug };
   const shots = (rec.shots || []);
   if (shots.length < 6 || shots.some((s) => !fs.existsSync(path.join(root, s)))) return { ok: false, why: 'screenshots missing - run: node md-files/qa/run.js ' + slug };
-  return { ok: true, why: '' };
+  return require('./final.js').check(root, slug); /* gate 2: extremes, text vs tool, visual, side by side (slugs in gate2.json) */
 }
 /* calculator pages that must be gated: in the sitemap, run a CalcThis.init*() and are not grandfathered in legacy.json */
 function gated(root) {

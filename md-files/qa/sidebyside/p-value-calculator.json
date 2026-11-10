@@ -1,0 +1,16 @@
+{
+ "date": "2026-11-10",
+ "competitors": [
+  { "name": "Omnicalculator p-value", "url": "https://www.omnicalculator.com/statistics/p-value", "reopenedAfterBuild": true, "gaps": [] },
+  { "name": "calculator.net p-value", "url": "https://www.calculator.net/p-value-calculator.html", "reopenedAfterBuild": true, "gaps": [] },
+  { "name": "GraphPad QuickCalcs p value", "url": "https://www.graphpad.com/quickcalcs/pvalue1/", "reopenedAfterBuild": true, "gaps": [] },
+  { "name": "Social Science Statistics t and z to p", "url": "https://www.socscistatistics.com/pvalues/tdistribution.aspx", "reopenedAfterBuild": true, "gaps": [] },
+  { "name": "Statology t score to p value", "url": "https://www.statology.org/t-score-p-value-calculator/", "reopenedAfterBuild": true, "gaps": [] }
+ ],
+ "weBeat": [
+  "visual: live curve with the p-value area shaded, the statistic and the critical value drawn from the user's numbers (Omni has a static example picture, others none)",
+  "functional: five statistics, all tails plus between / from-centre at once, verdict at alpha, reverse for every statistic, t or z from sample numbers, a note under every field"
+ ],
+ "gapsLeft": [],
+ "unverified": ["real phone", "other browsers (Chrome only)", "print", "Statology z / chi-square / F pages and SocSci F / chi-square pages not reopened (same pattern as the t pages)"]
+}

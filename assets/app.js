@@ -25247,3 +25247,397 @@ CalcThis.initUnitPriceCalc = function () {
   mkRow(); mkRow(); setKind('weight'); render();
 };
 /* UNITPRICE:END */
+
+/* PVALUE:BEGIN */
+/* =========================================================
+   P VALUE calculator (/p-value-calculator/). Competitors opened live (2026-11-10): Omnicalculator (z, t, chi-square, F; one tail at a time; static example picture), calculator.net (z only,
+   five area boxes, works backwards), GraphPad QuickCalcs (z, t, F, r, chi-square; two-tailed only), Social Science Statistics (one page per distribution), Statology (t only, verdict).
+   Notes: md-files/calcthis-pvalue-research.md. Maths: tails from the regularised incomplete gamma and beta functions (Numerical Recipes style continued fractions + series), the normal
+   tail from the incomplete gamma (erfc(x) = Q(1/2, x^2)), t = distribution with df, chi-square, F = d1/d2 ratio, correlation r -> t = r sqrt(df / (1 - r^2)) with df = n - 2.
+   Two-tailed p = 2 x min(left tail, right tail) (Omni's definition, equals 2 x tail of |x| for the symmetric z and t).
+   ========================================================= */
+/* PVALUE-ENGINE:START */
+CalcThis.pvalueEngine = (function () {
+  var LG = [57.1562356658629235, -59.5979603554754912, 14.1360979747417471, -0.491913816097620199, 0.339946499848118887e-4, 0.465236289270485756e-4, -0.983744753048795646e-4, 0.158088703224912494e-3, -0.210264441724104883e-3, 0.217439618115212643e-3, -0.164318106536763890e-3, 0.844182239838527433e-4, -0.261908384015814087e-4, 0.368991826595316234e-5];
+  function lgamma(x) {
+    if (x < 0.5) return Math.log(Math.PI / Math.abs(Math.sin(Math.PI * x))) - lgamma(1 - x);
+    var y = x, t = x + 5.24218750000000000, s = 0.999999999999997092, j;
+    t = (x + 0.5) * Math.log(t) - t;
+    for (j = 0; j < 14; j++) s += LG[j] / ++y;
+    return t + Math.log(2.5066282746310005 * s / x);
+  }
+  /* regularised incomplete gamma: { p: P(a,x), q: Q(a,x) } */
+  function gammaPQ(a, x) {
+    if (x <= 0) return { p: 0, q: 1 };
+    var gln = lgamma(a), i;
+    if (x < a + 1) {
+      var ap = a, sum = 1 / a, del = sum;
+      for (i = 0; i < 400000; i++) { ap += 1; del *= x / ap; sum += del; if (Math.abs(del) < Math.abs(sum) * 1e-16) break; }
+      var p = sum * Math.exp(-x + a * Math.log(x) - gln); if (p > 1) p = 1;
+      return { p: p, q: 1 - p };
+    }
+    var b = x + 1 - a, c = 1 / 1e-300, d = 1 / b, h = d, an;
+    for (i = 1; i < 400000; i++) {
+      an = -i * (i - a); b += 2; d = an * d + b; if (Math.abs(d) < 1e-300) d = 1e-300;
+      c = b + an / c; if (Math.abs(c) < 1e-300) c = 1e-300; d = 1 / d; var del2 = d * c; h *= del2;
+      if (Math.abs(del2 - 1) < 1e-16) break;
+    }
+    var q = Math.exp(-x + a * Math.log(x) - gln) * h; if (q > 1) q = 1;
+    return { p: 1 - q, q: q };
+  }
+  function betacf(a, b, x) {
+    var qab = a + b, qap = a + 1, qam = a - 1, c = 1, d = 1 - qab * x / qap, m, m2, aa, del, h;
+    if (Math.abs(d) < 1e-300) d = 1e-300; d = 1 / d; h = d;
+    for (m = 1; m < 400000; m++) {
+      m2 = 2 * m; aa = m * (b - m) * x / ((qam + m2) * (a + m2));
+      d = 1 + aa * d; if (Math.abs(d) < 1e-300) d = 1e-300; c = 1 + aa / c; if (Math.abs(c) < 1e-300) c = 1e-300; d = 1 / d; h *= d * c;
+      aa = -(a + m) * (qab + m) * x / ((a + m2) * (qap + m2));
+      d = 1 + aa * d; if (Math.abs(d) < 1e-300) d = 1e-300; c = 1 + aa / c; if (Math.abs(c) < 1e-300) c = 1e-300; d = 1 / d; del = d * c; h *= del;
+      if (Math.abs(del - 1) < 1e-16) break;
+    }
+    return h;
+  }
+  /* regularised incomplete beta: { p: I_x(a,b), q: 1 - I_x(a,b) }, each accurate in its own small branch */
+  function betaPQ(a, b, x) {
+    if (x <= 0) return { p: 0, q: 1 }; if (x >= 1) return { p: 1, q: 0 };
+    var bt = Math.exp(lgamma(a + b) - lgamma(a) - lgamma(b) + a * Math.log(x) + b * Math.log(1 - x));
+    if (x < (a + 1) / (a + b + 2)) { var p = bt * betacf(a, b, x) / a; if (p > 1) p = 1; return { p: p, q: 1 - p }; }
+    var q = bt * betacf(b, a, 1 - x) / b; if (q > 1) q = 1; return { p: 1 - q, q: q };
+  }
+  /* distribution kinds: z, t (df), chi (df), f (d1, d2). cdf(x) -> { lo: P(X <= x), hi: P(X > x) } */
+  function cdf(k, P, x) {
+    var r, s;
+    if (k === 'z') { s = 0.5 * gammaPQ(0.5, x * x / 2).q; return x >= 0 ? { lo: 1 - s, hi: s } : { lo: s, hi: 1 - s }; }
+    if (k === 't') { s = 0.5 * betaPQ(P.df / 2, 0.5, P.df / (P.df + x * x)).p; return x >= 0 ? { lo: 1 - s, hi: s } : { lo: s, hi: 1 - s }; }
+    if (k === 'chi') { if (x <= 0) return { lo: 0, hi: 1 }; r = gammaPQ(P.df / 2, x / 2); return { lo: r.p, hi: r.q }; }
+    if (x <= 0) return { lo: 0, hi: 1 };
+    r = betaPQ(P.d1 / 2, P.d2 / 2, P.d1 * x / (P.d1 * x + P.d2)); return { lo: r.p, hi: r.q };
+  }
+  function pvals(k, P, x) { var c = cdf(k, P, x), two = 2 * Math.min(c.lo, c.hi); if (two > 1) two = 1; return { left: c.lo, right: c.hi, two: two }; }
+  function sym(k) { return k === 'z' || k === 't'; }
+  /* x with right tail prob = a (tail 'R') or left tail prob = a (tail 'L') */
+  function inv(k, P, a, tail) {
+    var f = function (x) { var c = cdf(k, P, x); return tail === 'R' ? c.hi : c.lo; }, lo, hi, i, mid;
+    var pos = (k === 'chi' || k === 'f');
+    var left = function (x) { return tail === 'R' ? f(x) > a : f(x) < a; }; /* true while x is still to the left of the root */
+    lo = pos ? 0 : -1; hi = 1;
+    for (i = 0; i < 1100 && left(hi); i++) hi *= 2;
+    if (!pos) for (i = 0; i < 1100 && !left(lo); i++) lo *= 2;
+    for (i = 0; i < 400; i++) {
+      mid = (lo + hi) / 2;
+      if (left(mid)) lo = mid; else hi = mid;
+      if (hi - lo <= 1e-15 * Math.max(1, Math.abs(mid))) break;
+    }
+    return (lo + hi) / 2;
+  }
+  function dens(k, P, x) {
+    if (k === 'z') return Math.exp(-x * x / 2) / Math.sqrt(2 * Math.PI);
+    if (k === 't') return Math.exp(lgamma((P.df + 1) / 2) - lgamma(P.df / 2) - 0.5 * Math.log(P.df * Math.PI) - (P.df + 1) / 2 * Math.log(1 + x * x / P.df));
+    if (x <= 0) return NaN;
+    if (k === 'chi') return Math.exp((P.df / 2 - 1) * Math.log(x) - x / 2 - P.df / 2 * Math.log(2) - lgamma(P.df / 2));
+    return Math.exp(lgamma((P.d1 + P.d2) / 2) - lgamma(P.d1 / 2) - lgamma(P.d2 / 2) + P.d1 / 2 * Math.log(P.d1 / P.d2) + (P.d1 / 2 - 1) * Math.log(x) - (P.d1 + P.d2) / 2 * Math.log(1 + P.d1 * x / P.d2));
+  }
+  /* the test statistic from a correlation r and sample size n (df = n - 2) */
+  function rToT(r, n) { var df = n - 2; return { t: r * Math.sqrt(df / (1 - r * r)), df: df }; }
+  /* statistic from sample numbers. type: 't1' one-sample t, 'z1' one-sample z, 't2' two-sample Welch, 'tp' two-sample pooled */
+  function build(type, o) {
+    if (type === 't1' || type === 'z1') { var se = o.s1 / Math.sqrt(o.n1); return { stat: (o.m1 - o.m0) / se, df: o.n1 - 1, kind: type === 'z1' ? 'z' : 't' }; }
+    var a = o.s1 * o.s1 / o.n1, b = o.s2 * o.s2 / o.n2;
+    if (type === 'tp') { var sp2 = ((o.n1 - 1) * o.s1 * o.s1 + (o.n2 - 1) * o.s2 * o.s2) / (o.n1 + o.n2 - 2); return { stat: (o.m1 - o.m2) / Math.sqrt(sp2 * (1 / o.n1 + 1 / o.n2)), df: o.n1 + o.n2 - 2, kind: 't' }; }
+    return { stat: (o.m1 - o.m2) / Math.sqrt(a + b), df: Math.pow(a + b, 2) / (a * a / (o.n1 - 1) + b * b / (o.n2 - 1)), kind: 't' };
+  }
+  var SUP = { '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹', '-': '⁻' };
+  /* p-value text: 4 significant digits, scientific below 0.0001; dec = fixed decimal places (optional) */
+  function fp(p, dec) {
+    if (p == null || !isFinite(p)) return '—';
+    if (p <= 0 || p < 1e-300) return 'less than 1 × 10⁻³⁰⁰';
+    if (dec != null) { var s = p.toFixed(dec); if (/^0\.?0*$/.test(s)) return 'less than ' + (dec === 0 ? '1' : '0.' + new Array(dec).join('0') + '1'); return s; }
+    if (p < 1e-4) { var e = p.toExponential(3).split('e'); return e[0] + ' × 10' + String(parseInt(e[1], 10)).split('').map(function (c) { return SUP[c]; }).join(''); }
+    var t = p.toPrecision(4); if (t.indexOf('.') >= 0) t = t.replace(/0+$/, '').replace(/\.$/, '');
+    return t;
+  }
+  return { lgamma: lgamma, cdf: cdf, pvals: pvals, inv: inv, dens: dens, rToT: rToT, build: build, fp: fp, sym: sym, gammaPQ: gammaPQ, betaPQ: betaPQ };
+})();
+/* PVALUE-ENGINE:END */
+
+/* =========================================================
+   CalcThis.initPvalueCalc() - ids pv*. Engine CalcThis.pvalueEngine.
+   ========================================================= */
+CalcThis.initPvalueCalc = function () {
+  var X = CalcThis.pvalueEngine;
+  var $ = function (id) { return document.getElementById(id); };
+  if (!$('pvVal')) return;
+  var STATS = {
+    z: { name: 'z-score', lab: 'z-score', ph: 'e.g. 1.96', kind: 'z', dfd: 'normal (z) distribution', tail: 'two' },
+    t: { name: 't-score', lab: 't-score', ph: 'e.g. 2.1', kind: 't', dfd: 't distribution', tail: 'two' },
+    chi: { name: 'chi-square', lab: 'Chi-square value (χ²)', ph: 'e.g. 3.84', kind: 'chi', dfd: 'chi-square distribution', tail: 'right' },
+    f: { name: 'F-score', lab: 'F-score', ph: 'e.g. 4.96', kind: 'f', dfd: 'F distribution', tail: 'right' },
+    r: { name: 'correlation r', lab: 'Correlation coefficient (r)', ph: 'e.g. 0.45', kind: 't', dfd: 't distribution (df = n − 2)', tail: 'two' }
+  };
+  var TAILN = { two: 'two-tailed', left: 'left-tailed', right: 'right-tailed' };
+  var st = { stat: 'z', tail: 'two', adv: false, build: 't1', pool: 'welch', last: null };
+  var NUM = /^[+-]?(\d+\.?\d*|\.\d+)(e[+-]?\d+)?$/i;
+  /* number reader: { empty, partial, err, v }; accepts 1,000 and 5% (as 0.05 when pct) */
+  function num(raw, pct) {
+    var s = String(raw == null ? '' : raw).replace(/[\s ]/g, '').replace(/−/g, '-');
+    if (s === '') return { empty: true };
+    var pc = false; if (pct && /%$/.test(s)) { pc = true; s = s.slice(0, -1); }
+    if (/^[+-]?\d{1,3}(,\d{3})+(\.\d*)?$/.test(s)) s = s.replace(/,/g, '');
+    if (/^[+-]?\.?$/.test(s) || /^[+-]?(\d+\.?\d*|\.\d+)e[+-]?$/i.test(s)) return { partial: true };
+    if (!NUM.test(s)) return { err: 'junk' };
+    var v = parseFloat(s); if (!isFinite(v)) return { err: 'big' };
+    if (pc) v /= 100;
+    if (Math.abs(v) > 1e9) return { err: 'big' };
+    return { v: v };
+  }
+  function short(raw) { return String(raw).trim().slice(0, 14); }
+  function fx(x) { if (x == null || !isFinite(x)) return '—'; var a = Math.abs(x); var s = a >= 1e6 || (a < 1e-4 && a > 0) ? x.toExponential(3) : String(Math.round(x * 1e4) / 1e4); return s.replace('-', '−'); }
+  function fa(x) { var r = Math.round(x * 1e6) / 1e6; return String(r); }
+  function setNote(id, t) { var e = $(id); if (!e) return; e.textContent = t || ''; e.style.display = t ? '' : 'none'; }
+  function setHint(m, at) {
+    var h = $('pvHint'); h.textContent = m || ''; h.style.display = m ? 'block' : 'none';
+    if (m && at) { var el = $(at), f = el && (el.closest('.fld') || el.closest('.radgrp') || el); if (f && f.nextSibling !== h && f.parentNode) f.parentNode.insertBefore(h, f.nextSibling); }
+  }
+  function show(id, on) { var e = $(id); if (e) e.style.display = on ? '' : 'none'; }
+  var BIG = 'is too large — keep it under 1,000,000,000.';
+  function readVal(id, label, eg, opt) {
+    var r = num($(id).value);
+    if (r.empty) return { miss: true };
+    if (r.partial) return { miss: true, partial: true };
+    if (r.err) return { bad: r.err === 'junk' ? 'Couldn’t read “' + short($(id).value) + '” in ' + label + ' — type a number like ' + eg + '.' : label + ' ' + BIG };
+    var v = r.v;
+    if (opt.min !== undefined && (opt.minEx ? v <= opt.min : v < opt.min)) return { bad: label + (opt.minMsg || (opt.min === 0 && !opt.minEx ? ' can’t be negative — it starts at 0.' : ' must be above ' + opt.min + '.')) };
+    if (opt.max !== undefined && (opt.maxEx ? v >= opt.max : v > opt.max)) return { bad: label + (opt.maxMsg || ' must be at most ' + opt.max + '.') };
+    if (opt.int && v % 1 !== 0) return { bad: label + ' must be a whole number.' };
+    return { v: v };
+  }
+
+  /* ---------- the labels follow the chosen statistic ---------- */
+  function syncStat() {
+    var s = STATS[st.stat];
+    $('pvValLab').textContent = s.lab; $('pvVal').placeholder = s.ph;
+    show('pvDfW', st.stat === 't' || st.stat === 'chi'); show('pvDf1W', st.stat === 'f'); show('pvDf2W', st.stat === 'f'); show('pvNW', st.stat === 'r');
+    $('pvStat').querySelector('.csel-val').textContent = { z: 'z-score (normal)', t: 't-score', chi: 'Chi-square (χ²)', f: 'F-score', r: 'Correlation r' }[st.stat];
+  }
+  function setTail(t) {
+    st.tail = t;
+    [].forEach.call($('pvTail').querySelectorAll('.radopt'), function (b) { var on = b.getAttribute('data-v') === t; b.classList.toggle('on', on); b.setAttribute('aria-checked', on ? 'true' : 'false'); });
+  }
+
+  /* ---------- curve ---------- */
+  var VW = 280, VH = 170, PL = 8, PR = 272, AX = 132, TOP = 26;
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+  function drawCurve(R) {
+    var k = R.kind, P = R.P, x = R.x, sy = X.sym(k), xmin, xmax, i, w;
+    if (sy) { w = Math.max(4, Math.min(Math.abs(x) * 1.2, 8)); if (R.crit) R.crit.forEach(function (c) { w = Math.max(w, Math.min(Math.abs(c) * 1.2, 8)); }); xmin = -w; xmax = w; }
+    else {
+      var q = X.inv(k, P, k === 'f' ? 0.005 : 0.002, 'R'); xmax = Math.max(q, 3); if (k === 'f') xmax = Math.min(xmax, 60);
+      xmax = Math.max(xmax, Math.min(x * 1.2, xmax * 3)); if (R.crit) R.crit.forEach(function (c) { xmax = Math.max(xmax, Math.min(c * 1.2, xmax * 3)); }); xmin = 0;
+    }
+    var N = 220, ys = [], xs = [], peak = 0;
+    for (i = 0; i <= N; i++) { var xv = xmin + (xmax - xmin) * i / N; xs.push(xv); var d = X.dens(k, P, xv); ys.push(d); if (isFinite(d) && (sy || xv >= 0.02 * xmax) && d > peak) peak = d; }
+    var ymax = peak * 1.1 || 1;
+    var px = function (v) { return PL + (v - xmin) / (xmax - xmin) * (PR - PL); };
+    var py = function (d) { if (!isFinite(d)) d = ymax; return AX - Math.min(d, ymax) / ymax * (AX - TOP); };
+    var line = ''; for (i = 0; i <= N; i++) { if (!sy && i === 0 && !isFinite(ys[0])) continue; line += (line ? 'L' : 'M') + px(xs[i]).toFixed(1) + ',' + py(ys[i]).toFixed(1); }
+    function area(a, b) {
+      a = Math.max(a, xmin); b = Math.min(b, xmax); if (!(b > a)) return '';
+      var M = 70, s2 = 'M' + px(a).toFixed(1) + ',' + AX; for (var j = 0; j <= M; j++) { var xv2 = a + (b - a) * j / M; s2 += 'L' + px(xv2).toFixed(1) + ',' + py(X.dens(k, P, xv2 === 0 ? 1e-9 : xv2)).toFixed(1); }
+      return '<path d="' + s2 + 'L' + px(b).toFixed(1) + ',' + AX + 'Z" fill="#B5761F" fill-opacity=".38" stroke="none"/>';
+    }
+    var shade = '';
+    R.shade.forEach(function (r2) { shade += area(r2[0], r2[1]); });
+    var crit = '';
+    (R.crit || []).forEach(function (c) { if (c >= xmin && c <= xmax) crit += '<line x1="' + px(c).toFixed(1) + '" y1="' + (TOP - 2) + '" x2="' + px(c).toFixed(1) + '" y2="' + (AX + 4) + '" stroke="#37503F" stroke-width="1.6" stroke-dasharray="4 3"/><text x="' + px(c).toFixed(1) + '" y="' + (AX + 19) + '" text-anchor="middle" font-size="12" fill="#37503F" font-weight="600">' + fx(c) + '</text>'; });
+    var xm = Math.max(xmin, Math.min(xmax, x)), off = x < xmin || x > xmax, mx = px(xm);
+    var lab = (R.sname || '') + ' = ' + fx(x) + (off ? (x > xmax ? ' →' : '') : ''); if (off && x < xmin) lab = '← ' + lab;
+    var anc = mx > PR - 60 ? 'end' : mx < PL + 60 ? 'start' : 'middle';
+    var marker = '<line x1="' + mx.toFixed(1) + '" y1="' + (TOP - 4) + '" x2="' + mx.toFixed(1) + '" y2="' + AX + '" stroke="#8F5C13" stroke-width="2.2"/><text x="' + (anc === 'end' ? mx + 4 : anc === 'start' ? mx - 4 : mx).toFixed(1) + '" y="14" text-anchor="' + anc + '" font-size="12" fill="#8F5C13" font-weight="700">' + esc(lab) + '</text>';
+    var svg = '<svg viewBox="0 0 ' + VW + ' ' + VH + '" width="100%" role="img" aria-label="Curve of the ' + esc(STATS[R.stat].dfd) + ' with the p-value area shaded" xmlns="http://www.w3.org/2000/svg">' +
+      '<line x1="' + PL + '" y1="' + AX + '" x2="' + PR + '" y2="' + AX + '" stroke="#CDBFA5" stroke-width="1.2"/>' + shade + '<path d="' + line + '" fill="none" stroke="#241A11" stroke-width="1.8" stroke-linejoin="round"/>' + crit + marker + '</svg>';
+    return svg;
+  }
+
+  /* ---------- main read + render ---------- */
+  function partialBad(id) { return { msg: 'Keep typing — “' + short($(id).value) + '” isn’t a complete number yet.', at: id }; }
+  function readMain() {
+    var s = STATS[st.stat], R = { stat: st.stat, kind: s.kind, sname: st.stat === 'z' ? 'z' : st.stat === 't' ? 't' : st.stat === 'chi' ? 'χ²' : st.stat === 'f' ? 'F' : 'r', P: {}, bad: null, miss: [], notes: {} };
+    var vo = st.stat === 'chi' || st.stat === 'f' ? { min: 0 } : st.stat === 'r' ? { min: -1, max: 1, minEx: true, maxEx: true, minMsg: ' must be between −1 and 1 (not exactly −1 or 1).', maxMsg: ' must be between −1 and 1 (not exactly −1 or 1).' } : {};
+    var v = readVal('pvVal', 'the ' + s.name, s.ph.replace('e.g. ', ''), vo);
+    if (v.bad) R.bad = { msg: v.bad + ' Fix it to see the p-value.', at: 'pvVal' }; else if (v.miss) { R.miss.push('value'); if (v.partial && !R.bad) R.bad = partialBad('pvVal'); } else R.x0 = v.v;
+    var d;
+    if (st.stat === 't' || st.stat === 'chi') { d = readVal('pvDf', 'the degrees of freedom', '20', { min: 0, minEx: true, max: 1e6, minMsg: ' must be above 0 (for a sample, the size minus 1).', maxMsg: ' is too large — keep it at 1,000,000 or less.' }); if (d.bad) { if (!R.bad) R.bad = { msg: d.bad + ' Fix it to see the p-value.', at: 'pvDf' }; } else if (d.miss) { R.miss.push('df'); if (d.partial && !R.bad) R.bad = partialBad('pvDf'); } else R.P.df = d.v; }
+    if (st.stat === 'f') {
+      d = readVal('pvDf1', 'the numerator degrees of freedom', '4', { min: 0, minEx: true, max: 1e6, minMsg: ' must be above 0.', maxMsg: ' is too large — keep it at 1,000,000 or less.' }); if (d.bad) { if (!R.bad) R.bad = { msg: d.bad + ' Fix it to see the p-value.', at: 'pvDf1' }; } else if (d.miss) { R.miss.push('df1'); if (d.partial && !R.bad) R.bad = partialBad('pvDf1'); } else R.P.d1 = d.v;
+      d = readVal('pvDf2', 'the denominator degrees of freedom', '20', { min: 0, minEx: true, max: 1e6, minMsg: ' must be above 0.', maxMsg: ' is too large — keep it at 1,000,000 or less.' }); if (d.bad) { if (!R.bad) R.bad = { msg: d.bad + ' Fix it to see the p-value.', at: 'pvDf2' }; } else if (d.miss) { R.miss.push('df2'); if (d.partial && !R.bad) R.bad = partialBad('pvDf2'); } else R.P.d2 = d.v;
+    }
+    if (st.stat === 'r') { d = readVal('pvN', 'the sample size', '25', { min: 3, int: true, max: 1e6, minMsg: ' must be at least 3 (the p-value uses n − 2 degrees of freedom).', maxMsg: ' is too large — keep it at 1,000,000 or less.' }); if (d.bad) { if (!R.bad) R.bad = { msg: d.bad + ' Fix it to see the p-value.', at: 'pvN' }; } else if (d.miss) { R.miss.push('n'); if (d.partial && !R.bad) R.bad = partialBad('pvN'); } else R.n = d.v; }
+    R.ready = !R.bad && !R.miss.length;
+    if (R.ready) {
+      if (st.stat === 'r') { var tt = X.rToT(R.x0, R.n); R.x = tt.t; R.P = { df: tt.df }; R.rr = R.x0; } else R.x = R.x0;
+      R.pv = X.pvals(R.kind, R.P, R.x);
+    }
+    return R;
+  }
+  function critOf(R, alpha) {
+    var k = R.kind, P = R.P;
+    if (st.tail === 'right') return [X.inv(k, P, alpha, 'R')];
+    if (st.tail === 'left') return [X.inv(k, P, alpha, 'L')];
+    return [X.inv(k, P, alpha / 2, 'L'), X.inv(k, P, alpha / 2, 'R')];
+  }
+  function shadeOf(R) {
+    var k = R.kind, P = R.P, x = R.x, c = X.cdf(k, P, x), far = 1e9;
+    if (st.tail === 'right') return [[x, far]];
+    if (st.tail === 'left') return [[-far, x]];
+    if (X.sym(k)) { var a = Math.abs(x); return [[-far, -a], [a, far]]; }
+    /* chi-square / F two-tailed: the smaller tail at x and the equal-area tail on the other side */
+    var pr = Math.min(c.lo, c.hi);
+    return c.hi <= c.lo ? [[x, far], [-far, X.inv(k, P, pr, 'L')]] : [[-far, x], [X.inv(k, P, pr, 'R'), far]];
+  }
+  var DEFN = { two: 'two-tailed (different from)', left: 'left-tailed (lower than)', right: 'right-tailed (higher than)' };
+  function render() {
+    var R = readMain(), alpha = null, aSoft = null, dec = null, decSoft = null, hm = null, hat = null, i;
+    var ar = num($('pvAlpha').value, true);
+    if (ar.err) aSoft = { msg: ar.err === 'junk' ? 'Couldn’t read “' + short($('pvAlpha').value) + '” in the significance level — type a number like 0.05 or 5%. It is ignored for now.' : 'The significance level is too large — it should be between 0 and 1. It is ignored for now.', at: 'pvAlpha' };
+    else if (ar.v !== undefined) { if (ar.v <= 0 || ar.v >= 1) aSoft = { msg: 'The significance level should be between 0 and 1 (for example 0.05). It is ignored for now.', at: 'pvAlpha' }; else alpha = ar.v; }
+    var dr = num($('pvDec').value);
+    if (dr.err || (dr.v !== undefined && (dr.v % 1 !== 0 || dr.v < 0 || dr.v > 12))) decSoft = { msg: 'Decimal places should be a whole number from 0 to 12. It is ignored for now.', at: 'pvDec' };
+    else if (dr.v !== undefined) dec = dr.v;
+    var aDef = false; if (alpha === null) { alpha = 0.05; aDef = true; }
+    var rev = revRender(R);
+    var bld = buildRender();
+    if (R.bad) { hm = R.bad.msg; hat = R.bad.at; } else if (aSoft) { hm = aSoft.msg; hat = aSoft.at; } else if (decSoft) { hm = decSoft.msg; hat = decSoft.at; } else if (rev.soft) { hm = rev.soft; hat = 'pvRev'; } else if (bld.soft) { hm = bld.soft; hat = bld.at || 'pvM1'; }
+    setHint(hm, hat);
+    /* notes under every field */
+    var vn = '', s = STATS[st.stat];
+    if (R.ready) {
+      if (st.stat === 'r') vn = 'r = ' + fx(R.rr) + ' with n = ' + R.n + ' gives t = ' + fx(R.x) + ' with ' + fx(R.P.df) + ' degrees of freedom, and the p-value comes from that t distribution.';
+      else if (st.stat === 'z') vn = 'z = ' + fx(R.x) + ': your result is ' + fx(Math.abs(R.x)) + ' standard deviations ' + (R.x < 0 ? 'below' : R.x > 0 ? 'above' : 'at') + ' the middle of the normal curve' + (R.x === 0 ? '.' : '.');
+      else if (st.stat === 't') vn = 't = ' + fx(R.x) + ' on the t distribution with ' + fx(R.P.df) + ' degrees of freedom.';
+      else if (st.stat === 'chi') vn = 'χ² = ' + fx(R.x) + ' on the chi-square distribution with ' + fx(R.P.df) + ' degrees of freedom (its average is ' + fx(R.P.df) + ').';
+      else vn = 'F = ' + fx(R.x) + ' on the F distribution with ' + fx(R.P.d1) + ' and ' + fx(R.P.d2) + ' degrees of freedom.';
+    } else if (!R.bad) {
+      var need = []; if (R.miss.indexOf('value') >= 0) need.push('the ' + s.name); if (R.miss.indexOf('df') >= 0) need.push('the degrees of freedom'); if (R.miss.indexOf('df1') >= 0) need.push('the numerator degrees of freedom'); if (R.miss.indexOf('df2') >= 0) need.push('the denominator degrees of freedom'); if (R.miss.indexOf('n') >= 0) need.push('the sample size');
+      vn = 'Type ' + need.join(' and ') + ' to see the p-value.';
+    }
+    setNote('pvValNote', vn);
+    var dn = '';
+    if (st.stat === 't' || st.stat === 'chi') {
+      var dd = num($('pvDf').value), how = st.stat === 't' ? 'one sample or paired: n − 1; two samples with equal variance: n₁ + n₂ − 2.' : 'goodness of fit: categories − 1; test of independence: (rows − 1) × (columns − 1).';
+      dn = R.P.df !== undefined ? 'Degrees of freedom — ' + how : (dd.empty || dd.partial ? 'Type the degrees of freedom — ' + how : '');
+    }
+    setNote('pvDfNote', dn);
+    var fn = '';
+    if (st.stat === 'f') { fn = R.P.d1 !== undefined && R.P.d2 !== undefined ? 'ANOVA: numerator = groups − 1, denominator = total observations − groups.' : 'Type both: the numerator df (groups − 1 in ANOVA) and the denominator df (observations − groups).'; }
+    setNote('pvFNote', fn);
+    setNote('pvNNote', st.stat === 'r' ? (R.n !== undefined ? 'The p-value uses n − 2 = ' + (R.n - 2) + ' degrees of freedom.' : 'Type the number of pairs of values behind r (at least 3).') : '');
+    setNote('pvAlphaNote', aDef ? (aSoft ? '' : 'No level typed, so 0.05 — the most common one — is used. Type your own (for example 0.01) to change it.') : 'α = ' + fa(alpha) + ': you reject the null hypothesis when p is ' + fa(alpha) + ' or smaller, which risks a ' + fa(Math.round(alpha * 1e8) / 1e6) + '% chance of a false alarm if the null hypothesis is true. Common choices: 0.10, 0.05, 0.01.');
+    var tn = { two: 'Use it when you are testing for any difference, in either direction.', left: 'Use it when you are testing whether the value is lower than the reference.', right: 'Use it when you are testing whether the value is higher than the reference.' }[st.tail];
+    if (st.stat === 'chi' || st.stat === 'f') tn += ' Most chi-square and F tests use the right tail.'; else if (st.stat === 'r') tn += ' For r: right = a positive correlation, left = a negative one.';
+    setNote('pvTailNote', tn);
+    setNote('pvDecNote', dec !== null ? 'p-values are shown with ' + dec + ' decimal places.' : 'Leave empty for 4 significant digits (and scientific notation for tiny values).');
+    /* result */
+    var big = '—', lab = 'p-value', sub = $('pvSub').getAttribute('data-empty'), tip = '', body = false;
+    show('pvCurveWrap', false); show('pvTailsWrap', false);
+    if (R.ready) {
+      body = true; var p = R.pv[st.tail === 'two' ? 'two' : st.tail]; lab = 'p-value, ' + TAILN[st.tail]; big = X.fp(p, dec);
+      var sig = p <= alpha;
+      sub = sig ? 'At or below α = ' + fa(alpha) + ' · statistically significant, reject the null hypothesis' : 'Above α = ' + fa(alpha) + ' · not significant, you cannot reject the null hypothesis';
+      tip = sig ? 'p = ' + X.fp(p, dec) + ' is at or below α = ' + fa(alpha) + ', so you reject H₀ at the ' + fa(Math.round(alpha * 1e8) / 1e6) + '% level. It does not say how large or important the effect is.' : 'p = ' + X.fp(p, dec) + ' is above α = ' + fa(alpha) + ', so you do not have enough evidence to reject H₀. That is not proof that it is true.';
+      var cr = critOf(R, alpha); R.crit = cr; R.shade = shadeOf(R);
+      $('pvCurve').innerHTML = drawCurve(R); show('pvCurveWrap', true);
+      $('pvCurveKey').textContent = 'The amber area is the p-value: the chance of a result at least this extreme if H₀ (the no-effect hypothesis) is true.' + (cr ?' The dashed ' + (cr.length === 2 ? 'lines mark' : 'line marks') + ' the critical value' + (cr.length === 2 ? 's' : '') + ' for α = ' + fa(alpha) + ': ' + cr.map(function (c) { return fx(c); }).join(' and ') + '.' : '');
+      var th = '<thead><tr><th>Tail</th><th>p-value</th><th>At α = ' + fa(alpha) + '</th></tr></thead><tbody>';
+      [['two', 'Two-tailed'], ['left', 'Left-tailed'], ['right', 'Right-tailed']].forEach(function (t) {
+        th += '<tr class="pv-trow' + (t[0] === st.tail ? ' on' : '') + '" data-v="' + t[0] + '" tabindex="0"><td>' + t[1] + '</td><td>' + X.fp(R.pv[t[0]], dec) + '</td>' + '<td>' + (R.pv[t[0]] <= alpha ? 'Significant' : 'Not significant') + '</td></tr>';
+      });
+      if (X.sym(R.kind)) { var ax = Math.abs(R.x), btw = 1 - R.pv.two; th += '<tr class="pv-xrow"><td>Between ±' + fx(ax) + '</td><td>' + X.fp(btw, dec) + '</td><td>—</td></tr><tr class="pv-xrow"><td>From 0 to ' + fx(ax) + '</td><td>' + X.fp(btw / 2, dec) + '</td><td>—</td></tr>'; }
+      $('pvTails').innerHTML = th + '</tbody>'; show('pvTailsWrap', true);
+    }
+    $('pvBig').textContent = big; $('pvBig').parentNode.classList.toggle('pv-long', big.length > 12); $('pvLab').textContent = lab; $('pvSub').textContent = sub; $('pvBody').style.display = body ? '' : 'none'; $('pvTip').textContent = tip;
+    $('pvMLab').textContent = body ? lab : 'p-value'; $('pvMVal').textContent = big;
+  }
+
+  /* ---------- advanced: p-value -> statistic ---------- */
+  function revRender(R) {
+    var r = num($('pvRev').value, true), out = { soft: null }, s = STATS[st.stat];
+    if (r.empty || r.partial) { setNote('pvRevNote', 'Type a p-value (for example 0.03) to find the ' + s.name + ' that gives it, for the tail you chose above.'); return out; }
+    if (r.err) { out.soft = 'Couldn’t read “' + short($('pvRev').value) + '” in the p-value — type a number like 0.03. It is ignored for now.'; setNote('pvRevNote', ''); return out; }
+    var rk = $('pvRevKind').value || 'tail';
+    if (rk !== 'tail' && !X.sym(s.kind)) { setNote('pvRevNote', '“Between” and “from the centre” only exist for the symmetric z, t and r curves — pick “The tail I chose above”.'); return out; }
+    var okR = rk === 'tail' ? (r.v > 0 && r.v <= 1) : rk === 'between' ? (r.v > 0 && r.v < 1) : (r.v > 0 && r.v < 0.5);
+    if (!okR) { out.soft = (rk === 'tail' ? 'The p-value should be above 0 and at most 1 (for example 0.03).' : rk === 'between' ? 'The area between −x and x should be above 0 and below 1 (for example 0.95).' : 'The area from the centre should be above 0 and below 0.5 (for example 0.475).') + ' It is ignored for now.'; setNote('pvRevNote', ''); return out; }
+    var P = {}, k = s.kind;
+    if (st.stat === 'r') { if (R.n === undefined) { setNote('pvRevNote', 'Type the sample size n above to turn this p-value into an r.'); return out; } P.df = R.n - 2; }
+    else if (st.stat === 't' || st.stat === 'chi') { if (R.P.df === undefined) { setNote('pvRevNote', 'Type the degrees of freedom above first — the ' + s.name + ' for a p-value depends on them.'); return out; } P.df = R.P.df; }
+    else if (st.stat === 'f') { if (R.P.d1 === undefined || R.P.d2 === undefined) { setNote('pvRevNote', 'Type both degrees of freedom above first — the F-score for a p-value depends on them.'); return out; } P.d1 = R.P.d1; P.d2 = R.P.d2; }
+    var p = r.v, txt, conv = function (t) { if (st.stat !== 'r') return fx(t); var rr = t / Math.sqrt(t * t + P.df); return fx(rr); };
+    if (rk !== 'tail') { var p2 = rk === 'between' ? 1 - p : 1 - 2 * p; setNote('pvRevNote', 'An area ' + (rk === 'between' ? 'between −x and x' : 'from the centre to x') + ' of ' + X.fp(p) + ' needs a ' + (st.stat === 'r' ? 'correlation r' : s.name) + ' of ±' + conv(X.inv(k, P, p2 / 2, 'R')) + '.'); return out; }
+    if (st.tail === 'right') txt = conv(X.inv(k, P, p, 'R'));
+    else if (st.tail === 'left') txt = conv(X.inv(k, P, p, 'L'));
+    else if (X.sym(k)) { if (p >= 1) txt = '0'; else txt = '±' + conv(X.inv(k, P, p / 2, 'R')); }
+    else txt = (p >= 1 ? 'any value' : conv(X.inv(k, P, p / 2, 'L')) + ' and ' + conv(X.inv(k, P, p / 2, 'R')));
+    var nm = st.stat === 'r' ? 'correlation r' : s.name;
+    setNote('pvRevNote', 'A ' + TAILN[st.tail] + ' p-value of ' + X.fp(p) + ' needs ' + (st.tail === 'two' && !X.sym(k) ? 'a ' + nm + ' of ' + txt + (p >= 1 ? '' : ' (the two edges of the shaded areas)') : 'a ' + nm + ' of ' + txt) + '.');
+    return out;
+  }
+
+  /* ---------- advanced: statistic from sample numbers ---------- */
+  var BL = {
+    t1: { w: 'one-sample t-test', m1: 'Sample mean', s1: 'Sample standard deviation (s)', n1: 'Sample size (n)', m0: 'Value to compare with (the null mean)' },
+    z1: { w: 'one-sample z-test', m1: 'Sample mean', s1: 'Population standard deviation (σ)', n1: 'Sample size (n)', m0: 'Value to compare with (the null mean)' },
+    t2: { w: 'two-sample t-test', m1: 'Group 1 mean', s1: 'Group 1 standard deviation', n1: 'Group 1 size', m2: 'Group 2 mean', s2: 'Group 2 standard deviation', n2: 'Group 2 size' }
+  };
+  var tmp = { built: null };
+  function buildRender() {
+    var type = st.build === 't2' ? (st.pool === 'pooled' ? 'tp' : 't2') : st.build, two = st.build === 't2', L = BL[st.build], out = { soft: null, at: null };
+    $('pvM1Lab').textContent = L.m1; $('pvS1Lab').textContent = L.s1; $('pvN1Lab').textContent = L.n1; if (!two) $('pvM0Lab').textContent = L.m0; else { $('pvM2Lab').textContent = L.m2; $('pvS2Lab').textContent = L.s2; $('pvN2Lab').textContent = L.n2; }
+    show('pvM0W', !two); show('pvM2W', two); show('pvS2W', two); show('pvN2W', two); show('pvPoolW', two);
+    tmp.built = null; show('pvUse', false);
+    var o = {}, miss = [], bad = null;
+    var rd = function (id, label, eg, opt, key) { var v = readVal(id, label, eg, opt); if (v.bad) { if (!bad) bad = { msg: v.bad + ' It is ignored for now.', at: id }; } else if (v.miss) miss.push(label); else o[key] = v.v; };
+    rd('pvM1', two ? 'group 1 mean' : 'the sample mean', '52.3', {}, 'm1');
+    rd('pvS1', two ? 'group 1 standard deviation' : (st.build === 'z1' ? 'the population standard deviation' : 'the sample standard deviation'), '4.5', { min: 0, minEx: true, minMsg: ' must be above 0.' }, 's1');
+    rd('pvN1', two ? 'group 1 size' : 'the sample size', '25', { min: two || st.build === 't1' ? 2 : 1, int: true, max: 1e9, minMsg: ' must be a whole number of at least ' + (two || st.build === 't1' ? 2 : 1) + '.' }, 'n1');
+    if (!two) rd('pvM0', 'the value to compare with', '50', {}, 'm0');
+    else { rd('pvM2', 'group 2 mean', '49.1', {}, 'm2'); rd('pvS2', 'group 2 standard deviation', '5.1', { min: 0, minEx: true, minMsg: ' must be above 0.' }, 's2'); rd('pvN2', 'group 2 size', '25', { min: 2, int: true, max: 1e9, minMsg: ' must be a whole number of at least 2.' }, 'n2'); }
+    var any = ['pvM1', 'pvS1', 'pvN1', 'pvM0', 'pvM2', 'pvS2', 'pvN2'].some(function (id) { return $(id) && $(id).value.trim() !== ''; });
+    if (bad) { out.soft = bad.msg; out.at = bad.at; setNote('pvBuildNote', ''); return out; }
+    if (!any) { setNote('pvBuildNote', 'Type your sample numbers to get the ' + (st.build === 'z1' ? 'z-score' : 't-score') + ' here, then press the button to use it above.'); return out; }
+    if (miss.length) { setNote('pvBuildNote', 'Still needed for the ' + L.w + ': ' + miss.join(', ') + '.'); return out; }
+    if (two && st.pool === 'pooled' && o.n1 + o.n2 - 2 < 1) { setNote('pvBuildNote', 'The pooled test needs at least 3 observations in all.'); return out; }
+    var b = X.build(type, o);
+    if (!isFinite(b.stat)) { setNote('pvBuildNote', 'The sample numbers give no usable statistic — check the standard deviations.'); return out; }
+    tmp.built = b;
+    setNote('pvBuildNote', 'The ' + L.w + (two ? (st.pool === 'pooled' ? ' (equal variances)' : ' (Welch, unequal variances)') : '') + ' gives ' + (b.kind === 'z' ? 'z' : 't') + ' = ' + fx(b.stat) + (b.kind === 't' ? ' with ' + fx(b.df) + ' degrees of freedom' : '') + '.');
+    $('pvUse').textContent = 'Use this ' + (b.kind === 'z' ? 'z-score' : 't-score') + ' above'; show('pvUse', true);
+    return out;
+  }
+
+  /* ---------- controls ---------- */
+  CalcThis.initCsel($('pvStat')); CalcThis.initCsel($('pvBuild')); CalcThis.initCsel($('pvRevKind'));
+  $('pvRevKind').addEventListener('change', function () { var v = $('pvRevKind').value; $('pvRevKind').querySelector('.csel-val').textContent = { tail: 'The tail I chose above', between: 'Between −x and x', centre: 'From the centre to x' }[v] || ''; render(); });
+  $('pvStat').addEventListener('change', function () { var v = $('pvStat').value; if (v && v !== st.stat && STATS[v]) { st.stat = v; setTail(STATS[v].tail); syncStat(); render(); } });
+  $('pvBuild').addEventListener('change', function () { var v = $('pvBuild').value; if (v && v !== st.build && BL[v]) { st.build = v; $('pvBuild').querySelector('.csel-val').textContent = { t1: 'One-sample t-test', z1: 'One-sample z-test', t2: 'Two-sample t-test' }[v]; render(); } });
+  [].forEach.call($('pvTail').querySelectorAll('.radopt'), function (b) { b.addEventListener('click', function () { setTail(b.getAttribute('data-v')); render(); }); });
+  [].forEach.call(document.querySelectorAll('.p-pv input[type=text]'), function (i) { i.addEventListener('input', render); });
+  [].forEach.call($('pvPoolW').querySelectorAll('button'), function (b) { b.addEventListener('click', function () { st.pool = b.getAttribute('data-v'); [].forEach.call($('pvPoolW').querySelectorAll('button'), function (x) { x.classList.toggle('on', x === b); }); render(); }); });
+  $('pvTails').addEventListener('click', function (e) { var r = e.target.closest('.pv-trow'); if (r) { setTail(r.getAttribute('data-v')); render(); } });
+  $('pvTails').addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { var r = e.target.closest('.pv-trow'); if (r) { e.preventDefault(); setTail(r.getAttribute('data-v')); render(); } } });
+  $('pvUse').addEventListener('click', function () {
+    var b = tmp.built; if (!b) return;
+    st.stat = b.kind; $('pvStat').setAttribute('data-value', b.kind); $('pvStat').value = b.kind; setTail('two'); syncStat();
+    $('pvVal').value = String(Math.round(b.stat * 1e6) / 1e6); if (b.kind === 't') $('pvDf').value = String(Math.round(b.df * 1e4) / 1e4);
+    render();
+  });
+  function clearAdv() { $('pvRevKind').setAttribute('data-value', 'tail'); $('pvRevKind').value = 'tail'; $('pvRevKind').querySelector('.csel-val').textContent = 'The tail I chose above'; [].forEach.call($('pvRevKind').querySelectorAll('.csel-opt'), function (o) { var on = o.getAttribute('data-value') === 'tail'; o.classList.toggle('on', on); o.setAttribute('aria-selected', on ? 'true' : 'false'); }); ['pvRev', 'pvDec', 'pvM1', 'pvS1', 'pvN1', 'pvM0', 'pvM2', 'pvS2', 'pvN2'].forEach(function (id) { $(id).value = ''; }); }
+  $('pvClear').addEventListener('click', function () {
+    ['pvVal', 'pvDf', 'pvDf1', 'pvDf2', 'pvN'].forEach(function (id) { $(id).value = ''; }); $('pvAlpha').value = ''; clearAdv(); setTail(STATS[st.stat].tail); render(); $('pvVal').focus();
+  });
+  $('pvAdvBtn').addEventListener('click', function () {
+    st.adv = !st.adv; $('pvAdvBtn').classList.toggle('open', st.adv); $('pvAdvBtnLab').textContent = st.adv ? 'Go simple' : 'Go advanced'; $('pvAdvIn').style.display = st.adv ? '' : 'none';
+    if (!st.adv) clearAdv(); render();
+  });
+  syncStat(); setTail('two'); render();
+};
+/* PVALUE:END */

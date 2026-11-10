@@ -3477,3 +3477,28 @@ body .fld + .av-note,body .fld + .cb-note{margin-top:-6px}
 .p-up .up-urow.on{background:#F7EBD2}
 .p-up .up-urow.on td{color:var(--ink);font-weight:700}
 @media print{body.p-up .mbar{display:none!important}}
+
+/* ---- P VALUE calculator (.p-pv) — reuses .p-bmr result look, .dtable, .csel, .radgrp/.radopt, .seg ---- */
+.p-pv .card{min-width:0}
+.p-pv .av-note,.p-pv .cb-note{font-size:14px;font-weight:500;color:var(--ink-soft);margin:4px 0 8px;line-height:1.45}
+.p-pv .cb-note{color:var(--muted);font-weight:400}
+.p-pv .res-big{font-size:clamp(34px,8vw,52px);overflow-wrap:anywhere}
+.p-pv .res-big.pv-long{font-size:26px}
+.p-pv .mbar-vals b{font-size:20px;overflow-wrap:anywhere}
+.p-pv .res-sub{overflow-wrap:anywhere}
+.p-pv .pv-two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+.p-pv .pv-two > *{min-width:0}
+.p-pv .pv-sech{font-size:14px;font-weight:600;color:var(--ink);margin:14px 0 8px}
+.p-pv .pv-sech span{font-weight:400;color:var(--muted)}
+.p-pv .pv-curve{border:1px solid var(--line);border-radius:12px;background:#FFFDF8;padding:8px 8px 4px;margin:6px 0 4px}
+.p-pv .pv-curve svg{display:block;width:100%;height:auto}
+.p-pv .dtable td:nth-child(n+2),.p-pv .dtable th:nth-child(n+2){text-align:right}
+.p-pv .dtable td{font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.p-pv .dtable td,.p-pv .dtable th{padding-left:6px;padding-right:6px}
+.p-pv #pvTails td:nth-child(-n+2),.p-pv #pvTails th:nth-child(-n+2){white-space:nowrap}
+.p-pv .pv-trow{cursor:pointer}
+.p-pv .pv-trow:hover td{background:#FBF3E4}
+.p-pv .pv-trow.on td{font-weight:700;color:var(--ink);background:#FBF3E4}
+.p-pv .pv-usew{margin:4px 0 12px}
+.p-pv .pv-seg{display:flex;width:100%}
+.p-pv .pv-seg button{flex:1 1 0;min-width:0}

@@ -1,0 +1,814 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>P-Value Calculator: From Z, t, Chi-Square or F Score</title>
+<meta name="description" content="P value calculator: get the p-value from a z, t, chi-square, F or r statistic for any tail, with a live curve, the critical value and a plain verdict.">
+<link rel="canonical" href="https://calcthis.co/p-value-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="P-Value Calculator: From Z, t, Chi-Square or F Score">
+<meta property="og:description" content="P value calculator: get the p-value from a z, t, chi-square, F or r statistic for any tail, with a live curve, the critical value and a plain verdict.">
+<meta property="og:url" content="https://calcthis.co/p-value-calculator/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/datepicker.min.css">
+<link rel="stylesheet" href="/assets/style.css?v=340">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "P-Value Calculator",
+  "url": "https://calcthis.co/p-value-calculator/",
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "Free p-value calculator: the p-value from a z-score, t-score, chi-square, F-score or correlation coefficient for a left-tailed, right-tailed or two-tailed test; a live curve with the p-value area shaded and the critical value marked; all three tails at once; a verdict at your significance level; the statistic from a p-value; and the t or z statistic from sample means and standard deviations."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I find a p-value from a test statistic?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Pick the statistic (z, t, chi-square, F or r), type its value and, if it has them, the degrees of freedom, then choose the tail. For t = 2.1 with 20 degrees of freedom the two-tailed p-value is 0.04862 and the right-tailed one is 0.02431."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is a p-value?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The p-value is the probability, if the null hypothesis were true, of getting a test statistic at least as extreme as the one you observed. A small p-value means your result would be unusual under the null hypothesis. It is not the probability that the null hypothesis is true."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between a one-tailed and a two-tailed p-value?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A two-tailed test looks for a difference in either direction and counts both tails of the curve; a right-tailed test asks whether the value is higher than the reference, a left-tailed one whether it is lower. For the symmetric z and t distributions the two-tailed p-value is twice the smaller tail: z = 1.96 gives 0.025 in the right tail and 0.05 for two tails."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What p-value is statistically significant?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Compare it with the significance level α you chose before the test. If p ≤ α you reject the null hypothesis. 0.05 is the most common choice, and 0.01 and 0.10 are also used, but none of them is a law of nature."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I find the p-value from a t-score?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Choose t-score, type the t value and the degrees of freedom (n − 1 for one sample or a paired test, n₁ + n₂ − 2 for two samples with equal variance). t = 2.3 with 11 degrees of freedom gives a two-tailed p-value of 0.04203."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I find the p-value from a z-score?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Choose z-score and type it; no degrees of freedom are needed. z = 1.96 gives 0.05 for a two-tailed test, and z = −1.5 gives 0.06681 in the left tail."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I find the p-value for a chi-square test or an F test?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Choose chi-square or F, type the value and the degrees of freedom (F needs two: numerator and denominator). These tests almost always use the right tail: χ² = 3.84 with 1 degree of freedom gives 0.05004, and F = 4.96 with 1 and 10 degrees of freedom gives 0.05009."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I get the p-value from a correlation coefficient?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Choose correlation r and type r and the number of pairs n. The calculator turns r into t = r × √(df ÷ (1 − r²)) with df = n − 2: r = 0.45 with n = 25 gives t = 2.417 and a two-tailed p-value of 0.024."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I find the test statistic from a p-value?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Go advanced and type the p-value in “Find the statistic from a p-value”: you get the z, t, chi-square, F or r that produces it for the tail you chose. A two-tailed p-value of 0.05 with z gives ±1.96."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can a p-value be exactly 0?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "In practice no. Very large statistics give extremely small p-values, which this calculator shows in scientific notation such as 1.524 × 10⁻²³ for z = 10, rather than rounding to 0."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "CalcThis",
+      "item": "https://calcthis.co/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "P-Value Calculator",
+      "item": "https://calcthis.co/p-value-calculator/"
+    }
+  ]
+}
+</script>
+<meta property="og:site_name" content="CalcThis">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://calcthis.co/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="CalcThis — free, purpose-built calculators">
+<meta name="twitter:title" content="P-Value Calculator: From Z, t, Chi-Square or F Score">
+<meta name="twitter:description" content="P value calculator: get the p-value from a z, t, chi-square, F or r statistic for any tail, with a live curve, the critical value and a plain verdict.">
+<meta name="twitter:image" content="https://calcthis.co/assets/og-default.png">
+</head>
+<body class="p-bmr p-pv">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <a class="hdr-back" href="/blog/" aria-label="Back to blog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-search"><div class="menu-sx"><input id="menuSearch" type="search" placeholder="Search calculators or states…" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Search calculators" enterkeyhint="search"></div><div class="menu-results" id="menuResults" hidden></div></div>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <span class="menu-col-head">Construction &amp; Gardening</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+          <a href="/paint-calculator/">Paint</a>
+          <a href="/wallpaper-calculator/">Wallpaper</a>
+          <a href="/square-footage-calculator/">Square Footage</a>
+          <a href="/tape-measure-fraction-calculator/">Tape Measure Fraction</a>
+          <a href="/stair-calculator/">Stair</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/vo2-max-calculator/">VO2 Max</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
+          <a href="/bmi-calculator/">BMI</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/ideal-weight-calculator/">Ideal Weight</a>
+          <a href="/lean-body-mass-calculator/">Lean Body Mass</a>
+          <a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio</a>
+          <a href="/gmi-calculator/">GMI</a>
+          <a href="/a1c-calculator/">A1C</a>
+          <a href="/calorie-calculator/">Calorie</a>
+          <a href="/calorie-deficit-calculator/">Calorie Deficit</a>
+          <a href="/bmr-calculator/">BMR</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/water-intake-calculator/">Water Intake</a>
+          <a href="/macro-calculator/">Macro</a>
+          <a href="/protein-intake-calculator/">Protein Intake</a>
+          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
+          <a href="/steps-to-miles-calculator/">Steps to Miles</a>
+          <a href="/dog-age-calculator/">Dog Age</a>
+          <a href="/cat-age-calculator/">Cat Age</a>
+          <a href="/calories-burned-calculator/">Calories Burned</a>
+          <a href="/calories-burned-walking-calculator/">Calories Burned Walking</a>
+          <a href="/calories-burned-running-calculator/">Calories Burned Running</a>
+          <a href="/keto-calculator/">Keto</a>
+          <a href="/net-carb-calculator/">Net Carb</a>
+          <a href="/intermittent-fasting-calculator/">Intermittent Fasting</a>
+          <a href="/bsa-calculator/">BSA</a>
+          <a href="/dog-food-calculator/">Dog Food</a>
+          <a href="/ffmi-calculator/">FFMI</a>
+          <a href="/bulking-calculator/">Bulking</a>
+          <a href="/weight-loss-calculator/">Weight Loss</a>
+          <a href="/weight-loss-percentage-calculator/">Weight Loss %</a>
+          <a href="/max-heart-rate-calculator/">Max Heart Rate</a>
+          <a href="/caffeine-calculator/">Caffeine</a>
+          <a href="/caffeine-half-life-calculator/">Caffeine Half Life</a>
+          <a href="/fiber-calculator/">Fiber</a>
+          <a href="/creatine-calculator/">Creatine</a>
+          <a href="/vitamin-d-calculator/">Vitamin D</a>
+          <a href="/body-recomposition-calculator/">Body Recomposition</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/semester-grade-calculator/">Semester Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+          <a href="/grade-curve-calculator/">Grade Curve</a>
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/fraction-calculator/">Fraction</a>
+          <a href="/standard-deviation-calculator/">Standard Deviation</a>
+          <a href="/p-value-calculator/" class="current">P-Value</a>
+          <a href="/scientific-notation-calculator/">Scientific Notation</a>
+          <a href="/average-calculator/">Average</a>
+          <a href="/batting-average-calculator/">Batting Average</a>
+          <a href="/stock-average-calculator/">Stock Average</a>
+          <a href="/dice-average-calculator/">Dice Average</a>
+          <a href="/time-average-calculator/">Time Average</a>
+          <a href="/weighted-average-calculator/">Weighted Average</a>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+          <a href="/percentage-change-calculator/">Percentage Change</a>
+          <a href="/age-calculator/">Age</a>
+          <a href="/date-calculator/">Date</a>
+          <a href="/time-calculator/">Time</a>
+          <a href="/hours-calculator/">Hours</a>
+          <a href="/triangle-calculator/">Triangle</a>
+          <a href="/random-number-generator/">Random Number</a>
+          <span class="menu-col-head">Cooking &amp; Kitchen</span>
+          <a href="/recipe-converter/">Recipe Converter</a>
+          <a href="/turkey-cooking-time-calculator/">Turkey Cooking Time</a>
+          <a href="/turkey-thawing-time-calculator/">Turkey Thawing Time</a>
+          <a href="/turkey-size-calculator/">Turkey Size</a>
+          <!--UNITNAV:START-->
+          <span class="menu-col-head">Unit Converters</span>
+          <a href="/unit-converter/">Unit Converter</a>
+          <a href="/length-converter/">Length Converter</a>
+          <a href="/weight-converter/">Weight Converter</a>
+          <a href="/volume-converter/">Volume Converter</a>
+          <a href="/temperature-converter/">Temperature Converter</a>
+          <a href="/area-converter/">Area Converter</a>
+          <a href="/speed-converter/">Speed Converter</a>
+          <a href="/data-storage-converter/">Data Storage Converter</a>
+          <a href="/cooking-converter/">Cooking Converter</a>
+          <a href="/px-to-rem-converter/">PX to REM Converter</a>
+          <!--UNITNAV:END-->
+          <span class="menu-col-head">Money &amp; Finance</span>
+          <a href="/mortgage-calculator/">Mortgage</a>
+          <a href="/loan-calculator/">Loan</a>
+          <a href="/auto-loan-calculator/">Auto Loan</a>
+          <a href="/car-sales-tax-calculator/">Car Sales Tax</a>
+          <a href="/overtime-calculator/">Overtime</a>
+          <a href="/salary-calculator/">Salary</a>
+          <a href="/markup-calculator/">Markup</a>
+          <a href="/profit-margin-calculator/">Profit Margin</a>
+          <a href="/discount-calculator/">Discount</a>
+          <a href="/commission-calculator/">Commission</a>
+          <a href="/realtor-commission-calculator/">Realtor Commission</a>
+          <a href="/unit-price-calculator/">Unit Price</a>
+          <!--STAXNAV:START-->
+          <a href="/sales-tax-calculator/">Sales Tax</a>
+          <a href="/sales-tax-calculator/california/">California Sales Tax</a>
+          <a href="/sales-tax-calculator/chicago/">Chicago Sales Tax</a>
+          <a href="/sales-tax-calculator/florida/">Florida Sales Tax</a>
+          <a href="/sales-tax-calculator/las-vegas/">Las Vegas Sales Tax</a>
+          <a href="/sales-tax-calculator/los-angeles/">Los Angeles Sales Tax</a>
+          <a href="/sales-tax-calculator/michigan/">Michigan Sales Tax</a>
+          <a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax</a>
+          <a href="/sales-tax-calculator/missouri/">Missouri Sales Tax</a>
+          <a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax</a>
+          <a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax</a>
+          <a href="/sales-tax-calculator/north-carolina/">North Carolina Sales Tax</a>
+          <a href="/sales-tax-calculator/ohio/">Ohio Sales Tax</a>
+          <a href="/sales-tax-calculator/texas/">Texas Sales Tax</a>
+          <a href="/sales-tax-calculator/virginia/">Virginia Sales Tax</a>
+          <!--STAXNAV:END-->
+          <a href="/tip-calculator/">Tip</a>
+          <a href="/how-much-to-tip/">How Much to Tip</a>
+        </div>
+        <!--PAYNAV:START-->
+        <div class="menu-col">
+          <span class="menu-col-head">Paycheck Calculators</span>
+          <a href="/paycheck-calculator/">Paycheck Calculator (all states)</a>
+          <a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a>
+          <a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arkansas/">Arkansas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/california/">California Paycheck Calculator</a>
+          <a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a>
+          <a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a>
+          <a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/hawaii/">Hawaii Paycheck Calculator</a>
+          <a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a>
+          <a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a>
+          <a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a>
+          <a href="/paycheck-calculator/louisiana/">Louisiana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a>
+          <a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a>
+          <a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a>
+          <a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a>
+          <a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nebraska/">Nebraska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a>
+          <a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a>
+          <a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a>
+          <a href="/paycheck-calculator/oklahoma/">Oklahoma Paycheck Calculator</a>
+          <a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a>
+          <a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a>
+          <a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a>
+          <a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/utah/">Utah Paycheck Calculator</a>
+          <a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wisconsin/">Wisconsin Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a>
+        </div>
+        <!--PAYNAV:END-->
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">From z, t, chi-square, F or correlation · all three tails · live curve</div>
+    <h1>P-Value Calculator</h1>
+    <p>Pick your <strong>test statistic</strong>, type its value (and the <strong>degrees of freedom</strong> if it has them) and see the <strong>p-value</strong> with the tail area drawn on the curve. <strong>t = 2.1 with 20 degrees of freedom</strong> gives a two-tailed p-value of <strong>0.04862</strong>; <strong>z = 1.96</strong> gives <strong>0.05</strong>. Left, right and two-tailed values are shown together, with the critical value and whether the result is significant at your α.</p>
+  </section>
+
+  <div class="grid">
+
+    <!-- INPUT -->
+    <div class="card">
+      <div class="card-pad">
+        <h2 class="card-h2">Your test result</h2>
+        <div class="fld"><span class="lab">What do you have?</span><div class="csel" id="pvStat" data-value="z" aria-label="What do you have?"><button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false"><span class="csel-val">z-score (normal)</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="csel-panel" role="listbox"><button type="button" class="csel-opt on" role="option" aria-selected="true" data-value="z">z-score (normal)</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="t">t-score</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="chi">Chi-square (χ²)</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="f">F-score</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="r">Correlation r</button></div></div></div>
+        <label class="fld" for="pvVal"><span class="lab" id="pvValLab">z-score</span><div class="inp"><input id="pvVal" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 1.96"></div></label>
+        <p class="av-note" id="pvValNote"></p>
+        <div id="pvDfW" style="display:none"><label class="fld" for="pvDf"><span class="lab">Degrees of freedom</span><div class="inp"><input id="pvDf" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 20"></div></label><p class="av-note" id="pvDfNote"></p></div>
+        <div class="pv-two"><div id="pvDf1W" style="display:none"><label class="fld" for="pvDf1"><span class="lab">Numerator df</span><div class="inp"><input id="pvDf1" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 4"></div></label></div><div id="pvDf2W" style="display:none"><label class="fld" for="pvDf2"><span class="lab">Denominator df</span><div class="inp"><input id="pvDf2" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 20"></div></label></div></div>
+        <p class="av-note" id="pvFNote"></p>
+        <div id="pvNW" style="display:none"><label class="fld" for="pvN"><span class="lab">Sample size (n) <span class="unit">pairs</span></span><div class="inp"><input id="pvN" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 25"></div></label><p class="av-note" id="pvNNote"></p></div>
+        <label class="fld" for="pvAlpha"><span class="lab">Significance level <span class="unit">α</span></span><div class="inp"><input id="pvAlpha" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 0.05"></div></label>
+        <p class="av-note" id="pvAlphaNote"></p>
+        <div class="ctl-row" style="display:block"><span class="ctl-lab" style="display:block;margin-bottom:8px">Type of p-value</span>
+          <div class="radgrp" id="pvTail" role="radiogroup" aria-label="Type of p-value"><button class="radopt on" type="button" role="radio" aria-checked="true" id="pvTail2" data-v="two"><i class="rd"></i><span class="t"><b>Two-tailed</b><span class="d">Different from the reference, in either direction.</span></span></button><button class="radopt" type="button" role="radio" aria-checked="false" id="pvTailL" data-v="left"><i class="rd"></i><span class="t"><b>Left-tailed</b><span class="d">Lower than the reference.</span></span></button><button class="radopt" type="button" role="radio" aria-checked="false" id="pvTailR" data-v="right"><i class="rd"></i><span class="t"><b>Right-tailed</b><span class="d">Higher than the reference.</span></span></button></div>
+        </div>
+        <p class="av-note" id="pvTailNote"></p>
+        <div class="res-hint" id="pvHint" style="display:none;text-align:left;margin:4px 0 8px"></div>
+        <div id="pvAdvIn" style="display:none">
+          <div class="proj-sep"></div>
+          <p class="pv-sech">Find the statistic from a p-value <span>· optional</span></p>
+          <div class="fld"><span class="lab">What the number measures</span><div class="csel" id="pvRevKind" data-value="tail" aria-label="What the number measures"><button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false"><span class="csel-val">The tail I chose above</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="csel-panel" role="listbox"><button type="button" class="csel-opt on" role="option" aria-selected="true" data-value="tail">The tail I chose above</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="between">Between −x and x</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="centre">From the centre to x</button></div></div></div>
+          <label class="fld" for="pvRev"><span class="lab">p-value or area</span><div class="inp"><input id="pvRev" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 0.03"></div></label>
+          <p class="av-note" id="pvRevNote"></p>
+          <p class="pv-sech">Work out the statistic from sample numbers <span>· optional</span></p>
+          <div class="fld"><span class="lab">Test</span><div class="csel" id="pvBuild" data-value="t1" aria-label="Test"><button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false"><span class="csel-val">One-sample t-test</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="csel-panel" role="listbox"><button type="button" class="csel-opt on" role="option" aria-selected="true" data-value="t1">One-sample t-test</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="z1">One-sample z-test</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="t2">Two-sample t-test</button></div></div></div>
+          <label class="fld" for="pvM1"><span class="lab" id="pvM1Lab">Sample mean</span><div class="inp"><input id="pvM1" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 52.3"></div></label>
+          <div class="pv-two"><label class="fld" for="pvS1"><span class="lab" id="pvS1Lab">Sample standard deviation (s)</span><div class="inp"><input id="pvS1" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 4.5"></div></label><label class="fld" for="pvN1"><span class="lab" id="pvN1Lab">Sample size (n)</span><div class="inp"><input id="pvN1" type="text" inputmode="numeric" autocomplete="off" placeholder="e.g. 25"></div></label></div>
+          <div id="pvM0W"><label class="fld" for="pvM0"><span class="lab" id="pvM0Lab">Value to compare with (the null mean)</span><div class="inp"><input id="pvM0" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 50"></div></label></div>
+          <div id="pvM2W" style="display:none"><label class="fld" for="pvM2"><span class="lab" id="pvM2Lab">Group 2 mean</span><div class="inp"><input id="pvM2" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 49.1"></div></label></div>
+          <div class="pv-two"><div id="pvS2W" style="display:none"><label class="fld" for="pvS2"><span class="lab" id="pvS2Lab">Group 2 standard deviation</span><div class="inp"><input id="pvS2" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 5.1"></div></label></div><div id="pvN2W" style="display:none"><label class="fld" for="pvN2"><span class="lab" id="pvN2Lab">Group 2 size</span><div class="inp"><input id="pvN2" type="text" inputmode="numeric" autocomplete="off" placeholder="e.g. 25"></div></label></div></div>
+          <div class="fld" id="pvPoolW" style="display:none"><span class="lab">Variances</span><div class="seg pv-seg" role="group" aria-label="Variances"><button class="on" type="button" data-v="welch">Not equal (Welch)</button><button type="button" data-v="pooled">Equal (pooled)</button></div></div>
+          <p class="av-note" id="pvBuildNote"></p>
+          <div class="pv-usew"><button class="btn" id="pvUse" type="button" style="display:none">Use this statistic above</button></div>
+          <p class="pv-sech">Display <span>· optional</span></p>
+          <label class="fld" for="pvDec"><span class="lab">Decimal places</span><div class="inp"><input id="pvDec" type="text" inputmode="numeric" autocomplete="off" placeholder="e.g. 4"></div></label>
+          <p class="av-note" id="pvDecNote"></p>
+        </div>
+        <div class="add-row split" style="margin-top:16px">
+          <button class="linkbtn" id="pvClear" type="button">Clear fields</button>
+          <button class="advbtn" id="pvAdvBtn" type="button">
+            <span id="pvAdvBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div class="card">
+      <div class="card-pad">
+        <div class="bf-res">
+          <div class="res-lab" id="pvLab">p-value</div>
+          <div class="res-big"><span id="pvBig">—</span></div>
+          <div class="res-sub" id="pvSub" data-empty="Type your test result to see the p-value.">Type your test result to see the p-value.</div>
+        </div>
+        <div id="pvBody" style="display:none">
+          <p class="res-tip adv-tip" id="pvTip"></p>
+          <div id="pvCurveWrap" style="display:none">
+            <p class="bm-h">Where your result sits on the curve</p>
+            <div class="pv-curve" id="pvCurve"></div>
+            <p class="cb-note" id="pvCurveKey"></p>
+          </div>
+          <div id="pvTailsWrap" style="display:none">
+            <p class="bm-h">All three tails at once</p>
+            <table class="dtable" id="pvTails"></table>
+            <p class="cb-note">Click a row to use that tail.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- mobile sticky bar -->
+  <div class="mbar" id="mbar">
+    <span class="mbar-lab" id="pvMLab">p-value</span>
+    <div class="mbar-vals"><b id="pvMVal">—</b></div>
+  </div>
+
+  <div class="related-calcs">
+    <p class="related-calcs-h">More calculators that may interest you</p>
+    <div class="pills">
+      <a class="pill" href="/standard-deviation-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 18c3 0 4-12 9-12s6 12 9 12"/><path d="M12 6v14"/></svg>
+        Standard Deviation Calculator
+      </a>
+      <a class="pill" href="/percentage-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 5L5 19"/><circle cx="7" cy="7" r="2.5"/><circle cx="17" cy="17" r="2.5"/></svg>
+        Percentage Calculator
+      </a>
+      <a class="pill" href="/average-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg>
+        Average Calculator
+      </a>
+      <a class="pill" href="/ratio-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h7M4 17h7M15 7h5M15 17h5M8 4v6M8 14v6"/></svg>
+        Ratio Calculator
+      </a>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use the p-value calculator</h2>
+        <p>Choose the <strong>statistic your test gave you</strong> — z, t, chi-square, F, or a correlation r — and type its value. t, chi-square, F and r also need <strong>degrees of freedom</strong> (or the sample size for r); the note under each field says where to find them. Type your <strong>significance level α</strong> (0.05 is used if you leave it empty) and choose the <strong>type of p-value</strong>: two-tailed for any difference, left-tailed for “lower than”, right-tailed for “higher than”.</p>
+        <p>The result shows the p-value for that tail, whether it is at or below α, and a curve of the distribution with your statistic marked and the p-value area shaded. The table under it gives the left, right and two-tailed p-values at once; click a row to switch tails. Go advanced to turn a p-value (or an area between −x and x, or from the centre to x, for z, t and r) back into a statistic, or to work out t or z from sample means and standard deviations.</p>
+
+        <h2>Which statistic do I have?</h2>
+        <table class="dtable"><thead><tr><th>Your test</th><th>Statistic</th><th>Degrees of freedom</th></tr></thead><tbody><tr><td>z-test (known population standard deviation, or a large sample)</td><td>z</td><td>none</td></tr><tr><td>t-test: one sample, paired, or two samples</td><td>t</td><td>n − 1, or n₁ + n₂ − 2</td></tr><tr><td>Chi-square test: goodness of fit, independence</td><td>χ²</td><td>categories − 1, or (rows − 1) × (columns − 1)</td></tr><tr><td>ANOVA, comparing two variances, regression F</td><td>F</td><td>numerator and denominator</td></tr><tr><td>Correlation</td><td>r (with n)</td><td>n − 2</td></tr></tbody></table>
+
+        <h2>The formulas</h2>
+        <div class="formula">
+          left tail = P(X ≤ x) · right tail = P(X ≥ x) · two tails = 2 × min(left, right)
+          <small>THE P-VALUE IS THE TAIL AREA UNDER THE CURVE OF THE NULL DISTRIBUTION</small>
+        </div>
+        <p>For a correlation, t = r × √(df ÷ (1 − r²)) with df = n − 2. From sample numbers: one-sample t = (x̄ − μ₀) ÷ (s ÷ √n) with n − 1 degrees of freedom; two-sample Welch t = (x̄₁ − x̄₂) ÷ √(s₁²/n₁ + s₂²/n₂). Values worked out by this calculator:</p>
+        <table class="dtable"><thead><tr><th>Statistic</th><th>Left-tailed</th><th>Right-tailed</th><th>Two-tailed</th></tr></thead><tbody><tr><td>t = 2.1, df = 20</td><td>0.9757</td><td>0.02431</td><td>0.04862</td></tr><tr><td>z = 1.96</td><td>0.975</td><td>0.025</td><td>0.05</td></tr><tr><td>z = −1.5</td><td>0.06681</td><td>0.9332</td><td>0.1336</td></tr><tr><td>χ² = 3.84, df = 1</td><td>0.95</td><td>0.05004</td><td>0.1001</td></tr><tr><td>F = 4.96, df = 1 and 10</td><td>0.9499</td><td>0.05009</td><td>0.1002</td></tr></tbody></table>
+      </div>
+
+      <div>
+        <h2>How to read the p-value</h2>
+        <p>If the p-value is at or below your significance level α, the result is statistically significant and you reject the null hypothesis; if it is above α you do not have enough evidence to reject it. Rejecting or not rejecting says nothing about how big or useful the effect is, and a p-value above α does not prove the null hypothesis true. Choose α before you look at the data.</p>
+        <h2>Critical values at α = 0.05</h2>
+        <p>A statistic past the critical value gives a p-value below α. The calculator marks these lines on the curve for your α.</p>
+        <table class="dtable"><thead><tr><th>Test (α = 0.05)</th><th>Two-tailed critical value</th><th>Right-tailed critical value</th></tr></thead><tbody><tr><td>z (normal)</td><td>±1.96</td><td>1.645</td></tr><tr><td>t, 5 degrees of freedom</td><td>±2.571</td><td>2.015</td></tr><tr><td>t, 10 degrees of freedom</td><td>±2.228</td><td>1.812</td></tr><tr><td>t, 20 degrees of freedom</td><td>±2.086</td><td>1.725</td></tr><tr><td>t, 30 degrees of freedom</td><td>±2.042</td><td>1.697</td></tr><tr><td>t, 60 degrees of freedom</td><td>±2</td><td>1.671</td></tr><tr><td>t, 120 degrees of freedom</td><td>±1.98</td><td>1.658</td></tr><tr><td>chi-square, 1 degree of freedom</td><td>0.001 and 5.024</td><td>3.841</td></tr><tr><td>chi-square, 2 degrees of freedom</td><td>0.051 and 7.378</td><td>5.991</td></tr><tr><td>chi-square, 3 degrees of freedom</td><td>0.216 and 9.348</td><td>7.815</td></tr><tr><td>chi-square, 5 degrees of freedom</td><td>0.831 and 12.833</td><td>11.07</td></tr><tr><td>chi-square, 10 degrees of freedom</td><td>3.247 and 20.483</td><td>18.307</td></tr></tbody></table>
+        <h2>Worked example</h2>
+        <p>A t-test gives t = 2.1 with 20 degrees of freedom. Two-tailed: p = 0.04862, below 0.05, so the difference is significant at the 5% level. Right-tailed: p = 0.02431. For r = 0.45 from 25 pairs, t = 2.417 with 23 degrees of freedom and a two-tailed p-value of 0.024.</p>
+
+        <h2>Related tools</h2>
+        <p>For the spread of your data use the <a href="/standard-deviation-calculator/">standard deviation calculator</a>, to average a list of numbers the <a href="/average-calculator/">average calculator</a>, and for percentages the <a href="/percentage-calculator/">percentage calculator</a>.</p>
+        <h2>Sources</h2>
+        <ul>
+          <li>The definition — the p-value is the probability, assuming the null hypothesis is true, of a test statistic at least as extreme as the one observed — and the two-tailed rule p = 2 × min(left tail, right tail) are the standard ones used by Omnicalculator's p-value calculator, GraphPad QuickCalcs, calculator.net, Social Science Statistics and Statology, all opened on 2026-11-10.</li>
+          <li>The tails come from the cumulative distribution functions of the normal, t, chi-square and F distributions (regularised incomplete gamma and beta functions). For a correlation, t = r × √(df ÷ (1 − r²)) with df = n − 2. Checked against published values such as t = 2.1 with 20 degrees of freedom → two-tailed p = 0.048618.</li>
+          <li>The 0.05 level is a convention, not a law; pick your α before you look at the data. Statistical significance does not measure how large or important an effect is.</li>
+        </ul>
+        <p><small>For information only. Check your own study design before drawing conclusions.</small></p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>How do I find a p-value from a test statistic?</summary><p>Pick the statistic (z, t, chi-square, F or r), type its value and, if it has them, the degrees of freedom, then choose the tail. For t = 2.1 with 20 degrees of freedom the two-tailed p-value is 0.04862 and the right-tailed one is 0.02431.</p></details>
+    <details class="faq"><summary>What is a p-value?</summary><p>The p-value is the probability, if the null hypothesis were true, of getting a test statistic at least as extreme as the one you observed. A small p-value means your result would be unusual under the null hypothesis. It is not the probability that the null hypothesis is true.</p></details>
+    <details class="faq"><summary>What is the difference between a one-tailed and a two-tailed p-value?</summary><p>A two-tailed test looks for a difference in either direction and counts both tails of the curve; a right-tailed test asks whether the value is higher than the reference, a left-tailed one whether it is lower. For the symmetric z and t distributions the two-tailed p-value is twice the smaller tail: z = 1.96 gives 0.025 in the right tail and 0.05 for two tails.</p></details>
+    <details class="faq"><summary>What p-value is statistically significant?</summary><p>Compare it with the significance level α you chose before the test. If p ≤ α you reject the null hypothesis. 0.05 is the most common choice, and 0.01 and 0.10 are also used, but none of them is a law of nature.</p></details>
+    <details class="faq"><summary>How do I find the p-value from a t-score?</summary><p>Choose t-score, type the t value and the degrees of freedom (n − 1 for one sample or a paired test, n₁ + n₂ − 2 for two samples with equal variance). t = 2.3 with 11 degrees of freedom gives a two-tailed p-value of 0.04203.</p></details>
+    <details class="faq"><summary>How do I find the p-value from a z-score?</summary><p>Choose z-score and type it; no degrees of freedom are needed. z = 1.96 gives 0.05 for a two-tailed test, and z = −1.5 gives 0.06681 in the left tail.</p></details>
+    <details class="faq"><summary>How do I find the p-value for a chi-square test or an F test?</summary><p>Choose chi-square or F, type the value and the degrees of freedom (F needs two: numerator and denominator). These tests almost always use the right tail: χ² = 3.84 with 1 degree of freedom gives 0.05004, and F = 4.96 with 1 and 10 degrees of freedom gives 0.05009.</p></details>
+    <details class="faq"><summary>Can I get the p-value from a correlation coefficient?</summary><p>Yes. Choose correlation r and type r and the number of pairs n. The calculator turns r into t = r × √(df ÷ (1 − r²)) with df = n − 2: r = 0.45 with n = 25 gives t = 2.417 and a two-tailed p-value of 0.024.</p></details>
+    <details class="faq"><summary>Can I find the test statistic from a p-value?</summary><p>Yes. Go advanced and type the p-value in “Find the statistic from a p-value”: you get the z, t, chi-square, F or r that produces it for the tail you chose. A two-tailed p-value of 0.05 with z gives ±1.96.</p></details>
+    <details class="faq"><summary>Can a p-value be exactly 0?</summary><p>In practice no. Very large statistics give extremely small p-values, which this calculator shows in scientific notation such as 1.524 × 10⁻²³ for z = 10, rather than rounding to 0.</p></details>
+  </section>
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+      <div class="footer-stack">
+<div class="footer-col" style="order:1">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+          <li><a href="/paint-calculator/">Paint Calculator</a></li>
+          <li><a href="/wallpaper-calculator/">Wallpaper Calculator</a></li>
+          <li><a href="/square-footage-calculator/">Square Footage Calculator</a></li>
+          <li><a href="/tape-measure-fraction-calculator/">Tape Measure Fraction Calculator</a></li>
+          <li><a href="/stair-calculator/">Stair Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:5">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Cooking &amp;</span> <span class="ft2">Kitchen</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/recipe-converter/">Recipe Converter</a></li>
+          <li><a href="/turkey-cooking-time-calculator/">Turkey Cooking Time Calculator</a></li>
+          <li><a href="/turkey-thawing-time-calculator/">Turkey Thawing Time Calculator</a></li>
+          <li><a href="/turkey-size-calculator/">Turkey Size Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:6">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Money &amp;</span> <span class="ft2">Finance</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/mortgage-calculator/">Mortgage Calculator</a></li>
+          <li><a href="/loan-calculator/">Loan Calculator</a></li>
+          <li><a href="/auto-loan-calculator/">Auto Loan Calculator</a></li>
+          <li><a href="/car-sales-tax-calculator/">Car Sales Tax Calculator</a></li>
+          <li><a href="/overtime-calculator/">Overtime Calculator</a></li>
+          <li><a href="/salary-calculator/">Salary Calculator</a></li>
+          <li><a href="/markup-calculator/">Markup Calculator</a></li>
+          <li><a href="/profit-margin-calculator/">Profit Margin Calculator</a></li>
+          <li><a href="/discount-calculator/">Discount Calculator</a></li>
+          <li><a href="/commission-calculator/">Commission Calculator</a></li>
+          <li><a href="/realtor-commission-calculator/">Realtor Commission Calculator</a></li>
+          <li><a href="/unit-price-calculator/">Unit Price Calculator</a></li>
+          <!--STAXFOOT:START-->
+          <li><a href="/sales-tax-calculator/">Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/california/">California Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/chicago/">Chicago Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/florida/">Florida Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/las-vegas/">Las Vegas Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/los-angeles/">Los Angeles Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/michigan/">Michigan Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/missouri/">Missouri Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/north-carolina/">North Carolina Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/ohio/">Ohio Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/texas/">Texas Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/virginia/">Virginia Sales Tax Calculator</a></li>
+          <!--STAXFOOT:END-->
+          <li><a href="/tip-calculator/">Tip Calculator</a></li>
+          <li><a href="/how-much-to-tip/">How Much to Tip</a></li>
+        </ul>
+      </div>
+      </div>
+
+      <div class="footer-right">
+<div class="footer-col footer-col--two" style="order:2">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/vo2-max-calculator/">VO2 Max Calculator</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/bmi-calculator/">BMI Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/ideal-weight-calculator/">Ideal Weight Calculator</a></li>
+          <li><a href="/lean-body-mass-calculator/">Lean Body Mass Calculator</a></li>
+          <li><a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio Calculator</a></li>
+          <li><a href="/gmi-calculator/">GMI Calculator</a></li>
+          <li><a href="/a1c-calculator/">A1C Calculator</a></li>
+          <li><a href="/calorie-calculator/">Calorie Calculator</a></li>
+          <li><a href="/calorie-deficit-calculator/">Calorie Deficit Calculator</a></li>
+          <li><a href="/bmr-calculator/">BMR Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/water-intake-calculator/">Water Intake Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/protein-intake-calculator/">Protein Intake Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
+          <li><a href="/steps-to-miles-calculator/">Steps to Miles Calculator</a></li>
+          <li><a href="/dog-age-calculator/">Dog Age Calculator</a></li>
+          <li><a href="/cat-age-calculator/">Cat Age Calculator</a></li>
+          <li><a href="/calories-burned-calculator/">Calories Burned Calculator</a></li>
+          <li><a href="/calories-burned-walking-calculator/">Calories Burned Walking Calculator</a></li>
+          <li><a href="/calories-burned-running-calculator/">Calories Burned Running Calculator</a></li>
+          <li><a href="/keto-calculator/">Keto Calculator</a></li>
+          <li><a href="/net-carb-calculator/">Net Carb Calculator</a></li>
+          <li><a href="/intermittent-fasting-calculator/">Intermittent Fasting Calculator</a></li>
+          <li><a href="/bsa-calculator/">BSA Calculator</a></li>
+          <li><a href="/dog-food-calculator/">Dog Food Calculator</a></li>
+          <li><a href="/ffmi-calculator/">FFMI Calculator</a></li>
+          <li><a href="/bulking-calculator/">Bulking Calculator</a></li>
+          <li><a href="/weight-loss-calculator/">Weight Loss Calculator</a></li>
+          <li><a href="/weight-loss-percentage-calculator/">Weight Loss Percentage Calculator</a></li>
+          <li><a href="/max-heart-rate-calculator/">Max Heart Rate Calculator</a></li>
+          <li><a href="/caffeine-calculator/">Caffeine Calculator</a></li>
+          <li><a href="/caffeine-half-life-calculator/">Caffeine Half Life Calculator</a></li>
+          <li><a href="/fiber-calculator/">Fiber Calculator</a></li>
+          <li><a href="/creatine-calculator/">Creatine Calculator</a></li>
+          <li><a href="/vitamin-d-calculator/">Vitamin D Calculator</a></li>
+          <li><a href="/body-recomposition-calculator/">Body Recomposition Calculator</a></li>
+        </ul>
+      </div>
+
+        <div class="footer-sub">
+<div class="footer-subcol">
+<div class="footer-col" style="order:3">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/semester-grade-calculator/">Semester Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+          <li><a href="/grade-curve-calculator/">Grade Curve Calculator</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:START-->
+<div class="footer-col" style="order:7">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Unit</span> <span class="ft2">Converters</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/unit-converter/">Unit Converter</a></li>
+          <li><a href="/length-converter/">Length Converter</a></li>
+          <li><a href="/weight-converter/">Weight Converter</a></li>
+          <li><a href="/volume-converter/">Volume Converter</a></li>
+          <li><a href="/temperature-converter/">Temperature Converter</a></li>
+          <li><a href="/area-converter/">Area Converter</a></li>
+          <li><a href="/speed-converter/">Speed Converter</a></li>
+          <li><a href="/data-storage-converter/">Data Storage Converter</a></li>
+          <li><a href="/cooking-converter/">Cooking Measurement Converter</a></li>
+          <li><a href="/px-to-rem-converter/">PX to REM Converter</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:END-->
+</div>
+
+<div class="footer-col" style="order:4">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/fraction-calculator/">Fraction Calculator</a></li>
+          <li><a href="/standard-deviation-calculator/">Standard Deviation Calculator</a></li>
+          <li><a href="/p-value-calculator/">P-Value Calculator</a></li>
+          <li><a href="/scientific-notation-calculator/">Scientific Notation Calculator</a></li>
+          <li><a href="/weighted-average-calculator/">Weighted Average Calculator</a></li>
+          <li><a href="/average-calculator/">Average Calculator</a></li>
+          <li><a href="/batting-average-calculator/">Batting Average Calculator</a></li>
+          <li><a href="/stock-average-calculator/">Stock Average Calculator</a></li>
+          <li><a href="/dice-average-calculator/">Dice Average Calculator</a></li>
+          <li><a href="/time-average-calculator/">Time Average Calculator</a></li>
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+          <li><a href="/percentage-change-calculator/">Percentage Change Calculator</a></li>
+          <li><a href="/age-calculator/">Age Calculator</a></li>
+          <li><a href="/date-calculator/">Date Calculator</a></li>
+          <li><a href="/time-calculator/">Time Calculator</a></li>
+          <li><a href="/hours-calculator/">Hours Calculator</a></li>
+          <li><a href="/triangle-calculator/">Triangle Calculator</a></li>
+          <li><a href="/random-number-generator/">Random Number Generator</a></li>
+        </ul>
+      </div>
+        </div>
+      </div>
+
+      <!--PAYFOOT:START-->
+      <div class="footer-col footer-col--wide">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Paycheck</span> <span class="ft2">Calculators</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/paycheck-calculator/">Paycheck Calculator (all states)</a></li>
+          <li><a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arkansas/">Arkansas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/california/">California Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/hawaii/">Hawaii Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/louisiana/">Louisiana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nebraska/">Nebraska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/oklahoma/">Oklahoma Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/utah/">Utah Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wisconsin/">Wisconsin Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a></li>
+        </ul>
+      </div>
+      <!--PAYFOOT:END-->
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/blog/">Blog</a>
+      <span aria-hidden="true">·</span>
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+</div>
+
+<script src="/assets/app.js?v=340"></script>
+<script>CalcThis.initPvalueCalc();</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>

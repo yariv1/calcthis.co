@@ -1,0 +1,35 @@
+{
+ "slug": "p-value-calculator",
+ "pass": true,
+ "at": "2026-11-10T16:22:45.292Z",
+ "hash": "0e17cdc981fe0451",
+ "viewports": {
+  "mobile": {
+   "steps": 2826,
+   "fails": []
+  },
+  "desktop": {
+   "steps": 2826,
+   "fails": []
+  }
+ },
+ "oracle": {
+  "runs": 454,
+  "fails": []
+ },
+ "shots": [
+  "md-files/qa-passes/shots/p-value-calculator-1-empty-mobile.png",
+  "md-files/qa-passes/shots/p-value-calculator-2-filled-mobile.png",
+  "md-files/qa-passes/shots/p-value-calculator-3-result-mobile.png",
+  "md-files/qa-passes/shots/p-value-calculator-4-advanced-mobile.png",
+  "md-files/qa-passes/shots/p-value-calculator-5-error-mobile.png",
+  "md-files/qa-passes/shots/p-value-calculator-6-after-chaos-mobile.png",
+  "md-files/qa-passes/shots/p-value-calculator-1-empty-desktop.png",
+  "md-files/qa-passes/shots/p-value-calculator-2-filled-desktop.png",
+  "md-files/qa-passes/shots/p-value-calculator-3-result-desktop.png",
+  "md-files/qa-passes/shots/p-value-calculator-4-advanced-desktop.png",
+  "md-files/qa-passes/shots/p-value-calculator-5-error-desktop.png",
+  "md-files/qa-passes/shots/p-value-calculator-6-after-chaos-desktop.png"
+ ],
+ "console": []
+}

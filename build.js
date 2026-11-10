@@ -67,6 +67,7 @@ const PAGES = [
   { file: 'average-calculator/index.html', slug: '/average-calculator/' },
   { file: 'fraction-calculator/index.html', slug: '/fraction-calculator/' },
   { file: 'standard-deviation-calculator/index.html', slug: '/standard-deviation-calculator/' },
+  { file: 'p-value-calculator/index.html',          slug: '/p-value-calculator/' },
   { file: 'scientific-notation-calculator/index.html', slug: '/scientific-notation-calculator/' },
   { file: 'percentage-calculator/index.html', slug: '/percentage-calculator/' },
   { file: 'percentage-change-calculator/index.html', slug: '/percentage-change-calculator/' },
