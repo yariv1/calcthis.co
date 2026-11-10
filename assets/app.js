@@ -25641,3 +25641,235 @@ CalcThis.initPvalueCalc = function () {
   syncStat(); setTail('two'); render();
 };
 /* PVALUE:END */
+
+/* TIMECONV:BEGIN */
+/* =========================================================
+   TIME CONVERSION pages (/seconds-to-hours-calculator/, /minutes-to-hours-calculator/, /seconds-to-minutes-calculator/). Competitors opened live (2026-11-10): Omnicalculator (linked
+   boxes + a mixed h/min/sec box), Inch Calculator (one box, swap, decimal + h/min/s result, table), DQYDJ (one box, decimal + mixed). Notes: md-files/calcthis-timeconv-research.md.
+   Maths: 1 minute = 60 seconds, 1 hour = 3,600 seconds, 1 day = 86,400 seconds (clock changes and leap seconds ignored). Mixed forms use whole milliseconds.
+   ========================================================= */
+/* TIMECONV-ENGINE:START */
+CalcThis.timeConvEngine = (function () {
+  var F = { s: 1, m: 60, h: 3600, d: 86400, w: 604800, mo: 2592000, y: 31536000 };
+  var NAME = { s: ['second', 'seconds'], m: ['minute', 'minutes'], h: ['hour', 'hours'], d: ['day', 'days'], w: ['week', 'weeks'], mo: ['month', 'months'], y: ['year', 'years'] };
+  var CAP = 1e12;
+  var NUM = '(?:\\d{1,3}(?:,\\d{3})+|\\d+)(?:\\.\\d+)?|\\.\\d+';
+  var UNITS = { h: 3600, hr: 3600, hrs: 3600, hour: 3600, hours: 3600, m: 60, min: 60, mins: 60, minute: 60, minutes: 60, s: 1, sec: 1, secs: 1, second: 1, seconds: 1, d: 86400, day: 86400, days: 86400 };
+  function num(t) { return parseFloat(String(t).replace(/,/g, '')); }
+  function plural(n, u) { return NAME[u][n === 1 ? 0 : 1]; }
+  /* decimal text: up to d places (default 6), trailing zeros dropped, thousands commas */
+  function fmtNum(x, d) {
+    if (d == null) d = 6;
+    if (!isFinite(x)) return '—';
+    var il = String(Math.floor(Math.abs(x))).length; if (il + d > 15) d = Math.max(0, 15 - il); /* a double holds about 15 safe digits */
+    var s = x.toFixed(d), neg = false;
+    if (s.charAt(0) === '-') { neg = true; s = s.slice(1); }
+    if (s.indexOf('.') >= 0) s = s.replace(/0+$/, '').replace(/\.$/, '');
+    if (s === '0' && x !== 0 && d >= 6) return x.toExponential(2);
+    var parts = s.split('.'); parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    s = parts.join('.');
+    if (neg && s !== '0') s = '-' + s;
+    return s;
+  }
+  /* whole units + the rest, from whole milliseconds. top 'h': hours, minutes, seconds; top 'm': minutes (unbounded), seconds */
+  function split(S, top) {
+    var ms = Math.round(S * 1000), o = { h: 0, m: 0, ms: 0 };
+    if (top === 'm') { o.m = Math.floor(ms / 60000); o.ms = ms - o.m * 60000; }
+    else { o.h = Math.floor(ms / 3600000); var rem = ms - o.h * 3600000; o.m = Math.floor(rem / 60000); o.ms = rem - o.m * 60000; }
+    o.s = o.ms / 1000; return o;
+  }
+  function words(S, top) {
+    var p = split(S, top), a = [];
+    if (p.h) a.push(fmtNum(p.h, 0) + ' ' + plural(p.h, 'h'));
+    if (p.m) a.push(fmtNum(p.m, 0) + ' ' + plural(p.m, 'm'));
+    if (p.s) a.push(fmtNum(p.s, 3) + ' ' + plural(p.s, 's'));
+    if (!a.length) a.push('0 seconds');
+    return a.join(' ');
+  }
+  function clock(S, top) {
+    var p = split(S, top), si = Math.floor(p.s), fr = p.ms % 1000, f = fr ? '.' + ('00' + fr).slice(-3).replace(/0+$/, '') : '', pad = function (n) { return (n < 10 ? '0' : '') + n; };
+    return top === 'm' ? p.m + ':' + pad(si) + f : p.h + ':' + pad(p.m) + ':' + pad(si) + f;
+  }
+  function totals(S) { return { s: S, m: S / 60, h: S / 3600, d: S / 86400, w: S / 604800, mo: S / 2592000, y: S / 31536000 }; }
+  /* split into the listed units, biggest first (e.g. ['y','mo','d','h','m','s']); a month is 30 days and a year 365 days. The last unit is seconds and keeps up to 3 decimals. */
+  function wordsU(S, units) {
+    var rem = Math.round(S * 1000), a = [], i, n, sz, u;
+    for (i = 0; i < units.length; i++) {
+      u = units[i];
+      if (u === 's') { if (rem) a.push(fmtNum(rem / 1000, 3) + ' ' + plural(rem === 1000 ? 1 : 2, 's')); continue; }
+      sz = F[u] * 1000; n = Math.floor(rem / sz); rem -= n * sz;
+      if (n) a.push(fmtNum(n, 0) + ' ' + plural(n, u));
+    }
+    return a.length ? a.join(' ') : '0 seconds';
+  }
+  function roundTo(S, stepMin) { var st = stepMin * 60; return Math.floor(S / st + 0.5) * st; }
+  /* parse one typed time. def = unit of a bare number (s, m, h); two = meaning of a:b ('hm' hours:minutes, 'ms' minutes:seconds). Returns { empty } | { err } | { ok, s, read } */
+  function parse(text, def, two) {
+    var t = String(text == null ? '' : text).replace(/−/g, '-').replace(/\s+/g, ' ').trim(), m, S, read, bad;
+    if (t === '') return { empty: true };
+    if (t.charAt(0) === '-') return { err: 'A time cannot be negative. Type zero or more.' };
+    if (/^\d+,\d{1,2}$/.test(t)) t = t.replace(',', '.');
+    var HELP = 'Not understood yet. Try 5400, 1:30:00 or 1h 30m.';
+    if ((m = t.match(new RegExp('^(' + NUM + ')\\.?$')))) {
+      var v = num(m[1]); S = v * F[def]; var vs = fmtNum(v); read = 'Read as ' + vs + ' ' + (vs === '1' ? NAME[def][0] : NAME[def][1]);
+    } else if ((m = t.match(/^(\d+):(\d{1,2})(?::(\d{1,2}(?:\.\d+)?))?$/))) {
+      if (m[3] !== undefined) {
+        if (+m[2] >= 60 || parseFloat(m[3]) >= 60) return { err: 'In h:mm:ss the minutes and seconds must be below 60.' };
+        S = +m[1] * 3600 + +m[2] * 60 + parseFloat(m[3]);
+      } else if (two === 'ms') {
+        if (+m[2] >= 60) return { err: 'In m:ss the seconds must be below 60.' };
+        S = +m[1] * 60 + +m[2];
+      } else {
+        if (+m[2] >= 60) return { err: 'In h:mm the minutes must be below 60.' };
+        S = +m[1] * 3600 + +m[2] * 60;
+      }
+      read = 'Read as ' + words(S, two === 'ms' ? 'm' : 'h');
+    } else {
+      var re = new RegExp('(' + NUM + ')\\s*([a-z]+)', 'gi'), left = t, tot = 0, cnt = 0, g, u;
+      while ((g = re.exec(t))) { u = UNITS[g[2].toLowerCase()]; if (!u) { bad = true; break; } tot += num(g[1]) * u; cnt++; left = left.replace(g[0], ' '); }
+      if (!bad) left = left.replace(/\band\b|,/gi, '').replace(/\s+/g, '');
+      if (bad || cnt === 0 || left !== '') return { err: HELP };
+      S = tot; read = 'Read as ' + words(S, 'h');
+    }
+    if (!isFinite(S)) return { err: HELP };
+    if (S > CAP) return { err: 'That is too large. Keep it under 1,000,000,000,000 seconds.' };
+    return { ok: true, s: S, read: read };
+  }
+  /* a pasted list: one value per line, or separated by semicolons, tabs or a comma and a space */
+  function list(text, def, two) {
+    var raw = String(text || '').split(/\r?\n|;|\t|, /), items = [], total = 0, ok = 0, bad = 0, i, t, p, trunc = false;
+    for (i = 0; i < raw.length; i++) {
+      t = raw[i].trim(); if (!t) continue;
+      if (items.length >= 500) { trunc = true; break; }
+      p = parse(t, def, two);
+      if (p.ok) { items.push({ raw: t, ok: true, s: p.s }); total += p.s; ok++; } else { items.push({ raw: t, ok: false }); bad++; }
+    }
+    return { items: items, total: total, okCount: ok, bad: bad, truncated: trunc };
+  }
+  return { F: F, NAME: NAME, CAP: CAP, parse: parse, list: list, fmtNum: fmtNum, split: split, words: words, clock: clock, totals: totals, wordsU: wordsU, roundTo: roundTo, plural: plural };
+})();
+/* TIMECONV-ENGINE:END */
+
+/* =========================================================
+   CalcThis.initTimeConvCalc(kind) - kind 'sec-hr' | 'min-hr' | 'sec-min'. ids tc*. Two linked boxes (typing in one fills the other), result ring, every format at once,
+   optional pasted list (Go advanced) and, on the minutes page, payroll rounding.
+   ========================================================= */
+CalcThis.initTimeConvCalc = function (kind) {
+  var X = CalcThis.timeConvEngine, $ = function (id) { return document.getElementById(id); };
+  var KINDS = {
+    'sec-hr': { src: 's', tgt: 'h', ring: 'h', two: 'hm', sn: 'Seconds', tn: 'Hours' },
+    'min-hr': { src: 'm', tgt: 'h', ring: 'h', two: 'hm', sn: 'Minutes', tn: 'Hours' },
+    'sec-min': { src: 's', tgt: 'm', ring: 'm', two: 'ms', sn: 'Seconds', tn: 'Minutes' }
+  };
+  var K = KINDS[kind]; if (!K || !$('tcA')) return;
+  var st = { S: null, err: '', read: '', adv: false };
+  var GUIDE = 'Type in either box and the other fills in. You can also type 1:30:00 or 1h 30m.';
+  var ROUND_HINT = 'Rounds the total to the nearest 5, 6 or 15 minutes, as many timesheets do.';
+  function unitWord(u, n) { return X.plural(n, u); }
+  function setHint(m) { var h = $('tcHint'); h.textContent = m || ''; h.style.display = m ? 'block' : 'none'; }
+  function setNote(id, t) { var e = $(id); if (!e) return; e.textContent = t || ''; e.style.display = t ? '' : 'none'; }
+  function ratioText() { return X.fmtNum(X.F[K.tgt] / X.F[K.src], 0); }
+  function roundStep() { var r = $('tcRound'); return r ? parseInt(r.value, 10) || 0 : 0; }
+
+  function ring(S) {
+    var top = K.ring, p = X.split(S, top), unitMs = top === 'h' ? 3600000 : 60000, ms = Math.round(S * 1000);
+    var whole = top === 'h' ? p.h : p.m, remMs = ms - whole * unitMs, frac = remMs / unitMs, R = 64, C = 2 * Math.PI * R;
+    var ws = String(whole.toFixed(0)).replace(/\B(?=(\d{3})+(?!\d))/g, ','), fs = ws.length <= 5 ? 30 : ws.length <= 7 ? 22 : ws.length <= 9 ? 17 : 13;
+    var lab = top === 'h' ? ['0', '15', '30', '45'] : ['0', '15', '30', '45'];
+    var svg = '<svg id="tcRing" viewBox="0 0 280 205" role="img" aria-label="Clock face of the ' + (top === 'h' ? 'hour' : 'minute') + ' with the leftover time shaded">' +
+      '<circle class="tc-bg" cx="140" cy="102" r="' + R + '" fill="none" stroke-width="18"/>' +
+      (remMs > 0 ? '<circle class="tc-arc" id="tcArc" cx="140" cy="102" r="' + R + '" fill="none" stroke-width="18" stroke-dasharray="' + (frac * C).toFixed(3) + ' ' + C.toFixed(3) + '" transform="rotate(-90 140 102)" data-frac="' + frac + '" data-c="' + C + '"/>' : '<circle id="tcArc" cx="140" cy="102" r="0" fill="none" data-frac="0" data-c="' + C + '"/>') +
+      '<text class="tc-tick" x="140" y="19" text-anchor="middle">' + lab[0] + '</text><text class="tc-tick" x="228" y="107" text-anchor="middle">' + lab[1] + '</text>' +
+      '<text class="tc-tick" x="140" y="196" text-anchor="middle">' + lab[2] + '</text><text class="tc-tick" x="52" y="107" text-anchor="middle">' + lab[3] + '</text>' +
+      '<text class="tc-whole" id="tcWhole" x="140" y="' + (fs > 17 ? 108 : 106) + '" text-anchor="middle" style="font-size:' + fs + 'px">' + ws + '</text>' +
+      '<text class="tc-wl" x="140" y="126" text-anchor="middle">full ' + unitWord(top, whole) + '</text></svg>';
+    $('tcRingWrap').innerHTML = svg;
+    var left = remMs / 1000;
+    var cap = remMs === 0 ? 'Nothing is left over after ' + ws + ' full ' + unitWord(top, whole) + '.' :
+      (whole === 0 ? 'Less than one full ' + unitWord(top, 1) + ': the shaded part is ' + X.words(left, 'h') + ' of the ' + unitWord(top, 1) + '.' :
+        'The shaded part is the ' + X.words(left, 'h') + ' left over after ' + ws + ' full ' + unitWord(top, whole) + '.');
+    $('tcRingCap').textContent = cap;
+  }
+
+  function batch(L) {
+    var h = '<thead><tr><th>You typed</th><th>' + K.tn + '</th><th>In words</th></tr></thead><tbody>';
+    L.items.forEach(function (it) {
+      var v = it.ok ? it.s / X.F[K.tgt] : 0;
+      h += '<tr><td class="tc-raw"></td><td>' + (it.ok ? X.fmtNum(v) : '—') + '</td><td>' + (it.ok ? X.words(it.s, K.ring) : 'Not understood (ignored)') + '</td></tr>';
+    });
+    var tv = L.total / X.F[K.tgt];
+    h += '<tr class="tc-tot"><td><strong>Total</strong></td><td><strong>' + X.fmtNum(tv) + '</strong></td><td><strong>' + X.words(L.total, K.ring) + '</strong></td></tr></tbody>';
+    var t = $('tcBatch'); t.innerHTML = h;
+    var cells = t.querySelectorAll('.tc-raw'); L.items.forEach(function (it, i) { cells[i].textContent = it.raw; });
+  }
+
+  function render() {
+    var L = X.list($('tcList').value, K.src, K.two), useList = L.okCount > 0, S = useList ? L.total : st.S;
+    var aTxt = $('tcA').value.trim(), bTxt = $('tcB').value.trim();
+    /* hint under the boxes: an unreadable box. With a list showing, the box is ignored. */
+    var hint = st.err ? (useList ? st.err + ' This box is ignored while the list is shown.' : st.err) : '';
+    setHint(hint);
+    /* the list's own note */
+    var lt = $('tcList').value.trim();
+    setNote('tcListNote', !lt ? 'One value per line, or separated by semicolons. Each can be 5400, 1:30:00 or 1h 30m.' :
+      (useList ? L.okCount + (L.okCount === 1 ? ' value' : ' values') + ' read; the total is shown on the right.' + (L.bad ? ' ' + L.bad + (L.bad === 1 ? ' line' : ' lines') + ' could not be read and ' + (L.bad === 1 ? 'is' : 'are') + ' ignored.' : '') + (L.truncated ? ' Only the first 500 lines are used.' : '') :
+        'None of the lines could be read yet. Try 5400, 1:30:00 or 1h 30m.'));
+    setNote('tcRoundNote', roundStep() && S == null ? 'Type a time in either box first.' : ROUND_HINT);
+    if (S == null) {
+      $('tcBody').style.display = 'none'; $('tcBig').textContent = '—'; $('tcLab').textContent = K.tn; $('tcSub').textContent = $('tcSub').getAttribute('data-empty');
+      $('tcMLab').textContent = K.tn; $('tcMVal').textContent = '—';
+      setNote('tcNote', st.err ? '' : GUIDE);
+      return;
+    }
+    var val = S / X.F[K.tgt], vs = X.fmtNum(val), big = vs + ' ' + (vs === '1' ? X.NAME[K.tgt][0] : X.NAME[K.tgt][1]);
+    var lab = useList ? 'Total of ' + L.okCount + (L.okCount === 1 ? ' value' : ' values') : K.tn;
+    $('tcBody').style.display = ''; $('tcBig').textContent = big; $('tcLab').textContent = lab; $('tcSub').textContent = X.words(S, K.ring);
+    $('tcMLab').textContent = lab; $('tcMVal').textContent = big;
+    var srcAmt = S / X.F[K.src], ss = X.fmtNum(srcAmt);
+    $('tcTip').textContent = useList ? 'Sum of ' + L.okCount + (L.okCount === 1 ? ' value' : ' values') + ' = ' + big : ss + ' ' + (ss === '1' ? X.NAME[K.src][0] : X.NAME[K.src][1]) + ' ÷ ' + ratioText() + ' = ' + big;
+    if (useList) setNote('tcNote', 'Showing the total of the list in Go advanced.' + (aTxt || bTxt ? ' The two boxes above are ignored while the list is shown.' : ''));
+    else setNote('tcNote', st.read);
+    /* every format */
+    $('tcFdec').textContent = vs; $('tcF2dp').textContent = X.fmtNum(val, 2); $('tcFclock').textContent = X.clock(S, K.ring); $('tcFwords').textContent = X.words(S, K.ring);
+    var T = X.totals(S);
+    [['s', 'tcFsec'], ['m', 'tcFmin'], ['h', 'tcFhr'], ['d', 'tcFday']].forEach(function (r) { var e = $(r[1]); if (e) e.textContent = X.fmtNum(T[r[0]]); });
+    var rs = roundStep(), rr = $('tcFrRow');
+    if (rr) {
+      rr.style.display = rs ? '' : 'none';
+      if (rs) { var RS = X.roundTo(S, rs); $('tcFrL').textContent = 'Rounded to the nearest ' + rs + ' minutes'; $('tcFr').textContent = X.fmtNum(RS / 3600) + ' hours (' + X.clock(RS, 'h') + ')'; }
+    }
+    if ($('tcMoreWrap')) {
+      $('tcMoreWrap').style.display = st.adv ? '' : 'none';
+      $('tcFwk').textContent = X.fmtNum(T.w); $('tcFmo').textContent = X.fmtNum(T.mo); $('tcFyr').textContent = X.fmtNum(T.y);
+      $('tcFdhm').textContent = X.wordsU(S, ['d', 'h', 'm', 's']); $('tcFwdh').textContent = X.wordsU(S, ['w', 'd', 'h', 'm', 's']); $('tcFymd').textContent = X.wordsU(S, ['y', 'mo', 'd', 'h', 'm', 's']);
+    }
+    ring(S);
+    $('tcBatchWrap').style.display = useList ? '' : 'none';
+    if (useList) batch(L);
+  }
+
+  function onInput(which) {
+    var el = $(which === 'A' ? 'tcA' : 'tcB'), other = $(which === 'A' ? 'tcB' : 'tcA'), du = which === 'A' ? K.src : K.tgt, ou = which === 'A' ? K.tgt : K.src;
+    var p = X.parse(el.value, du, K.two);
+    if (p.ok) { st.S = p.s; st.err = ''; st.read = p.read; other.value = X.fmtNum(p.s / X.F[ou]); }
+    else { st.S = null; st.err = p.empty ? '' : p.err; st.read = ''; other.value = ''; }
+    render();
+  }
+  $('tcA').addEventListener('input', function () { onInput('A'); });
+  $('tcB').addEventListener('input', function () { onInput('B'); });
+  $('tcList').addEventListener('input', render);
+  if ($('tcRound')) $('tcRound').addEventListener('change', render);
+  $('tcClear').addEventListener('click', function () { $('tcA').value = ''; $('tcB').value = ''; $('tcList').value = ''; st.S = null; st.err = ''; st.read = ''; render(); $('tcA').focus(); });
+  $('tcAdvBtn').addEventListener('click', function () {
+    st.adv = !st.adv; $('tcAdvBtn').classList.toggle('open', st.adv); $('tcAdvBtnLab').textContent = st.adv ? 'Go simple' : 'Go advanced'; $('tcAdvIn').style.display = st.adv ? '' : 'none';
+    if (!st.adv) { $('tcList').value = ''; if ($('tcRound')) $('tcRound').value = '0'; }
+    render();
+  });
+  /* the reference table: a click fills the first box */
+  document.addEventListener('click', function (e) {
+    var tr = e.target.closest ? e.target.closest('.tc-ref tr[data-v]') : null; if (!tr) return;
+    $('tcA').value = tr.getAttribute('data-v'); onInput('A'); try { $('tcA').scrollIntoView({ block: 'center' }); } catch (x) { /* ignore */ }
+  });
+  render();
+};
+/* TIMECONV:END */

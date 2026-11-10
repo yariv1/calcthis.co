@@ -218,6 +218,18 @@
     "t": "Salary Calculator: Hourly to Annual, Monthly & Take-Home",
     "d": "Free salary calculator: turn hourly, weekly, monthly or yearly pay into every other period in any currency, with unpaid time off, US take-home and raises."
   },
+  "/seconds-to-minutes-calculator/": {
+    "t": "Seconds to Minutes Calculator: Convert s to min and s",
+    "d": "Seconds to minutes calculator: type seconds, get minutes as a decimal and as m:ss, see the leftover on a clock, add a list of times and go back to seconds."
+  },
+  "/minutes-to-hours-calculator/": {
+    "t": "Minutes to Hours Calculator: Decimal Hours and h:mm",
+    "d": "Minutes to hours calculator: type minutes, get decimal hours and h:mm, round to 5, 6 or 15 minutes for timesheets, add a list of times and go back to minutes."
+  },
+  "/seconds-to-hours-calculator/": {
+    "t": "Seconds to Hours Calculator: Convert s to h:m:s",
+    "d": "Seconds to hours calculator: type seconds, get hours as a decimal and as h:m:s, see the leftover on a clock, add a list of times and go back to seconds."
+  },
   "/hours-calculator/": {
     "d": "Free hours calculator: hours worked with breaks, split and overnight shifts, weekly overtime and pay, hours between dates and minutes to decimal hours."
   },

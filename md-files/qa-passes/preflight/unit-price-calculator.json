@@ -1,0 +1,5 @@
+{
+ "slug": "unit-price-calculator",
+ "legacy": true,
+ "note": "passed before the preflight gate existed (2026-11-10)"
+}

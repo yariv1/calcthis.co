@@ -1,0 +1,135 @@
+{
+ "slug": "seconds-to-minutes-calculator",
+ "research": "md-files/calcthis-timeconv-research.md",
+ "competitors": [
+  {
+   "name": "Inch Calculator",
+   "url": "https://www.inchcalculator.com/convert/second-to-minute/",
+   "openedLive": true,
+   "date": "2026-11-10",
+   "inputs": [
+    "one value box in seconds",
+    "swap direction link (minutes to seconds)",
+    "decimal result",
+    "whole units and remainder result",
+    "formula text",
+    "step by step method for the mixed form",
+    "what is a unit definitions",
+    "conversion table of common values",
+    "links to other time conversions"
+   ]
+  },
+  {
+   "name": "DQYDJ",
+   "url": "https://dqydj.com/seconds-to-minutes-calculator/",
+   "openedLive": true,
+   "date": "2026-11-10",
+   "inputs": [
+    "one number box with a Calculate button",
+    "decimal result",
+    "mixed result (whole unit plus remainder)",
+    "links to other time conversion tools"
+   ]
+  },
+  {
+   "name": "Omnicalculator",
+   "url": "https://www.omnicalculator.com/conversion/seconds-to-minutes-converter",
+   "openedLive": true,
+   "date": "2026-11-10",
+   "inputs": [
+    "seconds box and minutes box linked both ways",
+    "worked example 78 seconds = 1.3 minutes",
+    "what is a second text",
+    "links to related time converters"
+   ]
+  }
+ ],
+ "features": [
+  {
+   "covers": [
+    "Inch Calculator: one value box in seconds",
+    "Inch Calculator: swap direction link (minutes to seconds)",
+    "DQYDJ: one number box with a Calculate button",
+    "Omnicalculator: seconds box and minutes box linked both ways"
+   ],
+   "status": "exceed",
+   "ids": [
+    "tcA",
+    "tcB"
+   ],
+   "note": "two linked boxes, typing in either fills the other; accepts 1:30:00, 1h 30m, 90 min and thousands commas"
+  },
+  {
+   "covers": [
+    "Inch Calculator: decimal result",
+    "DQYDJ: decimal result"
+   ],
+   "status": "match",
+   "ids": [
+    "tcBig",
+    "tcFdec"
+   ],
+   "note": "decimal result up to 6 places plus a 2-place row"
+  },
+  {
+   "covers": [
+    "Inch Calculator: whole units and remainder result",
+    "DQYDJ: mixed result (whole unit plus remainder)"
+   ],
+   "status": "exceed",
+   "ids": [
+    "tcSub",
+    "tcFclock",
+    "tcFwords",
+    "tcFormats"
+   ],
+   "note": "words, clock form and totals in every other unit at once, each with Copy; under Go advanced weeks, months, years and day/week/year splits (hours pages); clock ring draws the leftover"
+  },
+  {
+   "covers": [
+    "Inch Calculator: formula text",
+    "Inch Calculator: step by step method for the mixed form",
+    "Omnicalculator: worked example 78 seconds = 1.3 minutes"
+   ],
+   "status": "match",
+   "ids": [
+    "tcTip",
+    "tcContent"
+   ],
+   "note": "formula line under the result plus formula, steps and a worked example in the text"
+  },
+  {
+   "covers": [
+    "Inch Calculator: what is a unit definitions",
+    "Omnicalculator: what is a second text"
+   ],
+   "status": "match",
+   "ids": [
+    "tcContent"
+   ],
+   "note": "unit text, sources and FAQ"
+  },
+  {
+   "covers": [
+    "Inch Calculator: conversion table of common values"
+   ],
+   "status": "exceed",
+   "ids": [
+    "tcRef"
+   ],
+   "note": "chart of the most searched values; a click on a row fills the calculator"
+  },
+  {
+   "covers": [
+    "Inch Calculator: links to other time conversions",
+    "DQYDJ: links to other time conversion tools",
+    "Omnicalculator: links to related time converters"
+   ],
+   "status": "match",
+   "ids": [
+    "tcContent"
+   ],
+   "note": "links to the sibling time pages, the hours and time calculators and the unit converter"
+  }
+ ]
+}

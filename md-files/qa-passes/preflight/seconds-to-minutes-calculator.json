@@ -1,0 +1,12 @@
+{
+ "slug": "seconds-to-minutes-calculator",
+ "pass": true,
+ "failed": [],
+ "hash": "42c89bb6fc516c96",
+ "at": "2026-11-10T18:56:15.614Z",
+ "results": {
+  "silent": "ok   seconds-to-minutes-calculator  fields 2",
+  "duplicate": "most overlap 6.6% with /seconds-to-hours-calculator/ (limit 12%)",
+  "registration": "sitemap urls 235 | seconds-to-hours-calculator cards 1 inbound 234 ld WebApplication,FAQPage,BreadcrumbList | minutes-to-hours-calculator cards 1 inbound 234 ld WebApplication,FAQPage,BreadcrumbList | seconds-to-minutes-calculator cards 1 inbound 234 ld WebApplication,FAQPage,BreadcrumbList | AUDIT PASS"
+ }
+}

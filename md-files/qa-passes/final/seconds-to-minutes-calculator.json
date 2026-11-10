@@ -1,0 +1,14 @@
+{
+ "slug": "seconds-to-minutes-calculator",
+ "pass": true,
+ "at": "2026-11-10T18:18:30.056Z",
+ "passHash": "42c89bb6fc516c96",
+ "scriptHash": "9606b16eae877f16",
+ "cats": {
+  "textVsTool": 144,
+  "extremes": 104,
+  "visual": 130
+ },
+ "runs": 140,
+ "fails": []
+}

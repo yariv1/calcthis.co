@@ -1,0 +1,19 @@
+{
+ "slug": "minutes-to-hours-calculator",
+ "hash": "a14f7509220271e5",
+ "shots": [
+  "minutes-to-hours-calculator-1-empty-mobile.png",
+  "minutes-to-hours-calculator-2-filled-mobile.png",
+  "minutes-to-hours-calculator-3-result-mobile.png",
+  "minutes-to-hours-calculator-4-advanced-mobile.png",
+  "minutes-to-hours-calculator-5-error-mobile.png",
+  "minutes-to-hours-calculator-6-after-chaos-mobile.png",
+  "minutes-to-hours-calculator-1-empty-desktop.png",
+  "minutes-to-hours-calculator-2-filled-desktop.png",
+  "minutes-to-hours-calculator-3-result-desktop.png",
+  "minutes-to-hours-calculator-4-advanced-desktop.png",
+  "minutes-to-hours-calculator-5-error-desktop.png",
+  "minutes-to-hours-calculator-6-after-chaos-desktop.png"
+ ],
+ "at": "2026-11-10T18:53:14.179Z"
+}

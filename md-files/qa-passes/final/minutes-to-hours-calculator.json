@@ -1,0 +1,14 @@
+{
+ "slug": "minutes-to-hours-calculator",
+ "pass": true,
+ "at": "2026-11-10T18:18:24.945Z",
+ "passHash": "a14f7509220271e5",
+ "scriptHash": "9d6b86d0de0a4741",
+ "cats": {
+  "textVsTool": 184,
+  "extremes": 104,
+  "visual": 130
+ },
+ "runs": 150,
+ "fails": []
+}

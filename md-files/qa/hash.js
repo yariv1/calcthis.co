@@ -37,6 +37,10 @@ function check(root, slug) {
   if (rec.hash !== h.hash) return { ok: false, why: 'the page, its code, css, fixture, oracle or the harness changed after the last QA pass - run: node md-files/qa/run.js ' + slug };
   const shots = (rec.shots || []);
   if (shots.length < 6 || shots.some((s) => !fs.existsSync(path.join(root, s)))) return { ok: false, why: 'screenshots missing - run: node md-files/qa/run.js ' + slug };
+  const vw = require('./viewed.js').check(root, slug); /* gate 1b: the 12 screenshots were really looked at (2026-11-10) */
+  if (!vw.ok) return vw;
+  const pf = require('./preflight.js').check(root, slug); /* gate 1c: audit-silent + duplicate content + registration audit (2026-11-10) */
+  if (!pf.ok) return pf;
   return require('./final.js').check(root, slug); /* gate 2: extremes, text vs tool, visual, side by side (slugs in gate2.json) */
 }
 /* calculator pages that must be gated: in the sitemap, run a CalcThis.init*() and are not grandfathered in legacy.json */

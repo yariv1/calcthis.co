@@ -1,0 +1,138 @@
+{
+ "slug": "minutes-to-hours-calculator",
+ "research": "md-files/calcthis-timeconv-research.md",
+ "competitors": [
+  {
+   "name": "Inch Calculator",
+   "url": "https://www.inchcalculator.com/convert/minute-to-hour/",
+   "openedLive": true,
+   "date": "2026-11-10",
+   "inputs": [
+    "one value box in minutes",
+    "swap direction link (hours to minutes)",
+    "decimal result",
+    "whole units and remainder result",
+    "formula text",
+    "step by step method for the mixed form",
+    "what is a unit definitions",
+    "conversion table of common values",
+    "links to other time conversions"
+   ]
+  },
+  {
+   "name": "DQYDJ",
+   "url": "https://dqydj.com/minutes-to-hours-calculator/",
+   "openedLive": true,
+   "date": "2026-11-10",
+   "inputs": [
+    "one number box with a Calculate button",
+    "decimal result",
+    "mixed result (whole unit plus remainder)",
+    "links to other time conversion tools"
+   ]
+  },
+  {
+   "name": "Omnicalculator",
+   "url": "https://www.omnicalculator.com/conversion/minutes-to-hours-converter",
+   "openedLive": true,
+   "date": "2026-11-10",
+   "inputs": [
+    "hours, minutes and seconds boxes linked to each other",
+    "time box with a unit dropdown (seconds, minutes, hours, days, weeks, months, years, min/sec, hrs/min, hrs/min/sec, years/months, years/months/days, weeks/days, days/hours)",
+    "decimal values such as 2.7 hours accepted",
+    "text on the time units and how to convert between hours, minutes and seconds",
+    "FAQ"
+   ]
+  }
+ ],
+ "features": [
+  {
+   "covers": [
+    "Inch Calculator: one value box in minutes",
+    "Inch Calculator: swap direction link (hours to minutes)",
+    "DQYDJ: one number box with a Calculate button",
+    "Omnicalculator: hours, minutes and seconds boxes linked to each other"
+   ],
+   "status": "exceed",
+   "ids": [
+    "tcA",
+    "tcB"
+   ],
+   "note": "two linked boxes, typing in either fills the other; accepts 1:30:00, 1h 30m, 90 min and thousands commas"
+  },
+  {
+   "covers": [
+    "Inch Calculator: decimal result",
+    "DQYDJ: decimal result",
+    "Omnicalculator: decimal values such as 2.7 hours accepted"
+   ],
+   "status": "match",
+   "ids": [
+    "tcBig",
+    "tcFdec"
+   ],
+   "note": "decimal result up to 6 places plus a 2-place row"
+  },
+  {
+   "covers": [
+    "Inch Calculator: whole units and remainder result",
+    "DQYDJ: mixed result (whole unit plus remainder)",
+    "Omnicalculator: time box with a unit dropdown (seconds, minutes, hours, days, weeks, months, years, min/sec, hrs/min, hrs/min/sec, years/months, years/months/days, weeks/days, days/hours)"
+   ],
+   "status": "exceed",
+   "ids": [
+    "tcSub",
+    "tcFclock",
+    "tcFwords",
+    "tcFormats",
+    "tcMoreWrap"
+   ],
+   "note": "words, clock form and totals in every other unit at once, each with Copy; under Go advanced weeks, months, years and day/week/year splits (hours pages); clock ring draws the leftover"
+  },
+  {
+   "covers": [
+    "Inch Calculator: formula text",
+    "Inch Calculator: step by step method for the mixed form"
+   ],
+   "status": "match",
+   "ids": [
+    "tcTip",
+    "tcContent"
+   ],
+   "note": "formula line under the result plus formula, steps and a worked example in the text"
+  },
+  {
+   "covers": [
+    "Inch Calculator: what is a unit definitions",
+    "Omnicalculator: text on the time units and how to convert between hours, minutes and seconds",
+    "Omnicalculator: FAQ"
+   ],
+   "status": "match",
+   "ids": [
+    "tcContent"
+   ],
+   "note": "unit text, sources and FAQ"
+  },
+  {
+   "covers": [
+    "Inch Calculator: conversion table of common values"
+   ],
+   "status": "exceed",
+   "ids": [
+    "tcRef"
+   ],
+   "note": "chart of the most searched values; a click on a row fills the calculator"
+  },
+  {
+   "covers": [
+    "Inch Calculator: links to other time conversions",
+    "DQYDJ: links to other time conversion tools"
+   ],
+   "status": "match",
+   "ids": [
+    "tcContent"
+   ],
+   "note": "links to the sibling time pages, the hours and time calculators and the unit converter"
+  }
+ ]
+}

@@ -169,4 +169,5 @@ GSC snapshot 2026-10-26: 69 indexed, 13 not indexed (8 Discovered, 1 Crawled, 1 
 - 2026-11-08 v333: global field symbols now cover all picker currencies (side per currency: ILS/EUR/SEK after, USD/INR/GBP before; no-symbol currencies show the code); app.js FIELD SYMBOLS block. No new pages.
 - NOTE 2026-11-08 session end: Bing submit still pending for markup, profit margin, discount (v330-v332); v333-v336 had no new pages.
 
+- 2026-11-10 v341: /seconds-to-hours-calculator/, /minutes-to-hours-calculator/, /seconds-to-minutes-calculator/ deployed; IndexNow sent; Bing manual submit NOT yet done; GSC not requested.
 - 2026-11-10 v340: /p-value-calculator/ deployed; IndexNow sent; Bing manual submit NOT yet done; GSC not requested.

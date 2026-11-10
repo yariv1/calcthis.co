@@ -1,0 +1,36 @@
+{
+ "date": "2026-11-10",
+ "competitors": [
+  {
+   "name": "Inch Calculator",
+   "url": "https://www.inchcalculator.com/convert/second-to-minute/",
+   "reopenedAfterBuild": true,
+   "gaps": []
+  },
+  {
+   "name": "DQYDJ",
+   "url": "https://dqydj.com/seconds-to-minutes-calculator/",
+   "reopenedAfterBuild": true,
+   "gaps": []
+  },
+  {
+   "name": "Omnicalculator",
+   "url": "https://www.omnicalculator.com/conversion/seconds-to-minutes-converter",
+   "reopenedAfterBuild": true,
+   "gaps": []
+  }
+ ],
+ "weBeat": [
+  "visual: a clock ring drawn to scale from the typed value (whole units counted, the leftover shaded and written out); no competitor draws anything",
+  "functional: two linked boxes that also read 1:30:00, 1h 30m and 90 min, every format at once with Copy (decimal, 2 places, clock, words, totals in other units), a pasted list with a total",
+  "a chart of the most searched values where a click fills the calculator; a note under the boxes always says how the entry was read"
+ ],
+ "gapsLeft": [],
+ "unverified": [
+  "real phone",
+  "other browsers (Chrome only)",
+  "print",
+  "Copy buttons were not clicked in a real browser clipboard session",
+  "competitor pages were reopened as text (Omnicalculator also as a screenshot); their live widgets were not driven with typed values after the build"
+ ]
+}

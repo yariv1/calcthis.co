@@ -1,0 +1,66 @@
+{
+  "slug": "seconds-to-hours-calculator",
+  "bodyClass": "p-tc",
+  "blocks": [
+    "TIMECONV"
+  ],
+  "result": {
+    "big": "tcBig",
+    "body": "tcBody",
+    "hint": "tcHint"
+  },
+  "required": [
+    "tcA",
+    "tcB"
+  ],
+  "fill": [
+    [
+      "click",
+      "tcClear"
+    ],
+    [
+      "set",
+      "tcList",
+      ""
+    ],
+    [
+      "set",
+      "tcA",
+      "5400"
+    ]
+  ],
+  "optionalSamples": {},
+  "pools": {
+    "tcA": [
+      "5400",
+      "1:30:00",
+      "1h 30m",
+      "86400",
+      "0",
+      "1,500",
+      "90 min",
+      "2.5",
+      "1e3",
+      "-5",
+      "1:75"
+    ],
+    "tcB": [
+      "1.5",
+      "24",
+      "0",
+      "0.25",
+      "1000",
+      "-2",
+      "abc"
+    ]
+  },
+  "variants": [],
+  "scrollTo": "tcFormats",
+  "errorState": [
+    [
+      "set",
+      "tcA",
+      "abc"
+    ]
+  ]
+}

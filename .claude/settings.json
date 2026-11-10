@@ -32,6 +32,15 @@
             "timeout": 20
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/check-pretext.cjs",
+            "timeout": 10
+          }
+        ]
       }
     ]
   }

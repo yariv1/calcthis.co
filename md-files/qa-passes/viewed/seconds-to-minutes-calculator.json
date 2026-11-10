@@ -1,0 +1,19 @@
+{
+ "slug": "seconds-to-minutes-calculator",
+ "hash": "42c89bb6fc516c96",
+ "shots": [
+  "seconds-to-minutes-calculator-1-empty-mobile.png",
+  "seconds-to-minutes-calculator-2-filled-mobile.png",
+  "seconds-to-minutes-calculator-3-result-mobile.png",
+  "seconds-to-minutes-calculator-4-advanced-mobile.png",
+  "seconds-to-minutes-calculator-5-error-mobile.png",
+  "seconds-to-minutes-calculator-6-after-chaos-mobile.png",
+  "seconds-to-minutes-calculator-1-empty-desktop.png",
+  "seconds-to-minutes-calculator-2-filled-desktop.png",
+  "seconds-to-minutes-calculator-3-result-desktop.png",
+  "seconds-to-minutes-calculator-4-advanced-desktop.png",
+  "seconds-to-minutes-calculator-5-error-desktop.png",
+  "seconds-to-minutes-calculator-6-after-chaos-desktop.png"
+ ],
+ "at": "2026-11-10T18:52:57.756Z"
+}

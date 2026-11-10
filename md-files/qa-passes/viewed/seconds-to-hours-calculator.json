@@ -1,0 +1,19 @@
+{
+ "slug": "seconds-to-hours-calculator",
+ "hash": "2b5ca1d051b1b07f",
+ "shots": [
+  "seconds-to-hours-calculator-1-empty-mobile.png",
+  "seconds-to-hours-calculator-2-filled-mobile.png",
+  "seconds-to-hours-calculator-3-result-mobile.png",
+  "seconds-to-hours-calculator-4-advanced-mobile.png",
+  "seconds-to-hours-calculator-5-error-mobile.png",
+  "seconds-to-hours-calculator-6-after-chaos-mobile.png",
+  "seconds-to-hours-calculator-1-empty-desktop.png",
+  "seconds-to-hours-calculator-2-filled-desktop.png",
+  "seconds-to-hours-calculator-3-result-desktop.png",
+  "seconds-to-hours-calculator-4-advanced-desktop.png",
+  "seconds-to-hours-calculator-5-error-desktop.png",
+  "seconds-to-hours-calculator-6-after-chaos-desktop.png"
+ ],
+ "at": "2026-11-10T18:52:52.153Z"
+}

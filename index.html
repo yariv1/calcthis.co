@@ -119,6 +119,9 @@
         { "@type": "WebApplication", "name": "Date Calculator", "url": "https://calcthis.co/date-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Time Calculator", "url": "https://calcthis.co/time-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Hours Calculator", "url": "https://calcthis.co/hours-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
+        { "@type": "WebApplication", "name": "Seconds to Hours Calculator", "url": "https://calcthis.co/seconds-to-hours-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
+        { "@type": "WebApplication", "name": "Minutes to Hours Calculator", "url": "https://calcthis.co/minutes-to-hours-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
+        { "@type": "WebApplication", "name": "Seconds to Minutes Calculator", "url": "https://calcthis.co/seconds-to-minutes-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Overtime Calculator", "url": "https://calcthis.co/overtime-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Car Sales Tax Calculator", "url": "https://calcthis.co/car-sales-tax-calculator/", "applicationCategory": "FinanceApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Salary Calculator", "url": "https://calcthis.co/salary-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
@@ -146,7 +149,7 @@
   ]
 }
 </script>
-<link rel="stylesheet" href="/assets/style.css?v=340">
+<link rel="stylesheet" href="/assets/style.css?v=341">
 <style>
   .cat-tabs{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
   .cat-grp--hidden{display:none}
@@ -274,6 +277,9 @@
           <a href="/date-calculator/">Date</a>
           <a href="/time-calculator/">Time</a>
           <a href="/hours-calculator/">Hours</a>
+          <a href="/seconds-to-hours-calculator/">Seconds to Hours</a>
+          <a href="/minutes-to-hours-calculator/">Minutes to Hours</a>
+          <a href="/seconds-to-minutes-calculator/">Seconds to Minutes</a>
           <a href="/triangle-calculator/">Triangle</a>
           <a href="/random-number-generator/">Random Number</a>
           <span class="menu-col-head">Cooking &amp; Kitchen</span>
@@ -1586,6 +1592,39 @@
       </span>
     </a>
 
+    <a class="calc" href="/seconds-to-minutes-calculator/">
+      <span class="ico" aria-hidden="true">
+        <svg width="30" height="30" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="11" fill="#EFE7D8" stroke="#8F5C13" stroke-width="1.4"/><path d="M16 9v7l5 3" stroke="#37503F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+      <h3>Seconds to Minutes Calculator</h3>
+      <p>Seconds to minutes as a decimal and as m:ss, minutes to seconds, a clock ring and the total of a list.</p>
+      <span class="go">Open calculator
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+    </a>
+
+    <a class="calc" href="/minutes-to-hours-calculator/">
+      <span class="ico" aria-hidden="true">
+        <svg width="30" height="30" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="11" fill="#EFE7D8" stroke="#8F5C13" stroke-width="1.4"/><path d="M16 9v7l5 3" stroke="#37503F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+      <h3>Minutes to Hours Calculator</h3>
+      <p>Minutes to decimal hours and h:mm, timesheet rounding to 5, 6 or 15 minutes, a clock ring and the total of a list.</p>
+      <span class="go">Open calculator
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+    </a>
+
+    <a class="calc" href="/seconds-to-hours-calculator/">
+      <span class="ico" aria-hidden="true">
+        <svg width="30" height="30" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="11" fill="#EFE7D8" stroke="#8F5C13" stroke-width="1.4"/><path d="M16 9v7l5 3" stroke="#37503F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+      <h3>Seconds to Hours Calculator</h3>
+      <p>Seconds to hours as a decimal and as h:m:s, hours to seconds, a clock ring and the total of a list.</p>
+      <span class="go">Open calculator
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+    </a>
+
     <a class="calc" href="/hours-calculator/">
       <span class="ico" aria-hidden="true">
         <svg width="30" height="30" viewBox="0 0 32 32" fill="none">
@@ -2096,6 +2135,9 @@
           <li><a href="/date-calculator/">Date</a><span> — days between dates, or add and subtract</span></li>
           <li><a href="/time-calculator/">Time</a><span> — elapsed time, durations and time cards</span></li>
           <li><a href="/hours-calculator/">Hours</a><span> — shifts, breaks, overtime and pay</span></li>
+          <li><a href="/seconds-to-hours-calculator/">Seconds to Hours</a><span> — seconds to decimal hours and h:m:s, hours to seconds, the total of a list</span></li>
+          <li><a href="/minutes-to-hours-calculator/">Minutes to Hours</a><span> — minutes to decimal hours and h:mm, timesheet rounding, the total of a list</span></li>
+          <li><a href="/seconds-to-minutes-calculator/">Seconds to Minutes</a><span> — seconds to decimal minutes and m:ss, minutes to seconds, the total of a list</span></li>
           <li><a href="/triangle-calculator/">Triangle</a><span> — solved and drawn to scale</span></li>
           <li><a href="/random-number-generator/">Random number generator</a><span> — any range, no repeats, with a number wheel</span></li>
         </ul>
@@ -2351,6 +2393,9 @@
           <li><a href="/date-calculator/">Date Calculator</a></li>
           <li><a href="/time-calculator/">Time Calculator</a></li>
           <li><a href="/hours-calculator/">Hours Calculator</a></li>
+          <li><a href="/seconds-to-hours-calculator/">Seconds to Hours Calculator</a></li>
+          <li><a href="/minutes-to-hours-calculator/">Minutes to Hours Calculator</a></li>
+          <li><a href="/seconds-to-minutes-calculator/">Seconds to Minutes Calculator</a></li>
           <li><a href="/triangle-calculator/">Triangle Calculator</a></li>
           <li><a href="/random-number-generator/">Random Number Generator</a></li>
         </ul>
@@ -2441,7 +2486,7 @@
   });
 })();
 </script>
-<script src="/assets/app.js?v=340"></script>
+<script src="/assets/app.js?v=341"></script>
 <script src="/feedback.js" defer></script>
 </body>
 </html>

@@ -3502,3 +3502,34 @@ body .fld + .av-note,body .fld + .cb-note{margin-top:-6px}
 .p-pv .pv-usew{margin:4px 0 12px}
 .p-pv .pv-seg{display:flex;width:100%}
 .p-pv .pv-seg button{flex:1 1 0;min-width:0}
+
+/* ---- TIME CONVERSION pages (.p-tc): seconds to hours, minutes to hours, seconds to minutes. Reuses .p-bmr result look, .dtable, .csel, .advbtn ---- */
+.p-tc .card{min-width:0}
+.p-tc .tc-two{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}
+.p-tc .tc-two .fld{min-width:0}
+.p-tc .av-note,.p-tc .cb-note{font-size:14px;font-weight:500;color:var(--ink-soft);margin:4px 0 8px;line-height:1.45}
+.p-tc .cb-note{color:var(--muted);font-weight:400}
+.p-tc .res-big{font-size:clamp(32px,8vw,48px);overflow-wrap:anywhere}
+.p-tc .res-sub{overflow-wrap:anywhere}
+.p-tc .mbar-vals b{font-size:20px;overflow-wrap:anywhere}
+.p-tc .tc-ta{width:100%;font:inherit;font-size:15px;font-weight:500;color:var(--ink);background:#FCFAF6;border:1.5px solid var(--line);border-radius:10px;padding:11px 13px;resize:vertical;font-variant-numeric:tabular-nums;line-height:1.5;min-height:96px}
+.p-tc .tc-ta:focus{outline:none;border-color:var(--amber);background:#fff;box-shadow:0 0 0 3px rgba(181,118,31,.13)}
+.p-tc .tc-ring{max-width:300px;margin:6px auto 0}
+.p-tc .tc-ring svg{display:block;width:100%;height:auto}
+.p-tc .tc-bg{stroke:#EFE7D8}
+.p-tc .tc-arc{stroke:var(--amber)}
+.p-tc .tc-tick{font-size:13px;fill:#6b6355}
+.p-tc .tc-whole{font-family:'Fraunces',serif;font-weight:700;fill:var(--ink)}
+.p-tc .tc-wl{font-size:13px;fill:#6b6355}
+.p-tc .tc-cap{text-align:center;margin:2px 0 6px}
+.p-tc .dtable td:nth-child(2),.p-tc .dtable th:nth-child(2){text-align:right}
+.p-tc .dtable td{overflow-wrap:anywhere}
+.p-tc .dtable td,.p-tc .dtable th{padding-left:6px;padding-right:6px}
+.p-tc #tcFormats td:nth-child(2),.p-tc #tcMore td:nth-child(2){font-variant-numeric:tabular-nums;font-weight:600;color:var(--ink)}
+.p-tc #tcFormats td:last-child,.p-tc #tcMore td:last-child{width:1%;text-align:right;white-space:nowrap}
+.p-tc .tc-cp{font-size:14px}
+.p-tc #tcBatch td:nth-child(2),.p-tc #tcBatch th:nth-child(2){font-variant-numeric:tabular-nums}
+.p-tc #tcBatch td:nth-child(3),.p-tc #tcBatch th:nth-child(3){text-align:left}
+.p-tc .tc-ref tr[data-v]{cursor:pointer}
+.p-tc .tc-ref tr[data-v]:hover td{background:#FBF3E4}
+.p-tc .tc-ref td:nth-child(n+2),.p-tc .tc-ref th:nth-child(n+2){text-align:right}
