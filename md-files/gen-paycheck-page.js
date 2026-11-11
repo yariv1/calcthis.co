@@ -108,7 +108,7 @@ const CONTENT_MAIN = `  <section class="content">
 
       <div>
         <h2>State income tax</h2>
-        <p><strong>No state income tax:</strong> ${listAnd(noTax)}. Only federal tax and FICA apply${noTax.indexOf('Washington') >= 0 ? ' (Washington still has employee-paid paid-family-leave and long-term-care premiums, which the calculator includes)' : ''}.</p>
+        <p><strong>No state income tax:</strong> ${listAnd(noTax)}. Only federal tax and FICA apply${noTax.indexOf('Washington') >= 0 ? ' (Washington still has employee-paid paid-family-leave and long-term-care premiums, and Alaska withholds a small employee unemployment-insurance contribution; the calculator includes both)' : ''}.</p>
         <p><strong>Computed from the official 2026 formula:</strong> ${listAnd(liveWithTax)}.</p>
         <p><strong>Every other state</strong> shows federal tax and FICA only and says so. Under Go advanced you can type your state’s tax rate for a flat estimate, clearly labelled as an estimate — the calculator never picks a state rate for you.</p>
         <p><strong>Coming next</strong>, as each official formula is checked: ${listAnd(pending)}.</p>
@@ -445,6 +445,7 @@ function fact(c) {
     case 'LA': return 'Louisiana withholds a flat 3.09% (the 3% income tax rate plus a small cushion) of your pay after subtracting a standard deduction spread over the pay periods: $12,875 a year for a single filer and $25,750 for married filing jointly, head of household or a surviving spouse (Form L-4 claim “1” or “2”).';
     case 'OK': return 'Oklahoma withholds 2.5%, 3.5% and 4.5% in three steps from its Packet OW-2 tables, after subtracting $1,000 a year for each allowance claimed on Form OK-W-4. Single filers pay tax above $10,100 a year and married filers above $20,200, and the result is rounded to the whole dollar.';
     case 'NE': return 'Nebraska withholds 2.26%, 3.22%, 4.21%, 4.35%, 4.48% and 4.60% in six steps from its Circular EN tables, after subtracting $2,440 a year for each allowance claimed on Form W-4N. Head-of-household filers use the single table and surviving spouses use the married table.';
+    case 'AK': return 'Alaska has no state income tax, but employers must deduct the employee share of unemployment insurance: 0.50% of wages up to $54,200 in 2026, which is at most $271 a year.';
     case 'WA': return 'Washington has no state income tax, but employees pay for the state’s Paid Family & Medical Leave program (about 0.81% of wages up to the Social Security limit) and the WA Cares long-term-care fund (0.58% of all wages).';
     default: return n + ' does not tax wages, so your paycheck has only federal income tax, Social Security and Medicare.';
   }
@@ -477,7 +478,90 @@ function stateFaqs(c) {
     `Single filer, paid bi-weekly${cty}: ${m0(40000)} a year gives ${m(ex[0].net)} a paycheck; ${m0(100000)} a year gives ${m(ex[2].net)} a paycheck.`]);
   const byA = (a, st) => ex.find((r) => r.a === a && r.st === st);
   [30000, 50000, 75000, 150000].forEach((a) => { const r = byA(a, 'single'); f.push([`What is ${m0(a)} a year after taxes in ${n}?`, `A single filer paid bi-weekly in ${n}${cty} on ${m0(a)} a year takes home about ${m(r.net)} a paycheck, roughly ${m0(r.net * 26)} a year after federal income tax${none && !r.prog ? '' : ', ' + n + ' tax'}, Social Security and Medicare. That is an effective total tax rate of about ${((1 - r.net * 26 / a) * 100).toFixed(1)}%.`]); });
+  if (NOTAX_INFO[c]) {
+    // states without a wage income tax: keep only the questions that differ by state; the example table already holds the other pay levels
+    const keep = f.filter((q) => /\$65,000 salary|monthly take-home|\$40,000 or \$100,000/.test(q[0]));
+    const mw = minWageRow(c);
+    keep.unshift([`Does ${n} have a state income tax on wages?`, `No. ${NOTAX_INFO[c].note}`]);
+    keep.push([`What is the minimum wage in ${n} and what is the take-home pay on it?`, `${NOTAX_INFO[c].mwText}. A single filer working 40 hours a week at that rate grosses ${m(mw.wk)} a week and takes home about ${m(mw.r.net)} a week (${m0(mw.r.net * 52)} a year) after federal income tax, Social Security${mw.r.programTotal > 0 ? ', Medicare and ' + n + ' employee programs' : ' and Medicare'}. Minimum-wage source: U.S. Department of Labor state minimum wage table, updated November 5, 2026.`]);
+    return keep;
+  }
+  if (MW_INFO[c]) { const mw = minWageRow(c); f.push([`What is the minimum wage in ${n} and what is the take-home pay on it?`, `${mw.I.mwText}. A single filer working 40 hours a week at ${m(mw.I.mw)} an hour grosses ${m(mw.wk)} a week and takes home about ${m(mw.r.net)} a week (${m0(mw.r.net * 52)} a year) after federal income tax, Social Security, Medicare and ${n} tax${mw.r.programTotal > 0 ? ' and employee programs' : ''}. Minimum-wage source: U.S. Department of Labor state minimum wage table, updated November 5, 2026.`]); }
   return f;
+}
+// Facts for states without a wage income tax. Every figure is checked against a named source (read 2026-11-11):
+// minimum wage = U.S. Department of Labor "State Minimum Wage Laws" table (updated November 5, 2026);
+// no tax on wages / New Hampshire repeal = Tax Foundation "State Individual Income Tax Rates and Brackets for 2026" (published Feb 17, updated Feb 19, 2026);
+// Tennessee Hall tax = Tennessee Department of Revenue Hall Income Tax page; Alaska UI = Alaska DOLWD Employment Security Tax (rate table + Tax Handbook);
+// Washington = WA ESD / Paid Leave premium notices and the WA Cares Fund employer page.
+const NOTAX_INFO = {
+  AK: { mw: 14, mwText: 'Alaska’s minimum wage is $14.00 an hour', note: 'Alaska has no tax on wages, but something extra does come out of your pay: employees pay 0.50% of wages up to a $54,200 yearly wage base toward unemployment insurance in 2026 (at most $271 a year), and the employer deducts it. Alaska’s Employment Security Tax Handbook says employees working for an employer that pays contributions are required to pay the employee share.', src: [['Alaska Department of Labor — employee contribution rate table', 'https://labor.alaska.gov/estax/faq/w1.htm'], ['Alaska Employment Security Tax Handbook', 'https://labor.alaska.gov/estax/documents/taxbook.pdf']] },
+  FL: { mw: 15, mwText: 'Florida’s minimum wage is $15.00 an hour (the U.S. Department of Labor lists annual formula-based updates starting January 1, 2028)', note: 'Florida takes nothing out of a paycheck for state income tax, and there is no state disability or paid-leave deduction in this calculator.' },
+  NV: { mw: 12, mwText: 'Nevada’s minimum wage is $12.00 an hour', note: 'Nevada takes nothing out of a paycheck for state income tax, and there is no state disability or paid-leave deduction in this calculator.' },
+  NH: { mw: 7.25, mwText: 'New Hampshire’s minimum wage equals the federal $7.25 an hour', note: 'New Hampshire repealed its tax on interest and dividends as of 2025, so the state taxes neither wages nor investment income.' },
+  SD: { mw: 11.85, mwText: 'South Dakota’s minimum wage is $11.85 an hour (adjusted each year by a set formula)', note: 'South Dakota takes nothing out of a paycheck for state income tax, and there is no state disability or paid-leave deduction in this calculator.' },
+  TN: { mw: 7.25, mwText: 'Tennessee has no state minimum-wage law, so employers covered by the federal Fair Labor Standards Act must pay the federal $7.25 an hour', note: 'Tennessee’s Hall income tax, which applied only to interest and dividends, was repealed for tax periods beginning January 1, 2021, so wages and investment income are both untaxed at the state level.', src: [['Tennessee Department of Revenue — Hall Income Tax', 'https://www.tn.gov/revenue/taxes/hall-income-tax.html']] },
+  TX: { mw: 7.25, mwText: 'Texas’s minimum wage is the federal $7.25 an hour', note: 'Texas takes nothing out of a paycheck for state income tax, and there is no state disability or paid-leave deduction in this calculator.' },
+  WA: { mw: 17.13, mwText: 'Washington’s minimum wage is $17.13 an hour', note: 'Washington does not tax wages (it taxes capital gains only), but two employee-paid premiums come out of every paycheck: Paid Family and Medical Leave (a 1.13% premium in 2026, of which employees pay 71.43%, on wages up to $184,500) and WA Cares Fund (0.58% of all wages, no cap). The calculator includes both.', src: [['Washington ESD — 2026 Paid Family & Medical Leave premium rate', 'https://esd.wa.gov/about-us/news-release/2025/paid-family-medical-leave-premium-rate-increases-113-2026'], ['WA Cares Fund — employer information', 'https://wacaresfund.wa.gov/employers/']] },
+  WY: { mw: 7.25, mwText: 'Wyoming’s own minimum wage is $5.15 an hour, but employers covered by the federal Fair Labor Standards Act must pay the federal $7.25 an hour, which is used here', note: 'Wyoming takes nothing out of a paycheck for state income tax, and there is no state disability or paid-leave deduction in this calculator.' }
+};
+const MW_INFO = {
+  AL: { mw: 7.25, t: 'Alabama has no state minimum-wage law, so employers covered by the federal Fair Labor Standards Act must pay the federal $7.25 an hour' },
+  AZ: { mw: 15.15, t: 'Arizona’s basic state minimum wage is $15.15 an hour' },
+  AR: { mw: 11, t: 'Arkansas’s minimum wage is $11.00 an hour for employers with 4 or more employees' },
+  CA: { mw: 16.9, t: 'California’s minimum wage is $16.90 an hour (adjusted each year by a set formula)' },
+  CO: { mw: 15.16, t: 'Colorado’s minimum wage on the U.S. Department of Labor table is $15.16 an hour (listed for retail and service, commercial support service, food and beverage, and health and medical industries)' },
+  GA: { mw: 7.25, t: 'Georgia’s own minimum wage is $5.15 an hour for employers with 6 or more employees, but employment covered by the federal Fair Labor Standards Act must pay the federal $7.25 an hour, which is used here' },
+  HI: { mw: 16, t: 'Hawaii’s minimum wage is $16.00 an hour' },
+  IL: { mw: 15, t: 'Illinois’s minimum wage is $15.00 an hour for employers with 4 or more employees' },
+  IN: { mw: 7.25, t: 'Indiana’s minimum wage is the federal $7.25 an hour for employers with 2 or more employees' },
+  IA: { mw: 7.25, t: 'Iowa’s minimum wage equals the federal $7.25 an hour' },
+  KY: { mw: 7.25, t: 'Kentucky adopts the federal minimum wage of $7.25 an hour' },
+  LA: { mw: 7.25, t: 'Louisiana has no state minimum-wage law, so employers covered by the federal Fair Labor Standards Act must pay the federal $7.25 an hour' },
+  MD: { mw: 15, t: 'Maryland’s basic state minimum wage is $15.00 an hour' },
+  MA: { mw: 15, t: 'Massachusetts’s minimum wage is $15.00 an hour' },
+  MI: { mw: 13.73, t: 'Michigan’s minimum wage is $13.73 an hour for employers with 2 or more employees, scheduled by the U.S. Department of Labor table to rise to $15.00 on January 1, 2027' },
+  MN: { mw: 11.41, t: 'Minnesota’s minimum wage is $11.41 an hour (adjusted each year by a set formula)' },
+  MO: { mw: 15, t: 'Missouri’s minimum wage is $15.00 an hour (the table lists exemptions, for example for retail or service businesses with gross annual sales under $500,000)' },
+  MT: { mw: 10.85, t: 'Montana’s minimum wage is $10.85 an hour for businesses with gross annual sales over $110,000' },
+  NE: { mw: 15, t: 'Nebraska’s minimum wage is $15.00 an hour for employers with 4 or more employees' },
+  NJ: { mw: 15.92, t: 'New Jersey’s minimum wage is $15.92 an hour ($15.23 for employers with fewer than 6 employees and for seasonal employees)' },
+  NY: { mw: 16, t: 'New York’s minimum wage outside New York City, Nassau, Suffolk and Westchester counties is $16.00 an hour (it is $17.00 in those four places)' },
+  NC: { mw: 7.25, t: 'North Carolina’s basic state minimum wage is the federal $7.25 an hour' },
+  OH: { mw: 11, t: 'Ohio’s minimum wage is $11.00 an hour for employers with annual gross receipts of $405,000 or more ($7.25 for smaller employers)' },
+  OK: { mw: 7.25, t: 'Oklahoma’s minimum wage is the federal $7.25 an hour for employers with 10 or more full-time employees at one location or annual gross sales over $100,000' },
+  OR: { mw: 15.55, t: 'Oregon’s standard minimum wage is $15.55 an hour ($16.80 in the Portland metro area and $14.55 in non-urban counties)' },
+  PA: { mw: 7.25, t: 'Pennsylvania’s basic state minimum wage is the federal $7.25 an hour' },
+  UT: { mw: 7.25, t: 'Utah’s minimum wage is the federal $7.25 an hour' },
+  VA: { mw: 12.77, t: 'Virginia’s minimum wage is $12.77 an hour (adjusted each year by a set formula)' },
+  WI: { mw: 7.25, t: 'Wisconsin’s basic state minimum wage is the federal $7.25 an hour' }
+};
+function minWageRow(c) {
+  const I0 = NOTAX_INFO[c] || MW_INFO[c]; if (!I0) return null;
+  const I = I0.mwText ? I0 : { mw: I0.mw, mwText: I0.t };
+  const wk = I.mw * 40;
+  const r = pc(base(wk, 52, { fed: { w4: 'new', status: 'single' }, state: { code: c, status: 'single', allowances: c === 'AZ' ? null : 0, allowances2: 0, county: E.STATES[c].defaultCounty } }));
+  return { I, wk, r };
+}
+function taxedSection(c) {
+  if (NOTAX_INFO[c]) return '';
+  const x = minWageRow(c); if (!x) return '';
+  const n = NAMES[c], S = E.STATES[c], r = x.r;
+  const stPart = r.state + r.county;
+  return `<h2>Take-home pay at the ${n} minimum wage</h2>
+        <p>${x.I.mwText}. A single filer working 40 hours a week at ${m(x.I.mw)} an hour grosses ${m(x.wk)} a week and takes home about <strong>${m(r.net)} a week</strong> (${m0(r.net * 52)} a year) after federal income tax, Social Security, Medicare, ${n} income tax (${m(stPart)}${S.defaultCounty ? ', including ' + S.defaultCounty + ' tax' : ''})${r.programTotal > 0 ? ' and ' + n + ' employee programs (' + m(r.programTotal) + ')' : ''}.</p>
+        <p style="font-size:14px;color:var(--muted)">Sources, checked November 11, 2026: <a href="https://www.dol.gov/agencies/whd/minimum-wage/state" rel="noopener">U.S. Department of Labor — State minimum wage laws (updated November 5, 2026)</a>${/^https?:/.test(S.src || '') ? '; <a href="' + S.src + '" rel="noopener">' + n + ' official 2026 withholding source used by this calculator</a>' : ''}.</p>
+        `;
+}
+function noTaxSection(c) {
+  const x = minWageRow(c); if (!x) return '';
+  const n = NAMES[c], I = x.I, r = x.r;
+  const srcs = [['Tax Foundation — State Individual Income Tax Rates and Brackets for 2026', 'https://taxfoundation.org/data/all/state/state-income-tax-rates-2026/'], ['U.S. Department of Labor — State minimum wage laws (updated November 5, 2026)', 'https://www.dol.gov/agencies/whd/minimum-wage/state']].concat(I.src || []);
+  return `<h2>What comes out of a ${n} paycheck</h2>
+        <p>${I.note}</p>
+        <p>${I.mwText}. A single filer working 40 hours a week at that rate grosses ${m(x.wk)} a week and takes home about <strong>${m(r.net)} a week</strong> (${m0(r.net * 52)} a year) after federal income tax, Social Security${r.programTotal > 0 ? ', Medicare and ' + n + ' employee programs (' + m(r.programTotal) + ' of the deductions)' : ' and Medicare'}.</p>
+        <p style="font-size:14px;color:var(--muted)">Sources, checked November 11, 2026: ${srcs.map((s) => '<a href="' + s[1] + '" rel="noopener">' + s[0] + '</a>').join('; ')}.</p>
+        `;
 }
 function stateContent(c, faqs2) {
   const n = NAMES[c], S = E.STATES[c], ex = stateExamples(c);
@@ -490,6 +574,7 @@ function stateContent(c, faqs2) {
         <p><strong>${m0(65000)} a year in ${n}${S.defaultCounty ? ' (' + S.defaultCounty + ')' : ''}</strong> (single, bi-weekly, 2026) is <strong>${m(ex[1].net)} a paycheck</strong>, about ${m0(ex[1].net * 26)} a year. <strong>${m0(100000)}</strong> is <strong>${m(ex[2].net)}</strong> a paycheck. Updated for the 2026 tax year using the IRS Publication 15-T method${S.method === 'none' ? '' : ' and the official ' + n + ' withholding formula'}.</p>
         <h2>How ${n} paycheck tax works</h2>
         <p>${fact(c)}</p>
+        ${noTaxSection(c)}${taxedSection(c)}
         <p>${c === 'NY' ? 'Live in New York City? Tick “I live in New York City” above, or use the <a href="/paycheck-calculator/new-york-city/">New York City paycheck calculator</a>, to add the city’s resident income tax. Yonkers and other local taxes are not included.' : (LOCALS[c] || 'City, county and school-district taxes are not included.')} Under Go advanced you can add a city or local tax rate as an estimate.</p>
         <h2>${n} paycheck examples</h2>
         <p>Single filer unless marked, paid bi-weekly in 2026, no extra withholding, no deductions${S.defaultCounty ? ', living in ' + S.defaultCounty : ''}. Amounts are per paycheck:</p>
@@ -513,7 +598,7 @@ ${faqs2.map((q) => `    <details class="faq"><summary>${q[0]}</summary><p>${q[1]
 let nState = 0;
 liveSorted.forEach((c) => {
   const n = NAMES[c], url = 'https://calcthis.co/paycheck-calculator/' + SLUG[c] + '/', f2 = stateFaqs(c), e65 = stateExamples(c)[1];
-  const app = Object.assign({}, jsonLdApp, { dateModified: ['NJ', 'OH', 'MA', 'MD', 'WI', 'IN', 'OR', 'UT', 'LA', 'OK', 'NE', 'AR', 'HI'].indexOf(c) >= 0 ? '2026-11-02' : '2026-10-27', name: n + ' Paycheck Calculator', url, description: n + ' paycheck and take home pay calculator for salary and hourly pay: federal income tax, Social Security, Medicare' + (E.STATES[c].method === 'none' ? '' : ', ' + n + ' state tax') + ', deductions and overtime.' });
+  const app = Object.assign({}, jsonLdApp, { dateModified: (NOTAX_INFO[c] || MW_INFO[c]) ? '2026-11-11' : ['NJ', 'OH', 'MA', 'MD', 'WI', 'IN', 'OR', 'UT', 'LA', 'OK', 'NE', 'AR', 'HI'].indexOf(c) >= 0 ? '2026-11-02' : '2026-10-27', name: n + ' Paycheck Calculator', url, description: n + ' paycheck and take home pay calculator for salary and hourly pay: federal income tax, Social Security, Medicare' + (E.STATES[c].method === 'none' ? '' : ', ' + n + ' state tax') + ', deductions and overtime.' });
   const faq = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: f2.map((q) => ({ '@type': 'Question', name: q[0], acceptedAnswer: { '@type': 'Answer', text: q[1] } })) };
   const crumbs = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'CalcThis', item: 'https://calcthis.co/' },

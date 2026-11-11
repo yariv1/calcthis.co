@@ -24,7 +24,17 @@ function sidebyside(root, slug) {
   let par; try { par = JSON.parse(fs.readFileSync(path.join(root, 'md-files/qa/parity/' + slug + '.json'), 'utf8')); } catch (e) { return bad('parity file missing'); }
   const names = (par.competitors || []).map((c) => c.name);
   if (!/^\d{4}-\d{2}-\d{2}$/.test(s.date || '')) return bad('needs a date');
-  const pf = path.join(root, slug + '/index.html'); const pd = fs.statSync(pf).mtime.toISOString().slice(0, 10);
+  const pf = path.join(root, slug + '/index.html'); let pd = fs.statSync(pf).mtime.toISOString().slice(0, 10);
+  /* A build only rewrites the asset-version stamp (?v=NNN) in untouched pages and resets their file date. If the page equals the committed copy apart from that stamp, judge it by its last commit date instead of the file date. Any other edit keeps the file date and trips the check. */
+  try {
+    const cp = require('child_process');
+    const head = cp.execFileSync('git', ['show', 'HEAD:' + slug + '/index.html'], { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], maxBuffer: 64 * 1024 * 1024 });
+    const norm = (t) => t.replace(/\r\n/g, '\n').replace(/\?v=\d+/g, '?v=0');
+    if (norm(head) === norm(fs.readFileSync(pf, 'utf8'))) {
+      const cd = cp.execFileSync('git', ['log', '-1', '--format=%cs', '--', slug + '/index.html'], { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim();
+      if (/^\d{4}-\d{2}-\d{2}$/.test(cd)) pd = cd;
+    }
+  } catch (e) { /* no git: keep the file date */ }
   if (s.date < pd) return bad('dated ' + s.date + ' but the page changed on ' + pd + ' - reopen the competitors again after the last change');
   const got = Array.isArray(s.competitors) ? s.competitors : [];
   for (const n of names) { const c = got.filter((x) => x.name === n)[0]; if (!c) return bad('competitor "' + n + '" (from the parity file) was not compared'); if (c.reopenedAfterBuild !== true) return bad('"' + n + '" must be reopened AFTER the build (reopenedAfterBuild:true)'); if (!Array.isArray(c.gaps)) return bad('"' + n + '" needs a gaps array (empty when none)'); if (c.gaps.length) return bad('"' + n + '" still has gaps: ' + c.gaps.join(' | ')); }

@@ -173,3 +173,8 @@ GSC snapshot 2026-10-26: 69 indexed, 13 not indexed (8 Discovered, 1 Crawled, 1 
 - 2026-11-10 v340: /p-value-calculator/ deployed; IndexNow sent; Bing manual submit NOT yet done; GSC not requested.
 
 - 2026-11-10: confidence-interval-calculator deployed v342, NOT yet submitted to Bing or GSC.
+
+- 2026-11-10: Bing manual submit DONE (5 URLs: p-value, seconds-to-hours, minutes-to-hours, seconds-to-minutes, confidence-interval) and GSC "Indexing requested" for the same 5. Older queue (utah first) not started.
+- 2026-11-10 (queue): inspected /paycheck-calculator/utah/, louisiana/, nebraska/: all "URL is on Google / Page is indexed" (no request needed). The Pages report (last update 2026-11-06) still lists 50 Discovered + 25 Crawled-not-indexed, so it is stale; the queue order in this file is out of date. Next time: inspect first, request only pages that say "URL is not on Google". No quota error seen.
+- 2026-11-10 (sweep): /average-calculator/ was "URL is not on Google" -> Indexing requested. /paycheck-calculator/hawaii/ and /dice-average-calculator/ on Google. /batting-average-calculator/ screenshot showed a "Submitting request" dialog (state unclear, re-inspect). NOT checked yet: oklahoma, arkansas, the other states, hours, mortgage, overtime, bmr, calorie-deficit, 2 blog pages, contact, and the 25 Crawled-not-indexed (Search Console report last updated 2026-11-06, stale).
+- 2026-11-10: GSC quota EXCEEDED after 10 requests today (5 new pages + average, batting-average, hours, mortgage, overtime). Next in line: /bmr-calculator/ (quota hit on it), calorie-deficit, oklahoma, arkansas, other states, 2 blog pages. Retry on a new day.

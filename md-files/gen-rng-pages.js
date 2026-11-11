@@ -34,6 +34,19 @@ const factsTable = (a, b) => {
   return '<div class="pc-tblwrap"><table class="dtable"><thead><tr><th>On a single draw from ' + a + ' to ' + b + '</th><th>Chance</th></tr></thead><tbody>' + rows.map((r) => '<tr><td>' + r[0] + '</td><td>' + r[1] + '</td></tr>').join('') + '</tbody></table></div>';
 };
 
+/* exact maths for one range, whole numbers a..b drawn with replacement (each draw independent): mean, spread, repeat chance, draws to hit a number */
+function mathBlock(a, b) {
+  const n = b - a + 1, mean = (a + b) / 2, sd = Math.sqrt((n * n - 1) / 12);
+  const P = (x) => { if (x >= 1) return '100%'; const v = x * 100; if (v > 99.95) return 'more than 99.9%'; if (v < 0.05) return 'less than 0.1%'; return (Math.round(v * 10) / 10).toFixed(1) + '%'; };
+  const rep = (k) => { if (k > n) return 1; let none = 1; for (let i = 0; i < k; i++) none *= (n - i) / n; return 1 - none; };
+  const ks = [2, 3, 5, 10].filter((k) => k <= n + 1);
+  const rows = ks.map((k) => ['At least one repeat in ' + k + ' draws', k > n ? '100% (only ' + n + ' different numbers exist)' : P(rep(k))]);
+  const need = (p) => Math.ceil(Math.log(1 - p) / Math.log(1 - 1 / n));
+  rows.push(['Draws for a 50% chance of seeing one named number', need(0.5) + ' draws'], ['Draws for a 90% chance of seeing one named number', need(0.9) + ' draws']);
+  const num = (x) => (Math.round(x * 100) / 100).toString();
+  return '<h2>Averages and repeats for ' + a + ' to ' + b + '</h2><p>The average of many draws from ' + a + ' to ' + b + ' settles near ' + num(mean) + ', and a single draw typically lands within about ' + num(sd) + ' of it (the standard deviation of ' + n + ' equally likely whole numbers is the square root of (' + n + '² − 1) ÷ 12). Repeats are likely sooner than most people expect:</p><div class="pc-tblwrap"><table class="dtable"><thead><tr><th>With ' + n + ' possible numbers</th><th>Chance</th></tr></thead><tbody>' + rows.map((r) => '<tr><td>' + r[0] + '</td><td>' + r[1] + '</td></tr>').join('') + '</tbody></table></div>';
+}
+
 const RANGES = [[1, 2], [1, 3], [1, 6], [1, 10], [1, 13], [1, 100], [1, 1000]];
 const chips = RANGES.map((r) => `<button type="button" data-min="${r[0]}" data-max="${r[1]}">${r[0]}–${commas(r[1])}</button>`).join('');
 
@@ -186,7 +199,7 @@ ${faqHtml}
       </div>
       <div>
         <h2>The odds</h2>
-        ${p.slug.endsWith('no-repeats') || p.slug.endsWith('wheel') ? factsTable(a, b) : factsTable(a, b)}
+        ${p.slug.endsWith('no-repeats') || p.slug.endsWith('wheel') ? factsTable(a, b) : factsTable(a, b) + mathBlock(a, b)}
         ${SRC}
       </div>
     </div>

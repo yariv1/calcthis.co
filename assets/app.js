@@ -14638,7 +14638,7 @@ CalcThis.payEngine = (function () {
 /* PAY-STATES:START */
 (function (S) {
   function none(n, extra) { var o = { name: n, method: 'none', src: 'No state tax on wages' }; if (extra) for (var k in extra) o[k] = extra[k]; return o; }
-  S.AK = none('Alaska'); S.FL = none('Florida'); S.NV = none('Nevada'); S.NH = none('New Hampshire'); S.SD = none('South Dakota');
+  S.AK = none('Alaska', { programs: [{ name: 'AK Unemployment Insurance (employee share)', rate: .005, base: 54200 }] }); S.FL = none('Florida'); S.NV = none('Nevada'); S.NH = none('New Hampshire'); S.SD = none('South Dakota');
   S.TN = none('Tennessee'); S.TX = none('Texas'); S.WY = none('Wyoming');
   S.WA = none('Washington', { programs: [{ name: 'WA Paid Family & Medical Leave', rate: .0113 * .7143, base: 184500 }, { name: 'WA Cares Fund', rate: .0058 }] });
   S.CA = { name: 'California', method: 'ca', src: 'https://edd.ca.gov/siteassets/files/pdf_pub_ctr/26methb.pdf', stdDed: { single: 5706, married0: 5706, married2: 11412, hoh: 11412 },
