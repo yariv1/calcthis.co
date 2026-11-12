@@ -18,6 +18,8 @@ _Rewritten 2026-11-08 at the end of session #6 PART 2 (profit margin v331, disco
 
 ---
 
+**UPDATE 2026-11-12 (later): UNIT-PAIR CONTENT FIX DEPLOYED v344 (CLAUDE.md addendum 40). Step (2) of his 'do all' is done; NEXT = (3) tip pages + sales-tax states research report; GSC queue now also includes the 18 pair pages + 4 changed state items; Bing manual submit of the 18 pair URLs pending (he must be signed in).**
+
 ## 0000000000000025. START HERE — END OF THE 2026-11-11/12 SESSION #9 (INDEXING + THIN-CONTENT FIX, v343 live) — LIVE v343 · 106 calculators · 25 articles · 236 pages · `main` last code commit `a0ad928c` — AUTHORITATIVE; §24 below is the previous session and stays valid unless this contradicts it
 
 **First reply = ONE line: "synced: v343 live, SEO/indexing track, next = unit-pair converter research report", then work silently. Never make him re-explain. ONE final message with a QA: line, no text before tool calls, short answers.**

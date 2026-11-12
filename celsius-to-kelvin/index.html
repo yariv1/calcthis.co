@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=343">
+<link rel="stylesheet" href="/assets/style.css?v=344">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
 <script>
@@ -473,7 +473,8 @@
         <div class="pc-tblwrap"><table class="dtable"><thead><tr><th>Celsius</th><th>Kelvin</th></tr></thead><tbody><tr><td>−40°C</td><td>233.15 K</td></tr><tr><td>0°C</td><td>273.15 K</td></tr><tr><td>25°C</td><td>298.15 K</td></tr><tr><td>37°C</td><td>310.15 K</td></tr><tr><td>100°C</td><td>373.15 K</td></tr></tbody></table></div>
         <h2>Kelvin to celsius — common values</h2>
         <div class="pc-tblwrap"><table class="dtable"><thead><tr><th>Kelvin</th><th>Celsius</th></tr></thead><tbody><tr><td>0 K</td><td>−273.15°C</td></tr><tr><td>100 K</td><td>−173.15°C</td></tr><tr><td>273.15 K</td><td>0°C</td></tr><tr><td>300 K</td><td>26.85°C</td></tr><tr><td>373.15 K</td><td>100°C</td></tr></tbody></table></div>
-        <p class="st-src">Sources: factors are the exact international definitions — <a href="https://www.bipm.org/en/publications/si-brochure" rel="noopener">BIPM SI Brochure</a>, <a href="https://www.nist.gov/pml/special-publication-811" rel="noopener">NIST Special Publication 811</a> and, for binary data units, IEC 80000-13.</p>
+        <h2>What are Celsius and Kelvin?</h2><p>The <strong>kelvin</strong> is the SI unit of temperature. It is written without a degree sign, and a change of one kelvin is the same size as a change of one degree Celsius, but the scale starts at absolute zero: 0 K = −273.15 °C = −459.67 °F (NIST, “Kelvin: Introduction”). NIST gives the relation as T/K = t/°C + 273.15 (SP 811, Appendix B.8).</p><p>Because of that fixed offset, no temperature below 0 K exists, and the converter rejects it.</p><h2>Worked example, step by step</h2><p>Body temperature is 37 °C. Add 273.15: 37°C = 310.15 K. For a laboratory freezer at −80 °C: −80°C = 193.15 K. Going back, subtract 273.15: 294 K = 20.85°C, which NIST gives as room temperature at 294 K (about 21 °C).</p><h2>Quick mental math</h2><p>For everyday numbers add 273: 298.15 K exactly, 298 by the shortcut. The shortcut is 0.15 K low at every temperature, which is smaller than most thermometers can resolve, but keep the .15 for physics and chemistry formulas.</p><h2>Common mistakes</h2><ul><li><strong>Writing °K.</strong> The unit is K, not °K, and it is spoken as “kelvins”.</li><li><strong>Adding 32 or multiplying by 1.8.</strong> Kelvin and Celsius degrees are the same size, so only the offset 273.15 changes the number.</li><li><strong>Entering a negative kelvin value.</strong> 0 K = −273.15°C is absolute zero; nothing can be colder.</li></ul><h2>Celsius to Kelvin — quick reference</h2><div class="pc-tblwrap"><table class="dtable"><thead><tr><th>Celsius</th><th>Kelvin</th></tr></thead><tbody><tr><td>−273.15°C</td><td>0 K</td></tr><tr><td>−196°C</td><td>77.15 K</td></tr><tr><td>−80°C</td><td>193.15 K</td></tr><tr><td>−40°C</td><td>233.15 K</td></tr><tr><td>−20°C</td><td>253.15 K</td></tr><tr><td>−10°C</td><td>263.15 K</td></tr><tr><td>0°C</td><td>273.15 K</td></tr><tr><td>4°C</td><td>277.15 K</td></tr><tr><td>10°C</td><td>283.15 K</td></tr><tr><td>15°C</td><td>288.15 K</td></tr><tr><td>20°C</td><td>293.15 K</td></tr><tr><td>21°C</td><td>294.15 K</td></tr><tr><td>25°C</td><td>298.15 K</td></tr><tr><td>30°C</td><td>303.15 K</td></tr><tr><td>37°C</td><td>310.15 K</td></tr><tr><td>40°C</td><td>313.15 K</td></tr><tr><td>50°C</td><td>323.15 K</td></tr><tr><td>80°C</td><td>353.15 K</td></tr><tr><td>100°C</td><td>373.15 K</td></tr><tr><td>121°C</td><td>394.15 K</td></tr><tr><td>150°C</td><td>423.15 K</td></tr><tr><td>200°C</td><td>473.15 K</td></tr><tr><td>500°C</td><td>773.15 K</td></tr><tr><td>1,000°C</td><td>1,273.15 K</td></tr></tbody></table></div>
+        <p class="st-src">Sources: factors are the exact international definitions — <a href="https://www.bipm.org/en/publications/si-brochure" rel="noopener">BIPM SI Brochure</a>, <a href="https://www.nist.gov/pml/special-publication-811" rel="noopener">NIST Special Publication 811</a> and, for binary data units, IEC 80000-13 as listed on the <a href="https://physics.nist.gov/cuu/Units/binary.html" rel="noopener">NIST binary prefixes page</a>. Read 2026-11-12.</p>
       </div>
       <div>
         <h2>More conversions</h2>
@@ -765,7 +766,7 @@
 
 </div>
 
-<script src="/assets/app.js?v=343"></script>
+<script src="/assets/app.js?v=344"></script>
 <script>CalcThis.initUnitConverter();</script>
 <script src="/feedback.js" defer></script>
 </body>

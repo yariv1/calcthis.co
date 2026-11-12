@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=343">
+<link rel="stylesheet" href="/assets/style.css?v=344">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
 <script>
@@ -472,7 +472,8 @@
         <div class="pc-tblwrap"><table class="dtable"><thead><tr><th>Kilobytes (1,000 bytes)</th><th>Megabytes</th></tr></thead><tbody><tr><td>100 KB</td><td>0.1 MB</td></tr><tr><td>1,000 KB</td><td>1 MB</td></tr><tr><td>10,000 KB</td><td>10 MB</td></tr><tr><td>10,240 KB</td><td>10.24 MB</td></tr></tbody></table></div>
         <h2>Megabytes to kilobytes (1,000 bytes) — common values</h2>
         <div class="pc-tblwrap"><table class="dtable"><thead><tr><th>Megabytes</th><th>Kilobytes (1,000 bytes)</th></tr></thead><tbody><tr><td>1 MB</td><td>1,000 KB</td></tr><tr><td>5 MB</td><td>5,000 KB</td></tr><tr><td>10 MB</td><td>10,000 KB</td></tr><tr><td>100 MB</td><td>100,000 KB</td></tr></tbody></table></div>
-        <p class="st-src">Sources: factors are the exact international definitions — <a href="https://www.bipm.org/en/publications/si-brochure" rel="noopener">BIPM SI Brochure</a>, <a href="https://www.nist.gov/pml/special-publication-811" rel="noopener">NIST Special Publication 811</a> and, for binary data units, IEC 80000-13.</p>
+        <h2>What are kilobytes and megabytes?</h2><p>In the SI system a <strong>kilobyte</strong> is exactly 1,000 bytes and a <strong>megabyte</strong> is exactly 1,000,000 bytes (NIST: 1 MB = 10⁶ B). NIST states that kilo and mega must not stand for 1,024 and 1,048,576 (SP 811, chapter 4).</p><p>The IEC names for the binary sizes, approved in December 1998, are the <strong>kibibyte</strong> (1 KiB = 1,024 B) and the <strong>mebibyte</strong> (1 MiB = 1,048,576 B). A file size shown in KiB or MiB is a binary size even when the label says KB or MB.</p><h2>Worked example, step by step</h2><p>Take a 3,500 KB file. In decimal units divide by 1,000: 3,500 KB = 3.5 MB. In binary units divide by 1,024: 3,500 KiB = 3.4179688 MiB. A mebibyte is 1.049 MB, so the binary figure is always about 4.6% smaller.</p><h2>Quick mental math</h2><p>Move the decimal point three places left for KB to MB (decimal). For a binary size, divide by 1,000 and take off about 5%: 9.765625 MiB exactly, against 10 × 0.95 = 9.5 MiB by the shortcut.</p><h2>Common mistakes</h2><ul><li><strong>Mixing KB and Kb.</strong> A small b is a bit: 1 KB = 8 Kb. File sizes use bytes, connection speeds use bits.</li><li><strong>Expecting 1,000 KB = 1 MiB.</strong> 1,024 KiB = 1 MiB while 1,000 KiB is only 0.9765625 MiB.</li><li><strong>Using decimal for memory.</strong> RAM and cache sizes are binary, so 1,024 KiB is the number to use there.</li></ul><h2>Kilobytes to megabytes — quick reference</h2><div class="pc-tblwrap"><table class="dtable"><thead><tr><th>Kilobytes (1,000 bytes)</th><th>Megabytes</th></tr></thead><tbody><tr><td>1 KB</td><td>0.001 MB</td></tr><tr><td>5 KB</td><td>0.005 MB</td></tr><tr><td>10 KB</td><td>0.01 MB</td></tr><tr><td>50 KB</td><td>0.05 MB</td></tr><tr><td>100 KB</td><td>0.1 MB</td></tr><tr><td>250 KB</td><td>0.25 MB</td></tr><tr><td>500 KB</td><td>0.5 MB</td></tr><tr><td>512 KB</td><td>0.512 MB</td></tr><tr><td>750 KB</td><td>0.75 MB</td></tr><tr><td>1,000 KB</td><td>1 MB</td></tr><tr><td>1,024 KB</td><td>1.024 MB</td></tr><tr><td>2,000 KB</td><td>2 MB</td></tr><tr><td>2,048 KB</td><td>2.048 MB</td></tr><tr><td>3,500 KB</td><td>3.5 MB</td></tr><tr><td>5,000 KB</td><td>5 MB</td></tr><tr><td>10,000 KB</td><td>10 MB</td></tr><tr><td>10,240 KB</td><td>10.24 MB</td></tr><tr><td>25,000 KB</td><td>25 MB</td></tr><tr><td>50,000 KB</td><td>50 MB</td></tr><tr><td>100,000 KB</td><td>100 MB</td></tr></tbody></table></div>
+        <p class="st-src">Sources: factors are the exact international definitions — <a href="https://www.bipm.org/en/publications/si-brochure" rel="noopener">BIPM SI Brochure</a>, <a href="https://www.nist.gov/pml/special-publication-811" rel="noopener">NIST Special Publication 811</a> and, for binary data units, IEC 80000-13 as listed on the <a href="https://physics.nist.gov/cuu/Units/binary.html" rel="noopener">NIST binary prefixes page</a>. Read 2026-11-12.</p>
       </div>
       <div>
         <h2>More conversions</h2>
@@ -764,7 +765,7 @@
 
 </div>
 
-<script src="/assets/app.js?v=343"></script>
+<script src="/assets/app.js?v=344"></script>
 <script>CalcThis.initUnitConverter();</script>
 <script src="/feedback.js" defer></script>
 </body>

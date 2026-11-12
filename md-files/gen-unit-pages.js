@@ -327,7 +327,7 @@ function pairTable(cat, a, b, vals, o) {
   const rows = vals.map((x0) => { const x = typeof x0 === 'string' ? E.parse(x0) : x0; return '<tr><td>' + withSym(typeof x0 === 'string' ? x0 : F(x0), sym(cat, a)) + '</td><td>' + withSym(F(cv(cat, a, b, x, o)), sym(cat, b)) + '</td></tr>'; }).join('');
   return '<div class="pc-tblwrap"><table class="dtable"><thead><tr><th>' + nm(cat, a) + '</th><th>' + nm(cat, b) + '</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
 }
-const SOURCE = '<p class="st-src">Sources: factors are the exact international definitions — <a href="https://www.bipm.org/en/publications/si-brochure" rel="noopener">BIPM SI Brochure</a>, <a href="https://www.nist.gov/pml/special-publication-811" rel="noopener">NIST Special Publication 811</a> and, for binary data units, IEC 80000-13.</p>';
+const SOURCE = '<p class="st-src">Sources: factors are the exact international definitions — <a href="https://www.bipm.org/en/publications/si-brochure" rel="noopener">BIPM SI Brochure</a>, <a href="https://www.nist.gov/pml/special-publication-811" rel="noopener">NIST Special Publication 811</a> and, for binary data units, IEC 80000-13 as listed on the <a href="https://physics.nist.gov/cuu/Units/binary.html" rel="noopener">NIST binary prefixes page</a>. Read 2026-11-12.</p>';
 
 function writeCat(c) {
   const p = P[c], C = E.CATS[c], url = 'https://calcthis.co' + urlOf(c), f = p.faqs();
@@ -633,6 +633,7 @@ const PAIRS = [
       ['How many tablespoons are in a cup?', `${say('volume', 'cup', 'tbsp', 1)}, which is ${val('volume', 'cup', 'ml', 1)}.`]
     ] }
 ];
+const EXTRA = require('./unit-pair-extras.js')({ say, val, cv, F, FF, pairTable, E, nm });
 const pairUrl = (p) => '/' + p.slug + '/';
 const popularLinks = (c) => { const l = PAIRS.filter((p) => p.cat === c); return l.length ? '<h2>Popular conversions</h2><ul class="pc-statelist">' + l.map((p) => '<li><a href="' + pairUrl(p) + '">' + p.h1.replace(' Converter', '') + '</a></li>').join('') + '</ul>' : ''; };
 
@@ -653,6 +654,7 @@ function writePair(p) {
         ${pairTable(c, p.a, p.b, p.vals)}
         <h2>${nm(c, p.b)} to ${nm(c, p.a).toLowerCase()} — common values</h2>
         ${pairTable(c, p.b, p.a, p.rvals)}`}
+        ${EXTRA(p.slug, p)}
         ${SOURCE}
       </div>
       <div>
