@@ -31,8 +31,10 @@ function sidebyside(root, slug) {
     const head = cp.execFileSync('git', ['show', 'HEAD:' + slug + '/index.html'], { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], maxBuffer: 64 * 1024 * 1024 });
     const norm = (t) => t.replace(/\r\n/g, '\n').replace(/\?v=\d+/g, '?v=0');
     if (norm(head) === norm(fs.readFileSync(pf, 'utf8'))) {
-      const cd = cp.execFileSync('git', ['log', '-1', '--format=%cs', '--', slug + '/index.html'], { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim();
-      if (/^\d{4}-\d{2}-\d{2}$/.test(cd)) pd = cd;
+      /* walk back to the newest commit that changed the page by more than the stamp */
+      const lines = cp.execFileSync('git', ['log', '--format=%H %cs', '--', slug + '/index.html'], { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim().split('\n').filter(Boolean);
+      const show = (ref) => { try { return norm(cp.execFileSync('git', ['show', ref + ':' + slug + '/index.html'], { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], maxBuffer: 64 * 1024 * 1024 })); } catch (e) { return null; } };
+      for (const ln of lines) { const [h, d] = ln.split(' '); const cur = show(h), prev = show(h + '~1'); if (prev === null || cur !== prev) { if (/^\d{4}-\d{2}-\d{2}$/.test(d)) pd = d; break; } }
     }
   } catch (e) { /* no git: keep the file date */ }
   if (s.date < pd) return bad('dated ' + s.date + ' but the page changed on ' + pd + ' - reopen the competitors again after the last change');

@@ -17,6 +17,8 @@ _How-to for requesting indexing with Claude in Chrome + the next batch: HANDOFF.
 
 **GSC 2026-11-07 (later, "Start queue"): 0 requested — "Quota Exceeded" on the very first URL (/paycheck-calculator/utah/, status "Discovered - currently not indexed", no referring page). Quota had not reset since the morning batch of 11. Next attempt: after the quota resets (roughly a day after 2026-11-07 first batch); queue order unchanged, starts with utah.**
 
+**GSC 2026-11-12 (after v343 thin-content deploy): 10 REQUESTED (confirmed "Indexing requested"): paycheck missouri, montana, nevada, new-hampshire, south-dakota, tennessee, wyoming, florida, texas, washington. /paycheck-calculator/alaska/ -> "Quota Exceeded". NEXT, same order: alaska (re-request, Alaska withholding fix), then the other changed pages: the 29 taxed paycheck states (alabama ... west-virginia; all with the new minimum-wage section), then RNG /random-number-generator-1-3/, -1-10/, -1-13/, -1-100/. Then the older queue (newest pages, health block, 3 time pages, p-value, confidence interval, markup ... unit price). Bing manual submit of the 42 changed pages DONE 2026-11-12 (all 42 appear in the Submitted list).**
+
 ## LIVE QUEUE (update at EVERY deploy and every request session; last updated 2026-11-02 — overtime deployed; GSC not requested since 2026-11-01 (10 done, quota hit at valet))
 **2026-11-05 (v316): NEW PAGE /bsa-calculator/ deployed (IndexNow 213 URLs HTTP 200; GitHub rejected the first two pushes, the third succeeded). Bing manual submit NOT done (signed out). Add to the END of the GSC queue (after intermittent fasting).**
 
