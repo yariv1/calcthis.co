@@ -1,0 +1,36 @@
+{
+ "slug": "compound-interest-calculator",
+ "pass": true,
+ "at": "2026-11-13T18:20:51.448Z",
+ "hash": "da7af6b22a49356f",
+ "viewports": {
+  "mobile": {
+   "steps": 2319,
+   "fails": []
+  },
+  "desktop": {
+   "steps": 2319,
+   "fails": []
+  }
+ },
+ "oracle": {
+  "runs": 188,
+  "fails": [],
+  "compared": 8546
+ },
+ "shots": [
+  "md-files/qa-passes/shots/compound-interest-calculator-1-empty-mobile.png",
+  "md-files/qa-passes/shots/compound-interest-calculator-2-filled-mobile.png",
+  "md-files/qa-passes/shots/compound-interest-calculator-3-result-mobile.png",
+  "md-files/qa-passes/shots/compound-interest-calculator-4-advanced-mobile.png",
+  "md-files/qa-passes/shots/compound-interest-calculator-5-error-mobile.png",
+  "md-files/qa-passes/shots/compound-interest-calculator-6-after-chaos-mobile.png",
+  "md-files/qa-passes/shots/compound-interest-calculator-1-empty-desktop.png",
+  "md-files/qa-passes/shots/compound-interest-calculator-2-filled-desktop.png",
+  "md-files/qa-passes/shots/compound-interest-calculator-3-result-desktop.png",
+  "md-files/qa-passes/shots/compound-interest-calculator-4-advanced-desktop.png",
+  "md-files/qa-passes/shots/compound-interest-calculator-5-error-desktop.png",
+  "md-files/qa-passes/shots/compound-interest-calculator-6-after-chaos-desktop.png"
+ ],
+ "console": []
+}

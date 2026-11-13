@@ -1,0 +1,14 @@
+{
+ "slug": "compound-interest-calculator",
+ "pass": true,
+ "at": "2026-11-13T18:21:33.251Z",
+ "passHash": "da7af6b22a49356f",
+ "scriptHash": "da224665cf0a062a",
+ "cats": {
+  "textVsTool": 96,
+  "extremes": 24,
+  "visual": 94
+ },
+ "runs": 90,
+ "fails": []
+}

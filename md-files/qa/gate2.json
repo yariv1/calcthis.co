@@ -4,5 +4,6 @@
  "minutes-to-hours-calculator",
  "seconds-to-minutes-calculator",
  "confidence-interval-calculator",
- "z-score-calculator"
+ "z-score-calculator",
+ "compound-interest-calculator"
 ]

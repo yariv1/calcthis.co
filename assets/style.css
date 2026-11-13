@@ -3601,3 +3601,48 @@ body .fld + .av-note,body .fld + .cb-note{margin-top:-6px}
 .p-zs .zs-ztab td,.p-zs .zs-ztab th{white-space:nowrap}
 .p-zs .grid2 > div{min-width:0}
 .p-zs .zs-tbl{max-width:100%}
+/* ---- COMPOUND INTEREST calculator (.p-ic). Reuses .p-bmr result look, .dtable, .csel, .seg, .chips, .advbtn ---- */
+.p-ic .card{min-width:0}
+.p-ic .av-note,.p-ic .cb-note{font-size:14px;font-weight:500;color:var(--ink-soft);margin:4px 0 8px;line-height:1.45}
+.p-ic .cb-note{color:var(--muted);font-weight:400}
+.p-ic .res-big{font-size:clamp(28px,7vw,44px);overflow-wrap:anywhere}
+.p-ic .res-big.ic-long{font-size:24px}
+.p-ic .res-sub{overflow-wrap:anywhere}
+.p-ic .mbar-vals b{font-size:18px;overflow-wrap:anywhere}
+.p-ic .ic-two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0 10px}
+.p-ic .ic-two > *{min-width:0}
+.p-ic .ic-sech{font-size:14px;font-weight:600;color:var(--ink);margin:14px 0 8px}
+.p-ic .ic-sech span{font-weight:400;color:var(--muted)}
+.p-ic .ic-seg{display:flex;width:100%}
+.p-ic .ic-seg button{flex:1 1 0;min-width:0}
+.p-ic .ic-ta{width:100%;font:inherit;font-size:15px;font-weight:500;color:var(--ink);background:#FCFAF6;border:1.5px solid var(--line);border-radius:10px;padding:11px 13px;resize:vertical;font-variant-numeric:tabular-nums;line-height:1.5;min-height:110px}
+.p-ic .ic-ta:focus{outline:none;border-color:var(--amber);background:#fff;box-shadow:0 0 0 3px rgba(181,118,31,.13)}
+.p-ic .chips{margin-top:0;margin-bottom:6px}
+.p-ic .ic-vis{border:1px solid var(--line);border-radius:12px;background:#FFFDF8;padding:8px 8px 4px;margin:6px 0 4px}
+.p-ic .ic-vis svg{display:block;width:100%;height:auto}
+.p-ic .dtable td:nth-child(n+2),.p-ic .dtable th:nth-child(n+2){text-align:right}
+.p-ic .dtable td{font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.p-ic .dtable td,.p-ic .dtable th{padding-left:6px;padding-right:6px}
+.p-ic .ic-mrow[data-v]{cursor:pointer}
+.p-ic .ic-mrow[data-v]:hover td{background:#FBF3E4}
+.p-ic .ic-mrow.on td{font-weight:700;color:var(--ink);background:#FBF3E4}
+.p-ic .ic-steps{margin:6px 0 4px;padding-left:20px;font-size:14.5px;line-height:1.55;color:var(--ink-soft)}
+.p-ic .ic-steps li{margin-bottom:4px;overflow-wrap:anywhere}
+.p-ic .ic-tbl{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 0 8px}
+.p-ic .ic-tbl table{width:100%}
+.p-ic .ic-listsum{font-size:14px;font-weight:600;color:var(--ink);margin:4px 0 8px;overflow-wrap:anywhere}
+.p-ic .ic-ztab td,.p-ic .ic-ztab th{font-size:12.5px;padding:5px 3px}
+.p-ic .ic-ztab{width:auto;min-width:100%}
+.p-ic .ic-ztab td,.p-ic .ic-ztab th{white-space:nowrap}
+.p-ic .grid2 > div{min-width:0}
+.p-ic .sl-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}
+.p-ic .sl-head .card-h2{margin:0}
+.p-ic .sl-cur{width:auto;min-width:110px;flex:0 0 auto}
+.p-ic .sl-cur .csel-panel{left:auto;right:0;width:300px;max-width:86vw;max-height:min(380px,60vh)}
+.p-ic .ic-two.ic-one{grid-template-columns:minmax(0,1fr)}
+.p-ic .ic-on td{font-weight:700;color:var(--ink);background:#FBF3E4}
+.p-ic .content .dtable td:nth-child(n+2),.p-ic .content .dtable th:nth-child(n+2){white-space:nowrap}
+.p-ic #icNums,.p-ic #icCmp,.p-ic #icSc,.p-ic #icSch,.p-ic #icWd{display:table;width:100%}
+.p-ic #icNums td,.p-ic #icNums th,.p-ic #icCmp td,.p-ic #icCmp th,.p-ic #icSc td,.p-ic #icSc th,.p-ic #icSch td,.p-ic #icSch th,.p-ic #icWd td{white-space:normal;overflow-wrap:anywhere}
+.p-ic #icSc td:first-child,.p-ic #icCmp td:first-child,.p-ic .content .dtable td:first-child{white-space:nowrap}
+.p-ic .content .dtable td,.p-ic .content .dtable th{padding-left:4px;padding-right:4px}

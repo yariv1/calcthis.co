@@ -1,0 +1,12 @@
+{
+ "slug": "compound-interest-calculator",
+ "pass": true,
+ "failed": [],
+ "hash": "da7af6b22a49356f",
+ "at": "2026-11-13T18:22:38.139Z",
+ "results": {
+  "silent": "ok   compound-interest-calculator  fields 10",
+  "duplicate": "most overlap 0.3% with /z-score-calculator/ (limit 12%)",
+  "registration": "sitemap urls 238 | compound-interest-calculator cards 1 inbound 237 ld WebApplication,FAQPage,BreadcrumbList | AUDIT PASS"
+ }
+}

@@ -26773,3 +26773,361 @@ CalcThis.initZscoreCalc = function () {
   render();
 };
 /* ZSCORE:END */
+
+/* COMPOUND:BEGIN */
+/* =========================================================
+   COMPOUND INTEREST calculator (/compound-interest-calculator/). Competitors opened live (2026-11-13): calculator.net (interest calculator: contributions, begin/end, tax, inflation, schedules;
+   its compound-interest page is an APY/APR converter), Omnicalculator (currency, 13 compounding options, deposits with frequency, charts), Investor.gov (negative contribution = withdrawal, rate range),
+   CalculatorSoup (solve for balance / principal / rate / time, deposits or withdrawals, steps), Inch Calculator (daily compounding), NerdWallet (widget not readable). Bankrate blocked (not checked).
+   Notes: md-files/calcthis-compoundinterest-research.md. Sources read 2026-11-13: Wikipedia "Compound interest" (A = P(1 + r/n)^(nt), continuous P e^(rt), periodic-deposit formula, rule of 72).
+   Model: interest compounds at the effective rate for the chosen frequency, so every deposit period grows by (1 + r/n)^(n/m) (m = deposits a year); deposits come at the END of each period (or the start).
+   Tax: interest is taxed as it is earned (net rate = rate x (1 - tax)). Inflation: real value = balance / (1 + inflation)^years. Withdrawals: monthly, at the end of each month, after the saving years.
+   ========================================================= */
+/* COMPOUND-ENGINE:START */
+CalcThis.icEngine = (function () {
+  var NS = { annual: 1, semi: 2, quarterly: 4, monthly: 12, weekly: 52, daily: 365 };
+  var DM = { weekly: 52, biweekly: 26, monthly: 12, quarterly: 4, yearly: 1 };
+  function G(rate, comp, t) { return comp === 'cont' ? Math.exp(rate * t) : Math.pow(1 + rate / NS[comp], NS[comp] * t); }
+  /* o: P, D, rate (nominal a year, decimal, AFTER tax), comp, dep, begin, inc (decimal a year), months */
+  function run(o) {
+    var m = DM[o.dep], T = o.months / 12, N = Math.floor(T * m + 1e-9), g = G(o.rate, o.comp, 1 / m), inc = o.inc || 0;
+    var B = o.P, C = o.P, si = 0, k, dk, dsum = 0, yrs = [], snaps = [], every = N <= 240 ? 1 : m, yd = 0;
+    snaps.push({ y: 0, bal: o.P, put: o.P, simple: o.P });
+    for (k = 1; k <= N; k++) {
+      dk = o.D * Math.pow(1 + inc, Math.floor((k - 1) / m));
+      if (o.begin) { B = (B + dk) * g; C += dk; si += o.rate * C / m; } else { si += o.rate * C / m; B = B * g + dk; C += dk; }
+      dsum += dk; yd += dk;
+      if (k % every === 0 && k !== N) snaps.push({ y: k / m, bal: B, put: C, simple: C + si });
+      if (k % m === 0) { var pb = yrs.length ? yrs[yrs.length - 1].bal : o.P, pp = yrs.length ? yrs[yrs.length - 1].put : o.P; yrs.push({ y: k / m, dep: yd, int: B - pb - yd, bal: B, put: C }); yd = 0; }
+    }
+    var rem = T - N / m;
+    if (rem > 1e-9) { B = B * G(o.rate, o.comp, rem); si += o.rate * C * rem; }
+    snaps.push({ y: T, bal: B, put: C, simple: C + si });
+    var lastY = yrs.length ? yrs[yrs.length - 1] : null;
+    if (rem > 1e-9 || !lastY || Math.abs(lastY.y - T) > 1e-9) { var pb2 = lastY ? lastY.bal : o.P; yrs.push({ y: T, dep: yd, int: B - pb2 - yd, bal: B, put: C, part: true }); }
+    return { bal: B, put: C, dep: dsum, int: B - C, simple: C + si, T: T, N: N, yrs: yrs, snaps: snaps, intP: o.P * (G(o.rate, o.comp, T) - 1) };
+  }
+  function net(i) { return { P: i.P, D: i.D, rate: i.rate * (1 - (i.tax || 0)), comp: i.comp, dep: i.dep, begin: i.begin, inc: i.inc, months: i.months }; }
+  function calc(i) { return run(net(i)); }
+  function withRate(i, r) { var j = {}; for (var k in i) j[k] = i[k]; j.rate = r; return j; }
+  function val(r, kind) { return kind === 'int' ? r.int : r.bal; }
+  function cp(i, over) { var j = {}, k; for (k in i) j[k] = i[k]; for (k in over) j[k] = over[k]; return j; }
+  function solveD(i, goal, kind) { var a = val(calc(cp(i, { D: 0 })), kind), b = val(calc(cp(i, { D: 1 })), kind); if (!(b - a > 0)) return null; return (goal - a) / (b - a); }
+  function solveP(i, goal, kind) { var a = val(calc(cp(i, { P: 0 })), kind), b = val(calc(cp(i, { P: 1 })), kind); if (!(b - a > 0)) return null; return (goal - a) / (b - a); }
+  function solveMonths(i, goal, kind) {
+    var f = function (mo) { return val(calc(cp(i, { months: mo })), kind); }, hi = 1, lo = 0;
+    if (f(1200) < goal) return null;
+    while (f(hi) < goal && hi < 1200) { lo = hi; hi = Math.min(1200, hi * 2); }
+    while (hi - lo > 1) { var mid = Math.floor((lo + hi) / 2); if (f(mid) >= goal) hi = mid; else lo = mid; }
+    return hi;
+  }
+  function solveRate(i, goal, kind) {
+    var f = function (r) { return val(calc(cp(i, { rate: r })), kind); };
+    if (f(0) >= goal) return 0; if (f(1) < goal) return null;
+    var a = 0, b = 1; for (var n = 0; n < 200; n++) { var mid = (a + b) / 2; if (f(mid) < goal) a = mid; else b = mid; if (b - a < 1e-13) break; }
+    return (a + b) / 2;
+  }
+  /* withdrawals of W a month (end of month) from balance B: full payments possible, or the balance left after 100 years */
+  function drain(B, W, rate, comp, tax) {
+    var g = G(rate * (1 - (tax || 0)), comp, 1 / 12), n = 0;
+    while (n < 1200) { B = B * g - W; if (B < 0) return { full: n, ends: true }; n++; }
+    return { full: 1200, ends: false, bal: B };
+  }
+  function apy(rate, comp) { return G(rate, comp, 1) - 1; }
+  function doubling(rate, comp) { if (!(rate > 0)) return null; return Math.log(2) / Math.log(G(rate, comp, 1)); }
+  return { NS: NS, DM: DM, G: G, run: run, calc: calc, solveD: solveD, solveP: solveP, solveMonths: solveMonths, solveRate: solveRate, drain: drain, apy: apy, doubling: doubling };
+})();
+/* COMPOUND-ENGINE:END */
+
+/* =========================================================
+   CalcThis.initCompoundCalc() - ids ic*. Engine CalcThis.icEngine, currency list from CalcThis.salaryEngine (display only, nothing is converted).
+   ========================================================= */
+CalcThis.initCompoundCalc = function () {
+  var E = CalcThis.icEngine, SE = CalcThis.salaryEngine;
+  var $ = function (id) { return document.getElementById(id); };
+  if (!$('icP')) return;
+  var st = { cur: 'USD', dec: 2, adv: false, timing: 'end' };
+  var NF = {}, DN = null;
+  try { DN = new Intl.DisplayNames(['en'], { type: 'currency' }); } catch (e) { DN = null; }
+  var CN = { SLE: 'Sierra Leonean Leone' };
+  function curName(c) { try { var n = DN && DN.of(c); return (n && n !== c) ? n : (CN[c] || c); } catch (e) { return CN[c] || c; } }
+  function decOf(c) { try { return Math.min(2, new Intl.NumberFormat('en-US', { style: 'currency', currency: c }).resolvedOptions().maximumFractionDigits); } catch (e) { return 2; } }
+  function sym(c) { try { return new Intl.NumberFormat('en-US', { style: 'currency', currency: c, currencyDisplay: 'narrowSymbol' }).format(0).replace(/[0-9.,\s]/g, ''); } catch (e) { return c; } }
+  function cf(x, d) {
+    var k = st.cur + d;
+    if (!NF[k]) NF[k] = new Intl.NumberFormat('en-US', { style: 'currency', currency: st.cur, currencyDisplay: 'narrowSymbol', minimumFractionDigits: d, maximumFractionDigits: d });
+    return (x < 0 ? '−' : '') + CalcThis.fmtMoney(NF[k], st.cur, Math.abs(x));
+  }
+  function fm(x) { if (x == null || !isFinite(x)) return '—'; if (Math.abs(x) < Math.pow(10, -st.dec) / 2) x = 0; return cf(x, st.dec); }
+  function fm0(x) { if (x == null || !isFinite(x)) return '—'; if (Math.abs(x) < 0.5) x = 0; return cf(x, 0); }
+  function sg(x) { return String(x).replace('-', '−'); }
+  function fnum(x) { return sg(String(Math.round(x * 1e6) / 1e6)); }
+  function fp(x) { return fnum(Math.round(x * 1e4) / 1e4) + '%'; }
+  var NUM = /^[+-]?(\d+\.?\d*|\.\d+)(e[+-]?\d+)?$/i;
+  function num(raw) {
+    var s = String(raw == null ? '' : raw).replace(/[\s ]/g, '').replace(/−/g, '-').replace(/[$€£¥₪]/g, '');
+    if (s === '') return { empty: true };
+    var pc = false; if (/%$/.test(s)) { pc = true; s = s.slice(0, -1); }
+    if (/^[+-]?\d{1,3}(,\d{3})+(\.\d*)?$/.test(s)) s = s.replace(/,/g, '');
+    if (/^[+-]?\.?$/.test(s) || /^[+-]?(\d+\.?\d*|\.\d+)e[+-]?$/i.test(s)) return { partial: true };
+    if (!NUM.test(s)) return { err: 'junk' };
+    var v = parseFloat(s); if (!isFinite(v)) return { err: 'big' };
+    return { v: v, pc: pc };
+  }
+  function short(raw) { return String(raw).trim().slice(0, 14); }
+  function setNote(id, t) { var e = $(id); if (!e) return; e.textContent = t || ''; e.style.display = t ? '' : 'none'; }
+  function show(id, on) { var e = $(id); if (e) e.style.display = on ? '' : 'none'; }
+  function setHint(m, at) {
+    var h = $('icHint'); m = m ? m.charAt(0).toUpperCase() + m.slice(1) : m; h.textContent = m || ''; h.style.display = m ? 'block' : 'none';
+    if (m && at) {
+      var el = $(at), f = el && (el.closest('.fld') || el), par = f && f.parentNode;
+      var w2 = f && f.closest ? f.closest('.ic-two') : null; if (w2) f = w2;
+      if (f && f.nextSibling !== h && f.parentNode) f.parentNode.insertBefore(h, f.nextSibling);
+    }
+  }
+  var BIGM = 1e12;
+  function rd(id, label, eg, o) {
+    var r = num($(id).value);
+    if (r.empty) return { miss: true };
+    if (r.partial) return { miss: true, partial: true };
+    if (r.err) return { bad: r.err === 'junk' ? 'Couldn’t read “' + short($(id).value) + '” in ' + label + ' — type a number like ' + eg + '.' : label + ' is too large.' };
+    var v = r.v;
+    if (o.min !== undefined && (o.minEx ? v <= o.min : v < o.min)) return { bad: label + (o.minMsg || ' must be at least ' + o.min + '.') };
+    if (o.max !== undefined && v > o.max) return { bad: label + (o.maxMsg || ' must be at most ' + o.max + '.') };
+    return { v: v };
+  }
+  /* time: 10, 5.5, "18 months", "5y 6m", "2 years 3 months" -> months */
+  function parseTerm(raw) {
+    var s = String(raw == null ? '' : raw).toLowerCase().replace(/[\s ]/g, ''); if (s === '') return { empty: true };
+    if (NUM.test(s)) return { months: Math.round(parseFloat(s) * 12), y: parseFloat(s) };
+    var tot = 0, rest = s, found = false, re = /^(\d+\.?\d*|\.\d+)(years?|yrs?|y|months?|mos?|mo|m)(?:and|,)?/;
+    while (rest) { var m = re.exec(rest); if (!m) return /^[\d.]*$/.test(rest) && found ? { partial: true } : (/^[\d.]+[a-z]{0,8}$/.test(rest) && !found ? { partial: true } : { err: 'junk' }); found = true; tot += parseFloat(m[1]) * (/^y/.test(m[2]) ? 12 : 1); rest = rest.slice(m[0].length); }
+    return { months: Math.round(tot), y: tot / 12 };
+  }
+  function yearsTxt(mo) { var y = Math.floor(mo / 12), m = mo % 12, a = []; if (y) a.push(y + (y === 1 ? ' year' : ' years')); if (m) a.push(m + (m === 1 ? ' month' : ' months')); return a.join(' ') || '0 months'; }
+  var COMP = { annual: ['annually', 'once a year'], semi: ['semiannually', '2 times a year'], quarterly: ['quarterly', '4 times a year'], monthly: ['monthly', '12 times a year'], weekly: ['weekly', '52 times a year'], daily: ['daily', '365 times a year'], cont: ['continuously', 'continuously'] };
+  var DEPN = { weekly: ['Weekly deposit', 'week'], biweekly: ['Deposit every 2 weeks', '2 weeks'], monthly: ['Monthly deposit', 'month'], quarterly: ['Quarterly deposit', 'quarter'], yearly: ['Yearly deposit', 'year'] };
+
+  /* ---------- compute ---------- */
+  function compute() {
+    var R = { bad: null, soft: null, ready: false, gk: $('icGoalKind').value || 'bal', solve: $('icSolve').value || 'balance', comp: $('icComp').value || 'monthly', dep: $('icDep').value || 'monthly', miss: [] };
+    var sv = R.solve;
+    var P = rd('icP', 'the starting amount', '5,000', { min: 0, max: BIGM, minMsg: ' can’t be negative.', maxMsg: ' is too large.' });
+    var D = rd('icD', 'the deposit', '200', { min: 0, max: BIGM, minMsg: ' can’t be negative — it is the amount you add. Use the withdrawal box for money you take out.', maxMsg: ' is too large.' });
+    var Rt = rd('icR', 'the interest rate', '5', { min: 0, max: 100, minMsg: ' can’t be negative.', maxMsg: ' must be at most 100%.' });
+    var Gl = rd('icG', 'the amount you want', '100,000', { min: 0, minEx: true, max: 1e15, minMsg: ' must be above 0.', maxMsg: ' is too large.' });
+    var Yt = parseTerm($('icY').value), Y = null;
+    if (Yt.err) Y = { bad: 'Couldn’t read “' + short($('icY').value) + '” in the time — type years (10), months (18 months) or both (5y 6m).' };
+    else if (Yt.empty) Y = { miss: true };
+    else if (Yt.partial) Y = { miss: true, partial: true };
+    else if (Yt.months < 1) Y = { bad: 'The time must be at least 1 month.' };
+    else if (Yt.months > 1200) Y = { bad: 'The time must be at most 100 years.' };
+    else Y = { v: Yt.months };
+    var f = { icR: Rt, icY: Y, icG: Gl };
+    /* the starting amount and the deposit are never a hard error: a bad value is ignored (with a hint) and treated as empty */
+    [['icP', 'P', P], ['icD', 'D', D]].forEach(function (q) { if (q[0] === 'icD' && sv === 'deposit') return; if (q[0] === 'icP' && sv === 'start') return; if (q[2].bad) { if (!R.soft) R.soft = { msg: q[2].bad + ' It is ignored for now.', at: q[0] }; q[2].miss = true; q[2].v = undefined; delete q[2].bad; } else if (q[2].partial) { q[2].v = undefined; } });
+    var hard = [];
+    if (sv !== 'rate') hard.push('icR'); if (sv !== 'years') hard.push('icY'); if (sv !== 'balance') hard.push('icG');
+    hard.forEach(function (id) {
+      var q = f[id];
+      if (q.bad) { if (!R.bad) R.bad = { msg: q.bad + ' Fix it to see the result.', at: id }; }
+      else if (q.partial && !R.bad) R.bad = { msg: 'Keep typing — “' + short($(id).value) + '” isn’t a complete number yet.', at: id };
+    });
+    if (sv === 'balance' && Gl.bad) { if (!R.soft) R.soft = { msg: Gl.bad + ' It is ignored for now.', at: 'icG' }; Gl.miss = true; Gl.v = undefined; delete Gl.bad; } else if (sv === 'balance' && Gl.partial) Gl.v = undefined;
+    /* advanced */
+    var Inc = rd('icInc', 'the yearly increase', '3', { min: 0, max: 100, minMsg: ' can’t be negative.', maxMsg: ' must be at most 100%.' });
+    var Tax = rd('icTax', 'the tax rate', '20', { min: 0, max: 99, minMsg: ' can’t be negative.', maxMsg: ' must be below 100%.' });
+    var Inf = rd('icInf', 'the inflation rate', '2.5', { min: 0, max: 100, minMsg: ' can’t be negative.', maxMsg: ' must be at most 100%.' });
+    var Vr = rd('icVar', 'the rate range', '1', { min: 0, minEx: true, max: 50, minMsg: ' must be above 0.', maxMsg: ' must be at most 50 percentage points.' });
+    var Wd = rd('icW', 'the withdrawal', '1,500', { min: 0, minEx: true, max: BIGM, minMsg: ' must be above 0.', maxMsg: ' is too large.' });
+    [[Inc, 'icInc'], [Tax, 'icTax'], [Inf, 'icInf'], [Vr, 'icVar'], [Wd, 'icW']].forEach(function (q) { if (q[0].bad) { if (!R.soft) R.soft = { msg: q[0].bad + ' It is ignored for now.', at: q[1] }; q[0].miss = true; q[0].v = undefined; } });
+    R.inc = Inc.v !== undefined ? Inc.v / 100 : 0; R.tax = Tax.v !== undefined ? Tax.v / 100 : 0; R.inf = Inf.v !== undefined ? Inf.v / 100 : 0; R.vr = Vr.v; R.W = Wd.v;
+    R.typed = { P: P.v !== undefined, D: D.v !== undefined, R: Rt.v !== undefined, Y: Y.v !== undefined, G: Gl.v !== undefined };
+    R.rate = Rt.v !== undefined ? Rt.v / 100 : undefined; R.months = Y.v; R.p = P.v || 0; R.d = D.v || 0; R.g = Gl.v;
+    if (R.bad) return R;
+    var p = sv === 'start' ? 0 : (P.v || 0), d = D.v || 0, g = Gl.v, months = Y.v, rate = Rt.v !== undefined ? Rt.v / 100 : undefined;
+    var base = { P: p, D: d, rate: rate, tax: R.tax, comp: R.comp, dep: R.dep, begin: st.timing === 'begin', inc: R.inc, months: months };
+    R.p = p; R.d = d; R.g = g;
+    if (sv === 'balance') {
+      if (rate === undefined) R.miss.push('the interest rate'); if (months === undefined) R.miss.push('the time'); if (!R.typed.P && !R.typed.D) R.miss.push('a starting amount or a deposit');
+      if (R.miss.length) return R;
+    } else if (sv === 'deposit') {
+      if (rate === undefined) R.miss.push('the interest rate'); if (months === undefined) R.miss.push('the time'); if (g === undefined) R.miss.push('the amount you want');
+      if (R.miss.length) return R;
+      var dn = E.solveD(base, g, R.gk); if (dn === null) { R.bad = { msg: 'With these numbers a deposit does not change the result — check the rate and time.', at: 'icR' }; return R; }
+      R.zeroDep = dn <= 0; d = Math.max(0, dn); base.D = d; R.solvedD = d; R.d = d;
+    } else if (sv === 'years') {
+      if (rate === undefined) R.miss.push('the interest rate'); if (g === undefined) R.miss.push('the amount you want'); if (!R.typed.P && !R.typed.D) R.miss.push('a starting amount or a deposit');
+      if (R.miss.length) return R;
+      base.months = 1; var mo = E.solveMonths(base, g, R.gk); if (mo === null) { R.unreach = true; mo = 1200; }
+      base.months = mo; months = mo; R.solvedM = mo;
+    } else if (sv === 'start') {
+      if (rate === undefined) R.miss.push('the interest rate'); if (months === undefined) R.miss.push('the time'); if (g === undefined) R.miss.push('the amount you want');
+      if (R.miss.length) return R;
+      var pn = E.solveP(base, g, R.gk); if (pn === null) { R.bad = { msg: 'With these numbers a starting amount does not change the result — check the rate and time.', at: 'icR' }; return R; }
+      R.zeroDep = pn <= 0; p = Math.max(0, pn); base.P = p; R.solvedP = p; R.p = p;
+    } else {
+      if (months === undefined) R.miss.push('the time'); if (g === undefined) R.miss.push('the amount you want'); if (!R.typed.P && !R.typed.D) R.miss.push('a starting amount or a deposit');
+      if (R.miss.length) return R;
+      base.rate = 0.05; var rr = E.solveRate(base, g, R.gk); if (rr === null) { R.unreach = true; rr = 1; }
+      R.zeroRate = rr === 0; base.rate = rr; rate = rr; R.solvedR = rr;
+    }
+    R.base = base; R.months = months; R.rate = rate;
+    R.res = E.calc(base);
+    if (!(R.res.bal < 1e15) || !(R.res.put < 1e15)) { R.ready = false; R.bad = { msg: 'The result would be more than 1,000 trillion — lower the rate, the deposits or the time.', at: 'icR' }; return R; }
+    R.ready = true;
+    /* goal reached (balance mode with a goal) */
+    if (sv === 'balance' && g !== undefined) { var m2 = E.solveMonths(base, g, R.gk); R.goalM = m2; }
+    return R;
+  }
+
+  /* ---------- the picture ---------- */
+  var VW = 280, PL = 46, PR = 272, CT = 16, CB = 140;
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+  function ab(v) { var a = Math.abs(v), s = a >= 1e9 ? (a / 1e9) + 'B' : a >= 1e6 ? (a / 1e6) + 'M' : a >= 1e3 ? (a / 1e3) + 'K' : String(a); return s.replace(/(\.\d)\d+/, '$1'); }
+  function niceMax(v) { var e = Math.pow(10, Math.floor(Math.log(v) / Math.LN10)), f = v / e, c = [1, 1.2, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10], n = 10, k; for (k = 0; k < c.length; k++) if (f <= c[k] + 1e-9) { n = c[k]; break; } return n * e; }
+  function draw(R) {
+    var r = R.res, sn = r.snaps, T = r.T, i, lo = null, hi = null;
+    if (R.vr && R.rate !== undefined) { var bl = R.base; lo = E.calc({ P: bl.P, D: bl.D, rate: Math.max(0, R.rate - R.vr / 100), tax: bl.tax, comp: bl.comp, dep: bl.dep, begin: bl.begin, inc: bl.inc, months: bl.months }); hi = E.calc({ P: bl.P, D: bl.D, rate: R.rate + R.vr / 100, tax: bl.tax, comp: bl.comp, dep: bl.dep, begin: bl.begin, inc: bl.inc, months: bl.months }); }
+    var maxv = Math.max(r.bal, r.simple, hi ? hi.bal : 0); if (!(maxv > 0)) return null;
+    var top = niceMax(maxv * 1.04), px = function (y) { return PL + y / T * (PR - PL); }, py = function (v) { return CB - v / top * (CB - CT); };
+    var svg = '<svg viewBox="0 0 ' + VW + ' ' + (CB + 34) + '" width="100%" role="img" aria-label="Growth of your money: starting amount, deposits and interest stacked, with the same money without compounding as a dashed line" xmlns="http://www.w3.org/2000/svg">';
+    [0, 0.5, 1].forEach(function (f) { var y = py(top * f); svg += '<line x1="' + PL + '" y1="' + y.toFixed(1) + '" x2="' + PR + '" y2="' + y.toFixed(1) + '" stroke="#E5DBC8" stroke-width="1"/><text x="' + (PL - 6) + '" y="' + (y + 4).toFixed(1) + '" text-anchor="end" font-size="12" fill="#5B4B3B">' + esc(ab(top * f)) + '</text>'; });
+    var area = function (lowf, highf, fill) { var d = 'M' + px(sn[0].y).toFixed(1) + ',' + py(lowf(sn[0])).toFixed(1), j; for (j = 1; j < sn.length; j++) d += 'L' + px(sn[j].y).toFixed(1) + ',' + py(lowf(sn[j])).toFixed(1); for (j = sn.length - 1; j >= 0; j--) d += 'L' + px(sn[j].y).toFixed(1) + ',' + py(highf(sn[j])).toFixed(1); return '<path d="' + d + 'Z" fill="' + fill + '" stroke="none"/>'; };
+    svg += area(function () { return 0; }, function () { return R.p; }, '#37503F');
+    svg += area(function () { return R.p; }, function (s) { return s.put; }, '#7A9A82');
+    svg += area(function (s) { return s.put; }, function (s) { return s.bal; }, '#D99A33');
+    var line = function (arr, key, col, dash) { var d = '', j; for (j = 0; j < arr.length; j++) d += (j ? 'L' : 'M') + px(arr[j].y).toFixed(1) + ',' + py(arr[j][key]).toFixed(1); return '<path d="' + d + '" fill="none" stroke="' + col + '" stroke-width="1.6"' + (dash ? ' stroke-dasharray="' + dash + '"' : '') + ' stroke-linejoin="round"/>'; };
+    if (lo && hi) { svg += line(lo.snaps, 'bal', '#8F5C13', '2 3') + line(hi.snaps, 'bal', '#8F5C13', '2 3'); }
+    svg += line(sn, 'simple', '#241A11', '5 3') + line(sn, 'bal', '#8F5C13', '');
+    /* crossover: first year the interest of that year passes the deposits of that year */
+    var cx = null; r.yrs.forEach(function (y) { if (cx === null && !y.part && y.dep > 0 && y.int > y.dep) cx = y.y; });
+    R.cross = cx;
+    if (cx !== null) { var X = px(cx); svg += '<line x1="' + X.toFixed(1) + '" y1="' + CT + '" x2="' + X.toFixed(1) + '" y2="' + CB + '" stroke="#241A11" stroke-width="1.2" stroke-dasharray="2 3"/><text x="' + X.toFixed(1) + '" y="' + (CT - 3) + '" text-anchor="' + (X > PR - 60 ? 'end' : 'middle') + '" font-size="12" font-weight="700" fill="#241A11">year ' + fnum(cx) + '</text>'; }
+    /* x labels */
+    var step = 1, cands = [1, 2, 5, 10, 20, 25, 50], lbl = []; for (i = 0; i < cands.length; i++) { step = cands[i]; if (T / step <= 6) break; }
+    if (T < 1) { lbl = [0, T]; } else for (var yv = 0; yv <= T + 1e-9; yv += step) lbl.push(yv);
+    lbl.forEach(function (yv, ix) { var X = px(yv), an = ix === 0 ? 'start' : (X > PR - 8 ? 'end' : 'middle'); svg += '<text x="' + X.toFixed(1) + '" y="' + (CB + 16) + '" text-anchor="' + an + '" font-size="12" fill="#5B4B3B">' + (T < 1 ? (yv === 0 ? '0' : yearsTxt(Math.round(yv * 12)).replace(' months', ' mo').replace(' month', ' mo')) : fnum(Math.round(yv * 100) / 100)) + '</text>'; });
+    svg += '<text x="' + ((PL + PR) / 2) + '" y="' + (CB + 31) + '" text-anchor="middle" font-size="12" fill="#5B4B3B">years</text>';
+    return svg + '</svg>';
+  }
+
+  /* ---------- render ---------- */
+  function render() {
+    var R = compute(), sv = R.solve, i;
+    var depLab = DEPN[R.dep][0];
+    show('icPW', sv !== 'start'); show('icDW', sv !== 'deposit'); show('icRW', sv !== 'rate'); show('icYW', sv !== 'years');
+    $('ic2a').classList.toggle('ic-one', sv === 'deposit' || sv === 'start'); $('ic2b').classList.toggle('ic-one', sv === 'rate' || sv === 'years');
+    if (sv === 'rate' || sv === 'years') { /* the pair keeps one box */ }
+    $('icDLab').textContent = depLab; $('icYLab').textContent = 'Time';
+    $('icGLab').textContent = (R.gk === 'int' ? (sv === 'balance' ? 'Interest goal · optional' : 'Interest I want to earn') : (sv === 'balance' ? 'Goal · optional' : 'Amount I want'));
+    $('icY').placeholder = 'e.g. 10 or 18 months';
+    var hm = null, hat = null;
+    if (R.bad) { hm = R.bad.msg; hat = R.bad.at; } else if (R.soft) { hm = R.soft.msg; hat = R.soft.at; }
+    setHint(hm, hat);
+    /* notes under every field */
+    var ty = R.typed || {}, ctxn = '';
+    setNote('icPNote', sv === 'start' ? '' : (ty.P ? 'You start with ' + fm(R.p) + '.' : 'Optional. The money you already have (leave empty for 0).'));
+    var rate = R.rate, mo = R.months;
+    if (sv === 'deposit') setNote('icDNote', ''); else if (ty.D) setNote('icDNote', mo ? 'You add ' + fm(R.d) + ' every ' + DEPN[R.dep][1] + (R.res ? ', ' + fm(R.res.dep) + ' in total over ' + yearsTxt(mo) + '.' : '.') : 'You add ' + fm(R.d) + ' every ' + DEPN[R.dep][1] + '. Type the time to see the total.'); else setNote('icDNote', 'Optional. What you add regularly (leave empty for none).');
+    if (sv === 'rate') setNote('icRNote', ''); else if (ty.R) { var ap = E.apy(rate, R.comp); setNote('icRNote', fp(rate * 100) + ' a year compounded ' + COMP[R.comp][0] + ' is an effective ' + fp(ap * 100) + ' a year' + (R.tax ? ' before tax' : '') + '.'); } else setNote('icRNote', 'Type the yearly interest rate: 5 means 5%.');
+    if (sv === 'years') setNote('icYNote', ''); else if (mo) setNote('icYNote', 'A total of ' + (mo === 1 ? '1 month' : mo + ' months') + (mo >= 12 ? ' (' + yearsTxt(mo) + ').' : '.')); else setNote('icYNote', 'Type years (10), months (18 months) or both (5y 6m).');
+    setNote('icCompNote', 'Interest is added ' + COMP[R.comp][1] + (R.comp === 'cont' ? ' (the limit of compounding more and more often).' : '.'));
+    var gn = ''; if (sv === 'balance') { if (R.ready && R.g !== undefined) gn = R.goalM ? (R.gk === 'int' ? 'You earn ' + fm(R.g) + ' in interest after ' : 'You reach ' + fm(R.g) + ' after ') + yearsTxt(R.goalM) + '.' : 'These numbers don’t reach ' + fm(R.g) + (R.gk === 'int' ? ' in interest' : '') + ' within 100 years.'; else gn = R.g !== undefined ? 'Type the rate and time to see when you reach it.' : 'Optional. Type an amount to see when you reach it.'; } else gn = R.g !== undefined ? '' : (R.gk === 'int' ? 'Type the interest you want to earn.' : 'Type the amount you want to reach.');
+    setNote('icGNote', gn);
+    setNote('icGoalKindNote', R.gk === 'int' ? 'The goal is the interest you earn, not counting what you put in.' : 'The goal is the balance at the end, what you put in plus the interest.');
+    setNote('icDepNote', R.dep === 'monthly' ? 'Deposits are made every month.' : 'Deposits are made every ' + DEPN[R.dep][1] + '.');
+    setNote('icTimingNote', st.timing === 'begin' ? 'Each deposit is made at the start of its period, so it earns interest for the whole period.' : 'Each deposit is made at the end of its period.');
+    setNote('icIncNote', R.inc ? 'Each year your deposit is ' + fp(R.inc * 100) + ' higher than the year before.' : 'Optional. Raise the deposit every year by this percentage, for example with your pay.');
+    setNote('icTaxNote', R.tax ? 'Interest is taxed as it is earned: you keep ' + fp((1 - R.tax) * 100) + ' of it, so ' + (rate !== undefined ? fp(rate * 100) + ' grows as ' + fp(rate * (1 - R.tax) * 100) + '.' : 'the rate is reduced by the tax.') : 'Optional. The tax you pay on the interest, as a percentage.');
+    setNote('icInfNote', R.inf ? 'The result is also shown in today’s money, assuming prices rise ' + fp(R.inf * 100) + ' a year.' : 'Optional. Prices rising by this percentage a year, to see what the money will buy.');
+    setNote('icVarNote', R.vr ? 'Results are also shown for a rate ' + fnum(R.vr) + ' points lower and higher.' : 'Optional. Add or subtract this many percentage points to see a lower and a higher result.');
+    setNote('icWNote', R.W ? (R.ready ? 'After the saving years you take out ' + fm(R.W) + ' a month.' : 'You take out ' + fm(R.W) + ' a month after the saving years.') : 'Optional. A monthly amount you take out after saving, to see how long the money lasts.');
+    /* result */
+    var big = '—', lab = 'Final balance', sub = $('icSub').getAttribute('data-empty'), tip = '', body = false;
+    ['icVisWrap', 'icNumsWrap', 'icCmpWrap', 'icScWrap', 'icWdWrap', 'icSchWrap', 'icStepsWrap'].forEach(function (id) { show(id, false); });
+    ['icNums', 'icCmp', 'icSc', 'icWd', 'icSch', 'icSteps', 'icVis'].forEach(function (id) { $(id).innerHTML = ''; });
+    if (R.ready) {
+      body = true; var r = R.res, b = R.base, T = r.T;
+      var goalTxt = R.gk === 'int' ? 'earn ' + fm(R.g) + ' in interest' : 'reach ' + fm(R.g);
+      if (sv === 'balance') { big = fm(r.bal); lab = 'Balance after ' + yearsTxt(R.months); }
+      else if (sv === 'start') { big = fm(R.solvedP); lab = 'Starting amount needed to ' + goalTxt; }
+      else if (sv === 'deposit') { big = fm(R.solvedD) + ' a ' + DEPN[R.dep][1]; lab = 'Deposit needed to ' + goalTxt; }
+      else if (sv === 'years') { big = R.unreach ? 'Over 100 years' : yearsTxt(R.solvedM); lab = 'Time needed to ' + goalTxt; }
+      else { big = R.unreach ? 'More than 100% a year' : fp(R.solvedR * 100) + ' a year'; lab = 'Rate needed to ' + goalTxt; }
+      sub = R.unreach ? (sv === 'years' ? 'Even after 100 years you would have ' + (R.gk === 'int' ? fm(r.int) + ' in interest' : fm(r.bal)) + ', short of ' + fm(R.g) + ' — raise the deposit or the rate.' : 'Even at 100% a year you would have ' + (R.gk === 'int' ? fm(r.int) + ' in interest' : fm(r.bal)) + ', short of ' + fm(R.g) + ' — raise the deposit or the time.') : 'You put in ' + fm(r.put) + ' · interest adds ' + fm(r.int) + (sv === 'balance' ? '' : ' · balance ' + fm(r.bal));
+      var more = r.bal - r.simple;
+      tip = 'Interest makes up ' + (r.bal > 0 ? fnum(Math.round(r.int / r.bal * 1000) / 10) + '%' : '0%') + ' of the ' + fm(r.bal) + '. Without compounding the same money would reach only ' + fm(r.simple) + ', ' + fm(more) + ' less.' + (R.cross !== null && R.cross !== undefined ? '' : '');
+      var rows = [];
+      rows.push([sv === 'balance' ? 'Final balance' : 'Balance at the end', fm(r.bal)]);
+      rows.push(['Starting amount', fm(R.p)]);
+      rows.push(['Deposits added', fm(r.dep)]);
+      rows.push(['Total you put in', fm(r.put)]);
+      rows.push(['Total interest', fm(r.int)]);
+      rows.push(['Interest on the starting amount', fm(r.intP)]);
+      rows.push(['Interest on the deposits', fm(r.int - r.intP)]);
+      rows.push(['Same money without compounding', fm(r.simple)]);
+      if (R.inf) rows.push(['Buying power in today’s money', fm(r.bal / Math.pow(1 + R.inf, T))]);
+      if (R.tax) rows.push(['Interest rate after tax', fp(b.rate * (1 - R.tax) * 100) + ' a year']);
+      rows.push(['Effective yearly rate', fp(E.apy(b.rate * (1 - R.tax), R.comp) * 100)]);
+      var dbl = E.doubling(b.rate * (1 - R.tax), R.comp); if (dbl) rows.push(['Doubling time of the starting amount', fnum(Math.round(dbl * 100) / 100) + ' years (rule of 72: ' + fnum(Math.round(72 / (b.rate * (1 - R.tax) * 100) * 100) / 100) + ')']);
+      if (sv === 'balance' && R.g !== undefined) rows.push(['Goal ' + fm(R.g), R.goalM ? 'reached after ' + yearsTxt(R.goalM) : 'not within 100 years']);
+      $('icNums').innerHTML = '<tbody>' + rows.map(function (rw) { return '<tr><td>' + rw[0] + '</td><td>' + rw[1] + '</td></tr>'; }).join('') + '</tbody>'; show('icNumsWrap', true);
+      $('icCopyTxt').textContent = lab + ': ' + big + ' (' + sub + ')';
+      /* picture */
+      var svg = draw(R); if (svg) { $('icVis').innerHTML = svg; show('icVisWrap', true); $('icVisKey').textContent = 'Dark green is your starting amount, light green your deposits, amber the interest on top. The dashed black line is the same money without compounding' + (R.vr ? '; the two dotted lines are the lower and higher rate' : '') + '.' + (R.cross !== null && R.cross !== undefined ? ' From year ' + fnum(R.cross) + ' the interest you earn in a year is more than what you deposit in that year.' : ''); }
+      /* compounding frequencies */
+      var order = ['annual', 'semi', 'quarterly', 'monthly', 'weekly', 'daily', 'cont'], ch = '<thead><tr><th>Compounded</th><th>Balance</th><th>Extra</th></tr></thead><tbody>', ref = null;
+      var vals = order.map(function (c) { var q = E.calc({ P: b.P, D: b.D, rate: b.rate, tax: b.tax, comp: c, dep: b.dep, begin: b.begin, inc: b.inc, months: b.months }); return q.bal; });
+      order.forEach(function (c, ix) { ch += '<tr class="' + (c === R.comp ? 'ic-on' : '') + '"><td>' + COMP[c][0] + '</td><td>' + fm(vals[ix]) + '</td><td>' + (ix === 0 ? '—' : '+' + fm(vals[ix] - vals[0])) + '</td></tr>'; });
+      $('icCmp').innerHTML = ch + '</tbody>'; show('icCmpWrap', true);
+      /* scenarios */
+      if (R.vr && rate !== undefined) { var lr = Math.max(0, rate - R.vr / 100), hr = rate + R.vr / 100; var sc = [['Lower: ' + fp(lr * 100), lr], ['Your rate: ' + fp(rate * 100), rate], ['Higher: ' + fp(hr * 100), hr]]; $('icSc').innerHTML = '<thead><tr><th>Rate</th><th>Balance</th><th>Interest</th></tr></thead><tbody>' + sc.map(function (s2) { var q = E.calc({ P: b.P, D: b.D, rate: s2[1], tax: b.tax, comp: b.comp, dep: b.dep, begin: b.begin, inc: b.inc, months: b.months }); return '<tr><td>' + s2[0] + '</td><td>' + fm0(q.bal) + '</td><td>' + fm0(q.int) + '</td></tr>'; }).join('') + '</tbody>'; show('icScWrap', true); }
+      /* withdrawals */
+      if (R.W) { var dr = E.drain(r.bal, R.W, b.rate, b.comp, R.tax), wt; if (dr.ends) wt = dr.full === 0 ? 'The first withdrawal of ' + fm(R.W) + ' is more than the balance, so the money does not last a month.' : 'Taking out ' + fm(R.W) + ' a month, the money pays in full for ' + yearsTxt(dr.full) + '.'; else wt = 'Taking out ' + fm(R.W) + ' a month, the money never runs out: after 100 years ' + fm(dr.bal) + ' is still left.'; $('icWd').innerHTML = '<tbody><tr><td>' + wt + '</td></tr></tbody>'; show('icWdWrap', true); }
+      /* yearly table */
+      var yr = r.yrs, sh = yr.length > 30 ? yr.slice(0, 30).concat(yr.slice(-1)) : yr;
+      $('icSch').innerHTML = '<thead><tr><th>Year</th><th>Deposits</th><th>Interest</th><th>Balance</th></tr></thead><tbody>' + sh.map(function (y) { return '<tr><td>' + (y.part ? fnum(Math.round(y.y * 100) / 100) : fnum(y.y)) + '</td><td>' + fm0(y.dep) + '</td><td>' + fm0(y.int) + '</td><td>' + fm0(y.bal) + '</td></tr>'; }).join('') + '</tbody>'; show('icSchWrap', true);
+      $('icSchKey').textContent = 'Amounts are rounded to whole ' + (st.cur === 'USD' ? 'dollars' : 'units of the currency') + '.' + (yr.length > 30 ? ' Showing years 1 to 30 and the last year of ' + yr.length + '.' : '');
+      /* steps */
+      var n0 = COMP[R.comp][0], st2 = [];
+      st2.push('Rate: ' + fp(rate * 100) + (R.tax ? ' less ' + fp(R.tax * 100) + ' tax = ' + fp(rate * (1 - R.tax) * 100) : '') + ', compounded ' + n0 + '. Effective yearly rate ' + fp(E.apy(rate * (1 - R.tax), R.comp) * 100) + '.');
+      if (R.p > 0) st2.push('Starting amount ' + fm(R.p) + ' grows to ' + fm(R.p + r.intP) + ' on its own (A = P × (1 + r ÷ n)^(n × t)' + (R.comp === 'cont' ? ', with continuous compounding A = P × e^(r × t)' : '') + ').');
+      if (R.d > 0) st2.push('Every ' + DEPN[R.dep][1] + ' ' + fm(R.d) + ' is added' + (R.inc ? ' (' + fp(R.inc * 100) + ' more each year)' : '') + ' at the ' + (st.timing === 'begin' ? 'start' : 'end') + ' of the period, ' + (r.N) + ' deposits in all, and grows too.');
+      st2.push('Together: ' + fm(r.bal) + ' = ' + fm(r.put) + ' you put in + ' + fm(r.int) + ' interest.');
+      $('icSteps').innerHTML = st2.map(function (s3) { return '<li>' + s3 + '</li>'; }).join(''); show('icStepsWrap', true);
+    }
+    $('icBig').textContent = big; $('icBig').parentNode.classList.toggle('ic-long', big.length > 14); $('icLab').textContent = lab; $('icSub').textContent = sub; $('icBody').style.display = body ? '' : 'none'; $('icTip').textContent = tip; $('icTip').style.display = tip ? '' : 'none';
+    $('icMLab').textContent = body ? (sv === 'balance' ? 'Final balance' : sv === 'start' ? 'Start needed' : sv === 'deposit' ? 'Deposit needed' : sv === 'years' ? 'Time needed' : 'Rate needed') : 'Final balance'; $('icMVal').textContent = big;
+    var emp = 'Type the interest rate, the time and a starting amount or a deposit to see the result.';
+    if (!body) { sub = R.bad ? emp : (R.miss && R.miss.length ? 'Type ' + (R.miss.length > 1 ? R.miss.slice(0, -1).join(', ') + ' and ' + R.miss[R.miss.length - 1] : R.miss[0]) + ' to see the result.' : emp); $('icSub').textContent = sub; }
+    st.last = R;
+  }
+
+  /* ---------- controls ---------- */
+  [].forEach.call(document.querySelectorAll('.p-ic input[type=text]'), function (el) { el.addEventListener('input', render); });
+  CalcThis.initCsel($('icSolve')); CalcThis.initCsel($('icComp')); CalcThis.initCsel($('icDep')); CalcThis.initCsel($('icGoalKind'));
+  [['icSolve'], ['icComp'], ['icDep'], ['icGoalKind']].forEach(function (p) { $(p[0]).addEventListener('change', render); });
+  [].forEach.call($('icTiming').children, function (b) { b.addEventListener('click', function () { st.timing = b.getAttribute('data-v'); [].forEach.call($('icTiming').children, function (x) { var on = x === b; x.classList.toggle('on', on); x.setAttribute('aria-pressed', on ? 'true' : 'false'); }); render(); }); });
+  function cselSet(id, v) { $(id).value = v; }
+  var SOLN = { balance: 'Final balance', deposit: 'Deposit needed', years: 'Time needed', rate: 'Rate needed' }, COMPN = { annual: 'Annually', semi: 'Semiannually', quarterly: 'Quarterly', monthly: 'Monthly', weekly: 'Weekly', daily: 'Daily', cont: 'Continuously' }, DEPNN = { weekly: 'Every week', biweekly: 'Every 2 weeks', monthly: 'Every month', quarterly: 'Every quarter', yearly: 'Every year' };
+  var ALL = ['icP', 'icD', 'icR', 'icY', 'icG', 'icInc', 'icTax', 'icInf', 'icVar', 'icW'];
+  function resetAdv() { ['icInc', 'icTax', 'icInf', 'icVar', 'icW'].forEach(function (id) { $(id).value = ''; }); cselSet('icDep', 'monthly', DEPNN); cselSet('icGoalKind', 'bal'); st.timing = 'end'; [].forEach.call($('icTiming').children, function (x) { var on = x.getAttribute('data-v') === 'end'; x.classList.toggle('on', on); x.setAttribute('aria-pressed', on ? 'true' : 'false'); }); }
+  $('icClear').addEventListener('click', function () { ALL.forEach(function (id) { $(id).value = ''; }); cselSet('icSolve', 'balance', SOLN); cselSet('icComp', 'monthly', COMPN); resetAdv(); render(); $('icP').focus(); });
+  $('icAdvBtn').addEventListener('click', function () {
+    st.adv = !st.adv; $('icAdvBtn').classList.toggle('open', st.adv); $('icAdvBtnLab').textContent = st.adv ? 'Go simple' : 'Go advanced'; $('icAdvIn').style.display = st.adv ? '' : 'none';
+    if (!st.adv) resetAdv(); render();
+  });
+  /* the currency picker: the salary page's searchable list, display only */
+  (function () {
+    var opt = function (c, pop) { var n = curName(c); return '<button type="button" class="csel-opt' + (pop ? ' csel-pop' : '') + (c === 'USD' ? ' on' : '') + '" role="option" aria-selected="' + (c === 'USD') + '" data-value="' + c + '" data-p="' + (SE.RANK.indexOf(c) + 1) + '" data-s="' + (c + ' ' + n + ' ' + sym(c)).toLowerCase() + '"><span class="n">' + n + '</span><span class="c">' + c + '</span></button>'; };
+    var all = SE.CURRENCIES.slice().sort(function (a, b) { return curName(a) < curName(b) ? -1 : 1; });
+    $('icCur').querySelector('.csel-panel').innerHTML = '<div class="csel-sbox"><input class="csel-search" type="text" placeholder="Search currency" aria-label="Search currency" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="go"></div><div class="csel-group">Popular</div>' +
+      SE.POPULAR.map(function (c) { return opt(c, true); }).join('') + '<div class="csel-group">All currencies</div>' + all.map(function (c) { return opt(c, false); }).join('') + '<div class="csel-none" style="display:none">No currency found</div>';
+    CalcThis.initCsel($('icCur'));
+    $('icCur').querySelector('.csel-val').textContent = 'USD';
+  })();
+  $('icCur').addEventListener('change', function () { st.cur = $('icCur').value || 'USD'; st.dec = decOf(st.cur); $('icCur').querySelector('.csel-val').textContent = st.cur; render(); });
+  render();
+};
+/* COMPOUND:END */

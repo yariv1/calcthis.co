@@ -1,0 +1,284 @@
+{
+ "slug": "compound-interest-calculator",
+ "research": "md-files/calcthis-compoundinterest-research.md",
+ "competitors": [
+  {
+   "name": "calculator.net interest calculator",
+   "url": "https://www.calculator.net/interest-calculator.html",
+   "openedLive": true,
+   "date": "2026-11-13",
+   "inputs": [
+    "initial investment",
+    "annual contribution",
+    "monthly contribution",
+    "contribute at the beginning or end of each period",
+    "interest rate",
+    "compounding from annually to continuously (9 options)",
+    "investment length in years and months",
+    "tax rate on interest",
+    "inflation rate",
+    "results: ending balance, total principal, total contributions, total interest",
+    "interest of the initial investment and of the contributions",
+    "buying power of the end balance after inflation",
+    "share bar and accumulation chart",
+    "annual and monthly schedule tables",
+    "APY and APR converter between compounding frequencies"
+   ]
+  },
+  {
+   "name": "Omnicalculator compound interest",
+   "url": "https://www.omnicalculator.com/finance/compound-interest",
+   "openedLive": true,
+   "date": "2026-11-13",
+   "inputs": [
+    "currency selector",
+    "initial balance",
+    "interest rate",
+    "term in years, months or both",
+    "compounding frequency (13 options)",
+    "additional deposits and how often",
+    "final balance and total compound interest",
+    "yearly balances as bar, pie or table",
+    "worked examples including solving the rate and the doubling time",
+    "compound interest formula and table"
+   ]
+  },
+  {
+   "name": "Investor.gov compound interest calculator",
+   "url": "https://www.investor.gov/financial-tools-calculators/calculators/compound-interest-calculator",
+   "openedLive": true,
+   "date": "2026-11-13",
+   "inputs": [
+    "initial investment",
+    "monthly contribution (a negative number is a withdrawal)",
+    "length of time in years",
+    "estimated annual interest rate",
+    "interest rate variance range",
+    "compound frequency from annual to daily"
+   ]
+  },
+  {
+   "name": "CalculatorSoup compound interest calculator",
+   "url": "https://www.calculatorsoup.com/calculators/financial/compound-interest-calculator.php",
+   "openedLive": true,
+   "date": "2026-11-13",
+   "inputs": [
+    "solve for the total",
+    "solve for the principal from the total",
+    "solve for the principal from the total interest",
+    "solve for the rate",
+    "solve for the time",
+    "principal",
+    "annual rate",
+    "compounding (11 options including continuous)",
+    "how long in months or years",
+    "deposits or withdrawals with amount and frequency",
+    "deposit made at the beginning or end of the period",
+    "growth chart and yearly table",
+    "calculation steps"
+   ]
+  },
+  {
+   "name": "Inch Calculator daily compound interest calculator",
+   "url": "https://www.inchcalculator.com/daily-compound-interest-calculator/",
+   "openedLive": true,
+   "date": "2026-11-13",
+   "inputs": [
+    "initial value",
+    "interest rate daily or annual",
+    "time in days",
+    "future value and total interest",
+    "balance by day table"
+   ]
+  },
+  {
+   "name": "NerdWallet compound interest calculator",
+   "url": "https://www.nerdwallet.com/banking/calculators/compound-interest-calculator",
+   "openedLive": true,
+   "date": "2026-11-13",
+   "inputs": [
+    "monthly and annual contributions (as described on the page)",
+    "example rate of return"
+   ]
+  }
+ ],
+ "features": [
+  {
+   "covers": [
+    "calculator.net interest calculator: initial investment",
+    "calculator.net interest calculator: interest rate",
+    "Omnicalculator compound interest: initial balance",
+    "Omnicalculator compound interest: interest rate",
+    "Investor.gov compound interest calculator: initial investment",
+    "Investor.gov compound interest calculator: estimated annual interest rate",
+    "CalculatorSoup compound interest calculator: principal",
+    "CalculatorSoup compound interest calculator: annual rate",
+    "Inch Calculator daily compound interest calculator: initial value",
+    "Inch Calculator daily compound interest calculator: interest rate daily or annual",
+    "NerdWallet compound interest calculator: example rate of return"
+   ],
+   "status": "match",
+   "ids": [
+    "icP",
+    "icR"
+   ]
+  },
+  {
+   "covers": [
+    "calculator.net interest calculator: annual contribution",
+    "calculator.net interest calculator: monthly contribution",
+    "Omnicalculator compound interest: additional deposits and how often",
+    "Investor.gov compound interest calculator: monthly contribution (a negative number is a withdrawal)",
+    "CalculatorSoup compound interest calculator: deposits or withdrawals with amount and frequency",
+    "NerdWallet compound interest calculator: monthly and annual contributions (as described on the page)"
+   ],
+   "status": "exceed",
+   "ids": [
+    "icD",
+    "icDep",
+    "icW",
+    "icInc"
+   ]
+  },
+  {
+   "covers": [
+    "calculator.net interest calculator: investment length in years and months",
+    "Omnicalculator compound interest: term in years, months or both",
+    "Investor.gov compound interest calculator: length of time in years",
+    "CalculatorSoup compound interest calculator: how long in months or years"
+   ],
+   "status": "exceed",
+   "ids": [
+    "icY"
+   ]
+  },
+  {
+   "covers": [
+    "calculator.net interest calculator: compounding from annually to continuously (9 options)",
+    "Omnicalculator compound interest: compounding frequency (13 options)",
+    "Investor.gov compound interest calculator: compound frequency from annual to daily",
+    "CalculatorSoup compound interest calculator: compounding (11 options including continuous)"
+   ],
+   "status": "exceed",
+   "ids": [
+    "icComp",
+    "icCmp"
+   ]
+  },
+  {
+   "covers": [
+    "calculator.net interest calculator: contribute at the beginning or end of each period",
+    "CalculatorSoup compound interest calculator: deposit made at the beginning or end of the period"
+   ],
+   "status": "match",
+   "ids": [
+    "icTiming"
+   ]
+  },
+  {
+   "covers": [
+    "calculator.net interest calculator: tax rate on interest",
+    "calculator.net interest calculator: inflation rate",
+    "calculator.net interest calculator: buying power of the end balance after inflation"
+   ],
+   "status": "match",
+   "ids": [
+    "icTax",
+    "icInf",
+    "icNums"
+   ]
+  },
+  {
+   "covers": [
+    "Investor.gov compound interest calculator: interest rate variance range"
+   ],
+   "status": "exceed",
+   "ids": [
+    "icVar",
+    "icSc"
+   ]
+  },
+  {
+   "covers": [
+    "CalculatorSoup compound interest calculator: solve for the total",
+    "CalculatorSoup compound interest calculator: solve for the principal from the total",
+    "CalculatorSoup compound interest calculator: solve for the principal from the total interest",
+    "CalculatorSoup compound interest calculator: solve for the rate",
+    "CalculatorSoup compound interest calculator: solve for the time"
+   ],
+   "status": "exceed",
+   "ids": [
+    "icSolve",
+    "icG",
+    "icGoalKind"
+   ]
+  },
+  {
+   "covers": [
+    "calculator.net interest calculator: results: ending balance, total principal, total contributions, total interest",
+    "calculator.net interest calculator: interest of the initial investment and of the contributions",
+    "Omnicalculator compound interest: final balance and total compound interest",
+    "Inch Calculator daily compound interest calculator: future value and total interest"
+   ],
+   "status": "match",
+   "ids": [
+    "icNums",
+    "icBig"
+   ]
+  },
+  {
+   "covers": [
+    "calculator.net interest calculator: share bar and accumulation chart",
+    "calculator.net interest calculator: annual and monthly schedule tables",
+    "Omnicalculator compound interest: yearly balances as bar, pie or table",
+    "CalculatorSoup compound interest calculator: growth chart and yearly table"
+   ],
+   "status": "exceed",
+   "ids": [
+    "icVis",
+    "icSch"
+   ]
+  },
+  {
+   "covers": [
+    "CalculatorSoup compound interest calculator: calculation steps",
+    "Omnicalculator compound interest: worked examples including solving the rate and the doubling time",
+    "Omnicalculator compound interest: compound interest formula and table"
+   ],
+   "status": "match",
+   "ids": [
+    "icSteps"
+   ]
+  },
+  {
+   "covers": [
+    "calculator.net interest calculator: APY and APR converter between compounding frequencies"
+   ],
+   "status": "match",
+   "ids": [
+    "icComp",
+    "icNums"
+   ]
+  },
+  {
+   "covers": [
+    "Omnicalculator compound interest: currency selector"
+   ],
+   "status": "match",
+   "ids": [
+    "icCur"
+   ]
+  },
+  {
+   "covers": [
+    "Inch Calculator daily compound interest calculator: time in days",
+    "Inch Calculator daily compound interest calculator: balance by day table"
+   ],
+   "status": "dropped",
+   "signoff": {
+    "quote": "Approve all (his reply to the report that said: daily compound interest, with time in days, becomes its own page later; the hub does not take a time in days or a balance by day table)",
+    "date": "2026-11-13"
+   }
+  }
+ ]
+}

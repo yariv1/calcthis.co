@@ -1,0 +1,26 @@
+{
+ "date": "2026-11-13",
+ "competitors": [
+  { "name": "calculator.net interest calculator", "url": "https://www.calculator.net/interest-calculator.html", "reopenedAfterBuild": true, "gaps": [] },
+  { "name": "Omnicalculator compound interest", "url": "https://www.omnicalculator.com/finance/compound-interest", "reopenedAfterBuild": true, "gaps": [] },
+  { "name": "Investor.gov compound interest calculator", "url": "https://www.investor.gov/financial-tools-calculators/calculators/compound-interest-calculator", "reopenedAfterBuild": true, "gaps": [] },
+  { "name": "CalculatorSoup compound interest calculator", "url": "https://www.calculatorsoup.com/calculators/financial/compound-interest-calculator.php", "reopenedAfterBuild": true, "gaps": [] },
+  { "name": "Inch Calculator daily compound interest calculator", "url": "https://www.inchcalculator.com/daily-compound-interest-calculator/", "reopenedAfterBuild": true, "gaps": [] },
+  { "name": "NerdWallet compound interest calculator", "url": "https://www.nerdwallet.com/banking/calculators/compound-interest-calculator", "reopenedAfterBuild": true, "gaps": [] }
+ ],
+ "weBeat": [
+  "visual: one layered growth chart (starting amount, deposits and interest stacked) with a dashed 'same money without compounding' line, the year the yearly interest passes the yearly deposits marked, and a lower and higher rate as dotted lines; competitors show a pie, a bar or a plain chart",
+  "functional: solve the deposit, the starting amount, the time or the rate needed for a goal (a final balance or an interest amount) in the same boxes (CalculatorSoup solves some, one at a time, none solves the deposit); every compounding frequency side by side for your own numbers; deposits that grow each year; a lower and higher rate; after-tax and inflation-adjusted values; how long money lasts when taken out; any currency",
+  "every competitor feature kept except the daily-compound page's time in days and balance by day table (a later page, per the approved report)"
+ ],
+ "gapsLeft": [],
+ "unverified": [
+  "real phone",
+  "other browsers (Chrome only)",
+  "print",
+  "Copy result button in a real clipboard session",
+  "Bankrate could not be opened (human-verification wall) and NerdWallet's calculator widget could not be read, so neither was compared in detail",
+  "Investor.gov and CalculatorSoup let money be withdrawn while still saving (a negative deposit); here withdrawals are a separate phase after the saving years",
+  "the competitors were reloaded after the build (page loads and headings read), not typed side by side with every input"
+ ]
+}

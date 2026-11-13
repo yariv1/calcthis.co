@@ -1,0 +1,289 @@
+{
+  "slug": "compound-interest-calculator",
+  "bodyClass": "p-ic",
+  "blocks": [
+    "COMPOUND"
+  ],
+  "result": {
+    "big": "icBig",
+    "body": "icBody",
+    "hint": "icHint"
+  },
+  "required": [
+    "icR",
+    "icY",
+    "icG"
+  ],
+  "fill": [
+    [
+      "click",
+      "icClear"
+    ],
+    [
+      "set",
+      "icSolve",
+      "balance"
+    ],
+    [
+      "set",
+      "icComp",
+      "monthly"
+    ],
+    [
+      "set",
+      "icDep",
+      "monthly"
+    ],
+    [
+      "seg",
+      "icTiming",
+      "end"
+    ],
+    [
+      "set",
+      "icCur",
+      "USD"
+    ],
+    [
+      "set",
+      "icP",
+      "10000"
+    ],
+    [
+      "set",
+      "icD",
+      "200"
+    ],
+    [
+      "set",
+      "icR",
+      "6"
+    ],
+    [
+      "set",
+      "icY",
+      "10"
+    ]
+  ],
+  "optionalSamples": {
+    "icP": [
+      "5000",
+      "0",
+      "1,000"
+    ],
+    "icD": [
+      "250",
+      "0"
+    ],
+    "icInc": [
+      "3",
+      "0",
+      "100"
+    ],
+    "icTax": [
+      "20",
+      "0",
+      "99"
+    ],
+    "icInf": [
+      "2.5",
+      "0"
+    ],
+    "icVar": [
+      "1",
+      "5"
+    ],
+    "icW": [
+      "1500",
+      "10"
+    ]
+  },
+  "pools": {
+    "icP": [
+      "10000",
+      "0",
+      "250,000"
+    ],
+    "icD": [
+      "200",
+      "0",
+      "50"
+    ],
+    "icR": [
+      "6",
+      "0",
+      "12.5"
+    ],
+    "icY": [
+      "10",
+      "18 months",
+      "5y 6m",
+      "40",
+      "1"
+    ],
+    "icG": [
+      "100000",
+      "50000"
+    ],
+    "icInc": [
+      "3",
+      "0"
+    ],
+    "icTax": [
+      "20",
+      "0"
+    ],
+    "icInf": [
+      "2.5"
+    ],
+    "icVar": [
+      "1",
+      "2"
+    ],
+    "icW": [
+      "1500",
+      "300"
+    ]
+  },
+  "variants": [
+    [
+      [
+        "set",
+        "icSolve",
+        "deposit"
+      ],
+      [
+        "set",
+        "icD",
+        ""
+      ],
+      [
+        "set",
+        "icG",
+        "100000"
+      ]
+    ],
+    [
+      [
+        "set",
+        "icSolve",
+        "years"
+      ],
+      [
+        "set",
+        "icG",
+        "500000"
+      ]
+    ],
+    [
+      [
+        "set",
+        "icSolve",
+        "rate"
+      ],
+      [
+        "set",
+        "icG",
+        "40000"
+      ]
+    ],
+    [
+      [
+        "set",
+        "icInc",
+        "3"
+      ],
+      [
+        "set",
+        "icTax",
+        "20"
+      ],
+      [
+        "set",
+        "icInf",
+        "2.5"
+      ],
+      [
+        "set",
+        "icVar",
+        "1"
+      ],
+      [
+        "set",
+        "icW",
+        "1500"
+      ]
+    ],
+    [
+      [
+        "set",
+        "icDep",
+        "weekly"
+      ],
+      [
+        "set",
+        "icComp",
+        "daily"
+      ]
+    ],
+    [
+      [
+        "seg",
+        "icTiming",
+        "begin"
+      ],
+      [
+        "set",
+        "icComp",
+        "cont"
+      ]
+    ],
+    [
+      [
+        "set",
+        "icSolve",
+        "start"
+      ],
+      [
+        "set",
+        "icG",
+        "50000"
+      ],
+      [
+        "set",
+        "icP",
+        ""
+      ]
+    ],
+    [
+      [
+        "set",
+        "icGoalKind",
+        "int"
+      ],
+      [
+        "set",
+        "icSolve",
+        "deposit"
+      ],
+      [
+        "set",
+        "icG",
+        "20000"
+      ],
+      [
+        "set",
+        "icD",
+        ""
+      ]
+    ]
+  ],
+  "scrollTo": "icBig",
+  "errorState": [
+    [
+      "set",
+      "icY",
+      "abc"
+    ]
+  ]
+}
