@@ -16670,8 +16670,8 @@ CalcThis.tipEngine = (function () {
     { id: 'hairdresser', label: 'Hairdresser', lo: 15, hi: 20, chips: [15, 18, 20, 25], def: 20, who: 'hairdressers' },
     { id: 'barber', label: 'Barber', lo: 15, hi: 25, chips: [15, 20, 25], def: 20, who: 'barbers' },
     { id: 'tattoo', label: 'Tattoo artist', lo: 15, hi: 25, chips: [15, 20, 25], def: 20, who: 'tattoo artists' },
-    { id: 'massage', label: 'Massage therapist', lo: 15, hi: 20, chips: [15, 18, 20, 25], def: 18, who: 'massage therapists' },
-    { id: 'groomer', label: 'Dog groomer', lo: 15, hi: 20, chips: [15, 18, 20, 25], def: 18, who: 'dog groomers' },
+    { id: 'massage', label: 'Massage therapist', lo: 15, hi: 20, chips: [15, 18, 20, 25], def: 20, who: 'massage therapists' },
+    { id: 'groomer', label: 'Dog groomer', lo: 15, hi: 20, chips: [15, 18, 20, 25], def: 20, who: 'dog groomers' },
     { id: 'rideshare', label: 'Uber or Lyft driver', lo: 10, hi: 20, chips: [10, 15, 18, 20], def: 15, who: 'rideshare drivers' },
     { id: 'hair', label: 'Nails or other salon service', lo: 10, hi: 20, chips: [10, 15, 18, 20], def: 15, who: 'nail and other salon services' },
     { id: 'other', label: 'Something else', lo: null, hi: null, chips: [10, 15, 18, 20, 25], def: 18, who: '' }
