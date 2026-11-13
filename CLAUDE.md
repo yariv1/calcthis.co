@@ -272,7 +272,7 @@ must be built from the article's actual units, every time, not pasted from a tem
 
 ## Project state
 
-- **Asset version:** v344 (live; `.assetver`; unit-pair content fix deployed, 106 calculators, 236 pages)
+- **Asset version:** v350 (live; z-score calculator deployed 2026-11-13, 107 calculators, 237 pages)
 - **Total pages:** 230 live (sitemap)
 - **Model:** Sonnet 5
 
