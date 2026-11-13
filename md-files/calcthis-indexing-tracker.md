@@ -190,3 +190,4 @@ GSC snapshot 2026-10-26: 69 indexed, 13 not indexed (8 Discovered, 1 Crawled, 1 
 - 2026-11-13 (v350): /z-score-calculator/ deployed (commit 485c42f3, Pages built, live 200). IndexNow pinged 237 URLs (HTTP 200). Bing manual submit NOT done (signed out). GSC not requested: add to the queue after the unit pairs + tip pages.
 - GSC 2026-11-13 later "Start queue": 0 requested, /cm-to-inches/ = Quota Exceeded again (same day as the first try). Queue order unchanged: 18 unit pairs, tip hub + 8 service pages, /z-score-calculator/, paycheck states from kentucky.
 - 2026-11-13 (v351): /compound-interest-calculator/ deployed. IndexNow pinged 238 URLs (HTTP 200). Bing manual submit NOT done (signed out). GSC not requested: add to the queue after /z-score-calculator/.
+- BING 2026-11-13 (evening): /z-score-calculator/ and /compound-interest-calculator/ submitted manually (signed in); both appear in the Submitted Urls list as "Today". GSC still pending (quota).
