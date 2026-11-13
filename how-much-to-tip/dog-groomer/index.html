@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=347">
+<link rel="stylesheet" href="/assets/style.css?v=349">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
 <script>
@@ -361,7 +361,7 @@
   <div class="grid">
     <div class="card">
       <div class="card-pad">
-        <h2 class="card-h2">Your bill</h2>
+        <div class="sl-head"><h2 class="card-h2">Your bill</h2><div class="csel sl-cur" id="tpCur" data-value="USD" data-search="1" aria-label="Currency"><button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false"><span class="csel-val">USD</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="csel-panel" role="listbox"></div></div></div>
 
         <div class="modeseg" id="tpModeSeg" role="group" aria-label="What to calculate">
           <button class="on" type="button" data-v="tip">Tip &amp; split</button>
@@ -408,7 +408,6 @@
           </div>
           <div class="fld"><span class="lab">Rounding</span><div class="csel" id="tpRound" data-value=""><button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false"><span class="csel-val"></span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="csel-panel" role="listbox"></div></div></div>
           <label class="dc-check" for="tpUneven"><input type="checkbox" id="tpUneven"><span>Split unevenly, by what each person ordered</span></label>
-          <div class="fld"><span class="lab">Currency symbol</span><div class="csel" id="tpSym" data-value=""><button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false"><span class="csel-val"></span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="csel-panel" role="listbox"></div></div></div>
         </div>
 
         <div class="add-row split" style="margin-top:16px">
@@ -779,7 +778,7 @@
 
 </div>
 
-<script src="/assets/app.js?v=347"></script>
+<script src="/assets/app.js?v=349"></script>
 <script>CalcThis.initTipCalc();</script>
 <script src="/feedback.js" defer></script>
 </body>

@@ -98,7 +98,7 @@ const meta = {};
     ['Do you tip for takeout in Canada?', 'Often not: 54% of respondents in the Research Co. survey said a tip is not necessary for takeout pickup.'],
     ['Is the tax on a restaurant bill the same as the rate in the table?', 'Not always. The table shows each province’s general rate; some provinces tax restaurant meals and alcohol differently. For an exact split, type the tax from your receipt under Go advanced in the calculator.']
   ];
-  const calcCanada = calcSeg.replace('<div class="fld"><span class="lab">What are you tipping?</span>', () => `<div class="fld"><span class="lab">Province or territory</span>${csel('tpProv')}</div>\n        <p class="st-note" id="tpProvNote" style="margin-top:-8px"></p>\n\n        <div class="fld"><span class="lab">What are you tipping?</span>`);
+  const calcCanada = calcSeg.replace('id="tpCur" data-value="USD"', 'id="tpCur" data-value="CAD"').replace('<span class="csel-val">USD</span>', '<span class="csel-val">CAD</span>').replace('<div class="fld"><span class="lab">What are you tipping?</span>', () => `<div class="fld"><span class="lab">Province or territory</span>${csel('tpProv')}</div>\n        <p class="st-note" id="tpProvNote" style="margin-top:-8px"></p>\n\n        <div class="fld"><span class="lab">What are you tipping?</span>`);
   const hero = `  <section class="hero">
     <div class="eyebrow">Tipping guide · Canada</div>
     <h1>Tipping in Canada</h1>

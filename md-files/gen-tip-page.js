@@ -116,7 +116,7 @@ ${hero}
   <div class="grid">
     <div class="card">
       <div class="card-pad">
-        <h2 class="card-h2">Your bill</h2>
+        <div class="sl-head"><h2 class="card-h2">Your bill</h2><div class="csel sl-cur" id="tpCur" data-value="USD" data-search="1" aria-label="Currency"><button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false"><span class="csel-val">USD</span>${chev}</button><div class="csel-panel" role="listbox"></div></div></div>
 
         <div class="modeseg" id="tpModeSeg" role="group" aria-label="What to calculate">
           <button class="on" type="button" data-v="tip">Tip &amp; split</button>
@@ -163,7 +163,6 @@ ${hero}
           </div>
           <div class="fld"><span class="lab">Rounding</span>${csel('tpRound')}</div>
           <label class="dc-check" for="tpUneven"><input type="checkbox" id="tpUneven"><span>Split unevenly, by what each person ordered</span></label>
-          <div class="fld"><span class="lab">Currency symbol</span>${csel('tpSym')}</div>
         </div>
 
         <div class="add-row split" style="margin-top:16px">

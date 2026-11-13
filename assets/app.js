@@ -16764,10 +16764,21 @@ CalcThis.tipEngine = (function () {
 CalcThis.initTipCalc = function () {
   var E = CalcThis.tipEngine, $ = function (id) { return document.getElementById(id); };
   var pre = document.body.getAttribute('data-svc');
-  var st = { mode: 'tip', adv: false, svc: pre && E.service(pre).id === pre ? pre : 'restaurant', prov: '', base: 'total', round: 'none', sym: '$', uneven: false, rows: [{ amt: '' }, { amt: '' }] }, last = null;
+  var st = { mode: 'tip', adv: false, svc: pre && E.service(pre).id === pre ? pre : 'restaurant', prov: '', base: 'total', round: 'none', cur: 'USD', uneven: false, rows: [{ amt: '' }, { amt: '' }] }, last = null;
+  if ($('tpCur')) st.cur = $('tpCur').getAttribute('data-value') || 'USD';
   var MAX = 1e9;
+  var NF = {}, DN = null;
+  try { DN = new Intl.DisplayNames(['en'], { type: 'currency' }); } catch (e) { DN = null; }
+  function curName(c) { try { var n = DN && DN.of(c); return (n && n !== c) ? n : c; } catch (e) { return c; } }
+  function csym(c) { try { return new Intl.NumberFormat('en-US', { style: 'currency', currency: c, currencyDisplay: 'narrowSymbol' }).format(0).replace(/[0-9.,\s]/g, ''); } catch (e) { return c; } }
+  var WHOLE = { USD: 'dollar', CAD: 'dollar', AUD: 'dollar', NZD: 'dollar', SGD: 'dollar', HKD: 'dollar', EUR: 'euro', GBP: 'pound' };
+  function roundOpts() { var w = WHOLE[st.cur] || 'unit'; return [['none', 'No rounding'], ['tip', 'Round the tip up to a whole ' + w], ['total', 'Round the total up to a whole ' + w], ['person', 'Round each share up to a whole ' + w]]; }
   function num(v) { var t = String(v).replace(/[$,\s%]/g, ''); var n = t === '' ? NaN : Number(t); return isFinite(n) ? n : NaN; }
-  function mon(x) { return (x < 0 ? '−' : '') + st.sym + Math.abs(x).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+  function mon(x) {
+    var k = st.cur;
+    if (!NF[k]) { try { NF[k] = new Intl.NumberFormat('en-US', { style: 'currency', currency: k, currencyDisplay: 'narrowSymbol', minimumFractionDigits: 2, maximumFractionDigits: 2 }); } catch (e) { NF[k] = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 2 }); } }
+    return (x < 0 ? '−' : '') + CalcThis.fmtMoney(NF[k], k, Math.abs(x));
+  }
   function pct(x) { return String(Math.round(x * 100) / 100) + '%'; }
   function esc(t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'); }
   function setSeg(id, v) { [].forEach.call($(id).querySelectorAll('button'), function (b) { b.classList.toggle('on', b.getAttribute('data-v') === v); }); }
@@ -16809,7 +16820,7 @@ CalcThis.initTipCalc = function () {
   }
   function buildRows() {
     $('tpRows').innerHTML = st.rows.map(function (r, i) {
-      return '<div class="fld"><div class="st-lab"><label class="lab" for="tpAmt' + i + '">Person ' + (i + 1) + ' ordered <span class="unit">' + esc(st.sym) + '</span></label>' + (i > 1 ? '<button type="button" class="st-rm" data-i="' + i + '">Remove</button>' : '') + '</div><div class="inp"><input id="tpAmt' + i + '" class="tp-amt" data-i="' + i + '" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. ' + (i % 2 ? '18.50' : '32') + '" value="' + esc(r.amt) + '"></div></div>';
+      return '<div class="fld"><div class="st-lab"><label class="lab" for="tpAmt' + i + '">Person ' + (i + 1) + ' ordered <span class="unit">$</span></label>' + (i > 1 ? '<button type="button" class="st-rm" data-i="' + i + '">Remove</button>' : '') + '</div><div class="inp"><input id="tpAmt' + i + '" class="tp-amt" data-i="' + i + '" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. ' + (i % 2 ? '18.50' : '32') + '" value="' + esc(r.amt) + '"></div></div>';
     }).join('');
   }
   function showMode() {
@@ -16821,7 +16832,7 @@ CalcThis.initTipCalc = function () {
     $('tpAdvBtn').parentNode.style.display = rev ? 'none' : '';
     $('tpAdvIn').style.display = !rev && st.adv ? '' : 'none';
     $('tpBillLab').firstChild.textContent = rev ? 'Bill, before the tip ' : 'Bill, tax included ';
-    $('tpEx').textContent = rev ? 'See an example: $86.40 bill, $102 paid' : 'See an example: $86.40 bill, 18% tip, 4 people';
+    $('tpEx').textContent = rev ? 'See an example: ' + mon(86.4) + ' bill, ' + mon(102) + ' paid' : 'See an example: ' + mon(86.4) + ' bill, 18% tip, 4 people';
   }
   /* ---- results ---- */
   function renderTip(hints) {
@@ -16927,7 +16938,7 @@ CalcThis.initTipCalc = function () {
   $('tpService').addEventListener('change', function () { st.svc = $('tpService').value; var s = svc(); buildChips(); $('tpPct').value = String(s.def); markPct(); render(); });
   $('tpBaseSeg').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; st.base = b.getAttribute('data-v'); setSeg('tpBaseSeg', st.base); render(); });
   $('tpRound').addEventListener('change', function () { st.round = $('tpRound').value; render(); });
-  $('tpSym').addEventListener('change', function () { st.sym = $('tpSym').value; [].forEach.call(document.querySelectorAll('.tp-symlab'), function (el) { el.textContent = st.sym; }); buildRows(); render(); });
+  $('tpCur').addEventListener('change', function () { st.cur = $('tpCur').value || 'USD'; $('tpCur').querySelector('.csel-val').textContent = st.cur; setPanel($('tpRound'), roundOpts(), st.round); buildRows(); showMode(); render(); });
   $('tpUneven').addEventListener('change', function () { st.uneven = $('tpUneven').checked; showMode(); render(); });
   $('tpRows').addEventListener('input', function (e) { var t = e.target; if (t.classList.contains('tp-amt')) { st.rows[+t.getAttribute('data-i')].amt = t.value; render(); } });
   $('tpRows').addEventListener('click', function (e) { var b = e.target.closest('.st-rm'); if (!b) return; st.rows.splice(+b.getAttribute('data-i'), 1); buildRows(); render(); });
@@ -16940,9 +16951,8 @@ CalcThis.initTipCalc = function () {
   $('tpAdvBtn').addEventListener('click', function () {
     st.adv = !st.adv; $('tpAdvBtn').classList.toggle('open', st.adv); $('tpAdvBtnLab').textContent = st.adv ? 'Go simple' : 'Go advanced';
     if (!st.adv) { /* Go simple resets every advanced setting */
-      $('tpTax').value = ''; st.base = 'total'; setSeg('tpBaseSeg', 'total'); st.round = 'none'; setPanel($('tpRound'), ROUNDS, 'none');
+      $('tpTax').value = ''; st.base = 'total'; setSeg('tpBaseSeg', 'total'); st.round = 'none'; setPanel($('tpRound'), roundOpts(), 'none');
       st.uneven = false; $('tpUneven').checked = false; st.rows = [{ amt: '' }, { amt: '' }]; buildRows();
-      st.sym = '$'; setPanel($('tpSym'), SYMS, '$'); [].forEach.call(document.querySelectorAll('.tp-symlab'), function (el) { el.textContent = '$'; });
     }
     showMode(); render();
   });
@@ -16958,10 +16968,18 @@ CalcThis.initTipCalc = function () {
     try { navigator.clipboard.writeText(txt).then(function () { done(true); }, legacy); } catch (e) { legacy(); }
   });
   /* ---- init ---- */
-  var ROUNDS = [['none', 'No rounding'], ['tip', 'Round the tip up to a whole dollar'], ['total', 'Round the total up to a whole dollar'], ['person', 'Round each share up to a whole dollar']];
-  var SYMS = [['$', '$ dollar'], ['€', '€ euro'], ['£', '£ pound'], ['CA$', 'CA$ Canadian dollar'], ['A$', 'A$ Australian dollar'], ['₹', '₹ rupee']];
+  var SE = CalcThis.salaryEngine;
+  /* the currency picker: the salary page's searchable list (design system), always visible in the card header */
+  (function () {
+    var opt = function (c, pop) { var n = curName(c); return '<button type="button" class="csel-opt' + (pop ? ' csel-pop' : '') + (c === st.cur ? ' on' : '') + '" role="option" aria-selected="' + (c === st.cur) + '" data-value="' + c + '" data-p="' + (SE.RANK.indexOf(c) + 1) + '" data-s="' + (c + ' ' + n + ' ' + csym(c)).toLowerCase() + '"><span class="n">' + n + '</span><span class="c">' + c + '</span></button>'; };
+    var all = SE.CURRENCIES.slice().sort(function (a, b) { return curName(a) < curName(b) ? -1 : 1; });
+    $('tpCur').querySelector('.csel-panel').innerHTML = '<div class="csel-sbox"><input class="csel-search" type="text" placeholder="Search currency" aria-label="Search currency" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="go"></div><div class="csel-group">Popular</div>' +
+      SE.POPULAR.map(function (c) { return opt(c, true); }).join('') + '<div class="csel-group">All currencies</div>' + all.map(function (c) { return opt(c, false); }).join('') + '<div class="csel-none" style="display:none">No currency found</div>';
+    CalcThis.initCsel($('tpCur'));
+    $('tpCur').querySelector('.csel-val').textContent = st.cur;
+  })();
   setPanel($('tpService'), E.SERVICES.map(function (s) { return [s.id, s.label]; }), st.svc);
-  setPanel($('tpRound'), ROUNDS, 'none'); setPanel($('tpSym'), SYMS, '$');
+  setPanel($('tpRound'), roundOpts(), 'none');
   if ($('tpProv')) {
     setPanel($('tpProv'), [['', 'Not sure — no tax split']].concat(E.PROVINCES.map(function (p) { return [p.id, p.name]; })), '');
     $('tpProv').addEventListener('change', function () {

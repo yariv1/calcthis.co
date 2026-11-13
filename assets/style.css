@@ -3244,6 +3244,10 @@
 .p-rc #rcBfNote,.p-rc #rcMaintNote,.p-rc #rcTbfNote,.p-rc #rcDaysNote{margin:-6px 0 15px}
 
 /* ---- MARKUP calculator (.p-mk) — reuses .p-bmr result look, .dtable, .seg, the salary page's searchable currency .csel ---- */
+.p-tip .sl-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}
+.p-tip .sl-head .card-h2{margin:0}
+.p-tip .sl-cur{width:auto;min-width:110px;flex:0 0 auto}
+.p-tip .sl-cur .csel-panel{left:auto;right:0;width:300px;max-width:86vw;max-height:min(380px,60vh)}
 .p-mk .sl-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:6px}
 .p-mk .sl-head .card-h2{margin:0}
 .p-mk .sl-cur{width:auto;min-width:110px;flex:0 0 auto}

@@ -389,6 +389,8 @@ see above). Single `.sel` wrapper, never nest two:
 
 
 ### Searchable `.csel` (type-to-filter) — added 2026-11-02 (salary calculator currency picker)
+
+**MANDATORY (user, 2026-11-13, furious): the currency picker is NEVER inside Go advanced. Every money calculator shows it all the time, top-right of the first card on the title row (`.sl-head` + `.csel.sl-cur#xxCur`, copy markup/unit price; id must end in `Cur` and be in the `build.js` `checkPickerDesign` list). The tip pages had a 6-symbol "Currency symbol" dropdown under Go advanced (fixed 2026-11-13: `#tpCur`). Before shipping a money page, open the markup page next to it and compare.**
 For any list longer than ~12 options (currencies, countries, units). Put `data-search="1"` on the `.csel` root and build the panel as:
 `<div class="csel-sbox"><input class="csel-search" placeholder="Search …"></div>` + optional `<div class="csel-group">Popular</div>` + options + `<div class="csel-none" style="display:none">No … found</div>`.
 Each option: `.csel-opt` with `data-value`, `data-s="lowercase search text"` (code + name + symbol), optional `data-p` (popularity rank; lower wins ties), and `.csel-pop` on the duplicates inside the Popular group (hidden while a query is typed). Name left / code right via `<span class="n">` / `<span class="c">`.
