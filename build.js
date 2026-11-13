@@ -69,6 +69,7 @@ const PAGES = [
   { file: 'standard-deviation-calculator/index.html', slug: '/standard-deviation-calculator/' },
   { file: 'p-value-calculator/index.html',          slug: '/p-value-calculator/' },
   { file: 'confidence-interval-calculator/index.html',          slug: '/confidence-interval-calculator/' },
+  { file: 'z-score-calculator/index.html',          slug: '/z-score-calculator/' },
   { file: 'scientific-notation-calculator/index.html', slug: '/scientific-notation-calculator/' },
   { file: 'percentage-calculator/index.html', slug: '/percentage-calculator/' },
   { file: 'percentage-change-calculator/index.html', slug: '/percentage-change-calculator/' },

@@ -1,0 +1,14 @@
+{
+ "slug": "z-score-calculator",
+ "pass": true,
+ "at": "2026-11-13T17:15:56.841Z",
+ "passHash": "3dd9fc52e8a44737",
+ "scriptHash": "b7a1aedf926275ec",
+ "cats": {
+  "textVsTool": 120,
+  "extremes": 40,
+  "visual": 76
+ },
+ "runs": 150,
+ "fails": []
+}

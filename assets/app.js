@@ -26395,3 +26395,381 @@ CalcThis.initCiCalc = function () {
   render();
 };
 /* CI:END */
+
+/* ZSCORE:BEGIN */
+/* =========================================================
+   Z SCORE calculator (/z-score-calculator/). Competitors opened live (2026-11-13): calculator.net (x, mean, SD -> z; z <-> five probability boxes; probability between two z; z table),
+   Omnicalculator (fill any 3 of x, mean, SD, z; left/right/two-tailed p; two-tailed confidence level), CalculatorSoup (several points, sample mean + n, pasted sample),
+   GigaCalculator (z and probabilities, z from probability, chart, z table), 8gwifi (score->z, z->prob, percentile->z, z->score, curve, steps), Statistics By Jim (z + shaded graph, five regions).
+   Notes: md-files/calcthis-zscore-research.md. Maths: z = (x - mu) / sigma; for the mean of n values the standard error sigma / sqrt(n) replaces sigma; areas from the normal cdf of
+   CalcThis.pvalueEngine; percentile -> z by its inverse. Shares within 1, 2, 3 SD (68.27, 95.45, 99.73) are computed, they match NIST/SEMATECH e-Handbook 6.5.1.
+   ========================================================= */
+/* ZSCORE-ENGINE:START */
+CalcThis.zsEngine = (function () {
+  var P = CalcThis.pvalueEngine, C = CalcThis.ciEngine;
+  function lo(z) { return P.cdf('z', {}, z).lo; }
+  function hi(z) { return P.cdf('z', {}, z).hi; }
+  /* areas for one z: left, right, between the mean and z, between -|z| and |z|, both tails */
+  function probs(z) { var a = Math.abs(z), t = lo(-a); return { left: lo(z), right: hi(z), zero: 0.5 - t, between: 1 - 2 * t, two: 2 * t }; }
+  function zOfP(p) { var z = P.inv('z', {}, p, 'L'); return Math.abs(z) < 1e-12 ? 0 : z; }
+  function zCrit(conf) { return P.inv('z', {}, (1 - conf) / 2, 'R'); }
+  function zOf(x, m, s, k) { return (x - m) / (s * k); }
+  function between(z1, z2) { var a = Math.min(z1, z2), b = Math.max(z1, z2); if (a > 0) return hi(a) - hi(b); if (b < 0) return lo(b) - lo(a); return 1 - lo(a) - hi(b); }
+  function listZ(v, pop) {
+    var n = v.length, i, m = 0, ss = 0, s; for (i = 0; i < n; i++) m += v[i]; m /= n; for (i = 0; i < n; i++) ss += (v[i] - m) * (v[i] - m);
+    s = Math.sqrt(ss / (pop ? n : n - 1));
+    return { n: n, m: m, s: s, z: s > 0 ? v.map(function (x) { return (x - m) / s; }) : null };
+  }
+  return { probs: probs, zOfP: zOfP, zCrit: zCrit, zOf: zOf, between: between, listZ: listZ, parseList: C.parseList, dens: function (z) { return P.dens('z', {}, z); } };
+})();
+/* ZSCORE-ENGINE:END */
+
+/* =========================================================
+   CalcThis.initZscoreCalc() - ids zs*. Engine CalcThis.zsEngine.
+   ========================================================= */
+CalcThis.initZscoreCalc = function () {
+  var E = CalcThis.zsEngine;
+  var $ = function (id) { return document.getElementById(id); };
+  if (!$('zsX')) return;
+  var st = { mode: 'one', lkind: 'pop', adv: false };
+  var NUM = /^[+-]?(\d+\.?\d*|\.\d+)(e[+-]?\d+)?$/i;
+  function num(raw) {
+    var s = String(raw == null ? '' : raw).replace(/[\s ]/g, '').replace(/−/g, '-');
+    if (s === '') return { empty: true };
+    var pc = false; if (/%$/.test(s)) { pc = true; s = s.slice(0, -1); }
+    if (/^[+-]?\d{1,3}(,\d{3})+(\.\d*)?$/.test(s)) s = s.replace(/,/g, '');
+    if (/^[+-]?\.?$/.test(s) || /^[+-]?(\d+\.?\d*|\.\d+)e[+-]?$/i.test(s)) return { partial: true };
+    if (!NUM.test(s)) return { err: 'junk' };
+    var v = parseFloat(s); if (!isFinite(v) || Math.abs(v) > 1e9) return { err: 'big' };
+    return { v: v, pc: pc };
+  }
+  function short(raw) { return String(raw).trim().slice(0, 14); }
+  function setNote(id, t) { var e = $(id); if (!e) return; e.textContent = t || ''; e.style.display = t ? '' : 'none'; }
+  function show(id, on) { var e = $(id); if (e) e.style.display = on ? '' : 'none'; }
+  function setHint(m, at) {
+    var h = $('zsHint'); m = m ? m.charAt(0).toUpperCase() + m.slice(1) : m; h.textContent = m || ''; h.style.display = m ? 'block' : 'none';
+    if (m && at) {
+      var el = $(at), f = el && (el.closest('.fld') || el), par = f && f.parentNode;
+      if (par && par.classList && par.classList.contains('zs-two')) f = par;
+      if (f && f.nextSibling !== h && f.parentNode) f.parentNode.insertBefore(h, f.nextSibling);
+    }
+  }
+  function sg(x) { return String(x).replace('-', '−'); }
+  function fnum(x) { return sg(String(Math.round(x * 1e6) / 1e6)); }
+  function fixed(x, d) { var s = x.toFixed(d); if (/^-0(\.0*)?$/.test(s)) s = s.slice(1); return sg(s); }
+  var BIG = 'is too large — keep it under 1,000,000,000.';
+  function readVal(id, label, eg, o) {
+    var r = num($(id).value);
+    if (r.empty) return { miss: true };
+    if (r.partial) return { miss: true, partial: true };
+    if (r.err) return { bad: r.err === 'junk' ? 'Couldn’t read “' + short($(id).value) + '” in ' + label + ' — type a number like ' + eg + '.' : label + ' ' + BIG };
+    var v = r.v;
+    if (o.min !== undefined && (o.minEx ? v <= o.min : v < o.min)) return { bad: label + (o.minMsg || ' must be above ' + o.min + '.') };
+    if (o.max !== undefined && v > o.max) return { bad: label + (o.maxMsg || ' must be at most ' + o.max + '.') };
+    if (o.int && v % 1 !== 0) return { bad: label + ' must be a whole number.' };
+    return { v: v, pc: r.pc };
+  }
+  var SDB = { min: 0, minEx: true, minMsg: ' must be above 0.' };
+
+  /* ---------- reading one group of score / mean / spread ---------- */
+  function readTrio(R, ids, who) {
+    var g = { x: readVal(ids[0], 'the score' + who, '85', {}), m: readVal(ids[1], 'the mean' + who, '75', {}), s: readVal(ids[2], 'the standard deviation' + who, '10', SDB), ids: ids };
+    g.ok = !!(g.x.v !== undefined && g.m.v !== undefined && g.s.v !== undefined);
+    ['x', 'm', 's'].forEach(function (k, i) {
+      var q = g[k];
+      if (q.bad && !R.bad) R.bad = { msg: q.bad + ' Fix it to see the result.', at: ids[i] };
+      if (q.partial && !R.bad) R.bad = { msg: 'Keep typing — “' + short($(ids[i]).value) + '” isn’t a complete number yet.', at: ids[i] };
+    });
+    g.typed = ['x', 'm', 's'].filter(function (k) { return g[k].v !== undefined; }).length;
+    g.bad = !!(g.x.bad || g.m.bad || g.s.bad);
+    return g;
+  }
+  function perc(id, label, R, ok) {
+    var r = readVal(id, label, '84', { min: 0, minEx: true, minMsg: ' must be above 0 and below 100 (for example 84).', max: 99.999999999999, maxMsg: ' must be above 0 and below 100 (for example 84).' });
+    if (r.bad) { if (ok) { if (!R.soft) R.soft = { msg: r.bad + ' It is ignored for now.', at: id }; } else if (!R.bad) R.bad = { msg: r.bad + ' Fix it to see the result.', at: id }; return null; }
+    return r.miss ? null : r;
+  }
+  function readList(R) {
+    var raw = $('zsList').value;
+    if (raw.trim() === '') return;
+    var pl = E.parseList(raw);
+    R.listJunk = pl.junk;
+    if (pl.vals.length < 2) { R.listNote = pl.vals.length ? 'Type at least 2 numbers — one number has no spread to compare with.' : 'Couldn’t find a number in your list — separate numbers with commas, spaces or new lines.'; return; }
+    var lz = E.listZ(pl.vals, st.lkind === 'pop');
+    if (!(lz.s > 0)) { R.listNote = 'All ' + lz.n + ' numbers are the same, so there is no spread and no z-score.'; return; }
+    R.list = { vals: pl.vals, n: lz.n, m: lz.m, s: lz.s, z: lz.z };
+  }
+
+  /* ---------- the main compute ---------- */
+  function compute() {
+    var R = { bad: null, soft: null, ready: false, dec: null, mode: st.mode, k: 1, n: 0 };
+    var dr = num($('zsDec').value);
+    if (dr.err || (dr.v !== undefined && (dr.v % 1 !== 0 || dr.v < 0 || dr.v > 10))) R.softD = { msg: 'Decimal places should be a whole number from 0 to 10. It is ignored for now.', at: 'zsDec' };
+    else if (dr.v !== undefined) R.dec = dr.v;
+    readList(R);
+    /* between two z-scores */
+    var b1 = readVal('zsZ1', 'the first z-score', '-1', {}), b2 = readVal('zsZ2', 'the second z-score', '1', {});
+    if (b1.bad || b2.bad) R.softB = { msg: (b1.bad || b2.bad) + ' It is ignored for now.', at: b1.bad ? 'zsZ1' : 'zsZ2' };
+    else if (b1.v !== undefined && b2.v !== undefined) R.between = { z1: b1.v, z2: b2.v, p: E.between(b1.v, b2.v) };
+    else if (b1.v !== undefined || b2.v !== undefined) R.betweenOne = true;
+    if (st.mode === 'two') {
+      var A = readTrio(R, ['zsX', 'zsMean', 'zsSd'], ' A'), B = readTrio(R, ['zsX2', 'zsMean2', 'zsSd2'], ' B');
+      R.A = A; R.B = B;
+      if (A.ok && B.ok && !R.bad) {
+        R.kind = 'two'; R.ready = true;
+        [A, B].forEach(function (g) { g.xv = g.x.v; g.mv = g.m.v; g.sv = g.s.v; g.z = E.zOf(g.xv, g.mv, g.sv, 1); g.p = E.probs(g.z); });
+      }
+      return R;
+    }
+    var T = readTrio(R, ['zsX', 'zsMean', 'zsSd'], '');
+    R.T = T;
+    var nr = readVal('zsN', 'the sample size', '25', { min: 1, int: true, max: 1e9, minMsg: ' must be a whole number of at least 1.' });
+    if (nr.bad) R.softN = { msg: nr.bad + ' It is ignored for now.', at: 'zsN' };
+    else if (nr.v !== undefined) { R.n = nr.v; R.k = 1 / Math.sqrt(nr.v); }
+    var zr = readVal('zsZ', 'the z-score', '1.5', {});
+    var pr = perc('zsPct', 'the percentile', R, T.ok);
+    var cr = readVal('zsConf', 'the confidence level', '95', { min: 0, minEx: true, minMsg: ' should be above 0% and below 100% (for example 95).', max: 99.999999999999, maxMsg: ' should be above 0% and below 100% (for example 95).' });
+    if (zr.bad) { if (T.ok) { if (!R.soft) R.soft = { msg: zr.bad + ' It is ignored for now.', at: 'zsZ' }; } else if (!R.bad) R.bad = { msg: zr.bad + ' Fix it to see the result.', at: 'zsZ' }; zr = { miss: true }; }
+    if (cr.bad) { if (T.ok) { if (!R.soft) R.soft = { msg: cr.bad + ' It is ignored for now.', at: 'zsConf' }; } else if (!R.bad) R.bad = { msg: cr.bad + ' Fix it to see the result.', at: 'zsConf' }; cr = { miss: true }; }
+    R.zr = zr; R.pr = pr; R.cr = cr;
+    var zsrc = null, zv;
+    if (zr.v !== undefined) { zsrc = 'z'; zv = zr.v; }
+    else if (pr) { zsrc = 'pct'; zv = E.zOfP(pr.v / 100); }
+    else if (cr.v !== undefined) { zsrc = 'conf'; zv = E.zCrit(cr.v / 100); }
+    R.zsrc = zsrc; R.zIn = zv;
+    if (cr.v !== undefined) R.confZ = E.zCrit(cr.v / 100);
+    if (R.bad) return R;
+    if (T.ok) {
+      R.kind = 'z'; R.xv = T.x.v; R.mv = T.m.v; R.sv = T.s.v; R.z = E.zOf(R.xv, R.mv, R.sv, R.k); R.ready = true;
+    } else if (zsrc && T.typed === 0) {
+      R.kind = 'zonly'; R.z = zv; R.ready = true;
+    } else if (zsrc && T.typed === 2) {
+      var missing = ['x', 'm', 's'].filter(function (k) { return T[k].v === undefined; })[0];
+      var x = T.x.v, m = T.m.v, s = T.s.v, k = R.k;
+      if (missing === 'x') x = m + zv * s * k; else if (missing === 'm') m = x - zv * s * k;
+      else {
+        if (zv === 0) { R.bad = { msg: 'A z-score of 0 means the score equals the mean, so the spread can’t be worked out. Type a z-score other than 0.', at: 'zsZ' }; return R; }
+        s = (x - m) / (zv * k);
+        if (!(s > 0)) { R.bad = { msg: 'These numbers would need a negative standard deviation — a score above the mean goes with a positive z-score, below the mean with a negative one.', at: 'zsZ' }; return R; }
+      }
+      R.kind = 'solve'; R.what = missing; R.xv = x; R.mv = m; R.sv = s; R.z = zv; R.ready = true;
+    }
+    if (R.ready) R.p = E.probs(R.z);
+    return R;
+  }
+
+  /* ---------- formatting ---------- */
+  function zH(R, z) { return fixed(z, R.dec !== null ? R.dec : 2); }
+  function zT(R, z) { return fixed(z, R.dec !== null ? R.dec : 4); }
+  function ord(v) { var n = Math.abs(v), t = n % 100, u = n % 10, sfx = (n % 1 !== 0 || (t >= 11 && t <= 13)) ? 'th' : u === 1 ? 'st' : u === 2 ? 'nd' : u === 3 ? 'rd' : 'th'; return fnum(v) + sfx; }
+  function rawT(R, v) { return R.dec !== null ? fixed(v, R.dec) : fnum(v); }
+  function pctT(R, p, tiny) {
+    var d = R.dec !== null ? R.dec : 2, v = p * 100, e = 0.5 * Math.pow(10, -d);
+    if (v < e && (p > 0 || tiny)) return '<' + fixed(Math.pow(10, -d), d) + '%';
+    if (v > 100 - e && (p < 1 || tiny)) return '>' + fixed(100 - Math.pow(10, -d), d) + '%';
+    return fixed(v, d) + '%';
+  }
+  function probT(R, p) { return CalcThis.pvalueEngine.fp(p, null); }
+  function sdText(R, z) {
+    var a = Math.abs(z), s = fixed(a, R.dec !== null ? R.dec : 2).replace('−', '');
+    if (parseFloat(s) === 0 && a !== 0) return 'almost exactly at the mean';
+    if (a === 0) return 'exactly at the mean';
+    var unit = R.n ? ['standard error ', 'standard errors '] : ['standard deviation ', 'standard deviations '];
+    return s + ' ' + unit[parseFloat(s) === 1 ? 0 : 1].trim() + ' ' + (z > 0 ? 'above' : 'below') + ' the mean';
+  }
+
+  /* ---------- the picture: bell curve with two scales, markers and bands ---------- */
+  var VW = 280, PL = 54, PR = 270, CT = 36, CB = 120;
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+  var HALO = ' stroke="#FFFDF8" stroke-width="3" paint-order="stroke"';
+  function draw(R) {
+    var zs = R.kind === 'two' ? [R.A.z, R.B.z] : [R.z], zm = 4, i, j;
+    zs.forEach(function (z) { zm = Math.max(zm, Math.abs(z) + 0.6); }); zm = Math.min(zm, 40);
+    var px = function (z) { return PL + (z + zm) / (2 * zm) * (PR - PL); };
+    var peak = E.dens(0), py = function (z) { return CB - E.dens(z) / peak * (CB - CT); };
+    var raw = R.kind !== 'two' && R.mv !== undefined, y0 = CB + (raw ? 52 : 34), RH = 22;
+    var svg = '<svg viewBox="0 0 ' + VW + ' ' + (y0 + 3 * RH + 2) + '" width="100%" role="img" aria-label="Bell curve with your score marked, the scale in z-scores' + (raw ? ' and in your own units' : '') + ', and the share of the group within 1, 2 and 3 standard deviations" xmlns="http://www.w3.org/2000/svg">';
+    var N = 170, line = '', area = '', z;
+    for (j = 0; j <= N; j++) { z = -zm + 2 * zm * j / N; line += (j ? 'L' : 'M') + px(z).toFixed(1) + ',' + py(z).toFixed(1); }
+    if (R.kind !== 'two') {
+      var zz = Math.max(-zm, Math.min(zm, R.z)), M = Math.max(10, Math.round(170 * (zz + zm) / (2 * zm)));
+      area = 'M' + px(-zm).toFixed(1) + ',' + CB; for (j = 0; j <= M; j++) { z = -zm + (zz + zm) * j / M; area += 'L' + px(z).toFixed(1) + ',' + py(z).toFixed(1); } area += 'L' + px(zz).toFixed(1) + ',' + CB + 'Z';
+      svg += '<path d="' + area + '" fill="#B5761F" fill-opacity=".34" stroke="none"/>';
+    }
+    svg += '<line x1="' + PL + '" y1="' + CB + '" x2="' + PR + '" y2="' + CB + '" stroke="#CDBFA5" stroke-width="1.2"/><path d="' + line + '" fill="none" stroke="#241A11" stroke-width="1.8" stroke-linejoin="round"/>';
+    var cols0 = ['#8F5C13', '#37503F'], mk0 = '';
+    zs.forEach(function (zv, ix) { var X0 = px(Math.max(-zm, Math.min(zm, zv))); mk0 += '<line x1="' + X0.toFixed(1) + '" y1="' + (CT - 6) + '" x2="' + X0.toFixed(1) + '" y2="' + (y0 + 3 * RH - 8) + '" stroke="' + cols0[ix] + '" stroke-width="1.6" stroke-dasharray="3 3"/>'; });
+    svg += mk0;
+    /* axis labels: pick a step that leaves room */
+    var cands = [1, 2, 3, 4].filter(function (c) { return c <= zm; }), step = 1, lbl = function (zv) { return sg(String(Math.round(zv * 1e6) / 1e6)); };
+    var rawD = raw ? Math.max(0, Math.min(6, 2 - Math.floor(Math.log(R.sv * R.k) / Math.LN10 + 1e-9))) : 0, rawLbl = function (zv) { return sg(String(Number((R.mv + zv * R.sv * R.k).toFixed(rawD)))); };
+    var maxLen = 2; for (i = 0; i < cands.length; i++) { step = cands[i]; maxLen = 2; for (z = -Math.floor(zm / step) * step; z <= zm + 1e-9; z += step) { maxLen = Math.max(maxLen, lbl(z).length, raw ? rawLbl(z).length : 0); } if ((PR - PL) / (2 * zm) * step >= maxLen * 7 + 8) break; }
+    var any = false;
+    for (z = -Math.floor(zm / step) * step; z <= zm + 1e-9; z += step) {
+      var X = px(z).toFixed(1); any = true;
+      svg += '<line x1="' + X + '" y1="' + CB + '" x2="' + X + '" y2="' + (CB + 4) + '" stroke="#CDBFA5"/><text x="' + X + '" y="' + (CB + 18) + '" text-anchor="middle" font-size="12" fill="#5B4B3B"' + HALO + '>' + esc(lbl(z)) + '</text>';
+      if (raw) svg += '<text x="' + X + '" y="' + (CB + 34) + '" text-anchor="middle" font-size="12" fill="#8F5C13" font-weight="600"' + HALO + '>' + esc(rawLbl(z)) + '</text>';
+    }
+    svg += '<text x="' + (PL - 16) + '" y="' + (CB + 18) + '" text-anchor="end" font-size="12" fill="#5B4B3B">z</text>';
+    if (raw) svg += '<text x="' + (PL - 16) + '" y="' + (CB + 34) + '" text-anchor="end" font-size="12" fill="#8F5C13" font-weight="600">score</text>';
+    /* bands */
+    [1, 2, 3].forEach(function (b, ix) {
+      var y = y0 + ix * RH + 6;
+      svg += '<text x="' + (PL - 6) + '" y="' + (y + 4) + '" text-anchor="end" font-size="12" fill="#5B4B3B">±' + b + ' SD</text><line x1="' + px(-b).toFixed(1) + '" y1="' + y + '" x2="' + px(b).toFixed(1) + '" y2="' + y + '" stroke="#37503F" stroke-opacity=".55" stroke-width="8" stroke-linecap="round"/>';
+    });
+    /* markers */
+    var cols = ['#8F5C13', '#37503F'], names = R.kind === 'two' ? ['A', 'B'] : [''], mLines = '';
+    zs.forEach(function (zv, ix) {
+      var X = px(Math.max(-zm, Math.min(zm, zv))), an = X > PR - 44 ? 'end' : X < PL + 44 ? 'start' : 'middle', t = (R.kind === 'two' ? names[ix] + ': z = ' : 'z = ') + zH(R, zv);
+      mLines += '<line x1="' + X.toFixed(1) + '" y1="' + (CT - 6) + '" x2="' + X.toFixed(1) + '" y2="' + (y0 + 3 * RH - 8) + '" stroke="' + cols[ix] + '" stroke-width="1.6" stroke-dasharray="3 3"/>';
+      svg += '<text x="' + X.toFixed(1) + '" y="' + (R.kind === 'two' ? 12 + ix * 15 : 14) + '" text-anchor="' + an + '" font-size="12" fill="' + cols[ix] + '" font-weight="700">' + esc(t) + '</text>';
+    });
+    return any ? svg + '</svg>' : null;
+  }
+
+  /* ---------- render ---------- */
+  function grp(R) { return R.n ? 'sample means of this size' : 'the group'; }
+  function render() {
+    var R = compute(), two = st.mode === 'two', i;
+    show('zsBW', two); show('zsZW', !two); show('zsNW', !two); show('zsConfW', !two);
+    $('zsXLab').textContent = two ? 'Score A' : 'Your score (x)';
+    $('zsMeanLab').textContent = two ? 'Mean for A' : 'Mean of the group';
+    $('zsSdLab').textContent = two ? 'Std. deviation for A' : 'Standard deviation';
+    $('zsX').placeholder = two ? 'e.g. 85' : 'e.g. 85'; $('zsMean').placeholder = 'e.g. 75'; $('zsSd').placeholder = 'e.g. 10';
+    /* hint: the first problem wins */
+    var hm = null, hat = null;
+    if (R.bad) { hm = R.bad.msg; hat = R.bad.at; } else if (R.soft) { hm = R.soft.msg; hat = R.soft.at; } else if (R.softN) { hm = R.softN.msg; hat = R.softN.at; } else if (R.softB) { hm = R.softB.msg; hat = R.softB.at; } else if (R.softD) { hm = R.softD.msg; hat = R.softD.at; }
+    setHint(hm, hat);
+    /* notes under the fields (every field reacts) */
+    var mn = '';
+    if (two) {
+      if (R.ready) mn = 'Both scores are turned into z-scores, so they can be compared even though they come from different scales.';
+      else if (!R.bad) { var miss = []; [[R.A, 'A', ['score', 'mean', 'standard deviation']], [R.B, 'B', ['score', 'mean', 'standard deviation']]].forEach(function (g) { ['x', 'm', 's'].forEach(function (k, ix) { if (g[0][k].v === undefined) miss.push(g[2][ix] + ' ' + g[1]); }); }); mn = 'Type ' + (miss.length > 1 ? miss.slice(0, -1).join(', ') + ' and ' + miss[miss.length - 1] : miss[0]) + ' to compare the two scores.'; }
+    } else if (R.ready && R.kind === 'z') mn = R.n ? 'z = (x̄ − μ) ÷ (σ ÷ √n): the score is treated as the mean of ' + fnum(R.n) + ' values, so the standard error ' + rawT(R, R.sv * R.k) + ' is used.' : 'z = (x − μ) ÷ σ = (' + rawT(R, R.xv) + ' − ' + rawT(R, R.mv) + ') ÷ ' + rawT(R, R.sv) + '.';
+    else if (R.ready && R.kind === 'solve') mn = 'The ' + { x: 'score', m: 'mean', s: 'standard deviation' }[R.what] + ' is worked out from the other two boxes and your ' + (R.zsrc === 'z' ? 'z-score' : R.zsrc === 'pct' ? 'percentile' : 'confidence level') + '.';
+    else if (R.ready && R.kind === 'zonly') mn = 'Only a z-score is given, so the areas under the curve are shown. Add the mean and spread to turn it into a score.';
+    else if (!R.bad) {
+      var T = R.T, mk = [['x', 'your score'], ['m', 'the mean'], ['s', 'the standard deviation']].filter(function (q) { return T[q[0]].v === undefined; }).map(function (q) { return q[1]; });
+      if (R.zsrc && T.typed === 1) mn = 'Type one more of score, mean and standard deviation to go with your ' + (R.zsrc === 'z' ? 'z-score' : R.zsrc === 'pct' ? 'percentile' : 'confidence level') + ' — or clear this one.';
+      else mn = 'Type ' + (mk.length > 1 ? mk.slice(0, -1).join(', ') + ' and ' + mk[mk.length - 1] : mk[0]) + ' to see the z-score, or give a z-score or percentile and two of the three boxes.';
+    }
+    setNote('zsMainNote', mn);
+    var zn = '';
+    if (!two) {
+      var trioOk = R.T.ok;
+      if (R.zr && R.zr.v !== undefined) zn = trioOk ? 'Your score, mean and spread are all typed, so z is worked out from them and this z-score is not used.' : 'Using the z-score you typed' + (R.pr ? ' (the percentile is ignored)' : '') + '.';
+      else if (R.pr) zn = trioOk ? 'Your score, mean and spread are all typed, so z is worked out from them and this percentile is not used.' : 'The ' + ord(R.pr.v) + ' percentile has z = ' + fixed(R.zIn, 4) + '.' + (R.pr.v < 1 ? ' Percentile 0.5 means the 0.5th percentile (0.5%), not 50%.' : '');
+      else zn = 'Type either one with two of the three boxes above and the third is worked out.';
+    }
+    setNote('zsZNote', zn);
+    var nn = '';
+    if (!two) { if (R.softN) nn = ''; else if (R.n) nn = 'Your score is treated as the average of ' + fnum(R.n) + ' values: the standard error σ ÷ √' + fnum(R.n) + ' is used instead of σ.'; else nn = 'Optional. Type n if your score is the average of n people or measurements; leave it empty for a single value.'; }
+    setNote('zsNNote', nn);
+    var cn = '';
+    if (!two) { if (R.cr && R.cr.v !== undefined) cn = 'A ' + fnum(R.cr.v) + '% two-tailed level has a critical z of ±' + fixed(R.confZ, 4) + (R.zsrc === 'conf' ? ', used as your z-score because no z-score or percentile is typed.' : (R.zsrc ? '.' : '.')) + (R.zsrc && R.zsrc !== 'conf' ? ' Your typed ' + (R.zsrc === 'z' ? 'z-score' : 'percentile') + ' is used for the result instead.' : ''); else cn = 'Optional. Type a two-tailed confidence level (for example 95) to get its critical z-score.'; }
+    setNote('zsConfNote', cn);
+    var bn = '';
+    if (R.between) bn = 'Between z = ' + fixed(R.between.z1, 2) + ' and z = ' + fixed(R.between.z2, 2) + ' lies ' + pctT(R, R.between.p) + ' of the group (probability ' + probT(R, R.between.p) + ').';
+    else if (R.betweenOne) bn = 'Type the other z-score too to see how much of the group lies between them.';
+    else bn = 'Optional. Type two z-scores to see the share of the group between them.';
+    setNote('zsBetweenNote', R.softB ? '' : bn);
+    var ln = '';
+    if (R.list) ln = R.list.n + ' numbers read' + (R.listJunk ? ', ' + R.listJunk + (R.listJunk === 1 ? ' item that is not a number left out' : ' items that are not numbers left out') : '') + '. The z-scores are shown with the results.';
+    else if (R.listNote) ln = R.listNote;
+    else ln = 'Optional. Paste numbers separated by commas, spaces or new lines to get a z-score for every one.';
+    setNote('zsListNote', ln);
+    setNote('zsDecNote', R.softD ? '' : (R.dec !== null ? 'Numbers are shown with ' + R.dec + ' decimal places.' : 'Leave empty for automatic: the headline z-score has 2 decimals, the table 4.'));
+    /* result */
+    var big = '—', lab = 'z-score', sub = $('zsSub').getAttribute('data-empty'), tip = '', body = false, mval;
+    show('zsProbWrap', false); show('zsVisWrap', false); show('zsListWrap', false);
+    $('zsNums').innerHTML = ''; $('zsSteps').innerHTML = ''; $('zsProb').innerHTML = ''; $('zsListTab').innerHTML = ''; $('zsVis').innerHTML = '';
+    if (R.ready) {
+      body = true;
+      var p, below, above;
+      if (R.kind === 'two') {
+        var a = R.A, b = R.B, d = a.z - b.z;
+        big = Math.abs(d) < 1e-9 ? 'Same z-score' : (d > 0 ? 'Score A is higher' : 'Score B is higher'); lab = 'Comparing the two scores';
+        sub = 'z = ' + zH(R, a.z) + ' (A) vs ' + zH(R, b.z) + ' (B) · ' + pctT(R, a.p.left, true) + ' vs ' + pctT(R, b.p.left, true);
+        tip = Math.abs(d) < 1e-9 ? 'Both scores sit the same number of standard deviations from their own mean, so they are equally good compared with their groups.' : 'Compared with its own group, score ' + (d > 0 ? 'A' : 'B') + ' is ' + fixed(Math.abs(d), R.dec !== null ? R.dec : 2) + ' standard deviations further from the mean: it is higher than ' + pctT(R, (d > 0 ? a : b).p.left, true) + ' of its group, while score ' + (d > 0 ? 'B' : 'A') + ' is higher than ' + pctT(R, (d > 0 ? b : a).p.left, true) + ' of its group.';
+        var tr = function (lab2, fa, fb) { return '<tr><td>' + lab2 + '</td><td>' + fa + '</td><td>' + fb + '</td></tr>'; };
+        $('zsNums').innerHTML = '<thead><tr><th></th><th>Score A</th><th>Score B</th></tr></thead><tbody>' + tr('z-score', zT(R, a.z), zT(R, b.z)) + tr('Higher than (percentile)', pctT(R, a.p.left, true), pctT(R, b.p.left, true)) + tr('Score', rawT(R, a.xv), rawT(R, b.xv)) + tr('Mean', rawT(R, a.mv), rawT(R, b.mv)) + tr('Standard deviation', rawT(R, a.sv), rawT(R, b.sv)) + '</tbody>';
+        $('zsCopyTxt').textContent = lab + ': ' + big + ' (' + sub + ')';
+        $('zsSteps').innerHTML = [a, b].map(function (g, ix) { return '<li>Score ' + (ix ? 'B' : 'A') + ': z = (x − μ) ÷ σ = (' + rawT(R, g.xv) + ' − ' + rawT(R, g.mv) + ') ÷ ' + rawT(R, g.sv) + ' = ' + zT(R, g.z) + '.</li>'; }).join('') + '<li>Percentile: P(Z < ' + zT(R, a.z) + ') = ' + probT(R, a.p.left) + ' for A and P(Z < ' + zT(R, b.z) + ') = ' + probT(R, b.p.left) + ' for B.</li><li>The higher z-score is the better result compared with its own group.</li>';
+        mval = big;
+        var svg2 = draw(R); if (svg2) { $('zsVis').innerHTML = svg2; show('zsVisWrap', true); }
+      } else {
+        p = R.p; below = pctT(R, p.left, true); above = pctT(R, p.right, true);
+        if (R.kind === 'solve') {
+          var wv = R.what === 'x' ? R.xv : R.what === 'm' ? R.mv : R.sv;
+          big = rawT(R, wv); lab = (R.what === 'x' ? 'Your score' : R.what === 'm' ? 'The mean' : 'The standard deviation') + ' for z = ' + zH(R, R.z);
+          sub = 'Higher than ' + below + ' of ' + grp(R) + ' · ' + sdText(R, R.z);
+        } else {
+          big = 'z = ' + zH(R, R.z); lab = R.kind === 'zonly' ? 'z-score' : (R.n ? 'z-score of the sample mean' : 'z-score');
+          sub = (R.kind === 'zonly' && R.zsrc !== 'z' ? 'From ' + (R.zsrc === 'pct' ? 'the ' + ord(R.pr.v) + ' percentile' : 'a ' + fnum(R.cr.v) + '% two-tailed level') + ' · ' : '') + 'Higher than ' + below + ' of ' + grp(R) + ' · ' + sdText(R, R.z);
+        }
+        tip = 'This is ' + sdText(R, R.z) + '. It is higher than ' + below + ' of ' + grp(R) + ', and ' + above + ' score higher. Only ' + pctT(R, p.two, true) + ' of ' + grp(R) + ' is this far or further from the mean, in either direction.';
+        var rows = [['z-score', zT(R, R.z)]];
+        if (R.xv !== undefined) { rows.push([R.n ? 'Sample mean (x̄)' : 'Score (x)', rawT(R, R.xv)]); rows.push(['Mean (μ)', rawT(R, R.mv)]); rows.push([R.n ? 'Standard deviation (σ)' : 'Standard deviation (σ)', rawT(R, R.sv)]); if (R.n) { rows.push(['Sample size (n)', fnum(R.n)]); rows.push(['Standard error (σ ÷ √n)', rawT(R, R.sv * R.k)]); } }
+        $('zsNums').innerHTML = '<tbody>' + rows.map(function (rw) { return '<tr><td>' + rw[0] + '</td><td>' + rw[1] + '</td></tr>'; }).join('') + '</tbody>';
+        var pr2 = [['Below z — percentile, P(Z < z)', p.left, true], ['Above z, P(Z > z)', p.right, true], ['Between the mean and z', p.zero, false], ['Between −|z| and |z| (two-tailed confidence level)', p.between, false], ['Outside −|z| and |z| (both tails)', p.two, true]];
+        $('zsProb').innerHTML = '<thead><tr><th>Area under the curve</th><th>Probability</th><th>Percent</th></tr></thead><tbody>' + pr2.map(function (rw) { return '<tr><td>' + rw[0] + '</td><td>' + probT(R, rw[1]) + '</td><td>' + pctT(R, rw[1], rw[2]) + '</td></tr>'; }).join('') + '</tbody>'; show('zsProbWrap', true);
+        $('zsCopyTxt').textContent = lab + ': ' + big + ' (' + sub + ')';
+        var stp = [];
+        if (R.kind === 'z') stp.push(R.n ? 'z = (x̄ − μ) ÷ (σ ÷ √n) = (' + rawT(R, R.xv) + ' − ' + rawT(R, R.mv) + ') ÷ (' + rawT(R, R.sv) + ' ÷ √' + fnum(R.n) + ') = ' + zT(R, R.z) + '.' : 'z = (x − μ) ÷ σ = (' + rawT(R, R.xv) + ' − ' + rawT(R, R.mv) + ') ÷ ' + rawT(R, R.sv) + ' = ' + zT(R, R.z) + '.');
+        else {
+          if (R.zsrc === 'pct') stp.push('The z-score with P(Z < z) = ' + fnum(R.pr.v / 100) + ' is z = ' + zT(R, R.z) + '.');
+          else if (R.zsrc === 'conf') stp.push('For a ' + fnum(R.cr.v) + '% two-tailed level the critical z-score is ±' + fixed(R.confZ, 4) + '; z = ' + zT(R, R.z) + ' is used.');
+          else stp.push('z = ' + zT(R, R.z) + ' (typed).');
+          if (R.kind === 'solve') stp.push(R.what === 'x' ? (R.n ? 'x̄ = μ + z × σ ÷ √n' : 'x = μ + z × σ') + ' = ' + rawT(R, R.mv) + ' + ' + zT(R, R.z) + ' × ' + rawT(R, R.sv * R.k) + ' = ' + rawT(R, R.xv) + '.' : R.what === 'm' ? 'μ = x − z × ' + (R.n ? 'σ ÷ √n' : 'σ') + ' = ' + rawT(R, R.xv) + ' − ' + zT(R, R.z) + ' × ' + rawT(R, R.sv * R.k) + ' = ' + rawT(R, R.mv) + '.' : 'σ = (x − μ) ÷ z' + (R.n ? ' × √n' : '') + ' = (' + rawT(R, R.xv) + ' − ' + rawT(R, R.mv) + ') ÷ ' + zT(R, R.z) + (R.n ? ' × √' + fnum(R.n) : '') + ' = ' + rawT(R, R.sv) + '.');
+        }
+        stp.push('Percentile: P(Z < ' + zT(R, R.z) + ') = ' + probT(R, p.left) + ', so ' + below + ' of the group scores lower.');
+        stp.push('Above: 1 − ' + probT(R, p.left) + ' = ' + probT(R, p.right) + ' (' + above + ').');
+        $('zsSteps').innerHTML = stp.map(function (s2) { return '<li>' + s2 + '</li>'; }).join('');
+        mval = big;
+        var sv = draw(R); if (sv) { $('zsVis').innerHTML = sv; show('zsVisWrap', true); }
+        var bsh = [1, 2, 3].map(function (b) { return pctT({ dec: 2 }, E.between(-b, b)); });
+        $('zsVisKey').textContent = (R.kind === 'two' ? 'Both scores are drawn on the same standard curve (z-scores); the marker further right is higher compared with its own group. ' : 'The amber area is the share of the group below your score. ') + 'Under a bell curve ' + bsh[0] + ' of the group lies within 1 standard deviation of the mean, ' + bsh[1] + ' within 2 and ' + bsh[2] + ' within 3.';
+      }
+    }
+    if (R.kind === 'two' && R.ready) $('zsVisKey').textContent = 'Both scores are drawn on the same standard curve (z-scores): the marker further right is higher compared with its own group. Under a bell curve 68.27% of a group lies within 1 standard deviation of the mean, 95.45% within 2 and 99.73% within 3.';
+    /* list */
+    if (R.list) {
+      var L = R.list, flag2 = 0, flag3 = 0, show50 = Math.min(50, L.n);
+      var lt = '<thead><tr><th>Value</th><th>z-score</th><th>Distance</th></tr></thead><tbody>';
+      for (i = 0; i < L.n; i++) { var az = Math.abs(L.z[i]); if (az > 2) flag2++; if (az > 3) flag3++; if (i < show50) lt += '<tr><td>' + fnum(L.vals[i]) + '</td><td>' + fixed(L.z[i], R.dec !== null ? R.dec : 4) + '</td><td>' + (az > 3 ? 'beyond ±3' : az > 2 ? 'beyond ±2' : '') + '</td></tr>'; }
+      $('zsListTab').innerHTML = lt + '</tbody>';
+      $('zsListSum').textContent = L.n + ' values · mean ' + fnum(L.m) + ' · standard deviation ' + fnum(L.s) + ' (' + (st.lkind === 'pop' ? 'population, ÷ n' : 'sample, ÷ n − 1') + ')';
+      $('zsListKey').textContent = (flag2 ? flag2 + ' of ' + L.n + ' values are more than 2 standard deviations from the mean' + (flag3 ? ', ' + flag3 + ' of them more than 3' : '') + '. ' : 'No value is more than 2 standard deviations from the mean. ') + (L.n > show50 ? 'Showing the first ' + show50 + ' of ' + L.n + ' values.' : '');
+      show('zsListWrap', true); body = true;
+    }
+    if (!R.ready && R.list) { big = L2big(R); lab = 'Your list'; sub = R.list.n + ' values · mean ' + fnum(R.list.m) + ' · standard deviation ' + fnum(R.list.s); mval = big; }
+    function L2big(Rr) { return Rr.list.n + ' z-scores'; }
+    $('zsBig').textContent = big; $('zsBig').parentNode.classList.toggle('zs-long', big.length > 18); $('zsLab').textContent = lab; $('zsSub').textContent = sub; $('zsBody').style.display = body ? '' : 'none'; $('zsTip').textContent = tip; $('zsTip').style.display = tip ? '' : 'none';
+    show('zsNumsWrap', R.ready); show('zsStepsWrap', R.ready);
+    $('zsMLab').textContent = R.ready ? (R.kind === 'solve' ? lab.replace(/ for z = .*/, '') : R.kind === 'two' ? 'Higher score' : 'z-score') : 'z-score';
+    $('zsMVal').textContent = R.ready ? (R.kind === 'two' ? big.replace('Score ', '').replace(' is higher', '') : big.replace('z = ', '') + (R.kind === 'solve' ? '' : ' · ' + pctT(R, R.p.left, true))) : big;
+    [].forEach.call(document.querySelectorAll('.p-zs .zs-seg'), function () { });
+    st.last = R;
+  }
+
+  /* ---------- controls ---------- */
+  function segSet(id, key, v) { st[key] = v; [].forEach.call($(id).children, function (b) { var on = b.getAttribute('data-v') === v; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); }); }
+  [['zsMode', 'mode'], ['zsListKind', 'lkind']].forEach(function (pp) {
+    [].forEach.call($(pp[0]).children, function (b) { b.addEventListener('click', function () { segSet(pp[0], pp[1], b.getAttribute('data-v')); render(); }); });
+  });
+  [].forEach.call(document.querySelectorAll('.p-zs input[type=text]'), function (i) { i.addEventListener('input', render); });
+  $('zsList').addEventListener('input', render);
+  $('zsListUse').addEventListener('click', function () {
+    var R = st.last; if (!R || !R.list) return;
+    $('zsMean').value = String(Math.round(R.list.m * 1e6) / 1e6); $('zsSd').value = String(Math.round(R.list.s * 1e6) / 1e6); render(); $('zsX').focus();
+  });
+  var ALL = ['zsX', 'zsMean', 'zsSd', 'zsX2', 'zsMean2', 'zsSd2', 'zsZ', 'zsPct', 'zsN', 'zsConf', 'zsZ1', 'zsZ2', 'zsDec'];
+  $('zsClear').addEventListener('click', function () { ALL.forEach(function (id) { $(id).value = ''; }); $('zsList').value = ''; segSet('zsListKind', 'lkind', 'pop'); render(); $('zsX').focus(); });
+  $('zsAdvBtn').addEventListener('click', function () {
+    st.adv = !st.adv; $('zsAdvBtn').classList.toggle('open', st.adv); $('zsAdvBtnLab').textContent = st.adv ? 'Go simple' : 'Go advanced'; $('zsAdvIn').style.display = st.adv ? '' : 'none';
+    if (!st.adv) { ['zsN', 'zsConf', 'zsZ1', 'zsZ2', 'zsDec'].forEach(function (id) { $(id).value = ''; }); $('zsList').value = ''; segSet('zsListKind', 'lkind', 'pop'); }
+    render();
+  });
+  render();
+};
+/* ZSCORE:END */

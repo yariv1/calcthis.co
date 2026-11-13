@@ -3,5 +3,6 @@
  "seconds-to-hours-calculator",
  "minutes-to-hours-calculator",
  "seconds-to-minutes-calculator",
- "confidence-interval-calculator"
+ "confidence-interval-calculator",
+ "z-score-calculator"
 ]

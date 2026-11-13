@@ -1,5 +1,5 @@
 {
- "date": "2026-11-10",
+ "date": "2026-11-13",
  "competitors": [
   {
    "name": "calculator.net confidence interval",
@@ -37,6 +37,7 @@
   "other browsers (Chrome only)",
   "print",
   "Copy result button in a real clipboard session",
-  "SocSci result layout was not run (only the calculator form inputs were read); Omnicalculator article was read, its mode switch checked for proportion only"
+  "SocSci result layout was not run (only the calculator form inputs were read); Omnicalculator article was read, its mode switch checked for proportion only",
+  "2026-11-13: the competitor pages were reopened (page loads and headings read) after the header gained the z-score link; no feature comparison was repeated"
  ]
 }

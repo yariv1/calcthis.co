@@ -1,0 +1,26 @@
+{
+ "date": "2026-11-13",
+ "competitors": [
+  { "name": "calculator.net z-score calculator", "url": "https://www.calculator.net/z-score-calculator.html", "reopenedAfterBuild": true, "gaps": [] },
+  { "name": "Omnicalculator z-score calculator", "url": "https://www.omnicalculator.com/statistics/z-score", "reopenedAfterBuild": true, "gaps": [] },
+  { "name": "CalculatorSoup z score calculator", "url": "https://www.calculatorsoup.com/calculators/statistics/z-score-calculator.php", "reopenedAfterBuild": true, "gaps": [] },
+  { "name": "GigaCalculator z score calculator", "url": "https://www.gigacalculator.com/calculators/z-score-calculator.php", "reopenedAfterBuild": true, "gaps": [] },
+  { "name": "8gwifi z-score calculator", "url": "https://8gwifi.org/z-score-calculator.jsp", "reopenedAfterBuild": true, "gaps": [] },
+  { "name": "Statistics By Jim z-score calculators", "url": "https://statisticsbyjim.com/calculators/z-score-calculator/", "reopenedAfterBuild": true, "gaps": [] },
+  { "name": "Social Science Statistics z-score calculator", "url": "https://www.socscistatistics.com/tests/zscore/calculator/", "reopenedAfterBuild": true, "gaps": [] }
+ ],
+ "weBeat": [
+  "visual: one bell curve drawn on two scales at once (z-scores and the user's own units), shaded share below the score, markers for two scores, and the 1, 2, 3 standard deviation bands; competitors draw only a z axis or nothing",
+  "functional: compare two scores from different scales in one view (none of the six does); any one of score, mean or spread solved from a typed z-score, percentile or confidence level; sample mean with n; list of numbers with a z-score per value, outlier marks and a button to reuse its mean and spread",
+  "every competitor feature kept except PNG download, LaTeX copy, preset examples and the six-sigma section (dropped under his approval of the research report, recorded in the parity file)"
+ ],
+ "gapsLeft": [],
+ "unverified": [
+  "real phone",
+  "other browsers (Chrome only)",
+  "print",
+  "Copy result button in a real clipboard session",
+  "IQ / T-score / SAT-scale equivalents are not offered (no readable source)",
+  "the competitors were compared from the research pass and the same pages reloaded after the build, not typed side by side with every input"
+ ]
+}

@@ -1,0 +1,19 @@
+{
+ "slug": "z-score-calculator",
+ "hash": "3dd9fc52e8a44737",
+ "shots": [
+  "z-score-calculator-1-empty-mobile.png",
+  "z-score-calculator-2-filled-mobile.png",
+  "z-score-calculator-3-result-mobile.png",
+  "z-score-calculator-4-advanced-mobile.png",
+  "z-score-calculator-5-error-mobile.png",
+  "z-score-calculator-6-after-chaos-mobile.png",
+  "z-score-calculator-1-empty-desktop.png",
+  "z-score-calculator-2-filled-desktop.png",
+  "z-score-calculator-3-result-desktop.png",
+  "z-score-calculator-4-advanced-desktop.png",
+  "z-score-calculator-5-error-desktop.png",
+  "z-score-calculator-6-after-chaos-desktop.png"
+ ],
+ "at": "2026-11-13T17:16:17.989Z"
+}

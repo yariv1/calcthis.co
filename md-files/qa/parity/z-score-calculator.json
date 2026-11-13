@@ -1,0 +1,270 @@
+{
+ "slug": "z-score-calculator",
+ "research": "md-files/calcthis-zscore-research.md",
+ "competitors": [
+  {
+   "name": "calculator.net z-score calculator",
+   "url": "https://www.calculator.net/z-score-calculator.html",
+   "openedLive": true,
+   "date": "2026-11-13",
+   "inputs": [
+    "raw score x",
+    "population mean",
+    "standard deviation",
+    "z-score converter: type any one of z or five probabilities",
+    "probabilities P(x<Z), P(x>Z), P(0 to Z), P(-Z<x<Z), P(x<-Z or x>Z)",
+    "probability between two z-scores (left and right bound)",
+    "z-table from 0 to 4.0",
+    "formula and definition text"
+   ]
+  },
+  {
+   "name": "Omnicalculator z-score calculator",
+   "url": "https://www.omnicalculator.com/statistics/z-score",
+   "openedLive": true,
+   "date": "2026-11-13",
+   "inputs": [
+    "experimental result x",
+    "mean value",
+    "standard deviation",
+    "z-score field (fill any three of four)",
+    "left-tailed, right-tailed and two-tailed p-value",
+    "two-tailed confidence level",
+    "worked example with four test scores",
+    "z-score table explanation",
+    "six sigma section"
+   ]
+  },
+  {
+   "name": "CalculatorSoup z score calculator",
+   "url": "https://www.calculatorsoup.com/calculators/statistics/z-score-calculator.php",
+   "openedLive": true,
+   "date": "2026-11-13",
+   "inputs": [
+    "data point(s), several at once",
+    "sample mean and sample size",
+    "a pasted data sample",
+    "population mean and population standard deviation",
+    "applicable z-score formula shown"
+   ]
+  },
+  {
+   "name": "GigaCalculator z score calculator",
+   "url": "https://www.gigacalculator.com/calculators/z-score-calculator.php",
+   "openedLive": true,
+   "date": "2026-11-13",
+   "inputs": [
+    "raw score, mean, standard deviation",
+    "precision selector",
+    "z score from probability (critical z)",
+    "probabilities above, below, between and outside",
+    "z distribution chart with key quantiles",
+    "z table"
+   ]
+  },
+  {
+   "name": "8gwifi z-score calculator",
+   "url": "https://8gwifi.org/z-score-calculator.jsp",
+   "openedLive": true,
+   "date": "2026-11-13",
+   "inputs": [
+    "score to z mode",
+    "z to probability mode",
+    "percentile to z mode",
+    "z to score mode",
+    "result with z, percentile, left tail and right tail",
+    "normal curve chart",
+    "calculation steps",
+    "plain-English interpretation",
+    "preset examples (SAT, IQ, 95% CI, top 5%)",
+    "copy LaTeX, share, download PNG"
+   ]
+  },
+  {
+   "name": "Statistics By Jim z-score calculators",
+   "url": "https://statisticsbyjim.com/calculators/z-score-calculator/",
+   "openedLive": true,
+   "date": "2026-11-13",
+   "inputs": [
+    "observed value, mean, standard deviation",
+    "graph with the area left of z shaded",
+    "z-score to five probability regions",
+    "small graph for each region"
+   ]
+  },
+  {
+   "name": "Social Science Statistics z-score calculator",
+   "url": "https://www.socscistatistics.com/tests/zscore/calculator/",
+   "openedLive": true,
+   "date": "2026-11-13",
+   "inputs": [
+    "raw score, population mean, population SD"
+   ]
+  }
+ ],
+ "features": [
+  {
+   "covers": [
+    "calculator.net z-score calculator: raw score x",
+    "calculator.net z-score calculator: population mean",
+    "calculator.net z-score calculator: standard deviation",
+    "Omnicalculator z-score calculator: experimental result x",
+    "Omnicalculator z-score calculator: mean value",
+    "Omnicalculator z-score calculator: standard deviation",
+    "CalculatorSoup z score calculator: population mean and population standard deviation",
+    "GigaCalculator z score calculator: raw score, mean, standard deviation",
+    "8gwifi z-score calculator: score to z mode",
+    "Statistics By Jim z-score calculators: observed value, mean, standard deviation",
+    "Social Science Statistics z-score calculator: raw score, population mean, population SD"
+   ],
+   "status": "exceed",
+   "ids": [
+    "zsX",
+    "zsMean",
+    "zsSd"
+   ]
+  },
+  {
+   "covers": [
+    "calculator.net z-score calculator: z-score converter: type any one of z or five probabilities",
+    "Omnicalculator z-score calculator: z-score field (fill any three of four)",
+    "8gwifi z-score calculator: z to score mode"
+   ],
+   "status": "exceed",
+   "ids": [
+    "zsZ",
+    "zsPct",
+    "zsX",
+    "zsMean",
+    "zsSd"
+   ]
+  },
+  {
+   "covers": [
+    "calculator.net z-score calculator: probabilities P(x<Z), P(x>Z), P(0 to Z), P(-Z<x<Z), P(x<-Z or x>Z)",
+    "Omnicalculator z-score calculator: left-tailed, right-tailed and two-tailed p-value",
+    "GigaCalculator z score calculator: probabilities above, below, between and outside",
+    "8gwifi z-score calculator: z to probability mode",
+    "8gwifi z-score calculator: result with z, percentile, left tail and right tail",
+    "Statistics By Jim z-score calculators: z-score to five probability regions"
+   ],
+   "status": "exceed",
+   "ids": [
+    "zsProb",
+    "zsZ"
+   ]
+  },
+  {
+   "covers": [
+    "calculator.net z-score calculator: probability between two z-scores (left and right bound)"
+   ],
+   "status": "match",
+   "ids": [
+    "zsZ1",
+    "zsZ2",
+    "zsBetweenNote"
+   ]
+  },
+  {
+   "covers": [
+    "GigaCalculator z score calculator: z score from probability (critical z)",
+    "8gwifi z-score calculator: percentile to z mode"
+   ],
+   "status": "exceed",
+   "ids": [
+    "zsPct",
+    "zsConf"
+   ]
+  },
+  {
+   "covers": [
+    "Omnicalculator z-score calculator: two-tailed confidence level"
+   ],
+   "status": "match",
+   "ids": [
+    "zsConf",
+    "zsProb"
+   ]
+  },
+  {
+   "covers": [
+    "CalculatorSoup z score calculator: data point(s), several at once",
+    "CalculatorSoup z score calculator: a pasted data sample"
+   ],
+   "status": "exceed",
+   "ids": [
+    "zsList",
+    "zsListTab",
+    "zsListKind"
+   ]
+  },
+  {
+   "covers": [
+    "CalculatorSoup z score calculator: sample mean and sample size"
+   ],
+   "status": "match",
+   "ids": [
+    "zsN"
+   ]
+  },
+  {
+   "covers": [
+    "GigaCalculator z score calculator: precision selector"
+   ],
+   "status": "match",
+   "ids": [
+    "zsDec"
+   ]
+  },
+  {
+   "covers": [
+    "GigaCalculator z score calculator: z distribution chart with key quantiles",
+    "8gwifi z-score calculator: normal curve chart",
+    "Statistics By Jim z-score calculators: graph with the area left of z shaded",
+    "Statistics By Jim z-score calculators: small graph for each region"
+   ],
+   "status": "exceed",
+   "ids": [
+    "zsVis"
+   ]
+  },
+  {
+   "covers": [
+    "calculator.net z-score calculator: formula and definition text",
+    "CalculatorSoup z score calculator: applicable z-score formula shown",
+    "Omnicalculator z-score calculator: worked example with four test scores",
+    "8gwifi z-score calculator: calculation steps",
+    "8gwifi z-score calculator: plain-English interpretation"
+   ],
+   "status": "match",
+   "ids": [
+    "zsSteps",
+    "zsTip",
+    "zsSub"
+   ]
+  },
+  {
+   "covers": [
+    "calculator.net z-score calculator: z-table from 0 to 4.0",
+    "GigaCalculator z score calculator: z table",
+    "Omnicalculator z-score calculator: z-score table explanation"
+   ],
+   "status": "match",
+   "ids": [
+    "zsZTable"
+   ]
+  },
+  {
+   "covers": [
+    "8gwifi z-score calculator: preset examples (SAT, IQ, 95% CI, top 5%)",
+    "8gwifi z-score calculator: copy LaTeX, share, download PNG",
+    "Omnicalculator z-score calculator: six sigma section"
+   ],
+   "status": "dropped",
+   "signoff": {
+    "quote": "i approve all (his reply to the research report that named PNG download, LaTeX copy and the six-sigma section as dropped; preset examples were not named in that report)",
+    "date": "2026-11-13"
+   }
+  }
+ ]
+}

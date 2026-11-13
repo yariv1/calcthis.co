@@ -1,0 +1,12 @@
+{
+ "slug": "z-score-calculator",
+ "pass": true,
+ "failed": [],
+ "hash": "3dd9fc52e8a44737",
+ "at": "2026-11-13T17:20:21.885Z",
+ "results": {
+  "silent": "ok   z-score-calculator  fields 10",
+  "duplicate": "most overlap 0.2% with /confidence-interval-calculator/ (limit 12%)",
+  "registration": "sitemap urls 237 | z-score-calculator cards 1 inbound 236 ld WebApplication,FAQPage,BreadcrumbList | AUDIT PASS"
+ }
+}

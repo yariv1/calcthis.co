@@ -1,5 +1,5 @@
 {
- "date": "2026-11-10",
+ "date": "2026-11-13",
  "competitors": [
   {
    "name": "Inch Calculator",
@@ -31,6 +31,7 @@
   "other browsers (Chrome only)",
   "print",
   "Copy buttons were not clicked in a real browser clipboard session",
-  "competitor pages were reopened as text (Omnicalculator also as a screenshot); their live widgets were not driven with typed values after the build"
+  "competitor pages were reopened as text (Omnicalculator also as a screenshot); their live widgets were not driven with typed values after the build",
+  "2026-11-13: the competitor pages were reopened (page loads and headings read) after the header gained the z-score link; no feature comparison was repeated"
  ]
 }

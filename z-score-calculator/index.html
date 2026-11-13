@@ -1,0 +1,856 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Z-Score Calculator: Score, Percentile &amp; Probability</title>
+<meta name="description" content="Z-score calculator: find the z-score of a value from the mean and standard deviation, or work back from a z-score or percentile. Compare two scores.">
+<link rel="canonical" href="https://calcthis.co/z-score-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Z-Score Calculator: Score, Percentile &amp; Probability">
+<meta property="og:description" content="Z-score calculator: find the z-score of a value from the mean and standard deviation, or work back from a z-score or percentile. Compare two scores.">
+<meta property="og:url" content="https://calcthis.co/z-score-calculator/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/datepicker.min.css">
+<link rel="stylesheet" href="/assets/style.css?v=350">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Z-Score Calculator",
+  "url": "https://calcthis.co/z-score-calculator/",
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "Free z-score calculator: the z-score of a value from the mean and standard deviation, the percentile and the areas under the normal curve, the score, mean or standard deviation from a z-score or percentile, the z-score of a sample mean, a comparison of two scores from different scales, the critical z-score for a confidence level, the area between two z-scores, and z-scores for a pasted list, with a live bell curve in z-scores and in your own units."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I calculate a z-score?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Subtract the mean from your score and divide by the standard deviation: z = (x − μ) ÷ σ. For a score of 85 with a mean of 75 and a standard deviation of 10, z = (85 − 75) ÷ 10 = 1.00."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What does a z-score tell me?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "How many standard deviations a value is above (positive) or below (negative) the mean. A z-score of 0 is exactly the mean. A z-score of 1.00 means one standard deviation above it, which is higher than 84.13% of a normal group."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I turn a z-score into a percentile?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The percentile is the area under the standard normal curve to the left of z. Type the z-score in the calculator and read “Below z” in the areas table: z = 1.00 gives 84.13%, so about 15.87% score higher. The z table on this page lists the same areas."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I find the z-score for a percentile?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Type the percentile in the Percentile box. The 95th percentile has z = 1.6449, the 50th has z = 0 and the 5th has z = −1.6449. The percentile table on this page lists more."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What z-score do I need for 90%, 95% or 99% confidence?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The two-tailed critical z-scores are ±1.6449 for 90%, ±1.9600 for 95% and ±2.5758 for 99%. In Go advanced, type a confidence level to get its critical z-score; the table on this page lists more levels, one-tailed too."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I compare scores from different tests?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Switch to “Compare two” and type each score with its own mean and standard deviation. A 85 on a test with mean 75 and standard deviation 10 has z = 1.00; a 640 on a test with mean 500 and standard deviation 100 has z = 1.40. The second is the better result compared with its group (91.92% vs 84.13%)."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the z-score of a sample mean?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Go advanced and type the sample size n: the standard error σ ÷ √n replaces σ. A sample of 36 people with a mean of 76, when the population mean is 75 and σ = 10, gives z = (76 − 75) ÷ (10 ÷ √36) = 0.60."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I find the score, mean or standard deviation from a z-score?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Type the z-score (or a percentile) and any two of the score, mean and standard deviation: the empty box is worked out. For example z = 1.00, mean 75 and standard deviation 10 give a score of 85 (x = μ + z × σ)."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is a z-score above 2 or 3 unusual?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "For a bell-shaped group, 4.55% of values lie more than 2 standard deviations from the mean (either side) and 0.27% lie more than 3 away. The calculator shows the exact share outside your own z-score, so you can judge for yourself."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I get a z-score for every number in a list?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Go advanced, paste the numbers separated by commas, spaces or new lines, and a table shows each value’s z-score and marks those beyond ±2 and ±3. Choose population (÷ n) or sample (÷ n − 1) for the standard deviation, and use the mean and spread above to score a new value."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between a z-score and a p-value?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A z-score says how far a value is from the mean in standard deviations. A p-value is the probability of a result at least that extreme. The areas table turns your z-score into one-tailed and two-tailed probabilities; for tests of a hypothesis use the p-value calculator."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "CalcThis",
+      "item": "https://calcthis.co/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Z-Score Calculator",
+      "item": "https://calcthis.co/z-score-calculator/"
+    }
+  ]
+}
+</script>
+<meta property="og:site_name" content="CalcThis">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://calcthis.co/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="CalcThis — free, purpose-built calculators">
+<meta name="twitter:title" content="Z-Score Calculator: Score, Percentile &amp; Probability">
+<meta name="twitter:description" content="Z-score calculator: find the z-score of a value from the mean and standard deviation, or work back from a z-score or percentile. Compare two scores.">
+<meta name="twitter:image" content="https://calcthis.co/assets/og-default.png">
+</head>
+<body class="p-bmr p-zs">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <a class="hdr-back" href="/blog/" aria-label="Back to blog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-search"><div class="menu-sx"><input id="menuSearch" type="search" placeholder="Search calculators or states…" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Search calculators" enterkeyhint="search"></div><div class="menu-results" id="menuResults" hidden></div></div>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <span class="menu-col-head">Construction &amp; Gardening</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+          <a href="/paint-calculator/">Paint</a>
+          <a href="/wallpaper-calculator/">Wallpaper</a>
+          <a href="/square-footage-calculator/">Square Footage</a>
+          <a href="/tape-measure-fraction-calculator/">Tape Measure Fraction</a>
+          <a href="/stair-calculator/">Stair</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/vo2-max-calculator/">VO2 Max</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
+          <a href="/bmi-calculator/">BMI</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/ideal-weight-calculator/">Ideal Weight</a>
+          <a href="/lean-body-mass-calculator/">Lean Body Mass</a>
+          <a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio</a>
+          <a href="/gmi-calculator/">GMI</a>
+          <a href="/a1c-calculator/">A1C</a>
+          <a href="/calorie-calculator/">Calorie</a>
+          <a href="/calorie-deficit-calculator/">Calorie Deficit</a>
+          <a href="/bmr-calculator/">BMR</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/water-intake-calculator/">Water Intake</a>
+          <a href="/macro-calculator/">Macro</a>
+          <a href="/protein-intake-calculator/">Protein Intake</a>
+          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
+          <a href="/steps-to-miles-calculator/">Steps to Miles</a>
+          <a href="/dog-age-calculator/">Dog Age</a>
+          <a href="/cat-age-calculator/">Cat Age</a>
+          <a href="/calories-burned-calculator/">Calories Burned</a>
+          <a href="/calories-burned-walking-calculator/">Calories Burned Walking</a>
+          <a href="/calories-burned-running-calculator/">Calories Burned Running</a>
+          <a href="/keto-calculator/">Keto</a>
+          <a href="/net-carb-calculator/">Net Carb</a>
+          <a href="/intermittent-fasting-calculator/">Intermittent Fasting</a>
+          <a href="/bsa-calculator/">BSA</a>
+          <a href="/dog-food-calculator/">Dog Food</a>
+          <a href="/ffmi-calculator/">FFMI</a>
+          <a href="/bulking-calculator/">Bulking</a>
+          <a href="/weight-loss-calculator/">Weight Loss</a>
+          <a href="/weight-loss-percentage-calculator/">Weight Loss %</a>
+          <a href="/max-heart-rate-calculator/">Max Heart Rate</a>
+          <a href="/caffeine-calculator/">Caffeine</a>
+          <a href="/caffeine-half-life-calculator/">Caffeine Half Life</a>
+          <a href="/fiber-calculator/">Fiber</a>
+          <a href="/creatine-calculator/">Creatine</a>
+          <a href="/vitamin-d-calculator/">Vitamin D</a>
+          <a href="/body-recomposition-calculator/">Body Recomposition</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/semester-grade-calculator/">Semester Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+          <a href="/grade-curve-calculator/">Grade Curve</a>
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/fraction-calculator/">Fraction</a>
+          <a href="/standard-deviation-calculator/">Standard Deviation</a>
+          <a href="/p-value-calculator/">P-Value</a>
+          <a href="/confidence-interval-calculator/">Confidence Interval</a>
+          <a href="/z-score-calculator/" class="current">Z Score</a>
+          <a href="/scientific-notation-calculator/">Scientific Notation</a>
+          <a href="/average-calculator/">Average</a>
+          <a href="/batting-average-calculator/">Batting Average</a>
+          <a href="/stock-average-calculator/">Stock Average</a>
+          <a href="/dice-average-calculator/">Dice Average</a>
+          <a href="/time-average-calculator/">Time Average</a>
+          <a href="/weighted-average-calculator/">Weighted Average</a>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+          <a href="/percentage-change-calculator/">Percentage Change</a>
+          <a href="/age-calculator/">Age</a>
+          <a href="/date-calculator/">Date</a>
+          <a href="/time-calculator/">Time</a>
+          <a href="/hours-calculator/">Hours</a>
+          <a href="/seconds-to-hours-calculator/">Seconds to Hours</a>
+          <a href="/minutes-to-hours-calculator/">Minutes to Hours</a>
+          <a href="/seconds-to-minutes-calculator/">Seconds to Minutes</a>
+          <a href="/triangle-calculator/">Triangle</a>
+          <a href="/random-number-generator/">Random Number</a>
+          <span class="menu-col-head">Cooking &amp; Kitchen</span>
+          <a href="/recipe-converter/">Recipe Converter</a>
+          <a href="/turkey-cooking-time-calculator/">Turkey Cooking Time</a>
+          <a href="/turkey-thawing-time-calculator/">Turkey Thawing Time</a>
+          <a href="/turkey-size-calculator/">Turkey Size</a>
+          <!--UNITNAV:START-->
+          <span class="menu-col-head">Unit Converters</span>
+          <a href="/unit-converter/">Unit Converter</a>
+          <a href="/length-converter/">Length Converter</a>
+          <a href="/weight-converter/">Weight Converter</a>
+          <a href="/volume-converter/">Volume Converter</a>
+          <a href="/temperature-converter/">Temperature Converter</a>
+          <a href="/area-converter/">Area Converter</a>
+          <a href="/speed-converter/">Speed Converter</a>
+          <a href="/data-storage-converter/">Data Storage Converter</a>
+          <a href="/cooking-converter/">Cooking Converter</a>
+          <a href="/px-to-rem-converter/">PX to REM Converter</a>
+          <!--UNITNAV:END-->
+          <span class="menu-col-head">Money &amp; Finance</span>
+          <a href="/mortgage-calculator/">Mortgage</a>
+          <a href="/loan-calculator/">Loan</a>
+          <a href="/auto-loan-calculator/">Auto Loan</a>
+          <a href="/car-sales-tax-calculator/">Car Sales Tax</a>
+          <a href="/overtime-calculator/">Overtime</a>
+          <a href="/salary-calculator/">Salary</a>
+          <a href="/markup-calculator/">Markup</a>
+          <a href="/profit-margin-calculator/">Profit Margin</a>
+          <a href="/discount-calculator/">Discount</a>
+          <a href="/commission-calculator/">Commission</a>
+          <a href="/realtor-commission-calculator/">Realtor Commission</a>
+          <a href="/unit-price-calculator/">Unit Price</a>
+          <!--STAXNAV:START-->
+          <a href="/sales-tax-calculator/">Sales Tax</a>
+          <a href="/sales-tax-calculator/california/">California Sales Tax</a>
+          <a href="/sales-tax-calculator/chicago/">Chicago Sales Tax</a>
+          <a href="/sales-tax-calculator/florida/">Florida Sales Tax</a>
+          <a href="/sales-tax-calculator/las-vegas/">Las Vegas Sales Tax</a>
+          <a href="/sales-tax-calculator/los-angeles/">Los Angeles Sales Tax</a>
+          <a href="/sales-tax-calculator/michigan/">Michigan Sales Tax</a>
+          <a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax</a>
+          <a href="/sales-tax-calculator/missouri/">Missouri Sales Tax</a>
+          <a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax</a>
+          <a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax</a>
+          <a href="/sales-tax-calculator/north-carolina/">North Carolina Sales Tax</a>
+          <a href="/sales-tax-calculator/ohio/">Ohio Sales Tax</a>
+          <a href="/sales-tax-calculator/texas/">Texas Sales Tax</a>
+          <a href="/sales-tax-calculator/virginia/">Virginia Sales Tax</a>
+          <!--STAXNAV:END-->
+          <a href="/tip-calculator/">Tip</a>
+          <a href="/how-much-to-tip/">How Much to Tip</a>
+        </div>
+        <!--PAYNAV:START-->
+        <div class="menu-col">
+          <span class="menu-col-head">Paycheck Calculators</span>
+          <a href="/paycheck-calculator/">Paycheck Calculator (all states)</a>
+          <a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a>
+          <a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arkansas/">Arkansas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/california/">California Paycheck Calculator</a>
+          <a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a>
+          <a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a>
+          <a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/hawaii/">Hawaii Paycheck Calculator</a>
+          <a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a>
+          <a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a>
+          <a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a>
+          <a href="/paycheck-calculator/louisiana/">Louisiana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a>
+          <a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a>
+          <a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a>
+          <a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a>
+          <a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nebraska/">Nebraska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a>
+          <a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a>
+          <a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a>
+          <a href="/paycheck-calculator/oklahoma/">Oklahoma Paycheck Calculator</a>
+          <a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a>
+          <a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a>
+          <a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a>
+          <a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/utah/">Utah Paycheck Calculator</a>
+          <a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wisconsin/">Wisconsin Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a>
+        </div>
+        <!--PAYNAV:END-->
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">Score, percentile and probability · compare two scores · live bell curve</div>
+    <h1>Z-Score Calculator</h1>
+    <p>Type a <strong>score, the mean and the standard deviation</strong> and get the <strong>z-score</strong>, the percentile and the areas under the curve, drawn on a bell curve with your own units. A score of <strong>85</strong> on a test with a mean of <strong>75</strong> and a standard deviation of <strong>10</strong> has a z-score of <strong>1.00</strong>, higher than <strong>84.13%</strong> of the group. Know the z-score or percentile instead? Type it with two of the three boxes and the third is worked out. Or compare two scores from different tests.</p>
+  </section>
+
+  <div class="grid">
+
+    <!-- INPUT -->
+    <div class="card">
+      <div class="card-pad">
+        <h2 class="card-h2">Your score</h2>
+        <div class="fld"><span class="lab">What do you want to do?</span><div class="seg zs-seg" id="zsMode" role="group" aria-label="What do you want to do?"><button type="button" data-v="one" class="on">One z-score</button><button type="button" data-v="two">Compare two</button></div></div>
+        <label class="fld" for="zsX"><span class="lab" id="zsXLab">Your score (x)</span><div class="inp"><input id="zsX" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 85"></div></label>
+        <div class="zs-two"><label class="fld" for="zsMean"><span class="lab" id="zsMeanLab">Mean of the group</span><div class="inp"><input id="zsMean" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 75"></div></label><label class="fld" for="zsSd"><span class="lab" id="zsSdLab">Standard deviation</span><div class="inp"><input id="zsSd" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 10"></div></label></div>
+        <div id="zsBW" style="display:none">
+          <label class="fld" for="zsX2"><span class="lab">Score B</span><div class="inp"><input id="zsX2" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 640"></div></label>
+          <div class="zs-two"><label class="fld" for="zsMean2"><span class="lab">Mean for B</span><div class="inp"><input id="zsMean2" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 500"></div></label><label class="fld" for="zsSd2"><span class="lab">Std. deviation for B</span><div class="inp"><input id="zsSd2" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 100"></div></label></div>
+        </div>
+        <p class="av-note" id="zsMainNote"></p>
+        <div id="zsZW">
+          <p class="zs-sech">Or use a z-score or percentile <span>· optional</span></p>
+          <div class="zs-two"><label class="fld" for="zsZ"><span class="lab">z-score</span><div class="inp"><input id="zsZ" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 1.5"></div></label><label class="fld" for="zsPct"><span class="lab">Percentile <span class="unit">%</span></span><div class="inp"><input id="zsPct" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 84"></div></label></div>
+          <p class="av-note" id="zsZNote"></p>
+        </div>
+        <div class="res-hint" id="zsHint" style="display:none;text-align:left;margin:4px 0 8px"></div>
+        <div id="zsAdvIn" style="display:none">
+          <div class="proj-sep"></div>
+          <div id="zsNW">
+          <p class="zs-sech">Score is the average of a sample <span>· optional</span></p>
+          <label class="fld" for="zsN"><span class="lab">Sample size (n)</span><div class="inp"><input id="zsN" type="text" inputmode="numeric" autocomplete="off" placeholder="e.g. 36"></div></label>
+          <p class="av-note" id="zsNNote"></p>
+          </div>
+          <div id="zsConfW">
+          <p class="zs-sech">Critical z-score for a confidence level <span>· optional</span></p>
+          <label class="fld" for="zsConf"><span class="lab">Two-tailed confidence level <span class="unit">%</span></span><div class="inp"><input id="zsConf" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 95"></div></label>
+          <p class="av-note" id="zsConfNote"></p>
+          </div>
+          <p class="zs-sech">Share of the group between two z-scores <span>· optional</span></p>
+          <div class="zs-two"><label class="fld" for="zsZ1"><span class="lab">From z-score</span><div class="inp"><input id="zsZ1" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. -1"></div></label><label class="fld" for="zsZ2"><span class="lab">To z-score</span><div class="inp"><input id="zsZ2" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 1"></div></label></div>
+          <p class="av-note" id="zsBetweenNote"></p>
+          <p class="zs-sech">Z-scores for a list of numbers <span>· optional</span></p>
+          <div class="fld"><label class="lab" for="zsList">Your numbers</label><textarea class="zs-ta" id="zsList" placeholder="e.g. 62, 70, 55, 81, 48, 66&#10;or paste a column from Excel" aria-label="Your numbers" spellcheck="false"></textarea></div>
+          <div class="fld"><span class="lab">Standard deviation of the list</span><div class="seg zs-seg" id="zsListKind" role="group" aria-label="Standard deviation of the list"><button type="button" data-v="pop" class="on">Population (÷ n)</button><button type="button" data-v="sample">Sample (÷ n − 1)</button></div></div>
+          <p class="av-note" id="zsListNote"></p>
+          <p class="zs-sech">Display <span>· optional</span></p>
+          <label class="fld" for="zsDec"><span class="lab">Decimal places</span><div class="inp"><input id="zsDec" type="text" inputmode="numeric" autocomplete="off" placeholder="e.g. 3"></div></label>
+          <p class="av-note" id="zsDecNote"></p>
+        </div>
+        <div class="add-row split" style="margin-top:16px">
+          <button class="linkbtn" id="zsClear" type="button">Clear fields</button>
+          <button class="advbtn" id="zsAdvBtn" type="button">
+            <span id="zsAdvBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div class="card">
+      <div class="card-pad">
+        <div class="bf-res">
+          <div class="res-lab" id="zsLab">z-score</div>
+          <div class="res-big"><span id="zsBig">—</span></div>
+          <div class="res-sub" id="zsSub" data-empty="Type a score, the mean and the standard deviation to see the z-score.">Type a score, the mean and the standard deviation to see the z-score.</div>
+        </div>
+        <div id="zsBody" style="display:none">
+          <p class="res-tip adv-tip" id="zsTip"></p>
+          <div id="zsVisWrap" style="display:none">
+            <p class="bm-h">Where it sits on the bell curve</p>
+            <div class="zs-vis" id="zsVis"></div>
+            <p class="cb-note" id="zsVisKey"></p>
+          </div>
+          <div id="zsNumsWrap">
+            <p class="bm-h">The numbers <button class="linkbtn" type="button" data-copy="zsCopyTxt" style="margin-left:8px">Copy result</button></p>
+            <table class="dtable" id="zsNums"></table>
+            <div id="zsCopyTxt" style="display:none"></div>
+          </div>
+          <div id="zsProbWrap" style="display:none">
+            <p class="bm-h">Areas under the curve</p>
+            <table class="dtable" id="zsProb"></table>
+          </div>
+          <div id="zsListWrap" style="display:none">
+            <p class="bm-h">Z-scores for your list</p>
+            <p class="zs-listsum" id="zsListSum"></p>
+            <div class="zs-tbl"><table class="dtable" id="zsListTab"></table></div>
+            <p class="cb-note" id="zsListKey"></p>
+            <button class="linkbtn" id="zsListUse" type="button">Use this mean and spread in the boxes</button>
+          </div>
+          <div id="zsStepsWrap">
+            <p class="bm-h">How it is worked out</p>
+            <ol class="zs-steps" id="zsSteps"></ol>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- mobile sticky bar -->
+  <div class="mbar" id="mbar">
+    <span class="mbar-lab" id="zsMLab">z-score</span>
+    <div class="mbar-vals"><b id="zsMVal">—</b></div>
+  </div>
+
+  <div class="related-calcs">
+    <p class="related-calcs-h">More calculators that may interest you</p>
+    <div class="pills">
+      <a class="pill" href="/p-value-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 24c4 0 6-16 13-16s9 16 13 16"/><path d="M3 24h26"/></svg>
+        P-Value Calculator
+      </a>
+      <a class="pill" href="/confidence-interval-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 16h24M4 11v10M28 11v10"/></svg>
+        Confidence Interval Calculator
+      </a>
+      <a class="pill" href="/standard-deviation-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 18c3 0 4-12 9-12s6 12 9 12"/><path d="M12 6v14"/></svg>
+        Standard Deviation Calculator
+      </a>
+      <a class="pill" href="/average-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg>
+        Average Calculator
+      </a>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use the z-score calculator</h2>
+        <p>Type your <strong>score</strong>, the <strong>mean</strong> of the group and its <strong>standard deviation</strong>: the z-score, the percentile and the areas under the curve appear at once, with a bell curve that shows your score on both the z scale and your own scale. Already know the z-score or the percentile? Type it in its box together with two of the three boxes above, and the missing one (score, mean or standard deviation) is worked out.</p>
+        <p>Choose <strong>Compare two</strong> to see which of two results is better compared with its own group, even when they come from different tests. Go advanced for the z-score of a sample mean, the critical z-score for a confidence level, the share of the group between two z-scores, and a z-score for every number in a pasted list.</p>
+
+        <h2 id="zsFormulas">The formula</h2>
+        <div class="formula">
+          z = (x − μ) ÷ σ
+          <small>SAMPLE MEAN OF n VALUES: z = (x̄ − μ) ÷ (σ ÷ √n) · SCORE FROM z: x = μ + z × σ</small>
+        </div>
+        <p>x is the value, μ the mean and σ the standard deviation. A positive z-score is above the mean, a negative one below it, and 0 is the mean itself. Worked out with this calculator: x = 85, μ = 75, σ = 10 gives z = 1.0000; the area to its left is 0.8413, so 84.13% of the group scores lower and 15.87% higher.</p>
+        <h2>The standard normal table (area to the left of z)</h2>
+        <p>Find the row for z to one decimal and the column for the second decimal. Positive z only: for a negative z, the area to the left is 1 minus the table value for the same positive z.</p>
+        <div class="zs-tbl"><table class="dtable zs-ztab" id="zsZTable"><thead><tr><th>z</th><th>0.00</th><th>0.01</th><th>0.02</th><th>0.03</th><th>0.04</th><th>0.05</th><th>0.06</th><th>0.07</th><th>0.08</th><th>0.09</th></tr></thead><tbody><tr><td>0.0</td><td>0.5000</td><td>0.5040</td><td>0.5080</td><td>0.5120</td><td>0.5160</td><td>0.5199</td><td>0.5239</td><td>0.5279</td><td>0.5319</td><td>0.5359</td></tr><tr><td>0.1</td><td>0.5398</td><td>0.5438</td><td>0.5478</td><td>0.5517</td><td>0.5557</td><td>0.5596</td><td>0.5636</td><td>0.5675</td><td>0.5714</td><td>0.5753</td></tr><tr><td>0.2</td><td>0.5793</td><td>0.5832</td><td>0.5871</td><td>0.5910</td><td>0.5948</td><td>0.5987</td><td>0.6026</td><td>0.6064</td><td>0.6103</td><td>0.6141</td></tr><tr><td>0.3</td><td>0.6179</td><td>0.6217</td><td>0.6255</td><td>0.6293</td><td>0.6331</td><td>0.6368</td><td>0.6406</td><td>0.6443</td><td>0.6480</td><td>0.6517</td></tr><tr><td>0.4</td><td>0.6554</td><td>0.6591</td><td>0.6628</td><td>0.6664</td><td>0.6700</td><td>0.6736</td><td>0.6772</td><td>0.6808</td><td>0.6844</td><td>0.6879</td></tr><tr><td>0.5</td><td>0.6915</td><td>0.6950</td><td>0.6985</td><td>0.7019</td><td>0.7054</td><td>0.7088</td><td>0.7123</td><td>0.7157</td><td>0.7190</td><td>0.7224</td></tr><tr><td>0.6</td><td>0.7257</td><td>0.7291</td><td>0.7324</td><td>0.7357</td><td>0.7389</td><td>0.7422</td><td>0.7454</td><td>0.7486</td><td>0.7517</td><td>0.7549</td></tr><tr><td>0.7</td><td>0.7580</td><td>0.7611</td><td>0.7642</td><td>0.7673</td><td>0.7704</td><td>0.7734</td><td>0.7764</td><td>0.7794</td><td>0.7823</td><td>0.7852</td></tr><tr><td>0.8</td><td>0.7881</td><td>0.7910</td><td>0.7939</td><td>0.7967</td><td>0.7995</td><td>0.8023</td><td>0.8051</td><td>0.8078</td><td>0.8106</td><td>0.8133</td></tr><tr><td>0.9</td><td>0.8159</td><td>0.8186</td><td>0.8212</td><td>0.8238</td><td>0.8264</td><td>0.8289</td><td>0.8315</td><td>0.8340</td><td>0.8365</td><td>0.8389</td></tr><tr><td>1.0</td><td>0.8413</td><td>0.8438</td><td>0.8461</td><td>0.8485</td><td>0.8508</td><td>0.8531</td><td>0.8554</td><td>0.8577</td><td>0.8599</td><td>0.8621</td></tr><tr><td>1.1</td><td>0.8643</td><td>0.8665</td><td>0.8686</td><td>0.8708</td><td>0.8729</td><td>0.8749</td><td>0.8770</td><td>0.8790</td><td>0.8810</td><td>0.8830</td></tr><tr><td>1.2</td><td>0.8849</td><td>0.8869</td><td>0.8888</td><td>0.8907</td><td>0.8925</td><td>0.8944</td><td>0.8962</td><td>0.8980</td><td>0.8997</td><td>0.9015</td></tr><tr><td>1.3</td><td>0.9032</td><td>0.9049</td><td>0.9066</td><td>0.9082</td><td>0.9099</td><td>0.9115</td><td>0.9131</td><td>0.9147</td><td>0.9162</td><td>0.9177</td></tr><tr><td>1.4</td><td>0.9192</td><td>0.9207</td><td>0.9222</td><td>0.9236</td><td>0.9251</td><td>0.9265</td><td>0.9279</td><td>0.9292</td><td>0.9306</td><td>0.9319</td></tr><tr><td>1.5</td><td>0.9332</td><td>0.9345</td><td>0.9357</td><td>0.9370</td><td>0.9382</td><td>0.9394</td><td>0.9406</td><td>0.9418</td><td>0.9429</td><td>0.9441</td></tr><tr><td>1.6</td><td>0.9452</td><td>0.9463</td><td>0.9474</td><td>0.9484</td><td>0.9495</td><td>0.9505</td><td>0.9515</td><td>0.9525</td><td>0.9535</td><td>0.9545</td></tr><tr><td>1.7</td><td>0.9554</td><td>0.9564</td><td>0.9573</td><td>0.9582</td><td>0.9591</td><td>0.9599</td><td>0.9608</td><td>0.9616</td><td>0.9625</td><td>0.9633</td></tr><tr><td>1.8</td><td>0.9641</td><td>0.9649</td><td>0.9656</td><td>0.9664</td><td>0.9671</td><td>0.9678</td><td>0.9686</td><td>0.9693</td><td>0.9699</td><td>0.9706</td></tr><tr><td>1.9</td><td>0.9713</td><td>0.9719</td><td>0.9726</td><td>0.9732</td><td>0.9738</td><td>0.9744</td><td>0.9750</td><td>0.9756</td><td>0.9761</td><td>0.9767</td></tr><tr><td>2.0</td><td>0.9772</td><td>0.9778</td><td>0.9783</td><td>0.9788</td><td>0.9793</td><td>0.9798</td><td>0.9803</td><td>0.9808</td><td>0.9812</td><td>0.9817</td></tr><tr><td>2.1</td><td>0.9821</td><td>0.9826</td><td>0.9830</td><td>0.9834</td><td>0.9838</td><td>0.9842</td><td>0.9846</td><td>0.9850</td><td>0.9854</td><td>0.9857</td></tr><tr><td>2.2</td><td>0.9861</td><td>0.9864</td><td>0.9868</td><td>0.9871</td><td>0.9875</td><td>0.9878</td><td>0.9881</td><td>0.9884</td><td>0.9887</td><td>0.9890</td></tr><tr><td>2.3</td><td>0.9893</td><td>0.9896</td><td>0.9898</td><td>0.9901</td><td>0.9904</td><td>0.9906</td><td>0.9909</td><td>0.9911</td><td>0.9913</td><td>0.9916</td></tr><tr><td>2.4</td><td>0.9918</td><td>0.9920</td><td>0.9922</td><td>0.9925</td><td>0.9927</td><td>0.9929</td><td>0.9931</td><td>0.9932</td><td>0.9934</td><td>0.9936</td></tr><tr><td>2.5</td><td>0.9938</td><td>0.9940</td><td>0.9941</td><td>0.9943</td><td>0.9945</td><td>0.9946</td><td>0.9948</td><td>0.9949</td><td>0.9951</td><td>0.9952</td></tr><tr><td>2.6</td><td>0.9953</td><td>0.9955</td><td>0.9956</td><td>0.9957</td><td>0.9959</td><td>0.9960</td><td>0.9961</td><td>0.9962</td><td>0.9963</td><td>0.9964</td></tr><tr><td>2.7</td><td>0.9965</td><td>0.9966</td><td>0.9967</td><td>0.9968</td><td>0.9969</td><td>0.9970</td><td>0.9971</td><td>0.9972</td><td>0.9973</td><td>0.9974</td></tr><tr><td>2.8</td><td>0.9974</td><td>0.9975</td><td>0.9976</td><td>0.9977</td><td>0.9977</td><td>0.9978</td><td>0.9979</td><td>0.9979</td><td>0.9980</td><td>0.9981</td></tr><tr><td>2.9</td><td>0.9981</td><td>0.9982</td><td>0.9982</td><td>0.9983</td><td>0.9984</td><td>0.9984</td><td>0.9985</td><td>0.9985</td><td>0.9986</td><td>0.9986</td></tr><tr><td>3.0</td><td>0.9987</td><td>0.9987</td><td>0.9987</td><td>0.9988</td><td>0.9988</td><td>0.9989</td><td>0.9989</td><td>0.9989</td><td>0.9990</td><td>0.9990</td></tr><tr><td>3.1</td><td>0.9990</td><td>0.9991</td><td>0.9991</td><td>0.9991</td><td>0.9992</td><td>0.9992</td><td>0.9992</td><td>0.9992</td><td>0.9993</td><td>0.9993</td></tr><tr><td>3.2</td><td>0.9993</td><td>0.9993</td><td>0.9994</td><td>0.9994</td><td>0.9994</td><td>0.9994</td><td>0.9994</td><td>0.9995</td><td>0.9995</td><td>0.9995</td></tr><tr><td>3.3</td><td>0.9995</td><td>0.9995</td><td>0.9995</td><td>0.9996</td><td>0.9996</td><td>0.9996</td><td>0.9996</td><td>0.9996</td><td>0.9996</td><td>0.9997</td></tr><tr><td>3.4</td><td>0.9997</td><td>0.9997</td><td>0.9997</td><td>0.9997</td><td>0.9997</td><td>0.9997</td><td>0.9997</td><td>0.9997</td><td>0.9997</td><td>0.9998</td></tr></tbody></table></div>
+      </div>
+
+      <div>
+        <h2>Percentile to z-score</h2>
+        <table class="dtable"><thead><tr><th>Percentile</th><th>z-score</th></tr></thead><tbody><tr><td>1st</td><td>−2.3263</td></tr><tr><td>5th</td><td>−1.6449</td></tr><tr><td>10th</td><td>−1.2816</td></tr><tr><td>25th</td><td>−0.6745</td></tr><tr><td>50th</td><td>0.0000</td></tr><tr><td>75th</td><td>0.6745</td></tr><tr><td>90th</td><td>1.2816</td></tr><tr><td>95th</td><td>1.6449</td></tr><tr><td>97.5th</td><td>1.9600</td></tr><tr><td>99th</td><td>2.3263</td></tr><tr><td>99.5th</td><td>2.5758</td></tr></tbody></table>
+        <h2>Critical z-scores by confidence level</h2>
+        <p>The two-tailed z-score leaves half of the remaining probability in each tail; the one-tailed z-score puts all of it in one tail.</p>
+        <table class="dtable"><thead><tr><th>Confidence level</th><th>Two-tailed z</th><th>One-tailed z</th></tr></thead><tbody><tr><td>80%</td><td>±1.2816</td><td>0.8416</td></tr><tr><td>90%</td><td>±1.6449</td><td>1.2816</td></tr><tr><td>95%</td><td>±1.9600</td><td>1.6449</td></tr><tr><td>98%</td><td>±2.3263</td><td>2.0537</td></tr><tr><td>99%</td><td>±2.5758</td><td>2.3263</td></tr><tr><td>99.9%</td><td>±3.2905</td><td>3.0902</td></tr></tbody></table>
+        <h2>How much of a group lies near the mean?</h2>
+        <p>For a bell-shaped group the share within a given distance of the mean is fixed:</p>
+        <table class="dtable"><thead><tr><th>Distance from the mean</th><th>Share of the group</th></tr></thead><tbody><tr><td>within 1 standard deviation</td><td>68.27%</td></tr><tr><td>within 2 standard deviations</td><td>95.45%</td></tr><tr><td>within 3 standard deviations</td><td>99.73%</td></tr></tbody></table>
+        <p>So a z-score beyond 2 is further out than 95.45% of the group, and beyond 3 further out than 99.73%.</p>
+        <h2>Compare scores from different tests</h2>
+        <p>Raw scores from different scales cannot be compared directly. Turn each into a z-score first: 85 on a test with mean 75 and standard deviation 10 has z = 1.00, while 640 on a test with mean 500 and standard deviation 100 has z = 1.40. The second is higher than 91.92% of its group, the first than 84.13% of its group, so the second is the better result.</p>
+        <h2>Z-score of a sample mean</h2>
+        <p>When the score is the average of n values, divide the standard deviation by √n first. A sample of 36 with a mean of 76, a population mean of 75 and σ = 10 has a standard error of 1.6667 and z = 0.60, higher than 72.57% of sample means.</p>
+
+        <h2>Related tools</h2>
+        <p>To turn a z-score into a test result use the <a href="/p-value-calculator/">p-value calculator</a>; for an interval around a mean the <a href="/confidence-interval-calculator/">confidence interval calculator</a>; to find the spread of your data the <a href="/standard-deviation-calculator/">standard deviation calculator</a>; and to average a list the <a href="/average-calculator/">average calculator</a>.</p>
+        <h2>Sources</h2>
+        <ul>
+          <li>The z-score z = (x − μ) ÷ σ and the shares of a normal population within 1, 2 and 3 standard deviations (68.27%, 95.45%, 99.73%) are given in the NIST/SEMATECH e-Handbook of Statistical Methods, section 6.5.1 (“What do we mean by ‘Normal’ data?”); the standard normal distribution (mean 0, standard deviation 1) is defined in section 1.3.6.6.1 of the same handbook. Both pages read on 2026-11-13.</li>
+          <li>The feature set was compared with the z-score calculators of calculator.net, Omnicalculator, CalculatorSoup, GigaCalculator, 8gwifi and Statistics By Jim, all opened on 2026-11-13. Probabilities come from the normal distribution function of this site's p-value calculator, checked against an independent calculation and against published z-table values.</li>
+          <li>Scales such as IQ or SAT scores are not converted here, because no source for their conventions was read.</li>
+        </ul>
+        <p><small>For information only. Check your own data and assumptions before drawing conclusions.</small></p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>How do I calculate a z-score?</summary><p>Subtract the mean from your score and divide by the standard deviation: z = (x − μ) ÷ σ. For a score of 85 with a mean of 75 and a standard deviation of 10, z = (85 − 75) ÷ 10 = 1.00.</p></details>
+    <details class="faq"><summary>What does a z-score tell me?</summary><p>How many standard deviations a value is above (positive) or below (negative) the mean. A z-score of 0 is exactly the mean. A z-score of 1.00 means one standard deviation above it, which is higher than 84.13% of a normal group.</p></details>
+    <details class="faq"><summary>How do I turn a z-score into a percentile?</summary><p>The percentile is the area under the standard normal curve to the left of z. Type the z-score in the calculator and read “Below z” in the areas table: z = 1.00 gives 84.13%, so about 15.87% score higher. The z table on this page lists the same areas.</p></details>
+    <details class="faq"><summary>How do I find the z-score for a percentile?</summary><p>Type the percentile in the Percentile box. The 95th percentile has z = 1.6449, the 50th has z = 0 and the 5th has z = −1.6449. The percentile table on this page lists more.</p></details>
+    <details class="faq"><summary>What z-score do I need for 90%, 95% or 99% confidence?</summary><p>The two-tailed critical z-scores are ±1.6449 for 90%, ±1.9600 for 95% and ±2.5758 for 99%. In Go advanced, type a confidence level to get its critical z-score; the table on this page lists more levels, one-tailed too.</p></details>
+    <details class="faq"><summary>How do I compare scores from different tests?</summary><p>Switch to “Compare two” and type each score with its own mean and standard deviation. A 85 on a test with mean 75 and standard deviation 10 has z = 1.00; a 640 on a test with mean 500 and standard deviation 100 has z = 1.40. The second is the better result compared with its group (91.92% vs 84.13%).</p></details>
+    <details class="faq"><summary>What is the z-score of a sample mean?</summary><p>Go advanced and type the sample size n: the standard error σ ÷ √n replaces σ. A sample of 36 people with a mean of 76, when the population mean is 75 and σ = 10, gives z = (76 − 75) ÷ (10 ÷ √36) = 0.60.</p></details>
+    <details class="faq"><summary>How do I find the score, mean or standard deviation from a z-score?</summary><p>Type the z-score (or a percentile) and any two of the score, mean and standard deviation: the empty box is worked out. For example z = 1.00, mean 75 and standard deviation 10 give a score of 85 (x = μ + z × σ).</p></details>
+    <details class="faq"><summary>Is a z-score above 2 or 3 unusual?</summary><p>For a bell-shaped group, 4.55% of values lie more than 2 standard deviations from the mean (either side) and 0.27% lie more than 3 away. The calculator shows the exact share outside your own z-score, so you can judge for yourself.</p></details>
+    <details class="faq"><summary>Can I get a z-score for every number in a list?</summary><p>Yes. Go advanced, paste the numbers separated by commas, spaces or new lines, and a table shows each value’s z-score and marks those beyond ±2 and ±3. Choose population (÷ n) or sample (÷ n − 1) for the standard deviation, and use the mean and spread above to score a new value.</p></details>
+    <details class="faq"><summary>What is the difference between a z-score and a p-value?</summary><p>A z-score says how far a value is from the mean in standard deviations. A p-value is the probability of a result at least that extreme. The areas table turns your z-score into one-tailed and two-tailed probabilities; for tests of a hypothesis use the <a href="/p-value-calculator/">p-value calculator</a>.</p></details>
+  </section>
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+      <div class="footer-stack">
+<div class="footer-col" style="order:1">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+          <li><a href="/paint-calculator/">Paint Calculator</a></li>
+          <li><a href="/wallpaper-calculator/">Wallpaper Calculator</a></li>
+          <li><a href="/square-footage-calculator/">Square Footage Calculator</a></li>
+          <li><a href="/tape-measure-fraction-calculator/">Tape Measure Fraction Calculator</a></li>
+          <li><a href="/stair-calculator/">Stair Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:5">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Cooking &amp;</span> <span class="ft2">Kitchen</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/recipe-converter/">Recipe Converter</a></li>
+          <li><a href="/turkey-cooking-time-calculator/">Turkey Cooking Time Calculator</a></li>
+          <li><a href="/turkey-thawing-time-calculator/">Turkey Thawing Time Calculator</a></li>
+          <li><a href="/turkey-size-calculator/">Turkey Size Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:6">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Money &amp;</span> <span class="ft2">Finance</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/mortgage-calculator/">Mortgage Calculator</a></li>
+          <li><a href="/loan-calculator/">Loan Calculator</a></li>
+          <li><a href="/auto-loan-calculator/">Auto Loan Calculator</a></li>
+          <li><a href="/car-sales-tax-calculator/">Car Sales Tax Calculator</a></li>
+          <li><a href="/overtime-calculator/">Overtime Calculator</a></li>
+          <li><a href="/salary-calculator/">Salary Calculator</a></li>
+          <li><a href="/markup-calculator/">Markup Calculator</a></li>
+          <li><a href="/profit-margin-calculator/">Profit Margin Calculator</a></li>
+          <li><a href="/discount-calculator/">Discount Calculator</a></li>
+          <li><a href="/commission-calculator/">Commission Calculator</a></li>
+          <li><a href="/realtor-commission-calculator/">Realtor Commission Calculator</a></li>
+          <li><a href="/unit-price-calculator/">Unit Price Calculator</a></li>
+          <!--STAXFOOT:START-->
+          <li><a href="/sales-tax-calculator/">Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/california/">California Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/chicago/">Chicago Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/florida/">Florida Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/las-vegas/">Las Vegas Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/los-angeles/">Los Angeles Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/michigan/">Michigan Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/missouri/">Missouri Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/north-carolina/">North Carolina Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/ohio/">Ohio Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/texas/">Texas Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/virginia/">Virginia Sales Tax Calculator</a></li>
+          <!--STAXFOOT:END-->
+          <li><a href="/tip-calculator/">Tip Calculator</a></li>
+          <li><a href="/how-much-to-tip/">How Much to Tip</a></li>
+        </ul>
+      </div>
+      </div>
+
+      <div class="footer-right">
+<div class="footer-col footer-col--two" style="order:2">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/vo2-max-calculator/">VO2 Max Calculator</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/bmi-calculator/">BMI Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/ideal-weight-calculator/">Ideal Weight Calculator</a></li>
+          <li><a href="/lean-body-mass-calculator/">Lean Body Mass Calculator</a></li>
+          <li><a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio Calculator</a></li>
+          <li><a href="/gmi-calculator/">GMI Calculator</a></li>
+          <li><a href="/a1c-calculator/">A1C Calculator</a></li>
+          <li><a href="/calorie-calculator/">Calorie Calculator</a></li>
+          <li><a href="/calorie-deficit-calculator/">Calorie Deficit Calculator</a></li>
+          <li><a href="/bmr-calculator/">BMR Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/water-intake-calculator/">Water Intake Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/protein-intake-calculator/">Protein Intake Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
+          <li><a href="/steps-to-miles-calculator/">Steps to Miles Calculator</a></li>
+          <li><a href="/dog-age-calculator/">Dog Age Calculator</a></li>
+          <li><a href="/cat-age-calculator/">Cat Age Calculator</a></li>
+          <li><a href="/calories-burned-calculator/">Calories Burned Calculator</a></li>
+          <li><a href="/calories-burned-walking-calculator/">Calories Burned Walking Calculator</a></li>
+          <li><a href="/calories-burned-running-calculator/">Calories Burned Running Calculator</a></li>
+          <li><a href="/keto-calculator/">Keto Calculator</a></li>
+          <li><a href="/net-carb-calculator/">Net Carb Calculator</a></li>
+          <li><a href="/intermittent-fasting-calculator/">Intermittent Fasting Calculator</a></li>
+          <li><a href="/bsa-calculator/">BSA Calculator</a></li>
+          <li><a href="/dog-food-calculator/">Dog Food Calculator</a></li>
+          <li><a href="/ffmi-calculator/">FFMI Calculator</a></li>
+          <li><a href="/bulking-calculator/">Bulking Calculator</a></li>
+          <li><a href="/weight-loss-calculator/">Weight Loss Calculator</a></li>
+          <li><a href="/weight-loss-percentage-calculator/">Weight Loss Percentage Calculator</a></li>
+          <li><a href="/max-heart-rate-calculator/">Max Heart Rate Calculator</a></li>
+          <li><a href="/caffeine-calculator/">Caffeine Calculator</a></li>
+          <li><a href="/caffeine-half-life-calculator/">Caffeine Half Life Calculator</a></li>
+          <li><a href="/fiber-calculator/">Fiber Calculator</a></li>
+          <li><a href="/creatine-calculator/">Creatine Calculator</a></li>
+          <li><a href="/vitamin-d-calculator/">Vitamin D Calculator</a></li>
+          <li><a href="/body-recomposition-calculator/">Body Recomposition Calculator</a></li>
+        </ul>
+      </div>
+
+        <div class="footer-sub">
+<div class="footer-subcol">
+<div class="footer-col" style="order:3">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/semester-grade-calculator/">Semester Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+          <li><a href="/grade-curve-calculator/">Grade Curve Calculator</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:START-->
+<div class="footer-col" style="order:7">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Unit</span> <span class="ft2">Converters</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/unit-converter/">Unit Converter</a></li>
+          <li><a href="/length-converter/">Length Converter</a></li>
+          <li><a href="/weight-converter/">Weight Converter</a></li>
+          <li><a href="/volume-converter/">Volume Converter</a></li>
+          <li><a href="/temperature-converter/">Temperature Converter</a></li>
+          <li><a href="/area-converter/">Area Converter</a></li>
+          <li><a href="/speed-converter/">Speed Converter</a></li>
+          <li><a href="/data-storage-converter/">Data Storage Converter</a></li>
+          <li><a href="/cooking-converter/">Cooking Measurement Converter</a></li>
+          <li><a href="/px-to-rem-converter/">PX to REM Converter</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:END-->
+</div>
+
+<div class="footer-col" style="order:4">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/fraction-calculator/">Fraction Calculator</a></li>
+          <li><a href="/standard-deviation-calculator/">Standard Deviation Calculator</a></li>
+          <li><a href="/p-value-calculator/">P-Value Calculator</a></li>
+          <li><a href="/confidence-interval-calculator/">Confidence Interval Calculator</a></li>
+          <li><a href="/z-score-calculator/">Z-Score Calculator</a></li>
+          <li><a href="/scientific-notation-calculator/">Scientific Notation Calculator</a></li>
+          <li><a href="/weighted-average-calculator/">Weighted Average Calculator</a></li>
+          <li><a href="/average-calculator/">Average Calculator</a></li>
+          <li><a href="/batting-average-calculator/">Batting Average Calculator</a></li>
+          <li><a href="/stock-average-calculator/">Stock Average Calculator</a></li>
+          <li><a href="/dice-average-calculator/">Dice Average Calculator</a></li>
+          <li><a href="/time-average-calculator/">Time Average Calculator</a></li>
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+          <li><a href="/percentage-change-calculator/">Percentage Change Calculator</a></li>
+          <li><a href="/age-calculator/">Age Calculator</a></li>
+          <li><a href="/date-calculator/">Date Calculator</a></li>
+          <li><a href="/time-calculator/">Time Calculator</a></li>
+          <li><a href="/hours-calculator/">Hours Calculator</a></li>
+          <li><a href="/seconds-to-hours-calculator/">Seconds to Hours Calculator</a></li>
+          <li><a href="/minutes-to-hours-calculator/">Minutes to Hours Calculator</a></li>
+          <li><a href="/seconds-to-minutes-calculator/">Seconds to Minutes Calculator</a></li>
+          <li><a href="/triangle-calculator/">Triangle Calculator</a></li>
+          <li><a href="/random-number-generator/">Random Number Generator</a></li>
+        </ul>
+      </div>
+        </div>
+      </div>
+
+      <!--PAYFOOT:START-->
+      <div class="footer-col footer-col--wide">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Paycheck</span> <span class="ft2">Calculators</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/paycheck-calculator/">Paycheck Calculator (all states)</a></li>
+          <li><a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arkansas/">Arkansas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/california/">California Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/hawaii/">Hawaii Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/louisiana/">Louisiana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nebraska/">Nebraska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/oklahoma/">Oklahoma Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/utah/">Utah Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wisconsin/">Wisconsin Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a></li>
+        </ul>
+      </div>
+      <!--PAYFOOT:END-->
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/blog/">Blog</a>
+      <span aria-hidden="true">·</span>
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+</div>
+
+<script src="/assets/app.js?v=350"></script>
+<script>CalcThis.initZscoreCalc();</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>
