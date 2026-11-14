@@ -1,0 +1,14 @@
+{
+ "slug": "amortization-calculator",
+ "pass": true,
+ "at": "2026-11-14T10:59:34.873Z",
+ "passHash": "dc31e8e323bb3b56",
+ "scriptHash": "e5a65270a85c84f2",
+ "cats": {
+  "textVsTool": 80,
+  "extremes": 24,
+  "visual": 28
+ },
+ "runs": 68,
+ "fails": []
+}

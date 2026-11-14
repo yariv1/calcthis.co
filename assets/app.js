@@ -27131,3 +27131,467 @@ CalcThis.initCompoundCalc = function () {
   render();
 };
 /* COMPOUND:END */
+
+/* AMORT:BEGIN */
+/* AMORT-ENGINE:START */
+CalcThis.amEngine = (function () {
+  var L = CalcThis.loanEngine;
+  var PER = {
+    monthly: { ppy: 12, name: 'Monthly', each: 'month', pay: 'Monthly payment' },
+    biweekly: { ppy: 26, name: 'Every 2 weeks', each: '2 weeks', pay: 'Payment every 2 weeks' },
+    semimonthly: { ppy: 24, name: 'Twice a month', each: 'half month', pay: 'Payment twice a month' },
+    weekly: { ppy: 52, name: 'Weekly', each: 'week', pay: 'Weekly payment' },
+    quarterly: { ppy: 4, name: 'Quarterly', each: 'quarter', pay: 'Quarterly payment' },
+    semi: { ppy: 2, name: 'Every 6 months', each: '6 months', pay: 'Payment every 6 months' },
+    annual: { ppy: 1, name: 'Yearly', each: 'year', pay: 'Yearly payment' },
+    bimonthly: { ppy: 6, name: 'Every 2 months', each: '2 months', pay: 'Payment every 2 months' },
+    daily: { ppy: 365, name: 'Daily', each: 'day', pay: 'Daily payment' },
+    semiweekly: { ppy: 104, name: 'Twice a week', each: 'half week', pay: 'Payment twice a week' }
+  };
+  function dim(y, m) { return new Date(y, m + 1, 0).getDate(); }
+  function addM(d, k) { var m = d.getMonth() + k, y = d.getFullYear() + Math.floor(m / 12); m = ((m % 12) + 12) % 12; return new Date(y, m, Math.min(d.getDate(), dim(y, m))); }
+  function addD(d, k) { return new Date(d.getFullYear(), d.getMonth(), d.getDate() + k); }
+  /* the date of payment k (k = 1 is one period after the loan start) */
+  function payDate(s, key, k) {
+    switch (key) {
+      case 'monthly': return addM(s, k);
+      case 'bimonthly': return addM(s, 2 * k);
+      case 'quarterly': return addM(s, 3 * k);
+      case 'semi': return addM(s, 6 * k);
+      case 'annual': return addM(s, 12 * k);
+      case 'semimonthly': return k % 2 === 0 ? addM(s, k / 2) : addD(addM(s, (k - 1) / 2), 15);
+      case 'biweekly': return addD(s, 14 * k);
+      case 'weekly': return addD(s, 7 * k);
+      case 'daily': return addD(s, k);
+      default: return addD(s, Math.round(k * 3.5));
+    }
+  }
+  function rateOf(apr, ppy, comp) { return L.prate(apr, ppy, comp == null || comp === 'same' ? ppy : comp); }
+  /* o: { P, apr, key, comp, n, extra, yAmt, yMonth, start, ones: {k: amount} } */
+  function run(o) {
+    var ppy = PER[o.key].ppy, r = rateOf(o.apr, ppy, o.comp), pay = L.pmt(o.P, r, o.n), bal = o.P, rows = [], tot = 0, k = 0, cross = 0, lastYM = -1, ones = o.ones || {};
+    while (bal > 0.005 && k < o.n) {
+      k++;
+      var start = bal, intr = start * r, sp = pay - intr, xo = k >= (o.xFrom || 1), ex = xo ? (o.extra || 0) : 0;
+      if (o.yAmt && xo) { var dt = payDate(o.start, o.key, k), ym = dt.getFullYear() * 12 + dt.getMonth(); if (dt.getMonth() === o.yMonth && ym !== lastYM) { ex += o.yAmt; lastYM = ym; } }
+      if (ones[k]) ex += ones[k];
+      var pr = sp + ex;
+      if (pr >= start - 0.005 || k === o.n) pr = start;
+      bal = start - pr;
+      if (!cross && sp > intr) cross = k;
+      tot += intr;
+      rows.push({ k: k, start: start, intr: intr, sp: sp, pr: pr, pay: intr + pr, bal: bal < 0.005 ? 0 : bal });
+    }
+    return { pay: pay, r: r, rows: rows, count: k, totInt: tot, totPaid: tot + o.P, cross: cross };
+  }
+  return { PER: PER, run: run, payDate: payDate, rateOf: rateOf };
+})();
+/* AMORT-ENGINE:END */
+
+/* =========================================================
+   CalcThis.initAmortCalc() - ids am*. Engine CalcThis.amEngine (built on loanEngine), currency list from CalcThis.salaryEngine (display only).
+   ========================================================= */
+CalcThis.initAmortCalc = function () {
+  var E = CalcThis.amEngine, SE = CalcThis.salaryEngine, PER = E.PER;
+  var $ = function (id) { return document.getElementById(id); };
+  if (!$('amP')) return;
+  var st = { cur: 'USD', dec: 2, adv: false, view: 'year', mark: null, rowsShown: 120, nOnes: 0, onesIds: [] };
+  var NF = {}, DN = null;
+  try { DN = new Intl.DisplayNames(['en'], { type: 'currency' }); } catch (e) { DN = null; }
+  var CN = { SLE: 'Sierra Leonean Leone' };
+  function curName(c) { try { var n = DN && DN.of(c); return (n && n !== c) ? n : (CN[c] || c); } catch (e) { return CN[c] || c; } }
+  function decOf(c) { try { return Math.min(2, new Intl.NumberFormat('en-US', { style: 'currency', currency: c }).resolvedOptions().maximumFractionDigits); } catch (e) { return 2; } }
+  function sym(c) { try { return new Intl.NumberFormat('en-US', { style: 'currency', currency: c, currencyDisplay: 'narrowSymbol' }).format(0).replace(/[0-9.,\s]/g, ''); } catch (e) { return c; } }
+  function cf(x, d) {
+    var k = st.cur + d;
+    if (!NF[k]) NF[k] = new Intl.NumberFormat('en-US', { style: 'currency', currency: st.cur, currencyDisplay: 'narrowSymbol', minimumFractionDigits: d, maximumFractionDigits: d });
+    return (x < 0 ? '−' : '') + CalcThis.fmtMoney(NF[k], st.cur, Math.abs(x));
+  }
+  function fm(x) { if (x == null || !isFinite(x)) return '—'; if (Math.abs(x) < Math.pow(10, -st.dec) / 2) x = 0; return cf(x, st.dec); }
+  function fm0(x) { if (x == null || !isFinite(x)) return '—'; if (Math.abs(x) < 0.5) x = 0; return cf(x, 0); }
+  function sg(x) { return String(x).replace('-', '−'); }
+  function fnum(x) { return sg(String(Math.round(x * 1e6) / 1e6)); }
+  function fp(x) { return fnum(Math.round(x * 1e4) / 1e4) + '%'; }
+  function fp1(x) { return fnum(Math.round(x * 10) / 10) + '%'; }
+  var NUM = /^[+-]?(\d+\.?\d*|\.\d+)(e[+-]?\d+)?$/i;
+  function num(raw) {
+    var s = String(raw == null ? '' : raw).replace(/[\s ]/g, '').replace(/−/g, '-').replace(/[$€£¥₪]/g, '');
+    if (s === '') return { empty: true };
+    var pc = false; if (/%$/.test(s)) { pc = true; s = s.slice(0, -1); }
+    if (/^[+-]?\d{1,3}(,\d{3})+(\.\d*)?$/.test(s)) s = s.replace(/,/g, '');
+    if (/^[+-]?\.?$/.test(s) || /^[+-]?(\d+\.?\d*|\.\d+)e[+-]?$/i.test(s)) return { partial: true };
+    if (!NUM.test(s)) return { err: 'junk' };
+    var v = parseFloat(s); if (!isFinite(v)) return { err: 'big' };
+    return { v: v, pc: pc };
+  }
+  function short(raw) { return String(raw).trim().slice(0, 14); }
+  function setNote(id, t) { var e = $(id); if (!e) return; e.textContent = t || ''; e.style.display = t ? '' : 'none'; }
+  function show(id, on) { var e = $(id); if (e) e.style.display = on ? '' : 'none'; }
+  function setHint(m, at) {
+    var h = $('amHint'); m = m ? m.charAt(0).toUpperCase() + m.slice(1) : m; h.textContent = m || ''; h.style.display = m ? 'block' : 'none';
+    if (m && at) {
+      var el = $(at), f = el && (el.closest('.fld') || el);
+      var w2 = f && f.closest ? f.closest('.am-two') : null; if (w2) f = w2;
+      if (f && f.nextSibling !== h && f.parentNode) f.parentNode.insertBefore(h, f.nextSibling);
+    }
+  }
+  var BIGM = 1e12, MAXN = 50000;
+  function rd(id, label, eg, o) {
+    var r = num($(id).value);
+    if (r.empty) return { miss: true };
+    if (r.partial) return { miss: true, partial: true };
+    if (r.err) return { bad: r.err === 'junk' ? 'Couldn’t read “' + short($(id).value) + '” in ' + label + ' — type a number like ' + eg + '.' : label + ' is too large.' };
+    var v = r.v;
+    if (o.min !== undefined && (o.minEx ? v <= o.min : v < o.min)) return { bad: label + (o.minMsg || ' must be at least ' + o.min + '.') };
+    if (o.max !== undefined && v > o.max) return { bad: label + (o.maxMsg || ' must be at most ' + o.max + '.') };
+    return { v: v, pc: r.pc };
+  }
+  /* term: 30, 5.5, "18 months", "5y 6m", "52 weeks", "90 days" -> years */
+  function parseTerm(raw) {
+    var s = String(raw == null ? '' : raw).toLowerCase().replace(/[\s ]/g, ''); if (s === '') return { empty: true };
+    if (NUM.test(s)) return { years: parseFloat(s) };
+    var tot = 0, rest = s, found = false, re = /^(\d+\.?\d*|\.\d+)(years?|yrs?|y|months?|mos?|mo|m|weeks?|wks?|w|days?|d)(?:and|,)?/;
+    while (rest) {
+      var m = re.exec(rest);
+      if (!m) return /^[\d.]*$/.test(rest) && found ? { partial: true } : (/^[\d.]+[a-z]{0,8}$/.test(rest) && !found ? { partial: true } : { err: 'junk' });
+      found = true; var u = m[2].charAt(0); tot += parseFloat(m[1]) * (u === 'y' ? 1 : (u === 'w' ? 7 / 365 : (u === 'd' ? 1 / 365 : 1 / 12))); rest = rest.slice(m[0].length);
+    }
+    return { years: tot };
+  }
+  function yearsTxt(mo) { var y = Math.floor(mo / 12), m = mo % 12, a = []; if (y) a.push(y + (y === 1 ? ' year' : ' years')); if (m) a.push(m + (m === 1 ? ' month' : ' months')); return a.join(' ') || '0 months'; }
+  var MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  var MONF = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  function dtxt(d) { return d.getDate() + ' ' + MON[d.getMonth()] + ' ' + d.getFullYear(); }
+  function monIdx(w) { var i; w = String(w).toLowerCase(); if (w.length < 3) return -1; for (i = 0; i < 12; i++) if (MONF[i].toLowerCase().indexOf(w) === 0) return i; return -1; }
+  function parseDate(raw) {
+    var t = (raw + '').trim(), m, d, mo, y;
+    if ((m = /^(\d{1,2})\s+([A-Za-z]+)\.?,?\s+(\d{4})$/.exec(t))) { d = +m[1]; y = +m[3]; mo = monIdx(m[2]); }
+    else if ((m = /^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(t))) { y = +m[1]; mo = +m[2] - 1; d = +m[3]; }
+    else if ((m = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/.exec(t))) { mo = +m[1] - 1; d = +m[2]; y = +m[3]; }
+    else return null;
+    if (mo < 0 || mo > 11 || d < 1 || d > 31 || y < 1900 || y > 2200) return null;
+    var r = new Date(y, mo, d); r.setHours(0, 0, 0, 0);
+    return (r.getFullYear() === y && r.getMonth() === mo && r.getDate() === d) ? r : null;
+  }
+  /* a month and year: "Mar 2030", "March 2030", "3/2030", "2030-03" -> first day of that month */
+  function parseMonth(raw) {
+    var t = (raw + '').trim(), m, mo, y;
+    if ((m = /^([A-Za-z]+)\.?,?\s+(\d{4})$/.exec(t))) { mo = monIdx(m[1]); y = +m[2]; }
+    else if ((m = /^(\d{1,2})\/(\d{4})$/.exec(t))) { mo = +m[1] - 1; y = +m[2]; }
+    else if ((m = /^(\d{4})-(\d{1,2})$/.exec(t))) { y = +m[1]; mo = +m[2] - 1; }
+    else return null;
+    if (mo < 0 || mo > 11 || y < 1900 || y > 2200) return null;
+    return new Date(y, mo, 1);
+  }
+  function today() { var d = new Date(); d.setHours(0, 0, 0, 0); return d; }
+  function niceRound(x) { var e = Math.pow(10, Math.floor(Math.log(x) / Math.LN10)), f = x / e, c = [1, 2, 5, 10], b = c[0], i; for (i = 1; i < c.length; i++) if (Math.abs(c[i] - f) < Math.abs(b - f)) b = c[i]; return b * e; }
+  var COMPN = { same: 'as often as you pay', annual: 'once a year', semi: '2 times a year', quarterly: '4 times a year', monthly: '12 times a year', weekly: '52 times a year', daily: '365 times a year', cont: 'continuously' };
+  var COMPV = { annual: 1, semi: 2, quarterly: 4, monthly: 12, weekly: 52, daily: 365, cont: 'c' };
+
+  /* one-time extra payments: a dynamic list */
+  function onesRowHtml(i) {
+    return '<div class="am-one" id="amOne' + i + '"><div class="am-two"><label class="fld" for="amOA' + i + '"><span class="lab">Extra payment</span><div class="inp"><input id="amOA' + i + '" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 5,000"></div></label>' +
+      '<label class="fld" for="amOW' + i + '"><span class="lab">When</span><div class="inp"><input id="amOW' + i + '" type="text" autocomplete="off" placeholder="e.g. Mar 2030 or payment 24"></div></label></div>' +
+      '<p class="av-note" id="amON' + i + '"></p><button type="button" class="linkbtn" id="amOR' + i + '">Remove this extra payment</button></div>';
+  }
+  function homeHint() { var h = $('amHint'), a = $('amAtNote'); if (h && a && a.parentNode && h.previousSibling !== a) a.parentNode.insertBefore(h, a.nextSibling); }
+  function addOne() {
+    if (st.onesIds.length >= 10) return;
+    var i = ++st.nOnes; st.onesIds.push(i);
+    var d = document.createElement('div'); d.innerHTML = onesRowHtml(i); var row = d.firstChild; $('amOnes').appendChild(row);
+    [$('amOA' + i), $('amOW' + i)].forEach(function (el) { el.addEventListener('input', render); });
+    $('amOR' + i).addEventListener('click', function () { homeHint(); st.onesIds = st.onesIds.filter(function (x) { return x !== i; }); row.parentNode.removeChild(row); render(); });
+    $('amAddOne').style.display = st.onesIds.length >= 10 ? 'none' : '';
+    render();
+  }
+
+  /* ---------- compute ---------- */
+  function compute() {
+    var R = { bad: null, soft: null, ready: false, miss: [], key: $('amFreq').value || 'monthly', comp: $('amComp').value || 'same' };
+    var ppy = PER[R.key].ppy;
+    R.ppy = ppy;
+    var Pr = rd('amP', 'the loan amount', '200,000', { min: 0, minEx: true, max: BIGM, minMsg: ' must be above 0.', maxMsg: ' is too large.' });
+    var Rt = rd('amR', 'the interest rate', '6', { min: 0, max: 100, minMsg: ' can’t be negative.', maxMsg: ' must be at most 100%.' });
+    var Tm = parseTerm($('amT').value), T = null;
+    if (Tm.err) T = { bad: 'Couldn’t read “' + short($('amT').value) + '” in the term — type years (30), months (18 months) or both (5y 6m).' };
+    else if (Tm.empty) T = { miss: true };
+    else if (Tm.partial) T = { miss: true, partial: true };
+    else if (!(Tm.years > 0)) T = { bad: 'The term must be above 0.' };
+    else if (Tm.years > 100) T = { bad: 'The term must be at most 100 years.' };
+    else { var nn = Math.max(1, Math.round(Tm.years * ppy)); if (nn > MAXN) T = { bad: 'That is ' + nn.toLocaleString('en-US') + ' payments — the limit is ' + MAXN.toLocaleString('en-US') + '. Use a shorter term or less frequent payments.' }; else T = { v: nn, years: Tm.years }; }
+    /* price and down payment (optional) */
+    var Px = rd('amPrice', 'the price', '300,000', { min: 0, minEx: true, max: BIGM, minMsg: ' must be above 0.', maxMsg: ' is too large.' });
+    var Dn = rd('amDown', 'the down payment', '20% or 60,000', { min: 0, max: BIGM, minMsg: ' can’t be negative.', maxMsg: ' is too large.' });
+    if (Px.bad) { R.soft = { msg: Px.bad + ' It is ignored for now.', at: 'amPrice' }; Px = { miss: true }; } else if (Px.partial) Px = { miss: true };
+    if (Dn.bad) { if (!R.soft) R.soft = { msg: Dn.bad + ' It is ignored for now.', at: 'amDown' }; Dn = { miss: true }; } else if (Dn.partial) Dn = { miss: true };
+    R.price = Px.v; R.downTyped = Dn.v !== undefined; R.downPct = !!Dn.pc;
+    if (R.price !== undefined && Dn.v !== undefined) { if (Dn.pc) { if (Dn.v > 100) { if (!R.soft) R.soft = { msg: 'The down payment can’t be more than 100% of the price. It is ignored for now.', at: 'amDown' }; R.down = 0; R.downTyped = false; } else R.down = R.price * Dn.v / 100; } else R.down = Dn.v; } else R.down = 0;
+    R.derived = R.price !== undefined ? R.price - R.down : undefined;
+    /* the required three */
+    var Lv;
+    if (Pr.bad) { R.bad = { msg: Pr.bad + ' Fix it to see the result.', at: 'amP' }; }
+    else if (Pr.partial) R.bad = { msg: 'Keep typing — “' + short($('amP').value) + '” isn’t a complete number yet.', at: 'amP' };
+    else if (Pr.v !== undefined) Lv = Pr.v;
+    else if (R.derived !== undefined) { if (R.derived > 0) Lv = R.derived; else if (!R.soft) R.soft = { msg: 'The down payment is as large as the price, so there is nothing to borrow.', at: 'amDown' }; }
+    if (!R.bad && Rt.bad) R.bad = { msg: Rt.bad + ' Fix it to see the result.', at: 'amR' };
+    else if (!R.bad && Rt.partial) R.bad = { msg: 'Keep typing — “' + short($('amR').value) + '” isn’t a complete number yet.', at: 'amR' };
+    if (!R.bad && T.bad) R.bad = { msg: T.bad + ' Fix it to see the result.', at: 'amT' };
+    else if (!R.bad && T.partial) R.bad = { msg: 'Keep typing — “' + short($('amT').value) + '” isn’t a complete number yet.', at: 'amT' };
+    /* optional: extra, yearly extra, start date, one-time list */
+    var Ex = rd('amX', 'the extra payment', '100', { min: 0, max: BIGM, minMsg: ' can’t be negative.', maxMsg: ' is too large.' });
+    var Ya = rd('amYA', 'the yearly extra', '2,000', { min: 0, max: BIGM, minMsg: ' can’t be negative.', maxMsg: ' is too large.' });
+    [[Ex, 'amX'], [Ya, 'amYA']].forEach(function (q) { if (q[0].bad) { if (!R.soft) R.soft = { msg: q[0].bad + ' It is ignored for now.', at: q[1] }; q[0].v = undefined; } });
+    R.extra = Ex.v || 0; R.yAmt = Ya.v || 0; R.yMonth = +($('amYM').value || 0);
+    var sTxt = $('amStart').value.trim(), sd = null;
+    if (sTxt) { sd = parseDate(sTxt); if (!sd) { if (!R.soft) R.soft = { msg: 'Couldn’t read the start date “' + short(sTxt) + '” — pick a date or type it like 14 Dec 2026. It is ignored for now.', at: 'amStart' }; } }
+    R.startTyped = !!sd; R.start = sd || today();
+    R.rate = Rt.v; R.L = Lv; R.n = T.v; R.years = T.years;
+    R.typed = { P: Pr.v !== undefined, R: Rt.v !== undefined, T: T.v !== undefined, X: Ex.v !== undefined, Ya: Ya.v !== undefined };
+    if (R.L === undefined) R.miss.push('the loan amount'); if (Rt.v === undefined) R.miss.push('the interest rate'); if (T.v === undefined) R.miss.push('the term');
+    if (R.bad || R.miss.length) return R;
+    R.ones = {}; R.onesRows = []; R.xFrom = 1; R.xsNote = '';
+    { var xs = $('amXS').value.trim();
+      if (xs) {
+        var xm = /^(?:payment|pmt|#)\s*(\d+)$/i.exec(xs) || /^(\d{1,6})$/.exec(xs), xk = null;
+        if (xm) { xk = +xm[1]; if (xk < 1) { R.xsNote = 'Payments start at 1, so the extra payments start with the first payment.'; xk = null; } else if (xk > R.n) { R.xsNote = 'The loan has only ' + R.n + ' payments, so no extra payment is made.'; R.xFrom = R.n + 1; xk = null; } }
+        else { var xd = parseDate(xs) || parseMonth(xs); if (!xd) { if (!R.soft) R.soft = { msg: 'Couldn’t read “' + short(xs) + '” as a start — type a payment number like 24, a month and year like Mar 2030 or a date. It is ignored for now.', at: 'amXS' }; R.xsNote = 'Type a payment number like 24 or a month and year like Mar 2030.'; } else { var xj; for (xj = 1; xj <= R.n; xj++) if (E.payDate(R.start, R.key, xj) >= xd) { xk = xj; break; } if (xk === null) { R.xsNote = 'That is after the last payment (' + dtxt(E.payDate(R.start, R.key, R.n)) + '), so no extra payment is made.'; R.xFrom = R.n + 1; } } }
+        if (xk !== null) { R.xFrom = xk; R.xsNote = 'The extra payments start at payment ' + xk + ' (' + dtxt(E.payDate(R.start, R.key, xk)) + ').'; }
+      } else R.xsNote = 'Optional. Start the extra payments later: a payment number or a month and year (Mar 2030). Empty means from the first payment.';
+    }
+    var base = { P: R.L, apr: R.rate, key: R.key, comp: R.comp === 'same' ? 'same' : COMPV[R.comp], n: R.n, extra: 0, yAmt: 0, yMonth: R.yMonth, start: R.start, ones: {} };
+    R.base0 = base;
+    st.onesIds.forEach(function (i) {
+      var A = rd('amOA' + i, 'the one-time extra payment', '5,000', { min: 0, minEx: true, max: BIGM, minMsg: ' must be above 0.', maxMsg: ' is too large.' }), w = $('amOW' + i).value.trim(), row = { i: i, amt: A.v, k: null, note: '' };
+      if (A.bad) { if (!R.soft) R.soft = { msg: A.bad + ' It is ignored for now.', at: 'amOA' + i }; row.note = 'This extra payment is ignored until the amount is fixed.'; A.v = undefined; row.amt = undefined; }
+      else if (A.partial) { row.amt = undefined; row.note = 'Keep typing the amount.'; }
+      else if (A.miss && !w) row.note = 'Type an amount and when you will pay it.';
+      else if (A.miss) row.note = 'Type the amount of this extra payment.';
+      if (row.amt !== undefined && !w) row.note = 'Type when you will pay it: a month and year like Mar 2030, or a payment number like payment 24.';
+      if (w && row.amt !== undefined) {
+        var kk = null, m = /^(?:payment|pmt|#)\s*(\d+)$/i.exec(w) || /^(\d{1,6})$/.exec(w);
+        if (m) { kk = +m[1]; if (kk < 1 || kk > R.n) { row.note = 'Payment ' + kk + ' doesn’t exist: the loan has ' + R.n + ' payments. This extra payment is ignored.'; kk = null; } }
+        else {
+          var dd = parseDate(w) || parseMonth(w);
+          if (!dd) { if (!R.soft) R.soft = { msg: 'Couldn’t read “' + short(w) + '” as a time — type a month and year like Mar 2030, a date like 14 Mar 2030 or a payment number like 24. It is ignored for now.', at: 'amOW' + i }; row.note = 'Type a month and year like Mar 2030 or a payment number like 24.'; }
+          else { var j; for (j = 1; j <= R.n; j++) if (E.payDate(R.start, R.key, j) >= dd) { kk = j; break; } if (kk === null) row.note = 'That is after the last payment (' + dtxt(E.payDate(R.start, R.key, R.n)) + '), so this extra payment is ignored.'; }
+        }
+        if (kk !== null) { row.k = kk; R.ones[kk] = (R.ones[kk] || 0) + row.amt; }
+      } else if (w && row.amt === undefined && !row.note) row.note = 'Type the amount of this extra payment.';
+      R.onesRows.push(row);
+    });
+    R.base = base;
+    var plan = { P: R.L, apr: R.rate, key: R.key, comp: base.comp, n: R.n, extra: R.extra, yAmt: R.yAmt, yMonth: R.yMonth, start: R.start, ones: R.ones, xFrom: R.xFrom };
+    R.plan = plan;
+    R.hasExtra = !!(R.extra || R.yAmt || Object.keys(R.ones).length);
+    R.res = E.run(plan);
+    R.res0 = R.hasExtra ? E.run(base) : R.res;
+    R.ready = true;
+    R.date = function (k) { return E.payDate(R.start, R.key, k); };
+    return R;
+  }
+
+  /* ---------- the picture ---------- */
+  var VW = 280, PL = 46, PR = 272, CT = 16, CB = 140;
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+  function ab(v) { var a = Math.abs(v), s = a >= 1e9 ? (a / 1e9) + 'B' : a >= 1e6 ? (a / 1e6) + 'M' : a >= 1e3 ? (a / 1e3) + 'K' : String(a); return s.replace(/(\.\d)\d+/, '$1'); }
+  function niceMax(v) { var e = Math.pow(10, Math.floor(Math.log(v) / Math.LN10)), f = v / e, c = [1, 1.2, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10], n = 10, k; for (k = 0; k < c.length; k++) if (f <= c[k] + 1e-9) { n = c[k]; break; } return n * e; }
+  function draw(R, mk) {
+    var rows = R.res.rows, N = rows.length, ppy = R.ppy, i;
+    var maxv = 0; for (i = 0; i < N; i++) if (rows[i].pay > maxv) maxv = rows[i].pay;
+    if (!(maxv > 0)) return null;
+    var top = niceMax(maxv * 1.05), X0 = 1, X1 = Math.max(N, 2), px = function (k) { return PL + (k - X0) / (X1 - X0) * (PR - PL); }, py = function (v) { return CB - v / top * (CB - CT); };
+    var step = Math.max(1, Math.ceil(N / 120)), idx = []; for (i = 0; i < N; i += step) idx.push(i); if (idx[idx.length - 1] !== N - 1) idx.push(N - 1);
+    var svg = '<svg viewBox="0 0 ' + VW + ' ' + (CB + 34) + '" width="100%" role="img" aria-label="Every payment split into principal and interest" xmlns="http://www.w3.org/2000/svg">';
+    [0, 0.5, 1].forEach(function (f) { var y = py(top * f); svg += '<line x1="' + PL + '" y1="' + y.toFixed(1) + '" x2="' + PR + '" y2="' + y.toFixed(1) + '" stroke="#E5DBC8" stroke-width="1"/><text x="' + (PL - 6) + '" y="' + (y + 4).toFixed(1) + '" text-anchor="end" font-size="12" fill="#5B4B3B">' + esc(ab(top * f)) + '</text>'; });
+    var area = function (lowf, highf, fill) { var d = 'M' + px(rows[idx[0]].k).toFixed(1) + ',' + py(lowf(rows[idx[0]])).toFixed(1), j; for (j = 1; j < idx.length; j++) d += 'L' + px(rows[idx[j]].k).toFixed(1) + ',' + py(lowf(rows[idx[j]])).toFixed(1); for (j = idx.length - 1; j >= 0; j--) d += 'L' + px(rows[idx[j]].k).toFixed(1) + ',' + py(highf(rows[idx[j]])).toFixed(1); return '<path d="' + d + 'Z" fill="' + fill + '" stroke="none"/>'; };
+    if (N === 1) { var w = 24, x = (PL + PR) / 2; svg += '<rect x="' + (x - w / 2) + '" y="' + py(rows[0].pr).toFixed(1) + '" width="' + w + '" height="' + (CB - py(rows[0].pr)).toFixed(1) + '" fill="#37503F"/><rect x="' + (x - w / 2) + '" y="' + py(rows[0].pay).toFixed(1) + '" width="' + w + '" height="' + (py(rows[0].pr) - py(rows[0].pay)).toFixed(1) + '" fill="#D99A33"/>'; }
+    else { svg += area(function () { return 0; }, function (r) { return r.pr; }, '#37503F'); svg += area(function (r) { return r.pr; }, function (r) { return r.pay; }, '#D99A33'); }
+    var cx = R.res.cross > 1 && R.res.r > 0 ? R.res.cross : 0;
+    if (cx && cx <= N) { var X = px(cx); svg += '<line x1="' + X.toFixed(1) + '" y1="' + CT + '" x2="' + X.toFixed(1) + '" y2="' + CB + '" stroke="#241A11" stroke-width="1.2" stroke-dasharray="2 3"/>'; }
+    var T = N / ppy, unit = T >= 2 ? ppy : 1, lblStep = 1, cands = T >= 2 ? [1, 2, 5, 10, 20, 25, 50, 100] : [1, 2, 5, 10, 20, 25, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000], lbl = [];
+    var span = N / unit; for (i = 0; i < cands.length; i++) { lblStep = cands[i]; if (span / lblStep <= 6) break; }
+    for (var yv = lblStep; yv <= span + 1e-9; yv += lblStep) lbl.push(yv);
+    if (lbl.length === 0) lbl.push(span);
+    lbl.forEach(function (yv) { var Xv = px(Math.max(1, yv * unit)), an = Xv > PR - 8 ? 'end' : 'middle'; svg += '<text x="' + Xv.toFixed(1) + '" y="' + (CB + 16) + '" text-anchor="' + an + '" font-size="12" fill="#5B4B3B">' + fnum(Math.round(yv * 100) / 100) + '</text>'; });
+    svg += '<text x="' + ((PL + PR) / 2) + '" y="' + (CB + 31) + '" text-anchor="middle" font-size="12" fill="#5B4B3B">' + (T >= 2 ? 'years' : 'payment number') + '</text>';
+    if (mk >= 1 && mk <= N) { var Xm = px(mk); svg += '<line x1="' + Xm.toFixed(1) + '" y1="' + (CT - 6) + '" x2="' + Xm.toFixed(1) + '" y2="' + CB + '" stroke="#8F5C13" stroke-width="2"/><circle cx="' + Xm.toFixed(1) + '" cy="' + py(rows[mk - 1].pay).toFixed(1) + '" r="4" fill="#fff" stroke="#8F5C13" stroke-width="2"/>'; }
+    return svg + '</svg>';
+  }
+
+  function durTxt(count, ppy) { var mo = Math.round(count * 12 / ppy); return mo < 1 ? count + (count === 1 ? ' payment' : ' payments') : yearsTxt(mo); }
+  function perLab(R) { return PER[R.key].each; }
+  function cum(R) { var rows = R.res.rows, ci = [0], cp = [0], i; for (i = 0; i < rows.length; i++) { ci.push(ci[i] + rows[i].intr); cp.push(cp[i] + rows[i].pr); } return { i: ci, p: cp }; }
+  function markK(R) {
+    var N = R.res.count;
+    if (R.atK) return Math.min(R.atK, N);
+    if (st.mark) return Math.min(st.mark, N);
+    return R.res.cross > 1 && R.res.r > 0 && R.res.cross <= N ? R.res.cross : Math.max(1, Math.ceil(N / 2));
+  }
+  function paintPoint(R) {
+    var N = R.res.count, k = markK(R), rows = R.res.rows, C = cum(R), row = rows[k - 1];
+    var svg = draw(R, k); $('amVis').innerHTML = svg || '';
+    var sl = $('amSlide'); sl.min = 1; sl.max = Math.max(1, N); sl.value = k; sl.disabled = N < 2; sl.setAttribute('aria-valuetext', 'payment ' + k + ' of ' + N);
+    var d = R.date(k), left = N - k;
+    var t = [
+      ['Payment', k + ' of ' + N + ' · ' + dtxt(d)],
+      ['Balance still owed', fm(row.bal)],
+      ['Principal paid so far', fm(C.p[k]) + ' (' + fp1(C.p[k] / R.L * 100) + ' of the loan)'],
+      ['Interest paid so far', fm(C.i[k])],
+      ['Interest still to pay', fm(R.res.totInt - C.i[k])],
+      ['Payments left', left + (left ? ' · last on ' + dtxt(R.date(N)) : '')]
+    ];
+    if (R.price !== undefined) t.push(['Your equity (price − balance)', fm(R.price - row.bal) + ' (' + fp1((R.price - row.bal) / R.price * 100) + ')']);
+    $('amPoint').innerHTML = '<tbody>' + t.map(function (rw) { return '<tr><td>' + rw[0] + '</td><td>' + rw[1] + '</td></tr>'; }).join('') + '</tbody>';
+    $('amPointKey').textContent = 'Drag the slider to look at any payment. In this payment ' + fm(row.intr) + ' is interest and ' + fm(row.pr) + ' reduces what you owe.';
+  }
+
+  /* ---------- render ---------- */
+  function render() {
+    var R = compute(), i, ppy = R.ppy, per = PER[R.key];
+    var hm = null, hat = null;
+    if (R.bad) { hm = R.bad.msg; hat = R.bad.at; } else if (R.soft) { hm = R.soft.msg; hat = R.soft.at; }
+    setHint(hm, hat);
+    /* notes under every field */
+    var ty = R.typed || {}, rdy = R.ready;
+    var loanTxt = R.L !== undefined ? fm(R.L) : null;
+    setNote('amPNote', ty.P ? (R.price !== undefined ? 'You borrow ' + fm(R.L) + '. The price and down payment below are not used while this box has an amount.' : 'You borrow ' + fm(R.L) + '.') : (R.derived !== undefined && R.derived > 0 ? 'Empty, so the loan is the price minus the down payment: ' + fm(R.derived) + '.' : 'The amount you borrow. Or fill in the price and down payment under Go advanced.'));
+    setNote('amRNote', ty.R ? fp(R.rate) + ' a year, charged ' + (R.comp === 'same' ? 'every ' + per.each : COMPN[R.comp]) + (R.comp === 'same' ? ': ' + fp(R.rate) + ' ÷ ' + ppy + ' = ' + fp(R.rate / ppy) + ' per payment.' : '.') : 'Type the yearly interest rate: 6 means 6%.');
+    setNote('amTNote', ty.T ? 'That is ' + R.n.toLocaleString('en-US') + (R.n === 1 ? ' payment' : ' payments') + ' (' + per.name.toLowerCase() + ').' : 'Years (30), months (18 months) or both (5y 6m). Weeks and days work too.');
+    setNote('amXNote', ty.X ? (rdy ? 'You pay ' + fm(R.extra) + ' extra with every payment, on top of ' + fm(R.res.pay) + '.' : 'You pay ' + fm(R.extra) + ' extra with every payment. Type the loan details to see the effect.') : (rdy ? 'Optional. Pay a bit more each time to finish earlier and save interest.' : 'Optional. Type the loan amount, rate and term first, then see what extra payments save.'));
+    setNote('amPriceNote', R.price !== undefined ? (ty.P ? 'The loan amount you typed above is used, not the price.' : (R.derived > 0 ? 'Price ' + fm(R.price) + (R.downTyped ? ' minus the down payment ' + fm(R.down) : '') + ' = loan ' + fm(R.derived) + '.' : '')) : 'Optional. What you are buying; the loan is the price minus your down payment.');
+    var dtv = $('amDown').value.trim();
+    setNote('amDownNote', R.downTyped ? (R.price !== undefined ? 'Down payment ' + fm(R.down) + (R.downPct ? ' (' + fp(num(dtv).v) + ' of the price).' : ' (' + fp1(R.down / R.price * 100) + ' of the price).') : 'Type the price first.') : (dtv && R.price === undefined ? 'Type the price first.' : 'Optional. An amount, or a percentage like 20%.'));
+    setNote('amFreqNote', 'You pay ' + per.name.toLowerCase() + ': ' + ppy + (ppy === 1 ? ' payment' : ' payments') + ' a year.');
+    setNote('amCompNote', R.comp === 'same' ? 'Interest is added as often as you pay, the usual way for loans.' : 'Interest is added ' + COMPN[R.comp] + (ty.R ? '; the effective yearly rate is ' + fp((Math.pow(1 + E.rateOf(R.rate, ppy, R.comp === 'same' ? 'same' : COMPV[R.comp]), ppy) - 1) * 100) + '.' : '.'));
+    setNote('amStartNote', R.startTyped ? 'The loan starts on ' + dtxt(R.start) + '; your first payment is on ' + dtxt(E.payDate(R.start, R.key, 1)) + '.' : 'Empty = today (' + dtxt(R.start) + '). Your first payment is one period later, on ' + dtxt(E.payDate(R.start, R.key, 1)) + '.');
+    setNote('amYANote', ty.Ya ? 'You pay ' + fm(R.yAmt) + ' extra once a year, with the first payment in ' + MONF[R.yMonth] + '.' : 'Optional. A bonus or tax refund you put on the loan once a year.');
+    st.onesIds.forEach(function (id) { var rw = (R.onesRows || []).filter(function (q) { return q.i === id; })[0]; var note = rw ? rw.note : 'Type the loan details first, then the amount and when.'; if (rw && !note && rw.k) note = fm(rw.amt) + ' extra at payment ' + rw.k + ' (' + dtxt(R.date(rw.k)) + ').'; setNote('amON' + id, note); });
+    setNote('amXSNote', rdy ? R.xsNote : ($('amXS').value.trim() ? 'Type the loan amount, rate and term first, then this sets when the extra payments start.' : 'Optional. Start the extra payments later: a payment number or a month and year (Mar 2030). Empty means from the first payment.'));
+    setNote('amOnesNote', st.onesIds.length ? 'You can add up to 10 one-time payments.' : 'Optional. A lump sum, such as a bonus, that you pay once.');
+    /* the "look at a point" field */
+    var atRaw = $('amAt').value.trim(), atNote = 'Optional. Type a payment number (60), a month and year (Mar 2030) or a date to see where the loan stands then.';
+    R.atK = null;
+    if (!rdy) { if (atRaw) atNote = 'Type the loan amount, rate and term first, then this shows where the loan stands at that point.'; }
+    else if (atRaw) {
+      var am = /^(?:payment|pmt|#)\s*(\d+)$/i.exec(atRaw) || /^(\d{1,6})$/.exec(atRaw);
+      if (am) { var ak = +am[1]; if (ak < 1) atNote = 'Payments start at 1.'; else if (ak > R.res.count) atNote = 'The loan has only ' + R.res.count + ' payments' + (R.hasExtra ? ' with your extra payments' : '') + '. Showing the slider position instead.'; else { R.atK = ak; atNote = 'Showing payment ' + ak + ' of ' + R.res.count + ' (' + dtxt(R.date(ak)) + ').'; } }
+      else {
+        var ad = parseDate(atRaw) || parseMonth(atRaw);
+        if (!ad) atNote = 'Couldn’t read “' + short(atRaw) + '” — type a payment number like 60, a month and year like Mar 2030 or a date like 14 Mar 2030.';
+        else { var q, f = null; for (q = 1; q <= R.res.count; q++) if (R.date(q) >= ad) { f = q; break; } if (f === null) atNote = 'That is after the last payment (' + dtxt(R.date(R.res.count)) + '). Showing the slider position instead.'; else { R.atK = f; atNote = (ad < R.date(1) ? 'That is before the first payment, so this is payment ' : 'The first payment on or after that is payment ')  + f + ' of ' + R.res.count + ' (' + dtxt(R.date(f)) + ').'; } }
+      }
+    }
+    setNote('amAtNote', atNote);
+    /* result */
+    var big = '—', lab = per.pay, sub = $('amSub').getAttribute('data-empty'), tip = '', body = false;
+    ['amVisWrap', 'amNumsWrap', 'amFastWrap', 'amSchWrap', 'amStepsWrap'].forEach(function (id) { show(id, false); });
+    ['amNums', 'amFast', 'amSch', 'amSteps', 'amVis', 'amPoint', 'amSplit'].forEach(function (id) { $(id).innerHTML = ''; });
+    if (rdy) {
+      body = true; var r = R.res, r0 = R.res0;
+      big = fm(r.pay);
+      var intShare = r.totInt / r.totPaid * 100;
+      sub = 'Total of ' + r.count.toLocaleString('en-US') + (r.count === 1 ? ' payment ' : ' payments ') + fm(r.totPaid) + ' · interest ' + fm(r.totInt);
+      if (R.hasExtra) { var sv = r0.totInt - r.totInt, ms = Math.round((r0.count - r.count) * 12 / ppy); sub = 'Paid off in ' + durTxt(r.count, ppy) + ' (' + r.count.toLocaleString('en-US') + (r.count === 1 ? ' payment' : ' payments') + ') · interest ' + fm(r.totInt) + (sv > 0.005 ? ' · saves ' + fm(sv) + (ms > 0 ? ' and ' + yearsTxt(ms) : '') : ''); }
+      tip = 'Interest is ' + fp1(intShare) + ' of everything you pay back.' + (r.cross > 1 && r.r > 0 ? ' From payment ' + r.cross + ' (' + dtxt(R.date(r.cross)) + ') more of each payment goes to principal than to interest.' : (r.r === 0 ? ' At 0% every payment is all principal.' : ''));
+      var w = Math.max(0, Math.min(100, (r.totPaid - r.totInt) / r.totPaid * 100));
+      $('amSplit').innerHTML = '<div class="am-bar" role="img" aria-label="' + fp1(w) + ' principal, ' + fp1(100 - w) + ' interest"><span class="am-p" style="width:' + w.toFixed(2) + '%"></span><span class="am-i" style="width:' + (100 - w).toFixed(2) + '%"></span></div><p class="cb-note am-legend"><span class="am-leg"><span class="am-dot am-dp"></span>Principal ' + fm(R.L) + ' (' + fp1(w) + ')</span> <span class="am-leg"><span class="am-dot am-di"></span>Interest ' + fm(r.totInt) + ' (' + fp1(100 - w) + ')</span></p>';
+      var rows = [];
+      rows.push([per.pay, fm(r.pay)]);
+      rows.push(['Number of payments', r.count.toLocaleString('en-US') + (R.hasExtra && r0.count !== r.count ? ' (without extras: ' + r0.count.toLocaleString('en-US') + ')' : '')]);
+      rows.push(['Loan amount', fm(R.L)]);
+      rows.push(['Total interest', fm(r.totInt)]);
+      rows.push(['Total you pay', fm(r.totPaid)]);
+      rows.push(['Interest as a share of what you pay', fp1(intShare)]);
+      rows.push(['First payment', dtxt(R.date(1))]);
+      rows.push(['Last payment', dtxt(R.date(r.count))]);
+      rows.push(['Interest in the first payment', fm(r.rows[0].intr)]);
+      rows.push(['Interest in the last payment', fm(r.rows[r.rows.length - 1].intr)]);
+      if (R.hasExtra) { rows.push(['Interest saved by your extra payments', fm(r0.totInt - r.totInt)]); rows.push(['Time saved', r0.count > r.count ? durTxt(r0.count - r.count, ppy) + ' (' + (r0.count - r.count).toLocaleString('en-US') + (r0.count - r.count === 1 ? ' payment)' : ' payments)') : 'none']); }
+      $('amNums').innerHTML = '<tbody>' + rows.map(function (rw) { return '<tr><td>' + rw[0] + '</td><td>' + rw[1] + '</td></tr>'; }).join('') + '</tbody>'; show('amNumsWrap', true);
+      $('amCopyTxt').textContent = per.pay + ': ' + big + ' (' + sub + ')';
+      paintPoint(R); show('amVisWrap', true);
+      /* pay it off faster */
+      var cand = [], seen = {}, ex0 = R.extra;
+      [0.1, 0.25, 0.5, 1].forEach(function (f) { var v = niceRound(r.pay * f); if (v < 1 && st.dec === 2) v = Math.max(0.01, Math.round(v * 100) / 100); if (v > 0 && !seen[v]) { seen[v] = 1; cand.push(v); } });
+      var fh = '<thead><tr><th>Extra with each payment</th><th>Paid off in</th><th>Interest saved</th></tr></thead><tbody>';
+      var row0 = R.hasExtra ? r0 : r;
+      fh += '<tr class="' + (!R.hasExtra ? 'am-on' : '') + '"><td>None</td><td>' + durTxt(row0.count, ppy) + '</td><td>—</td></tr>';
+      if (R.hasExtra) fh += '<tr class="am-on"><td>Your plan' + (R.extra ? ' (' + fm0(R.extra) + ')' : '') + '</td><td>' + durTxt(r.count, ppy) + '</td><td>' + fm0(r0.totInt - r.totInt) + '</td></tr>';
+      cand.forEach(function (v) {
+        var q = E.run({ P: R.L, apr: R.rate, key: R.key, comp: R.base0.comp, n: R.n, extra: v, yAmt: R.yAmt, yMonth: R.yMonth, start: R.start, ones: R.ones, xFrom: R.xFrom });
+        fh += '<tr class="am-pick" data-v="' + v + '"><td>' + (v % 1 ? fm(v) : fm0(v)) + '</td><td>' + durTxt(q.count, ppy) + '</td><td><span class="am-nw">' + fm0(row0.totInt - q.totInt) + '</span> ' + (row0.count > q.count ? '<span class="am-sv">' + durTxt(row0.count - q.count, ppy) + ' sooner</span>' : '') + '</td></tr>';
+      });
+      $('amFast').innerHTML = fh + '</tbody>'; show('amFastWrap', true);
+      $('amFastKey').textContent = 'Savings are against the plan with no extra payments. Click a row to use that extra amount.';
+      /* schedule */
+      renderSch(R); show('amSchWrap', true);
+      /* steps */
+      var st2 = [], rr = r.r;
+      st2.push('Rate for each payment: ' + (R.comp === 'same' ? fp(R.rate) + ' ÷ ' + ppy + ' = ' + fnum(Math.round(rr * 1e10) / 1e10 * 100) + '%' : fnum(Math.round(rr * 1e10) / 1e10 * 100) + '% (the yearly ' + fp(R.rate) + ' compounded ' + COMPN[R.comp] + ', turned into a rate per payment)') + '.');
+      st2.push(rr > 0 ? 'Payment = loan × r ÷ (1 − (1 + r)^−n) = ' + fm(R.L) + ' × ' + fnum(Math.round(rr * 1e8) / 1e8) + ' ÷ (1 − (1 + ' + fnum(Math.round(rr * 1e8) / 1e8) + ')^−' + R.n + ') = ' + fm(r.pay) + '.' : 'At 0% the payment is the loan ÷ the number of payments: ' + fm(R.L) + ' ÷ ' + R.n + ' = ' + fm(r.pay) + '.');
+      st2.push('First payment: interest = ' + fm(R.L) + ' × ' + fnum(Math.round(rr * 1e8) / 1e8) + ' = ' + fm(r.rows[0].intr) + ', so ' + fm(r.rows[0].pr) + ' goes to principal and the balance falls to ' + fm(r.rows[0].bal) + '.');
+      st2.push('Each payment the interest is charged on a smaller balance, so more of the same payment pays down principal. Do this ' + r.count.toLocaleString('en-US') + (r.count === 1 ? ' time' : ' times') + ' and the balance reaches 0.');
+      $('amSteps').innerHTML = st2.map(function (s3) { return '<li>' + s3 + '</li>'; }).join(''); show('amStepsWrap', true);
+    }
+    $('amBig').textContent = big; $('amBig').parentNode.classList.toggle('am-long', big.length > 14); $('amLab').textContent = lab; $('amSub').textContent = sub; $('amBody').style.display = body ? '' : 'none'; $('amTip').textContent = tip; $('amTip').style.display = tip ? '' : 'none';
+    $('amMLab').textContent = per.pay; $('amMVal').textContent = big;
+    var emp = 'Type the loan amount, the interest rate and the term to see the payment and the whole schedule.';
+    if (!body) { sub = R.bad ? emp : (R.miss && R.miss.length ? 'Type ' + (R.miss.length > 1 ? R.miss.slice(0, -1).join(', ') + ' and ' + R.miss[R.miss.length - 1] : R.miss[0]) + ' to see the payment and the schedule.' : emp); $('amSub').textContent = sub; }
+    st.last = R;
+  }
+  function renderSch(R) {
+    var rows = R.res.rows, ppy = R.ppy, h, i;
+    $('amSchSeg').querySelectorAll('button').forEach(function (b) { var on = b.getAttribute('data-v') === st.view; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); });
+    if (st.view === 'year') {
+      var yrs = [], cy = null;
+      rows.forEach(function (r) { var y = Math.ceil(r.k / ppy); if (!cy || cy.y !== y) { cy = { y: y, intr: 0, pr: 0, bal: 0 }; yrs.push(cy); } cy.intr += r.intr; cy.pr += r.pr; cy.bal = r.bal; });
+      h = '<thead><tr><th>Year</th><th>Interest</th><th>Principal</th><th>Balance</th></tr></thead><tbody>';
+      yrs.forEach(function (y) { h += '<tr><td>' + y.y + '</td><td>' + fm0(y.intr) + '</td><td>' + fm0(y.pr) + '</td><td>' + fm0(y.bal) + '</td></tr>'; });
+      $('amSch').innerHTML = h + '</tbody>'; show('amMore', false);
+      $('amSchKey').textContent = 'Year ' + (ppy === 1 ? '1 is the first payment' : '1 is the first ' + ppy + ' payments') + '. Amounts are rounded to whole ' + (st.cur === 'USD' ? 'dollars' : 'units of the currency') + (R.hasExtra ? '; principal includes your extra payments' : '') + '.';
+    } else {
+      var lim = Math.min(rows.length, st.rowsShown);
+      h = '<thead><tr><th>Payment</th><th>Interest</th><th>Principal</th><th>Balance</th></tr></thead><tbody>';
+      for (i = 0; i < lim; i++) { var r = rows[i]; h += '<tr><td>' + r.k + ' · ' + dtxt(R.date(r.k)) + '</td><td>' + fm(r.intr) + '</td><td>' + fm(r.pr) + '</td><td>' + fm(r.bal) + '</td></tr>'; }
+      $('amSch').innerHTML = h + '</tbody>';
+      show('amMore', lim < rows.length); $('amMore').textContent = 'Show ' + Math.min(240, rows.length - lim) + ' more payments';
+      $('amSchKey').textContent = 'Showing payments 1 to ' + lim + ' of ' + rows.length.toLocaleString('en-US') + (R.hasExtra ? '. Principal includes your extra payments.' : '.') + ' On a narrow screen, swipe the table sideways to see the balance.';
+    }
+  }
+
+  /* ---------- controls ---------- */
+  [].forEach.call(document.querySelectorAll('.p-am input[type=text]'), function (el) { if (el.id.indexOf('amO') === 0) return; el.addEventListener('input', render); });
+  CalcThis.initCsel($('amFreq')); CalcThis.initCsel($('amComp')); CalcThis.initCsel($('amYM'));
+  ['amFreq', 'amComp', 'amYM'].forEach(function (id) { $(id).addEventListener('change', function () { st.mark = null; st.rowsShown = 120; render(); }); });
+  $('amSlide').addEventListener('input', function () { st.mark = +$('amSlide').value; if ($('amAt').value) $('amAt').value = ''; if (st.last && st.last.ready) { st.last.atK = null; render(); } });
+  [].forEach.call($('amSchSeg').children, function (b) { b.addEventListener('click', function () { st.view = b.getAttribute('data-v'); st.rowsShown = 120; if (st.last && st.last.ready) renderSch(st.last); }); });
+  $('amMore').addEventListener('click', function () { st.rowsShown += 240; if (st.last && st.last.ready) renderSch(st.last); });
+  $('amFast').addEventListener('click', function (e) { var tr = e.target.closest ? e.target.closest('tr.am-pick') : null; if (!tr) return; $('amX').value = tr.getAttribute('data-v'); render(); });
+  $('amAddOne').addEventListener('click', addOne);
+  $('amPrint').addEventListener('click', function () { if (window.print) window.print(); });
+  function cselSet(id, v) { $(id).value = v; }
+  var ALL = ['amP', 'amR', 'amT', 'amX', 'amAt', 'amPrice', 'amDown', 'amStart', 'amYA', 'amXS'];
+  function resetAdv() {
+    ['amPrice', 'amDown', 'amStart', 'amYA', 'amXS'].forEach(function (id) { $(id).value = ''; });
+    cselSet('amFreq', 'monthly'); cselSet('amComp', 'same'); cselSet('amYM', '0');
+    homeHint(); st.onesIds.slice().forEach(function (id) { var el = $('amOne' + id); if (el) el.parentNode.removeChild(el); }); st.onesIds = []; $('amAddOne').style.display = '';
+  }
+  $('amClear').addEventListener('click', function () { ALL.forEach(function (id) { $(id).value = ''; }); resetAdv(); st.mark = null; st.rowsShown = 120; render(); $('amP').focus(); });
+  $('amAdvBtn').addEventListener('click', function () {
+    st.adv = !st.adv; $('amAdvBtn').classList.toggle('open', st.adv); $('amAdvBtnLab').textContent = st.adv ? 'Go simple' : 'Go advanced'; $('amAdvIn').style.display = st.adv ? '' : 'none';
+    if (!st.adv) { resetAdv(); st.mark = null; } render();
+  });
+  if (window.Datepicker) { var dpS = new Datepicker($('amStart'), { format: 'd MM yyyy', autohide: true, weekStart: 0, todayHighlight: true }); $('amStart').addEventListener('changeDate', function () { st.mark = null; render(); }); }
+  /* the currency picker: the salary page's searchable list, display only */
+  (function () {
+    var opt = function (c, pop) { var n = curName(c); return '<button type="button" class="csel-opt' + (pop ? ' csel-pop' : '') + (c === 'USD' ? ' on' : '') + '" role="option" aria-selected="' + (c === 'USD') + '" data-value="' + c + '" data-p="' + (SE.RANK.indexOf(c) + 1) + '" data-s="' + (c + ' ' + n + ' ' + sym(c)).toLowerCase() + '"><span class="n">' + n + '</span><span class="c">' + c + '</span></button>'; };
+    var all = SE.CURRENCIES.slice().sort(function (a, b) { return curName(a) < curName(b) ? -1 : 1; });
+    $('amCur').querySelector('.csel-panel').innerHTML = '<div class="csel-sbox"><input class="csel-search" type="text" placeholder="Search currency" aria-label="Search currency" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="go"></div><div class="csel-group">Popular</div>' +
+      SE.POPULAR.map(function (c) { return opt(c, true); }).join('') + '<div class="csel-group">All currencies</div>' + all.map(function (c) { return opt(c, false); }).join('') + '<div class="csel-none" style="display:none">No currency found</div>';
+    CalcThis.initCsel($('amCur'));
+    $('amCur').querySelector('.csel-val').textContent = 'USD';
+  })();
+  $('amCur').addEventListener('change', function () { st.cur = $('amCur').value || 'USD'; st.dec = decOf(st.cur); $('amCur').querySelector('.csel-val').textContent = st.cur; render(); });
+  render();
+};
+/* AMORT:END */

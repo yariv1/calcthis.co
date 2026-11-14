@@ -1,0 +1,12 @@
+{
+ "slug": "amortization-calculator",
+ "pass": true,
+ "failed": [],
+ "hash": "dc31e8e323bb3b56",
+ "at": "2026-11-14T11:01:53.935Z",
+ "results": {
+  "silent": "ok   amortization-calculator  fields 10",
+  "duplicate": "most overlap 3.1% with /compound-interest-calculator/ (limit 12%)",
+  "registration": "sitemap urls 239 | amortization-calculator cards 1 inbound 238 ld WebApplication,FAQPage,BreadcrumbList | AUDIT PASS"
+ }
+}

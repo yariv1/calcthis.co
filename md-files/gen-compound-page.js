@@ -216,7 +216,7 @@ function build() {
         <h2>Tax and inflation</h2>
         <p>If the interest is taxed as it is earned, only part of it grows. ${money(10000)} at 5% for 10 years becomes ${money(A.bal)} with no tax and ${money(tax.bal)} with a 20% tax on the interest. Inflation shrinks what the money buys: with prices rising 2.5% a year, ${money(A.bal)} in 10 years buys what ${money(inf)} buys today.</p>
         <h2>Related tools</h2>
-        <p>To see what a loan costs use the <a href="/loan-calculator/">loan calculator</a>; for a home loan the <a href="/mortgage-calculator/">mortgage calculator</a>; for growth between two numbers the <a href="/percentage-change-calculator/">percentage change calculator</a>; and for what you earn the <a href="/salary-calculator/">salary calculator</a>.</p>
+        <p>To see what a loan costs use the <a href="/loan-calculator/">loan calculator</a>; for a home loan the <a href="/mortgage-calculator/">mortgage calculator</a>; for the payment-by-payment split of principal and interest the <a href="/amortization-calculator/">amortization calculator</a>; for growth between two numbers the <a href="/percentage-change-calculator/">percentage change calculator</a>; and for what you earn the <a href="/salary-calculator/">salary calculator</a>.</p>
         ${SRC}`;
 
   const body = `<body class="${P.body}">

@@ -1,5 +1,5 @@
 {
- "date": "2026-11-13",
+ "date": "2026-11-14",
  "competitors": [
   { "name": "calculator.net z-score calculator", "url": "https://www.calculator.net/z-score-calculator.html", "reopenedAfterBuild": true, "gaps": [] },
   { "name": "Omnicalculator z-score calculator", "url": "https://www.omnicalculator.com/statistics/z-score", "reopenedAfterBuild": true, "gaps": [] },

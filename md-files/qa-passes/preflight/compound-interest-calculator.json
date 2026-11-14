@@ -2,11 +2,11 @@
  "slug": "compound-interest-calculator",
  "pass": true,
  "failed": [],
- "hash": "da7af6b22a49356f",
- "at": "2026-11-13T18:22:38.139Z",
+ "hash": "e1a5c173b63e7d15",
+ "at": "2026-11-14T15:26:18.794Z",
  "results": {
   "silent": "ok   compound-interest-calculator  fields 10",
-  "duplicate": "most overlap 0.3% with /z-score-calculator/ (limit 12%)",
-  "registration": "sitemap urls 238 | compound-interest-calculator cards 1 inbound 237 ld WebApplication,FAQPage,BreadcrumbList | AUDIT PASS"
+  "duplicate": "most overlap 3.0% with /amortization-calculator/ (limit 12%)",
+  "registration": "sitemap urls 239 | compound-interest-calculator cards 1 inbound 238 ld WebApplication,FAQPage,BreadcrumbList | AUDIT PASS"
  }
 }

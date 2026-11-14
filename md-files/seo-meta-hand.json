@@ -198,6 +198,10 @@
     "t": "Overtime Calculator — Pay, Take-Home & No Tax on Overtime",
     "d": "Free overtime calculator: your hourly rate and hours give overtime pay, take-home after tax, California daily rules and the no-tax-on-overtime deduction."
   },
+  "/amortization-calculator/": {
+    "t": "Amortization Calculator: Schedule & Extra Payments",
+    "d": "Amortization calculator: payment, interest and balance of every payment, with extra payments, any frequency and a slider for where you stand. Any currency."
+  },
   "/compound-interest-calculator/": {
     "t": "Compound Interest Calculator: Growth, Deposits & Goals",
     "d": "Compound interest calculator: see how savings grow with deposits, solve the deposit, time or rate for a goal, and compare compounding, in any currency."

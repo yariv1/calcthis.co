@@ -1,0 +1,255 @@
+{
+ "slug": "amortization-calculator",
+ "research": "md-files/calcthis-amortization-research.md",
+ "competitors": [
+  {
+   "name": "calculator.net amortization calculator",
+   "url": "https://www.calculator.net/amortization-calculator.html",
+   "openedLive": true,
+   "date": "2026-11-14",
+   "inputs": [
+    "loan amount",
+    "loan term in years and months",
+    "interest rate",
+    "start month and year",
+    "extra monthly payment with start month and year",
+    "extra yearly payment with month and year",
+    "extra one-time payment with month and year",
+    "up to 10 more one-time payments",
+    "result: monthly payment",
+    "principal and interest split bar",
+    "result: total of payments and total interest",
+    "chart of balance, interest and payment by year",
+    "annual amortization schedule",
+    "monthly amortization schedule",
+    "print"
+   ]
+  },
+  {
+   "name": "Omnicalculator amortization calculator",
+   "url": "https://www.omnicalculator.com/finance/amortization",
+   "openedLive": true,
+   "date": "2026-11-14",
+   "inputs": [
+    "loan amount with currency (21 currencies)",
+    "amortization term in months, years or years and months",
+    "interest rate",
+    "compounding frequency (yearly to continuous, 7 options)",
+    "payment frequency (yearly to daily, 7 options)",
+    "extra payment per period with currency",
+    "result: periodic payment",
+    "result: total payment and interest",
+    "chart of principal balance, principal paid and interest paid",
+    "periodic or yearly balances table",
+    "share result",
+    "clear all changes"
+   ]
+  },
+  {
+   "name": "mortgagecalculator.org amortization calculator",
+   "url": "https://www.mortgagecalculator.org/calcs/amortization.php",
+   "openedLive": true,
+   "date": "2026-11-14",
+   "inputs": [
+    "purchase price",
+    "down payment in dollars or percent",
+    "loan amount",
+    "loan term in days, weeks, months or years",
+    "APR",
+    "payment frequency (daily to annually, 10 options)",
+    "loan date (month, day, year)",
+    "result: payment amount and results panel",
+    "inline schedule",
+    "printable schedule",
+    "share your results"
+   ]
+  }
+ ],
+ "features": [
+  {
+   "covers": [
+    "calculator.net amortization calculator: loan amount",
+    "Omnicalculator amortization calculator: loan amount with currency (21 currencies)",
+    "mortgagecalculator.org amortization calculator: loan amount"
+   ],
+   "status": "exceed",
+   "ids": [
+    "amP",
+    "amCur"
+   ]
+  },
+  {
+   "covers": [
+    "calculator.net amortization calculator: loan term in years and months",
+    "Omnicalculator amortization calculator: amortization term in months, years or years and months",
+    "mortgagecalculator.org amortization calculator: loan term in days, weeks, months or years"
+   ],
+   "status": "exceed",
+   "ids": [
+    "amT"
+   ]
+  },
+  {
+   "covers": [
+    "calculator.net amortization calculator: interest rate",
+    "Omnicalculator amortization calculator: interest rate",
+    "mortgagecalculator.org amortization calculator: APR"
+   ],
+   "status": "match",
+   "ids": [
+    "amR"
+   ]
+  },
+  {
+   "covers": [
+    "mortgagecalculator.org amortization calculator: purchase price",
+    "mortgagecalculator.org amortization calculator: down payment in dollars or percent"
+   ],
+   "status": "match",
+   "ids": [
+    "amPrice",
+    "amDown"
+   ]
+  },
+  {
+   "covers": [
+    "calculator.net amortization calculator: start month and year",
+    "mortgagecalculator.org amortization calculator: loan date (month, day, year)"
+   ],
+   "status": "exceed",
+   "ids": [
+    "amStart"
+   ]
+  },
+  {
+   "covers": [
+    "Omnicalculator amortization calculator: compounding frequency (yearly to continuous, 7 options)"
+   ],
+   "status": "match",
+   "ids": [
+    "amComp"
+   ]
+  },
+  {
+   "covers": [
+    "Omnicalculator amortization calculator: payment frequency (yearly to daily, 7 options)",
+    "mortgagecalculator.org amortization calculator: payment frequency (daily to annually, 10 options)"
+   ],
+   "status": "exceed",
+   "ids": [
+    "amFreq"
+   ]
+  },
+  {
+   "covers": [
+    "calculator.net amortization calculator: extra monthly payment with start month and year",
+    "Omnicalculator amortization calculator: extra payment per period with currency"
+   ],
+   "status": "match",
+   "ids": [
+    "amX",
+    "amXS"
+   ]
+  },
+  {
+   "covers": [
+    "calculator.net amortization calculator: extra yearly payment with month and year"
+   ],
+   "status": "match",
+   "ids": [
+    "amYA",
+    "amYM",
+    "amXS"
+   ]
+  },
+  {
+   "covers": [
+    "calculator.net amortization calculator: extra one-time payment with month and year",
+    "calculator.net amortization calculator: up to 10 more one-time payments"
+   ],
+   "status": "exceed",
+   "ids": [
+    "amAddOne",
+    "amOnes"
+   ]
+  },
+  {
+   "covers": [
+    "calculator.net amortization calculator: result: monthly payment",
+    "Omnicalculator amortization calculator: result: periodic payment",
+    "mortgagecalculator.org amortization calculator: result: payment amount and results panel"
+   ],
+   "status": "match",
+   "ids": [
+    "amBig",
+    "amNums"
+   ]
+  },
+  {
+   "covers": [
+    "calculator.net amortization calculator: principal and interest split bar",
+    "calculator.net amortization calculator: result: total of payments and total interest",
+    "Omnicalculator amortization calculator: result: total payment and interest"
+   ],
+   "status": "match",
+   "ids": [
+    "amSplit",
+    "amSub"
+   ]
+  },
+  {
+   "covers": [
+    "calculator.net amortization calculator: chart of balance, interest and payment by year",
+    "Omnicalculator amortization calculator: chart of principal balance, principal paid and interest paid"
+   ],
+   "status": "exceed",
+   "ids": [
+    "amVis",
+    "amSlide",
+    "amPoint"
+   ]
+  },
+  {
+   "covers": [
+    "calculator.net amortization calculator: annual amortization schedule",
+    "calculator.net amortization calculator: monthly amortization schedule",
+    "Omnicalculator amortization calculator: periodic or yearly balances table",
+    "mortgagecalculator.org amortization calculator: inline schedule"
+   ],
+   "status": "match",
+   "ids": [
+    "amSch",
+    "amSchSeg"
+   ]
+  },
+  {
+   "covers": [
+    "calculator.net amortization calculator: print",
+    "mortgagecalculator.org amortization calculator: printable schedule"
+   ],
+   "status": "match",
+   "ids": [
+    "amPrint"
+   ]
+  },
+  {
+   "covers": [
+    "Omnicalculator amortization calculator: share result",
+    "mortgagecalculator.org amortization calculator: share your results"
+   ],
+   "status": "match",
+   "ids": [
+    "amCopyTxt"
+   ]
+  },
+  {
+   "covers": [
+    "Omnicalculator amortization calculator: clear all changes"
+   ],
+   "status": "match",
+   "ids": [
+    "amClear"
+   ]
+  }
+ ]
+}

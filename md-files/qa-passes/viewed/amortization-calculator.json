@@ -1,0 +1,19 @@
+{
+ "slug": "amortization-calculator",
+ "hash": "dc31e8e323bb3b56",
+ "shots": [
+  "amortization-calculator-1-empty-mobile.png",
+  "amortization-calculator-2-filled-mobile.png",
+  "amortization-calculator-3-result-mobile.png",
+  "amortization-calculator-4-advanced-mobile.png",
+  "amortization-calculator-5-error-mobile.png",
+  "amortization-calculator-6-after-chaos-mobile.png",
+  "amortization-calculator-1-empty-desktop.png",
+  "amortization-calculator-2-filled-desktop.png",
+  "amortization-calculator-3-result-desktop.png",
+  "amortization-calculator-4-advanced-desktop.png",
+  "amortization-calculator-5-error-desktop.png",
+  "amortization-calculator-6-after-chaos-desktop.png"
+ ],
+ "at": "2026-11-14T10:59:56.907Z"
+}

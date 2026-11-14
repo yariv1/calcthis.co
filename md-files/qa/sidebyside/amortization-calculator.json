@@ -1,0 +1,39 @@
+{
+ "date": "2026-11-14",
+ "competitors": [
+  {
+   "name": "calculator.net amortization calculator",
+   "url": "https://www.calculator.net/amortization-calculator.html",
+   "reopenedAfterBuild": true,
+   "gaps": []
+  },
+  {
+   "name": "Omnicalculator amortization calculator",
+   "url": "https://www.omnicalculator.com/finance/amortization",
+   "reopenedAfterBuild": true,
+   "gaps": []
+  },
+  {
+   "name": "mortgagecalculator.org amortization calculator",
+   "url": "https://www.mortgagecalculator.org/calcs/amortization.php",
+   "reopenedAfterBuild": true,
+   "gaps": []
+  }
+ ],
+ "weBeat": [
+  "visual: one chart that stacks EVERY payment into principal and interest (calculator.net draws balance and yearly interest lines, Omnicalculator cumulative lines), with the crossover payment marked and a slider marker that reads out the balance, principal and interest paid so far, interest still to pay, payments left and equity at any payment",
+  "functional: 'Look at one point in the loan' (type a payment number, a month and year or a date) and the slider replace scrolling a 360-row table; a pay-it-faster table (extra 10, 25, 50, 100% of the payment) shows time and interest saved and applies on click; extra payments every payment, once a year and up to 10 one-time payments typed as a date or a payment number; ten payment frequencies with seven compounding options in one page (Omnicalculator has 7 + 7, mortgagecalculator.org 10 + none, calculator.net monthly only); price and down payment ($ or %); term in years, months, weeks or days; any currency",
+  "the payment, total interest and every yearly row were typed side by side with calculator.net (200,000 at 6% for 15 years: 1,687.71 / 103,788.46; 320,000 at 7% for 30 years: 2,128.97 / 446,428.47) and mortgagecalculator.org (320,000 at 7% for 30 years: 2,128.97): same to the cent; Omnicalculator's default plan (loan about 3,129.40 at 12.5% for 10 years, monthly) gives 45.81 on both"
+ ],
+ "gapsLeft": [],
+ "unverified": [
+  "real phone",
+  "other browsers (Chrome only)",
+  "print layout of the Print button",
+  "Copy result button in a real clipboard session",
+  "mortgagecalculator.org also shows local current mortgage-rate tables (15 and 30 year, by location): a live rates feed, not part of the amortization calculation, not matched here; the user has not been asked about it yet",
+  "calculator.net has a separate start month and year for the monthly and the yearly extra; here one \"Extra payments start\" field (payment number, month and year or date) governs both",
+  "Omnicalculator's exact figures with extra payments and other frequencies were not typed side by side; only its default plan was compared",
+  "Bankrate could not be opened (human-verification wall) and NerdWallet's calculator could not be read, so neither was compared"
+ ]
+}

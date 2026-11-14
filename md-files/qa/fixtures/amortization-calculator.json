@@ -1,0 +1,267 @@
+{
+  "slug": "amortization-calculator",
+  "bodyClass": "p-am",
+  "blocks": [
+    "AMORT"
+  ],
+  "result": {
+    "big": "amBig",
+    "body": "amBody",
+    "hint": "amHint"
+  },
+  "required": [
+    "amP",
+    "amR",
+    "amT"
+  ],
+  "fill": [
+    [
+      "click",
+      "amClear"
+    ],
+    [
+      "set",
+      "amFreq",
+      "monthly"
+    ],
+    [
+      "set",
+      "amComp",
+      "same"
+    ],
+    [
+      "set",
+      "amYM",
+      "0"
+    ],
+    [
+      "set",
+      "amCur",
+      "USD"
+    ],
+    [
+      "set",
+      "amP",
+      "200000"
+    ],
+    [
+      "set",
+      "amR",
+      "6"
+    ],
+    [
+      "set",
+      "amT",
+      "15"
+    ]
+  ],
+  "optionalSamples": {
+    "amX": [
+      "100",
+      "0",
+      "25,000"
+    ],
+    "amAt": [
+      "60",
+      "payment 24",
+      "Mar 2030",
+      "15 Jan 2031"
+    ],
+    "amPrice": [
+      "300,000",
+      "10"
+    ],
+    "amDown": [
+      "20%",
+      "60,000",
+      "0"
+    ],
+    "amStart": [
+      "14 Mar 2027",
+      "2027-03-14"
+    ],
+    "amYA": [
+      "2,000",
+      "0"
+    ],
+    "amXS": [
+      "24",
+      "payment 12",
+      "Mar 2030"
+    ]
+  },
+  "pools": {
+    "amP": [
+      "200000",
+      "5000",
+      "1,500,000",
+      "0.5"
+    ],
+    "amR": [
+      "6",
+      "0",
+      "12.5",
+      "3.25"
+    ],
+    "amT": [
+      "15",
+      "18 months",
+      "5y 6m",
+      "30",
+      "1",
+      "52 weeks"
+    ],
+    "amX": [
+      "100",
+      "0",
+      "2500"
+    ],
+    "amAt": [
+      "12",
+      "payment 3",
+      "Jan 2030"
+    ],
+    "amPrice": [
+      "300000"
+    ],
+    "amDown": [
+      "20%",
+      "50000"
+    ],
+    "amYA": [
+      "1000",
+      "0"
+    ],
+    "amXS": [
+      "12",
+      "Jan 2030"
+    ]
+  },
+  "variants": [
+    [
+      [
+        "set",
+        "amFreq",
+        "biweekly"
+      ],
+      [
+        "set",
+        "amComp",
+        "daily"
+      ]
+    ],
+    [
+      [
+        "set",
+        "amFreq",
+        "weekly"
+      ],
+      [
+        "set",
+        "amT",
+        "52 weeks"
+      ]
+    ],
+    [
+      [
+        "set",
+        "amFreq",
+        "annual"
+      ],
+      [
+        "set",
+        "amComp",
+        "cont"
+      ],
+      [
+        "set",
+        "amT",
+        "10"
+      ]
+    ],
+    [
+      [
+        "set",
+        "amFreq",
+        "quarterly"
+      ],
+      [
+        "set",
+        "amComp",
+        "semi"
+      ]
+    ],
+    [
+      [
+        "set",
+        "amX",
+        "200"
+      ],
+      [
+        "set",
+        "amYA",
+        "3000"
+      ],
+      [
+        "set",
+        "amYM",
+        "5"
+      ]
+    ],
+    [
+      [
+        "set",
+        "amR",
+        "0"
+      ],
+      [
+        "set",
+        "amT",
+        "2"
+      ]
+    ],
+    [
+      [
+        "click",
+        "amAddOne"
+      ]
+    ],
+    [
+      [
+        "set",
+        "amStart",
+        "31 Jan 2027"
+      ],
+      [
+        "set",
+        "amFreq",
+        "monthly"
+      ],
+      [
+        "set",
+        "amAt",
+        "payment 24"
+      ]
+    ],
+    [
+      [
+        "set",
+        "amFreq",
+        "daily"
+      ],
+      [
+        "set",
+        "amT",
+        "1"
+      ]
+    ]
+  ],
+  "scrollTo": "amBig",
+  "errorState": [
+    [
+      "set",
+      "amT",
+      "abc"
+    ]
+  ]
+}

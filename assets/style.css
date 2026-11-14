@@ -3646,3 +3646,77 @@ body .fld + .av-note,body .fld + .cb-note{margin-top:-6px}
 .p-ic #icNums td,.p-ic #icNums th,.p-ic #icCmp td,.p-ic #icCmp th,.p-ic #icSc td,.p-ic #icSc th,.p-ic #icSch td,.p-ic #icSch th,.p-ic #icWd td{white-space:normal;overflow-wrap:anywhere}
 .p-ic #icSc td:first-child,.p-ic #icCmp td:first-child,.p-ic .content .dtable td:first-child{white-space:nowrap}
 .p-ic .content .dtable td,.p-ic .content .dtable th{padding-left:4px;padding-right:4px}
+
+/* ---- AMORTIZATION calculator (.p-am). Reuses .p-bmr result look, .dtable, .csel, .seg, .chips, .advbtn ---- */
+.p-am .card{min-width:0}
+.p-am .av-note,.p-am .cb-note{font-size:14px;font-weight:500;color:var(--ink-soft);margin:4px 0 8px;line-height:1.45}
+.p-am .cb-note{color:var(--muted);font-weight:400}
+.p-am .res-big{font-size:clamp(28px,7vw,44px);overflow-wrap:anywhere}
+.p-am .res-big.am-long{font-size:24px}
+.p-am .res-sub{overflow-wrap:anywhere}
+.p-am .mbar-vals b{font-size:18px;overflow-wrap:anywhere}
+.p-am .am-two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0 10px}
+.p-am .am-two > *{min-width:0}
+.p-am .am-sech{font-size:14px;font-weight:600;color:var(--ink);margin:14px 0 8px}
+.p-am .am-sech span{font-weight:400;color:var(--muted)}
+.p-am .am-seg{display:flex;width:100%}
+.p-am .am-seg button{flex:1 1 0;min-width:0}
+.p-am .am-ta{width:100%;font:inherit;font-size:15px;font-weight:500;color:var(--ink);background:#FCFAF6;border:1.5px solid var(--line);border-radius:10px;padding:11px 13px;resize:vertical;font-variant-numeric:tabular-nums;line-height:1.5;min-height:110px}
+.p-am .am-ta:focus{outline:none;border-color:var(--amber);background:#fff;box-shadow:0 0 0 3px rgba(181,118,31,.13)}
+.p-am .chips{margin-top:0;margin-bottom:6px}
+.p-am .am-vis{border:1px solid var(--line);border-radius:12px;background:#FFFDF8;padding:8px 8px 4px;margin:6px 0 4px}
+.p-am .am-vis svg{display:block;width:100%;height:auto}
+.p-am .dtable td:nth-child(n+2),.p-am .dtable th:nth-child(n+2){text-align:right}
+.p-am .dtable td{font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.p-am .dtable td,.p-am .dtable th{padding-left:6px;padding-right:6px}
+.p-am .am-mrow[data-v]{cursor:pointer}
+.p-am .am-mrow[data-v]:hover td{background:#FBF3E4}
+.p-am .am-mrow.on td{font-weight:700;color:var(--ink);background:#FBF3E4}
+.p-am .am-steps{margin:6px 0 4px;padding-left:20px;font-size:14.5px;line-height:1.55;color:var(--ink-soft)}
+.p-am .am-steps li{margin-bottom:4px;overflow-wrap:anywhere}
+.p-am .am-tbl{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 0 8px}
+.p-am .am-tbl table{width:100%}
+.p-am .am-listsum{font-size:14px;font-weight:600;color:var(--ink);margin:4px 0 8px;overflow-wrap:anywhere}
+.p-am .am-ztab td,.p-am .am-ztab th{font-size:12.5px;padding:5px 3px}
+.p-am .am-ztab{width:auto;min-width:100%}
+.p-am .am-ztab td,.p-am .am-ztab th{white-space:nowrap}
+.p-am .grid2 > div{min-width:0}
+.p-am .sl-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}
+.p-am .sl-head .card-h2{margin:0}
+.p-am .sl-cur{width:auto;min-width:110px;flex:0 0 auto}
+.p-am .sl-cur .csel-panel{left:auto;right:0;width:300px;max-width:86vw;max-height:min(380px,60vh)}
+.p-am .am-two.am-one{grid-template-columns:minmax(0,1fr)}
+.p-am .am-on td{font-weight:700;color:var(--ink);background:#FBF3E4}
+.p-am .content .dtable td:nth-child(n+2),.p-am .content .dtable th:nth-child(n+2){white-space:nowrap}
+.p-am #amNums,.p-am #amCmp,.p-am #amSc,.p-am #amSch,.p-am #amWd{display:table;width:100%}
+.p-am #amNums td,.p-am #amNums th,.p-am #amCmp td,.p-am #amCmp th,.p-am #amSc td,.p-am #amSc th,.p-am #amSch td,.p-am #amSch th,.p-am #amWd td{white-space:normal;overflow-wrap:anywhere}
+.p-am #amSc td:first-child,.p-am #amCmp td:first-child,.p-am .content .dtable td:first-child{white-space:nowrap}
+.p-am .content .dtable td,.p-am .content .dtable th{padding-left:4px;padding-right:4px}
+
+.p-am .am-bar{display:flex;height:18px;border-radius:9px;overflow:hidden;background:#E5DBC8;margin:6px 0 4px}
+.p-am .am-bar .am-p{background:#37503F}
+.p-am .am-bar .am-i{background:#D99A33}
+.p-am .am-legend{margin:2px 0 10px}
+.p-am .am-dot{display:inline-block;width:10px;height:10px;border-radius:3px;margin:0 6px 0 0;vertical-align:baseline}
+.p-am .am-legend .am-dot + *{}
+.p-am .am-dp{background:#37503F}
+.p-am .am-di{background:#D99A33}
+.p-am .am-range{width:100%;accent-color:#B5761F;margin:2px 0 4px}
+.p-am .am-pick{cursor:pointer}
+.p-am .am-pick:hover td{background:#FBF3E4}
+.p-am .am-sv{color:var(--muted);font-weight:400;display:block}
+.p-am .am-leg{white-space:nowrap;margin-right:10px}
+.p-am .am-nw{white-space:nowrap}
+.p-am #amFast td:nth-child(3){text-align:right}
+.p-am #amFast{table-layout:fixed}
+.p-am #amFast th:nth-child(1){width:27%}
+.p-am #amFast th:nth-child(2){width:33%}
+.p-am #amFast td{overflow-wrap:break-word !important;word-break:normal}
+.p-am .am-one{border-top:1px solid var(--line);padding-top:10px;margin-top:8px}
+.p-am .am-on td{font-weight:700;color:var(--ink);background:#FBF3E4}
+.p-am #amPoint,.p-am #amFast,.p-am #amSch{display:table;width:100%}
+.p-am #amPoint td,.p-am #amPoint th,.p-am #amFast td,.p-am #amFast th,.p-am #amSch td,.p-am #amSch th{white-space:normal;overflow-wrap:anywhere}
+.p-am #amPoint td:nth-child(n+2){text-align:right}
+.p-am #amSch td,.p-am #amSch th{font-size:13.5px}
+.p-am .am-more{margin:6px 0 10px}
+@media (max-width:560px){.p-am #amSch{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}.p-am #amSch td,.p-am #amSch th{white-space:nowrap;overflow-wrap:normal}}
