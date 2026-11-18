@@ -216,6 +216,7 @@ const PAGES = [
   { file: 'blog/what-is-a-weighted-average/index.html', slug: '/blog/what-is-a-weighted-average/' },
   { file: 'blog/how-to-curve-grades/index.html', slug: '/blog/how-to-curve-grades/' },
   { file: 'about/index.html',           slug: '/about/' },
+  { file: 'whats-new/index.html',       slug: '/whats-new/' },
   { file: 'contact/index.html',         slug: '/contact/' },
   { file: 'privacy-policy/index.html',  slug: '/privacy-policy/' },
   { file: 'terms-of-use/index.html',    slug: '/terms-of-use/' },
@@ -609,6 +610,14 @@ function seoStamp(html, slug) {
   return html;
 }
 
+/* ---- page dates: md-files/lastmod.json = { slug: { hash, date } }. New slugs are seeded from the sitemap's existing <lastmod> (or today); the date moves only when the page body changes ---- */
+const LASTMOD_FILE = path.join(ROOT, 'md-files', 'lastmod.json');
+let LASTMOD = {};
+try { LASTMOD = JSON.parse(fs.readFileSync(LASTMOD_FILE, 'utf8')); } catch (e) {}
+const TODAY = new Date().toISOString().slice(0, 10);
+const smDate = {};
+try { for (const m of fs.readFileSync(path.join(ROOT, 'sitemap.xml'), 'utf8').matchAll(/<loc>https:\/\/calcthis\.co([^<]*)<\/loc>\s*<lastmod>([^<]*)<\/lastmod>/g)) smDate[m[1]] = m[2]; } catch (e) {}
+
 let changed = 0, warned = 0;
 for (const p of PAGES) {
   const fp = path.join(ROOT, p.file);
@@ -640,12 +649,34 @@ for (const p of PAGES) {
   // 4. SEO head stamp (idempotent): shared social tags + title length + breadcrumbs, same on every page
   html = seoStamp(html, p.slug);
 
+  // 5. page "last updated" date (2026-11-18): only moves when the page's own content changes (header, footer, asset version excluded)
+  {
+    const core = html.replace(HDR_RE, '').replace(FTR_RE, '').replace(/\?v=\d+/g, '').replace(/\r\n/g, '\n');
+    const hash = require('crypto').createHash('sha1').update(core).digest('hex').slice(0, 16);
+    const prev = LASTMOD[p.slug];
+    if (!prev) LASTMOD[p.slug] = { hash: hash, date: smDate[p.slug] || TODAY };
+    else if (prev.hash !== hash) LASTMOD[p.slug] = { hash: hash, date: TODAY };
+    const d = LASTMOD[p.slug].date;
+    const nice = new Date(d + 'T00:00:00Z').toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+    html = html.split('<!--UPDATED-->').join('Page last updated: <time datetime="' + d + '">' + nice + '</time>.');
+  }
+
   fs.writeFileSync(fp, html);
   changed++;
   console.log('  \u2713 ' + p.file + '  (current=' + p.slug + ')');
 }
 
 console.log('\nStamped ' + changed + ' page(s) at asset v=' + ver + (warned ? ('  [' + warned + ' warning(s)]') : ''));
+
+/* ---- write the page dates and mirror them into sitemap.xml <lastmod> ---- */
+fs.writeFileSync(LASTMOD_FILE, JSON.stringify(LASTMOD, null, 1) + '\n');
+try {
+  const smFile = path.join(ROOT, 'sitemap.xml');
+  let sm = fs.readFileSync(smFile, 'utf8'), n = 0;
+  sm = sm.replace(/(<loc>https:\/\/calcthis\.co([^<]*)<\/loc>\s*<lastmod>)([^<]*)(<\/lastmod>)/g, (a, x, slug, old, y) => { const e = LASTMOD[slug]; if (e && e.date !== old) { n++; return x + e.date + y; } return a; });
+  if (n) fs.writeFileSync(smFile, sm);
+  console.log('sitemap lastmod updated for ' + n + ' URL(s)');
+} catch (e) { console.warn('  ! sitemap lastmod not updated: ' + e.message); }
 
 
 /* ===== INDEXNOW:START ===== auto-submit all sitemap URLs to IndexNow (Bing/Yandex) ===== */

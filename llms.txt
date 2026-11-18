@@ -144,6 +144,7 @@
 - [CalcThis — Fast, Purpose-Built Calculators](https://calcthis.co/): CalcThis is a growing hub of fast, single-purpose calculators — construction, health & fitness, and school & grades. Free, instant, no sign-up.
 - [About](https://calcthis.co/about/): CalcThis is a free collection of purpose-built calculators for construction, health, and school. No sign-up, no ads mixed into results — just fast, accurate answers.
 - [Contact](https://calcthis.co/contact/): Get in touch with CalcThis. Questions, corrections, or a calculator you'd like us to build — send a message and a real person will read it.
+- [What's New](https://calcthis.co/whats-new/): Dated list of every calculator, improvement and correction added to CalcThis, newest first.
 - [Privacy Policy](https://calcthis.co/privacy-policy/): CalcThis privacy policy. We don't collect personal data. Learn how we use cookies and third-party services.
 - [Terms of Use](https://calcthis.co/terms-of-use/): Terms of use for CalcThis. Free calculators for informational purposes — please verify results with a qualified professional.
 

@@ -466,6 +466,10 @@
   "/contact/": {
     "t": "Contact CalcThis — Questions, Feedback & Corrections"
   },
+  "/whats-new/": {
+    "t": "What’s New on CalcThis — Updates and Corrections",
+    "d": "A dated list of the calculators, features and corrections added to CalcThis, newest first, including every fix to a published number."
+  },
   "/terms-of-use/": {
     "t": "Terms of Use — CalcThis"
   },

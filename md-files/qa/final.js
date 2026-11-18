@@ -29,7 +29,8 @@ function sidebyside(root, slug) {
   try {
     const cp = require('child_process');
     const head = cp.execFileSync('git', ['show', 'HEAD:' + slug + '/index.html'], { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], maxBuffer: 64 * 1024 * 1024 });
-    const norm = (t) => t.replace(/\r\n/g, '\n').replace(/\?v=\d+/g, '?v=0');
+    /* the shared header and footer blocks are stamped from partials on every build (a new menu link, the "Page last updated" line); they are not edits of the page itself (same rule as hash.js) */
+    const norm = (t) => t.replace(/\r\n/g, '\n').replace(/<!--HEADER:START-->[\s\S]*?<!--HEADER:END-->/, '').replace(/<!--FOOTER:START-->[\s\S]*?<!--FOOTER:END-->/, '').replace(/\?v=\d+/g, '?v=0');
     if (norm(head) === norm(fs.readFileSync(pf, 'utf8'))) {
       /* walk back to the newest commit that changed the page by more than the stamp */
       const lines = cp.execFileSync('git', ['log', '--format=%H %cs', '--', slug + '/index.html'], { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim().split('\n').filter(Boolean);
