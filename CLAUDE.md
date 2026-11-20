@@ -222,6 +222,8 @@ must be built from the article's actual units, every time, not pasted from a tem
 
 ## ⛔ SESSION HANDOFF — START HERE (rewritten 2026-11-08, end of session #6 PART 2: markup/profit margin/discount deployed, GLOBAL FIELD SYMBOLS v332-v336; full detail in `HANDOFF.md` §0000000000000020 = the FIRST section of the file — read it in full before replying)
 
+**NEWEST (2026-11-20, end of session #13, v357 live, 109 calculators, 240 pages): FREE LISTINGS CHECKED + TRUST FIXES, no calculator built. Read `HANDOFF.md` §0000000000000029 in full (first section after the banners), then §28 and §27; first reply = its ONE sync line, then work silently. DONE: AlternativeTo (declines calculators/suites) and Indie Hackers (low value) SKIPPED; visible contact address = help@calcthis.co everywhere (Cloudflare forward to his Gmail); feedback widget + Contact form stay on the Gmail FormSubmit endpoint (help@ endpoint took 10-15 s, do not retry), widget now thanks instantly, sends in the background with retry, opens a fresh form each time (he confirmed it works). NEXT (on his word "Start queue"): GSC re-request /about/ + homepage (inspect first), Bing homepage; ~2026-11-26 re-read GSC (checkpoint > 160 indexed); Dec 15 earliest AdSense review. Read a site's rules page BEFORE any listing. Do NOT add pages or text to "add value".**
+
 **NEWEST (2026-11-20, end of session #12, v355 live, no code changed): FREE LISTINGS track. Read `HANDOFF.md` §0000000000000028 in full (first section after the banners), then §27; first reply = its ONE sync line, then work silently. DONE: help@calcthis.co (Cloudflare Email Routing), SaaSHub listing submitted (pending approval), draft text in `md-files/calcthis-listings-targets.md`. NEXT: AlternativeTo (free, one listing a week), Indie Hackers, Show HN/Product Hunt; GSC re-request /about/ + request homepage + Bing homepage still open. His rules: free listings only, no bots, honest claims, no Reddit/social.**
 
 **(older) NEWEST (2026-11-18, end of session #11, v355 live, 109 calculators, 240 pages): ADSENSE "Low value content" track, not a calculator build. Read `HANDOFF.md` §0000000000000027 in full (first section after the banners) and `md-files/calcthis-adsense-plan.md`; first reply = its ONE sync line, then work silently. DONE: amortization v352, plan step 1 v354 (About method, /whats-new/, footer "Page last updated", lastmod), homepage H1 v355 ("Free Online Calculators and Unit Converters — Accurate, Sourced, Instant"), Bing submitted for whats-new + about. OPEN: GSC re-request /about/ + homepage (inspect first, request only "not on Google"), then plan steps 2-3 (Reddit comments, one listing a week, profiles, monthly data page), GSC re-read after Nov 26, checkpoints Nov 26 >160 indexed, Dec 8 >200, Dec 15 earliest AdSense review. At every release add an entry at the TOP of `md-files/gen-whatsnew-page.js`. Do NOT add pages or text to "add value".**
@@ -278,7 +280,7 @@ must be built from the article's actual units, every time, not pasted from a tem
 
 ## Project state
 
-- **Asset version:** v355 (live; homepage H1 changed 2026-11-18, 109 calculators, 240 pages)
+- **Asset version:** v357 (live; contact email help@calcthis.co + feedback widget fix 2026-11-20, 109 calculators, 240 pages)
 - **Total pages:** 230 live (sitemap)
 - **Model:** Sonnet 5
 
