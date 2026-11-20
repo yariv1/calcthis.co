@@ -26,3 +26,8 @@ Source of names: web search 2026-11-18 (ideaproof.io, vantaige.io, startupdirect
 
 Avoid: bulk submitters (DirSubmit, 240-directory one-click), paid listings, reciprocal-link directories (look manipulated, risk during AdSense review).
 Order of work: 1, 2, 3 first (text is the same), then 5 and 4 with a distinct angle, then the website directories.
+
+## Decisions 2026-11-20
+- AlternativeTo: SKIP. Its FAQ (why-wasn-t-my-software-app-approved) declines calculators, unit converters and suites of simple online tools; links are nofollow.
+- Indie Hackers: SKIP (his call, low value: nofollow links, founder audience, little traffic). Not forbidden, just not worth the time.
+- Rule going forward: read each site FAQ/rules page before preparing a listing.
