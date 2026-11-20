@@ -26,8 +26,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"ContactPage","name":"Contact CalcThis","url":"https://calcthis.co/contact/","description":"Get in touch with the CalcThis team with questions, corrections, or suggestions.","publisher":{"@type":"Organization","name":"CalcThis","url":"https://calcthis.co/","email":"getapps.support@gmail.com"}}</script>
-<link rel="stylesheet" href="/assets/style.css?v=355">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"ContactPage","name":"Contact CalcThis","url":"https://calcthis.co/contact/","description":"Get in touch with the CalcThis team with questions, corrections, or suggestions.","publisher":{"@type":"Organization","name":"CalcThis","url":"https://calcthis.co/","email":"help@calcthis.co"}}</script>
+<link rel="stylesheet" href="/assets/style.css?v=356">
 <style>
   /* ===== Contact page ===== */
   .p-contact .contact-card{margin-top:24px}
@@ -322,7 +322,7 @@
       </div>
     </div>
 
-    <p class="contact-alt">Prefer email? Reach us directly at <a href="mailto:getapps.support@gmail.com">getapps.support@gmail.com</a>.</p>
+    <p class="contact-alt">Prefer email? Reach us directly at <a href="mailto:help@calcthis.co">help@calcthis.co</a>.</p>
   </div>
 </main>
 
@@ -600,11 +600,11 @@
       <span aria-hidden="true">·</span>
       <a href="/privacy-policy/">Privacy policy</a>
     </nav>
-    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Page last updated: <time datetime="2026-10-31">October 31, 2026</time>. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Page last updated: <time datetime="2026-11-20">November 20, 2026</time>. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
   </footer>
 <!--FOOTER:END-->
 
-<script src="/assets/app.js?v=355"></script>
+<script src="/assets/app.js?v=356"></script>
 <script>
 (function(){
   var form = document.getElementById('contactForm');
@@ -629,7 +629,7 @@
     if(!EMAIL_RE.test(em)){ err.textContent = 'That email doesn\u2019t look right — please check it.'; email.focus(); return; }
 
     send.disabled = true; send.textContent = 'Sending\u2026';
-    fetch('https://formsubmit.co/ajax/getapps.support@gmail.com', {
+    fetch('https://formsubmit.co/ajax/help@calcthis.co', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
       body: JSON.stringify({
@@ -644,12 +644,12 @@
           form.style.display = 'none'; thanks.style.display = 'block';
         } else {
           send.disabled = false; send.textContent = 'Send message';
-          err.textContent = 'Couldn\u2019t send just now — please try again, or email getapps.support@gmail.com.';
+          err.textContent = 'Couldn\u2019t send just now — please try again, or email help@calcthis.co.';
         }
       })
       .catch(function(){
         send.disabled = false; send.textContent = 'Send message';
-        err.textContent = 'Couldn\u2019t send just now — please try again, or email getapps.support@gmail.com.';
+        err.textContent = 'Couldn\u2019t send just now — please try again, or email help@calcthis.co.';
       });
   });
 })();

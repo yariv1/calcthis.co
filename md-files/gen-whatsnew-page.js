@@ -4,6 +4,9 @@ const fs = require('fs'), path = require('path');
 const ROOT = path.join(__dirname, '..') + path.sep;
 const A = (slug, name) => { if (!fs.existsSync(ROOT + slug + '/index.html')) throw new Error('missing page ' + slug); return '<a href="/' + slug + '/">' + name + '</a>'; };
 const ENTRIES = [
+  ['2026-11-20', 'November 20, 2026', [
+    'Improved: the contact address is now help@calcthis.co on every page, and the feedback button and contact form send to it.',
+  ]],
   ['2026-11-14', 'November 14, 2026', [
     'New: ' + A('amortization-calculator', 'Amortization Calculator') + ' — a chart of every payment split into principal and interest, ten payment frequencies, extra payments and a full schedule.',
   ]],
@@ -51,7 +54,7 @@ html = html.replace(/<title>[^<]*<\/title>/, '<title>' + esc(TITLE) + '</title>'
   .replace(/(<meta name="description" content=")[^"]*(")/, '$1' + esc(DESC) + '$2').replace(/(<meta property="og:description" content=")[^"]*(")/, '$1' + esc(DESC) + '$2').replace(/(<meta name="twitter:description" content=")[^"]*(")/, '$1' + esc(DESC) + '$2')
   .replace(/(<meta property="og:url" content=")[^"]*(")/, '$1' + URL + '$2')
   .replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/, '<script type="application/ld+json">\n' + JSON.stringify({ '@context': 'https://schema.org', '@type': 'CollectionPage', name: TITLE.replace(/’/g, "'"), url: URL, description: DESC, inLanguage: 'en-US', isPartOf: { '@type': 'WebSite', name: 'CalcThis', url: 'https://calcthis.co/' } }, null, 2) + '\n</script>');
-const main = '<main class="legal-page">\n  <div class="legal-content">\n    <h1>What’s new on CalcThis</h1>\n    <p>Every calculator, improvement and correction, newest first. If you find a wrong number, write to <a href="mailto:getapps.support@gmail.com">getapps.support@gmail.com</a>; fixes to published numbers are listed here as corrections.</p>\n' +
+const main = '<main class="legal-page">\n  <div class="legal-content">\n    <h1>What’s new on CalcThis</h1>\n    <p>Every calculator, improvement and correction, newest first. If you find a wrong number, write to <a href="mailto:help@calcthis.co">help@calcthis.co</a>; fixes to published numbers are listed here as corrections.</p>\n' +
   ENTRIES.map((e) => '\n    <h2><time datetime="' + e[0] + '">' + e[1] + '</time></h2>\n    <ul>\n' + e[2].map((x) => '      <li>' + x + '</li>').join('\n') + '\n    </ul>').join('\n') + '\n  </div>\n</main>';
 html = html.replace(/<main class="legal-page">[\s\S]*?<\/main>/, main);
 fs.mkdirSync(ROOT + 'whats-new', { recursive: true });

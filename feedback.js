@@ -1,11 +1,11 @@
 /* calcthis.co feedback widget — shared, self-contained, theme-inheriting.
-   Renders a floating button + panel; submits to FormSubmit (getapps.support@gmail.com).
+   Renders a floating button + panel; submits to FormSubmit (help@calcthis.co).
    No dependencies. Inherits host page theme via CSS variables. */
 (function () {
   if (window.__fbWidget) return;
   window.__fbWidget = true;
 
-  var EMAIL = 'getapps.support@gmail.com';
+  var EMAIL = 'help@calcthis.co';
   var ENDPOINT = 'https://formsubmit.co/ajax/' + EMAIL;
   var SUBJECT = 'calcthis.co feedback';
 
