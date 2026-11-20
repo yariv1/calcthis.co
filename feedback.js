@@ -1,11 +1,11 @@
 /* calcthis.co feedback widget — shared, self-contained, theme-inheriting.
-   Renders a floating button + panel; submits to FormSubmit (help@calcthis.co).
+   Renders a floating button + panel; submits to FormSubmit (getapps.support@gmail.com).
    No dependencies. Inherits host page theme via CSS variables. */
 (function () {
   if (window.__fbWidget) return;
   window.__fbWidget = true;
 
-  var EMAIL = 'help@calcthis.co';
+  var EMAIL = 'getapps.support@gmail.com';
   var ENDPOINT = 'https://formsubmit.co/ajax/' + EMAIL;
   var SUBJECT = 'calcthis.co feedback';
 
@@ -86,8 +86,36 @@
     var form = ov.querySelector('#fbForm');
     var thanks = ov.querySelector('#fbThanks');
 
-    function open() { ov.classList.add('open'); setTimeout(function () { ta.focus(); }, 40); }
+    function reset() {
+      form.style.display = ''; thanks.style.display = 'none';
+      ta.value = ''; msg.textContent = ''; send.disabled = false;
+    }
+    function open() { reset(); ov.classList.add('open'); setTimeout(function () { ta.focus(); }, 40); }
     function close() { ov.classList.remove('open'); }
+
+    /* Messages are queued, the thank-you shows at once, and the post to FormSubmit
+       (slow: 10-15 s) runs in the background; unsent messages retry on the next page load. */
+    var QK = 'ct_fb_queue', mem = [], flushing = false;
+    function qGet() { try { return JSON.parse(localStorage.getItem(QK) || '[]'); } catch (e) { return mem; } }
+    function qSet(a) { mem = a; try { localStorage.setItem(QK, JSON.stringify(a)); } catch (e) {} }
+    function post(p) {
+      return fetch(ENDPOINT, {
+        method: 'POST', keepalive: true,
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(p)
+      }).then(function (r) { return r.json().catch(function () { return {}; }); })
+        .then(function (d) { return !!(d && (d.success === 'true' || d.success === true)); })
+        .catch(function () { return false; });
+    }
+    function flush() {
+      if (flushing) return;
+      var q = qGet(); if (!q.length) return;
+      flushing = true;
+      post(q[0]).then(function (ok) {
+        flushing = false;
+        if (ok) { qSet(qGet().slice(1)); flush(); }
+      });
+    }
 
     btn.addEventListener('click', open);
     ov.querySelector('#fbX').addEventListener('click', close);
@@ -97,28 +125,13 @@
     send.addEventListener('click', function () {
       var text = (ta.value || '').trim();
       if (!text) { msg.textContent = 'Please add a note first.'; ta.focus(); return; }
-      send.disabled = true; msg.textContent = 'Sending…';
-      fetch(ENDPOINT, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify({
-          message: text,
-          _subject: SUBJECT,
-          _template: 'table',
-          page: location.href
-        })
-      }).then(function (r) { return r.json().catch(function () { return {}; }); })
-        .then(function (d) {
-          if (d && (d.success === 'true' || d.success === true)) {
-            form.style.display = 'none'; thanks.style.display = 'block';
-            setTimeout(close, 2200);
-          } else {
-            send.disabled = false;
-            msg.textContent = 'Could not send — please try again.';
-          }
-        })
-        .catch(function () { send.disabled = false; msg.textContent = 'Could not send — please try again.'; });
+      var q = qGet(); q.push({ message: text, _subject: SUBJECT, _template: 'table', page: location.href });
+      qSet(q);
+      form.style.display = 'none'; thanks.style.display = 'block';
+      setTimeout(close, 2200);
+      flush();
     });
+    flush();
   }
 
   if (document.readyState === 'loading') {
