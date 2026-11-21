@@ -1,0 +1,19 @@
+{
+ "slug": "serial-dilution-calculator",
+ "hash": "85ab2081be57540d",
+ "shots": [
+  "serial-dilution-calculator-1-empty-mobile.png",
+  "serial-dilution-calculator-2-filled-mobile.png",
+  "serial-dilution-calculator-3-result-mobile.png",
+  "serial-dilution-calculator-4-advanced-mobile.png",
+  "serial-dilution-calculator-5-error-mobile.png",
+  "serial-dilution-calculator-6-after-chaos-mobile.png",
+  "serial-dilution-calculator-1-empty-desktop.png",
+  "serial-dilution-calculator-2-filled-desktop.png",
+  "serial-dilution-calculator-3-result-desktop.png",
+  "serial-dilution-calculator-4-advanced-desktop.png",
+  "serial-dilution-calculator-5-error-desktop.png",
+  "serial-dilution-calculator-6-after-chaos-desktop.png"
+ ],
+ "at": "2026-11-21T20:17:37.267Z"
+}

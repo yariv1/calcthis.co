@@ -1,6 +1,6 @@
 {
  "/": {
-  "hash": "cd61aae4f7a290b6",
+  "hash": "f0c21f51918d40f6",
   "date": "2026-11-21"
  },
  "/board-foot-calculator/": {
@@ -788,7 +788,7 @@
   "date": "2026-11-20"
  },
  "/whats-new/": {
-  "hash": "1ce3aa837715040e",
+  "hash": "cea0cd3d71c933bf",
   "date": "2026-11-21"
  },
  "/contact/": {
@@ -973,6 +973,10 @@
  },
  "/retatrutide-dosage-calculator/": {
   "hash": "e65c5897d0b13736",
+  "date": "2026-11-21"
+ },
+ "/serial-dilution-calculator/": {
+  "hash": "2067aa78917d60b0",
   "date": "2026-11-21"
  }
 }

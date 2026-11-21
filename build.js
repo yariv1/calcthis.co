@@ -94,6 +94,7 @@ const PAGES = [
   { file: 'mg-to-ml-calculator/index.html', slug: '/mg-to-ml-calculator/' },
   { file: 'dilution-calculator/index.html', slug: '/dilution-calculator/' },
   { file: 'retatrutide-dosage-calculator/index.html', slug: '/retatrutide-dosage-calculator/' },
+  { file: 'serial-dilution-calculator/index.html', slug: '/serial-dilution-calculator/' },
   { file: 'triangle-calculator/index.html',    slug: '/triangle-calculator/' },
   { file: 'mortgage-calculator/index.html',    slug: '/mortgage-calculator/' },
   { file: 'loan-calculator/index.html',        slug: '/loan-calculator/' },

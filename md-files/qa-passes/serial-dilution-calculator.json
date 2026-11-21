@@ -1,0 +1,36 @@
+{
+ "slug": "serial-dilution-calculator",
+ "pass": true,
+ "at": "2026-11-21T20:15:49.702Z",
+ "hash": "85ab2081be57540d",
+ "viewports": {
+  "mobile": {
+   "steps": 2900,
+   "fails": []
+  },
+  "desktop": {
+   "steps": 2900,
+   "fails": []
+  }
+ },
+ "oracle": {
+  "runs": 227,
+  "fails": [],
+  "comparisons": 5932
+ },
+ "shots": [
+  "md-files/qa-passes/shots/serial-dilution-calculator-1-empty-mobile.png",
+  "md-files/qa-passes/shots/serial-dilution-calculator-2-filled-mobile.png",
+  "md-files/qa-passes/shots/serial-dilution-calculator-3-result-mobile.png",
+  "md-files/qa-passes/shots/serial-dilution-calculator-4-advanced-mobile.png",
+  "md-files/qa-passes/shots/serial-dilution-calculator-5-error-mobile.png",
+  "md-files/qa-passes/shots/serial-dilution-calculator-6-after-chaos-mobile.png",
+  "md-files/qa-passes/shots/serial-dilution-calculator-1-empty-desktop.png",
+  "md-files/qa-passes/shots/serial-dilution-calculator-2-filled-desktop.png",
+  "md-files/qa-passes/shots/serial-dilution-calculator-3-result-desktop.png",
+  "md-files/qa-passes/shots/serial-dilution-calculator-4-advanced-desktop.png",
+  "md-files/qa-passes/shots/serial-dilution-calculator-5-error-desktop.png",
+  "md-files/qa-passes/shots/serial-dilution-calculator-6-after-chaos-desktop.png"
+ ],
+ "console": []
+}

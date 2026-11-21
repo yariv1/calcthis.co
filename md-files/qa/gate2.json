@@ -10,5 +10,6 @@
  "mg-to-ml-calculator",
  "dilution-calculator",
  "t-test-calculator",
- "retatrutide-dosage-calculator"
+ "retatrutide-dosage-calculator",
+ "serial-dilution-calculator"
 ]

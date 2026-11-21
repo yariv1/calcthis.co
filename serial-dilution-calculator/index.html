@@ -1,0 +1,864 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Serial Dilution Calculator: Tubes, Volumes, Titer</title>
+<meta name="description" content="Serial dilution calculator: the concentration of every tube, the volume to take and diluent to add, and the original count from a plate. Draws the tubes.">
+<link rel="canonical" href="https://calcthis.co/serial-dilution-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Serial Dilution Calculator: Tubes, Volumes, Titer">
+<meta property="og:description" content="Serial dilution calculator: the concentration of every tube, the volume to take and diluent to add, and the original count from a plate. Draws the tubes.">
+<meta property="og:url" content="https://calcthis.co/serial-dilution-calculator/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/datepicker.min.css">
+<link rel="stylesheet" href="/assets/style.css?v=363">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Serial Dilution Calculator",
+  "url": "https://calcthis.co/serial-dilution-calculator/",
+  "applicationCategory": "EducationalApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "Free serial dilution calculator: the concentration of every tube from the stock, the dilution factor and the number of tubes, a series from X down to Y, or your own list of concentrations; a volume planner that works backwards from the last tube, a smallest-pipette-volume check, error spread, a row of tubes drawn to scale and a plate-count back-calculation."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I calculate a serial dilution?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Divide the stock concentration by the dilution factor to get tube 1, then divide each tube by the factor again to get the next. For a stock of 1,000,000 and a factor of 10, the tubes are 100,000, 10,000, 1,000, 100, 10, 1. The last tube is 1,000,000 times weaker than the stock."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What does a 1:10 serial dilution mean?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A ratio of 1 : 10 means 1 part of the sample and 10 parts of diluent, so 11 parts in total and a factor of 11. A tenfold dilution, often called a 1 in 10 dilution, is 1 part sample and 9 parts diluent, a factor of 10. The page has a switch for “Fold”, “Ratio 1 : X” and “Transfer / total”, so you can type it the way your protocol says it."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How much do I take and how much diluent do I add?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The volume to take is the volume you make divided by the step factor, and the diluent is what is left. To end with 100 µL in a tenfold series, tube 6 takes 10 µL and 90 µL of diluent. Earlier tubes must hold more, because the next tube takes some of their liquid."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why do the first tubes need more volume?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Each tube must give 100 µL for your assay and also feed the next tube. Working backwards from the last tube, tube 5 makes 110 µL and tube 1 makes 111.1 µL. The stock needed for the whole series is 11.11 µL."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I get from a concentration to another in the fewest tubes?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Choose “From X down to Y”, type both concentrations and either the factor or the number of tubes. With 1,000 to 1 and a factor of 10 you need 4 tubes; with 4 tubes the factor is 10."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I find the concentration of the original sample from a plate count?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Divide the colonies counted by the volume plated in millilitres, then divide by the concentration of the tube it came from (written as a fraction of the original). In the lab manual example, 32 colonies from 200 µL of a 10−6 tube is 160 per mL, so the original has 160,000,000 per mL. Plates with 30 to 300 colonies are called countable."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does pipetting error add up along the series?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Every step repeats the error of the one before it. If you type 2% for one step, 6 steps give about ±4.899% if the errors are independent and at most ±12% if they all point the same way. The number is yours: no pipette accuracy is assumed."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I use my own list of concentrations?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Choose “My own list” and type the concentration of every tube from the strongest to the weakest. The page gives the step between tubes, the volumes to take and diluent to add, and flags any tube that is not weaker than the one before."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What concentration units does it use?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Choose M, mM, µM, nM, pM, fM, mg/mL, µg/mL, ng/mL, %, cells/mL, CFU/mL, PFU/mL or ×. The unit is a label only: every tube uses the unit of your stock and nothing is converted."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "CalcThis",
+      "item": "https://calcthis.co/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Serial Dilution Calculator",
+      "item": "https://calcthis.co/serial-dilution-calculator/"
+    }
+  ]
+}
+</script>
+<meta property="og:site_name" content="CalcThis">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://calcthis.co/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="CalcThis — free, purpose-built calculators">
+<meta name="twitter:title" content="Serial Dilution Calculator: Tubes, Volumes, Titer">
+<meta name="twitter:description" content="Serial dilution calculator: the concentration of every tube, the volume to take and diluent to add, and the original count from a plate. Draws the tubes.">
+<meta name="twitter:image" content="https://calcthis.co/assets/og-default.png">
+</head>
+<body class="p-bmr p-sd">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <a class="hdr-back" href="/blog/" aria-label="Back to blog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-search"><div class="menu-sx"><input id="menuSearch" type="search" placeholder="Search calculators or states…" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Search calculators" enterkeyhint="search"></div><div class="menu-results" id="menuResults" hidden></div></div>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <span class="menu-col-head">Construction &amp; Gardening</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+          <a href="/paint-calculator/">Paint</a>
+          <a href="/wallpaper-calculator/">Wallpaper</a>
+          <a href="/square-footage-calculator/">Square Footage</a>
+          <a href="/tape-measure-fraction-calculator/">Tape Measure Fraction</a>
+          <a href="/stair-calculator/">Stair</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/vo2-max-calculator/">VO2 Max</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
+          <a href="/bmi-calculator/">BMI</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/ideal-weight-calculator/">Ideal Weight</a>
+          <a href="/lean-body-mass-calculator/">Lean Body Mass</a>
+          <a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio</a>
+          <a href="/gmi-calculator/">GMI</a>
+          <a href="/a1c-calculator/">A1C</a>
+          <a href="/calorie-calculator/">Calorie</a>
+          <a href="/calorie-deficit-calculator/">Calorie Deficit</a>
+          <a href="/bmr-calculator/">BMR</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/water-intake-calculator/">Water Intake</a>
+          <a href="/macro-calculator/">Macro</a>
+          <a href="/protein-intake-calculator/">Protein Intake</a>
+          <a href="/steps-to-miles-calculator/">Steps to Miles</a>
+          <a href="/dog-age-calculator/">Dog Age</a>
+          <a href="/cat-age-calculator/">Cat Age</a>
+          <a href="/calories-burned-calculator/">Calories Burned</a>
+          <a href="/calories-burned-walking-calculator/">Calories Burned Walking</a>
+          <a href="/calories-burned-running-calculator/">Calories Burned Running</a>
+          <a href="/keto-calculator/">Keto</a>
+          <a href="/net-carb-calculator/">Net Carb</a>
+          <a href="/intermittent-fasting-calculator/">Intermittent Fasting</a>
+          <a href="/bsa-calculator/">BSA</a>
+          <a href="/dog-food-calculator/">Dog Food</a>
+          <a href="/ffmi-calculator/">FFMI</a>
+          <a href="/bulking-calculator/">Bulking</a>
+          <a href="/weight-loss-calculator/">Weight Loss</a>
+          <a href="/weight-loss-percentage-calculator/">Weight Loss %</a>
+          <a href="/max-heart-rate-calculator/">Max Heart Rate</a>
+          <a href="/caffeine-calculator/">Caffeine</a>
+          <a href="/caffeine-half-life-calculator/">Caffeine Half Life</a>
+          <a href="/fiber-calculator/">Fiber</a>
+          <a href="/creatine-calculator/">Creatine</a>
+          <a href="/vitamin-d-calculator/">Vitamin D</a>
+          <a href="/body-recomposition-calculator/">Body Recomposition</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/semester-grade-calculator/">Semester Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+          <a href="/grade-curve-calculator/">Grade Curve</a>
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/fraction-calculator/">Fraction</a>
+          <a href="/standard-deviation-calculator/">Standard Deviation</a>
+          <a href="/p-value-calculator/">P-Value</a>
+          <a href="/confidence-interval-calculator/">Confidence Interval</a>
+          <a href="/z-score-calculator/">Z Score</a>
+          <a href="/t-test-calculator/">T-Test</a>
+          <a href="/scientific-notation-calculator/">Scientific Notation</a>
+          <a href="/average-calculator/">Average</a>
+          <a href="/batting-average-calculator/">Batting Average</a>
+          <a href="/stock-average-calculator/">Stock Average</a>
+          <a href="/dice-average-calculator/">Dice Average</a>
+          <a href="/time-average-calculator/">Time Average</a>
+          <a href="/weighted-average-calculator/">Weighted Average</a>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+          <a href="/percentage-change-calculator/">Percentage Change</a>
+          <a href="/age-calculator/">Age</a>
+          <a href="/date-calculator/">Date</a>
+          <a href="/time-calculator/">Time</a>
+          <a href="/hours-calculator/">Hours</a>
+          <a href="/seconds-to-hours-calculator/">Seconds to Hours</a>
+          <a href="/minutes-to-hours-calculator/">Minutes to Hours</a>
+          <a href="/seconds-to-minutes-calculator/">Seconds to Minutes</a>
+          <a href="/triangle-calculator/">Triangle</a>
+          <a href="/random-number-generator/">Random Number</a>
+          <span class="menu-col-head">Cooking &amp; Kitchen</span>
+          <a href="/recipe-converter/">Recipe Converter</a>
+          <a href="/turkey-cooking-time-calculator/">Turkey Cooking Time</a>
+          <a href="/turkey-thawing-time-calculator/">Turkey Thawing Time</a>
+          <a href="/turkey-size-calculator/">Turkey Size</a>
+          <span class="menu-col-head">Medication &amp; Lab</span>
+          <a href="/mg-to-ml-calculator/">mg to mL</a>
+          <a href="/dilution-calculator/">Dilution</a>
+          <a href="/retatrutide-dosage-calculator/">Retatrutide Dosage</a>
+          <a href="/serial-dilution-calculator/" class="current">Serial Dilution</a>
+          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
+          <!--UNITNAV:START-->
+          <span class="menu-col-head">Unit Converters</span>
+          <a href="/unit-converter/">Unit Converter</a>
+          <a href="/length-converter/">Length Converter</a>
+          <a href="/weight-converter/">Weight Converter</a>
+          <a href="/volume-converter/">Volume Converter</a>
+          <a href="/temperature-converter/">Temperature Converter</a>
+          <a href="/area-converter/">Area Converter</a>
+          <a href="/speed-converter/">Speed Converter</a>
+          <a href="/data-storage-converter/">Data Storage Converter</a>
+          <a href="/cooking-converter/">Cooking Converter</a>
+          <a href="/px-to-rem-converter/">PX to REM Converter</a>
+          <!--UNITNAV:END-->
+          <span class="menu-col-head">Money &amp; Finance</span>
+          <a href="/mortgage-calculator/">Mortgage</a>
+          <a href="/loan-calculator/">Loan</a>
+          <a href="/auto-loan-calculator/">Auto Loan</a>
+          <a href="/car-sales-tax-calculator/">Car Sales Tax</a>
+          <a href="/overtime-calculator/">Overtime</a>
+          <a href="/salary-calculator/">Salary</a>
+          <a href="/markup-calculator/">Markup</a>
+          <a href="/profit-margin-calculator/">Profit Margin</a>
+          <a href="/discount-calculator/">Discount</a>
+          <a href="/commission-calculator/">Commission</a>
+          <a href="/realtor-commission-calculator/">Realtor Commission</a>
+          <a href="/unit-price-calculator/">Unit Price</a>
+          <a href="/compound-interest-calculator/">Compound Interest</a>
+          <a href="/amortization-calculator/">Amortization</a>
+          <!--STAXNAV:START-->
+          <a href="/sales-tax-calculator/">Sales Tax</a>
+          <a href="/sales-tax-calculator/california/">California Sales Tax</a>
+          <a href="/sales-tax-calculator/chicago/">Chicago Sales Tax</a>
+          <a href="/sales-tax-calculator/florida/">Florida Sales Tax</a>
+          <a href="/sales-tax-calculator/las-vegas/">Las Vegas Sales Tax</a>
+          <a href="/sales-tax-calculator/los-angeles/">Los Angeles Sales Tax</a>
+          <a href="/sales-tax-calculator/michigan/">Michigan Sales Tax</a>
+          <a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax</a>
+          <a href="/sales-tax-calculator/missouri/">Missouri Sales Tax</a>
+          <a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax</a>
+          <a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax</a>
+          <a href="/sales-tax-calculator/north-carolina/">North Carolina Sales Tax</a>
+          <a href="/sales-tax-calculator/ohio/">Ohio Sales Tax</a>
+          <a href="/sales-tax-calculator/texas/">Texas Sales Tax</a>
+          <a href="/sales-tax-calculator/virginia/">Virginia Sales Tax</a>
+          <!--STAXNAV:END-->
+          <a href="/tip-calculator/">Tip</a>
+          <a href="/how-much-to-tip/">How Much to Tip</a>
+        </div>
+        <!--PAYNAV:START-->
+        <div class="menu-col">
+          <span class="menu-col-head">Paycheck Calculators</span>
+          <a href="/paycheck-calculator/">Paycheck Calculator (all states)</a>
+          <a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a>
+          <a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arkansas/">Arkansas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/california/">California Paycheck Calculator</a>
+          <a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a>
+          <a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a>
+          <a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/hawaii/">Hawaii Paycheck Calculator</a>
+          <a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a>
+          <a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a>
+          <a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a>
+          <a href="/paycheck-calculator/louisiana/">Louisiana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a>
+          <a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a>
+          <a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a>
+          <a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a>
+          <a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nebraska/">Nebraska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a>
+          <a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a>
+          <a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a>
+          <a href="/paycheck-calculator/oklahoma/">Oklahoma Paycheck Calculator</a>
+          <a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a>
+          <a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a>
+          <a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a>
+          <a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/utah/">Utah Paycheck Calculator</a>
+          <a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wisconsin/">Wisconsin Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a>
+        </div>
+        <!--PAYNAV:END-->
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">Concentration of every tube · volumes to pipette · from X down to Y · plate count</div>
+    <h1>Serial Dilution Calculator</h1>
+    <p>Type the <strong>stock concentration</strong>, the <strong>dilution factor</strong> and the <strong>number of tubes</strong>, and see the concentration of every tube drawn as a row of tubes. For a stock of 1,000,000, a tenfold factor and 6 tubes, tube 6 is <strong>1</strong>, a total dilution of 1,000,000×. Add how much each tube must give for your assay and the page works <strong>backwards</strong> to the volume to make, the volume to take and the diluent to add in every tube. Type a count from a plate to find the concentration of the original sample.</p>
+  </section>
+
+  <div class="grid">
+
+    <!-- INPUT -->
+    <div class="card">
+      <div class="card-pad">
+        <div class="sl-head"><h2 class="card-h2">Your series</h2><button class="linkbtn" id="sdClear" type="button">Clear fields</button></div>
+        <div class="two"><div class="fld"><span class="lab">Stock concentration</span><div class="cf-box"><input id="sdStock" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 1e9" aria-label="Stock concentration"></div></div><div class="fld"><span class="lab">Unit <span class="unit">a label only</span></span><div class="csel" id="sdUnit" data-value="cfuml" aria-label="Concentration unit"><button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false"><span class="csel-val">CFU/mL</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="csel-panel" role="listbox"></div></div></div></div>
+        <p class="cb-note" id="sdStockN"></p>
+        <p class="cb-note" style="margin:-2px 0 10px"><button class="linkbtn" id="sdEx" type="button">Try an example</button></p>
+        <div class="ctl-row" style="display:block"><span class="ctl-lab" style="display:block;margin-bottom:6px">How do you set the series?</span><div class="modeseg" id="sdMode" role="group" aria-label="How do you set the series?"><button class="on" type="button" data-v="factor">Factor and tubes</button><button type="button" data-v="range">From X down to Y</button><button type="button" data-v="list">My own list</button></div></div>
+        <div class="fld"><span class="lab">Volumes in <span class="unit">every volume on this page</span></span><div class="csel" id="sdVu" data-value="ul" aria-label="Volumes in"><button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false"><span class="csel-val">µL</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="csel-panel" role="listbox"></div></div></div>
+        <div id="sdFtW"><div class="ctl-row" style="display:block"><span class="ctl-lab" style="display:block;margin-bottom:6px">Type the dilution as</span><div class="modeseg" id="sdFt" role="group" aria-label="Type the dilution as"><button class="on" type="button" data-v="fold">Fold (10)</button><button type="button" data-v="ratio">Ratio 1 : X</button><button type="button" data-v="tv">Transfer / total</button></div></div></div>
+        <div id="sdFacW">
+          <div id="sdFacF"><div class="fld"><span class="lab"><span id="sdFactorLab">Dilution factor (fold)</span> <span class="unit" id="sdFactorUnit">e.g. 10 = tenfold</span></span><div class="cf-box"><input id="sdFactor" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 10" aria-label="Dilution factor"></div></div></div>
+          <div id="sdTVW" style="display:none"><div class="two"><div class="fld"><span class="lab">Volume you transfer</span><div class="cf-box"><input id="sdT" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 100" aria-label="Volume you transfer"></div></div><div class="fld"><span class="lab">Total volume after adding diluent</span><div class="cf-box"><input id="sdV" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 1000" aria-label="Total volume after adding diluent"></div></div></div></div>
+          <p class="cb-note" id="sdFacN"></p>
+        </div>
+        <div id="sdNW">
+          <div class="fld"><span class="lab">Number of tubes <span class="unit">steps</span></span><div class="cf-box"><input id="sdN" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 6" aria-label="Number of tubes"></div></div>
+          <p class="cb-note" id="sdNN"></p>
+          <div class="chips" id="sdPre" role="group" aria-label="Common series"><button type="button" data-f="2" data-n="8">2× · 8 tubes</button><button type="button" data-f="3" data-n="6">3× · 6 tubes</button><button type="button" data-f="5" data-n="6">5× · 6 tubes</button><button type="button" data-f="10" data-n="6">10× · 6 tubes</button><button type="button" data-f="3.16227766" data-n="6">Half-log (√10) · 6 tubes</button></div>
+        </div>
+        <div id="sdRngW" style="display:none"><div class="two"><div class="fld"><span class="lab">First tube</span><div class="cf-box"><input id="sdFrom" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 1000" aria-label="First tube"></div></div><div class="fld"><span class="lab">Last tube</span><div class="cf-box"><input id="sdTo" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 1" aria-label="Last tube"></div></div></div><p class="cb-note" id="sdRngN"></p></div>
+        <div id="sdListW" style="display:none"><div class="fld"><span class="lab">Concentration of every tube <span class="unit">strongest first</span></span><textarea id="sdList" rows="3" autocomplete="off" placeholder="e.g. 1000, 100, 10, 1" aria-label="Concentration of every tube"></textarea></div><p class="cb-note" id="sdListN"></p></div>
+        <div class="proj-sep"></div>
+        <p class="bm-h">Volumes <span class="unit" style="font-weight:400">optional</span></p>
+        <div class="fld"><span class="lab">Liquid each tube must give <span class="unit">for your assay</span></span><div class="cf-box"><input id="sdVol" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 100" aria-label="Liquid each tube must give"></div></div>
+        <p class="cb-note" id="sdVolN"></p>
+        <div class="res-hint" id="sdHint" style="display:none;text-align:left;margin:4px 0 8px"></div>
+        <div id="sdAdvIn" style="display:none">
+          <div class="proj-sep"></div>
+          <div class="ctl-row" style="display:block"><span class="ctl-lab" style="display:block;margin-bottom:6px">Show the numbers as</span><div class="modeseg" id="sdFm" role="group" aria-label="Show the numbers as"><button class="on" type="button" data-v="a">Normal</button><button type="button" data-v="s">Scientific</button></div></div>
+          <div class="ctl-row" style="display:block"><span class="ctl-lab" style="display:block;margin-bottom:6px">Significant digits in the concentrations</span><div class="modeseg" id="sdSg" role="group" aria-label="Significant digits in the concentrations"><button type="button" data-v="3">3</button><button class="on" type="button" data-v="4">4</button><button type="button" data-v="5">5</button><button type="button" data-v="6">6</button></div></div>
+          <div id="sdFirstW"><div class="fld"><span class="lab">First tube starts at <span class="unit">if not stock ÷ factor</span></span><div class="cf-box"><input id="sdFirst" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 1000" aria-label="First tube starts at"></div></div><p class="cb-note" id="sdFirstN"></p></div>
+          <div class="fld"><span class="lab">Replicates <span class="unit">optional</span></span><div class="cf-box"><input id="sdRep" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 3" aria-label="Replicates"></div></div>
+          <p class="cb-note" id="sdRepN"></p>
+          <div class="fld"><span class="lab">Extra for pipetting loss <span class="unit">%</span></span><div class="cf-box"><input id="sdLoss" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 10" aria-label="Extra for pipetting loss"></div></div>
+          <p class="cb-note" id="sdLossN"></p>
+          <div class="fld"><span class="lab">Smallest volume you can pipette <span class="unit">in the volume unit above</span></span><div class="cf-box"><input id="sdMin" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 5" aria-label="Smallest volume you can pipette"></div></div>
+          <p class="cb-note" id="sdMinN"></p>
+          <div class="ctl-row" style="display:block"><span class="ctl-lab" style="display:block;margin-bottom:6px">The error of one step is given as</span><div class="modeseg" id="sdEt" role="group" aria-label="The error of one step is given as"><button class="on" type="button" data-v="p">Percent</button><button type="button" data-v="v">Volume</button></div></div>
+          <div class="fld"><span class="lab">Error of one dilution step <span class="unit" id="sdErrUnit">%</span></span><div class="cf-box"><input id="sdErr" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 2" aria-label="Error of one dilution step"></div></div>
+          <p class="cb-note" id="sdErrN"></p>
+          <p class="bm-h">Single dilution from the stock <span class="unit" style="font-weight:400">C1 × V1 = C2 × V2</span></p>
+          <div class="two"><div class="fld"><span class="lab">Concentration you want</span><div class="cf-box"><input id="sdC2" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 1000" aria-label="Concentration you want"></div></div><div class="fld"><span class="lab">Final volume you want <span class="unit">volume unit above</span></span><div class="cf-box"><input id="sdV2" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 500" aria-label="Final volume you want"></div></div></div>
+          <p class="cb-note" id="sdC1N"></p>
+          <p class="bm-h">Names for the copied protocol <span class="unit" style="font-weight:400">optional</span></p>
+          <div class="two"><div class="fld"><span class="lab">Stock name</span><div class="cf-box"><input id="sdSN" type="text" autocomplete="off" placeholder="e.g. culture" aria-label="Stock name"></div></div><div class="fld"><span class="lab">Diluent name</span><div class="cf-box"><input id="sdDN" type="text" autocomplete="off" placeholder="e.g. saline" aria-label="Diluent name"></div></div></div>
+          <p class="cb-note" id="sdNmN"></p>
+          <p class="bm-h">Count back from a plate <span class="unit" style="font-weight:400">optional</span></p>
+          <div class="fld"><span class="lab">Colonies or plaques counted</span><div class="cf-box"><input id="sdCnt" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 32" aria-label="Colonies or plaques counted"></div></div>
+          <div class="two"><div class="fld"><span class="lab">Volume plated</span><div class="cf-box"><input id="sdPlate" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 200" aria-label="Volume plated"></div></div><div class="ctl-row" style="display:block"><span class="ctl-lab" style="display:block;margin-bottom:6px">Plated in</span><div class="modeseg" id="sdPu" role="group" aria-label="Plated in"><button class="on" type="button" data-v="ul">µL</button><button type="button" data-v="ml">mL</button></div></div></div>
+          <div class="fld"><span class="lab">Tube that was plated <span class="unit">leave empty for the last tube</span></span><div class="cf-box"><input id="sdTubeN" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 6" aria-label="Tube that was plated"></div></div>
+          <p class="cb-note" id="sdTubeNN"></p>
+          <p class="cb-note" id="sdCbN"></p>
+        </div>
+        <div class="add-row split" style="margin-top:16px">
+          <span></span>
+          <button class="advbtn" id="sdAdvBtn" type="button">
+            <span id="sdAdvBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div class="card">
+      <div class="card-pad">
+        <div class="bf-res">
+          <div class="res-lab" id="sdLab">Concentration of the last tube</div>
+          <div class="res-big"><span id="sdBig">—</span></div>
+          <div class="res-sub" id="sdSub" data-empty="Type the stock, the dilution factor and the number of tubes to see every tube.">Type the stock, the dilution factor and the number of tubes to see every tube.</div>
+        </div>
+        <div id="sdBody" style="display:none">
+          <p class="res-tip adv-tip" id="sdTip"></p>
+          <div id="sdWarn" style="display:none"></div>
+          <p class="bm-h">Your tubes</p>
+          <div class="sd-tubes" id="sdTubes"></div>
+          <p class="rt-cap" id="sdTubesCap"></p>
+          <p class="bm-h">Tube by tube</p>
+          <div class="rt-wide"><table class="dtable" id="sdTab"></table></div>
+          <p class="bm-h">The numbers <button class="linkbtn" type="button" data-copy="sdCopyTxt" style="margin-left:8px">Copy result</button></p>
+          <table class="dtable" id="sdNums"></table>
+          <div id="sdCopyTxt" style="display:none"></div>
+          <div id="sdCbWrap" style="display:none">
+            <p class="bm-h">The original sample</p>
+            <p class="sd-cb" id="sdCb"></p>
+          </div>
+          <p class="bm-h">How it was worked out</p>
+          <ol class="sd-steps" id="sdSteps"></ol>
+          <p class="cb-note">For laboratory planning, not a validated protocol. Mix every tube well and change the tip between tubes.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- mobile sticky bar -->
+  <div class="mbar" id="mbar">
+    <span class="mbar-lab" id="sdMLab">Last tube</span>
+    <div class="mbar-vals"><b id="sdMVal">—</b></div>
+  </div>
+
+  <div class="related-calcs">
+    <p class="related-calcs-h">More calculators that may interest you</p>
+    <div class="pills">
+      <a class="pill" href="/dilution-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h10l-1 18H8L7 3zM7 9h10"/></svg>
+        Dilution Calculator
+      </a>
+      <a class="pill" href="/mg-to-ml-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 5h12M12 5v8l-5 10a3 3 0 0 0 3 4h12a3 3 0 0 0 3-4l-5-10V5"/></svg>
+        mg to mL Calculator
+      </a>
+      <a class="pill" href="/scientific-notation-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 18L18 6M8 8h.01M16 16h.01"/></svg>
+        Scientific Notation Calculator
+      </a>
+      <a class="pill" href="/confidence-interval-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h18M7 8v8M17 8v8"/></svg>
+        Confidence Interval Calculator
+      </a>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use the serial dilution calculator</h2>
+        <p>Type the <strong>stock concentration</strong> and choose its unit. Then choose how you set the series: <strong>Factor and tubes</strong> (a factor such as 10 and a number of tubes), <strong>From X down to Y</strong> (the first and last concentration, and the page finds the factor or the number of tubes), or <strong>My own list</strong> (the concentration of every tube).</p>
+        <p>Add <strong>the liquid each tube must give</strong> and the page works out how much to make, take and dilute in every tube, starting from the last. Under <strong>Go advanced</strong> you can add replicates, an allowance for pipetting loss, the smallest volume you can pipette, the error of one step, and a plate count to find the original concentration.</p>
+        <h2>The formulas</h2>
+        <div class="formula">
+          tube k = first tube ÷ factor^(k − 1)
+          <small>TUBE 1 = STOCK ÷ FACTOR · TAKE = MADE ÷ FACTOR · DILUENT = MADE − TAKE · ORIGINAL = COUNT ÷ VOLUME PLATED (mL) ÷ TUBE DILUTION</small>
+        </div>
+        <p>Worked out with this calculator: a stock of 1,000,000 diluted 10-fold in 6 tubes gives 100,000, 10,000, 1,000, 100, 10, 1. To end with 100 µL in every tube, working backwards:</p>
+        <table class="dtable"><thead><tr><th>Tube</th><th>Concentration</th><th>Pipette: take + diluent = make</th></tr></thead><tbody><tr><td>1</td><td>100,000</td><td>11.11 µL of stock + 100 µL diluent = 111.1 µL</td></tr><tr><td>2</td><td>10,000</td><td>11.11 µL of tube 1 + 100 µL diluent = 111.1 µL</td></tr><tr><td>3</td><td>1,000</td><td>11.11 µL of tube 2 + 99.99 µL diluent = 111.1 µL</td></tr><tr><td>4</td><td>100</td><td>11.1 µL of tube 3 + 99.9 µL diluent = 111 µL</td></tr><tr><td>5</td><td>10</td><td>11 µL of tube 4 + 99 µL diluent = 110 µL</td></tr><tr><td>6</td><td>1</td><td>10 µL of tube 5 + 90 µL diluent = 100 µL</td></tr></tbody></table>
+        <p>The whole series needs 11.11 µL of stock and 588.9 µL of diluent.</p>
+        <h2>Common series</h2>
+        <p>The total dilution after 6 tubes for a stock of 1,000,000:</p>
+        <table class="dtable"><thead><tr><th>Factor per step</th><th>Ratio</th><th>Last tube after 6 tubes</th><th>Total dilution</th></tr></thead><tbody><tr><td>2×</td><td>1 : 1</td><td>15,625</td><td>64×</td></tr><tr><td>3×</td><td>1 : 2</td><td>1,372</td><td>729×</td></tr><tr><td>5×</td><td>1 : 4</td><td>64</td><td>15,625×</td></tr><tr><td>10×</td><td>1 : 9</td><td>1</td><td>1,000,000×</td></tr></tbody></table>
+        <p>A half-log series uses a factor of √10 = 3.162: 316,228, 100,000, 31,623, 10,000 for four tubes, so every second tube is a tenfold step.</p>
+      </div>
+
+      <div>
+        <h2>From X down to Y</h2>
+        <p>Choose “From X down to Y” when you know the concentrations you want. From 1,000 down to 1 with a factor of 10 takes 4 tubes; with 4 tubes the factor is 10. If the factor does not divide the range evenly, the last step is smaller so the last tube lands exactly on the concentration you typed.</p>
+        <h2>Counting back from a plate</h2>
+        <p>Plate a known volume from one tube and count the colonies. Divide the count by the volume in millilitres, then by the dilution of that tube. In the lab manual example, 32 colonies from 200 µL of a 10<sup>−6</sup> tube is 32 ÷ 0.2 = 160 per mL, and 160 ÷ 10<sup>−6</sup> = 160,000,000 per mL in the original. A count of 30 to 300 is the range the manual calls countable.</p>
+        <h2>Error and the smallest volume</h2>
+        <p>Every step repeats the error of the one before it. With 2% per step, 6 steps give about ±4.899% for independent errors and at most ±12%. If a transfer is smaller than the smallest volume you can pipette, the page flags it: use a smaller factor, more liquid in the tube, or an extra step.</p>
+        <h2>What the calculator does not do</h2>
+        <p>It does not choose a factor, a volume or a pipette for you, it does not convert between a mass and a molar concentration, and it does not replace your protocol. It does the arithmetic with the numbers you type.</p>
+        <h2>Related tools</h2>
+        <p>For a single dilution use the <a href="/dilution-calculator/">dilution calculator</a>; for milligrams to milliliters the <a href="/mg-to-ml-calculator/">mg to mL calculator</a>; for very large or small counts the <a href="/scientific-notation-calculator/">scientific notation calculator</a>; and for the uncertainty of a mean the <a href="/confidence-interval-calculator/">confidence interval calculator</a>.</p>
+        <h2>Sources</h2>
+        <ul>
+          <li>The plate-count back-calculation (colonies ÷ volume plated in mL, then divided by the dilution of the tube) and the range of 30 to 300 colonies for a countable plate: Pakpour and Horgan, General Microbiology Laboratory Manual, Lab 9 “Standard Plate Count” (LibreTexts, read 2026-11-22). Its example, 32 colonies from 200 µL of a 10<sup>−6</sup> tube, gives 160 per mL and 1.6 × 10<sup>8</sup> per mL in the original, and is the example used here.</li>
+          <li>The series arithmetic (concentration of tube k = first tube ÷ factor<sup>k − 1</sup>, the volume to take = volume to make ÷ the step ratio) is plain division, the same on every calculator opened on 2026-11-22: Omnicalculator, AAT Bioquest, calculate.co.nz, ConductScience, Easy Unit Converter, dilution.phage.org (Abedon) and Pearson. The page lets you type the concentration unit as a label and never converts between a mass and a molar unit.</li>
+          <li>Pipetting error and the smallest volume your pipette handles: no figure is taken from any calculator. You type your own, and the page shows what it does to the series. Other calculators advise preparing extra volume for pipetting loss; the percent you add here is yours.</li>
+        </ul>
+        <p><small>For laboratory planning, not a validated protocol. The page does arithmetic with the numbers you type. Mix every tube well and change the tip between tubes; check the plan with your own protocol or supervisor.</small></p>
+      </div>
+    </div>
+
+    <h2 id="sdFaq" style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>How do I calculate a serial dilution?</summary><p>Divide the stock concentration by the dilution factor to get tube 1, then divide each tube by the factor again to get the next. For a stock of 1,000,000 and a factor of 10, the tubes are 100,000, 10,000, 1,000, 100, 10, 1. The last tube is 1,000,000 times weaker than the stock.</p></details>
+    <details class="faq"><summary>What does a 1:10 serial dilution mean?</summary><p>A ratio of 1 : 10 means 1 part of the sample and 10 parts of diluent, so 11 parts in total and a factor of 11. A tenfold dilution, often called a 1 in 10 dilution, is 1 part sample and 9 parts diluent, a factor of 10. The page has a switch for “Fold”, “Ratio 1 : X” and “Transfer / total”, so you can type it the way your protocol says it.</p></details>
+    <details class="faq"><summary>How much do I take and how much diluent do I add?</summary><p>The volume to take is the volume you make divided by the step factor, and the diluent is what is left. To end with 100 µL in a tenfold series, tube 6 takes 10 µL and 90 µL of diluent. Earlier tubes must hold more, because the next tube takes some of their liquid.</p></details>
+    <details class="faq"><summary>Why do the first tubes need more volume?</summary><p>Each tube must give 100 µL for your assay and also feed the next tube. Working backwards from the last tube, tube 5 makes 110 µL and tube 1 makes 111.1 µL. The stock needed for the whole series is 11.11 µL.</p></details>
+    <details class="faq"><summary>How do I get from a concentration to another in the fewest tubes?</summary><p>Choose “From X down to Y”, type both concentrations and either the factor or the number of tubes. With 1,000 to 1 and a factor of 10 you need 4 tubes; with 4 tubes the factor is 10.</p></details>
+    <details class="faq"><summary>How do I find the concentration of the original sample from a plate count?</summary><p>Divide the colonies counted by the volume plated in millilitres, then divide by the concentration of the tube it came from (written as a fraction of the original). In the lab manual example, 32 colonies from 200 µL of a 10<sup>−6</sup> tube is 160 per mL, so the original has 160,000,000 per mL. Plates with 30 to 300 colonies are called countable.</p></details>
+    <details class="faq"><summary>Does pipetting error add up along the series?</summary><p>Yes. Every step repeats the error of the one before it. If you type 2% for one step, 6 steps give about ±4.899% if the errors are independent and at most ±12% if they all point the same way. The number is yours: no pipette accuracy is assumed.</p></details>
+    <details class="faq"><summary>Can I use my own list of concentrations?</summary><p>Yes. Choose “My own list” and type the concentration of every tube from the strongest to the weakest. The page gives the step between tubes, the volumes to take and diluent to add, and flags any tube that is not weaker than the one before.</p></details>
+    <details class="faq"><summary>What concentration units does it use?</summary><p>Choose M, mM, µM, nM, pM, fM, mg/mL, µg/mL, ng/mL, %, cells/mL, CFU/mL, PFU/mL or ×. The unit is a label only: every tube uses the unit of your stock and nothing is converted.</p></details>
+  </section>
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+      <div class="footer-stack">
+<div class="footer-col" style="order:1">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+          <li><a href="/paint-calculator/">Paint Calculator</a></li>
+          <li><a href="/wallpaper-calculator/">Wallpaper Calculator</a></li>
+          <li><a href="/square-footage-calculator/">Square Footage Calculator</a></li>
+          <li><a href="/tape-measure-fraction-calculator/">Tape Measure Fraction Calculator</a></li>
+          <li><a href="/stair-calculator/">Stair Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:5">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Cooking &amp;</span> <span class="ft2">Kitchen</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/recipe-converter/">Recipe Converter</a></li>
+          <li><a href="/turkey-cooking-time-calculator/">Turkey Cooking Time Calculator</a></li>
+          <li><a href="/turkey-thawing-time-calculator/">Turkey Thawing Time Calculator</a></li>
+          <li><a href="/turkey-size-calculator/">Turkey Size Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:5">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Medication &amp;</span> <span class="ft2">Lab</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/mg-to-ml-calculator/">mg to mL Calculator</a></li>
+          <li><a href="/dilution-calculator/">Dilution Calculator</a></li>
+          <li><a href="/retatrutide-dosage-calculator/">Retatrutide Dosage Calculator</a></li>
+          <li><a href="/serial-dilution-calculator/">Serial Dilution Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:6">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Money &amp;</span> <span class="ft2">Finance</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/mortgage-calculator/">Mortgage Calculator</a></li>
+          <li><a href="/loan-calculator/">Loan Calculator</a></li>
+          <li><a href="/auto-loan-calculator/">Auto Loan Calculator</a></li>
+          <li><a href="/car-sales-tax-calculator/">Car Sales Tax Calculator</a></li>
+          <li><a href="/overtime-calculator/">Overtime Calculator</a></li>
+          <li><a href="/salary-calculator/">Salary Calculator</a></li>
+          <li><a href="/markup-calculator/">Markup Calculator</a></li>
+          <li><a href="/profit-margin-calculator/">Profit Margin Calculator</a></li>
+          <li><a href="/discount-calculator/">Discount Calculator</a></li>
+          <li><a href="/commission-calculator/">Commission Calculator</a></li>
+          <li><a href="/realtor-commission-calculator/">Realtor Commission Calculator</a></li>
+          <li><a href="/unit-price-calculator/">Unit Price Calculator</a></li>
+          <li><a href="/compound-interest-calculator/">Compound Interest Calculator</a></li>
+          <li><a href="/amortization-calculator/">Amortization Calculator</a></li>
+          <!--STAXFOOT:START-->
+          <li><a href="/sales-tax-calculator/">Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/california/">California Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/chicago/">Chicago Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/florida/">Florida Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/las-vegas/">Las Vegas Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/los-angeles/">Los Angeles Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/michigan/">Michigan Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/missouri/">Missouri Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/north-carolina/">North Carolina Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/ohio/">Ohio Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/texas/">Texas Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/virginia/">Virginia Sales Tax Calculator</a></li>
+          <!--STAXFOOT:END-->
+          <li><a href="/tip-calculator/">Tip Calculator</a></li>
+          <li><a href="/how-much-to-tip/">How Much to Tip</a></li>
+        </ul>
+      </div>
+      </div>
+
+      <div class="footer-right">
+<div class="footer-col footer-col--two" style="order:2">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/vo2-max-calculator/">VO2 Max Calculator</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/bmi-calculator/">BMI Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/ideal-weight-calculator/">Ideal Weight Calculator</a></li>
+          <li><a href="/lean-body-mass-calculator/">Lean Body Mass Calculator</a></li>
+          <li><a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio Calculator</a></li>
+          <li><a href="/gmi-calculator/">GMI Calculator</a></li>
+          <li><a href="/a1c-calculator/">A1C Calculator</a></li>
+          <li><a href="/calorie-calculator/">Calorie Calculator</a></li>
+          <li><a href="/calorie-deficit-calculator/">Calorie Deficit Calculator</a></li>
+          <li><a href="/bmr-calculator/">BMR Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/water-intake-calculator/">Water Intake Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/protein-intake-calculator/">Protein Intake Calculator</a></li>
+          <li><a href="/steps-to-miles-calculator/">Steps to Miles Calculator</a></li>
+          <li><a href="/dog-age-calculator/">Dog Age Calculator</a></li>
+          <li><a href="/cat-age-calculator/">Cat Age Calculator</a></li>
+          <li><a href="/calories-burned-calculator/">Calories Burned Calculator</a></li>
+          <li><a href="/calories-burned-walking-calculator/">Calories Burned Walking Calculator</a></li>
+          <li><a href="/calories-burned-running-calculator/">Calories Burned Running Calculator</a></li>
+          <li><a href="/keto-calculator/">Keto Calculator</a></li>
+          <li><a href="/net-carb-calculator/">Net Carb Calculator</a></li>
+          <li><a href="/intermittent-fasting-calculator/">Intermittent Fasting Calculator</a></li>
+          <li><a href="/bsa-calculator/">BSA Calculator</a></li>
+          <li><a href="/dog-food-calculator/">Dog Food Calculator</a></li>
+          <li><a href="/ffmi-calculator/">FFMI Calculator</a></li>
+          <li><a href="/bulking-calculator/">Bulking Calculator</a></li>
+          <li><a href="/weight-loss-calculator/">Weight Loss Calculator</a></li>
+          <li><a href="/weight-loss-percentage-calculator/">Weight Loss Percentage Calculator</a></li>
+          <li><a href="/max-heart-rate-calculator/">Max Heart Rate Calculator</a></li>
+          <li><a href="/caffeine-calculator/">Caffeine Calculator</a></li>
+          <li><a href="/caffeine-half-life-calculator/">Caffeine Half Life Calculator</a></li>
+          <li><a href="/fiber-calculator/">Fiber Calculator</a></li>
+          <li><a href="/creatine-calculator/">Creatine Calculator</a></li>
+          <li><a href="/vitamin-d-calculator/">Vitamin D Calculator</a></li>
+          <li><a href="/body-recomposition-calculator/">Body Recomposition Calculator</a></li>
+        </ul>
+      </div>
+
+        <div class="footer-sub">
+<div class="footer-subcol">
+<div class="footer-col" style="order:3">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/semester-grade-calculator/">Semester Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+          <li><a href="/grade-curve-calculator/">Grade Curve Calculator</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:START-->
+<div class="footer-col" style="order:7">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Unit</span> <span class="ft2">Converters</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/unit-converter/">Unit Converter</a></li>
+          <li><a href="/length-converter/">Length Converter</a></li>
+          <li><a href="/weight-converter/">Weight Converter</a></li>
+          <li><a href="/volume-converter/">Volume Converter</a></li>
+          <li><a href="/temperature-converter/">Temperature Converter</a></li>
+          <li><a href="/area-converter/">Area Converter</a></li>
+          <li><a href="/speed-converter/">Speed Converter</a></li>
+          <li><a href="/data-storage-converter/">Data Storage Converter</a></li>
+          <li><a href="/cooking-converter/">Cooking Measurement Converter</a></li>
+          <li><a href="/px-to-rem-converter/">PX to REM Converter</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:END-->
+</div>
+
+<div class="footer-col" style="order:4">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/fraction-calculator/">Fraction Calculator</a></li>
+          <li><a href="/standard-deviation-calculator/">Standard Deviation Calculator</a></li>
+          <li><a href="/p-value-calculator/">P-Value Calculator</a></li>
+          <li><a href="/confidence-interval-calculator/">Confidence Interval Calculator</a></li>
+          <li><a href="/z-score-calculator/">Z-Score Calculator</a></li>
+          <li><a href="/t-test-calculator/">T-Test Calculator</a></li>
+          <li><a href="/scientific-notation-calculator/">Scientific Notation Calculator</a></li>
+          <li><a href="/weighted-average-calculator/">Weighted Average Calculator</a></li>
+          <li><a href="/average-calculator/">Average Calculator</a></li>
+          <li><a href="/batting-average-calculator/">Batting Average Calculator</a></li>
+          <li><a href="/stock-average-calculator/">Stock Average Calculator</a></li>
+          <li><a href="/dice-average-calculator/">Dice Average Calculator</a></li>
+          <li><a href="/time-average-calculator/">Time Average Calculator</a></li>
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+          <li><a href="/percentage-change-calculator/">Percentage Change Calculator</a></li>
+          <li><a href="/age-calculator/">Age Calculator</a></li>
+          <li><a href="/date-calculator/">Date Calculator</a></li>
+          <li><a href="/time-calculator/">Time Calculator</a></li>
+          <li><a href="/hours-calculator/">Hours Calculator</a></li>
+          <li><a href="/seconds-to-hours-calculator/">Seconds to Hours Calculator</a></li>
+          <li><a href="/minutes-to-hours-calculator/">Minutes to Hours Calculator</a></li>
+          <li><a href="/seconds-to-minutes-calculator/">Seconds to Minutes Calculator</a></li>
+          <li><a href="/triangle-calculator/">Triangle Calculator</a></li>
+          <li><a href="/random-number-generator/">Random Number Generator</a></li>
+        </ul>
+      </div>
+        </div>
+      </div>
+
+      <!--PAYFOOT:START-->
+      <div class="footer-col footer-col--wide">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Paycheck</span> <span class="ft2">Calculators</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/paycheck-calculator/">Paycheck Calculator (all states)</a></li>
+          <li><a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arkansas/">Arkansas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/california/">California Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/hawaii/">Hawaii Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/louisiana/">Louisiana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nebraska/">Nebraska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/oklahoma/">Oklahoma Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/utah/">Utah Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wisconsin/">Wisconsin Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a></li>
+        </ul>
+      </div>
+      <!--PAYFOOT:END-->
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/blog/">Blog</a>
+      <span aria-hidden="true">·</span>
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/whats-new/">What's new</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Page last updated: <time datetime="2026-11-21">November 21, 2026</time>. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+</div>
+
+<script src="/assets/app.js?v=363"></script>
+<script>CalcThis.initSerialDilCalc();</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>

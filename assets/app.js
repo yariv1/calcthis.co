@@ -27593,6 +27593,313 @@ CalcThis.initRetaCalc = function () {
 };
 /* RETA:END */
 
+/* SERIALDIL:BEGIN */
+/* =========================================================
+   SERIAL DILUTION calculator (/serial-dilution-calculator/). Ahrefs 2026-11-21 (his screenshots): serial dilution calculator >1000 Easy, cell dilution calculator >100 Easy.
+   Competitors opened live 2026-11-22: Omnicalculator (factor or range method, volume per use, uses, error, minimum volume), AAT Bioquest planner (stock, diluent names, initial concentration, replicates, protocol),
+   calculate.co.nz (stock, factor, steps), ConductScience (fold or custom concentrations, presets, volumes, pipetting warnings), Easy Unit Converter (concentrations, transfer and diluent volumes),
+   dilution.phage.org (planner to a plate, titer from plate count), Pearson (factor / 1:x / transfer over total, working, decay curve). Notes: md-files/calcthis-serialdilution-research.md.
+   Source READ 2026-11-22: Pakpour & Horgan, General Microbiology Lab Manual, Lab 9 Standard Plate Count (LibreTexts): serial dilutions give a countable plate of 30 to 300; CFU per mL = colonies / volume plated (mL), then divided by the dilution of the tube
+   (32 colonies on 200 uL of a 10^-6 tube = 160 CFU/mL / 10^-6 = 1.6 x 10^8 CFU/mL). Maths: tube k = first / factor^(k-1); backwards volumes: made(N) = need, made(i) = need + made(i+1) / ratio(i+1), transfer(i) = made(i) / ratio(i),
+   diluent(i) = made(i) - transfer(i); step ratio = previous concentration / this concentration; error spread: worst case steps x e, root sum of squares sqrt(steps) x e for independent errors.
+   ========================================================= */
+/* SERIALDIL-ENGINE:START */
+CalcThis.sdEngine = (function () {
+  var UNITS = [['M', 'M'], ['mM', 'mM'], ['uM', 'µM'], ['nM', 'nM'], ['pM', 'pM'], ['fM', 'fM'], ['aM', 'aM'], ['zM', 'zM'], ['yM', 'yM'], ['mgml', 'mg/mL'], ['ugml', 'µg/mL'], ['ngml', 'ng/mL'], ['pct', '%'], ['cellsml', 'cells/mL'], ['cfuml', 'CFU/mL'], ['pfuml', 'PFU/mL'], ['x', '× (fold)']];
+  var PRESETS = [[2, 8, '2× · 8 tubes'], [3, 6, '3× · 6 tubes'], [5, 6, '5× · 6 tubes'], [10, 6, '10× · 6 tubes'], [3.16227766, 6, 'Half-log (√10) · 6 tubes']];
+  var VOLS = [['nl', 'nL', 0.001], ['ul', 'µL', 1], ['ml', 'mL', 1000], ['cl', 'cL', 10000], ['l', 'L', 1e6], ['mm3', 'mm³', 1], ['cm3', 'cm³', 1000], ['dm3', 'dm³', 1e6], ['m3', 'm³', 1e9], ['in3', 'cu in', 16387.064], ['ft3', 'cu ft', 28316846.592], ['yd3', 'cu yd', 764554857.984], ['usgal', 'US gal', 3785411.784], ['ukgal', 'UK gal', 4546090], ['usfloz', 'US fl oz', 29573.5295625], ['ukfloz', 'UK fl oz', 28413.0625], ['cup', 'US cups', 236588.2365], ['tbsp', 'tbsp (15 mL)', 15000], ['tsp', 'tsp (5 mL)', 5000], ['usqt', 'US qt', 946352.946], ['ukqt', 'UK qt', 1136522.5], ['uspt', 'US pt', 473176.473], ['ukpt', 'UK pt', 568261.25]];
+  var MAXN = 30;
+  function num(t) {
+    t = (t + '').trim().replace(/\s/g, '');
+    if (!t) return null;
+    if (/^\d{1,3}(,\d{3})+(\.\d+)?$/.test(t)) t = t.replace(/,/g, ''); else if (/^[+-]?\d*,\d+$/.test(t)) t = t.replace(',', '.'); else t = t.replace(/,/g, '');
+    if (!/^[+-]?(\d+\.?\d*|\.\d+)(e[+-]?\d+)?$/i.test(t)) return NaN;
+    return parseFloat(t);
+  }
+  function grpS(s) { var p = String(s).split('.'); p[0] = p[0].replace(/\B(?=(\d{3})+(?!\d))/g, ','); return p.join('.'); }
+  function trimz(s) { return s.indexOf('.') >= 0 ? s.replace(/0+$/, '').replace(/\.$/, '') : s; }
+  function digits(x, n) {
+    if (!isFinite(x)) return '—';
+    if (x === 0) return '0';
+    var ax = Math.abs(x);
+    if (ax < 1e-4 || ax >= 1e9) return String(parseFloat(x.toPrecision(n)).toExponential()).replace('e+', 'e');
+    var e = Math.floor(Math.log(ax) / Math.LN10 + 1e-12), d = Math.max(0, Math.min(12, n - 1 - e));
+    return grpS(trimz(x.toFixed(d)));
+  }
+  function sci(x, n) { if (!isFinite(x) || x === 0) return digits(x, n); return String(parseFloat(x.toPrecision(n)).toExponential()).replace('e+', 'e'); }
+  function fmt(x, mode, sg) { return mode === 's' ? sci(x, sg || 4) : digits(x, sg || 4); }
+  function readPos(t, lo, hi) { var n = num(t); if (n === null) return { empty: true }; if (isNaN(n) || n <= 0 || (lo != null && n < lo) || (hi != null && n > hi)) return { bad: true }; return { v: n }; }
+  function parseList(text) {
+    var tk = String(text == null ? '' : text).replace(/−/g, '-').split(/[\s;]+/), vals = [], junk = 0, i;
+    for (i = 0; i < tk.length; i++) { var t = tk[i].replace(/,$/, ''); if (t === '') continue; var n = num(t); if (n === null || isNaN(n) || n <= 0 || !isFinite(n)) junk++; else vals.push(n); }
+    return { vals: vals, junk: junk };
+  }
+  /* integer power by repeated multiplication: the same result in every browser (Math.pow differs in the last digit between engines) */
+  function ipow(b, e) { var p = 1, k; for (k = 0; k < e; k++) p *= b; return p; }
+  /* concentrations of the tubes. o: { mode, stock, factor, n, first, from, to, list } -> { c: [...], factor, n } or { err } */
+  function tubes(o) {
+    var c = [], i, F = o.factor, n = o.n, c1;
+    if (o.mode === 'list') { for (i = 0; i < o.list.length; i++) c.push(o.list[i]); return { c: c, factor: o.list.length > 1 ? o.list[0] / o.list[1] : 0, n: c.length }; }
+    if (o.mode === 'range') {
+      if (n) { F = Math.pow(o.from / o.to, 1 / (n - 1)); } else if (F) { n = 1 + Math.ceil(Math.log(o.from / o.to) / Math.log(F) - 1e-9); }
+      for (i = 0; i < n; i++) c.push(o.from / ipow(F, i));
+      if (n >= 2) c[n - 1] = o.to;
+      return { c: c, factor: F, n: n };
+    }
+    c1 = o.first ? o.first : o.stock / F;
+    for (i = 0; i < n; i++) c.push(c1 / ipow(F, i));
+    return { c: c, factor: F, n: n };
+  }
+  /* volumes, all in uL. need = volume each tube must be able to give for use (already x replicates x loss). Returns rows with made, take, diluent, ratio */
+  function plan(stock, c, need) {
+    var N = c.length, made = new Array(N), i, rows = [], ratio = [];
+    for (i = 0; i < N; i++) ratio.push((i === 0 ? stock : c[i - 1]) / c[i]);
+    made[N - 1] = need;
+    for (i = N - 2; i >= 0; i--) made[i] = need + made[i + 1] / ratio[i + 1];
+    var stockTot = 0, dilTot = 0;
+    for (i = 0; i < N; i++) { var take = made[i] / ratio[i], dil = made[i] - take; rows.push({ made: made[i], take: take, dil: dil, ratio: ratio[i] }); if (i === 0) stockTot = take; dilTot += dil; }
+    return { rows: rows, stock: stockTot, diluent: dilTot };
+  }
+  /* spread of the concentration of tube k when each dilution step has a relative error e (percent): steps = tubes up to k whose ratio is above 1 */
+  function spread(ratios, e) {
+    var out = [], steps = 0, i;
+    for (i = 0; i < ratios.length; i++) { if (ratios[i] > 1 + 1e-12) steps++; out.push({ steps: steps, worst: steps * e, rss: Math.sqrt(steps) * e }); }
+    return out;
+  }
+  /* the same spread when the error is a volume (in uL) on each transfer: the relative error of a step is that volume over the volume taken */
+  function spreadV(take, ratios, e) { var out = [], sum = 0, sq = 0, steps = 0, i; for (i = 0; i < ratios.length; i++) { if (ratios[i] > 1 + 1e-12) { var rel = e / take[i] * 100; sum += rel; sq += rel * rel; steps++; } out.push({ steps: steps, worst: sum, rss: Math.sqrt(sq) }); } return out; }
+  /* titer of the original sample from a plate count: count / volume plated (mL) x (stock / tube concentration) */
+  function titer(count, plateMl, stock, ctube) { return count / plateMl * (stock / ctube); }
+  return { UNITS: UNITS, VOLS: VOLS, PRESETS: PRESETS, MAXN: MAXN, num: num, digits: digits, sci: sci, fmt: fmt, readPos: readPos, parseList: parseList, tubes: tubes, plan: plan, spread: spread, spreadV: spreadV, titer: titer };
+})();
+/* SERIALDIL-ENGINE:END */
+
+/* =========================================================
+   CalcThis.initSerialDilCalc() - ids sd*. Engine CalcThis.sdEngine.
+   ========================================================= */
+CalcThis.initSerialDilCalc = function () {
+  var E = CalcThis.sdEngine, U = CalcThis._kzUtil, seg = U.seg, setSeg = U.setSeg, esc = U.esc;
+  var $ = function (id) { return document.getElementById(id); };
+  if (!$('sdStock')) return;
+  var st = { mode: 'factor', ft: 'fold', vu: 'ul', pu: 'ul', fm: 'a', unit: 'cfuml', sg: 4, et: 'p' }, last = null;
+  var NOTE = function (id, txt) { var n = $(id); if (n) { n.textContent = txt || ''; n.style.display = txt ? '' : 'none'; } };
+  function show(id, on) { var e = $(id); if (e) e.style.display = on ? '' : 'none'; }
+  function setHint(m, at) {
+    var h = $('sdHint'); h.textContent = m || ''; h.style.display = m ? 'block' : 'none';
+    if (m && at) { var el = $(at), f = el ? (el.closest('.two') || el.closest('.fld')) : null; if (f && f.nextSibling !== h && f.parentNode) f.parentNode.insertBefore(h, f.nextSibling); }
+  }
+  function C(x) { return E.fmt(x, st.fm, st.sg); }
+  function A(x) { return E.fmt(x, 'a'); }
+  var VOLF = {}, VOLL = {}; E.VOLS.forEach(function (v) { VOLL[v[0]] = v[1]; VOLF[v[0]] = v[2]; });
+  function VF() { return VOLF[st.vu]; }
+  function VU() { return VOLL[st.vu]; }
+  function V(ul) { return A(ul / VF()) + ' ' + VU(); }
+  function unitLab() { var u = E.UNITS.filter(function (x) { return x[0] === st.unit; })[0]; return u ? u[1] : ''; }
+  function CU(x) { return C(x) + ' ' + unitLab(); }
+  function empty(msg, at) { $('sdBig').textContent = '—'; $('sdSub').textContent = $('sdSub').getAttribute('data-empty'); $('sdBody').style.display = 'none'; $('sdMVal').textContent = '—'; $('sdCopyTxt').textContent = ''; $('sdLab').textContent = 'Concentration of the last tube'; $('sdMLab').textContent = 'Last tube'; $('sdCbWrap').style.display = 'none'; last = null;
+    var anyCb = $('sdCnt').value.trim() || $('sdPlate').value.trim() || $('sdTubeN').value.trim();
+    var pcb = []; if ($('sdCnt').value.trim()) pcb.push('count ' + $('sdCnt').value.trim()); if ($('sdPlate').value.trim()) pcb.push('volume plated ' + $('sdPlate').value.trim()); if ($('sdTubeN').value.trim()) pcb.push('tube ' + $('sdTubeN').value.trim());
+    NOTE('sdCbN', anyCb ? 'Noted: ' + pcb.join(', ') + '. Set up the series first (stock, factor and tubes): the count is turned into the concentration of the original sample with it.' : 'Optional. After plating, type the colonies (or plaques) you counted, the volume you plated and the tube it came from to find the concentration of the original sample.');
+    NOTE('sdTubeNN', $('sdTubeN').value.trim() ? 'Needs the series above first.' : '');
+    setHint(msg || '', at); }
+  /* ---------- unit picker (csel) ---------- */
+  (function () {
+    $('sdUnit').querySelector('.csel-panel').innerHTML = E.UNITS.map(function (u) { return '<button type="button" class="csel-opt' + (u[0] === 'cfuml' ? ' on' : '') + '" role="option" aria-selected="' + (u[0] === 'cfuml') + '" data-value="' + u[0] + '">' + u[1] + '</button>'; }).join('');
+    CalcThis.initCsel($('sdUnit'));
+  })();
+  $('sdVu').querySelector('.csel-panel').innerHTML = E.VOLS.map(function (v) { return '<button type="button" class="csel-opt' + (v[0] === 'ul' ? ' on' : '') + '" role="option" aria-selected="' + (v[0] === 'ul') + '" data-value="' + v[0] + '">' + v[1] + '</button>'; }).join('');
+  CalcThis.initCsel($('sdVu'));
+  /* ---------- controls ---------- */
+  function applyMode() {
+    var m = st.mode;
+    show('sdFacW', m !== 'list'); show('sdFtW', m === 'factor'); show('sdTVW', m === 'factor' && st.ft === 'tv'); show('sdFacF', m === 'range' || (m === 'factor' && st.ft !== 'tv')); show('sdNW', m !== 'list');
+    show('sdRngW', m === 'range'); show('sdListW', m === 'list'); show('sdFirstW', m === 'factor');
+    $('sdFactorLab').textContent = m === 'range' ? 'Dilution factor' : (st.ft === 'ratio' ? 'Ratio 1 : X (X parts diluent)' : 'Dilution factor (fold)');
+    $('sdFactorUnit').textContent = m === 'range' ? 'optional · or type the tubes' : (st.ft === 'ratio' ? '1 part + X parts' : 'e.g. 10 = tenfold');
+    setSeg('sdMode', m); setSeg('sdFt', st.ft);
+  }
+  seg('sdMode', function (v) { st.mode = v; applyMode(); render(); });
+  seg('sdFt', function (v) { st.ft = v; applyMode(); render(); });
+  seg('sdFm', function (v) { st.fm = v; render(); });
+  seg('sdSg', function (v) { st.sg = +v; render(); });
+  seg('sdEt', function (v) { st.et = v; $('sdErr').value = ''; $('sdErrUnit').textContent = v === 'p' ? '%' : 'in the volume unit'; render(); });
+  $('sdVu').addEventListener('change', function () { var v = $('sdVu').value || 'ul'; if (v === st.vu) return; var k = VOLF[st.vu] / VOLF[v]; ['sdVol', 'sdMin', 'sdT', 'sdV'].forEach(function (id) { var q = E.num($(id).value); if (q !== null && !isNaN(q) && q > 0) $(id).value = String(parseFloat((q * k).toPrecision(10))); }); st.vu = v; render(); });
+  $('sdPu').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; var v = b.getAttribute('data-v'); if (v === st.pu) return; var n = E.num($('sdPlate').value); if (n !== null && !isNaN(n) && n > 0) $('sdPlate').value = String(parseFloat((n * (v === 'ml' ? 0.001 : 1000)).toPrecision(10))); st.pu = v; setSeg('sdPu', v); render(); });
+  $('sdUnit').addEventListener('change', function () { st.unit = $('sdUnit').value || 'cfuml'; render(); });
+  $('sdPre').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; st.mode = 'factor'; st.ft = 'fold'; $('sdFactor').value = b.getAttribute('data-f'); $('sdN').value = b.getAttribute('data-n'); applyMode(); render(); });
+  ['sdStock', 'sdFactor', 'sdN', 'sdT', 'sdV', 'sdFrom', 'sdTo', 'sdVol', 'sdFirst', 'sdRep', 'sdLoss', 'sdMin', 'sdErr', 'sdCnt', 'sdPlate', 'sdTubeN', 'sdC2', 'sdV2', 'sdSN', 'sdDN'].forEach(function (id) { $(id).addEventListener('input', render); });
+  $('sdEx').addEventListener('click', function () { st.mode = 'factor'; st.ft = 'fold'; st.vu = 'ul'; $('sdVu').value = 'ul'; applyMode(); $('sdStock').value = '1000000000'; $('sdFactor').value = '10'; $('sdN').value = '6'; $('sdVol').value = '100'; $('sdT').value = ''; $('sdV').value = ''; render(); });
+  $('sdList').addEventListener('input', render);
+  $('sdClear').addEventListener('click', function () {
+    ['sdStock', 'sdFactor', 'sdN', 'sdT', 'sdV', 'sdFrom', 'sdTo', 'sdVol', 'sdFirst', 'sdRep', 'sdLoss', 'sdMin', 'sdErr', 'sdCnt', 'sdPlate', 'sdTubeN', 'sdC2', 'sdV2', 'sdSN', 'sdDN'].forEach(function (id) { $(id).value = ''; }); $('sdList').value = '';
+    st.mode = 'factor'; st.ft = 'fold'; st.vu = 'ul'; st.pu = 'ul'; st.fm = 'a'; st.sg = 4; st.et = 'p'; $('sdVu').value = 'ul'; setSeg('sdPu', 'ul'); setSeg('sdFm', 'a'); setSeg('sdSg', '4'); setSeg('sdEt', 'p'); $('sdErrUnit').textContent = '%'; applyMode(); setHint(''); render();
+  });
+  $('sdAdvBtn').addEventListener('click', function () {
+    var open = $('sdAdvBtn').classList.toggle('open'); $('sdAdvBtnLab').textContent = open ? 'Go simple' : 'Go advanced'; $('sdAdvIn').style.display = open ? '' : 'none';
+    if (!open) { ['sdFirst', 'sdRep', 'sdLoss', 'sdMin', 'sdErr', 'sdCnt', 'sdPlate', 'sdTubeN', 'sdC2', 'sdV2', 'sdSN', 'sdDN'].forEach(function (id) { $(id).value = ''; }); st.fm = 'a'; setSeg('sdFm', 'a'); st.sg = 4; setSeg('sdSg', '4'); st.et = 'p'; setSeg('sdEt', 'p'); $('sdErrUnit').textContent = '%'; st.pu = 'ul'; setSeg('sdPu', 'ul'); }
+    render();
+  });
+  /* ---------- drawing: a row of tubes ---------- */
+  var PERROW = 5, CELL = 52;
+  function drawTubes(R) {
+    var shown = Math.min(R.n, PERROW * 2 - 1), cells = shown + 1, rows = Math.ceil(cells / PERROW), H = rows * 100 + 8, svg, i, mx = 0, k;
+    if (R.plan) for (i = 0; i < shown; i++) mx = Math.max(mx, R.plan.rows[i].made);
+    var lo = Math.log(R.c[R.n - 1]), hi = Math.log(R.stock), span = hi - lo;
+    var useSci = false; for (k = 0; k < cells; k++) if (C(k === 0 ? R.stock : R.c[k - 1]).length > 6) useSci = true;
+    svg = '<svg id="sdTubesSvg" viewBox="0 0 260 ' + H + '" width="100%" role="img" aria-label="' + esc('A row of ' + R.n + ' tubes, from the stock to tube ' + R.n + ', each with its concentration') + '" xmlns="http://www.w3.org/2000/svg">';
+    for (k = 0; k < cells; k++) {
+      var row = Math.floor(k / PERROW), col = k % PERROW, cx = col * CELL + CELL / 2, y0 = row * 100 + 22, th = 54, tw = 20, conc = k === 0 ? R.stock : R.c[k - 1], frac = span > 1e-12 ? Math.max(0, Math.min(1, (Math.log(conc) - lo) / span)) : 1;
+      var level = k === 0 ? 0.8 : (R.plan && mx > 0 ? Math.max(0.12, R.plan.rows[k - 1].made / mx) : 0.7), lh = th * level;
+      svg += '<text x="' + cx + '" y="' + (y0 - 6) + '" text-anchor="middle" font-size="12" font-weight="700" fill="#7A4D0F">' + esc(useSci ? E.sci(conc, 3) : C(conc)) + '</text>';
+      svg += '<path d="M' + (cx - tw / 2) + ',' + y0 + 'v' + (th - 8) + 'a' + tw / 2 + ',8 0 0 0 ' + tw + ',0v-' + (th - 8) + '" fill="#FFFDF8" stroke="#9A8F80" stroke-width="1.4"/>';
+      svg += '<clipPath id="sdClip' + k + '"><path d="M' + (cx - tw / 2) + ',' + y0 + 'v' + (th - 8) + 'a' + tw / 2 + ',8 0 0 0 ' + tw + ',0v-' + (th - 8) + 'z"/></clipPath>';
+      svg += '<rect class="sd-liq" data-tube="' + k + '" data-conc="' + conc + '" data-level="' + level.toFixed(4) + '" x="' + (cx - tw / 2) + '" y="' + (y0 + th - lh).toFixed(2) + '" width="' + tw + '" height="' + lh.toFixed(2) + '" fill="' + (k === 0 ? '#B5761F' : '#37503F') + '" fill-opacity="' + (k === 0 ? 0.9 : (0.14 + 0.78 * frac).toFixed(3)) + '" clip-path="url(#sdClip' + k + ')"/>';
+      svg += '<text x="' + cx + '" y="' + (y0 + th + 18) + '" text-anchor="middle" font-size="12" fill="#5B4B3B">' + (k === 0 ? 'stock' : k) + '</text>';
+      if (col < PERROW - 1 && k < cells - 1) svg += '<path d="M' + (cx + tw / 2 + 4) + ',' + (y0 + 14) + 'h' + (CELL - tw - 14) + 'm-5,-3 l5,3 l-5,3" fill="none" stroke="#B5761F" stroke-width="1.5" stroke-linecap="round"/>';
+    }
+    return svg + '</svg>';
+  }
+  /* ---------- the main compute + render ---------- */
+  function render() {
+    var soft = [], m = st.mode, i;
+    /* stock */
+    var sr = E.readPos($('sdStock').value, 1e-30, 1e30);
+    if (sr.empty) NOTE('sdStockN', 'Type the concentration of your stock, in the unit chosen next to it. The unit is a label: nothing is converted.'); else if (sr.bad) NOTE('sdStockN', 'Use a number above 0, for example 100 or 1e9.'); else NOTE('sdStockN', 'Stock: ' + CU(sr.v) + '. Every concentration below is in ' + unitLab() + '.');
+    /* factor / steps */
+    var F = 0, N = 0, fr = E.readPos($('sdFactor').value, null, 1e9), nr = E.readPos($('sdN').value, 1, E.MAXN), tr = E.readPos($('sdT').value, null, 1e12), vr = E.readPos($('sdV').value, null, 1e12);
+    if (nr.v && nr.v % 1 !== 0) nr = { bad: true };
+    var wantF = m === 'factor' || m === 'range';
+    if (m === 'factor' && st.ft === 'tv') {
+      if (tr.empty || vr.empty) NOTE('sdFacN', tr.empty && vr.empty ? 'Type the volume you transfer and the total volume it is made up to. The factor is total ÷ transfer.' : (tr.empty ? 'Type the volume you transfer too.' : 'Type the total volume too.')); else if (tr.bad || vr.bad) NOTE('sdFacN', 'Use numbers above 0.'); else if (tr.v >= vr.v) NOTE('sdFacN', 'The transfer must be smaller than the total volume.'); else { F = vr.v / tr.v; NOTE('sdFacN', A(tr.v) + ' ' + VU() + ' into ' + A(vr.v) + ' ' + VU() + ' total = a factor of ' + A(F) + ' (1 part + ' + A(F - 1) + ' parts diluent).'); }
+    } else if (wantF) {
+      if (fr.empty) NOTE('sdFacN', m === 'range' ? 'Optional here: type the factor and the page counts the tubes, or type the number of tubes and it finds the factor.' : (st.ft === 'ratio' ? 'Type X for a ratio 1 : X, for example 9 for 1 : 9 (a tenfold step).' : 'Type the dilution factor of each step, for example 10 for tenfold.'));
+      else if (fr.bad) NOTE('sdFacN', 'Use a number above 0.');
+      else { F = st.ft === 'ratio' && m === 'factor' ? fr.v + 1 : fr.v; if (!(F > 1)) { NOTE('sdFacN', 'Each tube has to be weaker than the one before, so type a factor above 1.'); F = 0; } else NOTE('sdFacN', (st.ft === 'ratio' && m === 'factor' ? '1 : ' + A(fr.v) + ' means 1 part + ' + A(fr.v) + ' parts diluent = a factor of ' + A(F) + '. ' : '') + 'Each tube is ' + A(F) + ' times weaker than the one before.'); }
+    }
+    if (m !== 'list') { if (nr.empty) NOTE('sdNN', m === 'range' ? 'Optional here: type the number of tubes and the page finds the factor.' : 'Type how many tubes (steps) the series has, up to ' + E.MAXN + '.'); else if (nr.bad) NOTE('sdNN', 'Use a whole number from 1 to ' + E.MAXN + '.'); else { N = nr.v; NOTE('sdNN', N + ' tube' + (N === 1 ? '' : 's') + '.'); } }
+    /* range / list / first tube */
+    var from = E.readPos($('sdFrom').value, 1e-30, 1e30), to = E.readPos($('sdTo').value, 1e-30, 1e30), first = E.readPos($('sdFirst').value, 1e-30, 1e30), list = null, lp = null;
+    if (m === 'range') { if (from.empty || to.empty) NOTE('sdRngN', 'Type the concentration of the first tube and the one you want the last tube to reach.'); else if (from.bad || to.bad) NOTE('sdRngN', 'Use numbers above 0 for both.'); else if (to.v >= from.v) NOTE('sdRngN', 'The last tube must be weaker than the first.'); else NOTE('sdRngN', 'From ' + CU(from.v) + ' down to ' + CU(to.v) + ': a total dilution of ' + A(from.v / to.v) + '×.'); }
+    else NOTE('sdRngN', '');
+    if (m === 'list') {
+      lp = E.parseList($('sdList').value);
+      if ($('sdList').value.trim() === '') NOTE('sdListN', 'Type the concentration of every tube, from the strongest to the weakest, separated by commas, spaces or new lines.'); else if (!lp.vals.length) NOTE('sdListN', 'Couldn’t find a number above 0 in your list.'); else NOTE('sdListN', lp.vals.length + ' concentration' + (lp.vals.length === 1 ? '' : 's') + ' read' + (lp.junk ? ', ' + lp.junk + (lp.junk === 1 ? ' item that is not a number left out' : ' items that are not numbers left out') : '') + '.');
+      list = lp.vals;
+    } else NOTE('sdListN', '');
+    if (m === 'factor') { if (first.empty) NOTE('sdFirstN', 'Leave empty: tube 1 is the stock divided by the factor. Type a concentration to start tube 1 there instead (the stock itself if it is the same).'); else if (first.bad) { NOTE('sdFirstN', 'Use a number above 0.'); soft.push({ m: 'First tube: use a number above 0. It is ignored for now.', at: 'sdFirst' }); first = { empty: true }; } else NOTE('sdFirstN', 'Tube 1 starts at ' + CU(first.v) + '.'); } else NOTE('sdFirstN', '');
+    /* volumes and advanced numbers */
+    var vol = E.readPos($('sdVol').value, 1e-9, 1e12), rep = E.readPos($('sdRep').value, 1, 1000), loss = E.readPos($('sdLoss').value, null, 1000), mn = E.readPos($('sdMin').value, null, 1e12), er = E.readPos($('sdErr').value, null, st.et === 'p' ? 100 : 1e12);
+    var mul = VF();
+    if (vol.empty) NOTE('sdVolN', 'Optional. Type how much liquid each tube must give for your assay and the page works out every volume to pipette, from the last tube back to the stock.'); else if (vol.bad) { NOTE('sdVolN', 'Use a number above 0.'); soft.push({ m: 'Volume needed: use a number above 0. It is ignored for now.', at: 'sdVol' }); vol = { empty: true }; } else NOTE('sdVolN', A(vol.v) + ' ' + VU() + ' needed from each tube.');
+    if (rep.empty) NOTE('sdRepN', 'Optional. Replicates multiply the volume each tube must give.'); else if (rep.bad || rep.v % 1 !== 0) { NOTE('sdRepN', 'Use a whole number from 1 to 1000.'); soft.push({ m: 'Replicates: use a whole number from 1 to 1000. It is ignored for now.', at: 'sdRep' }); rep = { empty: true }; } else NOTE('sdRepN', A(rep.v) + ' replicates: ' + (vol.v ? A(vol.v * rep.v) + ' ' + VU() + ' from each tube.' : 'needs the volume above.'));
+    if (loss.empty) NOTE('sdLossN', 'Optional. Extra volume for what is lost in pipetting, in percent.'); else if (loss.bad) { NOTE('sdLossN', 'Use a number above 0 (percent).'); soft.push({ m: 'Pipetting loss: use a number above 0 (percent). It is ignored for now.', at: 'sdLoss' }); loss = { empty: true }; } else NOTE('sdLossN', A(loss.v) + '% extra on every tube' + (vol.v ? '.' : ' (needs the volume above).'));
+    if (mn.empty) NOTE('sdMinN', 'Optional. The smallest volume your pipette can measure well: transfers below it are flagged.'); else if (mn.bad) { NOTE('sdMinN', 'Use a number above 0.'); soft.push({ m: 'Smallest volume: use a number above 0. It is ignored for now.', at: 'sdMin' }); mn = { empty: true }; } else NOTE('sdMinN', 'Transfers below ' + A(mn.v) + ' ' + VU() + ' are flagged' + (vol.v ? '.' : ' (needs the volume above).'));
+    if (er.empty) NOTE('sdErrN', st.et === 'p' ? 'Optional. The error of one dilution step, in percent: the page shows how it adds up along the series.' : 'Optional. The error of one transfer in the volume unit above (for example 0.5 µL): the page shows how it adds up along the series.'); else if (er.bad) { NOTE('sdErrN', st.et === 'p' ? 'Use a number above 0 and up to 100 (percent).' : 'Use a number above 0.'); soft.push({ m: st.et === 'p' ? 'Pipetting error: use a number above 0 and up to 100 (percent). It is ignored for now.' : 'Pipetting error: use a number above 0. It is ignored for now.', at: 'sdErr' }); er = { empty: true }; } else NOTE('sdErrN', st.et === 'p' ? '±' + A(er.v) + '% per step.' : '±' + A(er.v) + ' ' + VU() + ' per transfer' + (vol.v ? '.' : ' (needs the volume above).'));
+    /* single dilution C1 V1 = C2 V2 from the stock */
+    var c2 = E.readPos($('sdC2').value, 1e-30, 1e30), v2 = E.readPos($('sdV2').value, 1e-12, 1e12);
+    if (c2.empty && v2.empty) NOTE('sdC1N', 'Optional. One single dilution from the stock (C1 × V1 = C2 × V2): type the concentration you want and the final volume.');
+    else if (c2.bad) { NOTE('sdC1N', 'Use a number above 0 for the concentration you want.'); soft.push({ m: 'Concentration you want: use a number above 0. It is ignored for now.', at: 'sdC2' }); }
+    else if (v2.bad) { NOTE('sdC1N', 'Use a number above 0 for the final volume.'); soft.push({ m: 'Final volume: use a number above 0. It is ignored for now.', at: 'sdV2' }); }
+    else if (c2.empty || v2.empty) NOTE('sdC1N', 'Type the ' + (c2.empty ? 'concentration you want' : 'final volume') + ' too.');
+    else if (sr.empty || sr.bad) NOTE('sdC1N', 'Type the stock concentration first.');
+    else if (c2.v > sr.v * (1 + 1e-12)) NOTE('sdC1N', 'The concentration you want (' + A(c2.v) + ') cannot be stronger than the stock (' + A(sr.v) + ').');
+    else { var v1 = c2.v * v2.v * mul / sr.v; NOTE('sdC1N', 'Take ' + V(v1) + ' of the stock and add ' + V(v2.v * mul - v1) + ' of diluent to make ' + V(v2.v * mul) + ' at ' + CU(c2.v) + ' (a factor of ' + A(sr.v / c2.v) + ').'); }
+    var snm = $('sdSN').value.trim().slice(0, 40), dnm = $('sdDN').value.trim().slice(0, 40);
+    NOTE('sdNmN', snm || dnm ? 'The copied protocol says “' + (snm || 'stock') + '” and “' + (dnm || 'diluent') + '”.' : 'Optional. Names for the stock and the diluent, used in the copied protocol.');
+    /* required: stock, then the series */
+    if (sr.empty) return empty(''); if (sr.bad) return empty('The stock concentration should be a number above 0.', 'sdStock');
+    var stock = sr.v, T = null;
+    if (m === 'factor') {
+      if (nr.empty || !F) { if (nr.bad) return empty('The number of tubes should be a whole number from 1 to ' + E.MAXN + '.', 'sdN'); if (fr.bad && !(st.ft === 'tv')) return empty('The dilution factor should be a number above 0.', 'sdFactor'); if (F === 0 && !fr.empty && !fr.bad && st.ft !== 'tv') return empty('The dilution factor must be above 1 (for example 10 for a tenfold step).', 'sdFactor'); if (st.ft === 'tv' && !tr.empty && !vr.empty && (tr.bad || vr.bad || tr.v >= vr.v)) return empty('The transfer must be a number above 0 and smaller than the total volume.', tr.bad || tr.v >= vr.v ? 'sdT' : 'sdV'); return empty(''); }
+      if (nr.bad) return empty('The number of tubes should be a whole number from 1 to ' + E.MAXN + '.', 'sdN');
+      if (first.v && first.v > stock * (1 + 1e-12)) return empty('The first tube (' + A(first.v) + ') cannot be stronger than the stock (' + A(stock) + ').', 'sdFirst');
+      T = E.tubes({ mode: 'factor', stock: stock, factor: F, n: N, first: first.v || 0 });
+    } else if (m === 'range') {
+      if (from.empty || to.empty) { if (from.bad) return empty('The first tube should be a number above 0.', 'sdFrom'); if (to.bad) return empty('The last tube should be a number above 0.', 'sdTo'); return empty(''); }
+      if (from.bad) return empty('The first tube should be a number above 0.', 'sdFrom'); if (to.bad) return empty('The last tube should be a number above 0.', 'sdTo');
+      if (to.v >= from.v) return empty('The last tube must be weaker than the first.', 'sdTo');
+      if (from.v > stock * (1 + 1e-12)) return empty('The first tube (' + A(from.v) + ') cannot be stronger than the stock (' + A(stock) + ').', 'sdFrom');
+      if (nr.bad) return empty('The number of tubes should be a whole number from 1 to ' + E.MAXN + '.', 'sdN');
+      if (!N && !F) return empty('');
+      if (N === 1) return empty('A range needs at least 2 tubes: the first and the last.', 'sdN');
+      if (!N && fr.bad) return empty('The dilution factor should be a number above 1.', 'sdFactor');
+      if (!N && F > 1) { var nn = 1 + Math.ceil(Math.log(from.v / to.v) / Math.log(F) - 1e-9); if (nn > E.MAXN) return empty('That factor needs ' + nn + ' tubes to reach the last concentration, more than ' + E.MAXN + '. Use a bigger factor.', 'sdFactor'); }
+      T = E.tubes({ mode: 'range', stock: stock, factor: N ? 0 : F, n: N, from: from.v, to: to.v });
+    } else {
+      if ($('sdList').value.trim() === '') return empty(''); if (!list.length) return empty('Couldn’t find a number above 0 in your list.', 'sdList');
+      if (list.length > E.MAXN) return empty('A list can hold up to ' + E.MAXN + ' tubes.', 'sdList');
+      if (list[0] > stock * (1 + 1e-12)) return empty('The first tube (' + A(list[0]) + ') cannot be stronger than the stock (' + A(stock) + ').', 'sdList');
+      for (i = 1; i < list.length; i++) if (!(list[i] < list[i - 1])) return empty('Each concentration must be weaker than the one before (tube ' + (i + 1) + ' is not).', 'sdList');
+      T = E.tubes({ mode: 'list', list: list });
+    }
+    var c = T.c, n = T.n; if (!n) return empty('');
+    setHint(soft.length ? soft[0].m : '', soft.length ? soft[0].at : null);
+    var R = { c: c, n: n, stock: stock, plan: null };
+    /* volume plan */
+    var need = vol.v ? vol.v * mul * (rep.v || 1) * (1 + (loss.v || 0) / 100) : 0, pl = null;
+    if (need) { pl = E.plan(stock, c, need); R.plan = pl; }
+    var ratios = []; for (i = 0; i < n; i++) ratios.push((i === 0 ? stock : c[i - 1]) / c[i]);
+    var totalDil = stock / c[n - 1], flagged = [];
+    if (pl && mn.v) { var minUl = mn.v * mul; for (i = 0; i < n; i++) if (ratios[i] > 1 + 1e-12 && pl.rows[i].take < minUl - 1e-12) flagged.push(i); }
+    /* headline */
+    $('sdLab').textContent = 'Concentration of tube ' + n; $('sdBig').textContent = CU(c[n - 1]);
+    $('sdSub').textContent = n + ' tube' + (n === 1 ? '' : 's') + ' · ' + (function () { var dr = ratios.filter(function (r) { return r > 1 + 1e-12; }); if (!dr.length) return 'no dilution step'; return dr.every(function (r) { return Math.abs(r - dr[0]) <= 1e-9 * dr[0]; }) ? A(dr[0]) + '× each step' : 'steps of ' + A(Math.min.apply(null, dr)) + ' to ' + A(Math.max.apply(null, dr)) + '×'; })() + ' · total dilution ' + A(totalDil) + '×';
+    $('sdMLab').textContent = 'Tube ' + n; $('sdMVal').textContent = CU(c[n - 1]);
+    $('sdTip').textContent = 'From ' + CU(stock) + ' your ' + n + ' tubes run ' + (n === 1 ? '' : 'from ' + CU(c[0]) + ' down ') + 'to ' + CU(c[n - 1]) + '. The last tube is ' + A(totalDil) + ' times weaker than the stock' + (pl ? '; the whole series needs ' + V(pl.stock) + ' of stock.' : '.');
+    /* warnings */
+    var warn = [];
+    if (flagged.length) { var s = 0; flagged.forEach(function (k) { s = Math.max(s, mn.v * mul / pl.rows[k].take); }); warn.push((flagged.length === 1 ? 'The transfer into tube ' + (flagged[0] + 1) : 'The transfers into tubes ' + flagged.map(function (k) { return k + 1; }).join(', ')) + ' (' + flagged.map(function (k) { return V(pl.rows[k].take); }).join(', ') + ') ' + (flagged.length === 1 ? 'is' : 'are') + ' below your smallest volume of ' + A(mn.v) + ' ' + VU() + '. If each tube must give at least ' + V(need * s / (rep.v || 1) / (1 + (loss.v || 0) / 100)) + ', every transfer is at least that.'); }
+    if (pl && mn.v && !flagged.length) { /* nothing */ }
+    $('sdWarn').innerHTML = warn.map(function (w) { return '<p class="sd-warn">' + esc(w) + '</p>'; }).join(''); show('sdWarn', warn.length > 0);
+    /* tubes drawing */
+    $('sdTubes').innerHTML = drawTubes(R);
+    $('sdTubesCap').textContent = 'Read left to right, then the next row. Each arrow is one transfer into the next tube. The colour is the concentration' + (pl ? ' and the liquid level the volume you make' : '') + '.' + (n > PERROW * 2 - 1 ? ' The first ' + (PERROW * 2 - 1) + ' tubes are drawn; all ' + n + ' are in the table.' : '');
+    /* the table */
+    var head = '<thead><tr><th>Tube</th><th>Concentration</th>' + (pl ? '<th>Pipette: take + diluent = make</th>' : '<th>Step</th>') + '</tr></thead><tbody>';
+    var body = '<tr class="sd-stock"><td>Stock</td><td>' + esc(CU(stock)) + '</td>' + '<td>—</td>' + '</tr>';
+    for (i = 0; i < n; i++) {
+      var from2 = i === 0 ? 'stock' : 'tube ' + i;
+      body += '<tr data-t="' + (i + 1) + '"' + (flagged.indexOf(i) >= 0 ? ' class="sd-flag"' : '') + '><td>' + (i + 1) + '</td><td>' + esc(CU(c[i])) + '</td>' + (pl ? '<td>' + (ratios[i] <= 1 + 1e-12 ? V(pl.rows[i].made) + ' of stock, no diluent' : V(pl.rows[i].take) + ' of ' + from2 + ' + ' + V(pl.rows[i].dil) + ' diluent = ' + V(pl.rows[i].made)) + '</td>' : '<td>' + (ratios[i] <= 1 + 1e-12 ? 'the stock' : A(ratios[i]) + '× weaker') + '</td>') + '</tr>';
+    }
+    $('sdTab').innerHTML = head + body + '</tbody>';
+    /* numbers */
+    var tr2 = function (a, b) { return '<tr><td>' + a + '</td><td>' + b + '</td></tr>'; }, nums = [tr2('Tubes', String(n)), tr2('Total dilution of the last tube', A(totalDil) + '×'), tr2('Last tube', esc(CU(c[n - 1])))];
+    if (pl) { nums.push(tr2('Stock needed in total', V(pl.stock))); nums.push(tr2('Diluent needed in total', V(pl.diluent))); nums.push(tr2('Liquid each tube must give', V(need))); }
+    if (er.v) { var lastS = st.et === 'p' ? E.spread(ratios, er.v)[n - 1] : (pl ? E.spreadV(pl.rows.map(function (r) { return r.take; }), ratios, er.v * mul)[n - 1] : null); if (lastS) nums.push(tr2('Concentration of tube ' + n + ' with ±' + A(er.v) + (st.et === 'p' ? '% per step' : ' ' + VU() + ' per transfer'), lastS.steps ? 'worst case ±' + A(lastS.worst) + '%, typical ±' + A(lastS.rss) + '% (independent errors)' : 'no dilution step: the stock itself')); }
+    var pvE = E.readPos($('sdPlate').value, 1e-9, 1e9);
+    if (pvE.v && (st.unit === 'cfuml' || st.unit === 'pfuml' || st.unit === 'cellsml')) { var pM2 = pvE.v / (st.pu === 'ml' ? 1 : 1000), hit = []; for (i = 0; i < n; i++) { var ex = c[i] * pM2; if (ex >= 30 && ex <= 300) hit.push('tube ' + (i + 1) + ' (' + A(ex) + ')'); } nums.push(tr2('Countable tubes (30 to 300) on a ' + A(pvE.v) + ' ' + (st.pu === 'ml' ? 'mL' : 'µL') + ' plate', hit.length ? hit.join(', ') : 'no tube lands between 30 and 300')); }
+    $('sdNums').innerHTML = '<tbody>' + nums.join('') + '</tbody>';
+    /* count back */
+    var cn = E.readPos($('sdCnt').value, null, 1e15), pv = E.readPos($('sdPlate').value, 1e-9, 1e9), tn = E.readPos($('sdTubeN').value, 1, n);
+    if (tn.v && tn.v % 1 !== 0) tn = { bad: true };
+    var cbTxt = '', cbRes = '';
+    if (cn.empty && pv.empty && tn.empty) cbTxt = 'Optional. After plating, type the colonies (or plaques) you counted, the volume you plated and the tube it came from to find the concentration of the original sample.';
+    else if (cn.bad) { cbTxt = 'Use a number above 0 for the count.'; soft.push({ m: 'Count: use a number above 0. It is ignored for now.', at: 'sdCnt' }); }
+    else if (pv.bad) { cbTxt = 'Use a number above 0 for the volume plated.'; soft.push({ m: 'Volume plated: use a number above 0. It is ignored for now.', at: 'sdPlate' }); }
+    else if (tn.bad) { cbTxt = 'Use a whole number from 1 to ' + n + ' for the tube.'; soft.push({ m: 'Tube plated: use a whole number from 1 to ' + n + '. It is ignored for now.', at: 'sdTubeN' }); }
+    else if (cn.empty || pv.empty) cbTxt = 'Type the ' + (cn.empty ? 'count' : 'volume plated') + (cn.empty && pv.empty ? ' and the volume plated' : '') + ' too.';
+    else { var tube = tn.v || n, ct = c[tube - 1], pMl = pv.v / (st.pu === 'ml' ? 1 : 1000), ti = E.titer(cn.v, pMl, stock, ct), dilt = stock / ct; cbTxt = A(cn.v) + ' counted ÷ ' + A(pMl) + ' mL = ' + A(cn.v / pMl) + ' per mL in tube ' + tube + '; tube ' + tube + ' is ' + A(dilt) + '× weaker than the original, so the original has ' + A(ti) + ' per mL.'; cbRes = A(ti) + ' per mL'; var inr = cn.v >= 30 && cn.v <= 300; cbTxt += inr ? ' A count of 30 to 300 is the range a lab manual calls countable.' : ' A lab manual calls 30 to 300 the countable range, so this plate may be too sparse or too crowded.'; }
+    NOTE('sdCbN', cbTxt); $('sdCb').textContent = cbRes; show('sdCbWrap', !!cbRes);
+    if (!tn.v && !tn.empty && !tn.bad) { /* nothing */ }
+    NOTE('sdTubeNN', tn.empty ? 'Leave empty for the last tube (tube ' + n + ').' : (tn.bad ? '' : 'Tube ' + tn.v + ' was plated.'));
+    setHint(soft.length ? soft[0].m : '', soft.length ? soft[0].at : null);
+    /* steps */
+    var stp = ['Tube 1' + (m === 'factor' && first.v ? ' starts at ' + CU(first.v) + '.' : m !== 'factor' ? ' is ' + CU(c[0]) + '.' : ' = stock ÷ factor = ' + A(stock) + ' ÷ ' + A(T.factor) + ' = ' + A(c[0]) + ' ' + unitLab() + '.')];
+    if (n > 1) stp.push('Each next tube is the one before ÷ ' + (m === 'list' ? 'its own step (' + A(Math.min.apply(null, ratios.slice(1))) + ' to ' + A(Math.max.apply(null, ratios.slice(1))) + ')' : A(T.factor)) + ': tube k = tube 1 ÷ factor^(k − 1), so tube ' + n + ' = ' + CU(c[n - 1]) + '.');
+    stp.push('Total dilution of the last tube = stock ÷ last tube = ' + A(stock) + ' ÷ ' + A(c[n - 1]) + ' = ' + A(totalDil) + '×.');
+    if (pl) { stp.push('Working backwards: the last tube makes ' + V(need) + '; each earlier tube makes what it must give (' + V(need) + ') plus what the next tube takes from it.'); stp.push('Take from the previous tube = volume made ÷ step ratio; diluent = made − take. The stock needed is the take of tube 1: ' + V(pl.stock) + '.'); }
+    $('sdSteps').innerHTML = stp.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('');
+    /* copy */
+    var cp = ['Serial dilution: stock ' + CU(stock) + ', ' + n + ' tubes, last tube ' + CU(c[n - 1]) + ' (' + A(totalDil) + '× total)'];
+    var sN = snm || 'stock', dN = dnm || 'diluent';
+    for (i = 0; i < n; i++) cp.push('Tube ' + (i + 1) + ': ' + CU(c[i]) + (pl ? ' | ' + (ratios[i] <= 1 + 1e-12 ? V(pl.rows[i].made) + ' of ' + sN + ', no ' + dN : V(pl.rows[i].take) + ' of ' + (i === 0 ? sN : 'tube ' + i) + ' + ' + V(pl.rows[i].dil) + ' ' + dN + ' = ' + V(pl.rows[i].made)) : ''));
+    $('sdCopyTxt').textContent = cp.join('\n') + '\n(calcthis.co/serial-dilution-calculator/)';
+    $('sdBody').style.display = ''; last = { n: n };
+  }
+  applyMode(); render();
+};
+/* SERIALDIL:END */
+
 /* COMPOUND:BEGIN */
 /* =========================================================
    COMPOUND INTEREST calculator (/compound-interest-calculator/). Competitors opened live (2026-11-13): calculator.net (interest calculator: contributions, begin/end, tax, inflation, schedules;

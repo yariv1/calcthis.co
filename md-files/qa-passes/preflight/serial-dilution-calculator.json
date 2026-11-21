@@ -1,0 +1,12 @@
+{
+ "slug": "serial-dilution-calculator",
+ "pass": true,
+ "failed": [],
+ "hash": "85ab2081be57540d",
+ "at": "2026-11-21T20:39:45.611Z",
+ "results": {
+  "silent": "ok   serial-dilution-calculator  fields 16",
+  "duplicate": "most overlap 0.2% with /retatrutide-dosage-calculator/ (limit 12%)",
+  "registration": "sitemap urls 245 | serial-dilution-calculator cards 1 inbound 244 ld WebApplication,FAQPage,BreadcrumbList | AUDIT PASS"
+ }
+}

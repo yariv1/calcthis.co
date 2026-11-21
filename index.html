@@ -139,6 +139,7 @@
         { "@type": "WebApplication", "name": "mg to mL Calculator", "url": "https://calcthis.co/mg-to-ml-calculator/", "applicationCategory": "HealthApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Dilution Calculator", "url": "https://calcthis.co/dilution-calculator/", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Retatrutide Dosage Calculator", "url": "https://calcthis.co/retatrutide-dosage-calculator/", "applicationCategory": "HealthApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
+        { "@type": "WebApplication", "name": "Serial Dilution Calculator", "url": "https://calcthis.co/serial-dilution-calculator/", "applicationCategory": "EducationalApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Mortgage Calculator", "url": "https://calcthis.co/mortgage-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Loan Calculator", "url": "https://calcthis.co/loan-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Auto Loan Calculator", "url": "https://calcthis.co/auto-loan-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
@@ -157,7 +158,7 @@
   ]
 }
 </script>
-<link rel="stylesheet" href="/assets/style.css?v=362">
+<link rel="stylesheet" href="/assets/style.css?v=363">
 <style>
   .cat-tabs{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
   .cat-grp--hidden{display:none}
@@ -301,6 +302,7 @@
           <a href="/mg-to-ml-calculator/">mg to mL</a>
           <a href="/dilution-calculator/">Dilution</a>
           <a href="/retatrutide-dosage-calculator/">Retatrutide Dosage</a>
+          <a href="/serial-dilution-calculator/">Serial Dilution</a>
           <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
           <!--UNITNAV:START-->
           <span class="menu-col-head">Unit Converters</span>
@@ -1322,6 +1324,20 @@
       </span>
     </a>
 
+    <a class="calc" href="/serial-dilution-calculator/">
+      <span class="ico" aria-hidden="true">
+        <svg width="30" height="30" viewBox="0 0 32 32" fill="none">
+          <path d="M5 8v13a3 3 0 0 0 6 0V8M13 8v13a3 3 0 0 0 6 0V8M21 8v13a3 3 0 0 0 6 0V8" stroke="#37503F" stroke-width="2.2" stroke-linecap="round"/>
+          <path d="M5 17h6M13 19h6M21 21h6" stroke="#D99A33" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <h3>Serial Dilution Calculator</h3>
+      <p>The concentration of every tube, the volumes to pipette, a series from X down to Y and the count back from a plate, with the tubes drawn.</p>
+      <span class="go">Open calculator
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+    </a>
+
     <a class="calc" href="/peptide-reconstitution-calculator/">
       <span class="ico" aria-hidden="true">
         <svg width="30" height="30" viewBox="0 0 32 32" fill="none">
@@ -2302,6 +2318,7 @@
           <li><a href="/mg-to-ml-calculator/">mg to mL Calculator</a><span> — dose in mg and the strength on the label to milliliters on a to-scale syringe, mL to mg and the strength from a dose and a volume</span></li>
           <li><a href="/dilution-calculator/">Dilution Calculator</a><span> — concentrate and water for any strength, ratio (1:10) or factor, with a flask drawn to scale and the same batch at other strengths</span></li>
           <li><a href="/retatrutide-dosage-calculator/">Retatrutide Dosage Calculator</a><span> — syringe units from the vial, the water and a dose you type, with your own steps and the vials they need; arithmetic only, no doses</span></li>
+          <li><a href="/serial-dilution-calculator/">Serial Dilution Calculator</a><span> — the concentration of every tube, the volumes to pipette, a series from X down to Y and the count back from a plate, with the tubes drawn</span></li>
           <li><a href="/sales-tax-calculator/">Sales tax</a><span> — by state, with exempt items and local rates</span></li>
           <li><a href="/tip-calculator/">Tip</a><span> — split the bill, tip before or after tax</span></li>
         </ul>
@@ -2378,6 +2395,7 @@
           <li><a href="/mg-to-ml-calculator/">mg to mL Calculator</a></li>
           <li><a href="/dilution-calculator/">Dilution Calculator</a></li>
           <li><a href="/retatrutide-dosage-calculator/">Retatrutide Dosage Calculator</a></li>
+          <li><a href="/serial-dilution-calculator/">Serial Dilution Calculator</a></li>
           <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
         </ul>
       </div>
@@ -2637,7 +2655,7 @@
   });
 })();
 </script>
-<script src="/assets/app.js?v=362"></script>
+<script src="/assets/app.js?v=363"></script>
 <script src="/feedback.js" defer></script>
 </body>
 </html>

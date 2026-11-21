@@ -202,6 +202,10 @@
     "t": "Overtime Calculator — Pay, Take-Home & No Tax on Overtime",
     "d": "Free overtime calculator: your hourly rate and hours give overtime pay, take-home after tax, California daily rules and the no-tax-on-overtime deduction."
   },
+  "/serial-dilution-calculator/": {
+    "t": "Serial Dilution Calculator: Tubes, Volumes, Titer",
+    "d": "Serial dilution calculator: the concentration of every tube, the volume to take and diluent to add, and the original count from a plate. Draws the tubes."
+  },
   "/retatrutide-dosage-calculator/": {
     "t": "Retatrutide Dosage Calculator: Syringe Units & Vials",
     "d": "Retatrutide dosage calculator: type your vial, water and your own steps to see syringe units, weeks per vial and vials needed. Arithmetic only, no doses."

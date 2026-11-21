@@ -1,0 +1,397 @@
+{
+ "slug": "serial-dilution-calculator",
+ "research": "md-files/calcthis-serialdilution-research.md",
+ "competitors": [
+  {
+   "name": "Omnicalculator serial dilution calculator",
+   "url": "https://www.omnicalculator.com/chemistry/serial-dilution",
+   "openedLive": true,
+   "date": "2026-11-22",
+   "inputs": [
+    "method: dilution factor or concentration range",
+    "number of dilutions",
+    "dilution factor (X:1)",
+    "starting solution concentration (molar units M down to yM)",
+    "volume left for each dilution",
+    "volume per use",
+    "number of uses per dilution",
+    "error type (percentage or volume) and the error",
+    "minimum volume required",
+    "output: starting volume needed",
+    "output: volume of stock solution required",
+    "output: volume of diluent to add",
+    "volume units (21 units, mm3 to UK pints)",
+    "share, reload and clear buttons",
+    "text on how to do serial dilutions with examples"
+   ]
+  },
+  {
+   "name": "AAT Bioquest serial dilution planner",
+   "url": "https://www.aatbio.com/tools/serial-dilution",
+   "openedLive": true,
+   "date": "2026-11-22",
+   "inputs": [
+    "method: initial concentration plus factor or concentration range",
+    "stock solution name and diluent name",
+    "concentration of stock solution (uM)",
+    "serial dilution initial concentration (cannot exceed the stock)",
+    "dilution factor",
+    "final volume of each dilution (uL)",
+    "number of dilutions",
+    "number of replicates (optional)",
+    "protocol (tube or well list)",
+    "advice to prepare extra volume for pipetting loss",
+    "citation (MLA, APA, BibTeX)"
+   ]
+  },
+  {
+   "name": "calculate.co.nz serial dilution calculator",
+   "url": "https://www.calculate.co.nz/dilution-series-calculator.php",
+   "openedLive": true,
+   "date": "2026-11-22",
+   "inputs": [
+    "starting stock concentration",
+    "dilution factor at each step",
+    "number of steps",
+    "output: concentration after the final step, total dilution and the list of concentrations at every step",
+    "formula text"
+   ]
+  },
+  {
+   "name": "ConductScience serial dilution planner",
+   "url": "https://conductscience.com/tools/serial-dilution-calculator",
+   "openedLive": true,
+   "date": "2026-11-22",
+   "inputs": [
+    "fold dilution (auto) or custom concentrations",
+    "stock concentration with a unit (M, mM, uM, nM, pM, mg/mL, ug/mL, ng/mL, cells/mL, CFU/mL, PFU/mL, x fold)",
+    "total volume per tube (uL)",
+    "dilution preset 1:2, 1:3, 1:5, 1:10 and half-log (1:sqrt 10)",
+    "simple dilution box C1 V1 = C2 V2",
+    "transfer and diluent volumes with pipetting-accuracy warnings",
+    "ready-to-print protocol",
+    "download for a lab notebook",
+    "load example data",
+    "text on error compounding and mixing"
+   ]
+  },
+  {
+   "name": "Easy Unit Converter serial dilution calculator",
+   "url": "https://www.easyunitconverter.com/serial-dilution-calculator",
+   "openedLive": true,
+   "date": "2026-11-22",
+   "inputs": [
+    "initial concentration (M, mM, uM, mg/mL, ug/mL)",
+    "dilution factor (1:X)",
+    "number of steps",
+    "final volume per tube (mL, uL, L)",
+    "output: concentration at each step, transfer volume and diluent volume",
+    "how-to text with Cn = C0 x (1/DF)^n"
+   ]
+  },
+  {
+   "name": "dilution.phage.org dilution calculator",
+   "url": "https://dilution.phage.org/",
+   "openedLive": true,
+   "date": "2026-11-22",
+   "inputs": [
+    "dilution planner goal: reach a target final titer in a tube or deliver a target number of pfu or cfu to a plate",
+    "starting titer pfu/mL or cfu/mL in scientific notation",
+    "titer from plate count back-calculation",
+    "exponents, scientific notation and significant figures teaching tabs",
+    "citation with a DOI"
+   ]
+  },
+  {
+   "name": "Pearson serial dilution calculator",
+   "url": "https://www.pearson.com/channels/it/calculators/serial-dilution-calculator",
+   "openedLive": true,
+   "date": "2026-11-22",
+   "inputs": [
+    "initial concentration with a label-only unit",
+    "dilution per step as a factor D, a ratio 1:x or transfer over total volume",
+    "number of steps",
+    "include step 0 (the stock) in the table",
+    "step-by-step working and a results table",
+    "decay curve",
+    "final-concentration gauge",
+    "significant figures and scientific notation toggles"
+   ]
+  }
+ ],
+ "features": [
+  {
+   "covers": [
+    "Omnicalculator serial dilution calculator: method: dilution factor or concentration range",
+    "AAT Bioquest serial dilution planner: method: initial concentration plus factor or concentration range",
+    "ConductScience serial dilution planner: fold dilution (auto) or custom concentrations"
+   ],
+   "status": "match",
+   "ids": [
+    "sdMode",
+    "sdFactor",
+    "sdN",
+    "sdFrom",
+    "sdTo",
+    "sdList"
+   ]
+  },
+  {
+   "covers": [
+    "Omnicalculator serial dilution calculator: number of dilutions",
+    "AAT Bioquest serial dilution planner: number of dilutions",
+    "calculate.co.nz serial dilution calculator: number of steps",
+    "Easy Unit Converter serial dilution calculator: number of steps",
+    "Pearson serial dilution calculator: number of steps"
+   ],
+   "status": "match",
+   "ids": [
+    "sdN"
+   ]
+  },
+  {
+   "covers": [
+    "Omnicalculator serial dilution calculator: dilution factor (X:1)",
+    "AAT Bioquest serial dilution planner: dilution factor",
+    "calculate.co.nz serial dilution calculator: dilution factor at each step",
+    "Easy Unit Converter serial dilution calculator: dilution factor (1:X)",
+    "Pearson serial dilution calculator: dilution per step as a factor D, a ratio 1:x or transfer over total volume"
+   ],
+   "status": "exceed",
+   "ids": [
+    "sdFt",
+    "sdFactor",
+    "sdT",
+    "sdV"
+   ]
+  },
+  {
+   "covers": [
+    "Omnicalculator serial dilution calculator: starting solution concentration (molar units M down to yM)",
+    "AAT Bioquest serial dilution planner: concentration of stock solution (uM)",
+    "calculate.co.nz serial dilution calculator: starting stock concentration",
+    "ConductScience serial dilution planner: stock concentration with a unit (M, mM, uM, nM, pM, mg/mL, ug/mL, ng/mL, cells/mL, CFU/mL, PFU/mL, x fold)",
+    "Easy Unit Converter serial dilution calculator: initial concentration (M, mM, uM, mg/mL, ug/mL)",
+    "Pearson serial dilution calculator: initial concentration with a label-only unit"
+   ],
+   "status": "match",
+   "ids": [
+    "sdStock",
+    "sdUnit"
+   ]
+  },
+  {
+   "covers": [
+    "AAT Bioquest serial dilution planner: serial dilution initial concentration (cannot exceed the stock)"
+   ],
+   "status": "match",
+   "ids": [
+    "sdFirst"
+   ]
+  },
+  {
+   "covers": [
+    "Omnicalculator serial dilution calculator: volume left for each dilution",
+    "Omnicalculator serial dilution calculator: volume per use",
+    "AAT Bioquest serial dilution planner: final volume of each dilution (uL)",
+    "ConductScience serial dilution planner: total volume per tube (uL)",
+    "Easy Unit Converter serial dilution calculator: final volume per tube (mL, uL, L)"
+   ],
+   "status": "match",
+   "ids": [
+    "sdVol",
+    "sdVu"
+   ]
+  },
+  {
+   "covers": [
+    "Omnicalculator serial dilution calculator: number of uses per dilution",
+    "AAT Bioquest serial dilution planner: number of replicates (optional)"
+   ],
+   "status": "match",
+   "ids": [
+    "sdRep"
+   ]
+  },
+  {
+   "covers": [
+    "Omnicalculator serial dilution calculator: error type (percentage or volume) and the error",
+    "ConductScience serial dilution planner: text on error compounding and mixing"
+   ],
+   "status": "match",
+   "ids": [
+    "sdEt",
+    "sdErr"
+   ]
+  },
+  {
+   "covers": [
+    "Omnicalculator serial dilution calculator: minimum volume required",
+    "ConductScience serial dilution planner: transfer and diluent volumes with pipetting-accuracy warnings"
+   ],
+   "status": "match",
+   "ids": [
+    "sdMin",
+    "sdWarn"
+   ]
+  },
+  {
+   "covers": [
+    "Omnicalculator serial dilution calculator: output: starting volume needed",
+    "Omnicalculator serial dilution calculator: output: volume of stock solution required",
+    "Omnicalculator serial dilution calculator: output: volume of diluent to add",
+    "Easy Unit Converter serial dilution calculator: output: concentration at each step, transfer volume and diluent volume",
+    "calculate.co.nz serial dilution calculator: output: concentration after the final step, total dilution and the list of concentrations at every step"
+   ],
+   "status": "match",
+   "ids": [
+    "sdTab",
+    "sdNums"
+   ]
+  },
+  {
+   "covers": [
+    "Omnicalculator serial dilution calculator: volume units (21 units, mm3 to UK pints)"
+   ],
+   "status": "match",
+   "ids": [
+    "sdVu"
+   ]
+  },
+  {
+   "covers": [
+    "Omnicalculator serial dilution calculator: share, reload and clear buttons",
+    "ConductScience serial dilution planner: ready-to-print protocol",
+    "AAT Bioquest serial dilution planner: protocol (tube or well list)"
+   ],
+   "status": "match",
+   "ids": [
+    "sdClear",
+    "sdCopyTxt",
+    "sdEx"
+   ]
+  },
+  {
+   "covers": [
+    "AAT Bioquest serial dilution planner: advice to prepare extra volume for pipetting loss"
+   ],
+   "status": "match",
+   "ids": [
+    "sdLoss"
+   ]
+  },
+  {
+   "covers": [
+    "AAT Bioquest serial dilution planner: stock solution name and diluent name"
+   ],
+   "status": "match",
+   "ids": [
+    "sdSN",
+    "sdDN"
+   ]
+  },
+  {
+   "covers": [
+    "ConductScience serial dilution planner: dilution preset 1:2, 1:3, 1:5, 1:10 and half-log (1:sqrt 10)",
+    "ConductScience serial dilution planner: load example data"
+   ],
+   "status": "match",
+   "ids": [
+    "sdPre",
+    "sdEx"
+   ]
+  },
+  {
+   "covers": [
+    "ConductScience serial dilution planner: simple dilution box C1 V1 = C2 V2"
+   ],
+   "status": "match",
+   "ids": [
+    "sdC2",
+    "sdV2"
+   ]
+  },
+  {
+   "covers": [
+    "Omnicalculator serial dilution calculator: text on how to do serial dilutions with examples",
+    "calculate.co.nz serial dilution calculator: formula text",
+    "Easy Unit Converter serial dilution calculator: how-to text with Cn = C0 x (1/DF)^n",
+    "Pearson serial dilution calculator: step-by-step working and a results table"
+   ],
+   "status": "match",
+   "ids": [
+    "sdSteps",
+    "sdTip"
+   ]
+  },
+  {
+   "covers": [
+    "Pearson serial dilution calculator: include step 0 (the stock) in the table"
+   ],
+   "status": "match",
+   "ids": [
+    "sdTab"
+   ]
+  },
+  {
+   "covers": [
+    "Pearson serial dilution calculator: decay curve",
+    "Pearson serial dilution calculator: final-concentration gauge"
+   ],
+   "status": "exceed",
+   "ids": [
+    "sdTubes"
+   ]
+  },
+  {
+   "covers": [
+    "Pearson serial dilution calculator: significant figures and scientific notation toggles"
+   ],
+   "status": "match",
+   "ids": [
+    "sdFm",
+    "sdSg"
+   ]
+  },
+  {
+   "covers": [
+    "dilution.phage.org dilution calculator: dilution planner goal: reach a target final titer in a tube or deliver a target number of pfu or cfu to a plate"
+   ],
+   "status": "match",
+   "ids": [
+    "sdMode",
+    "sdFrom",
+    "sdTo",
+    "sdPlate"
+   ]
+  },
+  {
+   "covers": [
+    "dilution.phage.org dilution calculator: starting titer pfu/mL or cfu/mL in scientific notation",
+    "dilution.phage.org dilution calculator: titer from plate count back-calculation"
+   ],
+   "status": "match",
+   "ids": [
+    "sdCnt",
+    "sdPlate",
+    "sdPu",
+    "sdTubeN",
+    "sdCb"
+   ]
+  },
+  {
+   "covers": [
+    "AAT Bioquest serial dilution planner: citation (MLA, APA, BibTeX)",
+    "ConductScience serial dilution planner: download for a lab notebook",
+    "dilution.phage.org dilution calculator: exponents, scientific notation and significant figures teaching tabs",
+    "dilution.phage.org dilution calculator: citation with a DOI"
+   ],
+   "status": "dropped",
+   "ids": [],
+   "signoff": {
+    "quote": "approve all (his reply to the research report that named citation formats MLA / APA / BibTeX, the lab notebook download and the maths teaching tabs as drop candidates)",
+    "date": "2026-11-22"
+   }
+  }
+ ]
+}

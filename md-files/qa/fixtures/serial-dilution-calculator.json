@@ -1,0 +1,57 @@
+{
+  "slug": "serial-dilution-calculator",
+  "bodyClass": "p-sd",
+  "blocks": ["SERIALDIL"],
+  "result": { "big": "sdBig", "body": "sdBody", "hint": "sdHint" },
+  "required": ["sdStock", "sdFactor", "sdN", "sdT", "sdV", "sdFrom", "sdTo", "sdList"],
+  "fill": [
+    ["click", "sdClear"],
+    ["seg", "sdMode", "factor"],
+    ["seg", "sdFt", "fold"],
+    ["set", "sdVu", "ul"],
+    ["seg", "sdFm", "a"],
+    ["seg", "sdPu", "ul"],
+    ["set", "sdStock", "1000000"],
+    ["set", "sdFactor", "10"],
+    ["set", "sdN", "6"]
+  ],
+  "optionalSamples": {
+    "sdVol": ["100", "50", "0.5", "2000"],
+    "sdFirst": ["100000", "1000000", "5000"],
+    "sdRep": ["3", "2", "10"],
+    "sdLoss": ["10", "5", "25"],
+    "sdMin": ["5", "10", "0.5"],
+    "sdErr": ["2", "5", "0.5"],
+    "sdCnt": ["32", "250", "5"],
+    "sdPlate": ["200", "100", "0.1"],
+    "sdTubeN": ["6", "3", "1"]
+  },
+  "pools": {
+    "sdStock": ["1000000", "1e9", "250", "0.05", "7500"],
+    "sdFactor": ["10", "2", "3", "5", "100", "1.5"],
+    "sdN": ["6", "3", "8", "12", "1", "30"],
+    "sdT": ["100", "10", "1", "50"],
+    "sdV": ["1000", "300", "500", "100"],
+    "sdFrom": ["1000", "100000", "250"],
+    "sdTo": ["1", "10", "0.5"],
+    "sdVol": ["100", "50", "500"],
+    "sdFirst": ["100000", "50000"],
+    "sdRep": ["3", "2"],
+    "sdLoss": ["10", "20"],
+    "sdMin": ["5", "10"],
+    "sdErr": ["2", "5"],
+    "sdCnt": ["32", "250"],
+    "sdPlate": ["200", "100"],
+    "sdTubeN": ["6", "3"]
+  },
+  "variants": [
+    [["click", "sdClear"], ["seg", "sdMode", "range"], ["set", "sdStock", "1000000"], ["set", "sdFrom", "1000"], ["set", "sdTo", "1"], ["set", "sdFactor", "10"]],
+    [["click", "sdClear"], ["seg", "sdMode", "range"], ["set", "sdStock", "1000000"], ["set", "sdFrom", "1000"], ["set", "sdTo", "1"], ["set", "sdN", "4"]],
+    [["click", "sdClear"], ["seg", "sdMode", "list"], ["set", "sdStock", "1000000"], ["set", "sdList", "1000, 100, 10, 1"]],
+    [["click", "sdClear"], ["seg", "sdFt", "tv"], ["set", "sdStock", "1000000"], ["set", "sdT", "100"], ["set", "sdV", "1000"], ["set", "sdN", "6"]],
+    [["click", "sdClear"], ["seg", "sdFt", "ratio"], ["set", "sdStock", "1000000"], ["set", "sdFactor", "9"], ["set", "sdN", "6"]],
+    [["click", "sdClear"], ["set", "sdStock", "1000000"], ["set", "sdFactor", "10"], ["set", "sdN", "6"], ["set", "sdVol", "100"], ["set", "sdMin", "20"]]
+  ],
+  "scrollTo": "sdBig",
+  "errorState": [["set", "sdFactor", "0.5"]]
+}

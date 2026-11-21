@@ -1,0 +1,62 @@
+{
+ "date": "2026-11-22",
+ "competitors": [
+  {
+   "name": "Omnicalculator serial dilution calculator",
+   "url": "https://www.omnicalculator.com/chemistry/serial-dilution",
+   "reopenedAfterBuild": true,
+   "gaps": []
+  },
+  {
+   "name": "AAT Bioquest serial dilution planner",
+   "url": "https://www.aatbio.com/tools/serial-dilution",
+   "reopenedAfterBuild": true,
+   "gaps": []
+  },
+  {
+   "name": "calculate.co.nz serial dilution calculator",
+   "url": "https://www.calculate.co.nz/dilution-series-calculator.php",
+   "reopenedAfterBuild": true,
+   "gaps": []
+  },
+  {
+   "name": "ConductScience serial dilution planner",
+   "url": "https://conductscience.com/tools/serial-dilution-calculator",
+   "reopenedAfterBuild": true,
+   "gaps": []
+  },
+  {
+   "name": "Easy Unit Converter serial dilution calculator",
+   "url": "https://www.easyunitconverter.com/serial-dilution-calculator",
+   "reopenedAfterBuild": true,
+   "gaps": []
+  },
+  {
+   "name": "dilution.phage.org dilution calculator",
+   "url": "https://dilution.phage.org/",
+   "reopenedAfterBuild": true,
+   "gaps": []
+  },
+  {
+   "name": "Pearson serial dilution calculator",
+   "url": "https://www.pearson.com/channels/it/calculators/serial-dilution-calculator",
+   "reopenedAfterBuild": true,
+   "gaps": []
+  }
+ ],
+ "weBeat": [
+  "visual: the series drawn as a row of tubes: one tube per step plus the stock, the concentration written on each tube, colour strength following the concentration, liquid level following the volume you must make, and an arrow for every transfer; Pearson draws only a decay curve and gauge, the other six draw nothing",
+  "functional: three ways to define the series (factor and tubes, from X down to Y, your own list), a backwards volume plan for every tube with replicates and a pipetting-loss percent, a flag on every transfer below your smallest pipette volume, error spread in percent or in volume, a single-dilution box, names in the copied protocol, which tubes land between 30 and 300 on a plate, and the count back from a plate in one page; no checked competitor has all of these"
+ ],
+ "gapsLeft": [],
+ "unverified": [
+  "real phone",
+  "other browsers (Chrome only)",
+  "print",
+  "Copy button in a real clipboard session",
+  "the competitors were reopened after the build and their controls compared with the parity list; they were not typed side by side with every input value",
+  "the 30 to 300 countable range comes from one lab manual (LibreTexts, Pakpour and Horgan); other texts may state a different range",
+  "volume units: 23 units (Omnicalculator list plus nL and uL); liquid unit conversions are exact definitions but only a few were checked against NIST",
+  "Pearson types the dilution as a fraction D below 1 (0.1 for tenfold); this page asks for the factor above 1 (10) and says so in the note"
+ ]
+}

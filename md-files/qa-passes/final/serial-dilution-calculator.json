@@ -1,0 +1,14 @@
+{
+ "slug": "serial-dilution-calculator",
+ "pass": true,
+ "at": "2026-11-21T20:17:41.071Z",
+ "passHash": "85ab2081be57540d",
+ "scriptHash": "ea02a2d56d1fdd9f",
+ "cats": {
+  "textVsTool": 82,
+  "extremes": 34,
+  "visual": 34
+ },
+ "runs": 60,
+ "fails": []
+}
