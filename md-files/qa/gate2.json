@@ -6,5 +6,6 @@
  "confidence-interval-calculator",
  "z-score-calculator",
  "compound-interest-calculator",
- "amortization-calculator"
+ "amortization-calculator",
+ "mg-to-ml-calculator"
 ]

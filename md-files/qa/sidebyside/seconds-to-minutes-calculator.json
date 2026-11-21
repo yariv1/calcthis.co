@@ -1,5 +1,5 @@
 {
- "date": "2026-11-14",
+ "date": "2026-11-21",
  "competitors": [
   {
    "name": "Inch Calculator",
@@ -32,6 +32,7 @@
   "print",
   "Copy buttons were not clicked in a real browser clipboard session",
   "competitor pages were reopened as text (Omnicalculator also as a screenshot); their live widgets were not driven with typed values after the build",
-  "2026-11-13: the competitor pages were reopened (page loads and headings read) after the header gained the z-score link; no feature comparison was repeated"
+  "2026-11-13: the competitor pages were reopened (page loads and headings read) after the header gained the z-score link; no feature comparison was repeated",
+  "2026-11-21 re-check after the contact-email release: every competitor page was reopened and its tool layout looked the same at first-screen level; not re-typed input by input"
  ]
 }

@@ -1,0 +1,24 @@
+{
+ "date": "2026-11-21",
+ "competitors": [
+  { "name": "Omnicalculator mg to mL", "url": "https://www.omnicalculator.com/conversion/mg-to-ml", "reopenedAfterBuild": true, "gaps": [] },
+  { "name": "CalculateQuick mg to ml", "url": "https://calculatequick.com/conversion/mg-to-ml-calculator/", "reopenedAfterBuild": true, "gaps": [] },
+  { "name": "Inch Calculator mg to mL", "url": "https://www.inchcalculator.com/convert/milligram-to-milliliter/", "reopenedAfterBuild": true, "gaps": [] },
+  { "name": "Calculator.academy mg to mL", "url": "https://calculator.academy/mg-to-ml-calculator-2/", "reopenedAfterBuild": true, "gaps": [] }
+ ],
+ "weBeat": [
+  "visual: the dose drawn on a to-scale syringe (size picked from the volume) plus a bottle ruler (volume against milligrams), a label strength line and a nearest-mark note; none of the four competitors draws anything",
+  "functional: type the label the way it is printed (250 mg in 5 mL), any of three modes (mg to mL, mL to mg, strength), mcg / mg / g echo under the dose, warnings for a volume too small or too big for a syringe, the dose worked out from a dose per kg of body weight, doses per bottle, a saved list, 16 label presets read on DailyMed and 40 water and cooking densities",
+  "every competitor feature kept except what has no readable source (4 Omni and 3 Inch medicine labels, about 14 Inch food items) and the embed and cite buttons, recorded as dropped under his approval of the research report"
+ ],
+ "gapsLeft": [],
+ "unverified": [
+  "real phone",
+  "other browsers (Chrome only)",
+  "print",
+  "Copy result button in a real clipboard session",
+  "the syringe drawing is schematic: real syringes have their own marks, so the nearest-mark note only works with the gap the user types",
+  "label strengths change by brand and year, each preset was read on one DailyMed label on 2026-11-21",
+  "the competitors were compared from the research pass and the same pages reloaded after the build, not typed side by side with every input"
+ ]
+}

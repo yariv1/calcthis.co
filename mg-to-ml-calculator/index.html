@@ -1,0 +1,854 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>mg to mL Calculator — Convert a Dose to Milliliters</title>
+<meta name="description" content="mg to mL calculator: enter the dose and the strength on the label, get milliliters on a to-scale syringe. Also mL to mg, mg per mL, tsp, tbsp and mcg.">
+<link rel="canonical" href="https://calcthis.co/mg-to-ml-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="mg to mL Calculator — Convert a Dose to Milliliters">
+<meta property="og:description" content="mg to mL calculator: enter the dose and the strength on the label, get milliliters on a to-scale syringe. Also mL to mg, mg per mL, tsp, tbsp and mcg.">
+<meta property="og:url" content="https://calcthis.co/mg-to-ml-calculator/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/datepicker.min.css">
+<link rel="stylesheet" href="/assets/style.css?v=358">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "mg to mL Calculator",
+  "url": "https://calcthis.co/mg-to-ml-calculator/",
+  "applicationCategory": "HealthApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "Free mg to mL calculator: convert a dose in mg, mcg or g to milliliters with the strength on the label (mg per mL or mg per 5 mL), mL to mg, and the strength from a dose and a volume. Shows a to-scale syringe, teaspoons, tablespoons, fluid ounces, label presets read on DailyMed and densities for water and common liquids."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I convert mg to mL?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Divide the dose in mg by the strength in mg per mL. mg are weight and mL are volume, so you need the strength of the liquid. 50 mg at 20 mg per mL is 2.5 mL. For water, 1 mL weighs about 1,000 mg, so 1,000 mg is about 1 mL."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How many mL is 10 mg?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It depends on the strength. 10 mg is 10 mL at 1 mg per mL, 2 mL at 5 mg per mL, 1 mL at 10 mg per mL, 0.5 mL at 20 mg per mL, 0.2 mL at 50 mg per mL and 0.1 mL at 100 mg per mL. For water it is 0.01 mL."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How many mL is 2.5 mg?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "2.5 mL at 1 mg per mL, 0.5 mL at 5 mg per mL, 0.25 mL at 10 mg per mL, 0.125 mL at 20 mg per mL and 0.05 mL at 50 mg per mL. Type your own strength in the calculator to see it on a syringe."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How many mL is 50 mg?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "5 mL at 10 mg per mL, 2.5 mL at 20 mg per mL, 1 mL at 50 mg per mL, 0.5 mL at 100 mg per mL and 0.2 mL at 250 mg per mL. A 50 mg dose of children’s ibuprofen at 20 mg per mL (100 mg in 5 mL) is 2.5 mL."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How many mL is 500 mg?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "5 mL at 100 mg per mL, 2 mL at 250 mg per mL, 10 mL at 50 mg per mL (250 mg in 5 mL) and 0.5 mL for water. At 1 mg per mL it would be 500 mL, which shows why the strength matters."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I read a label such as 250 mg/5 mL?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It means every 5 mL holds 250 mg, so the strength is 250 ÷ 5 = 50 mg per mL. Type 250 in the amount box and 5 in the liquid box, or pick the label from the list. Leave the liquid box empty when the label says “per mL”."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I convert mcg to mL?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Divide mcg by 1,000 to get mg, then divide by the strength. 500 mcg is 0.5 mg, which is 0.5 mL at 1 mg per mL. The calculator takes mcg, mg or g in the dose box and shows all three."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How many mL is a teaspoon or tablespoon of medicine?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Medicine labels use 1 teaspoon = 5 mL and 1 tablespoon = 15 mL (MedlinePlus). A flatware teaspoon can hold anywhere from 2.5 mL to 10 mL, so use the syringe or cup that came with the medicine."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does this calculator tell me how much medicine to take?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. It does the arithmetic with the numbers you type and never suggests a dose. Take the dose from your label or prescriber and ask a pharmacist if anything is unclear."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "CalcThis",
+      "item": "https://calcthis.co/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "mg to mL Calculator",
+      "item": "https://calcthis.co/mg-to-ml-calculator/"
+    }
+  ]
+}
+</script>
+<meta property="og:site_name" content="CalcThis">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://calcthis.co/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="CalcThis — free, purpose-built calculators">
+<meta name="twitter:title" content="mg to mL Calculator — Convert a Dose to Milliliters">
+<meta name="twitter:description" content="mg to mL calculator: enter the dose and the strength on the label, get milliliters on a to-scale syringe. Also mL to mg, mg per mL, tsp, tbsp and mcg.">
+<meta name="twitter:image" content="https://calcthis.co/assets/og-default.png">
+</head>
+<body class="p-bmr p-mm">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <a class="hdr-back" href="/blog/" aria-label="Back to blog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-search"><div class="menu-sx"><input id="menuSearch" type="search" placeholder="Search calculators or states…" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Search calculators" enterkeyhint="search"></div><div class="menu-results" id="menuResults" hidden></div></div>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <span class="menu-col-head">Construction &amp; Gardening</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+          <a href="/paint-calculator/">Paint</a>
+          <a href="/wallpaper-calculator/">Wallpaper</a>
+          <a href="/square-footage-calculator/">Square Footage</a>
+          <a href="/tape-measure-fraction-calculator/">Tape Measure Fraction</a>
+          <a href="/stair-calculator/">Stair</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/vo2-max-calculator/">VO2 Max</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
+          <a href="/bmi-calculator/">BMI</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/ideal-weight-calculator/">Ideal Weight</a>
+          <a href="/lean-body-mass-calculator/">Lean Body Mass</a>
+          <a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio</a>
+          <a href="/gmi-calculator/">GMI</a>
+          <a href="/a1c-calculator/">A1C</a>
+          <a href="/calorie-calculator/">Calorie</a>
+          <a href="/calorie-deficit-calculator/">Calorie Deficit</a>
+          <a href="/bmr-calculator/">BMR</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/water-intake-calculator/">Water Intake</a>
+          <a href="/macro-calculator/">Macro</a>
+          <a href="/protein-intake-calculator/">Protein Intake</a>
+          <a href="/steps-to-miles-calculator/">Steps to Miles</a>
+          <a href="/dog-age-calculator/">Dog Age</a>
+          <a href="/cat-age-calculator/">Cat Age</a>
+          <a href="/calories-burned-calculator/">Calories Burned</a>
+          <a href="/calories-burned-walking-calculator/">Calories Burned Walking</a>
+          <a href="/calories-burned-running-calculator/">Calories Burned Running</a>
+          <a href="/keto-calculator/">Keto</a>
+          <a href="/net-carb-calculator/">Net Carb</a>
+          <a href="/intermittent-fasting-calculator/">Intermittent Fasting</a>
+          <a href="/bsa-calculator/">BSA</a>
+          <a href="/dog-food-calculator/">Dog Food</a>
+          <a href="/ffmi-calculator/">FFMI</a>
+          <a href="/bulking-calculator/">Bulking</a>
+          <a href="/weight-loss-calculator/">Weight Loss</a>
+          <a href="/weight-loss-percentage-calculator/">Weight Loss %</a>
+          <a href="/max-heart-rate-calculator/">Max Heart Rate</a>
+          <a href="/caffeine-calculator/">Caffeine</a>
+          <a href="/caffeine-half-life-calculator/">Caffeine Half Life</a>
+          <a href="/fiber-calculator/">Fiber</a>
+          <a href="/creatine-calculator/">Creatine</a>
+          <a href="/vitamin-d-calculator/">Vitamin D</a>
+          <a href="/body-recomposition-calculator/">Body Recomposition</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/semester-grade-calculator/">Semester Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+          <a href="/grade-curve-calculator/">Grade Curve</a>
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/fraction-calculator/">Fraction</a>
+          <a href="/standard-deviation-calculator/">Standard Deviation</a>
+          <a href="/p-value-calculator/">P-Value</a>
+          <a href="/confidence-interval-calculator/">Confidence Interval</a>
+          <a href="/z-score-calculator/">Z Score</a>
+          <a href="/scientific-notation-calculator/">Scientific Notation</a>
+          <a href="/average-calculator/">Average</a>
+          <a href="/batting-average-calculator/">Batting Average</a>
+          <a href="/stock-average-calculator/">Stock Average</a>
+          <a href="/dice-average-calculator/">Dice Average</a>
+          <a href="/time-average-calculator/">Time Average</a>
+          <a href="/weighted-average-calculator/">Weighted Average</a>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+          <a href="/percentage-change-calculator/">Percentage Change</a>
+          <a href="/age-calculator/">Age</a>
+          <a href="/date-calculator/">Date</a>
+          <a href="/time-calculator/">Time</a>
+          <a href="/hours-calculator/">Hours</a>
+          <a href="/seconds-to-hours-calculator/">Seconds to Hours</a>
+          <a href="/minutes-to-hours-calculator/">Minutes to Hours</a>
+          <a href="/seconds-to-minutes-calculator/">Seconds to Minutes</a>
+          <a href="/triangle-calculator/">Triangle</a>
+          <a href="/random-number-generator/">Random Number</a>
+          <span class="menu-col-head">Cooking &amp; Kitchen</span>
+          <a href="/recipe-converter/">Recipe Converter</a>
+          <a href="/turkey-cooking-time-calculator/">Turkey Cooking Time</a>
+          <a href="/turkey-thawing-time-calculator/">Turkey Thawing Time</a>
+          <a href="/turkey-size-calculator/">Turkey Size</a>
+          <span class="menu-col-head">Medication &amp; Dosage</span>
+          <a href="/mg-to-ml-calculator/" class="current">mg to mL</a>
+          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
+          <!--UNITNAV:START-->
+          <span class="menu-col-head">Unit Converters</span>
+          <a href="/unit-converter/">Unit Converter</a>
+          <a href="/length-converter/">Length Converter</a>
+          <a href="/weight-converter/">Weight Converter</a>
+          <a href="/volume-converter/">Volume Converter</a>
+          <a href="/temperature-converter/">Temperature Converter</a>
+          <a href="/area-converter/">Area Converter</a>
+          <a href="/speed-converter/">Speed Converter</a>
+          <a href="/data-storage-converter/">Data Storage Converter</a>
+          <a href="/cooking-converter/">Cooking Converter</a>
+          <a href="/px-to-rem-converter/">PX to REM Converter</a>
+          <!--UNITNAV:END-->
+          <span class="menu-col-head">Money &amp; Finance</span>
+          <a href="/mortgage-calculator/">Mortgage</a>
+          <a href="/loan-calculator/">Loan</a>
+          <a href="/auto-loan-calculator/">Auto Loan</a>
+          <a href="/car-sales-tax-calculator/">Car Sales Tax</a>
+          <a href="/overtime-calculator/">Overtime</a>
+          <a href="/salary-calculator/">Salary</a>
+          <a href="/markup-calculator/">Markup</a>
+          <a href="/profit-margin-calculator/">Profit Margin</a>
+          <a href="/discount-calculator/">Discount</a>
+          <a href="/commission-calculator/">Commission</a>
+          <a href="/realtor-commission-calculator/">Realtor Commission</a>
+          <a href="/unit-price-calculator/">Unit Price</a>
+          <a href="/compound-interest-calculator/">Compound Interest</a>
+          <a href="/amortization-calculator/">Amortization</a>
+          <!--STAXNAV:START-->
+          <a href="/sales-tax-calculator/">Sales Tax</a>
+          <a href="/sales-tax-calculator/california/">California Sales Tax</a>
+          <a href="/sales-tax-calculator/chicago/">Chicago Sales Tax</a>
+          <a href="/sales-tax-calculator/florida/">Florida Sales Tax</a>
+          <a href="/sales-tax-calculator/las-vegas/">Las Vegas Sales Tax</a>
+          <a href="/sales-tax-calculator/los-angeles/">Los Angeles Sales Tax</a>
+          <a href="/sales-tax-calculator/michigan/">Michigan Sales Tax</a>
+          <a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax</a>
+          <a href="/sales-tax-calculator/missouri/">Missouri Sales Tax</a>
+          <a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax</a>
+          <a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax</a>
+          <a href="/sales-tax-calculator/north-carolina/">North Carolina Sales Tax</a>
+          <a href="/sales-tax-calculator/ohio/">Ohio Sales Tax</a>
+          <a href="/sales-tax-calculator/texas/">Texas Sales Tax</a>
+          <a href="/sales-tax-calculator/virginia/">Virginia Sales Tax</a>
+          <!--STAXNAV:END-->
+          <a href="/tip-calculator/">Tip</a>
+          <a href="/how-much-to-tip/">How Much to Tip</a>
+        </div>
+        <!--PAYNAV:START-->
+        <div class="menu-col">
+          <span class="menu-col-head">Paycheck Calculators</span>
+          <a href="/paycheck-calculator/">Paycheck Calculator (all states)</a>
+          <a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a>
+          <a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arkansas/">Arkansas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/california/">California Paycheck Calculator</a>
+          <a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a>
+          <a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a>
+          <a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/hawaii/">Hawaii Paycheck Calculator</a>
+          <a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a>
+          <a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a>
+          <a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a>
+          <a href="/paycheck-calculator/louisiana/">Louisiana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a>
+          <a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a>
+          <a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a>
+          <a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a>
+          <a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nebraska/">Nebraska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a>
+          <a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a>
+          <a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a>
+          <a href="/paycheck-calculator/oklahoma/">Oklahoma Paycheck Calculator</a>
+          <a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a>
+          <a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a>
+          <a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a>
+          <a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/utah/">Utah Paycheck Calculator</a>
+          <a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wisconsin/">Wisconsin Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a>
+        </div>
+        <!--PAYNAV:END-->
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">mg to mL · mL to mg · strength per mL · to-scale syringe</div>
+    <h1>mg to mL Calculator</h1>
+    <p>Type the <strong>dose in mg</strong> and the <strong>strength on the label</strong> (for example <strong>250 mg in 5 mL</strong>) and see the <strong>milliliters</strong> to measure, drawn on a <strong>syringe to scale</strong>, with teaspoons, tablespoons and fluid ounces. Convert <strong>mL to mg</strong> or find a strength too. A milligram is weight and a milliliter is volume, so the strength (mg per mL) is what links them.</p>
+  </section>
+
+  <div class="grid">
+
+    <!-- INPUT -->
+    <div class="card">
+      <div class="card-pad">
+        <div class="sl-head"><h2 class="card-h2">Your dose</h2><button class="linkbtn" id="mmClear" type="button">Clear fields</button></div>
+        <div class="ctl-row" style="display:block"><span class="ctl-lab" style="display:block;margin-bottom:6px">What do you want to find?</span><div class="modeseg" id="mmMode" role="group" aria-label="What do you want to find?"><button class="on" type="button" data-v="mgml">mg to mL</button><button type="button" data-v="mlmg">mL to mg</button><button type="button" data-v="strength">Strength</button></div></div>
+        <div id="mmDoseF"><div class="fld"><span class="lab">Dose <span class="unit">the amount of medicine</span></span><div class="cf-box"><input id="mmDose" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 50" aria-label="Dose"><div class="seg cf-u" id="mmDu" data-u="mg" role="group" aria-label="Dose unit"><button type="button" data-v="mcg">mcg</button><button type="button" class="on" data-v="mg">mg</button><button type="button" data-v="g">g</button></div></div></div>
+        <p class="cb-note" id="mmDoseN"></p></div>
+        <div id="mmVolF" style="display:none"><div class="two"><div class="fld"><span class="lab" id="mmVolLab">Volume the dose is in</span><div class="cf-box"><input id="mmVol" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 2.5" aria-label="Volume"></div></div><div class="fld"><span class="lab">Volume unit</span><div class="csel" id="mmVu" data-value="ml" aria-label="Volume unit"><button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false"><span class="csel-val">mL</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="csel-panel" role="listbox"></div></div></div></div>
+        <p class="cb-note" id="mmVolN"></p></div>
+        <div class="res-hint" id="mmHint" style="display:none;text-align:left;margin:4px 0 8px"></div>
+        <div id="mmStrWrap">
+          <div class="proj-sep"></div>
+          <p class="bm-h">Strength on the label</p>
+          <div class="fld"><span class="lab">Amount of medicine on the label</span><div class="cf-box"><input id="mmSa" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 250" aria-label="Amount of medicine on the label"><div class="seg cf-u" id="mmSu" data-u="mg" role="group" aria-label="Amount of medicine on the label unit"><button type="button" data-v="mcg">mcg</button><button type="button" class="on" data-v="mg">mg</button><button type="button" data-v="g">g</button></div></div></div>
+          <div class="fld"><span class="lab">In this much liquid <span class="unit">empty = 1</span></span><div class="cf-box"><input id="mmSp" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 5" aria-label="In this much liquid"><div class="seg cf-u" id="mmSpu" data-u="ml" role="group" aria-label="In this much liquid unit"><button type="button" class="on" data-v="ml">mL</button><button type="button" data-v="l">L</button></div></div></div>
+          <p class="cb-note" id="mmSn"></p>
+          <div class="fld"><span class="lab">Quick strengths <span class="unit">mg per mL</span></span><div class="chips" id="mmChips"><button type="button" data-v="1">1 mg/mL</button><button type="button" data-v="5">5 mg/mL</button><button type="button" data-v="10">10 mg/mL</button><button type="button" data-v="50">50 mg/mL</button></div></div>
+          <div class="fld"><span class="lab">Or pick a label or liquid</span><div class="st-ta"><div class="inp"><input id="mmPreIn" type="text" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="mmPreList" aria-label="Label or liquid" placeholder="Type a medicine or a liquid, e.g. amoxicillin"><input id="mmPre" type="hidden" value=""></div><div class="st-ta-list" id="mmPreList" role="listbox" style="display:none"></div></div></div>
+        </div>
+        <div id="mmAdvIn" style="display:none">
+          <div class="proj-sep"></div>
+          <p class="bm-h">Advanced</p>
+          <div class="fld" id="mmRuF"><span class="lab">Show the volume in</span><div class="csel" id="mmRu" data-value="ml" aria-label="Show the volume in"><button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false"><span class="csel-val">mL</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="csel-panel" role="listbox"></div></div></div>
+          <div class="ctl-row" style="display:block"><span class="ctl-lab" style="display:block;margin-bottom:6px">Decimal places</span><div class="modeseg" id="mmDec" role="group" aria-label="Decimal places"><button class="on" type="button" data-v="a">Auto</button><button type="button" data-v="2">2</button><button type="button" data-v="3">3</button><button type="button" data-v="4">4</button></div></div>
+          <div class="fld"><span class="lab">Syringe size in the drawing</span><div class="csel" id="mmSyrSz" data-value="a" aria-label="Syringe size"><button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false"><span class="csel-val">Auto</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="csel-panel" role="listbox"><button type="button" class="csel-opt on" role="option" aria-selected="true" data-value="a">Auto</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="1">1 mL</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="3">3 mL</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="5">5 mL</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="10">10 mL</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="20">20 mL</button><button type="button" class="csel-opt" role="option" aria-selected="false" data-value="60">60 mL</button></div></div></div>
+          <div class="fld"><span class="lab">Marks on your syringe are every <span class="unit">mL</span></span><div class="inp"><input id="mmMark" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 0.1" aria-label="Gap between marks in mL"></div></div>
+          <p class="cb-note" id="mmMarkN"></p>
+          <div class="fld"><span class="lab">Bottle size <span class="unit">mL</span></span><div class="inp"><input id="mmBot" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 100" aria-label="Bottle size in mL"></div></div>
+          <p class="cb-note" id="mmBotN"></p>
+          <div class="fld"><span class="lab">Doses a day</span><div class="inp"><input id="mmDpd" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 2" aria-label="Doses a day"></div></div>
+          <p class="cb-note" id="mmDpdN"></p>
+          <div class="proj-sep"></div>
+          <p class="bm-h">Dose from body weight</p>
+          <div class="fld"><span class="lab">Dose per kg of body weight <span class="unit">mg per kg</span></span><div class="inp"><input id="mmKg" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 10" aria-label="Dose in mg per kg of body weight"></div></div>
+          <div class="fld"><span class="lab">Body weight</span><div class="cf-box"><input id="mmWt" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 20" aria-label="Body weight"><div class="seg cf-u" id="mmWu" data-u="kg" role="group" aria-label="Body weight unit"><button type="button" class="on" data-v="kg">kg</button><button type="button" data-v="lb">lb</button></div></div></div>
+          <p class="cb-note" id="mmKgN"></p>
+          <button class="linkbtn" id="mmKgUse" type="button" style="display:none;margin-bottom:8px"></button>
+        </div>
+        <div class="add-row split" style="margin-top:16px">
+          <span></span>
+          <button class="advbtn" id="mmAdvBtn" type="button">
+            <span id="mmAdvBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div class="card">
+      <div class="card-pad">
+        <div class="bf-res">
+          <div class="res-lab" id="mmLab">Volume to measure</div>
+          <div class="res-big"><span id="mmBig">—</span></div>
+          <div class="res-sub" id="mmSub" data-empty="Enter the dose and the strength from the label.">Enter the dose and the strength from the label.</div>
+        </div>
+        <div id="mmBody" style="display:none">
+          <p class="res-tip adv-tip" id="mmTip"></p>
+          <div id="mmWarn" style="display:none"></div>
+          <div id="mmSyrWrap">
+            <p class="bm-h">On a syringe</p>
+            <div class="mm-syr" id="mmSyr"></div>
+            <p class="mm-cap" id="mmSyrCap"></p>
+          </div>
+          <p class="bm-h">What is in the bottle</p>
+          <div id="mmRule"></div>
+          <p class="mm-cap" id="mmRuleCap"></p>
+          <div class="mm-tools"><button class="linkbtn" id="mmSave" type="button">Save to my list</button><button class="linkbtn" type="button" data-copy="mmCopyTxt">Copy result</button></div>
+          <div id="mmCopyTxt" style="display:none"></div>
+          <div id="mmListWrap" style="display:none"><p class="bm-h">My list <button class="linkbtn" id="mmListClear" type="button" style="margin-left:8px">Clear list</button></p><div id="mmList"></div><p class="cb-note">Kept on this page only. It is gone when you reload.</p></div>
+          <div id="mmTabWrap"><p class="bm-h" id="mmTabH"></p><table class="dtable" id="mmTab"></table><p class="cb-note">Click a row to use it.</p></div>
+          <p class="bm-h">The same volume in every unit</p>
+          <table class="dtable" id="mmUnits"></table>
+          <p class="bm-h">The same medicine in every unit</p>
+          <table class="dtable" id="mmMass"></table>
+          <p class="bm-h">The same strength written other ways</p>
+          <table class="dtable" id="mmStrU"></table>
+          <p class="cb-note">For information only, not medical advice. This only does arithmetic with the numbers you type. Check the strength on your own label and ask a pharmacist before giving any medicine.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- mobile sticky bar -->
+  <div class="mbar" id="mbar">
+    <span class="mbar-lab" id="mmMLab">Volume to measure</span>
+    <div class="mbar-vals"><b id="mmMVal">—</b></div>
+  </div>
+
+  <div class="related-calcs">
+    <p class="related-calcs-h">More calculators that may interest you</p>
+    <div class="pills">
+      <a class="pill" href="/peptide-reconstitution-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 2 3h10a2 2 0 0 0 2-3l-5-9V3"/></svg>
+        Peptide Reconstitution Calculator
+      </a>
+      <a class="pill" href="/volume-converter/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h10l-1 18H8L7 3zM7 9h10"/></svg>
+        Volume Converter
+      </a>
+      <a class="pill" href="/weight-converter/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 21h12l-2-12H8L6 21zM9 9a3 3 0 1 1 6 0"/></svg>
+        Weight Converter
+      </a>
+      <a class="pill" href="/cooking-converter/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 13h14l-1 7H6l-1-7zM4 13h16M9 8c0-2 2-2 2-4"/></svg>
+        Cooking Converter
+      </a>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use the mg to mL calculator</h2>
+        <p>Pick what you want to find: <strong>mg to mL</strong> (the usual one), <strong>mL to mg</strong>, or the <strong>strength</strong> from a dose and a volume.</p>
+        <p>Type the <strong>dose</strong> and choose mcg, mg or g. Then type the <strong>strength on the label</strong> the way it is printed: for “250 mg per 5 mL” enter <strong>250</strong> in the first box and <strong>5</strong> in the second. If the label says “per mL”, leave the second box empty. You can also pick a label from the list (read on DailyMed) or a liquid such as water or milk.</p>
+        <p>The result shows the volume to measure on a syringe drawn to scale, in teaspoons and tablespoons, and in every other unit. Under <strong>Go advanced</strong> you can set the decimal places, the syringe size and the gap between marks on your syringe, and see how many doses a bottle holds. If your prescription gives a dose per kg of body weight, work out the dose in mg there and use it with one click.</p>
+
+        <h2>The mg to mL formula</h2>
+        <div class="formula">
+          mL = mg ÷ (mg per mL)
+          <small>MILLIGRAMS ARE WEIGHT, MILLILITERS ARE VOLUME: THE STRENGTH LINKS THEM</small>
+        </div>
+        <table class="dtable"><thead><tr><th>You know</th><th>You want</th><th>Formula</th><th>Example</th></tr></thead><tbody><tr><td>Dose and strength</td><td>Volume</td><td>mL = mg ÷ mg per mL</td><td>500 mg ÷ 250 mg per mL = 2 mL</td></tr><tr><td>Volume and strength</td><td>Dose</td><td>mg = mL × mg per mL</td><td>5 mL × 100 mg per mL = 500 mg</td></tr><tr><td>Dose and volume</td><td>Strength</td><td>mg per mL = mg ÷ mL</td><td>200 mg ÷ 10 mL = 20 mg per mL</td></tr></tbody></table>
+        <p>Without the strength there is no single answer: 1,000 mg of water is about 1 mL, but 1,000 mg of honey is 0.6979 mL and 1,000 mg of a 250 mg per mL medicine is 4 mL.</p>
+
+        <h2>How to read a medicine label</h2>
+        <p>Liquid medicines print the strength as “mg in a volume”. “250 mg/5 mL” means every 5 mL holds 250 mg, so the strength is 250 ÷ 5 = <strong>50 mg per mL</strong>. “100 mg/5 mL” is 20 mg per mL and “50 mg/1.25 mL” is 40 mg per mL. The calculator does the division for you and shows the result as mg per mL, per 5 mL, per teaspoon and as a percentage.</p>
+        <p>Two products of the same medicine can have different strengths, so a dose that is 2.5 mL of one bottle can be a different volume of another. Always use the strength printed on the bottle in your hand.</p>
+        <h2>mg, mcg and g</h2>
+        <table class="dtable"><thead><tr><th>Unit</th><th>In mg</th><th>In mcg</th></tr></thead><tbody><tr><td>1 g</td><td>1,000 mg</td><td>1,000,000 mcg</td></tr><tr><td>1 mg</td><td>1 mg</td><td>1,000 mcg</td></tr><tr><td>1 mcg</td><td>0.001 mg</td><td>1 mcg</td></tr></tbody></table>
+        <p>Mixing up mg and mcg is a factor of 1,000. The calculator shows what you typed in all three units under the dose box.</p>
+      </div>
+
+      <div>
+        <h2>mg to mL at common strengths</h2>
+        <p>Arithmetic only, not doses. The columns are the strength in mg per mL and each cell is the volume in mL. Use the calculator above for your own strength:</p>
+        <div class="mm-wide"><table class="dtable"><thead><tr><th>Dose</th><th>1</th><th>5</th><th>10</th><th>20</th><th>50</th></tr></thead><tbody><tr><td>1 mg</td><td>1</td><td>0.2</td><td>0.1</td><td>0.05</td><td>0.02</td></tr><tr><td>2.5 mg</td><td>2.5</td><td>0.5</td><td>0.25</td><td>0.125</td><td>0.05</td></tr><tr><td>5 mg</td><td>5</td><td>1</td><td>0.5</td><td>0.25</td><td>0.1</td></tr><tr><td>10 mg</td><td>10</td><td>2</td><td>1</td><td>0.5</td><td>0.2</td></tr><tr><td>50 mg</td><td>50</td><td>10</td><td>5</td><td>2.5</td><td>1</td></tr><tr><td>500 mg</td><td>500</td><td>100</td><td>50</td><td>25</td><td>10</td></tr></tbody></table></div>
+        <h2>Label strengths read on DailyMed</h2>
+        <table class="dtable"><thead><tr><th>Product</th><th>Label</th><th>Strength</th></tr></thead><tbody><tr><td>Children’s acetaminophen</td><td>160 mg per 5 mL</td><td>32 mg per mL</td></tr><tr><td>Children’s ibuprofen</td><td>100 mg per 5 mL</td><td>20 mg per mL</td></tr><tr><td>Infants’ ibuprofen drops</td><td>50 mg per 1.25 mL</td><td>40 mg per mL</td></tr><tr><td>Diphenhydramine oral liquid</td><td>12.5 mg per 5 mL</td><td>2.5 mg per mL</td></tr><tr><td>Children’s cetirizine</td><td>5 mg per 5 mL</td><td>1 mg per mL</td></tr><tr><td>Amoxicillin</td><td>125 mg per 5 mL</td><td>25 mg per mL</td></tr><tr><td>Amoxicillin</td><td>200 mg per 5 mL</td><td>40 mg per mL</td></tr><tr><td>Amoxicillin</td><td>250 mg per 5 mL</td><td>50 mg per mL</td></tr><tr><td>Amoxicillin</td><td>400 mg per 5 mL</td><td>80 mg per mL</td></tr><tr><td>Azithromycin</td><td>100 mg per 5 mL</td><td>20 mg per mL</td></tr><tr><td>Azithromycin</td><td>200 mg per 5 mL</td><td>40 mg per mL</td></tr><tr><td>Cefdinir</td><td>125 mg per 5 mL</td><td>25 mg per mL</td></tr><tr><td>Cefdinir</td><td>250 mg per 5 mL</td><td>50 mg per mL</td></tr><tr><td>Cephalexin</td><td>125 mg per 5 mL</td><td>25 mg per mL</td></tr><tr><td>Cephalexin</td><td>250 mg per 5 mL</td><td>50 mg per mL</td></tr><tr><td>Testosterone cypionate</td><td>100 mg per 1 mL</td><td>100 mg per mL</td></tr><tr><td>Testosterone cypionate</td><td>200 mg per 1 mL</td><td>200 mg per mL</td></tr></tbody></table>
+        <p>These are the strengths printed on the labels listed in the sources. Antibiotic liquids start as a powder and are mixed with water as the label says; the strength is for the mixed liquid.</p>
+
+        <h2>Teaspoons, tablespoons and syringes</h2>
+        <p>On medicine labels, <strong>5 mL is 1 teaspoon</strong>, <strong>2.5 mL is half a teaspoon</strong> and <strong>15 mL is 1 tablespoon</strong> (MedlinePlus). A spoon from the kitchen drawer can hold anywhere from 2.5 mL to 10 mL, so use the oral syringe or cup that came with the medicine. Check that the units on it (teaspoon, tablespoon or mL) match the units of the dose, and watch the decimal point: 0.5 mL is not 5 mL. The syringe drawing on this page is schematic and to scale for the size it shows; the marks on your own syringe are what count.</p>
+
+        <h2>Water and everyday liquids</h2>
+        <p>Water is about 1 gram per mL, so 1 mL weighs about 1,000 mg. Other liquids are heavier or lighter, which changes the answer:</p>
+        <table class="dtable"><thead><tr><th>Liquid</th><th>Density</th><th>1,000 mg is</th></tr></thead><tbody><tr><td>Water</td><td>1,000 mg per mL</td><td>1 mL per 1,000 mg</td></tr><tr><td>Whole milk</td><td>1,031 mg per mL</td><td>0.9696 mL per 1,000 mg</td></tr><tr><td>Olive oil</td><td>913 mg per mL</td><td>1.095 mL per 1,000 mg</td></tr><tr><td>Canola oil</td><td>921.4 mg per mL</td><td>1.085 mL per 1,000 mg</td></tr><tr><td>Honey</td><td>1,433 mg per mL</td><td>0.6979 mL per 1,000 mg</td></tr></tbody></table>
+        <p>For cooking, the <a href="/cooking-converter/">cooking converter</a> and the <a href="/recipe-converter/">recipe converter</a> do the same job for cups and grams. For peptide vials, use the <a href="/peptide-reconstitution-calculator/">peptide reconstitution calculator</a>.</p>
+        <h2>Sources</h2>
+        <ul>
+          <li>Label strengths: DailyMed (US National Library of Medicine), the labels read on 2026-11-21: children’s acetaminophen oral suspension, 160 mg in each 5 mL (American Health Packaging, updated 21 October 2024); Children’s Motrin ibuprofen suspension, 100 mg in each 5 mL; infants’ ibuprofen drops, 50 mg in each 1.25 mL; diphenhydramine oral solution, 12.5 mg per 5 mL; children’s cetirizine, 5 mg in each 5 mL; amoxicillin for oral suspension, 125 mg and 250 mg in each 5 mL, the same label also names a 400 mg per 5 mL suspension, and 200 mg per 5 mL (A-S Medication Solutions label, updated 30 October 2026); azithromycin for oral suspension, 100 mg and 200 mg per 5 mL; cefdinir for oral suspension, 125 mg and 250 mg per 5 mL; cephalexin for oral suspension, 125 mg and 250 mg per 5 mL; testosterone cypionate injection, 100 mg and 200 mg per mL. Brands and strengths change, so always use the label on your own bottle.</li>
+          <li>Teaspoons, tablespoons and spoons: MedlinePlus, Liquid medication administration (review date 1 October 2025, read 2026-11-21): 1 mL = 1 cc, 2.5 mL = 1/2 teaspoon, 5 mL = 1 teaspoon, 15 mL = 1 tablespoon; a flatware teaspoon can hold anywhere from 2.5 mL to 10 mL; check that the units on the cup or syringe match the units of the dose. The US customary teaspoon in NIST Special Publication 811, Appendix B.8 is 4.928922 mL; medicine labels use 5 mL.</li>
+          <li>Volume units: NIST Special Publication 811, Appendix B.8 (read 2026-11-12 and 2026-11-21): US fluid ounce 29.57353 mL, US cup 236.5882 mL, imperial gallon 4.54609 L. The UK fluid ounce here, 28.4130625 mL, is 4.54609 L divided by 160, the number of imperial fluid ounces in a gallon; the 160 is not on the NIST page.</li>
+          <li>Density of liquids: water is roughly 1 gram per milliliter (USGS Water Science School, Water Density, read 2026-11-21), so 1,000 mg per mL. Whole milk (244 g per US cup), olive oil (216 g), canola oil (218 g) and honey (339 g) come from the USDA FoodData Central cup weights (SR Legacy, read 2026-11-21), divided by 236.5882 mL. The cooking ingredients in the picker use the typical grams per US cup of our <a href="/recipe-converter/">recipe converter</a>, which can differ by about 5% with how you scoop.</li>
+          <li>Not on this page: any recommended dose, how much to give a child or an adult, and strengths I could not read on a label. Ask a pharmacist or the prescriber how much to take.</li>
+        </ul>
+        <p><small>For information only, not medical advice. This calculator does arithmetic with the numbers you type. It cannot know whether a dose is right for a person. Check the strength on your own label and ask a pharmacist before giving any medicine, especially to a child.</small></p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>How do I convert mg to mL?</summary><p>Divide the dose in mg by the strength in mg per mL. mg are weight and mL are volume, so you need the strength of the liquid. 50 mg at 20 mg per mL is 2.5 mL. For water, 1 mL weighs about 1,000 mg, so 1,000 mg is about 1 mL.</p></details>
+    <details class="faq"><summary>How many mL is 10 mg?</summary><p>It depends on the strength. 10 mg is 10 mL at 1 mg per mL, 2 mL at 5 mg per mL, 1 mL at 10 mg per mL, 0.5 mL at 20 mg per mL, 0.2 mL at 50 mg per mL and 0.1 mL at 100 mg per mL. For water it is 0.01 mL.</p></details>
+    <details class="faq"><summary>How many mL is 2.5 mg?</summary><p>2.5 mL at 1 mg per mL, 0.5 mL at 5 mg per mL, 0.25 mL at 10 mg per mL, 0.125 mL at 20 mg per mL and 0.05 mL at 50 mg per mL. Type your own strength in the calculator to see it on a syringe.</p></details>
+    <details class="faq"><summary>How many mL is 50 mg?</summary><p>5 mL at 10 mg per mL, 2.5 mL at 20 mg per mL, 1 mL at 50 mg per mL, 0.5 mL at 100 mg per mL and 0.2 mL at 250 mg per mL. A 50 mg dose of children’s ibuprofen at 20 mg per mL (100 mg in 5 mL) is 2.5 mL.</p></details>
+    <details class="faq"><summary>How many mL is 500 mg?</summary><p>5 mL at 100 mg per mL, 2 mL at 250 mg per mL, 10 mL at 50 mg per mL (250 mg in 5 mL) and 0.5 mL for water. At 1 mg per mL it would be 500 mL, which shows why the strength matters.</p></details>
+    <details class="faq"><summary>How do I read a label such as 250 mg/5 mL?</summary><p>It means every 5 mL holds 250 mg, so the strength is 250 ÷ 5 = 50 mg per mL. Type 250 in the amount box and 5 in the liquid box, or pick the label from the list. Leave the liquid box empty when the label says “per mL”.</p></details>
+    <details class="faq"><summary>How do I convert mcg to mL?</summary><p>Divide mcg by 1,000 to get mg, then divide by the strength. 500 mcg is 0.5 mg, which is 0.5 mL at 1 mg per mL. The calculator takes mcg, mg or g in the dose box and shows all three.</p></details>
+    <details class="faq"><summary>How many mL is a teaspoon or tablespoon of medicine?</summary><p>Medicine labels use 1 teaspoon = 5 mL and 1 tablespoon = 15 mL (MedlinePlus). A flatware teaspoon can hold anywhere from 2.5 mL to 10 mL, so use the syringe or cup that came with the medicine.</p></details>
+    <details class="faq"><summary>Does this calculator tell me how much medicine to take?</summary><p>No. It does the arithmetic with the numbers you type and never suggests a dose. Take the dose from your label or prescriber and ask a pharmacist if anything is unclear.</p></details>
+  </section>
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+      <div class="footer-stack">
+<div class="footer-col" style="order:1">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+          <li><a href="/paint-calculator/">Paint Calculator</a></li>
+          <li><a href="/wallpaper-calculator/">Wallpaper Calculator</a></li>
+          <li><a href="/square-footage-calculator/">Square Footage Calculator</a></li>
+          <li><a href="/tape-measure-fraction-calculator/">Tape Measure Fraction Calculator</a></li>
+          <li><a href="/stair-calculator/">Stair Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:5">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Cooking &amp;</span> <span class="ft2">Kitchen</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/recipe-converter/">Recipe Converter</a></li>
+          <li><a href="/turkey-cooking-time-calculator/">Turkey Cooking Time Calculator</a></li>
+          <li><a href="/turkey-thawing-time-calculator/">Turkey Thawing Time Calculator</a></li>
+          <li><a href="/turkey-size-calculator/">Turkey Size Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:5">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Medication &amp;</span> <span class="ft2">Dosage</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/mg-to-ml-calculator/">mg to mL Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:6">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Money &amp;</span> <span class="ft2">Finance</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/mortgage-calculator/">Mortgage Calculator</a></li>
+          <li><a href="/loan-calculator/">Loan Calculator</a></li>
+          <li><a href="/auto-loan-calculator/">Auto Loan Calculator</a></li>
+          <li><a href="/car-sales-tax-calculator/">Car Sales Tax Calculator</a></li>
+          <li><a href="/overtime-calculator/">Overtime Calculator</a></li>
+          <li><a href="/salary-calculator/">Salary Calculator</a></li>
+          <li><a href="/markup-calculator/">Markup Calculator</a></li>
+          <li><a href="/profit-margin-calculator/">Profit Margin Calculator</a></li>
+          <li><a href="/discount-calculator/">Discount Calculator</a></li>
+          <li><a href="/commission-calculator/">Commission Calculator</a></li>
+          <li><a href="/realtor-commission-calculator/">Realtor Commission Calculator</a></li>
+          <li><a href="/unit-price-calculator/">Unit Price Calculator</a></li>
+          <li><a href="/compound-interest-calculator/">Compound Interest Calculator</a></li>
+          <li><a href="/amortization-calculator/">Amortization Calculator</a></li>
+          <!--STAXFOOT:START-->
+          <li><a href="/sales-tax-calculator/">Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/california/">California Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/chicago/">Chicago Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/florida/">Florida Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/las-vegas/">Las Vegas Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/los-angeles/">Los Angeles Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/michigan/">Michigan Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/missouri/">Missouri Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/north-carolina/">North Carolina Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/ohio/">Ohio Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/texas/">Texas Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/virginia/">Virginia Sales Tax Calculator</a></li>
+          <!--STAXFOOT:END-->
+          <li><a href="/tip-calculator/">Tip Calculator</a></li>
+          <li><a href="/how-much-to-tip/">How Much to Tip</a></li>
+        </ul>
+      </div>
+      </div>
+
+      <div class="footer-right">
+<div class="footer-col footer-col--two" style="order:2">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/vo2-max-calculator/">VO2 Max Calculator</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/bmi-calculator/">BMI Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/ideal-weight-calculator/">Ideal Weight Calculator</a></li>
+          <li><a href="/lean-body-mass-calculator/">Lean Body Mass Calculator</a></li>
+          <li><a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio Calculator</a></li>
+          <li><a href="/gmi-calculator/">GMI Calculator</a></li>
+          <li><a href="/a1c-calculator/">A1C Calculator</a></li>
+          <li><a href="/calorie-calculator/">Calorie Calculator</a></li>
+          <li><a href="/calorie-deficit-calculator/">Calorie Deficit Calculator</a></li>
+          <li><a href="/bmr-calculator/">BMR Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/water-intake-calculator/">Water Intake Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/protein-intake-calculator/">Protein Intake Calculator</a></li>
+          <li><a href="/steps-to-miles-calculator/">Steps to Miles Calculator</a></li>
+          <li><a href="/dog-age-calculator/">Dog Age Calculator</a></li>
+          <li><a href="/cat-age-calculator/">Cat Age Calculator</a></li>
+          <li><a href="/calories-burned-calculator/">Calories Burned Calculator</a></li>
+          <li><a href="/calories-burned-walking-calculator/">Calories Burned Walking Calculator</a></li>
+          <li><a href="/calories-burned-running-calculator/">Calories Burned Running Calculator</a></li>
+          <li><a href="/keto-calculator/">Keto Calculator</a></li>
+          <li><a href="/net-carb-calculator/">Net Carb Calculator</a></li>
+          <li><a href="/intermittent-fasting-calculator/">Intermittent Fasting Calculator</a></li>
+          <li><a href="/bsa-calculator/">BSA Calculator</a></li>
+          <li><a href="/dog-food-calculator/">Dog Food Calculator</a></li>
+          <li><a href="/ffmi-calculator/">FFMI Calculator</a></li>
+          <li><a href="/bulking-calculator/">Bulking Calculator</a></li>
+          <li><a href="/weight-loss-calculator/">Weight Loss Calculator</a></li>
+          <li><a href="/weight-loss-percentage-calculator/">Weight Loss Percentage Calculator</a></li>
+          <li><a href="/max-heart-rate-calculator/">Max Heart Rate Calculator</a></li>
+          <li><a href="/caffeine-calculator/">Caffeine Calculator</a></li>
+          <li><a href="/caffeine-half-life-calculator/">Caffeine Half Life Calculator</a></li>
+          <li><a href="/fiber-calculator/">Fiber Calculator</a></li>
+          <li><a href="/creatine-calculator/">Creatine Calculator</a></li>
+          <li><a href="/vitamin-d-calculator/">Vitamin D Calculator</a></li>
+          <li><a href="/body-recomposition-calculator/">Body Recomposition Calculator</a></li>
+        </ul>
+      </div>
+
+        <div class="footer-sub">
+<div class="footer-subcol">
+<div class="footer-col" style="order:3">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/semester-grade-calculator/">Semester Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+          <li><a href="/grade-curve-calculator/">Grade Curve Calculator</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:START-->
+<div class="footer-col" style="order:7">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Unit</span> <span class="ft2">Converters</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/unit-converter/">Unit Converter</a></li>
+          <li><a href="/length-converter/">Length Converter</a></li>
+          <li><a href="/weight-converter/">Weight Converter</a></li>
+          <li><a href="/volume-converter/">Volume Converter</a></li>
+          <li><a href="/temperature-converter/">Temperature Converter</a></li>
+          <li><a href="/area-converter/">Area Converter</a></li>
+          <li><a href="/speed-converter/">Speed Converter</a></li>
+          <li><a href="/data-storage-converter/">Data Storage Converter</a></li>
+          <li><a href="/cooking-converter/">Cooking Measurement Converter</a></li>
+          <li><a href="/px-to-rem-converter/">PX to REM Converter</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:END-->
+</div>
+
+<div class="footer-col" style="order:4">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/fraction-calculator/">Fraction Calculator</a></li>
+          <li><a href="/standard-deviation-calculator/">Standard Deviation Calculator</a></li>
+          <li><a href="/p-value-calculator/">P-Value Calculator</a></li>
+          <li><a href="/confidence-interval-calculator/">Confidence Interval Calculator</a></li>
+          <li><a href="/z-score-calculator/">Z-Score Calculator</a></li>
+          <li><a href="/scientific-notation-calculator/">Scientific Notation Calculator</a></li>
+          <li><a href="/weighted-average-calculator/">Weighted Average Calculator</a></li>
+          <li><a href="/average-calculator/">Average Calculator</a></li>
+          <li><a href="/batting-average-calculator/">Batting Average Calculator</a></li>
+          <li><a href="/stock-average-calculator/">Stock Average Calculator</a></li>
+          <li><a href="/dice-average-calculator/">Dice Average Calculator</a></li>
+          <li><a href="/time-average-calculator/">Time Average Calculator</a></li>
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+          <li><a href="/percentage-change-calculator/">Percentage Change Calculator</a></li>
+          <li><a href="/age-calculator/">Age Calculator</a></li>
+          <li><a href="/date-calculator/">Date Calculator</a></li>
+          <li><a href="/time-calculator/">Time Calculator</a></li>
+          <li><a href="/hours-calculator/">Hours Calculator</a></li>
+          <li><a href="/seconds-to-hours-calculator/">Seconds to Hours Calculator</a></li>
+          <li><a href="/minutes-to-hours-calculator/">Minutes to Hours Calculator</a></li>
+          <li><a href="/seconds-to-minutes-calculator/">Seconds to Minutes Calculator</a></li>
+          <li><a href="/triangle-calculator/">Triangle Calculator</a></li>
+          <li><a href="/random-number-generator/">Random Number Generator</a></li>
+        </ul>
+      </div>
+        </div>
+      </div>
+
+      <!--PAYFOOT:START-->
+      <div class="footer-col footer-col--wide">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Paycheck</span> <span class="ft2">Calculators</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/paycheck-calculator/">Paycheck Calculator (all states)</a></li>
+          <li><a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arkansas/">Arkansas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/california/">California Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/hawaii/">Hawaii Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/louisiana/">Louisiana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nebraska/">Nebraska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/oklahoma/">Oklahoma Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/utah/">Utah Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wisconsin/">Wisconsin Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a></li>
+        </ul>
+      </div>
+      <!--PAYFOOT:END-->
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/blog/">Blog</a>
+      <span aria-hidden="true">·</span>
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/whats-new/">What's new</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Page last updated: <time datetime="2026-11-21">November 21, 2026</time>. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+</div>
+
+<script src="/assets/app.js?v=358"></script>
+<script>CalcThis.initMgMlCalc();</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>

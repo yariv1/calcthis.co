@@ -135,6 +135,7 @@
         { "@type": "WebApplication", "name": "Unit Price Calculator", "url": "https://calcthis.co/unit-price-calculator/", "applicationCategory": "FinanceApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Compound Interest Calculator", "url": "https://calcthis.co/compound-interest-calculator/", "applicationCategory": "FinanceApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Amortization Calculator", "url": "https://calcthis.co/amortization-calculator/", "applicationCategory": "FinanceApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
+        { "@type": "WebApplication", "name": "mg to mL Calculator", "url": "https://calcthis.co/mg-to-ml-calculator/", "applicationCategory": "HealthApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Mortgage Calculator", "url": "https://calcthis.co/mortgage-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Loan Calculator", "url": "https://calcthis.co/loan-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Auto Loan Calculator", "url": "https://calcthis.co/auto-loan-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
@@ -153,7 +154,7 @@
   ]
 }
 </script>
-<link rel="stylesheet" href="/assets/style.css?v=357">
+<link rel="stylesheet" href="/assets/style.css?v=358">
 <style>
   .cat-tabs{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
   .cat-grp--hidden{display:none}
@@ -231,7 +232,6 @@
           <a href="/water-intake-calculator/">Water Intake</a>
           <a href="/macro-calculator/">Macro</a>
           <a href="/protein-intake-calculator/">Protein Intake</a>
-          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
           <a href="/steps-to-miles-calculator/">Steps to Miles</a>
           <a href="/dog-age-calculator/">Dog Age</a>
           <a href="/cat-age-calculator/">Cat Age</a>
@@ -293,6 +293,9 @@
           <a href="/turkey-cooking-time-calculator/">Turkey Cooking Time</a>
           <a href="/turkey-thawing-time-calculator/">Turkey Thawing Time</a>
           <a href="/turkey-size-calculator/">Turkey Size</a>
+          <span class="menu-col-head">Medication &amp; Dosage</span>
+          <a href="/mg-to-ml-calculator/">mg to mL</a>
+          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
           <!--UNITNAV:START-->
           <span class="menu-col-head">Unit Converters</span>
           <a href="/unit-converter/">Unit Converter</a>
@@ -407,6 +410,7 @@
   <div class="cat-tabs" id="catTabs" role="tablist">
     <button class="cat-tab on" type="button" data-cat="construction" role="tab" aria-selected="true">Construction &amp;<br>Gardening</button>
     <button class="cat-tab" type="button" data-cat="health" role="tab" aria-selected="false">Health &amp;<br>Lifestyle</button>
+    <button class="cat-tab" type="button" data-cat="medication" role="tab" aria-selected="false">Medication &amp;<br>Dosage</button>
     <button class="cat-tab" type="button" data-cat="academic" role="tab" aria-selected="false">School &amp;<br>Grades</button>
     <button class="cat-tab" type="button" data-cat="math" role="tab" aria-selected="false">Math &amp;<br>Numbers</button>
     <button class="cat-tab" type="button" data-cat="cooking" role="tab" aria-selected="false">Cooking &amp;<br>Kitchen</button>
@@ -932,24 +936,6 @@
       </span>
     </a>
 
-    <a class="calc" href="/peptide-reconstitution-calculator/">
-      <span class="ico" aria-hidden="true">
-        <svg width="30" height="30" viewBox="0 0 32 32" fill="none">
-          <line x1="2" y1="16" x2="9" y2="16" stroke="#B5761F" stroke-width="2" stroke-linecap="round"/>
-          <rect x="9" y="11" width="17" height="10" rx="3" stroke="#B5761F" stroke-width="2" fill="none"/>
-          <rect x="10.5" y="12.5" width="8" height="7" rx="1.5" fill="#37503F" opacity="0.55"/>
-          <line x1="20" y1="13" x2="20" y2="19" stroke="#B5761F" stroke-width="1.4" stroke-linecap="round"/>
-          <line x1="23" y1="13" x2="23" y2="19" stroke="#B5761F" stroke-width="1.4" stroke-linecap="round"/>
-          <rect x="26" y="9" width="2.5" height="14" rx="1.25" fill="#B5761F"/>
-          <rect x="24" y="7" width="6.5" height="2" rx="1" fill="#B5761F" opacity="0.7"/>
-        </svg>
-      </span>
-      <h3>Peptide Reconstitution Calculator</h3>
-      <p>Enter your vial size, BAC water, and target dose — see the exact unit mark to draw on your U-100 insulin syringe, with a live visual syringe diagram.</p>
-      <span class="go">Open calculator
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </span>
-    </a>
 
     <a class="calc" href="/dog-age-calculator/">
       <span class="ico" aria-hidden="true">
@@ -1275,6 +1261,46 @@
       </span>
       <h3>Protein Intake</h3>
       <p>Your daily protein target in grams for sedentary, general fitness, muscle gain or fat loss, plotted on a live g/kg gauge with real-world food equivalents.</p>
+      <span class="go">Open calculator
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+    </a>
+
+  </div>
+  </section>
+
+  <section id="grp-medication" class="cat-grp cat-grp--hidden" aria-label="Medication &amp; Dosage calculators">
+  <div class="cards">
+
+    <a class="calc" href="/mg-to-ml-calculator/">
+      <span class="ico" aria-hidden="true">
+        <svg width="30" height="30" viewBox="0 0 32 32" fill="none">
+          <rect x="9" y="12" width="14" height="6" rx="2" stroke="#37503F" stroke-width="2.2"/>
+          <path d="M23 15h5M9 15H5l-2 0" stroke="#37503F" stroke-width="2.2" stroke-linecap="round"/>
+          <path d="M13 12v6M17 12v6" stroke="#B5761F" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <h3>mg to mL Calculator</h3>
+      <p>Dose in mg and the strength on the label to milliliters, on a to-scale syringe. Also mL to mg and the strength from a dose and a volume.</p>
+      <span class="go">Open calculator
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+    </a>
+
+    <a class="calc" href="/peptide-reconstitution-calculator/">
+      <span class="ico" aria-hidden="true">
+        <svg width="30" height="30" viewBox="0 0 32 32" fill="none">
+          <line x1="2" y1="16" x2="9" y2="16" stroke="#B5761F" stroke-width="2" stroke-linecap="round"/>
+          <rect x="9" y="11" width="17" height="10" rx="3" stroke="#B5761F" stroke-width="2" fill="none"/>
+          <rect x="10.5" y="12.5" width="8" height="7" rx="1.5" fill="#37503F" opacity="0.55"/>
+          <line x1="20" y1="13" x2="20" y2="19" stroke="#B5761F" stroke-width="1.4" stroke-linecap="round"/>
+          <line x1="23" y1="13" x2="23" y2="19" stroke="#B5761F" stroke-width="1.4" stroke-linecap="round"/>
+          <rect x="26" y="9" width="2.5" height="14" rx="1.25" fill="#B5761F"/>
+          <rect x="24" y="7" width="6.5" height="2" rx="1" fill="#B5761F" opacity="0.7"/>
+        </svg>
+      </span>
+      <h3>Peptide Reconstitution Calculator</h3>
+      <p>Enter your vial size, BAC water, and target dose — see the exact unit mark to draw on your U-100 insulin syringe, with a live visual syringe diagram.</p>
       <span class="go">Open calculator
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </span>
@@ -2226,6 +2252,7 @@
           <li><a href="/unit-price-calculator/">Unit Price</a><span> — price per ounce, litre or item, the best buy ranked, whole packs and price per serving</span></li>
           <li><a href="/compound-interest-calculator/">Compound Interest</a><span> — how savings grow with regular deposits, and the deposit, time or rate you need to reach a goal, in any currency</span></li>
           <li><a href="/amortization-calculator/">Amortization</a><span> — every payment of a loan split into interest and principal, the balance at any point, and what extra payments save, in any currency</span></li>
+          <li><a href="/mg-to-ml-calculator/">mg to mL Calculator</a><span> — dose in mg and the strength on the label to milliliters on a to-scale syringe, mL to mg and the strength from a dose and a volume</span></li>
           <li><a href="/sales-tax-calculator/">Sales tax</a><span> — by state, with exempt items and local rates</span></li>
           <li><a href="/tip-calculator/">Tip</a><span> — split the bill, tip before or after tax</span></li>
         </ul>
@@ -2290,6 +2317,17 @@
           <li><a href="/turkey-cooking-time-calculator/">Turkey Cooking Time Calculator</a></li>
           <li><a href="/turkey-thawing-time-calculator/">Turkey Thawing Time Calculator</a></li>
           <li><a href="/turkey-size-calculator/">Turkey Size Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:5">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Medication &amp;</span> <span class="ft2">Dosage</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/mg-to-ml-calculator/">mg to mL Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
         </ul>
       </div>
 
@@ -2364,7 +2402,6 @@
           <li><a href="/water-intake-calculator/">Water Intake Calculator</a></li>
           <li><a href="/macro-calculator/">Macro Calculator</a></li>
           <li><a href="/protein-intake-calculator/">Protein Intake Calculator</a></li>
-          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
           <li><a href="/steps-to-miles-calculator/">Steps to Miles Calculator</a></li>
           <li><a href="/dog-age-calculator/">Dog Age Calculator</a></li>
           <li><a href="/cat-age-calculator/">Cat Age Calculator</a></li>
@@ -2528,7 +2565,7 @@
       <span aria-hidden="true">·</span>
       <a href="/privacy-policy/">Privacy policy</a>
     </nav>
-    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Page last updated: <time datetime="2026-11-18">November 18, 2026</time>. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Page last updated: <time datetime="2026-11-21">November 21, 2026</time>. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
   </footer>
 <!--FOOTER:END-->
 
@@ -2537,7 +2574,7 @@
 <script>
 (function(){
   var tabs=document.getElementById('catTabs'); if(!tabs) return;
-  var grp={construction:document.getElementById('grp-construction'),health:document.getElementById('grp-health'),academic:document.getElementById('grp-academic'),math:document.getElementById('grp-math'),cooking:document.getElementById('grp-cooking'),finance:document.getElementById('grp-finance'),paycheck:document.getElementById('grp-paycheck'),salestax:document.getElementById('grp-salestax'),units:document.getElementById('grp-units')};
+  var grp={construction:document.getElementById('grp-construction'),health:document.getElementById('grp-health'),medication:document.getElementById('grp-medication'),academic:document.getElementById('grp-academic'),math:document.getElementById('grp-math'),cooking:document.getElementById('grp-cooking'),finance:document.getElementById('grp-finance'),paycheck:document.getElementById('grp-paycheck'),salestax:document.getElementById('grp-salestax'),units:document.getElementById('grp-units')};
   tabs.addEventListener('click',function(e){
     var b=e.target.closest('.cat-tab'); if(!b) return;
     [].forEach.call(tabs.querySelectorAll('.cat-tab'),function(x){x.classList.remove('on');x.setAttribute('aria-selected','false');});
@@ -2548,7 +2585,7 @@
   });
 })();
 </script>
-<script src="/assets/app.js?v=357"></script>
+<script src="/assets/app.js?v=358"></script>
 <script src="/feedback.js" defer></script>
 </body>
 </html>

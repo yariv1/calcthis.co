@@ -1,7 +1,7 @@
 {
  "/": {
-  "hash": "96323d85fe492bed",
-  "date": "2026-11-18"
+  "hash": "64ecbdd08f6ee345",
+  "date": "2026-11-21"
  },
  "/board-foot-calculator/": {
   "hash": "41e9c86bf0956ae1",
@@ -580,8 +580,8 @@
   "date": "2026-10-31"
  },
  "/peptide-reconstitution-calculator/": {
-  "hash": "2d4e67d9f4a66b7b",
-  "date": "2026-10-31"
+  "hash": "0fc1bf01c51a9821",
+  "date": "2026-11-21"
  },
  "/steps-to-miles-calculator/": {
   "hash": "20338fbe39f2ff26",
@@ -788,8 +788,8 @@
   "date": "2026-11-20"
  },
  "/whats-new/": {
-  "hash": "5a5d457646765c7a",
-  "date": "2026-11-20"
+  "hash": "0178e379676efc2d",
+  "date": "2026-11-21"
  },
  "/contact/": {
   "hash": "a6aa9bb68b171a76",
@@ -958,5 +958,9 @@
  "/paycheck-calculator/wyoming/": {
   "hash": "f274d94b80e6253e",
   "date": "2026-11-11"
+ },
+ "/mg-to-ml-calculator/": {
+  "hash": "09a07086199c5fae",
+  "date": "2026-11-21"
  }
 }

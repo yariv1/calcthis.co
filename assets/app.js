@@ -27595,3 +27595,325 @@ CalcThis.initAmortCalc = function () {
   render();
 };
 /* AMORT:END */
+
+/* MGML:BEGIN */
+/* =========================================================
+   MG TO ML calculator (/mg-to-ml-calculator/). Ahrefs 2026-11-21 (his screenshots): mg to ml >10,000 Easy, mg to ml calculator >1000 Easy, mg to ml conversion / drug conversion / 10 mg to ml / 2.5 / 1 / 50 mg to ml all >1000 Easy.
+   Competitors opened live 2026-11-21: Omnicalculator (liquid select, 11 medicine labels, concentration in 5 units, dose ug/mg/g, volume in 9 units, both ways), CalculateQuick (strength + 1/5/10/50 chips, linked fields, decimals, recent list, teaspoon line),
+   Inch Calculator (substance list ~110, both ways, density formula, mg table), Calculator.academy (solve-for modes incl. strength, label format "per stated mL", nearest syringe mark).
+   Sources READ 2026-11-21: DailyMed labels (children's acetaminophen 160 mg per 5 mL, American Health Packaging, updated Oct 21 2024; Children's Motrin 100 mg per 5 mL; infants' ibuprofen 50 mg per 1.25 mL; diphenhydramine 12.5 mg per 5 mL;
+   children's cetirizine 5 mg per 5 mL; amoxicillin 125 and 250 mg per 5 mL (400 mg per 5 mL named in the same label); azithromycin 100 and 200 mg per 5 mL; cefdinir 125 and 250 mg per 5 mL; cephalexin 125 and 250 mg per 5 mL; testosterone cypionate 100 and 200 mg per mL),
+   MedlinePlus "Liquid medication administration" (review 10/1/2025: 1 mL = 1 cc, 2.5 mL = 1/2 tsp, 5 mL = 1 tsp, 15 mL = 1 tbsp, flatware spoons 2.5 to 10 mL), NIST SP 811 App. B.8 (cup 236.5882 mL, US fl oz 29.57353 mL, US teaspoon 4.928922 mL, imperial gallon 4.54609 L),
+   USGS water density (about 1 g/mL), USDA FoodData Central cup weights (whole milk 244 g, olive oil 216 g, canola oil 218 g, honey 339 g). Cooking ingredient densities = the recipe converter's typical grams per US cup. UK fl oz = 4.54609 L / 160 (the 160 is the definition, not on the NIST page).
+   NOT used: any recommended dose, the 80 mg per 0.8 mL infant drops (FDA page 404), unread competitor presets (morphine oral, Benadryl injection, ibuprofen injection, acetaminophen 500 mg per 15 mL).
+   ========================================================= */
+/* MGML-ENGINE:START */
+CalcThis.mgmlEngine = (function () {
+  var MASS = { mcg: 0.001, mg: 1, g: 1000 };
+  var CUP = 236.5882365;
+  var VOLS = [
+    { id: 'ml', name: 'mL', lab: 'mL', long: 'milliliters (mL)', f: 1 }, { id: 'cc', name: 'cc', lab: 'cc (cm³)', long: 'cubic centimeters (cc, cm³)', f: 1 }, { id: 'l', name: 'L', lab: 'L', long: 'liters (L)', f: 1000 },
+    { id: 'mm3', name: 'mm³', lab: 'mm³', long: 'cubic millimeters (mm³)', f: 0.001 }, { id: 'tsp', name: 'tsp', lab: 'teaspoon (5 mL)', long: 'teaspoons (5 mL)', f: 5 }, { id: 'tbsp', name: 'tbsp', lab: 'tablespoon (15 mL)', long: 'tablespoons (15 mL)', f: 15 },
+    { id: 'usfloz', name: 'US fl oz', lab: 'US fl oz', long: 'US fluid ounces', f: 29.5735295625 }, { id: 'ukfloz', name: 'UK fl oz', lab: 'UK fl oz', long: 'UK fluid ounces', f: 28.4130625 }
+  ];
+  var VOL = {}; VOLS.forEach(function (v) { VOL[v.id] = v; });
+  var MEDS = [
+    { g: 'Children’s pain and fever', items: [['apap160', 'Children’s acetaminophen', 160, 5], ['ibu100', 'Children’s ibuprofen', 100, 5], ['ibu50', 'Infants’ ibuprofen drops', 50, 1.25]] },
+    { g: 'Allergy', items: [['dph12', 'Diphenhydramine oral liquid', 12.5, 5], ['cet5', 'Children’s cetirizine', 5, 5]] },
+    { g: 'Antibiotic liquids (after mixing)', items: [['amx125', 'Amoxicillin', 125, 5], ['amx200', 'Amoxicillin', 200, 5], ['amx250', 'Amoxicillin', 250, 5], ['amx400', 'Amoxicillin', 400, 5], ['azi100', 'Azithromycin', 100, 5], ['azi200', 'Azithromycin', 200, 5], ['cfd125', 'Cefdinir', 125, 5], ['cfd250', 'Cefdinir', 250, 5], ['cph125', 'Cephalexin', 125, 5], ['cph250', 'Cephalexin', 250, 5]] },
+    { g: 'Injection', items: [['tc100', 'Testosterone cypionate', 100, 1], ['tc200', 'Testosterone cypionate', 200, 1]] }
+  ];
+  /* grams per US cup (USDA FoodData Central read 2026-11-21; recipe converter typical values) */
+  var LIQS = [
+    { g: 'Water and everyday liquids', items: [['water', 'Water', 1000, 0], ['milk', 'Whole milk', 0, 244], ['olive', 'Olive oil', 0, 216], ['canola', 'Canola oil', 0, 218], ['honey', 'Honey', 0, 339]] },
+    { g: 'Cooking ingredients (typical)', items: [['flour', 'All-purpose flour', 0, 120], ['sugar', 'Granulated sugar', 0, 200], ['brown', 'Brown sugar (packed)', 0, 213], ['powder', 'Powdered sugar', 0, 120], ['butter', 'Butter', 0, 226.8], ['maple', 'Maple syrup', 0, 322], ['salt', 'Salt', 0, 288], ['bpowder', 'Baking powder', 0, 192], ['bsoda', 'Baking soda', 0, 220], ['cocoa', 'Cocoa powder', 0, 85], ['cstarch', 'Cornstarch', 0, 128], ['oats', 'Rolled oats', 0, 90], ['rice', 'Rice, uncooked', 0, 185], ['bflour', 'Bread flour', 0, 120], ['cflour', 'Cake flour', 0, 114], ['wwflour', 'Whole-wheat flour', 0, 113], ['rflour', 'Rye flour', 0, 102], ['aflour', 'Almond flour', 0, 96], ['cmeal', 'Cornmeal', 0, 138], ['cot', 'Cream of tartar', 0, 144], ['molas', 'Molasses', 0, 340], ['hcream', 'Heavy cream', 0, 238], ['shorten', 'Shortening', 0, 205], ['pbutter', 'Peanut butter', 0, 256], ['yogurt', 'Yogurt', 0, 245], ['scream', 'Sour cream', 0, 240], ['ccheese', 'Cream cheese', 0, 232], ['jam', 'Jam or jelly', 0, 320], ['vanilla', 'Vanilla extract', 0, 208], ['juice', 'Fruit juice', 0, 244], ['broth', 'Broth or stock', 0, 240], ['vinegar', 'Vinegar', 0, 239], ['raisins', 'Raisins', 0, 149], ['almonds', 'Almonds', 0, 142], ['walnuts', 'Walnuts or pecans', 0, 113]] }
+  ];
+  var DOSES = [1, 2.5, 5, 10, 25, 50, 100, 250, 500, 1000];
+  var VOLTAB = [0.1, 0.25, 0.5, 1, 1.25, 2, 2.5, 5, 10, 15];
+  var CHIPS = [1, 5, 10, 50];
+  var SIZES = [1, 3, 5, 10, 20, 60];
+  var MAJ = { 1: 0.1, 3: 0.5, 5: 1, 10: 1, 20: 5, 60: 10 };
+  function num(t) {
+    t = (t + '').trim().replace(/\s/g, '');
+    if (!t) return null;
+    if (/^\d{1,3}(,\d{3})+(\.\d+)?$/.test(t)) t = t.replace(/,/g, ''); else if (/^[+-]?\d*,\d+$/.test(t)) t = t.replace(',', '.'); else t = t.replace(/,/g, '');
+    if (!/^[+-]?(\d+\.?\d*|\.\d+)$/.test(t)) return NaN;
+    return parseFloat(t);
+  }
+  function grpS(s) { var p = String(s).split('.'); p[0] = p[0].replace(/\B(?=(\d{3})+(?!\d))/g, ','); return p.join('.'); }
+  function trimz(s) { return s.indexOf('.') >= 0 ? s.replace(/0+$/, '').replace(/\.$/, '') : s; }
+  function digits(x, n) {
+    if (!isFinite(x)) return '—';
+    if (x === 0) return '0';
+    var ax = Math.abs(x);
+    if (ax < 1e-4 || ax >= 1e12) return String(parseFloat(x.toPrecision(n)).toExponential()).replace('e+', 'e');
+    var e = Math.floor(Math.log(ax) / Math.LN10 + 1e-12), d = Math.max(0, Math.min(12, n - 1 - e));
+    return grpS(trimz(x.toFixed(d)));
+  }
+  function fmt(x, dec) { if (dec === 'a' || dec == null) return digits(x, 4); if (!isFinite(x)) return '—'; return grpS(x.toFixed(+dec)); }
+  function exact(x) { return digits(x, 8); }
+  function trimN(x, d) { return String(parseFloat((Math.round(x * Math.pow(10, d)) / Math.pow(10, d)).toFixed(d))); }
+  function readPos(t) { var n = num(t); if (n === null) return { empty: true }; if (isNaN(n) || n <= 0) return { bad: true }; return { v: n }; }
+  function readDose(t, unit) { var r = readPos(t); if (!r.v) return r; var mg = r.v * MASS[unit]; if (mg < 1e-6 || mg > 1e9) return { bad: true }; return { v: r.v, mg: mg }; }
+  function readVol(t, unit) { var r = readPos(t); if (!r.v) return r; var ml = r.v * VOL[unit].f; if (ml < 1e-6 || ml > 1e6) return { bad: true }; return { v: r.v, ml: ml }; }
+  function readStrength(aT, aU, pT, pU) {
+    var a = readPos(aT), p = readPos(pT);
+    if (a.empty) return { empty: true, pTyped: !p.empty };
+    if (a.bad) return { bad: 'a' };
+    var amg = a.v * MASS[aU], per = 1, dflt = true;
+    if (!p.empty) { if (p.bad) return { bad: 'p', amg: amg }; per = p.v * (pU === 'l' ? 1000 : 1); dflt = false; }
+    var s = amg / per; if (s < 1e-6 || s > 1e7) return { bad: 'range' };
+    return { s: s, amg: amg, per: per, dflt: dflt };
+  }
+  function densOf(gCup) { return gCup * 1000 / CUP; }
+  function fillOf(id) {
+    var i, j, it;
+    for (i = 0; i < MEDS.length; i++) for (j = 0; j < MEDS[i].items.length; j++) { it = MEDS[i].items[j]; if (it[0] === id) return { a: it[2], u: 'mg', p: it[3], pu: 'ml', name: it[1] }; }
+    for (i = 0; i < LIQS.length; i++) for (j = 0; j < LIQS[i].items.length; j++) { it = LIQS[i].items[j]; if (it[0] === id) return { a: it[2] || Math.round(densOf(it[3]) * 10) / 10, u: 'mg', p: 1, pu: 'ml', name: it[1] }; }
+    return null;
+  }
+  function sizeFor(vol, want) {
+    var i; if (vol > 60) return null;
+    for (i = 0; i < SIZES.length; i++) if (SIZES[i] >= vol - 1e-12 && (want === 'a' || !want || SIZES[i] >= +want)) return SIZES[i];
+    return null;
+  }
+  function nice(vol) {
+    var st = [0.1, 0.25, 0.5, 1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 100000], i;
+    for (i = 0; i < st.length; i++) if (Math.ceil(vol / st[i] - 1e-9) <= 2) { var n = Math.max(1, Math.ceil(vol / st[i] - 1e-9)); return { step: st[i], mx: (n + 1) * st[i] }; }
+    return { step: vol, mx: vol * 1.25 };
+  }
+  function nearestMark(vol, step) { var k = Math.round(vol / step); return Math.round(k * step * 1e9) / 1e9; }
+  function spoon(tsp) {
+    var q = Math.round(tsp * 4); if (Math.abs(tsp * 4 - q) > 0.02 || q <= 0 || q > 24) return '';
+    var w = Math.floor(q / 4), r = q % 4, fr = { 0: '', 1: '¼', 2: '½', 3: '¾' }[r];
+    return (w ? w : '') + fr + ' tsp';
+  }
+  return { MASS: MASS, VOLS: VOLS, VOL: VOL, MEDS: MEDS, LIQS: LIQS, DOSES: DOSES, VOLTAB: VOLTAB, CHIPS: CHIPS, SIZES: SIZES, MAJ: MAJ, CUP: CUP, num: num, grpS: grpS, digits: digits, fmt: fmt, exact: exact, trimN: trimN, readPos: readPos, readDose: readDose, readVol: readVol, readStrength: readStrength, densOf: densOf, fillOf: fillOf, sizeFor: sizeFor, nice: nice, nearestMark: nearestMark, spoon: spoon };
+})();
+/* MGML-ENGINE:END */
+
+/* =========================================================
+   CalcThis.initMgMlCalc() — ids mm*. Engine: CalcThis.mgmlEngine. Amount fields = the caffeine/vitamin D DS pattern (input + inline unit toggle).
+   ========================================================= */
+CalcThis.initMgMlCalc = function () {
+  var E = CalcThis.mgmlEngine, U = CalcThis._kzUtil, seg = U.seg, setSeg = U.setSeg, esc = U.esc;
+  var $ = function (id) { return document.getElementById(id); };
+  var st = { mode: 'mgml', du: 'mg', su: 'mg', spu: 'ml', dec: 'a', vu: 'ml', ru: 'ml', syr: 'a', wu: 'kg' }, saved = [], last = null, kgDose = null;
+  var MODES = { mgml: 'mg to mL', mlmg: 'mL to mg', strength: 'Find the strength' };
+  function setHint(m, at) {
+    var h = $('mmHint'); h.textContent = m || ''; h.style.display = m ? 'block' : 'none';
+    if (m && at) { var el = $(at), f = el ? el.closest('.fld') : null; if (f && f.nextSibling !== h) f.parentNode.insertBefore(h, f.nextSibling); }
+  }
+  function note(id, txt, cls) { var n = $(id); n.textContent = txt; n.className = 'cb-note' + (cls ? ' ' + cls : ''); }
+  function table(id, head, rows, cls) { $(id).innerHTML = '<thead><tr>' + head.map(function (h) { return '<th>' + h + '</th>'; }).join('') + '</tr></thead><tbody>' + rows.map(function (r) { return '<tr' + (r.cls ? ' class="' + r.cls + '"' : '') + (r.d != null ? ' data-d="' + r.d + '"' : '') + '>' + r.c.map(function (c) { return '<td>' + c + '</td>'; }).join('') + '</tr>'; }).join('') + '</tbody>'; }
+  function unitTxt(u) { return u === 'mcg' ? 'mcg' : (u === 'g' ? 'g' : 'mg'); }
+  function vTxt(ml, u, dec) { return E.fmt(ml / E.VOL[u].f, dec) + ' ' + E.VOL[u].name; }
+  function empty(msg, at) { $('mmBig').textContent = '—'; $('mmSub').textContent = $('mmSub').getAttribute('data-empty'); $('mmBody').style.display = 'none'; $('mmMVal').textContent = '—'; $('mmCopyTxt').textContent = ''; last = null; setHint(msg || '', at); }
+  /* ---------- csel builders ---------- */
+  (function () {
+    var vo = E.VOLS.map(function (v) { return '<button type="button" class="csel-opt' + (v.id === 'ml' ? ' on' : '') + '" role="option" aria-selected="' + (v.id === 'ml') + '" data-value="' + v.id + '">' + v.lab + '</button>'; }).join('');
+    $('mmVu').querySelector('.csel-panel').innerHTML = vo; $('mmRu').querySelector('.csel-panel').innerHTML = vo;
+    CalcThis.initCsel($('mmVu')); CalcThis.initCsel($('mmRu')); CalcThis.initCsel($('mmSyrSz'));
+  })();
+  /* ---------- unit toggles: convert the typed number, keep invalid text as it is ---------- */
+  function convertField(id, fromF, toF) { var n = E.num($(id).value); if (n !== null && !isNaN(n) && n > 0) $(id).value = E.trimN(n * fromF / toF, 9); }
+  seg('mmMode', function (v) { st.mode = v; applyMode(); render(); });
+  $('mmDu').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; var v = b.getAttribute('data-v'); if (v === st.du) return; convertField('mmDose', E.MASS[st.du], E.MASS[v]); st.du = v; setSeg('mmDu', v); render(); });
+  $('mmSu').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; var v = b.getAttribute('data-v'); if (v === st.su) return; convertField('mmSa', E.MASS[st.su], E.MASS[v]); st.su = v; setSeg('mmSu', v); preOff(); render(); });
+  $('mmSpu').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; var v = b.getAttribute('data-v'); if (v === st.spu) return; convertField('mmSp', v === 'l' ? 0.001 : 1, v === 'l' ? 1 : 0.001); st.spu = v; setSeg('mmSpu', v); preOff(); render(); });
+  $('mmVu').addEventListener('change', function () { var v = $('mmVu').value || 'ml'; if (v === st.vu) return; convertField('mmVol', E.VOL[st.vu].f, E.VOL[v].f); st.vu = v; render(); });
+  $('mmRu').addEventListener('change', function () { st.ru = $('mmRu').value || 'ml'; render(); });
+  $('mmSyrSz').addEventListener('change', function () { st.syr = $('mmSyrSz').value || 'a'; render(); });
+  seg('mmDec', function (v) { st.dec = v; render(); });
+  $('mmWu').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; var v = b.getAttribute('data-v'); if (v === st.wu) return; convertField('mmWt', v === 'lb' ? 1 : 0.45359237, v === 'lb' ? 0.45359237 : 1); st.wu = v; setSeg('mmWu', v); render(); });
+  $('mmKgUse').addEventListener('click', function () {
+    var a = E.readPos($('mmKg').value), w = E.readPos($('mmWt').value); if (!a.v || !w.v) return;
+    var d = a.v * w.v * (st.wu === 'lb' ? 0.45359237 : 1); $('mmDose').value = E.trimN(d, 9); st.du = 'mg'; setSeg('mmDu', 'mg'); st.mode = 'mgml'; applyMode(); render();
+  });
+  /* ---------- label / liquid typeahead (DS .st-ta, copied from the paycheck State field and the dog breed field) ---------- */
+  var pEl = $('mmPre'), pIn = $('mmPreIn'), pList = $('mmPreList'), pVal = '', pHits = [], pAct = -1, P_OPTS = [];
+  E.MEDS.concat(E.LIQS).forEach(function (g) { g.items.forEach(function (it) { var f = E.fillOf(it[0]); P_OPTS.push({ v: it[0], label: it[1], meta: E.fmt(f.a, 'a') + ' mg per ' + E.fmt(f.p, 'a') + ' mL', s: (it[1] + ' ' + g.g + ' ' + E.fmt(f.a, 'a') + ' ' + E.fmt(f.p, 'a')).toLowerCase() }); }); });
+  function pText(v) { for (var i = 0; i < P_OPTS.length; i++) if (P_OPTS[i].v === v) return P_OPTS[i].label + ' · ' + P_OPTS[i].meta; return ''; }
+  Object.defineProperty(pEl, 'value', { configurable: true, get: function () { return pVal; }, set: function (v) { pVal = v || ''; pIn.value = pText(pVal); } });
+  function pRank(o, q) { if (o.label.toLowerCase().indexOf(q) === 0) return 0; if ((' ' + o.s).indexOf(' ' + q) >= 0) return 1; return o.s.indexOf(q) >= 0 ? 2 : -1; }
+  function pClose() { pList.style.display = 'none'; pIn.setAttribute('aria-expanded', 'false'); pAct = -1; }
+  function pShow(full) {
+    var q = full ? '' : pIn.value.trim().toLowerCase(), hits = [];
+    P_OPTS.forEach(function (o, i) { var r = q ? pRank(o, q) : 0; if (r >= 0) hits.push({ o: o, r: r, i: i }); });
+    hits.sort(function (x, y) { return x.r - y.r || x.i - y.i; });
+    pHits = hits.map(function (h) { return h.o; }); pAct = q && pHits.length ? 0 : -1;
+    pList.innerHTML = pHits.length ? pHits.map(function (o, i) { return '<button type="button" class="st-ta-opt' + (!q && o.v === pVal ? ' on' : '') + (q && i === pAct ? ' kb' : '') + '" role="option" data-i="' + i + '"><span>' + esc(o.label) + '</span><b>' + o.meta + '</b></button>'; }).join('') : '<div class="st-ta-none">No label matches “' + esc(pIn.value) + '”. Type the strength from your own label instead.</div>';
+    pList.style.display = 'block'; pIn.setAttribute('aria-expanded', 'true');
+    var cur = pList.querySelector('.st-ta-opt.on'); pList.scrollTop = cur && !q ? Math.max(0, cur.offsetTop - 60) : 0;
+  }
+  function applyPreset(id) {
+    var f = E.fillOf(id); if (!f) return;
+    $('mmSa').value = String(f.a); st.su = 'mg'; setSeg('mmSu', 'mg'); $('mmSp').value = f.p === 1 ? '' : String(f.p); st.spu = 'ml'; setSeg('mmSpu', 'ml'); render();
+  }
+  function pPick(o) { if (!o) return; pClose(); pEl.value = o.v; pIn.blur(); applyPreset(o.v); }
+  function preOff() { if (pVal) pEl.value = ''; }
+  pIn.addEventListener('focus', function () { pIn.select(); pShow(true); });
+  pIn.addEventListener('input', function () { if (!pIn.value.trim() && pVal) pVal = ''; pShow(!pIn.value.trim()); });
+  pIn.addEventListener('blur', function () { setTimeout(function () { pClose(); pIn.value = pText(pVal); }, 150); });
+  pIn.addEventListener('keydown', function (e) {
+    var opts = pList.querySelectorAll('.st-ta-opt');
+    if (e.key === 'Escape') { pClose(); pIn.value = pText(pVal); return; }
+    if (!opts.length) return;
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); pAct = e.key === 'ArrowDown' ? Math.min(opts.length - 1, pAct + 1) : Math.max(0, pAct - 1); [].forEach.call(opts, function (o, i) { o.classList.toggle('kb', i === pAct); }); opts[pAct].scrollIntoView({ block: 'nearest' }); }
+    else if (e.key === 'Enter') { e.preventDefault(); pPick(pHits[pAct >= 0 ? pAct : 0]); }
+  });
+  pList.addEventListener('mousedown', function (e) { e.preventDefault(); var bt = e.target.closest('.st-ta-opt'); if (bt) pPick(pHits[+bt.getAttribute('data-i')]); });
+  pEl.addEventListener('input', function () { if (pVal) applyPreset(pVal); });
+  $('mmChips').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; $('mmSa').value = b.getAttribute('data-v'); st.su = 'mg'; setSeg('mmSu', 'mg'); $('mmSp').value = ''; st.spu = 'ml'; setSeg('mmSpu', 'ml'); preOff(); render(); });
+  function applyMode() {
+    $('mmDoseF').style.display = st.mode === 'mlmg' ? 'none' : ''; $('mmVolF').style.display = st.mode === 'mgml' ? 'none' : ''; $('mmStrWrap').style.display = st.mode === 'strength' ? 'none' : '';
+    $('mmVolLab').textContent = st.mode === 'mlmg' ? 'Volume to convert' : 'Volume the dose is in';
+    $('mmRuF').style.display = st.mode === 'mgml' ? '' : 'none';
+    setSeg('mmMode', st.mode);
+  }
+  /* ---------- drawing: a syringe to scale ---------- */
+  function syringe(vol, size) {
+    var bx = 46, bw = 218, by = 22, bh = 20, W = 316, frac = Math.min(1, vol / size), fw = frac * bw, maj = E.MAJ[size], minor = maj / 5, ticks = '', labs = '', v, n = 0, every = Math.round(size / maj) > 6 ? 2 : 1;
+    for (v = 0, n = 0; v <= size + 1e-9; v += minor, n++) {
+      var x = bx + v / size * bw, isMaj = Math.abs(v / maj - Math.round(v / maj)) < 1e-6;
+      if (isMaj) { ticks += '<line x1="' + x.toFixed(1) + '" y1="' + (by + bh) + '" x2="' + x.toFixed(1) + '" y2="' + (by + bh + 10) + '" stroke="#8F8270" stroke-width="1.3"/>'; var k = Math.round(v / maj); if (k % every === 0) labs += '<text x="' + x.toFixed(1) + '" y="' + (by + bh + 25) + '" text-anchor="middle" font-size="12.5" font-weight="600" fill="#6B6556">' + E.trimN(v, 3) + '</text>'; }
+      else ticks += '<line x1="' + x.toFixed(1) + '" y1="' + (by + bh) + '" x2="' + x.toFixed(1) + '" y2="' + (by + bh + 5) + '" stroke="#C0B4A4" stroke-width="0.9"/>';
+    }
+    var mx = bx + fw, lab = E.fmt(vol, st.dec) + ' mL', anchor = mx > bx + bw - 34 ? 'end' : (mx < bx + 30 ? 'start' : 'middle'), lx = anchor === 'end' ? Math.min(mx + 6, bx + bw) : (anchor === 'start' ? Math.max(mx - 6, bx) : mx);
+    return '<svg id="mmSyrSvg" class="mm-syr-svg" viewBox="0 0 ' + W + ' 76" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Syringe of ' + size + ' mL filled to ' + esc(lab) + '" data-size="' + size + '" data-vol="' + vol + '" data-fillw="' + fw.toFixed(2) + '" data-barw="' + bw + '">' +
+      '<line x1="3" y1="32.5" x2="30" y2="32.5" stroke="#9A8F80" stroke-width="1.5" stroke-linecap="round"/><polygon points="2,33.6 9,31.2 9,33.6" fill="#9A8F80"/><polygon points="30,30.2 46,27.5 46,37.5 30,34.8" fill="#B9AFA1" stroke="#9A8F80" stroke-width="1" stroke-linejoin="round"/><rect x="40" y="26.5" width="6" height="12" rx="1.5" fill="#CFC6B8" stroke="#9A8F80" stroke-width="1"/>' +
+      '<rect x="' + bx + '" y="' + by + '" width="' + bw + '" height="' + bh + '" rx="4" fill="#FBF6EE" stroke="#D4C8B5" stroke-width="1.5"/><clipPath id="mmClip"><rect x="' + bx + '" y="' + by + '" width="' + bw + '" height="' + bh + '" rx="4"/></clipPath>' +
+      '<rect id="mmFill" x="' + bx + '" y="' + by + '" width="' + fw.toFixed(2) + '" height="' + bh + '" fill="#37503F" opacity="0.75" clip-path="url(#mmClip)"/>' + ticks + labs +
+      '<line x1="' + mx.toFixed(1) + '" y1="' + (by - 6) + '" x2="' + mx.toFixed(1) + '" y2="' + (by + bh + 2) + '" stroke="#B5761F" stroke-width="2" stroke-dasharray="3,2.5"/><polygon points="' + (mx - 5).toFixed(1) + ',' + (by - 8) + ' ' + (mx + 5).toFixed(1) + ',' + (by - 8) + ' ' + mx.toFixed(1) + ',' + (by - 2) + '" fill="#B5761F"/>' +
+      '<text x="' + lx.toFixed(1) + '" y="' + (by - 12) + '" text-anchor="' + anchor + '" font-size="13.5" font-weight="800" fill="#7A4D0F">' + esc(lab) + '</text>' +
+      '<rect x="' + (bx + bw - 1) + '" y="' + (by - 6) + '" width="3" height="' + (bh + 12) + '" rx="1.5" fill="#DDD0C0"/><rect x="' + (bx + bw + 2) + '" y="' + by + '" width="5" height="' + bh + '" fill="#D8CFBF" stroke="#C8B8A5" stroke-width="1"/><rect x="' + (bx + bw + 7) + '" y="' + (by + 6) + '" width="26" height="7" rx="3" fill="#E0D4C4"/><rect x="' + (bx + bw + 31) + '" y="' + (by - 10) + '" width="5" height="' + (bh + 20) + '" rx="2.5" fill="#D0C4B0"/></svg>';
+  }
+  /* ---------- drawing: what is in the bottle (volume vs milligrams) ---------- */
+  function rule(vol, s, dec) {
+    var nz = E.nice(vol), mx = nz.mx, p = function (x) { return Math.max(0, Math.min(100, x / mx * 100)); }, labs = '', k;
+    for (k = 0; k * nz.step <= mx + 1e-9; k++) { var v = k * nz.step; labs += '<span class="' + (k === 0 ? 'f' : (k * nz.step >= mx - 1e-9 ? 'l' : '')) + '" style="left:' + p(v) + '%"><b>' + E.fmt(v, 'a') + ' mL</b>' + E.fmt(v * s, 'a') + ' mg</span>'; }
+    return '<div class="mm-rule"><div class="mm-rule-t"><i class="mm-band" style="width:' + p(vol) + '%"></i><i class="mm-mk" style="left:' + p(vol) + '%"></i></div><div class="mm-rule-l">' + labs + '</div></div>';
+  }
+  /* ---------- results ---------- */
+  function readAdv(soft, vol, mode) {
+    var out = { step: null, bottle: null, dpd: null }, m = E.readPos($('mmMark').value), b = E.readPos($('mmBot').value), d = E.readPos($('mmDpd').value), mkN = $('mmMarkN'), bN = $('mmBotN'), dN = $('mmDpdN');
+    mkN.className = 'cb-note'; bN.className = 'cb-note'; dN.className = 'cb-note';
+    if (m.empty) mkN.textContent = 'Optional. Type the gap between two marks on your syringe, in mL, to see the nearest mark.'; else if (m.bad || m.v > 100) { mkN.textContent = 'Use a number above 0 for the gap between marks.'; soft.push({ m: 'Marks every: use a number above 0 (in mL). It is ignored for now.', at: 'mmMark' }); } else { out.step = m.v; mkN.textContent = mode === 'mgml' ? 'Marks every ' + E.fmt(m.v, 'a') + ' mL: the nearest mark is shown under the result.' : 'The nearest mark is shown when you convert mg to mL.'; }
+    if (b.empty) { bN.textContent = d.empty ? 'Optional. Type the bottle size in mL to see how many doses it holds.' : 'Type the bottle size first, then the doses a day count.'; if (!d.empty) soft.push({ m: 'Doses a day: type the bottle size first. It is ignored for now.', at: 'mmBot' }); }
+    else if (b.bad || b.v > 100000) { bN.textContent = 'Use a number above 0 for the bottle size in mL.'; soft.push({ m: 'Bottle size: use a number above 0 (in mL). It is ignored for now.', at: 'mmBot' }); }
+    else { out.bottle = b.v; bN.textContent = vol ? 'A bottle of ' + E.fmt(b.v, 'a') + ' mL holds ' + E.fmt(b.v / vol, 'a') + ' doses of ' + E.fmt(vol, 'a') + ' mL.' : 'Needs a dose or a volume first.'; }
+    if (d.empty) dN.textContent = 'Optional. How many doses you give each day.'; else if (d.bad || d.v > 1000) { dN.textContent = 'Use a number above 0.'; soft.push({ m: 'Doses a day: use a number above 0. It is ignored for now.', at: 'mmDpd' }); } else if (out.bottle) { out.dpd = d.v; dN.textContent = vol ? E.fmt(d.v, 'a') + ' a day: ' + E.fmt(out.bottle / vol / d.v, 'a') + ' days per bottle.' : 'Needs a dose or a volume first.'; } else dN.textContent = 'Type the bottle size first.';
+    var kN = $('mmKgN'), kg = E.readPos($('mmKg').value), wt = E.readPos($('mmWt').value), kb = $('mmKgUse'), wkg = wt.v ? wt.v * (st.wu === 'lb' ? 0.45359237 : 1) : 0, dz = kg.v && wkg ? kg.v * wkg : 0;
+    kN.className = 'cb-note'; kb.style.display = 'none'; out.kgDose = null;
+    if (kg.empty && wt.empty) kN.textContent = 'Optional. Type the dose per kg of body weight and the body weight to work out the dose in mg.';
+    else if (kg.bad || wt.bad || (kg.v && kg.v > 1e6) || (wt.v && wt.v > 1000) || (dz && (dz < 1e-6 || dz > 1e9))) { kN.textContent = 'Use numbers above 0 for the dose per kg and the body weight.'; soft.push({ m: 'Dose from body weight: use numbers above 0. It is ignored for now.', at: 'mmKg' }); }
+    else if (kg.empty) kN.textContent = 'Type the dose per kg too.';
+    else if (wt.empty) kN.textContent = 'Type the body weight too.';
+    else { out.kgDose = dz; kN.textContent = E.fmt(kg.v, 'a') + ' mg per kg × ' + E.fmt(wkg, 'a') + ' kg = ' + E.fmt(dz, 'a') + ' mg'; kb.textContent = 'Use ' + E.fmt(dz, 'a') + ' mg as the dose'; kb.style.display = ''; }
+    return out;
+  }
+  function render() {
+    var soft = [], mode = st.mode, D = null, V = null, S = null, dRaw = $('mmDose').value, vRaw = $('mmVol').value;
+    /* dose note */
+    var dr = E.readDose(dRaw, st.du);
+    if (dr.empty) note('mmDoseN', 'Type the dose in mcg, mg or g. It is shown in all three units here.'); else if (dr.bad) note('mmDoseN', 'Use numbers only, for example 50 or 0.25.'); else note('mmDoseN', E.fmt(dr.mg / E.MASS.mcg, 'a') + ' mcg = ' + E.fmt(dr.mg, 'a') + ' mg = ' + E.fmt(dr.mg / E.MASS.g, 'a') + ' g');
+    var vr = E.readVol(vRaw, st.vu);
+    if (vr.empty) note('mmVolN', 'Type the amount of liquid. 5 mL = 1 teaspoon, 15 mL = 1 tablespoon.'); else if (vr.bad) note('mmVolN', 'Use numbers only, for example 2.5 or 10.'); else note('mmVolN', E.fmt(vr.ml, 'a') + ' mL = ' + E.fmt(vr.ml / 5, 'a') + ' tsp = ' + E.fmt(vr.ml / 15, 'a') + ' tbsp');
+    var sr = E.readStrength($('mmSa').value, st.su, $('mmSp').value, st.spu);
+    if (sr.empty) note('mmSn', sr.pTyped ? 'Type the amount on the label first, then the volume counts.' : 'Type the label the way it is printed, for example 250 mg in 5 mL. Leave the volume empty for “per 1 mL”.'); else if (sr.bad === 'a') note('mmSn', 'Use numbers only, for example 250.'); else if (sr.bad === 'p') note('mmSn', 'The volume should be a number above 0. It is ignored for now, so 1 mL is used.'); else if (sr.bad === 'range') note('mmSn', 'That strength is outside 0.000001 to 10,000,000 mg per mL.'); else note('mmSn', E.fmt(sr.amg, 'a') + ' mg in ' + E.fmt(sr.per, 'a') + ' mL = ' + E.fmt(sr.s, 'a') + ' mg per mL (' + E.fmt(sr.s * 1000, 'a') + ' mcg per mL, ' + E.fmt(sr.s / 10, 'a') + '% w/v)');
+    if (sr.bad === 'p') soft.push({ m: 'Label volume: use a number above 0. It is ignored for now, so “per 1 mL” is used.', at: 'mmSp' });
+    if (sr.bad === 'p') { var s2 = sr.amg; sr = (s2 < 1e-6 || s2 > 1e7) ? { bad: 'range' } : { s: s2, amg: s2, per: 1, dflt: true }; }
+    readAdv([], null, mode);
+    /* required fields for this mode */
+    if (mode === 'mgml' || mode === 'strength') { if (dr.empty) { setHintsOff(); return empty(''); } if (dr.bad) return empty('The dose should be a number above 0 (up to 1,000,000,000 mg).', 'mmDose'); D = dr.mg; }
+    if (mode === 'mlmg' || mode === 'strength') { if (vr.empty) { return empty(''); } if (vr.bad) return empty('The volume should be a number above 0 (up to 1,000,000 mL).', 'mmVol'); V = vr.ml; }
+    if (mode !== 'strength') {
+      if (sr.empty) return empty('', null);
+      if (sr.bad === 'a') return empty('The strength amount should be a number above 0.', 'mmSa');
+      if (sr.bad === 'range') return empty('The strength should be between 0.000001 and 10,000,000 mg per mL. Check the amount and the volume.', 'mmSa');
+      S = sr.s;
+    }
+    var vol, mg, str, big, sub, tip, warn = [];
+    if (mode === 'mgml') { str = S; mg = D; vol = D / S; } else if (mode === 'mlmg') { str = S; vol = V; mg = V * S; } else { vol = V; mg = D; str = D / V; if (str < 1e-6 || str > 1e7) return empty('That dose and volume give a strength outside 0.000001 to 10,000,000 mg per mL. Check the units.', 'mmDose'); }
+    if (!isFinite(vol) || !isFinite(mg) || !isFinite(str)) return empty('Check the numbers: the result is too large or too small to show.', 'mmDose');
+    var adv = readAdv(soft, vol, mode);
+    setHint(soft.length ? soft[0].m : '', soft.length ? soft[0].at : null);
+    var doseTxt = E.fmt(mg / E.MASS[st.du], st.dec) + ' ' + unitTxt(st.du);
+    if (mode === 'mgml') { big = vTxt(vol, st.ru, st.dec); sub = E.fmt(mg / E.MASS[st.du], 'a') + ' ' + unitTxt(st.du) + ' ÷ ' + E.fmt(str, 'a') + ' mg per mL'; $('mmLab').textContent = 'Volume to measure'; }
+    else if (mode === 'mlmg') { big = E.fmt(mg, st.dec) + ' mg'; sub = vTxt(vol, st.vu, 'a') + ' × ' + E.fmt(str, 'a') + ' mg per mL'; $('mmLab').textContent = 'Amount of medicine'; }
+    else { big = E.fmt(str, st.dec) + ' mg per mL'; sub = E.fmt(mg, 'a') + ' mg in ' + E.fmt(vol, 'a') + ' mL = ' + E.fmt(str * 5, 'a') + ' mg per 5 mL'; $('mmLab').textContent = 'Strength'; }
+    $('mmBig').textContent = big; $('mmSub').textContent = sub; $('mmMLab').textContent = $('mmLab').textContent; $('mmMVal').textContent = big;
+    /* tip */
+    var tsp = vol / 5, sp = E.spoon(tsp), mgTxt = E.fmt(mg, 'a') + ' mg';
+    if (mode === 'mgml') tip = 'Measure ' + E.fmt(vol, st.dec) + ' mL (' + (sp || E.fmt(tsp, 'a') + ' tsp') + ') of the liquid: that is ' + mgTxt + ' at ' + E.fmt(str, 'a') + ' mg per mL.';
+    else if (mode === 'mlmg') tip = E.fmt(vol, 'a') + ' mL of a liquid at ' + E.fmt(str, 'a') + ' mg per mL holds ' + mgTxt + ' (' + E.fmt(mg / E.MASS.mcg, 'a') + ' mcg).';
+    else tip = mgTxt + ' in ' + E.fmt(vol, 'a') + ' mL is ' + E.fmt(str, 'a') + ' mg per mL, the same as ' + E.fmt(str * 5, 'a') + ' mg per 5 mL.';
+    $('mmTip').textContent = tip;
+    /* warnings */
+    if (vol < 0.1 && vol >= 1e-9 && mode !== 'strength') warn.push('This is under 0.1 mL. Check that your syringe has marks this fine, or ask a pharmacist.');
+    if (vol > 1000) warn.push('This is more than 1 litre. Check the strength and the units.'); else if (vol > 60) warn.push('This is more than 60 mL, more than the largest syringe drawn here. Check the strength and the dose.');
+    if (adv.step && mode === 'mgml') { var mk = E.nearestMark(vol, adv.step), del = mk * str, pct = (del - mg) / mg * 100; if (mk <= 0) warn.push('The dose is less than one mark (' + E.fmt(adv.step, 'a') + ' mL) on your syringe. Ask a pharmacist for a finer syringe.'); else warn.push('On a syringe with marks every ' + E.fmt(adv.step, 'a') + ' mL, the nearest mark is ' + E.fmt(mk, 'a') + ' mL = ' + E.fmt(del, 'a') + ' mg (' + (Math.abs(pct) < 0.05 ? 'exactly the dose' : E.fmt(Math.abs(pct), 'a') + '% ' + (pct > 0 ? 'more' : 'less') + ' than the dose') + ').'); }
+    $('mmWarn').innerHTML = warn.map(function (w) { return '<p class="mm-warn">' + esc(w) + '</p>'; }).join(''); $('mmWarn').style.display = warn.length ? '' : 'none';
+    /* drawings */
+    var size = E.sizeFor(vol, st.syr), want = st.syr !== 'a' ? +st.syr : null;
+    if (want && size && size !== want) { /* chosen syringe too small: the next size is used */ soft.push({ m: 'The ' + want + ' mL syringe size is ignored for now: the volume is ' + E.fmt(vol, 'a') + ' mL, so a ' + size + ' mL syringe is drawn.', at: 'mmSyrSz' }); setHint(soft[0].m, soft[0].at); }
+    if (vol >= 1e-9 && size) { $('mmSyr').innerHTML = syringe(vol, size); $('mmSyrCap').textContent = 'A ' + size + ' mL syringe, drawn to scale and filled to ' + E.fmt(vol, 'a') + ' mL. Schematic: real syringes have their own marks, so read the marks on yours.'; $('mmSyrWrap').style.display = ''; }
+    else { $('mmSyr').innerHTML = ''; $('mmSyrWrap').style.display = 'none'; }
+    $('mmRule').innerHTML = rule(vol, str, st.dec);
+    $('mmRuleCap').textContent = 'Every mL of this liquid holds ' + E.fmt(str, 'a') + ' mg, so ' + mgTxt + ' is ' + E.fmt(vol, 'a') + ' mL.';
+    /* every unit */
+    var amt = function (x) { var r = E.fmt(x, st.dec), ex = E.exact(x); return r + (ex !== r ? '<span class="bm-sub">exact ' + ex + '</span>' : ''); };
+    table('mmUnits', ['Volume in', 'Amount'], E.VOLS.map(function (v) { return { c: [v.long, amt(vol / v.f)] }; }));
+    table('mmMass', ['Medicine in', 'Amount'], ['mcg', 'mg', 'g'].map(function (u) { return { c: [u === 'mcg' ? 'micrograms (mcg)' : (u === 'mg' ? 'milligrams (mg)' : 'grams (g)'), amt(mg / E.MASS[u])] }; }));
+    table('mmStrU', ['Strength in', 'Amount'], [['mg per mL', str], ['mg per 5 mL', str * 5], ['mg per tsp (5 mL)', str * 5], ['mg per tbsp (15 mL)', str * 15], ['mcg per mL', str * 1000], ['g per L (same as mg per mL)', str], ['mg per L', str * 1000], ['% (g per 100 mL)', str / 10]].map(function (r) { return { c: [r[0], E.fmt(r[1], st.dec)] }; }));
+    /* table at this strength */
+    if (mode === 'strength') $('mmTabWrap').style.display = 'none';
+    else {
+      $('mmTabWrap').style.display = '';
+      if (mode === 'mgml') { $('mmTabH').textContent = 'mg to mL at ' + E.fmt(str, 'a') + ' mg per mL'; table('mmTab', ['Dose', 'Volume'], E.DOSES.map(function (d) { return { d: d, c: [E.fmt(d, 'a') + ' mg', E.fmt(d / str, st.dec) + ' mL'] }; })); }
+      else { $('mmTabH').textContent = 'mL to mg at ' + E.fmt(str, 'a') + ' mg per mL'; table('mmTab', ['Volume', 'Medicine'], E.VOLTAB.map(function (v) { return { d: v, c: [E.fmt(v, 'a') + ' mL', E.fmt(v * str, st.dec) + ' mg'] }; })); }
+    }
+    /* copy + save */
+    var cp = mode === 'mgml' ? E.fmt(mg / E.MASS[st.du], 'a') + ' ' + unitTxt(st.du) + ' at ' + E.fmt(str, 'a') + ' mg per mL = ' + E.fmt(vol, st.dec) + ' mL' : (mode === 'mlmg' ? E.fmt(vol, 'a') + ' mL at ' + E.fmt(str, 'a') + ' mg per mL = ' + E.fmt(mg, st.dec) + ' mg' : E.fmt(mg, 'a') + ' mg in ' + E.fmt(vol, 'a') + ' mL = ' + E.fmt(str, st.dec) + ' mg per mL');
+    $('mmCopyTxt').textContent = cp + ' (calcthis.co/mg-to-ml-calculator/)';
+    last = { mode: mode, dose: dRaw, du: st.du, vol: vRaw, vu: st.vu, sa: $('mmSa').value, su: st.su, sp: $('mmSp').value, spu: st.spu, txt: cp };
+    $('mmBody').style.display = '';
+  }
+  function setHintsOff() { setHint(''); }
+  /* ---------- saved list (kept in this page only, gone on reload) ---------- */
+  function renderList() {
+    $('mmListWrap').style.display = saved.length ? '' : 'none';
+    $('mmList').innerHTML = saved.map(function (x, i) { return '<div class="mm-li"><button type="button" class="mm-li-t" data-i="' + i + '">' + esc(x.txt) + '</button><button class="x" type="button" data-x="' + i + '" aria-label="Remove">&#215;</button></div>'; }).join('');
+  }
+  $('mmSave').addEventListener('click', function () { if (!last) return; saved.unshift(last); if (saved.length > 10) saved.pop(); renderList(); });
+  $('mmList').addEventListener('click', function (e) {
+    var x = e.target.closest('[data-x]'), t = e.target.closest('[data-i]');
+    if (x) { saved.splice(+x.getAttribute('data-x'), 1); renderList(); return; }
+    if (t) {
+      var it = saved[+t.getAttribute('data-i')]; if (!it) return;
+      st.mode = it.mode; st.du = it.du; st.su = it.su; st.spu = it.spu; $('mmDose').value = it.dose; $('mmVol').value = it.vol; $('mmSa').value = it.sa; $('mmSp').value = it.sp;
+      setSeg('mmDu', it.du); setSeg('mmSu', it.su); setSeg('mmSpu', it.spu); st.vu = it.vu; $('mmVu').value = it.vu; preOff(); applyMode(); render();
+    }
+  });
+  $('mmListClear').addEventListener('click', function () { saved = []; renderList(); });
+  $('mmTab').addEventListener('click', function (e) {
+    var r = e.target.closest('tr[data-d]'); if (!r) return; var d = r.getAttribute('data-d');
+    if (st.mode === 'mgml') { $('mmDose').value = d; st.du = 'mg'; setSeg('mmDu', 'mg'); } else { $('mmVol').value = d; st.vu = 'ml'; $('mmVu').value = 'ml'; }
+    render();
+  });
+  /* ---------- controls ---------- */
+  ['mmDose', 'mmVol', 'mmMark', 'mmBot', 'mmDpd', 'mmKg', 'mmWt'].forEach(function (id) { $(id).addEventListener('input', render); });
+  ['mmSa', 'mmSp'].forEach(function (id) { $(id).addEventListener('input', function () { preOff(); render(); }); });
+  $('mmClear').addEventListener('click', function () {
+    ['mmDose', 'mmVol', 'mmSa', 'mmSp', 'mmMark', 'mmBot', 'mmDpd', 'mmKg', 'mmWt'].forEach(function (id) { $(id).value = ''; });
+    st.wu = 'kg'; setSeg('mmWu', 'kg');
+    st.du = 'mg'; st.su = 'mg'; st.spu = 'ml'; st.vu = 'ml'; setSeg('mmDu', 'mg'); setSeg('mmSu', 'mg'); setSeg('mmSpu', 'ml'); $('mmVu').value = 'ml'; preOff(); setHint(''); render();
+  });
+  $('mmAdvBtn').addEventListener('click', function () {
+    var open = $('mmAdvBtn').classList.toggle('open'); $('mmAdvBtnLab').textContent = open ? 'Go simple' : 'Go advanced'; $('mmAdvIn').style.display = open ? '' : 'none';
+    if (!open) { st.dec = 'a'; setSeg('mmDec', 'a'); st.ru = 'ml'; $('mmRu').value = 'ml'; st.syr = 'a'; $('mmSyrSz').value = 'a'; ['mmMark', 'mmBot', 'mmDpd', 'mmKg', 'mmWt'].forEach(function (id) { $(id).value = ''; }); st.wu = 'kg'; setSeg('mmWu', 'kg'); }
+    render();
+  });
+  applyMode(); render();
+};
+/* MGML:END */

@@ -1,5 +1,5 @@
 {
- "date": "2026-11-14",
+ "date": "2026-11-21",
  "competitors": [
   {
    "name": "calculator.net amortization calculator",
@@ -34,6 +34,7 @@
   "mortgagecalculator.org also shows local current mortgage-rate tables (15 and 30 year, by location): a live rates feed, not part of the amortization calculation, not matched here; the user has not been asked about it yet",
   "calculator.net has a separate start month and year for the monthly and the yearly extra; here one \"Extra payments start\" field (payment number, month and year or date) governs both",
   "Omnicalculator's exact figures with extra payments and other frequencies were not typed side by side; only its default plan was compared",
-  "Bankrate could not be opened (human-verification wall) and NerdWallet's calculator could not be read, so neither was compared"
+  "Bankrate could not be opened (human-verification wall) and NerdWallet's calculator could not be read, so neither was compared",
+  "2026-11-21 re-check after the contact-email release: every competitor page was reopened and its tool layout looked the same at first-screen level; not re-typed input by input"
  ]
 }

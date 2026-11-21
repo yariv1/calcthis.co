@@ -1,0 +1,14 @@
+{
+ "slug": "mg-to-ml-calculator",
+ "pass": true,
+ "at": "2026-11-21T11:04:34.563Z",
+ "passHash": "9427df9199c71b8e",
+ "scriptHash": "b216c2e83d33f726",
+ "cats": {
+  "textVsTool": 186,
+  "extremes": 40,
+  "visual": 140
+ },
+ "runs": 224,
+ "fails": []
+}

@@ -4,6 +4,10 @@ const fs = require('fs'), path = require('path');
 const ROOT = path.join(__dirname, '..') + path.sep;
 const A = (slug, name) => { if (!fs.existsSync(ROOT + slug + '/index.html')) throw new Error('missing page ' + slug); return '<a href="/' + slug + '/">' + name + '</a>'; };
 const ENTRIES = [
+  ['2026-11-21', 'November 21, 2026', [
+    'New: ' + A('mg-to-ml-calculator', 'mg to mL Calculator') + ' — type a dose and the strength printed on the label and see the milliliters on a to-scale syringe, with mL to mg, strength, teaspoons, tablespoons and label strengths read on DailyMed.',
+    'New: a Medication &amp; Dosage group in the menu, with the mg to mL calculator and the peptide reconstitution calculator.',
+  ]],
   ['2026-11-20', 'November 20, 2026', [
     'Improved: the contact address is now help@calcthis.co on every page, and the feedback button and contact form send to it.',
   ]],

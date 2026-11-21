@@ -1,0 +1,19 @@
+{
+ "slug": "mg-to-ml-calculator",
+ "hash": "9427df9199c71b8e",
+ "shots": [
+  "mg-to-ml-calculator-1-empty-mobile.png",
+  "mg-to-ml-calculator-2-filled-mobile.png",
+  "mg-to-ml-calculator-3-result-mobile.png",
+  "mg-to-ml-calculator-4-advanced-mobile.png",
+  "mg-to-ml-calculator-5-error-mobile.png",
+  "mg-to-ml-calculator-6-after-chaos-mobile.png",
+  "mg-to-ml-calculator-1-empty-desktop.png",
+  "mg-to-ml-calculator-2-filled-desktop.png",
+  "mg-to-ml-calculator-3-result-desktop.png",
+  "mg-to-ml-calculator-4-advanced-desktop.png",
+  "mg-to-ml-calculator-5-error-desktop.png",
+  "mg-to-ml-calculator-6-after-chaos-desktop.png"
+ ],
+ "at": "2026-11-21T11:05:23.023Z"
+}

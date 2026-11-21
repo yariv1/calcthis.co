@@ -1,5 +1,5 @@
 {
- "date": "2026-11-14",
+ "date": "2026-11-21",
  "competitors": [
   {
    "name": "Omnicalculator p-value",
@@ -42,6 +42,7 @@
   "other browsers (Chrome only)",
   "print",
   "Statology z / chi-square / F pages and SocSci F / chi-square pages not reopened (same pattern as the t pages)",
-  "2026-11-13: the competitor pages were reopened (page loads and headings read) after the header gained the z-score link; no feature comparison was repeated"
+  "2026-11-13: the competitor pages were reopened (page loads and headings read) after the header gained the z-score link; no feature comparison was repeated",
+  "2026-11-21 re-check after the contact-email release: every competitor page was reopened and its tool layout looked the same at first-screen level; not re-typed input by input"
  ]
 }

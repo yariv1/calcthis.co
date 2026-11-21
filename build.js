@@ -90,6 +90,7 @@ const PAGES = [
   { file: 'unit-price-calculator/index.html',          slug: '/unit-price-calculator/' },
   { file: 'compound-interest-calculator/index.html',          slug: '/compound-interest-calculator/' },
   { file: 'amortization-calculator/index.html',          slug: '/amortization-calculator/' },
+  { file: 'mg-to-ml-calculator/index.html', slug: '/mg-to-ml-calculator/' },
   { file: 'triangle-calculator/index.html',    slug: '/triangle-calculator/' },
   { file: 'mortgage-calculator/index.html',    slug: '/mortgage-calculator/' },
   { file: 'loan-calculator/index.html',        slug: '/loan-calculator/' },

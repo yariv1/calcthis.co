@@ -1,0 +1,234 @@
+{
+  "slug": "mg-to-ml-calculator",
+  "research": "md-files/calcthis-mgtoml-research.md",
+  "competitors": [
+    {
+      "name": "Omnicalculator mg to mL",
+      "url": "https://www.omnicalculator.com/conversion/mg-to-ml",
+      "openedLive": true,
+      "date": "2026-11-21",
+      "inputs": [
+        "liquid select: water, milk, cooking oil, medications, other",
+        "medications list: acetaminophen, amoxicillin, Benadryl, cetirizine, ibuprofen oral, and a custom label",
+        "medication labels not read on DailyMed: morphine 20 mg/mL oral, Benadryl injection 50 mg/mL, two ibuprofen injections",
+        "concentration in mg/mL, g/L, mg/L, ug/L, ug/mL",
+        "medication dosage in ug, mg, g",
+        "liquid dosage in mm3, cm3, mL, L, US fl oz, UK fl oz, tbsp, tsp, cc",
+        "works both ways, mg to mL and mL to mg",
+        "share result, reload calculator, clear all changes",
+        "formula text with the densities of water, milk and cooking oil, worked example, FAQ"
+      ]
+    },
+    {
+      "name": "CalculateQuick mg to ml",
+      "url": "https://calculatequick.com/conversion/mg-to-ml-calculator/",
+      "openedLive": true,
+      "date": "2026-11-21",
+      "inputs": [
+        "solution concentration box with 1, 5, 10 and 50 mg/ml chips",
+        "two linked fields, milligrams and milliliters",
+        "rounded and exact values",
+        "decimal places 0, 2, 3, 4",
+        "recent conversions list with clear",
+        "teaspoon equivalent under the result",
+        "formula, copy and share buttons",
+        "embed code and cite buttons",
+        "three-variable table: dose and strength, volume and strength, dose and volume",
+        "label reading text, common liquid medicine table, household measures, density examples, worked examples"
+      ]
+    },
+    {
+      "name": "Inch Calculator mg to mL",
+      "url": "https://www.inchcalculator.com/convert/milligram-to-milliliter/",
+      "openedLive": true,
+      "date": "2026-11-21",
+      "inputs": [
+        "direction tabs: milligrams to milliliters and milliliters to milligrams",
+        "substance dropdown with medicine labels: acetaminophen 160 mg/5 mL, amoxicillin 250 and 400 mg/5 mL, azithromycin 100 and 200, cefdinir 125 and 250, cephalexin 125 and 250, Benadryl, ibuprofen",
+        "medicine labels not read on DailyMed: acetaminophen 500 mg/15 mL, 960 mg/30 mL and 1000 mg/30 mL",
+        "substance dropdown with water, drinks, dairy, oils and fats, sugars, flours, baking items, nuts, grains",
+        "substance dropdown items with no source here: beer, coffee, soda, wine, cinnamon, garlic powder, spice blends, soy sauce, vitamin powder, yeast, vegetables, Nutella, mayonnaise, ice cream",
+        "weight in milligrams, result in milliliters",
+        "density formula with g/mL",
+        "table of 22 mg values for 5 substances",
+        "text: what is a milligram, what is a milliliter, when to convert, references"
+      ]
+    },
+    {
+      "name": "Calculator.academy mg to mL",
+      "url": "https://calculator.academy/mg-to-ml-calculator-2/",
+      "openedLive": true,
+      "date": "2026-11-21",
+      "inputs": [
+        "solve for: mass to mL, stated mg/kg to mL, mL to mass, concentration",
+        "conversion basis: product label strength or non-medicine density",
+        "label format: mg per mL or mg per stated mL",
+        "dose units mg, mcg, g",
+        "optional settings with the nearest syringe mark",
+        "density table of 14 substances",
+        "label strength example table",
+        "definition, formula, example and FAQ text"
+      ]
+    }
+  ],
+  "features": [
+    {
+      "covers": [
+        "Omnicalculator mg to mL: works both ways, mg to mL and mL to mg",
+        "Inch Calculator mg to mL: direction tabs: milligrams to milliliters and milliliters to milligrams",
+        "Calculator.academy mg to mL: solve for: mass to mL, stated mg/kg to mL, mL to mass, concentration"
+      ],
+      "status": "exceed",
+      "ids": [
+        "mmMode",
+        "mmKg",
+        "mmWt",
+        "mmKgUse"
+      ]
+    },
+    {
+      "covers": [
+        "Omnicalculator mg to mL: liquid select: water, milk, cooking oil, medications, other",
+        "Omnicalculator mg to mL: medications list: acetaminophen, amoxicillin, Benadryl, cetirizine, ibuprofen oral, and a custom label",
+        "Inch Calculator mg to mL: substance dropdown with medicine labels: acetaminophen 160 mg/5 mL, amoxicillin 250 and 400 mg/5 mL, azithromycin 100 and 200, cefdinir 125 and 250, cephalexin 125 and 250, Benadryl, ibuprofen",
+        "Inch Calculator mg to mL: substance dropdown with water, drinks, dairy, oils and fats, sugars, flours, baking items, nuts, grains",
+        "Calculator.academy mg to mL: conversion basis: product label strength or non-medicine density",
+        "Calculator.academy mg to mL: density table of 14 substances",
+        "Calculator.academy mg to mL: label strength example table"
+      ],
+      "status": "exceed",
+      "ids": [
+        "mmPre",
+        "mmSa",
+        "mmSp"
+      ]
+    },
+    {
+      "covers": [
+        "Omnicalculator mg to mL: concentration in mg/mL, g/L, mg/L, ug/L, ug/mL",
+        "CalculateQuick mg to ml: solution concentration box with 1, 5, 10 and 50 mg/ml chips",
+        "Calculator.academy mg to mL: label format: mg per mL or mg per stated mL"
+      ],
+      "status": "exceed",
+      "ids": [
+        "mmSa",
+        "mmSu",
+        "mmSp",
+        "mmSpu",
+        "mmChips",
+        "mmStrU"
+      ]
+    },
+    {
+      "covers": [
+        "Omnicalculator mg to mL: medication dosage in ug, mg, g",
+        "Calculator.academy mg to mL: dose units mg, mcg, g",
+        "Inch Calculator mg to mL: weight in milligrams, result in milliliters"
+      ],
+      "status": "exceed",
+      "ids": [
+        "mmDose",
+        "mmDu",
+        "mmMass"
+      ]
+    },
+    {
+      "covers": [
+        "Omnicalculator mg to mL: liquid dosage in mm3, cm3, mL, L, US fl oz, UK fl oz, tbsp, tsp, cc",
+        "CalculateQuick mg to ml: two linked fields, milligrams and milliliters",
+        "CalculateQuick mg to ml: teaspoon equivalent under the result"
+      ],
+      "status": "exceed",
+      "ids": [
+        "mmVol",
+        "mmVu",
+        "mmRu",
+        "mmUnits",
+        "mmTip"
+      ]
+    },
+    {
+      "covers": [
+        "CalculateQuick mg to ml: rounded and exact values",
+        "CalculateQuick mg to ml: decimal places 0, 2, 3, 4"
+      ],
+      "status": "match",
+      "ids": [
+        "mmDec",
+        "mmUnits"
+      ]
+    },
+    {
+      "covers": [
+        "CalculateQuick mg to ml: recent conversions list with clear"
+      ],
+      "status": "match",
+      "ids": [
+        "mmSave",
+        "mmList",
+        "mmListClear"
+      ]
+    },
+    {
+      "covers": [
+        "Omnicalculator mg to mL: share result, reload calculator, clear all changes",
+        "CalculateQuick mg to ml: formula, copy and share buttons"
+      ],
+      "status": "match",
+      "ids": [
+        "mmCopyTxt",
+        "mmClear"
+      ]
+    },
+    {
+      "covers": [
+        "Calculator.academy mg to mL: optional settings with the nearest syringe mark"
+      ],
+      "status": "exceed",
+      "ids": [
+        "mmMark",
+        "mmSyrSz",
+        "mmBot",
+        "mmDpd"
+      ]
+    },
+    {
+      "covers": [
+        "Omnicalculator mg to mL: formula text with the densities of water, milk and cooking oil, worked example, FAQ",
+        "CalculateQuick mg to ml: three-variable table: dose and strength, volume and strength, dose and volume",
+        "CalculateQuick mg to ml: label reading text, common liquid medicine table, household measures, density examples, worked examples",
+        "Inch Calculator mg to mL: density formula with g/mL",
+        "Inch Calculator mg to mL: table of 22 mg values for 5 substances",
+        "Inch Calculator mg to mL: text: what is a milligram, what is a milliliter, when to convert, references",
+        "Calculator.academy mg to mL: definition, formula, example and FAQ text"
+      ],
+      "status": "exceed",
+      "ids": [
+        "mmTab",
+        "mmStrU"
+      ]
+    },
+    {
+      "covers": [
+        "Omnicalculator mg to mL: medication labels not read on DailyMed: morphine 20 mg/mL oral, Benadryl injection 50 mg/mL, two ibuprofen injections",
+        "Inch Calculator mg to mL: medicine labels not read on DailyMed: acetaminophen 500 mg/15 mL, 960 mg/30 mL and 1000 mg/30 mL",
+        "Inch Calculator mg to mL: substance dropdown items with no source here: beer, coffee, soda, wine, cinnamon, garlic powder, spice blends, soy sauce, vitamin powder, yeast, vegetables, Nutella, mayonnaise, ice cream"
+      ],
+      "status": "dropped",
+      "signoff": {
+        "quote": "Approve all",
+        "date": "2026-11-21"
+      }
+    },
+    {
+      "covers": [
+        "CalculateQuick mg to ml: embed code and cite buttons"
+      ],
+      "status": "dropped",
+      "signoff": {
+        "quote": "Approve all",
+        "date": "2026-11-21"
+      }
+    }
+  ]
+}
