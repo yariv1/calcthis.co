@@ -210,3 +210,5 @@ BING 2026-11-22: submitted manually (7 URLs, listed in Submitted URLs): paycheck
 BING 2026-11-22 (second batch): 89 URLs submitted manually, all appear as "Today" in Submitted URLs (daily quota now used): the paycheck hub + 36 state pages, 45 older calculator pages, contact, privacy, terms. Bing has now received every sitemap page except blog articles and the RNG hub/wheel/no-repeats/other pages not listed; unit pairs and tip pages went in on 2026-11-13.
 
 - 2026-11-22 DEPLOYED v361 (commit 19c3f37b): /t-test-calculator/ + whats-new. IndexNow pinged 243 URLs (HTTP 200). Bing manual submit NOT done: daily quota 0 left. GSC NOT requested (quota used today); add t-test-calculator to the GSC queue (after virginia).
+
+- 2026-11-22 DEPLOYED v362 (commit 00b99e64): /retatrutide-dosage-calculator/ + whats-new. IndexNow pinged 244 URLs (HTTP 200). Bing manual submit and GSC NOT done (quotas used): add retatrutide-dosage-calculator and t-test-calculator to the GSC queue (after virginia) and to Bing on a new day.
