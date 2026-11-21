@@ -1,0 +1,35 @@
+{
+ "slug": "dilution-calculator",
+ "pass": true,
+ "at": "2026-11-21T11:47:56.263Z",
+ "hash": "a23feec73a61e9df",
+ "viewports": {
+  "mobile": {
+   "steps": 843,
+   "fails": []
+  },
+  "desktop": {
+   "steps": 843,
+   "fails": []
+  }
+ },
+ "oracle": {
+  "runs": 261,
+  "fails": []
+ },
+ "shots": [
+  "md-files/qa-passes/shots/dilution-calculator-1-empty-mobile.png",
+  "md-files/qa-passes/shots/dilution-calculator-2-filled-mobile.png",
+  "md-files/qa-passes/shots/dilution-calculator-3-result-mobile.png",
+  "md-files/qa-passes/shots/dilution-calculator-4-advanced-mobile.png",
+  "md-files/qa-passes/shots/dilution-calculator-5-error-mobile.png",
+  "md-files/qa-passes/shots/dilution-calculator-6-after-chaos-mobile.png",
+  "md-files/qa-passes/shots/dilution-calculator-1-empty-desktop.png",
+  "md-files/qa-passes/shots/dilution-calculator-2-filled-desktop.png",
+  "md-files/qa-passes/shots/dilution-calculator-3-result-desktop.png",
+  "md-files/qa-passes/shots/dilution-calculator-4-advanced-desktop.png",
+  "md-files/qa-passes/shots/dilution-calculator-5-error-desktop.png",
+  "md-files/qa-passes/shots/dilution-calculator-6-after-chaos-desktop.png"
+ ],
+ "console": []
+}

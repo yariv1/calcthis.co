@@ -1,0 +1,150 @@
+{
+  "slug": "dilution-calculator",
+  "research": "md-files/calcthis-dilution-research.md",
+  "competitors": [
+    {
+      "name": "Omnicalculator dilution ratio",
+      "url": "https://www.omnicalculator.com/everyday-life/dilution-ratio",
+      "openedLive": true,
+      "date": "2026-11-21",
+      "inputs": [
+        "final volume, dilution ratio, concentrate volume and water volume: any two give the rest",
+        "17 volume units on each volume field",
+        "share result, reload calculator, clear all changes",
+        "dilution chart and text: what is the dilution ratio, how to calculate it"
+      ]
+    },
+    {
+      "name": "Omnicalculator solution dilution",
+      "url": "https://www.omnicalculator.com/chemistry/solution-dilution",
+      "openedLive": true,
+      "date": "2026-11-21",
+      "inputs": [
+        "initial and final concentration in M, mM, uM, nM, pM, fM and smaller",
+        "initial and final volume in 21 units",
+        "solves the missing value of C1 V1 = C2 V2"
+      ]
+    },
+    {
+      "name": "Omnicalculator dilution factor",
+      "url": "https://www.omnicalculator.com/chemistry/dilution-factor",
+      "openedLive": true,
+      "date": "2026-11-21",
+      "inputs": [
+        "initial volume, dilutant volume and final volume",
+        "dilution factors total to stock and dilutant to stock"
+      ]
+    },
+    {
+      "name": "Promega Biomath dilution calculator",
+      "url": "https://www.promega.com/resources/tools/biomath/dilution-calculator/",
+      "openedLive": true,
+      "date": "2026-11-21",
+      "inputs": [
+        "stock solution concentration in M, mM, uM, nM, pM",
+        "final concentration and final volume in L, ml, ul",
+        "volume of stock needed"
+      ]
+    },
+    {
+      "name": "Alliance Chemical dilution calculator",
+      "url": "https://alliancechemical.com/pages/dilution",
+      "openedLive": true,
+      "date": "2026-11-21",
+      "inputs": [
+        "target as percent, ratio 1:X or ppm, strength you have, batch size in gal, qt, fl oz, L, mL",
+        "concentrate and water amounts with the mixing steps and a safety line",
+        "41 chemicals with density-corrected percent by weight",
+        "copy link and print the recipe",
+        "package sizes and prices to buy"
+      ]
+    },
+    {
+      "name": "MiniWebtool dilution calculator",
+      "url": "https://miniwebtool.com/dilution-calculator/",
+      "openedLive": true,
+      "date": "2026-11-21",
+      "inputs": [
+        "solve for C1, V1, C2 or V2",
+        "units M, mM, uM, nM and L, mL, uL",
+        "quick examples: 10x dilution, buffer prep, drug dilution, PCR template",
+        "solvent volume, dilution factor and a step by step protocol",
+        "embed widget and a limit of 3 free uses a day"
+      ]
+    },
+    {
+      "name": "Calculate.co.nz dilution calculator",
+      "url": "https://www.calculate.co.nz/dilution-calculator.php",
+      "openedLive": true,
+      "date": "2026-11-21",
+      "inputs": [
+        "solve for any of C1, V1, C2, V2",
+        "diluent volume and dilution factor",
+        "warning that C2 must be below C1 and units must match"
+      ]
+    }
+  ],
+  "features": [
+    {
+      "covers": [
+        "Omnicalculator dilution ratio: final volume, dilution ratio, concentrate volume and water volume: any two give the rest",
+        "Omnicalculator dilution factor: initial volume, dilutant volume and final volume",
+        "Omnicalculator dilution factor: dilution factors total to stock and dilutant to stock",
+        "MiniWebtool dilution calculator: solve for C1, V1, C2 or V2",
+        "Calculate.co.nz dilution calculator: solve for any of C1, V1, C2, V2",
+        "Omnicalculator solution dilution: solves the missing value of C1 V1 = C2 V2",
+        "Promega Biomath dilution calculator: volume of stock needed"
+      ],
+      "status": "exceed",
+      "ids": ["dlHow", "dlRat", "dlRs", "dlVk", "dlV", "dlVc", "dlVw", "dlC1", "dlC2"]
+    },
+    {
+      "covers": [
+        "Omnicalculator dilution ratio: 17 volume units on each volume field",
+        "Omnicalculator solution dilution: initial and final volume in 21 units",
+        "Promega Biomath dilution calculator: final concentration and final volume in L, ml, ul",
+        "MiniWebtool dilution calculator: units M, mM, uM, nM and L, mL, uL",
+        "Alliance Chemical dilution calculator: target as percent, ratio 1:X or ppm, strength you have, batch size in gal, qt, fl oz, L, mL"
+      ],
+      "status": "exceed",
+      "ids": ["dlU1", "dlU2", "dlVu", "dlVcu", "dlVwu", "dlRat"]
+    },
+    {
+      "covers": [
+        "Omnicalculator solution dilution: initial and final concentration in M, mM, uM, nM, pM, fM and smaller",
+        "Promega Biomath dilution calculator: stock solution concentration in M, mM, uM, nM, pM"
+      ],
+      "status": "match",
+      "ids": ["dlU1", "dlU2"]
+    },
+    {
+      "covers": [
+        "Omnicalculator dilution ratio: share result, reload calculator, clear all changes",
+        "Alliance Chemical dilution calculator: concentrate and water amounts with the mixing steps and a safety line",
+        "MiniWebtool dilution calculator: solvent volume, dilution factor and a step by step protocol",
+        "Calculate.co.nz dilution calculator: diluent volume and dilution factor"
+      ],
+      "status": "exceed",
+      "ids": ["dlClear", "dlCopyTxt", "dlSteps", "dlEq", "dlFlask"]
+    },
+    {
+      "covers": [
+        "Omnicalculator dilution ratio: dilution chart and text: what is the dilution ratio, how to calculate it",
+        "MiniWebtool dilution calculator: quick examples: 10x dilution, buffer prep, drug dilution, PCR template",
+        "Calculate.co.nz dilution calculator: warning that C2 must be below C1 and units must match"
+      ],
+      "status": "exceed",
+      "ids": ["dlBatch", "dlHint"]
+    },
+    {
+      "covers": [
+        "Alliance Chemical dilution calculator: 41 chemicals with density-corrected percent by weight",
+        "Alliance Chemical dilution calculator: copy link and print the recipe",
+        "Alliance Chemical dilution calculator: package sizes and prices to buy",
+        "MiniWebtool dilution calculator: embed widget and a limit of 3 free uses a day"
+      ],
+      "status": "dropped",
+      "signoff": { "quote": "Approve all", "date": "2026-11-21" }
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+ "date": "2026-11-21",
+ "competitors": [
+  { "name": "Omnicalculator dilution ratio", "url": "https://www.omnicalculator.com/everyday-life/dilution-ratio", "reopenedAfterBuild": true, "gaps": [] },
+  { "name": "Omnicalculator solution dilution", "url": "https://www.omnicalculator.com/chemistry/solution-dilution", "reopenedAfterBuild": true, "gaps": [] },
+  { "name": "Omnicalculator dilution factor", "url": "https://www.omnicalculator.com/chemistry/dilution-factor", "reopenedAfterBuild": true, "gaps": [] },
+  { "name": "Promega Biomath dilution calculator", "url": "https://www.promega.com/resources/tools/biomath/dilution-calculator/", "reopenedAfterBuild": true, "gaps": [] },
+  { "name": "Alliance Chemical dilution calculator", "url": "https://alliancechemical.com/pages/dilution", "reopenedAfterBuild": true, "gaps": [] },
+  { "name": "MiniWebtool dilution calculator", "url": "https://miniwebtool.com/dilution-calculator/", "reopenedAfterBuild": true, "gaps": [] },
+  { "name": "Calculate.co.nz dilution calculator", "url": "https://www.calculate.co.nz/dilution-calculator.php", "reopenedAfterBuild": true, "gaps": [] }
+ ],
+ "weBeat": [
+  "visual: a flask drawn to scale (concentrate layer and water layer up to the final mark, legend with the shares) plus a strength bar; none of the seven competitors draws anything",
+  "functional: three ways in (strengths, ratio or factor typed as 1:10 / 1 in 10 / 10x, or the volumes already used), the ratio meaning written out, percent / ppm / mg/mL / molar / fold strength units that convert inside a kind, 13 volume units, extra volume, the mixing order with the safety line, the same batch at 13 other ratios in one table (click to use), the strength you made from the volumes you used",
+  "every competitor feature kept except what has no readable source here (41-chemical density list for percent by weight), the shop prices, copy-link and print, and the embed widget, recorded as dropped under his approval of the research report"
+ ],
+ "gapsLeft": [],
+ "unverified": [
+  "real phone",
+  "other browsers (Chrome only)",
+  "print",
+  "Copy result button in a real clipboard session",
+  "percent by weight with different densities and liquids that do not mix ideally (alcohol and water) are not handled, the page says so",
+  "Sigma-Aldrich solution dilution calculator could not be opened (403), so it is not in the comparison",
+  "the competitors were compared from the research pass and the same pages reloaded after the build, not typed side by side with every input"
+ ]
+}

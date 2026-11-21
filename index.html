@@ -136,6 +136,7 @@
         { "@type": "WebApplication", "name": "Compound Interest Calculator", "url": "https://calcthis.co/compound-interest-calculator/", "applicationCategory": "FinanceApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Amortization Calculator", "url": "https://calcthis.co/amortization-calculator/", "applicationCategory": "FinanceApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "mg to mL Calculator", "url": "https://calcthis.co/mg-to-ml-calculator/", "applicationCategory": "HealthApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
+        { "@type": "WebApplication", "name": "Dilution Calculator", "url": "https://calcthis.co/dilution-calculator/", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Mortgage Calculator", "url": "https://calcthis.co/mortgage-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Loan Calculator", "url": "https://calcthis.co/loan-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Auto Loan Calculator", "url": "https://calcthis.co/auto-loan-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
@@ -154,7 +155,7 @@
   ]
 }
 </script>
-<link rel="stylesheet" href="/assets/style.css?v=358">
+<link rel="stylesheet" href="/assets/style.css?v=359">
 <style>
   .cat-tabs{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
   .cat-grp--hidden{display:none}
@@ -293,8 +294,9 @@
           <a href="/turkey-cooking-time-calculator/">Turkey Cooking Time</a>
           <a href="/turkey-thawing-time-calculator/">Turkey Thawing Time</a>
           <a href="/turkey-size-calculator/">Turkey Size</a>
-          <span class="menu-col-head">Medication &amp; Dosage</span>
+          <span class="menu-col-head">Medication &amp; Lab</span>
           <a href="/mg-to-ml-calculator/">mg to mL</a>
+          <a href="/dilution-calculator/">Dilution</a>
           <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
           <!--UNITNAV:START-->
           <span class="menu-col-head">Unit Converters</span>
@@ -410,7 +412,7 @@
   <div class="cat-tabs" id="catTabs" role="tablist">
     <button class="cat-tab on" type="button" data-cat="construction" role="tab" aria-selected="true">Construction &amp;<br>Gardening</button>
     <button class="cat-tab" type="button" data-cat="health" role="tab" aria-selected="false">Health &amp;<br>Lifestyle</button>
-    <button class="cat-tab" type="button" data-cat="medication" role="tab" aria-selected="false">Medication &amp;<br>Dosage</button>
+    <button class="cat-tab" type="button" data-cat="medication" role="tab" aria-selected="false">Medication &amp;<br>Lab</button>
     <button class="cat-tab" type="button" data-cat="academic" role="tab" aria-selected="false">School &amp;<br>Grades</button>
     <button class="cat-tab" type="button" data-cat="math" role="tab" aria-selected="false">Math &amp;<br>Numbers</button>
     <button class="cat-tab" type="button" data-cat="cooking" role="tab" aria-selected="false">Cooking &amp;<br>Kitchen</button>
@@ -1269,7 +1271,7 @@
   </div>
   </section>
 
-  <section id="grp-medication" class="cat-grp cat-grp--hidden" aria-label="Medication &amp; Dosage calculators">
+  <section id="grp-medication" class="cat-grp cat-grp--hidden" aria-label="Medication &amp; Lab calculators">
   <div class="cards">
 
     <a class="calc" href="/mg-to-ml-calculator/">
@@ -1282,6 +1284,20 @@
       </span>
       <h3>mg to mL Calculator</h3>
       <p>Dose in mg and the strength on the label to milliliters, on a to-scale syringe. Also mL to mg and the strength from a dose and a volume.</p>
+      <span class="go">Open calculator
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+    </a>
+
+    <a class="calc" href="/dilution-calculator/">
+      <span class="ico" aria-hidden="true">
+        <svg width="30" height="30" viewBox="0 0 32 32" fill="none">
+          <path d="M10 5h12M12 5v8l-5 10a3 3 0 0 0 3 4h12a3 3 0 0 0 3-4l-5-10V5" stroke="#37503F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M9 21h14l1.5 3a1.5 1.5 0 0 1-1.4 2H8.9a1.5 1.5 0 0 1-1.4-2L9 21z" fill="#D99A33" opacity=".85"/>
+        </svg>
+      </span>
+      <h3>Dilution Calculator</h3>
+      <p>Concentrate and water for any strength, ratio or factor, with a flask drawn to scale, the mixing order and the same batch at other strengths.</p>
       <span class="go">Open calculator
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </span>
@@ -2253,6 +2269,7 @@
           <li><a href="/compound-interest-calculator/">Compound Interest</a><span> — how savings grow with regular deposits, and the deposit, time or rate you need to reach a goal, in any currency</span></li>
           <li><a href="/amortization-calculator/">Amortization</a><span> — every payment of a loan split into interest and principal, the balance at any point, and what extra payments save, in any currency</span></li>
           <li><a href="/mg-to-ml-calculator/">mg to mL Calculator</a><span> — dose in mg and the strength on the label to milliliters on a to-scale syringe, mL to mg and the strength from a dose and a volume</span></li>
+          <li><a href="/dilution-calculator/">Dilution Calculator</a><span> — concentrate and water for any strength, ratio (1:10) or factor, with a flask drawn to scale and the same batch at other strengths</span></li>
           <li><a href="/sales-tax-calculator/">Sales tax</a><span> — by state, with exempt items and local rates</span></li>
           <li><a href="/tip-calculator/">Tip</a><span> — split the bill, tip before or after tax</span></li>
         </ul>
@@ -2322,11 +2339,12 @@
 
 <div class="footer-col" style="order:5">
         <button class="footer-col-btn" aria-expanded="false" type="button">
-          <span class="fttl"><span class="ft1">Medication &amp;</span> <span class="ft2">Dosage</span></span>
+          <span class="fttl"><span class="ft1">Medication &amp;</span> <span class="ft2">Lab</span></span>
           <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
         <ul class="footer-links">
           <li><a href="/mg-to-ml-calculator/">mg to mL Calculator</a></li>
+          <li><a href="/dilution-calculator/">Dilution Calculator</a></li>
           <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
         </ul>
       </div>
@@ -2585,7 +2603,7 @@
   });
 })();
 </script>
-<script src="/assets/app.js?v=358"></script>
+<script src="/assets/app.js?v=359"></script>
 <script src="/feedback.js" defer></script>
 </body>
 </html>

@@ -27917,3 +27917,204 @@ CalcThis.initMgMlCalc = function () {
   applyMode(); render();
 };
 /* MGML:END */
+
+/* DILUTION:BEGIN */
+/* =========================================================
+   DILUTION calculator (/dilution-calculator/). Ahrefs 2026-11-21 (his screenshots): dilution calculator >10,000 Easy, serial / solution dilution >1000 Easy, alcohol dilution, dilution calculator mg/ml >100 Easy.
+   Competitors opened live 2026-11-21: Omnicalculator dilution ratio, solution dilution and dilution factor, Promega Biomath, Alliance Chemical (41 chemicals), MiniWebtool, Calculate.co.nz; Sigma-Aldrich returned 403.
+   Sources READ 2026-11-21: LibreTexts 13.7 Solution Dilution (the amount of solute does not change, so M1 V1 = M2 V2), Yale Water Knowledge for All (1 mg/L = 1 ppm for fresh water), Illinois Division of Research Safety Mineral Acids (always dilute by adding acid
+   to water, adding water to concentrated acid may boil violently and splash), CDC cleaning and disinfecting with bleach (never mix bleach with other cleaners; bleach solutions are not as effective after 24 hours), NIST SP 811 App. B.8 (volume units).
+   Strength units are shared families: mass (% as g per 100 mL, g/L, mg/mL, mg/L, ppm, ug/mL, ug/L, ppb), molar (M ... fM) and fold (x); a % w/w dilution needs densities and is NOT handled (said on the page).
+   ========================================================= */
+/* DILUTION-ENGINE:START */
+CalcThis.dilutionEngine = (function () {
+  var SU = {
+    pct: { f: 10000, fam: 'm', name: '%', lab: '% (w/v)' }, gl: { f: 1000, fam: 'm', name: 'g/L', lab: 'g/L' }, mgml: { f: 1000, fam: 'm', name: 'mg/mL', lab: 'mg/mL' }, mgl: { f: 1, fam: 'm', name: 'mg/L', lab: 'mg/L' },
+    ppm: { f: 1, fam: 'm', name: 'ppm', lab: 'ppm (mg/L)' }, ugml: { f: 1, fam: 'm', name: 'µg/mL', lab: 'µg/mL' }, ugl: { f: 0.001, fam: 'm', name: 'µg/L', lab: 'µg/L' }, ppb: { f: 0.001, fam: 'm', name: 'ppb', lab: 'ppb (µg/L)' },
+    M: { f: 1, fam: 'o', name: 'M', lab: 'M (mol/L)' }, mM: { f: 1e-3, fam: 'o', name: 'mM', lab: 'mM' }, uM: { f: 1e-6, fam: 'o', name: 'µM', lab: 'µM' }, nM: { f: 1e-9, fam: 'o', name: 'nM', lab: 'nM' }, pM: { f: 1e-12, fam: 'o', name: 'pM', lab: 'pM' }, fM: { f: 1e-15, fam: 'o', name: 'fM', lab: 'fM' },
+    x: { f: 1, fam: 'x', name: '×', lab: '× (fold, like 10× stock)' }
+  };
+  var SGROUPS = [['Mass (water-like liquids)', ['pct', 'gl', 'mgml', 'mgl', 'ppm', 'ugml', 'ugl', 'ppb']], ['Molar', ['M', 'mM', 'uM', 'nM', 'pM', 'fM']], ['Fold', ['x']]];
+  var FAMN = { m: 'mg/L', o: 'M', x: '×' };
+  var VU = [
+    { id: 'ul', name: 'µL', lab: 'µL', f: 0.001 }, { id: 'ml', name: 'mL', lab: 'mL', f: 1 }, { id: 'l', name: 'L', lab: 'L', f: 1000 }, { id: 'tsp', name: 'tsp', lab: 'teaspoon (US)', f: 4.92892159375 }, { id: 'tbsp', name: 'tbsp', lab: 'tablespoon (US)', f: 14.78676478125 },
+    { id: 'usfloz', name: 'US fl oz', lab: 'US fl oz', f: 29.5735295625 }, { id: 'cup', name: 'cups', lab: 'US cup', f: 236.5882365 }, { id: 'uspt', name: 'US pt', lab: 'US pint', f: 473.176473 }, { id: 'usqt', name: 'US qt', lab: 'US quart', f: 946.352946 }, { id: 'usgal', name: 'US gal', lab: 'US gallon', f: 3785.411784 },
+    { id: 'ukfloz', name: 'UK fl oz', lab: 'UK fl oz', f: 28.4130625 }, { id: 'ukpt', name: 'UK pt', lab: 'UK pint', f: 568.26125 }, { id: 'ukgal', name: 'UK gal', lab: 'UK gallon', f: 4546.09 }
+  ];
+  var VUM = {}; VU.forEach(function (v) { VUM[v.id] = v; });
+  var UNITS_TAB = ['ml', 'l', 'tsp', 'tbsp', 'usfloz', 'cup'];
+  var BATCH = [1, 2, 3, 4, 5, 9, 10, 19, 20, 49, 50, 99, 100];
+  function num(t) {
+    t = (t + '').trim().replace(/\s/g, '');
+    if (!t) return null;
+    if (/^\d{1,3}(,\d{3})+(\.\d+)?$/.test(t)) t = t.replace(/,/g, ''); else if (/^[+-]?\d*,\d+$/.test(t)) t = t.replace(',', '.'); else t = t.replace(/,/g, '');
+    if (!/^[+-]?(\d+\.?\d*|\.\d+)$/.test(t)) return NaN;
+    return parseFloat(t);
+  }
+  function grpS(s) { var p = String(s).split('.'); p[0] = p[0].replace(/\B(?=(\d{3})+(?!\d))/g, ','); return p.join('.'); }
+  function trimz(s) { return s.indexOf('.') >= 0 ? s.replace(/0+$/, '').replace(/\.$/, '') : s; }
+  function digits(x, n) {
+    if (!isFinite(x)) return '—';
+    if (x === 0) return '0';
+    var ax = Math.abs(x);
+    if (ax < 1e-4 || ax >= 1e12) return String(parseFloat(x.toPrecision(n)).toExponential()).replace('e+', 'e');
+    var e = Math.floor(Math.log(ax) / Math.LN10 + 1e-12), d = Math.max(0, Math.min(12, n - 1 - e));
+    return grpS(trimz(x.toFixed(d)));
+  }
+  function fmt(x, dec) { if (dec === 'a' || dec == null) return digits(x, 4); if (!isFinite(x)) return '—'; return grpS(x.toFixed(+dec)); }
+  function trimN(x, d) { return String(parseFloat((Math.round(x * Math.pow(10, d)) / Math.pow(10, d)).toFixed(d))); }
+  function readPos(t) { var n = num(t); if (n === null) return { empty: true }; if (isNaN(n) || n <= 0) return { bad: true }; return { v: n }; }
+  function readS(t, u) { var r = readPos(t); if (!r.v) return r; var b = r.v * SU[u].f; if (b < 1e-18 || b > 1e18) return { bad: true }; return { v: r.v, b: b, fam: SU[u].fam }; }
+  function readV(t, u) { var r = readPos(t); if (!r.v) return r; var ml = r.v * VUM[u].f; if (ml < 1e-6 || ml > 1e9) return { bad: true }; return { v: r.v, ml: ml }; }
+  /* 1:10, 1 in 10, 10x, 2:30, or a plain number read by the choice (r = parts of water per part of concentrate, f = factor) */
+  function parseRatio(text, rs) {
+    var t = (text + '').trim().toLowerCase().replace(/×/g, 'x').replace(/\s+/g, ' ');
+    if (!t) return { empty: true };
+    var N = '(\\d+\\.?\\d*|\\.\\d+)', m, a, b, F = null, how = '';
+    if ((m = new RegExp('^' + N + ' ?: ?' + N + '$').exec(t))) { a = parseFloat(m[1]); b = parseFloat(m[2]); if (a > 0 && b > 0) { F = (a + b) / a; how = 'ratio'; } }
+    else if ((m = new RegExp('^1 in ' + N + '$').exec(t))) { a = parseFloat(m[1]); F = a; how = 'in'; }
+    else if ((m = new RegExp('^' + N + ' ?(x|fold|times)$').exec(t))) { a = parseFloat(m[1]); F = a; how = 'x'; }
+    else if ((m = new RegExp('^' + N + '$').exec(t))) { a = parseFloat(m[1]); if (a > 0) { F = rs === 'f' ? a : 1 + a; how = 'plain'; } }
+    if (F === null || !isFinite(F) || F <= 1 || F > 1e9) return { bad: true };
+    return { F: F, r: F - 1, how: how };
+  }
+  function nice(t) { return t; }
+  return { SU: SU, SGROUPS: SGROUPS, FAMN: FAMN, VU: VU, VUM: VUM, UNITS_TAB: UNITS_TAB, BATCH: BATCH, num: num, grpS: grpS, digits: digits, fmt: fmt, trimN: trimN, readPos: readPos, readS: readS, readV: readV, parseRatio: parseRatio };
+})();
+/* DILUTION-ENGINE:END */
+
+/* =========================================================
+   CalcThis.initDilutionCalc() — ids dl*. Engine: CalcThis.dilutionEngine. Amount fields = the vitamin D / mg to mL DS pattern.
+   ========================================================= */
+CalcThis.initDilutionCalc = function () {
+  var E = CalcThis.dilutionEngine, U = CalcThis._kzUtil, seg = U.seg, setSeg = U.setSeg, esc = U.esc;
+  var $ = function (id) { return document.getElementById(id); };
+  var st = { how: 'str', vk: 'final', rs: 'r', dec: 'a' }, last = null;
+  var f = function (x) { return E.fmt(x, 'a'); };
+  function setHint(m, at) {
+    var h = $('dlHint'); h.textContent = m || ''; h.style.display = m ? 'block' : 'none';
+    if (m && at) { var el = $(at), fl = el ? (el.closest('.two') || el.closest('.fld')) : null; if (fl && fl.nextSibling !== h) fl.parentNode.insertBefore(h, fl.nextSibling); }
+  }
+  function note(id, txt) { var n = $(id); n.textContent = txt; n.className = 'cb-note'; }
+  function table(id, head, rows) { $(id).innerHTML = '<thead><tr>' + head.map(function (h) { return '<th>' + h + '</th>'; }).join('') + '</tr></thead><tbody>' + rows.map(function (r) { return '<tr' + (r.r != null ? ' data-r="' + r.r + '"' : '') + '>' + r.c.map(function (c) { return '<td>' + c + '</td>'; }).join('') + '</tr>'; }).join('') + '</tbody>'; }
+  function empty(msg, at) { $('dlBig').textContent = '—'; $('dlSub').textContent = $('dlSub').getAttribute('data-empty'); $('dlBody').style.display = 'none'; $('dlMVal').textContent = '—'; $('dlCopyTxt').textContent = ''; last = null; setHint(msg || '', at); }
+  /* ---------- csel builders ---------- */
+  (function () {
+    var sopts = E.SGROUPS.map(function (g) { return '<div class="csel-group">' + g[0] + '</div>' + g[1].map(function (id) { return '<button type="button" class="csel-opt' + (id === 'pct' ? ' on' : '') + '" role="option" aria-selected="' + (id === 'pct') + '" data-value="' + id + '">' + E.SU[id].lab + '</button>'; }).join(''); }).join('');
+    $('dlU1').querySelector('.csel-panel').innerHTML = sopts; $('dlU2').querySelector('.csel-panel').innerHTML = sopts;
+    var vopts = E.VU.map(function (v) { return '<button type="button" class="csel-opt' + (v.id === 'ml' ? ' on' : '') + '" role="option" aria-selected="' + (v.id === 'ml') + '" data-value="' + v.id + '">' + v.lab + '</button>'; }).join('');
+    ['dlVu', 'dlVcu', 'dlVwu'].forEach(function (id) { $(id).querySelector('.csel-panel').innerHTML = vopts; });
+    ['dlU1', 'dlU2', 'dlVk', 'dlVu', 'dlVcu', 'dlVwu'].forEach(function (id) { CalcThis.initCsel($(id)); });
+  })();
+  var uOf = function (id) { return $(id).value || (id === 'dlVk' ? 'final' : (/^dlU/.test(id) ? 'pct' : 'ml')); };
+  function applyMode() {
+    $('dlStrB').style.display = st.how === 'str' ? '' : 'none'; $('dlRatB').style.display = st.how === 'rat' ? '' : 'none';
+    $('dlVolB').style.display = st.how === 'vol' ? 'none' : ''; $('dlVolsB').style.display = st.how === 'vol' ? '' : 'none';
+    $('dlC1Lab').textContent = st.how === 'str' ? 'Strength you have' : 'Concentrate strength (optional)';
+    setSeg('dlHow', st.how);
+  }
+  seg('dlHow', function (v) { st.how = v; applyMode(); render(); });
+  seg('dlRs', function (v) { st.rs = v; render(); });
+  seg('dlDec', function (v) { st.dec = v; render(); });
+  ['dlU1', 'dlU2', 'dlVk', 'dlVu', 'dlVcu', 'dlVwu'].forEach(function (id) { $(id).addEventListener('change', render); });
+  ['dlC1', 'dlC2', 'dlRat', 'dlV', 'dlVc', 'dlVw', 'dlX'].forEach(function (id) { $(id).addEventListener('input', render); });
+  /* ---------- drawing: a flask filled to the final mark ---------- */
+  function flask(vc, vw, V, uname, uf, dec) {
+    var x0 = 76, x1 = 164, yT = 28, yB = 164, H = yB - yT, hc = vc / V * H, hw = H - hc, ticks = '', k;
+    for (k = 0; k <= 4; k++) { var y = yB - H * k / 4; ticks += '<line x1="' + (x0 - 6) + '" y1="' + y.toFixed(1) + '" x2="' + x0 + '" y2="' + y.toFixed(1) + '" stroke="#8F8270" stroke-width="1.3"/><text x="' + (x0 - 10) + '" y="' + (y + 4.5).toFixed(1) + '" text-anchor="end" font-size="12.5" font-weight="600" fill="#6B6556">' + E.fmt(V * k / 4 / uf, 'a') + '</text>'; }
+    return '<svg id="dlFlaskSvg" class="dl-flask-svg" viewBox="0 0 250 190" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A flask filled to ' + esc(E.fmt(V / uf, dec) + ' ' + uname) + ' with ' + esc(E.fmt(vc / uf, dec) + ' ' + uname) + ' of concentrate and ' + esc(E.fmt(vw / uf, dec) + ' ' + uname) + ' of water" data-vc="' + vc + '" data-vw="' + vw + '" data-hc="' + hc.toFixed(2) + '" data-hw="' + hw.toFixed(2) + '" data-h="' + H + '">' +
+      '<clipPath id="dlClip"><rect x="' + x0 + '" y="' + yT + '" width="' + (x1 - x0) + '" height="' + H + '" rx="3"/></clipPath>' +
+      '<rect id="dlRectW" x="' + x0 + '" y="' + yT + '" width="' + (x1 - x0) + '" height="' + hw.toFixed(2) + '" fill="#B7CDD6" clip-path="url(#dlClip)"/>' +
+      '<rect id="dlRectC" x="' + x0 + '" y="' + (yT + hw).toFixed(2) + '" width="' + (x1 - x0) + '" height="' + hc.toFixed(2) + '" fill="#D99A33" clip-path="url(#dlClip)"/>' +
+      '<path d="M' + (x0 - 6) + ',16 L' + (x0 - 6) + ',160 Q' + (x0 - 6) + ',172 ' + (x0 + 6) + ',172 L' + (x1 - 6) + ',172 Q' + (x1 + 6) + ',172 ' + (x1 + 6) + ',160 L' + (x1 + 6) + ',16" fill="none" stroke="#B8AE9C" stroke-width="2.2" stroke-linecap="round"/>' + ticks +
+      '<line x1="' + (x0 - 6) + '" y1="' + yT + '" x2="' + (x1 + 6) + '" y2="' + yT + '" stroke="#B5761F" stroke-width="2" stroke-dasharray="3,2.5"/>' +
+      '<text x="' + (x1 + 12) + '" y="' + (yT + 4.5) + '" font-size="13.5" font-weight="800" fill="#7A4D0F">' + esc(E.fmt(V / uf, dec) + ' ' + uname) + '</text></svg>';
+  }
+  function bar(F) { var p = 100 / F; return '<div class="mm-rule"><div class="mm-rule-t"><i class="mm-band" style="width:' + p + '%"></i></div><div class="mm-rule-l"><span class="f"><b>0</b></span><span class="l"><b>Concentrate</b></span></div></div>'; }
+  /* ---------- the maths ---------- */
+  function render() {
+    var how = st.how, u1 = uOf('dlU1'), u2 = uOf('dlU2'), vk = uOf('dlVk'), vu = uOf('dlVu'), vcu = uOf('dlVcu'), vwu = uOf('dlVwu'), soft = [], dec = st.dec;
+    var s1 = E.readS($('dlC1').value, u1), s2 = E.readS($('dlC2').value, u2), rt = E.parseRatio($('dlRat').value, st.rs), vv = E.readV($('dlV').value, vu), vc = E.readV($('dlVc').value, vcu), vw = E.readV($('dlVw').value, vwu), ex = E.readPos($('dlX').value);
+    var exRaw = E.num($('dlX').value), exEmpty = exRaw === null, exOk = true, e = 0;
+    if (!exEmpty) { if (isNaN(exRaw) || exRaw < 0 || exRaw > 1000) exOk = false; else e = exRaw; }
+    /* notes */
+    var echo = function (r, u) { return 'That is ' + f(r.b) + ' ' + E.FAMN[r.fam]; };
+    if (s1.empty) note('dlC1N', how === 'str' ? 'Type the strength of the concentrate you have, in the unit next to it.' : 'Optional. Type the strength of the concentrate to see the strength you end up with.'); else if (s1.bad) note('dlC1N', 'Use numbers only, for example 10 or 0.5.'); else note('dlC1N', echo(s1, u1));
+    var famOk = s1.fam && s2.fam && s1.fam === s2.fam;
+    if (s2.empty) note('dlC2N', 'Type the strength you want to end up with, in the same kind of unit.'); else if (s2.bad) note('dlC2N', 'Use numbers only, for example 1 or 0.05.'); else note('dlC2N', echo(s2, u2) + (s1.b && famOk ? ' = ' + f(s2.b / s1.b * 100) + '% of the strength you have' : ''));
+    if (rt.empty) note('dlRatN', 'Type it as you read it: 1:10, 1 in 10, 10x, or a number read as the choice on the right.'); else if (rt.bad) note('dlRatN', 'Could not read that. Try 1:10, 1 in 10, 10x or a number above 0.'); else note('dlRatN', '1 : ' + f(rt.r) + ' means 1 part concentrate + ' + f(rt.r) + ' parts water = ' + f(rt.F) + ' parts, a factor of ' + f(rt.F) + ' (1 in ' + f(rt.F) + ')');
+    var vtxt = function (r, who) { if (r.empty) return who; if (r.bad) return 'Use numbers only, for example 100 or 2.5.'; return f(r.ml) + ' mL = ' + f(r.ml / 1000) + ' L = ' + f(r.ml / 29.5735295625) + ' US fl oz'; };
+    var xN, xFinal = how !== 'vol' && vk === 'final';
+    if (exEmpty) xN = 'Optional. Make this much extra to cover what sticks to the container, in %.'; else if (!exOk) xN = 'Use a number of 0 or more, up to 1,000.'; else if (!xFinal) xN = 'The extra volume applies when you give the final volume.';
+    else if (!e) xN = 'The extra is 0%, so nothing is added.'; else if (vv.ml) xN = 'Includes ' + f(e) + '% extra: ' + f(vv.ml * (1 + e / 100) / E.VUM[vu].f) + ' ' + E.VUM[vu].name + ' made, ' + f(vv.ml / E.VUM[vu].f) + ' ' + E.VUM[vu].name + ' to use.'; else xN = 'Type the final volume first, then the extra is added to it.';
+    note('dlXN', xN);
+    note('dlVN', vtxt(vv, vk === 'final' ? 'Type how much of the diluted liquid you want to make.' : (vk === 'conc' ? 'Type how much concentrate you have.' : 'Type how much water you have.')));
+    note('dlVcN', vtxt(vc, 'Type how much concentrate you used.')); note('dlVwN', vtxt(vw, 'Type how much water you added.'));
+    /* required fields */
+    var F, V, Vc, Vw, bad = null;
+    if (how === 'str') {
+      if (s1.empty) return empty(''); if (s1.bad) return empty('The strength you have should be a number above 0.', 'dlC1');
+      if (s2.empty) return empty(''); if (s2.bad) return empty('The strength you need should be a number above 0.', 'dlC2');
+      if (!famOk) return empty('The two strengths are in different kinds of units (mass, molar or ×). Use the same kind.', 'dlU2');
+      if (s2.b > s1.b) return empty('The target is stronger than the concentrate. Adding water can only make it weaker.', 'dlC2');
+      if (s2.b === s1.b) return empty('The target is the same as the concentrate, so there is nothing to dilute.', 'dlC2');
+      F = s1.b / s2.b; if (F > 1e9) return empty('That is a dilution of more than a billion times. Check the strengths and the units.', 'dlC2');
+    } else if (how === 'rat') {
+      if (rt.empty) return empty(''); if (rt.bad) return empty('Could not read the dilution. Try 1:10, 1 in 10, 10x or a number above 0.', 'dlRat');
+      F = rt.F;
+    }
+    if (how === 'vol') {
+      if (vc.empty) return empty(''); if (vc.bad) return empty('The concentrate volume should be a number above 0 (up to 1,000,000,000 mL).', 'dlVc');
+      if (vw.empty) return empty(''); if (vw.bad) return empty('The water volume should be a number above 0 (up to 1,000,000,000 mL).', 'dlVw');
+      Vc = vc.ml; Vw = vw.ml; V = Vc + Vw; F = V / Vc;
+    } else {
+      if (vv.empty) return empty(''); if (vv.bad) return empty('The volume should be a number above 0 (up to 1,000,000,000 mL).', 'dlV');
+      var Vf;
+      if (vk === 'final') { Vf = vv.ml; V = Vf * (1 + e / 100); Vc = V / F; Vw = V - Vc; }
+      else if (vk === 'conc') { Vc = vv.ml; V = Vc * F; Vw = V - Vc; }
+      else { Vw = vv.ml; Vc = Vw / (F - 1); V = Vc * F; }
+    }
+    /* optional fields: soft hints */
+    if (how !== 'str' && s1.bad) soft.push({ m: 'Strength of the concentrate: use a number above 0. It is ignored for now.', at: 'dlC1' });
+    if (!exEmpty && !exOk) soft.push({ m: 'Extra: use a number of 0 or more (up to 1,000). It is ignored for now.', at: 'dlX' });
+    setHint(soft.length ? soft[0].m : '', soft.length ? soft[0].at : null);
+    var u = how === 'vol' ? vcu : vu, uf = VUM_f(u), un = E.VUM[u].name, r = F - 1;
+    var okS = how !== 'str' ? (s1.v ? s1 : null) : s1, fs = okS ? okS.v / F : null, fsTxt = fs ? f(fs) + ' ' + E.SU[uOf('dlU1')].name : '';
+    var vt = function (x) { return E.fmt(x / uf, dec) + ' ' + un; };
+    var big, sub, tip, lab;
+    if (how === 'vol') { lab = 'Dilution made'; big = '1 : ' + f(r); sub = vt(Vc) + ' of concentrate + ' + vt(Vw) + ' of water = ' + vt(V) + ' · ' + f(F) + '× weaker'; tip = 'You made ' + vt(V) + ': ' + f(F) + ' times weaker than the concentrate' + (fs ? ', ' + fsTxt : '') + '.'; }
+    else { lab = 'Concentrate to use'; big = vt(Vc); sub = '+ ' + vt(Vw) + ' of water = ' + vt(V) + ' · 1 : ' + f(r) + ' · ' + f(F) + '× weaker'; tip = 'Add ' + vt(Vc) + ' of the concentrate to ' + vt(Vw) + ' of water to make ' + vt(V) + (fs ? ' at ' + fsTxt : '') + '.'; }
+    $('dlLab').textContent = lab; $('dlBig').textContent = big; $('dlSub').textContent = sub; $('dlMLab').textContent = lab; $('dlMVal').textContent = big; $('dlTip').textContent = tip;
+    $('dlFlask').innerHTML = flask(Vc, Vw, V, un, uf, dec);
+    $('dlLegend').innerHTML = '<span><i class="dl-k c"></i>Concentrate ' + vt(Vc) + ' (' + f(100 / F) + '%)</span><span><i class="dl-k w"></i>Water ' + vt(Vw) + ' (' + f(100 - 100 / F) + '%)</span>';
+    $('dlBar').innerHTML = bar(F); $('dlBarCap').textContent = 'The diluted liquid keeps ' + f(100 / F) + '% of the concentrate’s strength (' + f(F) + '× weaker).';
+    $('dlSteps').innerHTML = '<li>Put most of the water (' + vt(Vw) + ' in all) into a container that holds at least ' + vt(V) + '.</li><li>Add the ' + vt(Vc) + ' of concentrate to the water, slowly, stirring.</li><li>Top up with water to the ' + vt(V) + ' mark and stir well.</li>';
+    table('dlEq', ['What it is', 'Value'], [['Ratio (concentrate : water)', '1 : ' + f(r)], ['Dilution factor', f(F) + '× weaker (1 in ' + f(F) + ')'], ['Concentrate, share of the final volume', f(100 / F) + ' %'], ['Water, share of the final volume', f(100 - 100 / F) + ' %']].map(function (x) { return { c: x }; }));
+    table('dlUnits', ['Unit', 'Concentrate + water = total'], E.UNITS_TAB.map(function (id) { var g = VUM_f(id); return { c: [E.VUM[id].lab, E.fmt(Vc / g, dec) + ' + ' + E.fmt(Vw / g, dec) + ' = ' + E.fmt(V / g, dec)] }; }));
+    if (how === 'vol') $('dlBatchWrap').style.display = 'none';
+    else {
+      $('dlBatchWrap').style.display = '';
+      table('dlBatch', ['Ratio', 'Concentrate', 'Water'].concat(okS && okS.v ?['Strength (' + E.SU[uOf('dlU1')].name + ')'] : []), E.BATCH.map(function (rr) { var row = ['1 : ' + rr, E.fmt(V / (1 + rr) / uf, dec), E.fmt(V * rr / (1 + rr) / uf, dec)]; if (okS && okS.v) row.push(f(okS.v / (1 + rr))); return { r: rr, c: row }; }));
+      $('dlBatchH').textContent = 'The same ' + vt(V) + ' at other strengths (amounts in ' + un + ')';
+    }
+    var cp = how === 'vol' ? vt(Vc) + ' of concentrate + ' + vt(Vw) + ' of water = ' + vt(V) + ' (1 : ' + f(r) + ')' : 'Mix ' + vt(Vc) + ' of concentrate with ' + vt(Vw) + ' of water = ' + vt(V) + ' (1 : ' + f(r) + (fs ? ', ' + fsTxt : '') + ')';
+    $('dlCopyTxt').textContent = cp + ' (calcthis.co/dilution-calculator/)';
+    last = { how: how }; $('dlBody').style.display = '';
+  }
+  function VUM_f(id) { return E.VUM[id].f; }
+  $('dlBatch').addEventListener('click', function (ev) {
+    var tr = ev.target.closest('tr[data-r]'); if (!tr) return;
+    st.how = 'rat'; st.rs = 'r'; setSeg('dlRs', 'r'); $('dlRat').value = '1:' + tr.getAttribute('data-r'); applyMode(); render();
+  });
+  $('dlClear').addEventListener('click', function () {
+    ['dlC1', 'dlC2', 'dlRat', 'dlV', 'dlVc', 'dlVw', 'dlX'].forEach(function (id) { $(id).value = ''; });
+    st.rs = 'r'; setSeg('dlRs', 'r'); ['dlU1', 'dlU2'].forEach(function (id) { $(id).value = 'pct'; }); ['dlVu', 'dlVcu', 'dlVwu'].forEach(function (id) { $(id).value = 'ml'; }); $('dlVk').value = 'final'; setHint(''); render();
+  });
+  $('dlAdvBtn').addEventListener('click', function () {
+    var open = $('dlAdvBtn').classList.toggle('open'); $('dlAdvBtnLab').textContent = open ? 'Go simple' : 'Go advanced'; $('dlAdvIn').style.display = open ? '' : 'none';
+    if (!open) { $('dlX').value = ''; st.dec = 'a'; setSeg('dlDec', 'a'); }
+    render();
+  });
+  applyMode(); render();
+};
+/* DILUTION:END */

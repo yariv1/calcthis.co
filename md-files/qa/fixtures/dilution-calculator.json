@@ -1,0 +1,39 @@
+{
+  "slug": "dilution-calculator",
+  "bodyClass": "p-dl",
+  "blocks": ["DILUTION"],
+  "result": { "big": "dlBig", "body": "dlBody", "hint": "dlHint" },
+  "required": ["dlC1", "dlC2", "dlRat", "dlV", "dlVc", "dlVw"],
+  "fill": [
+    ["click", "dlClear"],
+    ["seg", "dlHow", "str"],
+    ["seg", "dlRs", "r"],
+    ["seg", "dlDec", "a"],
+    ["set", "dlU1", "pct"],
+    ["set", "dlU2", "pct"],
+    ["set", "dlVk", "final"],
+    ["set", "dlVu", "ml"],
+    ["set", "dlVcu", "ml"],
+    ["set", "dlVwu", "ml"],
+    ["set", "dlRat", ""],
+    ["set", "dlVc", ""],
+    ["set", "dlVw", ""],
+    ["set", "dlX", ""],
+    ["set", "dlC1", "10"],
+    ["set", "dlC2", "1"],
+    ["set", "dlV", "1000"]
+  ],
+  "optionalSamples": {
+    "dlX": ["10", "5", "0"]
+  },
+  "variants": [
+    [["seg", "dlHow", "rat"], ["set", "dlRat", "1:10"]],
+    [["seg", "dlHow", "rat"], ["set", "dlRat", "10x"], ["set", "dlVk", "conc"], ["set", "dlV", "100"]],
+    [["seg", "dlHow", "rat"], ["seg", "dlRs", "f"], ["set", "dlRat", "20"], ["set", "dlVk", "water"], ["set", "dlV", "950"]],
+    [["seg", "dlHow", "vol"], ["set", "dlVc", "100"], ["set", "dlVw", "900"]],
+    [["set", "dlU1", "mM"], ["set", "dlU2", "uM"], ["set", "dlC1", "10"], ["set", "dlC2", "100"], ["set", "dlV", "50"]],
+    [["click", "dlAdvBtn"], ["set", "dlX", "10"], ["seg", "dlDec", "3"], ["set", "dlVu", "cup"]]
+  ],
+  "scrollTo": "dlFlask",
+  "errorState": [["set", "dlC1", "abc"]]
+}

@@ -1,0 +1,12 @@
+{
+ "slug": "dilution-calculator",
+ "pass": true,
+ "failed": [],
+ "hash": "a23feec73a61e9df",
+ "at": "2026-11-21T11:48:40.729Z",
+ "results": {
+  "silent": "ok   dilution-calculator  fields 4",
+  "duplicate": "most overlap 0.9% with /mg-to-ml-calculator/ (limit 12%)",
+  "registration": "sitemap urls 242 | dilution-calculator cards 1 inbound 241 ld WebApplication,FAQPage,BreadcrumbList | AUDIT PASS"
+ }
+}

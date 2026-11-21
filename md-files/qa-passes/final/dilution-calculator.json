@@ -1,0 +1,14 @@
+{
+ "slug": "dilution-calculator",
+ "pass": true,
+ "at": "2026-11-21T11:48:11.728Z",
+ "passHash": "a23feec73a61e9df",
+ "scriptHash": "c918dbf7bda17f30",
+ "cats": {
+  "textVsTool": 76,
+  "extremes": 38,
+  "visual": 108
+ },
+ "runs": 88,
+ "fails": []
+}

@@ -1,0 +1,19 @@
+{
+ "slug": "dilution-calculator",
+ "hash": "a23feec73a61e9df",
+ "shots": [
+  "dilution-calculator-1-empty-mobile.png",
+  "dilution-calculator-2-filled-mobile.png",
+  "dilution-calculator-3-result-mobile.png",
+  "dilution-calculator-4-advanced-mobile.png",
+  "dilution-calculator-5-error-mobile.png",
+  "dilution-calculator-6-after-chaos-mobile.png",
+  "dilution-calculator-1-empty-desktop.png",
+  "dilution-calculator-2-filled-desktop.png",
+  "dilution-calculator-3-result-desktop.png",
+  "dilution-calculator-4-advanced-desktop.png",
+  "dilution-calculator-5-error-desktop.png",
+  "dilution-calculator-6-after-chaos-desktop.png"
+ ],
+ "at": "2026-11-21T11:48:28.641Z"
+}

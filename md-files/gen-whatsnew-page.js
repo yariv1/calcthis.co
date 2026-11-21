@@ -4,6 +4,10 @@ const fs = require('fs'), path = require('path');
 const ROOT = path.join(__dirname, '..') + path.sep;
 const A = (slug, name) => { if (!fs.existsSync(ROOT + slug + '/index.html')) throw new Error('missing page ' + slug); return '<a href="/' + slug + '/">' + name + '</a>'; };
 const ENTRIES = [
+  ['2026-11-22', 'November 22, 2026', [
+    'New: ' + A('dilution-calculator', 'Dilution Calculator') + ' — concentrate and water for any strength, ratio (1:10, 1 in 10, 10x) or factor, in percent, ppm, mg/mL, molar or fold units, with a flask drawn to scale, the mixing order and the same batch at other ratios.',
+    'Changed: the menu group Medication &amp; Dosage is now called Medication &amp; Lab; it holds the mg to mL, dilution and peptide reconstitution calculators.',
+  ]],
   ['2026-11-21', 'November 21, 2026', [
     'New: ' + A('mg-to-ml-calculator', 'mg to mL Calculator') + ' — type a dose and the strength printed on the label and see the milliliters on a to-scale syringe, with mL to mg, strength, teaspoons, tablespoons and label strengths read on DailyMed.',
     'New: a Medication &amp; Dosage group in the menu, with the mg to mL calculator and the peptide reconstitution calculator.',

@@ -278,13 +278,13 @@ const pepSlug = '/peptide-reconstitution-calculator/';
   edit('partials/header.html', (s2) => {
     if (s2.includes('href="' + slug + '"')) return s2;
     s2 = s2.replace('          <a href="' + pepSlug + '">Peptide Reconstitution</a>\n', '');
-    return s2.replace('          <a href="/turkey-size-calculator/">Turkey Size</a>\n', (mm) => mm + '          <span class="menu-col-head">Medication &amp; Dosage</span>\n          <a href="' + slug + '">' + P.menu + '</a>\n          <a href="' + pepSlug + '">Peptide Reconstitution</a>\n');
+    return s2.replace('          <a href="/turkey-size-calculator/">Turkey Size</a>\n', (mm) => mm + '          <span class="menu-col-head">Medication &amp; Lab</span>\n          <a href="' + slug + '">' + P.menu + '</a>\n          <a href="' + pepSlug + '">Peptide Reconstitution</a>\n');
   });
   /* footer: new pillar after Cooking & Kitchen */
   edit('partials/footer.html', (s2) => {
     if (s2.includes('href="' + slug + '"')) return s2;
     s2 = s2.replace('          <li><a href="' + pepSlug + '">Peptide Reconstitution Calculator</a></li>\n', '');
-    const col = '<div class="footer-col" style="order:5">\n        <button class="footer-col-btn" aria-expanded="false" type="button">\n          <span class="fttl"><span class="ft1">Medication &amp;</span> <span class="ft2">Dosage</span></span>\n          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>\n        </button>\n        <ul class="footer-links">\n          <li><a href="' + slug + '">' + P.name + '</a></li>\n          <li><a href="' + pepSlug + '">Peptide Reconstitution Calculator</a></li>\n        </ul>\n      </div>\n\n';
+    const col = '<div class="footer-col" style="order:5">\n        <button class="footer-col-btn" aria-expanded="false" type="button">\n          <span class="fttl"><span class="ft1">Medication &amp;</span> <span class="ft2">Lab</span></span>\n          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>\n        </button>\n        <ul class="footer-links">\n          <li><a href="' + slug + '">' + P.name + '</a></li>\n          <li><a href="' + pepSlug + '">Peptide Reconstitution Calculator</a></li>\n        </ul>\n      </div>\n\n';
     return s2.replace('<div class="footer-col" style="order:6">', () => col + '<div class="footer-col" style="order:6">');
   });
   edit('index.html', (h) => {
@@ -306,9 +306,9 @@ ${ico}
     let pepCard = pm ? pm[0] : '';
     if (pepCard && !h.includes('id="grp-medication"')) h = h.replace(pepCard, '');
     if (!h.includes('id="grp-medication"')) {
-      const sec = '  <section id="grp-medication" class="cat-grp cat-grp--hidden" aria-label="Medication &amp; Dosage calculators">\n  <div class="cards">\n\n' + cardOf(slug, ico, P.name, P.card) + '\n' + pepCard + '\n  </div>\n  </section>\n\n';
+      const sec = '  <section id="grp-medication" class="cat-grp cat-grp--hidden" aria-label="Medication &amp; Lab calculators">\n  <div class="cards">\n\n' + cardOf(slug, ico, P.name, P.card) + '\n' + pepCard + '\n  </div>\n  </section>\n\n';
       h = h.replace('  <section id="grp-academic"', () => sec + '  <section id="grp-academic"');
-      h = h.replace('    <button class="cat-tab" type="button" data-cat="academic"', () => '    <button class="cat-tab" type="button" data-cat="medication" role="tab" aria-selected="false">Medication &amp;<br>Dosage</button>\n    <button class="cat-tab" type="button" data-cat="academic"');
+      h = h.replace('    <button class="cat-tab" type="button" data-cat="academic"', () => '    <button class="cat-tab" type="button" data-cat="medication" role="tab" aria-selected="false">Medication &amp;<br>Lab</button>\n    <button class="cat-tab" type="button" data-cat="academic"');
       h = h.replace("health:document.getElementById('grp-health'),", () => "health:document.getElementById('grp-health'),medication:document.getElementById('grp-medication'),");
     }
     const li = '<a href="' + slug + '">' + P.name + '</a><span>';

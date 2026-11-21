@@ -3768,3 +3768,47 @@ body .fld + .av-note,body .fld + .cb-note{margin-top:-6px}
 .p-mm .st-ta-opt b{flex:none;font-size:12.5px;font-weight:700;color:var(--muted);letter-spacing:.03em;white-space:nowrap}
 .p-mm .st-ta-opt:hover,.p-mm .st-ta-opt.on,.p-mm .st-ta-opt.kb{background:#F5EFE4;color:var(--ink)}
 .p-mm .st-ta-none{font-size:13.5px;color:var(--muted);padding:9px 11px;line-height:1.45}
+
+/* ---- DILUTION calculator (.p-dl) — reuses .p-bmr result look, .dtable, .seg, .csel and the mg to mL amount box / ruler ---- */
+.p-dl .modeseg{grid-template-columns:repeat(3,1fr)}
+.p-dl .card{min-width:0}
+.p-dl .cf-box{display:flex;align-items:center;gap:8px;background:#FBF6EC;border:1px solid var(--line);border-radius:11px;padding:6px 8px;transition:.15s}
+.p-dl .cf-box:focus-within{border-color:var(--amber);background:#fff;box-shadow:0 0 0 3px rgba(181,118,31,.13)}
+.p-dl .cf-box input{flex:1;min-width:0;width:100%;border:0;background:none;font:inherit;font-size:19px;font-weight:600;color:var(--ink);padding:4px 4px;margin:0;outline:none}
+.p-dl .cf-box .seg{flex:none;padding:2px}
+.p-dl .cf-box .seg button{padding:6px 11px;font-size:12.5px}
+.p-dl .two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+.p-dl .av-note,.p-dl .cb-note{font-size:14px;font-weight:500;color:var(--ink-soft);margin:4px 0 8px;line-height:1.45}
+.p-dl .cb-note{color:var(--muted);font-weight:400}
+.p-dl .two + .cb-note{margin-top:-6px}
+.p-dl .sl-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:6px}
+.p-dl .sl-head .card-h2{margin:0}
+.p-dl .dl-flask{margin:6px 0 2px}
+.p-dl .dl-flask-svg{display:block;width:100%;max-width:300px;height:auto}
+.p-dl .dl-legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:14px;color:var(--ink-soft);margin:4px 0 6px}
+.p-dl .dl-k{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.p-dl .dl-k.c{background:#D99A33}
+.p-dl .dl-k.w{background:#B7CDD6}
+.p-dl .mm-cap{font-size:14px;font-weight:400;color:var(--muted);line-height:1.45;margin:2px 0 8px}
+.p-dl .mm-rule{margin:6px 0 4px;padding-bottom:8px}
+.p-dl .mm-rule-t{position:relative;height:16px;border-radius:8px;background:#EFE7D8;margin:14px 0 0}
+.p-dl .mm-band{position:absolute;left:0;top:0;bottom:0;background:var(--spruce);opacity:.6;border-radius:8px 0 0 8px}
+.p-dl .mm-rule-l{position:relative;height:24px;margin-top:10px}
+.p-dl .mm-rule-l span{position:absolute;top:0;font-size:13px;font-weight:500;color:var(--muted);line-height:1.25;white-space:nowrap}
+.p-dl .mm-rule-l span b{font-size:13.5px;font-weight:700;color:var(--ink)}
+.p-dl .mm-rule-l span.f{left:0}
+.p-dl .mm-rule-l span.l{right:0}
+.p-dl .dtable td:nth-child(n+2),.p-dl .dtable th:nth-child(n+2){text-align:right}
+.p-dl #dlBatch tr[data-r]{cursor:pointer}
+.p-dl #dlBatch tr[data-r]:hover td{background:#FCF7EE}
+.p-dl .dl-steps{margin:4px 0 8px 20px;padding:0;font-size:15px;line-height:1.5;color:var(--ink-soft)}
+.p-dl .dl-steps li{margin:0 0 4px}
+.p-dl .dl-wide{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.p-dl .mm-tools{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;margin:10px 0 4px}
+.p-dl #dlDec{grid-template-columns:repeat(4,1fr)}
+.p-dl .bm-sub{display:block;font-size:12.5px;font-weight:500;color:var(--muted);margin-top:2px}
+.p-dl #dlBatch{width:100%;table-layout:fixed}
+.p-dl #dlBatch td,.p-dl #dlBatch th{padding-left:6px;padding-right:6px;font-size:13.5px}
+.p-dl #dlBatch td{overflow-wrap:anywhere}
+.p-dl #dlEq,.p-dl #dlUnits{width:100%;table-layout:fixed}
+.p-dl #dlEq td,.p-dl #dlUnits td{overflow-wrap:anywhere}

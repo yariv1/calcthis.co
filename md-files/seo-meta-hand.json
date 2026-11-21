@@ -198,6 +198,10 @@
     "t": "Overtime Calculator — Pay, Take-Home & No Tax on Overtime",
     "d": "Free overtime calculator: your hourly rate and hours give overtime pay, take-home after tax, California daily rules and the no-tax-on-overtime deduction."
   },
+  "/dilution-calculator/": {
+    "t": "Dilution Calculator — C1V1, Ratio and Factor",
+    "d": "Dilution calculator: concentrate and water for any strength, ratio (1:10) or factor, in mL, cups or gallons, with a flask drawn to scale."
+  },
   "/mg-to-ml-calculator/": {
     "t": "mg to mL Calculator — Convert a Dose to Milliliters",
     "d": "mg to mL calculator: enter the dose and the strength on the label, get milliliters on a to-scale syringe. Also mL to mg, mg per mL, tsp, tbsp and mcg."
