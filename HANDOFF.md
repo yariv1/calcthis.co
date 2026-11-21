@@ -27,7 +27,7 @@ _Rewritten 2026-11-08 at the end of session #6 PART 2 (profit margin v331, disco
 
 **NEWEST (2026-11-13, END OF SESSION #10): live v351 · 108 calcs · 238 pages. Read `HANDOFF.md` §0000000000000026 in full (first section below). First reply = ONE sync line, then the #12 AMORTIZATION calculator research report (wait for "Approve all"). GSC queue = "Start queue" on his word (quota was exceeded twice on 2026-11-13); Bing submits are done for everything live. z-score v350 + compound interest v351 deployed. Re-read GSC ~2026-11-26.**
 
-## 000000000000002a. START HERE — END OF THE 2026-11-21 SESSION #14 (DIRECTION: CALCULATORS + ORGANIC SEO ONLY; MG TO ML BUILT, NOT DEPLOYED; NEW "MEDICATION & DOSAGE" GROUP) — LIVE STILL v357 · local build = 110 calculators · 241 pages · nothing committed — AUTHORITATIVE; §29 below stays valid (GSC/Bing queue, AdSense plan) unless this contradicts it
+## 000000000000002a. START HERE — END OF THE 2026-11-21 SESSION #14 (DIRECTION: CALCULATORS + ORGANIC SEO ONLY; MG TO ML BUILT, NOT DEPLOYED; NEW "MEDICATION & DOSAGE" GROUP) — DEPLOYED 2026-11-21 AS v358 (commit `4e793cf4`, Pages built, mg-to-ml / whats-new / peptide URLs 200, IndexNow pinged 241 URLs; Bing manual submit + GSC queue for /mg-to-ml-calculator/ still pending) · 110 calculators · 241 pages — AUTHORITATIVE; §29 below stays valid (GSC/Bing queue, AdSense plan) unless this contradicts it
 
 **0. First reply = ONE sync line, then work silently (no narration, one final message with a "QA:" line, short answers, never "100%").**
 
