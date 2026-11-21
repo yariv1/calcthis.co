@@ -27,7 +27,7 @@ _Rewritten 2026-11-08 at the end of session #6 PART 2 (profit margin v331, disco
 
 **NEWEST (2026-11-13, END OF SESSION #10): live v351 · 108 calcs · 238 pages. Read `HANDOFF.md` §0000000000000026 in full (first section below). First reply = ONE sync line, then the #12 AMORTIZATION calculator research report (wait for "Approve all"). GSC queue = "Start queue" on his word (quota was exceeded twice on 2026-11-13); Bing submits are done for everything live. z-score v350 + compound interest v351 deployed. Re-read GSC ~2026-11-26.**
 
-## 000000000000002b. START HERE — 2026-11-21/22 SESSION #14 PART 2: MG TO ML DEPLOYED v358, DILUTION CALCULATOR BUILT (NOT DEPLOYED), GROUP RENAMED "MEDICATION & LAB" — AUTHORITATIVE; §2a below stays valid (direction, demand numbers) unless this contradicts it
+## 000000000000002b. START HERE — 2026-11-21/22 SESSION #14 PART 2: MG TO ML DEPLOYED v358, DILUTION DEPLOYED v359 (commit af39c8c6, Pages built, URLs 200, IndexNow 242; Bing + GSC pending), GROUP RENAMED "MEDICATION & LAB" — AUTHORITATIVE; §2a below stays valid (direction, demand numbers) unless this contradicts it
 
 **0. First reply = ONE sync line, then work silently. One final message with a "QA:" line. Deploy only on his "Deploy".**
 
