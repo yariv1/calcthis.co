@@ -212,3 +212,5 @@ BING 2026-11-22 (second batch): 89 URLs submitted manually, all appear as "Today
 - 2026-11-22 DEPLOYED v361 (commit 19c3f37b): /t-test-calculator/ + whats-new. IndexNow pinged 243 URLs (HTTP 200). Bing manual submit NOT done: daily quota 0 left. GSC NOT requested (quota used today); add t-test-calculator to the GSC queue (after virginia).
 
 - 2026-11-22 DEPLOYED v362 (commit 00b99e64): /retatrutide-dosage-calculator/ + whats-new. IndexNow pinged 244 URLs (HTTP 200). Bing manual submit and GSC NOT done (quotas used): add retatrutide-dosage-calculator and t-test-calculator to the GSC queue (after virginia) and to Bing on a new day.
+
+- 2026-11-22 DEPLOYED v363 (commit 8bdbdab5, Pages built, URL 200, IndexNow 245): /serial-dilution-calculator/ — Bing manual submit + GSC request pending (quota day).
