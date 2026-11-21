@@ -1,0 +1,36 @@
+{
+ "slug": "t-test-calculator",
+ "pass": true,
+ "at": "2026-11-21T17:29:19.582Z",
+ "hash": "55ee3b282b1493a4",
+ "viewports": {
+  "mobile": {
+   "steps": 1952,
+   "fails": []
+  },
+  "desktop": {
+   "steps": 1952,
+   "fails": []
+  }
+ },
+ "oracle": {
+  "runs": 227,
+  "fails": [],
+  "comparisons": 10606
+ },
+ "shots": [
+  "md-files/qa-passes/shots/t-test-calculator-1-empty-mobile.png",
+  "md-files/qa-passes/shots/t-test-calculator-2-filled-mobile.png",
+  "md-files/qa-passes/shots/t-test-calculator-3-result-mobile.png",
+  "md-files/qa-passes/shots/t-test-calculator-4-advanced-mobile.png",
+  "md-files/qa-passes/shots/t-test-calculator-5-error-mobile.png",
+  "md-files/qa-passes/shots/t-test-calculator-6-after-chaos-mobile.png",
+  "md-files/qa-passes/shots/t-test-calculator-1-empty-desktop.png",
+  "md-files/qa-passes/shots/t-test-calculator-2-filled-desktop.png",
+  "md-files/qa-passes/shots/t-test-calculator-3-result-desktop.png",
+  "md-files/qa-passes/shots/t-test-calculator-4-advanced-desktop.png",
+  "md-files/qa-passes/shots/t-test-calculator-5-error-desktop.png",
+  "md-files/qa-passes/shots/t-test-calculator-6-after-chaos-desktop.png"
+ ],
+ "console": []
+}

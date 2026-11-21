@@ -1,0 +1,25 @@
+{
+ "date": "2026-11-22",
+ "competitors": [
+  { "name": "Omnicalculator t-test calculator", "url": "https://www.omnicalculator.com/statistics/t-test", "reopenedAfterBuild": true, "gaps": [] },
+  { "name": "GraphPad QuickCalcs t test calculator", "url": "https://www.graphpad.com/quickcalcs/ttest1/", "reopenedAfterBuild": true, "gaps": [] },
+  { "name": "Social Science Statistics t-test calculator", "url": "https://www.socscistatistics.com/tests/studentttest/calculator/", "reopenedAfterBuild": true, "gaps": [] },
+  { "name": "Stats Kingdom t-test calculator", "url": "https://www.statskingdom.com/t-test-calculator.html", "reopenedAfterBuild": true, "gaps": [] }
+ ],
+ "weBeat": [
+  "visual: an estimation plot in the user's own units (every value as a dot, the mean of each group with its interval, grey lines for pairs, and the difference with its interval against a zero line) next to the t curve; Stats Kingdom draws only the abstract t curve, the others draw nothing",
+  "functional: Welch and pooled results side by side from the same data with a plain-English note on which fits and whether they disagree; a 'What would it take' table (smallest difference that would be significant, people needed for p below alpha, power of this test, people needed for 80% power) with exact noncentral-t power; all three comparisons (two groups, before and after, one group) in one page with raw numbers or summary numbers (mean, SD or SEM, n); t-score and degrees of freedom only mode",
+  "every competitor feature kept except Chicago citation style, CSV / Excel file upload, R code, Print, last-run restore and the Shapiro-Wilk normality test (dropped under his approval of the research report, recorded in the parity file)"
+ ],
+ "gapsLeft": [],
+ "unverified": [
+  "real phone",
+  "other browsers (Chrome only)",
+  "print",
+  "Copy buttons in a real clipboard session",
+  "normality is not tested (no Shapiro-Wilk): the page shows skewness, outliers and the dots instead",
+  "no rule-of-thumb labels for Cohen's d (no primary source read)",
+  "power and people-needed counts assume equal group sizes and the observed difference; checked against an independent integration, not against another calculator",
+  "the competitors were compared from the research pass and the same pages reloaded after the build, not typed side by side with every input; the example data gave the same t, df, p and interval as Social Science Statistics and Stats Kingdom"
+ ]
+}

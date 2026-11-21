@@ -1,0 +1,19 @@
+{
+ "slug": "t-test-calculator",
+ "hash": "55ee3b282b1493a4",
+ "shots": [
+  "t-test-calculator-1-empty-mobile.png",
+  "t-test-calculator-2-filled-mobile.png",
+  "t-test-calculator-3-result-mobile.png",
+  "t-test-calculator-4-advanced-mobile.png",
+  "t-test-calculator-5-error-mobile.png",
+  "t-test-calculator-6-after-chaos-mobile.png",
+  "t-test-calculator-1-empty-desktop.png",
+  "t-test-calculator-2-filled-desktop.png",
+  "t-test-calculator-3-result-desktop.png",
+  "t-test-calculator-4-advanced-desktop.png",
+  "t-test-calculator-5-error-desktop.png",
+  "t-test-calculator-6-after-chaos-desktop.png"
+ ],
+ "at": "2026-11-21T17:32:13.636Z"
+}

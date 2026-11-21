@@ -3812,3 +3812,40 @@ body .fld + .av-note,body .fld + .cb-note{margin-top:-6px}
 .p-dl #dlBatch td{overflow-wrap:anywhere}
 .p-dl #dlEq,.p-dl #dlUnits{width:100%;table-layout:fixed}
 .p-dl #dlEq td,.p-dl #dlUnits td{overflow-wrap:anywhere}
+
+/* ---- T-TEST calculator (.p-tt). Reuses .p-bmr result look, .dtable, .seg, .chips, .advbtn ---- */
+.p-tt .card{min-width:0}
+.p-tt .av-note,.p-tt .cb-note{font-size:14px;font-weight:500;color:var(--ink-soft);margin:4px 0 8px;line-height:1.45}
+.p-tt .cb-note{color:var(--muted);font-weight:400}
+.p-tt .res-big{font-size:clamp(28px,7vw,44px);overflow-wrap:anywhere}
+.p-tt .res-big.tt-long{font-size:24px}
+.p-tt .res-sub,.p-tt .res-lab{overflow-wrap:anywhere}
+.p-tt .mbar-vals b{font-size:16px;overflow-wrap:anywhere}
+.p-tt .tt-two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0 10px}
+.p-tt .tt-three{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 8px;align-items:end}
+.p-tt .tt-two > *,.p-tt .tt-three > *{min-width:0}
+.p-tt .tt-three .lab{font-size:13.5px;line-height:1.25}
+.p-tt .zs-sech{font-size:14px;font-weight:600;color:var(--ink);margin:14px 0 8px}
+.p-tt .zs-sech span{font-weight:400;color:var(--muted)}
+.p-tt .tt-seg{display:flex;width:100%}
+.p-tt .tt-seg button{flex:1 1 0;min-width:0;padding-left:6px;padding-right:6px}
+.p-tt .tt-ta{display:block;width:100%;font:inherit;font-size:15px;font-weight:500;color:var(--ink);background:#FCFAF6;border:1.5px solid var(--line);border-radius:10px;padding:11px 13px;resize:vertical;font-variant-numeric:tabular-nums;line-height:1.5;min-height:96px}
+.p-tt .tt-ta:focus{outline:none;border-color:var(--amber);background:#fff;box-shadow:0 0 0 3px rgba(181,118,31,.13)}
+.p-tt .chips{margin-top:0;margin-bottom:6px}
+.p-tt .tt-vis{border:1px solid var(--line);border-radius:12px;background:#FFFDF8;padding:8px 8px 4px;margin:6px 0 4px}
+.p-tt .tt-vis svg{display:block;width:100%;height:auto}
+.p-tt .dtable td,.p-tt .dtable th{padding-left:6px;padding-right:6px;overflow-wrap:anywhere}
+.p-tt .dtable td{font-variant-numeric:tabular-nums}
+.p-tt #ttNums td:nth-child(2),.p-tt #ttWhat td:nth-child(2),.p-tt #ttCmp td:nth-child(n+2),.p-tt #ttCmp th:nth-child(n+2),.p-tt #ttGrp td:nth-child(n+2),.p-tt #ttGrp th:nth-child(n+2){text-align:right}
+.p-tt #ttCmp,.p-tt #ttGrp,.p-tt #ttNums,.p-tt #ttWhat{width:100%;table-layout:auto}
+.p-tt .tt-tbl{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 0 8px;max-width:100%}
+.p-tt .tt-steps{margin:6px 0 4px;padding-left:20px;font-size:14.5px;line-height:1.55;color:var(--ink-soft)}
+.p-tt .tt-steps li{margin-bottom:4px;overflow-wrap:anywhere}
+.p-tt .tt-write{font-size:14.5px;line-height:1.55;color:var(--ink);background:#FBF7EE;border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:4px 0 8px;overflow-wrap:anywhere}
+.p-tt .grid2 > div{min-width:0}
+.p-tt .tt-ctab{overflow-x:auto;max-width:100%}
+.p-tt .tt-ctab td,.p-tt .tt-ctab th{white-space:nowrap}
+.p-tt #ttDev{width:100%}
+.p-tt #ttDev td:nth-child(n+2),.p-tt #ttDev th:nth-child(n+2){text-align:right}
+.p-tt #ttDev thead tr:first-child th{text-align:left}
+.p-tt #ttDevWrap{margin:6px 0 8px}

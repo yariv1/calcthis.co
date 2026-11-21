@@ -1,0 +1,12 @@
+{
+ "slug": "t-test-calculator",
+ "pass": true,
+ "failed": [],
+ "hash": "55ee3b282b1493a4",
+ "at": "2026-11-21T17:36:02.117Z",
+ "results": {
+  "silent": "ok   t-test-calculator  fields 8",
+  "duplicate": "most overlap 0.4% with /confidence-interval-calculator/ (limit 12%)",
+  "registration": "sitemap urls 243 | t-test-calculator cards 1 inbound 242 ld WebApplication,FAQPage,BreadcrumbList | AUDIT PASS"
+ }
+}

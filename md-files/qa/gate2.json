@@ -8,5 +8,6 @@
  "compound-interest-calculator",
  "amortization-calculator",
  "mg-to-ml-calculator",
- "dilution-calculator"
+ "dilution-calculator",
+ "t-test-calculator"
 ]

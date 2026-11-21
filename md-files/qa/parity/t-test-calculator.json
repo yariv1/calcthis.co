@@ -1,0 +1,350 @@
+{
+ "slug": "t-test-calculator",
+ "research": "md-files/calcthis-ttest-research.md",
+ "competitors": [
+  {
+   "name": "Omnicalculator t-test calculator",
+   "url": "https://www.omnicalculator.com/statistics/t-test",
+   "openedLive": true,
+   "date": "2026-11-22",
+   "inputs": [
+    "test type: one-sample, two-sample, paired-sample",
+    "alternative hypothesis: two-tailed, less, greater",
+    "approach: p-value or critical values",
+    "significance level alpha",
+    "typed t-score and degrees of freedom (no sample data)",
+    "p-value result",
+    "formulas, t versus z, assumptions and FAQ text",
+    "share result, reload and clear buttons"
+   ]
+  },
+  {
+   "name": "GraphPad QuickCalcs t test calculator",
+   "url": "https://www.graphpad.com/quickcalcs/ttest1/",
+   "openedLive": true,
+   "date": "2026-11-22",
+   "inputs": [
+    "data entry as up to 50 rows",
+    "pasted data up to 2000 rows",
+    "mean, SEM and N entry",
+    "mean, SD and N entry",
+    "unpaired t test",
+    "Welch's unpaired t test",
+    "paired t test",
+    "group labels",
+    "two-tailed result only",
+    "results: P value, t, df, means, standard error, confidence interval of the difference",
+    "help on which t test to choose, assumptions and interpreting results"
+   ]
+  },
+  {
+   "name": "Social Science Statistics t-test calculator",
+   "url": "https://www.socscistatistics.com/tests/studentttest/calculator/",
+   "openedLive": true,
+   "date": "2026-11-22",
+   "inputs": [
+    "two pasted lists of values",
+    "Welch or pooled Student method",
+    "significance level 0.01, 0.05, 0.10",
+    "alternative hypothesis: two-sided, greater, less",
+    "differences from the mean and squared differences tables",
+    "per-group N, mean, sum of squares and variance",
+    "standard error, t, degrees of freedom, mean difference",
+    "95% two-sided confidence interval",
+    "three p-values (greater, less, two-tailed)",
+    "significant or not significant sentence",
+    "citation sentence: APA parenthetical",
+    "citation sentence: APA narrative",
+    "citation sentence: Chicago",
+    "citation sentence: plain English",
+    "copy button for the citation",
+    "formulas and requirements text"
+   ]
+  },
+  {
+   "name": "Stats Kingdom t-test calculator",
+   "url": "https://www.statskingdom.com/t-test-calculator.html",
+   "openedLive": true,
+   "date": "2026-11-22",
+   "inputs": [
+    "four tests: one-sample, pooled two-sample, Welch two-sample, paired",
+    "tails: two, left, right",
+    "significance level alpha",
+    "raw data grid with paste from Excel",
+    "CSV or Excel file upload",
+    "summarized data: mean, SD, n",
+    "expected difference d or expected mean",
+    "options: rounding, outliers, effect size",
+    "APA results sentence",
+    "p-value, t, degrees of freedom, difference of averages, standard error",
+    "Cohen's d and pooled SD",
+    "a priori and post hoc power",
+    "per-group average, SD, size, skewness and outliers",
+    "per-group normality p-value (Shapiro-Wilk)",
+    "calculation steps",
+    "t curve with shaded rejection regions and t marker",
+    "acceptance region and confidence interval",
+    "validation notes: outliers (Tukey) and power advice",
+    "R code",
+    "copy button",
+    "print button",
+    "last run restore"
+   ]
+  }
+ ],
+ "features": [
+  {
+   "covers": [
+    "Omnicalculator t-test calculator: test type: one-sample, two-sample, paired-sample",
+    "GraphPad QuickCalcs t test calculator: unpaired t test",
+    "GraphPad QuickCalcs t test calculator: Welch's unpaired t test",
+    "GraphPad QuickCalcs t test calculator: paired t test",
+    "Social Science Statistics t-test calculator: Welch or pooled Student method",
+    "Stats Kingdom t-test calculator: four tests: one-sample, pooled two-sample, Welch two-sample, paired"
+   ],
+   "status": "exceed",
+   "ids": [
+    "ttTest",
+    "ttHead",
+    "ttCmp"
+   ]
+  },
+  {
+   "covers": [
+    "Omnicalculator t-test calculator: alternative hypothesis: two-tailed, less, greater",
+    "GraphPad QuickCalcs t test calculator: two-tailed result only",
+    "Social Science Statistics t-test calculator: alternative hypothesis: two-sided, greater, less",
+    "Stats Kingdom t-test calculator: tails: two, left, right"
+   ],
+   "status": "match",
+   "ids": [
+    "ttTail"
+   ]
+  },
+  {
+   "covers": [
+    "Omnicalculator t-test calculator: significance level alpha",
+    "Social Science Statistics t-test calculator: significance level 0.01, 0.05, 0.10",
+    "Stats Kingdom t-test calculator: significance level alpha"
+   ],
+   "status": "exceed",
+   "ids": [
+    "ttAlpha",
+    "ttAlphaChips"
+   ]
+  },
+  {
+   "covers": [
+    "GraphPad QuickCalcs t test calculator: data entry as up to 50 rows",
+    "GraphPad QuickCalcs t test calculator: pasted data up to 2000 rows",
+    "Social Science Statistics t-test calculator: two pasted lists of values",
+    "Stats Kingdom t-test calculator: raw data grid with paste from Excel"
+   ],
+   "status": "match",
+   "ids": [
+    "ttA",
+    "ttB"
+   ]
+  },
+  {
+   "covers": [
+    "GraphPad QuickCalcs t test calculator: mean, SEM and N entry"
+   ],
+   "status": "match",
+   "ids": [
+    "ttSpread",
+    "ttM1",
+    "ttS1",
+    "ttN1"
+   ]
+  },
+  {
+   "covers": [
+    "GraphPad QuickCalcs t test calculator: mean, SD and N entry",
+    "Stats Kingdom t-test calculator: summarized data: mean, SD, n"
+   ],
+   "status": "match",
+   "ids": [
+    "ttM1",
+    "ttS1",
+    "ttN1",
+    "ttM2",
+    "ttS2",
+    "ttN2"
+   ]
+  },
+  {
+   "covers": [
+    "Stats Kingdom t-test calculator: expected difference d or expected mean"
+   ],
+   "status": "match",
+   "ids": [
+    "ttD0",
+    "ttMu0"
+   ]
+  },
+  {
+   "covers": [
+    "Omnicalculator t-test calculator: typed t-score and degrees of freedom (no sample data)"
+   ],
+   "status": "match",
+   "ids": [
+    "ttTin",
+    "ttDfIn"
+   ]
+  },
+  {
+   "covers": [
+    "GraphPad QuickCalcs t test calculator: group labels"
+   ],
+   "status": "match",
+   "ids": [
+    "ttNameA",
+    "ttNameB"
+   ]
+  },
+  {
+   "covers": [
+    "Omnicalculator t-test calculator: approach: p-value or critical values",
+    "Omnicalculator t-test calculator: p-value result",
+    "GraphPad QuickCalcs t test calculator: results: P value, t, df, means, standard error, confidence interval of the difference",
+    "Social Science Statistics t-test calculator: standard error, t, degrees of freedom, mean difference",
+    "Social Science Statistics t-test calculator: 95% two-sided confidence interval",
+    "Social Science Statistics t-test calculator: three p-values (greater, less, two-tailed)",
+    "Stats Kingdom t-test calculator: p-value, t, degrees of freedom, difference of averages, standard error",
+    "Stats Kingdom t-test calculator: acceptance region and confidence interval"
+   ],
+   "status": "exceed",
+   "ids": [
+    "ttNums",
+    "ttCmp",
+    "ttBig"
+   ]
+  },
+  {
+   "covers": [
+    "Social Science Statistics t-test calculator: per-group N, mean, sum of squares and variance",
+    "Stats Kingdom t-test calculator: options: rounding, outliers, effect size",
+    "Stats Kingdom t-test calculator: per-group average, SD, size, skewness and outliers",
+    "Stats Kingdom t-test calculator: validation notes: outliers (Tukey) and power advice"
+   ],
+   "status": "exceed",
+   "ids": [
+    "ttGrp",
+    "ttDec",
+    "ttWhat"
+   ]
+  },
+  {
+   "covers": [
+    "Social Science Statistics t-test calculator: differences from the mean and squared differences tables"
+   ],
+   "status": "match",
+   "ids": [
+    "ttDev",
+    "ttDevWrap"
+   ]
+  },
+  {
+   "covers": [
+    "Social Science Statistics t-test calculator: significant or not significant sentence"
+   ],
+   "status": "exceed",
+   "ids": [
+    "ttTip",
+    "ttNums"
+   ]
+  },
+  {
+   "covers": [
+    "Social Science Statistics t-test calculator: citation sentence: APA parenthetical",
+    "Social Science Statistics t-test calculator: citation sentence: APA narrative",
+    "Social Science Statistics t-test calculator: citation sentence: plain English",
+    "Social Science Statistics t-test calculator: copy button for the citation",
+    "Stats Kingdom t-test calculator: APA results sentence",
+    "Stats Kingdom t-test calculator: copy button"
+   ],
+   "status": "match",
+   "ids": [
+    "ttWrite",
+    "ttTip"
+   ]
+  },
+  {
+   "covers": [
+    "Stats Kingdom t-test calculator: Cohen's d and pooled SD"
+   ],
+   "status": "exceed",
+   "ids": [
+    "ttNums"
+   ]
+  },
+  {
+   "covers": [
+    "Stats Kingdom t-test calculator: a priori and post hoc power"
+   ],
+   "status": "exceed",
+   "ids": [
+    "ttWhat"
+   ]
+  },
+  {
+   "covers": [
+    "Stats Kingdom t-test calculator: calculation steps"
+   ],
+   "status": "match",
+   "ids": [
+    "ttSteps"
+   ]
+  },
+  {
+   "covers": [
+    "Stats Kingdom t-test calculator: t curve with shaded rejection regions and t marker"
+   ],
+   "status": "exceed",
+   "ids": [
+    "ttCurve",
+    "ttVis"
+   ]
+  },
+  {
+   "covers": [
+    "Omnicalculator t-test calculator: formulas, t versus z, assumptions and FAQ text",
+    "GraphPad QuickCalcs t test calculator: help on which t test to choose, assumptions and interpreting results",
+    "Social Science Statistics t-test calculator: formulas and requirements text"
+   ],
+   "status": "match",
+   "ids": [
+    "ttFormulas",
+    "ttWhich",
+    "ttReading",
+    "ttFaq"
+   ]
+  },
+  {
+   "covers": [
+    "Omnicalculator t-test calculator: share result, reload and clear buttons"
+   ],
+   "status": "match",
+   "ids": [
+    "ttClear",
+    "ttWrite"
+   ]
+  },
+  {
+   "covers": [
+    "Social Science Statistics t-test calculator: citation sentence: Chicago",
+    "Stats Kingdom t-test calculator: CSV or Excel file upload",
+    "Stats Kingdom t-test calculator: per-group normality p-value (Shapiro-Wilk)",
+    "Stats Kingdom t-test calculator: R code",
+    "Stats Kingdom t-test calculator: print button",
+    "Stats Kingdom t-test calculator: last run restore"
+   ],
+   "status": "dropped",
+   "signoff": {
+    "quote": "approve all (his reply to the research report that named Chicago style, CSV / Excel file upload, R code, Print and the Shapiro-Wilk normality test as drop candidates; last-run restore was not named in that report)",
+    "date": "2026-11-22"
+   }
+  }
+ ]
+}

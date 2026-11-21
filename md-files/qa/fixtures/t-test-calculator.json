@@ -1,0 +1,52 @@
+{
+  "slug": "t-test-calculator",
+  "bodyClass": "p-tt",
+  "blocks": ["PVALUE", "CI", "TTEST"],
+  "result": { "big": "ttBig", "body": "ttBody", "hint": "ttHint" },
+  "required": ["ttA", "ttB", "ttM1", "ttS1", "ttN1", "ttM2", "ttS2", "ttN2", "ttMu0"],
+  "fill": [
+    ["click", "ttClear"],
+    ["seg", "ttTest", "two"],
+    ["seg", "ttEntry", "raw"],
+    ["seg", "ttTail", "two"],
+    ["set", "ttA", "78 82 86 85 73 82 90 88"],
+    ["set", "ttB", "77 75 79 86 74 71 73 89"]
+  ],
+  "optionalSamples": {
+    "ttAlpha": ["0.05", "0.1", "5%", "0.001"],
+    "ttConf": ["95", "99", "50"],
+    "ttD0": ["2", "-1", "0.5"],
+    "ttTin": ["2.1", "-3", "0"],
+    "ttDfIn": ["14", "2.5", "1000"],
+    "ttNameA": ["Control"],
+    "ttNameB": ["Treatment"],
+    "ttDec": ["3", "0", "6"],
+    "ttMu0": ["100", "-5"]
+  },
+  "pools": {
+    "ttAlpha": ["0.05", "0.1", "5%", "0.001", "1"],
+    "ttConf": ["95", "99", "50"],
+    "ttD0": ["2", "-1", "0.5"],
+    "ttTin": ["2.1", "-3", "0"],
+    "ttDfIn": ["14", "2.5", "1000"],
+    "ttNameA": ["Control", "x"],
+    "ttNameB": ["Treatment"],
+    "ttDec": ["3", "0", "6"],
+    "ttM1": ["83", "0", "-5"],
+    "ttS1": ["5.5", "0.2", "100"],
+    "ttN1": ["8", "2", "50"],
+    "ttM2": ["78", "10"],
+    "ttS2": ["6.4", "1"],
+    "ttN2": ["8", "30"],
+    "ttMu0": ["100", "80"]
+  },
+  "variants": [
+    [["click", "ttClear"], ["seg", "ttTest", "two"], ["seg", "ttEntry", "sum"], ["seg", "ttTail", "two"], ["set", "ttM1", "83"], ["set", "ttS1", "5.5"], ["set", "ttN1", "8"], ["set", "ttM2", "78"], ["set", "ttS2", "6.4"], ["set", "ttN2", "8"]],
+    [["click", "ttClear"], ["seg", "ttTest", "paired"], ["seg", "ttEntry", "raw"], ["seg", "ttTail", "two"], ["set", "ttA", "120 132 118 140 125 135 128 122"], ["set", "ttB", "115 128 119 131 120 130 126 117"]],
+    [["click", "ttClear"], ["seg", "ttTest", "one"], ["seg", "ttEntry", "raw"], ["seg", "ttTail", "gt"], ["set", "ttA", "102 98 110 95 104 108 99 106"], ["set", "ttMu0", "100"]],
+    [["click", "ttClear"], ["seg", "ttTest", "paired"], ["seg", "ttEntry", "sum"], ["seg", "ttTail", "lt"], ["set", "ttM1", "-2"], ["set", "ttS1", "3"], ["set", "ttN1", "12"]],
+    [["click", "ttClear"], ["seg", "ttTest", "one"], ["seg", "ttEntry", "sum"], ["seg", "ttTail", "two"], ["set", "ttM1", "104"], ["set", "ttS1", "4"], ["set", "ttN1", "20"], ["set", "ttMu0", "100"]]
+  ],
+  "scrollTo": "ttBig",
+  "errorState": [["set", "ttA", "5"]]
+}

@@ -1,0 +1,906 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>T-Test Calculator: One-Sample, Two-Sample &amp; Paired</title>
+<meta name="description" content="T-test calculator: paste your numbers or type means, SDs and n. Welch and pooled side by side, p-value, confidence interval, effect size and power.">
+<link rel="canonical" href="https://calcthis.co/t-test-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="T-Test Calculator: One-Sample, Two-Sample &amp; Paired">
+<meta property="og:description" content="T-test calculator: paste your numbers or type means, SDs and n. Welch and pooled side by side, p-value, confidence interval, effect size and power.">
+<meta property="og:url" content="https://calcthis.co/t-test-calculator/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/datepicker.min.css">
+<link rel="stylesheet" href="/assets/style.css?v=361">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "T-Test Calculator",
+  "url": "https://calcthis.co/t-test-calculator/",
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "Free t-test calculator: one-sample, paired and two-sample (Welch and pooled) t-tests from pasted numbers or from means, standard deviations and sample sizes, with the t-score, degrees of freedom, p-value for two-tailed or one-tailed tests, confidence interval of the difference, Cohen's d, power, the number of people needed, a picture of the data and the t curve, steps and a ready-to-copy sentence."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is a t-test?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A t-test checks whether an average differs from a number, or whether two averages differ, by comparing the gap with the amount of random variation expected from the sample sizes. The result is a t-score and a p-value."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which t-test should I use?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Use a one-sample t-test to compare one group with a known number, a paired t-test for the same people measured twice, and a two-sample t-test for two separate groups. When unsure about two groups, choose Welch: it does not assume equal variances. This page shows Welch and pooled together."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between Welch and pooled?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The pooled test assumes both groups have the same variance and uses one combined spread, with n₁ + n₂ − 2 degrees of freedom. Welch uses each group’s own variance and the Welch–Satterthwaite degrees of freedom. For the example on this page, Welch gives p = 0.1169 and pooled p = 0.1165."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I read the p-value?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The p-value is the probability of a result at least as extreme as yours if there were really no difference. If it is below your significance level α (usually 0.05), the result is called statistically significant. A p-value of 0.1169 is above 0.05, so the example is not significant."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "One-tailed or two-tailed?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Use two-tailed to test for a difference in either direction. Use one-tailed (higher or lower) only when you decided before looking at the data that only one direction matters. The one-tailed p-value is half the two-tailed one when the difference points the chosen way."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What do the degrees of freedom mean?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "For one sample and paired tests they are n − 1. For the pooled two-sample test n₁ + n₂ − 2. For Welch they are a formula that is usually not a whole number: 13.72 in the example."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What does the confidence interval tell me?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It is a range of differences the data are consistent with. For the example it runs from −1.42 to 11.42, which includes 0, matching the non-significant p-value. If an interval does not include the tested value, the result is significant at the matching level."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How many people do I need?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The “What would it take” table shows how many people per group would give p below α if the means and spreads stayed the same (13 per group in the example), and how many are needed for 80% power at the difference you saw (24 per group). It is a planning guide, not proof of anything."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are the assumptions of a t-test?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The values are independent and the data are roughly bell-shaped, especially with small samples. Check the dots in the picture for outliers; the tables flag values beyond 1.5 × the interquartile range. With very small samples and strong outliers, other tests may fit better."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I use summary numbers instead of the data?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Choose “Use summary numbers” and type the mean, standard deviation and number of values of each group. In Go advanced you can type the standard error instead of the standard deviation, or just a t-score and degrees of freedom to get the p-value."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "CalcThis",
+      "item": "https://calcthis.co/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "T-Test Calculator",
+      "item": "https://calcthis.co/t-test-calculator/"
+    }
+  ]
+}
+</script>
+<meta property="og:site_name" content="CalcThis">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://calcthis.co/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="CalcThis — free, purpose-built calculators">
+<meta name="twitter:title" content="T-Test Calculator: One-Sample, Two-Sample &amp; Paired">
+<meta name="twitter:description" content="T-test calculator: paste your numbers or type means, SDs and n. Welch and pooled side by side, p-value, confidence interval, effect size and power.">
+<meta name="twitter:image" content="https://calcthis.co/assets/og-default.png">
+</head>
+<body class="p-bmr p-tt">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <a class="hdr-back" href="/blog/" aria-label="Back to blog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-search"><div class="menu-sx"><input id="menuSearch" type="search" placeholder="Search calculators or states…" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Search calculators" enterkeyhint="search"></div><div class="menu-results" id="menuResults" hidden></div></div>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <span class="menu-col-head">Construction &amp; Gardening</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+          <a href="/paint-calculator/">Paint</a>
+          <a href="/wallpaper-calculator/">Wallpaper</a>
+          <a href="/square-footage-calculator/">Square Footage</a>
+          <a href="/tape-measure-fraction-calculator/">Tape Measure Fraction</a>
+          <a href="/stair-calculator/">Stair</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/vo2-max-calculator/">VO2 Max</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
+          <a href="/bmi-calculator/">BMI</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/ideal-weight-calculator/">Ideal Weight</a>
+          <a href="/lean-body-mass-calculator/">Lean Body Mass</a>
+          <a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio</a>
+          <a href="/gmi-calculator/">GMI</a>
+          <a href="/a1c-calculator/">A1C</a>
+          <a href="/calorie-calculator/">Calorie</a>
+          <a href="/calorie-deficit-calculator/">Calorie Deficit</a>
+          <a href="/bmr-calculator/">BMR</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/water-intake-calculator/">Water Intake</a>
+          <a href="/macro-calculator/">Macro</a>
+          <a href="/protein-intake-calculator/">Protein Intake</a>
+          <a href="/steps-to-miles-calculator/">Steps to Miles</a>
+          <a href="/dog-age-calculator/">Dog Age</a>
+          <a href="/cat-age-calculator/">Cat Age</a>
+          <a href="/calories-burned-calculator/">Calories Burned</a>
+          <a href="/calories-burned-walking-calculator/">Calories Burned Walking</a>
+          <a href="/calories-burned-running-calculator/">Calories Burned Running</a>
+          <a href="/keto-calculator/">Keto</a>
+          <a href="/net-carb-calculator/">Net Carb</a>
+          <a href="/intermittent-fasting-calculator/">Intermittent Fasting</a>
+          <a href="/bsa-calculator/">BSA</a>
+          <a href="/dog-food-calculator/">Dog Food</a>
+          <a href="/ffmi-calculator/">FFMI</a>
+          <a href="/bulking-calculator/">Bulking</a>
+          <a href="/weight-loss-calculator/">Weight Loss</a>
+          <a href="/weight-loss-percentage-calculator/">Weight Loss %</a>
+          <a href="/max-heart-rate-calculator/">Max Heart Rate</a>
+          <a href="/caffeine-calculator/">Caffeine</a>
+          <a href="/caffeine-half-life-calculator/">Caffeine Half Life</a>
+          <a href="/fiber-calculator/">Fiber</a>
+          <a href="/creatine-calculator/">Creatine</a>
+          <a href="/vitamin-d-calculator/">Vitamin D</a>
+          <a href="/body-recomposition-calculator/">Body Recomposition</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/semester-grade-calculator/">Semester Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+          <a href="/grade-curve-calculator/">Grade Curve</a>
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/fraction-calculator/">Fraction</a>
+          <a href="/standard-deviation-calculator/">Standard Deviation</a>
+          <a href="/p-value-calculator/">P-Value</a>
+          <a href="/confidence-interval-calculator/">Confidence Interval</a>
+          <a href="/z-score-calculator/">Z Score</a>
+          <a href="/t-test-calculator/" class="current">T-Test</a>
+          <a href="/scientific-notation-calculator/">Scientific Notation</a>
+          <a href="/average-calculator/">Average</a>
+          <a href="/batting-average-calculator/">Batting Average</a>
+          <a href="/stock-average-calculator/">Stock Average</a>
+          <a href="/dice-average-calculator/">Dice Average</a>
+          <a href="/time-average-calculator/">Time Average</a>
+          <a href="/weighted-average-calculator/">Weighted Average</a>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+          <a href="/percentage-change-calculator/">Percentage Change</a>
+          <a href="/age-calculator/">Age</a>
+          <a href="/date-calculator/">Date</a>
+          <a href="/time-calculator/">Time</a>
+          <a href="/hours-calculator/">Hours</a>
+          <a href="/seconds-to-hours-calculator/">Seconds to Hours</a>
+          <a href="/minutes-to-hours-calculator/">Minutes to Hours</a>
+          <a href="/seconds-to-minutes-calculator/">Seconds to Minutes</a>
+          <a href="/triangle-calculator/">Triangle</a>
+          <a href="/random-number-generator/">Random Number</a>
+          <span class="menu-col-head">Cooking &amp; Kitchen</span>
+          <a href="/recipe-converter/">Recipe Converter</a>
+          <a href="/turkey-cooking-time-calculator/">Turkey Cooking Time</a>
+          <a href="/turkey-thawing-time-calculator/">Turkey Thawing Time</a>
+          <a href="/turkey-size-calculator/">Turkey Size</a>
+          <span class="menu-col-head">Medication &amp; Lab</span>
+          <a href="/mg-to-ml-calculator/">mg to mL</a>
+          <a href="/dilution-calculator/">Dilution</a>
+          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
+          <!--UNITNAV:START-->
+          <span class="menu-col-head">Unit Converters</span>
+          <a href="/unit-converter/">Unit Converter</a>
+          <a href="/length-converter/">Length Converter</a>
+          <a href="/weight-converter/">Weight Converter</a>
+          <a href="/volume-converter/">Volume Converter</a>
+          <a href="/temperature-converter/">Temperature Converter</a>
+          <a href="/area-converter/">Area Converter</a>
+          <a href="/speed-converter/">Speed Converter</a>
+          <a href="/data-storage-converter/">Data Storage Converter</a>
+          <a href="/cooking-converter/">Cooking Converter</a>
+          <a href="/px-to-rem-converter/">PX to REM Converter</a>
+          <!--UNITNAV:END-->
+          <span class="menu-col-head">Money &amp; Finance</span>
+          <a href="/mortgage-calculator/">Mortgage</a>
+          <a href="/loan-calculator/">Loan</a>
+          <a href="/auto-loan-calculator/">Auto Loan</a>
+          <a href="/car-sales-tax-calculator/">Car Sales Tax</a>
+          <a href="/overtime-calculator/">Overtime</a>
+          <a href="/salary-calculator/">Salary</a>
+          <a href="/markup-calculator/">Markup</a>
+          <a href="/profit-margin-calculator/">Profit Margin</a>
+          <a href="/discount-calculator/">Discount</a>
+          <a href="/commission-calculator/">Commission</a>
+          <a href="/realtor-commission-calculator/">Realtor Commission</a>
+          <a href="/unit-price-calculator/">Unit Price</a>
+          <a href="/compound-interest-calculator/">Compound Interest</a>
+          <a href="/amortization-calculator/">Amortization</a>
+          <!--STAXNAV:START-->
+          <a href="/sales-tax-calculator/">Sales Tax</a>
+          <a href="/sales-tax-calculator/california/">California Sales Tax</a>
+          <a href="/sales-tax-calculator/chicago/">Chicago Sales Tax</a>
+          <a href="/sales-tax-calculator/florida/">Florida Sales Tax</a>
+          <a href="/sales-tax-calculator/las-vegas/">Las Vegas Sales Tax</a>
+          <a href="/sales-tax-calculator/los-angeles/">Los Angeles Sales Tax</a>
+          <a href="/sales-tax-calculator/michigan/">Michigan Sales Tax</a>
+          <a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax</a>
+          <a href="/sales-tax-calculator/missouri/">Missouri Sales Tax</a>
+          <a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax</a>
+          <a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax</a>
+          <a href="/sales-tax-calculator/north-carolina/">North Carolina Sales Tax</a>
+          <a href="/sales-tax-calculator/ohio/">Ohio Sales Tax</a>
+          <a href="/sales-tax-calculator/texas/">Texas Sales Tax</a>
+          <a href="/sales-tax-calculator/virginia/">Virginia Sales Tax</a>
+          <!--STAXNAV:END-->
+          <a href="/tip-calculator/">Tip</a>
+          <a href="/how-much-to-tip/">How Much to Tip</a>
+        </div>
+        <!--PAYNAV:START-->
+        <div class="menu-col">
+          <span class="menu-col-head">Paycheck Calculators</span>
+          <a href="/paycheck-calculator/">Paycheck Calculator (all states)</a>
+          <a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a>
+          <a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arkansas/">Arkansas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/california/">California Paycheck Calculator</a>
+          <a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a>
+          <a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a>
+          <a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/hawaii/">Hawaii Paycheck Calculator</a>
+          <a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a>
+          <a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a>
+          <a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a>
+          <a href="/paycheck-calculator/louisiana/">Louisiana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a>
+          <a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a>
+          <a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a>
+          <a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a>
+          <a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nebraska/">Nebraska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a>
+          <a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a>
+          <a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a>
+          <a href="/paycheck-calculator/oklahoma/">Oklahoma Paycheck Calculator</a>
+          <a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a>
+          <a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a>
+          <a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a>
+          <a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/utah/">Utah Paycheck Calculator</a>
+          <a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wisconsin/">Wisconsin Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a>
+        </div>
+        <!--PAYNAV:END-->
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">One sample · two groups · paired · live picture of your data</div>
+    <h1>T-Test Calculator</h1>
+    <p>Paste the numbers of <strong>two groups</strong> (or type their means, standard deviations and sizes) and get the <strong>p-value</strong>, the <strong>confidence interval of the difference</strong> and the effect size, with the <strong>Welch and pooled tests side by side</strong>. For the example below, 83.00 against 78.00 with 8 values in each group gives <strong>t(13.72) = 1.67, p = 0.1169</strong>: not significant at 0.05. You also see your data drawn as dots, the difference with its interval, and how many more people it would take.</p>
+  </section>
+
+  <div class="grid">
+
+    <!-- INPUT -->
+    <div class="card">
+      <div class="card-pad">
+        <h2 class="card-h2">Your data</h2>
+        <div class="fld"><span class="lab">What do you want to compare?</span><div class="seg tt-seg" id="ttTest" role="group" aria-label="What do you want to compare?"><button type="button" data-v="two" class="on">Two groups</button><button type="button" data-v="paired">Paired</button><button type="button" data-v="one">One group</button></div></div>
+        <p class="av-note" id="ttTestNote"></p>
+        <div class="fld"><span class="lab">How will you enter the data?</span><div class="seg tt-seg" id="ttEntry" role="group" aria-label="How will you enter the data?"><button type="button" data-v="raw" class="on">Type the numbers</button><button type="button" data-v="sum">Use summary numbers</button></div></div>
+        <div id="ttRawW">
+          <div class="fld"><label class="lab" id="ttALab" for="ttA">Numbers for “Group 1”</label><textarea class="tt-ta" id="ttA" placeholder="e.g. 78, 82, 86, 85, 73, 82, 90, 88" aria-label="Numbers for “Group 1”" spellcheck="false"></textarea></div>
+          <p class="av-note" id="ttANote"></p>
+          <div id="ttBRaw">
+          <div class="fld"><label class="lab" id="ttBLab" for="ttB">Numbers for “Group 2”</label><textarea class="tt-ta" id="ttB" placeholder="e.g. 77, 75, 79, 86, 74, 71, 73, 89" aria-label="Numbers for “Group 2”" spellcheck="false"></textarea></div>
+          <p class="av-note" id="ttBNote"></p>
+          </div>
+        </div>
+        <div id="ttSumW" style="display:none">
+          <p class="zs-sech" id="ttSum1H">Group 1</p>
+          <div class="tt-three"><label class="fld" for="ttM1"><span class="lab" id="ttM1Lab">Mean</span><div class="inp"><input id="ttM1" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 83"></div></label><label class="fld" for="ttS1"><span class="lab" id="ttS1Lab">Standard deviation</span><div class="inp"><input id="ttS1" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 5.5"></div></label><label class="fld" for="ttN1"><span class="lab" id="ttN1Lab">Number of values</span><div class="inp"><input id="ttN1" type="text" inputmode="numeric" autocomplete="off" placeholder="e.g. 8"></div></label></div>
+          <p class="av-note" id="ttSum1Note"></p>
+          <div id="ttSum2">
+            <p class="zs-sech" id="ttSum2H">Group 2</p>
+            <div class="tt-three"><label class="fld" for="ttM2"><span class="lab">Mean</span><div class="inp"><input id="ttM2" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 78"></div></label><label class="fld" for="ttS2"><span class="lab" id="ttS2Lab">Standard deviation</span><div class="inp"><input id="ttS2" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 6.4"></div></label><label class="fld" for="ttN2"><span class="lab">Number of values</span><div class="inp"><input id="ttN2" type="text" inputmode="numeric" autocomplete="off" placeholder="e.g. 8"></div></label></div>
+            <p class="av-note" id="ttSum2Note"></p>
+          </div>
+        </div>
+        <div id="ttMu0W" style="display:none">
+          <label class="fld" for="ttMu0"><span class="lab">Compare the mean with (μ₀)</span><div class="inp"><input id="ttMu0" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 100"></div></label>
+          <p class="av-note" id="ttMuNote"></p>
+        </div>
+        <div class="fld"><span class="lab" id="ttTailLab">“Group 1” is…</span><div class="seg tt-seg" id="ttTail" role="group" aria-label="“Group 1” is…"><button type="button" data-v="two" class="on">Different</button><button type="button" data-v="gt">Higher</button><button type="button" data-v="lt">Lower</button></div></div>
+        <p class="av-note" id="ttTailNote"></p>
+        <label class="fld" for="ttAlpha"><span class="lab">Significance level (α) <span class="unit">· optional</span></span><div class="inp"><input id="ttAlpha" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 0.05"></div></label>
+        <div class="chips" id="ttAlphaChips" role="group" aria-label="Common significance levels"><button type="button" data-v="0.10">0.10</button><button type="button" data-v="0.05">0.05</button><button type="button" data-v="0.01">0.01</button></div>
+        <p class="av-note" id="ttAlphaNote"></p>
+        <div class="res-hint" id="ttHint" style="display:none;text-align:left;margin:4px 0 8px"></div>
+        <div id="ttAdvIn" style="display:none">
+          <div class="proj-sep"></div>
+          <div id="ttHeadW">
+          <div class="fld"><span class="lab">Test shown in the headline</span><div class="seg tt-seg" id="ttHead" role="group" aria-label="Test shown in the headline"><button type="button" data-v="welch" class="on">Welch (recommended)</button><button type="button" data-v="pooled">Pooled (equal variances)</button></div></div>
+          <p class="av-note" id="ttHeadNote"></p>
+          </div>
+          <div id="ttSpreadW" style="display:none">
+          <div class="fld"><span class="lab">The spread you have is the</span><div class="seg tt-seg" id="ttSpread" role="group" aria-label="The spread you have is the"><button type="button" data-v="sd" class="on">Standard deviation</button><button type="button" data-v="sem">Standard error</button></div></div>
+          <p class="av-note" id="ttSpreadNote"></p>
+          </div>
+          <div id="ttD0W">
+          <p class="zs-sech">Test against a difference other than 0 <span>· optional</span></p>
+          <label class="fld" for="ttD0"><span class="lab">Difference to test against</span><div class="inp"><input id="ttD0" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 2"></div></label>
+          <p class="av-note" id="ttD0Note"></p>
+          </div>
+          <p class="zs-sech">Confidence interval <span>· optional</span></p>
+          <label class="fld" for="ttConf"><span class="lab">Confidence level <span class="unit">%</span></span><div class="inp"><input id="ttConf" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 95"></div></label>
+          <p class="av-note" id="ttConfNote"></p>
+          <p class="zs-sech">Group names <span>· optional</span></p>
+          <div class="tt-two"><label class="fld" for="ttNameA"><span class="lab">Name of group 1</span><div class="inp"><input id="ttNameA" type="text" inputmode="text" autocomplete="off" placeholder="e.g. Control"></div></label><label class="fld" for="ttNameB"><span class="lab">Name of group 2</span><div class="inp"><input id="ttNameB" type="text" inputmode="text" autocomplete="off" placeholder="e.g. Treatment"></div></label></div>
+          <p class="av-note" id="ttNameNote"></p>
+          <p class="zs-sech">Only have a t-score? <span>· optional</span></p>
+          <div class="tt-two"><label class="fld" for="ttTin"><span class="lab">t-score</span><div class="inp"><input id="ttTin" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 2.1"></div></label><label class="fld" for="ttDfIn"><span class="lab">Degrees of freedom</span><div class="inp"><input id="ttDfIn" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 14"></div></label></div>
+          <p class="av-note" id="ttTNote"></p>
+          <p class="zs-sech">Display <span>· optional</span></p>
+          <label class="fld" for="ttDec"><span class="lab">Decimal places</span><div class="inp"><input id="ttDec" type="text" inputmode="numeric" autocomplete="off" placeholder="e.g. 3"></div></label>
+          <p class="av-note" id="ttDecNote"></p>
+        </div>
+        <div class="add-row split" style="margin-top:16px">
+          <button class="linkbtn" id="ttClear" type="button">Clear fields</button>
+          <button class="advbtn" id="ttAdvBtn" type="button">
+            <span id="ttAdvBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div class="card">
+      <div class="card-pad">
+        <div class="bf-res">
+          <div class="res-lab" id="ttLab">p-value</div>
+          <div class="res-big"><span id="ttBig">—</span></div>
+          <div class="res-sub" id="ttSub" data-empty="Type the numbers of your groups to see the p-value, the interval and a picture of your data.">Type the numbers of your groups to see the p-value, the interval and a picture of your data.</div>
+        </div>
+        <div id="ttBody" style="display:none">
+          <p class="res-tip adv-tip" id="ttTip"></p>
+          <div id="ttVisWrap" style="display:none">
+            <p class="bm-h">Your data and the difference</p>
+            <div class="tt-vis" id="ttVis"></div>
+            <p class="cb-note" id="ttVisKey"></p>
+          </div>
+          <div id="ttCurveWrap" style="display:none">
+            <p class="bm-h">Where your t-score falls</p>
+            <div class="tt-vis" id="ttCurve"></div>
+            <p class="cb-note" id="ttCurveKey"></p>
+          </div>
+          <div id="ttCmpWrap" style="display:none">
+            <p class="bm-h">Welch and pooled, side by side</p>
+            <div class="tt-tbl"><table class="dtable" id="ttCmp"></table></div>
+            <p class="cb-note" id="ttCmpNote"></p>
+          </div>
+          <div id="ttNumsWrap" style="display:none">
+            <p class="bm-h">The numbers <button class="linkbtn" type="button" data-copy="ttCopyTxt" style="margin-left:8px">Copy result</button></p>
+            <div class="tt-tbl"><table class="dtable" id="ttNums"></table></div>
+            <div id="ttCopyTxt" style="display:none"></div>
+          </div>
+          <div id="ttGrpWrap" style="display:none">
+            <p class="bm-h">About each group</p>
+            <div class="tt-tbl"><table class="dtable" id="ttGrp"></table></div>
+            <p class="cb-note" id="ttGrpKey"></p>
+          </div>
+          <details class="faq" id="ttDevWrap" style="display:none"><summary>Show each value’s difference from its mean</summary>
+            <div class="tt-tbl"><table class="dtable" id="ttDev"></table></div>
+          </details>
+          <div id="ttWhatWrap" style="display:none">
+            <p class="bm-h">What would it take?</p>
+            <div class="tt-tbl"><table class="dtable" id="ttWhat"></table></div>
+            <p class="cb-note" id="ttWhatKey"></p>
+          </div>
+          <div id="ttWriteWrap" style="display:none">
+            <p class="bm-h">Write it up <button class="linkbtn" type="button" data-copy="ttWrite" style="margin-left:8px">Copy sentence</button></p>
+            <p class="tt-write" id="ttWrite"></p>
+          </div>
+          <div id="ttStepsWrap" style="display:none">
+            <p class="bm-h">How it is worked out</p>
+            <ol class="tt-steps" id="ttSteps"></ol>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- mobile sticky bar -->
+  <div class="mbar" id="mbar">
+    <span class="mbar-lab" id="ttMLab">p-value</span>
+    <div class="mbar-vals"><b id="ttMVal">—</b></div>
+  </div>
+
+  <div class="related-calcs">
+    <p class="related-calcs-h">More calculators that may interest you</p>
+    <div class="pills">
+      <a class="pill" href="/p-value-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 24c4 0 6-16 13-16s9 16 13 16"/><path d="M3 24h26"/></svg>
+        P-Value Calculator
+      </a>
+      <a class="pill" href="/confidence-interval-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 16h24M4 11v10M28 11v10"/></svg>
+        Confidence Interval Calculator
+      </a>
+      <a class="pill" href="/z-score-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 18c3 0 4-12 9-12s6 12 9 12"/><path d="M12 6v14"/></svg>
+        Z-Score Calculator
+      </a>
+      <a class="pill" href="/standard-deviation-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg>
+        Standard Deviation Calculator
+      </a>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use the t-test calculator</h2>
+        <p>Choose what you are comparing: <strong>two groups</strong>, the <strong>same people before and after</strong>, or <strong>one group against a number</strong>. Paste the numbers of each group (a column from Excel works), or switch to summary numbers and type the mean, standard deviation and number of values. The p-value, the confidence interval and a picture of your data appear as you type.</p>
+        <p>Pick “Different”, “Higher” or “Lower” for a two-tailed or one-tailed test and leave the significance level empty for 0.05. Go advanced to test against a difference other than 0, change the confidence level, name your groups, type the standard error instead of the standard deviation, or type just a t-score and degrees of freedom.</p>
+
+        <h2 id="ttFormulas">The formulas</h2>
+        <div class="formula">
+          t = (x̄ − μ₀) ÷ (s ÷ √n)
+          <small>PAIRED: THE SAME WITH THE DIFFERENCES · TWO GROUPS (WELCH): t = (x̄₁ − x̄₂ − d₀) ÷ √(s₁² ÷ n₁ + s₂² ÷ n₂)</small>
+        </div>
+        <p>For the pooled test, replace the square root by sₚ × √(1 ÷ n₁ + 1 ÷ n₂), where sₚ² = ((n₁ − 1)s₁² + (n₂ − 1)s₂²) ÷ (n₁ + n₂ − 2). Worked out with this calculator for 8 values in each group (means 83.00 and 78.00, standard deviations 5.53 and 6.39): Welch t = 1.6733 with 13.72 degrees of freedom and p = 0.1169; pooled t = 1.6733 with 14 degrees of freedom and p = 0.1165. The 95% interval for the difference of 5.00 runs from −1.42 to 11.42 (Welch) and from −1.41 to 11.41 (pooled).</p>
+        <h2 id="ttWhich">Which t-test should I use?</h2>
+        <table class="dtable"><thead><tr><th>Your data</th><th>Test</th></tr></thead><tbody><tr><td>One group, compared with a known number (a target, a standard, a claim)</td><td>One-sample t-test</td></tr><tr><td>The same people or things measured twice (before and after, left and right)</td><td>Paired t-test</td></tr><tr><td>Two separate groups, spreads clearly different or unknown</td><td>Welch two-sample t-test</td></tr><tr><td>Two separate groups with the same spread</td><td>Pooled two-sample t-test (Welch gives almost the same answer)</td></tr><tr><td>Three or more groups</td><td>Not a t-test: use analysis of variance</td></tr></tbody></table>
+        <h2>Paired and one-sample examples</h2>
+        <p><strong>Paired:</strong> blood pressure before (120, 132, 118, 140, 125, 135, 128, 122) and after (115, 128, 119, 131, 120, 130, 126, 117) for 8 people. The differences have a mean of 4.25 and a standard deviation of 2.87, so t(7) = 4.19 and p = 0.004065: significant at 0.05.</p>
+        <p><strong>One sample:</strong> 10 measurements (102, 98, 110, 95, 104, 108, 99, 106, 101, 97) compared with a target of 100. The mean is 102.00, t(9) = 1.28 and p = 0.2328: not significant at 0.05.</p>
+      </div>
+
+      <div>
+        <h2>Critical t-values</h2>
+        <p>A t-score beyond the critical value for your degrees of freedom is significant at that level. Two-tailed values; for a one-tailed test use the column of twice the level (for example the α = 0.10 column for a one-tailed test at 0.05).</p>
+        <table class="dtable"><thead><tr><th>Degrees of freedom</th><th>α = 0.10</th><th>α = 0.05</th><th>α = 0.01</th></tr></thead><tbody><tr><td>1</td><td>6.314</td><td>12.706</td><td>63.657</td></tr><tr><td>2</td><td>2.920</td><td>4.303</td><td>9.925</td></tr><tr><td>3</td><td>2.353</td><td>3.182</td><td>5.841</td></tr><tr><td>4</td><td>2.132</td><td>2.776</td><td>4.604</td></tr><tr><td>5</td><td>2.015</td><td>2.571</td><td>4.032</td></tr><tr><td>6</td><td>1.943</td><td>2.447</td><td>3.707</td></tr><tr><td>7</td><td>1.895</td><td>2.365</td><td>3.499</td></tr><tr><td>8</td><td>1.860</td><td>2.306</td><td>3.355</td></tr><tr><td>9</td><td>1.833</td><td>2.262</td><td>3.250</td></tr><tr><td>10</td><td>1.812</td><td>2.228</td><td>3.169</td></tr><tr><td>12</td><td>1.782</td><td>2.179</td><td>3.055</td></tr><tr><td>15</td><td>1.753</td><td>2.131</td><td>2.947</td></tr><tr><td>20</td><td>1.725</td><td>2.086</td><td>2.845</td></tr><tr><td>25</td><td>1.708</td><td>2.060</td><td>2.787</td></tr><tr><td>30</td><td>1.697</td><td>2.042</td><td>2.750</td></tr><tr><td>40</td><td>1.684</td><td>2.021</td><td>2.704</td></tr><tr><td>60</td><td>1.671</td><td>2.000</td><td>2.660</td></tr><tr><td>120</td><td>1.658</td><td>1.980</td><td>2.617</td></tr><tr><td>∞ (normal curve)</td><td>1.645</td><td>1.960</td><td>2.576</td></tr></tbody></table>
+        <h2 id="ttReading">Reading the result</h2>
+        <p>The <strong>p-value</strong> is the probability of a difference at least as large as yours if there were really none. Compare it with your significance level α: below it, the result is called significant. The <strong>confidence interval</strong> shows the range of differences the data are consistent with; if it includes 0 (or the value you test against), the result is not significant at the matching level. <strong>Cohen’s d</strong> divides the difference by the spread, so it shows how big the difference is compared with the variation, not just whether it is detectable. A significant result with a tiny d can be unimportant; a non-significant result from a small sample can still hide a real difference, which is what the “What would it take?” table helps you judge.</p>
+        <h2>Check against a published example</h2>
+        <p>The NIST/SEMATECH handbook compares the fuel economy of 249 US cars (mean 20.14458, standard deviation 6.4147) with 79 Japanese cars (mean 30.48101, standard deviation 6.10771) using the pooled test. This calculator, given those summary numbers, returns t = −12.6206 with 326 degrees of freedom; the two-tailed critical value is 1.9673 and the one-tailed one 1.6495, so the means are different at the 0.05 level.</p>
+        <h2>How many people do I need?</h2>
+        <p>With the example data above (8 per group), the calculator reports that about 13 per group would give p below 0.05 if the means and standard deviations stayed the same, and 24 per group would give 80% power to detect the observed difference. The power of the test as run is 34.4%.</p>
+
+        <h2>Related tools</h2>
+        <p>To turn any t-score into a p-value or find critical values use the <a href="/p-value-calculator/">p-value calculator</a>; for an interval around one mean the <a href="/confidence-interval-calculator/">confidence interval calculator</a>; to standardise a value the <a href="/z-score-calculator/">z-score calculator</a>; and to find a spread the <a href="/standard-deviation-calculator/">standard deviation calculator</a>.</p>
+        <h2>Sources</h2>
+        <ul>
+          <li>The one-sample, paired and two-sample t statistics, the pooled formula, the Welch–Satterthwaite degrees of freedom, the threshold form of the null hypothesis (a difference of d₀) and the critical regions for the two-tailed and one-tailed alternatives follow the NIST/SEMATECH e-Handbook of Statistical Methods, section 1.3.5.3 “Two-Sample t-Test for Equal Means”. The interval estimate x̄ ± t × s ÷ √N with N − 1 degrees of freedom follows section 1.3.5.2 “Confidence Limits for the Mean”. Both pages read on 2026-11-22.</li>
+          <li>Check: with the handbook’s miles-per-gallon summary (US cars n = 249, mean 20.14458, standard deviation 6.4147; Japanese cars n = 79, mean 30.48101, standard deviation 6.10771) this calculator gives t = −12.6206 with 326 degrees of freedom, and critical values 1.9673 (two-tailed) and 1.6495 (one-tailed), the values printed in the handbook.</li>
+          <li>The feature set was compared with the t-test tools of Omnicalculator, GraphPad QuickCalcs, Social Science Statistics and Stats Kingdom, all opened on 2026-11-22. The statements about assumptions (independent values, roughly bell-shaped data) follow the descriptions on those pages. Probabilities come from the t distribution of this site’s p-value calculator. Power uses the noncentral t distribution, computed numerically.</li>
+          <li>No rule-of-thumb labels (small, medium, large) are attached to Cohen’s d, because no primary source for them was read.</li>
+        </ul>
+        <p><small>For information only. Check the assumptions of the test and your own data before drawing conclusions.</small></p>
+      </div>
+    </div>
+
+    <h2 id="ttFaq" style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>What is a t-test?</summary><p>A t-test checks whether an average differs from a number, or whether two averages differ, by comparing the gap with the amount of random variation expected from the sample sizes. The result is a t-score and a p-value.</p></details>
+    <details class="faq"><summary>Which t-test should I use?</summary><p>Use a one-sample t-test to compare one group with a known number, a paired t-test for the same people measured twice, and a two-sample t-test for two separate groups. When unsure about two groups, choose Welch: it does not assume equal variances. This page shows Welch and pooled together.</p></details>
+    <details class="faq"><summary>What is the difference between Welch and pooled?</summary><p>The pooled test assumes both groups have the same variance and uses one combined spread, with n₁ + n₂ − 2 degrees of freedom. Welch uses each group’s own variance and the Welch–Satterthwaite degrees of freedom. For the example on this page, Welch gives p = 0.1169 and pooled p = 0.1165.</p></details>
+    <details class="faq"><summary>How do I read the p-value?</summary><p>The p-value is the probability of a result at least as extreme as yours if there were really no difference. If it is below your significance level α (usually 0.05), the result is called statistically significant. A p-value of 0.1169 is above 0.05, so the example is not significant.</p></details>
+    <details class="faq"><summary>One-tailed or two-tailed?</summary><p>Use two-tailed to test for a difference in either direction. Use one-tailed (higher or lower) only when you decided before looking at the data that only one direction matters. The one-tailed p-value is half the two-tailed one when the difference points the chosen way.</p></details>
+    <details class="faq"><summary>What do the degrees of freedom mean?</summary><p>For one sample and paired tests they are n − 1. For the pooled two-sample test n₁ + n₂ − 2. For Welch they are a formula that is usually not a whole number: 13.72 in the example.</p></details>
+    <details class="faq"><summary>What does the confidence interval tell me?</summary><p>It is a range of differences the data are consistent with. For the example it runs from −1.42 to 11.42, which includes 0, matching the non-significant p-value. If an interval does not include the tested value, the result is significant at the matching level.</p></details>
+    <details class="faq"><summary>How many people do I need?</summary><p>The “What would it take” table shows how many people per group would give p below α if the means and spreads stayed the same (13 per group in the example), and how many are needed for 80% power at the difference you saw (24 per group). It is a planning guide, not proof of anything.</p></details>
+    <details class="faq"><summary>What are the assumptions of a t-test?</summary><p>The values are independent and the data are roughly bell-shaped, especially with small samples. Check the dots in the picture for outliers; the tables flag values beyond 1.5 × the interquartile range. With very small samples and strong outliers, other tests may fit better.</p></details>
+    <details class="faq"><summary>Can I use summary numbers instead of the data?</summary><p>Yes. Choose “Use summary numbers” and type the mean, standard deviation and number of values of each group. In Go advanced you can type the standard error instead of the standard deviation, or just a t-score and degrees of freedom to get the p-value.</p></details>
+  </section>
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+      <div class="footer-stack">
+<div class="footer-col" style="order:1">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+          <li><a href="/paint-calculator/">Paint Calculator</a></li>
+          <li><a href="/wallpaper-calculator/">Wallpaper Calculator</a></li>
+          <li><a href="/square-footage-calculator/">Square Footage Calculator</a></li>
+          <li><a href="/tape-measure-fraction-calculator/">Tape Measure Fraction Calculator</a></li>
+          <li><a href="/stair-calculator/">Stair Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:5">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Cooking &amp;</span> <span class="ft2">Kitchen</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/recipe-converter/">Recipe Converter</a></li>
+          <li><a href="/turkey-cooking-time-calculator/">Turkey Cooking Time Calculator</a></li>
+          <li><a href="/turkey-thawing-time-calculator/">Turkey Thawing Time Calculator</a></li>
+          <li><a href="/turkey-size-calculator/">Turkey Size Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:5">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Medication &amp;</span> <span class="ft2">Lab</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/mg-to-ml-calculator/">mg to mL Calculator</a></li>
+          <li><a href="/dilution-calculator/">Dilution Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:6">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Money &amp;</span> <span class="ft2">Finance</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/mortgage-calculator/">Mortgage Calculator</a></li>
+          <li><a href="/loan-calculator/">Loan Calculator</a></li>
+          <li><a href="/auto-loan-calculator/">Auto Loan Calculator</a></li>
+          <li><a href="/car-sales-tax-calculator/">Car Sales Tax Calculator</a></li>
+          <li><a href="/overtime-calculator/">Overtime Calculator</a></li>
+          <li><a href="/salary-calculator/">Salary Calculator</a></li>
+          <li><a href="/markup-calculator/">Markup Calculator</a></li>
+          <li><a href="/profit-margin-calculator/">Profit Margin Calculator</a></li>
+          <li><a href="/discount-calculator/">Discount Calculator</a></li>
+          <li><a href="/commission-calculator/">Commission Calculator</a></li>
+          <li><a href="/realtor-commission-calculator/">Realtor Commission Calculator</a></li>
+          <li><a href="/unit-price-calculator/">Unit Price Calculator</a></li>
+          <li><a href="/compound-interest-calculator/">Compound Interest Calculator</a></li>
+          <li><a href="/amortization-calculator/">Amortization Calculator</a></li>
+          <!--STAXFOOT:START-->
+          <li><a href="/sales-tax-calculator/">Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/california/">California Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/chicago/">Chicago Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/florida/">Florida Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/las-vegas/">Las Vegas Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/los-angeles/">Los Angeles Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/michigan/">Michigan Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/missouri/">Missouri Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/north-carolina/">North Carolina Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/ohio/">Ohio Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/texas/">Texas Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/virginia/">Virginia Sales Tax Calculator</a></li>
+          <!--STAXFOOT:END-->
+          <li><a href="/tip-calculator/">Tip Calculator</a></li>
+          <li><a href="/how-much-to-tip/">How Much to Tip</a></li>
+        </ul>
+      </div>
+      </div>
+
+      <div class="footer-right">
+<div class="footer-col footer-col--two" style="order:2">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/vo2-max-calculator/">VO2 Max Calculator</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/bmi-calculator/">BMI Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/ideal-weight-calculator/">Ideal Weight Calculator</a></li>
+          <li><a href="/lean-body-mass-calculator/">Lean Body Mass Calculator</a></li>
+          <li><a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio Calculator</a></li>
+          <li><a href="/gmi-calculator/">GMI Calculator</a></li>
+          <li><a href="/a1c-calculator/">A1C Calculator</a></li>
+          <li><a href="/calorie-calculator/">Calorie Calculator</a></li>
+          <li><a href="/calorie-deficit-calculator/">Calorie Deficit Calculator</a></li>
+          <li><a href="/bmr-calculator/">BMR Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/water-intake-calculator/">Water Intake Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/protein-intake-calculator/">Protein Intake Calculator</a></li>
+          <li><a href="/steps-to-miles-calculator/">Steps to Miles Calculator</a></li>
+          <li><a href="/dog-age-calculator/">Dog Age Calculator</a></li>
+          <li><a href="/cat-age-calculator/">Cat Age Calculator</a></li>
+          <li><a href="/calories-burned-calculator/">Calories Burned Calculator</a></li>
+          <li><a href="/calories-burned-walking-calculator/">Calories Burned Walking Calculator</a></li>
+          <li><a href="/calories-burned-running-calculator/">Calories Burned Running Calculator</a></li>
+          <li><a href="/keto-calculator/">Keto Calculator</a></li>
+          <li><a href="/net-carb-calculator/">Net Carb Calculator</a></li>
+          <li><a href="/intermittent-fasting-calculator/">Intermittent Fasting Calculator</a></li>
+          <li><a href="/bsa-calculator/">BSA Calculator</a></li>
+          <li><a href="/dog-food-calculator/">Dog Food Calculator</a></li>
+          <li><a href="/ffmi-calculator/">FFMI Calculator</a></li>
+          <li><a href="/bulking-calculator/">Bulking Calculator</a></li>
+          <li><a href="/weight-loss-calculator/">Weight Loss Calculator</a></li>
+          <li><a href="/weight-loss-percentage-calculator/">Weight Loss Percentage Calculator</a></li>
+          <li><a href="/max-heart-rate-calculator/">Max Heart Rate Calculator</a></li>
+          <li><a href="/caffeine-calculator/">Caffeine Calculator</a></li>
+          <li><a href="/caffeine-half-life-calculator/">Caffeine Half Life Calculator</a></li>
+          <li><a href="/fiber-calculator/">Fiber Calculator</a></li>
+          <li><a href="/creatine-calculator/">Creatine Calculator</a></li>
+          <li><a href="/vitamin-d-calculator/">Vitamin D Calculator</a></li>
+          <li><a href="/body-recomposition-calculator/">Body Recomposition Calculator</a></li>
+        </ul>
+      </div>
+
+        <div class="footer-sub">
+<div class="footer-subcol">
+<div class="footer-col" style="order:3">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/semester-grade-calculator/">Semester Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+          <li><a href="/grade-curve-calculator/">Grade Curve Calculator</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:START-->
+<div class="footer-col" style="order:7">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Unit</span> <span class="ft2">Converters</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/unit-converter/">Unit Converter</a></li>
+          <li><a href="/length-converter/">Length Converter</a></li>
+          <li><a href="/weight-converter/">Weight Converter</a></li>
+          <li><a href="/volume-converter/">Volume Converter</a></li>
+          <li><a href="/temperature-converter/">Temperature Converter</a></li>
+          <li><a href="/area-converter/">Area Converter</a></li>
+          <li><a href="/speed-converter/">Speed Converter</a></li>
+          <li><a href="/data-storage-converter/">Data Storage Converter</a></li>
+          <li><a href="/cooking-converter/">Cooking Measurement Converter</a></li>
+          <li><a href="/px-to-rem-converter/">PX to REM Converter</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:END-->
+</div>
+
+<div class="footer-col" style="order:4">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/fraction-calculator/">Fraction Calculator</a></li>
+          <li><a href="/standard-deviation-calculator/">Standard Deviation Calculator</a></li>
+          <li><a href="/p-value-calculator/">P-Value Calculator</a></li>
+          <li><a href="/confidence-interval-calculator/">Confidence Interval Calculator</a></li>
+          <li><a href="/z-score-calculator/">Z-Score Calculator</a></li>
+          <li><a href="/t-test-calculator/">T-Test Calculator</a></li>
+          <li><a href="/scientific-notation-calculator/">Scientific Notation Calculator</a></li>
+          <li><a href="/weighted-average-calculator/">Weighted Average Calculator</a></li>
+          <li><a href="/average-calculator/">Average Calculator</a></li>
+          <li><a href="/batting-average-calculator/">Batting Average Calculator</a></li>
+          <li><a href="/stock-average-calculator/">Stock Average Calculator</a></li>
+          <li><a href="/dice-average-calculator/">Dice Average Calculator</a></li>
+          <li><a href="/time-average-calculator/">Time Average Calculator</a></li>
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+          <li><a href="/percentage-change-calculator/">Percentage Change Calculator</a></li>
+          <li><a href="/age-calculator/">Age Calculator</a></li>
+          <li><a href="/date-calculator/">Date Calculator</a></li>
+          <li><a href="/time-calculator/">Time Calculator</a></li>
+          <li><a href="/hours-calculator/">Hours Calculator</a></li>
+          <li><a href="/seconds-to-hours-calculator/">Seconds to Hours Calculator</a></li>
+          <li><a href="/minutes-to-hours-calculator/">Minutes to Hours Calculator</a></li>
+          <li><a href="/seconds-to-minutes-calculator/">Seconds to Minutes Calculator</a></li>
+          <li><a href="/triangle-calculator/">Triangle Calculator</a></li>
+          <li><a href="/random-number-generator/">Random Number Generator</a></li>
+        </ul>
+      </div>
+        </div>
+      </div>
+
+      <!--PAYFOOT:START-->
+      <div class="footer-col footer-col--wide">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Paycheck</span> <span class="ft2">Calculators</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/paycheck-calculator/">Paycheck Calculator (all states)</a></li>
+          <li><a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arkansas/">Arkansas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/california/">California Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/hawaii/">Hawaii Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/louisiana/">Louisiana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nebraska/">Nebraska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/oklahoma/">Oklahoma Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/utah/">Utah Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wisconsin/">Wisconsin Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a></li>
+        </ul>
+      </div>
+      <!--PAYFOOT:END-->
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/blog/">Blog</a>
+      <span aria-hidden="true">·</span>
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/whats-new/">What's new</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Page last updated: <time datetime="2026-11-21">November 21, 2026</time>. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+</div>
+
+<script src="/assets/app.js?v=361"></script>
+<script>CalcThis.initTtestCalc();</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>

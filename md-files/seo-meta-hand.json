@@ -112,6 +112,10 @@
     "t": "Fraction Calculator — Add, Subtract, Multiply & Divide",
     "d": "Free fraction calculator: add, subtract, multiply and divide fractions, mixed numbers and decimals, simplify and convert, with a live bar diagram and steps."
   },
+  "/t-test-calculator/": {
+    "t": "T-Test Calculator: One-Sample, Two-Sample & Paired",
+    "d": "T-test calculator: paste your numbers or type means, SDs and n. Welch and pooled side by side, p-value, confidence interval, effect size and power."
+  },
   "/z-score-calculator/": {
     "t": "Z-Score Calculator: Score, Percentile & Probability",
     "d": "Z-score calculator: find the z-score of a value from the mean and standard deviation, or work back from a z-score or percentile. Compare two scores."

@@ -26774,6 +26774,501 @@ CalcThis.initZscoreCalc = function () {
 };
 /* ZSCORE:END */
 
+/* TTEST:BEGIN */
+/* =========================================================
+   T-TEST calculator (/t-test-calculator/). Competitors opened live (2026-11-22): Omnicalculator (type of test, tails, p-value or critical values from a TYPED t-score and degrees of freedom only),
+   GraphPad QuickCalcs (raw rows, mean + SEM + N, mean + SD + N; unpaired, Welch, paired; two-tailed), Social Science Statistics (two pasted lists, Welch or pooled, alpha, tails, CI, citation sentences),
+   Stats Kingdom (one-sample, pooled, Welch, paired; raw or summary; expected difference; effect size, power, normality, outliers, t curve, APA sentence, R code).
+   Notes: md-files/calcthis-ttest-research.md. Sources read 2026-11-22: NIST/SEMATECH e-Handbook 1.3.5.3 (two-sample t-test, Welch-Satterthwaite degrees of freedom, pooled formula, threshold d0,
+   critical regions) and 1.3.5.2 (confidence limits for the mean, t with N - 1 degrees of freedom).
+   Maths: one sample / paired (differences): t = (mean - d0) / (s / sqrt n), df = n - 1. Two samples: Welch t = (m1 - m2 - d0) / sqrt(s1^2/n1 + s2^2/n2) with Welch-Satterthwaite df; pooled t uses
+   sp^2 = ((n1-1)s1^2 + (n2-1)s2^2) / (n1+n2-2), df = n1 + n2 - 2. p from the t distribution of CalcThis.pvalueEngine. Cohen's d = difference / pooled SD (two groups), mean difference / SD of the
+   differences (paired), (mean - mu0) / s (one sample). Power: noncentral t by numerical integration over the chi distribution; counts of people use equal group sizes and the pooled formula.
+   ========================================================= */
+/* TTEST-ENGINE:START */
+CalcThis.ttEngine = (function () {
+  var P = CalcThis.pvalueEngine, BIGDF = 1e6;
+  function cdfT(x, df) { return df > BIGDF ? P.cdf('z', {}, x) : P.cdf('t', { df: df }, x); }
+  function tinvR(a, df) { return df > BIGDF ? P.inv('z', {}, a, 'R') : P.inv('t', { df: df }, a, 'R'); }
+  function pvals(t, df) { var c = cdfT(t, df), two = 2 * Math.min(c.lo, c.hi); return { left: c.lo, right: c.hi, two: two > 1 ? 1 : two }; }
+  function pTail(pv, tail) { return tail === 'gt' ? pv.right : tail === 'lt' ? pv.left : pv.two; }
+  /* positive critical value: two-tailed alpha/2 in each tail, one-tailed alpha in one tail */
+  function crit(alpha, df, tail) { return tail === 'two' ? tinvR(alpha / 2, df) : tinvR(alpha, df); }
+  function quant(s, p) { var h = (s.length - 1) * p, lo = Math.floor(h); return lo + 1 < s.length ? s[lo] + (h - lo) * (s[lo + 1] - s[lo]) : s[lo]; }
+  /* summary of a list of numbers: sample (n - 1) variance, skewness (adjusted G1, n >= 3), Tukey 1.5 IQR outliers with quartiles by linear interpolation */
+  function describe(v) {
+    var n = v.length, i, m = 0, ss = 0, c = 0, sd, s;
+    for (i = 0; i < n; i++) m += v[i]; m /= n;
+    for (i = 0; i < n; i++) ss += (v[i] - m) * (v[i] - m);
+    sd = n > 1 ? Math.sqrt(ss / (n - 1)) : 0;
+    s = v.slice().sort(function (a, b) { return a - b; });
+    var q1 = quant(s, 0.25), q3 = quant(s, 0.75), iqr = q3 - q1, out = 0;
+    for (i = 0; i < n; i++) if (v[i] < q1 - 1.5 * iqr || v[i] > q3 + 1.5 * iqr) out++;
+    var sk = null; if (n >= 3 && sd > 0) { for (i = 0; i < n; i++) c += Math.pow((v[i] - m) / sd, 3); sk = n / ((n - 1) * (n - 2)) * c; }
+    return { n: n, m: m, ss: ss, vr: sd * sd, s: sd, sem: sd / Math.sqrt(n), skew: sk, min: s[0], max: s[n - 1], q1: q1, q3: q3, out: out };
+  }
+  /* kind: one | paired | welch | pooled. a, b = { m, s, n }. d0 = value under H0 (mu0 for one, the difference otherwise) */
+  function run(kind, a, b, d0) {
+    var diff, se, df, sp = null, v1, v2, sdv;
+    if (kind === 'one' || kind === 'paired') { diff = a.m; se = a.s / Math.sqrt(a.n); df = a.n - 1; sdv = a.s; }
+    else {
+      diff = a.m - b.m; v1 = a.s * a.s / a.n; v2 = b.s * b.s / b.n;
+      sp = Math.sqrt(((a.n - 1) * a.s * a.s + (b.n - 1) * b.s * b.s) / (a.n + b.n - 2)); sdv = sp;
+      if (kind === 'pooled') { se = sp * Math.sqrt(1 / a.n + 1 / b.n); df = a.n + b.n - 2; }
+      else { se = Math.sqrt(v1 + v2); df = Math.pow(v1 + v2, 2) / ((v1 > 0 ? v1 * v1 / (a.n - 1) : 0) + (v2 > 0 ? v2 * v2 / (b.n - 1) : 0)); }
+    }
+    return { kind: kind, diff: diff, d0: d0, se: se, df: df, t: (diff - d0) / se, sd: sdv, cohen: sdv > 0 ? (diff - (kind === 'one' ? d0 : 0)) / sdv : null };
+  }
+  /* interval estimate: diff +- t(1 - (1 - level)/2, df) * se */
+  function ci(r, level) { var m = tinvR((1 - level) / 2, r.df), me = m * r.se; return { c: m, me: me, lo: r.diff - me, hi: r.diff + me }; }
+  /* P(T' <= x) for the noncentral t with v degrees of freedom and noncentrality dl: integral over the chi distribution of Phi(x s / sqrt v - dl) */
+  function nct(x, v, dl) {
+    if (v > BIGDF) return P.cdf('z', {}, x - dl).lo;
+    var lg = P.lgamma(v / 2), s0 = Math.sqrt(v), a = Math.max(0, s0 - 9), b = s0 + 9, N = 400, h = (b - a) / N, sum = 0, i, s, f, w, g, r = Math.sqrt(v);
+    for (i = 0; i <= N; i++) {
+      s = a + i * h;
+      f = s > 0 ? Math.exp((1 - v / 2) * Math.LN2 + (v - 1) * Math.log(s) - s * s / 2 - lg) : (v === 1 ? Math.exp(0.5 * Math.LN2 - lg) : 0);
+      g = P.cdf('z', {}, x * s / r - dl).lo; w = (i === 0 || i === N) ? 1 : (i % 2 ? 4 : 2); sum += w * f * g;
+    }
+    sum = sum * h / 3; return sum < 0 ? 0 : sum > 1 ? 1 : sum;
+  }
+  function power(tail, alpha, df, dl) {
+    var c = crit(alpha, df, tail), p;
+    if (tail === 'gt') p = 1 - nct(c, df, dl); else if (tail === 'lt') p = nct(-c, df, dl); else p = 1 - nct(c, df, dl) + nct(-c, df, dl);
+    return p < 0 ? 0 : p > 1 ? 1 : p;
+  }
+  function first(pred) {
+    var lo, hi, m; if (pred(2)) return 2; lo = 2; hi = 4;
+    while (!pred(hi)) { lo = hi; hi *= 2; if (hi > 1e7) { if (!pred(1e7)) return Infinity; hi = 1e7; break; } }
+    while (hi - lo > 1) { m = Math.floor((lo + hi) / 2); if (pred(m)) hi = m; else lo = m; }
+    return hi;
+  }
+  /* people needed (per group, pairs or people) keeping the same means and spread: for p < alpha, and for 80% power. null = the difference points the wrong way, Infinity = more than 10,000,000.
+     o: { two (bool), diff, d0, s1, s2, s, tail, alpha } */
+  function plan(o) {
+    var eff = o.diff - o.d0, ok = o.tail === 'two' ? eff !== 0 : (o.tail === 'gt' ? eff > 0 : eff < 0);
+    if (!ok) return { sig: null, pow: null };
+    function se(n) { return o.two ? Math.sqrt((o.s1 * o.s1 + o.s2 * o.s2) / n) : o.s / Math.sqrt(n); }
+    function df(n) { return o.two ? 2 * n - 2 : n - 1; }
+    function sigAt(n) { var t = eff / se(n), c = crit(o.alpha, df(n), o.tail); return o.tail === 'lt' ? t < -c : o.tail === 'gt' ? t > c : Math.abs(t) > c; }
+    function powAt(n) { return power(o.tail, o.alpha, df(n), eff / se(n)) >= 0.8; }
+    return { sig: first(sigAt), pow: first(powAt) };
+  }
+  function niceTicks(lo, hi, want) {
+    var span = hi - lo, raw, mag, f, step, t0, out = [], v;
+    if (!(span > 0)) { span = Math.abs(lo) || 1; lo -= span / 2; hi += span / 2; span = hi - lo; }
+    raw = span / want; mag = Math.pow(10, Math.floor(Math.log(raw) / Math.LN10)); f = raw / mag; step = (f < 1.5 ? 1 : f < 3 ? 2 : f < 7 ? 5 : 10) * mag;
+    t0 = Math.ceil(lo / step - 1e-9) * step; for (v = t0; v <= hi + step * 1e-9; v += step) out.push(Math.round(v / step) * step);
+    return { ticks: out, step: step };
+  }
+  return { cdfT: cdfT, tinvR: tinvR, pvals: pvals, pTail: pTail, crit: crit, describe: describe, run: run, ci: ci, nct: nct, power: power, plan: plan, niceTicks: niceTicks, parseList: CalcThis.ciEngine.parseList, dens: function (x, df) { return df > BIGDF ? P.dens('z', {}, x) : P.dens('t', { df: df }, x); } };
+})();
+/* TTEST-ENGINE:END */
+
+/* =========================================================
+   CalcThis.initTtestCalc() - ids tt*. Engine CalcThis.ttEngine.
+   ========================================================= */
+CalcThis.initTtestCalc = function () {
+  var E = CalcThis.ttEngine, P = CalcThis.pvalueEngine;
+  var $ = function (id) { return document.getElementById(id); };
+  if (!$('ttA')) return;
+  var st = { test: 'two', entry: 'raw', tail: 'two', head: 'welch', spread: 'sd', adv: false, last: null };
+  var NUM = /^[+-]?(\d+\.?\d*|\.\d+)(e[+-]?\d+)?$/i;
+  function num(raw) {
+    var s = String(raw == null ? '' : raw).replace(/[\s ]/g, '').replace(/−/g, '-');
+    if (s === '') return { empty: true };
+    var pc = false; if (/%$/.test(s)) { pc = true; s = s.slice(0, -1); }
+    if (/^[+-]?\d{1,3}(,\d{3})+(\.\d*)?$/.test(s)) s = s.replace(/,/g, '');
+    if (/^[+-]?\.?$/.test(s) || /^[+-]?(\d+\.?\d*|\.\d+)e[+-]?$/i.test(s)) return { partial: true };
+    if (!NUM.test(s)) return { err: 'junk' };
+    var v = parseFloat(s); if (!isFinite(v) || Math.abs(v) > 1e9) return { err: 'big' };
+    return { v: v, pc: pc };
+  }
+  function short(raw) { return String(raw).trim().slice(0, 14); }
+  function setNote(id, t) { var e = $(id); if (!e) return; e.textContent = t || ''; e.style.display = t ? '' : 'none'; }
+  function show(id, on) { var e = $(id); if (e) e.style.display = on ? '' : 'none'; }
+  function setHint(m, at) {
+    var h = $('ttHint'); m = m ? m.charAt(0).toUpperCase() + m.slice(1) : m; h.textContent = m || ''; h.style.display = m ? 'block' : 'none';
+    if (m && at) {
+      var el = $(at), f = el && (el.closest('.fld') || el), par = f && f.parentNode;
+      if (par && par.classList && (par.classList.contains('tt-two') || par.classList.contains('tt-three'))) f = par;
+      var nx = f && f.nextElementSibling; if (nx && nx.classList && nx.classList.contains('chips')) f = nx;
+      if (f && f.nextSibling !== h && f.parentNode) f.parentNode.insertBefore(h, f.nextSibling);
+    }
+  }
+  function sg(x) { return String(x).replace('-', '−'); }
+  function fnum(x) { return sg(String(Math.round(x * 1e6) / 1e6)); }
+  function fixed(x, d) { var s = x.toFixed(d); if (/^-0(\.0*)?$/.test(s)) s = s.slice(1); return sg(s); }
+  var BIG = 'is too large — keep it under 1,000,000,000.';
+  function readVal(id, label, eg, o) {
+    var r = num($(id).value);
+    if (r.empty) return { miss: true };
+    if (r.partial) return { miss: true, partial: true };
+    if (r.err) return { bad: r.err === 'junk' ? 'Couldn’t read “' + short($(id).value) + '” in ' + label + ' — type a number like ' + eg + '.' : label + ' ' + BIG };
+    var v = r.v;
+    if (o.min !== undefined && (o.minEx ? v <= o.min : v < o.min)) return { bad: label + (o.minMsg || ' must be above ' + o.min + '.') };
+    if (o.max !== undefined && v > o.max) return { bad: label + (o.maxMsg || ' must be at most ' + o.max + '.') };
+    if (o.int && v % 1 !== 0) return { bad: label + ' must be a whole number.' };
+    return { v: v, pc: r.pc };
+  }
+  function names() {
+    var a = $('ttNameA').value.trim().slice(0, 24), b = $('ttNameB').value.trim().slice(0, 24);
+    return { a: a || (st.test === 'paired' ? 'Before' : st.test === 'one' ? 'Your group' : 'Group 1'), b: b || (st.test === 'paired' ? 'After' : 'Group 2') };
+  }
+
+  /* ---------- reading a pasted list ---------- */
+  function readList(id, who, R) {
+    var raw = $(id).value; if (raw.trim() === '') return { empty: true };
+    var pl = E.parseList(raw);
+    if (pl.vals.length < 2) { if (!R.bad) R.bad = { msg: (pl.vals.length ? who + ' needs at least 2 numbers — one number has no spread to test with.' : 'Couldn’t find a number in ' + who + ' — separate numbers with commas, spaces or new lines.') + ' Fix it to see the result.', at: id }; return { bad: true, vals: pl.vals, junk: pl.junk }; }
+    return { vals: pl.vals, junk: pl.junk, n: pl.vals.length };
+  }
+  function readSum(R, ids, who, nm) {
+    var g = { m: readVal(ids[0], 'the mean' + who, '83', {}), s: readVal(ids[1], 'the ' + (st.spread === 'sem' ? 'standard error' : 'standard deviation') + who, '5.5', { min: 0, minEx: true, minMsg: ' must be above 0.' }), n: readVal(ids[2], 'the number of values' + who, '8', { min: 2, int: true, max: 1e9, minMsg: ' must be a whole number of at least 2.' }) };
+    ['m', 's', 'n'].forEach(function (k, i) {
+      var q = g[k];
+      if (q.bad && !R.bad) R.bad = { msg: q.bad + ' Fix it to see the result.', at: ids[i] };
+      if (q.partial && !R.bad) R.bad = { msg: 'Keep typing — “' + short($(ids[i]).value) + '” isn’t a complete number yet.', at: ids[i] };
+    });
+    g.typed = ['m', 's', 'n'].filter(function (k) { return g[k].v !== undefined; }).length;
+    g.ok = g.typed === 3;
+    if (g.ok) { var sd = st.spread === 'sem' ? g.s.v * Math.sqrt(g.n.v) : g.s.v; g.o = { m: g.m.v, s: sd, n: g.n.v, sem: sd / Math.sqrt(g.n.v), vr: sd * sd }; }
+    return g;
+  }
+
+  /* ---------- the main compute ---------- */
+  function compute() {
+    var R = { bad: null, ready: false, test: st.test, entry: st.entry, tail: st.tail, alpha: 0.05, alphaTyped: false, dec: null, d0: 0, d0Typed: false, nm: names() };
+    var kind = st.test, raw = st.entry === 'raw', two = kind === 'two';
+    var ra = num($('ttAlpha').value);
+    if (ra.err) R.softA = { msg: 'Couldn’t read “' + short($('ttAlpha').value) + '” in the significance level — type a number like 0.05 or a percent like 5%. It is ignored for now (0.05 is used).', at: 'ttAlpha' };
+    else if (ra.v !== undefined) { var av = ra.pc ? ra.v / 100 : ra.v; if (!(av > 0 && av < 1)) R.softA = { msg: 'The significance level must be between 0 and 1 (for example 0.05) or a percent like 5%. It is ignored for now (0.05 is used).', at: 'ttAlpha' }; else { R.alpha = av; R.alphaTyped = true; } }
+    var rc = readVal('ttConf', 'the confidence level', '95', { min: 0, minEx: true, max: 99.999999, minMsg: ' should be above 0% and below 100% (for example 95).', maxMsg: ' should be above 0% and below 100% (for example 95).' });
+    R.conf = 1 - R.alpha; R.confTyped = false;
+    if (rc.bad) R.softC = { msg: rc.bad + ' It is ignored for now (1 − α is used).', at: 'ttConf' }; else if (rc.v !== undefined) { R.conf = rc.v / 100; R.confTyped = true; }
+    if (kind !== 'one') {
+      var rd = readVal('ttD0', 'the difference to test against', '2', {});
+      if (rd.bad) R.softD = { msg: rd.bad + ' It is ignored for now (0 is used).', at: 'ttD0' }; else if (rd.v !== undefined) { R.d0 = rd.v; R.d0Typed = true; }
+    }
+    var rdec = num($('ttDec').value);
+    if (rdec.err || (rdec.v !== undefined && (rdec.v % 1 !== 0 || rdec.v < 0 || rdec.v > 10))) R.softE = { msg: 'Decimal places should be a whole number from 0 to 10. It is ignored for now.', at: 'ttDec' };
+    else if (rdec.v !== undefined) R.dec = rdec.v;
+    /* t and df typed directly */
+    var rt = readVal('ttTin', 'the t-score', '2.1', {}), rf = readVal('ttDfIn', 'the degrees of freedom', '14', { min: 0, minEx: true, minMsg: ' must be above 0.', max: 1e9 });
+    if (rt.bad) R.softT = { msg: rt.bad + ' It is ignored for now.', at: 'ttTin' }; else if (rf.bad) R.softT = { msg: rf.bad + ' It is ignored for now.', at: 'ttDfIn' };
+    R.tIn = rt; R.dfIn = rf;
+    if (rt.v !== undefined && rf.v !== undefined && !R.softT) R.tonly = { t: rt.v, df: rf.v };
+
+    var A = null, B = null, la = null, lb = null, mu0 = null, gA = null, gB = null;
+    if (kind === 'one') {
+      var rm = readVal('ttMu0', 'the value to compare with', '100', {});
+      if (rm.bad && !R.bad) R.bad = { msg: rm.bad + ' Fix it to see the result.', at: 'ttMu0' };
+      if (rm.partial && !R.bad) R.bad = { msg: 'Keep typing — “' + short($('ttMu0').value) + '” isn’t a complete number yet.', at: 'ttMu0' };
+      mu0 = rm.v;
+      R.mu0Miss = rm.v === undefined;
+    }
+    if (raw) {
+      la = readList('ttA', '“' + R.nm.a + '”', R); R.la = la;
+      if (kind !== 'one') { lb = readList('ttB', '“' + R.nm.b + '”', R); R.lb = lb; }
+      if (la && la.n && (kind === 'one' || (lb && lb.n))) {
+        if (kind === 'paired' && la.n !== lb.n) { if (!R.bad) R.bad = { msg: R.nm.a + ' has ' + la.n + ' numbers and ' + R.nm.b + ' has ' + lb.n + ' — a paired test needs the same number in each, in the same order. Fix it to see the result.', at: 'ttB' }; }
+        else {
+          if (kind === 'paired') { var df2 = [], i; for (i = 0; i < la.n; i++) df2.push(la.vals[i] - lb.vals[i]); R.dArr = df2; R.dDesc = E.describe(df2); }
+          R.dA = E.describe(la.vals); if (kind !== 'one') R.dB = E.describe(lb.vals);
+          if (kind === 'two') { A = R.dA; B = R.dB; } else if (kind === 'paired') A = R.dDesc; else A = R.dA;
+        }
+      }
+    } else {
+      gA = readSum(R, ['ttM1', 'ttS1', 'ttN1'], kind === 'two' ? ' of ' + R.nm.a : '', R.nm.a);
+      if (kind === 'two') gB = readSum(R, ['ttM2', 'ttS2', 'ttN2'], ' of ' + R.nm.b, R.nm.b);
+      R.gA = gA; R.gB = gB;
+      if (gA.ok && (kind !== 'two' || gB.ok)) { A = gA.o; B = gB ? gB.o : null; if (kind === 'two') { R.dA = A; R.dB = B; } else R.dA = A; }
+    }
+    if (R.bad) return R;
+    if (A && (kind !== 'two' || B) && (kind !== 'one' || mu0 !== null && mu0 !== undefined)) {
+      if (kind === 'two' && !(A.s > 0) && !(B.s > 0)) { R.bad = { msg: 'All the numbers in both groups are the same, so there is no spread to test with. Add some variation to see the result.', at: raw ? 'ttB' : 'ttS2' }; return R; }
+      if (kind !== 'two' && !(A.s > 0)) { R.bad = { msg: (kind === 'paired' ? 'Every pair has the same difference' : 'All the numbers are the same') + ', so there is no spread to test with. Add some variation to see the result.', at: raw ? 'ttA' : 'ttS1' }; return R; }
+      R.ready = true; R.A = A; R.B = B; R.kind = kind === 'two' ? st.head : kind;
+      var d0 = kind === 'one' ? mu0 : R.d0; R.d0 = d0;
+      R.main = E.run(R.kind, A, B, d0);
+      if (kind === 'two') { R.welch = E.run('welch', A, B, d0); R.pooled = E.run('pooled', A, B, d0); }
+      var m = R.main; m.pv = E.pvals(m.t, m.df); m.p = E.pTail(m.pv, st.tail); m.sig = m.p < R.alpha; m.crit = E.crit(R.alpha, m.df, st.tail); m.ci = E.ci(m, R.conf);
+      [R.welch, R.pooled].forEach(function (r) { if (r) { r.pv = E.pvals(r.t, r.df); r.p = E.pTail(r.pv, st.tail); r.sig = r.p < R.alpha; r.ci = E.ci(r, R.conf); } });
+      /* the interval of each mean (for the picture) */
+      var tm = function (g) { var c = E.tinvR((1 - R.conf) / 2, g.n - 1); return { m: g.m, lo: g.m - c * g.s / Math.sqrt(g.n), hi: g.m + c * g.s / Math.sqrt(g.n) }; };
+      R.ciA = tm(kind === 'two' ? A : R.dA); if (kind === 'two' || (kind === 'paired' && raw)) R.ciB = tm(kind === 'two' ? B : R.dB);
+      /* what would it take (cached: the integration is the slowest part) */
+      m.minD = E.crit(R.alpha, m.df, st.tail) * m.se;
+      var o = { two: kind === 'two', diff: m.diff, d0: d0, tail: st.tail, alpha: R.alpha };
+      if (kind === 'two') { o.s1 = A.s; o.s2 = B.s; } else o.s = A.s;
+      var key = JSON.stringify([o, m.df, m.se]);
+      if (!st.cache || st.cache.key !== key) st.cache = { key: key, plan: E.plan(o), power: E.power(st.tail, R.alpha, m.df, (m.diff - d0) / m.se) };
+      R.plan = st.cache.plan; R.power = st.cache.power;
+    } else if (R.tonly) {
+      R.ready = true; R.kind = 'tonly'; var tt = R.tonly; tt.pv = E.pvals(tt.t, tt.df); tt.p = E.pTail(tt.pv, st.tail); tt.sig = tt.p < R.alpha; tt.crit = E.crit(R.alpha, tt.df, st.tail); R.main = tt;
+    }
+    return R;
+  }
+
+  /* ---------- formatting ---------- */
+  function tT(R, v) { return fixed(v, R.dec !== null ? R.dec : 4); }
+  function tH(R, v) { return fixed(v, R.dec !== null ? R.dec : 2); }
+  function dfT(R, v) { return Math.abs(v - Math.round(v)) < 1e-9 ? String(Math.round(v)) : fixed(v, R.dec !== null ? R.dec : 4); }
+  function dfH(R, v) { return Math.abs(v - Math.round(v)) < 1e-9 ? String(Math.round(v)) : fixed(v, 2); }
+  function rawT(R, v) { return R.dec !== null ? fixed(v, R.dec) : fnum(v); }
+  function pT(R, p) { return P.fp(p, R.dec !== null ? R.dec : null); }
+  function apaP(p) { return p < 0.001 ? '< .001' : '= ' + p.toFixed(3).replace(/^0\./, '.'); }
+  function chance(p) { return p >= 0.01 ? 'about ' + Math.round(p * 100) + ' times in 100' : p >= 0.001 ? 'about ' + Math.round(p * 1000) + ' times in 1,000' : 'fewer than 1 time in 1,000'; }
+  function tailName(t) { return t === 'two' ? 'two-tailed' : t === 'gt' ? 'right-tailed (higher)' : 'left-tailed (lower)'; }
+  function testName(k) { return k === 'welch' ? 'Welch two-sample t-test' : k === 'pooled' ? 'Pooled two-sample t-test' : k === 'paired' ? 'Paired t-test' : k === 'one' ? 'One-sample t-test' : 't-score and degrees of freedom'; }
+  function cut(s, n) { s = String(s); return s.length > n ? s.slice(0, n - 1) + '…' : s; }
+  function peopleN(v) { return v === Infinity ? 'more than 10,000,000' : v.toLocaleString('en-US'); }
+
+  /* ---------- picture 1: your numbers and the difference, in your own units ---------- */
+  var VW = 260, PL = 70, PR = 250;
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+  var HALO = ' stroke="#FFFDF8" stroke-width="3" paint-order="stroke"';
+  function tickLab(v, step) { var d = Math.max(0, Math.min(8, Math.ceil(-Math.log(step) / Math.LN10 - 1e-9))); return fixed(v, d); }
+  function drawPlot(R) {
+    if (R.kind === 'tonly') return null;
+    var kind = st.test, m = R.main, nm = R.nm, rows = [], i, lo = Infinity, hi = -Infinity;
+    function addRow(label, vals, c, col) { rows.push({ label: label, vals: vals, c: c, col: col }); [c.lo, c.hi, c.m].forEach(function (x) { lo = Math.min(lo, x); hi = Math.max(hi, x); }); if (vals) vals.forEach(function (x) { lo = Math.min(lo, x); hi = Math.max(hi, x); }); }
+    var rawOK = st.entry === 'raw';
+    if (kind === 'paired' && !rawOK) addRow('Change', null, R.ciA, '#8F5C13');
+    else { addRow(nm.a, rawOK ? R.la.vals : null, R.ciA, '#8F5C13'); if (kind !== 'one') addRow(nm.b, rawOK ? R.lb.vals : null, R.ciB, '#37503F'); }
+    if (kind === 'one') { lo = Math.min(lo, R.d0); hi = Math.max(hi, R.d0); }
+    var pad = (hi - lo) * 0.06 || Math.abs(hi) * 0.06 || 1; lo -= pad; hi += pad;
+    var nt = E.niceTicks(lo, hi, 4), px = function (v) { return PL + (v - lo) / (hi - lo) * (PR - PL); };
+    var RH = 40, y0 = 8, yAx = y0 + rows.length * RH + 2, ySep = yAx + 28, yD = ySep + 34, yDax = yD + 22, H = yDax + 30, svg = '', k, j;
+    svg += '<svg viewBox="0 0 ' + VW + ' ' + H + '" width="100%" role="img" aria-label="' + esc('Your numbers' + (rawOK ? ' as dots' : '') + ' with the average and its ' + fnum(R.conf * 100) + '% interval for each group, and below it the difference with its interval') + '" xmlns="http://www.w3.org/2000/svg">';
+    /* gridlines */
+    nt.ticks.forEach(function (v) { svg += '<line x1="' + px(v).toFixed(1) + '" y1="' + y0 + '" x2="' + px(v).toFixed(1) + '" y2="' + yAx + '" stroke="#EADFCB" stroke-width="1"/>'; });
+    if (kind === 'one') svg += '<line x1="' + px(R.d0).toFixed(1) + '" y1="' + (y0 - 2) + '" x2="' + px(R.d0).toFixed(1) + '" y2="' + yAx + '" stroke="#241A11" stroke-width="1.4" stroke-dasharray="4 3"/>';
+    /* paired lines */
+    if (kind === 'paired' && rawOK) { var step0 = Math.max(1, Math.ceil(R.la.n / 200)); for (i = 0; i < R.la.n; i += step0) svg += '<line x1="' + px(R.la.vals[i]).toFixed(1) + '" y1="' + (y0 + RH / 2) + '" x2="' + px(R.lb.vals[i]).toFixed(1) + '" y2="' + (y0 + RH + RH / 2) + '" stroke="#B9A98C" stroke-opacity=".55" stroke-width="1"/>'; }
+    rows.forEach(function (r, ri) {
+      var cy = y0 + ri * RH + RH / 2;
+      svg += '<text x="' + (PL - 8) + '" y="' + (cy + 4) + '" text-anchor="end" font-size="12" fill="#5B4B3B">' + esc(cut(r.label, 9)) + '</text>';
+      if (r.vals) { var step = Math.max(1, Math.ceil(r.vals.length / 200)); for (j = 0; j < r.vals.length; j += step) { var jit = (((j * 37 + 11) % 13) - 6) / 6 * 9; svg += '<circle cx="' + px(r.vals[j]).toFixed(1) + '" cy="' + (cy + jit).toFixed(1) + '" r="3" fill="' + r.col + '" fill-opacity=".5"/>'; } }
+      var xl = px(r.c.lo).toFixed(1), xh = px(r.c.hi).toFixed(1), xm = px(r.c.m).toFixed(1), cyy = (cy + 15).toFixed(1);
+      svg += '<line x1="' + xl + '" y1="' + cyy + '" x2="' + xh + '" y2="' + cyy + '" stroke="' + r.col + '" stroke-width="2.2"/><line x1="' + xl + '" y1="' + (cy + 11) + '" x2="' + xl + '" y2="' + (cy + 19) + '" stroke="' + r.col + '" stroke-width="2.2"/><line x1="' + xh + '" y1="' + (cy + 11) + '" x2="' + xh + '" y2="' + (cy + 19) + '" stroke="' + r.col + '" stroke-width="2.2"/>';
+      svg += '<rect x="' + (xm - 3.5) + '" y="' + (cy + 11.5) + '" width="7" height="7" transform="rotate(45 ' + xm + ' ' + cyy + ')" fill="' + r.col + '"/>';
+    });
+    svg += '<line x1="' + PL + '" y1="' + yAx + '" x2="' + PR + '" y2="' + yAx + '" stroke="#CDBFA5" stroke-width="1.2"/>';
+    nt.ticks.forEach(function (v) { svg += '<line x1="' + px(v).toFixed(1) + '" y1="' + yAx + '" x2="' + px(v).toFixed(1) + '" y2="' + (yAx + 4) + '" stroke="#CDBFA5"/><text x="' + px(v).toFixed(1) + '" y="' + (yAx + 18) + '" text-anchor="middle" font-size="12" fill="#5B4B3B"' + HALO + '>' + esc(tickLab(v, nt.step)) + '</text>'; });
+    /* difference panel */
+    var off = kind === 'one' ? R.d0 : 0, e = m.diff - off, cl = m.ci.lo - off, ch = m.ci.hi - off, ref = kind === 'one' ? 0 : R.d0;
+    var dlo = Math.min(cl, ref, e), dhi = Math.max(ch, ref, e), dpad = (dhi - dlo) * 0.12 || Math.abs(dhi) * 0.12 || 1; dlo -= dpad; dhi += dpad;
+    var dt = E.niceTicks(dlo, dhi, 4), dx = function (v) { return PL + (v - dlo) / (dhi - dlo) * (PR - PL); };
+    var dcol = m.sig ? '#37503F' : '#8F5C13';
+    svg += '<line x1="12" y1="' + ySep + '" x2="' + (VW - 12) + '" y2="' + ySep + '" stroke="#EADFCB" stroke-width="1"/>';
+    dt.ticks.forEach(function (v) { svg += '<line x1="' + dx(v).toFixed(1) + '" y1="' + (yD - 18) + '" x2="' + dx(v).toFixed(1) + '" y2="' + yDax + '" stroke="#EADFCB" stroke-width="1"/>'; });
+    svg += '<line x1="' + dx(ref).toFixed(1) + '" y1="' + (yD - 20) + '" x2="' + dx(ref).toFixed(1) + '" y2="' + yDax + '" stroke="#241A11" stroke-width="1.4" stroke-dasharray="4 3"/>';
+    svg += '<text x="' + (PL - 8) + '" y="' + (yD + 4) + '" text-anchor="end" font-size="12" fill="#5B4B3B">' + (kind === 'two' ? 'Difference' : kind === 'paired' ? 'Mean change' : 'Mean − μ₀') + '</text>';
+    var xl2 = dx(cl).toFixed(1), xh2 = dx(ch).toFixed(1), xe = dx(e).toFixed(1);
+    svg += '<line x1="' + xl2 + '" y1="' + yD + '" x2="' + xh2 + '" y2="' + yD + '" stroke="' + dcol + '" stroke-width="2.6"/><line x1="' + xl2 + '" y1="' + (yD - 5) + '" x2="' + xl2 + '" y2="' + (yD + 5) + '" stroke="' + dcol + '" stroke-width="2.6"/><line x1="' + xh2 + '" y1="' + (yD - 5) + '" x2="' + xh2 + '" y2="' + (yD + 5) + '" stroke="' + dcol + '" stroke-width="2.6"/>';
+    svg += '<rect x="' + (dx(e) - 4.5) + '" y="' + (yD - 4.5) + '" width="9" height="9" transform="rotate(45 ' + xe + ' ' + yD + ')" fill="' + dcol + '"/>';
+    var lab = tH(R, cl) + ' to ' + tH(R, ch), mid = (dx(cl) + dx(ch)) / 2, anc = mid > PR - 50 ? 'end' : mid < PL + 50 ? 'start' : 'middle', ax = anc === 'end' ? PR : anc === 'start' ? PL : mid;
+    svg += '<text x="' + ax.toFixed(1) + '" y="' + (yD - 12) + '" text-anchor="' + anc + '" font-size="12" font-weight="700" fill="' + dcol + '"' + HALO + '>' + esc(lab) + '</text>';
+    svg += '<line x1="' + PL + '" y1="' + yDax + '" x2="' + PR + '" y2="' + yDax + '" stroke="#CDBFA5" stroke-width="1.2"/>';
+    dt.ticks.forEach(function (v) { svg += '<line x1="' + dx(v).toFixed(1) + '" y1="' + yDax + '" x2="' + dx(v).toFixed(1) + '" y2="' + (yDax + 4) + '" stroke="#CDBFA5"/><text x="' + dx(v).toFixed(1) + '" y="' + (yDax + 18) + '" text-anchor="middle" font-size="12" fill="#5B4B3B"' + HALO + '>' + esc(tickLab(v, dt.step)) + '</text>'; });
+    return svg + '</svg>';
+  }
+
+  /* ---------- picture 2: where the t-score falls on the t curve ---------- */
+  function drawCurve(R) {
+    var m = R.main, df = m.df, t = m.t, tail = st.tail, c = m.crit, xm = Math.max(4, Math.min(10, Math.abs(t) + 1.2), c + 1), CT = 40, CB = 134, VW2 = 260, PL2 = 12, PR2 = 248, j, z;
+    var px = function (x) { return PL2 + (x + xm) / (2 * xm) * (PR2 - PL2); }, peak = E.dens(0, df), py = function (x) { return CB - E.dens(x, df) / peak * (CB - CT); };
+    var N = 200, line = '', svg = '<svg viewBox="0 0 ' + VW2 + ' ' + (CB + 54) + '" width="100%" role="img" aria-label="The t distribution with your t-score, the critical values and the shaded p-value area" xmlns="http://www.w3.org/2000/svg">';
+    function area(a, b) { a = Math.max(-xm, a); b = Math.min(xm, b); if (!(b > a)) return ''; var M = 60, d = 'M' + px(a).toFixed(1) + ',' + CB; for (j = 0; j <= M; j++) { z = a + (b - a) * j / M; d += 'L' + px(z).toFixed(1) + ',' + py(z).toFixed(1); } return '<path d="' + d + 'L' + px(b).toFixed(1) + ',' + CB + 'Z" fill="#B5761F" fill-opacity=".38" stroke="none"/>'; }
+    if (tail === 'two') svg += area(-xm, -Math.abs(t)) + area(Math.abs(t), xm); else if (tail === 'gt') svg += area(t, xm); else svg += area(-xm, t);
+    for (j = 0; j <= N; j++) { z = -xm + 2 * xm * j / N; line += (j ? 'L' : 'M') + px(z).toFixed(1) + ',' + py(z).toFixed(1); }
+    svg += '<line x1="' + PL2 + '" y1="' + CB + '" x2="' + PR2 + '" y2="' + CB + '" stroke="#CDBFA5" stroke-width="1.2"/><path d="' + line + '" fill="none" stroke="#241A11" stroke-width="1.8" stroke-linejoin="round"/>';
+    var crits = tail === 'two' ? [-c, c] : tail === 'gt' ? [c] : [-c];
+    crits.forEach(function (cv) { if (Math.abs(cv) <= xm) svg += '<line x1="' + px(cv).toFixed(1) + '" y1="' + (CT - 4) + '" x2="' + px(cv).toFixed(1) + '" y2="' + CB + '" stroke="#37503F" stroke-width="1.5" stroke-dasharray="4 3"/>'; });
+    var tc = Math.max(-xm, Math.min(xm, t)), X = px(tc), off = Math.abs(t) > xm, an = X > PR2 - 70 ? 'end' : X < PL2 + 70 ? 'start' : 'middle';
+    svg += '<line x1="' + X.toFixed(1) + '" y1="' + (CT - 20) + '" x2="' + X.toFixed(1) + '" y2="' + CB + '" stroke="#8F5C13" stroke-width="2"/><text x="' + X.toFixed(1) + '" y="' + (CT - 26) + '" text-anchor="' + an + '" font-size="12" font-weight="700" fill="#8F5C13">t = ' + esc(tH(R, t)) + (off ? ' (off the scale)' : '') + '</text>';
+    var stp = xm > 7 ? 2 : 1, lbl;
+    for (z = -Math.floor(xm / stp) * stp; z <= xm + 1e-9; z += stp) { lbl = sg(String(Math.round(z * 1e6) / 1e6)); svg += '<line x1="' + px(z).toFixed(1) + '" y1="' + CB + '" x2="' + px(z).toFixed(1) + '" y2="' + (CB + 4) + '" stroke="#CDBFA5"/><text x="' + px(z).toFixed(1) + '" y="' + (CB + 18) + '" text-anchor="middle" font-size="12" fill="#5B4B3B"' + HALO + '>' + esc(lbl) + '</text>'; }
+    svg += '<text x="' + PL2 + '" y="' + (CB + 40) + '" font-size="12" fill="#37503F" font-weight="600">critical t = ' + esc(tail === 'lt' ? sg(String(-Math.round(c * 1e4) / 1e4)) : (tail === 'two' ? '±' : '') + fixed(c, 4).replace('−', '')) + ' (α = ' + esc(fnum(R.alpha)) + ')</text>';
+    return svg + '</svg>';
+  }
+
+  /* ---------- render ---------- */
+  function segSet(id, key, v) { st[key] = v; [].forEach.call($(id).children, function (b) { var on = b.getAttribute('data-v') === v; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); }); }
+  function listNote(l, who) {
+    if (!l || l.empty) return '';
+    if (l.bad) return '';
+    return l.n + ' numbers read' + (l.junk ? ', ' + l.junk + (l.junk === 1 ? ' item that is not a number left out' : ' items that are not numbers left out') : '') + '.';
+  }
+  function sumNote(g, who, R) {
+    if (!g) return '';
+    if (g.ok) return who + ': n = ' + g.o.n + ', mean ' + fnum(g.o.m) + ', standard deviation ' + fnum(g.o.s) + (st.spread === 'sem' ? ' (the standard error ' + fnum(g.s.v) + ' × √' + g.o.n + ')' : '') + ', standard error ' + fnum(g.o.sem) + '.';
+    var miss = [['m', 'the mean'], ['s', st.spread === 'sem' ? 'the standard error' : 'the standard deviation'], ['n', 'the number of values']].filter(function (q) { return g[q[0]].v === undefined; }).map(function (q) { return q[1]; });
+    if (!miss.length) return '';
+    return 'Type ' + (miss.length > 1 ? miss.slice(0, -1).join(', ') + ' and ' + miss[miss.length - 1] : miss[0]) + (who ? ' for ' + who : '') + ' to run the test.';
+  }
+  function render() {
+    var R = compute(), kind = st.test, raw = st.entry === 'raw', two = kind === 'two', i;
+    var nm = R.nm;
+    /* labels and visible blocks for the chosen comparison */
+    show('ttRawW', raw); show('ttSumW', !raw); show('ttBRaw', raw && kind !== 'one'); show('ttSum2', !raw && two); show('ttMu0W', kind === 'one');
+    show('ttHeadW', two); show('ttD0W', kind !== 'one'); show('ttSpreadW', !raw);
+    $('ttALab').textContent = kind === 'one' ? 'Your numbers' : kind === 'paired' ? 'Numbers for “' + nm.a + '”' : 'Numbers for “' + nm.a + '”';
+    $('ttBLab').textContent = 'Numbers for “' + nm.b + '”';
+    $('ttA').placeholder = kind === 'one' ? 'e.g. 102, 98, 110, 95, 104' : 'e.g. 78, 82, 86, 85, 73, 82, 90, 88';
+    $('ttB').placeholder = kind === 'paired' ? 'e.g. 75, 80, 83, 84, 70, 79, 85, 88' : 'e.g. 77, 75, 79, 86, 74, 71, 73, 89';
+    var sumLab = kind === 'paired' ? ['Average of the differences', 'Standard deviation of the differences', 'Number of pairs'] : kind === 'one' ? ['Mean of your group', 'Standard deviation', 'Number of values'] : ['Mean', 'Standard deviation', 'Number of values'];
+    var spLab = st.spread === 'sem' ? 'Standard error of the mean' : sumLab[1];
+    $('ttM1Lab').textContent = sumLab[0]; $('ttS1Lab').textContent = kind === 'paired' && st.spread === 'sem' ? 'Standard error of the differences' : spLab; $('ttN1Lab').textContent = sumLab[2];
+    $('ttSum1H').textContent = two ? '“' + nm.a + '”' : kind === 'paired' ? 'Differences (“' + nm.a + '” − “' + nm.b + '”)' : 'Your group';
+    $('ttSum2H').textContent = '“' + nm.b + '”';
+    $('ttSum1H').style.display = (two || kind === 'paired') ? '' : 'none';
+    $('ttTailLab').textContent = kind === 'one' ? 'The mean of your group is…' : '“' + nm.a + '” is…';
+    var tl = st.tail === 'two' ? 'different' : st.tail === 'gt' ? 'higher' : 'lower', refTxt = kind === 'one' ? (R.mu0Miss ? 'the value you compare with' : 'μ₀ = ' + fnum(R.d0)) : '“' + nm.b + '”';
+    setNote('ttTailNote', (st.tail === 'two' ? 'Two-tailed: tests for a difference in either direction.' : st.tail === 'gt' ? 'One-tailed (right): tests only whether it is higher.' : 'One-tailed (left): tests only whether it is lower.') + (kind === 'paired' ? ' “' + nm.a + '” minus “' + nm.b + '” is the difference.' : ''));
+    $('ttTestNote').textContent = kind === 'two' ? 'Two separate groups of different people or things.' : kind === 'paired' ? 'The same people or things measured twice: numbers are matched by position.' : 'One group compared with a number you already know.';
+    /* hint: the first problem wins */
+    var hm = null, hat = null;
+    ['bad', 'softA', 'softC', 'softD', 'softT', 'softE'].some(function (k) { if (R[k]) { hm = R[k].msg; hat = R[k].at; return true; } return false; });
+    setHint(hm, hat);
+    /* notes under every field */
+    var an = '';
+    if (raw) { an = listNote(R.la, nm.a); if (!an) an = kind === 'one' ? 'Paste or type your numbers, separated by commas, spaces or new lines.' : 'Paste a column from Excel or type the numbers, separated by commas, spaces or new lines.'; if (R.la && !R.la.empty && !R.la.bad && R.dA) an += ' Mean ' + fnum(R.dA.m) + ', standard deviation ' + fnum(R.dA.s) + '.'; }
+    setNote('ttANote', an);
+    var bn = '';
+    if (raw && kind !== 'one') { bn = listNote(R.lb, nm.b); if (!bn) bn = kind === 'paired' ? 'Same number of values as the first box, in the same order (the first value of each box is the same person or thing).' : 'The second group. It can have a different number of values.'; if (R.lb && !R.lb.empty && !R.lb.bad && R.dB) bn += ' Mean ' + fnum(R.dB.m) + ', standard deviation ' + fnum(R.dB.s) + '.'; }
+    setNote('ttBNote', bn);
+    setNote('ttMuNote', kind === 'one' ? (R.mu0Miss ? 'Type the number your group is compared with (for example the national average). The test needs it.' : 'The test asks whether the mean of your group is different from ' + fnum(R.d0) + '.') : '');
+    if (!raw) { setNote('ttSum1Note', sumNote(R.gA, kind === 'two' ? nm.a : kind === 'paired' ? 'the differences' : 'your group', R)); setNote('ttSum2Note', two ? sumNote(R.gB, nm.b, R) : ''); }
+    else { setNote('ttSum1Note', ''); setNote('ttSum2Note', ''); }
+    setNote('ttAlphaNote', R.softA ? '' : (R.alphaTyped ? 'A result counts as significant when p is below ' + fnum(R.alpha) + '.' : 'Leave empty for 0.05: a result counts as significant when p is below 0.05.'));
+    [].forEach.call($('ttAlphaChips').children, function (b) { b.classList.toggle('on', R.alphaTyped && Math.abs(R.alpha - parseFloat(b.getAttribute('data-v'))) < 1e-12); });
+    if (st.adv) {
+      setNote('ttHeadNote', two ? (st.head === 'welch' ? 'Welch does not assume equal variances: the safe default. Both tests are shown side by side in the results.' : 'The pooled test assumes both groups have the same variance. Both tests are shown side by side in the results.') : '');
+      setNote('ttD0Note', kind === 'one' ? '' : R.softD ? '' : (R.d0Typed ? 'The test asks whether the difference is different from ' + fnum(R.d0) + ' instead of 0.' : 'Leave empty to test against no difference (0). Type a threshold such as 2 to test “at least 2 more”.'));
+      setNote('ttConfNote', R.softC ? '' : (R.confTyped ? 'The interval uses a ' + fnum(R.conf * 100) + '% level instead of ' + fnum((1 - R.alpha) * 100) + '%.' : 'Leave empty to use the level that matches α: ' + fnum((1 - R.alpha) * 100) + '%. The interval is always two-sided.'));
+      setNote('ttSpreadNote', !raw ? (st.spread === 'sem' ? 'The standard error of the mean is turned into a standard deviation: SD = SEM × √n.' : 'The spread you type is the standard deviation. Choose “Standard error” if your source gives SEM.') : '');
+      var tn = '';
+      if (R.tIn.v !== undefined && R.dfIn.v !== undefined) tn = (R.ready && R.kind !== 'tonly') ? 'Your data are complete, so the test is run on them and this t-score and these degrees of freedom are not used.' : (R.softT ? '' : 'Using t = ' + fnum(R.tIn.v) + ' with ' + fnum(R.dfIn.v) + ' degrees of freedom.');
+      else if (R.tIn.v !== undefined) tn = 'Type the degrees of freedom too.'; else if (R.dfIn.v !== undefined) tn = 'Type the t-score too.'; else tn = 'Optional. Already have a t-score and its degrees of freedom? Type both to get the p-value without any data.';
+      setNote('ttTNote', tn);
+      var nmn = $('ttNameA').value.trim() || $('ttNameB').value.trim() ? 'The names are used in the labels, the picture and the sentences.' : 'Optional. Give the groups names such as “Control” and “Treatment”.';
+      setNote('ttNameNote', nmn);
+      setNote('ttDecNote', R.softE ? '' : (R.dec !== null ? 'Numbers are shown with ' + R.dec + ' decimal places.' : 'Leave empty for automatic: 4 decimals in the tables.'));
+    }
+    /* result */
+    var big = '—', lab = 'p-value', sub = $('ttSub').getAttribute('data-empty'), tip = '', body = false, mval = '—', mlab = 'p-value';
+    ['ttVisWrap', 'ttCurveWrap', 'ttCmpWrap', 'ttGrpWrap', 'ttDevWrap', 'ttWhatWrap', 'ttWriteWrap', 'ttNumsWrap', 'ttStepsWrap'].forEach(function (id) { show(id, false); });
+    ['ttVis', 'ttCurve', 'ttCmp', 'ttGrp', 'ttDev', 'ttWhat', 'ttNums', 'ttSteps'].forEach(function (id) { $(id).innerHTML = ''; });
+    $('ttWrite').textContent = '';
+    if (R.ready) {
+      body = true; var m = R.main, sig = m.sig, ap = R.alpha;
+      var pTxt = pT(R, m.p); big = 'p = ' + pTxt;
+      lab = testName(R.kind) + ' · ' + tailName(st.tail);
+      sub = (sig ? 'Significant' : 'Not significant') + ' at α = ' + fnum(ap) + ' · t(' + dfH(R, m.df) + ') = ' + tH(R, m.t);
+      mval = pTxt + ' · ' + (sig ? 'significant' : 'not significant'); mlab = 'p-value';
+      var decTxt = sig ? 'statistically significant' : 'not statistically significant', ch = chance(m.p), cidir = m.ci || { lo: 0, hi: 0 }, cl = tH(R, cidir.lo), chh = tH(R, cidir.hi);
+      var incl = R.d0 >= cidir.lo && R.d0 <= cidir.hi;
+      var refWord = fnum(R.d0);
+      if (R.kind === 'tonly') {
+        big = 'p = ' + pTxt; lab = 't-score and degrees of freedom · ' + tailName(st.tail); sub = (sig ? 'Significant' : 'Not significant') + ' at α = ' + fnum(ap) + ' · t(' + dfH(R, m.df) + ') = ' + tH(R, m.t);
+        tip = 'A t-score of ' + tH(R, m.t) + ' with ' + dfH(R, m.df) + ' degrees of freedom gives p = ' + pTxt + ' (' + tailName(st.tail) + '). That is ' + decTxt + ' at α = ' + fnum(ap) + '. Type your data instead to also get the means, the interval for the difference and the effect size.';
+        var tr0 = function (a, b) { return '<tr><td>' + a + '</td><td>' + b + '</td></tr>'; };
+        $('ttNums').innerHTML = '<tbody>' + tr0('t-score', tT(R, m.t)) + tr0('Degrees of freedom', dfT(R, m.df)) + tr0('p-value, two-tailed' + (st.tail === 'two' ? ' (used)' : ''), pT(R, m.pv.two)) + tr0('p-value, right-tailed (higher)' + (st.tail === 'gt' ? ' (used)' : ''), pT(R, m.pv.right)) + tr0('p-value, left-tailed (lower)' + (st.tail === 'lt' ? ' (used)' : ''), pT(R, m.pv.left)) + tr0('Critical t at α = ' + fnum(ap) + ' (' + (st.tail === 'two' ? 'two-tailed' : 'one-tailed') + ')', (st.tail === 'two' ? '±' : st.tail === 'lt' ? '−' : '') + fixed(m.crit, R.dec !== null ? R.dec : 4).replace('−', '')) + tr0('Decision', sig ? 'Reject H₀' : 'Do not reject H₀') + '</tbody>';
+        $('ttCopyTxt').textContent = lab + ': ' + big + ' (' + sub + ')'; show('ttNumsWrap', true);
+        $('ttCurve').innerHTML = drawCurve(R); show('ttCurveWrap', true);
+        $('ttCurveKey').textContent = 'The amber area is the p-value: the share of the t distribution at least as extreme as your t-score. The green dashed line is the critical value for α = ' + fnum(ap) + '.';
+        $('ttSteps').innerHTML = '<li>t = ' + tT(R, m.t) + ' and df = ' + dfT(R, m.df) + ' (typed).</li><li>p = ' + pTxt + ' from the t distribution (' + tailName(st.tail) + ').</li><li>Critical value at α = ' + fnum(ap) + ': ' + (st.tail === 'two' ? '±' : st.tail === 'lt' ? '−' : '') + fixed(m.crit, 4).replace('−', '') + '. Compare |t| with it, or p with α.</li>'; show('ttStepsWrap', true);
+        $('ttWrite').textContent = 't(' + dfH(R, m.df) + ') = ' + tH(R, m.t) + ', p ' + apaP(m.p); show('ttWriteWrap', true);
+      } else {
+        var dWord = kind === 'one' ? 'The mean of ' + nm.a + ' is ' + rawT(R, R.A.m) + ', compared with ' + fnum(R.d0) + '.' : kind === 'paired' ? 'The average change (“' + nm.a + '” − “' + nm.b + '”) over ' + R.A.n + ' pairs is ' + rawT(R, m.diff) + '.' : 'The difference between “' + nm.a + '” (mean ' + rawT(R, R.A.m) + ') and “' + nm.b + '” (mean ' + rawT(R, R.B.m) + ') is ' + rawT(R, m.diff) + ' (“' + nm.a + '” − “' + nm.b + '”).';
+        var dirTxt = st.tail === 'two' ? '' : st.tail === 'gt' ? ' in the “higher” direction' : ' in the “lower” direction';
+        tip = dWord + ' That is ' + decTxt + ' at α = ' + fnum(ap) + ' (p = ' + pTxt + '): a gap at least this large' + dirTxt + ' would show up by chance ' + (sig ? 'only ' : '') + ch + (sig ? '' : ' even') + ' if there were really no difference. The ' + fnum(R.conf * 100) + '% interval runs from ' + cl + ' to ' + chh + (incl ? ' and includes ' : ' and does not include ') + refWord + '.';
+        /* numbers table */
+        var trw = function (a, b) { return '<tr><td>' + a + '</td><td>' + b + '</td></tr>'; };
+        var diffLab = kind === 'one' ? 'Mean (x̄)' : kind === 'paired' ? 'Mean difference' : 'Difference of the means (“' + nm.a + '” − “' + nm.b + '”)';
+        var rowsN = [trw('Test', testName(R.kind)), trw('t-score', tT(R, m.t)), trw('Degrees of freedom', dfT(R, m.df)), trw('p-value, two-tailed' + (st.tail === 'two' ? ' (used)' : ''), pT(R, m.pv.two)), trw('p-value, right-tailed (higher)' + (st.tail === 'gt' ? ' (used)' : ''), pT(R, m.pv.right)), trw('p-value, left-tailed (lower)' + (st.tail === 'lt' ? ' (used)' : ''), pT(R, m.pv.left)), trw(diffLab, rawT(R, m.diff)), trw(kind === 'one' ? 'Value compared with (μ₀)' : 'Difference tested against', rawT(R, R.d0)), trw('Standard error', tT(R, m.se)), trw(fnum(R.conf * 100) + '% confidence interval', tH(R, cidir.lo) + ' to ' + tH(R, cidir.hi)), trw('Critical t at α = ' + fnum(ap) + ' (' + (st.tail === 'two' ? 'two-tailed' : 'one-tailed') + ')', (st.tail === 'two' ? '±' : st.tail === 'lt' ? '−' : '') + fixed(m.crit, R.dec !== null ? R.dec : 4).replace('−', '')), trw('Cohen’s d (effect size)', m.cohen === null ? '—' : tT(R, m.cohen)), trw('Decision at α = ' + fnum(ap), sig ? 'Reject H₀: significant' : 'Do not reject H₀: not significant')];
+        if (kind === 'two') rowsN.splice(8, 0, trw('Pooled standard deviation', tT(R, m.sd)));
+        $('ttNums').innerHTML = '<tbody>' + rowsN.join('') + '</tbody>';
+        $('ttCopyTxt').textContent = lab + ': ' + big + ' (' + sub + ')'; show('ttNumsWrap', true);
+        /* both tests side by side */
+        if (kind === 'two') {
+          var W = R.welch, Pp = R.pooled, cr = function (a, b, c) { return '<tr><td>' + a + '</td><td>' + b + '</td><td>' + c + '</td></tr>'; };
+          $('ttCmp').innerHTML = '<thead><tr><th></th><th>Welch (unequal variances)</th><th>Pooled (equal variances)</th></tr></thead><tbody>' + cr('t-score', tT(R, W.t), tT(R, Pp.t)) + cr('Degrees of freedom', dfT(R, W.df), dfT(R, Pp.df)) + cr('p-value (' + tailName(st.tail) + ')', pT(R, W.p), pT(R, Pp.p)) + cr('Standard error', tT(R, W.se), tT(R, Pp.se)) + cr(fnum(R.conf * 100) + '% interval for the difference', tH(R, W.ci.lo) + ' to ' + tH(R, W.ci.hi), tH(R, Pp.ci.lo) + ' to ' + tH(R, Pp.ci.hi)) + cr('Significant at α = ' + fnum(ap) + '?', W.sig ? 'Yes' : 'No', Pp.sig ? 'Yes' : 'No') + '</tbody>';
+          var ratio = Math.max(R.A.s, R.B.s) / Math.min(R.A.s, R.B.s), rtxt = isFinite(ratio) ? fnum(Math.round(ratio * 100) / 100) : '∞';
+          var agree = W.sig === Pp.sig, cn = 'The two standard deviations are ' + rawT(R, R.A.s) + ' and ' + rawT(R, R.B.s) + ' (the larger is ' + rtxt + ' times the smaller). ';
+          cn += agree ? 'Both tests reach the same conclusion: ' + (W.sig ? 'significant' : 'not significant') + ' at α = ' + fnum(ap) + '. ' : 'The two tests disagree about significance here, so the choice matters: ';
+          cn += ratio > 2 || !agree ? 'The spreads are quite different, so use Welch, which does not assume equal variances.' : 'Welch does not assume equal variances, so it is the safe default; pooled is slightly more powerful only when the variances really are equal.';
+          $('ttCmpNote').textContent = cn; show('ttCmpWrap', true);
+        }
+        /* about each group */
+        var cols = [], dsc = function (d, raw2) { return { n: d.n, m: d.m, s: d.s, sem: d.sem, vr: d.vr, ss: raw2 ? d.ss : null, skew: raw2 ? d.skew : undefined, min: raw2 ? d.min : null, max: raw2 ? d.max : null, out: raw2 ? d.out : null }; };
+        if (kind === 'paired' && !raw) cols = [{ h: 'Differences', d: dsc(R.A, false) }];
+        else { cols.push({ h: nm.a, d: dsc(kind === 'paired' ? R.dA : R.A, raw) }); if (kind === 'two' || kind === 'paired') cols.push({ h: nm.b, d: dsc(kind === 'paired' ? R.dB : R.B, raw) }); if (kind === 'paired') cols.push({ h: 'Differences', d: dsc(R.A, raw) }); }
+        var gr = function (lb, f) { return '<tr><td>' + lb + '</td>' + cols.map(function (c) { return '<td>' + f(c.d) + '</td>'; }).join('') + '</tr>'; };
+        var gh = '<thead><tr><th></th>' + cols.map(function (c) { return '<th>' + esc(cut(c.h, 14)) + '</th>'; }).join('') + '</tr></thead><tbody>';
+        var gt2 = gh + gr('Number of values (n)', function (d) { return String(d.n); }) + gr('Mean', function (d) { return rawT(R, d.m); }) + gr('Standard deviation', function (d) { return tT(R, d.s); }) + gr('Standard error of the mean', function (d) { return tT(R, d.sem); }) + gr('Variance', function (d) { return tT(R, d.vr); });
+        if (raw) gt2 += gr('Sum of squares', function (d) { return tT(R, d.ss); }) + gr('Smallest', function (d) { return rawT(R, d.min); }) + gr('Largest', function (d) { return rawT(R, d.max); }) + gr('Skewness', function (d) { return d.skew === null || d.skew === undefined ? '—' : tT(R, d.skew); }) + gr('Outliers (beyond 1.5 × IQR)', function (d) { return d.out ? String(d.out) : 'none'; });
+        $('ttGrp').innerHTML = gt2 + '</tbody>'; show('ttGrpWrap', true);
+        $('ttGrpKey').textContent = raw ? 'Quartiles for the outlier rule use linear interpolation; skewness is the adjusted sample skewness (needs 3 or more values). Normality is not tested here: look at the dots in the picture.' : 'Only the summary numbers you typed are known, so the individual values, skewness and outliers cannot be shown.';
+        if (raw) {
+          var devG = kind === 'two' ? [[nm.a, R.la.vals, R.dA], [nm.b, R.lb.vals, R.dB]] : kind === 'paired' ? [['Differences', R.dArr, R.dDesc]] : [[nm.a, R.la.vals, R.dA]], dh2 = '';
+          devG.forEach(function (g) { var rows2 = '', k2, lim = Math.min(50, g[1].length); for (k2 = 0; k2 < lim; k2++) { var dv = g[1][k2] - g[2].m; rows2 += '<tr><td>' + rawT(R, g[1][k2]) + '</td><td>' + tT(R, dv) + '</td><td>' + tT(R, dv * dv) + '</td></tr>'; } dh2 += '<thead><tr><th colspan="3">' + esc(cut(g[0], 24)) + '</th></tr><tr><th>Value</th><th>Minus the mean (' + rawT(R, g[2].m) + ')</th><th>Squared</th></tr></thead><tbody>' + rows2 + '<tr><td colspan="2"><b>Sum of squares</b>' + (g[1].length > lim ? ' (all ' + g[1].length + ' values)' : '') + '</td><td><b>' + tT(R, g[2].ss) + '</b></td></tr></tbody>'; });
+          $('ttDev').innerHTML = dh2; show('ttDevWrap', true);
+        }
+        /* what would it take */
+        var unit = kind === 'two' ? 'people per group' : kind === 'paired' ? 'pairs' : 'people', wr = function (a, b) { return '<tr><td>' + a + '</td><td>' + b + '</td></tr>'; };
+        var minTxt = st.tail === 'two' ? 'more than ' + tT(R, m.minD) + ' either side of ' + fnum(R.d0) : st.tail === 'gt' ? 'more than ' + tT(R, m.minD) + ' above ' + fnum(R.d0) : 'more than ' + tT(R, m.minD) + ' below ' + fnum(R.d0);
+        var minLab = kind === 'one' ? 'Smallest mean that would be significant' : kind === 'paired' ? 'Smallest average change that would be significant' : 'Smallest difference that would be significant';
+        var sigTxt = R.plan.sig === null ? 'Never: the difference points the other way' : m.sig ? 'Already significant with your numbers' : peopleN(R.plan.sig) + ' ' + unit;
+        var powTxt = R.plan.pow === null ? 'Never: the difference points the other way' : peopleN(R.plan.pow) + ' ' + unit;
+        $('ttWhat').innerHTML = '<tbody>' + wr(minLab + ' with your numbers', minTxt + (kind === 'two' || kind === 'paired' ? ' (you have ' + rawT(R, m.diff) + ')' : ' (you have ' + rawT(R, m.diff) + ')')) + wr('People needed for p below α, if the means and spreads stayed the same', sigTxt) + wr('Power of this test to detect the difference you saw', fixed(R.power * 100, 1) + '%') + wr('People needed for 80% power at that difference', powTxt) + '</tbody>';
+        $('ttWhatKey').textContent = 'Counts assume equal group sizes' + (kind === 'two' ? ' and the pooled formula' : '') + ' and the same spread as in your data. Power uses the difference you observed, so it mostly restates the p-value: use these numbers to plan a follow-up study, not to explain this result.'; show('ttWhatWrap', true);
+        /* write it up */
+        var nA = R.A, apa = (kind === 'two' ? 'A ' + (R.kind === 'welch' ? 'Welch two-sample' : 'pooled two-sample') + ' t-test ' + (sig ? 'found a significant difference' : 'found no significant difference') + ' between ' + nm.a + ' (M = ' + fixed(R.A.m, 2) + ', SD = ' + fixed(R.A.s, 2) + ') and ' + nm.b + ' (M = ' + fixed(R.B.m, 2) + ', SD = ' + fixed(R.B.s, 2) + ')' : kind === 'paired' ? 'A paired t-test ' + (sig ? 'found a significant difference' : 'found no significant difference') + ' between ' + nm.a + ' and ' + nm.b + ' (mean difference ' + nm.a + ' − ' + nm.b + ' = ' + fixed(m.diff, 2) + ', SD = ' + fixed(nA.s, 2) + ', n = ' + nA.n + ')' : 'A one-sample t-test ' + (sig ? 'found that the mean (M = ' + fixed(nA.m, 2) + ', SD = ' + fixed(nA.s, 2) + ') differs significantly from ' + fnum(R.d0) : 'found that the mean (M = ' + fixed(nA.m, 2) + ', SD = ' + fixed(nA.s, 2) + ') does not differ significantly from ' + fnum(R.d0))) + ', t(' + dfH(R, m.df) + ') = ' + fixed(m.t, 2) + ', p ' + apaP(m.p) + (m.cohen === null ? '' : ', d = ' + fixed(m.cohen, 2)) + ', ' + fnum(R.conf * 100) + '% CI [' + fixed(cidir.lo, 2) + ', ' + fixed(cidir.hi, 2) + '].';
+        $('ttWrite').textContent = apa; show('ttWriteWrap', true);
+        /* pictures */
+        var svg1 = drawPlot(R); if (svg1) { $('ttVis').innerHTML = svg1; show('ttVisWrap', true); }
+        var drawn = raw ? 'Each dot is one value' + ((R.la && R.la.n > 200) || (R.lb && R.lb.n > 200) ? ' (every few values are skipped when there are more than 200)' : '') + '. ' : 'No individual values are known from summary numbers, so only the averages are drawn. ';
+        $('ttVisKey').textContent = drawn + 'The diamond is the average and the bar around it its ' + fnum(R.conf * 100) + '% interval. ' + (kind === 'paired' && raw ? 'Grey lines join each pair. ' : '') + 'Below, the ' + (kind === 'two' ? 'difference' : kind === 'paired' ? 'average change' : 'mean minus μ₀') + ' with its interval: ' + (incl ? 'the interval crosses the dashed line, so the data do not rule out “no difference”' : 'the interval stays clear of the dashed line, so the data rule out “no difference”') + (R.kind === 'one' ? ' (here “no difference” means the mean equals ' + fnum(R.d0) + ').' : '.');
+        $('ttCurve').innerHTML = drawCurve(R); show('ttCurveWrap', true);
+        $('ttCurveKey').textContent = 'The amber area is the p-value: the share of the t distribution at least as extreme as your t-score. The green dashed line is the critical value for α = ' + fnum(ap) + '; a t-score beyond it is significant.';
+        /* steps */
+        var stp = [];
+        if (R.kind === 'welch') stp.push('Standard error = √(s₁² ÷ n₁ + s₂² ÷ n₂) = √(' + rawT(R, R.A.s) + '² ÷ ' + R.A.n + ' + ' + rawT(R, R.B.s) + '² ÷ ' + R.B.n + ') = ' + tT(R, m.se) + '.', 'Degrees of freedom (Welch–Satterthwaite) = ' + dfT(R, m.df) + '.');
+        else if (R.kind === 'pooled') stp.push('Pooled standard deviation sₚ = √(((n₁ − 1)s₁² + (n₂ − 1)s₂²) ÷ (n₁ + n₂ − 2)) = ' + tT(R, m.sd) + '; standard error = sₚ × √(1 ÷ n₁ + 1 ÷ n₂) = ' + tT(R, m.se) + '.', 'Degrees of freedom = n₁ + n₂ − 2 = ' + dfT(R, m.df) + '.');
+        else stp.push('Standard error = s ÷ √n = ' + rawT(R, R.A.s) + ' ÷ √' + R.A.n + ' = ' + tT(R, m.se) + '.', 'Degrees of freedom = n − 1 = ' + dfT(R, m.df) + '.');
+        stp.push('t = (' + (kind === 'one' ? 'x̄ − μ₀' : kind === 'paired' ? 'mean difference − tested value' : 'x̄₁ − x̄₂ − tested difference') + ') ÷ standard error = (' + rawT(R, m.diff) + ' − ' + rawT(R, R.d0) + ') ÷ ' + tT(R, m.se) + ' = ' + tT(R, m.t) + '.');
+        stp.push('p-value (' + tailName(st.tail) + ') from the t distribution with ' + dfT(R, m.df) + ' degrees of freedom = ' + pTxt + '.');
+        stp.push('Compare: p ' + (sig ? '<' : '≥') + ' α (' + pTxt + (sig ? ' < ' : ' ≥ ') + fnum(ap) + '), so the result is ' + decTxt + '. Equivalent check: ' + (st.tail === 'two' ? '|t| = ' + fixed(Math.abs(m.t), 4).replace('−', '') : 't = ' + tT(R, m.t)) + ' against the critical value ' + (st.tail === 'two' ? '±' : st.tail === 'lt' ? '−' : '') + fixed(m.crit, 4).replace('−', '') + '.');
+        stp.push(fnum(R.conf * 100) + '% interval = ' + (kind === 'one' ? 'x̄' : 'difference') + ' ± t* × standard error = ' + rawT(R, m.diff) + ' ± ' + fixed(cidir.c, 4).replace('−', '') + ' × ' + tT(R, m.se) + ' = ' + tH(R, cidir.lo) + ' to ' + tH(R, cidir.hi) + '.');
+        $('ttSteps').innerHTML = stp.map(function (s2) { return '<li>' + s2 + '</li>'; }).join(''); show('ttStepsWrap', true);
+      }
+    }
+    $('ttBig').textContent = big; $('ttBig').parentNode.classList.toggle('tt-long', big.length > 18); $('ttLab').textContent = lab; $('ttSub').textContent = sub; $('ttBody').style.display = body ? '' : 'none'; $('ttTip').textContent = tip; $('ttTip').style.display = tip ? '' : 'none';
+    $('ttMLab').textContent = mlab; $('ttMVal').textContent = mval;
+    st.last = R;
+  }
+
+  /* ---------- controls ---------- */
+  [['ttTest', 'test'], ['ttEntry', 'entry'], ['ttTail', 'tail'], ['ttHead', 'head'], ['ttSpread', 'spread']].forEach(function (pp) {
+    [].forEach.call($(pp[0]).children, function (b) { b.addEventListener('click', function () { segSet(pp[0], pp[1], b.getAttribute('data-v')); render(); }); });
+  });
+  [].forEach.call(document.querySelectorAll('.p-tt input[type=text]'), function (i) { i.addEventListener('input', render); });
+  $('ttA').addEventListener('input', render); $('ttB').addEventListener('input', render);
+  $('ttAlphaChips').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; $('ttAlpha').value = b.getAttribute('data-v'); render(); });
+  var ALL = ['ttM1', 'ttS1', 'ttN1', 'ttM2', 'ttS2', 'ttN2', 'ttMu0', 'ttAlpha', 'ttD0', 'ttConf', 'ttTin', 'ttDfIn', 'ttNameA', 'ttNameB', 'ttDec'];
+  $('ttClear').addEventListener('click', function () { ALL.forEach(function (id) { $(id).value = ''; }); $('ttA').value = ''; $('ttB').value = ''; render(); $('ttA').focus(); });
+  $('ttAdvBtn').addEventListener('click', function () {
+    st.adv = !st.adv; $('ttAdvBtn').classList.toggle('open', st.adv); $('ttAdvBtnLab').textContent = st.adv ? 'Go simple' : 'Go advanced'; $('ttAdvIn').style.display = st.adv ? '' : 'none';
+    if (!st.adv) { ['ttD0', 'ttConf', 'ttTin', 'ttDfIn', 'ttNameA', 'ttNameB', 'ttDec'].forEach(function (id) { $(id).value = ''; }); segSet('ttHead', 'head', 'welch'); segSet('ttSpread', 'spread', 'sd'); }
+    render();
+  });
+  render();
+};
+/* TTEST:END */
+
 /* COMPOUND:BEGIN */
 /* =========================================================
    COMPOUND INTEREST calculator (/compound-interest-calculator/). Competitors opened live (2026-11-13): calculator.net (interest calculator: contributions, begin/end, tax, inflation, schedules;

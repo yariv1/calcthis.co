@@ -1,6 +1,6 @@
 {
  "/": {
-  "hash": "2fd23eeb94251bee",
+  "hash": "cbe71864577b2493",
   "date": "2026-11-21"
  },
  "/board-foot-calculator/": {
@@ -788,7 +788,7 @@
   "date": "2026-11-20"
  },
  "/whats-new/": {
-  "hash": "766d7d2f9a3719da",
+  "hash": "8d7fcf4d8c3fc8cf",
   "date": "2026-11-21"
  },
  "/contact/": {
@@ -965,6 +965,10 @@
  },
  "/dilution-calculator/": {
   "hash": "36126f5b4f848c35",
+  "date": "2026-11-21"
+ },
+ "/t-test-calculator/": {
+  "hash": "e5e83bc39e43d625",
   "date": "2026-11-21"
  }
 }

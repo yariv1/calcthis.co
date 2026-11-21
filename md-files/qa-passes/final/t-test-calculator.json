@@ -1,0 +1,14 @@
+{
+ "slug": "t-test-calculator",
+ "pass": true,
+ "at": "2026-11-21T17:30:18.844Z",
+ "passHash": "55ee3b282b1493a4",
+ "scriptHash": "18c507453f46c367",
+ "cats": {
+  "textVsTool": 76,
+  "extremes": 40,
+  "visual": 60
+ },
+ "runs": 72,
+ "fails": []
+}

@@ -107,6 +107,7 @@
         { "@type": "WebApplication", "name": "P-Value Calculator", "url": "https://calcthis.co/p-value-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Confidence Interval Calculator", "url": "https://calcthis.co/confidence-interval-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Z-Score Calculator", "url": "https://calcthis.co/z-score-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
+        { "@type": "WebApplication", "name": "T-Test Calculator", "url": "https://calcthis.co/t-test-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Scientific Notation Calculator", "url": "https://calcthis.co/scientific-notation-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Weighted Average Calculator", "url": "https://calcthis.co/weighted-average-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Time Average Calculator", "url": "https://calcthis.co/time-average-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
@@ -155,7 +156,7 @@
   ]
 }
 </script>
-<link rel="stylesheet" href="/assets/style.css?v=360">
+<link rel="stylesheet" href="/assets/style.css?v=361">
 <style>
   .cat-tabs{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
   .cat-grp--hidden{display:none}
@@ -270,6 +271,7 @@
           <a href="/p-value-calculator/">P-Value</a>
           <a href="/confidence-interval-calculator/">Confidence Interval</a>
           <a href="/z-score-calculator/">Z Score</a>
+          <a href="/t-test-calculator/">T-Test</a>
           <a href="/scientific-notation-calculator/">Scientific Notation</a>
           <a href="/average-calculator/">Average</a>
           <a href="/batting-average-calculator/">Batting Average</a>
@@ -1441,6 +1443,17 @@
       </span>
     </a>
 
+    <a class="calc" href="/t-test-calculator/">
+      <span class="ico" aria-hidden="true">
+        <svg width="30" height="30" viewBox="0 0 32 32" fill="none"><path d="M3 24c4 0 6-16 13-16s9 16 13 16" fill="#EFE7D8" stroke="#8F5C13" stroke-width="1.4"/><path d="M3 24h26" stroke="#37503F" stroke-width="2" stroke-linecap="round"/><path d="M9 24c3 0 4-10 9-10s6 10 9 10" stroke="#37503F" stroke-width="1.4" fill="none"/></svg>
+      </span>
+      <h3>T-Test Calculator</h3>
+      <p>Compare two groups, before and after, or one group with a number. Welch and pooled side by side, with a picture of your data.</p>
+      <span class="go">Open calculator
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+    </a>
+
     <a class="calc" href="/z-score-calculator/">
       <span class="ico" aria-hidden="true">
         <svg width="30" height="30" viewBox="0 0 32 32" fill="none"><path d="M3 24c4 0 6-16 13-16s9 16 13 16" fill="#EFE7D8" stroke="#8F5C13" stroke-width="1.4"/><path d="M3 24h26" stroke="#37503F" stroke-width="2" stroke-linecap="round"/><path d="M21 24V12" stroke="#37503F" stroke-width="2" stroke-linecap="round"/></svg>
@@ -2217,6 +2230,7 @@
           <li><a href="/p-value-calculator/">P-Value</a><span> — p-value from a z, t, chi-square, F or r statistic, all three tails, a live curve and critical values</span></li>
           <li><a href="/confidence-interval-calculator/">Confidence Interval</a><span> — confidence interval for a mean, proportion or count at 90, 95 or 99%, with t or z, a live curve and the sample size you need</span></li>
           <li><a href="/z-score-calculator/">Z Score</a><span> — z-score of any value from the mean and standard deviation, its percentile and probabilities, or back from a z-score, with two scores compared on a live bell curve</span></li>
+          <li><a href="/t-test-calculator/">T-Test</a><span> — compare two groups, before and after, or one group with a number: p-value, interval, effect size and a picture of your data</span></li>
           <li><a href="/scientific-notation-calculator/">Scientific notation</a><span> — every notation at once</span></li>
           <li><a href="/average-calculator/">Average</a><span> — mean, median, mode and outliers</span></li>
           <li><a href="/batting-average-calculator/">Batting average</a><span> — baseball and cricket, with a target solver</span></li>
@@ -2494,6 +2508,7 @@
           <li><a href="/p-value-calculator/">P-Value Calculator</a></li>
           <li><a href="/confidence-interval-calculator/">Confidence Interval Calculator</a></li>
           <li><a href="/z-score-calculator/">Z-Score Calculator</a></li>
+          <li><a href="/t-test-calculator/">T-Test Calculator</a></li>
           <li><a href="/scientific-notation-calculator/">Scientific Notation Calculator</a></li>
           <li><a href="/weighted-average-calculator/">Weighted Average Calculator</a></li>
           <li><a href="/average-calculator/">Average Calculator</a></li>
@@ -2603,7 +2618,7 @@
   });
 })();
 </script>
-<script src="/assets/app.js?v=360"></script>
+<script src="/assets/app.js?v=361"></script>
 <script src="/feedback.js" defer></script>
 </body>
 </html>
