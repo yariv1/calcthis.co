@@ -1,0 +1,55 @@
+{
+  "slug": "retatrutide-dosage-calculator",
+  "bodyClass": "p-rt",
+  "blocks": ["RETA"],
+  "result": { "big": "rtBig", "body": "rtBody", "hint": "rtHint" },
+  "required": ["rtVial", "rtWater", "rtD1", "rtLA", "rtWant", "rtIpm"],
+  "fill": [
+    ["click", "rtClear"],
+    ["seg", "rtForm", "vial"],
+    ["seg", "rtFind", "units"],
+    ["seg", "rtVu", "mg"],
+    ["seg", "rtDu", "mg"],
+    ["seg", "rtSyrSz", "1"],
+    ["seg", "rtDec", "a"],
+    ["set", "rtVial", "10"],
+    ["set", "rtWater", "2"],
+    ["set", "rtD1", "1"]
+  ],
+  "optionalSamples": {
+    "rtFreq": ["1", "2", "3.5", "7"],
+    "rtW1": ["2", "4", "0.5"],
+    "rtLP": ["1", "5"],
+    "rtLTot": ["3", "10"],
+    "rtKg": ["0.05"],
+    "rtWt": ["80"],
+    "rtD2": ["2", "0.5"],
+    "rtW2": ["2", "4"],
+    "rtD3": ["3"],
+    "rtW3": ["2"]
+  },
+  "pools": {
+    "rtVial": ["10", "5", "0.5", "30"],
+    "rtWater": ["2", "1", "0.5", "3"],
+    "rtD1": ["1", "0.5", "2", "0.25"],
+    "rtFreq": ["1", "2", "3.5", "7"],
+    "rtW1": ["2", "4", "0.5", "10"],
+    "rtLA": ["5", "10", "2.5"],
+    "rtLP": ["1", "2"],
+    "rtLTot": ["3", "10"],
+    "rtWant": ["20", "25", "10"],
+    "rtKg": ["0.05"],
+    "rtWt": ["80", "180"],
+    "rtD2": ["2", "0.5"],
+    "rtW2": ["2", "4"]
+  },
+  "variants": [
+    [["click", "rtClear"], ["seg", "rtForm", "liquid"], ["set", "rtLA", "5"], ["set", "rtD1", "1"]],
+    [["click", "rtClear"], ["seg", "rtFind", "water"], ["set", "rtVial", "10"], ["set", "rtWant", "25"], ["set", "rtD1", "1"]],
+    [["click", "rtClear"], ["set", "rtVial", "10"], ["set", "rtWater", "2"], ["set", "rtD1", "1"], ["set", "rtW1", "2"], ["click", "rtAdd"], ["set", "rtD2", "2"], ["set", "rtW2", "2"]],
+    [["click", "rtClear"], ["seg", "rtVu", "mcg"], ["seg", "rtDu", "mcg"], ["set", "rtVial", "10000"], ["set", "rtWater", "2"], ["set", "rtD1", "1000"]],
+    [["click", "rtClear"], ["seg", "rtVu", "iu"], ["set", "rtVial", "30"], ["set", "rtIpm", "3"], ["set", "rtWater", "2"], ["set", "rtD1", "1"]]
+  ],
+  "scrollTo": "rtBig",
+  "errorState": [["set", "rtD1", "0"]]
+}

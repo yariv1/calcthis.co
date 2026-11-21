@@ -27269,6 +27269,330 @@ CalcThis.initTtestCalc = function () {
 };
 /* TTEST:END */
 
+/* RETA:BEGIN */
+/* =========================================================
+   RETATRUTIDE DOSAGE calculator (/retatrutide-dosage-calculator/). Ahrefs 2026-11-21 (his screenshots): retatrutide dosage calculator >10,000 Easy, peptide dosage calculator >1,000 Medium.
+   Competitors opened live 2026-11-22: Omnicalculator peptide calculator (vial in mcg/mg/oz, water, dose units, weight-based dose), thepeptidecatalog (vial 10/30/60, water 1-3, dose chips, protocols),
+   peptideprotocolwiki (mg or IU vial, dose to units / units to water, syringe 0.3/0.5/1 mL, frequency), peptidedeck (titration ladder, vials, weeks per vial, 1 mL syringe), glp3planner (tier schedule, half-life chart),
+   calculate.co.nz (U-100 / U-50 / U-30 barrels, fits check), peptiq (units from concentration + dose). Notes: md-files/calcthis-dosage-research.md.
+   Source READ 2026-11-22: Eli Lilly press release of May 21, 2026 (investor.lilly.com): retatrutide is "an investigational, first-in-class GIP, GLP-1, and glucagon triple hormone receptor agonist".
+   Maths (arithmetic only, no dose is ever suggested): concentration = vial mg / water mL; draw mL = dose mg / concentration; units = mL x 100 (100 units = 1 mL); water for a wanted draw = vial mg x units / (100 x dose mg).
+   Schedule: injections of a step = floor(weeks x injections a week); the vial is used one injection at a time and a new vial is opened when the rest cannot cover the next dose.
+   ========================================================= */
+/* RETA-ENGINE:START */
+CalcThis.retaEngine = (function () {
+  var MASS = { mcg: 0.001, mg: 1 };
+  var SIZES = [1, 0.5, 0.3];
+  var WATERS = [1, 1.5, 2, 2.5, 3, 4, 5];
+  var VCHIPS = [5, 10, 15, 20, 30, 60], WCHIPS = [1, 2, 3], FCHIPS = [1, 2, 3, 7];
+  var UREF = [1, 5, 10, 20, 25, 50, 100];
+  function num(t) {
+    t = (t + '').trim().replace(/\s/g, '');
+    if (!t) return null;
+    if (/^\d{1,3}(,\d{3})+(\.\d+)?$/.test(t)) t = t.replace(/,/g, ''); else if (/^[+-]?\d*,\d+$/.test(t)) t = t.replace(',', '.'); else t = t.replace(/,/g, '');
+    if (!/^[+-]?(\d+\.?\d*|\.\d+)$/.test(t)) return NaN;
+    return parseFloat(t);
+  }
+  function grpS(s) { var p = String(s).split('.'); p[0] = p[0].replace(/\B(?=(\d{3})+(?!\d))/g, ','); return p.join('.'); }
+  function trimz(s) { return s.indexOf('.') >= 0 ? s.replace(/0+$/, '').replace(/\.$/, '') : s; }
+  function digits(x, n) {
+    if (!isFinite(x)) return '—';
+    if (x === 0) return '0';
+    var ax = Math.abs(x);
+    if (ax < 1e-4 || ax >= 1e12) return String(parseFloat(x.toPrecision(n)).toExponential()).replace('e+', 'e');
+    var e = Math.floor(Math.log(ax) / Math.LN10 + 1e-12), d = Math.max(0, Math.min(12, n - 1 - e));
+    return grpS(trimz(x.toFixed(d)));
+  }
+  function fmt(x, dec) { if (dec === 'a' || dec == null) return digits(x, 4); if (!isFinite(x)) return '—'; return grpS(x.toFixed(+dec)); }
+  function trimN(x, d) { return String(parseFloat((Math.round(x * Math.pow(10, d)) / Math.pow(10, d)).toFixed(d))); }
+  function readPos(t, max) { var n = num(t); if (n === null) return { empty: true }; if (isNaN(n) || n <= 0 || (max && n > max)) return { bad: true }; return { v: n }; }
+  /* the draw for one dose */
+  function draw(doseMg, conc) { var ml = doseMg / conc; return { ml: ml, units: ml * 100 }; }
+  function waterFor(vialMg, doseMg, units) { return vialMg * units / (100 * doseMg); }
+  /* whole-unit mark: the unit nearest to the draw and what it would really give */
+  function mark(units, conc) { var u = Math.round(units), mg = u / 100 * conc; return { u: u, mg: mg }; }
+  function injections(weeks, perWeek) { return Math.floor(weeks * perWeek + 1e-9); }
+  /* steps: [{ doseMg, weeks }] with weeks > 0; vialMg may be 0 (unknown). One injection at a time; a new vial opens when the rest cannot cover the dose. */
+  function plan(steps, perWeek, vialMg) {
+    var vials = [], cur = null, rem = 0, k = 0, mg = 0, T = 0, rows = [];
+    steps.forEach(function (s) {
+      var n = injections(s.weeks, perWeek), j, row = { n: n, mg: n * s.doseMg, from: k, weeks: s.weeks }; T += s.weeks;
+      for (j = 0; j < n; j++) {
+        if (vialMg) {
+          if (!cur || rem + 1e-9 < s.doseMg) { if (cur) cur.left = rem; cur = { n: vials.length + 1, first: k, last: k, count: 0, used: 0, left: 0 }; vials.push(cur); rem = vialMg; }
+          rem -= s.doseMg; cur.count++; cur.used += s.doseMg; cur.last = k;
+        }
+        mg += s.doseMg; k++;
+      }
+      rows.push(row);
+    });
+    if (cur) cur.left = rem;
+    vials.forEach(function (v) { v.t0 = v.first / perWeek; v.t1 = Math.min(T, (v.last + 1) / perWeek); });
+    return { inj: k, mg: mg, T: T, vials: vials, rows: rows };
+  }
+  function weekTicks(T) {
+    var st = [1, 2, 4, 5, 10, 13, 26, 52, 104, 260], i, out = [], v;
+    for (i = 0; i < st.length; i++) if (T / st[i] <= 6) break;
+    var s = st[Math.min(i, st.length - 1)]; for (v = 0; v <= T + 1e-9; v += s) out.push(v);
+    return out;
+  }
+  return { MASS: MASS, SIZES: SIZES, WATERS: WATERS, VCHIPS: VCHIPS, WCHIPS: WCHIPS, FCHIPS: FCHIPS, UREF: UREF, num: num, grpS: grpS, digits: digits, fmt: fmt, trimN: trimN, readPos: readPos, draw: draw, waterFor: waterFor, mark: mark, injections: injections, plan: plan, weekTicks: weekTicks };
+})();
+/* RETA-ENGINE:END */
+
+/* =========================================================
+   CalcThis.initRetaCalc() - ids rt*. Engine CalcThis.retaEngine. Amount fields = the mg to mL pattern (input + inline unit toggle).
+   ========================================================= */
+CalcThis.initRetaCalc = function () {
+  var E = CalcThis.retaEngine, U = CalcThis._kzUtil, seg = U.seg, setSeg = U.setSeg, esc = U.esc;
+  var $ = function (id) { return document.getElementById(id); };
+  if (!$('rtVial')) return;
+  var MAXR = 6;
+  var st = { form: 'vial', find: 'units', vu: 'mg', lu: 'mg', du: 'mg', wu: 'kg', syr: '1', dec: 'a', rows: 1, view: 1 }, last = null;
+  var NOTE = function (id, txt) { var n = $(id); if (n) { n.textContent = txt || ''; n.style.display = txt ? '' : 'none'; } };
+  function show(id, on) { var e = $(id); if (e) e.style.display = on ? '' : 'none'; }
+  function setHint(m, at) {
+    var h = $('rtHint'); h.textContent = m || ''; h.style.display = m ? 'block' : 'none';
+    if (m && at) { var el = $(at), f = el ? (el.closest('.two') || el.closest('.fld')) : null; if (f && f.nextSibling !== h && f.parentNode) f.parentNode.insertBefore(h, f.nextSibling); }
+  }
+  function F(x) { return E.fmt(x, st.dec); }
+  function A(x) { return E.fmt(x, 'a'); }
+  function empty(msg, at) { $('rtBig').textContent = '—'; $('rtSub').textContent = $('rtSub').getAttribute('data-empty'); $('rtBody').style.display = 'none'; $('rtMVal').textContent = '—'; $('rtCopyTxt').textContent = ''; $('rtLab').textContent = 'Syringe units for your dose'; $('rtMLab').textContent = 'Draw'; last = null; setHint(msg || '', at); }
+  function convertField(id, fromF, toF) { var n = E.num($(id).value); if (n !== null && !isNaN(n) && n > 0) $(id).value = E.trimN(n * fromF / toF, 9); }
+  /* ---------- controls ---------- */
+  function applyForm() {
+    var liquid = st.form === 'liquid';
+    show('rtVialW', !liquid); show('rtLiqW', liquid); show('rtFindW', !liquid); show('rtWaterF', !liquid && st.find === 'units'); show('rtWantW', !liquid && st.find === 'water');
+    setSeg('rtForm', st.form); setSeg('rtFind', st.find); show('rtIpmW', !liquid && st.vu === 'iu');
+  }
+  seg('rtForm', function (v) { st.form = v; if (v === 'liquid') st.find = 'units'; applyForm(); render(); });
+  seg('rtFind', function (v) { st.find = v; applyForm(); render(); });
+  $('rtVu').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; var v = b.getAttribute('data-v'); if (v === st.vu) return; if (v !== 'iu' && st.vu !== 'iu') convertField('rtVial', E.MASS[st.vu], E.MASS[v]); st.vu = v; setSeg('rtVu', v); show('rtIpmW', v === 'iu' && st.form === 'vial'); render(); });
+  $('rtLu').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; var v = b.getAttribute('data-v'); if (v === st.lu) return; convertField('rtLA', E.MASS[st.lu], E.MASS[v]); st.lu = v; setSeg('rtLu', v); render(); });
+  $('rtDu').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return; var v = b.getAttribute('data-v'); if (v === st.du) return;
+    for (var n = 1; n <= MAXR; n++) convertField('rtD' + n, E.MASS[st.du], E.MASS[v]);
+    st.du = v; setSeg('rtDu', v); render();
+  });
+  $('rtWu').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; var v = b.getAttribute('data-v'); if (v === st.wu) return; convertField('rtWt', v === 'lb' ? 1 : 0.45359237, v === 'lb' ? 0.45359237 : 1); st.wu = v; setSeg('rtWu', v); render(); });
+  seg('rtSyrSz', function (v) { st.syr = v; render(); });
+  seg('rtDec', function (v) { st.dec = v; render(); });
+  $('rtVChips').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; $('rtVial').value = b.getAttribute('data-v'); st.vu = 'mg'; setSeg('rtVu', 'mg'); show('rtIpmW', false); render(); });
+  $('rtWChips').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; $('rtWater').value = b.getAttribute('data-v'); render(); });
+  $('rtFChips').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; $('rtFreq').value = b.getAttribute('data-v'); render(); });
+  function showRows() { for (var n = 1; n <= MAXR; n++) show('rtR' + n, n <= st.rows); show('rtAdd', st.rows < MAXR); }
+  $('rtAdd').addEventListener('click', function () { if (st.rows < MAXR) { st.rows++; showRows(); render(); $('rtD' + st.rows).focus(); } });
+  for (var q = 2; q <= MAXR; q++) (function (n) {
+    $('rtX' + n).addEventListener('click', function () { $('rtD' + n).value = ''; $('rtW' + n).value = ''; if (n === st.rows) st.rows--; if (st.view === n) st.view = 1; showRows(); render(); });
+  })(q);
+  $('rtSched').addEventListener('click', function (e) { var r = e.target.closest('tr[data-n]'); if (!r) return; st.view = +r.getAttribute('data-n'); render(); });
+  $('rtWTab').addEventListener('click', function (e) { var r = e.target.closest('tr[data-w]'); if (!r) return; $('rtWater').value = r.getAttribute('data-w'); st.find = 'units'; applyForm(); render(); });
+  $('rtKgUse').addEventListener('click', function () {
+    var a = E.readPos($('rtKg').value), w = E.readPos($('rtWt').value); if (!a.v || !w.v) return;
+    var dmg = a.v * w.v * (st.wu === 'lb' ? 0.45359237 : 1); $('rtD1').value = E.trimN(dmg / E.MASS[st.du], 9); render();
+  });
+  ['rtVial', 'rtIpm', 'rtWater', 'rtLA', 'rtLP', 'rtLTot', 'rtWant', 'rtFreq', 'rtKg', 'rtWt'].forEach(function (id) { $(id).addEventListener('input', render); });
+  for (var r0 = 1; r0 <= MAXR; r0++) { $('rtD' + r0).addEventListener('input', render); $('rtW' + r0).addEventListener('input', render); }
+  $('rtClear').addEventListener('click', function () {
+    ['rtVial', 'rtIpm', 'rtWater', 'rtLA', 'rtLP', 'rtLTot', 'rtWant', 'rtFreq', 'rtKg', 'rtWt'].forEach(function (id) { $(id).value = ''; });
+    for (var n = 1; n <= MAXR; n++) { $('rtD' + n).value = ''; $('rtW' + n).value = ''; }
+    st.form = 'vial'; st.find = 'units'; st.vu = 'mg'; st.lu = 'mg'; st.du = 'mg'; st.wu = 'kg'; st.syr = '1'; st.dec = 'a'; st.rows = 1; st.view = 1;
+    setSeg('rtVu', 'mg'); setSeg('rtLu', 'mg'); setSeg('rtDu', 'mg'); setSeg('rtWu', 'kg'); setSeg('rtSyrSz', '1'); setSeg('rtDec', 'a'); show('rtIpmW', false); applyForm(); showRows(); setHint(''); render();
+  });
+  $('rtAdvBtn').addEventListener('click', function () {
+    var open = $('rtAdvBtn').classList.toggle('open'); $('rtAdvBtnLab').textContent = open ? 'Go simple' : 'Go advanced'; $('rtAdvIn').style.display = open ? '' : 'none';
+    if (!open) { st.dec = 'a'; setSeg('rtDec', 'a'); ['rtKg', 'rtWt'].forEach(function (id) { $(id).value = ''; }); st.wu = 'kg'; setSeg('rtWu', 'kg'); }
+    render();
+  });
+  /* ---------- drawing 1: a syringe to scale, marked in units ---------- */
+  function syringe(ml, B, units) {
+    var bx = 40, bw = 170, by = 22, bh = 20, W = 252, frac = Math.min(1, ml / B), fw = frac * bw, U = Math.round(B * 100), minor = U > 50 ? 5 : 1, major = U > 50 ? 10 : 5, every = U > 50 ? 2 : (U > 30 ? 2 : 1), ticks = '', labs = '', v;
+    for (v = 0; v <= U + 1e-9; v += minor) {
+      var x = bx + v / U * bw, isMaj = v % major === 0;
+      if (isMaj) { ticks += '<line x1="' + x.toFixed(1) + '" y1="' + (by + bh) + '" x2="' + x.toFixed(1) + '" y2="' + (by + bh + 10) + '" stroke="#8F8270" stroke-width="1.3"/>'; if ((v / major) % every === 0) labs += '<text x="' + x.toFixed(1) + '" y="' + (by + bh + 25) + '" text-anchor="middle" font-size="12.5" font-weight="600" fill="#6B6556">' + v + '</text>'; }
+      else ticks += '<line x1="' + x.toFixed(1) + '" y1="' + (by + bh) + '" x2="' + x.toFixed(1) + '" y2="' + (by + bh + 5) + '" stroke="#C0B4A4" stroke-width="0.9"/>';
+    }
+    var mx = bx + fw, lab = F(units) + ' units', anchor = mx > bx + bw - 40 ? 'end' : (mx < bx + 36 ? 'start' : 'middle'), lx = anchor === 'end' ? Math.min(mx + 6, bx + bw) : (anchor === 'start' ? Math.max(mx - 6, bx) : mx);
+    return '<svg id="rtSyrSvg" class="rt-syr-svg" viewBox="0 0 ' + W + ' 76" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Syringe of ' + B + ' mL filled to ' + esc(lab) + '" data-size="' + B + '" data-units="' + units + '" data-fillw="' + fw.toFixed(2) + '" data-barw="' + bw + '">' +
+      '<line x1="3" y1="32.5" x2="26" y2="32.5" stroke="#9A8F80" stroke-width="1.5" stroke-linecap="round"/><polygon points="26,30.2 40,27.5 40,37.5 26,34.8" fill="#B9AFA1" stroke="#9A8F80" stroke-width="1" stroke-linejoin="round"/>' +
+      '<rect x="' + bx + '" y="' + by + '" width="' + bw + '" height="' + bh + '" rx="4" fill="#FBF6EE" stroke="#D4C8B5" stroke-width="1.5"/><clipPath id="rtClip"><rect x="' + bx + '" y="' + by + '" width="' + bw + '" height="' + bh + '" rx="4"/></clipPath>' +
+      '<rect id="rtFill" x="' + bx + '" y="' + by + '" width="' + fw.toFixed(2) + '" height="' + bh + '" fill="#37503F" opacity="0.75" clip-path="url(#rtClip)"/>' + ticks + labs +
+      '<line x1="' + mx.toFixed(1) + '" y1="' + (by - 6) + '" x2="' + mx.toFixed(1) + '" y2="' + (by + bh + 2) + '" stroke="#B5761F" stroke-width="2" stroke-dasharray="3,2.5"/><polygon points="' + (mx - 5).toFixed(1) + ',' + (by - 8) + ' ' + (mx + 5).toFixed(1) + ',' + (by - 8) + ' ' + mx.toFixed(1) + ',' + (by - 2) + '" fill="#B5761F"/>' +
+      '<text x="' + lx.toFixed(1) + '" y="' + (by - 12) + '" text-anchor="' + anchor + '" font-size="13.5" font-weight="800" fill="#7A4D0F">' + esc(lab) + '</text>' +
+      '<rect x="' + (bx + bw - 1) + '" y="' + (by - 6) + '" width="3" height="' + (bh + 12) + '" rx="1.5" fill="#DDD0C0"/><rect x="' + (bx + bw + 2) + '" y="' + by + '" width="5" height="' + bh + '" fill="#D8CFBF" stroke="#C8B8A5" stroke-width="1"/><rect x="' + (bx + bw + 7) + '" y="' + (by + 6) + '" width="20" height="7" rx="3" fill="#E0D4C4"/><rect x="' + (bx + bw + 25) + '" y="' + (by - 10) + '" width="5" height="' + (bh + 20) + '" rx="2.5" fill="#D0C4B0"/></svg>';
+  }
+  /* ---------- drawing 2: the user's own schedule against the vials ---------- */
+  var HALO = ' stroke="#FFFDF8" stroke-width="3" paint-order="stroke"';
+  function timeline(pl, B, vialMg) {
+    var T = pl.T, PL = 30, PR = 248, VW = 260, uMax = Math.round(B * 100), top = 16, bh = 70, yb = top + bh, i, svg = '', px = function (w) { return PL + w / T * (PR - PL); }, py = function (u) { return yb - Math.min(u, uMax) / uMax * bh; };
+    var ticks = E.weekTicks(T), tickEnd = yb + (vialMg ? 40 : 4);
+    svg += '<svg viewBox="0 0 ' + VW + ' ' + (tickEnd + 26) + '" width="100%" role="img" aria-label="Your schedule: units per injection by week' + (vialMg ? ' and the vials used' : '') + '" xmlns="http://www.w3.org/2000/svg" id="rtTlSvg">';
+    ticks.forEach(function (w) { svg += '<line x1="' + px(w).toFixed(1) + '" y1="' + top + '" x2="' + px(w).toFixed(1) + '" y2="' + tickEnd + '" stroke="#EADFCB" stroke-width="1"/>'; });
+    svg += '<text x="' + (PL - 4) + '" y="' + (py(uMax) + 4) + '" text-anchor="end" font-size="12" fill="#5B4B3B">' + uMax + '</text><text x="' + (PL - 4) + '" y="' + (yb + 4) + '" text-anchor="end" font-size="12" fill="#5B4B3B">0</text>';
+    var t0 = 0;
+    pl.rows.forEach(function (r, ix) {
+      var s = pl.stepsRef[ix], x0 = px(t0), x1 = px(t0 + s.weeks), u = s.units, over = u > uMax + 1e-9;
+      svg += '<rect class="rt-bar" data-step="' + s.n + '" x="' + x0.toFixed(1) + '" y="' + py(u).toFixed(1) + '" width="' + Math.max(1, x1 - x0 - 1).toFixed(1) + '" height="' + (yb - py(u)).toFixed(1) + '" fill="' + (over ? '#B23A2A' : '#B5761F') + '" fill-opacity="' + (s.n === st.view ? '.9' : '.55') + '"/>';
+      if (x1 - x0 >= 34) svg += '<text x="' + ((x0 + x1) / 2).toFixed(1) + '" y="' + (Math.max(py(u) - 4, 12)).toFixed(1) + '" text-anchor="middle" font-size="12" font-weight="700" fill="' + (over ? '#B23A2A' : '#7A4D0F') + '"' + HALO + '>' + esc(F(u)) + '</text>';
+      t0 += s.weeks;
+    });
+    svg += '<line x1="' + PL + '" y1="' + yb + '" x2="' + PR + '" y2="' + yb + '" stroke="#CDBFA5" stroke-width="1.2"/>';
+    if (vialMg) {
+      var cols = ['#37503F', '#6E8A74'];
+      pl.vials.forEach(function (v, ix) {
+        var x0 = px(v.t0), x1 = px(v.t1);
+        svg += '<rect class="rt-vial" data-vial="' + v.n + '" x="' + x0.toFixed(1) + '" y="' + (yb + 8) + '" width="' + Math.max(2, x1 - x0 - 1).toFixed(1) + '" height="22" rx="3" fill="' + cols[ix % 2] + '" fill-opacity=".85"/>';
+        if (x1 - x0 >= 18 && pl.vials.length <= 30) svg += '<text x="' + ((x0 + x1) / 2).toFixed(1) + '" y="' + (yb + 24) + '" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">' + v.n + '</text>';
+      });
+      svg += '<text x="' + (PL - 4) + '" y="' + (yb + 24) + '" text-anchor="end" font-size="12" fill="#5B4B3B">vial</text>';
+    }
+    ticks.forEach(function (w) { svg += '<line x1="' + px(w).toFixed(1) + '" y1="' + tickEnd + '" x2="' + px(w).toFixed(1) + '" y2="' + (tickEnd + 4) + '" stroke="#CDBFA5"/><text x="' + px(w).toFixed(1) + '" y="' + (tickEnd + 18) + '" text-anchor="middle" font-size="12" fill="#5B4B3B"' + HALO + '>' + (Math.round(w * 100) / 100) + '</text>'; });
+    return svg + '</svg>';
+  }
+  /* ---------- results ---------- */
+  function readAdv(soft) {
+    var kg = E.readPos($('rtKg').value, 1e6), wt = E.readPos($('rtWt').value, 1000), kb = $('rtKgUse'), wkg = wt.v ? wt.v * (st.wu === 'lb' ? 0.45359237 : 1) : 0, dz = kg.v && wkg ? kg.v * wkg : 0;
+    kb.style.display = 'none';
+    if (kg.empty && wt.empty) NOTE('rtKgN', 'Optional. Type a dose per kg of body weight and the body weight to work out a dose in mg.');
+    else if (kg.bad || wt.bad || (dz && (dz < 1e-6 || dz > 1e6))) { NOTE('rtKgN', 'Use numbers above 0 for the dose per kg and the body weight.'); soft.push({ m: 'Dose from body weight: use numbers above 0. It is ignored for now.', at: 'rtKg' }); }
+    else if (kg.empty) NOTE('rtKgN', 'Type the dose per kg too.');
+    else if (wt.empty) NOTE('rtKgN', 'Type the body weight too.');
+    else { NOTE('rtKgN', A(kg.v) + ' mg per kg × ' + A(wkg) + ' kg = ' + A(dz) + ' mg'); kb.textContent = 'Use ' + A(dz / E.MASS[st.du]) + ' ' + st.du + ' as the dose in step 1'; kb.style.display = ''; }
+  }
+  function render() {
+    var soft = [], liquid = st.form === 'liquid', waterMode = !liquid && st.find === 'water', i, n;
+    var vialMg = 0, conc = 0, waterMl = 0, contMl = 0;
+    /* ---- vial / label ---- */
+    var vr = E.readPos($('rtVial').value, 1e9), wr = E.readPos($('rtWater').value, 1e6), ipm = E.readPos($('rtIpm').value, 1e9), iu = st.vu === 'iu', vMg = vr.v ? (iu ? (ipm.v ? vr.v / ipm.v : 0) : vr.v * E.MASS[st.vu]) : 0;
+    if (!liquid) {
+      if (vr.empty) NOTE('rtVialN', 'Type the amount of peptide printed on the vial. It is shown in mg and mcg here.'); else if (vr.bad) NOTE('rtVialN', 'Use numbers only, for example 10.'); else if (iu && !vMg) NOTE('rtVialN', A(vr.v) + ' IU. Type the IU per mg printed on the label to turn it into mg.'); else NOTE('rtVialN', (iu ? A(vr.v) + ' IU = ' : '') + A(vMg) + ' mg = ' + A(vMg / E.MASS.mcg) + ' mcg');
+      if (!iu) NOTE('rtIpmN', ''); else if (ipm.empty) NOTE('rtIpmN', 'Peptides sold in IU print how many IU are in 1 mg. Type that number from your label: the page cannot guess it.'); else if (ipm.bad) NOTE('rtIpmN', 'Use a number above 0 for the IU per mg.'); else NOTE('rtIpmN', A(ipm.v) + ' IU per mg.');
+      if (wr.empty) NOTE('rtWaterN', vr.empty ? 'Type the water you add, in mL. Type the vial first to see the strength.' : 'Type the water you add, in mL, to see the strength.'); else if (wr.bad) NOTE('rtWaterN', 'Use a number above 0 for the water, in mL.'); else if (!vr.v) NOTE('rtWaterN', 'Type the amount in the vial first, then the water counts.'); else if (!vMg) NOTE('rtWaterN', 'Type the IU per mg from the label first, then the water counts.'); else NOTE('rtWaterN', A(vMg) + ' mg in ' + A(wr.v) + ' mL = ' + A(vMg / wr.v) + ' mg per mL (' + A(vMg / wr.v * 1000) + ' mcg per mL)');
+      NOTE('rtLN', ''); NOTE('rtLTotN', '');
+    } else {
+      var la = E.readPos($('rtLA').value, 1e9), lp = E.readPos($('rtLP').value, 1e6), lt = E.readPos($('rtLTot').value, 1e6);
+      if (la.empty) NOTE('rtLN', lp.empty ? 'Type the strength the way the label prints it, for example 5 mg in 1 mL. Leave the volume empty for “per 1 mL”.' : 'Type the amount on the label first, then the volume counts.'); else if (la.bad) NOTE('rtLN', 'Use numbers only, for example 5.'); else if (lp.bad) NOTE('rtLN', 'The volume should be a number above 0. It is ignored for now, so 1 mL is used.'); else { var sm = la.v * E.MASS[st.lu] / (lp.v || 1); NOTE('rtLN', A(la.v * E.MASS[st.lu]) + ' mg in ' + A(lp.v || 1) + ' mL = ' + A(sm) + ' mg per mL (' + A(sm * 1000) + ' mcg per mL)'); }
+      if (lp.bad && !la.empty && !la.bad) soft.push({ m: 'Label volume: use a number above 0. It is ignored for now, so “per 1 mL” is used.', at: 'rtLP' });
+      if (lt.empty) NOTE('rtLTotN', 'Optional. Type how much liquid is in the whole container, in mL, to count doses and containers.'); else if (lt.bad) { NOTE('rtLTotN', 'Use a number above 0 for the container size, in mL.'); soft.push({ m: 'Container size: use a number above 0 (in mL). It is ignored for now.', at: 'rtLTot' }); } else contMl = lt.v;
+      NOTE('rtVialN', ''); NOTE('rtWaterN', ''); NOTE('rtIpmN', '');
+    }
+    /* ---- injections a week ---- */
+    var perWeek = 1, fr = E.readPos($('rtFreq').value, 28);
+    if (fr.empty) NOTE('rtFreqN', 'Leave empty for 1 a week. Type how many injections you have in a week (for example 2, or 7 for every day).'); else if (fr.bad) { NOTE('rtFreqN', 'Use a number above 0 and up to 28.'); soft.push({ m: 'Injections a week: use a number above 0 and up to 28. It is ignored for now, so 1 a week is used.', at: 'rtFreq' }); } else { perWeek = fr.v; NOTE('rtFreqN', A(perWeek) + ' injection' + (perWeek === 1 ? '' : 's') + ' a week = one every ' + A(7 / perWeek) + ' days.'); }
+    /* ---- steps ---- */
+    var steps = [], bad1 = null;
+    for (n = 1; n <= st.rows; n++) {
+      var d = E.readPos($('rtD' + n).value, 1e9), w = E.readPos($('rtW' + n).value, 520), rowNote = '';
+      if (d.empty && w.empty) rowNote = n === 1 ? 'Type the dose for one injection (in the unit chosen above).' : 'Optional. Type the dose and the number of weeks for another step.';
+      else if (d.empty) rowNote = 'Type the dose for step ' + n + ' too.';
+      else if (d.bad) { rowNote = 'Use numbers only, for example 1 or 0.5.'; if (n === 1) bad1 = { m: 'The dose in step 1 should be a number above 0.', at: 'rtD1' }; else soft.push({ m: 'Step ' + n + ': the dose should be a number above 0. The step is ignored for now.', at: 'rtD' + n }); }
+      else {
+        var dmg = d.v * E.MASS[st.du];
+        if (dmg < 1e-6 || dmg > 1e9) { rowNote = 'That dose is outside 0.000001 to 1,000,000,000 mg.'; if (n === 1) bad1 = { m: 'The dose in step 1 should be between 0.000001 mg and 1,000,000,000 mg.', at: 'rtD1' }; else soft.push({ m: 'Step ' + n + ': the dose is out of range. The step is ignored for now.', at: 'rtD' + n }); }
+        else {
+          var wk = 0;
+          if (w.bad) { soft.push({ m: 'Step ' + n + ': the weeks should be a number above 0 and up to 520. The weeks are ignored for now.', at: 'rtW' + n }); } else if (w.v) wk = w.v;
+          steps.push({ n: n, doseMg: dmg, dose: d.v, weeks: wk, wBad: !!w.bad });
+          rowNote = st.du === 'mg' ? A(dmg) + ' mg = ' + A(dmg / E.MASS.mcg) + ' mcg' : A(d.v) + ' mcg = ' + A(dmg) + ' mg';
+        }
+      }
+      NOTE('rtRN' + n, rowNote);
+    }
+    /* ---- the strength and the water ---- */
+    var first = steps.filter(function (s) { return s.n === 1; })[0];
+    readAdv([]);
+    if (waterMode) { var wu0 = E.readPos($('rtWant').value, 1e6); if (wu0.empty) NOTE('rtWantN', 'Type how many units you want to draw for the dose in step 1.'); else if (wu0.bad) NOTE('rtWantN', 'Use a number above 0 for the units to draw.'); else if (vr.empty || !first) NOTE('rtWantN', 'Type the vial and the dose in step 1 too, to see the water.'); }
+    NOTE('rtDN', '');
+    if (liquid) {
+      var la2 = E.readPos($('rtLA').value, 1e9), lp2 = E.readPos($('rtLP').value, 1e6);
+      if (la2.empty) return empty(''); if (la2.bad) return empty('The amount on the label should be a number above 0.', 'rtLA');
+      conc = la2.v * E.MASS[st.lu] / (lp2.v || 1); if (!(conc >= 1e-6 && conc <= 1e7)) return empty('That strength is outside 0.000001 to 10,000,000 mg per mL. Check the amount and the volume.', 'rtLA');
+      vialMg = contMl ? conc * contMl : 0; waterMl = 0;
+    } else {
+      if (vr.empty) return empty(''); if (vr.bad) return empty('The amount in the vial should be a number above 0.', 'rtVial');
+      if (iu && ipm.empty) return empty(''); if (iu && ipm.bad) return empty('The IU per mg should be a number above 0.', 'rtIpm'); vialMg = vMg; if (vialMg < 1e-6 || vialMg > 1e9) return empty('The amount in the vial should be between 0.000001 mg and 1,000,000,000 mg.', 'rtVial');
+      if (!waterMode) { if (wr.empty) return empty(''); if (wr.bad) return empty('The water should be a number above 0, in mL (up to 1,000,000).', 'rtWater'); waterMl = wr.v; conc = vialMg / waterMl; if (!(conc >= 1e-6 && conc <= 1e7)) return empty('That vial and water give a strength outside 0.000001 to 10,000,000 mg per mL. Check the units.', 'rtWater'); }
+    }
+    if (bad1) return empty(bad1.m, bad1.at);
+    if (!first) return empty('');
+    /* water mode: how much water for the wanted draw */
+    var wantU = 0, wu = E.readPos($('rtWant').value, 1e6);
+    if (waterMode) {
+      if (wu.empty) { NOTE('rtWantN', 'Type how many units you want to draw for the dose in step 1.'); return empty(''); }
+      if (wu.bad) return empty('The units to draw should be a number above 0.', 'rtWant');
+      wantU = wu.v; waterMl = E.waterFor(vialMg, first.doseMg, wantU); conc = vialMg / waterMl;
+      if (!(waterMl >= 1e-6 && waterMl <= 1e6) || !(conc >= 1e-6 && conc <= 1e7)) return empty('That draw gives a water volume that is too large or too small to show. Check the numbers.', 'rtWant');
+      NOTE('rtWantN', 'To draw ' + A(wantU) + ' units for ' + A(first.doseMg) + ' mg from ' + A(vialMg) + ' mg, add ' + A(waterMl) + ' mL of water (' + A(conc) + ' mg per mL).');
+    } else NOTE('rtWantN', st.find === 'water' ? '' : 'Only used when “Water to add” is chosen.');
+    /* steps that cannot work */
+    var B = +st.syr, good = [];
+    steps.forEach(function (s) {
+      if (vialMg && s.doseMg > vialMg + 1e-12) { if (s.n === 1) { bad1 = { m: 'The dose in step 1 (' + A(s.doseMg) + ' mg) is more than the whole ' + (liquid ? 'container' : 'vial') + ' (' + A(vialMg) + ' mg).', at: 'rtD1' }; } else soft.push({ m: 'Step ' + s.n + ': the dose is more than the whole ' + (liquid ? 'container' : 'vial') + '. The step is ignored for now.', at: 'rtD' + s.n }); return; }
+      good.push(s);
+    });
+    if (bad1) return empty(bad1.m, bad1.at);
+    good.forEach(function (s) { var dr = E.draw(s.doseMg, conc); s.ml = dr.ml; s.units = dr.units; s.mk = E.mark(dr.units, conc); s.fits = dr.ml <= B + 1e-9; });
+    readAdv(soft);
+    setHint(soft.length ? soft[0].m : '', soft.length ? soft[0].at : null);
+    if (!good.filter(function (s) { return s.n === st.view; }).length) st.view = good[0].n;
+    var V = good.filter(function (s) { return s.n === st.view; })[0];
+    /* schedule + vials */
+    var withW = good.filter(function (s) { return s.weeks > 0 && E.injections(s.weeks, perWeek) > 0; }), pl = null;
+    if (withW.length) { pl = E.plan(withW.map(function (s) { return { doseMg: s.doseMg, weeks: s.weeks }; }), perWeek, vialMg); pl.stepsRef = withW; }
+    /* headline */
+    var multi = good.length > 1;
+    if (waterMode) { $('rtLab').textContent = 'Water to add for ' + A(wantU) + ' units'; $('rtBig').textContent = F(waterMl) + ' mL'; $('rtSub').textContent = 'Strength ' + F(conc) + ' mg per mL · ' + F(V.units) + ' units for ' + F(V.doseMg) + ' mg'; $('rtMLab').textContent = 'Water to add'; $('rtMVal').textContent = F(waterMl) + ' mL'; }
+    else { $('rtLab').textContent = multi ? 'Draw for step ' + V.n : 'Syringe units for your dose'; $('rtBig').textContent = F(V.units) + ' units'; $('rtSub').textContent = F(V.ml) + ' mL · ' + F(V.doseMg) + ' mg at ' + F(conc) + ' mg per mL'; $('rtMLab').textContent = multi ? 'Draw, step ' + V.n : 'Draw'; $('rtMVal').textContent = F(V.units) + ' units'; }
+    $('rtTip').textContent = (liquid ? 'A ' + A(conc) + ' mg per mL liquid' : 'A ' + A(vialMg) + ' mg vial with ' + A(waterMl) + ' mL of water (' + A(conc) + ' mg per mL)') + ': ' + A(V.doseMg) + ' mg is ' + A(V.ml) + ' mL, which is ' + A(V.units) + ' units on a syringe where 100 units = 1 mL.';
+    /* warnings */
+    var warn = [];
+    good.forEach(function (s) {
+      var pre = multi ? 'Step ' + s.n + ': ' : '';
+      if (!s.fits) { var wmax = !liquid ? vialMg * B / s.doseMg : 0; warn.push(pre + 'this dose needs ' + A(s.ml) + ' mL, more than the ' + A(B) + ' mL syringe holds.' + (!liquid ? ' With at most ' + A(wmax) + ' mL of water in this vial it would fit.' : ' Check the strength and the syringe size.')); }
+      else if (s.units < 1) warn.push(pre + 'this is under 1 unit (' + A(s.ml) + ' mL). A syringe cannot measure that: check the strength, the water and the dose.');
+      else if (Math.abs(s.mk.u - s.units) / s.units > 0.005) { var pc = (s.mk.mg - s.doseMg) / s.doseMg * 100; warn.push(pre + 'the draw is ' + A(s.units) + ' units. The closest whole unit is ' + s.mk.u + ', which gives ' + A(s.mk.mg) + ' mg (' + A(Math.abs(pc)) + '% ' + (pc > 0 ? 'more' : 'less') + ' than the dose). Check which marks your syringe has.'); }
+    });
+    $('rtWarn').innerHTML = warn.map(function (w) { return '<p class="rt-warn">' + esc(w) + '</p>'; }).join(''); show('rtWarn', warn.length > 0);
+    /* syringe */
+    if (V.fits && V.units >= 1e-9) { $('rtSyr').innerHTML = syringe(V.ml, B, V.units); $('rtSyrCap').textContent = 'A ' + A(B) + ' mL syringe (' + Math.round(B * 100) + ' units), drawn to scale and filled to ' + F(V.units) + ' units' + (multi ? ' for step ' + V.n : '') + '. Schematic: real syringes have their own marks, so read the marks on yours.'; show('rtSyrWrap', true); }
+    else { $('rtSyr').innerHTML = ''; show('rtSyrWrap', false); }
+    /* the numbers */
+    var tr = function (a, b) { return '<tr><td>' + a + '</td><td>' + b + '</td></tr>'; }, perVial = vialMg ? Math.floor(vialMg / V.doseMg + 1e-9) : 0;
+    var rows = [tr('Strength', F(conc) + ' mg per mL (' + F(conc * 1000) + ' mcg per mL)'), tr('Dose', F(V.doseMg) + ' mg = ' + F(V.doseMg / E.MASS.mcg) + ' mcg'), tr('Volume to draw', F(V.ml) + ' mL'), tr('Syringe units', F(V.units) + ' units')];
+    if (!liquid) { rows.unshift(tr('Peptide in the vial', F(vialMg) + ' mg (' + F(vialMg / E.MASS.mcg) + ' mcg)'), tr('Water added', F(waterMl) + ' mL')); }
+    if (vialMg) { rows.push(tr('Doses in one ' + (liquid ? 'container' : 'vial') + ' at this dose', String(perVial))); rows.push(tr('Weeks one ' + (liquid ? 'container' : 'vial') + ' lasts at ' + A(perWeek) + ' a week', perVial ? F(perVial / perWeek) : '0')); }
+    else if (liquid) rows.push(tr('Doses in a container', 'type the container size above'));
+    $('rtNums').innerHTML = '<tbody>' + rows.join('') + '</tbody>';
+    /* schedule table */
+    var head = '<thead><tr><th>Step</th><th>Dose</th><th>Draw</th><th>Weeks</th></tr></thead><tbody>';
+    $('rtSched').innerHTML = head + good.map(function (s) { return '<tr data-n="' + s.n + '" class="' + (s.n === st.view ? 'on' : '') + '"><td>' + s.n + '</td><td>' + F(s.dose) + ' ' + st.du + '</td><td>' + F(s.units) + ' units</td><td>' + (s.weeks ? A(s.weeks) : '—') + '</td></tr>'; }).join('') + '</tbody>';
+    show('rtSchedWrap', multi || !!pl);
+    $('rtSchedKey').textContent = multi ? 'Click a step to see it on the syringe.' : '';
+    /* timeline + totals */
+    if (pl && pl.inj > 0) {
+      $('rtTl').innerHTML = timeline(pl, B, vialMg); show('rtTlWrap', true);
+      var tot = [tr('Total weeks', A(pl.T)), tr('Injections', String(pl.inj)), tr('Total peptide used', F(pl.mg) + ' mg')];
+      if (vialMg) { var left = pl.vials.length ? pl.vials[pl.vials.length - 1].left : 0; tot.push(tr((liquid ? 'Containers' : 'Vials') + ' needed', String(pl.vials.length))); tot.push(tr('Left in the last ' + (liquid ? 'container' : 'vial'), F(left) + ' mg')); }
+      $('rtTot').innerHTML = '<tbody>' + tot.join('') + '</tbody>';
+      $('rtTlCap').textContent = 'Each amber bar is one step: its width is the weeks and its height the units you draw' + (vialMg ? '; the green blocks below show which ' + (liquid ? 'container' : 'vial') + ' each injection comes from. A new one is opened when the rest cannot cover the next dose, so the leftover is not used.' : '.') + (good.some(function (s) { return s.weeks > 0 && !(E.injections(s.weeks, perWeek) > 0); }) ? ' A step shorter than one injection is left out.' : '');
+    } else { show('rtTlWrap', false); $('rtTl').innerHTML = ''; $('rtTot').innerHTML = ''; }
+    /* water comparison */
+    if (!liquid) {
+      var ws = E.WATERS.slice(); if (ws.indexOf(waterMl) < 0 && !waterMode) { ws.push(waterMl); ws.sort(function (a, b) { return a - b; }); }
+      $('rtWTab').innerHTML = '<thead><tr><th>Water</th><th>Strength</th><th>Draw</th></tr></thead><tbody>' + ws.map(function (w) { var c = vialMg / w, dr = E.draw(V.doseMg, c); return '<tr data-w="' + w + '" class="' + (Math.abs(w - waterMl) < 1e-9 ? 'on' : '') + '"><td>' + A(w) + ' mL</td><td>' + F(c) + ' mg/mL</td><td>' + F(dr.units) + ' units' + (dr.ml > B + 1e-9 ? ' (too big)' : '') + '</td></tr>'; }).join('') + '</tbody>'; show('rtWTabWrap', true);
+    } else show('rtWTabWrap', false);
+    /* units reference */
+    $('rtUTab').innerHTML = '<thead><tr><th>Units</th><th>Volume</th><th>Peptide</th></tr></thead><tbody>' + E.UREF.map(function (u) { return '<tr><td>' + u + '</td><td>' + F(u / 100) + ' mL</td><td>' + F(u / 100 * conc) + ' mg</td></tr>'; }).join('') + '</tbody>';
+    /* copy */
+    var cp = A(V.doseMg) + ' mg: draw ' + F(V.units) + ' units (' + F(V.ml) + ' mL) at ' + A(conc) + ' mg per mL' + (!liquid ? ' (' + A(vialMg) + ' mg + ' + A(waterMl) + ' mL water)' : '');
+    $('rtCopyTxt').textContent = cp + ' (calcthis.co/retatrutide-dosage-calculator/)';
+    last = { cp: cp };
+    $('rtBody').style.display = '';
+  }
+  applyForm(); showRows(); render();
+};
+/* RETA:END */
+
 /* COMPOUND:BEGIN */
 /* =========================================================
    COMPOUND INTEREST calculator (/compound-interest-calculator/). Competitors opened live (2026-11-13): calculator.net (interest calculator: contributions, begin/end, tax, inflation, schedules;

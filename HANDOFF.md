@@ -1,3 +1,5 @@
+**NEWEST (2026-11-22, SESSION #15 part 2): RETATRUTIDE DOSAGE BUILT, NOT DEPLOYED. Read `HANDOFF.md` §000000000000002e (first section below) in full. First reply = ONE sync line, then work silently.**
+
 **NEWEST (2026-11-22, SESSION #15): T-TEST BUILT, NOT DEPLOYED (v360 live, 112 calcs once deployed). Read `HANDOFF.md` §000000000000002d (first section below) in full. First reply = ONE sync line, then work silently.**
 
 **NEWEST (2026-11-22, END OF SESSION #14 PART 3): LIVE v360 · 111 calcs · 242 pages, GSC quota used, Bing fed. Read `HANDOFF.md` §000000000000002c (first section below) in full, then §2b and §2a. First reply = its ONE sync line, then the T-TEST CALCULATOR research report (wait for "Approve all"). NO narration.**
@@ -30,6 +32,18 @@ _Rewritten 2026-11-08 at the end of session #6 PART 2 (profit margin v331, disco
 **UPDATE 2026-11-12 (later): UNIT-PAIR CONTENT FIX DEPLOYED v344 (CLAUDE.md addendum 40). Step (2) of his 'do all' is done; NEXT = (3) tip pages + sales-tax states research report; GSC queue now also includes the 18 pair pages + 4 changed state items; Bing manual submit of the 18 pair URLs pending (he must be signed in).**
 
 **NEWEST (2026-11-13, END OF SESSION #10): live v351 · 108 calcs · 238 pages. Read `HANDOFF.md` §0000000000000026 in full (first section below). First reply = ONE sync line, then the #12 AMORTIZATION calculator research report (wait for "Approve all"). GSC queue = "Start queue" on his word (quota was exceeded twice on 2026-11-13); Bing submits are done for everything live. z-score v350 + compound interest v351 deployed. Re-read GSC ~2026-11-26.**
+
+## 000000000000002e. START HERE — 2026-11-22 SESSION #15 PART 2: RETATRUTIDE DOSAGE CALCULATOR BUILT (NOT DEPLOYED), ALL GATES PASS — t-test is LIVE v361 (commit 19c3f37b)
+
+**0. First reply = ONE sync line, then silence. One final message with a "QA:" line. Deploy only on his "Deploy".**
+
+**1. WHAT EXISTS (uncommitted):** `retatrutide-dosage-calculator/index.html` (generator `md-files/gen-reta-page.js`, registered in sitemap, build.js PAGES, llms.txt, header/footer partials after Dilution, homepage card + hasPart + about list, seo-meta-hand.json), engine + init in `assets/app.js` after the TTEST block (`RETA:BEGIN/END`), css `.p-rt` at the end of `assets/style.css`, QA files `md-files/qa/fixtures|oracles|text|sidebyside|parity/retatrutide-dosage-calculator.*`, `md-files/qa-passes/*`. Details: CLAUDE.md addendum 48, research `md-files/calcthis-dosage-research.md`.
+
+**2. GATES ALL PASS:** run.js, viewed 12/12, final.js, preflight (the circular provisional record was written ONLY because he said "Yes, allow it" again; per-page permission, never assume), parity, audit-silent. Any later edit of the page needs run.js, Read all 12 shots, viewed.js, final.js, preflight again.
+
+**3. NEXT:** (1) his preview `http://localhost:8123/retatrutide-dosage-calculator/` and "Deploy": what's-new entry at the TOP of `md-files/gen-whatsnew-page.js` (same date entry), `node build.js`, commit, push, curl 200, Pages status, Bing manual submit (page + t-test, quota was 0 on 2026-11-22), GSC "Start queue" (t-test + retatrutide after virginia). (2) AdSense / policy risk of the unapproved-drug topic: flagged, not checked; he may veto at preview. (3) Open decisions he has not made: retitle `/peptide-reconstitution-calculator/` to "Peptide Dosage Calculator ..." (check GSC first); other candidates: serial dilution spoke, correlation coefficient, cookie banner before Dec 15.
+
+**4. THINGS THAT BIT ME:** (a) I almost wrote a parity sign-off quote for a feature he never approved (IU vials): the classifier refused; I built the feature instead. Never invent a sign-off. (b) Notes of fields that sit after an early `return empty()` stay silent: compute every field note BEFORE the required-field returns (audit-silent caught rtKg and the water-mode units box). (c) SVG text must render >= 11px at 375px: viewBox width 260. (d) Row labels that wrap misalign paired inputs: keep labels one line ("Weeks", not "For how many weeks"). (e) backslash-d in node -e / heredoc strings gets lost: use the Edit tool.
 
 ## 000000000000002d. START HERE — 2026-11-22 SESSION #15: T-TEST CALCULATOR BUILT (NOT DEPLOYED), ALL GATES PASS EXCEPT THE PREFLIGHT RECORD — LIVE STILL v360 · `/t-test-calculator/` ready in the working tree
 

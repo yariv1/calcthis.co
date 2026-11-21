@@ -3849,3 +3849,64 @@ body .fld + .av-note,body .fld + .cb-note{margin-top:-6px}
 .p-tt #ttDev td:nth-child(n+2),.p-tt #ttDev th:nth-child(n+2){text-align:right}
 .p-tt #ttDev thead tr:first-child th{text-align:left}
 .p-tt #ttDevWrap{margin:6px 0 8px}
+
+/* ---- MG TO ML calculator (.p-rt) — reuses .p-bmr result look, .dtable, .seg, .csel, .chips and the vitamin D amount box ---- */
+.p-rt .modeseg{grid-template-columns:repeat(3,1fr)}
+.p-rt .card{min-width:0}
+.p-rt .cf-box{display:flex;align-items:center;gap:8px;background:#FBF6EC;border:1px solid var(--line);border-radius:11px;padding:6px 8px;transition:.15s}
+.p-rt .cf-box:focus-within{border-color:var(--amber);background:#fff;box-shadow:0 0 0 3px rgba(181,118,31,.13)}
+.p-rt .cf-box input{flex:1;min-width:0;width:100%;border:0;background:none;font:inherit;font-size:19px;font-weight:600;color:var(--ink);padding:4px 4px;margin:0;outline:none}
+.p-rt .cf-box .seg{flex:none;padding:2px}
+.p-rt .cf-box .seg button{padding:6px 11px;font-size:12.5px}
+.p-rt .two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+.p-rt .av-note,.p-rt .cb-note{font-size:14px;font-weight:500;color:var(--ink-soft);margin:4px 0 8px;line-height:1.45}
+.p-rt .cb-note{color:var(--muted);font-weight:400}
+.p-rt .chips{margin:0 0 14px}
+.p-rt .rt-syr{margin:6px 0 4px}
+.p-rt .rt-syr-svg{display:block;width:100%;max-width:440px;height:auto}
+.p-rt .rt-cap{font-size:14px;font-weight:400;color:var(--muted);line-height:1.45;margin:2px 0 8px}
+.p-rt .rt-rule{margin:6px 0 4px;padding-bottom:8px}
+.p-rt .rt-rule-t{position:relative;height:16px;border-radius:8px;background:#EFE7D8;margin:14px 0 0}
+.p-rt .rt-band{position:absolute;left:0;top:0;bottom:0;background:var(--spruce);opacity:.6;border-radius:8px 0 0 8px}
+.p-rt .rt-mk{position:absolute;top:-6px;width:4px;height:28px;margin-left:-2px;background:var(--amber-deep);border-radius:2px;font-style:normal}
+.p-rt .rt-rule-l{position:relative;height:40px;margin-top:10px}
+.p-rt .rt-rule-l span{position:absolute;top:0;transform:translateX(-50%);font-size:13px;font-weight:500;color:var(--muted);line-height:1.25;white-space:nowrap;text-align:center}
+.p-rt .rt-rule-l span b{display:block;font-size:13.5px;font-weight:700;color:var(--ink)}
+.p-rt .rt-rule-l span.f{transform:none;text-align:left}
+.p-rt .rt-rule-l span.l{transform:translateX(-100%);text-align:right}
+.p-rt .rt-warn{font-size:14px;font-weight:500;color:var(--amber-deep);background:#FBF3E4;border-left:3px solid var(--amber);border-radius:6px;padding:8px 10px;margin:8px 0;line-height:1.45}
+.p-rt .dtable td:nth-child(n+2),.p-rt .dtable th:nth-child(n+2){text-align:right}
+.p-rt #rtTab tr[data-d]{cursor:pointer}
+.p-rt #rtTab tr[data-d]:hover td{background:#FCF7EE}
+.p-rt .rt-li{display:flex;align-items:center;gap:6px;padding:6px 0;border-bottom:1px dashed var(--line)}
+.p-rt .rt-li-t{flex:1;min-width:0;text-align:left;background:none;border:0;font:inherit;font-size:14.5px;font-weight:500;color:var(--ink);cursor:pointer;padding:2px 0;line-height:1.35}
+.p-rt .rt-li-t:hover{color:var(--amber-deep);text-decoration:underline}
+.p-rt .rt-li .x{background:none;border:0;color:var(--muted);cursor:pointer;font-size:18px;line-height:1;padding:2px 6px;border-radius:5px}
+.p-rt .rt-li .x:hover{color:#b23;background:#f7e9e9}
+.p-rt .rt-tools{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;margin:10px 0 4px}
+.p-rt .bm-sub{display:block;font-size:12.5px;font-weight:500;color:var(--muted);margin-top:2px}
+.p-rt .sl-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:6px}
+.p-rt .sl-head .card-h2{margin:0}
+.p-rt .two + .cb-note{margin-top:-6px}
+.p-rt .rt-wide{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.p-rt #rtDec{grid-template-columns:repeat(4,1fr)}
+.p-rt .fld .chips{margin:0}
+.p-rt .modeseg{grid-template-columns:repeat(2,1fr)}
+.p-rt .two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+.p-rt .two > *{min-width:0}
+.p-rt .rt-step{border-top:1px dashed var(--line);padding-top:10px;margin-top:4px}
+.p-rt .rt-step:first-of-type{border-top:0;padding-top:0;margin-top:0}
+.p-rt .rt-steph{display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:600;color:var(--ink);margin:0 0 6px}
+.p-rt .rt-x{background:none;border:0;color:var(--muted);cursor:pointer;font-size:14px;font-weight:500;padding:2px 4px}
+.p-rt .rt-x:hover{color:#b23}
+.p-rt #rtSched tr[data-n],.p-rt #rtWTab tr[data-w]{cursor:pointer}
+.p-rt #rtSched tr[data-n]:hover td,.p-rt #rtWTab tr[data-w]:hover td{background:#FCF7EE}
+.p-rt #rtSched tr.on td,.p-rt #rtWTab tr.on td{font-weight:700;color:var(--ink);background:#FBF3E4}
+.p-rt .rt-tl{border:1px solid var(--line);border-radius:12px;background:#FFFDF8;padding:8px 8px 4px;margin:6px 0 4px}
+.p-rt .rt-tl svg{display:block;width:100%;height:auto}
+.p-rt .rt-syr-svg{display:block;width:100%;max-width:440px;height:auto}
+.p-rt .dtable td,.p-rt .dtable th{overflow-wrap:anywhere}
+.p-rt .grid2 > div{min-width:0}
+.p-rt .rt-wide{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
+.p-rt #rtDec{grid-template-columns:repeat(4,1fr)}
+.p-rt #rtSyrSz{grid-template-columns:repeat(3,1fr)}

@@ -1,0 +1,28 @@
+{
+ "date": "2026-11-22",
+ "competitors": [
+  { "name": "Omnicalculator peptide calculator", "url": "https://www.omnicalculator.com/health/peptide-dosage", "reopenedAfterBuild": true, "gaps": [] },
+  { "name": "thepeptidecatalog retatrutide calculator", "url": "https://thepeptidecatalog.com/dose/retatrutide", "reopenedAfterBuild": true, "gaps": [] },
+  { "name": "peptideprotocolwiki retatrutide calculator", "url": "https://www.peptideprotocolwiki.com/tools/dosing-calculator/retatrutide", "reopenedAfterBuild": true, "gaps": [] },
+  { "name": "peptidedeck retatrutide calculator", "url": "https://www.peptidedeck.com/peptide-calculator/retatrutide-dosage", "reopenedAfterBuild": true, "gaps": [] },
+  { "name": "glp3planner retatrutide calculator", "url": "https://glp3planner.com/retatrutide-calculator", "reopenedAfterBuild": true, "gaps": [] },
+  { "name": "calculate.co.nz peptide reconstitution calculator", "url": "https://www.calculate.co.nz/peptide-calculator.php", "reopenedAfterBuild": true, "gaps": [] },
+  { "name": "peptiq dosage calculator", "url": "https://peptiq.io/calculators/dosage", "reopenedAfterBuild": true, "gaps": [] }
+ ],
+ "weBeat": [
+  "visual: the user's own schedule drawn against the vials: one bar per step (width = weeks, height = units) and one green block per vial showing where each vial starts and ends, next to a to-scale syringe in units; competitors draw a syringe at most, none draws the vials",
+  "functional: the user types their OWN steps (dose and weeks) and gets units per step, injections, total peptide, vials needed and what is left, plus water to add for a wanted draw, ready-liquid mode with container count, IU vials with the label's IU per mg, whole-unit rounding warning with the real dose, syringe-fit check with the water that would fit, and mcg/mg echo; competitors hard-code a titration ladder",
+  "no dose is ever suggested: titration ladders, community protocols, named-drug presets, half-life chart, vendor links and login plans are left out (dropped under his approval of the research report, recorded in the parity file)"
+ ],
+ "gapsLeft": [],
+ "unverified": [
+  "real phone",
+  "other browsers (Chrome only)",
+  "print",
+  "Copy button in a real clipboard session",
+  "the competitors were compared from the research pass and the same pages reloaded after the build, not typed side by side with every input; the anchors 5 mg + 2 mL + 250 mcg = 10 units and 15 mg + 2 mL + 1 mg = 13.3 units match calculate.co.nz and peptideprotocolwiki",
+  "the 100 units = 1 mL syringe definition comes from the competitor pages and our peptide page, not from a regulator page I read",
+  "retatrutide is called investigational by Lilly's press release of 2026-05-21; its current regulatory status was not re-checked elsewhere",
+  "whether Google or AdSense treat a retatrutide page differently was not checked"
+ ]
+}

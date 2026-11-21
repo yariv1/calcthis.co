@@ -1,6 +1,6 @@
 {
  "/": {
-  "hash": "cbe71864577b2493",
+  "hash": "cd61aae4f7a290b6",
   "date": "2026-11-21"
  },
  "/board-foot-calculator/": {
@@ -788,7 +788,7 @@
   "date": "2026-11-20"
  },
  "/whats-new/": {
-  "hash": "8d7fcf4d8c3fc8cf",
+  "hash": "1ce3aa837715040e",
   "date": "2026-11-21"
  },
  "/contact/": {
@@ -969,6 +969,10 @@
  },
  "/t-test-calculator/": {
   "hash": "e5e83bc39e43d625",
+  "date": "2026-11-21"
+ },
+ "/retatrutide-dosage-calculator/": {
+  "hash": "e65c5897d0b13736",
   "date": "2026-11-21"
  }
 }

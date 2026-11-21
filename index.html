@@ -138,6 +138,7 @@
         { "@type": "WebApplication", "name": "Amortization Calculator", "url": "https://calcthis.co/amortization-calculator/", "applicationCategory": "FinanceApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "mg to mL Calculator", "url": "https://calcthis.co/mg-to-ml-calculator/", "applicationCategory": "HealthApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Dilution Calculator", "url": "https://calcthis.co/dilution-calculator/", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
+        { "@type": "WebApplication", "name": "Retatrutide Dosage Calculator", "url": "https://calcthis.co/retatrutide-dosage-calculator/", "applicationCategory": "HealthApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Mortgage Calculator", "url": "https://calcthis.co/mortgage-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Loan Calculator", "url": "https://calcthis.co/loan-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Auto Loan Calculator", "url": "https://calcthis.co/auto-loan-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
@@ -156,7 +157,7 @@
   ]
 }
 </script>
-<link rel="stylesheet" href="/assets/style.css?v=361">
+<link rel="stylesheet" href="/assets/style.css?v=362">
 <style>
   .cat-tabs{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
   .cat-grp--hidden{display:none}
@@ -299,6 +300,7 @@
           <span class="menu-col-head">Medication &amp; Lab</span>
           <a href="/mg-to-ml-calculator/">mg to mL</a>
           <a href="/dilution-calculator/">Dilution</a>
+          <a href="/retatrutide-dosage-calculator/">Retatrutide Dosage</a>
           <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
           <!--UNITNAV:START-->
           <span class="menu-col-head">Unit Converters</span>
@@ -1305,6 +1307,21 @@
       </span>
     </a>
 
+    <a class="calc" href="/retatrutide-dosage-calculator/">
+      <span class="ico" aria-hidden="true">
+        <svg width="30" height="30" viewBox="0 0 32 32" fill="none">
+          <rect x="6" y="13" width="18" height="6" rx="2" stroke="#37503F" stroke-width="2.2"/>
+          <path d="M24 16h5M6 16H3M13 13v6M17 13v6" stroke="#37503F" stroke-width="2" stroke-linecap="round"/>
+          <path d="M7 16h6" stroke="#D99A33" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <h3>Retatrutide Dosage Calculator</h3>
+      <p>Syringe units from the vial, the water and the dose you type, with your own steps and vials needed. Arithmetic only.</p>
+      <span class="go">Open calculator
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+    </a>
+
     <a class="calc" href="/peptide-reconstitution-calculator/">
       <span class="ico" aria-hidden="true">
         <svg width="30" height="30" viewBox="0 0 32 32" fill="none">
@@ -2284,6 +2301,7 @@
           <li><a href="/amortization-calculator/">Amortization</a><span> — every payment of a loan split into interest and principal, the balance at any point, and what extra payments save, in any currency</span></li>
           <li><a href="/mg-to-ml-calculator/">mg to mL Calculator</a><span> — dose in mg and the strength on the label to milliliters on a to-scale syringe, mL to mg and the strength from a dose and a volume</span></li>
           <li><a href="/dilution-calculator/">Dilution Calculator</a><span> — concentrate and water for any strength, ratio (1:10) or factor, with a flask drawn to scale and the same batch at other strengths</span></li>
+          <li><a href="/retatrutide-dosage-calculator/">Retatrutide Dosage Calculator</a><span> — syringe units from the vial, the water and a dose you type, with your own steps and the vials they need; arithmetic only, no doses</span></li>
           <li><a href="/sales-tax-calculator/">Sales tax</a><span> — by state, with exempt items and local rates</span></li>
           <li><a href="/tip-calculator/">Tip</a><span> — split the bill, tip before or after tax</span></li>
         </ul>
@@ -2359,6 +2377,7 @@
         <ul class="footer-links">
           <li><a href="/mg-to-ml-calculator/">mg to mL Calculator</a></li>
           <li><a href="/dilution-calculator/">Dilution Calculator</a></li>
+          <li><a href="/retatrutide-dosage-calculator/">Retatrutide Dosage Calculator</a></li>
           <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
         </ul>
       </div>
@@ -2618,7 +2637,7 @@
   });
 })();
 </script>
-<script src="/assets/app.js?v=361"></script>
+<script src="/assets/app.js?v=362"></script>
 <script src="/feedback.js" defer></script>
 </body>
 </html>

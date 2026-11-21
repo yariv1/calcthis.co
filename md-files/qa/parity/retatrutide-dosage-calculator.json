@@ -1,0 +1,309 @@
+{
+ "slug": "retatrutide-dosage-calculator",
+ "research": "md-files/calcthis-dosage-research.md",
+ "competitors": [
+  {
+   "name": "Omnicalculator peptide calculator",
+   "url": "https://www.omnicalculator.com/health/peptide-dosage",
+   "openedLive": true,
+   "date": "2026-11-22",
+   "inputs": [
+    "vial capacity in mcg, mg or oz",
+    "bacteriostatic water volume in mL",
+    "dose in mcg, mg or g",
+    "pull the syringe to ... units",
+    "total amount of peptide for a weight-based dose (weight + dose per kg)",
+    "unit converters on every field",
+    "share result, reload, clear",
+    "peptide and reconstitution explanation text, sources, safety warning"
+   ]
+  },
+  {
+   "name": "thepeptidecatalog retatrutide calculator",
+   "url": "https://thepeptidecatalog.com/dose/retatrutide",
+   "openedLive": true,
+   "date": "2026-11-22",
+   "inputs": [
+    "vial size chips 10, 30, 60 mg",
+    "bacteriostatic water chips 1, 1.5, 2, 3 mL",
+    "dose chips 500 mcg, 1 mg, 2 mg and typed dose",
+    "draw in units on a U-100 syringe",
+    "concentration, draw volume and doses per vial with weeks",
+    "popular setups with usage counts",
+    "documented protocols table (starter, standard, advanced doses)",
+    "cycle cost calculator and vendor comparison links"
+   ]
+  },
+  {
+   "name": "peptideprotocolwiki retatrutide calculator",
+   "url": "https://www.peptideprotocolwiki.com/tools/dosing-calculator/retatrutide",
+   "openedLive": true,
+   "date": "2026-11-22",
+   "inputs": [
+    "vial labeled in mg or International Units",
+    "mode dose to syringe units",
+    "mode dose and units to water volume",
+    "presets for named peptides",
+    "syringe size 0.3, 0.5, 1 mL",
+    "vial and water chips and dose chips",
+    "dosing frequency (daily, twice daily, every other day, twice weekly, weekly, as needed)",
+    "pull to units on a scale drawing and doses per vial",
+    "1 mL versus 2 mL water comparison table",
+    "insulin syringe units to mL reference table",
+    "community protocols (alternative dose protocols)",
+    "email gated supply plan"
+   ]
+  },
+  {
+   "name": "peptidedeck retatrutide calculator",
+   "url": "https://www.peptidedeck.com/peptide-calculator/retatrutide-dosage",
+   "openedLive": true,
+   "date": "2026-11-22",
+   "inputs": [
+    "simple dose mode",
+    "titration schedule mode with target maintenance dose and speed",
+    "current week",
+    "vial size chips 5, 10, 20, 30 mg",
+    "water chips 1, 2, 3 mL",
+    "volume, IU on U-100 and weeks per vial",
+    "to-scale 1 mL syringe",
+    "full schedule table with volume and units per week",
+    "over-1-mL warning",
+    "vendor discount code"
+   ]
+  },
+  {
+   "name": "glp3planner retatrutide calculator",
+   "url": "https://glp3planner.com/retatrutide-calculator",
+   "openedLive": true,
+   "date": "2026-11-22",
+   "inputs": [
+    "dose schedule builder with tiers (weeks, dose, days of the week)",
+    "half-life drug level chart and steady state estimate",
+    "standard dosage chart",
+    "saved schedules with login"
+   ]
+  },
+  {
+   "name": "calculate.co.nz peptide reconstitution calculator",
+   "url": "https://www.calculate.co.nz/peptide-calculator.php",
+   "openedLive": true,
+   "date": "2026-11-22",
+   "inputs": [
+    "peptide in the vial in mg",
+    "diluent added in mL",
+    "amount wanted in mcg or mg",
+    "syringe type U-100, U-50, U-30",
+    "concentration, volume to draw, reading in units, amounts per vial, total in vial",
+    "check that the volume fits the barrel",
+    "worked example and arithmetic-only disclaimer"
+   ]
+  },
+  {
+   "name": "peptiq dosage calculator",
+   "url": "https://peptiq.io/calculators/dosage",
+   "openedLive": true,
+   "date": "2026-11-22",
+   "inputs": [
+    "concentration in mcg per mL and target dose in mcg to units",
+    "links to reconstitution chart, shelf life table and app"
+   ]
+  }
+ ],
+ "features": [
+  {
+   "covers": [
+    "Omnicalculator peptide calculator: vial capacity in mcg, mg or oz",
+    "thepeptidecatalog retatrutide calculator: vial size chips 10, 30, 60 mg",
+    "peptideprotocolwiki retatrutide calculator: vial labeled in mg or International Units",
+    "peptidedeck retatrutide calculator: vial size chips 5, 10, 20, 30 mg",
+    "calculate.co.nz peptide reconstitution calculator: peptide in the vial in mg"
+   ],
+   "status": "match",
+   "ids": [
+    "rtVial",
+    "rtVu",
+    "rtVChips",
+    "rtIpm"
+   ]
+  },
+  {
+   "covers": [
+    "Omnicalculator peptide calculator: bacteriostatic water volume in mL",
+    "thepeptidecatalog retatrutide calculator: bacteriostatic water chips 1, 1.5, 2, 3 mL",
+    "peptideprotocolwiki retatrutide calculator: vial and water chips and dose chips",
+    "peptidedeck retatrutide calculator: water chips 1, 2, 3 mL",
+    "calculate.co.nz peptide reconstitution calculator: diluent added in mL"
+   ],
+   "status": "match",
+   "ids": [
+    "rtWater",
+    "rtWChips"
+   ]
+  },
+  {
+   "covers": [
+    "Omnicalculator peptide calculator: dose in mcg, mg or g",
+    "thepeptidecatalog retatrutide calculator: dose chips 500 mcg, 1 mg, 2 mg and typed dose",
+    "peptidedeck retatrutide calculator: simple dose mode",
+    "calculate.co.nz peptide reconstitution calculator: amount wanted in mcg or mg"
+   ],
+   "status": "match",
+   "ids": [
+    "rtD1",
+    "rtDu"
+   ]
+  },
+  {
+   "covers": [
+    "peptiq dosage calculator: concentration in mcg per mL and target dose in mcg to units"
+   ],
+   "status": "match",
+   "ids": [
+    "rtLA",
+    "rtLP",
+    "rtLu"
+   ]
+  },
+  {
+   "covers": [
+    "Omnicalculator peptide calculator: pull the syringe to ... units",
+    "thepeptidecatalog retatrutide calculator: draw in units on a U-100 syringe",
+    "peptideprotocolwiki retatrutide calculator: mode dose to syringe units",
+    "peptideprotocolwiki retatrutide calculator: pull to units on a scale drawing and doses per vial",
+    "peptidedeck retatrutide calculator: volume, IU on U-100 and weeks per vial",
+    "peptidedeck retatrutide calculator: to-scale 1 mL syringe"
+   ],
+   "status": "exceed",
+   "ids": [
+    "rtBig",
+    "rtSyr",
+    "rtSyrWrap"
+   ]
+  },
+  {
+   "covers": [
+    "peptideprotocolwiki retatrutide calculator: mode dose and units to water volume"
+   ],
+   "status": "match",
+   "ids": [
+    "rtFind",
+    "rtWant"
+   ]
+  },
+  {
+   "covers": [
+    "peptideprotocolwiki retatrutide calculator: syringe size 0.3, 0.5, 1 mL",
+    "peptidedeck retatrutide calculator: over-1-mL warning",
+    "calculate.co.nz peptide reconstitution calculator: syringe type U-100, U-50, U-30",
+    "calculate.co.nz peptide reconstitution calculator: check that the volume fits the barrel"
+   ],
+   "status": "exceed",
+   "ids": [
+    "rtSyrSz",
+    "rtWarn"
+   ]
+  },
+  {
+   "covers": [
+    "Omnicalculator peptide calculator: total amount of peptide for a weight-based dose (weight + dose per kg)",
+    "thepeptidecatalog retatrutide calculator: concentration, draw volume and doses per vial with weeks",
+    "calculate.co.nz peptide reconstitution calculator: concentration, volume to draw, reading in units, amounts per vial, total in vial"
+   ],
+   "status": "match",
+   "ids": [
+    "rtNums",
+    "rtKg",
+    "rtWt"
+   ]
+  },
+  {
+   "covers": [
+    "peptideprotocolwiki retatrutide calculator: dosing frequency (daily, twice daily, every other day, twice weekly, weekly, as needed)"
+   ],
+   "status": "match",
+   "ids": [
+    "rtFreq",
+    "rtFChips"
+   ]
+  },
+  {
+   "covers": [
+    "peptideprotocolwiki retatrutide calculator: 1 mL versus 2 mL water comparison table"
+   ],
+   "status": "exceed",
+   "ids": [
+    "rtWTab",
+    "rtWTabWrap"
+   ]
+  },
+  {
+   "covers": [
+    "peptideprotocolwiki retatrutide calculator: insulin syringe units to mL reference table"
+   ],
+   "status": "match",
+   "ids": [
+    "rtUTab"
+   ]
+  },
+  {
+   "covers": [
+    "peptidedeck retatrutide calculator: titration schedule mode with target maintenance dose and speed",
+    "peptidedeck retatrutide calculator: current week",
+    "peptidedeck retatrutide calculator: full schedule table with volume and units per week",
+    "glp3planner retatrutide calculator: dose schedule builder with tiers (weeks, dose, days of the week)"
+   ],
+   "status": "exceed",
+   "ids": [
+    "rtSched",
+    "rtR1",
+    "rtAdd",
+    "rtTl",
+    "rtTot"
+   ]
+  },
+  {
+   "covers": [
+    "Omnicalculator peptide calculator: unit converters on every field",
+    "Omnicalculator peptide calculator: share result, reload, clear",
+    "Omnicalculator peptide calculator: peptide and reconstitution explanation text, sources, safety warning",
+    "calculate.co.nz peptide reconstitution calculator: worked example and arithmetic-only disclaimer"
+   ],
+   "status": "match",
+   "ids": [
+    "rtVu",
+    "rtDu",
+    "rtClear",
+    "rtCopyTxt"
+   ]
+  },
+  {
+   "covers": [
+    "thepeptidecatalog retatrutide calculator: popular setups with usage counts",
+    "thepeptidecatalog retatrutide calculator: documented protocols table (starter, standard, advanced doses)",
+    "thepeptidecatalog retatrutide calculator: cycle cost calculator and vendor comparison links",
+    "peptideprotocolwiki retatrutide calculator: presets for named peptides",
+    "peptideprotocolwiki retatrutide calculator: community protocols (alternative dose protocols)",
+    "peptideprotocolwiki retatrutide calculator: email gated supply plan",
+    "peptidedeck retatrutide calculator: vendor discount code",
+    "glp3planner retatrutide calculator: half-life drug level chart and steady state estimate",
+    "glp3planner retatrutide calculator: standard dosage chart",
+    "glp3planner retatrutide calculator: saved schedules with login"
+   ],
+   "status": "dropped",
+   "signoff": {
+    "quote": "Approve all (his reply to the research report that listed titration ladders, documented / community protocols, named-drug dose presets, the half-life chart, vendor links and discount codes, email-gated or login-saved plans as dropped because they state doses)",
+    "date": "2026-11-22"
+   }
+  },
+  {
+   "covers": [
+    "peptiq dosage calculator: links to reconstitution chart, shelf life table and app"
+   ],
+   "status": "match",
+   "ids": [
+    "rtFaq"
+   ]
+  }
+ ]
+}

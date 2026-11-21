@@ -1,0 +1,897 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Retatrutide Dosage Calculator: Syringe Units &amp; Vials</title>
+<meta name="description" content="Retatrutide dosage calculator: type your vial, water and your own steps to see syringe units, weeks per vial and vials needed. Arithmetic only, no doses.">
+<link rel="canonical" href="https://calcthis.co/retatrutide-dosage-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Retatrutide Dosage Calculator: Syringe Units &amp; Vials">
+<meta property="og:description" content="Retatrutide dosage calculator: type your vial, water and your own steps to see syringe units, weeks per vial and vials needed. Arithmetic only, no doses.">
+<meta property="og:url" content="https://calcthis.co/retatrutide-dosage-calculator/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/datepicker.min.css">
+<link rel="stylesheet" href="/assets/style.css?v=362">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Retatrutide Dosage Calculator",
+  "url": "https://calcthis.co/retatrutide-dosage-calculator/",
+  "applicationCategory": "HealthApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "Free retatrutide dosage calculator: syringe units from the vial size, the water added and a dose you type, the water to add for a wanted draw, a ready-made liquid mode, your own multi-step schedule with units per step, weeks per vial and vials needed, a syringe drawn to scale and a timeline of your schedule against the vials. Arithmetic only, no recommended doses."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I calculate retatrutide syringe units?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Divide the peptide in the vial by the water you added to get the strength, divide your dose by the strength to get the volume, and multiply the volume in mL by 100 for units on a syringe with 100 units to the millilitre. For 10 mg in 2 mL (5 mg per mL), 1 mg is 0.2 mL, which is 20 units."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How much water should I add to the vial?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "This page does not choose that for you. The water changes the strength but not the amount of peptide: 10 mg in 1 mL gives 10 units for 1 mg, in 2 mL 20 units. Use “Water to add” to find the water that gives the draw you want, or the table of other water volumes to compare."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does this calculator tell me what dose to take?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. It never suggests a dose, a schedule or a strength. You type the doses you were given by your prescriber or pharmacy, and it does the arithmetic."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is retatrutide approved?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Eli Lilly describes retatrutide as investigational (press release of May 21, 2026). There is no approved product label to read a strength or a dose from, so check every number with a prescriber or pharmacist. This page is arithmetic, not medical advice."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How many vials does my schedule need?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Choose Powder vial, type the vial size and the water, then type each step as a dose and a number of weeks. The page opens a new vial when the rest cannot cover the next injection and lists the vials needed and what is left. For example (only to show the arithmetic): 1 mg for 2 weeks then 2 mg for 2 weeks at 1 a week uses 6 mg, so 1 vial of 10 mg with 4 mg left."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why does it warn about whole units?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Syringes are marked in whole units, so a draw such as 33.33 units cannot be measured exactly. The warning shows the closest whole unit and the dose it really gives, so you can see the difference before you choose the water."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between mg and mcg?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "1 mg is 1,000 mcg. A mix-up is a thousandfold error, so the page shows every dose in both: 1 mg = 1,000 mcg."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What if I have a ready-made liquid and not a powder vial?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Choose “Ready liquid” and type the strength exactly as printed, for example 5 mg in 1 mL. There is no water step; the page gives the units for each dose and, if you type the liquid in the whole container, how many doses and containers your schedule needs."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which syringe sizes does it handle?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A 1 mL, 0.5 mL or 0.3 mL syringe, all marked 100 units to the millilitre, so they hold 100, 50 and 30 units. If a dose does not fit the syringe you chose, the page says so and shows the water that would make it fit."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "CalcThis",
+      "item": "https://calcthis.co/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Retatrutide Dosage Calculator",
+      "item": "https://calcthis.co/retatrutide-dosage-calculator/"
+    }
+  ]
+}
+</script>
+<meta property="og:site_name" content="CalcThis">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://calcthis.co/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="CalcThis — free, purpose-built calculators">
+<meta name="twitter:title" content="Retatrutide Dosage Calculator: Syringe Units &amp; Vials">
+<meta name="twitter:description" content="Retatrutide dosage calculator: type your vial, water and your own steps to see syringe units, weeks per vial and vials needed. Arithmetic only, no doses.">
+<meta name="twitter:image" content="https://calcthis.co/assets/og-default.png">
+</head>
+<body class="p-bmr p-rt">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <a class="hdr-back" href="/blog/" aria-label="Back to blog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-search"><div class="menu-sx"><input id="menuSearch" type="search" placeholder="Search calculators or states…" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Search calculators" enterkeyhint="search"></div><div class="menu-results" id="menuResults" hidden></div></div>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <span class="menu-col-head">Construction &amp; Gardening</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+          <a href="/paint-calculator/">Paint</a>
+          <a href="/wallpaper-calculator/">Wallpaper</a>
+          <a href="/square-footage-calculator/">Square Footage</a>
+          <a href="/tape-measure-fraction-calculator/">Tape Measure Fraction</a>
+          <a href="/stair-calculator/">Stair</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/vo2-max-calculator/">VO2 Max</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
+          <a href="/bmi-calculator/">BMI</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/ideal-weight-calculator/">Ideal Weight</a>
+          <a href="/lean-body-mass-calculator/">Lean Body Mass</a>
+          <a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio</a>
+          <a href="/gmi-calculator/">GMI</a>
+          <a href="/a1c-calculator/">A1C</a>
+          <a href="/calorie-calculator/">Calorie</a>
+          <a href="/calorie-deficit-calculator/">Calorie Deficit</a>
+          <a href="/bmr-calculator/">BMR</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/water-intake-calculator/">Water Intake</a>
+          <a href="/macro-calculator/">Macro</a>
+          <a href="/protein-intake-calculator/">Protein Intake</a>
+          <a href="/steps-to-miles-calculator/">Steps to Miles</a>
+          <a href="/dog-age-calculator/">Dog Age</a>
+          <a href="/cat-age-calculator/">Cat Age</a>
+          <a href="/calories-burned-calculator/">Calories Burned</a>
+          <a href="/calories-burned-walking-calculator/">Calories Burned Walking</a>
+          <a href="/calories-burned-running-calculator/">Calories Burned Running</a>
+          <a href="/keto-calculator/">Keto</a>
+          <a href="/net-carb-calculator/">Net Carb</a>
+          <a href="/intermittent-fasting-calculator/">Intermittent Fasting</a>
+          <a href="/bsa-calculator/">BSA</a>
+          <a href="/dog-food-calculator/">Dog Food</a>
+          <a href="/ffmi-calculator/">FFMI</a>
+          <a href="/bulking-calculator/">Bulking</a>
+          <a href="/weight-loss-calculator/">Weight Loss</a>
+          <a href="/weight-loss-percentage-calculator/">Weight Loss %</a>
+          <a href="/max-heart-rate-calculator/">Max Heart Rate</a>
+          <a href="/caffeine-calculator/">Caffeine</a>
+          <a href="/caffeine-half-life-calculator/">Caffeine Half Life</a>
+          <a href="/fiber-calculator/">Fiber</a>
+          <a href="/creatine-calculator/">Creatine</a>
+          <a href="/vitamin-d-calculator/">Vitamin D</a>
+          <a href="/body-recomposition-calculator/">Body Recomposition</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/semester-grade-calculator/">Semester Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+          <a href="/grade-curve-calculator/">Grade Curve</a>
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/fraction-calculator/">Fraction</a>
+          <a href="/standard-deviation-calculator/">Standard Deviation</a>
+          <a href="/p-value-calculator/">P-Value</a>
+          <a href="/confidence-interval-calculator/">Confidence Interval</a>
+          <a href="/z-score-calculator/">Z Score</a>
+          <a href="/t-test-calculator/">T-Test</a>
+          <a href="/scientific-notation-calculator/">Scientific Notation</a>
+          <a href="/average-calculator/">Average</a>
+          <a href="/batting-average-calculator/">Batting Average</a>
+          <a href="/stock-average-calculator/">Stock Average</a>
+          <a href="/dice-average-calculator/">Dice Average</a>
+          <a href="/time-average-calculator/">Time Average</a>
+          <a href="/weighted-average-calculator/">Weighted Average</a>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+          <a href="/percentage-change-calculator/">Percentage Change</a>
+          <a href="/age-calculator/">Age</a>
+          <a href="/date-calculator/">Date</a>
+          <a href="/time-calculator/">Time</a>
+          <a href="/hours-calculator/">Hours</a>
+          <a href="/seconds-to-hours-calculator/">Seconds to Hours</a>
+          <a href="/minutes-to-hours-calculator/">Minutes to Hours</a>
+          <a href="/seconds-to-minutes-calculator/">Seconds to Minutes</a>
+          <a href="/triangle-calculator/">Triangle</a>
+          <a href="/random-number-generator/">Random Number</a>
+          <span class="menu-col-head">Cooking &amp; Kitchen</span>
+          <a href="/recipe-converter/">Recipe Converter</a>
+          <a href="/turkey-cooking-time-calculator/">Turkey Cooking Time</a>
+          <a href="/turkey-thawing-time-calculator/">Turkey Thawing Time</a>
+          <a href="/turkey-size-calculator/">Turkey Size</a>
+          <span class="menu-col-head">Medication &amp; Lab</span>
+          <a href="/mg-to-ml-calculator/">mg to mL</a>
+          <a href="/dilution-calculator/">Dilution</a>
+          <a href="/retatrutide-dosage-calculator/" class="current">Retatrutide Dosage</a>
+          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
+          <!--UNITNAV:START-->
+          <span class="menu-col-head">Unit Converters</span>
+          <a href="/unit-converter/">Unit Converter</a>
+          <a href="/length-converter/">Length Converter</a>
+          <a href="/weight-converter/">Weight Converter</a>
+          <a href="/volume-converter/">Volume Converter</a>
+          <a href="/temperature-converter/">Temperature Converter</a>
+          <a href="/area-converter/">Area Converter</a>
+          <a href="/speed-converter/">Speed Converter</a>
+          <a href="/data-storage-converter/">Data Storage Converter</a>
+          <a href="/cooking-converter/">Cooking Converter</a>
+          <a href="/px-to-rem-converter/">PX to REM Converter</a>
+          <!--UNITNAV:END-->
+          <span class="menu-col-head">Money &amp; Finance</span>
+          <a href="/mortgage-calculator/">Mortgage</a>
+          <a href="/loan-calculator/">Loan</a>
+          <a href="/auto-loan-calculator/">Auto Loan</a>
+          <a href="/car-sales-tax-calculator/">Car Sales Tax</a>
+          <a href="/overtime-calculator/">Overtime</a>
+          <a href="/salary-calculator/">Salary</a>
+          <a href="/markup-calculator/">Markup</a>
+          <a href="/profit-margin-calculator/">Profit Margin</a>
+          <a href="/discount-calculator/">Discount</a>
+          <a href="/commission-calculator/">Commission</a>
+          <a href="/realtor-commission-calculator/">Realtor Commission</a>
+          <a href="/unit-price-calculator/">Unit Price</a>
+          <a href="/compound-interest-calculator/">Compound Interest</a>
+          <a href="/amortization-calculator/">Amortization</a>
+          <!--STAXNAV:START-->
+          <a href="/sales-tax-calculator/">Sales Tax</a>
+          <a href="/sales-tax-calculator/california/">California Sales Tax</a>
+          <a href="/sales-tax-calculator/chicago/">Chicago Sales Tax</a>
+          <a href="/sales-tax-calculator/florida/">Florida Sales Tax</a>
+          <a href="/sales-tax-calculator/las-vegas/">Las Vegas Sales Tax</a>
+          <a href="/sales-tax-calculator/los-angeles/">Los Angeles Sales Tax</a>
+          <a href="/sales-tax-calculator/michigan/">Michigan Sales Tax</a>
+          <a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax</a>
+          <a href="/sales-tax-calculator/missouri/">Missouri Sales Tax</a>
+          <a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax</a>
+          <a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax</a>
+          <a href="/sales-tax-calculator/north-carolina/">North Carolina Sales Tax</a>
+          <a href="/sales-tax-calculator/ohio/">Ohio Sales Tax</a>
+          <a href="/sales-tax-calculator/texas/">Texas Sales Tax</a>
+          <a href="/sales-tax-calculator/virginia/">Virginia Sales Tax</a>
+          <!--STAXNAV:END-->
+          <a href="/tip-calculator/">Tip</a>
+          <a href="/how-much-to-tip/">How Much to Tip</a>
+        </div>
+        <!--PAYNAV:START-->
+        <div class="menu-col">
+          <span class="menu-col-head">Paycheck Calculators</span>
+          <a href="/paycheck-calculator/">Paycheck Calculator (all states)</a>
+          <a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a>
+          <a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arkansas/">Arkansas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/california/">California Paycheck Calculator</a>
+          <a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a>
+          <a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a>
+          <a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/hawaii/">Hawaii Paycheck Calculator</a>
+          <a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a>
+          <a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a>
+          <a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a>
+          <a href="/paycheck-calculator/louisiana/">Louisiana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a>
+          <a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a>
+          <a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a>
+          <a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a>
+          <a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nebraska/">Nebraska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a>
+          <a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a>
+          <a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a>
+          <a href="/paycheck-calculator/oklahoma/">Oklahoma Paycheck Calculator</a>
+          <a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a>
+          <a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a>
+          <a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a>
+          <a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/utah/">Utah Paycheck Calculator</a>
+          <a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wisconsin/">Wisconsin Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a>
+        </div>
+        <!--PAYNAV:END-->
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">Vial · water · syringe units · your own schedule · vials needed</div>
+    <h1>Retatrutide Dosage Calculator</h1>
+    <p>Type the <strong>peptide in your vial</strong>, the <strong>water you add</strong> and <strong>the dose you were given</strong>, and see the <strong>syringe units</strong> on a syringe drawn to scale. For 10 mg in 2 mL of water (5 mg per mL), a 1 mg dose is <strong>20 units</strong>. Add your own steps and weeks to see the units for each step and how many vials the whole plan needs. This page only does arithmetic: it never suggests a dose, and retatrutide is an investigational medicine, so take every dose from your prescriber.</p>
+  </section>
+
+  <div class="grid">
+
+    <!-- INPUT -->
+    <div class="card">
+      <div class="card-pad">
+        <div class="sl-head"><h2 class="card-h2">Your vial and doses</h2><button class="linkbtn" id="rtClear" type="button">Clear fields</button></div>
+        <div class="ctl-row" style="display:block"><span class="ctl-lab" style="display:block;margin-bottom:6px">How do you have it?</span><div class="modeseg" id="rtForm" role="group" aria-label="How do you have it?"><button class="on" type="button" data-v="vial">Powder vial</button><button type="button" data-v="liquid">Ready liquid</button></div></div>
+        <div id="rtVialW">
+          <div class="fld"><span class="lab">Peptide in the vial <span class="unit">printed on the vial</span></span><div class="cf-box"><input id="rtVial" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 10" aria-label="Peptide in the vial"><div class="seg cf-u" id="rtVu" data-u="mg" role="group" aria-label="Peptide in the vial unit"><button type="button" data-v="mcg">mcg</button><button type="button" data-v="mg" class="on">mg</button><button type="button" data-v="iu">IU</button></div></div></div>
+          <div id="rtIpmW" style="display:none"><div class="fld"><span class="lab">IU in 1 mg <span class="unit">printed on the label</span></span><div class="cf-box"><input id="rtIpm" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 3" aria-label="IU per mg"></div></div><p class="cb-note" id="rtIpmN"></p></div>
+          <p class="cb-note" id="rtVialN"></p>
+          <div class="fld"><span class="lab">Quick vial sizes <span class="unit">mg</span></span><div class="chips" id="rtVChips" role="group" aria-label="Quick vial sizes"><button type="button" data-v="5">5</button><button type="button" data-v="10">10</button><button type="button" data-v="15">15</button><button type="button" data-v="20">20</button><button type="button" data-v="30">30</button><button type="button" data-v="60">60</button></div></div>
+          <div id="rtFindW"><div class="ctl-row" style="display:block"><span class="ctl-lab" style="display:block;margin-bottom:6px">What do you want to find?</span><div class="modeseg" id="rtFind" role="group" aria-label="What do you want to find?"><button class="on" type="button" data-v="units">Syringe units</button><button type="button" data-v="water">Water to add</button></div></div></div>
+          <div id="rtWaterF">
+            <div class="fld"><span class="lab">Water you add <span class="unit">mL</span></span><div class="cf-box"><input id="rtWater" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 2" aria-label="Water added in mL"></div></div>
+            <p class="cb-note" id="rtWaterN"></p>
+            <div class="fld"><span class="lab">Quick water <span class="unit">mL</span></span><div class="chips" id="rtWChips" role="group" aria-label="Quick water"><button type="button" data-v="1">1</button><button type="button" data-v="2">2</button><button type="button" data-v="3">3</button></div></div>
+          </div>
+          <div id="rtWantW" style="display:none">
+            <div class="fld"><span class="lab">Units you want to draw <span class="unit">for the dose in step 1</span></span><div class="cf-box"><input id="rtWant" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 25" aria-label="Units to draw"></div></div>
+            <p class="cb-note" id="rtWantN"></p>
+          </div>
+        </div>
+        <div id="rtLiqW" style="display:none">
+          <div class="fld"><span class="lab">Strength on the label <span class="unit">the amount printed</span></span><div class="cf-box"><input id="rtLA" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 5" aria-label="Strength on the label"><div class="seg cf-u" id="rtLu" data-u="mg" role="group" aria-label="Strength on the label unit"><button type="button" data-v="mcg">mcg</button><button type="button" data-v="mg" class="on">mg</button></div></div></div>
+          <div class="fld"><span class="lab">…in how many mL <span class="unit">leave empty for 1 mL</span></span><div class="cf-box"><input id="rtLP" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 1" aria-label="Volume on the label in mL"></div></div>
+          <p class="cb-note" id="rtLN"></p>
+          <div class="fld"><span class="lab">Liquid in the whole container <span class="unit">mL · optional</span></span><div class="cf-box"><input id="rtLTot" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 3" aria-label="Liquid in the whole container in mL"></div></div>
+          <p class="cb-note" id="rtLTotN"></p>
+        </div>
+        <div class="proj-sep"></div>
+        <p class="bm-h">Your doses</p>
+        <div class="ctl-row" style="display:block"><span class="ctl-lab" style="display:block;margin-bottom:6px">Dose unit</span><div class="modeseg" id="rtDu" role="group" aria-label="Dose unit"><button type="button" data-v="mcg">mcg</button><button class="on" type="button" data-v="mg">mg</button></div></div>
+        <div class="fld"><span class="lab">Injections a week <span class="unit">leave empty for 1</span></span><div class="cf-box"><input id="rtFreq" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 1" aria-label="Injections a week"></div></div>
+        <p class="cb-note" id="rtFreqN"></p>
+        <div class="chips" id="rtFChips" role="group" aria-label="Common injections a week"><button type="button" data-v="1">1 a week</button><button type="button" data-v="2">2 a week</button><button type="button" data-v="3">3 a week</button><button type="button" data-v="7">7 a week</button></div>
+        <div class="rt-step" id="rtR1">
+          <p class="rt-steph"><span>Step 1</span></p>
+          <div class="two"><div class="fld"><span class="lab">Dose per injection</span><div class="cf-box"><input id="rtD1" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 1" aria-label="Dose per injection, step 1"></div></div><div class="fld"><span class="lab">Weeks <span class="unit">optional</span></span><div class="cf-box"><input id="rtW1" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 2" aria-label="Weeks, step 1"></div></div></div>
+          <p class="cb-note" id="rtRN1"></p>
+        </div>
+        <div class="rt-step" id="rtR2" style="display:none">
+          <p class="rt-steph"><span>Step 2</span><button class="rt-x" id="rtX2" type="button" aria-label="Remove step 2">Remove</button></p>
+          <div class="two"><div class="fld"><span class="lab">Dose per injection</span><div class="cf-box"><input id="rtD2" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 2" aria-label="Dose per injection, step 2"></div></div><div class="fld"><span class="lab">Weeks <span class="unit">optional</span></span><div class="cf-box"><input id="rtW2" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 2" aria-label="Weeks, step 2"></div></div></div>
+          <p class="cb-note" id="rtRN2"></p>
+        </div>
+        <div class="rt-step" id="rtR3" style="display:none">
+          <p class="rt-steph"><span>Step 3</span><button class="rt-x" id="rtX3" type="button" aria-label="Remove step 3">Remove</button></p>
+          <div class="two"><div class="fld"><span class="lab">Dose per injection</span><div class="cf-box"><input id="rtD3" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 2" aria-label="Dose per injection, step 3"></div></div><div class="fld"><span class="lab">Weeks <span class="unit">optional</span></span><div class="cf-box"><input id="rtW3" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 2" aria-label="Weeks, step 3"></div></div></div>
+          <p class="cb-note" id="rtRN3"></p>
+        </div>
+        <div class="rt-step" id="rtR4" style="display:none">
+          <p class="rt-steph"><span>Step 4</span><button class="rt-x" id="rtX4" type="button" aria-label="Remove step 4">Remove</button></p>
+          <div class="two"><div class="fld"><span class="lab">Dose per injection</span><div class="cf-box"><input id="rtD4" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 2" aria-label="Dose per injection, step 4"></div></div><div class="fld"><span class="lab">Weeks <span class="unit">optional</span></span><div class="cf-box"><input id="rtW4" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 2" aria-label="Weeks, step 4"></div></div></div>
+          <p class="cb-note" id="rtRN4"></p>
+        </div>
+        <div class="rt-step" id="rtR5" style="display:none">
+          <p class="rt-steph"><span>Step 5</span><button class="rt-x" id="rtX5" type="button" aria-label="Remove step 5">Remove</button></p>
+          <div class="two"><div class="fld"><span class="lab">Dose per injection</span><div class="cf-box"><input id="rtD5" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 2" aria-label="Dose per injection, step 5"></div></div><div class="fld"><span class="lab">Weeks <span class="unit">optional</span></span><div class="cf-box"><input id="rtW5" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 2" aria-label="Weeks, step 5"></div></div></div>
+          <p class="cb-note" id="rtRN5"></p>
+        </div>
+        <div class="rt-step" id="rtR6" style="display:none">
+          <p class="rt-steph"><span>Step 6</span><button class="rt-x" id="rtX6" type="button" aria-label="Remove step 6">Remove</button></p>
+          <div class="two"><div class="fld"><span class="lab">Dose per injection</span><div class="cf-box"><input id="rtD6" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 2" aria-label="Dose per injection, step 6"></div></div><div class="fld"><span class="lab">Weeks <span class="unit">optional</span></span><div class="cf-box"><input id="rtW6" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 2" aria-label="Weeks, step 6"></div></div></div>
+          <p class="cb-note" id="rtRN6"></p>
+        </div>
+        <button class="linkbtn" id="rtAdd" type="button" style="margin:4px 0 12px">+ Add another step</button>
+        <div class="ctl-row" style="display:block"><span class="ctl-lab" style="display:block;margin-bottom:6px">Syringe size</span><div class="modeseg" id="rtSyrSz" role="group" aria-label="Syringe size"><button class="on" type="button" data-v="1">1 mL</button><button type="button" data-v="0.5">0.5 mL</button><button type="button" data-v="0.3">0.3 mL</button></div></div>
+        <p class="cb-note">All three are marked in units: 100 units = 1 mL, so they hold 100, 50 and 30 units.</p>
+        <div class="res-hint" id="rtHint" style="display:none;text-align:left;margin:4px 0 8px"></div>
+        <div id="rtAdvIn" style="display:none">
+          <div class="proj-sep"></div>
+          <div class="ctl-row" style="display:block"><span class="ctl-lab" style="display:block;margin-bottom:6px">Decimal places</span><div class="modeseg" id="rtDec" role="group" aria-label="Decimal places"><button class="on" type="button" data-v="a">Auto</button><button type="button" data-v="1">1</button><button type="button" data-v="2">2</button><button type="button" data-v="3">3</button></div></div>
+          <p class="bm-h">Dose from body weight <span class="unit" style="font-weight:400">optional</span></p>
+          <div class="fld"><span class="lab">Dose per kg of body weight <span class="unit">mg per kg</span></span><div class="cf-box"><input id="rtKg" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 0.05" aria-label="Dose in mg per kg of body weight"></div></div>
+          <div class="fld"><span class="lab">Body weight</span><div class="cf-box"><input id="rtWt" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 80" aria-label="Body weight"><div class="seg cf-u" id="rtWu" data-u="kg" role="group" aria-label="Body weight unit"><button type="button" data-v="kg" class="on">kg</button><button type="button" data-v="lb">lb</button></div></div></div>
+          <p class="cb-note" id="rtKgN"></p>
+          <button class="linkbtn" id="rtKgUse" type="button" style="display:none;margin-bottom:8px"></button>
+        </div>
+        <div class="add-row split" style="margin-top:16px">
+          <span></span>
+          <button class="advbtn" id="rtAdvBtn" type="button">
+            <span id="rtAdvBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div class="card">
+      <div class="card-pad">
+        <div class="bf-res">
+          <div class="res-lab" id="rtLab">Syringe units for your dose</div>
+          <div class="res-big"><span id="rtBig">—</span></div>
+          <div class="res-sub" id="rtSub" data-empty="Type the vial, the water and the dose you were given to see the syringe units.">Type the vial, the water and the dose you were given to see the syringe units.</div>
+        </div>
+        <div id="rtBody" style="display:none">
+          <p class="res-tip adv-tip" id="rtTip"></p>
+          <div id="rtWarn" style="display:none"></div>
+          <div id="rtSyrWrap">
+            <p class="bm-h">On a syringe</p>
+            <div class="rt-syr" id="rtSyr"></div>
+            <p class="rt-cap" id="rtSyrCap"></p>
+          </div>
+          <div id="rtTlWrap" style="display:none">
+            <p class="bm-h">Your schedule and your vials</p>
+            <div class="rt-tl" id="rtTl"></div>
+            <p class="rt-cap" id="rtTlCap"></p>
+            <table class="dtable" id="rtTot"></table>
+          </div>
+          <div id="rtSchedWrap" style="display:none">
+            <p class="bm-h">Your steps</p>
+            <table class="dtable" id="rtSched"></table>
+            <p class="cb-note" id="rtSchedKey"></p>
+          </div>
+          <p class="bm-h">The numbers <button class="linkbtn" type="button" data-copy="rtCopyTxt" style="margin-left:8px">Copy result</button></p>
+          <table class="dtable" id="rtNums"></table>
+          <div id="rtCopyTxt" style="display:none"></div>
+          <div id="rtWTabWrap" style="display:none">
+            <p class="bm-h">The same dose with other water</p>
+            <table class="dtable" id="rtWTab"></table>
+            <p class="cb-note">Click a row to use that water.</p>
+          </div>
+          <p class="bm-h">Units on the syringe</p>
+          <table class="dtable" id="rtUTab"></table>
+          <p class="cb-note">For information only, not medical advice. This only does arithmetic with the numbers you type. It never suggests a dose. Check every number with your prescriber or pharmacist.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- mobile sticky bar -->
+  <div class="mbar" id="mbar">
+    <span class="mbar-lab" id="rtMLab">Draw</span>
+    <div class="mbar-vals"><b id="rtMVal">—</b></div>
+  </div>
+
+  <div class="related-calcs">
+    <p class="related-calcs-h">More calculators that may interest you</p>
+    <div class="pills">
+      <a class="pill" href="/peptide-reconstitution-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 2 3h10a2 2 0 0 0 2-3l-5-9V3"/></svg>
+        Peptide Reconstitution Calculator
+      </a>
+      <a class="pill" href="/mg-to-ml-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 5h12M12 5v8l-5 10a3 3 0 0 0 3 4h12a3 3 0 0 0 3-4l-5-10V5"/></svg>
+        mg to mL Calculator
+      </a>
+      <a class="pill" href="/dilution-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h10l-1 18H8L7 3zM7 9h10"/></svg>
+        Dilution Calculator
+      </a>
+      <a class="pill" href="/volume-converter/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 21h12l-2-12H8L6 21zM9 9a3 3 0 1 1 6 0"/></svg>
+        Volume Converter
+      </a>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use the retatrutide dosage calculator</h2>
+        <p>Choose <strong>Powder vial</strong> and type the peptide printed on the vial, then the water you add: the <strong>strength</strong> and the <strong>syringe units</strong> for the dose appear at once, on a syringe drawn to scale. Have a ready-made liquid instead? Choose <strong>Ready liquid</strong> and type the strength exactly as the label prints it.</p>
+        <p>Type the <strong>dose you were given</strong>. To see a whole plan, add <strong>steps</strong>: each is a dose and a number of weeks, with the injections a week. You get the units for every step, a timeline against your vials, the vials needed and what is left. Pick <strong>Water to add</strong> to work backwards from the units you want to draw.</p>
+        <h2>The formulas</h2>
+        <div class="formula">
+          units = dose ÷ (vial ÷ water) × 100
+          <small>STRENGTH = VIAL ÷ WATER · VOLUME = DOSE ÷ STRENGTH · UNITS = mL × 100</small>
+        </div>
+        <p>Worked out with this calculator: a 10 mg vial with 2 mL of water is 5 mg per mL. A 1 mg dose is 1 ÷ 5 = 0.2 mL, which is 20 units. The vial holds 10 doses of 1 mg. With only 1 mL of water the strength doubles to 10 mg per mL and the same dose is 10 units. To draw 25 units for 1 mg, add 2.5 mL of water to the 10 mg vial.</p>
+        <h2>The same dose with other water</h2>
+        <p>The amount of water changes the strength, not the amount of peptide in the vial:</p>
+        <table class="dtable"><thead><tr><th>Water added</th><th>Strength</th><th>Draw for 1 mg</th></tr></thead><tbody><tr><td>1 mL</td><td>10 mg per mL</td><td>10 units (0.1 mL)</td></tr><tr><td>1.5 mL</td><td>6.667 mg per mL</td><td>15 units (0.15 mL)</td></tr><tr><td>2 mL</td><td>5 mg per mL</td><td>20 units (0.2 mL)</td></tr><tr><td>2.5 mL</td><td>4 mg per mL</td><td>25 units (0.25 mL)</td></tr><tr><td>3 mL</td><td>3.333 mg per mL</td><td>30 units (0.3 mL)</td></tr><tr><td>4 mL</td><td>2.5 mg per mL</td><td>40 units (0.4 mL)</td></tr><tr><td>5 mL</td><td>2 mg per mL</td><td>50 units (0.5 mL)</td></tr></tbody></table>
+        <h2>Your own schedule: the arithmetic</h2>
+        <p>Only to show how the steps add up (these are not suggested doses): at 5 mg per mL, 1 mg is 20 units and 2 mg is 40 units. 1 mg for 2 weeks and then 2 mg for 2 weeks at 1 injection a week is 4 injections and 6 mg, which fits in 1 vial of 10 mg with 4 mg left. When the rest of a vial cannot cover the next dose, a new vial is opened and the leftover is not used.</p>
+      </div>
+
+      <div>
+        <h2>Units, mL and mg</h2>
+        <p>A syringe marked 100 units to the millilitre has 1 unit = 0.01 mL. The mg a unit holds depends on the strength, so the same 10 units are a different dose at a different strength:</p>
+        <table class="dtable"><thead><tr><th>Units</th><th>Volume</th><th>Peptide at 5 mg per mL</th></tr></thead><tbody><tr><td>1</td><td>0.01 mL</td><td>0.05 mg</td></tr><tr><td>5</td><td>0.05 mL</td><td>0.25 mg</td></tr><tr><td>10</td><td>0.1 mL</td><td>0.5 mg</td></tr><tr><td>20</td><td>0.2 mL</td><td>1 mg</td></tr><tr><td>25</td><td>0.25 mL</td><td>1.25 mg</td></tr><tr><td>50</td><td>0.5 mL</td><td>2.5 mg</td></tr><tr><td>100</td><td>1 mL</td><td>5 mg</td></tr></tbody></table>
+        <h2>Syringe sizes</h2>
+        <table class="dtable"><thead><tr><th>Syringe</th><th>Holds</th><th>Units marked</th></tr></thead><tbody><tr><td>1 mL</td><td>1 mL</td><td>0 to 100</td></tr><tr><td>0.5 mL</td><td>0.5 mL</td><td>0 to 50</td></tr><tr><td>0.3 mL</td><td>0.3 mL</td><td>0 to 30</td></tr></tbody></table>
+        <h2>What the calculator does not do</h2>
+        <p>It does not say what to take, how much or how often, and it does not read a label for you. Retatrutide is an investigational medicine, so there is no approved product label here to take a strength or a dose from. Use the numbers from your prescriber or pharmacy, and let a pharmacist check the strength, the water and the units. Titration ladders, “protocols” and half-life charts found on other pages state doses, so this page leaves them out.</p>
+        <h2>Whole units and syringe size</h2>
+        <p>If the draw is not a whole number of units, the page shows the closest whole unit and the dose it really gives. If a dose needs more than the syringe holds, it says so and shows how much water would make it fit.</p>
+        <h2>Related tools</h2>
+        <p>For milligrams to milliliters from a printed label use the <a href="/mg-to-ml-calculator/">mg to mL calculator</a>; for vial size, water and syringe units for any peptide the <a href="/peptide-reconstitution-calculator/">peptide reconstitution calculator</a>; for making a weaker solution the <a href="/dilution-calculator/">dilution calculator</a>; and for other volume units the <a href="/volume-converter/">volume converter</a>.</p>
+        <h2>Sources</h2>
+        <ul>
+          <li>Retatrutide’s status: Eli Lilly and Company, press release of May 21, 2026 (investor.lilly.com, read 2026-11-22), which calls it “an investigational, first-in-class GIP, GLP-1, and glucagon triple hormone receptor agonist”. Because it is investigational there is no approved product label to take a strength or a dose from, so this page never gives one.</li>
+          <li>The arithmetic (strength = vial ÷ water, volume = dose ÷ strength, a syringe with 100 units to the millilitre) is the same on every peptide calculator opened on 2026-11-22: Omnicalculator, calculate.co.nz, thepeptidecatalog, peptideprotocolwiki, peptidedeck and glp3planner. It is plain unit arithmetic and does not depend on the medicine.</li>
+          <li>The feature set was compared with those calculators, all opened live on 2026-11-22. Their titration ladders, “documented protocols” and half-life charts are not copied: they state doses, and this page states none.</li>
+        </ul>
+        <p><small>For information only, not medical advice. This page does arithmetic with the numbers you type. It does not say what to take, how much or how often. Check every number with your prescriber or pharmacist.</small></p>
+      </div>
+    </div>
+
+    <h2 id="rtFaq" style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>How do I calculate retatrutide syringe units?</summary><p>Divide the peptide in the vial by the water you added to get the strength, divide your dose by the strength to get the volume, and multiply the volume in mL by 100 for units on a syringe with 100 units to the millilitre. For 10 mg in 2 mL (5 mg per mL), 1 mg is 0.2 mL, which is 20 units.</p></details>
+    <details class="faq"><summary>How much water should I add to the vial?</summary><p>This page does not choose that for you. The water changes the strength but not the amount of peptide: 10 mg in 1 mL gives 10 units for 1 mg, in 2 mL 20 units. Use “Water to add” to find the water that gives the draw you want, or the table of other water volumes to compare.</p></details>
+    <details class="faq"><summary>Does this calculator tell me what dose to take?</summary><p>No. It never suggests a dose, a schedule or a strength. You type the doses you were given by your prescriber or pharmacy, and it does the arithmetic.</p></details>
+    <details class="faq"><summary>Is retatrutide approved?</summary><p>Eli Lilly describes retatrutide as investigational (press release of May 21, 2026). There is no approved product label to read a strength or a dose from, so check every number with a prescriber or pharmacist. This page is arithmetic, not medical advice.</p></details>
+    <details class="faq"><summary>How many vials does my schedule need?</summary><p>Choose Powder vial, type the vial size and the water, then type each step as a dose and a number of weeks. The page opens a new vial when the rest cannot cover the next injection and lists the vials needed and what is left. For example (only to show the arithmetic): 1 mg for 2 weeks then 2 mg for 2 weeks at 1 a week uses 6 mg, so 1 vial of 10 mg with 4 mg left.</p></details>
+    <details class="faq"><summary>Why does it warn about whole units?</summary><p>Syringes are marked in whole units, so a draw such as 33.33 units cannot be measured exactly. The warning shows the closest whole unit and the dose it really gives, so you can see the difference before you choose the water.</p></details>
+    <details class="faq"><summary>What is the difference between mg and mcg?</summary><p>1 mg is 1,000 mcg. A mix-up is a thousandfold error, so the page shows every dose in both: 1 mg = 1,000 mcg.</p></details>
+    <details class="faq"><summary>What if I have a ready-made liquid and not a powder vial?</summary><p>Choose “Ready liquid” and type the strength exactly as printed, for example 5 mg in 1 mL. There is no water step; the page gives the units for each dose and, if you type the liquid in the whole container, how many doses and containers your schedule needs.</p></details>
+    <details class="faq"><summary>Which syringe sizes does it handle?</summary><p>A 1 mL, 0.5 mL or 0.3 mL syringe, all marked 100 units to the millilitre, so they hold 100, 50 and 30 units. If a dose does not fit the syringe you chose, the page says so and shows the water that would make it fit.</p></details>
+  </section>
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+      <div class="footer-stack">
+<div class="footer-col" style="order:1">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+          <li><a href="/paint-calculator/">Paint Calculator</a></li>
+          <li><a href="/wallpaper-calculator/">Wallpaper Calculator</a></li>
+          <li><a href="/square-footage-calculator/">Square Footage Calculator</a></li>
+          <li><a href="/tape-measure-fraction-calculator/">Tape Measure Fraction Calculator</a></li>
+          <li><a href="/stair-calculator/">Stair Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:5">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Cooking &amp;</span> <span class="ft2">Kitchen</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/recipe-converter/">Recipe Converter</a></li>
+          <li><a href="/turkey-cooking-time-calculator/">Turkey Cooking Time Calculator</a></li>
+          <li><a href="/turkey-thawing-time-calculator/">Turkey Thawing Time Calculator</a></li>
+          <li><a href="/turkey-size-calculator/">Turkey Size Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:5">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Medication &amp;</span> <span class="ft2">Lab</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/mg-to-ml-calculator/">mg to mL Calculator</a></li>
+          <li><a href="/dilution-calculator/">Dilution Calculator</a></li>
+          <li><a href="/retatrutide-dosage-calculator/">Retatrutide Dosage Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:6">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Money &amp;</span> <span class="ft2">Finance</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/mortgage-calculator/">Mortgage Calculator</a></li>
+          <li><a href="/loan-calculator/">Loan Calculator</a></li>
+          <li><a href="/auto-loan-calculator/">Auto Loan Calculator</a></li>
+          <li><a href="/car-sales-tax-calculator/">Car Sales Tax Calculator</a></li>
+          <li><a href="/overtime-calculator/">Overtime Calculator</a></li>
+          <li><a href="/salary-calculator/">Salary Calculator</a></li>
+          <li><a href="/markup-calculator/">Markup Calculator</a></li>
+          <li><a href="/profit-margin-calculator/">Profit Margin Calculator</a></li>
+          <li><a href="/discount-calculator/">Discount Calculator</a></li>
+          <li><a href="/commission-calculator/">Commission Calculator</a></li>
+          <li><a href="/realtor-commission-calculator/">Realtor Commission Calculator</a></li>
+          <li><a href="/unit-price-calculator/">Unit Price Calculator</a></li>
+          <li><a href="/compound-interest-calculator/">Compound Interest Calculator</a></li>
+          <li><a href="/amortization-calculator/">Amortization Calculator</a></li>
+          <!--STAXFOOT:START-->
+          <li><a href="/sales-tax-calculator/">Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/california/">California Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/chicago/">Chicago Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/florida/">Florida Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/las-vegas/">Las Vegas Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/los-angeles/">Los Angeles Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/michigan/">Michigan Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/missouri/">Missouri Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/north-carolina/">North Carolina Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/ohio/">Ohio Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/texas/">Texas Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/virginia/">Virginia Sales Tax Calculator</a></li>
+          <!--STAXFOOT:END-->
+          <li><a href="/tip-calculator/">Tip Calculator</a></li>
+          <li><a href="/how-much-to-tip/">How Much to Tip</a></li>
+        </ul>
+      </div>
+      </div>
+
+      <div class="footer-right">
+<div class="footer-col footer-col--two" style="order:2">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/vo2-max-calculator/">VO2 Max Calculator</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/bmi-calculator/">BMI Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/ideal-weight-calculator/">Ideal Weight Calculator</a></li>
+          <li><a href="/lean-body-mass-calculator/">Lean Body Mass Calculator</a></li>
+          <li><a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio Calculator</a></li>
+          <li><a href="/gmi-calculator/">GMI Calculator</a></li>
+          <li><a href="/a1c-calculator/">A1C Calculator</a></li>
+          <li><a href="/calorie-calculator/">Calorie Calculator</a></li>
+          <li><a href="/calorie-deficit-calculator/">Calorie Deficit Calculator</a></li>
+          <li><a href="/bmr-calculator/">BMR Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/water-intake-calculator/">Water Intake Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/protein-intake-calculator/">Protein Intake Calculator</a></li>
+          <li><a href="/steps-to-miles-calculator/">Steps to Miles Calculator</a></li>
+          <li><a href="/dog-age-calculator/">Dog Age Calculator</a></li>
+          <li><a href="/cat-age-calculator/">Cat Age Calculator</a></li>
+          <li><a href="/calories-burned-calculator/">Calories Burned Calculator</a></li>
+          <li><a href="/calories-burned-walking-calculator/">Calories Burned Walking Calculator</a></li>
+          <li><a href="/calories-burned-running-calculator/">Calories Burned Running Calculator</a></li>
+          <li><a href="/keto-calculator/">Keto Calculator</a></li>
+          <li><a href="/net-carb-calculator/">Net Carb Calculator</a></li>
+          <li><a href="/intermittent-fasting-calculator/">Intermittent Fasting Calculator</a></li>
+          <li><a href="/bsa-calculator/">BSA Calculator</a></li>
+          <li><a href="/dog-food-calculator/">Dog Food Calculator</a></li>
+          <li><a href="/ffmi-calculator/">FFMI Calculator</a></li>
+          <li><a href="/bulking-calculator/">Bulking Calculator</a></li>
+          <li><a href="/weight-loss-calculator/">Weight Loss Calculator</a></li>
+          <li><a href="/weight-loss-percentage-calculator/">Weight Loss Percentage Calculator</a></li>
+          <li><a href="/max-heart-rate-calculator/">Max Heart Rate Calculator</a></li>
+          <li><a href="/caffeine-calculator/">Caffeine Calculator</a></li>
+          <li><a href="/caffeine-half-life-calculator/">Caffeine Half Life Calculator</a></li>
+          <li><a href="/fiber-calculator/">Fiber Calculator</a></li>
+          <li><a href="/creatine-calculator/">Creatine Calculator</a></li>
+          <li><a href="/vitamin-d-calculator/">Vitamin D Calculator</a></li>
+          <li><a href="/body-recomposition-calculator/">Body Recomposition Calculator</a></li>
+        </ul>
+      </div>
+
+        <div class="footer-sub">
+<div class="footer-subcol">
+<div class="footer-col" style="order:3">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/semester-grade-calculator/">Semester Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+          <li><a href="/grade-curve-calculator/">Grade Curve Calculator</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:START-->
+<div class="footer-col" style="order:7">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Unit</span> <span class="ft2">Converters</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/unit-converter/">Unit Converter</a></li>
+          <li><a href="/length-converter/">Length Converter</a></li>
+          <li><a href="/weight-converter/">Weight Converter</a></li>
+          <li><a href="/volume-converter/">Volume Converter</a></li>
+          <li><a href="/temperature-converter/">Temperature Converter</a></li>
+          <li><a href="/area-converter/">Area Converter</a></li>
+          <li><a href="/speed-converter/">Speed Converter</a></li>
+          <li><a href="/data-storage-converter/">Data Storage Converter</a></li>
+          <li><a href="/cooking-converter/">Cooking Measurement Converter</a></li>
+          <li><a href="/px-to-rem-converter/">PX to REM Converter</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:END-->
+</div>
+
+<div class="footer-col" style="order:4">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/fraction-calculator/">Fraction Calculator</a></li>
+          <li><a href="/standard-deviation-calculator/">Standard Deviation Calculator</a></li>
+          <li><a href="/p-value-calculator/">P-Value Calculator</a></li>
+          <li><a href="/confidence-interval-calculator/">Confidence Interval Calculator</a></li>
+          <li><a href="/z-score-calculator/">Z-Score Calculator</a></li>
+          <li><a href="/t-test-calculator/">T-Test Calculator</a></li>
+          <li><a href="/scientific-notation-calculator/">Scientific Notation Calculator</a></li>
+          <li><a href="/weighted-average-calculator/">Weighted Average Calculator</a></li>
+          <li><a href="/average-calculator/">Average Calculator</a></li>
+          <li><a href="/batting-average-calculator/">Batting Average Calculator</a></li>
+          <li><a href="/stock-average-calculator/">Stock Average Calculator</a></li>
+          <li><a href="/dice-average-calculator/">Dice Average Calculator</a></li>
+          <li><a href="/time-average-calculator/">Time Average Calculator</a></li>
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+          <li><a href="/percentage-change-calculator/">Percentage Change Calculator</a></li>
+          <li><a href="/age-calculator/">Age Calculator</a></li>
+          <li><a href="/date-calculator/">Date Calculator</a></li>
+          <li><a href="/time-calculator/">Time Calculator</a></li>
+          <li><a href="/hours-calculator/">Hours Calculator</a></li>
+          <li><a href="/seconds-to-hours-calculator/">Seconds to Hours Calculator</a></li>
+          <li><a href="/minutes-to-hours-calculator/">Minutes to Hours Calculator</a></li>
+          <li><a href="/seconds-to-minutes-calculator/">Seconds to Minutes Calculator</a></li>
+          <li><a href="/triangle-calculator/">Triangle Calculator</a></li>
+          <li><a href="/random-number-generator/">Random Number Generator</a></li>
+        </ul>
+      </div>
+        </div>
+      </div>
+
+      <!--PAYFOOT:START-->
+      <div class="footer-col footer-col--wide">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Paycheck</span> <span class="ft2">Calculators</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/paycheck-calculator/">Paycheck Calculator (all states)</a></li>
+          <li><a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arkansas/">Arkansas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/california/">California Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/hawaii/">Hawaii Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/louisiana/">Louisiana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nebraska/">Nebraska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/oklahoma/">Oklahoma Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/utah/">Utah Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wisconsin/">Wisconsin Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a></li>
+        </ul>
+      </div>
+      <!--PAYFOOT:END-->
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/blog/">Blog</a>
+      <span aria-hidden="true">·</span>
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/whats-new/">What's new</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Page last updated: <time datetime="2026-11-21">November 21, 2026</time>. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+</div>
+
+<script src="/assets/app.js?v=362"></script>
+<script>CalcThis.initRetaCalc();</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>

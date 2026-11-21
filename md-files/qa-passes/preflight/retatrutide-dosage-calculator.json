@@ -1,0 +1,12 @@
+{
+ "slug": "retatrutide-dosage-calculator",
+ "pass": true,
+ "failed": [],
+ "hash": "3aec57e6b4a45729",
+ "at": "2026-11-21T19:30:05.334Z",
+ "results": {
+  "silent": "ok   retatrutide-dosage-calculator  fields 7",
+  "duplicate": "most overlap 0.1% with /mg-to-ml-calculator/ (limit 12%)",
+  "registration": "sitemap urls 244 | retatrutide-dosage-calculator cards 1 inbound 243 ld WebApplication,FAQPage,BreadcrumbList | AUDIT PASS"
+ }
+}

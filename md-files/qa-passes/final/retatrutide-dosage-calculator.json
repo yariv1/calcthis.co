@@ -1,0 +1,14 @@
+{
+ "slug": "retatrutide-dosage-calculator",
+ "pass": true,
+ "at": "2026-11-21T19:12:56.646Z",
+ "passHash": "3aec57e6b4a45729",
+ "scriptHash": "e652afdf37d35552",
+ "cats": {
+  "textVsTool": 92,
+  "extremes": 22,
+  "visual": 74
+ },
+ "runs": 58,
+ "fails": []
+}
