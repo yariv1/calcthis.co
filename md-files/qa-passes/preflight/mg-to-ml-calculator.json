@@ -2,11 +2,11 @@
  "slug": "mg-to-ml-calculator",
  "pass": true,
  "failed": [],
- "hash": "9427df9199c71b8e",
- "at": "2026-11-21T11:05:47.693Z",
+ "hash": "dfa6a123eef097ce",
+ "at": "2026-11-21T12:20:27.126Z",
  "results": {
   "silent": "ok   mg-to-ml-calculator  fields 8",
-  "duplicate": "most overlap 0.1% with /bsa-calculator/ (limit 12%)",
-  "registration": "sitemap urls 241 | mg-to-ml-calculator cards 1 inbound 240 ld WebApplication,FAQPage,BreadcrumbList | AUDIT PASS"
+  "duplicate": "most overlap 0.7% with /dilution-calculator/ (limit 12%)",
+  "registration": "sitemap urls 242 | mg-to-ml-calculator cards 1 inbound 241 ld WebApplication,FAQPage,BreadcrumbList | AUDIT PASS"
  }
 }

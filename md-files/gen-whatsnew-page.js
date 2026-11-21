@@ -6,6 +6,7 @@ const A = (slug, name) => { if (!fs.existsSync(ROOT + slug + '/index.html')) thr
 const ENTRIES = [
   ['2026-11-22', 'November 22, 2026', [
     'New: ' + A('dilution-calculator', 'Dilution Calculator') + ' — concentrate and water for any strength, ratio (1:10, 1 in 10, 10x) or factor, in percent, ppm, mg/mL, molar or fold units, with a flask drawn to scale, the mixing order and the same batch at other ratios.',
+    'Fixed: on the ' + A('mg-to-ml-calculator', 'mg to mL Calculator') + ', the error message under the volume box now sits under the whole row instead of half the width.',
     'Changed: the menu group Medication &amp; Dosage is now called Medication &amp; Lab; it holds the mg to mL, dilution and peptide reconstitution calculators.',
   ]],
   ['2026-11-21', 'November 21, 2026', [

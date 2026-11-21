@@ -27702,7 +27702,7 @@ CalcThis.initMgMlCalc = function () {
   var MODES = { mgml: 'mg to mL', mlmg: 'mL to mg', strength: 'Find the strength' };
   function setHint(m, at) {
     var h = $('mmHint'); h.textContent = m || ''; h.style.display = m ? 'block' : 'none';
-    if (m && at) { var el = $(at), f = el ? el.closest('.fld') : null; if (f && f.nextSibling !== h) f.parentNode.insertBefore(h, f.nextSibling); }
+    if (m && at) { var el = $(at), f = el ? (el.closest('.two') || el.closest('.fld')) : null; if (f && f.nextSibling !== h) f.parentNode.insertBefore(h, f.nextSibling); }
   }
   function note(id, txt, cls) { var n = $(id); n.textContent = txt; n.className = 'cb-note' + (cls ? ' ' + cls : ''); }
   function table(id, head, rows, cls) { $(id).innerHTML = '<thead><tr>' + head.map(function (h) { return '<th>' + h + '</th>'; }).join('') + '</tr></thead><tbody>' + rows.map(function (r) { return '<tr' + (r.cls ? ' class="' + r.cls + '"' : '') + (r.d != null ? ' data-d="' + r.d + '"' : '') + '>' + r.c.map(function (c) { return '<td>' + c + '</td>'; }).join('') + '</tr>'; }).join('') + '</tbody>'; }
