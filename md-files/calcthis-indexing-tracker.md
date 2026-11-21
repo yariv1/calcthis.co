@@ -208,3 +208,5 @@ GSC 2026-11-22 (queue, later): pennsylvania already on Google. virginia paycheck
 BING 2026-11-22: submitted manually (7 URLs, listed in Submitted URLs): paycheck michigan, minnesota, virginia, RNG 1-3, 1-10, 1-13, 1-100. Quota left that day was 96, so Bing has no daily bottleneck: submit the whole GSC queue there.
 
 BING 2026-11-22 (second batch): 89 URLs submitted manually, all appear as "Today" in Submitted URLs (daily quota now used): the paycheck hub + 36 state pages, 45 older calculator pages, contact, privacy, terms. Bing has now received every sitemap page except blog articles and the RNG hub/wheel/no-repeats/other pages not listed; unit pairs and tip pages went in on 2026-11-13.
+
+- 2026-11-22 DEPLOYED v361 (commit 19c3f37b): /t-test-calculator/ + whats-new. IndexNow pinged 243 URLs (HTTP 200). Bing manual submit NOT done: daily quota 0 left. GSC NOT requested (quota used today); add t-test-calculator to the GSC queue (after virginia).
