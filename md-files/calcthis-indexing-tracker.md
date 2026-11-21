@@ -204,3 +204,5 @@ GSC snapshot 2026-10-26: 69 indexed, 13 not indexed (8 Discovered, 1 Crawled, 1 
 GSC 2026-11-22 (continue queue): requested michigan, minnesota paycheck, RNG 1-10, 1-3, 1-13, 1-100 (1-100 and 1-13 possibly requested twice; no quota hit). Already on Google (skipped): louisiana, massachusetts, nebraska, new-jersey, new-york-city, new-york, north-carolina, ohio, oklahoma, oregon, utah, wisconsin. Not inspected yet: pennsylvania, virginia, then the 18 unit pairs and older queue. NOTE: RNG slugs are /random-number-generator-1-10/ style (not /random-number-generator/1-10/).
 
 GSC 2026-11-22 (queue, later): pennsylvania already on Google. virginia paycheck -> "Quota Exceeded" (not requested). NEXT: virginia, then the 18 unit pairs (v344 text, /cm-to-inches/ first; the 11-03 requests predate the v344 content so inspect first), then older queue. Quota resets ~a day.
+
+BING 2026-11-22: submitted manually (7 URLs, listed in Submitted URLs): paycheck michigan, minnesota, virginia, RNG 1-3, 1-10, 1-13, 1-100. Quota left that day was 96, so Bing has no daily bottleneck: submit the whole GSC queue there.
