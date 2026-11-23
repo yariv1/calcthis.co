@@ -3988,3 +3988,41 @@ body .fld + .av-note,body .fld + .cb-note{margin-top:-6px}
 .p-sd #sdTab td:first-child,.p-sd #sdTab th:first-child{white-space:nowrap;overflow-wrap:normal}
 .p-sd #sdTab td,.p-sd #sdTab th{overflow-wrap:normal;padding-left:6px;padding-right:6px}
 .p-sd #sdTab td:nth-child(3),.p-sd #sdTab th:nth-child(3){text-align:left}
+
+/* CORR:CSS ---- CORRELATION COEFFICIENT calculator (.p-cc). Reuses .p-bmr result look, .dtable, .seg, .chips, .advbtn ---- */
+.p-cc .card{min-width:0}
+.p-cc .av-note,.p-cc .cb-note{font-size:14px;font-weight:500;color:var(--ink-soft);margin:4px 0 8px;line-height:1.45}
+.p-cc .cb-note{color:var(--muted);font-weight:400}
+.p-cc .res-big{font-size:clamp(28px,7vw,44px);overflow-wrap:anywhere}
+.p-cc .res-big.cc-long{font-size:24px}
+.p-cc .res-sub,.p-cc .res-lab{overflow-wrap:anywhere}
+.p-cc .mbar-vals b{font-size:16px;overflow-wrap:anywhere}
+.p-cc .cc-two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0 10px}
+.p-cc .cc-two > *{min-width:0}
+.p-cc .zs-sech{font-size:14px;font-weight:600;color:var(--ink);margin:14px 0 8px}
+.p-cc .zs-sech span{font-weight:400;color:var(--muted)}
+.p-cc .cc-seg{display:flex;width:100%}
+.p-cc .cc-seg button{flex:1 1 0;min-width:0;padding-left:6px;padding-right:6px}
+.p-cc .cc-ta{display:block;width:100%;font:inherit;font-size:15px;font-weight:500;color:var(--ink);background:#FCFAF6;border:1.5px solid var(--line);border-radius:10px;padding:11px 13px;resize:vertical;font-variant-numeric:tabular-nums;line-height:1.5;min-height:84px}
+.p-cc .cc-ta:focus{outline:none;border-color:var(--amber);background:#fff;box-shadow:0 0 0 3px rgba(181,118,31,.13)}
+.p-cc .chips{margin-top:0;margin-bottom:6px}
+.p-cc .cc-vis{border:1px solid var(--line);border-radius:12px;background:#FFFDF8;padding:8px 8px 4px;margin:6px 0 4px}
+.p-cc .cc-vis svg{display:block;width:100%;height:auto}
+.p-cc .dtable td,.p-cc .dtable th{padding-left:6px;padding-right:6px;overflow-wrap:anywhere}
+.p-cc .dtable td{font-variant-numeric:tabular-nums}
+.p-cc #ccNums,.p-cc #ccAll,.p-cc #ccLoo,.p-cc #ccWhat,.p-cc #ccPred{width:100%;table-layout:auto}
+.p-cc #ccNums td:nth-child(2),.p-cc #ccWhat td:nth-child(2),.p-cc #ccPred td:nth-child(2),.p-cc #ccAll td:nth-child(n+2),.p-cc #ccAll th:nth-child(n+2),.p-cc #ccLoo td:nth-child(n+2),.p-cc #ccLoo th:nth-child(n+2){text-align:right}
+.p-cc .cc-tbl{margin:0 0 8px;max-width:100%}
+.p-cc #ccLoo tr.cc-flag td{background:#FBF1DC}
+.p-cc .cc-steps{margin:6px 0 4px;padding-left:20px;font-size:14.5px;line-height:1.55;color:var(--ink-soft)}
+.p-cc .cc-steps li{margin-bottom:4px;overflow-wrap:anywhere}
+.p-cc .cc-write{font-size:14.5px;line-height:1.55;color:var(--ink);background:#FBF7EE;border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:4px 0 8px;overflow-wrap:anywhere}
+.p-cc .cc-tools{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;margin:2px 0 6px}
+.p-cc .grid2 > div{min-width:0}
+.p-cc .cc-ctab td,.p-cc .cc-ctab th{white-space:nowrap}
+.p-cc #ccAll{table-layout:fixed}
+.p-cc #ccAll td,.p-cc #ccAll th{overflow-wrap:anywhere;word-break:normal;font-size:13.5px;padding-left:4px;padding-right:4px;hyphens:none}
+.p-cc #ccAll td:nth-child(n+2),.p-cc #ccAll th:nth-child(n+2){width:26%}
+.p-cc #ccAll td:first-child,.p-cc #ccAll th:first-child{width:22%}
+
+

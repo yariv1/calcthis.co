@@ -1,7 +1,7 @@
 {
  "/": {
-  "hash": "f0c21f51918d40f6",
-  "date": "2026-11-21"
+  "hash": "d2cd54c5e78d5c62",
+  "date": "2026-11-23"
  },
  "/board-foot-calculator/": {
   "hash": "41e9c86bf0956ae1",
@@ -788,8 +788,8 @@
   "date": "2026-11-20"
  },
  "/whats-new/": {
-  "hash": "cea0cd3d71c933bf",
-  "date": "2026-11-21"
+  "hash": "a4afd9d752433fc7",
+  "date": "2026-11-23"
  },
  "/contact/": {
   "hash": "a6aa9bb68b171a76",
@@ -978,5 +978,9 @@
  "/serial-dilution-calculator/": {
   "hash": "2067aa78917d60b0",
   "date": "2026-11-21"
+ },
+ "/correlation-coefficient-calculator/": {
+  "hash": "46563162f21ebc3d",
+  "date": "2026-11-23"
  }
 }

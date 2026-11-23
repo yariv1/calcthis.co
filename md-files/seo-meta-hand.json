@@ -112,6 +112,10 @@
     "t": "Fraction Calculator — Add, Subtract, Multiply & Divide",
     "d": "Free fraction calculator: add, subtract, multiply and divide fractions, mixed numbers and decimals, simplify and convert, with a live bar diagram and steps."
   },
+  "/correlation-coefficient-calculator/": {
+    "t": "Correlation Coefficient Calculator: Pearson, Spearman",
+    "d": "Correlation coefficient calculator: paste X and Y for Pearson r, Spearman and Kendall, p-value, interval, best-fit line and the point driving r."
+  },
   "/t-test-calculator/": {
     "t": "T-Test Calculator: One-Sample, Two-Sample & Paired",
     "d": "T-test calculator: paste your numbers or type means, SDs and n. Welch and pooled side by side, p-value, confidence interval, effect size and power."

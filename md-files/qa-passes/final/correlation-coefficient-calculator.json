@@ -1,0 +1,14 @@
+{
+ "slug": "correlation-coefficient-calculator",
+ "pass": true,
+ "at": "2026-11-23T19:13:34.269Z",
+ "passHash": "fadb6db9eb2bcdd4",
+ "scriptHash": "4caaf678992c1439",
+ "cats": {
+  "textVsTool": 62,
+  "extremes": 36,
+  "visual": 40
+ },
+ "runs": 50,
+ "fails": []
+}

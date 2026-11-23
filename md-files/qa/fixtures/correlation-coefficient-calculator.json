@@ -1,0 +1,218 @@
+{
+  "slug": "correlation-coefficient-calculator",
+  "bodyClass": "p-cc",
+  "blocks": [
+    "PVALUE",
+    "CI",
+    "TTEST",
+    "CORR"
+  ],
+  "result": {
+    "big": "ccBig",
+    "body": "ccBody",
+    "hint": "ccHint"
+  },
+  "required": [
+    "ccX",
+    "ccY",
+    "ccP"
+  ],
+  "fill": [
+    [
+      "click",
+      "ccClear"
+    ],
+    [
+      "seg",
+      "ccEntry",
+      "lists"
+    ],
+    [
+      "seg",
+      "ccTail",
+      "two"
+    ],
+    [
+      "seg",
+      "ccHead",
+      "pearson"
+    ],
+    [
+      "set",
+      "ccX",
+      "1 2 3 4 5 6 7 8 9 10"
+    ],
+    [
+      "set",
+      "ccY",
+      "52 55 61 58 70 72 69 80 85 60"
+    ]
+  ],
+  "optionalSamples": {
+    "ccAlpha": [
+      "0.05",
+      "0.1",
+      "5%",
+      "0.001"
+    ],
+    "ccConf": [
+      "95",
+      "99",
+      "60"
+    ],
+    "ccNameX": [
+      "Hours studied"
+    ],
+    "ccNameY": [
+      "Exam score"
+    ],
+    "ccPx": [
+      "11",
+      "5.5",
+      "-3"
+    ],
+    "ccDec": [
+      "3",
+      "0",
+      "6"
+    ],
+    "ccW": [
+      "1 1 2 1 3 1 1 2 1 1",
+      "1 1 1",
+      "0 0 0 0 0 0 0 0 0 0"
+    ],
+    "ccRho0": [
+      "0.3",
+      "-0.5",
+      "0",
+      "1.5"
+    ]
+  },
+  "pools": {
+    "ccAlpha": [
+      "0.05",
+      "0.1",
+      "5%",
+      "0.001",
+      "1"
+    ],
+    "ccConf": [
+      "95",
+      "99",
+      "60",
+      "50"
+    ],
+    "ccNameX": [
+      "Hours studied",
+      "x"
+    ],
+    "ccNameY": [
+      "Exam score"
+    ],
+    "ccPx": [
+      "11",
+      "5.5",
+      "-3",
+      "100"
+    ],
+    "ccDec": [
+      "3",
+      "0",
+      "6"
+    ],
+    "ccW": [
+      "1 1 2 1 3 1 1 2 1 1",
+      "1 1 1"
+    ],
+    "ccRho0": [
+      "0.3",
+      "-0.5",
+      "0",
+      "1.5",
+      "abc"
+    ]
+  },
+  "variants": [
+    [
+      [
+        "click",
+        "ccClear"
+      ],
+      [
+        "seg",
+        "ccEntry",
+        "pairs"
+      ],
+      [
+        "seg",
+        "ccTail",
+        "two"
+      ],
+      [
+        "set",
+        "ccP",
+        "1, 52\n2, 55\n3, 61\n4, 58\n5, 70\n6, 72\n7, 69\n8, 80\n9, 85\n10, 60"
+      ]
+    ],
+    [
+      [
+        "click",
+        "ccClear"
+      ],
+      [
+        "seg",
+        "ccEntry",
+        "lists"
+      ],
+      [
+        "seg",
+        "ccTail",
+        "gt"
+      ],
+      [
+        "set",
+        "ccX",
+        "2 4 6 8 10 12 14 16"
+      ],
+      [
+        "set",
+        "ccY",
+        "90 84 80 71 66 60 52 47"
+      ]
+    ],
+    [
+      [
+        "click",
+        "ccClear"
+      ],
+      [
+        "seg",
+        "ccEntry",
+        "lists"
+      ],
+      [
+        "seg",
+        "ccTail",
+        "lt"
+      ],
+      [
+        "set",
+        "ccX",
+        "2 4 6 8 10 12 14 16"
+      ],
+      [
+        "set",
+        "ccY",
+        "90 84 80 71 66 60 52 47"
+      ]
+    ]
+  ],
+  "scrollTo": "ccBig",
+  "errorState": [
+    [
+      "set",
+      "ccX",
+      "5"
+    ]
+  ]
+}

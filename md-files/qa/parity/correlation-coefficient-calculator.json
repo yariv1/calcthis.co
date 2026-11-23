@@ -1,0 +1,529 @@
+{
+ "slug": "correlation-coefficient-calculator",
+ "research": "md-files/calcthis-correlation-research.md",
+ "competitors": [
+  {
+   "name": "Omnicalculator correlation coefficient calculator",
+   "url": "https://www.omnicalculator.com/statistics/correlation",
+   "openedLive": true,
+   "date": "2026-11-23",
+   "inputs": [
+    "coefficient choice: Pearson, Spearman, Kendall",
+    "Matthews correlation coefficient (2 by 2 table)",
+    "number of points (up to 30) with x and y typed row by row",
+    "show calculation details (steps)",
+    "strength words from the Evans scale",
+    "formulas, worked example and FAQ text",
+    "share result and reload buttons"
+   ]
+  },
+  {
+   "name": "GigaCalculator correlation coefficient calculator",
+   "url": "https://www.gigacalculator.com/calculators/correlation-coefficient-calculator.php",
+   "openedLive": true,
+   "date": "2026-11-23",
+   "inputs": [
+    "coefficient choice: Pearson, Spearman, Kendall",
+    "pasted X and Y columns separated by spaces, tabs or commas",
+    "optional weights column (weighted Pearson)",
+    "confidence level",
+    "sample size, z score and p-value",
+    "two-sided and one-sided confidence bounds",
+    "least-squares regression equation",
+    "text on choosing a coefficient, formulas and a worked example"
+   ]
+  },
+  {
+   "name": "Pearson.com correlation coefficient calculator",
+   "url": "https://www.pearson.com/channels/calculators/correlation-coefficient-calculator",
+   "openedLive": true,
+   "date": "2026-11-23",
+   "inputs": [
+    "input format: paired rows or two columns",
+    "x and y variable labels",
+    "scatterplot with best-fit line",
+    "descriptive statistics",
+    "significance test for Pearson r",
+    "Spearman rank correlation",
+    "r squared and regression equation",
+    "is Pearson appropriate check",
+    "outlier and leverage warning",
+    "calculation table",
+    "plain-language interpretation",
+    "step-by-step explanation",
+    "correlation does not prove causation note",
+    "eleven quick-pick example data sets"
+   ]
+  },
+  {
+   "name": "correlationcoefficientcalculator.org",
+   "url": "https://correlationcoefficientcalculator.org/",
+   "openedLive": true,
+   "date": "2026-11-23",
+   "inputs": [
+    "method choice: Pearson, Spearman, Kendall",
+    "point-biserial method",
+    "editable table with add rows",
+    "upload CSV or Excel file",
+    "example data button",
+    "share button",
+    "interactive scatter plot with zoom",
+    "correlation meter with strength badge",
+    "data health check: sample size, skew, linearity",
+    "residual plot",
+    "r, r squared, p-value, t and degrees of freedom",
+    "95% and 99% confidence intervals",
+    "automatic interpretation sentence",
+    "export results as CSV",
+    "export results as PNG and PDF",
+    "step-by-step solution"
+   ]
+  },
+  {
+   "name": "Social Science Statistics Pearson correlation calculator",
+   "url": "https://www.socscistatistics.com/tests/pearson/calculator/",
+   "openedLive": true,
+   "date": "2026-11-23",
+   "inputs": [
+    "two boxes for X and Y values (at least 3 pairs)",
+    "significance level 0.01, 0.05 or 0.10",
+    "calculate and reset buttons",
+    "intermediate calculations: sums of X, Y, XY, X squared and Y squared",
+    "numerator and denominator of r",
+    "data values table with n for each variable",
+    "smaller-tail and two-tailed p-values",
+    "significant or not significant statement",
+    "citation styles: APA parenthetical, APA narrative, Chicago, plain English with a copy button"
+   ]
+  },
+  {
+   "name": "Stats Kingdom correlation calculator",
+   "url": "https://www.statskingdom.com/correlation-calculator.html",
+   "openedLive": true,
+   "date": "2026-11-23",
+   "inputs": [
+    "correlation type: Pearson or Spearman",
+    "spreadsheet grid with paste from Excel",
+    "load CSV or Excel file",
+    "more options",
+    "calculate, clear and example buttons",
+    "copy results button",
+    "last run restore",
+    "solution shown with the result",
+    "p-value distribution: automatic, t-distribution, Fisher transformation",
+    "exact distribution option for the p-value",
+    "expected correlation (rho0) to test against",
+    "tails: two, left, right",
+    "significance level alpha",
+    "effect size choice (small, medium, large) for power",
+    "digits (1 to 10)",
+    "step by step toggle",
+    "correlation strength label",
+    "covariance and test statistic",
+    "line fit plot",
+    "APA results sentence",
+    "calculation with deviations and squared deviations table",
+    "null hypothesis conclusion text",
+    "acceptance regions for t and for r",
+    "confidence interval of the correlation",
+    "test power validation",
+    "outlier validation (Tukey fence)",
+    "Shapiro-Wilk normality of the residuals",
+    "how to do it with R",
+    "print results"
+   ]
+  }
+ ],
+ "features": [
+  {
+   "covers": [
+    "Omnicalculator correlation coefficient calculator: coefficient choice: Pearson, Spearman, Kendall",
+    "GigaCalculator correlation coefficient calculator: coefficient choice: Pearson, Spearman, Kendall",
+    "correlationcoefficientcalculator.org: method choice: Pearson, Spearman, Kendall",
+    "Pearson.com correlation coefficient calculator: Spearman rank correlation",
+    "Stats Kingdom correlation calculator: correlation type: Pearson or Spearman"
+   ],
+   "status": "exceed",
+   "ids": [
+    "ccHead",
+    "ccAll"
+   ]
+  },
+  {
+   "covers": [
+    "correlationcoefficientcalculator.org: point-biserial method"
+   ],
+   "status": "match",
+   "ids": [
+    "ccNums"
+   ]
+  },
+  {
+   "covers": [
+    "Omnicalculator correlation coefficient calculator: number of points (up to 30) with x and y typed row by row",
+    "GigaCalculator correlation coefficient calculator: pasted X and Y columns separated by spaces, tabs or commas",
+    "Pearson.com correlation coefficient calculator: input format: paired rows or two columns",
+    "correlationcoefficientcalculator.org: editable table with add rows",
+    "Social Science Statistics Pearson correlation calculator: two boxes for X and Y values (at least 3 pairs)",
+    "Stats Kingdom correlation calculator: spreadsheet grid with paste from Excel"
+   ],
+   "status": "exceed",
+   "ids": [
+    "ccEntry",
+    "ccX",
+    "ccY",
+    "ccP"
+   ]
+  },
+  {
+   "covers": [
+    "Omnicalculator correlation coefficient calculator: show calculation details (steps)",
+    "Pearson.com correlation coefficient calculator: step-by-step explanation",
+    "correlationcoefficientcalculator.org: step-by-step solution",
+    "Stats Kingdom correlation calculator: solution shown with the result"
+   ],
+   "status": "match",
+   "ids": [
+    "ccSteps"
+   ]
+  },
+  {
+   "covers": [
+    "Pearson.com correlation coefficient calculator: calculation table"
+   ],
+   "status": "match",
+   "ids": [
+    "ccDev",
+    "ccDevWrap"
+   ]
+  },
+  {
+   "covers": [
+    "Omnicalculator correlation coefficient calculator: strength words from the Evans scale",
+    "Pearson.com correlation coefficient calculator: plain-language interpretation",
+    "correlationcoefficientcalculator.org: automatic interpretation sentence",
+    "Pearson.com correlation coefficient calculator: correlation does not prove causation note"
+   ],
+   "status": "exceed",
+   "ids": [
+    "ccSub",
+    "ccTip"
+   ]
+  },
+  {
+   "covers": [
+    "correlationcoefficientcalculator.org: correlation meter with strength badge"
+   ],
+   "status": "exceed",
+   "ids": [
+    "ccGauge"
+   ]
+  },
+  {
+   "covers": [
+    "GigaCalculator correlation coefficient calculator: optional weights column (weighted Pearson)"
+   ],
+   "status": "match",
+   "ids": [
+    "ccW"
+   ]
+  },
+  {
+   "covers": [
+    "GigaCalculator correlation coefficient calculator: confidence level",
+    "correlationcoefficientcalculator.org: 95% and 99% confidence intervals"
+   ],
+   "status": "match",
+   "ids": [
+    "ccConf",
+    "ccNums"
+   ]
+  },
+  {
+   "covers": [
+    "GigaCalculator correlation coefficient calculator: sample size, z score and p-value",
+    "Pearson.com correlation coefficient calculator: significance test for Pearson r",
+    "correlationcoefficientcalculator.org: r, r squared, p-value, t and degrees of freedom",
+    "GigaCalculator correlation coefficient calculator: two-sided and one-sided confidence bounds"
+   ],
+   "status": "match",
+   "ids": [
+    "ccNums"
+   ]
+  },
+  {
+   "covers": [
+    "GigaCalculator correlation coefficient calculator: least-squares regression equation",
+    "Pearson.com correlation coefficient calculator: r squared and regression equation",
+    "Pearson.com correlation coefficient calculator: descriptive statistics"
+   ],
+   "status": "match",
+   "ids": [
+    "ccNums"
+   ]
+  },
+  {
+   "covers": [
+    "Pearson.com correlation coefficient calculator: x and y variable labels"
+   ],
+   "status": "match",
+   "ids": [
+    "ccNameX",
+    "ccNameY"
+   ]
+  },
+  {
+   "covers": [
+    "Pearson.com correlation coefficient calculator: scatterplot with best-fit line",
+    "correlationcoefficientcalculator.org: interactive scatter plot with zoom"
+   ],
+   "status": "exceed",
+   "ids": [
+    "ccVis",
+    "ccZoomIn",
+    "ccZoomOut"
+   ]
+  },
+  {
+   "covers": [
+    "Pearson.com correlation coefficient calculator: is Pearson appropriate check",
+    "Pearson.com correlation coefficient calculator: outlier and leverage warning",
+    "correlationcoefficientcalculator.org: data health check: sample size, skew, linearity"
+   ],
+   "status": "exceed",
+   "ids": [
+    "ccCheckWrap",
+    "ccLoo"
+   ]
+  },
+  {
+   "covers": [
+    "Pearson.com correlation coefficient calculator: eleven quick-pick example data sets",
+    "correlationcoefficientcalculator.org: example data button",
+    "Stats Kingdom correlation calculator: calculate, clear and example buttons"
+   ],
+   "status": "match",
+   "ids": [
+    "ccExChips",
+    "ccClear"
+   ]
+  },
+  {
+   "covers": [
+    "Social Science Statistics Pearson correlation calculator: significance level 0.01, 0.05 or 0.10"
+   ],
+   "status": "match",
+   "ids": [
+    "ccAlpha",
+    "ccAlphaChips"
+   ]
+  },
+  {
+   "covers": [
+    "Social Science Statistics Pearson correlation calculator: calculate and reset buttons",
+    "Omnicalculator correlation coefficient calculator: share result and reload buttons",
+    "correlationcoefficientcalculator.org: share button",
+    "Stats Kingdom correlation calculator: copy results button"
+   ],
+   "status": "match",
+   "ids": [
+    "ccClear",
+    "ccCopyTxt"
+   ]
+  },
+  {
+   "covers": [
+    "correlationcoefficientcalculator.org: export results as CSV"
+   ],
+   "status": "match",
+   "ids": [
+    "ccCsvTxt"
+   ]
+  },
+  {
+   "covers": [
+    "Stats Kingdom correlation calculator: more options"
+   ],
+   "status": "match",
+   "ids": [
+    "ccAdvBtn",
+    "ccAdvIn"
+   ]
+  },
+  {
+   "covers": [
+    "Omnicalculator correlation coefficient calculator: formulas, worked example and FAQ text",
+    "GigaCalculator correlation coefficient calculator: text on choosing a coefficient, formulas and a worked example"
+   ],
+   "status": "match",
+   "ids": [
+    "ccFormulas",
+    "ccWhich",
+    "ccReading",
+    "ccFaq"
+   ]
+  },
+  {
+   "covers": [
+    "Omnicalculator correlation coefficient calculator: Matthews correlation coefficient (2 by 2 table)",
+    "correlationcoefficientcalculator.org: upload CSV or Excel file",
+    "Stats Kingdom correlation calculator: load CSV or Excel file",
+    "correlationcoefficientcalculator.org: export results as PNG and PDF",
+    "correlationcoefficientcalculator.org: residual plot",
+    "Stats Kingdom correlation calculator: last run restore",
+    "Stats Kingdom correlation calculator: exact distribution option for the p-value",
+    "Stats Kingdom correlation calculator: Shapiro-Wilk normality of the residuals",
+    "Stats Kingdom correlation calculator: how to do it with R",
+    "Stats Kingdom correlation calculator: print results"
+   ],
+   "status": "dropped",
+   "signoff": {
+    "quote": "Approve all (his reply on 2026-11-23 to the research report md-files/calcthis-correlation-research.md, whose list of proposed drops named Excel/CSV file upload, PNG/PDF export, the matrix of 3+ variables, Matthews/MCC and the residual plot; last-run restore was not named in that report) | and, after the build, in answer to the question that named the exact-distribution option, the Shapiro-Wilk normality test on the residuals, R code, the Print button and last-run restore as drops: \"Add those, drop those (Recommended)\"",
+    "date": "2026-11-23"
+   }
+  },
+  {
+   "covers": [
+    "Social Science Statistics Pearson correlation calculator: intermediate calculations: sums of X, Y, XY, X squared and Y squared",
+    "Social Science Statistics Pearson correlation calculator: numerator and denominator of r",
+    "Stats Kingdom correlation calculator: calculation with deviations and squared deviations table"
+   ],
+   "status": "match",
+   "ids": [
+    "ccSums",
+    "ccDev"
+   ]
+  },
+  {
+   "covers": [
+    "Social Science Statistics Pearson correlation calculator: data values table with n for each variable"
+   ],
+   "status": "match",
+   "ids": [
+    "ccDev",
+    "ccDevWrap"
+   ]
+  },
+  {
+   "covers": [
+    "Social Science Statistics Pearson correlation calculator: smaller-tail and two-tailed p-values",
+    "Social Science Statistics Pearson correlation calculator: significant or not significant statement",
+    "Stats Kingdom correlation calculator: null hypothesis conclusion text"
+   ],
+   "status": "exceed",
+   "ids": [
+    "ccNums",
+    "ccTip"
+   ]
+  },
+  {
+   "covers": [
+    "Social Science Statistics Pearson correlation calculator: citation styles: APA parenthetical, APA narrative, Chicago, plain English with a copy button",
+    "Stats Kingdom correlation calculator: APA results sentence"
+   ],
+   "status": "match",
+   "ids": [
+    "ccCiteChips",
+    "ccWrite"
+   ]
+  },
+  {
+   "covers": [
+    "Stats Kingdom correlation calculator: p-value distribution: automatic, t-distribution, Fisher transformation",
+    "Stats Kingdom correlation calculator: expected correlation (rho0) to test against"
+   ],
+   "status": "exceed",
+   "ids": [
+    "ccRho0",
+    "ccNums"
+   ]
+  },
+  {
+   "covers": [
+    "Stats Kingdom correlation calculator: tails: two, left, right"
+   ],
+   "status": "match",
+   "ids": [
+    "ccTail"
+   ]
+  },
+  {
+   "covers": [
+    "Stats Kingdom correlation calculator: significance level alpha"
+   ],
+   "status": "match",
+   "ids": [
+    "ccAlpha",
+    "ccAlphaChips"
+   ]
+  },
+  {
+   "covers": [
+    "Stats Kingdom correlation calculator: effect size choice (small, medium, large) for power",
+    "Stats Kingdom correlation calculator: test power validation"
+   ],
+   "status": "exceed",
+   "ids": [
+    "ccWhat"
+   ]
+  },
+  {
+   "covers": [
+    "Stats Kingdom correlation calculator: digits (1 to 10)"
+   ],
+   "status": "match",
+   "ids": [
+    "ccDec"
+   ]
+  },
+  {
+   "covers": [
+    "Stats Kingdom correlation calculator: step by step toggle"
+   ],
+   "status": "match",
+   "ids": [
+    "ccSteps"
+   ]
+  },
+  {
+   "covers": [
+    "Stats Kingdom correlation calculator: correlation strength label"
+   ],
+   "status": "exceed",
+   "ids": [
+    "ccSub",
+    "ccTip"
+   ]
+  },
+  {
+   "covers": [
+    "Stats Kingdom correlation calculator: covariance and test statistic",
+    "Stats Kingdom correlation calculator: acceptance regions for t and for r",
+    "Stats Kingdom correlation calculator: confidence interval of the correlation"
+   ],
+   "status": "exceed",
+   "ids": [
+    "ccNums"
+   ]
+  },
+  {
+   "covers": [
+    "Stats Kingdom correlation calculator: line fit plot"
+   ],
+   "status": "exceed",
+   "ids": [
+    "ccVis"
+   ]
+  },
+  {
+   "covers": [
+    "Stats Kingdom correlation calculator: outlier validation (Tukey fence)"
+   ],
+   "status": "exceed",
+   "ids": [
+    "ccCheckWrap",
+    "ccLoo"
+   ]
+  }
+ ]
+}

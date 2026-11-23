@@ -1,0 +1,28 @@
+{
+ "date": "2026-11-23",
+ "competitors": [
+  { "name": "Omnicalculator correlation coefficient calculator", "url": "https://www.omnicalculator.com/statistics/correlation", "reopenedAfterBuild": true, "gaps": [] },
+  { "name": "GigaCalculator correlation coefficient calculator", "url": "https://www.gigacalculator.com/calculators/correlation-coefficient-calculator.php", "reopenedAfterBuild": true, "gaps": [] },
+  { "name": "Pearson.com correlation coefficient calculator", "url": "https://www.pearson.com/channels/calculators/correlation-coefficient-calculator", "reopenedAfterBuild": true, "gaps": [] },
+  { "name": "correlationcoefficientcalculator.org", "url": "https://correlationcoefficientcalculator.org/", "reopenedAfterBuild": true, "gaps": [] },
+  { "name": "Social Science Statistics Pearson correlation calculator", "url": "https://www.socscistatistics.com/tests/pearson/calculator/", "reopenedAfterBuild": true, "gaps": [] },
+  { "name": "Stats Kingdom correlation calculator", "url": "https://www.statskingdom.com/correlation-calculator.html", "reopenedAfterBuild": true, "gaps": [] }
+ ],
+ "weBeat": [
+  "visual: a scatter in the user's own units with the best-fit line, a confidence band, one thin leave-one-out line per point, amber rings and labels on the points that move r by more than 0.1, zoom buttons, and a gauge on the -1 to +1 scale with the interval drawn as a bar; Pearson.com, correlationcoefficientcalculator.org and Stats Kingdom draw a scatter but none shows which point carries the correlation, and Omnicalculator, GigaCalculator and Social Science Statistics draw nothing",
+  "functional: 'Which point is carrying this?' table (r with each pair left out, flagged above 0.1), Pearson, Spearman and Kendall side by side with a plain note on when they disagree, 'What would it take' (smallest significant r, pairs needed for p below alpha and for 80% power, power for true correlations of 0.1, 0.3 and 0.5), a prediction from the line with the interval for the line and for one new point, testing against a correlation other than 0, weights, sentences in five styles, an 'Is Pearson appropriate' check, and the same example typed into Social Science Statistics and Stats Kingdom gave the same r, r squared, t, df and p as this page",
+  "every competitor feature kept except Matthews MCC, CSV / Excel file upload, PNG / PDF export, residual plot, the exact-distribution option, the Shapiro-Wilk normality test, R code, Print and last-run restore (dropped under his answers 'Approve all' and 'Add those, drop those (Recommended)', recorded in the parity file)"
+ ],
+ "gapsLeft": [],
+ "unverified": [
+  "real phone",
+  "other browsers (Chrome only)",
+  "print",
+  "Copy buttons in a real clipboard session",
+  "GigaCalculator's Share and Embed buttons and correlationcoefficientcalculator.org's correlation matrix and dark-theme switch were seen but are not on this page (the matrix was named as a drop in the research report; share and embed were not named)",
+  "the Chicago-style sentence copies the pattern Social Science Statistics prints (r(8) = 0.70; p = .025); the style rule itself was not read",
+  "the strength words follow the scale Omnicalculator attributes to Evans (1996); the original was not read",
+  "power counts for 80% and the three power rows use the Fisher z approximation; checked against an independent implementation, not against another calculator",
+  "Omnicalculator, GigaCalculator, Pearson.com and correlationcoefficientcalculator.org were reopened after the build but only read, not typed into; Social Science Statistics and Stats Kingdom were typed into and gave the same r, t, df and p"
+ ]
+}

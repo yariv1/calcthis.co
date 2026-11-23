@@ -1,0 +1,12 @@
+{
+ "slug": "correlation-coefficient-calculator",
+ "pass": true,
+ "failed": [],
+ "hash": "fadb6db9eb2bcdd4",
+ "at": "2026-11-23T22:55:26.324Z",
+ "results": {
+  "silent": "ok   correlation-coefficient-calculator  fields 7",
+  "duplicate": "most overlap 4.4% with /t-test-calculator/ (limit 12%)",
+  "registration": "sitemap urls 246 | correlation-coefficient-calculator cards 1 inbound 245 ld WebApplication,FAQPage,BreadcrumbList | AUDIT PASS"
+ }
+}

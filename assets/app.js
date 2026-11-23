@@ -27899,6 +27899,561 @@ CalcThis.initSerialDilCalc = function () {
   applyMode(); render();
 };
 /* SERIALDIL:END */
+/* CORR:BEGIN */
+/* =========================================================
+   CORRELATION COEFFICIENT calculator (/correlation-coefficient-calculator/). Competitors opened live (2026-11-23): Omnicalculator (Pearson / Spearman / Kendall / Matthews, up to 30 typed points,
+   steps, strength words), GigaCalculator (Pearson / Spearman / Kendall, pasted columns, weights column, confidence level, z, p, one- and two-sided bounds, regression equation),
+   Pearson.com (pairs or two columns, labels, scatter + best-fit line, outlier warning, assumptions check, steps), correlationcoefficientcalculator.org (table, scatter, meter, residual plot,
+   point-biserial, CI, exports), Social Science Statistics, Stats Kingdom. Notes: md-files/calcthis-correlation-research.md.
+   Sources read 2026-11-23: Wikipedia "Pearson correlation coefficient" (t statistic with n - 2 df; Fisher transformation F(r) = artanh r, SE = 1/sqrt(n - 3), interval tanh(F(r) +- z SE); example r = 0.7,
+   n = 50 gives (0.5237, 0.8188)); "Spearman's rank correlation coefficient" (t = r sqrt((n-2)/(1-r^2)) with n - 2 df; Fisher z with the factor 1.06: z = sqrt((n-3)/1.06) F(r)); "Kendall rank
+   correlation coefficient" (tau-b, z_B with the tie terms v0, vt, vu, v1, v2); "Prediction interval" (simple linear regression: prediction variance s^2 (1 + 1/n + (x - xbar)^2 / Sxx), mean response
+   s^2 (1/n + (x - xbar)^2 / Sxx)). The strength words follow the scale Omnicalculator attributes to Evans (1996); that scale was NOT read in the original.
+   Planning numbers: the smallest significant r comes from the t test; the people needed for p below alpha repeat the t test at the observed r; 80% power uses the Fisher z approximation
+   n = ((z_alpha + z_beta) / F(r))^2 + 3 (approximate, labelled so on the page).
+   ========================================================= */
+/* CORR-ENGINE:START */
+CalcThis.ccEngine = (function () {
+  var P = CalcThis.pvalueEngine, C = CalcThis.ciEngine, MAXN = 5000;
+  var NUM = /^[+-]?(\d+\.?\d*|\.\d+)(e[+-]?\d+)?$/i;
+  function atanh(r) { return 0.5 * Math.log((1 + r) / (1 - r)); }
+  function tanh(z) { if (z > 350) return 1; if (z < -350) return -1; var e = Math.exp(2 * z); return (e - 1) / (e + 1); }
+  /* pairs typed one per line: "x, y" with commas, spaces or tabs; lines that are not two numbers (headers, blanks) are skipped and counted */
+  function pairsFrom(text) {
+    var lines = String(text == null ? '' : text).replace(/−/g, '-').split(/\r?\n/), x = [], y = [], junk = 0, i, tk, j, ok;
+    for (i = 0; i < lines.length; i++) {
+      tk = lines[i].split(/[\s,;]+/).filter(function (s) { return s !== ''; });
+      if (!tk.length) continue;
+      ok = tk.length === 2; for (j = 0; ok && j < 2; j++) if (!NUM.test(tk[j]) || !isFinite(parseFloat(tk[j])) || Math.abs(parseFloat(tk[j])) > 1e9) ok = false;
+      if (ok) { x.push(parseFloat(tk[0])); y.push(parseFloat(tk[1])); } else junk++;
+    }
+    return { x: x, y: y, junk: junk };
+  }
+  function mean(v) { var s = 0, i; for (i = 0; i < v.length; i++) s += v[i]; return s / v.length; }
+  /* least squares fit and the Pearson r of two lists of the same length (two passes, centred) */
+  function pearson(x, y) {
+    var n = x.length, mx = mean(x), my = mean(y), sxx = 0, syy = 0, sxy = 0, i, dx, dy, r = null, slope = null, icpt = null, se = null;
+    for (i = 0; i < n; i++) { dx = x[i] - mx; dy = y[i] - my; sxx += dx * dx; syy += dy * dy; sxy += dx * dy; }
+    if (sxx > 0 && syy > 0) { r = sxy / Math.sqrt(sxx * syy); if (r > 1) r = 1; if (r < -1) r = -1; }
+    if (sxx > 0) { slope = sxy / sxx; icpt = my - slope * mx; if (n > 2) se = Math.sqrt(Math.max(0, syy - sxy * sxy / sxx) / (n - 2)); }
+    return { n: n, mx: mx, my: my, sxx: sxx, syy: syy, sxy: sxy, r: r, slope: slope, icpt: icpt, se: se, sdx: n > 1 ? Math.sqrt(sxx / (n - 1)) : 0, sdy: n > 1 ? Math.sqrt(syy / (n - 1)) : 0, cov: n > 1 ? sxy / (n - 1) : null };
+  }
+  /* weighted Pearson r: weighted means, then the same ratio with weights */
+  function wpearson(x, y, w) {
+    var n = x.length, sw = 0, mx = 0, my = 0, i, a = 0, b = 0, c = 0;
+    for (i = 0; i < n; i++) { sw += w[i]; mx += w[i] * x[i]; my += w[i] * y[i]; }
+    mx /= sw; my /= sw;
+    for (i = 0; i < n; i++) { a += w[i] * (x[i] - mx) * (y[i] - my); b += w[i] * (x[i] - mx) * (x[i] - mx); c += w[i] * (y[i] - my) * (y[i] - my); }
+    if (!(b > 0 && c > 0)) return null;
+    var r = a / Math.sqrt(b * c); return r > 1 ? 1 : r < -1 ? -1 : r;
+  }
+  /* average ranks (ties share the mean of their ranks) */
+  function rank(v) {
+    var n = v.length, idx = [], i, j, out = new Array(n), k;
+    for (i = 0; i < n; i++) idx.push(i);
+    idx.sort(function (a, b) { return v[a] - v[b]; });
+    i = 0; while (i < n) { j = i; while (j + 1 < n && v[idx[j + 1]] === v[idx[i]]) j++; for (k = i; k <= j; k++) out[idx[k]] = (i + j) / 2 + 1; i = j + 1; }
+    return out;
+  }
+  /* p-values of a t statistic with df degrees of freedom: left, right, two. t = +-Infinity when |r| = 1 */
+  function tp(t, df) {
+    if (t === Infinity) return { left: 1, right: 0, two: 0 };
+    if (t === -Infinity) return { left: 0, right: 1, two: 0 };
+    var c = P.cdf('t', { df: df }, t), two = 2 * Math.min(c.lo, c.hi); return { left: c.lo, right: c.hi, two: two > 1 ? 1 : two };
+  }
+  function pTail(pv, tail) { return tail === 'gt' ? pv.right : tail === 'lt' ? pv.left : pv.two; }
+  /* t test of a correlation (Pearson, and the t approximation for Spearman): t = r sqrt((n-2)/(1-r^2)) */
+  function test(r, n) {
+    var df = n - 2, d = 1 - r * r, t = d <= 1e-15 ? (r > 0 ? Infinity : -Infinity) : r * Math.sqrt(df / d);
+    return { t: t, df: df, pv: tp(t, df) };
+  }
+  /* interval for a correlation through the Fisher transformation; k = 1 for Pearson, 1.06 for Spearman (variance factor); null when n < 4 */
+  function fisher(r, n, level, k) {
+    if (n < 4) return null;
+    if (1 - r * r <= 1e-15) return { lo: r, hi: r, z: r > 0 ? Infinity : -Infinity, exact: true };
+    var z = atanh(r), se = Math.sqrt((k || 1) / (n - 3)), c = C.zc(level);
+    return { lo: tanh(z - c * se), hi: tanh(z + c * se), z: z / se, f: z, se: se, c: c };
+  }
+  function spearman(x, y) {
+    var rx = rank(x), ry = rank(y), f = pearson(rx, ry); return { rho: f.r, rx: rx, ry: ry };
+  }
+  /* Kendall tau-b with the tie-corrected normal approximation (v0, vt, vu, v1, v2) */
+  function groups(v) { var m = {}, i, out = []; for (i = 0; i < v.length; i++) m[v[i]] = (m[v[i]] || 0) + 1; for (var k in m) if (m[k] > 1) out.push(m[k]); return out; }
+  function kendall(x, y) {
+    var n = x.length, nc = 0, nd = 0, i, j, s, n0 = n * (n - 1) / 2, tx = groups(x), ty = groups(y), n1 = 0, n2 = 0, vt = 0, vu = 0, s1t = 0, s1u = 0, s2t = 0, s2u = 0;
+    for (i = 1; i < n; i++) for (j = 0; j < i; j++) { s = (x[i] - x[j]) * (y[i] - y[j]); if (s > 0) nc++; else if (s < 0) nd++; }
+    tx.forEach(function (t) { n1 += t * (t - 1) / 2; vt += t * (t - 1) * (2 * t + 5); s1t += t * (t - 1); s2t += t * (t - 1) * (t - 2); });
+    ty.forEach(function (u) { n2 += u * (u - 1) / 2; vu += u * (u - 1) * (2 * u + 5); s1u += u * (u - 1); s2u += u * (u - 1) * (u - 2); });
+    var den = Math.sqrt((n0 - n1) * (n0 - n2)); if (!(den > 0)) return null;
+    var v0 = n * (n - 1) * (2 * n + 5), v = (v0 - vt - vu) / 18 + s1t * s1u / (2 * n * (n - 1)) + (n > 2 ? s2t * s2u / (9 * n * (n - 1) * (n - 2)) : 0);
+    var tau = (nc - nd) / den, z = v > 0 ? (nc - nd) / Math.sqrt(v) : 0, c = P.cdf('z', {}, z), two = 2 * Math.min(c.lo, c.hi);
+    return { tau: tau, nc: nc, nd: nd, z: z, pv: { left: c.lo, right: c.hi, two: two > 1 ? 1 : two }, ties: tx.length + ty.length > 0 };
+  }
+  /* r, slope and intercept with each point left out, from shifted sums in one pass */
+  function leaveOne(x, y) {
+    var n = x.length, mx = mean(x), my = mean(y), Sx = 0, Sy = 0, Sxx = 0, Syy = 0, Sxy = 0, i, a, b, out = { r: [], slope: [], icpt: [] };
+    for (i = 0; i < n; i++) { a = x[i] - mx; b = y[i] - my; Sx += a; Sy += b; Sxx += a * a; Syy += b * b; Sxy += a * b; }
+    for (i = 0; i < n; i++) {
+      a = x[i] - mx; b = y[i] - my;
+      var m = n - 1, sx = Sx - a, sy = Sy - b, sxx = Sxx - a * a - sx * sx / m, syy = Syy - b * b - sy * sy / m, sxy = Sxy - a * b - sx * sy / m;
+      if (sxx > 1e-12 * (Sxx || 1) && syy > 1e-12 * (Syy || 1)) { var r = sxy / Math.sqrt(sxx * syy); out.r.push(r > 1 ? 1 : r < -1 ? -1 : r); out.slope.push(sxy / sxx); out.icpt.push(my + sy / m - sxy / sxx * (mx + sx / m)); }
+      else { out.r.push(null); out.slope.push(null); out.icpt.push(null); }
+    }
+    return out;
+  }
+  /* smallest |r| that is significant with n pairs: r = t / sqrt(t^2 + df) with the critical t */
+  function rcrit(n, alpha, tail) { var df = n - 2, t = P.inv('t', { df: df }, tail === 'two' ? alpha / 2 : alpha, 'R'); return t / Math.sqrt(t * t + df); }
+  function sigAt(r, n, alpha, tail) { var tt = test(r, n), c = P.inv('t', { df: n - 2 }, tail === 'two' ? alpha / 2 : alpha, 'R'); return tail === 'lt' ? tt.t < -c : tail === 'gt' ? tt.t > c : Math.abs(tt.t) > c; }
+  function first(pred) {
+    var lo, hi, m; if (pred(4)) return 4; lo = 4; hi = 8;
+    while (!pred(hi)) { lo = hi; hi *= 2; if (hi > 1e7) { if (!pred(1e7)) return Infinity; hi = 1e7; break; } }
+    while (hi - lo > 1) { m = Math.floor((lo + hi) / 2); if (pred(m)) hi = m; else lo = m; }
+    return hi;
+  }
+  /* people needed keeping the same r: for p below alpha (t test), and for 80% power (Fisher z approximation). null = r points the wrong way or is 0 */
+  function plan(r, alpha, tail) {
+    var ok = tail === 'two' ? r !== 0 : (tail === 'gt' ? r > 0 : r < 0);
+    if (!ok || Math.abs(r) >= 1) return { sig: null, pow: null };
+    var za = P.inv('z', {}, tail === 'two' ? alpha / 2 : alpha, 'R'), zb = P.inv('z', {}, 0.2, 'R'), f = Math.abs(atanh(r));
+    return { sig: first(function (n) { return sigAt(r, n, alpha, tail); }), pow: Math.max(4, Math.ceil(Math.pow((za + zb) / f, 2) + 3 - 1e-9)) };
+  }
+  /* intervals around the least squares line at xd: the line itself and one new point (Prediction interval, simple linear regression) */
+  function predict(f, xd, level) {
+    var n = f.n, df = n - 2, t = P.inv('t', { df: df }, (1 - level) / 2, 'R'), yh = f.icpt + f.slope * xd, q = (xd - f.mx) * (xd - f.mx) / f.sxx;
+    var mm = t * f.se * Math.sqrt(1 / n + q), pm = t * f.se * Math.sqrt(1 + 1 / n + q);
+    return { y: yh, t: t, mLo: yh - mm, mHi: yh + mm, pLo: yh - pm, pHi: yh + pm, out: false };
+  }
+  /* test against a correlation rho0 with the Fisher z statistic z = (artanh r - artanh rho0) sqrt(n - 3); n >= 4 */
+  function zTest(r, rho0, n) {
+    var z = (1 - r * r <= 1e-15) ? (r > 0 ? Infinity : -Infinity) : (atanh(r) - atanh(rho0)) * Math.sqrt(n - 3);
+    if (z === Infinity) return { z: z, pv: { left: 1, right: 0, two: 0 } };
+    if (z === -Infinity) return { z: z, pv: { left: 0, right: 1, two: 0 } };
+    var c = P.cdf('z', {}, z), two = 2 * Math.min(c.lo, c.hi); return { z: z, pv: { left: c.lo, right: c.hi, two: two > 1 ? 1 : two } };
+  }
+  /* power (approximate, Fisher z) to detect a true correlation rho against rho0 with n pairs */
+  function powerF(rho, rho0, n, alpha, tail) {
+    var d = (atanh(rho) - atanh(rho0)) * Math.sqrt(n - 3), za = P.inv('z', {}, tail === 'two' ? alpha / 2 : alpha, 'R'), Ph = function (x) { return P.cdf('z', {}, x).lo; };
+    var p = tail === 'gt' ? Ph(d - za) : tail === 'lt' ? Ph(-d - za) : Ph(d - za) + Ph(-d - za);
+    return p < 0 ? 0 : p > 1 ? 1 : p;
+  }
+  /* people needed when testing against rho0 (Fisher z): for p below alpha, and for 80% power */
+  function planF(r, rho0, alpha, tail) {
+    var eff = atanh(r) - atanh(rho0), ok = tail === 'two' ? eff !== 0 : (tail === 'gt' ? eff > 0 : eff < 0);
+    if (!ok || Math.abs(r) >= 1) return { sig: null, pow: null };
+    var za = P.inv('z', {}, tail === 'two' ? alpha / 2 : alpha, 'R'), zb = P.inv('z', {}, 0.2, 'R'), a = Math.abs(eff);
+    return { sig: first(function (n) { return a * Math.sqrt(n - 3) > za; }), pow: Math.max(4, Math.ceil(Math.pow((za + zb) / a, 2) + 3 - 1e-9)) };
+  }
+  /* the values of r that do NOT reject H0: rho = rho0 at level alpha. t based when rho0 = 0, Fisher z otherwise. lo / hi may be infinite */
+  function accept(n, rho0, alpha, tail) {
+    if (rho0 === 0) { var rc = rcrit(n, alpha, tail); return { lo: tail === 'gt' ? -Infinity : -rc, hi: tail === 'lt' ? Infinity : rc }; }
+    var za = P.inv('z', {}, tail === 'two' ? alpha / 2 : alpha, 'R'), c = za / Math.sqrt(n - 3), F0 = atanh(rho0);
+    return { lo: tail === 'gt' ? -Infinity : tanh(F0 - c), hi: tail === 'lt' ? Infinity : tanh(F0 + c) };
+  }
+  return { MAXN: MAXN, zTest: zTest, powerF: powerF, planF: planF, accept: accept, atanh: atanh, tanh: tanh, pairsFrom: pairsFrom, parseList: C.parseList, mean: mean, pearson: pearson, wpearson: wpearson, rank: rank, tp: tp, pTail: pTail, test: test, fisher: fisher, spearman: spearman, kendall: kendall, leaveOne: leaveOne, rcrit: rcrit, plan: plan, predict: predict, niceTicks: CalcThis.ttEngine.niceTicks };
+})();
+/* CORR-ENGINE:END */
+
+/* =========================================================
+   CalcThis.initCorrCalc() - ids cc*. Engine CalcThis.ccEngine.
+   ========================================================= */
+CalcThis.initCorrCalc = function () {
+  var E = CalcThis.ccEngine, P = CalcThis.pvalueEngine, T = CalcThis.ttEngine;
+  var $ = function (id) { return document.getElementById(id); };
+  if (!$('ccX')) return;
+  var st = { entry: 'lists', tail: 'two', head: 'pearson', adv: false, last: null, zoom: 0, cite: 'sentence' };
+  var NUM = /^[+-]?(\d+\.?\d*|\.\d+)(e[+-]?\d+)?$/i;
+  var EXAMPLES = {
+    study: { x: '1 2 3 4 5 6 7 8 9 10', y: '52 55 61 58 70 72 69 80 85 60' },
+    negative: { x: '2 4 6 8 10 12 14 16', y: '90 84 80 71 66 60 52 47' },
+    none: { x: '1 2 3 4 5 6 7 8 9 10', y: '5 2 9 4 7 1 8 3 6 5' },
+    outlier: { x: '1 2 3 4 5 6 7 8 9 20', y: '2 3 3 5 5 6 7 8 9 1' },
+    curve: { x: '-5 -4 -3 -2 -1 0 1 2 3 4 5', y: '25 16 9 4 1 0 1 4 9 16 25' },
+    perfect: { x: '1 2 3 4 5', y: '3 5 7 9 11' }
+  };
+  function num(raw) {
+    var s = String(raw == null ? '' : raw).replace(/[\s ]/g, '').replace(/−/g, '-');
+    if (s === '') return { empty: true };
+    var pc = false; if (/%$/.test(s)) { pc = true; s = s.slice(0, -1); }
+    if (/^[+-]?\d{1,3}(,\d{3})+(\.\d*)?$/.test(s)) s = s.replace(/,/g, '');
+    if (/^[+-]?\.?$/.test(s) || /^[+-]?(\d+\.?\d*|\.\d+)e[+-]?$/i.test(s)) return { partial: true };
+    if (!NUM.test(s)) return { err: 'junk' };
+    var v = parseFloat(s); if (!isFinite(v) || Math.abs(v) > 1e9) return { err: 'big' };
+    return { v: v, pc: pc };
+  }
+  function short(raw) { return String(raw).trim().slice(0, 14); }
+  function setNote(id, t) { var e = $(id); if (!e) return; e.textContent = t || ''; e.style.display = t ? '' : 'none'; }
+  function show(id, on) { var e = $(id); if (e) e.style.display = on ? '' : 'none'; }
+  function setHint(m, at) {
+    var h = $('ccHint'); m = m ? m.charAt(0).toUpperCase() + m.slice(1) : m; h.textContent = m || ''; h.style.display = m ? 'block' : 'none';
+    if (m && at) {
+      var el = $(at), f = el && (el.closest('.fld') || el), par = f && f.parentNode;
+      if (par && par.classList && par.classList.contains('cc-two')) f = par;
+      var nx = f && f.nextElementSibling; if (nx && nx.classList && nx.classList.contains('chips')) f = nx;
+      if (f && f.nextSibling !== h && f.parentNode) f.parentNode.insertBefore(h, f.nextSibling);
+    }
+  }
+  function sg(x) { return String(x).replace('-', '−'); }
+  function fnum(x) { return sg(String(Math.round(x * 1e6) / 1e6)); }
+  function fixed(x, d) { var s = x.toFixed(d); if (/^-0(\.0*)?$/.test(s)) s = s.slice(1); return sg(s); }
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+  function cut(s, n) { s = String(s); return s.length > n ? s.slice(0, n - 1) + '…' : s; }
+  var BIG = 'is too large — keep it under 1,000,000,000.';
+  function readVal(id, label, eg, o) {
+    var r = num($(id).value);
+    if (r.empty) return { miss: true };
+    if (r.partial) return { miss: true, partial: true };
+    if (r.err) return { bad: r.err === 'junk' ? 'Couldn’t read “' + short($(id).value) + '” in ' + label + ' — type a number like ' + eg + '.' : label + ' ' + BIG };
+    var v = r.v;
+    if (o.min !== undefined && (o.minEx ? v <= o.min : v < o.min)) return { bad: label + (o.minMsg || ' must be above ' + o.min + '.') };
+    if (o.max !== undefined && v > o.max) return { bad: label + (o.maxMsg || ' must be at most ' + o.max + '.') };
+    if (o.int && v % 1 !== 0) return { bad: label + ' must be a whole number.' };
+    return { v: v, pc: r.pc };
+  }
+  function names() {
+    var a = $('ccNameX').value.replace(/[<>&"]/g, '').trim().slice(0, 24), b = $('ccNameY').value.replace(/[<>&"]/g, '').trim().slice(0, 24);
+    return { x: a || 'X', y: b || 'Y' };
+  }
+  function readList(id, who, R) {
+    var raw = $(id).value; if (raw.trim() === '') return { empty: true };
+    var pl = E.parseList(raw);
+    if (pl.vals.length < 1) { if (!R.bad) R.bad = { msg: 'Couldn’t find a number in ' + who + ' — separate numbers with commas, spaces or new lines. Fix it to see the result.', at: id }; return { bad: true, vals: pl.vals, junk: pl.junk }; }
+    return { vals: pl.vals, junk: pl.junk, n: pl.vals.length };
+  }
+
+  /* ---------- the main compute ---------- */
+  function compute() {
+    var R = { bad: null, ready: false, tail: st.tail, alpha: 0.05, alphaTyped: false, conf: 0.95, confTyped: false, dec: null, nm: names(), px: undefined, w: null };
+    var ra = num($('ccAlpha').value);
+    if (ra.err) R.softA = { msg: 'Couldn’t read “' + short($('ccAlpha').value) + '” in the significance level — type a number like 0.05 or a percent like 5%. It is ignored for now (0.05 is used).', at: 'ccAlpha' };
+    else if (ra.v !== undefined) { var av = ra.pc ? ra.v / 100 : ra.v; if (!(av > 0 && av < 1)) R.softA = { msg: 'The significance level must be between 0 and 1 (for example 0.05) or a percent like 5%. It is ignored for now (0.05 is used).', at: 'ccAlpha' }; else { R.alpha = av; R.alphaTyped = true; } }
+    var rc = readVal('ccConf', 'the confidence level', '95', { min: 0, minEx: true, max: 99.999999, minMsg: ' should be above 0% and below 100% (for example 95).', maxMsg: ' should be above 0% and below 100% (for example 95).' });
+    R.conf = 1 - R.alpha;
+    if (rc.bad) R.softC = { msg: rc.bad + ' It is ignored for now (1 − α is used).', at: 'ccConf' }; else if (rc.v !== undefined) { R.conf = rc.v / 100; R.confTyped = true; }
+    var rdec = num($('ccDec').value);
+    if (rdec.err || (rdec.v !== undefined && (rdec.v % 1 !== 0 || rdec.v < 0 || rdec.v > 10))) R.softE = { msg: 'Decimal places should be a whole number from 0 to 10. It is ignored for now.', at: 'ccDec' };
+    else if (rdec.v !== undefined) R.dec = rdec.v;
+    var rr0 = num($('ccRho0').value); R.rho0 = 0; R.rho0Typed = false;
+    if (rr0.err) R.softR = { msg: 'Couldn’t read “' + short($('ccRho0').value) + '” in the correlation to test against — type a number like 0.3. It is ignored for now (0 is used).', at: 'ccRho0' };
+    else if (rr0.v !== undefined) { if (!(rr0.v > -1 && rr0.v < 1)) R.softR = { msg: 'The correlation to test against must be between −1 and 1 (for example 0.3). It is ignored for now (0 is used).', at: 'ccRho0' }; else { R.rho0 = rr0.v; R.rho0Typed = true; } }
+    var rp = readVal('ccPx', 'the X value to predict from', '6', {});
+    if (rp.bad) R.softP = { msg: rp.bad + ' It is ignored for now.', at: 'ccPx' }; else if (rp.v !== undefined) R.px = rp.v;
+
+    /* the data */
+    var xs = null, ys = null, junk = 0;
+    if (st.entry === 'lists') {
+      var lx = readList('ccX', 'the X numbers', R), ly = readList('ccY', 'the Y numbers', R); R.lx = lx; R.ly = ly;
+      if (lx && !lx.empty && !lx.bad && ly && !ly.empty && !ly.bad) {
+        if (lx.n !== ly.n) { if (!R.bad) R.bad = { msg: R.nm.x + ' has ' + lx.n + (lx.n === 1 ? ' number' : ' numbers') + ' and ' + R.nm.y + ' has ' + ly.n + (ly.n === 1 ? ' number' : ' numbers') + ' — every X needs a Y in the same order. Fix it to see the result.', at: 'ccY' }; }
+        else { xs = lx.vals; ys = ly.vals; junk = lx.junk + ly.junk; }
+      }
+    } else {
+      var raw = $('ccP').value;
+      if (raw.trim() !== '') {
+        var pp = E.pairsFrom(raw); R.pp = pp;
+        if (pp.x.length === 0) { R.bad = { msg: 'Couldn’t find a pair in the box — type one pair per line, like 3, 72. Fix it to see the result.', at: 'ccP' }; }
+        else { xs = pp.x; ys = pp.y; junk = pp.junk; }
+      }
+    }
+    R.junk = junk;
+    if (xs && xs.length > E.MAXN) { R.bad = { msg: 'That is ' + xs.length + ' pairs — this calculator takes up to ' + E.MAXN + '. Fix it to see the result.', at: st.entry === 'lists' ? 'ccX' : 'ccP' }; xs = ys = null; }
+    if (xs && xs.length < 3) { R.bad = R.bad || { msg: 'A correlation needs at least 3 pairs; you have ' + xs.length + '. Add more pairs to see the result.', at: st.entry === 'lists' ? 'ccY' : 'ccP' }; R.tooFew = xs.length; xs = ys = null; }
+    /* weights (advanced) */
+    var rw = $('ccW').value.trim();
+    if (rw !== '') {
+      var wl = E.parseList(rw); R.wl = wl;
+      if (!xs) R.wWait = true;
+      else if (wl.vals.length !== xs.length) R.softW = { msg: 'Weights: ' + wl.vals.length + ' numbers for ' + xs.length + ' pairs — one weight per pair, in the same order. They are ignored for now.', at: 'ccW' };
+      else if (wl.vals.some(function (v) { return v < 0; }) || !(wl.vals.reduce(function (a, b) { return a + b; }, 0) > 0)) R.softW = { msg: 'Weights must not be negative and must add up to more than 0. They are ignored for now.', at: 'ccW' };
+      else R.w = wl.vals;
+    }
+    if (R.bad || !xs) return R;
+    var f = E.pearson(xs, ys);
+    if (f.r === null) { R.bad = { msg: (f.sxx > 0 ? 'All the ' + R.nm.y + ' numbers are the same' : 'All the ' + R.nm.x + ' numbers are the same') + ', so there is no relationship to measure. Add some variation to see the result.', at: st.entry === 'lists' ? (f.sxx > 0 ? 'ccY' : 'ccX') : 'ccP' }; return R; }
+    var n = xs.length; R.ready = true; R.n = n; R.xs = xs; R.ys = ys; R.f = f;
+    if (R.rho0 !== 0 && n < 4) { R.softR = { msg: 'Testing against a correlation other than 0 needs at least 4 pairs; you have ' + n + '. It is ignored for now (0 is used).', at: 'ccRho0' }; R.rho0 = 0; R.rho0Typed = false; }
+    var tt = E.test(f.r, n), zt = n >= 4 ? E.zTest(f.r, R.rho0, n) : null, usePv = R.rho0 !== 0 ? zt.pv : tt.pv;
+    R.pe = { r: f.r, t: tt.t, df: tt.df, pv: usePv, tpv: tt.pv, zt: zt, zmode: R.rho0 !== 0, p: E.pTail(usePv, st.tail), ci: E.fisher(f.r, n, R.conf, 1) };
+    R.pe.sig = R.pe.p < R.alpha;
+    var sp = E.spearman(xs, ys), st2 = E.test(sp.rho, n);
+    R.se = { r: sp.rho, t: st2.t, df: st2.df, pv: st2.pv, p: E.pTail(st2.pv, st.tail), ci: E.fisher(sp.rho, n, R.conf, 1.06) }; R.se.sig = R.se.p < R.alpha;
+    var kd = E.kendall(xs, ys); R.ke = kd ? { r: kd.tau, z: kd.z, pv: kd.pv, p: E.pTail(kd.pv, st.tail), nc: kd.nc, nd: kd.nd, ties: kd.ties, ci: null } : null; if (R.ke) R.ke.sig = R.ke.p < R.alpha;
+    var d = st.head === 'spearman' ? R.se : st.head === 'kendall' && R.ke ? R.ke : R.pe; R.H = d; R.headName = d === R.se ? 'spearman' : d === R.ke ? 'kendall' : 'pearson';
+    if (R.w) R.wr = E.wpearson(xs, ys, R.w);
+    /* binary variable: the point-biserial correlation is the Pearson r */
+    var uq = function (v) { var m = {}, k = 0, i; for (i = 0; i < v.length; i++) if (!m[v[i]]) { m[v[i]] = 1; k++; if (k > 2) return 3; } return k; };
+    R.bin = uq(xs) === 2 ? 'x' : uq(ys) === 2 ? 'y' : null;
+    /* which point carries the correlation */
+    if (n >= 4) { R.loo = E.leaveOne(xs, ys); R.dr = R.loo.r.map(function (v) { return v === null ? null : v - f.r; }); R.flag = R.dr.map(function (v) { return v !== null && Math.abs(v) > 0.1; }); }
+    R.plan = R.rho0 !== 0 ? E.planF(f.r, R.rho0, R.alpha, st.tail) : E.plan(f.r, R.alpha, st.tail);
+    R.rcrit = n > 2 ? E.rcrit(n, R.alpha, st.tail) : null;
+    R.acc = E.accept(n, R.rho0, R.alpha, st.tail);
+    R.pow3 = n >= 4 ? [0.1, 0.3, 0.5].map(function (e) { return E.powerF(st.tail === 'lt' ? -e : e, R.rho0, n, R.alpha, st.tail); }) : null;
+    if (R.px !== undefined && f.se !== null) { R.pred = E.predict(f, R.px, R.conf); R.pred.out = R.px < Math.min.apply(null, xs) || R.px > Math.max.apply(null, xs); }
+    return R;
+  }
+
+  /* ---------- formatting ---------- */
+  function rr(R, v) { return fixed(v, R.dec !== null ? R.dec : 4); }
+  function r2(R, v) { return fixed(v, R.dec !== null ? R.dec : 2); }
+  function raw(R, v) { return R.dec !== null ? fixed(v, R.dec) : fnum(v); }
+  function pT(R, p) { return P.fp(p, R.dec !== null ? R.dec : null); }
+  function apaN(v) { var s = Math.abs(v).toFixed(2).replace(/^0\./, '.'); return (v < 0 && s !== '.00' ? '−' : '') + s; }
+  function apaP(p) { return p < 0.001 ? '< .001' : '= ' + p.toFixed(3).replace(/^0\./, '.'); }
+  function chance(p) { return p >= 0.01 ? 'about ' + Math.round(p * 100) + ' times in 100' : p >= 0.001 ? 'about ' + Math.round(p * 1000) + ' times in 1,000' : 'fewer than 1 time in 1,000'; }
+  function strength(r) { var a = Math.abs(r); return a >= 0.8 ? 'very strong' : a >= 0.6 ? 'strong' : a >= 0.4 ? 'moderate' : a >= 0.2 ? 'weak' : 'very weak'; }
+  function dirW(r) { return r > 0 ? 'positive' : r < 0 ? 'negative' : 'no'; }
+  function tailName(t) { return t === 'two' ? 'two-tailed' : t === 'gt' ? 'right-tailed (positive)' : 'left-tailed (negative)'; }
+  function peopleN(v) { return v === Infinity ? 'more than 10,000,000' : v.toLocaleString('en-US'); }
+  function ciTxt(R, c) { return c ? (c.exact ? 'exactly ' + rr(R, c.lo) : rr(R, c.lo) + ' to ' + rr(R, c.hi)) : '—'; }
+  var HALO = ' stroke="#FFFDF8" stroke-width="3" paint-order="stroke"';
+  function tickLab(v, step) { var d = Math.max(0, Math.min(8, Math.ceil(-Math.log(step) / Math.LN10 - 1e-9))); return fixed(v, d); }
+
+  /* ---------- picture 1: the scatter in your own units, the line, its band and the leave-one-out lines ---------- */
+  function drawScatter(R) {
+    var xs = R.xs, ys = R.ys, n = R.n, f = R.f, VW = 260, VH = 250, PL = 48, PR = 250, PT = 22, PB = 200, i, svg = '';
+    var xlo = Math.min.apply(null, xs), xhi = Math.max.apply(null, xs), ylo = Math.min.apply(null, ys), yhi = Math.max.apply(null, ys);
+    var tc = R.f.se !== null ? P.inv('t', { df: n - 2 }, (1 - R.conf) / 2, 'R') : 0;
+    var px0 = (xhi - xlo) * 0.06 || Math.abs(xhi) * 0.06 || 1, py0 = (yhi - ylo) * 0.08 || Math.abs(yhi) * 0.08 || 1;
+    xlo -= px0; xhi += px0; ylo -= py0; yhi += py0;
+    if (st.zoom) { var fz = Math.pow(0.5, st.zoom), cxm = (xlo + xhi) / 2, cym = (ylo + yhi) / 2, hx = (xhi - xlo) / 2 * fz, hy = (yhi - ylo) / 2 * fz; xlo = cxm - hx; xhi = cxm + hx; ylo = cym - hy; yhi = cym + hy; }
+    var nx = T.niceTicks(xlo, xhi, 5), ny = T.niceTicks(ylo, yhi, 5);
+    var X = function (v) { return PL + (v - xlo) / (xhi - xlo) * (PR - PL); }, Y = function (v) { return PB - (v - ylo) / (yhi - ylo) * (PB - PT); };
+    svg += '<svg viewBox="0 0 ' + VW + ' ' + VH + '" width="100%" role="img" aria-label="' + esc('Scatter plot of ' + R.nm.y + ' against ' + R.nm.x + ' with the best-fit line, its ' + fnum(R.conf * 100) + '% band and the lines you get when one point is left out') + '" xmlns="http://www.w3.org/2000/svg"><defs><clipPath id="ccClip"><rect x="' + PL + '" y="' + PT + '" width="' + (PR - PL) + '" height="' + (PB - PT) + '"/></clipPath></defs>';
+    nx.ticks.forEach(function (v) { svg += '<line x1="' + X(v).toFixed(1) + '" y1="' + PT + '" x2="' + X(v).toFixed(1) + '" y2="' + PB + '" stroke="#EADFCB" stroke-width="1"/>'; });
+    ny.ticks.forEach(function (v) { svg += '<line x1="' + PL + '" y1="' + Y(v).toFixed(1) + '" x2="' + PR + '" y2="' + Y(v).toFixed(1) + '" stroke="#EADFCB" stroke-width="1"/>'; });
+    svg += '<g clip-path="url(#ccClip)">';
+    /* the band around the line */
+    if (f.se !== null) {
+      var k, M = 40, up = '', lo2 = '', xv, yh, h;
+      for (k = 0; k <= M; k++) { xv = xlo + (xhi - xlo) * k / M; yh = f.icpt + f.slope * xv; h = tc * f.se * Math.sqrt(1 / n + (xv - f.mx) * (xv - f.mx) / f.sxx); up += (k ? 'L' : 'M') + X(xv).toFixed(1) + ',' + Y(yh + h).toFixed(1); lo2 = 'L' + X(xv).toFixed(1) + ',' + Y(yh - h).toFixed(1) + lo2; }
+      svg += '<path d="' + up + lo2 + 'Z" fill="#B5761F" fill-opacity=".16" stroke="none"/>';
+    }
+    /* the leave-one-out lines: all of them for small data, the most influential few otherwise */
+    if (R.loo) {
+      var order = []; for (i = 0; i < n; i++) if (R.loo.slope[i] !== null) order.push(i);
+      order.sort(function (a, b) { return Math.abs(R.dr[b]) - Math.abs(R.dr[a]); });
+      order.slice(0, n <= 60 ? order.length : 6).forEach(function (j) { svg += '<line x1="' + X(xlo).toFixed(1) + '" y1="' + Y(R.loo.icpt[j] + R.loo.slope[j] * xlo).toFixed(1) + '" x2="' + X(xhi).toFixed(1) + '" y2="' + Y(R.loo.icpt[j] + R.loo.slope[j] * xhi).toFixed(1) + '" stroke="' + (R.flag[j] ? '#B5761F' : '#B9A98C') + '" stroke-opacity="' + (R.flag[j] ? '.8' : '.45') + '" stroke-width="1"/>'; });
+    }
+    svg += '<line x1="' + X(xlo).toFixed(1) + '" y1="' + Y(f.icpt + f.slope * xlo).toFixed(1) + '" x2="' + X(xhi).toFixed(1) + '" y2="' + Y(f.icpt + f.slope * xhi).toFixed(1) + '" stroke="#241A11" stroke-width="1.8"/>';
+    var step = Math.max(1, Math.ceil(n / 1000));
+    for (i = 0; i < n; i += step) svg += '<circle cx="' + X(xs[i]).toFixed(1) + '" cy="' + Y(ys[i]).toFixed(1) + '" r="3.3" fill="#37503F" fill-opacity=".78"/>';
+    var labelled = 0, lblSvg = '';
+    if (R.flag) { var fl = []; for (i = 0; i < n; i++) if (R.flag[i]) fl.push(i); fl.sort(function (a, b) { return Math.abs(R.dr[b]) - Math.abs(R.dr[a]); }); fl.forEach(function (j, ix) { svg += '<circle cx="' + X(xs[j]).toFixed(1) + '" cy="' + Y(ys[j]).toFixed(1) + '" r="6" fill="none" stroke="#B5761F" stroke-width="2"/>'; var lx2 = X(xs[j]), ly2 = Y(ys[j]); if (ix < 3 && lx2 >= PL && lx2 <= PR && ly2 >= PT && ly2 <= PB) { var left = lx2 > PR - 34; lblSvg += '<text x="' + (left ? lx2 - 9 : lx2 + 9).toFixed(1) + '" y="' + (ly2 - 8).toFixed(1) + '" text-anchor="' + (left ? 'end' : 'start') + '" font-size="12" font-weight="700" fill="#8F5C13"' + HALO + '>#' + (j + 1) + '</text>'; labelled++; } }); }
+    svg += '</g>' + lblSvg + '<line x1="' + PL + '" y1="' + PB + '" x2="' + PR + '" y2="' + PB + '" stroke="#CDBFA5" stroke-width="1.2"/><line x1="' + PL + '" y1="' + PT + '" x2="' + PL + '" y2="' + PB + '" stroke="#CDBFA5" stroke-width="1.2"/>';
+    nx.ticks.forEach(function (v) { svg += '<line x1="' + X(v).toFixed(1) + '" y1="' + PB + '" x2="' + X(v).toFixed(1) + '" y2="' + (PB + 4) + '" stroke="#CDBFA5"/><text x="' + X(v).toFixed(1) + '" y="' + (PB + 18) + '" text-anchor="middle" font-size="12" fill="#5B4B3B"' + HALO + '>' + esc(tickLab(v, nx.step)) + '</text>'; });
+    ny.ticks.forEach(function (v) { svg += '<line x1="' + (PL - 4) + '" y1="' + Y(v).toFixed(1) + '" x2="' + PL + '" y2="' + Y(v).toFixed(1) + '" stroke="#CDBFA5"/><text x="' + (PL - 7) + '" y="' + (Y(v) + 4).toFixed(1) + '" text-anchor="end" font-size="12" fill="#5B4B3B"' + HALO + '>' + esc(tickLab(v, ny.step)) + '</text>'; });
+    svg += '<text x="' + ((PL + PR) / 2) + '" y="' + (VH - 6) + '" text-anchor="middle" font-size="12" font-weight="600" fill="#5B4B3B">' + esc(cut(R.nm.x, 28)) + '</text><text x="4" y="12" font-size="12" font-weight="600" fill="#5B4B3B">' + esc(cut(R.nm.y, 30)) + '</text>';
+    return svg + '</svg>';
+  }
+
+  /* ---------- picture 2: r on the -1 to +1 scale with its interval ---------- */
+  function drawGauge(R) {
+    var H = R.H, r = H.r, VW = 260, L = 12, Rg = 248, X = function (v) { return L + (v + 1) / 2 * (Rg - L); }, svg, i, k;
+    svg = '<svg viewBox="0 0 ' + VW + ' 112" width="100%" role="img" aria-label="' + esc('The correlation coefficient on a scale from minus 1 to plus 1' + (H.ci ? ' with its ' + fnum(R.conf * 100) + '% interval' : '')) + '" xmlns="http://www.w3.org/2000/svg">';
+    var ops = [0.15, 0.3, 0.5, 0.7, 0.9];
+    for (i = 0; i < 10; i++) { var a = -1 + i * 0.2, mid = Math.abs(a + 0.1), band = Math.min(4, Math.floor(mid / 0.2 + 1e-9)); svg += '<rect x="' + X(a).toFixed(1) + '" y="30" width="' + (X(a + 0.2) - X(a)).toFixed(1) + '" height="16" fill="' + (a + 0.1 < 0 ? '#B5761F' : '#37503F') + '" fill-opacity="' + (ops[band] * 0.55).toFixed(2) + '"/>'; }
+    svg += '<line x1="' + X(0) + '" y1="26" x2="' + X(0) + '" y2="50" stroke="#241A11" stroke-width="1.2" stroke-dasharray="3 2"/>';
+    [-1, -0.5, 0, 0.5, 1].forEach(function (v) { svg += '<line x1="' + X(v).toFixed(1) + '" y1="46" x2="' + X(v).toFixed(1) + '" y2="50" stroke="#CDBFA5"/><text x="' + X(v).toFixed(1) + '" y="64" text-anchor="middle" font-size="12" fill="#5B4B3B">' + sg(String(v)) + '</text>'; });
+    var cx = X(Math.max(-1, Math.min(1, r))), an = cx > Rg - 36 ? 'end' : cx < L + 36 ? 'start' : 'middle', ax = an === 'end' ? Rg : an === 'start' ? L : cx;
+    svg += '<path d="M' + (cx - 6).toFixed(1) + ',22 L' + (cx + 6).toFixed(1) + ',22 L' + cx.toFixed(1) + ',31 Z" fill="#8F5C13"/><text x="' + ax.toFixed(1) + '" y="16" text-anchor="' + an + '" font-size="12" font-weight="700" fill="#8F5C13">' + (R.headName === 'pearson' ? 'r' : R.headName === 'spearman' ? 'ρ' : 'τ') + ' = ' + esc(rr(R, r)) + '</text>';
+    if (H.ci) {
+      var lo = H.ci.lo, hi = H.ci.hi, xl = X(lo).toFixed(1), xh = X(hi).toFixed(1), col = (lo > 0 || hi < 0) ? '#37503F' : '#8F5C13', mid2 = (X(lo) + X(hi)) / 2, an2 = mid2 > Rg - 60 ? 'end' : mid2 < L + 60 ? 'start' : 'middle', ax2 = an2 === 'end' ? Rg : an2 === 'start' ? L : mid2;
+      svg += '<line x1="' + xl + '" y1="82" x2="' + xh + '" y2="82" stroke="' + col + '" stroke-width="3"/><line x1="' + xl + '" y1="76" x2="' + xl + '" y2="88" stroke="' + col + '" stroke-width="2.6"/><line x1="' + xh + '" y1="76" x2="' + xh + '" y2="88" stroke="' + col + '" stroke-width="2.6"/><rect x="' + (cx - 4).toFixed(1) + '" y="78" width="8" height="8" transform="rotate(45 ' + cx.toFixed(1) + ' 82)" fill="' + col + '"/>';
+      svg += '<text x="' + ax2.toFixed(1) + '" y="106" text-anchor="' + an2 + '" font-size="12" font-weight="700" fill="' + col + '">' + esc(fnum(R.conf * 100) + '% interval: ' + (H.ci.exact ? 'exactly ' + rr(R, lo) : rr(R, lo) + ' to ' + rr(R, hi))) + '</text>';
+    }
+    return svg + '</svg>';
+  }
+
+  /* ---------- render ---------- */
+  function segSet(id, key, v) { st[key] = v; [].forEach.call($(id).children, function (b) { var on = b.getAttribute('data-v') === v; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); }); }
+  function listNote(l, nm, R) {
+    if (!l || l.empty || l.bad) return '';
+    var d = E.pearson(l.vals, l.vals);
+    return l.n + (l.n === 1 ? ' number' : ' numbers') + ' read' + (l.junk ? ', ' + l.junk + (l.junk === 1 ? ' item that is not a number left out' : ' items that are not numbers left out') : '') + '. Mean ' + fnum(d.mx) + (l.n > 1 ? ', standard deviation ' + fnum(d.sdx) : '') + '.';
+  }
+  function render() {
+    var R = compute(), lists = st.entry === 'lists', nm = R.nm, i;
+    show('ccListsW', lists); show('ccPairsW', !lists);
+    $('ccXLab').textContent = 'Numbers for “' + nm.x + '”'; $('ccYLab').textContent = 'Numbers for “' + nm.y + '”';
+    $('ccPLab').textContent = 'Pairs: “' + nm.x + '”, “' + nm.y + '”, one pair per line';
+    $('ccTailLab').textContent = 'The relationship between “' + nm.x + '” and “' + nm.y + '” is…';
+    setNote('ccEntryNote', lists ? 'Two boxes: the X numbers and the Y numbers, matched by position (the first X goes with the first Y).' : 'One box: each line is one pair, like 3, 72. A header line such as x, y is skipped.');
+    setNote('ccTailNote', st.tail === 'two' ? 'Two-tailed: tests for a correlation that is not zero, positive or negative.' : st.tail === 'gt' ? 'One-tailed (right): tests only for a positive correlation, where Y rises as X rises.' : 'One-tailed (left): tests only for a negative correlation, where Y falls as X rises.');
+    var hm = null, hat = null;
+    ['bad', 'softA', 'softC', 'softR', 'softW', 'softP', 'softE'].some(function (k) { if (R[k]) { hm = R[k].msg; hat = R[k].at; return true; } return false; });
+    setHint(hm, hat);
+    if (lists) {
+      var xn = listNote(R.lx, nm, R) || 'Paste a column from Excel or type the numbers, separated by commas, spaces or new lines.';
+      setNote('ccXNote', xn);
+      var yn = listNote(R.ly, nm, R) || (R.lx && !R.lx.empty && !R.lx.bad ? 'Type the ' + R.lx.n + ' numbers of “' + nm.y + '”, one for each X, in the same order.' : 'The numbers that go with the first box, in the same order.');
+      setNote('ccYNote', yn);
+      setNote('ccPNote', '');
+    } else {
+      var pn = R.pp ? (R.pp.x.length + ' pairs read' + (R.pp.junk ? ', ' + R.pp.junk + (R.pp.junk === 1 ? ' line that is not a pair left out' : ' lines that are not pairs left out') : '') + '.') : 'Type or paste one pair per line, separated by a comma, space or tab.';
+      setNote('ccPNote', pn); setNote('ccXNote', ''); setNote('ccYNote', '');
+    }
+    setNote('ccAlphaNote', R.softA ? '' : (R.alphaTyped ? 'A result counts as significant when p is below ' + fnum(R.alpha) + '.' : 'Leave empty for 0.05: a result counts as significant when p is below 0.05.'));
+    [].forEach.call($('ccAlphaChips').children, function (b) { b.classList.toggle('on', R.alphaTyped && Math.abs(R.alpha - parseFloat(b.getAttribute('data-v'))) < 1e-12); });
+    if (st.adv) {
+      setNote('ccHeadNote', st.head === 'pearson' ? 'Pearson measures how well a straight line fits. All three coefficients are shown side by side in the results.' : st.head === 'spearman' ? 'Spearman uses the ranks of the values: it finds any steady rise or fall, not only a straight line. All three are shown side by side.' : 'Kendall counts pairs of points that agree or disagree in order. It is steadier with few points or many ties. All three are shown side by side.');
+      setNote('ccConfNote', R.softC ? '' : (R.confTyped ? 'The interval for r uses a ' + fnum(R.conf * 100) + '% level instead of ' + fnum((1 - R.alpha) * 100) + '%.' : 'Leave empty to use the level that matches α: ' + fnum((1 - R.alpha) * 100) + '%.'));
+      setNote('ccRho0Note', R.softR ? '' : (R.rho0Typed ? 'Pearson’s r is tested against ρ₀ = ' + fnum(R.rho0) + ' with the Fisher z test. Spearman and Kendall are always tested against 0.' : 'Optional. Leave empty to test against 0 (no correlation). Type a value such as 0.3 to ask whether the correlation differs from it.'));
+      var nn = ($('ccNameX').value.trim() || $('ccNameY').value.trim()) ? 'The names are used in the labels, the picture and the sentences.' : 'Optional. Give the variables names such as “Hours studied” and “Exam score”.';
+      setNote('ccNameNote', nn);
+      var wn;
+      if (R.wl) wn = R.softW ? '' : R.wWait ? 'Type your numbers first: weights need one number for each pair, in the same order.' : (R.w ? 'Weights read: ' + R.w.length + '. The weighted Pearson r is shown in the table of numbers; the p-value and interval are for the unweighted data.' : '');
+      else wn = 'Optional. One weight per pair, for example how many people each point stands for. Gives a weighted Pearson r.';
+      setNote('ccWNote', wn);
+      var pxn;
+      if (R.softP) pxn = ''; else if (R.px === undefined) pxn = 'Optional. Type an X value to predict the Y value from the line, with its interval.';
+      else if (!R.ready) pxn = 'Type your data first: the prediction for ' + nm.x + ' = ' + fnum(R.px) + ' is worked out from the best-fit line.';
+      else pxn = 'Predicting ' + nm.y + ' for ' + nm.x + ' = ' + fnum(R.px) + (R.pred && R.pred.out ? ' (outside your data, so the estimate is less reliable).' : '.');
+      setNote('ccPxNote', pxn);
+      setNote('ccDecNote', R.softE ? '' : (R.dec !== null ? 'Numbers are shown with ' + R.dec + ' decimal places.' : 'Leave empty for automatic: 4 decimals for r and p-values.'));
+    }
+    /* result */
+    var big = '—', lab = 'Pearson correlation coefficient (r)', sub = $('ccSub').getAttribute('data-empty'), tip = '', body = false, mval = '—', mlab = 'Pearson r';
+    ['ccVisWrap', 'ccGaugeWrap', 'ccAllWrap', 'ccCheckWrap', 'ccNumsWrap', 'ccLooWrap', 'ccWhatWrap', 'ccPredWrap', 'ccDevWrap', 'ccWriteWrap', 'ccStepsWrap'].forEach(function (id) { show(id, false); });
+    ['ccVis', 'ccGauge', 'ccAll', 'ccCheckList', 'ccNums', 'ccLoo', 'ccWhat', 'ccPred', 'ccDev', 'ccSums', 'ccSteps'].forEach(function (id) { $(id).innerHTML = ''; });
+    $('ccWrite').textContent = ''; $('ccCsvTxt').textContent = '';
+    if (R.ready) {
+      body = true; var H = R.H, f = R.f, n = R.n, xs = R.xs, ys = R.ys, sym = R.headName === 'pearson' ? 'r' : R.headName === 'spearman' ? 'ρ' : 'τ', pn2 = R.headName === 'pearson' ? 'Pearson correlation coefficient (r)' : R.headName === 'spearman' ? 'Spearman rank correlation (ρ)' : 'Kendall rank correlation (τ-b)';
+      big = sym + ' = ' + rr(R, H.r); lab = pn2; mlab = pn2.replace(' correlation coefficient', '').replace(' rank correlation', '').replace(/ \(.*\)/, '') + ' ' + sym;
+      var pTxt = pT(R, H.p), sig = H.sig;
+      sub = (H.r === 0 ? 'No' : strength(H.r) + ' ' + dirW(H.r)) + ' correlation · p = ' + pTxt + ' · n = ' + n;
+      mval = rr(R, H.r) + ' · ' + (H.r === 0 ? 'none' : strength(H.r) + ' ' + dirW(H.r));
+      var pct = fixed(f.r * f.r * 100, 1), ch = chance(H.p);
+      tip = (H.r === 0 ? '“' + nm.x + '” and “' + nm.y + '” show no correlation (' + sym + ' = 0). ' : 'There is a ' + strength(H.r) + ' ' + dirW(H.r) + ' correlation between “' + nm.x + '” and “' + nm.y + '” (' + sym + ' = ' + rr(R, H.r) + '): as “' + nm.x + '” goes up, “' + nm.y + '” tends to go ' + (H.r > 0 ? 'up' : 'down') + '. ') +
+        'It is ' + (sig ? 'statistically significant' : 'not statistically significant') + ' at α = ' + fnum(R.alpha) + ' (p = ' + pTxt + '): a correlation this far from ' + ((R.headName === 'pearson' && R.rho0Typed) ? fnum(R.rho0) : '0') + ' would show up ' + (sig ? 'only ' : '') + ch + (sig ? '' : ' even') + ' if the two were really unrelated. ' +
+        (H.ci ? 'The ' + fnum(R.conf * 100) + '% interval for ' + sym + ' runs from ' + rr(R, H.ci.lo) + ' to ' + rr(R, H.ci.hi) + '. ' : '') + 'A correlation alone does not show that one causes the other.';
+      /* scatter + gauge */
+      $('ccVis').innerHTML = drawScatter(R); show('ccVisWrap', true);
+      var nFlag = R.flag ? R.flag.filter(Boolean).length : 0;
+      $('ccVisKey').textContent = (st.zoom ? 'Zoomed in ' + Math.pow(2, st.zoom) + '× on the middle of the picture: points outside the frame are not shown. ' : '') + 'Each green dot is one pair. The dark line is the best-fit line' + (f.se !== null ? ' and the amber band around it its ' + fnum(R.conf * 100) + '% interval' : '') + '. ' + (R.loo ? 'Each thin grey line is the best-fit line you would get with one point left out' + (n > 60 ? ' (only the 6 points that move it most are drawn)' : '') + (nFlag ? '; amber ringed points change r by more than 0.1 when left out' : '; no single point changes r by more than 0.1') + '.' : 'With fewer than 4 pairs the leave-one-out lines are not drawn.');
+      $('ccGauge').innerHTML = drawGauge(R); show('ccGaugeWrap', true);
+      $('ccGaugeKey').textContent = 'The diamond is ' + sym + ' on the scale from −1 (perfect negative) to +1 (perfect positive); 0 means no relationship. ' + (H.ci ? 'The bar below is its ' + fnum(R.conf * 100) + '% interval: ' + ((H.ci.lo > 0 || H.ci.hi < 0) ? 'it stays on one side of 0, so the data rule out “no correlation”.' : 'it crosses 0, so the data do not rule out “no correlation”.') : 'No interval is given for Kendall’s τ here.');
+      /* three coefficients side by side */
+      var ar = function (a, b, c, d, nw) { var k = nw ? ' class="cc-n"' : ''; return '<tr><td>' + a + '</td><td' + k + '>' + b + '</td><td' + k + '>' + c + '</td><td' + k + '>' + d + '</td></tr>'; };
+      $('ccAll').innerHTML = '<thead><tr><th></th><th>Pearson<br>r</th><th>Spearman<br>ρ</th><th>Kendall<br>τ-b</th></tr></thead><tbody>' +
+        ar('Value', rr(R, R.pe.r), rr(R, R.se.r), R.ke ? rr(R, R.ke.r) : '—', true) +
+        ar('Looks for', 'straight line', 'steady rise or fall', 'same order') +
+        ar('p-value (' + tailName(st.tail) + ')', pT(R, R.pe.p), pT(R, R.se.p), R.ke ? pT(R, R.ke.p) : '—', true) +
+        ar('Significant at α = ' + fnum(R.alpha) + '?', R.pe.sig ? 'Yes' : 'No', R.se.sig ? 'Yes' : 'No', R.ke ? (R.ke.sig ? 'Yes' : 'No') : '—', true) +
+        ar(fnum(R.conf * 100) + '% interval', ciTxt(R, R.pe.ci), ciTxt(R, R.se.ci), '—') + '</tbody>';
+      var gap = Math.abs(R.pe.r - R.se.r), an;
+      if (gap > 0.1) an = 'Pearson and Spearman differ by ' + fixed(gap, 2) + '. That usually means the relationship is curved, or a few extreme points are pulling the straight line: check the picture and the table of single points below.';
+      else an = 'Pearson and Spearman are close (they differ by ' + fixed(gap, 2) + '), so a straight line describes the relationship about as well as the ranks do.';
+      $('ccAllNote').textContent = an + (R.ke && R.ke.ties ? ' Your data have repeated values, so Kendall’s τ-b and its p-value use the tie correction.' : '') + ' Spearman’s p-value is the t approximation and its interval uses the Fisher transformation with the factor 1.06; Kendall’s p-value is a normal approximation. Both are approximate for few pairs.';
+      show('ccAllWrap', true);
+      /* the numbers (Pearson) */
+      var tr = function (a, b) { return '<tr><td>' + a + '</td><td>' + b + '</td></tr>'; };
+      var rows = [tr('Pairs (n)', String(n)), tr('Pearson r', rr(R, f.r)), tr('r² (share of the variation in “' + cut(nm.y, 14) + '” explained by a straight line)', rr(R, f.r * f.r)), tr('t-score (' + (R.pe.zmode ? 'for ρ₀ = 0, ' : '') + 'n − 2 = ' + R.pe.df + ' degrees of freedom)', R.pe.t === Infinity || R.pe.t === -Infinity ? (R.pe.t > 0 ? '∞' : '−∞') : rr(R, R.pe.t)), tr('p-value, two-tailed' + (st.tail === 'two' ? ' (used)' : '') + (R.pe.zmode ? ', Fisher z test against ρ₀ = ' + fnum(R.rho0) : ''), pT(R, R.pe.pv.two)), tr('p-value, right-tailed (positive)' + (st.tail === 'gt' ? ' (used)' : '') + (R.pe.zmode ? ', Fisher z test' : ''), pT(R, R.pe.pv.right)), tr('p-value, left-tailed (negative)' + (st.tail === 'lt' ? ' (used)' : '') + (R.pe.zmode ? ', Fisher z test' : ''), pT(R, R.pe.pv.left))];
+      if (R.pe.zt) rows.push(R.pe.zmode ? tr('z-score against ρ₀ = ' + fnum(R.rho0), R.pe.zt.z === Infinity ? '∞' : R.pe.zt.z === -Infinity ? '−∞' : rr(R, R.pe.zt.z)) : tr('p-value, Fisher z test (approximate, ' + tailName(st.tail) + ')', pT(R, E.pTail(R.pe.zt.pv, st.tail))));
+      rows.push(tr('Decision at α = ' + fnum(R.alpha), R.pe.sig ? 'Reject H₀ (ρ = ' + fnum(R.rho0) + '): significant' : 'Do not reject H₀ (ρ = ' + fnum(R.rho0) + '): not significant'));
+      if (R.pe.ci) rows.push(tr(fnum(R.conf * 100) + '% interval for r (Fisher transformation)', ciTxt(R, R.pe.ci)), tr('Fisher z-score of r', R.pe.ci.exact ? (R.pe.ci.z > 0 ? '∞' : '−∞') : rr(R, R.pe.ci.z))); else rows.push(tr(fnum(R.conf * 100) + '% interval for r', 'needs at least 4 pairs'));
+      if (R.pe.ci && !R.pe.ci.exact && R.conf > 0.5) { var o1 = E.fisher(f.r, n, 2 * R.conf - 1, 1); rows.push(tr('One-sided lower bound (' + fnum(R.conf * 100) + '% sure r is at least)', rr(R, o1.lo)), tr('One-sided upper bound (' + fnum(R.conf * 100) + '% sure r is at most)', rr(R, o1.hi))); }
+      var accTxt = function (a) { return a.lo === -Infinity ? 'r up to ' + rr(R, a.hi) : a.hi === Infinity ? 'r of ' + rr(R, a.lo) + ' or higher' : rr(R, a.lo) + ' to ' + rr(R, a.hi); };
+      if (!R.pe.zmode) rows.push(tr('Smallest |r| that is significant with ' + n + ' pairs (α = ' + fnum(R.alpha) + ', ' + (st.tail === 'two' ? 'two-tailed' : 'one-tailed') + ')', rr(R, R.rcrit)));
+      rows.push(tr('Acceptance region for r (H₀: ρ = ' + fnum(R.rho0) + ', α = ' + fnum(R.alpha) + ')', accTxt(R.acc)));
+      if (!R.pe.zmode) rows.push(tr('Critical t at α = ' + fnum(R.alpha) + ' (' + (st.tail === 'two' ? 'two-tailed' : 'one-tailed') + ', ' + R.pe.df + ' degrees of freedom)', (st.tail === 'two' ? '±' : st.tail === 'lt' ? '−' : '') + rr(R, P.inv('t', { df: R.pe.df }, st.tail === 'two' ? R.alpha / 2 : R.alpha, 'R'))));
+      rows.push(tr('Covariance (sample, n − 1)', raw(R, f.cov)), tr('Mean of “' + cut(nm.x, 14) + '” / “' + cut(nm.y, 14) + '”', raw(R, f.mx) + ' / ' + raw(R, f.my)), tr('Standard deviation of “' + cut(nm.x, 14) + '” / “' + cut(nm.y, 14) + '”', raw(R, f.sdx) + ' / ' + raw(R, f.sdy)), tr('Best-fit line', esc(nm.y) + ' = ' + raw(R, f.icpt) + (f.slope < 0 ? ' − ' : ' + ') + raw(R, Math.abs(f.slope)) + ' × ' + esc(nm.x)), tr('Slope / intercept', raw(R, f.slope) + ' / ' + raw(R, f.icpt)));
+      if (f.se !== null) rows.push(tr('Standard error of the estimate', raw(R, f.se)));
+      if (R.wr !== undefined) rows.push(tr('Weighted Pearson r (with your weights)', R.wr === null ? '— (a weighted variance is 0)' : rr(R, R.wr)));
+      if (R.bin) rows.push(tr('Point-biserial correlation', rr(R, f.r) + ' (“' + esc(cut(R.bin === 'x' ? nm.x : nm.y, 14)) + '” has only two values, so Pearson’s r is the point-biserial correlation)'));
+      $('ccNums').innerHTML = '<tbody>' + rows.join('') + '</tbody>';
+      $('ccCopyTxt').textContent = pn2 + ': ' + big + ' (' + sub + ')'; show('ccNumsWrap', true);
+      $('ccCsvTxt').textContent = [].map.call($('ccNums').rows, function (rw) { return '"' + rw.cells[0].textContent.replace(/"/g, '""') + '","' + rw.cells[1].textContent.replace(/"/g, '""') + '"'; }).join('\n');
+      /* is Pearson appropriate? */
+      var dx = T.describe(xs), dy = T.describe(ys), ck = [], sk = function (d) { return d.skew === null ? '—' : fixed(d.skew, 2); }, lop = (dx.skew !== null && Math.abs(dx.skew) > 1) || (dy.skew !== null && Math.abs(dy.skew) > 1);
+      var uniq = function (v) { var m = {}, k2 = 0, i2; for (i2 = 0; i2 < v.length; i2++) if (!m[v[i2]]) { m[v[i2]] = 1; k2++; } return k2; };
+      ck.push('Sample size: ' + n + ' pairs' + (n < 10 ? ' is small, so the interval for r is wide: be careful with strong claims.' : n < 30 ? ' is modest.' : ' is a reasonable size.'));
+      ck.push('Shape: skewness of “' + esc(cut(nm.x, 14)) + '” is ' + sk(dx) + ' and of “' + esc(cut(nm.y, 14)) + '” is ' + sk(dy) + (lop ? ' (beyond ±1: very lopsided data can distort Pearson’s r, so compare it with Spearman).' : ' (both within ±1).'));
+      ck.push('Outliers (beyond 1.5 × IQR): ' + dx.out + ' in “' + esc(cut(nm.x, 14)) + '”, ' + dy.out + ' in “' + esc(cut(nm.y, 14)) + '”' + (dx.out + dy.out ? ': check them in the picture and in the table of single points.' : '.'));
+      ck.push('Straight-line fit: Pearson and Spearman differ by ' + fixed(Math.abs(R.pe.r - R.se.r), 2) + (Math.abs(R.pe.r - R.se.r) > 0.1 ? ', which hints at a curve or a few extreme points.' : ', so a straight line fits about as well as the ranks.'));
+      ck.push('Repeated values: ' + (uniq(xs) < n || uniq(ys) < n ? 'some values repeat (' + uniq(xs) + ' different in “' + esc(cut(nm.x, 14)) + '”, ' + uniq(ys) + ' in “' + esc(cut(nm.y, 14)) + '”); Spearman and Kendall share ranks for them.' : 'none.'));
+      $('ccCheckList').innerHTML = ck.map(function (s3) { return '<li>' + s3 + '</li>'; }).join(''); show('ccCheckWrap', true);
+      /* calculation table */
+      var dv = '', lim2 = Math.min(50, n), k3, sp2 = 0;
+      for (k3 = 0; k3 < lim2; k3++) { var ex2 = xs[k3] - f.mx, ey2 = ys[k3] - f.my; dv += '<tr><td>#' + (k3 + 1) + '</td><td>' + raw(R, ex2) + '</td><td>' + raw(R, ey2) + '</td><td>' + raw(R, ex2 * ey2) + '</td></tr>'; }
+      var sX = 0, sY = 0, sXY = 0, sXX = 0, sYY = 0, k4; for (k4 = 0; k4 < n; k4++) { sX += xs[k4]; sY += ys[k4]; sXY += xs[k4] * ys[k4]; sXX += xs[k4] * xs[k4]; sYY += ys[k4] * ys[k4]; }
+      var sr = function (a, b) { return '<tr><td>' + a + '</td><td>' + b + '</td></tr>'; };
+      $('ccSums').innerHTML = '<tbody>' + sr('ΣX (sum of X)', raw(R, sX)) + sr('ΣY (sum of Y)', raw(R, sY)) + sr('ΣXY (sum of X × Y)', raw(R, sXY)) + sr('ΣX² (sum of X squared)', raw(R, sXX)) + sr('ΣY² (sum of Y squared)', raw(R, sYY)) + sr('Σ(x − x̄)² (sum of squares of X)', raw(R, f.sxx)) + sr('Σ(y − ȳ)² (sum of squares of Y)', raw(R, f.syy)) + sr('Numerator Σ(x − x̄)(y − ȳ)', raw(R, f.sxy)) + sr('Denominator √(Σ(x − x̄)² × Σ(y − ȳ)²)', raw(R, Math.sqrt(f.sxx * f.syy))) + '</tbody>';
+      $('ccDev').innerHTML = '<thead><tr><th>Pair</th><th>x − x̄ (' + raw(R, f.mx) + ')</th><th>y − ȳ (' + raw(R, f.my) + ')</th><th>(x − x̄)(y − ȳ)</th></tr></thead><tbody>' + dv + '<tr><td colspan="3"><b>Sum of products' + (n > lim2 ? ' (all ' + n + ' pairs)' : '') + '</b></td><td><b>' + raw(R, f.sxy) + '</b></td></tr></tbody>'; show('ccDevWrap', true);
+      /* which point carries it */
+      if (R.loo) {
+        var ord = []; for (i = 0; i < n; i++) if (R.dr[i] !== null) ord.push(i); ord.sort(function (a, b) { return Math.abs(R.dr[b]) - Math.abs(R.dr[a]); });
+        var lim = ord.slice(0, Math.min(8, ord.length)), lr = '';
+        lim.forEach(function (j) { lr += '<tr' + (R.flag[j] ? ' class="cc-flag"' : '') + '><td>#' + (j + 1) + '</td><td>' + raw(R, R.xs[j]) + '</td><td>' + raw(R, R.ys[j]) + '</td><td>' + rr(R, R.loo.r[j]) + '</td><td>' + (R.dr[j] >= 0 ? '+' : '') + rr(R, R.dr[j]) + '</td></tr>'; });
+        $('ccLoo').innerHTML = '<thead><tr><th>Point</th><th>' + esc(cut(nm.x, 10)) + '</th><th>' + esc(cut(nm.y, 10)) + '</th><th>r without it</th><th>Change</th></tr></thead><tbody>' + lr + '</tbody>';
+        var rmin = Math.min.apply(null, ord.map(function (j) { return R.loo.r[j]; })), rmax = Math.max.apply(null, ord.map(function (j) { return R.loo.r[j]; }));
+        $('ccLooKey').textContent = (nFlag ? nFlag + (nFlag === 1 ? ' point changes' : ' points change') + ' r by more than 0.1 when left out (shaded rows): the correlation leans on ' + (nFlag === 1 ? 'it' : 'them') + '. ' : 'No single point changes r by more than 0.1: the correlation does not hang on one point. ') + 'Leaving out any one point keeps r between ' + rr(R, rmin) + ' and ' + rr(R, rmax) + '. The table shows the ' + lim.length + ' points that move r most' + (n > lim.length ? ' (of ' + n + ')' : '') + '; #1 is the first pair you typed.';
+        show('ccLooWrap', true);
+      }
+      /* what would it take */
+      var wr2 = function (a, b) { return '<tr><td>' + a + '</td><td>' + b + '</td></tr>'; };
+      var sigTxt = R.plan.sig === null ? 'Never: r points the other way or is 0' : (R.pe.sig ? 'Already significant with your ' + n + ' pairs' : peopleN(R.plan.sig) + ' pairs');
+      var powTxt = R.plan.pow === null ? 'Never: r points the other way or is 0' : (Math.abs(f.r) >= 1 ? 'Any 4 pairs show it' : peopleN(R.plan.pow) + ' pairs');
+      var pw = ''; if (R.pow3) [0.1, 0.3, 0.5].forEach(function (e, k) { pw += wr2('Power of this test to detect a true correlation of ' + (st.tail === 'lt' ? '−' : '') + e + ' (approximate)', fixed(R.pow3[k] * 100, 1) + '%'); });
+      $('ccWhat').innerHTML = '<tbody>' + (R.pe.zmode ? wr2('Values of r that would NOT be significant against ρ₀ = ' + fnum(R.rho0), accTxt(R.acc) + ' (you have ' + rr(R, f.r) + ')') : wr2('Smallest |r| that would be significant with ' + n + ' pairs', rr(R, R.rcrit) + ' (you have ' + rr(R, Math.abs(f.r)) + ')')) + wr2('Pairs needed for p below α if r stayed at ' + rr(R, f.r), sigTxt) + wr2('Pairs needed for 80% power to detect r = ' + rr(R, f.r) + ' (approximate)', powTxt) + pw + '</tbody>';
+      $('ccWhatKey').textContent = 'The first row is exact (from the t test, or the Fisher z test when you test against ρ₀). The second repeats the test at the same r with more pairs. The 80% power count and the power rows use the Fisher z approximation (n = ((z for α + z for 80% power) ÷ artanh r)² + 3), so treat them as a planning guide for a follow-up study, not as proof of anything.'; show('ccWhatWrap', true);
+      /* prediction */
+      if (R.pred) {
+        var pr = R.pred, tr3 = function (a, b) { return '<tr><td>' + a + '</td><td>' + b + '</td></tr>'; };
+        $('ccPred').innerHTML = '<tbody>' + tr3('Predicted “' + esc(cut(nm.y, 14)) + '” at “' + esc(cut(nm.x, 14)) + '” = ' + fnum(R.px), raw(R, pr.y)) + tr3(fnum(R.conf * 100) + '% interval for the line (the average Y at this X)', raw(R, pr.mLo) + ' to ' + raw(R, pr.mHi)) + tr3(fnum(R.conf * 100) + '% prediction interval for one new point', raw(R, pr.pLo) + ' to ' + raw(R, pr.pHi)) + '</tbody>';
+        $('ccPredKey').textContent = (pr.out ? 'Careful: ' + fnum(R.px) + ' is outside the X values you typed (' + raw(R, Math.min.apply(null, xsOf(R))) + ' to ' + raw(R, Math.max.apply(null, xsOf(R))) + '), so the line may not hold there. ' : '') + 'The interval for the line is narrower than the one for a single new point, because one point also varies around the line.'; show('ccPredWrap', true);
+      }
+      /* write it up */
+      var apa;
+      if (R.headName === 'pearson') apa = 'There was a ' + (H.r === 0 ? 'no' : strength(H.r) + ' ' + dirW(H.r)) + ' correlation between ' + nm.x + ' and ' + nm.y + ', r(' + R.pe.df + ') = ' + apaN(H.r) + ', p ' + apaP(H.p) + (H.ci ? ', ' + fnum(R.conf * 100) + '% CI [' + apaN(H.ci.lo) + ', ' + apaN(H.ci.hi) + ']' : '') + '.';
+      else if (R.headName === 'spearman') apa = 'A Spearman rank correlation found a ' + (H.r === 0 ? 'no' : strength(H.r) + ' ' + dirW(H.r)) + ' correlation between ' + nm.x + ' and ' + nm.y + ', rₛ(' + R.se.df + ') = ' + apaN(H.r) + ', p ' + apaP(H.p) + (H.ci ? ', ' + fnum(R.conf * 100) + '% CI [' + apaN(H.ci.lo) + ', ' + apaN(H.ci.hi) + ']' : '') + '.';
+      else apa = 'A Kendall rank correlation found a ' + (H.r === 0 ? 'no' : strength(H.r) + ' ' + dirW(H.r)) + ' correlation between ' + nm.x + ' and ' + nm.y + ', τ = ' + apaN(H.r) + ', p ' + apaP(H.p) + ' (n = ' + n + ').';
+      var cs = R.headName === 'pearson' ? 'r(' + R.pe.df + ')' : R.headName === 'spearman' ? 'rₛ(' + R.se.df + ')' : 'τ', cn = R.headName === 'pearson' ? 'Pearson correlation' : R.headName === 'spearman' ? 'Spearman rank correlation' : 'Kendall rank correlation', ciA = H.ci ? ', ' + fnum(R.conf * 100) + '% CI [' + apaN(H.ci.lo) + ', ' + apaN(H.ci.hi) + ']' : '', core = cs + ' = ' + apaN(H.r) + ', p ' + apaP(H.p) + ciA;
+      var forms = { sentence: apa, paren: '(' + core + ')', narr: 'A ' + cn + ' analysis found a ' + (H.sig ? 'significant' : 'non-significant') + ' ' + (H.r === 0 ? '' : strength(H.r) + ' ' + dirW(H.r) + ' ') + 'relationship between ' + nm.x + ' and ' + nm.y + ', ' + core + '.', chicago: cs + ' = ' + fixed(H.r, 2) + '; p ' + apaP(H.p) + (H.ci ? ', ' + fnum(R.conf * 100) + '% CI ' + fixed(H.ci.lo, 2) + ' to ' + fixed(H.ci.hi, 2) : ''), plain: 'The ' + cn + ' was ' + (H.sig ? 'statistically significant' : 'not statistically significant') + ' (' + sym + ' = ' + fixed(H.r, 2) + ', p ' + apaP(H.p) + ').' };
+      $('ccWrite').textContent = forms[st.cite] || apa; [].forEach.call($('ccCiteChips').children, function (b) { b.classList.toggle('on', b.getAttribute('data-v') === st.cite); }); show('ccWriteWrap', true);
+      /* steps */
+      var stp = [], pc = R.dec !== null ? R.dec : 4;
+      stp.push('Means: x̄ = ' + raw(R, f.mx) + ', ȳ = ' + raw(R, f.my) + ' (' + n + ' pairs).');
+      stp.push('Sums of squares and products: Σ(x − x̄)² = ' + raw(R, f.sxx) + ', Σ(y − ȳ)² = ' + raw(R, f.syy) + ', Σ(x − x̄)(y − ȳ) = ' + raw(R, f.sxy) + '.');
+      stp.push('r = Σ(x − x̄)(y − ȳ) ÷ √(Σ(x − x̄)² × Σ(y − ȳ)²) = ' + raw(R, f.sxy) + ' ÷ √(' + raw(R, f.sxx) + ' × ' + raw(R, f.syy) + ') = ' + rr(R, f.r) + '.');
+      stp.push('t = r × √((n − 2) ÷ (1 − r²)) = ' + (R.pe.t === Infinity || R.pe.t === -Infinity ? '∞ (r is exactly ±1)' : rr(R, R.pe.t)) + ' with n − 2 = ' + R.pe.df + ' degrees of freedom; p (' + tailName(st.tail) + ') = ' + pT(R, R.pe.p) + '.');
+      if (R.pe.ci && !R.pe.ci.exact) stp.push('Interval: artanh r = ' + rr(R, R.pe.ci.f) + ', standard error 1 ÷ √(n − 3) = ' + rr(R, R.pe.ci.se) + '; artanh r ± ' + rr(R, R.pe.ci.c) + ' × ' + rr(R, R.pe.ci.se) + ' turned back with tanh gives ' + rr(R, R.pe.ci.lo) + ' to ' + rr(R, R.pe.ci.hi) + '.');
+      stp.push('Spearman’s ρ is the Pearson r of the ranks (ties share their average rank) = ' + rr(R, R.se.r) + '; Kendall’s τ-b = (concordant − discordant pairs) ÷ √((pairs − tied X pairs)(pairs − tied Y pairs))' + (R.ke ? ' = (' + R.ke.nc + ' − ' + R.ke.nd + ') ÷ …  = ' + rr(R, R.ke.r) : '') + '.');
+      stp.push('Best-fit line: slope = Σ(x − x̄)(y − ȳ) ÷ Σ(x − x̄)² = ' + raw(R, f.slope) + ', intercept = ȳ − slope × x̄ = ' + raw(R, f.icpt) + '.');
+      $('ccSteps').innerHTML = stp.map(function (s2) { return '<li>' + s2 + '</li>'; }).join(''); show('ccStepsWrap', true);
+    }
+    $('ccBig').textContent = big; $('ccBig').parentNode.classList.toggle('cc-long', big.length > 18); $('ccLab').textContent = lab; $('ccSub').textContent = sub; $('ccBody').style.display = body ? '' : 'none'; $('ccTip').textContent = tip; $('ccTip').style.display = tip ? '' : 'none';
+    $('ccMLab').textContent = mlab; $('ccMVal').textContent = mval;
+    st.last = R;
+  }
+  function xsOf(R) { return R.xs; }
+
+  /* ---------- controls ---------- */
+  [['ccEntry', 'entry'], ['ccTail', 'tail'], ['ccHead', 'head']].forEach(function (pp) {
+    [].forEach.call($(pp[0]).children, function (b) { b.addEventListener('click', function () { segSet(pp[0], pp[1], b.getAttribute('data-v')); render(); }); });
+  });
+  [].forEach.call(document.querySelectorAll('.p-cc input[type=text]'), function (i) { i.addEventListener('input', render); });
+  ['ccX', 'ccY', 'ccP', 'ccW'].forEach(function (id) { $(id).addEventListener('input', render); });
+  $('ccAlphaChips').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; $('ccAlpha').value = b.getAttribute('data-v'); render(); });
+  var ALL = ['ccX', 'ccY', 'ccP', 'ccW', 'ccAlpha', 'ccConf', 'ccRho0', 'ccNameX', 'ccNameY', 'ccPx', 'ccDec'];
+  $('ccClear').addEventListener('click', function () { ALL.forEach(function (id) { $(id).value = ''; }); st.zoom = 0; render(); $(st.entry === 'lists' ? 'ccX' : 'ccP').focus(); });
+  $('ccExChips').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return; var ex = EXAMPLES[b.getAttribute('data-v')]; if (!ex) return;
+    if (st.entry === 'lists') { $('ccX').value = ex.x; $('ccY').value = ex.y; }
+    else { var a = ex.x.split(' '), c = ex.y.split(' '); $('ccP').value = a.map(function (v, i) { return v + ', ' + c[i]; }).join('\n'); }
+    st.zoom = 0; render();
+  });
+  $('ccCiteChips').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; st.cite = b.getAttribute('data-v'); render(); });
+  $('ccZoomIn').addEventListener('click', function () { if (st.zoom < 4) st.zoom++; render(); });
+  $('ccZoomOut').addEventListener('click', function () { if (st.zoom > 0) st.zoom--; render(); });
+  $('ccAdvBtn').addEventListener('click', function () {
+    st.adv = !st.adv; $('ccAdvBtn').classList.toggle('open', st.adv); $('ccAdvBtnLab').textContent = st.adv ? 'Go simple' : 'Go advanced'; $('ccAdvIn').style.display = st.adv ? '' : 'none';
+    if (!st.adv) { ['ccW', 'ccConf', 'ccRho0', 'ccNameX', 'ccNameY', 'ccPx', 'ccDec'].forEach(function (id) { $(id).value = ''; }); segSet('ccHead', 'head', 'pearson'); }
+    render();
+  });
+  render();
+};
+/* CORR:END */
+
 
 /* COMPOUND:BEGIN */
 /* =========================================================

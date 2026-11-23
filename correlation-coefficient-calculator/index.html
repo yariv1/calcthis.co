@@ -1,0 +1,924 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Correlation Coefficient Calculator: Pearson, Spearman</title>
+<meta name="description" content="Correlation coefficient calculator: paste X and Y for Pearson r, Spearman and Kendall, p-value, interval, best-fit line and the point driving r.">
+<link rel="canonical" href="https://calcthis.co/correlation-coefficient-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Correlation Coefficient Calculator: Pearson, Spearman">
+<meta property="og:description" content="Correlation coefficient calculator: paste X and Y for Pearson r, Spearman and Kendall, p-value, interval, best-fit line and the point driving r.">
+<meta property="og:url" content="https://calcthis.co/correlation-coefficient-calculator/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/datepicker.min.css">
+<link rel="stylesheet" href="/assets/style.css?v=364">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Correlation Coefficient Calculator",
+  "url": "https://calcthis.co/correlation-coefficient-calculator/",
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "Free correlation coefficient calculator: Pearson (linear) r, Spearman rho and Kendall tau-b from pasted X and Y numbers or pairs, with the t-score, p-value, confidence interval, r squared, best-fit line, a scatter plot with a band and leave-one-out lines, which points carry the correlation, the pairs needed, a prediction from the line, weights and a ready-to-copy sentence."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is a correlation coefficient?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A correlation coefficient is a number between −1 and +1 that measures how closely two variables move together. +1 means they rise together in a perfect straight line, −1 means one falls exactly as the other rises, and 0 means no straight-line relationship."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I calculate the correlation coefficient?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Paste the X numbers and the Y numbers (or one pair per line). The calculator finds the means, multiplies each pair of deviations and divides by the spread of both variables: r = Σ(x − x̄)(y − ȳ) ÷ √(Σ(x − x̄)² Σ(y − ȳ)²). For the example on this page it gives r = 0.6967."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the linear correlation coefficient?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It is Pearson’s r, the coefficient that measures how well a straight line fits the points. Spearman’s ρ and Kendall’s τ measure ranks instead and also pick up curved relationships that keep rising or falling."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is my correlation strong?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A common reading is very weak below 0.2, weak 0.2 to 0.4, moderate 0.4 to 0.6, strong 0.6 to 0.8 and very strong above 0.8, applied to |r|. What counts as strong depends on the field, so look at the interval and the picture too. The example gives 0.6967, called strong."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What does r² mean?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "r² is r multiplied by itself. It is the share of the variation in Y that a straight line through X accounts for. The example has r² = 0.4854, about 48.5%. It describes the fit, not cause and effect."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Pearson, Spearman or Kendall?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Use Pearson for measured numbers that follow a straight line. Use Spearman when the relationship is curved but steady, or a few extreme points matter. Use Kendall with few pairs or many repeated values. This page shows all three, so you can see when they disagree: in the example Pearson is 0.6967 and Spearman 0.6848."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I read the p-value?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The p-value is the probability of a correlation at least as far from 0 as yours if the two variables were really unrelated. Below your significance level α (usually 0.05) the result is called statistically significant. The example has p = 0.02517."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does correlation mean causation?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Two variables can move together because one causes the other, because a third thing drives both, or by chance. The correlation only describes how they move together."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which point is carrying my correlation?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The “Which point is carrying this?” table shows r with each pair left out. A pair whose removal changes r by more than 0.1 is flagged and ringed in the picture. In the example, leaving out pair #10 changes r from 0.6967 to 0.9595."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How many pairs do I need?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The “What would it take” table gives the smallest r that would be significant with your number of pairs (0.6319 for 10 pairs at α = 0.05) and how many pairs would be needed to reach p below α or 80% power if r stayed the same. With very few pairs, a large r can still be chance."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I paste from Excel?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Copy the X column into the first box and the Y column into the second, or switch to “Pairs, one per line” and paste both columns together. Header lines and blank rows are skipped."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "CalcThis",
+      "item": "https://calcthis.co/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Correlation Coefficient Calculator",
+      "item": "https://calcthis.co/correlation-coefficient-calculator/"
+    }
+  ]
+}
+</script>
+<meta property="og:site_name" content="CalcThis">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://calcthis.co/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="CalcThis — free, purpose-built calculators">
+<meta name="twitter:title" content="Correlation Coefficient Calculator: Pearson, Spearman">
+<meta name="twitter:description" content="Correlation coefficient calculator: paste X and Y for Pearson r, Spearman and Kendall, p-value, interval, best-fit line and the point driving r.">
+<meta name="twitter:image" content="https://calcthis.co/assets/og-default.png">
+</head>
+<body class="p-bmr p-cc">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <a class="hdr-back" href="/blog/" aria-label="Back to blog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-search"><div class="menu-sx"><input id="menuSearch" type="search" placeholder="Search calculators or states…" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Search calculators" enterkeyhint="search"></div><div class="menu-results" id="menuResults" hidden></div></div>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <span class="menu-col-head">Construction &amp; Gardening</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+          <a href="/paint-calculator/">Paint</a>
+          <a href="/wallpaper-calculator/">Wallpaper</a>
+          <a href="/square-footage-calculator/">Square Footage</a>
+          <a href="/tape-measure-fraction-calculator/">Tape Measure Fraction</a>
+          <a href="/stair-calculator/">Stair</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/vo2-max-calculator/">VO2 Max</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
+          <a href="/bmi-calculator/">BMI</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/ideal-weight-calculator/">Ideal Weight</a>
+          <a href="/lean-body-mass-calculator/">Lean Body Mass</a>
+          <a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio</a>
+          <a href="/gmi-calculator/">GMI</a>
+          <a href="/a1c-calculator/">A1C</a>
+          <a href="/calorie-calculator/">Calorie</a>
+          <a href="/calorie-deficit-calculator/">Calorie Deficit</a>
+          <a href="/bmr-calculator/">BMR</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/water-intake-calculator/">Water Intake</a>
+          <a href="/macro-calculator/">Macro</a>
+          <a href="/protein-intake-calculator/">Protein Intake</a>
+          <a href="/steps-to-miles-calculator/">Steps to Miles</a>
+          <a href="/dog-age-calculator/">Dog Age</a>
+          <a href="/cat-age-calculator/">Cat Age</a>
+          <a href="/calories-burned-calculator/">Calories Burned</a>
+          <a href="/calories-burned-walking-calculator/">Calories Burned Walking</a>
+          <a href="/calories-burned-running-calculator/">Calories Burned Running</a>
+          <a href="/keto-calculator/">Keto</a>
+          <a href="/net-carb-calculator/">Net Carb</a>
+          <a href="/intermittent-fasting-calculator/">Intermittent Fasting</a>
+          <a href="/bsa-calculator/">BSA</a>
+          <a href="/dog-food-calculator/">Dog Food</a>
+          <a href="/ffmi-calculator/">FFMI</a>
+          <a href="/bulking-calculator/">Bulking</a>
+          <a href="/weight-loss-calculator/">Weight Loss</a>
+          <a href="/weight-loss-percentage-calculator/">Weight Loss %</a>
+          <a href="/max-heart-rate-calculator/">Max Heart Rate</a>
+          <a href="/caffeine-calculator/">Caffeine</a>
+          <a href="/caffeine-half-life-calculator/">Caffeine Half Life</a>
+          <a href="/fiber-calculator/">Fiber</a>
+          <a href="/creatine-calculator/">Creatine</a>
+          <a href="/vitamin-d-calculator/">Vitamin D</a>
+          <a href="/body-recomposition-calculator/">Body Recomposition</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/semester-grade-calculator/">Semester Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+          <a href="/grade-curve-calculator/">Grade Curve</a>
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/fraction-calculator/">Fraction</a>
+          <a href="/standard-deviation-calculator/">Standard Deviation</a>
+          <a href="/p-value-calculator/">P-Value</a>
+          <a href="/confidence-interval-calculator/">Confidence Interval</a>
+          <a href="/z-score-calculator/">Z Score</a>
+          <a href="/t-test-calculator/">T-Test</a>
+          <a href="/correlation-coefficient-calculator/" class="current">Correlation Coefficient</a>
+          <a href="/scientific-notation-calculator/">Scientific Notation</a>
+          <a href="/average-calculator/">Average</a>
+          <a href="/batting-average-calculator/">Batting Average</a>
+          <a href="/stock-average-calculator/">Stock Average</a>
+          <a href="/dice-average-calculator/">Dice Average</a>
+          <a href="/time-average-calculator/">Time Average</a>
+          <a href="/weighted-average-calculator/">Weighted Average</a>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+          <a href="/percentage-change-calculator/">Percentage Change</a>
+          <a href="/age-calculator/">Age</a>
+          <a href="/date-calculator/">Date</a>
+          <a href="/time-calculator/">Time</a>
+          <a href="/hours-calculator/">Hours</a>
+          <a href="/seconds-to-hours-calculator/">Seconds to Hours</a>
+          <a href="/minutes-to-hours-calculator/">Minutes to Hours</a>
+          <a href="/seconds-to-minutes-calculator/">Seconds to Minutes</a>
+          <a href="/triangle-calculator/">Triangle</a>
+          <a href="/random-number-generator/">Random Number</a>
+          <span class="menu-col-head">Cooking &amp; Kitchen</span>
+          <a href="/recipe-converter/">Recipe Converter</a>
+          <a href="/turkey-cooking-time-calculator/">Turkey Cooking Time</a>
+          <a href="/turkey-thawing-time-calculator/">Turkey Thawing Time</a>
+          <a href="/turkey-size-calculator/">Turkey Size</a>
+          <span class="menu-col-head">Medication &amp; Lab</span>
+          <a href="/mg-to-ml-calculator/">mg to mL</a>
+          <a href="/dilution-calculator/">Dilution</a>
+          <a href="/retatrutide-dosage-calculator/">Retatrutide Dosage</a>
+          <a href="/serial-dilution-calculator/">Serial Dilution</a>
+          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
+          <!--UNITNAV:START-->
+          <span class="menu-col-head">Unit Converters</span>
+          <a href="/unit-converter/">Unit Converter</a>
+          <a href="/length-converter/">Length Converter</a>
+          <a href="/weight-converter/">Weight Converter</a>
+          <a href="/volume-converter/">Volume Converter</a>
+          <a href="/temperature-converter/">Temperature Converter</a>
+          <a href="/area-converter/">Area Converter</a>
+          <a href="/speed-converter/">Speed Converter</a>
+          <a href="/data-storage-converter/">Data Storage Converter</a>
+          <a href="/cooking-converter/">Cooking Converter</a>
+          <a href="/px-to-rem-converter/">PX to REM Converter</a>
+          <!--UNITNAV:END-->
+          <span class="menu-col-head">Money &amp; Finance</span>
+          <a href="/mortgage-calculator/">Mortgage</a>
+          <a href="/loan-calculator/">Loan</a>
+          <a href="/auto-loan-calculator/">Auto Loan</a>
+          <a href="/car-sales-tax-calculator/">Car Sales Tax</a>
+          <a href="/overtime-calculator/">Overtime</a>
+          <a href="/salary-calculator/">Salary</a>
+          <a href="/markup-calculator/">Markup</a>
+          <a href="/profit-margin-calculator/">Profit Margin</a>
+          <a href="/discount-calculator/">Discount</a>
+          <a href="/commission-calculator/">Commission</a>
+          <a href="/realtor-commission-calculator/">Realtor Commission</a>
+          <a href="/unit-price-calculator/">Unit Price</a>
+          <a href="/compound-interest-calculator/">Compound Interest</a>
+          <a href="/amortization-calculator/">Amortization</a>
+          <!--STAXNAV:START-->
+          <a href="/sales-tax-calculator/">Sales Tax</a>
+          <a href="/sales-tax-calculator/california/">California Sales Tax</a>
+          <a href="/sales-tax-calculator/chicago/">Chicago Sales Tax</a>
+          <a href="/sales-tax-calculator/florida/">Florida Sales Tax</a>
+          <a href="/sales-tax-calculator/las-vegas/">Las Vegas Sales Tax</a>
+          <a href="/sales-tax-calculator/los-angeles/">Los Angeles Sales Tax</a>
+          <a href="/sales-tax-calculator/michigan/">Michigan Sales Tax</a>
+          <a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax</a>
+          <a href="/sales-tax-calculator/missouri/">Missouri Sales Tax</a>
+          <a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax</a>
+          <a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax</a>
+          <a href="/sales-tax-calculator/north-carolina/">North Carolina Sales Tax</a>
+          <a href="/sales-tax-calculator/ohio/">Ohio Sales Tax</a>
+          <a href="/sales-tax-calculator/texas/">Texas Sales Tax</a>
+          <a href="/sales-tax-calculator/virginia/">Virginia Sales Tax</a>
+          <!--STAXNAV:END-->
+          <a href="/tip-calculator/">Tip</a>
+          <a href="/how-much-to-tip/">How Much to Tip</a>
+        </div>
+        <!--PAYNAV:START-->
+        <div class="menu-col">
+          <span class="menu-col-head">Paycheck Calculators</span>
+          <a href="/paycheck-calculator/">Paycheck Calculator (all states)</a>
+          <a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a>
+          <a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arkansas/">Arkansas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/california/">California Paycheck Calculator</a>
+          <a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a>
+          <a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a>
+          <a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/hawaii/">Hawaii Paycheck Calculator</a>
+          <a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a>
+          <a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a>
+          <a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a>
+          <a href="/paycheck-calculator/louisiana/">Louisiana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a>
+          <a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a>
+          <a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a>
+          <a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a>
+          <a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nebraska/">Nebraska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a>
+          <a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a>
+          <a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a>
+          <a href="/paycheck-calculator/oklahoma/">Oklahoma Paycheck Calculator</a>
+          <a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a>
+          <a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a>
+          <a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a>
+          <a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/utah/">Utah Paycheck Calculator</a>
+          <a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wisconsin/">Wisconsin Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a>
+        </div>
+        <!--PAYNAV:END-->
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">Pearson · Spearman · Kendall · see which point carries the correlation</div>
+    <h1>Correlation Coefficient Calculator</h1>
+    <p>Paste your <strong>X and Y numbers</strong> (or one pair per line) and get the <strong>correlation coefficient</strong> with its p-value and interval, the <strong>Pearson, Spearman and Kendall values side by side</strong> and a picture of your own data with the best-fit line. For the example below, 10 pairs give <strong>r = 0.6967, p = 0.02517</strong>: a strong positive correlation. The table of single points shows that leaving out pair #10 moves r to 0.9595.</p>
+  </section>
+
+  <div class="grid">
+
+    <!-- INPUT -->
+    <div class="card">
+      <div class="card-pad">
+        <h2 class="card-h2">Your data</h2>
+        <div class="fld"><span class="lab">How will you enter the data?</span><div class="seg cc-seg" id="ccEntry" role="group" aria-label="How will you enter the data?"><button type="button" data-v="lists" class="on">Two lists</button><button type="button" data-v="pairs">Pairs, one per line</button></div></div>
+        <p class="av-note" id="ccEntryNote"></p>
+        <div id="ccListsW">
+          <div class="fld"><label class="lab" id="ccXLab" for="ccX">Numbers for “X”</label><textarea class="cc-ta" id="ccX" placeholder="e.g. 1, 2, 3, 4, 5, 6, 7, 8, 9, 10" aria-label="Numbers for “X”" spellcheck="false"></textarea></div>
+          <p class="av-note" id="ccXNote"></p>
+          <div class="fld"><label class="lab" id="ccYLab" for="ccY">Numbers for “Y”</label><textarea class="cc-ta" id="ccY" placeholder="e.g. 52, 55, 61, 58, 70, 72, 69, 80, 85, 60" aria-label="Numbers for “Y”" spellcheck="false"></textarea></div>
+          <p class="av-note" id="ccYNote"></p>
+        </div>
+        <div id="ccPairsW" style="display:none">
+          <div class="fld"><label class="lab" id="ccPLab" for="ccP">Pairs, one per line</label><textarea class="cc-ta" id="ccP" placeholder="e.g.
+1, 52
+2, 55
+3, 61" aria-label="Pairs, one per line" spellcheck="false"></textarea></div>
+          <p class="av-note" id="ccPNote"></p>
+        </div>
+        <p class="zs-sech" style="margin-top:4px">Try an example</p>
+        <div class="chips" id="ccExChips" role="group" aria-label="Example data"><button type="button" data-v="study">Study hours</button><button type="button" data-v="negative">Negative</button><button type="button" data-v="none">No pattern</button><button type="button" data-v="outlier">One outlier</button><button type="button" data-v="curve">U-shape</button><button type="button" data-v="perfect">Perfect line</button></div>
+        <div class="fld"><span class="lab" id="ccTailLab">The relationship is…</span><div class="seg cc-seg" id="ccTail" role="group" aria-label="The relationship is…"><button type="button" data-v="two" class="on">Any (not zero)</button><button type="button" data-v="gt">Positive</button><button type="button" data-v="lt">Negative</button></div></div>
+        <p class="av-note" id="ccTailNote"></p>
+        <label class="fld" for="ccAlpha"><span class="lab">Significance level (α) <span class="unit">· optional</span></span><div class="inp"><input id="ccAlpha" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 0.05"></div></label>
+        <div class="chips" id="ccAlphaChips" role="group" aria-label="Common significance levels"><button type="button" data-v="0.10">0.10</button><button type="button" data-v="0.05">0.05</button><button type="button" data-v="0.01">0.01</button></div>
+        <p class="av-note" id="ccAlphaNote"></p>
+        <div class="res-hint" id="ccHint" style="display:none;text-align:left;margin:4px 0 8px"></div>
+        <div id="ccAdvIn" style="display:none">
+          <div class="proj-sep"></div>
+          <div class="fld"><span class="lab">Coefficient shown in the headline</span><div class="seg cc-seg" id="ccHead" role="group" aria-label="Coefficient shown in the headline"><button type="button" data-v="pearson" class="on">Pearson</button><button type="button" data-v="spearman">Spearman</button><button type="button" data-v="kendall">Kendall</button></div></div>
+          <p class="av-note" id="ccHeadNote"></p>
+          <p class="zs-sech">Confidence interval <span>· optional</span></p>
+          <label class="fld" for="ccConf"><span class="lab">Confidence level <span class="unit">%</span></span><div class="inp"><input id="ccConf" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 95"></div></label>
+          <p class="av-note" id="ccConfNote"></p>
+          <p class="zs-sech">Test against a correlation other than 0 <span>· optional</span></p>
+          <label class="fld" for="ccRho0"><span class="lab">Correlation to test against (ρ₀)</span><div class="inp"><input id="ccRho0" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 0.3"></div></label>
+          <p class="av-note" id="ccRho0Note"></p>
+          <p class="zs-sech">Variable names <span>· optional</span></p>
+          <div class="cc-two"><label class="fld" for="ccNameX"><span class="lab">Name of X</span><div class="inp"><input id="ccNameX" type="text" inputmode="text" autocomplete="off" placeholder="e.g. Hours studied"></div></label><label class="fld" for="ccNameY"><span class="lab">Name of Y</span><div class="inp"><input id="ccNameY" type="text" inputmode="text" autocomplete="off" placeholder="e.g. Exam score"></div></label></div>
+          <p class="av-note" id="ccNameNote"></p>
+          <p class="zs-sech">Weights <span>· optional</span></p>
+          <div class="fld"><label class="lab" id="ccWLab" for="ccW">One weight per pair</label><textarea class="cc-ta" id="ccW" placeholder="e.g. 1, 1, 2, 1, 3, 1, 1, 2, 1, 1" aria-label="One weight per pair" spellcheck="false"></textarea></div>
+          <p class="av-note" id="ccWNote"></p>
+          <p class="zs-sech">Predict Y from X <span>· optional</span></p>
+          <label class="fld" for="ccPx"><span class="lab">X value</span><div class="inp"><input id="ccPx" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 11"></div></label>
+          <p class="av-note" id="ccPxNote"></p>
+          <p class="zs-sech">Display <span>· optional</span></p>
+          <label class="fld" for="ccDec"><span class="lab">Decimal places</span><div class="inp"><input id="ccDec" type="text" inputmode="numeric" autocomplete="off" placeholder="e.g. 3"></div></label>
+          <p class="av-note" id="ccDecNote"></p>
+        </div>
+        <div class="add-row split" style="margin-top:16px">
+          <button class="linkbtn" id="ccClear" type="button">Clear fields</button>
+          <button class="advbtn" id="ccAdvBtn" type="button">
+            <span id="ccAdvBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div class="card">
+      <div class="card-pad">
+        <div class="bf-res">
+          <div class="res-lab" id="ccLab">Pearson correlation coefficient (r)</div>
+          <div class="res-big"><span id="ccBig">—</span></div>
+          <div class="res-sub" id="ccSub" data-empty="Type the X and Y numbers to see the correlation coefficient, its p-value and a picture of your data.">Type the X and Y numbers to see the correlation coefficient, its p-value and a picture of your data.</div>
+        </div>
+        <div id="ccBody" style="display:none">
+          <p class="res-tip adv-tip" id="ccTip"></p>
+          <div id="ccVisWrap" style="display:none">
+            <p class="bm-h">Your data, the best-fit line and the points that carry it</p>
+            <div class="cc-vis" id="ccVis"></div>
+            <div class="cc-tools"><button class="linkbtn" id="ccZoomIn" type="button">Zoom in</button><button class="linkbtn" id="ccZoomOut" type="button">Zoom out</button></div>
+            <p class="cb-note" id="ccVisKey"></p>
+          </div>
+          <div id="ccGaugeWrap" style="display:none">
+            <p class="bm-h">Where the correlation sits</p>
+            <div class="cc-vis" id="ccGauge"></div>
+            <p class="cb-note" id="ccGaugeKey"></p>
+          </div>
+          <div id="ccAllWrap" style="display:none">
+            <p class="bm-h">Pearson, Spearman and Kendall, side by side</p>
+            <div class="cc-tbl"><table class="dtable" id="ccAll"></table></div>
+            <p class="cb-note" id="ccAllNote"></p>
+          </div>
+          <div id="ccCheckWrap" style="display:none">
+            <p class="bm-h">Is Pearson appropriate for this data?</p>
+            <ul class="cc-steps" id="ccCheckList"></ul>
+          </div>
+          <div id="ccLooWrap" style="display:none">
+            <p class="bm-h">Which point is carrying this?</p>
+            <div class="cc-tbl"><table class="dtable" id="ccLoo"></table></div>
+            <p class="cb-note" id="ccLooKey"></p>
+          </div>
+          <div id="ccNumsWrap" style="display:none">
+            <p class="bm-h">The numbers <button class="linkbtn" type="button" data-copy="ccCopyTxt" style="margin-left:8px">Copy result</button><button class="linkbtn" type="button" data-copy="ccCsvTxt" style="margin-left:8px">Copy as CSV</button></p>
+            <div class="cc-tbl"><table class="dtable" id="ccNums"></table></div>
+            <div id="ccCopyTxt" style="display:none"></div>
+            <div id="ccCsvTxt" style="display:none"></div>
+          </div>
+          <details class="faq" id="ccDevWrap" style="display:none"><summary>Show the calculation table</summary>
+            <div class="cc-tbl"><table class="dtable" id="ccSums"></table></div>
+            <div class="cc-tbl"><table class="dtable" id="ccDev"></table></div>
+          </details>
+          <div id="ccWhatWrap" style="display:none">
+            <p class="bm-h">What would it take?</p>
+            <div class="cc-tbl"><table class="dtable" id="ccWhat"></table></div>
+            <p class="cb-note" id="ccWhatKey"></p>
+          </div>
+          <div id="ccPredWrap" style="display:none">
+            <p class="bm-h">Predicting Y from X</p>
+            <div class="cc-tbl"><table class="dtable" id="ccPred"></table></div>
+            <p class="cb-note" id="ccPredKey"></p>
+          </div>
+          <div id="ccWriteWrap" style="display:none">
+            <p class="bm-h">Write it up <button class="linkbtn" type="button" data-copy="ccWrite" style="margin-left:8px">Copy sentence</button></p>
+            <div class="chips" id="ccCiteChips" role="group" aria-label="Sentence style"><button type="button" data-v="sentence" class="on">Sentence</button><button type="button" data-v="paren">APA (parenthetical)</button><button type="button" data-v="narr">APA (narrative)</button><button type="button" data-v="chicago">Chicago</button><button type="button" data-v="plain">Plain English</button></div>
+            <p class="cc-write" id="ccWrite"></p>
+          </div>
+          <div id="ccStepsWrap" style="display:none">
+            <p class="bm-h">How it is worked out</p>
+            <ol class="cc-steps" id="ccSteps"></ol>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- mobile sticky bar -->
+  <div class="mbar" id="mbar">
+    <span class="mbar-lab" id="ccMLab">Pearson r</span>
+    <div class="mbar-vals"><b id="ccMVal">—</b></div>
+  </div>
+
+  <div class="related-calcs">
+    <p class="related-calcs-h">More calculators that may interest you</p>
+    <div class="pills">
+      <a class="pill" href="/t-test-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg>
+        T-Test Calculator
+      </a>
+      <a class="pill" href="/p-value-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 24c4 0 6-16 13-16s9 16 13 16"/><path d="M3 24h26"/></svg>
+        P-Value Calculator
+      </a>
+      <a class="pill" href="/confidence-interval-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 16h24M4 11v10M28 11v10"/></svg>
+        Confidence Interval Calculator
+      </a>
+      <a class="pill" href="/standard-deviation-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg>
+        Standard Deviation Calculator
+      </a>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use the correlation coefficient calculator</h2>
+        <p>Paste the <strong>X numbers</strong> in the first box and the <strong>Y numbers</strong> in the second (a column from Excel works), or switch to one pair per line. The correlation coefficient, its p-value and a picture of your data appear as you type. Pick “Positive” or “Negative” for a one-tailed test and leave the significance level empty for 0.05.</p>
+        <p>Go advanced to choose Spearman or Kendall for the headline, change the confidence level, name the variables, add a weight for each pair (for a weighted Pearson r) or type an X value to predict Y from the line with its interval.</p>
+
+        <h2 id="ccFormulas">The correlation coefficient formula</h2>
+        <div class="formula">
+          r = Σ(x − x̄)(y − ȳ) ÷ √( Σ(x − x̄)² × Σ(y − ȳ)² )
+          <small>PEARSON (LINEAR) CORRELATION COEFFICIENT · t = r × √((n − 2) ÷ (1 − r²)) WITH n − 2 DEGREES OF FREEDOM</small>
+        </div>
+        <p>Worked out with this calculator for 10 pairs (X = 1, 2, 3, 4, 5, 6, 7, 8, 9, 10; Y = 52, 55, 61, 58, 70, 72, 69, 80, 85, 60): the means are 5.50 and 66.20, Σ(x − x̄)(y − ȳ) = 206.00, Σ(x − x̄)² = 82.50 and Σ(y − ȳ)² = 1059.60, so r = 0.6967, r² = 0.4854, t(8) = 2.75 and p = 0.02517. The 95% interval for r through the Fisher transformation runs from 0.1196 to 0.9219. The best-fit line is Y = 52.47 + 2.50 × X, which predicts 79.93 at X = 11 (95% prediction interval 56.88 to 102.99).</p>
+        <h2 id="ccWhich">Pearson, Spearman or Kendall?</h2>
+        <table class="dtable"><thead><tr><th>Your data</th><th>Coefficient</th></tr></thead><tbody><tr><td>Two measured numbers, points roughly along a straight line</td><td>Pearson r</td></tr><tr><td>A curved but steady rise or fall, ranks, or a few extreme points</td><td>Spearman ρ</td></tr><tr><td>Few pairs, or many repeated values</td><td>Kendall τ-b</td></tr><tr><td>One of the two variables has only two values (0 and 1)</td><td>Pearson r is the point-biserial correlation</td></tr><tr><td>Three or more variables at once</td><td>A table of pairwise correlations (not on this page)</td></tr></tbody></table>
+        <p>For the same example Spearman’s ρ is 0.6848 (p = 0.02888) and Kendall’s τ-b is 0.6000 (p = 0.01574).</p>
+        <h2>Which point is carrying the correlation?</h2>
+        <p>A single extreme pair can create or hide a correlation. The calculator recomputes r with each pair left out. In the example, removing pair #10 (X = 10, Y = 60) changes r from 0.6967 to 0.9595, a change of 0.2627: that one point matters much more than any other.</p>
+      </div>
+
+      <div>
+        <h2>Critical values of r</h2>
+        <p>A correlation further from 0 than the critical value for your degrees of freedom (n − 2) is significant at that level. Two-tailed values; for a one-tailed test use the column of twice the level (for example the α = 0.10 column for a one-tailed test at 0.05).</p>
+        <table class="dtable"><thead><tr><th>Degrees of freedom (n − 2)</th><th>α = 0.10</th><th>α = 0.05</th><th>α = 0.01</th></tr></thead><tbody><tr><td>1</td><td>0.988</td><td>0.997</td><td>1.000</td></tr><tr><td>2</td><td>0.900</td><td>0.950</td><td>0.990</td></tr><tr><td>3</td><td>0.805</td><td>0.878</td><td>0.959</td></tr><tr><td>4</td><td>0.729</td><td>0.811</td><td>0.917</td></tr><tr><td>5</td><td>0.669</td><td>0.754</td><td>0.875</td></tr><tr><td>6</td><td>0.621</td><td>0.707</td><td>0.834</td></tr><tr><td>7</td><td>0.582</td><td>0.666</td><td>0.798</td></tr><tr><td>8</td><td>0.549</td><td>0.632</td><td>0.765</td></tr><tr><td>9</td><td>0.521</td><td>0.602</td><td>0.735</td></tr><tr><td>10</td><td>0.497</td><td>0.576</td><td>0.708</td></tr><tr><td>12</td><td>0.458</td><td>0.532</td><td>0.661</td></tr><tr><td>15</td><td>0.412</td><td>0.482</td><td>0.606</td></tr><tr><td>20</td><td>0.360</td><td>0.423</td><td>0.537</td></tr><tr><td>25</td><td>0.323</td><td>0.381</td><td>0.487</td></tr><tr><td>30</td><td>0.296</td><td>0.349</td><td>0.449</td></tr><tr><td>40</td><td>0.257</td><td>0.304</td><td>0.393</td></tr><tr><td>60</td><td>0.211</td><td>0.250</td><td>0.325</td></tr><tr><td>100</td><td>0.164</td><td>0.195</td><td>0.254</td></tr></tbody></table>
+        <h2 id="ccReading">Reading the result</h2>
+        <p>The <strong>coefficient</strong> runs from −1 to +1: the sign gives the direction, the size the strength. The <strong>p-value</strong> is the probability of a correlation at least this far from 0 if the two variables were really unrelated; below your significance level it is called significant. The <strong>interval</strong> shows the values of the true correlation the data are consistent with. With few pairs it is wide: 0.1196 to 0.9219 for the 10 pairs above.</p>
+        <p>The words on this page follow this rough scale for |r|:</p>
+        <table class="dtable"><thead><tr><th>|r|</th><th>Word used here</th></tr></thead><tbody><tr><td>0.8 to 1.0</td><td>very strong</td></tr><tr><td>0.6 to 0.8</td><td>strong</td></tr><tr><td>0.4 to 0.6</td><td>moderate</td></tr><tr><td>0.2 to 0.4</td><td>weak</td></tr><tr><td>0 to 0.2</td><td>very weak</td></tr></tbody></table>
+        <h2>Check against published examples</h2>
+        <p>The Wikipedia article on the Pearson coefficient gives r = 0.7 with 50 pairs a 95% interval of 0.5237 to 0.8188; this calculator’s interval for the same numbers is 0.5237 to 0.8188. For eight pairs rising from 52 to 86, this page and correlationcoefficientcalculator.org both report r = 0.9991, t = 56.1931 and a p-value of 2.133 × 10⁻⁹.</p>
+        <h2>How many pairs do I need?</h2>
+        <p>With 10 pairs, only a correlation beyond ±0.6319 is significant at 0.05. Keeping r at 0.6967, the calculator reports that 9 pairs would already give p below 0.05 and about 14 pairs would give 80% power (approximate, Fisher z).</p>
+
+        <h2>Related tools</h2>
+        <p>To compare two groups use the <a href="/t-test-calculator/">t-test calculator</a>; to turn any statistic into a p-value the <a href="/p-value-calculator/">p-value calculator</a>; for an interval around a mean the <a href="/confidence-interval-calculator/">confidence interval calculator</a>; and to find a spread the <a href="/standard-deviation-calculator/">standard deviation calculator</a>.</p>
+        <h2>Sources</h2>
+        <ul>
+          <li>The t statistic r × √((n − 2) ÷ (1 − r²)) with n − 2 degrees of freedom, the Fisher transformation artanh r with standard error 1 ÷ √(n − 3) and the interval tanh(artanh r ± z × SE) follow the Wikipedia article “Pearson correlation coefficient”, read on 2026-11-23. Its worked example (r = 0.7, n = 50, 95% interval 0.5237 to 0.8188) is reproduced by this calculator: 0.5237 to 0.8188.</li>
+          <li>Spearman’s ρ is the Pearson r of the ranks; its p-value uses the t approximation and its interval the Fisher transformation with the variance factor 1.06, as in the Wikipedia article “Spearman’s rank correlation coefficient” (read 2026-11-23). Kendall’s τ-b and its normal approximation with the tie terms follow the article “Kendall rank correlation coefficient” (read 2026-11-23).</li>
+          <li>The interval for the line and the prediction interval for one new point follow the simple-regression formulas in the Wikipedia article “Prediction interval” (read 2026-11-23). Probabilities come from the t and normal distributions of this site’s p-value calculator.</li>
+          <li>Check: for the eight pairs X = 1, 2, 3, 4, 5, 6, 7, 8 and Y = 52, 57, 62, 67, 72, 77, 83, 86 this calculator gives r = 0.9991, t = 56.1931 and p = 2.133 × 10⁻⁹; correlationcoefficientcalculator.org showed the same r, t and p for those numbers on 2026-11-23.</li>
+          <li>The feature set was compared with the correlation tools of Omnicalculator, GigaCalculator, Pearson.com, correlationcoefficientcalculator.org, Social Science Statistics and Stats Kingdom, all opened on 2026-11-23. The words very weak to very strong follow the scale Omnicalculator attributes to Evans (1996); that original was not read, so treat the words as a rough guide. The number of pairs for 80% power uses the Fisher z approximation and is labelled approximate.</li>
+        </ul>
+        <p><small>For information only. Check the assumptions of the method and your own data before drawing conclusions.</small></p>
+      </div>
+    </div>
+
+    <h2 id="ccFaq" style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>What is a correlation coefficient?</summary><p>A correlation coefficient is a number between −1 and +1 that measures how closely two variables move together. +1 means they rise together in a perfect straight line, −1 means one falls exactly as the other rises, and 0 means no straight-line relationship.</p></details>
+    <details class="faq"><summary>How do I calculate the correlation coefficient?</summary><p>Paste the X numbers and the Y numbers (or one pair per line). The calculator finds the means, multiplies each pair of deviations and divides by the spread of both variables: r = Σ(x − x̄)(y − ȳ) ÷ √(Σ(x − x̄)² Σ(y − ȳ)²). For the example on this page it gives r = 0.6967.</p></details>
+    <details class="faq"><summary>What is the linear correlation coefficient?</summary><p>It is Pearson’s r, the coefficient that measures how well a straight line fits the points. Spearman’s ρ and Kendall’s τ measure ranks instead and also pick up curved relationships that keep rising or falling.</p></details>
+    <details class="faq"><summary>Is my correlation strong?</summary><p>A common reading is very weak below 0.2, weak 0.2 to 0.4, moderate 0.4 to 0.6, strong 0.6 to 0.8 and very strong above 0.8, applied to |r|. What counts as strong depends on the field, so look at the interval and the picture too. The example gives 0.6967, called strong.</p></details>
+    <details class="faq"><summary>What does r² mean?</summary><p>r² is r multiplied by itself. It is the share of the variation in Y that a straight line through X accounts for. The example has r² = 0.4854, about 48.5%. It describes the fit, not cause and effect.</p></details>
+    <details class="faq"><summary>Pearson, Spearman or Kendall?</summary><p>Use Pearson for measured numbers that follow a straight line. Use Spearman when the relationship is curved but steady, or a few extreme points matter. Use Kendall with few pairs or many repeated values. This page shows all three, so you can see when they disagree: in the example Pearson is 0.6967 and Spearman 0.6848.</p></details>
+    <details class="faq"><summary>How do I read the p-value?</summary><p>The p-value is the probability of a correlation at least as far from 0 as yours if the two variables were really unrelated. Below your significance level α (usually 0.05) the result is called statistically significant. The example has p = 0.02517.</p></details>
+    <details class="faq"><summary>Does correlation mean causation?</summary><p>No. Two variables can move together because one causes the other, because a third thing drives both, or by chance. The correlation only describes how they move together.</p></details>
+    <details class="faq"><summary>Which point is carrying my correlation?</summary><p>The “Which point is carrying this?” table shows r with each pair left out. A pair whose removal changes r by more than 0.1 is flagged and ringed in the picture. In the example, leaving out pair #10 changes r from 0.6967 to 0.9595.</p></details>
+    <details class="faq"><summary>How many pairs do I need?</summary><p>The “What would it take” table gives the smallest r that would be significant with your number of pairs (0.6319 for 10 pairs at α = 0.05) and how many pairs would be needed to reach p below α or 80% power if r stayed the same. With very few pairs, a large r can still be chance.</p></details>
+    <details class="faq"><summary>Can I paste from Excel?</summary><p>Yes. Copy the X column into the first box and the Y column into the second, or switch to “Pairs, one per line” and paste both columns together. Header lines and blank rows are skipped.</p></details>
+  </section>
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+      <div class="footer-stack">
+<div class="footer-col" style="order:1">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+          <li><a href="/paint-calculator/">Paint Calculator</a></li>
+          <li><a href="/wallpaper-calculator/">Wallpaper Calculator</a></li>
+          <li><a href="/square-footage-calculator/">Square Footage Calculator</a></li>
+          <li><a href="/tape-measure-fraction-calculator/">Tape Measure Fraction Calculator</a></li>
+          <li><a href="/stair-calculator/">Stair Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:5">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Cooking &amp;</span> <span class="ft2">Kitchen</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/recipe-converter/">Recipe Converter</a></li>
+          <li><a href="/turkey-cooking-time-calculator/">Turkey Cooking Time Calculator</a></li>
+          <li><a href="/turkey-thawing-time-calculator/">Turkey Thawing Time Calculator</a></li>
+          <li><a href="/turkey-size-calculator/">Turkey Size Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:5">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Medication &amp;</span> <span class="ft2">Lab</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/mg-to-ml-calculator/">mg to mL Calculator</a></li>
+          <li><a href="/dilution-calculator/">Dilution Calculator</a></li>
+          <li><a href="/retatrutide-dosage-calculator/">Retatrutide Dosage Calculator</a></li>
+          <li><a href="/serial-dilution-calculator/">Serial Dilution Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:6">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Money &amp;</span> <span class="ft2">Finance</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/mortgage-calculator/">Mortgage Calculator</a></li>
+          <li><a href="/loan-calculator/">Loan Calculator</a></li>
+          <li><a href="/auto-loan-calculator/">Auto Loan Calculator</a></li>
+          <li><a href="/car-sales-tax-calculator/">Car Sales Tax Calculator</a></li>
+          <li><a href="/overtime-calculator/">Overtime Calculator</a></li>
+          <li><a href="/salary-calculator/">Salary Calculator</a></li>
+          <li><a href="/markup-calculator/">Markup Calculator</a></li>
+          <li><a href="/profit-margin-calculator/">Profit Margin Calculator</a></li>
+          <li><a href="/discount-calculator/">Discount Calculator</a></li>
+          <li><a href="/commission-calculator/">Commission Calculator</a></li>
+          <li><a href="/realtor-commission-calculator/">Realtor Commission Calculator</a></li>
+          <li><a href="/unit-price-calculator/">Unit Price Calculator</a></li>
+          <li><a href="/compound-interest-calculator/">Compound Interest Calculator</a></li>
+          <li><a href="/amortization-calculator/">Amortization Calculator</a></li>
+          <!--STAXFOOT:START-->
+          <li><a href="/sales-tax-calculator/">Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/california/">California Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/chicago/">Chicago Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/florida/">Florida Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/las-vegas/">Las Vegas Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/los-angeles/">Los Angeles Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/michigan/">Michigan Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/missouri/">Missouri Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/north-carolina/">North Carolina Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/ohio/">Ohio Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/texas/">Texas Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/virginia/">Virginia Sales Tax Calculator</a></li>
+          <!--STAXFOOT:END-->
+          <li><a href="/tip-calculator/">Tip Calculator</a></li>
+          <li><a href="/how-much-to-tip/">How Much to Tip</a></li>
+        </ul>
+      </div>
+      </div>
+
+      <div class="footer-right">
+<div class="footer-col footer-col--two" style="order:2">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/vo2-max-calculator/">VO2 Max Calculator</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/bmi-calculator/">BMI Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/ideal-weight-calculator/">Ideal Weight Calculator</a></li>
+          <li><a href="/lean-body-mass-calculator/">Lean Body Mass Calculator</a></li>
+          <li><a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio Calculator</a></li>
+          <li><a href="/gmi-calculator/">GMI Calculator</a></li>
+          <li><a href="/a1c-calculator/">A1C Calculator</a></li>
+          <li><a href="/calorie-calculator/">Calorie Calculator</a></li>
+          <li><a href="/calorie-deficit-calculator/">Calorie Deficit Calculator</a></li>
+          <li><a href="/bmr-calculator/">BMR Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/water-intake-calculator/">Water Intake Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/protein-intake-calculator/">Protein Intake Calculator</a></li>
+          <li><a href="/steps-to-miles-calculator/">Steps to Miles Calculator</a></li>
+          <li><a href="/dog-age-calculator/">Dog Age Calculator</a></li>
+          <li><a href="/cat-age-calculator/">Cat Age Calculator</a></li>
+          <li><a href="/calories-burned-calculator/">Calories Burned Calculator</a></li>
+          <li><a href="/calories-burned-walking-calculator/">Calories Burned Walking Calculator</a></li>
+          <li><a href="/calories-burned-running-calculator/">Calories Burned Running Calculator</a></li>
+          <li><a href="/keto-calculator/">Keto Calculator</a></li>
+          <li><a href="/net-carb-calculator/">Net Carb Calculator</a></li>
+          <li><a href="/intermittent-fasting-calculator/">Intermittent Fasting Calculator</a></li>
+          <li><a href="/bsa-calculator/">BSA Calculator</a></li>
+          <li><a href="/dog-food-calculator/">Dog Food Calculator</a></li>
+          <li><a href="/ffmi-calculator/">FFMI Calculator</a></li>
+          <li><a href="/bulking-calculator/">Bulking Calculator</a></li>
+          <li><a href="/weight-loss-calculator/">Weight Loss Calculator</a></li>
+          <li><a href="/weight-loss-percentage-calculator/">Weight Loss Percentage Calculator</a></li>
+          <li><a href="/max-heart-rate-calculator/">Max Heart Rate Calculator</a></li>
+          <li><a href="/caffeine-calculator/">Caffeine Calculator</a></li>
+          <li><a href="/caffeine-half-life-calculator/">Caffeine Half Life Calculator</a></li>
+          <li><a href="/fiber-calculator/">Fiber Calculator</a></li>
+          <li><a href="/creatine-calculator/">Creatine Calculator</a></li>
+          <li><a href="/vitamin-d-calculator/">Vitamin D Calculator</a></li>
+          <li><a href="/body-recomposition-calculator/">Body Recomposition Calculator</a></li>
+        </ul>
+      </div>
+
+        <div class="footer-sub">
+<div class="footer-subcol">
+<div class="footer-col" style="order:3">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/semester-grade-calculator/">Semester Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+          <li><a href="/grade-curve-calculator/">Grade Curve Calculator</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:START-->
+<div class="footer-col" style="order:7">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Unit</span> <span class="ft2">Converters</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/unit-converter/">Unit Converter</a></li>
+          <li><a href="/length-converter/">Length Converter</a></li>
+          <li><a href="/weight-converter/">Weight Converter</a></li>
+          <li><a href="/volume-converter/">Volume Converter</a></li>
+          <li><a href="/temperature-converter/">Temperature Converter</a></li>
+          <li><a href="/area-converter/">Area Converter</a></li>
+          <li><a href="/speed-converter/">Speed Converter</a></li>
+          <li><a href="/data-storage-converter/">Data Storage Converter</a></li>
+          <li><a href="/cooking-converter/">Cooking Measurement Converter</a></li>
+          <li><a href="/px-to-rem-converter/">PX to REM Converter</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:END-->
+</div>
+
+<div class="footer-col" style="order:4">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/fraction-calculator/">Fraction Calculator</a></li>
+          <li><a href="/standard-deviation-calculator/">Standard Deviation Calculator</a></li>
+          <li><a href="/p-value-calculator/">P-Value Calculator</a></li>
+          <li><a href="/confidence-interval-calculator/">Confidence Interval Calculator</a></li>
+          <li><a href="/z-score-calculator/">Z-Score Calculator</a></li>
+          <li><a href="/t-test-calculator/">T-Test Calculator</a></li>
+          <li><a href="/correlation-coefficient-calculator/">Correlation Coefficient Calculator</a></li>
+          <li><a href="/scientific-notation-calculator/">Scientific Notation Calculator</a></li>
+          <li><a href="/weighted-average-calculator/">Weighted Average Calculator</a></li>
+          <li><a href="/average-calculator/">Average Calculator</a></li>
+          <li><a href="/batting-average-calculator/">Batting Average Calculator</a></li>
+          <li><a href="/stock-average-calculator/">Stock Average Calculator</a></li>
+          <li><a href="/dice-average-calculator/">Dice Average Calculator</a></li>
+          <li><a href="/time-average-calculator/">Time Average Calculator</a></li>
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+          <li><a href="/percentage-change-calculator/">Percentage Change Calculator</a></li>
+          <li><a href="/age-calculator/">Age Calculator</a></li>
+          <li><a href="/date-calculator/">Date Calculator</a></li>
+          <li><a href="/time-calculator/">Time Calculator</a></li>
+          <li><a href="/hours-calculator/">Hours Calculator</a></li>
+          <li><a href="/seconds-to-hours-calculator/">Seconds to Hours Calculator</a></li>
+          <li><a href="/minutes-to-hours-calculator/">Minutes to Hours Calculator</a></li>
+          <li><a href="/seconds-to-minutes-calculator/">Seconds to Minutes Calculator</a></li>
+          <li><a href="/triangle-calculator/">Triangle Calculator</a></li>
+          <li><a href="/random-number-generator/">Random Number Generator</a></li>
+        </ul>
+      </div>
+        </div>
+      </div>
+
+      <!--PAYFOOT:START-->
+      <div class="footer-col footer-col--wide">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Paycheck</span> <span class="ft2">Calculators</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/paycheck-calculator/">Paycheck Calculator (all states)</a></li>
+          <li><a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arkansas/">Arkansas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/california/">California Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/hawaii/">Hawaii Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/louisiana/">Louisiana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nebraska/">Nebraska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/oklahoma/">Oklahoma Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/utah/">Utah Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wisconsin/">Wisconsin Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a></li>
+        </ul>
+      </div>
+      <!--PAYFOOT:END-->
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/blog/">Blog</a>
+      <span aria-hidden="true">·</span>
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/whats-new/">What's new</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Page last updated: <time datetime="2026-11-23">November 23, 2026</time>. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+</div>
+
+<script src="/assets/app.js?v=364"></script>
+<script>CalcThis.initCorrCalc();</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>
