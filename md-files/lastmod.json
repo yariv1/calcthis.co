@@ -1,7 +1,7 @@
 {
  "/": {
-  "hash": "d2cd54c5e78d5c62",
-  "date": "2026-11-23"
+  "hash": "e849332a4b2dd458",
+  "date": "2026-11-24"
  },
  "/board-foot-calculator/": {
   "hash": "41e9c86bf0956ae1",
@@ -788,8 +788,8 @@
   "date": "2026-11-20"
  },
  "/whats-new/": {
-  "hash": "a4afd9d752433fc7",
-  "date": "2026-11-23"
+  "hash": "94fd4b277781aebb",
+  "date": "2026-11-24"
  },
  "/contact/": {
   "hash": "a6aa9bb68b171a76",
@@ -982,5 +982,9 @@
  "/correlation-coefficient-calculator/": {
   "hash": "46563162f21ebc3d",
   "date": "2026-11-23"
+ },
+ "/linear-regression-calculator/": {
+  "hash": "f0241fae6ae52d61",
+  "date": "2026-11-24"
  }
 }

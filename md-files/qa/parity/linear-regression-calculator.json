@@ -1,0 +1,332 @@
+{
+ "slug": "linear-regression-calculator",
+ "research": "md-files/calcthis-linearregression-research.md",
+ "competitors": [
+  {
+   "name": "Omnicalculator linear regression calculator",
+   "url": "https://www.omnicalculator.com/statistics/linear-regression",
+   "openedLive": true,
+   "date": "2026-11-24",
+   "inputs": [
+    "up to 30 x,y points typed in rows (at least 3 needed)",
+    "precision setting",
+    "scatter plot with the regression line",
+    "equation y = ax + b",
+    "R² of the fitted model",
+    "article with slope and intercept meaning, formulas and a worked example",
+    "share result and reload buttons"
+   ]
+  },
+  {
+   "name": "Pearson.com linear regression calculator",
+   "url": "https://www.pearson.com/channels/calculators/linear-regression-calculator",
+   "openedLive": true,
+   "date": "2026-11-24",
+   "inputs": [
+    "input mode: pairs, lists, or summary statistics (n, x̄, ȳ, Sxx, Syy, Sxy)",
+    "step-by-step option",
+    "scatter plot option",
+    "residuals table option",
+    "predict ŷ from x",
+    "predict x from y",
+    "extrapolation warning",
+    "six quick-pick example data sets",
+    "line ŷ = a + bx, r and R²",
+    "formulas, worked examples and FAQ text"
+   ]
+  },
+  {
+   "name": "Social Science Statistics linear regression calculator",
+   "url": "https://www.socscistatistics.com/tests/regression/",
+   "openedLive": true,
+   "date": "2026-11-24",
+   "inputs": [
+    "X and Y columns input",
+    "regression equation Y = a + bX",
+    "Pearson correlation r",
+    "coefficient of determination R²",
+    "predicted values and residuals"
+   ]
+  },
+  {
+   "name": "Statistics by Jim linear regression calculator",
+   "url": "https://statisticsbyjim.com/calculators/linear-regression-calculator/",
+   "openedLive": true,
+   "date": "2026-11-24",
+   "inputs": [
+    "spreadsheet grid up to 300 rows with paste and variable names",
+    "model choice: linear, quadratic, cubic",
+    "regression equation",
+    "model summary: R², adjusted R², S",
+    "ANOVA table with F-statistic",
+    "coefficients with p-values",
+    "scatterplot with fitted line",
+    "print button",
+    "guidance text on interpreting results"
+   ]
+  },
+  {
+   "name": "Stats Kingdom linear regression calculator",
+   "url": "https://www.statskingdom.com/linear-regression-calculator.html",
+   "openedLive": true,
+   "date": "2026-11-24",
+   "inputs": [
+    "type or paste data grid",
+    "Excel or CSV file load",
+    "regression line equation",
+    "slope and intercept with standard errors and confidence intervals",
+    "APA style sentence",
+    "prediction table for typed X values with confidence and prediction intervals",
+    "fit plot with confidence and prediction bands",
+    "residual plot",
+    "ANOVA table, F, p, R², correlation and Sres",
+    "x-intercept",
+    "t tests of slope and intercept",
+    "Shapiro-Wilk test of residuals with QQ plot and histogram",
+    "outlier check",
+    "predicted versus actual values table",
+    "step-by-step solution",
+    "R code",
+    "copy button",
+    "last run button",
+    "example button"
+   ]
+  },
+  {
+   "name": "MiniWebtool linear regression calculator",
+   "url": "https://miniwebtool.com/linear-regression-calculator/",
+   "openedLive": true,
+   "date": "2026-11-24",
+   "inputs": [
+    "X list and Y list or pasted two columns",
+    "predict Y for an X value",
+    "decimal precision 2 to 12",
+    "four example data sets",
+    "scatter plot with regression line",
+    "residual chart",
+    "standard error of estimate, standard error of slope and sums of squares",
+    "formula steps",
+    "embed widget"
+   ]
+  },
+  {
+   "name": "GraphPad linear regression calculator",
+   "url": "https://www.graphpad.com/quickcalcs/linear1/",
+   "openedLive": true,
+   "date": "2026-11-24",
+   "inputs": [
+    "pasted X and Y table with variable labels",
+    "slope and Y-intercept with confidence intervals",
+    "R-square goodness of fit",
+    "is the slope significantly non-zero: F, df and P",
+    "equation Y = mX + b",
+    "graph of data and regression line",
+    "assumptions checklist and interpretation guide"
+   ]
+  }
+ ],
+ "features": [
+  {
+   "covers": [
+    "Omnicalculator linear regression calculator: share result and reload buttons",
+    "Statistics by Jim linear regression calculator: print button",
+    "Stats Kingdom linear regression calculator: Excel or CSV file load",
+    "Stats Kingdom linear regression calculator: Shapiro-Wilk test of residuals with QQ plot and histogram",
+    "Stats Kingdom linear regression calculator: R code",
+    "Stats Kingdom linear regression calculator: last run button",
+    "MiniWebtool linear regression calculator: embed widget"
+   ],
+   "status": "dropped",
+   "ids": [],
+   "signoff": {
+    "quote": "Approve all",
+    "date": "2026-11-24"
+   }
+  },
+  {
+   "covers": [
+    "Omnicalculator linear regression calculator: up to 30 x,y points typed in rows (at least 3 needed)",
+    "Pearson.com linear regression calculator: input mode: pairs, lists, or summary statistics (n, x̄, ȳ, Sxx, Syy, Sxy)",
+    "Social Science Statistics linear regression calculator: X and Y columns input",
+    "Statistics by Jim linear regression calculator: spreadsheet grid up to 300 rows with paste and variable names",
+    "Stats Kingdom linear regression calculator: type or paste data grid",
+    "MiniWebtool linear regression calculator: X list and Y list or pasted two columns",
+    "GraphPad linear regression calculator: pasted X and Y table with variable labels"
+   ],
+   "status": "exceed",
+   "ids": [
+    "lrX",
+    "lrY",
+    "lrP",
+    "lrSN",
+    "lrEntry"
+   ]
+  },
+  {
+   "covers": [
+    "Omnicalculator linear regression calculator: scatter plot with the regression line",
+    "Omnicalculator linear regression calculator: equation y = ax + b",
+    "Pearson.com linear regression calculator: scatter plot option",
+    "Pearson.com linear regression calculator: line ŷ = a + bx, r and R²",
+    "Social Science Statistics linear regression calculator: regression equation Y = a + bX",
+    "Social Science Statistics linear regression calculator: Pearson correlation r",
+    "Social Science Statistics linear regression calculator: coefficient of determination R²",
+    "Statistics by Jim linear regression calculator: regression equation",
+    "Statistics by Jim linear regression calculator: scatterplot with fitted line",
+    "Stats Kingdom linear regression calculator: regression line equation",
+    "Stats Kingdom linear regression calculator: fit plot with confidence and prediction bands",
+    "MiniWebtool linear regression calculator: scatter plot with regression line",
+    "GraphPad linear regression calculator: equation Y = mX + b",
+    "GraphPad linear regression calculator: graph of data and regression line"
+   ],
+   "status": "exceed",
+   "ids": [
+    "lrBig",
+    "lrVis",
+    "lrFit",
+    "lrSqBtn"
+   ]
+  },
+  {
+   "covers": [
+    "Omnicalculator linear regression calculator: R² of the fitted model",
+    "Statistics by Jim linear regression calculator: model summary: R², adjusted R², S",
+    "Statistics by Jim linear regression calculator: ANOVA table with F-statistic",
+    "Stats Kingdom linear regression calculator: ANOVA table, F, p, R², correlation and Sres",
+    "GraphPad linear regression calculator: R-square goodness of fit",
+    "GraphPad linear regression calculator: is the slope significantly non-zero: F, df and P"
+   ],
+   "status": "exceed",
+   "ids": [
+    "lrFit",
+    "lrAnova",
+    "lrCoef"
+   ]
+  },
+  {
+   "covers": [
+    "Statistics by Jim linear regression calculator: coefficients with p-values",
+    "Stats Kingdom linear regression calculator: slope and intercept with standard errors and confidence intervals",
+    "Stats Kingdom linear regression calculator: t tests of slope and intercept",
+    "MiniWebtool linear regression calculator: standard error of estimate, standard error of slope and sums of squares",
+    "GraphPad linear regression calculator: slope and Y-intercept with confidence intervals"
+   ],
+   "status": "exceed",
+   "ids": [
+    "lrCoef",
+    "lrFit",
+    "lrAnova"
+   ]
+  },
+  {
+   "covers": [
+    "Pearson.com linear regression calculator: predict ŷ from x",
+    "Pearson.com linear regression calculator: predict x from y",
+    "Pearson.com linear regression calculator: extrapolation warning",
+    "Social Science Statistics linear regression calculator: predicted values and residuals",
+    "Stats Kingdom linear regression calculator: prediction table for typed X values with confidence and prediction intervals",
+    "Stats Kingdom linear regression calculator: predicted versus actual values table",
+    "MiniWebtool linear regression calculator: predict Y for an X value"
+   ],
+   "status": "exceed",
+   "ids": [
+    "lrPx",
+    "lrPy",
+    "lrPred",
+    "lrInv"
+   ]
+  },
+  {
+   "covers": [
+    "Statistics by Jim linear regression calculator: model choice: linear, quadratic, cubic"
+   ],
+   "status": "exceed",
+   "ids": [
+    "lrModel",
+    "lrCurves"
+   ]
+  },
+  {
+   "covers": [
+    "Pearson.com linear regression calculator: residuals table option",
+    "Stats Kingdom linear regression calculator: residual plot",
+    "MiniWebtool linear regression calculator: residual chart"
+   ],
+   "status": "exceed",
+   "ids": [
+    "lrRes",
+    "lrTab"
+   ]
+  },
+  {
+   "covers": [
+    "Omnicalculator linear regression calculator: article with slope and intercept meaning, formulas and a worked example",
+    "Pearson.com linear regression calculator: step-by-step option",
+    "Pearson.com linear regression calculator: formulas, worked examples and FAQ text",
+    "Statistics by Jim linear regression calculator: guidance text on interpreting results",
+    "Stats Kingdom linear regression calculator: outlier check",
+    "Stats Kingdom linear regression calculator: step-by-step solution",
+    "MiniWebtool linear regression calculator: formula steps",
+    "GraphPad linear regression calculator: assumptions checklist and interpretation guide"
+   ],
+   "status": "exceed",
+   "ids": [
+    "lrSteps",
+    "lrCheckList",
+    "lrInf",
+    "lrFormulas",
+    "lrReading"
+   ]
+  },
+  {
+   "covers": [
+    "Pearson.com linear regression calculator: six quick-pick example data sets",
+    "Stats Kingdom linear regression calculator: example button",
+    "MiniWebtool linear regression calculator: four example data sets"
+   ],
+   "status": "match",
+   "ids": [
+    "lrExChips"
+   ]
+  },
+  {
+   "covers": [
+    "Stats Kingdom linear regression calculator: APA style sentence"
+   ],
+   "status": "exceed",
+   "ids": [
+    "lrWrite",
+    "lrCiteChips"
+   ]
+  },
+  {
+   "covers": [
+    "Omnicalculator linear regression calculator: precision setting",
+    "MiniWebtool linear regression calculator: decimal precision 2 to 12"
+   ],
+   "status": "match",
+   "ids": [
+    "lrDec"
+   ]
+  },
+  {
+   "covers": [
+    "Stats Kingdom linear regression calculator: x-intercept"
+   ],
+   "status": "match",
+   "ids": [
+    "lrFit"
+   ]
+  },
+  {
+   "covers": [
+    "Stats Kingdom linear regression calculator: copy button"
+   ],
+   "status": "match",
+   "ids": [
+    "lrCopyTxt",
+    "lrClear"
+   ]
+  }
+ ]
+}

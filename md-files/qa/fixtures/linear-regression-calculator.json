@@ -1,0 +1,41 @@
+{
+  "slug": "linear-regression-calculator",
+  "bodyClass": "p-lr",
+  "blocks": ["PVALUE", "CI", "TTEST", "CORR", "REG"],
+  "result": { "big": "lrBig", "body": "lrBody", "hint": "lrHint" },
+  "required": ["lrX", "lrY", "lrP", "lrSN", "lrSMx", "lrSMy", "lrSSxx", "lrSSyy", "lrSSxy"],
+  "fill": [
+    ["click", "lrClear"],
+    ["seg", "lrEntry", "lists"],
+    ["seg", "lrModel", "1"],
+    ["seg", "lrOrigin", "fit"],
+    ["set", "lrX", "1 2 3 4 5 6 7 8 9 10"],
+    ["set", "lrY", "52 55 61 58 70 72 69 80 85 60"]
+  ],
+  "optionalSamples": {
+    "lrConf": ["95", "99", "60"],
+    "lrNameX": ["Hours studied"],
+    "lrNameY": ["Exam score"],
+    "lrPx": ["11", "5.5, 12", "-3"],
+    "lrPy": ["70", "0"],
+    "lrDec": ["3", "0", "6"],
+    "lrW": ["1 1 2 1 3 1 1 2 1 1", "1 1 1", "0 0 0 0 0 0 0 0 0 0"]
+  },
+  "pools": {
+    "lrConf": ["95", "99", "60", "50"],
+    "lrNameX": ["Hours studied", "x"],
+    "lrNameY": ["Exam score"],
+    "lrPx": ["11", "5.5", "-3", "100"],
+    "lrPy": ["70", "0", "-5"],
+    "lrDec": ["3", "0", "6"],
+    "lrW": ["1 1 2 1 3 1 1 2 1 1", "1 1 1"]
+  },
+  "variants": [
+    [["click", "lrClear"], ["seg", "lrEntry", "pairs"], ["set", "lrP", "1, 52\n2, 55\n3, 61\n4, 58\n5, 70\n6, 72\n7, 69\n8, 80\n9, 85\n10, 60"]],
+    [["click", "lrClear"], ["seg", "lrEntry", "summary"], ["set", "lrSN", "15"], ["set", "lrSMx", "1.65"], ["set", "lrSMy", "62.078"], ["set", "lrSSxx", "0.2631"], ["set", "lrSSyy", "692.2"], ["set", "lrSSxy", "13.22"]],
+    [["click", "lrClear"], ["seg", "lrEntry", "lists"], ["seg", "lrModel", "2"], ["set", "lrX", "-5 -4 -3 -2 -1 0 1 2 3 4 5"], ["set", "lrY", "26 15 10 3 2 1 0 5 8 17 24"]],
+    [["click", "lrClear"], ["seg", "lrEntry", "lists"], ["seg", "lrModel", "1"], ["seg", "lrOrigin", "zero"], ["set", "lrX", "1 2 3 4 5 6"], ["set", "lrY", "2.1 3.9 6.2 7.8 10.1 12.2"]]
+  ],
+  "scrollTo": "lrBig",
+  "errorState": [["set", "lrX", "5"]]
+}

@@ -112,6 +112,10 @@
     "t": "Fraction Calculator — Add, Subtract, Multiply & Divide",
     "d": "Free fraction calculator: add, subtract, multiply and divide fractions, mixed numbers and decimals, simplify and convert, with a live bar diagram and steps."
   },
+  "/linear-regression-calculator/": {
+    "t": "Linear Regression Calculator: Line, R², Prediction",
+    "d": "Linear regression calculator: paste X and Y for the best-fit line, R², p-value, intervals, predictions, and the points that steer the line."
+  },
   "/correlation-coefficient-calculator/": {
     "t": "Correlation Coefficient Calculator: Pearson, Spearman",
     "d": "Correlation coefficient calculator: paste X and Y for Pearson r, Spearman and Kendall, p-value, interval, best-fit line and the point driving r."

@@ -1,0 +1,29 @@
+{
+ "date": "2026-11-24",
+ "competitors": [
+  { "name": "Omnicalculator linear regression calculator", "url": "https://www.omnicalculator.com/statistics/linear-regression", "reopenedAfterBuild": true, "gaps": [] },
+  { "name": "Pearson.com linear regression calculator", "url": "https://www.pearson.com/channels/calculators/linear-regression-calculator", "reopenedAfterBuild": true, "gaps": [] },
+  { "name": "Social Science Statistics linear regression calculator", "url": "https://www.socscistatistics.com/tests/regression/", "reopenedAfterBuild": true, "gaps": [] },
+  { "name": "Statistics by Jim linear regression calculator", "url": "https://statisticsbyjim.com/calculators/linear-regression-calculator/", "reopenedAfterBuild": true, "gaps": [] },
+  { "name": "Stats Kingdom linear regression calculator", "url": "https://www.statskingdom.com/linear-regression-calculator.html", "reopenedAfterBuild": true, "gaps": [] },
+  { "name": "MiniWebtool linear regression calculator", "url": "https://miniwebtool.com/linear-regression-calculator/", "reopenedAfterBuild": true, "gaps": [] },
+  { "name": "GraphPad linear regression calculator", "url": "https://www.graphpad.com/quickcalcs/linear1/", "reopenedAfterBuild": true, "gaps": [] }
+ ],
+ "weBeat": [
+  "visual: the scatter in the user's own units with the line (or curve), a confidence band, dashed prediction lines for one new point, a 'Show squares' toggle that draws every error as a real square, amber rings and labels on the points that steer the fit with the fit drawn without each of them, zoom buttons, diamonds for predicted values and a residual plot with ±S lines; Stats Kingdom, Statistics by Jim, MiniWebtool and Pearson.com draw a scatter or fit plot but none shows the squares of least squares or which point steers the line, and Omnicalculator, Social Science Statistics and GraphPad draw little or nothing next to the numbers",
+  "functional: 'Which points are steering the line?' table (Cook's distance, slope and R² without each point, leverage count), 'Does a curve help?' table (straight, quadratic, cubic with adjusted R² and the F test of each added term), predictions both ways with intervals and an outside-your-data flag, 'What would it take?' (smallest significant slope, pairs for p below alpha and for 80% power, pairs to halve the interval), weights, through-the-origin option, summary-number entry, assumptions check in plain words, five sentence styles, and the same 13-pair example typed in Stats Kingdom gave the same equation, slope interval, F, p and the same prediction and prediction intervals at X = 7 and 11",
+  "every competitor feature kept except Excel / CSV upload, Print, last-run restore, R code, Embed / Share and the Shapiro-Wilk test with QQ plot and histogram (dropped under his answer 'Approve all', recorded in the parity file); multiple regression stays out (under 100 searches a month, named in the research report)"
+ ],
+ "gapsLeft": [],
+ "unverified": [
+  "real phone",
+  "other browsers (Chrome only)",
+  "print",
+  "Copy buttons in a real clipboard session",
+  "multiple linear regression is not offered (separate intent, under 100 searches a month)",
+  "the Chicago-style sentence copies the pattern Social Science Statistics prints on its correlation page; the style rule itself was not read",
+  "a standardized error beyond ±2 is a common rule of thumb, labelled as such on the page; no source was read for it",
+  "pairs for 80% power use the Fisher z approximation on the correlation; checked against an independent implementation, not against another calculator",
+  "Omnicalculator, Pearson.com, Social Science Statistics, Statistics by Jim, MiniWebtool and GraphPad were reopened after the build but only read, not typed into; Stats Kingdom's own 13-pair example was compared number by number with this page"
+ ]
+}

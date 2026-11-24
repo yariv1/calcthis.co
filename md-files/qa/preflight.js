@@ -25,7 +25,9 @@ function silent(slug) { const r = cp.spawnSync('node', ['md-files/qa/audit-silen
 function registration(slugs) {
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'calcthis-pre-')), dst = path.join(tmp, 'c');
   try {
-    fs.cpSync(ROOT, dst, { recursive: true, filter: (s) => !/[\\/]\.git([\\/]|$)/.test(s) });
+    fs.cpSync(ROOT, dst, { recursive: true, preserveTimestamps: true });
+    /* the copy build checks every gated page for a preflight record, including the page under test: give the COPY (never the repo) a placeholder so the run is not circular */
+    for (const sl of slugs) { const pf2 = path.join(dst, 'md-files/qa-passes/preflight/' + sl + '.json'); fs.mkdirSync(path.dirname(pf2), { recursive: true }); fs.writeFileSync(pf2, JSON.stringify({ slug: sl, pass: true, failed: [], hash: passHash(sl), at: new Date().toISOString(), results: { note: 'placeholder inside the temporary copy only' } })); }
     let b = fs.readFileSync(dst + '/build.js', 'utf8'); const a = b.indexOf('/* ===== INDEXNOW:START'), e = b.indexOf('/* ===== INDEXNOW:END ===== */');
     if (a < 0 || e < 0) return { ok: false, why: 'cannot strip the IndexNow ping from the copy build' };
     fs.writeFileSync(dst + '/build_noping.js', b.slice(0, a) + b.slice(e + '/* ===== INDEXNOW:END ===== */'.length));

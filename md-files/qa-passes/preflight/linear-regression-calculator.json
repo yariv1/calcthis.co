@@ -1,0 +1,12 @@
+{
+ "slug": "linear-regression-calculator",
+ "pass": true,
+ "failed": [],
+ "hash": "867919a703bacf80",
+ "at": "2026-11-24T14:34:08.445Z",
+ "results": {
+  "silent": "ok   linear-regression-calculator  fields 6",
+  "duplicate": "most overlap 5.2% with /correlation-coefficient-calculator/ (limit 12%)",
+  "registration": "sitemap urls 247 | linear-regression-calculator cards 1 inbound 246 ld WebApplication,FAQPage,BreadcrumbList | AUDIT PASS"
+ }
+}

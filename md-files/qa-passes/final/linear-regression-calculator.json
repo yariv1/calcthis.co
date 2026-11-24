@@ -1,0 +1,14 @@
+{
+ "slug": "linear-regression-calculator",
+ "pass": true,
+ "at": "2026-11-24T14:34:25.643Z",
+ "passHash": "867919a703bacf80",
+ "scriptHash": "2b6cf95b7a92359b",
+ "cats": {
+  "textVsTool": 52,
+  "extremes": 64,
+  "visual": 48
+ },
+ "runs": 14,
+ "fails": []
+}

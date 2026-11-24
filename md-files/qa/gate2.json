@@ -12,5 +12,6 @@
  "t-test-calculator",
  "retatrutide-dosage-calculator",
  "serial-dilution-calculator",
- "correlation-coefficient-calculator"
+ "correlation-coefficient-calculator",
+ "linear-regression-calculator"
 ]

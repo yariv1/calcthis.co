@@ -4024,5 +4024,10 @@ body .fld + .av-note,body .fld + .cb-note{margin-top:-6px}
 .p-cc #ccAll td,.p-cc #ccAll th{overflow-wrap:anywhere;word-break:normal;font-size:13.5px;padding-left:4px;padding-right:4px;hyphens:none}
 .p-cc #ccAll td:nth-child(n+2),.p-cc #ccAll th:nth-child(n+2){width:26%}
 .p-cc #ccAll td:first-child,.p-cc #ccAll th:first-child{width:22%}
-
-
+/* REG:CSS ---- LINEAR REGRESSION calculator (page class p-lr). The page also carries the correlation page stylesheet class ---- */
+.p-lr #lrCoef,.p-lr #lrFit,.p-lr #lrAnova,.p-lr #lrCurves,.p-lr #lrInf,.p-lr #lrPred,.p-lr #lrInv,.p-lr #lrWhat,.p-lr #lrTab{width:100%;table-layout:auto}
+.p-lr #lrCoef td:nth-child(n+2),.p-lr #lrCoef th:nth-child(n+2),.p-lr #lrFit td:nth-child(2),.p-lr #lrAnova td:nth-child(n+2),.p-lr #lrAnova th:nth-child(n+2),.p-lr #lrCurves td:nth-child(n+2),.p-lr #lrCurves th:nth-child(n+2),.p-lr #lrInf td:nth-child(n+2),.p-lr #lrInf th:nth-child(n+2),.p-lr #lrPred td:nth-child(n+2),.p-lr #lrPred th:nth-child(n+2),.p-lr #lrInv td:nth-child(2),.p-lr #lrInv th:nth-child(2),.p-lr #lrWhat td:nth-child(2),.p-lr #lrTab td:nth-child(n+2),.p-lr #lrTab th:nth-child(n+2){text-align:right}
+.p-lr #lrCoef,.p-lr #lrAnova,.p-lr #lrCurves,.p-lr #lrInf,.p-lr #lrPred,.p-lr #lrTab{table-layout:fixed}
+.p-lr #lrCoef td,.p-lr #lrCoef th,.p-lr #lrAnova td,.p-lr #lrAnova th,.p-lr #lrCurves td,.p-lr #lrCurves th,.p-lr #lrInf td,.p-lr #lrInf th,.p-lr #lrPred td,.p-lr #lrPred th,.p-lr #lrTab td,.p-lr #lrTab th{overflow-wrap:anywhere;word-break:normal;font-size:13.5px;padding-left:4px;padding-right:4px;hyphens:none}
+.p-lr #lrInf tr.cc-flag td{background:#FBF1DC}
+.p-lr .lr-w3 td:first-child,.p-lr #lrCoef td:first-child,.p-lr #lrCoef th:first-child{width:30%}

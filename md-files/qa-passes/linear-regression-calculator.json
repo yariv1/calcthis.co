@@ -1,0 +1,36 @@
+{
+ "slug": "linear-regression-calculator",
+ "pass": true,
+ "at": "2026-11-24T14:22:23.731Z",
+ "hash": "867919a703bacf80",
+ "viewports": {
+  "mobile": {
+   "steps": 1512,
+   "fails": []
+  },
+  "desktop": {
+   "steps": 1512,
+   "fails": []
+  }
+ },
+ "oracle": {
+  "runs": 114,
+  "fails": [],
+  "cmp": 7729
+ },
+ "shots": [
+  "md-files/qa-passes/shots/linear-regression-calculator-1-empty-mobile.png",
+  "md-files/qa-passes/shots/linear-regression-calculator-2-filled-mobile.png",
+  "md-files/qa-passes/shots/linear-regression-calculator-3-result-mobile.png",
+  "md-files/qa-passes/shots/linear-regression-calculator-4-advanced-mobile.png",
+  "md-files/qa-passes/shots/linear-regression-calculator-5-error-mobile.png",
+  "md-files/qa-passes/shots/linear-regression-calculator-6-after-chaos-mobile.png",
+  "md-files/qa-passes/shots/linear-regression-calculator-1-empty-desktop.png",
+  "md-files/qa-passes/shots/linear-regression-calculator-2-filled-desktop.png",
+  "md-files/qa-passes/shots/linear-regression-calculator-3-result-desktop.png",
+  "md-files/qa-passes/shots/linear-regression-calculator-4-advanced-desktop.png",
+  "md-files/qa-passes/shots/linear-regression-calculator-5-error-desktop.png",
+  "md-files/qa-passes/shots/linear-regression-calculator-6-after-chaos-desktop.png"
+ ],
+ "console": []
+}

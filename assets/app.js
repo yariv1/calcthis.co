@@ -28453,6 +28453,568 @@ CalcThis.initCorrCalc = function () {
   render();
 };
 /* CORR:END */
+/* REG:BEGIN */
+/* =========================================================
+   LINEAR REGRESSION calculator (/linear-regression-calculator/). Competitors opened live (2026-11-24): Omnicalculator (30 typed points, scatter, equation, R2), Pearson.com (pairs / lists / summary
+   statistics, predict y from x and x from y, residuals, steps), Social Science Statistics, Statistics by Jim (grid, linear / quadratic / cubic, ANOVA, adjusted R2), Stats Kingdom (coefficient
+   intervals, prediction table with CI and PI, residual plot, ANOVA, Shapiro-Wilk, outliers, APA), MiniWebtool (predict, residual chart, standard errors, sums of squares), GraphPad (slope and
+   intercept with CI, R2, slope F test). Notes: md-files/calcthis-linearregression-research.md.
+   Sources read 2026-11-24: Wikipedia "Simple linear regression" (slope = Sxy / Sxx, intercept = ybar - slope xbar, t = (b - beta) / s_b with n - 2 df, interval b +- t* s_b; numerical example n = 15 heights
+   and masses: slope 61.272, intercept -39.062, s_b^2 = 3.1539, s_a^2 = 8.63185, t*13 = 2.1604, intervals [-45.4, -32.7] and [57.4, 65.1], r = 0.9946); "Prediction interval" (s^2 (1/n + (x - xbar)^2 / Sxx)
+   for the mean response and s^2 (1 + 1/n + ...) for one new value); "Cook's distance" (D_i = e_i^2 / (p s^2) * h_ii / (1 - h_ii)^2; cut-offs: the median of F(p, n - p), about 1, "there are different opinions");
+   "Leverage (statistics)" (a point with h_ii above 2p/n is a high-leverage point; mean leverage p/n). Standardized residuals beyond +-2 are a common rule of thumb, labelled so on the page.
+   Weights: least squares with weights normalised to an average of 1. Through the origin: R2 uses the uncentred total sum of squares Sum(w y^2) (said on the page).
+   ========================================================= */
+/* REG-ENGINE:START */
+CalcThis.lrEngine = (function () {
+  var P = CalcThis.pvalueEngine, E = CalcThis.ccEngine, MAXN = 5000;
+  function inv(A) {
+    var k = A.length, M = [], i, j, c, r, piv, t, f;
+    for (i = 0; i < k; i++) { M.push(A[i].slice()); for (j = 0; j < k; j++) M[i].push(i === j ? 1 : 0); }
+    for (c = 0; c < k; c++) {
+      piv = c; for (r = c + 1; r < k; r++) if (Math.abs(M[r][c]) > Math.abs(M[piv][c])) piv = r;
+      if (Math.abs(M[piv][c]) < 1e-11) return null;
+      t = M[c]; M[c] = M[piv]; M[piv] = t; f = M[c][c]; for (j = 0; j < 2 * k; j++) M[c][j] /= f;
+      for (r = 0; r < k; r++) if (r !== c) { f = M[r][c]; if (f !== 0) for (j = 0; j < 2 * k; j++) M[r][j] -= f * M[c][j]; }
+    }
+    return M.map(function (row) { return row.slice(k); });
+  }
+  function binom(k, j) { var r = 1, i; for (i = 1; i <= j; i++) r = r * (k - j + i) / i; return r; }
+  function horner(co, x) { var v = 0, j; for (j = co.length - 1; j >= 0; j--) v = v * x + co[j]; return v; }
+  /* turns the raw-power coefficients and their covariance into the table the page shows, plus R2, F and the p-values */
+  function finish(f) {
+    var alpha, j, se, t, tc;
+    f.df = f.n - f.p; f.s2 = f.df > 0 ? f.sse / f.df : null; f.s = f.s2 === null ? null : Math.sqrt(f.s2);
+    f.r2 = f.sst > 0 ? Math.max(0, 1 - f.sse / f.sst) : null;
+    f.adj = f.r2 === null || f.df <= 0 ? null : (f.origin ? 1 - (1 - f.r2) * f.n / f.df : 1 - (1 - f.r2) * (f.n - 1) / f.df);
+    f.dfR = f.origin ? 1 : f.p - 1; f.ssr = f.sst - f.sse;
+    if (f.df > 0 && f.dfR > 0 && f.sst > 0) { if (f.s2 > 1e-300 * Math.max(1, f.sst) && f.sse > 1e-12 * Math.max(f.sst, 1e-300)) { f.F = (f.ssr / f.dfR) / f.s2; f.pF = P.cdf('f', { d1: f.dfR, d2: f.df }, f.F).hi; } else { f.F = Infinity; f.pF = 0; } } else { f.F = null; f.pF = null; }
+    f.rows = [];
+    for (j = 0; j <= f.deg; j++) {
+      if (f.origin && j === 0) { f.rows.push({ j: 0, est: 0, fixed: true }); continue; }
+      se = f.df > 0 && f.cov ? Math.sqrt(Math.max(0, f.cov[j][j])) : null;
+      t = se === null ? null : (se === 0 ? (f.co[j] === 0 ? 0 : (f.co[j] > 0 ? Infinity : -Infinity)) : f.co[j] / se);
+      f.rows.push({ j: j, est: f.co[j], se: se, t: t, p: t === null ? null : E.tp(t, f.df).two });
+    }
+    return f;
+  }
+  function ciOf(f, level) { var tc = f.df > 0 ? P.inv('t', { df: f.df }, (1 - level) / 2, 'R') : null; return f.rows.map(function (r) { return r.fixed || r.se === null ? null : { lo: r.est - tc * r.se, hi: r.est + tc * r.se, t: tc }; }); }
+  function fit(x, y, o) {
+    o = o || {}; var deg = o.deg || 1, origin = !!o.origin && deg === 1, n = x.length, w = [], W = 0, i, a, c, k, j, m = 0, sum = 0, s, p, c0, A, b, ph, Ai, beta, t0, v, z;
+    for (i = 0; i < n; i++) { w.push(o.w ? o.w[i] : 1); W += w[i]; }
+    for (i = 0; i < n; i++) w[i] *= n / W; W = n;
+    if (!origin) { for (i = 0; i < n; i++) m += w[i] * x[i]; m /= W; }
+    for (i = 0; i < n; i++) sum += w[i] * (x[i] - m) * (x[i] - m);
+    s = Math.sqrt(sum / W); if (!(s > 0)) return null;
+    p = origin ? 1 : deg + 1; c0 = origin ? 1 : 0;
+    var phi = function (xv) { z = (xv - m) / s; var vv = [origin ? z : 1], q; for (q = 1; q < p; q++) vv.push(vv[q - 1] * z); return vv; };
+    A = []; b = []; ph = [];
+    for (a = 0; a < p; a++) { A.push([]); b.push(0); for (c = 0; c < p; c++) A[a].push(0); }
+    for (i = 0; i < n; i++) { ph.push(phi(x[i])); for (a = 0; a < p; a++) { b[a] += w[i] * y[i] * ph[i][a]; for (c = 0; c < p; c++) A[a][c] += w[i] * ph[i][a] * ph[i][c]; } }
+    Ai = inv(A); if (!Ai) return null;
+    beta = []; for (a = 0; a < p; a++) { t0 = 0; for (c = 0; c < p; c++) t0 += Ai[a][c] * b[c]; beta.push(t0); }
+    var Tm = []; /* raw power j from z-basis k */
+    for (j = 0; j <= deg; j++) { Tm.push([]); for (k = 0; k < p; k++) Tm[j].push(origin ? (j === 1 ? 1 / s : 0) : (j <= k ? binom(k, j) * Math.pow(-m, k - j) / Math.pow(s, k) : 0)); }
+    var co = []; for (j = 0; j <= deg; j++) { t0 = 0; for (k = 0; k < p; k++) t0 += Tm[j][k] * beta[k]; co.push(t0); }
+    var e = [], yh = [], sse = 0, sst = 0, yb = 0;
+    for (i = 0; i < n; i++) { v = 0; for (a = 0; a < p; a++) v += beta[a] * ph[i][a]; yh.push(v); e.push(y[i] - v); sse += w[i] * e[i] * e[i]; if (origin) sst += w[i] * y[i] * y[i]; else yb += w[i] * y[i]; }
+    if (!origin) { yb /= W; for (i = 0; i < n; i++) sst += w[i] * (y[i] - yb) * (y[i] - yb); }
+    var f = { kind: 'full', n: n, p: p, deg: deg, origin: origin, x: x, y: y, w: w, m: m, s0: s, beta: beta, co: co, Tm: Tm, Ai: Ai, ph: ph, e: e, yh: yh, sse: sse, sst: sst, ybar: yb, cov: null };
+    f.df = n - p; f.s2 = f.df > 0 ? sse / f.df : null;
+    if (f.s2 !== null) { f.cov = []; var zc = []; for (a = 0; a < p; a++) { zc.push([]); for (c = 0; c < p; c++) zc[a].push(f.s2 * Ai[a][c]); } for (j = 0; j <= deg; j++) { f.cov.push([]); for (k = 0; k <= deg; k++) { t0 = 0; for (a = 0; a < p; a++) for (c = 0; c < p; c++) t0 += Tm[j][a] * zc[a][c] * Tm[k][c]; f.cov[j].push(t0); } } }
+    f.phi = phi; f.fitAt = function (xv) { return horner(f.co, xv); };
+    f.pred = function (xd, level) {
+      var yhat = horner(f.co, xd); if (f.df <= 0) return { y: yhat }; var pv = phi(xd), q = 0, aa, cc2;
+      for (aa = 0; aa < p; aa++) for (cc2 = 0; cc2 < p; cc2++) q += pv[aa] * Ai[aa][cc2] * pv[cc2];
+      var tt = P.inv('t', { df: f.df }, (1 - level) / 2, 'R'), sm = Math.sqrt(f.s2 * q), sn = Math.sqrt(f.s2 * (1 + q));
+      return { y: yhat, t: tt, sm: sm, sn: sn, mLo: yhat - tt * sm, mHi: yhat + tt * sm, pLo: yhat - tt * sn, pHi: yhat + tt * sn };
+    };
+    finish(f);
+    /* influence: leverage, Cook's distance, studentized residual, and the fit without each point (exact update formulas) */
+    if (f.df > 0) {
+      f.h = []; f.D = []; f.stud = []; f.looCo = []; f.looR2 = [];
+      var Wsum = W;
+      for (i = 0; i < n; i++) {
+        var q2 = 0, aa2, cc3; for (aa2 = 0; aa2 < p; aa2++) for (cc3 = 0; cc3 < p; cc3++) q2 += ph[i][aa2] * Ai[aa2][cc3] * ph[i][cc3];
+        var h = w[i] * q2; f.h.push(h);
+        if (h < 1 - 1e-9 && f.s2 > 0) {
+          f.D.push(w[i] * e[i] * e[i] * h / (p * f.s2 * (1 - h) * (1 - h))); f.stud.push(e[i] * Math.sqrt(w[i]) / Math.sqrt(f.s2 * (1 - h)));
+          var d = w[i] * e[i] / (1 - h), bl = [], k2; for (k2 = 0; k2 < p; k2++) { t0 = 0; for (c = 0; c < p; c++) t0 += Ai[k2][c] * ph[i][c]; bl.push(beta[k2] - t0 * d); }
+          var cl = [], j2; for (j2 = 0; j2 <= deg; j2++) { t0 = 0; for (k2 = 0; k2 < p; k2++) t0 += Tm[j2][k2] * bl[k2]; cl.push(t0); }
+          f.looCo.push(cl);
+          var sseL = sse - w[i] * e[i] * e[i] / (1 - h), sstL = origin ? sst - w[i] * y[i] * y[i] : sst - w[i] * (y[i] - yb) * (y[i] - yb) * W / (W - w[i]);
+          f.looR2.push(sstL > 1e-12 * Math.max(1, sst) ? Math.max(0, 1 - sseL / sstL) : null);
+        } else { f.D.push(null); f.stud.push(null); f.looCo.push(null); f.looR2.push(null); }
+      }
+    }
+    return f;
+  }
+  /* straight line from summary numbers: n, means, Sxx, Syy, Sxy (sums of squares about the means) */
+  function fitSummary(n, mx, my, sxx, syy, sxy) {
+    var sl = sxy / sxx, ic = my - sl * mx, sse = Math.max(0, syy - sxy * sxy / sxx), df = n - 2, s2 = df > 0 ? sse / df : null;
+    var f = { kind: 'summary', n: n, p: 2, deg: 1, origin: false, mx: mx, my: my, sxx: sxx, syy: syy, sxy: sxy, co: [ic, sl], sse: sse, sst: syy, w: null };
+    f.df = df; f.s2 = s2; f.cov = s2 === null ? null : [[s2 * (1 / n + mx * mx / sxx), -s2 * mx / sxx], [-s2 * mx / sxx, s2 / sxx]];
+    f.fitAt = function (xv) { return ic + sl * xv; };
+    f.pred = function (xd, level) {
+      var yhat = ic + sl * xd; if (df <= 0) return { y: yhat }; var q = 1 / n + (xd - mx) * (xd - mx) / sxx, tt = P.inv('t', { df: df }, (1 - level) / 2, 'R'), sm = Math.sqrt(s2 * q), sn = Math.sqrt(s2 * (1 + q));
+      return { y: yhat, t: tt, sm: sm, sn: sn, mLo: yhat - tt * sm, mHi: yhat + tt * sm, pLo: yhat - tt * sn, pHi: yhat + tt * sn };
+    };
+    return finish(f);
+  }
+  /* straight, quadratic and cubic side by side: R2, adjusted R2, S, and the sequential F test of each added term */
+  function curves(x, y, w) {
+    var out = [], prev = null, d, f, F, pv;
+    for (d = 1; d <= 3; d++) {
+      if (x.length < d + 2) { out.push(null); continue; }
+      f = fit(x, y, { deg: d, w: w }); if (!f) { out.push(null); continue; }
+      F = null; pv = null;
+      if (prev && f.df > 0) { var num = prev.sse - f.sse; if (f.sse > 1e-12 * Math.max(1, f.sst)) { F = Math.max(0, num) / (f.sse / f.df); pv = P.cdf('f', { d1: 1, d2: f.df }, F).hi; } else { F = Infinity; pv = 0; } }
+      out.push({ deg: d, r2: f.r2, adj: f.adj, s: f.s, F: F, p: pv, df: f.df }); prev = f;
+    }
+    return out;
+  }
+  return { MAXN: MAXN, fit: fit, fitSummary: fitSummary, curves: curves, ci: ciOf, horner: horner, pairsFrom: E.pairsFrom, parseList: E.parseList, tp: E.tp, plan: E.plan, niceTicks: E.niceTicks, pearson: E.pearson };
+})();
+/* REG-ENGINE:END */
+
+/* =========================================================
+   CalcThis.initRegCalc() - ids lr*. Engine CalcThis.lrEngine.
+   ========================================================= */
+CalcThis.initRegCalc = function () {
+  var E = CalcThis.lrEngine, P = CalcThis.pvalueEngine, T = CalcThis.ttEngine;
+  var $ = function (id) { return document.getElementById(id); };
+  if (!$('lrX')) return;
+  var st = { entry: 'lists', model: '1', origin: 'fit', adv: false, last: null, zoom: 0, cite: 'sentence', sq: false };
+  var NUM = /^[+-]?(\d+\.?\d*|\.\d+)(e[+-]?\d+)?$/i;
+  var EXAMPLES = {
+    study: { x: '1 2 3 4 5 6 7 8 9 10', y: '52 55 61 58 70 72 69 80 85 60' },
+    height: { x: '1.47 1.50 1.52 1.55 1.57 1.60 1.63 1.65 1.68 1.70 1.73 1.75 1.78 1.80 1.83', y: '52.21 53.12 54.48 55.84 57.20 58.57 59.93 61.29 63.11 64.47 66.28 68.10 69.92 72.19 74.46' },
+    negative: { x: '2 4 6 8 10 12 14 16', y: '90 84 80 71 66 60 52 47' },
+    none: { x: '1 2 3 4 5 6 7 8 9 10', y: '5 2 9 4 7 1 8 3 6 5' },
+    outlier: { x: '1 2 3 4 5 6 7 8 9 20', y: '2 3 3 5 5 6 7 8 9 1' },
+    curve: { x: '-5 -4 -3 -2 -1 0 1 2 3 4 5', y: '25 16 9 4 1 0 1 4 9 16 25' }
+  };
+  function num(raw) {
+    var s = String(raw == null ? '' : raw).replace(/[\s ]/g, '').replace(/−/g, '-');
+    if (s === '') return { empty: true };
+    var pc = false; if (/%$/.test(s)) { pc = true; s = s.slice(0, -1); }
+    if (/^[+-]?\d{1,3}(,\d{3})+(\.\d*)?$/.test(s)) s = s.replace(/,/g, '');
+    if (/^[+-]?\.?$/.test(s) || /^[+-]?(\d+\.?\d*|\.\d+)e[+-]?$/i.test(s)) return { partial: true };
+    if (!NUM.test(s)) return { err: 'junk' };
+    var v = parseFloat(s); if (!isFinite(v) || Math.abs(v) > 1e9) return { err: 'big' };
+    return { v: v, pc: pc };
+  }
+  function short(raw) { return String(raw).trim().slice(0, 14); }
+  function setNote(id, t) { var e = $(id); if (!e) return; e.textContent = t || ''; e.style.display = t ? '' : 'none'; }
+  function show(id, on) { var e = $(id); if (e) e.style.display = on ? '' : 'none'; }
+  function setHint(m, at) {
+    var h = $('lrHint'); m = m ? m.charAt(0).toUpperCase() + m.slice(1) : m; h.textContent = m || ''; h.style.display = m ? 'block' : 'none';
+    if (m && at) {
+      var el = $(at), f = el && (el.closest('.fld') || el), par = f && f.parentNode;
+      if (par && par.classList && par.classList.contains('cc-two')) f = par;
+      var nx = f && f.nextElementSibling; if (nx && nx.classList && nx.classList.contains('chips')) f = nx;
+      if (f && f.nextSibling !== h && f.parentNode) f.parentNode.insertBefore(h, f.nextSibling);
+    }
+  }
+  function sg(x) { return String(x).replace('-', '−'); }
+  function fixed(x, d) { var s = x.toFixed(d); if (/^-0(\.0*)?$/.test(s)) s = s.slice(1); return sg(s); }
+  function sig(x) { if (x === 0) return '0'; var s = String(Number(x.toPrecision(6))); return sg(s); }
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+  function cut(s, n) { s = String(s); return s.length > n ? s.slice(0, n - 1) + '…' : s; }
+  var BIG = 'is too large — keep it under 1,000,000,000.';
+  function readVal(id, label, eg, o) {
+    var r = num($(id).value);
+    if (r.empty) return { miss: true };
+    if (r.partial) return { miss: true, partial: true };
+    if (r.err) return { bad: r.err === 'junk' ? 'Couldn’t read “' + short($(id).value) + '” in ' + label + ' — type a number like ' + eg + '.' : label + ' ' + BIG };
+    var v = r.v;
+    if (o.min !== undefined && (o.minEx ? v <= o.min : v < o.min)) return { bad: label + (o.minMsg || ' must be above ' + o.min + '.') };
+    if (o.max !== undefined && v > o.max) return { bad: label + (o.maxMsg || ' must be at most ' + o.max + '.') };
+    if (o.int && v % 1 !== 0) return { bad: label + ' must be a whole number.' };
+    return { v: v, pc: r.pc };
+  }
+  function names() {
+    var a = $('lrNameX').value.replace(/[<>&"]/g, '').trim().slice(0, 24), b = $('lrNameY').value.replace(/[<>&"]/g, '').trim().slice(0, 24);
+    return { x: a || 'X', y: b || 'Y' };
+  }
+  function readList(id, who, R) {
+    var raw = $(id).value; if (raw.trim() === '') return { empty: true };
+    var pl = E.parseList(raw);
+    if (pl.vals.length < 1) { if (!R.bad) R.bad = { msg: 'Couldn’t find a number in ' + who + ' — separate numbers with commas, spaces or new lines. Fix it to see the result.', at: id }; return { bad: true, vals: pl.vals, junk: pl.junk }; }
+    return { vals: pl.vals, junk: pl.junk, n: pl.vals.length };
+  }
+  var SUMF = [['lrSN', 'the number of pairs (n)', '15', 'n'], ['lrSMx', 'the mean of X', '1.65', 'mx'], ['lrSMy', 'the mean of Y', '62.08', 'my'], ['lrSSxx', 'Sxx (the sum of squares of X)', '0.2', 'sxx'], ['lrSSyy', 'Syy (the sum of squares of Y)', '690', 'syy'], ['lrSSxy', 'Sxy (the sum of products)', '12', 'sxy']];
+
+  /* ---------- the main compute ---------- */
+  function compute() {
+    var R = { bad: null, ready: false, alpha: 0.05, conf: 0.95, confTyped: false, dec: null, nm: names(), deg: 1, origin: false, w: null, px: [], py: [] };
+    var rc = readVal('lrConf', 'the confidence level', '95', { min: 0, minEx: true, max: 99.999999, minMsg: ' should be above 0% and below 100% (for example 95).', maxMsg: ' should be above 0% and below 100% (for example 95).' });
+    if (rc.bad) R.softC = { msg: rc.bad + ' It is ignored for now (95% is used).', at: 'lrConf' }; else if (rc.v !== undefined) { R.conf = rc.v / 100; R.confTyped = true; }
+    R.alpha = 1 - R.conf;
+    var rdec = num($('lrDec').value);
+    if (rdec.err || (rdec.v !== undefined && (rdec.v % 1 !== 0 || rdec.v < 0 || rdec.v > 10))) R.softE = { msg: 'Decimal places should be a whole number from 0 to 10. It is ignored for now.', at: 'lrDec' };
+    else if (rdec.v !== undefined) R.dec = rdec.v;
+    var rpx = $('lrPx').value.trim(); R.pxRaw = rpx;
+    if (rpx !== '') { var pl = E.parseList(rpx); R.pxJunk = pl.junk; if (pl.vals.length < 1) R.softP = { msg: 'Couldn’t find a number in the X values to predict from — type numbers like 11 or 11, 12, 13. They are ignored for now.', at: 'lrPx' }; else if (pl.vals.length > 20) R.softP = { msg: 'That is ' + pl.vals.length + ' X values to predict — up to 20 are used. The rest are ignored.', at: 'lrPx' }, R.px = pl.vals.slice(0, 20); else R.px = pl.vals; }
+    var rpy = $('lrPy').value.trim(); R.pyRaw = rpy;
+    if (rpy !== '') { var pl2 = E.parseList(rpy); if (pl2.vals.length < 1) R.softQ = { msg: 'Couldn’t find a number in the Y values to predict from — type numbers like 70. They are ignored for now.', at: 'lrPy' }; else R.py = pl2.vals.slice(0, 20); }
+    var xs = null, ys = null, junk = 0, sum = null;
+    if (st.entry === 'lists') {
+      var lx = readList('lrX', 'the X numbers', R), ly = readList('lrY', 'the Y numbers', R); R.lx = lx; R.ly = ly;
+      if (lx && !lx.empty && !lx.bad && ly && !ly.empty && !ly.bad) {
+        if (lx.n !== ly.n) { if (!R.bad) R.bad = { msg: R.nm.x + ' has ' + lx.n + (lx.n === 1 ? ' number' : ' numbers') + ' and ' + R.nm.y + ' has ' + ly.n + (ly.n === 1 ? ' number' : ' numbers') + ' — every X needs a Y in the same order. Fix it to see the result.', at: 'lrY' }; }
+        else { xs = lx.vals; ys = ly.vals; junk = lx.junk + ly.junk; }
+      }
+    } else if (st.entry === 'pairs') {
+      var raw = $('lrP').value;
+      if (raw.trim() !== '') {
+        var pp = E.pairsFrom(raw); R.pp = pp;
+        if (pp.x.length === 0) R.bad = { msg: 'Couldn’t find a pair in the box — type one pair per line, like 3, 72. Fix it to see the result.', at: 'lrP' };
+        else { xs = pp.x; ys = pp.y; junk = pp.junk; }
+      }
+    } else {
+      var vals = {}, miss = false, badS = null;
+      SUMF.forEach(function (d) { var r = readVal(d[0], d[1], d[2], d[3] === 'n' ? { min: 3, int: true, minMsg: ' must be 3 or more.', max: 1e7 } : (d[3] === 'sxx' ? { min: 0, minEx: true, minMsg: ' must be above 0.' } : (d[3] === 'syy' ? { min: 0, minMsg: ' must be 0 or more.' } : {}))); if (r.bad) { if (!badS) badS = { msg: r.bad + ' Fix it to see the result.', at: d[0] }; } else if (r.miss) miss = true; else vals[d[3]] = r.v; });
+      if (badS) R.bad = badS;
+      else if (!miss) {
+        if (Math.abs(vals.sxy) > Math.sqrt(vals.sxx * vals.syy) * (1 + 1e-9)) R.bad = { msg: 'Sxy cannot be larger in size than √(Sxx × Syy) = ' + sig(Math.sqrt(vals.sxx * vals.syy)) + ' — check the sums. Fix it to see the result.', at: 'lrSSxy' };
+        else sum = vals;
+      }
+    }
+    R.junk = junk;
+    if (xs && xs.length > E.MAXN) { R.bad = { msg: 'That is ' + xs.length + ' pairs — this calculator takes up to ' + E.MAXN + '. Fix it to see the result.', at: st.entry === 'lists' ? 'lrX' : 'lrP' }; xs = ys = null; }
+    if (xs && xs.length < 3) { R.bad = R.bad || { msg: 'A regression line needs at least 3 pairs; you have ' + xs.length + '. Add more pairs to see the result.', at: st.entry === 'lists' ? 'lrY' : 'lrP' }; R.tooFew = xs.length; xs = ys = null; }
+    var rw = $('lrW').value.trim();
+    if (rw !== '') {
+      var wl = E.parseList(rw); R.wl = wl;
+      if (!xs) R.wWait = true;
+      else if (wl.vals.length !== xs.length) R.softW = { msg: 'Weights: ' + wl.vals.length + ' numbers for ' + xs.length + ' pairs — one weight per pair, in the same order. They are ignored for now.', at: 'lrW' };
+      else if (wl.vals.some(function (v) { return !(v > 0); })) R.softW = { msg: 'Every weight must be above 0. They are ignored for now.', at: 'lrW' };
+      else R.w = wl.vals;
+    }
+    if (R.bad) return R;
+    var f = null, n;
+    if (sum) {
+      R.summary = true; n = sum.n; f = E.fitSummary(n, sum.mx, sum.my, sum.sxx, sum.syy, sum.sxy);
+    } else if (xs) {
+      n = xs.length; R.xs = xs; R.ys = ys;
+      var deg = parseInt(st.model, 10), origin = deg === 1 && st.origin === 'zero';
+      var uq = {}, nu = 0, i; for (i = 0; i < n; i++) if (!uq[xs[i]]) { uq[xs[i]] = 1; nu++; }
+      if (nu < 2) { R.bad = { msg: 'All the ' + R.nm.x + ' numbers are the same, so no line can be fitted. Add some variation to see the result.', at: st.entry === 'lists' ? 'lrX' : 'lrP' }; return R; }
+      if (deg > 1 && (n < deg + 2 || nu < deg + 1)) { R.softM = { msg: 'A ' + (deg === 2 ? 'quadratic' : 'cubic') + ' curve needs at least ' + (deg + 2) + ' pairs with ' + (deg + 1) + ' different X values; you have ' + n + ' pairs and ' + nu + ' different X values. A straight line is shown instead.', at: 'lrModel' }; deg = 1; origin = false; }
+      R.deg = deg; R.origin = origin;
+      f = E.fit(xs, ys, { deg: deg, origin: origin, w: R.w });
+      if (!f) { R.bad = { msg: 'These numbers can’t be fitted (the values are too close together). Add some variation to see the result.', at: st.entry === 'lists' ? 'lrX' : 'lrP' }; return R; }
+    }
+    if (!f) return R;
+    R.ready = true; R.n = n; R.f = f; R.ci = E.ci(f, R.conf);
+    if (f.sst === 0 || f.r2 === null) R.flatY = true;
+    if (R.px.length && f.df > 0) R.preds = R.px.map(function (xv) { var pr = f.pred(xv, R.conf); pr.x = xv; if (R.xs) pr.out = xv < Math.min.apply(null, R.xs) || xv > Math.max.apply(null, R.xs); return pr; });
+    else if (R.px.length) R.preds = R.px.map(function (xv) { return { x: xv, y: f.fitAt(xv), out: false }; });
+    if (R.py.length && f.deg === 1 && !f.origin && f.co[1] !== 0) R.inv = R.py.map(function (yv) { return { y: yv, x: (yv - f.co[0]) / f.co[1] }; });
+    else if (R.py.length && f.deg === 1 && f.origin && f.co[1] !== 0) R.inv = R.py.map(function (yv) { return { y: yv, x: yv / f.co[1] }; });
+    if (R.xs && f.df > 0) {
+      R.dcut = P.inv('f', { d1: f.p, d2: f.df }, 0.5, 'R'); R.hcut = 2 * f.p / n;
+      R.flagD = f.D.map(function (d) { return d !== null && d > R.dcut; });
+      R.curves = !R.origin && !R.w && !R.flatY ? E.curves(R.xs, R.ys, null) : null;
+    }
+    if (f.deg === 1 && !f.origin && f.df > 0 && f.sst > 0) { var rr0 = Math.sqrt(f.r2) * (f.co[1] < 0 ? -1 : 1); R.r = rr0; R.plan = Math.abs(rr0) < 1 ? E.plan(rr0, R.alpha, 'two') : { sig: null, pow: null }; }
+    return R;
+  }
+
+  /* ---------- formatting ---------- */
+  function raw(R, v) { return R.dec !== null ? fixed(v, R.dec) : sig(v); }
+  function r4(R, v) { return fixed(v, R.dec !== null ? R.dec : 4); }
+  function pT(R, p) { return P.fp(p, R.dec !== null ? R.dec : null); }
+  function apaN(v) { var s = Math.abs(v).toFixed(2).replace(/^0\./, '.'); return (v < 0 && s !== '.00' ? '−' : '') + s; }
+  function apaP(p) { return p < 0.001 ? '< .001' : '= ' + p.toFixed(3).replace(/^0\./, '.'); }
+  function apaB(v) { var s = Math.abs(v) >= 100 ? Math.abs(v).toFixed(1) : Math.abs(v).toFixed(2); return (v < 0 && !/^0\.?0*$/.test(s) ? '−' : '') + s; }
+  function peopleN(v) { return v === Infinity ? 'more than 10,000,000' : v.toLocaleString('en-US'); }
+  var HALO = ' stroke="#FFFDF8" stroke-width="3" paint-order="stroke"';
+  function tickLab(v, step) { var d = Math.max(0, Math.min(8, Math.ceil(-Math.log(step) / Math.LN10 - 1e-9))); return fixed(v, d); }
+  function eq(R, f) {
+    var nm = R.nm, s = esc(nm.y) + ' = ', j, first = true, names2 = ['', ' × ' + esc(nm.x), ' × ' + esc(nm.x) + '²', ' × ' + esc(nm.x) + '³'];
+    for (j = 0; j <= f.deg; j++) { if (f.origin && j === 0) continue; var v = f.co[j], t = raw(R, Math.abs(v)) + names2[j]; if (first) { s += (v < 0 ? '−' : '') + t; first = false; } else s += (v < 0 ? ' − ' : ' + ') + t; }
+    return s;
+  }
+  function eqPlain(R, f) { return eq(R, f).replace(/&amp;/g, '&').replace(/&lt;/g, '<'); }
+
+  /* ---------- picture 1: the scatter, the fitted line or curve, its band, the prediction band, the points that steer it ---------- */
+  function drawScatter(R) {
+    var xs = R.xs, ys = R.ys, n = R.n, f = R.f, VW = 260, VH = 250, PL = 48, PR = 250, PT = 22, PB = 200, i, k, svg = '', M = 48;
+    var xlo = Math.min.apply(null, xs), xhi = Math.max.apply(null, xs), ylo = Math.min.apply(null, ys), yhi = Math.max.apply(null, ys);
+    if (R.preds) R.preds.slice(0, 8).forEach(function (pr) { if (pr.x < xlo) xlo = pr.x; if (pr.x > xhi) xhi = pr.x; if (pr.y < ylo) ylo = pr.y; if (pr.y > yhi) yhi = pr.y; });
+    var px0 = (xhi - xlo) * 0.06 || Math.abs(xhi) * 0.06 || 1;
+    xlo -= px0; xhi += px0; if (R.origin && xlo > 0) xlo = 0;
+    var xv, yv; for (k = 0; k <= M; k++) { xv = xlo + (xhi - xlo) * k / M; yv = f.fitAt(xv); if (yv < ylo) ylo = yv; if (yv > yhi) yhi = yv; }
+    var py0 = (yhi - ylo) * 0.08 || Math.abs(yhi) * 0.08 || 1; ylo -= py0; yhi += py0;
+    if (st.zoom) { var fz = Math.pow(0.5, st.zoom), cxm = (xlo + xhi) / 2, cym = (ylo + yhi) / 2, hx = (xhi - xlo) / 2 * fz, hy = (yhi - ylo) / 2 * fz; xlo = cxm - hx; xhi = cxm + hx; ylo = cym - hy; yhi = cym + hy; }
+    var nx = T.niceTicks(xlo, xhi, 5), ny = T.niceTicks(ylo, yhi, 5);
+    var X = function (v) { return PL + (v - xlo) / (xhi - xlo) * (PR - PL); }, Y = function (v) { return PB - (v - ylo) / (yhi - ylo) * (PB - PT); };
+    var clampY = function (v) { return Math.max(PT - 60, Math.min(PB + 60, v)); };
+    svg += '<svg viewBox="0 0 ' + VW + ' ' + VH + '" width="100%" role="img" aria-label="' + esc('Scatter plot of ' + R.nm.y + ' against ' + R.nm.x + ' with the fitted ' + (f.deg === 1 ? 'line' : 'curve') + ', its ' + sig(R.conf * 100) + '% band and the prediction band') + '" xmlns="http://www.w3.org/2000/svg"><defs><clipPath id="lrClip"><rect x="' + PL + '" y="' + PT + '" width="' + (PR - PL) + '" height="' + (PB - PT) + '"/></clipPath></defs>';
+    nx.ticks.forEach(function (v) { svg += '<line x1="' + X(v).toFixed(1) + '" y1="' + PT + '" x2="' + X(v).toFixed(1) + '" y2="' + PB + '" stroke="#EADFCB" stroke-width="1"/>'; });
+    ny.ticks.forEach(function (v) { svg += '<line x1="' + PL + '" y1="' + Y(v).toFixed(1) + '" x2="' + PR + '" y2="' + Y(v).toFixed(1) + '" stroke="#EADFCB" stroke-width="1"/>'; });
+    svg += '<g clip-path="url(#lrClip)">';
+    if (f.df > 0) {
+      var up = '', lo2 = '', pu = '', pl = '', pr;
+      for (k = 0; k <= M; k++) { xv = xlo + (xhi - xlo) * k / M; pr = f.pred(xv, R.conf); up += (k ? 'L' : 'M') + X(xv).toFixed(1) + ',' + clampY(Y(pr.mHi)).toFixed(1); lo2 = 'L' + X(xv).toFixed(1) + ',' + clampY(Y(pr.mLo)).toFixed(1) + lo2; pu += (k ? 'L' : 'M') + X(xv).toFixed(1) + ',' + clampY(Y(pr.pHi)).toFixed(1); pl += (k ? 'L' : 'M') + X(xv).toFixed(1) + ',' + clampY(Y(pr.pLo)).toFixed(1); }
+      svg += '<path d="' + up + lo2 + 'Z" fill="#B5761F" fill-opacity=".16" stroke="none"/><path d="' + pu + '" fill="none" stroke="#B5761F" stroke-opacity=".7" stroke-width="1" stroke-dasharray="4 3"/><path d="' + pl + '" fill="none" stroke="#B5761F" stroke-opacity=".7" stroke-width="1" stroke-dasharray="4 3"/>';
+    }
+    /* the squares of the errors */
+    if (st.sq && n <= 60) { for (i = 0; i < n; i++) { var a1 = Y(ys[i]), a2 = Y(f.yh[i]), L = Math.abs(a2 - a1), xi = X(xs[i]), dir = xi + L > PR ? -1 : 1; svg += '<rect x="' + (dir > 0 ? xi : xi - L).toFixed(1) + '" y="' + Math.min(a1, a2).toFixed(1) + '" width="' + L.toFixed(1) + '" height="' + L.toFixed(1) + '" fill="#B5761F" fill-opacity=".13" stroke="#B5761F" stroke-opacity=".6" stroke-width="1"/>'; } }
+    else if (n <= 100) { for (i = 0; i < n; i++) svg += '<line x1="' + X(xs[i]).toFixed(1) + '" y1="' + Y(ys[i]).toFixed(1) + '" x2="' + X(xs[i]).toFixed(1) + '" y2="' + Y(f.yh[i]).toFixed(1) + '" stroke="#B9A98C" stroke-width="1"/>'; }
+    /* the fit without each flagged point */
+    var loo = []; if (R.flagD) { for (i = 0; i < n; i++) if (R.flagD[i] && f.looCo[i]) loo.push(i); loo.sort(function (a, b) { return f.D[b] - f.D[a]; }); loo = loo.slice(0, 6); }
+    loo.forEach(function (j) { var d2 = ''; for (k = 0; k <= (f.deg === 1 ? 1 : M); k++) { xv = f.deg === 1 ? (k ? xhi : xlo) : xlo + (xhi - xlo) * k / M; d2 += (k ? 'L' : 'M') + X(xv).toFixed(1) + ',' + clampY(Y(E.horner(f.looCo[j], xv))).toFixed(1); } svg += '<path d="' + d2 + '" fill="none" stroke="#B5761F" stroke-opacity=".8" stroke-width="1"/>'; });
+    var cd = ''; for (k = 0; k <= M; k++) { xv = xlo + (xhi - xlo) * k / M; cd += (k ? 'L' : 'M') + X(xv).toFixed(1) + ',' + clampY(Y(f.fitAt(xv))).toFixed(1); }
+    svg += '<path d="' + cd + '" fill="none" stroke="#241A11" stroke-width="1.8"/>';
+    var step = Math.max(1, Math.ceil(n / 1000));
+    for (i = 0; i < n; i += step) svg += '<circle cx="' + X(xs[i]).toFixed(1) + '" cy="' + Y(ys[i]).toFixed(1) + '" r="3.3" fill="#37503F" fill-opacity=".78"/>';
+    var lblSvg = '';
+    if (R.flagD) { var fl = []; for (i = 0; i < n; i++) if (R.flagD[i]) fl.push(i); fl.sort(function (a, b) { return f.D[b] - f.D[a]; }); fl.forEach(function (j, ix) { svg += '<circle cx="' + X(xs[j]).toFixed(1) + '" cy="' + Y(ys[j]).toFixed(1) + '" r="6" fill="none" stroke="#B5761F" stroke-width="2"/>'; var lx2 = X(xs[j]), ly2 = Y(ys[j]); if (ix < 3 && lx2 >= PL && lx2 <= PR && ly2 >= PT && ly2 <= PB) { var left = lx2 > PR - 34; lblSvg += '<text x="' + (left ? lx2 - 9 : lx2 + 9).toFixed(1) + '" y="' + (ly2 - 8).toFixed(1) + '" text-anchor="' + (left ? 'end' : 'start') + '" font-size="12" font-weight="700" fill="#8F5C13"' + HALO + '>#' + (j + 1) + '</text>'; } }); }
+    /* predicted points */
+    if (R.preds) R.preds.slice(0, 8).forEach(function (pr) { var cx = X(pr.x), cy = Y(pr.y); if (cx >= PL && cx <= PR && cy >= PT && cy <= PB) svg += '<rect x="' + (cx - 4).toFixed(1) + '" y="' + (cy - 4).toFixed(1) + '" width="8" height="8" transform="rotate(45 ' + cx.toFixed(1) + ' ' + cy.toFixed(1) + ')" fill="#B5761F" stroke="#241A11" stroke-width="1"/>'; });
+    svg += '</g>' + lblSvg + '<line x1="' + PL + '" y1="' + PB + '" x2="' + PR + '" y2="' + PB + '" stroke="#CDBFA5" stroke-width="1.2"/><line x1="' + PL + '" y1="' + PT + '" x2="' + PL + '" y2="' + PB + '" stroke="#CDBFA5" stroke-width="1.2"/>';
+    nx.ticks.forEach(function (v) { svg += '<line x1="' + X(v).toFixed(1) + '" y1="' + PB + '" x2="' + X(v).toFixed(1) + '" y2="' + (PB + 4) + '" stroke="#CDBFA5"/><text x="' + X(v).toFixed(1) + '" y="' + (PB + 18) + '" text-anchor="middle" font-size="12" fill="#5B4B3B"' + HALO + '>' + esc(tickLab(v, nx.step)) + '</text>'; });
+    ny.ticks.forEach(function (v) { svg += '<line x1="' + (PL - 4) + '" y1="' + Y(v).toFixed(1) + '" x2="' + PL + '" y2="' + Y(v).toFixed(1) + '" stroke="#CDBFA5"/><text x="' + (PL - 7) + '" y="' + (Y(v) + 4).toFixed(1) + '" text-anchor="end" font-size="12" fill="#5B4B3B"' + HALO + '>' + esc(tickLab(v, ny.step)) + '</text>'; });
+    svg += '<text x="' + ((PL + PR) / 2) + '" y="' + (VH - 6) + '" text-anchor="middle" font-size="12" font-weight="600" fill="#5B4B3B">' + esc(cut(R.nm.x, 28)) + '</text><text x="4" y="12" font-size="12" font-weight="600" fill="#5B4B3B">' + esc(cut(R.nm.y, 30)) + '</text>';
+    return svg + '</svg>';
+  }
+  /* ---------- picture 2: the residuals along X ---------- */
+  function drawResid(R) {
+    var xs = R.xs, f = R.f, n = R.n, e = f.e, VW = 260, VH = 150, PL = 48, PR = 250, PT = 14, PB = 118, i;
+    var xlo = Math.min.apply(null, xs), xhi = Math.max.apply(null, xs), emax = Math.max.apply(null, e.map(Math.abs)) || 1, sd = f.s || 0; emax = Math.max(emax, sd * 1.05);
+    var px0 = (xhi - xlo) * 0.06 || 1; xlo -= px0; xhi += px0;
+    var nx = T.niceTicks(xlo, xhi, 5), ny = T.niceTicks(-emax * 1.1, emax * 1.1, 4);
+    var X = function (v) { return PL + (v - xlo) / (xhi - xlo) * (PR - PL); }, Y = function (v) { return PB - (v + emax * 1.1) / (2.2 * emax) * (PB - PT); };
+    var svg = '<svg viewBox="0 0 ' + VW + ' ' + VH + '" width="100%" role="img" aria-label="' + esc('Residuals of ' + R.nm.y + ' along ' + R.nm.x) + '" xmlns="http://www.w3.org/2000/svg">';
+    ny.ticks.forEach(function (v) { svg += '<line x1="' + PL + '" y1="' + Y(v).toFixed(1) + '" x2="' + PR + '" y2="' + Y(v).toFixed(1) + '" stroke="#EADFCB"/><text x="' + (PL - 6) + '" y="' + (Y(v) + 4).toFixed(1) + '" text-anchor="end" font-size="12" fill="#5B4B3B">' + esc(tickLab(v, ny.step)) + '</text>'; });
+    nx.ticks.forEach(function (v) { svg += '<text x="' + X(v).toFixed(1) + '" y="' + (PB + 16) + '" text-anchor="middle" font-size="12" fill="#5B4B3B">' + esc(tickLab(v, nx.step)) + '</text>'; });
+    svg += '<line x1="' + PL + '" y1="' + Y(0).toFixed(1) + '" x2="' + PR + '" y2="' + Y(0).toFixed(1) + '" stroke="#241A11" stroke-width="1.4"/>';
+    if (sd > 0) svg += '<line x1="' + PL + '" y1="' + Y(sd).toFixed(1) + '" x2="' + PR + '" y2="' + Y(sd).toFixed(1) + '" stroke="#B5761F" stroke-dasharray="4 3"/><line x1="' + PL + '" y1="' + Y(-sd).toFixed(1) + '" x2="' + PR + '" y2="' + Y(-sd).toFixed(1) + '" stroke="#B5761F" stroke-dasharray="4 3"/>';
+    var step = Math.max(1, Math.ceil(n / 1000));
+    for (i = 0; i < n; i += step) svg += '<circle cx="' + X(xs[i]).toFixed(1) + '" cy="' + Y(e[i]).toFixed(1) + '" r="3.2" fill="#37503F" fill-opacity=".78"/>';
+    svg += '<line x1="' + PL + '" y1="' + PB + '" x2="' + PR + '" y2="' + PB + '" stroke="#CDBFA5"/><line x1="' + PL + '" y1="' + PT + '" x2="' + PL + '" y2="' + PB + '" stroke="#CDBFA5"/><text x="' + ((PL + PR) / 2) + '" y="' + (VH - 3) + '" text-anchor="middle" font-size="12" font-weight="600" fill="#5B4B3B">' + esc(cut(R.nm.x, 28)) + '</text><text x="4" y="11" font-size="12" font-weight="600" fill="#5B4B3B">Error (actual − line)</text>';
+    return svg + '</svg>';
+  }
+
+  /* ---------- render ---------- */
+  function segSet(id, key, v) { st[key] = v; [].forEach.call($(id).children, function (b) { var on = b.getAttribute('data-v') === v; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); }); }
+  function listNote(l) {
+    if (!l || l.empty || l.bad) return '';
+    var d = E.pearson(l.vals, l.vals);
+    return l.n + (l.n === 1 ? ' number' : ' numbers') + ' read' + (l.junk ? ', ' + l.junk + (l.junk === 1 ? ' item that is not a number left out' : ' items that are not numbers left out') : '') + '. Mean ' + sig(d.mx) + (l.n > 1 ? ', standard deviation ' + sig(d.sdx) : '') + '.';
+  }
+  function tbl(head, rows, cls) { return (head ? '<thead><tr>' + head.map(function (h) { return '<th>' + h + '</th>'; }).join('') + '</tr></thead>' : '') + '<tbody>' + rows.map(function (r) { return '<tr' + (r.cls ? ' class="' + r.cls + '"' : '') + '>' + r.c.map(function (c) { return '<td>' + c + '</td>'; }).join('') + '</tr>'; }).join('') + '</tbody>'; }
+  var PN = ['Intercept', 'Slope', 'X² term', 'X³ term'];
+  function coefName(R, f, j) { if (j === 0) return 'Intercept (value of ' + esc(cut(R.nm.y, 12)) + ' at ' + esc(cut(R.nm.x, 12)) + ' = 0)'; if (f.deg === 1) return 'Slope (change in ' + esc(cut(R.nm.y, 12)) + ' per 1 of ' + esc(cut(R.nm.x, 12)) + ')'; return j === 1 ? 'X term' : j === 2 ? 'X² term' : 'X³ term'; }
+  function render() {
+    var R = compute(), mode = st.entry, nm = R.nm, i;
+    show('lrListsW', mode === 'lists'); show('lrPairsW', mode === 'pairs'); show('lrSumW', mode === 'summary'); show('lrExW', mode !== 'summary');
+    $('lrXLab').textContent = 'Numbers for “' + nm.x + '” (the number you control or know)'; $('lrYLab').textContent = 'Numbers for “' + nm.y + '” (the number you want to predict)';
+    $('lrPLab').textContent = 'Pairs: “' + nm.x + '”, “' + nm.y + '”, one pair per line';
+    setNote('lrEntryNote', mode === 'lists' ? 'Two boxes: the X numbers and the Y numbers, matched by position (the first X goes with the first Y).' : mode === 'pairs' ? 'One box: each line is one pair, like 3, 72. A header line such as x, y is skipped.' : 'No data list needed: type the number of pairs, the two means and the three sums of squares (Sxx = Σ(x − x̄)², Syy = Σ(y − ȳ)², Sxy = Σ(x − x̄)(y − ȳ)).');
+    var hm = null, hat = null;
+    ['bad', 'softC', 'softW', 'softM', 'softP', 'softQ', 'softE'].some(function (k) { if (R[k]) { hm = R[k].msg; hat = R[k].at; return true; } return false; });
+    setHint(hm, hat);
+    if (mode === 'summary') {
+      var miss2 = SUMF.filter(function (d) { return $(d[0]).value.trim() === ''; }).map(function (d) { return d[3] === 'n' ? 'n' : d[3] === 'mx' ? 'mean of X' : d[3] === 'my' ? 'mean of Y' : d[3] === 'sxx' ? 'Sxx' : d[3] === 'syy' ? 'Syy' : 'Sxy'; });
+      setNote('lrSumNote', miss2.length === 0 ? (R.ready ? 'All six numbers read.' : '') : miss2.length === 6 ? 'Type all six numbers: n, the two means, Sxx, Syy and Sxy.' : 'Still needed: ' + miss2.join(', ') + '.');
+    } else setNote('lrSumNote', '');
+    if (mode === 'lists') {
+      setNote('lrXNote', listNote(R.lx) || 'Paste a column from Excel or type the numbers, separated by commas, spaces or new lines.');
+      setNote('lrYNote', listNote(R.ly) || (R.lx && !R.lx.empty && !R.lx.bad ? 'Type the ' + R.lx.n + ' numbers of “' + nm.y + '”, one for each X, in the same order.' : 'The numbers that go with the first box, in the same order.'));
+      setNote('lrPNote', '');
+    } else if (mode === 'pairs') {
+      setNote('lrPNote', R.pp ? (R.pp.x.length + ' pairs read' + (R.pp.junk ? ', ' + R.pp.junk + (R.pp.junk === 1 ? ' line that is not a pair left out' : ' lines that are not pairs left out') : '') + '.') : 'Type or paste one pair per line, separated by a comma, space or tab.');
+      setNote('lrXNote', ''); setNote('lrYNote', '');
+    } else { setNote('lrPNote', ''); setNote('lrXNote', ''); setNote('lrYNote', ''); }
+    [].forEach.call($('lrConfChips').children, function (b) { b.classList.toggle('on', R.confTyped && Math.abs(R.conf * 100 - parseFloat(b.getAttribute('data-v'))) < 1e-9); });
+    setNote('lrConfNote', R.softC ? '' : (R.confTyped ? 'Intervals use a ' + sig(R.conf * 100) + '% level (significant when p is below ' + sig(R.alpha) + ').' : 'Leave empty for 95%: intervals cover 95% and a result counts as significant when p is below 0.05.'));
+    var pxn;
+    if (R.softP) pxn = ''; else if (!R.px.length) pxn = 'Optional. Type one or more X values (for example 11, 12, 13) to predict Y from the line, with the interval for the line and for one new point.';
+    else if (!R.ready) pxn = 'Type your data first: ' + R.px.length + (R.px.length === 1 ? ' prediction is' : ' predictions are') + ' worked out from the fitted line.';
+    else pxn = 'Predicting ' + nm.y + ' for ' + R.px.length + (R.px.length === 1 ? ' value' : ' values') + ' of ' + nm.x + (R.preds && R.preds.some(function (p) { return p.out; }) ? ' (some are outside your data, so those are less reliable)' : '') + '.';
+    setNote('lrPxNote', pxn);
+    var pyn;
+    if (R.softQ) pyn = ''; else if (!R.py.length) pyn = 'Optional. Type a Y value (for example 70) to find the X that the line gives for it.';
+    else if (!R.ready) pyn = 'Type your data first: the X for a given Y is read back from the fitted line.';
+    else if (!R.inv) pyn = R.f.deg === 1 ? 'The line is flat, so no single X gives that Y.' : 'Finding X from Y needs the straight-line model: a curve can give two answers.';
+    else pyn = 'Finding the ' + nm.x + ' the line gives for ' + R.py.length + (R.py.length === 1 ? ' value' : ' values') + ' of ' + nm.y + '.';
+    setNote('lrPyNote', pyn);
+    show('lrOriginW', st.model === '1');
+    if (st.adv) {
+      setNote('lrModelNote', st.model === '1' ? 'A straight line. The curves below the results show whether a curve would fit better.' : st.model === '2' ? 'A quadratic curve: Y = a + b X + c X². Use it when the points bend once.' : 'A cubic curve: Y = a + b X + c X² + d X³. Use it when the points bend twice.');
+      setNote('lrOriginNote', st.origin === 'zero' ? 'The line is forced through (0, 0). R² is then measured against zero, not against the mean, so it is not comparable with the fitted line.' : 'The line may cross the Y axis anywhere (normal).');
+      var wn; if (R.wl) wn = R.softW ? '' : R.wWait ? 'Type your numbers first: weights need one number for each pair, in the same order.' : (R.w ? 'Weights read: ' + R.w.length + '. Pairs with a larger weight pull the line harder (weighted least squares).' : ''); else wn = 'Optional. One weight per pair, for example how many people each point stands for.';
+      setNote('lrWNote', wn);
+      setNote('lrNameNote', ($('lrNameX').value.trim() || $('lrNameY').value.trim()) ? 'The names are used in the labels, the picture and the sentences.' : 'Optional. Give the variables names such as “Hours studied” and “Exam score”.');
+      setNote('lrDecNote', R.softE ? '' : (R.dec !== null ? 'Numbers are shown with ' + R.dec + ' decimal places.' : 'Leave empty for automatic: 6 significant digits.'));
+    }
+    var big = '—', lab = 'Best-fit line', sub = $('lrSub').getAttribute('data-empty'), tip = '', body = false, mval = '—', mlab = 'Best-fit line';
+    ['lrVisWrap', 'lrResWrap', 'lrCoefWrap', 'lrFitWrap', 'lrCurvesWrap', 'lrInfWrap', 'lrPredWrap', 'lrInvWrap', 'lrWhatWrap', 'lrCheckWrap', 'lrTabWrap', 'lrWriteWrap', 'lrStepsWrap'].forEach(function (id) { show(id, false); });
+    ['lrVis', 'lrRes', 'lrCoef', 'lrFit', 'lrCurves', 'lrInf', 'lrPred', 'lrInv', 'lrWhat', 'lrCheckList', 'lrTab', 'lrSteps'].forEach(function (id) { $(id).innerHTML = ''; });
+    $('lrWrite').textContent = ''; $('lrCsvTxt').textContent = '';
+    if (R.ready) {
+      body = true; var f = R.f, n = R.n, xs = R.xs, ys = R.ys, ci = R.ci, name = f.deg === 1 ? (f.origin ? 'Best-fit line through zero' : 'Best-fit line') : f.deg === 2 ? 'Best-fit quadratic curve' : 'Best-fit cubic curve';
+      big = eqPlain(R, f); lab = name; mlab = f.deg === 1 ? 'Best-fit line' : 'Best-fit curve'; mval = f.r2 === null ? '—' : 'R² ' + r4(R, f.r2);
+      var pTxt = f.pF === null ? null : pT(R, f.pF), r2t = f.r2 === null ? '—' : r4(R, f.r2);
+      sub = (f.r2 === null ? 'Y is the same everywhere' : 'R² = ' + r2t) + (pTxt !== null ? ' · p = ' + pTxt : '') + ' · n = ' + n;
+      var slopeRow = f.rows[1], sl = f.co[1];
+      /* plain words */
+      if (R.flatY) tip = 'Every “' + nm.y + '” value is the same, so the line is flat and “' + nm.x + '” does not change it. R² is not defined.';
+      else if (f.deg === 1) tip = 'Each extra 1 of “' + nm.x + '” goes with ' + (sl >= 0 ? '' : '') + raw(R, Math.abs(sl)) + (sl >= 0 ? ' more' : ' less') + ' “' + nm.y + '” on average' + (slopeRow.se !== null && ci[1] ? ', give or take ' + raw(R, slopeRow.se) + ' (' + sig(R.conf * 100) + '% interval for the slope ' + raw(R, ci[1].lo) + ' to ' + raw(R, ci[1].hi) + ')' : '') + '. The line explains ' + fixed(f.r2 * 100, 1) + '% of the variation in “' + nm.y + '”' + (f.pF !== null ? '; the slope is ' + (f.pF < R.alpha ? 'statistically significant' : 'not statistically significant') + ' at α = ' + sig(R.alpha) + ' (p = ' + pTxt + ')' : '') + '. A line shows how they move together, not that one causes the other.' + (f.origin ? ' The line is forced through (0, 0).' : '');
+      else tip = 'The ' + (f.deg === 2 ? 'quadratic' : 'cubic') + ' curve explains ' + fixed(f.r2 * 100, 1) + '% of the variation in “' + nm.y + '”' + (f.pF !== null ? ' (p = ' + pTxt + ' for the whole curve)' : '') + '. Its steepness changes along “' + nm.x + '”, so there is no single slope: read the curve in the picture.';
+      /* picture */
+      if (R.xs) {
+        $('lrVis').innerHTML = drawScatter(R); show('lrVisWrap', true);
+        var nFlag = R.flagD ? R.flagD.filter(Boolean).length : 0;
+        $('lrSqBtn').textContent = st.sq ? 'Hide squares' : 'Show squares'; $('lrSqBtn').style.display = n <= 60 ? '' : 'none';
+        $('lrVisKey').textContent = (st.zoom ? 'Zoomed in ' + Math.pow(2, st.zoom) + '× on the middle of the picture: points outside the frame are not shown. ' : '') + 'Each green dot is one pair. The dark ' + (f.deg === 1 ? 'line' : 'curve') + ' is the best fit' + (f.df > 0 ? ', the amber band is its ' + sig(R.conf * 100) + '% interval (where the true line probably lies) and the dashed amber lines mark where one new point would fall ' + sig(R.conf * 100) + '% of the time' : '') + '. ' + (st.sq && n <= 60 ? 'Each amber square has a side equal to the error of one point: the line is the one that makes the total area of the squares as small as possible. ' : n <= 100 ? 'The thin vertical lines are the errors, one per point (“Show squares” turns them into squares). ' : '') + (R.flagD ? (nFlag ? 'Amber rings mark ' + nFlag + (nFlag === 1 ? ' point' : ' points') + ' that steer the fit (Cook’s distance above ' + fixed(R.dcut, 2) + '); the thin amber ' + (f.deg === 1 ? 'line' : 'curve') + (nFlag === 1 ? ' is' : 's are') + ' the fit without ' + (nFlag === 1 ? 'it' : 'them') + (nFlag > 6 ? ' (6 shown)' : '') + '. ' : 'No single point steers the fit (none has a Cook’s distance above ' + fixed(R.dcut, 2) + '). ') : '') + (R.preds ? 'Amber diamonds are the values you asked to predict.' : '');
+        if (f.df > 0) { $('lrRes').innerHTML = drawResid(R); show('lrResWrap', true); $('lrResKey').textContent = 'Each dot is the error (actual − line) of one pair. A good straight-line fit scatters evenly above and below the dark zero line with no pattern; a curve or a funnel shape means the line is missing something. The dashed amber lines are ±' + raw(R, f.s) + ' (the typical error, S).'; }
+      }
+      /* coefficients */
+      var crow = f.rows.map(function (rw, j) {
+        if (rw.fixed) return { c: ['Intercept', '0 (fixed)', '—', '—', '—', '—'] };
+        var cj = ci[j];
+        return { c: [coefName(R, f, j), raw(R, rw.est), rw.se === null ? '—' : raw(R, rw.se), rw.t === null ? '—' : (rw.t === Infinity ? '∞' : rw.t === -Infinity ? '−∞' : r4(R, rw.t)), rw.p === null ? '—' : pT(R, rw.p), cj ? raw(R, cj.lo) + ' to ' + raw(R, cj.hi) : '—'] };
+      });
+      $('lrCoef').innerHTML = tbl(['', 'Estimate', 'Std. error', 't', 'p', sig(R.conf * 100) + '% interval'], crow); show('lrCoefWrap', true);
+      setNote('lrCoefKey', f.df > 0 ? 'The t-score is the estimate divided by its standard error, with n − ' + f.p + ' = ' + f.df + ' degrees of freedom; p tests whether the true value is 0. The interval is estimate ± t × standard error.' : 'There are as many parameters as pairs, so the line passes through every point and there is nothing left to estimate errors from. Add more pairs to see standard errors and p-values.');
+      /* model summary and ANOVA */
+      var mrows = [{ c: ['Pairs (n)', String(n)] }, { c: [f.origin ? 'R² (against zero, not the mean)' : 'R² (share of the variation in “' + esc(cut(nm.y, 12)) + '” explained)', r2t] }];
+      if (R.r !== undefined) mrows.push({ c: ['Correlation r', r4(R, R.r)] });
+      if (f.adj !== null) mrows.push({ c: ['Adjusted R²', r4(R, f.adj)] });
+      if (f.s !== null) mrows.push({ c: ['S (typical error of a prediction, in “' + esc(cut(nm.y, 12)) + '” units)', raw(R, f.s)] });
+      if (f.F !== null) mrows.push({ c: ['F-statistic (' + f.dfR + ', ' + f.df + ' degrees of freedom)', f.F === Infinity ? '∞' : r4(R, f.F)] }, { c: ['p-value of the whole fit', pT(R, f.pF)] });
+      if (f.deg === 1 && !f.origin && f.co[1] !== 0 && f.rows[1].se !== undefined) mrows.push({ c: ['X-intercept (where the line crosses Y = 0)', raw(R, -f.co[0] / f.co[1])] });
+      if (R.summary) mrows.push({ c: ['Sxx / Syy / Sxy', raw(R, f.sxx) + ' / ' + raw(R, f.syy) + ' / ' + raw(R, f.sxy)] });
+      $('lrFit').innerHTML = tbl(null, mrows); show('lrFitWrap', true);
+      var arows = [{ c: ['Regression', raw(R, f.ssr), String(f.dfR), f.df > 0 && f.dfR > 0 ? raw(R, f.ssr / f.dfR) : '—', f.F === null ? '—' : (f.F === Infinity ? '∞' : r4(R, f.F)), f.pF === null ? '—' : pT(R, f.pF)] }, { c: ['Residual (error)', raw(R, f.sse), String(f.df), f.df > 0 ? raw(R, f.sse / f.df) : '—', '', ''] }, { c: ['Total', raw(R, f.sst), String(f.origin ? n : n - 1), '', '', ''] }];
+      $('lrAnova').innerHTML = tbl(['Source', 'Sum of squares', 'df', 'Mean square', 'F', 'p'], arows);
+      $('lrCopyTxt').textContent = name + ': ' + big + ' (' + sub + ')';
+      /* curves */
+      if (R.curves && R.curves[0]) {
+        var nmC = ['Straight line', 'Quadratic', 'Cubic'], cr = [], best = 0;
+        R.curves.forEach(function (c, k) { if (!c) return; cr.push({ c: [nmC[k], r4(R, c.r2), c.adj === null ? '—' : r4(R, c.adj), c.s === null ? '—' : raw(R, c.s), c.p === null ? '—' : (k === 0 ? '—' : pT(R, c.p))] }); });
+        $('lrCurves').innerHTML = tbl(['Model', 'R²', 'Adjusted R²', 'S', 'Does the extra term help? (p)'], cr);
+        var q = R.curves[1], cu = R.curves[2], msg;
+        if (q && q.p !== null && q.p < R.alpha) msg = 'The quadratic term is statistically significant (p = ' + pT(R, q.p) + '): the points bend, and a curve fits better than a straight line' + (cu && cu.p !== null && cu.p < R.alpha ? '; the cubic term helps too (p = ' + pT(R, cu.p) + ')' : '') + '. Pick “Curve” under Go advanced.';
+        else if (q && q.p !== null) msg = 'The quadratic term is not statistically significant (p = ' + pT(R, q.p) + ' at α = ' + sig(R.alpha) + '): nothing here says a curve beats the straight line' + (cu && cu.p !== null && cu.p < R.alpha ? ', although the cubic term would (p = ' + pT(R, cu.p) + ')' : '') + '.';
+        else msg = 'A curve needs more pairs before it can be compared with the line.';
+        setNote('lrCurvesKey', msg + ' Each p-value is the F test of the one extra term over the model above it; adjusted R² punishes extra terms.'); show('lrCurvesWrap', true);
+      }
+      /* influence */
+      if (R.xs && f.df > 0) {
+        var ord = []; for (i = 0; i < n; i++) if (f.D[i] !== null) ord.push(i); ord.sort(function (a, b) { return f.D[b] - f.D[a]; });
+        var lim = ord.slice(0, Math.min(8, ord.length)), ir = lim.map(function (j) { return { cls: R.flagD[j] ? 'cc-flag' : '', c: ['#' + (j + 1), raw(R, xs[j]), raw(R, ys[j]), r4(R, f.D[j]), f.deg === 1 ? raw(R, f.looCo[j][1]) : r4(R, f.h[j]), f.looR2[j] === null ? '—' : r4(R, f.looR2[j])] }; });
+        $('lrInf').innerHTML = tbl(['Point', esc(cut(nm.x, 10)), esc(cut(nm.y, 10)), 'Cook’s<br>D', f.deg === 1 ? 'Slope<br>without it' : 'Lever-<br>age', 'R²<br>without it'], ir);
+        var nh = f.h.filter(function (h) { return h > R.hcut; }).length;
+        setNote('lrInfKey', (nFlag ? nFlag + (nFlag === 1 ? ' point has' : ' points have') + ' a Cook’s distance above ' + fixed(R.dcut, 2) + ' (shaded rows): the fit leans on ' + (nFlag === 1 ? 'it' : 'them') + '. ' : 'No point has a Cook’s distance above ' + fixed(R.dcut, 2) + ' (the median of F(' + f.p + ', ' + f.df + ')): the fit does not hang on one point. ') + nh + (nh === 1 ? ' point has' : ' points have') + ' high leverage (above 2p/n = ' + fixed(R.hcut, 2) + '): far from the other X values, so able to pull the fit. The table shows the ' + lim.length + ' points with the largest Cook’s distance' + (n > lim.length ? ' (of ' + n + ')' : '') + '; #1 is the first pair you typed.'); show('lrInfWrap', true);
+      }
+      /* predictions */
+      if (R.preds && R.preds.length) {
+        var prow = R.preds.map(function (pr) { return { c: [raw(R, pr.x) + (pr.out ? ' *' : ''), raw(R, pr.y), pr.mLo === undefined ? '—' : raw(R, pr.mLo) + ' to ' + raw(R, pr.mHi), pr.pLo === undefined ? '—' : raw(R, pr.pLo) + ' to ' + raw(R, pr.pHi)] }; });
+        $('lrPred').innerHTML = tbl([esc(cut(nm.x, 10)), 'Predicted<br>' + esc(cut(nm.y, 10)), sig(R.conf * 100) + '% interval of the line', sig(R.conf * 100) + '% for one new point'], prow);
+        var anyOut = R.preds.some(function (p) { return p.out; });
+        setNote('lrPredKey', (anyOut ? '* outside the X values you typed (' + raw(R, Math.min.apply(null, xs)) + ' to ' + raw(R, Math.max.apply(null, xs)) + '): the line may not hold there. ' : '') + 'The interval of the line is the range for the average ' + nm.y + ' at that X; the interval for one new point is wider because one point also varies around the line.'); show('lrPredWrap', true);
+      }
+      if (R.inv) {
+        $('lrInv').innerHTML = tbl([esc(cut(nm.y, 10)), 'X on the line'], R.inv.map(function (v) { return { c: [raw(R, v.y), raw(R, v.x)] }; }));
+        setNote('lrInvKey', 'Found by turning the line around: X = (Y − intercept) ÷ slope. This is not the same as fitting X on Y, which gives a different line unless the points sit exactly on a line.'); show('lrInvWrap', true);
+      }
+      /* what would it take */
+      if (R.plan !== undefined && f.rows[1].se !== null) {
+        var s1 = f.rows[1], tcr = P.inv('t', { df: f.df }, R.alpha / 2, 'R'), wr = [];
+        wr.push({ c: ['Smallest slope that would be significant with these ' + n + ' pairs (α = ' + sig(R.alpha) + ')', '±' + raw(R, tcr * s1.se) + ' (yours is ' + raw(R, sl) + ')'] });
+        wr.push({ c: ['Pairs needed for p below α if the correlation stayed at r = ' + r4(R, R.r), R.plan.sig === null ? 'Never: r is 0' : (s1.p < R.alpha ? 'Already significant with your ' + n + ' pairs' : peopleN(R.plan.sig) + ' pairs')] });
+        wr.push({ c: ['Pairs needed for 80% power to detect r = ' + r4(R, R.r) + ' (approximate)', R.plan.pow === null ? 'Never: r is 0' : (Math.abs(R.r) >= 1 ? 'Any 4 pairs show it' : peopleN(R.plan.pow) + ' pairs')] });
+        var hw = tcr * s1.se, okN = function (m) { return P.inv('t', { df: m - 2 }, R.alpha / 2, 'R') * s1.se * Math.sqrt((n - 1) / (m - 1)) <= hw / 2; }, nlo = n, nhi = n * 2; while (!okN(nhi) && nhi < 1e7) { nlo = nhi; nhi *= 2; } while (nhi - nlo > 1) { var nmid = Math.floor((nlo + nhi) / 2); if (okN(nmid)) nhi = nmid; else nlo = nmid; } var nn = nhi;
+        wr.push({ c: ['Pairs needed to halve the interval of the slope (same spread of X and same errors, approximate)', peopleN(nn) + ' pairs'] });
+        $('lrWhat').innerHTML = tbl(null, wr);
+        setNote('lrWhatKey', 'The first row is exact (t test). The people-needed rows keep r (or the error size) the same and add pairs; the 80% power count uses the Fisher z approximation n = ((z for α + z for 80% power) ÷ artanh r)² + 3. Treat them as a planning guide for a follow-up study.'); show('lrWhatWrap', true);
+      }
+      /* checks in plain words */
+      if (R.xs && f.df > 0) {
+        var ck = [], sdd = T.describe(f.e), bigs = f.stud.filter(function (t) { return t !== null && Math.abs(t) > 2; }).length;
+        var half = Math.floor(n / 2), ord2 = xs.map(function (v, k) { return k; }).sort(function (a, b) { return xs[a] - xs[b]; }), sA = 0, sB = 0, cA = 0, cB = 0;
+        ord2.forEach(function (k, ix) { if (ix < half) { sA += f.e[k] * f.e[k]; cA++; } else if (ix >= n - half) { sB += f.e[k] * f.e[k]; cB++; } });
+        ck.push('Sample size: ' + n + ' pairs' + (n < 10 ? ' is small, so the intervals are wide: be careful with strong claims.' : n < 30 ? ' is modest.' : ' is a reasonable size.'));
+        if (R.curves && R.curves[1] && R.curves[1].p !== null && f.deg === 1) ck.push('Curve: ' + (R.curves[1].p < R.alpha ? 'the quadratic term is significant (p = ' + pT(R, R.curves[1].p) + '), so the relationship bends and a straight line misses part of it.' : 'a quadratic term does not help (p = ' + pT(R, R.curves[1].p) + '), so a straight line is enough for these points.'));
+        if (cA >= 2 && cB >= 2 && sA > 0 && sB > 0) { var rt = Math.sqrt((sB / cB) / (sA / cA)); ck.push('Spread of the errors: the typical error in the upper half of X is ' + fixed(rt, 2) + ' times that in the lower half' + (rt > 2 || rt < 0.5 ? ' — a big difference, which hints at a funnel shape (the line fits some X better than others).' : ' — similar along X.')); }
+        ck.push('Shape of the errors: skewness ' + (sdd.skew === null ? '—' : fixed(sdd.skew, 2)) + (sdd.skew !== null && Math.abs(sdd.skew) > 1 ? ' (beyond ±1: lopsided errors, so the p-values and intervals are less trustworthy).' : ' (within ±1).'));
+        ck.push('Large errors: ' + bigs + (bigs === 1 ? ' point has' : ' points have') + ' a standardized error beyond ±2 (a common rule of thumb, not a test)' + (bigs ? ': look at them in the picture and in the influence table.' : '.'));
+        ck.push('Independence: the method assumes each pair is separate (not repeated measures of the same thing, not a time series): this page can’t check that from the numbers.');
+        $('lrCheckList').innerHTML = ck.map(function (s) { return '<li>' + s + '</li>'; }).join(''); show('lrCheckWrap', true);
+      }
+      /* residual table */
+      if (R.xs) {
+        var rr2 = '', lim3 = Math.min(50, n), k3; for (k3 = 0; k3 < lim3; k3++) rr2 += '<tr><td>#' + (k3 + 1) + '</td><td>' + raw(R, xs[k3]) + '</td><td>' + raw(R, ys[k3]) + '</td><td>' + raw(R, f.yh[k3]) + '</td><td>' + raw(R, f.e[k3]) + '</td></tr>';
+        $('lrTab').innerHTML = '<thead><tr><th>Pair</th><th>' + esc(cut(nm.x, 10)) + '</th><th>' + esc(cut(nm.y, 10)) + '</th><th>Predicted</th><th>Error</th></tr></thead><tbody>' + rr2 + (n > lim3 ? '<tr><td colspan="5">… and ' + (n - lim3) + ' more pairs (first 50 shown)</td></tr>' : '') + '</tbody>'; show('lrTabWrap', true);
+      }
+      $('lrCsvTxt').textContent = [].map.call($('lrCoef').rows, function (rw) { return [].map.call(rw.cells, function (c) { return '"' + c.textContent.replace(/"/g, '""') + '"'; }).join(','); }).concat([].map.call($('lrFit').rows, function (rw) { return [].map.call(rw.cells, function (c) { return '"' + c.textContent.replace(/"/g, '""') + '"'; }).join(','); })).join('\n');
+      /* write it up */
+      if (f.deg === 1 && f.rows[1].se !== null && f.pF !== null && f.r2 !== null) {
+        var b1 = f.rows[1], cb = ci[1], tdf = '(' + f.df + ')', tv = b1.t === Infinity ? '∞' : apaN(b1.t).replace(/^(−?)\./, '$10.'), isg = b1.p < R.alpha;
+        var stat = 'b = ' + apaB(b1.est) + ', ' + sig(R.conf * 100) + '% CI [' + apaB(cb.lo) + ', ' + apaB(cb.hi) + '], t' + tdf + ' = ' + (b1.t === Infinity ? '∞' : fixed(b1.t, 2)) + ', p ' + apaP(b1.p) + ', R² = ' + apaN(f.r2);
+        var forms = {
+          sentence: 'A simple linear regression showed that ' + nm.x + ' ' + (isg ? 'significantly predicted' : 'did not significantly predict') + ' ' + nm.y + ', ' + stat + '.',
+          paren: '(' + stat + ')',
+          narr: 'The regression of ' + nm.y + ' on ' + nm.x + ' was ' + (isg ? 'significant' : 'not significant') + ', F(' + f.dfR + ', ' + f.df + ') = ' + (f.F === Infinity ? '∞' : fixed(f.F, 2)) + ', p ' + apaP(f.pF) + ', R² = ' + apaN(f.r2) + '; the slope was b = ' + apaB(b1.est) + ' (SE = ' + apaB(b1.se) + ').',
+          chicago: 'b = ' + apaB(b1.est) + ' (95% CI ' + apaB(cb.lo) + ' to ' + apaB(cb.hi) + '); t' + tdf + ' = ' + fixed(b1.t, 2) + '; p ' + apaP(b1.p) + '; R² = ' + apaN(f.r2),
+          plain: 'Each extra 1 of ' + nm.x + ' goes with ' + apaB(Math.abs(b1.est)) + (b1.est >= 0 ? ' more ' : ' less ') + nm.y + ' on average (' + (isg ? 'statistically significant' : 'not statistically significant') + ', p ' + apaP(b1.p) + '). The line explains ' + fixed(f.r2 * 100, 0) + '% of the variation.'
+        };
+        if (f.origin) forms.sentence = forms.sentence.replace('A simple linear regression', 'A simple linear regression through the origin');
+        $('lrWrite').textContent = forms[st.cite] || forms.sentence;
+      } else $('lrWrite').textContent = 'The best-fit ' + (f.deg === 1 ? 'line' : 'curve') + ' is ' + eqPlain(R, f) + (f.r2 !== null ? ', R² = ' + apaN(f.r2) : '') + (f.pF !== null ? ', p ' + apaP(f.pF) : '') + ' (n = ' + n + ').';
+      [].forEach.call($('lrCiteChips').children, function (b) { b.classList.toggle('on', b.getAttribute('data-v') === st.cite); }); show('lrCiteWrap', f.deg === 1 && f.rows[1].se !== null && f.pF !== null && f.r2 !== null); show('lrWriteWrap', true);
+      /* steps */
+      var stp = [];
+      if (f.kind === 'summary') { stp.push('From your numbers: n = ' + n + ', x̄ = ' + raw(R, f.mx) + ', ȳ = ' + raw(R, f.my) + ', Sxx = ' + raw(R, f.sxx) + ', Syy = ' + raw(R, f.syy) + ', Sxy = ' + raw(R, f.sxy) + '.'); }
+      else if (f.deg === 1 && !f.origin && !R.w) { var d1 = E.pearson(xs, ys); stp.push('Means: x̄ = ' + raw(R, d1.mx) + ', ȳ = ' + raw(R, d1.my) + ' (' + n + ' pairs).'); stp.push('Sums of squares and products: Sxx = Σ(x − x̄)² = ' + raw(R, d1.sxx) + ', Syy = Σ(y − ȳ)² = ' + raw(R, d1.syy) + ', Sxy = Σ(x − x̄)(y − ȳ) = ' + raw(R, d1.sxy) + '.'); }
+      if (f.deg === 1 && !f.origin && !R.w) {
+        stp.push('Slope b = Sxy ÷ Sxx = ' + raw(R, f.kind === 'summary' ? f.sxy : E.pearson(xs, ys).sxy) + ' ÷ ' + raw(R, f.kind === 'summary' ? f.sxx : E.pearson(xs, ys).sxx) + ' = ' + raw(R, f.co[1]) + '; intercept a = ȳ − b × x̄ = ' + raw(R, f.co[0]) + '.');
+        stp.push('Residual sum of squares SSE = Syy − Sxy² ÷ Sxx = ' + raw(R, f.sse) + (f.df > 0 ? '; residual variance s² = SSE ÷ (n − 2) = ' + raw(R, f.s2) + ', so S = ' + raw(R, f.s) + '.' : '.'));
+        if (f.df > 0) { stp.push('Standard error of the slope = √(s² ÷ Sxx) = ' + raw(R, f.rows[1].se) + '; of the intercept = √(s² × (1 ÷ n + x̄² ÷ Sxx)) = ' + raw(R, f.rows[0].se) + '.'); stp.push('t = estimate ÷ standard error with n − 2 = ' + f.df + ' degrees of freedom; the interval is estimate ± t* × standard error with t* = ' + r4(R, ci[1].t) + ' (' + sig(R.conf * 100) + '%).'); stp.push('R² = 1 − SSE ÷ Syy = ' + r2t + '; F = (R² ÷ 1) ÷ ((1 − R²) ÷ (n − 2)) = ' + (f.F === null ? '—' : f.F === Infinity ? '∞' : r4(R, f.F)) + '.'); }
+      } else {
+        stp.push('The coefficients are the ones that make the weighted sum of squared errors smallest: solve (XᵀWX) b = XᵀWy for the ' + f.p + ' unknowns' + (f.origin ? ' (no intercept column: the line passes through (0, 0))' : '') + '. SSE = ' + raw(R, f.sse) + ', SST = ' + raw(R, f.sst) + (f.origin ? ' (uncentred: Σw·y²)' : ' (about the weighted mean of Y)') + '.');
+        if (f.df > 0) stp.push('Residual variance s² = SSE ÷ (n − ' + f.p + ') = ' + raw(R, f.s2) + '; standard errors come from s² × (XᵀWX)⁻¹; t = estimate ÷ standard error with ' + f.df + ' degrees of freedom.');
+      }
+      $('lrSteps').innerHTML = stp.map(function (s2) { return '<li>' + s2 + '</li>'; }).join(''); show('lrStepsWrap', true);
+    }
+    $('lrBig').textContent = big; $('lrBig').parentNode.classList.toggle('cc-long', big.length > 18); $('lrLab').textContent = lab; $('lrSub').textContent = sub; $('lrBody').style.display = body ? '' : 'none'; $('lrTip').textContent = tip; $('lrTip').style.display = tip ? '' : 'none';
+    $('lrMLab').textContent = mlab; $('lrMVal').textContent = mval;
+    st.last = R;
+  }
+
+  /* ---------- controls ---------- */
+  [['lrEntry', 'entry'], ['lrModel', 'model'], ['lrOrigin', 'origin']].forEach(function (pp) {
+    [].forEach.call($(pp[0]).children, function (b) { b.addEventListener('click', function () { segSet(pp[0], pp[1], b.getAttribute('data-v')); render(); }); });
+  });
+  [].forEach.call(document.querySelectorAll('.p-lr input[type=text]'), function (i) { i.addEventListener('input', render); });
+  ['lrX', 'lrY', 'lrP', 'lrW'].forEach(function (id) { $(id).addEventListener('input', render); });
+  $('lrConfChips').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; $('lrConf').value = b.getAttribute('data-v'); render(); });
+  var ALL = ['lrX', 'lrY', 'lrP', 'lrW', 'lrConf', 'lrNameX', 'lrNameY', 'lrPx', 'lrPy', 'lrDec', 'lrSN', 'lrSMx', 'lrSMy', 'lrSSxx', 'lrSSyy', 'lrSSxy'];
+  $('lrClear').addEventListener('click', function () { ALL.forEach(function (id) { $(id).value = ''; }); st.zoom = 0; render(); $(st.entry === 'lists' ? 'lrX' : st.entry === 'pairs' ? 'lrP' : 'lrSN').focus(); });
+  $('lrExChips').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return; var ex = EXAMPLES[b.getAttribute('data-v')]; if (!ex) return;
+    if (st.entry === 'lists') { $('lrX').value = ex.x; $('lrY').value = ex.y; }
+    else { var a = ex.x.split(' '), c = ex.y.split(' '); $('lrP').value = a.map(function (v, i) { return v + ', ' + c[i]; }).join('\n'); }
+    st.zoom = 0; render();
+  });
+  $('lrCiteChips').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; st.cite = b.getAttribute('data-v'); render(); });
+  $('lrZoomIn').addEventListener('click', function () { if (st.zoom < 4) st.zoom++; render(); });
+  $('lrZoomOut').addEventListener('click', function () { if (st.zoom > 0) st.zoom--; render(); });
+  $('lrSqBtn').addEventListener('click', function () { st.sq = !st.sq; render(); });
+  $('lrAdvBtn').addEventListener('click', function () {
+    st.adv = !st.adv; $('lrAdvBtn').classList.toggle('open', st.adv); $('lrAdvBtnLab').textContent = st.adv ? 'Go simple' : 'Go advanced'; $('lrAdvIn').style.display = st.adv ? '' : 'none';
+    if (!st.adv) { ['lrW', 'lrNameX', 'lrNameY', 'lrDec'].forEach(function (id) { $(id).value = ''; }); segSet('lrModel', 'model', '1'); segSet('lrOrigin', 'origin', 'fit'); }
+    render();
+  });
+  render();
+};
+/* REG:END */
 
 
 /* COMPOUND:BEGIN */
