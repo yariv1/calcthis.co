@@ -216,3 +216,4 @@ BING 2026-11-22 (second batch): 89 URLs submitted manually, all appear as "Today
 - 2026-11-22 DEPLOYED v363 (commit 8bdbdab5, Pages built, URL 200, IndexNow 245): /serial-dilution-calculator/ — Bing manual submit + GSC request pending (quota day).
 - 2026-11-24 v364 correlation-coefficient-calculator deployed (2f93f320); Bing + GSC pending
 **GSC 2026-11-24 'Start queue': 11 REQUESTED (correlation-coefficient, serial-dilution, retatrutide, t-test, paycheck/virginia, cm-to-inches, kg-to-lbs, celsius-to-fahrenheit, cups-to-grams, feet-to-inches, grams-to-ounces); liters-to-quarts already on Google; mb-to-gb -> Quota Exceeded. NEXT: mb-to-gb, ml-to-oz, mm-to-inches, yards-to-meters, then other queue items. (miles-to-km does not exist.)**
+- 2026-11-24 DEPLOYED v365 (f467e618): /linear-regression-calculator/ — Bing + GSC pending (add to the stats block).
