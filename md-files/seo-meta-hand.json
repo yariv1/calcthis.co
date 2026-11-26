@@ -112,6 +112,10 @@
     "t": "Fraction Calculator — Add, Subtract, Multiply & Divide",
     "d": "Free fraction calculator: add, subtract, multiply and divide fractions, mixed numbers and decimals, simplify and convert, with a live bar diagram and steps."
   },
+  "/chi-square-calculator/": {
+    "t": "Chi Square Calculator: Independence and Goodness of Fit",
+    "d": "Chi square calculator for two-way tables and goodness of fit: χ², p-value, expected counts, Fisher, Yates, McNemar, effect size and a picture."
+  },
   "/linear-regression-calculator/": {
     "t": "Linear Regression Calculator: Line, R², Prediction",
     "d": "Linear regression calculator: paste X and Y for the best-fit line, R², p-value, intervals, predictions, and the points that steer the line."

@@ -1,5 +1,12 @@
 {
  "slug": "p-value-calculator",
- "legacy": true,
- "note": "passed before the preflight gate existed (2026-11-10)"
+ "pass": true,
+ "failed": [],
+ "hash": "b8be79ad5614b269",
+ "at": "2026-11-25T23:49:08.455Z",
+ "results": {
+  "silent": "ok   p-value-calculator  fields 8",
+  "duplicate": "most overlap 0.8% with /confidence-interval-calculator/ (limit 12%)",
+  "registration": "sitemap urls 248 | p-value-calculator cards 1 inbound 247 ld WebApplication,FAQPage,BreadcrumbList | AUDIT PASS"
+ }
 }

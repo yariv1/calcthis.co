@@ -1,0 +1,12 @@
+{
+ "slug": "chi-square-calculator",
+ "pass": true,
+ "failed": [],
+ "hash": "a52a58923bed2209",
+ "at": "2026-11-25T23:46:22.528Z",
+ "results": {
+  "silent": "ok   chi-square-calculator  fields 13",
+  "duplicate": "most overlap 0.8% with /correlation-coefficient-calculator/ (limit 12%)",
+  "registration": "sitemap urls 248 | chi-square-calculator cards 1 inbound 247 ld WebApplication,FAQPage,BreadcrumbList | AUDIT PASS"
+ }
+}

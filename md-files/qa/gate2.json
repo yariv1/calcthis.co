@@ -13,5 +13,6 @@
  "retatrutide-dosage-calculator",
  "serial-dilution-calculator",
  "correlation-coefficient-calculator",
- "linear-regression-calculator"
+ "linear-regression-calculator",
+ "chi-square-calculator"
 ]

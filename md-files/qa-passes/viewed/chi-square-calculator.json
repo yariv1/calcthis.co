@@ -1,0 +1,19 @@
+{
+ "slug": "chi-square-calculator",
+ "hash": "a52a58923bed2209",
+ "shots": [
+  "chi-square-calculator-1-empty-mobile.png",
+  "chi-square-calculator-2-filled-mobile.png",
+  "chi-square-calculator-3-result-mobile.png",
+  "chi-square-calculator-4-advanced-mobile.png",
+  "chi-square-calculator-5-error-mobile.png",
+  "chi-square-calculator-6-after-chaos-mobile.png",
+  "chi-square-calculator-1-empty-desktop.png",
+  "chi-square-calculator-2-filled-desktop.png",
+  "chi-square-calculator-3-result-desktop.png",
+  "chi-square-calculator-4-advanced-desktop.png",
+  "chi-square-calculator-5-error-desktop.png",
+  "chi-square-calculator-6-after-chaos-desktop.png"
+ ],
+ "at": "2026-11-25T23:45:20.074Z"
+}

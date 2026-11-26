@@ -4,6 +4,9 @@ const fs = require('fs'), path = require('path');
 const ROOT = path.join(__dirname, '..') + path.sep;
 const A = (slug, name) => { if (!fs.existsSync(ROOT + slug + '/index.html')) throw new Error('missing page ' + slug); return '<a href="/' + slug + '/">' + name + '</a>'; };
 const ENTRIES = [
+  ['2026-11-26', 'November 26, 2026', [
+    'New: ' + A('chi-square-calculator', 'Chi Square Calculator') + ' — test of independence and goodness of fit from a typed table, a pasted table or raw answers, with the p-value, a picture of where the difference comes from, Fisher, Yates and McNemar, effect size, power and the critical value.',
+  ]],
   ['2026-11-24', 'November 24, 2026', [
     'New: ' + A('linear-regression-calculator', 'Linear Regression Calculator') + ' — the best-fit line from your X and Y numbers (or pairs, or summary sums) with slope and intercept intervals, R², p-value, predictions in both directions, a scatter plot with the errors drawn as squares, and the points that steer the line.',
     'New: ' + A('correlation-coefficient-calculator', 'Correlation Coefficient Calculator') + ' — Pearson, Spearman and Kendall side by side from your X and Y numbers, with the p-value, interval, a scatter plot with the best-fit line, the points that carry the correlation, the pairs it would take, a prediction from the line and a test against a correlation other than 0.',

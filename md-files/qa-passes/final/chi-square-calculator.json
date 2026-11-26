@@ -1,0 +1,14 @@
+{
+ "slug": "chi-square-calculator",
+ "pass": true,
+ "at": "2026-11-25T23:44:20.557Z",
+ "passHash": "a52a58923bed2209",
+ "scriptHash": "5f6bc128335d37d8",
+ "cats": {
+  "textVsTool": 220,
+  "extremes": 62,
+  "visual": 698
+ },
+ "runs": 232,
+ "fails": []
+}

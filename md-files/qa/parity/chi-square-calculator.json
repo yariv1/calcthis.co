@@ -1,0 +1,402 @@
+{
+ "slug": "chi-square-calculator",
+ "research": "md-files/calcthis-chisquare-research.md",
+ "competitors": [
+  {
+   "name": "Omnicalculator chi-square calculator",
+   "url": "https://www.omnicalculator.com/statistics/chi-square",
+   "openedLive": true,
+   "date": "2026-11-25",
+   "inputs": [
+    "observed and expected value fields (goodness of fit)",
+    "chi-square statistic",
+    "explanatory article"
+   ]
+  },
+  {
+   "name": "Social Science Statistics chi square",
+   "url": "https://www.socscistatistics.com/tests/chisquare2/calculator/",
+   "openedLive": true,
+   "date": "2026-11-25",
+   "inputs": [
+    "two-way table up to 5x5 with names",
+    "observed, expected and component table",
+    "chi2, df, p and verdict at a chosen level",
+    "Cramer's V with strength word",
+    "sentence in APA, Chicago and plain English with Copy",
+    "goodness-of-fit page with O, E and (O-E)^2/E table",
+    "parameters estimated field"
+   ]
+  },
+  {
+   "name": "GraphPad QuickCalcs",
+   "url": "https://www.graphpad.com/quickcalcs/chisquared1/",
+   "openedLive": true,
+   "date": "2026-11-25",
+   "inputs": [
+    "goodness of fit up to 20 labelled categories",
+    "expected as counts or percent",
+    "chi2, df, P and verdict with data table",
+    "2x2 page with row and column labels",
+    "Fisher exact, chi-square or Yates",
+    "one or two tails"
+   ]
+  },
+  {
+   "name": "Statistics by Jim chi-square calculator",
+   "url": "https://statisticsbyjim.com/calculators/chi-square-calculator/",
+   "openedLive": true,
+   "date": "2026-11-25",
+   "inputs": [
+    "independence table up to 5x5 with labels",
+    "counts, expected and contributions table",
+    "chi2, df, p",
+    "APA sentence"
+   ]
+  },
+  {
+   "name": "GigaCalculator chi square",
+   "url": "https://www.gigacalculator.com/calculators/chi-square-calculator.php",
+   "openedLive": true,
+   "date": "2026-11-25",
+   "inputs": [
+    "independence or goodness of fit mode",
+    "paste a table of any size",
+    "expected as proportions",
+    "chi2, p and df result",
+    "tables above 20x20"
+   ]
+  },
+  {
+   "name": "Pearson.com chi square calculator",
+   "url": "https://www.pearson.com/channels/calculators/chi-square-calculator",
+   "openedLive": true,
+   "date": "2026-11-25",
+   "inputs": [
+    "goodness of fit, independence and critical value / p modes",
+    "significance level 0.10, 0.05, 0.01",
+    "expected blank means equal, or proportions",
+    "quick examples",
+    "curve with rejection region",
+    "contribution heatmap",
+    "worked steps"
+   ]
+  },
+  {
+   "name": "MiniWebtool chi-square test calculator",
+   "url": "https://miniwebtool.com/chi-square-test-calculator/",
+   "openedLive": true,
+   "date": "2026-11-25",
+   "inputs": [
+    "independence up to 10x10",
+    "goodness of fit with counts, proportions, percent, ratio or blank",
+    "significance levels and decimal places 2 to 10",
+    "examples",
+    "chi2, p, df and Cramer's V gauge",
+    "hypotheses in words",
+    "observed, expected and contribution tables with highlight",
+    "contribution bars",
+    "step by step",
+    "PDF and JPG download",
+    "embed"
+   ]
+  },
+  {
+   "name": "Stats Kingdom chi-square calculator",
+   "url": "https://www.statskingdom.com/310GoodnessChi.html",
+   "openedLive": true,
+   "date": "2026-11-25",
+   "inputs": [
+    "goodness of fit with binomial exact test",
+    "independence with Fisher exact test",
+    "McNemar test with mid-p",
+    "category names and raw data entry",
+    "paste from Excel",
+    "expected counts or probabilities",
+    "parameters estimated and continuity correction",
+    "effect size input and power",
+    "decimals",
+    "expected-count table with warnings",
+    "phi and Cramer V",
+    "distribution chart with rejection region",
+    "written interpretation",
+    "simulation",
+    "R code"
+   ]
+  }
+ ],
+ "features": [
+  {
+   "covers": [
+    "Social Science Statistics chi square: two-way table up to 5x5 with names",
+    "GraphPad QuickCalcs: 2x2 page with row and column labels",
+    "Statistics by Jim chi-square calculator: independence table up to 5x5 with labels",
+    "GigaCalculator chi square: paste a table of any size",
+    "MiniWebtool chi-square test calculator: independence up to 10x10",
+    "Stats Kingdom chi-square calculator: category names and raw data entry",
+    "Stats Kingdom chi-square calculator: paste from Excel"
+   ],
+   "status": "exceed",
+   "ids": [
+    "xsGrid",
+    "xsEntry",
+    "xsPaste",
+    "xsRaw",
+    "xsAddRow",
+    "xsAddCol"
+   ]
+  },
+  {
+   "covers": [
+    "Omnicalculator chi-square calculator: observed and expected value fields (goodness of fit)",
+    "GraphPad QuickCalcs: goodness of fit up to 20 labelled categories",
+    "Social Science Statistics chi square: goodness-of-fit page with O, E and (O-E)^2/E table"
+   ],
+   "status": "exceed",
+   "ids": [
+    "xsMode",
+    "xsFit",
+    "xsFEntry",
+    "xsFitP",
+    "xsAddCat",
+    "xsCells"
+   ]
+  },
+  {
+   "covers": [
+    "GigaCalculator chi square: independence or goodness of fit mode",
+    "Pearson.com chi square calculator: goodness of fit, independence and critical value / p modes"
+   ],
+   "status": "match",
+   "ids": [
+    "xsMode",
+    "xsChi",
+    "xsDf"
+   ]
+  },
+  {
+   "covers": [
+    "GraphPad QuickCalcs: expected as counts or percent",
+    "GigaCalculator chi square: expected as proportions",
+    "Pearson.com chi square calculator: expected blank means equal, or proportions",
+    "MiniWebtool chi-square test calculator: goodness of fit with counts, proportions, percent, ratio or blank",
+    "Stats Kingdom chi-square calculator: expected counts or probabilities"
+   ],
+   "status": "exceed",
+   "ids": [
+    "xsExp",
+    "xsExpNote"
+   ]
+  },
+  {
+   "covers": [
+    "Social Science Statistics chi square: parameters estimated field"
+   ],
+   "status": "match",
+   "ids": [
+    "xsParams"
+   ]
+  },
+  {
+   "covers": [
+    "Omnicalculator chi-square calculator: chi-square statistic",
+    "Social Science Statistics chi square: chi2, df, p and verdict at a chosen level",
+    "GraphPad QuickCalcs: chi2, df, P and verdict with data table",
+    "Statistics by Jim chi-square calculator: chi2, df, p",
+    "GigaCalculator chi square: chi2, p and df result",
+    "MiniWebtool chi-square test calculator: chi2, p, df and Cramer's V gauge"
+   ],
+   "status": "exceed",
+   "ids": [
+    "xsBig",
+    "xsSub",
+    "xsEff"
+   ]
+  },
+  {
+   "covers": [
+    "Pearson.com chi square calculator: significance level 0.10, 0.05, 0.01",
+    "MiniWebtool chi-square test calculator: significance levels and decimal places 2 to 10"
+   ],
+   "status": "exceed",
+   "ids": [
+    "xsAlpha",
+    "xsAlphaChips",
+    "xsDec"
+   ]
+  },
+  {
+   "covers": [
+    "Stats Kingdom chi-square calculator: decimals"
+   ],
+   "status": "match",
+   "ids": [
+    "xsDec"
+   ]
+  },
+  {
+   "covers": [
+    "Social Science Statistics chi square: observed, expected and component table",
+    "Statistics by Jim chi-square calculator: counts, expected and contributions table",
+    "MiniWebtool chi-square test calculator: observed, expected and contribution tables with highlight",
+    "Stats Kingdom chi-square calculator: expected-count table with warnings"
+   ],
+   "status": "exceed",
+   "ids": [
+    "xsCross",
+    "xsCells",
+    "xsWarn"
+   ]
+  },
+  {
+   "covers": [
+    "Pearson.com chi square calculator: contribution heatmap",
+    "MiniWebtool chi-square test calculator: contribution bars"
+   ],
+   "status": "exceed",
+   "ids": [
+    "xsVis",
+    "xsCells"
+   ]
+  },
+  {
+   "covers": [
+    "Social Science Statistics chi square: Cramer's V with strength word",
+    "Stats Kingdom chi-square calculator: phi and Cramer V"
+   ],
+   "status": "match",
+   "ids": [
+    "xsEff"
+   ]
+  },
+  {
+   "covers": [
+    "Social Science Statistics chi square: sentence in APA, Chicago and plain English with Copy",
+    "Statistics by Jim chi-square calculator: APA sentence",
+    "Stats Kingdom chi-square calculator: written interpretation"
+   ],
+   "status": "exceed",
+   "ids": [
+    "xsWrite",
+    "xsCiteChips",
+    "xsTip"
+   ]
+  },
+  {
+   "covers": [
+    "GraphPad QuickCalcs: Fisher exact, chi-square or Yates",
+    "GraphPad QuickCalcs: one or two tails",
+    "Stats Kingdom chi-square calculator: independence with Fisher exact test"
+   ],
+   "status": "exceed",
+   "ids": [
+    "xsTwo",
+    "xsHead"
+   ]
+  },
+  {
+   "covers": [
+    "Stats Kingdom chi-square calculator: goodness of fit with binomial exact test"
+   ],
+   "status": "match",
+   "ids": [
+    "xsTwo"
+   ]
+  },
+  {
+   "covers": [
+    "Stats Kingdom chi-square calculator: McNemar test with mid-p"
+   ],
+   "status": "match",
+   "ids": [
+    "xsPair",
+    "xsMc"
+   ]
+  },
+  {
+   "covers": [
+    "Stats Kingdom chi-square calculator: parameters estimated and continuity correction"
+   ],
+   "status": "match",
+   "ids": [
+    "xsParams",
+    "xsHead",
+    "xsTwo"
+   ]
+  },
+  {
+   "covers": [
+    "Stats Kingdom chi-square calculator: effect size input and power"
+   ],
+   "status": "exceed",
+   "ids": [
+    "xsW",
+    "xsPow"
+   ]
+  },
+  {
+   "covers": [
+    "Pearson.com chi square calculator: quick examples",
+    "MiniWebtool chi-square test calculator: examples"
+   ],
+   "status": "match",
+   "ids": [
+    "xsExT",
+    "xsExF"
+   ]
+  },
+  {
+   "covers": [
+    "Pearson.com chi square calculator: curve with rejection region",
+    "Stats Kingdom chi-square calculator: distribution chart with rejection region"
+   ],
+   "status": "exceed",
+   "ids": [
+    "xsCurve"
+   ]
+  },
+  {
+   "covers": [
+    "MiniWebtool chi-square test calculator: hypotheses in words"
+   ],
+   "status": "match",
+   "ids": [
+    "xsCheck"
+   ]
+  },
+  {
+   "covers": [
+    "Pearson.com chi square calculator: worked steps",
+    "MiniWebtool chi-square test calculator: step by step"
+   ],
+   "status": "match",
+   "ids": [
+    "xsSteps"
+   ]
+  },
+  {
+   "covers": [
+    "Omnicalculator chi-square calculator: explanatory article"
+   ],
+   "status": "match",
+   "ids": [
+    "xsFormulas",
+    "xsFaq"
+   ]
+  },
+  {
+   "covers": [
+    "GigaCalculator chi square: tables above 20x20",
+    "MiniWebtool chi-square test calculator: PDF and JPG download",
+    "MiniWebtool chi-square test calculator: embed",
+    "Stats Kingdom chi-square calculator: simulation",
+    "Stats Kingdom chi-square calculator: R code"
+   ],
+   "status": "dropped",
+   "signoff": {
+    "quote": "Approve all",
+    "date": "2026-11-26"
+   }
+  }
+ ]
+}

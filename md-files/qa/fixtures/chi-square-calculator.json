@@ -1,0 +1,473 @@
+{
+ "slug": "chi-square-calculator",
+ "bodyClass": "p-chi",
+ "blocks": [
+  "PVALUE",
+  "CHI"
+ ],
+ "result": {
+  "big": "xsBig",
+  "body": "xsBody",
+  "hint": "xsHint"
+ },
+ "required": [
+  "xsC1_1",
+  "xsC1_2",
+  "xsC1_3",
+  "xsC2_1",
+  "xsC2_2",
+  "xsC2_3",
+  "xsFO1",
+  "xsFO2",
+  "xsFO3",
+  "xsFE1",
+  "xsFE2",
+  "xsFE3",
+  "xsChi",
+  "xsDf"
+ ],
+ "fill": [
+  [
+   "click",
+   "xsClear"
+  ],
+  [
+   "seg",
+   "xsMode",
+   "table"
+  ],
+  [
+   "seg",
+   "xsEntry",
+   "grid"
+  ],
+  [
+   "seg",
+   "xsPair",
+   "ind"
+  ],
+  [
+   "seg",
+   "xsHead",
+   "pearson"
+  ],
+  [
+   "click",
+   "xsAddCol"
+  ],
+  [
+   "set",
+   "xsC1_1",
+   "20"
+  ],
+  [
+   "set",
+   "xsC1_2",
+   "30"
+  ],
+  [
+   "set",
+   "xsC1_3",
+   "50"
+  ],
+  [
+   "set",
+   "xsC2_1",
+   "30"
+  ],
+  [
+   "set",
+   "xsC2_2",
+   "40"
+  ],
+  [
+   "set",
+   "xsC2_3",
+   "30"
+  ]
+ ],
+ "optionalSamples": {
+  "xsAlpha": [
+   "0.01",
+   "0.05",
+   "5%",
+   "2"
+  ],
+  "xsDec": [
+   "3",
+   "0",
+   "12"
+  ],
+  "xsW": [
+   "0.3",
+   "0.1",
+   "0"
+  ],
+  "xsNameR": [
+   "Group"
+  ],
+  "xsNameC": [
+   "Answer"
+  ],
+  "xsNameK": [
+   "die faces"
+  ],
+  "xsParams": [
+   "1",
+   "0",
+   "5"
+  ],
+  "xsCN1": [
+   "Low"
+  ],
+  "xsCN2": [
+   "Medium"
+  ],
+  "xsCN3": [
+   "High"
+  ],
+  "xsRN1": [
+   "Group A"
+  ],
+  "xsRN2": [
+   "Group B"
+  ],
+  "xsFN1": [
+   "Red"
+  ],
+  "xsFN2": [
+   "Blue"
+  ],
+  "xsFN3": [
+   "Green"
+  ]
+ },
+ "pools": {
+  "xsAlpha": [
+   "0.01",
+   "0.05",
+   "5%",
+   "2"
+  ],
+  "xsDec": [
+   "3",
+   "0",
+   "12"
+  ],
+  "xsW": [
+   "0.3",
+   "0.1",
+   "0"
+  ],
+  "xsNameR": [
+   "Group"
+  ],
+  "xsNameC": [
+   "Answer"
+  ],
+  "xsNameK": [
+   "die faces"
+  ],
+  "xsParams": [
+   "1",
+   "0",
+   "5"
+  ],
+  "xsCN1": [
+   "Low"
+  ],
+  "xsCN2": [
+   "Medium"
+  ],
+  "xsCN3": [
+   "High"
+  ],
+  "xsRN1": [
+   "Group A"
+  ],
+  "xsRN2": [
+   "Group B"
+  ],
+  "xsFN1": [
+   "Red"
+  ],
+  "xsFN2": [
+   "Blue"
+  ],
+  "xsFN3": [
+   "Green"
+  ]
+ },
+ "variants": [
+  [
+   [
+    "click",
+    "xsClear"
+   ],
+   [
+    "seg",
+    "xsMode",
+    "table"
+   ],
+   [
+    "seg",
+    "xsEntry",
+    "grid"
+   ],
+   [
+    "seg",
+    "xsPair",
+    "ind"
+   ],
+   [
+    "seg",
+    "xsHead",
+    "pearson"
+   ],
+   [
+    "set",
+    "xsC1_1",
+    "20"
+   ],
+   [
+    "set",
+    "xsC1_2",
+    "10"
+   ],
+   [
+    "set",
+    "xsC2_1",
+    "30"
+   ],
+   [
+    "set",
+    "xsC2_2",
+    "40"
+   ]
+  ],
+  [
+   [
+    "click",
+    "xsClear"
+   ],
+   [
+    "seg",
+    "xsMode",
+    "table"
+   ],
+   [
+    "seg",
+    "xsEntry",
+    "grid"
+   ],
+   [
+    "seg",
+    "xsPair",
+    "mc"
+   ],
+   [
+    "seg",
+    "xsHead",
+    "pearson"
+   ],
+   [
+    "set",
+    "xsC1_1",
+    "101"
+   ],
+   [
+    "set",
+    "xsC1_2",
+    "121"
+   ],
+   [
+    "set",
+    "xsC2_1",
+    "59"
+   ],
+   [
+    "set",
+    "xsC2_2",
+    "33"
+   ]
+  ],
+  [
+   [
+    "click",
+    "xsClear"
+   ],
+   [
+    "seg",
+    "xsMode",
+    "table"
+   ],
+   [
+    "seg",
+    "xsEntry",
+    "paste"
+   ],
+   [
+    "seg",
+    "xsPair",
+    "ind"
+   ],
+   [
+    "seg",
+    "xsHead",
+    "pearson"
+   ],
+   [
+    "set",
+    "xsPaste",
+    ", Low, Medium, High\nGroup A, 20, 30, 50\nGroup B, 30, 40, 30"
+   ]
+  ],
+  [
+   [
+    "click",
+    "xsClear"
+   ],
+   [
+    "seg",
+    "xsMode",
+    "table"
+   ],
+   [
+    "seg",
+    "xsEntry",
+    "raw"
+   ],
+   [
+    "seg",
+    "xsPair",
+    "ind"
+   ],
+   [
+    "seg",
+    "xsHead",
+    "pearson"
+   ],
+   [
+    "set",
+    "xsRaw",
+    "a, yes\na, yes\nb, no\nb, yes\na, no\nb, no\nb, no"
+   ]
+  ],
+  [
+   [
+    "click",
+    "xsClear"
+   ],
+   [
+    "seg",
+    "xsMode",
+    "fit"
+   ],
+   [
+    "seg",
+    "xsFEntry",
+    "rows"
+   ],
+   [
+    "seg",
+    "xsExp",
+    "eq"
+   ],
+   [
+    "set",
+    "xsFO1",
+    "18"
+   ],
+   [
+    "set",
+    "xsFO2",
+    "30"
+   ],
+   [
+    "set",
+    "xsFO3",
+    "12"
+   ]
+  ],
+  [
+   [
+    "click",
+    "xsClear"
+   ],
+   [
+    "seg",
+    "xsMode",
+    "fit"
+   ],
+   [
+    "seg",
+    "xsFEntry",
+    "rows"
+   ],
+   [
+    "seg",
+    "xsExp",
+    "pct"
+   ],
+   [
+    "set",
+    "xsFO1",
+    "90"
+   ],
+   [
+    "set",
+    "xsFO2",
+    "70"
+   ],
+   [
+    "set",
+    "xsFO3",
+    "40"
+   ],
+   [
+    "set",
+    "xsFE1",
+    "50"
+   ],
+   [
+    "set",
+    "xsFE2",
+    "30"
+   ],
+   [
+    "set",
+    "xsFE3",
+    "20"
+   ]
+  ],
+  [
+   [
+    "click",
+    "xsClear"
+   ],
+   [
+    "seg",
+    "xsMode",
+    "value"
+   ],
+   [
+    "set",
+    "xsChi",
+    "8.43"
+   ],
+   [
+    "set",
+    "xsDf",
+    "2"
+   ]
+  ]
+ ],
+ "scrollTo": "xsBig",
+ "errorState": [
+  [
+   "set",
+   "xsC1_1",
+   "-3"
+  ]
+ ]
+}

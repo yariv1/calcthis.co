@@ -1,6 +1,19 @@
 {
  "slug": "p-value-calculator",
- "legacy": true,
- "note": "passed before the screenshot gate existed (2026-11-10)",
- "at": "2026-11-10T18:52:57.897Z"
+ "hash": "b8be79ad5614b269",
+ "shots": [
+  "p-value-calculator-1-empty-mobile.png",
+  "p-value-calculator-2-filled-mobile.png",
+  "p-value-calculator-3-result-mobile.png",
+  "p-value-calculator-4-advanced-mobile.png",
+  "p-value-calculator-5-error-mobile.png",
+  "p-value-calculator-6-after-chaos-mobile.png",
+  "p-value-calculator-1-empty-desktop.png",
+  "p-value-calculator-2-filled-desktop.png",
+  "p-value-calculator-3-result-desktop.png",
+  "p-value-calculator-4-advanced-desktop.png",
+  "p-value-calculator-5-error-desktop.png",
+  "p-value-calculator-6-after-chaos-desktop.png"
+ ],
+ "at": "2026-11-25T23:48:19.402Z"
 }

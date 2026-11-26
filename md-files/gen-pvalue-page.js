@@ -186,7 +186,7 @@ function build() {
         <p>A t-test gives t = 2.1 with 20 degrees of freedom. Two-tailed: p = ${fp(T1.two)}, below 0.05, so the difference is significant at the 5% level. Right-tailed: p = ${fp(T1.right)}. For r = 0.45 from 25 pairs, t = ${r3(RT.t)} with ${RT.df} degrees of freedom and a two-tailed p-value of ${fp(R1.two)}.</p>
 
         <h2>Related tools</h2>
-        <p>For the spread of your data use the <a href="/standard-deviation-calculator/">standard deviation calculator</a>, to average a list of numbers the <a href="/average-calculator/">average calculator</a>, and for percentages the <a href="/percentage-calculator/">percentage calculator</a>.</p>
+        <p>For the spread of your data use the <a href="/standard-deviation-calculator/">standard deviation calculator</a>, to average a list of numbers the <a href="/average-calculator/">average calculator</a>, and for percentages the <a href="/percentage-calculator/">percentage calculator</a>. To work out χ² and its p-value from the counts themselves use the <a href="/chi-square-calculator/">chi square calculator</a>.</p>
         ${SRC}`;
 
   const body = `<body class="${P.body}">

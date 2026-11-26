@@ -110,6 +110,7 @@
         { "@type": "WebApplication", "name": "T-Test Calculator", "url": "https://calcthis.co/t-test-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Correlation Coefficient Calculator", "url": "https://calcthis.co/correlation-coefficient-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Linear Regression Calculator", "url": "https://calcthis.co/linear-regression-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
+        { "@type": "WebApplication", "name": "Chi Square Calculator", "url": "https://calcthis.co/chi-square-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Scientific Notation Calculator", "url": "https://calcthis.co/scientific-notation-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Weighted Average Calculator", "url": "https://calcthis.co/weighted-average-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
         { "@type": "WebApplication", "name": "Time Average Calculator", "url": "https://calcthis.co/time-average-calculator/", "applicationCategory": "UtilityApplication", "operatingSystem": "Any (web browser)", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
@@ -160,7 +161,7 @@
   ]
 }
 </script>
-<link rel="stylesheet" href="/assets/style.css?v=365">
+<link rel="stylesheet" href="/assets/style.css?v=366">
 <style>
   .cat-tabs{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
   .cat-grp--hidden{display:none}
@@ -278,6 +279,7 @@
           <a href="/t-test-calculator/">T-Test</a>
           <a href="/correlation-coefficient-calculator/">Correlation Coefficient</a>
           <a href="/linear-regression-calculator/">Linear Regression</a>
+          <a href="/chi-square-calculator/">Chi Square</a>
           <a href="/scientific-notation-calculator/">Scientific Notation</a>
           <a href="/average-calculator/">Average</a>
           <a href="/batting-average-calculator/">Batting Average</a>
@@ -1480,6 +1482,17 @@
       </span>
     </a>
 
+    <a class="calc" href="/chi-square-calculator/">
+      <span class="ico" aria-hidden="true">
+        <svg width="30" height="30" viewBox="0 0 32 32" fill="none"><rect x="4" y="5" width="24" height="22" rx="2" stroke="#37503F" stroke-width="2"/><path d="M4 16h24M16 5v22" stroke="#37503F" stroke-width="2"/><rect x="6.5" y="7.5" width="7" height="6" fill="#8F5C13"/><rect x="18.5" y="18.5" width="7" height="6" fill="#8F5C13"/></svg>
+      </span>
+      <h3>Chi Square Calculator</h3>
+      <p>Test a two-way table or a list of counts, with p-value, expected counts and a picture of where the difference comes from.</p>
+      <span class="go">Open calculator
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+    </a>
+
     <a class="calc" href="/linear-regression-calculator/">
       <span class="ico" aria-hidden="true">
         <svg width="30" height="30" viewBox="0 0 32 32" fill="none"><path d="M4 28V4" stroke="#37503F" stroke-width="2" stroke-linecap="round"/><path d="M4 28h24" stroke="#37503F" stroke-width="2" stroke-linecap="round"/><circle cx="9" cy="23" r="2" fill="#8F5C13"/><circle cx="14" cy="20" r="2" fill="#8F5C13"/><circle cx="19" cy="14" r="2" fill="#8F5C13"/><circle cx="24" cy="10" r="2" fill="#8F5C13"/><path d="M6 26L28 7" stroke="#37503F" stroke-width="1.6" fill="none"/></svg>
@@ -2292,6 +2305,7 @@
           <li><a href="/t-test-calculator/">T-Test</a><span> — compare two groups, before and after, or one group with a number: p-value, interval, effect size and a picture of your data</span></li>
           <li><a href="/correlation-coefficient-calculator/">Correlation Coefficient</a><span> — Pearson, Spearman and Kendall from your X and Y numbers, with a picture of your data and the point that carries the correlation</span></li>
           <li><a href="/linear-regression-calculator/">Linear Regression</a><span> — the best-fit line from your X and Y numbers, with R², intervals, predictions and the points that steer the line</span></li>
+          <li><a href="/chi-square-calculator/">Chi Square</a><span> — a two-way table or a list of counts, with the p-value, expected counts and a picture of where the difference comes from</span></li>
           <li><a href="/scientific-notation-calculator/">Scientific notation</a><span> — every notation at once</span></li>
           <li><a href="/average-calculator/">Average</a><span> — mean, median, mode and outliers</span></li>
           <li><a href="/batting-average-calculator/">Batting average</a><span> — baseball and cricket, with a target solver</span></li>
@@ -2576,6 +2590,7 @@
           <li><a href="/t-test-calculator/">T-Test Calculator</a></li>
           <li><a href="/correlation-coefficient-calculator/">Correlation Coefficient Calculator</a></li>
           <li><a href="/linear-regression-calculator/">Linear Regression Calculator</a></li>
+          <li><a href="/chi-square-calculator/">Chi Square Calculator</a></li>
           <li><a href="/scientific-notation-calculator/">Scientific Notation Calculator</a></li>
           <li><a href="/weighted-average-calculator/">Weighted Average Calculator</a></li>
           <li><a href="/average-calculator/">Average Calculator</a></li>
@@ -2665,7 +2680,7 @@
       <span aria-hidden="true">·</span>
       <a href="/privacy-policy/">Privacy policy</a>
     </nav>
-    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Page last updated: <time datetime="2026-11-24">November 24, 2026</time>. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Page last updated: <time datetime="2026-11-26">November 26, 2026</time>. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
   </footer>
 <!--FOOTER:END-->
 
@@ -2685,7 +2700,7 @@
   });
 })();
 </script>
-<script src="/assets/app.js?v=365"></script>
+<script src="/assets/app.js?v=366"></script>
 <script src="/feedback.js" defer></script>
 </body>
 </html>

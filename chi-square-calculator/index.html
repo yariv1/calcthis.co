@@ -1,0 +1,1006 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Chi Square Calculator: Independence and Goodness of Fit</title>
+<meta name="description" content="Chi square calculator for two-way tables and goodness of fit: χ², p-value, expected counts, Fisher, Yates, McNemar, effect size and a picture.">
+<link rel="canonical" href="https://calcthis.co/chi-square-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Chi Square Calculator: Independence and Goodness of Fit">
+<meta property="og:description" content="Chi square calculator for two-way tables and goodness of fit: χ², p-value, expected counts, Fisher, Yates, McNemar, effect size and a picture.">
+<meta property="og:url" content="https://calcthis.co/chi-square-calculator/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/datepicker.min.css">
+<link rel="stylesheet" href="/assets/style.css?v=366">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Chi Square Calculator",
+  "url": "https://calcthis.co/chi-square-calculator/",
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "Free chi square calculator: test of independence for two-way tables up to 20 by 20 and goodness of fit test for up to 20 categories, with p-value, critical value, expected counts, contributions, standardized differences, Fisher exact test, Yates correction, McNemar test, exact binomial test, effect size, power and a ready-to-copy sentence."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is a chi-square test?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It compares counts you observed with the counts you would expect if there were nothing going on. The statistic χ² adds up (observed − expected)² ÷ expected over every box. The larger it is for its degrees of freedom, the smaller the p-value."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between independence and goodness of fit?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Independence takes a two-way table, such as group by answer, and asks whether the two are related. Goodness of fit takes one list of counts, such as the faces of a die, and asks whether they match shares you state in advance."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I calculate expected counts?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "In a table, expected = row total × column total ÷ grand total. In the example the first box is 100 × 50 ÷ 200 = 25. In a goodness-of-fit test, expected = total × expected share."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How many degrees of freedom are there?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "For a table it is (rows − 1) × (columns − 1), so a 2×3 table has 2. For goodness of fit it is the number of categories − 1, less one for each parameter you estimated from the same data."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What p-value is significant?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The usual line is 0.05: a p-value below it counts as significant. You can type another level. The example has p = 0.01478, below 0.05, so the two rows split differently by more than chance usually produces."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I use percentages instead of counts?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. The test depends on how many people or items there are: the same percentages from 20 and from 2,000 observations give very different results. Convert percentages back to counts first. Percentages are fine as expected shares in a goodness-of-fit test."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What if an expected count is below 5?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The chi-square p-value becomes unreliable when expected counts are small. For a 2×2 table use Fisher’s exact test, which this page shows next to it; for two categories use the exact binomial test; for bigger tables, merge groups that belong together or collect more data."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "When should I use Fisher’s exact test or Yates’s correction?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Both apply to 2×2 tables. Fisher’s test is exact and suits small counts. Yates’s correction lowers χ² to allow for counts being whole numbers and is more cautious. For the table 20, 10 and 30, 40 the p-values are 0.0291 (Pearson), 0.04953 (Yates) and 0.04858 (Fisher, two-sided)."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "When do I need McNemar’s test?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Use it when the same people were measured twice with a yes or no answer, such as before and after. Only the people who changed enter the test: χ² = (b − c)² ÷ (b + c). Fill a 2×2 table and choose “Same people twice”."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does a large χ² mean a strong effect?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. χ² grows with the number of counts. Cramér’s V and Cohen’s w describe the size of the effect. In the example w = 0.2053, a small effect by Cohen’s guide."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How many observations do I need?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "That depends on the effect you want to be able to detect. For 80% power at α = 0.05 with 1 degree of freedom you need about 785 counts for a small effect (w = 0.1), 88 for a medium one (0.3) and 32 for a large one (0.5)."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "I only have the χ² value. Can I get the p-value?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Choose “χ² value”, type the statistic and the degrees of freedom, and the p-value, the critical value and the curve appear. For example χ² = 3.84 with 1 degree of freedom gives p = 0.05004. With only the degrees of freedom typed, the critical value is shown."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "CalcThis",
+      "item": "https://calcthis.co/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Chi Square Calculator",
+      "item": "https://calcthis.co/chi-square-calculator/"
+    }
+  ]
+}
+</script>
+<meta property="og:site_name" content="CalcThis">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://calcthis.co/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="CalcThis — free, purpose-built calculators">
+<meta name="twitter:title" content="Chi Square Calculator: Independence and Goodness of Fit">
+<meta name="twitter:description" content="Chi square calculator for two-way tables and goodness of fit: χ², p-value, expected counts, Fisher, Yates, McNemar, effect size and a picture.">
+<meta name="twitter:image" content="https://calcthis.co/assets/og-default.png">
+</head>
+<body class="p-bmr p-cc p-chi">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <a class="hdr-back" href="/blog/" aria-label="Back to blog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-search"><div class="menu-sx"><input id="menuSearch" type="search" placeholder="Search calculators or states…" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Search calculators" enterkeyhint="search"></div><div class="menu-results" id="menuResults" hidden></div></div>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <span class="menu-col-head">Construction &amp; Gardening</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+          <a href="/paint-calculator/">Paint</a>
+          <a href="/wallpaper-calculator/">Wallpaper</a>
+          <a href="/square-footage-calculator/">Square Footage</a>
+          <a href="/tape-measure-fraction-calculator/">Tape Measure Fraction</a>
+          <a href="/stair-calculator/">Stair</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/vo2-max-calculator/">VO2 Max</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
+          <a href="/bmi-calculator/">BMI</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/ideal-weight-calculator/">Ideal Weight</a>
+          <a href="/lean-body-mass-calculator/">Lean Body Mass</a>
+          <a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio</a>
+          <a href="/gmi-calculator/">GMI</a>
+          <a href="/a1c-calculator/">A1C</a>
+          <a href="/calorie-calculator/">Calorie</a>
+          <a href="/calorie-deficit-calculator/">Calorie Deficit</a>
+          <a href="/bmr-calculator/">BMR</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/water-intake-calculator/">Water Intake</a>
+          <a href="/macro-calculator/">Macro</a>
+          <a href="/protein-intake-calculator/">Protein Intake</a>
+          <a href="/steps-to-miles-calculator/">Steps to Miles</a>
+          <a href="/dog-age-calculator/">Dog Age</a>
+          <a href="/cat-age-calculator/">Cat Age</a>
+          <a href="/calories-burned-calculator/">Calories Burned</a>
+          <a href="/calories-burned-walking-calculator/">Calories Burned Walking</a>
+          <a href="/calories-burned-running-calculator/">Calories Burned Running</a>
+          <a href="/keto-calculator/">Keto</a>
+          <a href="/net-carb-calculator/">Net Carb</a>
+          <a href="/intermittent-fasting-calculator/">Intermittent Fasting</a>
+          <a href="/bsa-calculator/">BSA</a>
+          <a href="/dog-food-calculator/">Dog Food</a>
+          <a href="/ffmi-calculator/">FFMI</a>
+          <a href="/bulking-calculator/">Bulking</a>
+          <a href="/weight-loss-calculator/">Weight Loss</a>
+          <a href="/weight-loss-percentage-calculator/">Weight Loss %</a>
+          <a href="/max-heart-rate-calculator/">Max Heart Rate</a>
+          <a href="/caffeine-calculator/">Caffeine</a>
+          <a href="/caffeine-half-life-calculator/">Caffeine Half Life</a>
+          <a href="/fiber-calculator/">Fiber</a>
+          <a href="/creatine-calculator/">Creatine</a>
+          <a href="/vitamin-d-calculator/">Vitamin D</a>
+          <a href="/body-recomposition-calculator/">Body Recomposition</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/semester-grade-calculator/">Semester Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+          <a href="/grade-curve-calculator/">Grade Curve</a>
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/fraction-calculator/">Fraction</a>
+          <a href="/standard-deviation-calculator/">Standard Deviation</a>
+          <a href="/p-value-calculator/">P-Value</a>
+          <a href="/confidence-interval-calculator/">Confidence Interval</a>
+          <a href="/z-score-calculator/">Z Score</a>
+          <a href="/t-test-calculator/">T-Test</a>
+          <a href="/correlation-coefficient-calculator/">Correlation Coefficient</a>
+          <a href="/linear-regression-calculator/">Linear Regression</a>
+          <a href="/chi-square-calculator/" class="current">Chi Square</a>
+          <a href="/scientific-notation-calculator/">Scientific Notation</a>
+          <a href="/average-calculator/">Average</a>
+          <a href="/batting-average-calculator/">Batting Average</a>
+          <a href="/stock-average-calculator/">Stock Average</a>
+          <a href="/dice-average-calculator/">Dice Average</a>
+          <a href="/time-average-calculator/">Time Average</a>
+          <a href="/weighted-average-calculator/">Weighted Average</a>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+          <a href="/percentage-change-calculator/">Percentage Change</a>
+          <a href="/age-calculator/">Age</a>
+          <a href="/date-calculator/">Date</a>
+          <a href="/time-calculator/">Time</a>
+          <a href="/hours-calculator/">Hours</a>
+          <a href="/seconds-to-hours-calculator/">Seconds to Hours</a>
+          <a href="/minutes-to-hours-calculator/">Minutes to Hours</a>
+          <a href="/seconds-to-minutes-calculator/">Seconds to Minutes</a>
+          <a href="/triangle-calculator/">Triangle</a>
+          <a href="/random-number-generator/">Random Number</a>
+          <span class="menu-col-head">Cooking &amp; Kitchen</span>
+          <a href="/recipe-converter/">Recipe Converter</a>
+          <a href="/turkey-cooking-time-calculator/">Turkey Cooking Time</a>
+          <a href="/turkey-thawing-time-calculator/">Turkey Thawing Time</a>
+          <a href="/turkey-size-calculator/">Turkey Size</a>
+          <span class="menu-col-head">Medication &amp; Lab</span>
+          <a href="/mg-to-ml-calculator/">mg to mL</a>
+          <a href="/dilution-calculator/">Dilution</a>
+          <a href="/retatrutide-dosage-calculator/">Retatrutide Dosage</a>
+          <a href="/serial-dilution-calculator/">Serial Dilution</a>
+          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
+          <!--UNITNAV:START-->
+          <span class="menu-col-head">Unit Converters</span>
+          <a href="/unit-converter/">Unit Converter</a>
+          <a href="/length-converter/">Length Converter</a>
+          <a href="/weight-converter/">Weight Converter</a>
+          <a href="/volume-converter/">Volume Converter</a>
+          <a href="/temperature-converter/">Temperature Converter</a>
+          <a href="/area-converter/">Area Converter</a>
+          <a href="/speed-converter/">Speed Converter</a>
+          <a href="/data-storage-converter/">Data Storage Converter</a>
+          <a href="/cooking-converter/">Cooking Converter</a>
+          <a href="/px-to-rem-converter/">PX to REM Converter</a>
+          <!--UNITNAV:END-->
+          <span class="menu-col-head">Money &amp; Finance</span>
+          <a href="/mortgage-calculator/">Mortgage</a>
+          <a href="/loan-calculator/">Loan</a>
+          <a href="/auto-loan-calculator/">Auto Loan</a>
+          <a href="/car-sales-tax-calculator/">Car Sales Tax</a>
+          <a href="/overtime-calculator/">Overtime</a>
+          <a href="/salary-calculator/">Salary</a>
+          <a href="/markup-calculator/">Markup</a>
+          <a href="/profit-margin-calculator/">Profit Margin</a>
+          <a href="/discount-calculator/">Discount</a>
+          <a href="/commission-calculator/">Commission</a>
+          <a href="/realtor-commission-calculator/">Realtor Commission</a>
+          <a href="/unit-price-calculator/">Unit Price</a>
+          <a href="/compound-interest-calculator/">Compound Interest</a>
+          <a href="/amortization-calculator/">Amortization</a>
+          <!--STAXNAV:START-->
+          <a href="/sales-tax-calculator/">Sales Tax</a>
+          <a href="/sales-tax-calculator/california/">California Sales Tax</a>
+          <a href="/sales-tax-calculator/chicago/">Chicago Sales Tax</a>
+          <a href="/sales-tax-calculator/florida/">Florida Sales Tax</a>
+          <a href="/sales-tax-calculator/las-vegas/">Las Vegas Sales Tax</a>
+          <a href="/sales-tax-calculator/los-angeles/">Los Angeles Sales Tax</a>
+          <a href="/sales-tax-calculator/michigan/">Michigan Sales Tax</a>
+          <a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax</a>
+          <a href="/sales-tax-calculator/missouri/">Missouri Sales Tax</a>
+          <a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax</a>
+          <a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax</a>
+          <a href="/sales-tax-calculator/north-carolina/">North Carolina Sales Tax</a>
+          <a href="/sales-tax-calculator/ohio/">Ohio Sales Tax</a>
+          <a href="/sales-tax-calculator/texas/">Texas Sales Tax</a>
+          <a href="/sales-tax-calculator/virginia/">Virginia Sales Tax</a>
+          <!--STAXNAV:END-->
+          <a href="/tip-calculator/">Tip</a>
+          <a href="/how-much-to-tip/">How Much to Tip</a>
+        </div>
+        <!--PAYNAV:START-->
+        <div class="menu-col">
+          <span class="menu-col-head">Paycheck Calculators</span>
+          <a href="/paycheck-calculator/">Paycheck Calculator (all states)</a>
+          <a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a>
+          <a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arkansas/">Arkansas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/california/">California Paycheck Calculator</a>
+          <a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a>
+          <a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a>
+          <a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/hawaii/">Hawaii Paycheck Calculator</a>
+          <a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a>
+          <a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a>
+          <a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a>
+          <a href="/paycheck-calculator/louisiana/">Louisiana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a>
+          <a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a>
+          <a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a>
+          <a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a>
+          <a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nebraska/">Nebraska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a>
+          <a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a>
+          <a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a>
+          <a href="/paycheck-calculator/oklahoma/">Oklahoma Paycheck Calculator</a>
+          <a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a>
+          <a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a>
+          <a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a>
+          <a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/utah/">Utah Paycheck Calculator</a>
+          <a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wisconsin/">Wisconsin Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a>
+        </div>
+        <!--PAYNAV:END-->
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">Two-way table · goodness of fit · Fisher, Yates and McNemar</div>
+    <h1>Chi Square Calculator</h1>
+    <p>Type your <strong>counts</strong> into the table (or paste them, or paste the raw answers) and get <strong>χ², the p-value</strong>, the expected counts and a picture of <strong>where the difference comes from</strong>. For the example of two groups with three answers (20, 30, 50 and 30, 40, 30) the result is <strong>χ² = 8.4286, 2 degrees of freedom, p = 0.01478</strong>.</p>
+  </section>
+
+  <div class="grid">
+
+    <!-- INPUT -->
+    <div class="card">
+      <div class="card-pad">
+        <h2 class="card-h2">Your counts</h2>
+        <div class="fld"><span class="lab">What do you want to test?</span><div class="seg cc-seg" id="xsMode" role="group" aria-label="What do you want to test?"><button type="button" data-v="table" class="on">Two-way table</button><button type="button" data-v="fit">Goodness of fit</button><button type="button" data-v="value">χ² value</button></div></div>
+        <p class="av-note" id="xsModeNote"></p>
+        <div id="xsTabW">
+          <div class="fld"><span class="lab">How will you enter the table?</span><div class="seg cc-seg" id="xsEntry" role="group" aria-label="How will you enter the table?"><button type="button" data-v="grid" class="on">Type it</button><button type="button" data-v="paste">Paste it</button><button type="button" data-v="raw">Raw answers</button></div></div>
+          <div id="xsGridW">
+            <div class="fld xs-gridw"><span class="lab">Counts <span class="unit">names are optional</span></span>
+              <div class="xs-grid" id="xsGrid"></div>
+              <div class="cc-tools"><button class="linkbtn" id="xsAddRow" type="button">+ Row</button><button class="linkbtn" id="xsDelRow" type="button">− Row</button><button class="linkbtn" id="xsAddCol" type="button">+ Column</button><button class="linkbtn" id="xsDelCol" type="button">− Column</button></div>
+            </div>
+            <p class="av-note" id="xsGridNote"></p>
+          </div>
+          <div id="xsPasteW" style="display:none">
+            <div class="fld"><label class="lab" for="xsPaste">Paste the table: one row per line</label><textarea class="cc-ta" id="xsPaste" placeholder="e.g.
+, Low, Medium, High
+Group A, 20, 30, 50
+Group B, 30, 40, 30" aria-label="Paste the table: one row per line" spellcheck="false"></textarea></div>
+            <p class="av-note" id="xsPasteNote"></p>
+          </div>
+          <div id="xsRawW" style="display:none">
+            <div class="fld"><label class="lab" for="xsRaw">One line per person: first answer, second answer</label><textarea class="cc-ta" id="xsRaw" placeholder="e.g.
+Woman, Yes
+Man, No
+Woman, Yes" aria-label="One line per person: first answer, second answer" spellcheck="false"></textarea></div>
+            <p class="av-note" id="xsRawNote"></p>
+          </div>
+          <div id="xsPairW" style="display:none">
+            <div class="fld"><span class="lab">Who is in the 2×2 table?</span><div class="seg cc-seg" id="xsPair" role="group" aria-label="Who is in the 2×2 table?"><button type="button" data-v="ind" class="on">Counted once each</button><button type="button" data-v="mc">Same people twice</button></div></div>
+            <p class="av-note" id="xsPairNote"></p>
+          </div>
+        </div>
+        <div id="xsFitW" style="display:none">
+          <div class="fld"><span class="lab">What do you expect?</span><div class="seg cc-seg" id="xsExp" role="group" aria-label="What do you expect?"><button type="button" data-v="eq" class="on">Equal shares</button><button type="button" data-v="pct">Percent</button><button type="button" data-v="cnt">Counts</button><button type="button" data-v="ratio">Ratio</button></div></div>
+          <p class="av-note" id="xsExpNote"></p>
+          <div class="fld"><span class="lab">How will you enter the counts?</span><div class="seg cc-seg" id="xsFEntry" role="group" aria-label="How will you enter the counts?"><button type="button" data-v="rows" class="on">Type them</button><button type="button" data-v="paste">Paste a list</button></div></div>
+          <div id="xsFitRowsW">
+            <div class="fld xs-gridw">
+              <div class="xs-grid" id="xsFit"></div>
+              <div class="cc-tools"><button class="linkbtn" id="xsAddCat" type="button">+ Category</button><button class="linkbtn" id="xsDelCat" type="button">− Category</button></div>
+            </div>
+            <p class="av-note" id="xsFitNote"></p>
+          </div>
+          <div id="xsFitPW" style="display:none">
+            <div class="fld"><label class="lab" for="xsFitP">One category per line</label><textarea class="cc-ta" id="xsFitP" placeholder="e.g.
+Red, 18
+Blue, 30" aria-label="One category per line" spellcheck="false"></textarea></div>
+            <p class="av-note" id="xsFitPNote"></p>
+          </div>
+        </div>
+        <div id="xsValW" style="display:none">
+          <div class="cc-two"><label class="fld" for="xsChi"><span class="lab">χ² value</span><div class="inp"><input id="xsChi" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 8.43"></div></label><label class="fld" for="xsDf"><span class="lab">Degrees of freedom</span><div class="inp"><input id="xsDf" type="text" inputmode="numeric" autocomplete="off" placeholder="e.g. 2"></div></label></div>
+        </div>
+        <div id="xsExW">
+          <p class="zs-sech" style="margin-top:4px">Try an example</p>
+          <div id="xsExT"><div class="chips" id="xsExTChips" role="group" aria-label="Example tables"><button type="button" data-v="levels">Two groups</button><button type="button" data-v="treat">2×2 treatment</button><button type="button" data-v="paired">Before and after</button><button type="button" data-v="small">Small counts</button></div></div>
+          <div id="xsExF" style="display:none"><div class="chips" id="xsExFChips" role="group" aria-label="Example lists"><button type="button" data-v="die">Die rolls</button><button type="button" data-v="pea">Ratio 9:3:3:1</button><button type="button" data-v="coin">Coin toss</button><button type="button" data-v="market">Market shares</button></div></div>
+        </div>
+        <label class="fld" for="xsAlpha"><span class="lab">Significance level α <span class="unit">optional</span></span><div class="inp"><input id="xsAlpha" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 0.05"></div></label>
+        <div class="chips" id="xsAlphaChips" role="group" aria-label="Common significance levels"><button type="button" data-v="0.1">0.10</button><button type="button" data-v="0.05">0.05</button><button type="button" data-v="0.01">0.01</button><button type="button" data-v="0.001">0.001</button></div>
+        <p class="av-note" id="xsAlphaNote"></p>
+        <div class="res-hint" id="xsHint" style="display:none;text-align:left;margin:4px 0 8px"></div>
+        <div id="xsAdvIn" style="display:none">
+          <div class="proj-sep"></div>
+          <div id="xsHeadW" style="display:none">
+            <div class="fld"><span class="lab">Headline test for a 2×2 table</span><div class="seg cc-seg" id="xsHead" role="group" aria-label="Headline test for a 2×2 table"><button type="button" data-v="pearson" class="on">Pearson</button><button type="button" data-v="yates">Yates</button><button type="button" data-v="fisher">Fisher</button></div></div>
+            <p class="av-note" id="xsHeadNote"></p>
+          </div>
+          <div id="xsTNamesW">
+            <p class="zs-sech">Variable names <span>· optional</span></p>
+            <div class="cc-two"><label class="fld" for="xsNameR"><span class="lab">The rows are…</span><div class="inp"><input id="xsNameR" type="text" inputmode="text" autocomplete="off" placeholder="e.g. group"></div></label><label class="fld" for="xsNameC"><span class="lab">The columns are…</span><div class="inp"><input id="xsNameC" type="text" inputmode="text" autocomplete="off" placeholder="e.g. answer"></div></label></div>
+            <p class="av-note" id="xsNamesNote"></p>
+          </div>
+          <div id="xsFAdvW" style="display:none">
+            <label class="fld" for="xsNameK"><span class="lab">What is being counted <span class="unit">optional</span></span><div class="inp"><input id="xsNameK" type="text" inputmode="text" autocomplete="off" placeholder="e.g. die faces"></div></label>
+            <p class="av-note" id="xsNameKNote"></p>
+            <label class="fld" for="xsParams"><span class="lab">Parameters estimated from these counts <span class="unit">optional</span></span><div class="inp"><input id="xsParams" type="text" inputmode="numeric" autocomplete="off" placeholder="e.g. 1"></div></label>
+            <p class="av-note" id="xsParamsNote"></p>
+          </div>
+          <div id="xsWW">
+            <label class="fld" for="xsW"><span class="lab">Effect size w to plan for <span class="unit">optional</span></span><div class="inp"><input id="xsW" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 0.3"></div></label>
+            <div class="chips" id="xsWChips" role="group" aria-label="Common effect sizes"><button type="button" data-v="0.1">Small 0.1</button><button type="button" data-v="0.3">Medium 0.3</button><button type="button" data-v="0.5">Large 0.5</button></div>
+            <p class="av-note" id="xsWNote"></p>
+          </div>
+          <label class="fld" for="xsDec"><span class="lab">Decimal places <span class="unit">optional</span></span><div class="inp"><input id="xsDec" type="text" inputmode="numeric" autocomplete="off" placeholder="e.g. 3"></div></label>
+          <p class="av-note" id="xsDecNote"></p>
+        </div>
+        <div class="add-row split" style="margin-top:16px">
+          <button class="linkbtn" id="xsClear" type="button">Clear fields</button>
+          <button class="advbtn" id="xsAdvBtn" type="button">
+            <span id="xsAdvBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div class="card">
+      <div class="card-pad">
+        <div class="bf-res">
+          <div class="res-lab" id="xsLab">Chi-square test of independence</div>
+          <div class="res-big"><span id="xsBig">—</span></div>
+          <div class="res-sub" id="xsSub" data-empty="Type your counts to see χ², the p-value, the expected counts and a picture of where the difference comes from.">Type your counts to see χ², the p-value, the expected counts and a picture of where the difference comes from.</div>
+        </div>
+        <div id="xsBody" style="display:none">
+          <p class="res-tip adv-tip" id="xsTip"></p>
+          <div id="xsVisWrap" style="display:none">
+            <p class="bm-h" id="xsVisH">Where the difference comes from</p>
+            <div class="cc-vis" id="xsVis"></div>
+            <p class="cb-note" id="xsVisKey"></p>
+          </div>
+          <div id="xsWarnWrap" style="display:none"><p class="xs-warn" id="xsWarn"></p></div>
+          <div id="xsTwoWrap" style="display:none">
+            <p class="bm-h" id="xsTwoH">Which p-value for a 2×2 table?</p>
+            <div class="cc-tbl"><table class="dtable" id="xsTwo"></table></div>
+            <p class="cb-note" id="xsTwoKey"></p>
+          </div>
+          <div id="xsMcWrap" style="display:none">
+            <p class="bm-h">McNemar’s test, all versions</p>
+            <div class="cc-tbl"><table class="dtable" id="xsMc"></table></div>
+            <p class="cb-note" id="xsMcKey"></p>
+          </div>
+          <div id="xsMergeWrap" style="display:none">
+            <p class="bm-h">Merge small groups</p>
+            <div id="xsMAxW"><div class="fld"><span class="lab">Merge two…</span><div class="seg cc-seg" id="xsMAx" role="group" aria-label="Merge two…"><button type="button" data-v="r" class="on">Rows</button><button type="button" data-v="c">Columns</button></div></div></div>
+            <div id="xsMPick"><div class="cc-two"><div class="fld"><span class="lab">This group</span><div class="csel" id="xsMA"><button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false" aria-label="This group"><span class="csel-val">—</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="csel-panel" role="listbox"><button type="button" class="csel-opt" role="option" data-value="0">—</button></div></div></div><div class="fld"><span class="lab">With this group</span><div class="csel" id="xsMB"><button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false" aria-label="With this group"><span class="csel-val">—</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="csel-panel" role="listbox"><button type="button" class="csel-opt" role="option" data-value="0">—</button></div></div></div></div></div>
+            <div class="cc-tools"><button class="linkbtn" id="xsMergeBtn" type="button">Merge them</button><button class="linkbtn" id="xsUndoBtn" type="button">Undo last merge</button></div>
+            <p class="cb-note" id="xsMergeNote"></p>
+          </div>
+          <div id="xsCrossWrap" style="display:none">
+            <p class="bm-h">Observed and expected counts</p>
+            <div class="cc-tbl"><table class="dtable" id="xsCross"></table></div>
+            <p class="cb-note" id="xsCrossKey"></p>
+          </div>
+          <details class="faq" id="xsCellWrap" style="display:none" open><summary>Cell by cell</summary>
+            <div class="cc-tbl"><table class="dtable" id="xsCells"></table></div>
+            <p class="cb-note" id="xsCellKey"></p>
+          </details>
+          <div id="xsEffWrap" style="display:none">
+            <p class="bm-h">How big is the effect?</p>
+            <div class="cc-tbl"><table class="dtable" id="xsEff"></table></div>
+            <p class="cb-note" id="xsEffKey"></p>
+          </div>
+          <div id="xsPowWrap" style="display:none">
+            <p class="bm-h">What would it take?</p>
+            <div class="cc-tbl"><table class="dtable" id="xsPow"></table></div>
+            <p class="cb-note" id="xsPowKey"></p>
+          </div>
+          <div id="xsCurveWrap" style="display:none">
+            <p class="bm-h">The chi-square curve</p>
+            <div class="cc-vis" id="xsCurve"></div>
+            <p class="cb-note" id="xsCurveKey"></p>
+          </div>
+          <div id="xsCheckWrap" style="display:none">
+            <p class="bm-h">What is being tested</p>
+            <ul class="cc-steps" id="xsCheck"></ul>
+          </div>
+          <div id="xsWriteWrap" style="display:none">
+            <p class="bm-h">Write it up <button class="linkbtn" type="button" data-copy="xsWrite" style="margin-left:8px">Copy sentence</button></p>
+            <div class="chips" id="xsCiteChips" role="group" aria-label="Sentence style"><button type="button" data-v="apa" class="on">APA</button><button type="button" data-v="chicago">Chicago</button><button type="button" data-v="plain">Plain English</button></div>
+            <p class="cc-write" id="xsWrite"></p>
+          </div>
+          <div id="xsCopyWrap" style="display:none">
+            <div class="cc-tools"><button class="linkbtn" type="button" data-copy="xsCopyTxt">Copy result</button><button class="linkbtn" type="button" data-copy="xsCsvTxt">Copy table as CSV</button></div>
+            <div id="xsCopyTxt" style="display:none"></div>
+            <div id="xsCsvTxt" style="display:none"></div>
+          </div>
+          <div id="xsStepsWrap" style="display:none">
+            <p class="bm-h">How it is worked out</p>
+            <ol class="cc-steps" id="xsSteps"></ol>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- mobile sticky bar -->
+  <div class="mbar" id="mbar">
+    <span class="mbar-lab" id="xsMLab">Chi-square</span>
+    <div class="mbar-vals"><b id="xsMVal">—</b></div>
+  </div>
+
+  <div class="related-calcs">
+    <p class="related-calcs-h">More calculators that may interest you</p>
+    <div class="pills">
+      <a class="pill" href="/p-value-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 24c4 0 6-16 13-16s9 16 13 16"/><path d="M3 24h26"/></svg>
+        P-Value Calculator
+      </a>
+      <a class="pill" href="/t-test-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg>
+        T-Test Calculator
+      </a>
+      <a class="pill" href="/confidence-interval-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h18M6 7v10M18 7v10"/></svg>
+        Confidence Interval Calculator
+      </a>
+      <a class="pill" href="/correlation-coefficient-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 28V4M4 28h24"/><path d="M7 25L27 7"/></svg>
+        Correlation Coefficient Calculator
+      </a>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use the chi square calculator</h2>
+        <p>Pick <strong>Two-way table</strong> to ask whether two things are related, or <strong>Goodness of fit</strong> to ask whether one list of counts matches what you expect. Type a count in each box (add rows and columns as needed), paste a table from a spreadsheet, or paste one line of raw answers per person and the table builds itself. The result updates as you type.</p>
+        <p>Under <strong>Go advanced</strong> you can name the variables, choose the headline test for a 2×2 table, allow for parameters estimated from the data, plan for an effect size and set the decimal places.</p>
+
+        <h2 id="xsFormulas">The chi square formula</h2>
+        <div class="formula">
+          χ² = Σ (O − E)² ÷ E
+          <small>O = observed count · E = expected count · TABLE: E = row total × column total ÷ grand total, df = (rows − 1) × (columns − 1) · LIST: E = total × expected share, df = categories − 1</small>
+        </div>
+
+        <h2 id="xsExample">Worked example: two groups, three answers</h2>
+        <table class="dtable xs-ex">
+          <thead><tr><th>Box</th><th>Observed</th><th>Expected</th><th>(O − E)² ÷ E</th></tr></thead>
+          <tbody><tr><td>A low</td><td>20</td><td>25</td><td>1.0000</td></tr><tr><td>A medium</td><td>30</td><td>35</td><td>0.7143</td></tr><tr><td>A high</td><td>50</td><td>40</td><td>2.5000</td></tr><tr><td>B low</td><td>30</td><td>25</td><td>1.0000</td></tr><tr><td>B medium</td><td>40</td><td>35</td><td>0.7143</td></tr><tr><td>B high</td><td>30</td><td>40</td><td>2.5000</td></tr></tbody>
+        </table>
+        <p>The contributions add up to χ² = 8.4286 with 2 degrees of freedom. The p-value is 0.01478 and the critical value at 0.05 is 5.9915. Cramér’s V is 0.2053. The two outer columns carry almost all of the difference; the middle one adds 1.4286.</p>
+
+        <h2 id="xsFit2">Goodness of fit examples</h2>
+        <p>A die rolled 60 times shows 8, 12, 9, 14, 11 and 6. Each face is expected 10 times, so χ² = 4.2000 with 5 degrees of freedom and p = 0.521: nothing unusual for a fair die.</p>
+        <p>Counts of 315, 108, 101 and 32 tested against a 9:3:3:1 ratio give χ² = 0.4700 with 3 degrees of freedom and p = 0.9254, a very close fit. A coin showing 62 heads in 100 tosses gives χ² = 5.7600 and p = 0.0164; the exact binomial test gives 0.02098.</p>
+
+        <h2 id="xsCritical">Chi-square critical values</h2>
+        <p>A statistic above the value in the table is significant at that level. For other degrees of freedom or levels, choose “χ² value” and type only the degrees of freedom.</p>
+        <table class="dtable xs-ex">
+          <thead><tr><th>df</th><th>0.10</th><th>0.05</th><th>0.01</th><th>0.001</th></tr></thead>
+          <tbody><tr><td>1</td><td>2.706</td><td>3.841</td><td>6.635</td><td>10.828</td></tr><tr><td>2</td><td>4.605</td><td>5.991</td><td>9.210</td><td>13.816</td></tr><tr><td>3</td><td>6.251</td><td>7.815</td><td>11.345</td><td>16.266</td></tr><tr><td>4</td><td>7.779</td><td>9.488</td><td>13.277</td><td>18.467</td></tr><tr><td>5</td><td>9.236</td><td>11.070</td><td>15.086</td><td>20.515</td></tr><tr><td>6</td><td>10.645</td><td>12.592</td><td>16.812</td><td>22.458</td></tr><tr><td>7</td><td>12.017</td><td>14.067</td><td>18.475</td><td>24.322</td></tr><tr><td>8</td><td>13.362</td><td>15.507</td><td>20.090</td><td>26.124</td></tr><tr><td>9</td><td>14.684</td><td>16.919</td><td>21.666</td><td>27.877</td></tr><tr><td>10</td><td>15.987</td><td>18.307</td><td>23.209</td><td>29.588</td></tr><tr><td>12</td><td>18.549</td><td>21.026</td><td>26.217</td><td>32.909</td></tr><tr><td>15</td><td>22.307</td><td>24.996</td><td>30.578</td><td>37.697</td></tr><tr><td>20</td><td>28.412</td><td>31.410</td><td>37.566</td><td>45.315</td></tr><tr><td>25</td><td>34.382</td><td>37.652</td><td>44.314</td><td>52.620</td></tr><tr><td>30</td><td>40.256</td><td>43.773</td><td>50.892</td><td>59.703</td></tr></tbody>
+        </table>
+      </div>
+
+      <div>
+        <h2 id="xsReading">Where the difference comes from</h2>
+        <p>One χ² number does not say which counts are unusual. The picture on this page does: each row of the table becomes a bar split into its columns, with dashed lines showing where the pieces would end if nothing differed. Amber pieces hold more counts than expected and blue pieces fewer, with stronger colour further from expected. The cell table gives each box its contribution and its standardized difference; beyond ±2 is unusual.</p>
+
+        <h2 id="xsSmall">Small counts: Fisher, Yates and merging</h2>
+        <p>The chi-square p-value is an approximation. A common rule asks for expected counts of at least 5 in every box of a 2×2 table, and in at least 80% of the boxes of a bigger one with none below 1. For the 2×2 table 20, 10 and 30, 40 the three p-values are 0.0291 (Pearson), 0.04953 (Yates) and 0.04858 (Fisher, two-sided). For 20, 30 and 30, 40 they are 0.7543, 0.9004 and 0.8515.</p>
+        <p>In a bigger table you can merge two rows, columns or categories on the page and undo it. Merge only groups that mean something together, and choose them before looking at which choice gives the p-value you like.</p>
+
+        <h2 id="xsMcNemar">The same people twice: McNemar</h2>
+        <p>If 314 patients are checked before and after a treatment and 101 are positive both times, 121 go from positive to negative, 59 from negative to positive and 33 are negative both times, only the 180 who changed are tested: χ² = (121 − 59)² ÷ 180 = 21.3556, p = 3.815 × 10⁻⁶. With fewer than 25 changes the exact or mid-p value is the better choice.</p>
+
+        <h2 id="xsPower">Effect size and sample size</h2>
+        <p>Cohen’s w = √(χ² ÷ N) measures the size of a difference independently of the number of counts. In the worked example w = 0.2053; if the true shares were exactly those, a new study of 200 counts would reach p below 0.05 74.1% of the time and 229 counts would give 80% power. With 100 counts and 1 degree of freedom, a medium effect (w = 0.3) has 85.1% power.</p>
+        <table class="dtable xs-ex">
+          <thead><tr><th>df</th><th>w = 0.1</th><th>w = 0.3</th><th>w = 0.5</th></tr></thead>
+          <tbody><tr><td>1</td><td>785</td><td>88</td><td>32</td></tr><tr><td>2</td><td>964</td><td>108</td><td>39</td></tr><tr><td>3</td><td>1091</td><td>122</td><td>44</td></tr><tr><td>4</td><td>1194</td><td>133</td><td>48</td></tr><tr><td>6</td><td>1363</td><td>152</td><td>55</td></tr></tbody>
+        </table>
+        <p>Counts needed for 80% power at α = 0.05.</p>
+
+        <h2>Related tools</h2>
+        <p>To turn any statistic into a probability use the <a href="/p-value-calculator/">p-value calculator</a>; to compare two averages the <a href="/t-test-calculator/">t-test calculator</a>; for the uncertainty of a proportion the <a href="/confidence-interval-calculator/">confidence interval calculator</a>; and for two number variables the <a href="/correlation-coefficient-calculator/">correlation coefficient calculator</a>.</p>
+        <h2>Sources</h2>
+        <ul>
+          <li>The statistic Σ(O − E)² ÷ E, the degrees of freedom (categories − 1 − estimated parameters, or (rows − 1) × (columns − 1)), the expected counts and the rule of 5 or more in all boxes of a 2×2 table and in 80% of the boxes of larger tables, with none at 0, follow the Wikipedia article “Pearson’s chi-squared test” (read 2026-11-25).</li>
+          <li>Yates’s correction of 0.5 follows “Yates’s correction for continuity”; here it never takes off more than the difference itself. Fisher’s two-sided p-value adds every table with the same totals whose probability is no larger than that of yours, as described in “Fisher’s exact test”. The exact test for two categories follows “Binomial test” (read 2026-11-26).</li>
+          <li>McNemar’s statistic, the corrected version, the exact and mid-p values and the guide of 25 changes follow “McNemar’s test”. Its first example (101, 121, 59, 33) gives 21.35 there and 21.3556 here; its second (59, 6, 16, 80) gives an exact p of 0.053 and a corrected χ² of 3.68, and this page gives 0.052 and 3.68 (read 2026-11-26).</li>
+          <li>The standardized difference of a box is the adjusted residual (O − E) ÷ √(E × (1 − row share) × (1 − column share)), with about ±2 unusual and ±3 very unusual, from the CASRAI guide “Standardized Residuals” (read 2026-11-25). For a single list the same idea uses (O − E) ÷ √(E × (1 − expected share)).</li>
+          <li>Cramér’s V and Cohen’s w (small 0.1, medium 0.3, large 0.5) follow “Cramér’s V” and “Effect size” (read 2026-11-25). Power uses the noncentral chi-square distribution with noncentrality N × w², as in the pingouin documentation of power_chi2, whose examples (power 0.2687 for w = 0.3, 20 counts, 1 degree of freedom; 121.14 counts for 3 degrees of freedom and 80% power) this calculator reproduces (read 2026-11-26).</li>
+          <li>The feature set was compared with the chi-square tools of Omnicalculator, Social Science Statistics, GraphPad QuickCalcs, Statistics by Jim, GigaCalculator, Pearson.com, MiniWebtool and Stats Kingdom, all opened on 2026-11-25.</li>
+        </ul>
+        <p><small>For information only. Check the assumptions of the method and your own data before drawing conclusions.</small></p>
+      </div>
+    </div>
+
+    <h2 id="xsFaq" style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>What is a chi-square test?</summary><p>It compares counts you observed with the counts you would expect if there were nothing going on. The statistic χ² adds up (observed − expected)² ÷ expected over every box. The larger it is for its degrees of freedom, the smaller the p-value.</p></details>
+    <details class="faq"><summary>What is the difference between independence and goodness of fit?</summary><p>Independence takes a two-way table, such as group by answer, and asks whether the two are related. Goodness of fit takes one list of counts, such as the faces of a die, and asks whether they match shares you state in advance.</p></details>
+    <details class="faq"><summary>How do I calculate expected counts?</summary><p>In a table, expected = row total × column total ÷ grand total. In the example the first box is 100 × 50 ÷ 200 = 25. In a goodness-of-fit test, expected = total × expected share.</p></details>
+    <details class="faq"><summary>How many degrees of freedom are there?</summary><p>For a table it is (rows − 1) × (columns − 1), so a 2×3 table has 2. For goodness of fit it is the number of categories − 1, less one for each parameter you estimated from the same data.</p></details>
+    <details class="faq"><summary>What p-value is significant?</summary><p>The usual line is 0.05: a p-value below it counts as significant. You can type another level. The example has p = 0.01478, below 0.05, so the two rows split differently by more than chance usually produces.</p></details>
+    <details class="faq"><summary>Can I use percentages instead of counts?</summary><p>No. The test depends on how many people or items there are: the same percentages from 20 and from 2,000 observations give very different results. Convert percentages back to counts first. Percentages are fine as expected shares in a goodness-of-fit test.</p></details>
+    <details class="faq"><summary>What if an expected count is below 5?</summary><p>The chi-square p-value becomes unreliable when expected counts are small. For a 2×2 table use Fisher’s exact test, which this page shows next to it; for two categories use the exact binomial test; for bigger tables, merge groups that belong together or collect more data.</p></details>
+    <details class="faq"><summary>When should I use Fisher’s exact test or Yates’s correction?</summary><p>Both apply to 2×2 tables. Fisher’s test is exact and suits small counts. Yates’s correction lowers χ² to allow for counts being whole numbers and is more cautious. For the table 20, 10 and 30, 40 the p-values are 0.0291 (Pearson), 0.04953 (Yates) and 0.04858 (Fisher, two-sided).</p></details>
+    <details class="faq"><summary>When do I need McNemar’s test?</summary><p>Use it when the same people were measured twice with a yes or no answer, such as before and after. Only the people who changed enter the test: χ² = (b − c)² ÷ (b + c). Fill a 2×2 table and choose “Same people twice”.</p></details>
+    <details class="faq"><summary>Does a large χ² mean a strong effect?</summary><p>No. χ² grows with the number of counts. Cramér’s V and Cohen’s w describe the size of the effect. In the example w = 0.2053, a small effect by Cohen’s guide.</p></details>
+    <details class="faq"><summary>How many observations do I need?</summary><p>That depends on the effect you want to be able to detect. For 80% power at α = 0.05 with 1 degree of freedom you need about 785 counts for a small effect (w = 0.1), 88 for a medium one (0.3) and 32 for a large one (0.5).</p></details>
+    <details class="faq"><summary>I only have the χ² value. Can I get the p-value?</summary><p>Yes. Choose “χ² value”, type the statistic and the degrees of freedom, and the p-value, the critical value and the curve appear. For example χ² = 3.84 with 1 degree of freedom gives p = 0.05004. With only the degrees of freedom typed, the critical value is shown.</p></details>
+  </section>
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+      <div class="footer-stack">
+<div class="footer-col" style="order:1">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+          <li><a href="/paint-calculator/">Paint Calculator</a></li>
+          <li><a href="/wallpaper-calculator/">Wallpaper Calculator</a></li>
+          <li><a href="/square-footage-calculator/">Square Footage Calculator</a></li>
+          <li><a href="/tape-measure-fraction-calculator/">Tape Measure Fraction Calculator</a></li>
+          <li><a href="/stair-calculator/">Stair Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:5">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Cooking &amp;</span> <span class="ft2">Kitchen</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/recipe-converter/">Recipe Converter</a></li>
+          <li><a href="/turkey-cooking-time-calculator/">Turkey Cooking Time Calculator</a></li>
+          <li><a href="/turkey-thawing-time-calculator/">Turkey Thawing Time Calculator</a></li>
+          <li><a href="/turkey-size-calculator/">Turkey Size Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:5">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Medication &amp;</span> <span class="ft2">Lab</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/mg-to-ml-calculator/">mg to mL Calculator</a></li>
+          <li><a href="/dilution-calculator/">Dilution Calculator</a></li>
+          <li><a href="/retatrutide-dosage-calculator/">Retatrutide Dosage Calculator</a></li>
+          <li><a href="/serial-dilution-calculator/">Serial Dilution Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:6">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Money &amp;</span> <span class="ft2">Finance</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/mortgage-calculator/">Mortgage Calculator</a></li>
+          <li><a href="/loan-calculator/">Loan Calculator</a></li>
+          <li><a href="/auto-loan-calculator/">Auto Loan Calculator</a></li>
+          <li><a href="/car-sales-tax-calculator/">Car Sales Tax Calculator</a></li>
+          <li><a href="/overtime-calculator/">Overtime Calculator</a></li>
+          <li><a href="/salary-calculator/">Salary Calculator</a></li>
+          <li><a href="/markup-calculator/">Markup Calculator</a></li>
+          <li><a href="/profit-margin-calculator/">Profit Margin Calculator</a></li>
+          <li><a href="/discount-calculator/">Discount Calculator</a></li>
+          <li><a href="/commission-calculator/">Commission Calculator</a></li>
+          <li><a href="/realtor-commission-calculator/">Realtor Commission Calculator</a></li>
+          <li><a href="/unit-price-calculator/">Unit Price Calculator</a></li>
+          <li><a href="/compound-interest-calculator/">Compound Interest Calculator</a></li>
+          <li><a href="/amortization-calculator/">Amortization Calculator</a></li>
+          <!--STAXFOOT:START-->
+          <li><a href="/sales-tax-calculator/">Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/california/">California Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/chicago/">Chicago Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/florida/">Florida Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/las-vegas/">Las Vegas Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/los-angeles/">Los Angeles Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/michigan/">Michigan Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/missouri/">Missouri Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/north-carolina/">North Carolina Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/ohio/">Ohio Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/texas/">Texas Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/virginia/">Virginia Sales Tax Calculator</a></li>
+          <!--STAXFOOT:END-->
+          <li><a href="/tip-calculator/">Tip Calculator</a></li>
+          <li><a href="/how-much-to-tip/">How Much to Tip</a></li>
+        </ul>
+      </div>
+      </div>
+
+      <div class="footer-right">
+<div class="footer-col footer-col--two" style="order:2">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/vo2-max-calculator/">VO2 Max Calculator</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/bmi-calculator/">BMI Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/ideal-weight-calculator/">Ideal Weight Calculator</a></li>
+          <li><a href="/lean-body-mass-calculator/">Lean Body Mass Calculator</a></li>
+          <li><a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio Calculator</a></li>
+          <li><a href="/gmi-calculator/">GMI Calculator</a></li>
+          <li><a href="/a1c-calculator/">A1C Calculator</a></li>
+          <li><a href="/calorie-calculator/">Calorie Calculator</a></li>
+          <li><a href="/calorie-deficit-calculator/">Calorie Deficit Calculator</a></li>
+          <li><a href="/bmr-calculator/">BMR Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/water-intake-calculator/">Water Intake Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/protein-intake-calculator/">Protein Intake Calculator</a></li>
+          <li><a href="/steps-to-miles-calculator/">Steps to Miles Calculator</a></li>
+          <li><a href="/dog-age-calculator/">Dog Age Calculator</a></li>
+          <li><a href="/cat-age-calculator/">Cat Age Calculator</a></li>
+          <li><a href="/calories-burned-calculator/">Calories Burned Calculator</a></li>
+          <li><a href="/calories-burned-walking-calculator/">Calories Burned Walking Calculator</a></li>
+          <li><a href="/calories-burned-running-calculator/">Calories Burned Running Calculator</a></li>
+          <li><a href="/keto-calculator/">Keto Calculator</a></li>
+          <li><a href="/net-carb-calculator/">Net Carb Calculator</a></li>
+          <li><a href="/intermittent-fasting-calculator/">Intermittent Fasting Calculator</a></li>
+          <li><a href="/bsa-calculator/">BSA Calculator</a></li>
+          <li><a href="/dog-food-calculator/">Dog Food Calculator</a></li>
+          <li><a href="/ffmi-calculator/">FFMI Calculator</a></li>
+          <li><a href="/bulking-calculator/">Bulking Calculator</a></li>
+          <li><a href="/weight-loss-calculator/">Weight Loss Calculator</a></li>
+          <li><a href="/weight-loss-percentage-calculator/">Weight Loss Percentage Calculator</a></li>
+          <li><a href="/max-heart-rate-calculator/">Max Heart Rate Calculator</a></li>
+          <li><a href="/caffeine-calculator/">Caffeine Calculator</a></li>
+          <li><a href="/caffeine-half-life-calculator/">Caffeine Half Life Calculator</a></li>
+          <li><a href="/fiber-calculator/">Fiber Calculator</a></li>
+          <li><a href="/creatine-calculator/">Creatine Calculator</a></li>
+          <li><a href="/vitamin-d-calculator/">Vitamin D Calculator</a></li>
+          <li><a href="/body-recomposition-calculator/">Body Recomposition Calculator</a></li>
+        </ul>
+      </div>
+
+        <div class="footer-sub">
+<div class="footer-subcol">
+<div class="footer-col" style="order:3">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/semester-grade-calculator/">Semester Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+          <li><a href="/grade-curve-calculator/">Grade Curve Calculator</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:START-->
+<div class="footer-col" style="order:7">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Unit</span> <span class="ft2">Converters</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/unit-converter/">Unit Converter</a></li>
+          <li><a href="/length-converter/">Length Converter</a></li>
+          <li><a href="/weight-converter/">Weight Converter</a></li>
+          <li><a href="/volume-converter/">Volume Converter</a></li>
+          <li><a href="/temperature-converter/">Temperature Converter</a></li>
+          <li><a href="/area-converter/">Area Converter</a></li>
+          <li><a href="/speed-converter/">Speed Converter</a></li>
+          <li><a href="/data-storage-converter/">Data Storage Converter</a></li>
+          <li><a href="/cooking-converter/">Cooking Measurement Converter</a></li>
+          <li><a href="/px-to-rem-converter/">PX to REM Converter</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:END-->
+</div>
+
+<div class="footer-col" style="order:4">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/fraction-calculator/">Fraction Calculator</a></li>
+          <li><a href="/standard-deviation-calculator/">Standard Deviation Calculator</a></li>
+          <li><a href="/p-value-calculator/">P-Value Calculator</a></li>
+          <li><a href="/confidence-interval-calculator/">Confidence Interval Calculator</a></li>
+          <li><a href="/z-score-calculator/">Z-Score Calculator</a></li>
+          <li><a href="/t-test-calculator/">T-Test Calculator</a></li>
+          <li><a href="/correlation-coefficient-calculator/">Correlation Coefficient Calculator</a></li>
+          <li><a href="/linear-regression-calculator/">Linear Regression Calculator</a></li>
+          <li><a href="/chi-square-calculator/">Chi Square Calculator</a></li>
+          <li><a href="/scientific-notation-calculator/">Scientific Notation Calculator</a></li>
+          <li><a href="/weighted-average-calculator/">Weighted Average Calculator</a></li>
+          <li><a href="/average-calculator/">Average Calculator</a></li>
+          <li><a href="/batting-average-calculator/">Batting Average Calculator</a></li>
+          <li><a href="/stock-average-calculator/">Stock Average Calculator</a></li>
+          <li><a href="/dice-average-calculator/">Dice Average Calculator</a></li>
+          <li><a href="/time-average-calculator/">Time Average Calculator</a></li>
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+          <li><a href="/percentage-change-calculator/">Percentage Change Calculator</a></li>
+          <li><a href="/age-calculator/">Age Calculator</a></li>
+          <li><a href="/date-calculator/">Date Calculator</a></li>
+          <li><a href="/time-calculator/">Time Calculator</a></li>
+          <li><a href="/hours-calculator/">Hours Calculator</a></li>
+          <li><a href="/seconds-to-hours-calculator/">Seconds to Hours Calculator</a></li>
+          <li><a href="/minutes-to-hours-calculator/">Minutes to Hours Calculator</a></li>
+          <li><a href="/seconds-to-minutes-calculator/">Seconds to Minutes Calculator</a></li>
+          <li><a href="/triangle-calculator/">Triangle Calculator</a></li>
+          <li><a href="/random-number-generator/">Random Number Generator</a></li>
+        </ul>
+      </div>
+        </div>
+      </div>
+
+      <!--PAYFOOT:START-->
+      <div class="footer-col footer-col--wide">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Paycheck</span> <span class="ft2">Calculators</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/paycheck-calculator/">Paycheck Calculator (all states)</a></li>
+          <li><a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arkansas/">Arkansas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/california/">California Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/hawaii/">Hawaii Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/louisiana/">Louisiana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nebraska/">Nebraska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/oklahoma/">Oklahoma Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/utah/">Utah Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wisconsin/">Wisconsin Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a></li>
+        </ul>
+      </div>
+      <!--PAYFOOT:END-->
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/blog/">Blog</a>
+      <span aria-hidden="true">·</span>
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/whats-new/">What's new</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Page last updated: <time datetime="2026-11-25">November 25, 2026</time>. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+</div>
+
+<script src="/assets/app.js?v=366"></script>
+<script>CalcThis.initChiCalc();</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>

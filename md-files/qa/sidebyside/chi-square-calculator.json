@@ -1,0 +1,29 @@
+{
+ "date": "2026-11-26",
+ "competitors": [
+  { "name": "Omnicalculator chi-square calculator", "url": "https://www.omnicalculator.com/statistics/chi-square", "reopenedAfterBuild": true, "gaps": [] },
+  { "name": "Social Science Statistics chi square", "url": "https://www.socscistatistics.com/tests/chisquare2/calculator/", "reopenedAfterBuild": true, "gaps": [] },
+  { "name": "GraphPad QuickCalcs", "url": "https://www.graphpad.com/quickcalcs/chisquared1/", "reopenedAfterBuild": true, "gaps": [] },
+  { "name": "Statistics by Jim chi-square calculator", "url": "https://statisticsbyjim.com/calculators/chi-square-calculator/", "reopenedAfterBuild": true, "gaps": [] },
+  { "name": "GigaCalculator chi square", "url": "https://www.gigacalculator.com/calculators/chi-square-calculator.php", "reopenedAfterBuild": true, "gaps": [] },
+  { "name": "Pearson.com chi square calculator", "url": "https://www.pearson.com/channels/calculators/chi-square-calculator", "reopenedAfterBuild": true, "gaps": [] },
+  { "name": "MiniWebtool chi-square test calculator", "url": "https://miniwebtool.com/chi-square-test-calculator/", "reopenedAfterBuild": true, "gaps": [] },
+  { "name": "Stats Kingdom chi-square calculator", "url": "https://www.statskingdom.com/310GoodnessChi.html", "reopenedAfterBuild": true, "gaps": [] }
+ ],
+ "weBeat": [
+  "visual: 'Where the difference comes from' draws each table row as a bar split into its columns (thickness = row size) with dashed no-difference lines and each piece coloured more or fewer than expected by strength; goodness of fit and McNemar get the same colours against expected markers; plus heat-shaded contributions and the chi-square curve. The 8 competitors show numbers, and at most a curve, bars or a contribution heatmap without direction",
+  "functional: one page for typed, pasted and raw-answer tables, goodness of fit (equal, percent, counts, ratio), chi-square value or critical value, Fisher, Yates, McNemar and binomial; plain-words reading with the user's names; merging small groups with undo; 'What would it take?' counts and power; no sign-in and no daily limit",
+  "every competitor feature kept except Monte Carlo simulation, R code, Excel / CSV file upload, PDF / JPG download, Share / Embed, Print, last-run restore and tables above 20 x 20 (dropped under his answer 'Approve all', recorded in the parity file); on reopening, two small items found (critical value from degrees of freedom alone on Pearson.com, preset effect sizes on Stats Kingdom) were added before this record"
+ ],
+ "gapsLeft": [],
+ "unverified": [
+  "real phone",
+  "other browsers (Chrome only)",
+  "print",
+  "Copy buttons in a real clipboard session",
+  "Pearson.com results are behind a sign-in and were never seen",
+  "competitors were reopened after the build and read, not typed into again (numbers were typed on 2026-11-25 and match: 8.4286 / .014783, die 4.2 / .5210, Fisher .0486, 0.09796 / .7543)",
+  "Fisher's test only for 2 x 2 tables and totals up to 10 million; no exact test for larger tables",
+  "the Chicago-style sentence copies the pattern Social Science Statistics prints; the style rule itself was not read"
+ ]
+}

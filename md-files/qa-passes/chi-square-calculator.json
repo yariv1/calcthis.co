@@ -1,0 +1,36 @@
+{
+ "slug": "chi-square-calculator",
+ "pass": true,
+ "at": "2026-11-25T23:43:42.356Z",
+ "hash": "a52a58923bed2209",
+ "viewports": {
+  "mobile": {
+   "steps": 2191,
+   "fails": []
+  },
+  "desktop": {
+   "steps": 2191,
+   "fails": []
+  }
+ },
+ "oracle": {
+  "runs": 306,
+  "fails": [],
+  "cmp": 25176
+ },
+ "shots": [
+  "md-files/qa-passes/shots/chi-square-calculator-1-empty-mobile.png",
+  "md-files/qa-passes/shots/chi-square-calculator-2-filled-mobile.png",
+  "md-files/qa-passes/shots/chi-square-calculator-3-result-mobile.png",
+  "md-files/qa-passes/shots/chi-square-calculator-4-advanced-mobile.png",
+  "md-files/qa-passes/shots/chi-square-calculator-5-error-mobile.png",
+  "md-files/qa-passes/shots/chi-square-calculator-6-after-chaos-mobile.png",
+  "md-files/qa-passes/shots/chi-square-calculator-1-empty-desktop.png",
+  "md-files/qa-passes/shots/chi-square-calculator-2-filled-desktop.png",
+  "md-files/qa-passes/shots/chi-square-calculator-3-result-desktop.png",
+  "md-files/qa-passes/shots/chi-square-calculator-4-advanced-desktop.png",
+  "md-files/qa-passes/shots/chi-square-calculator-5-error-desktop.png",
+  "md-files/qa-passes/shots/chi-square-calculator-6-after-chaos-desktop.png"
+ ],
+ "console": []
+}

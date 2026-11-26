@@ -29016,6 +29016,757 @@ CalcThis.initRegCalc = function () {
 };
 /* REG:END */
 
+/* CHI:BEGIN */
+/* =========================================================
+   CHI SQUARE calculator (/chi-square-calculator/). Competitors opened live (2026-11-25): Omnicalculator, Social Science Statistics, GraphPad QuickCalcs, Statistics by Jim, GigaCalculator,
+   Pearson.com (result behind sign-in), MiniWebtool, Stats Kingdom. Notes: md-files/calcthis-chisquare-research.md.
+   Sources read 2026-11-25/26: Wikipedia "Pearson's chi-squared test" (statistic, degrees of freedom k - 1 - fitted parameters or (r - 1)(c - 1), expected counts 5 or more in all cells of a 2 x 2 table and
+   in 80% of cells of larger ones, none 0), "Yates's correction for continuity" (0.5), "Fisher's exact test" (two-sided = sum of tables with probability <= the observed one, as in R), "McNemar's test"
+   (statistic, corrected (|b - c| - 1)^2 / (b + c), exact binomial, mid-p, b + c < 25), "Binomial test" (two-sided = sum of outcomes as likely or less likely), "Cramer's V", "Effect size" (Cohen's w;
+   small .10, medium .30, large .50), "Noncentral chi-squared distribution"; pingouin power_chi2 documentation (noncentrality = N x w^2); CASRAI "Standardized Residuals" (adjusted residual, about +-2).
+   A continuity correction never exceeds the difference it corrects (it stops at 0).
+   ========================================================= */
+/* CHI-ENGINE:START */
+CalcThis.chiEngine = (function () {
+  var P = CalcThis.pvalueEngine, MAXDIM = 20, MAXCOUNT = 1e9, EXACTMAX = 1e7;
+  function pRight(x, df) { return P.cdf('chi', { df: df }, x).hi; }
+  function crit(alpha, df) { return P.inv('chi', { df: df }, alpha, 'R'); }
+  /* sum of the probabilities of a unimodal discrete distribution: lo..hi, log pmf lp(x), mode m */
+  function discrete(lo, hi, m, lp, k) {
+    var pk = Math.exp(lp(k)), lim = lp(k) + 1e-7;
+    function walk(from, dir) {
+      var t = 0, x, v;
+      for (x = from; x >= lo && x <= hi; x += dir) { v = Math.exp(lp(x)); t += v; if (v <= t * 1e-17 && (dir < 0 ? x < m : x > m)) break; if (v === 0 && (dir < 0 ? x < m : x > m)) break; }
+      return t;
+    }
+    var left = k <= m ? walk(k, -1) : 1 - walk(k + 1, 1);
+    var right = k >= m ? walk(k, 1) : 1 - walk(k - 1, -1);
+    var two, a, b, mid;
+    if (lp(m) <= lim) two = 1;
+    else if (k < m) {
+      a = m; b = hi + 1;
+      while (b - a > 1) { mid = Math.floor((a + b) / 2); if (lp(mid) <= lim) b = mid; else a = mid; }
+      two = walk(k, -1) + (b <= hi ? walk(b, 1) : 0);
+    } else {
+      a = lo - 1; b = m;
+      while (b - a > 1) { mid = Math.floor((a + b) / 2); if (lp(mid) <= lim) a = mid; else b = mid; }
+      two = walk(k, 1) + (a >= lo ? walk(a, -1) : 0);
+    }
+    function cap(v) { return v > 1 ? 1 : (v < 0 ? 0 : v); }
+    return { two: cap(two), left: cap(left), right: cap(right), obs: pk };
+  }
+  function lchoose(n, k) {
+    if (k < 0 || k > n) return -Infinity;
+    var j = Math.min(k, n - k), s = 0, i;
+    if (j <= 200) { for (i = 1; i <= j; i++) s += Math.log((n - j + i) / i); return s; }
+    return P.lgamma(n + 1) - P.lgamma(k + 1) - P.lgamma(n - k + 1);
+  }
+  function fisher(a, b, c, d) {
+    var r1 = a + b, r2 = c + d, c1 = a + c, n = r1 + r2;
+    if (n > EXACTMAX) return null;
+    var lo = Math.max(0, c1 - r2), hi = Math.min(r1, c1), m = Math.min(hi, Math.max(lo, Math.floor((r1 + 1) * (c1 + 1) / (n + 2)))), den = lchoose(n, c1);
+    return discrete(lo, hi, m, function (x) { return lchoose(r1, x) + lchoose(r2, c1 - x) - den; }, a);
+  }
+  function binom(k, n, p) {
+    if (n > EXACTMAX || !(p > 0 && p < 1)) return null;
+    var m = Math.min(n, Math.floor((n + 1) * p)), lq = Math.log(1 - p), lpp = Math.log(p);
+    var r = discrete(0, n, m, function (x) { return lchoose(n, x) + x * lpp + (n - x) * lq; }, k);
+    return r;
+  }
+  function mcnemar(b, c) {
+    var s = b + c; if (!(s > 0)) return null;
+    var d = Math.abs(b - c), chi = d * d / s, cc = Math.max(0, d - 1), chiC = cc * cc / s, k = Math.min(b, c), exact = null, midp = null;
+    if (s <= EXACTMAX) {
+      var r = binom(k, s, 0.5);
+      exact = b === c ? 1 : Math.min(1, 2 * r.left);
+      midp = b === c ? 1 : Math.min(1, Math.max(0, exact - r.obs));
+    }
+    return { b: b, c: c, chi: chi, p: pRight(chi, 1), chiC: chiC, pC: pRight(chiC, 1), exact: exact, midp: midp };
+  }
+  function strength(w) { return w < 0.1 ? 'very small' : w < 0.3 ? 'small' : w < 0.5 ? 'medium' : 'large'; }
+  function table(O) {
+    var R = O.length, C = O[0].length, rt = [], ct = [], n = 0, i, j;
+    for (j = 0; j < C; j++) ct.push(0);
+    for (i = 0; i < R; i++) { var s = 0; for (j = 0; j < C; j++) { s += O[i][j]; ct[j] += O[i][j]; } rt.push(s); n += s; }
+    var E = [], K = [], Z = [], chi = 0, chiY = 0, lt5 = 0, lt1 = 0, minE = Infinity;
+    for (i = 0; i < R; i++) {
+      E.push([]); K.push([]); Z.push([]);
+      for (j = 0; j < C; j++) {
+        var e = rt[i] * ct[j] / n, d = O[i][j] - e, k = d * d / e, den = e * (1 - rt[i] / n) * (1 - ct[j] / n);
+        var y = Math.max(0, Math.abs(d) - 0.5); chiY += y * y / e;
+        E[i].push(e); K[i].push(k); Z[i].push(den > 0 ? d / Math.sqrt(den) : 0); chi += k;
+        if (e < 5) lt5++; if (e < 1) lt1++; if (e < minE) minE = e;
+      }
+    }
+    var df = (R - 1) * (C - 1), mn = Math.min(R, C) - 1, w = Math.sqrt(chi / n);
+    var out = { R: R, C: C, n: n, rt: rt, ct: ct, O: O, E: E, K: K, Z: Z, chi: chi, df: df, p: pRight(chi, df), w: w, V: Math.sqrt(chi / (n * mn)), cells: R * C, lt5: lt5, lt1: lt1, minE: minE };
+    out.smallBad = (R === 2 && C === 2) ? lt5 > 0 : (lt1 > 0 || lt5 / (R * C) > 0.2 + 1e-12);
+    if (R === 2 && C === 2) { out.yates = { chi: chiY, p: pRight(chiY, 1) }; out.fisher = fisher(O[0][0], O[0][1], O[1][0], O[1][1]); }
+    return out;
+  }
+  /* goodness of fit: observed counts and expected counts (same total) */
+  function fit(O, E, params) {
+    var k = O.length, n = 0, i, K = [], Z = [], chi = 0, lt5 = 0, lt1 = 0, minE = Infinity;
+    for (i = 0; i < k; i++) n += O[i];
+    for (i = 0; i < k; i++) {
+      var e = E[i], d = O[i] - e, c = d * d / e, den = e * (1 - e / n);
+      K.push(c); Z.push(den > 0 ? d / Math.sqrt(den) : 0); chi += c; if (e < 5 - 1e-9) lt5++; if (e < 1 - 1e-9) lt1++; if (e < minE) minE = e;
+    }
+    var df = k - 1 - (params || 0);
+    var out = { k: k, n: n, O: O, E: E, K: K, Z: Z, chi: chi, df: df, p: df > 0 ? pRight(chi, df) : null, w: Math.sqrt(chi / n), cells: k, lt5: lt5, lt1: lt1, minE: minE };
+    out.smallBad = lt1 > 0 || lt5 / k > 0.2 + 1e-12;
+    if (k === 2 && !params) out.binom = binom(O[0], n, E[0] / n);
+    return out;
+  }
+  /* P(noncentral chi-square with df and noncentrality lambda > x): Poisson mixture of central ones */
+  function power(lambda, df, x) {
+    if (lambda <= 0) return pRight(x, df);
+    if (lambda + df - x > 40 * Math.sqrt(2 * (df + 2 * lambda))) return 1;
+    var m = lambda / 2, k0 = Math.floor(m), w0 = Math.exp(-m + k0 * Math.log(m) - P.lgamma(k0 + 1)), s = 0, w = w0, k;
+    for (k = k0; ; k++) { s += w * pRight(x, df + 2 * k); w *= m / (k + 1); if (w < 1e-17) break; }
+    w = w0;
+    for (k = k0; k > 0; k--) { w *= k / m; if (w < 1e-17) break; s += w * pRight(x, df + 2 * (k - 1)); }
+    return s > 1 ? 1 : s;
+  }
+  /* what would it take, for a pattern of size w: total counts for p below alpha, power now, total for 80% power */
+  function plan(w, n, df, alpha) {
+    var x = crit(alpha, df), out = { crit: x, power: power(n * w * w, df, x), sig: null, n80: null };
+    if (w > 0) {
+      out.sig = Math.floor(x / (w * w)) + 1;
+      if (alpha < 0.8) {
+        var lo = 0, hi = 1, i, mid;
+        for (i = 0; i < 200 && power(hi, df, x) < 0.8; i++) hi *= 2;
+        for (i = 0; i < 60 && hi - lo > 1e-10 * hi; i++) { mid = (lo + hi) / 2; if (power(mid, df, x) < 0.8) lo = mid; else hi = mid; }
+        out.n80 = Math.ceil(hi / (w * w) - 1e-9);
+      }
+    }
+    return out;
+  }
+  /* ---------- text readers ---------- */
+  function num(raw) {
+    var s = String(raw == null ? '' : raw).replace(/[\s ]/g, '').replace(/−/g, '-');
+    if (s === '') return { empty: true };
+    var pc = false; if (/%$/.test(s)) { pc = true; s = s.slice(0, -1); }
+    if (/^[+-]?\d{1,3}(,\d{3})+(\.\d*)?$/.test(s)) s = s.replace(/,/g, '');
+    if (/^[+-]?\.?$/.test(s) || /^[+-]?(\d+\.?\d*|\.\d+)e[+-]?$/i.test(s)) return { partial: true };
+    var fr = s.match(/^(\d+\.?\d*|\.\d+)\/(\d+\.?\d*|\.\d+)?$/);
+    if (fr) { if (fr[2] === undefined || parseFloat(fr[2]) === 0) return { partial: true }; return { v: parseFloat(fr[1]) / parseFloat(fr[2]), frac: true, pc: pc }; }
+    if (!/^[+-]?(\d+\.?\d*|\.\d+)(e[+-]?\d+)?$/i.test(s)) return { err: 'junk' };
+    var v = parseFloat(s); if (!isFinite(v) || Math.abs(v) > MAXCOUNT) return { err: 'big' };
+    return { v: v, pc: pc };
+  }
+  function lines(text) { return String(text || '').replace(/\r/g, '').split('\n').filter(function (l) { return l.trim() !== ''; }); }
+  function delim(ls) { return ls.some(function (l) { return l.indexOf('\t') >= 0; }) ? '\t' : ls.some(function (l) { return l.indexOf(';') >= 0; }) ? ';' : ls.some(function (l) { return l.indexOf(',') >= 0; }) ? ',' : ' '; }
+  function cellsOf(l, d) { return d === ' ' ? l.trim().split(/\s+/) : l.split(d).map(function (c) { return c.trim(); }); }
+  function isNum(t) { var r = num(t); return !r.empty && !r.err; }
+  /* a pasted table: { rows, cols, cells (raw text), error } */
+  function pasteTable(text) {
+    var ls = lines(text); if (!ls.length) return { empty: true };
+    var d = delim(ls), parts = ls.map(function (l) { var c = cellsOf(l, d); while (d !== ' ' && c.length > 1 && c[c.length - 1] === '') c.pop(); return c; });
+    var head = null, f = parts[0];
+    if (parts.length > 1 && (f.every(function (c) { return !isNum(c); }) || (d !== ' ' && f.length > 1 && f[0] === '') || (d !== ' ' && f.slice(1).length && f.slice(1).every(function (c) { return !isNum(c); })))) head = parts.shift();
+    var rows = [], cells = [], i, C = null;
+    for (i = 0; i < parts.length; i++) {
+      var p = parts[i].slice(), name = '';
+      if (d === ' ') { var nm = []; while (p.length && !isNum(p[0])) nm.push(p.shift()); name = nm.join(' '); }
+      else if (p.length > 1 && !isNum(p[0])) name = p.shift();
+      else if (head && head.length === p.length && p.length > 1 && (head[0] === '' )) name = p.shift();
+      if (C === null) C = p.length;
+      if (p.length !== C) return { error: 'Line ' + (i + 1 + (head ? 1 : 0)) + ' has ' + p.length + ' counts but the line before it has ' + C + ' — every row needs the same number of counts. Don’t use commas inside a number.' };
+      rows.push(name); cells.push(p);
+    }
+    var cols = [];
+    if (head) { if (head.length === C + 1) cols = head.slice(1); else if (head.length === C) cols = head.slice(); }
+    return { rows: rows, cols: cols, cells: cells, headIgnored: !!head && !cols.length };
+  }
+  /* one answer pair per line -> a table of counts */
+  function rawTable(text) {
+    var ls = lines(text); if (!ls.length) return { empty: true };
+    var d = delim(ls), rows = [], cols = [], ri = {}, ci = {}, pairs = [], skipped = 0;
+    ls.forEach(function (l) {
+      var c = cellsOf(l, d).filter(function (x) { return x !== ''; });
+      if (c.length !== 2) { skipped++; return; }
+      var a = c[0].slice(0, 24), b = c[1].slice(0, 24), ka = '$' + a.toLowerCase(), kb = '$' + b.toLowerCase();
+      if (!(ka in ri)) { ri[ka] = rows.length; rows.push(a); }
+      if (!(kb in ci)) { ci[kb] = cols.length; cols.push(b); }
+      pairs.push([ri[ka], ci[kb]]);
+    });
+    if (rows.length > MAXDIM || cols.length > MAXDIM) return { error: 'That makes ' + rows.length + ' rows and ' + cols.length + ' columns — up to ' + MAXDIM + ' of each are supported. Group rare answers together.', skipped: skipped };
+    var O = rows.map(function () { return cols.map(function () { return 0; }); });
+    pairs.forEach(function (p) { O[p[0]][p[1]]++; });
+    return { rows: rows, cols: cols, O: O, used: pairs.length, skipped: skipped };
+  }
+  /* a pasted goodness-of-fit list: one category per line, "name observed [expected]" */
+  function pasteFit(text, withExp) {
+    var ls = lines(text); if (!ls.length) return { empty: true };
+    var d = delim(ls), names = [], obs = [], exp = [], i;
+    for (i = 0; i < ls.length; i++) {
+      var c = cellsOf(ls[i], d).filter(function (x) { return x !== ''; }), need = withExp ? 2 : 1;
+      if (i === 0 && ls.length > 1 && c.every(function (x) { return !isNum(x); })) continue;
+      if (c.length < need || c.slice(c.length - need).some(function (x) { return !isNum(x); })) return { error: 'Line ' + (i + 1) + ' needs ' + (withExp ? 'an observed count and an expected value' : 'an observed count') + ', like “' + (withExp ? 'Red 18 25' : 'Red 18') + '”.' };
+      var v = c.splice(c.length - need, need);
+      names.push(c.join(' ')); obs.push(v[0]); exp.push(withExp ? v[1] : '');
+    }
+    return { names: names, obs: obs, exp: exp };
+  }
+  return { MAXDIM: MAXDIM, MAXCOUNT: MAXCOUNT, EXACTMAX: EXACTMAX, pRight: pRight, crit: crit, fisher: fisher, binom: binom, mcnemar: mcnemar, strength: strength, table: table, fit: fit, power: power, plan: plan, num: num, pasteTable: pasteTable, rawTable: rawTable, pasteFit: pasteFit };
+})();
+/* CHI-ENGINE:END */
+
+/* =========================================================
+   CalcThis.initChiCalc() - ids xs*. Engine CalcThis.chiEngine.
+   ========================================================= */
+CalcThis.initChiCalc = function () {
+  var E = CalcThis.chiEngine, P = CalcThis.pvalueEngine;
+  var $ = function (id) { return document.getElementById(id); };
+  if (!$('xsGrid')) return;
+  var st = { mode: 'table', entry: 'grid', pair: 'ind', head: 'pearson', exp: 'eq', fentry: 'rows', axis: 'r', adv: false, cite: 'apa', R: 2, C: 2, K: 3, merges: [], sig: '' };
+  var EX = {
+    levels: { entry: 'grid', rows: ['Group A', 'Group B'], cols: ['Low', 'Medium', 'High'], O: [[20, 30, 50], [30, 40, 30]] },
+    treat: { rows: ['Treatment', 'Control'], cols: ['Better', 'Not'], O: [[20, 10], [30, 40]] },
+    paired: { pair: 'mc', rows: ['Before yes', 'Before no'], cols: ['After yes', 'After no'], O: [[101, 121], [59, 33]] },
+    small: { rows: ['North', 'South', 'East'], cols: ['Tea', 'Coffee', 'Juice'], O: [[12, 9, 2], [10, 14, 1], [3, 2, 1]] },
+    die: { exp: 'eq', names: ['1', '2', '3', '4', '5', '6'], obs: [8, 12, 9, 14, 11, 6] },
+    pea: { exp: 'ratio', names: ['Round yellow', 'Round green', 'Wrinkled yellow', 'Wrinkled green'], obs: [315, 108, 101, 32], e: [9, 3, 3, 1] },
+    coin: { exp: 'eq', names: ['Heads', 'Tails'], obs: [62, 38] },
+    market: { exp: 'pct', names: ['Brand A', 'Brand B', 'Other'], obs: [90, 70, 40], e: [50, 30, 20] }
+  };
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+  function clean(s) { return String(s == null ? '' : s).replace(/[<>&"]/g, '').trim().slice(0, 24); }
+  function cut(s, n) { s = String(s); return s.length > n ? s.slice(0, n - 1) + '…' : s; }
+  function setNote(id, t) { var e = $(id); if (!e) return; e.textContent = t || ''; e.style.display = t ? '' : 'none'; }
+  function show(id, on) { var e = $(id); if (e) e.style.display = on ? '' : 'none'; }
+  function setHint(m, at) {
+    var h = $('xsHint'); m = m ? m.charAt(0).toUpperCase() + m.slice(1) : m; h.textContent = m || ''; h.style.display = m ? 'block' : 'none';
+    if (m && at) {
+      var el = $(at), f = el;
+      if (el && el.closest('.xs-gridw')) f = el.closest('.xs-gridw'); else if (el) f = el.closest('.fld') || el;
+      var par = f && f.parentNode; if (par && par.classList && par.classList.contains('cc-two')) f = par;
+      var nx = f && f.nextElementSibling; if (nx && nx.classList && nx.classList.contains('chips')) f = nx;
+      if (f && f.nextSibling !== h && f.parentNode) f.parentNode.insertBefore(h, f.nextSibling);
+    }
+  }
+  function sg(s) { return String(s).replace('-', '−'); }
+  function tr(x, d) { var s = x.toFixed(d); if (s.indexOf('.') >= 0) s = s.replace(/0+$/, '').replace(/\.$/, ''); return s === '-0' ? '0' : s; }
+  var DEC = null;
+  function f4(x) { if (!isFinite(x)) return '∞'; if (DEC !== null) return sg(x.toFixed(DEC)); if (x !== 0 && Math.abs(x) < 0.001) return sg(String(Number(x.toPrecision(4)))); return sg(x.toFixed(4)); }
+  function f2(x) { if (DEC !== null) return sg(x.toFixed(DEC)); if (x !== 0 && Math.abs(x) < 0.01) return sg(String(Number(x.toPrecision(2)))); var s = tr(x, 2); if (Math.abs(x) >= 1000) s = s.replace(/^(-?\d+)/, function (m) { return m.replace(/\B(?=(\d{3})+$)/g, ','); }); return sg(s); }
+  function fk(x) { if (DEC !== null || Math.abs(x) < 100) return f4(x); return sg(x.toFixed(Math.abs(x) < 10000 ? 2 : 0)); }
+  function fz(x) { var s = x.toFixed(DEC !== null ? DEC : 2); if (/^-0(\.0*)?$/.test(s)) s = s.slice(1); return (x > 0 && !/^0(\.0*)?$/.test(s) ? '+' : '') + sg(s); }
+  function pT(p) { return P.fp(p, DEC); }
+  function pEq(p) { var t = pT(p); return /^less/.test(t) ? 'p ' + t.replace('less than', '<') : 'p = ' + t; }
+  function nT(x) { return x >= 1e15 ? x.toExponential(2) : x.toLocaleString('en-US'); }
+  function pctT(x) { return tr(x * 100, 1) + '%'; }
+  function powT(v) { return v > 0.999 ? 'over 99.9%' : pctT(v); }
+  function apaP(p) { if (p < 0.001) return '< .001'; var s = p.toFixed(3).replace(/^0/, ''); return '= ' + s; }
+  function apaN(x) { return x.toFixed(2).replace(/^0\./, '.'); }
+
+  /* ---------- the input grids ---------- */
+  function inp(id, ph, label, mode, cls) { return '<div class="inp' + (cls ? ' ' + cls : '') + '"><input id="' + id + '" type="text" inputmode="' + mode + '" autocomplete="off" placeholder="' + ph + '" aria-label="' + label + '"></div>'; }
+  function buildGrid() {
+    var keep = {}; [].forEach.call($('xsGrid').querySelectorAll('input'), function (i) { keep[i.id] = i.value; });
+    var h = '<span class="xs-corner"></span>', i, j;
+    for (j = 1; j <= st.C; j++) h += inp('xsCN' + j, (st.C > 3 ? 'C' : 'Col ') + j, 'Name of column ' + j, 'text', 'xs-name');
+    for (i = 1; i <= st.R; i++) { h += inp('xsRN' + i, 'Row ' + i, 'Name of row ' + i, 'text', 'xs-name'); for (j = 1; j <= st.C; j++) h += inp('xsC' + i + '_' + j, st.C > 3 ? 'n' : 'count', 'Count in row ' + i + ', column ' + j, 'numeric'); }
+    var g = $('xsGrid'); g.style.gridTemplateColumns = 'minmax(0,1.35fr) repeat(' + st.C + ',minmax(0,1fr))'; g.className = 'xs-grid' + (st.C > 3 ? ' xs-tight' : ''); g.innerHTML = h;
+    Object.keys(keep).forEach(function (id) { if ($(id)) $(id).value = keep[id]; });
+    $('xsAddRow').disabled = st.R >= E.MAXDIM; $('xsDelRow').disabled = st.R <= 2; $('xsAddCol').disabled = st.C >= 5; $('xsDelCol').disabled = st.C <= 2;
+  }
+  function buildFit() {
+    var keep = {}; [].forEach.call($('xsFit').querySelectorAll('input'), function (i) { keep[i.id] = i.value; });
+    var h = '<span class="xs-h">Category</span><span class="xs-h">Observed count</span><span class="xs-h xs-ecol" id="xsEHead">Expected</span>', i;
+    for (i = 1; i <= st.K; i++) h += inp('xsFN' + i, 'Group ' + i, 'Name of category ' + i, 'text', 'xs-name') + inp('xsFO' + i, 'count', 'Observed count in category ' + i, 'numeric') + inp('xsFE' + i, 'e.g. 1', 'Expected value for category ' + i, 'decimal', 'xs-ecol');
+    $('xsFit').innerHTML = h;
+    Object.keys(keep).forEach(function (id) { if ($(id)) $(id).value = keep[id]; });
+    $('xsAddCat').disabled = st.K >= E.MAXDIM; $('xsDelCat').disabled = st.K <= 2;
+    expUI();
+  }
+  var EXPL = { eq: ['', ''], pct: ['Expected %', 'e.g. 25'], cnt: ['Expected count', 'count'], ratio: ['Ratio part', 'e.g. 3'] };
+  function expUI() {
+    var on = st.exp !== 'eq', g = $('xsFit'); g.style.gridTemplateColumns = on ? 'minmax(0,1.3fr) minmax(0,1fr) minmax(0,1fr)' : 'minmax(0,1.3fr) minmax(0,1fr)';
+    [].forEach.call(g.querySelectorAll('.xs-ecol'), function (e) { e.style.display = on ? '' : 'none'; });
+    if (on) { $('xsEHead').textContent = EXPL[st.exp][0]; [].forEach.call(g.querySelectorAll('.xs-ecol input'), function (i) { i.placeholder = EXPL[st.exp][1]; }); }
+    $('xsFitP').placeholder = on ? 'e.g.\nRed, 18, ' + (st.exp === 'pct' ? '25' : st.exp === 'cnt' ? '20' : '1') + '\nBlue, 30, ' + (st.exp === 'pct' ? '75' : st.exp === 'cnt' ? '28' : '3') : 'e.g.\nRed, 18\nBlue, 30\nGreen, 12';
+  }
+
+  /* ---------- reading the data ---------- */
+  function countOf(raw, where) {
+    var r = E.num(raw);
+    if (r.empty) return { miss: true };
+    if (r.partial) return { bad: where + ' is not a finished number yet — type a whole count like 12.' };
+    if (r.err) return { bad: r.err === 'big' ? where + ' is too large — keep counts under 1,000,000,000.' : 'Couldn’t read “' + String(raw).trim().slice(0, 14) + '” in ' + where + ' — type a whole count like 12.' };
+    if (r.pc || r.frac || r.v % 1 !== 0) return { bad: where + ' must be a whole count. Chi-square works on how many, not on percentages or averages.' };
+    if (r.v < 0) return { bad: where + ' cannot be negative.' };
+    return { v: r.v };
+  }
+  function readTable(out) {
+    var rows = [], cols = [], O = [], i, j, miss = null, any = false, c;
+    if (st.entry === 'grid') {
+      for (i = 1; i <= st.R; i++) {
+        O.push([]);
+        for (j = 1; j <= st.C; j++) {
+          c = countOf($('xsC' + i + '_' + j).value, 'row ' + i + ', column ' + j);
+          if (c.bad) { if (!out.bad) out.bad = { msg: c.bad + ' Fix it to see the result.', at: 'xsC' + i + '_' + j }; any = true; }
+          else if (c.miss) { if (!miss) miss = 'xsC' + i + '_' + j; } else any = true;
+          O[i - 1].push(c.v);
+        }
+        rows.push(clean($('xsRN' + i).value) || 'Row ' + i);
+      }
+      for (j = 1; j <= st.C; j++) cols.push(clean($('xsCN' + j).value) || 'Column ' + j);
+      if (!out.bad && miss) { if (any) out.bad = { msg: 'Fill every count box (type 0 where nobody was counted) to see the result.', at: miss }; return null; }
+      if (out.bad) return null;
+    } else if (st.entry === 'paste') {
+      var pt = E.pasteTable($('xsPaste').value);
+      if (pt.empty) return null;
+      if (pt.error) { out.bad = { msg: pt.error, at: 'xsPaste' }; return null; }
+      if (pt.cells.length < 2 || pt.cells[0].length < 2) { out.bad = { msg: 'A test of independence needs at least 2 rows and 2 columns of counts; you have ' + pt.cells.length + ' by ' + (pt.cells[0] ? pt.cells[0].length : 0) + '.', at: 'xsPaste' }; return null; }
+      if (pt.cells.length > E.MAXDIM || pt.cells[0].length > E.MAXDIM) { out.bad = { msg: 'That table is ' + pt.cells.length + ' by ' + pt.cells[0].length + ' — up to ' + E.MAXDIM + ' rows and ' + E.MAXDIM + ' columns are supported.', at: 'xsPaste' }; return null; }
+      for (i = 0; i < pt.cells.length; i++) { O.push([]); for (j = 0; j < pt.cells[i].length; j++) { c = countOf(pt.cells[i][j], 'row ' + (i + 1) + ', column ' + (j + 1)); if (c.bad || c.miss) { out.bad = { msg: (c.bad || 'Row ' + (i + 1) + ', column ' + (j + 1) + ' is empty — type 0 where nobody was counted.') + ' Fix it to see the result.', at: 'xsPaste' }; return null; } O[i].push(c.v); } }
+      rows = pt.rows.map(function (s, k) { return clean(s) || 'Row ' + (k + 1); });
+      for (j = 0; j < O[0].length; j++) cols.push(clean(pt.cols[j]) || 'Column ' + (j + 1));
+      out.pasteInfo = 'Read ' + O.length + ' rows and ' + O[0].length + ' columns' + (pt.headIgnored ? ' (the first line did not match the number of columns, so its names are not used).' : '.');
+    } else {
+      var rt = E.rawTable($('xsRaw').value);
+      if (rt.empty) return null;
+      if (rt.error) { out.bad = { msg: rt.error, at: 'xsRaw' }; return null; }
+      out.rawInfo = rt.used + (rt.used === 1 ? ' line counted' : ' lines counted') + (rt.skipped ? ', ' + rt.skipped + ' skipped (each line needs exactly two answers, separated by a comma or tab)' : '') + '.';
+      if (rt.rows.length < 2 || rt.cols.length < 2) { out.bad = { msg: 'Both questions need at least 2 different answers; so far there ' + (rt.rows.length === 1 ? 'is 1 first answer' : 'are ' + rt.rows.length + ' first answers') + ' and ' + rt.cols.length + ' second. Add more lines to see the result.', at: 'xsRaw' }; return null; }
+      rows = rt.rows.map(function (s, k) { return clean(s) || 'Row ' + (k + 1); }); cols = rt.cols.map(function (s, k) { return clean(s) || 'Column ' + (k + 1); }); O = rt.O;
+    }
+    return { rows: rows, cols: cols, O: O };
+  }
+  function readFit(out) {
+    var names = [], obs = [], ex = [], ats = [], i;
+    if (st.fentry === 'rows') {
+      for (i = 1; i <= st.K; i++) { names.push($('xsFN' + i).value); obs.push($('xsFO' + i).value); ex.push($('xsFE' + i).value); ats.push(['xsFO' + i, 'xsFE' + i]); }
+      var blank = function (j) { return !String(names[j]).trim() && !String(obs[j]).trim() && (st.exp === 'eq' || !String(ex[j]).trim()); };
+      while (names.length > 2 && blank(names.length - 1)) { names.pop(); obs.pop(); ex.pop(); ats.pop(); out.skipRows = (out.skipRows || 0) + 1; }
+    } else {
+      var pf = E.pasteFit($('xsFitP').value, st.exp !== 'eq');
+      if (pf.empty) return null;
+      if (pf.error) { out.bad = { msg: pf.error, at: 'xsFitP' }; return null; }
+      if (pf.names.length < 2 || pf.names.length > E.MAXDIM) { out.bad = { msg: 'A goodness-of-fit test takes 2 to ' + E.MAXDIM + ' categories; you have ' + pf.names.length + '.', at: 'xsFitP' }; return null; }
+      names = pf.names; obs = pf.obs; ex = pf.exp; ats = names.map(function () { return ['xsFitP', 'xsFitP']; });
+      out.fitInfo = 'Read ' + names.length + ' categories.';
+    }
+    var O = [], W = [], miss = null, any = false, k = names.length;
+    for (i = 0; i < k; i++) {
+      var c = countOf(obs[i], 'the observed count of category ' + (i + 1));
+      if (c.bad) { if (!out.bad) out.bad = { msg: c.bad + ' Fix it to see the result.', at: ats[i][0] }; any = true; } else if (c.miss) { if (!miss) miss = ats[i][0]; } else any = true;
+      O.push(c.v);
+      if (st.exp !== 'eq') {
+        var r = E.num(ex[i]), what = 'the expected ' + (st.exp === 'pct' ? 'percentage' : st.exp === 'cnt' ? 'count' : 'ratio part') + ' of category ' + (i + 1);
+        if (r.empty) { if (!miss) miss = ats[i][1]; }
+        else if (r.partial || r.err || !(r.v > 0)) { if (!out.bad) out.bad = { msg: (r.err === 'big' ? what + ' is too large.' : what + ' must be a number above 0.').replace(/^t/, 'T') + ' Fix it to see the result.', at: ats[i][1] }; any = true; }
+        else { any = true; W.push(r.v); }
+      }
+    }
+    if (out.bad) return null;
+    if (miss) { if (any) out.bad = { msg: 'Fill every ' + (st.exp === 'eq' ? 'observed box (type 0 where there were none)' : 'observed and expected box') + ' to see the result.', at: miss }; return null; }
+    var n = 0, sw = 0; for (i = 0; i < k; i++) n += O[i];
+    if (!(n > 0)) { out.bad = { msg: 'All the observed counts are 0 — there is nothing to test yet.', at: ats[0][0] }; return null; }
+    var Ex;
+    if (st.exp === 'eq') Ex = O.map(function () { return n / k; });
+    else {
+      for (i = 0; i < k; i++) sw += W[i];
+      if (st.exp === 'pct' && Math.abs(sw - 100) > 0.5) { out.bad = { msg: 'The expected percentages add up to ' + tr(sw, 2) + '%, not 100%. Fix them, or switch to “Ratio” to use them as shares.', at: ats[k - 1][1] }; return null; }
+      if (st.exp === 'cnt' && Math.abs(sw - n) > Math.max(0.5, n * 0.001)) { out.bad = { msg: 'The expected counts add up to ' + tr(sw, 2) + ' but the observed counts add up to ' + n + '. They must match; or switch to “Ratio” to use them as shares.', at: ats[k - 1][1] }; return null; }
+      Ex = W.map(function (w) { return n * w / sw; });
+      out.expInfo = st.exp === 'pct' ? 'Percentages add up to ' + tr(sw, 2) + '%' + (Math.abs(sw - 100) > 1e-9 ? '; each is scaled so the total is exactly 100%' : '') + '.' : st.exp === 'cnt' ? 'Expected counts add up to ' + tr(sw, 2) + (Math.abs(sw - n) > 1e-9 ? '; they are scaled to the observed total of ' + n : ', the same as the observed total') + '.' : 'Your parts add up to ' + tr(sw, 4) + '; each category is expected to get its part of the ' + n + ' counts.';
+    }
+    return { names: names.map(function (s, j) { return clean(s) || 'Group ' + (j + 1); }), O: O, E: Ex };
+  }
+  function applyMerges(D) {
+    var d = D.table ? { table: true, rows: D.rows.slice(), cols: D.cols.slice(), O: D.O.map(function (r) { return r.slice(); }) } : { rows: D.rows.slice(), O: D.O.slice(), E: D.E.slice() };
+    st.merges.forEach(function (m) {
+      var list = m.axis === 'c' ? d.cols : d.rows;
+      if (!list || m.a >= list.length || m.b >= list.length || m.a === m.b || list.length < 3) return;
+      var a = Math.min(m.a, m.b), b = Math.max(m.a, m.b), name = list[a] + ' + ' + list[b];
+      list[a] = name; list.splice(b, 1);
+      if (!d.table) { d.O[a] += d.O[b]; d.O.splice(b, 1); d.E[a] += d.E[b]; d.E.splice(b, 1); }
+      else if (m.axis === 'c') d.O.forEach(function (r) { r[a] += r[b]; r.splice(b, 1); });
+      else { d.O[a] = d.O[a].map(function (v, j) { return v + d.O[b][j]; }); d.O.splice(b, 1); }
+    });
+    return d;
+  }
+
+  /* ---------- drawing ---------- */
+  function cls(z, d) { var a = Math.abs(z); return (Math.abs(d) < 1e-9 ? 'same' : (d > 0 ? 'more' : 'fewer') + (a >= 2 ? ' s2' : a >= 1 ? ' s1' : ' s0')); }
+  function arrow(d) { return Math.abs(d) < 1e-9 ? '=' : d > 0 ? '▲' : '▼'; }
+  function drawTable(T, d) {
+    var h = '', i, j, maxR = Math.max.apply(null, T.rt), marks = '', cum = 0;
+    for (j = 0; j < T.C - 1; j++) { cum += T.ct[j] / T.n; marks += '<i class="xs-mark" style="left:' + (cum * 100).toFixed(3) + '%"></i>'; }
+    h += '<div class="xs-row xs-ref"><div class="xs-rlab"><b>If nothing differed</b> every row would split like this</div><div class="xs-bar" style="height:26px">';
+    for (j = 0; j < T.C; j++) { var s = T.ct[j] / T.n; h += '<span class="xs-seg ref" style="width:' + (s * 100).toFixed(3) + '%">' + (s >= 0.1 ? '<em>' + tr(s * 100, 0) + '%</em>' : '') + '</span>'; }
+    h += '</div><div class="xs-rtxt"><span>Columns, left to right:</span>' + d.cols.map(function (n, k) { return '<span><b>' + esc(n) + '</b> ' + tr(T.ct[k] / T.n * 100, 1) + '%</span>'; }).join('') + '</div></div>';
+    for (i = 0; i < T.R; i++) {
+      var ht = Math.round(18 + 26 * T.rt[i] / maxR), txt = [];
+      h += '<div class="xs-row"><div class="xs-rlab"><b>' + esc(d.rows[i]) + '</b> ' + nT(T.rt[i]) + ' counted</div><div class="xs-bar" style="height:' + ht + 'px">';
+      for (j = 0; j < T.C; j++) {
+        var sh = T.O[i][j] / T.rt[i], df = T.O[i][j] - T.E[i][j];
+        h += '<span class="xs-seg ' + cls(T.Z[i][j], df) + '" style="width:' + (sh * 100).toFixed(3) + '%" data-r="' + i + '" data-c="' + j + '">' + (sh >= 0.1 ? '<em>' + tr(sh * 100, 0) + '%</em>' : '') + '</span>';
+        txt.push('<span>' + esc(d.cols[j]) + ': <b>' + nT(T.O[i][j]) + '</b> (expected ' + f2(T.E[i][j]) + ') ' + arrow(df) + '</span>');
+      }
+      h += marks + '</div>' + (T.C <= 6 ? '<div class="xs-rtxt">' + txt.join('') + '</div>' : '') + '</div>';
+    }
+    $('xsVis').innerHTML = h;
+    setNote('xsVisKey', 'Each bar is one row split into its columns; a thicker bar means more counts. Dashed lines show where the pieces would end if the rows did not differ. Amber = more than expected, blue = fewer; the stronger the colour, the further from expected (strongest: a standardized difference of 2 or more).' + (T.C > 6 ? ' The count of every box is listed under “Cell by cell”.' : ''));
+  }
+  function drawFit(O, Ex, Z, names, key) {
+    var h = '', i, max = 0; for (i = 0; i < O.length; i++) max = Math.max(max, O[i], Ex[i]);
+    for (i = 0; i < O.length; i++) {
+      var df = O[i] - Ex[i];
+      h += '<div class="xs-row"><div class="xs-rlab"><b>' + esc(names[i]) + '</b> ' + nT(O[i]) + ' counted, expected ' + f2(Ex[i]) + ' ' + arrow(df) + '</div><div class="xs-bar xs-fitbar" style="height:22px"><span class="xs-seg ' + cls(Z[i], df) + '" style="width:' + (O[i] / max * 100).toFixed(3) + '%" data-r="' + i + '"></span><i class="xs-mark xs-exp" style="left:' + (Ex[i] / max * 100).toFixed(3) + '%"></i></div></div>';
+    }
+    $('xsVis').innerHTML = h;
+    setNote('xsVisKey', key);
+  }
+  function drawCurve(chi, df, x, alpha) {
+    var W = 360, H = 168, L = 10, R = 10, base = 128, top = 14;
+    var none = chi === null; if (none) chi = 0;
+    var mode = Math.max(df - 2, 0), xmax = Math.max(x * 1.6, df + 4 * Math.sqrt(2 * df), 8), far = chi > xmax * 1.9;
+    if (!far) xmax = Math.max(xmax, chi * 1.15);
+    var xmin = df > 60 ? Math.max(0, df - 5 * Math.sqrt(2 * df)) : 0;
+    var X = function (v) { return L + (v - xmin) / (xmax - xmin) * (W - L - R); };
+    var n = 140, ys = [], i, xv, mx = 0;
+    for (i = 0; i <= n; i++) { xv = xmin + (xmax - xmin) * i / n; if (xv <= 0) xv = (xmax - xmin) / n * 0.25; var y = P.dens('chi', { df: df }, xv); ys.push([xv, y]); }
+    var ref = mode > 0 ? P.dens('chi', { df: df }, mode) : P.dens('chi', { df: df }, (xmax - xmin) * 0.04);
+    for (i = 0; i < ys.length; i++) mx = Math.max(mx, Math.min(ys[i][1], ref));
+    var Y = function (v) { return base - Math.min(v / mx, 1.04) * (base - top); };
+    var path = ys.map(function (p, k) { return (k ? 'L' : 'M') + X(k === 0 ? xmin : p[0]).toFixed(1) + ' ' + Y(p[1]).toFixed(1); }).join('');
+    var area = function (from, cl) { if (from >= xmax) return ''; var s = 'M' + X(Math.max(from, xmin)).toFixed(1) + ' ' + base; if (from > 0) s += 'L' + X(Math.max(from, xmin)).toFixed(1) + ' ' + Y(P.dens('chi', { df: df }, from)).toFixed(1); ys.forEach(function (p) { if (p[0] > from) s += 'L' + X(p[0]).toFixed(1) + ' ' + Y(p[1]).toFixed(1); }); return '<path d="' + s + 'L' + X(xmax).toFixed(1) + ' ' + base + 'Z" class="' + cl + '"/>'; };
+    var sx = far ? W - R : X(Math.max(chi, xmin)), cx = X(x), g = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Chi-square curve with the critical value and your statistic">';
+    g += area(x, 'xs-rej') + (!none && chi < xmax ? area(chi, 'xs-parea') : '');
+    g += '<path d="' + path + '" class="xs-line"/><path d="M' + L + ' ' + base + 'H' + (W - R) + '" class="xs-axis"/>';
+    g += '<path d="M' + cx.toFixed(1) + ' ' + base + 'V' + (top + 34) + '" class="xs-crit"/>' + (none ? '' : '<path d="M' + sx.toFixed(1) + ' ' + base + 'V' + (top + 4) + '" class="xs-stat"/>');
+    var anch = function (v) { return v < 80 ? 'start' : v > W - 80 ? 'end' : 'middle'; };
+    if (!none) g += '<text x="' + sx.toFixed(1) + '" y="' + top + '" text-anchor="' + anch(sx) + '" class="xs-tstat">your χ² ' + f2(chi) + (far ? ' →' : '') + '</text>';
+    g += '<text x="' + cx.toFixed(1) + '" y="' + (base + 17) + '" text-anchor="' + anch(cx) + '" class="xs-tcrit">critical ' + f2(x) + '</text>';
+    g += '<text x="' + L + '" y="' + (base + 34) + '" class="xs-tax">' + f2(Math.round(xmin)) + '</text><text x="' + (W - R) + '" y="' + (base + 34) + '" text-anchor="end" class="xs-tax">' + f2(Math.round(xmax)) + '</text>';
+    $('xsCurve').innerHTML = g + '</svg>';
+    setNote('xsCurveKey', 'The curve shows the χ² values chance alone produces with df = ' + df + '. The shaded tail right of the critical value holds ' + tr(alpha * 100, 4) + '% of them; a statistic that lands there counts as significant.' + (none ? '' : ' The darker area right of your statistic is the p-value.') + (far ? ' Your statistic is far off the right edge of the picture.' : ''));
+  }
+  function tbl(head, rows, cap) {
+    var h = '';
+    if (head) h += '<thead><tr>' + head.map(function (c) { return '<th>' + c + '</th>'; }).join('') + '</tr></thead>';
+    h += '<tbody>' + rows.map(function (r) { return '<tr' + (r.cls ? ' class="' + r.cls + '"' : '') + '>' + r.c.map(function (c, k) { return '<td' + (r.st && r.st[k] ? ' class="' + r.st[k] + '"' : '') + '>' + c + '</td>'; }).join('') + '</tr>'; }).join('') + '</tbody>';
+    return h;
+  }
+  var cselSig = {};
+  function fillCsel(id, names, want) {
+    var root = $(id), sig = names.join('|');
+    if (cselSig[id] !== sig) {
+      var first = cselSig[id] === undefined; cselSig[id] = sig;
+      root.querySelector('.csel-panel').innerHTML = names.map(function (n, k) { return '<button type="button" class="csel-opt" role="option" data-value="' + k + '">' + esc(n) + '</button>'; }).join('');
+      var cur = first ? want : parseInt(root.getAttribute('data-value'), 10); if (!(cur >= 0 && cur < names.length)) cur = want;
+      root.setAttribute('data-value', String(cur)); CalcThis.initCsel(root);
+    }
+  }
+
+  /* ---------- what each mode shows ---------- */
+  var SECTIONS = ['xsVisWrap', 'xsWarnWrap', 'xsMergeWrap', 'xsCrossWrap', 'xsCellWrap', 'xsTwoWrap', 'xsMcWrap', 'xsEffWrap', 'xsPowWrap', 'xsCurveWrap', 'xsCheckWrap', 'xsWriteWrap', 'xsStepsWrap', 'xsCopyWrap'];
+
+  function render() {
+    var out = { bad: null }, soft = null, alpha = 0.05, wUser = null, params = 0;
+    show('xsTabW', st.mode === 'table'); show('xsFitW', st.mode === 'fit'); show('xsValW', st.mode === 'value');
+    show('xsGridW', st.entry === 'grid'); show('xsPasteW', st.entry === 'paste'); show('xsRawW', st.entry === 'raw');
+    show('xsFitRowsW', st.fentry === 'rows'); show('xsFitPW', st.fentry === 'paste');
+    show('xsExT', st.mode === 'table'); show('xsExF', st.mode === 'fit'); show('xsExW', st.mode !== 'value');
+    show('xsTNamesW', st.mode === 'table'); show('xsFAdvW', st.mode === 'fit'); show('xsWW', st.mode !== 'value');
+    setNote('xsModeNote', st.mode === 'table' ? 'Do two things go together? For example group and answer. Each count is one person or item.' : st.mode === 'fit' ? 'Do your counts match what you expect? For example die rolls, or a 9:3:3:1 ratio.' : 'Type χ² and the degrees of freedom for the p-value, or only the degrees of freedom for the critical value.');
+    var ra = E.num($('xsAlpha').value);
+    if (!ra.empty) { var av = ra.v; if (ra.pc) av = av / 100; if (ra.err || ra.partial || !(av > 0 && av < 1)) soft = { msg: 'The significance level α should be between 0 and 1, like 0.05 or 5%. It is ignored for now (0.05 is used).', at: 'xsAlpha' }; else alpha = av; }
+    var rd = E.num($('xsDec').value); DEC = null;
+    if (!rd.empty) { if (rd.err || rd.partial || rd.v % 1 !== 0 || rd.v < 0 || rd.v > 10) soft = soft || { msg: 'Decimal places should be a whole number from 0 to 10. It is ignored for now.', at: 'xsDec' }; else DEC = rd.v; }
+    setNote('xsDecNote', DEC === null ? '' : 'Results are shown with ' + DEC + (DEC === 1 ? ' decimal place.' : ' decimal places.'));
+    if (st.mode !== 'value') { var rw = E.num($('xsW').value); if (!rw.empty) { if (rw.err || rw.partial || rw.pc || !(rw.v > 0 && rw.v <= 10)) soft = soft || { msg: 'The effect size w should be a number above 0 (small 0.1, medium 0.3, large 0.5). It is ignored for now.', at: 'xsW' }; else wUser = rw.v; } }
+    if (st.mode === 'fit') { var rp = E.num($('xsParams').value); if (!rp.empty) { if (rp.err || rp.partial || rp.pc || rp.v % 1 !== 0 || rp.v < 0) soft = soft || { msg: 'Estimated parameters should be a whole number like 0, 1 or 2. It is ignored for now.', at: 'xsParams' }; else params = rp.v; } }
+
+    var D = null, V = null, two = false;
+    if (st.mode === 'table') { var tb = readTable(out); if (tb) D = { table: true, rows: tb.rows, cols: tb.cols, O: tb.O }; }
+    else if (st.mode === 'fit') { var ft = readFit(out); if (ft) D = { rows: ft.names, O: ft.O, E: ft.E }; }
+    else {
+      var rc = E.num($('xsChi').value), rf = E.num($('xsDf').value);
+      if (!rc.empty && (rc.err || rc.partial || rc.pc || rc.v < 0)) out.bad = { msg: rc.err === 'big' ? 'The χ² value is too large — keep it under 1,000,000,000.' : 'The χ² value must be a number of 0 or more, like 8.43.', at: 'xsChi' };
+      if (!out.bad && !rf.empty && (rf.err || rf.partial || rf.pc || rf.v % 1 !== 0 || rf.v < 1 || rf.v > 100000)) out.bad = { msg: 'Degrees of freedom must be a whole number from 1 to 100,000.', at: 'xsDf' };
+      if (!out.bad && !rf.empty) V = { chi: rc.empty ? null : rc.v, df: rf.v };
+      else if (!out.bad && !rc.empty) out.bad = { msg: 'Type the degrees of freedom too to see the p-value.', at: 'xsDf' };
+    }
+    setNote('xsPasteNote', out.pasteInfo || ''); setNote('xsRawNote', out.rawInfo || ''); setNote('xsFitPNote', out.fitInfo || ''); setNote('xsExpNote', st.mode === 'fit' ? (out.expInfo || (st.exp === 'eq' ? 'Every category is expected to get the same share.' : st.exp === 'pct' ? 'Type the percentage each category should get; together 100%.' : st.exp === 'cnt' ? 'Type the count each category should get; the total must match your observed total.' : 'Type parts such as 9, 3, 3, 1, or proportions such as 1/6.')) + (out.skipRows && D ? ' ' + (out.skipRows === 1 ? 'The empty last row is' : out.skipRows + ' empty rows at the end are') + ' not counted.' : '') : '');
+
+    /* table checks */
+    if (D && D.table) {
+      var zr = -1, zc = -1, tot = 0;
+      D.O.forEach(function (r, i) { var s = 0; r.forEach(function (v) { s += v; }); tot += s; if (s === 0 && zr < 0) zr = i; });
+      D.cols.forEach(function (c, j) { var s = 0; D.O.forEach(function (r) { s += r[j]; }); if (s === 0 && zc < 0) zc = j; });
+      var at = st.entry === 'grid' ? 'xsC' + (zr >= 0 ? zr + 1 : 1) + '_' + (zr >= 0 ? 1 : zc + 1) : st.entry === 'paste' ? 'xsPaste' : 'xsRaw';
+      two = D.O.length === 2 && D.cols.length === 2;
+      var mc = two && st.pair === 'mc';
+      if (tot === 0) { out.bad = { msg: 'All the counts are 0 — there is nothing to test yet.', at: at }; D = null; }
+      else if (!mc && (zr >= 0 || zc >= 0)) { out.bad = { msg: (zr >= 0 ? 'Row “' + D.rows[zr] + '”' : 'Column “' + D.cols[zc] + '”') + ' has no counts at all — remove it or add its counts.', at: at }; D = null; }
+      else if (mc && D.O[0][1] + D.O[1][0] === 0) { out.bad = { msg: 'Nobody changed answer (the two off-diagonal counts are 0), so McNemar’s test has nothing to compare.', at: at }; D = null; }
+    }
+    show('xsPairW', st.mode === 'table' && two);
+    setNote('xsPairNote', st.pair === 'mc' ? 'Paired data: rows are the first answer, columns the second answer of the same people. McNemar’s test compares the two kinds of change.' : 'Each person or item is counted in exactly one box.');
+    show('xsHeadW', st.mode === 'table' && two && st.pair !== 'mc');
+    setNote('xsHeadNote', st.head === 'pearson' ? 'The headline is the plain Pearson chi-square; all the others stay listed in the results.' : st.head === 'yates' ? 'The headline uses Yates’s continuity correction: 0.5 is taken off each difference first.' : 'The headline uses Fisher’s exact two-sided p-value, which counts every possible table.');
+
+    var base = D ? JSON.stringify(D.table ? [D.rows, D.cols, D.O] : [D.rows, D.O, D.E]) : '';
+    if (base && base !== st.sig) { if (st.sig) st.merges = []; st.sig = base; }
+
+    var body = false, big = '—', lab = st.mode === 'table' ? 'Chi-square test of independence' : st.mode === 'fit' ? 'Chi-square goodness of fit' : 'p-value from χ²', sub = $('xsSub').getAttribute('data-empty'), tip = '', mlab = 'Chi-square', mval = '—';
+    var res = null, M = null, Mc = null;
+    if (D && st.mode === 'table') { M = applyMerges(D); if (M.O.length === 2 && M.cols.length === 2 && st.pair === 'mc' && two) Mc = E.mcnemar(M.O[0][1], M.O[1][0]); res = Mc ? { df: 1, n: M.O[0][0] + M.O[0][1] + M.O[1][0] + M.O[1][1] } : E.table(M.O); }
+    if (D && st.mode === 'fit') {
+      M = applyMerges(D);
+      if (params > M.O.length - 2) { if (params > 0) soft = soft || { msg: 'With ' + M.O.length + ' categories at most ' + (M.O.length - 2) + ' estimated parameters leave a degree of freedom. It is ignored for now.', at: 'xsParams' }; params = 0; }
+      res = E.fit(M.O, M.E, params);
+    }
+    setNote('xsParamsNote', st.mode === 'fit' ? (res ? 'Degrees of freedom: ' + res.k + ' categories − 1 − ' + params + ' = ' + res.df + '.' : (String($('xsParams').value).trim() ? 'Used once the counts are in: each estimated parameter takes away one degree of freedom.' : '')) : '');
+    setNote('xsAlphaNote', 'A p-value below ' + tr(alpha, 6) + ' counts as significant' + (ra.empty || (soft && soft.at === 'xsAlpha') ? ' (the usual level, used while this box is empty or invalid).' : ' (your level).') + (res && !Mc ? ' Critical value for df = ' + res.df + ': ' + f4(E.crit(alpha, res.df)) + '.' : V ? ' Critical value for df = ' + V.df + ': ' + f4(E.crit(alpha, V.df)) + '.' : ''));
+
+    SECTIONS.forEach(function (id) { show(id, false); }); show('xsCiteChips', true);
+    var rn = '', cn = '', kn = '';
+    rn = clean($('xsNameR').value); cn = clean($('xsNameC').value); kn = clean($('xsNameK').value);
+    setNote('xsNamesNote', st.mode === 'table' && (rn || cn) ? (res ? 'Used in the write-up: “' + (rn || 'the rows') + '” and “' + (cn || 'the columns') + '”.' : 'Appears in the write-up once the counts are in.') : '');
+    setNote('xsNameKNote', st.mode === 'fit' && kn ? (res ? 'Used in the write-up and tables: “' + kn + '”.' : 'Appears in the write-up once the counts are in.') : '');
+    var pw = null;
+    if (wUser !== null) { if (res && !Mc && res.df > 0) { pw = E.plan(wUser, res.n, res.df, alpha); setNote('xsWNote', 'For w = ' + tr(wUser, 4) + ' with your ' + nT(res.n) + ' counts the power is ' + powT(pw.power) + (pw.n80 !== null ? '; 80% power needs ' + nT(pw.n80) + ' counts.' : '.')); } else setNote('xsWNote', Mc ? 'Power is not worked out for McNemar’s test.' : 'Type the counts first to see the power for this effect size.'); } else setNote('xsWNote', '');
+
+    if (res && (Mc || res.df > 0)) {
+      body = true;
+      var isT = st.mode === 'table', stat, df, p, testName, sig, crit;
+      if (Mc) { stat = Mc.chi; df = 1; p = Mc.p; testName = 'McNemar’s test'; lab = 'McNemar’s test (same people twice)'; }
+      else { stat = res.chi; df = res.df; p = res.p; testName = isT ? 'chi-square test of independence' : 'chi-square goodness-of-fit test'; }
+      var head = isT && two && !Mc ? st.head : 'pearson';
+      if (head === 'yates') { stat = res.yates.chi; p = res.yates.p; lab = 'Chi-square with Yates’s correction'; testName = 'chi-square test with Yates’s correction'; }
+      if (head === 'fisher') { if (res.fisher) { p = res.fisher.two; lab = 'Fisher’s exact test (two-sided)'; testName = 'Fisher’s exact test'; } else { head = 'pearson'; setNote('xsHeadNote', 'Fisher’s test is not worked out for totals above 10,000,000; the Pearson chi-square is accurate there and is shown.'); } }
+      crit = E.crit(alpha, df); sig = p < alpha;
+      big = head === 'fisher' ? pEq(p) : 'χ² = ' + f4(stat);
+      sub = (head === 'fisher' ? 'two-sided · ' + nT(res.n) + ' counts' : 'df = ' + df + ' · ' + pEq(p) + (Mc ? ' · ' + nT(Mc.b + Mc.c) + ' changed' : ' · ' + nT(res.n) + ' counts')) + ' · ' + (sig ? 'significant' : 'not significant') + ' at α = ' + tr(alpha, 6);
+      mlab = head === 'fisher' ? 'Fisher exact' : Mc ? 'McNemar' : 'Chi-square'; mval = head === 'fisher' ? pEq(p) : 'χ² ' + f2(stat) + ' · ' + pEq(p);
+      var names = M.rows, cnames = M.cols;
+      /* plain words */
+      if (Mc) {
+        var ab = cnames[1], ba = cnames[0];
+        tip = (sig ? 'The two kinds of change are unequal: ' : 'The two kinds of change are close enough to be chance: ') + nT(Mc.b) + ' went from “' + names[0] + '” to “' + ab + '” and ' + nT(Mc.c) + ' from “' + names[1] + '” to “' + ba + '”.' + (Mc.b + Mc.c < 25 && Mc.exact !== null ? ' With fewer than 25 changes, rely on the exact p-value (' + pT(Mc.exact) + ') rather than χ².' : '');
+      } else {
+        var cells = [];
+        if (isT) res.Z.forEach(function (r, i) { r.forEach(function (z, j) { if (Math.abs(z) >= 2 && !(res.R === 2 && res.C === 2 && (i > 0 || j > 0))) cells.push({ z: z, t: res.R === 2 && res.C === 2 ? '“' + names[0] + '” chose “' + cnames[0] + '” ' + pctT(res.O[0][0] / res.rt[0]) + ' of the time against ' + pctT(res.O[1][0] / res.rt[1]) + ' for “' + names[1] + '”' : 'in “' + names[i] + '”, “' + cnames[j] + '” is ' + pctT(res.O[i][j] / res.rt[i]) + ' against ' + pctT(res.ct[j] / res.n) + ' overall (' + (z > 0 ? 'more' : 'fewer') + ' than expected)' }); }); });
+        else res.Z.forEach(function (z, i) { if (Math.abs(z) >= 2) cells.push({ z: z, t: '“' + names[i] + '” has ' + nT(res.O[i]) + ' where ' + f2(res.E[i]) + ' were expected (' + (z > 0 ? 'more' : 'fewer') + ')' }); });
+        cells.sort(function (a, b) { return Math.abs(b.z) - Math.abs(a.z); });
+        var lead = isT ? (sig ? 'The rows really do differ in how they split across the columns. ' : 'These counts do not show a clear link: differences this size happen often by chance. ') : (sig ? 'Your counts do not fit the expected shares. ' : 'Your counts are consistent with the expected shares: gaps this size happen often by chance. ');
+        tip = lead + (cells.length ? (sig ? 'Biggest gaps: ' : 'Largest single gaps to watch: ') + cells.slice(0, 3).map(function (c) { return c.t; }).join('; ') + '.' : 'No single box is 2 or more standardized units from expected.');
+        if (res.smallBad) tip += ' Careful: some expected counts are small' + (isT && res.R === 2 && res.C === 2 && res.fisher ? ', so rely on Fisher’s p-value (' + pT(res.fisher.two) + ').' : !isT && res.binom ? ', so rely on the exact binomial p-value (' + pT(res.binom.two) + ').' : ', so merge small groups below.');
+      }
+      /* picture */
+      if (Mc) drawFit([Mc.b, Mc.c], [(Mc.b + Mc.c) / 2, (Mc.b + Mc.c) / 2], [(Mc.b - Mc.c) / Math.sqrt(Mc.b + Mc.c), (Mc.c - Mc.b) / Math.sqrt(Mc.b + Mc.c)], [names[0] + ' → ' + cnames[1], names[1] + ' → ' + cnames[0]], 'The bars are the people whose answer changed, one bar for each direction. The dashed line marks an even split, which is what chance alone would give on average.');
+      else if (isT) drawTable(res, M);
+      else drawFit(res.O, res.E, res.Z, names, 'Each bar is the observed count; the dashed line marks the expected count. Amber = more than expected, blue = fewer; the strongest colour means a standardized difference of 2 or more.');
+      $('xsVisH').textContent = Mc ? 'Who changed, and which way' : 'Where the difference comes from'; show('xsVisWrap', true);
+      /* expected-count check */
+      if (!Mc) {
+        var wt;
+        if (res.lt5 === 0) wt = 'All expected counts are 5 or more (smallest ' + f2(res.minE) + '), so the chi-square approximation is reasonable.';
+        else if (!res.smallBad) wt = res.lt5 + ' of ' + res.cells + ' expected counts are below 5 (smallest ' + f2(res.minE) + '). That is still within the common rule: at least 80% at 5 or more and none below 1.';
+        else wt = res.lt5 + ' of ' + res.cells + ' expected counts ' + (res.lt5 === 1 ? 'is' : 'are') + ' below 5 (smallest ' + f2(res.minE) + '), so the chi-square p-value may be wrong. ' + (isT && res.R === 2 && res.C === 2 ? 'Use Fisher’s exact test below.' : !isT && res.k === 2 ? 'Use the exact binomial test below.' : 'Merge small groups below, or collect more.');
+        $('xsWarn').textContent = wt; $('xsWarn').className = 'xs-warn' + (res.smallBad ? ' bad' : ''); show('xsWarnWrap', true);
+      }
+      /* merge */
+      var canR = st.mode === 'table' ? M.rows.length >= 3 : M.rows.length >= 3, canC = st.mode === 'table' && M.cols.length >= 3;
+      if ((canR || canC || st.merges.length) && !Mc) {
+        var ax = st.axis; if (st.mode !== 'table') ax = 'r'; else if (ax === 'r' && !canR) ax = 'c'; else if (ax === 'c' && !canC) ax = 'r';
+        show('xsMAxW', st.mode === 'table' && canR && canC); [].forEach.call($('xsMAx').children, function (b) { b.classList.toggle('on', b.getAttribute('data-v') === ax); });
+        show('xsMPick', canR || canC);
+        if (canR || canC) {
+          var list = ax === 'c' ? M.cols : M.rows, ord = list.map(function (n, k) { var s = 0; if (st.mode === 'fit') s = M.O[k]; else if (ax === 'r') M.O[k].forEach(function (v) { s += v; }); else M.O.forEach(function (r) { s += r[k]; }); return [s, k]; }).sort(function (a, b) { return a[0] - b[0] || a[1] - b[1]; });
+          fillCsel('xsMA', list, ord[0][1]); fillCsel('xsMB', list, ord[1][1]);
+        }
+        st.useAxis = ax;
+        setNote('xsMergeNote', (st.merges.length ? 'Merged so far: ' + (st.mode === 'table' ? M.rows.concat(M.cols) : M.rows).filter(function (n) { return n.indexOf(' + ') >= 0; }).join(', ') + '. ' : '') + 'Merge only groups that belong together, and decide it by their meaning, not by which choice gives the smallest p.' + (st.mergeMsg ? ' ' + st.mergeMsg : ''));
+        $('xsUndoBtn').disabled = !st.merges.length; show('xsMergeWrap', true);
+      }
+      /* cross table */
+      if (isT && res.C <= 4 && res.n < 100000) {
+        var crows = names.map(function (n, i) { return { c: [esc(n)].concat(res.O[i].map(function (v, j) { return '<b>' + nT(v) + '</b><small>' + f2(res.E[i][j]) + '</small>'; })).concat(['<b>' + nT(res.rt[i]) + '</b>']) }; });
+        crows.push({ c: ['Total'].concat(res.ct.map(function (v) { return '<b>' + nT(v) + '</b>'; })).concat(['<b>' + nT(res.n) + '</b>']) });
+        $('xsCross').innerHTML = tbl([''].concat(cnames.map(function (c) { return esc(cut(c, res.C > 3 ? 7 : res.C === 3 ? 9 : 14)); })).concat(['Total']), crows);
+        setNote('xsCrossKey', 'Large number: what you counted. Small number under it: what to expect if rows and columns were unrelated (row total × column total ÷ grand total).'); show('xsCrossWrap', true);
+      }
+      /* cell by cell */
+      var csv = Mc ? [[M.rows[0] + ' / ' + M.cols[0], M.O[0][0]], [M.rows[0] + ' / ' + M.cols[1], M.O[0][1]], [M.rows[1] + ' / ' + M.cols[0], M.O[1][0]], [M.rows[1] + ' / ' + M.cols[1], M.O[1][1]]] : [];
+      if (!Mc) {
+      var crow = [], maxK = 0;
+      if (isT) res.K.forEach(function (r) { r.forEach(function (k) { maxK = Math.max(maxK, k); }); }); else res.K.forEach(function (k) { maxK = Math.max(maxK, k); });
+      var heat = function (k) { return maxK > 0 && k > 0 ? 'xs-h' + Math.max(1, Math.ceil(k / maxK * 4)) : ''; };
+      var addCell = function (label, o, e, k, z) { crow.push({ c: [esc(label), '<b>' + nT(o) + '</b><small>' + f2(e) + '</small>', fk(k), fz(z)], st: [null, null, heat(k), Math.abs(z) >= 2 ? 'xs-zbig' : null] }); csv.push([label, o, f2(e).replace(/,/g, ''), f4(k), fz(z)]); };
+      if (isT) res.O.forEach(function (r, i) { r.forEach(function (o, j) { addCell(names[i] + ' · ' + cnames[j], o, res.E[i][j], res.K[i][j], res.Z[i][j]); }); });
+      else res.O.forEach(function (o, i) { addCell(names[i], o, res.E[i], res.K[i], res.Z[i]); });
+      var sumE = res.n;
+      crow.push({ cls: 'xs-tot', c: ['Total', '<b>' + nT(res.n) + '</b><small>' + f2(sumE) + '</small>', fk(res.chi), ''] });
+      $('xsCells').innerHTML = tbl([isT ? 'Box' : esc(cut(kn || 'Category', 16)), 'Count<br>expected','(O−E)²<br>÷ E', 'Std.<br>diff.'], crow);
+      if ($('xsCellWrap').getAttribute('data-n') !== String(crow.length > 13)) { $('xsCellWrap').setAttribute('data-n', String(crow.length > 13)); $('xsCellWrap').open = !(crow.length > 13); }
+      setNote('xsCellKey', 'Large number: counted; small number: expected. Each box adds (observed − expected)² ÷ expected to χ²; darker shading means a bigger share. The standardized difference says how far a box is from expected; beyond ±2 is unusual and beyond ±3 very unusual (a rule of thumb).'); show('xsCellWrap', true);
+      }
+      /* exact tests */
+      if (isT && res.R === 2 && res.C === 2 && !Mc) {
+        var tr2 = [{ c: ['Pearson chi-square', f4(res.chi), pT(res.p)] }, { c: ['With Yates’s correction', f4(res.yates.chi), pT(res.yates.p)] }];
+        if (res.fisher) tr2.push({ c: ['Fisher exact, two-sided', '—', pT(res.fisher.two)] }, { c: ['Fisher, one-sided: top-left count this low or lower', '—', pT(res.fisher.left)] }, { c: ['Fisher, one-sided: top-left count this high or higher', '—', pT(res.fisher.right)] });
+        $('xsTwo').innerHTML = tbl(['Test', 'χ²', 'p'], tr2); $('xsTwoH').textContent = 'Which p-value for a 2×2 table?';
+        setNote('xsTwoKey', (res.smallBad ? 'Small expected counts here: report Fisher’s test. ' : 'With expected counts of 5 or more the three usually agree closely. ') + (res.fisher ? 'Fisher’s two-sided p adds up every table with the same totals that is as likely as yours or less. Use a one-sided value only if you named the direction before seeing the data.' : 'Fisher’s test is not worked out for totals above 10,000,000.')); show('xsTwoWrap', true);
+      }
+      if (!isT && res.binom) {
+        $('xsTwo').innerHTML = tbl(['Test', 'χ²', 'p'], [{ c: ['Pearson chi-square', f4(res.chi), pT(res.p)] }, { c: ['Exact binomial, two-sided', '—', pT(res.binom.two)] }, { c: ['One-sided: “' + esc(cut(names[0], 14)) + '” this low or lower', '—', pT(res.binom.left)] }, { c: ['One-sided: “' + esc(cut(names[0], 14)) + '” this high or higher', '—', pT(res.binom.right)] }]);
+        $('xsTwoH').textContent = 'Exact test for two categories';
+        setNote('xsTwoKey', 'With only two categories the binomial test gives the exact p-value: it adds up every outcome that is as likely as yours or less. Expected share of “' + names[0] + '”: ' + pctT(res.E[0] / res.n) + '.'); show('xsTwoWrap', true);
+      }
+      if (Mc) {
+        var mr = [{ c: ['McNemar chi-square', f4(Mc.chi), pT(Mc.p)] }, { c: ['With continuity correction', f4(Mc.chiC), pT(Mc.pC)] }];
+        if (Mc.exact !== null) mr.push({ c: ['Exact binomial, two-sided', '—', pT(Mc.exact)] }, { c: ['Mid-p', '—', pT(Mc.midp)] });
+        $('xsMc').innerHTML = tbl(['Version', 'χ²', 'p'], mr);
+        setNote('xsMcKey', 'Only the ' + nT(Mc.b + Mc.c) + ' who changed (' + nT(Mc.b) + ' one way, ' + nT(Mc.c) + ' the other) enter the test; the ' + nT(M.O[0][0] + M.O[1][1]) + ' who answered the same both times do not. ' + (Mc.c > 0 ? 'Ratio of the two changes: ' + f2(Mc.b / Mc.c) + '. ' : '') + (Mc.b + Mc.c < 25 ? 'Fewer than 25 changes: report the exact or the mid-p value (mid-p is the less cautious of the two).' : '25 or more changes: the chi-square versions are reasonable.')); show('xsMcWrap', true);
+      }
+      /* strength */
+      if (!Mc) {
+        var ef = [{ c: ['Cohen’s w', f4(res.w) + ' (' + E.strength(res.w) + ')'] }];
+        if (isT) ef.push({ c: ['Cramér’s V', f4(res.V)] });
+        if (isT && res.R === 2 && res.C === 2) ef.push({ c: ['Phi (φ)', f4(res.w)] });
+        if (isT && res.R === 2 && res.C === 2 && res.O[0][1] * res.O[1][0] > 0) ef.push({ c: ['Odds ratio', f4(res.O[0][0] * res.O[1][1] / (res.O[0][1] * res.O[1][0]))] });
+        $('xsEff').innerHTML = tbl(null, ef);
+        setNote('xsEffKey', 'p says whether a difference is more than chance; these say how big it is. Cohen’s guide for w: 0.1 small, 0.3 medium, 0.5 large.' + (isT ? ' V runs from 0 (no link) to 1 (one thing fixes the other).' : '')); show('xsEffWrap', true);
+        /* what would it take */
+        var pl = E.plan(res.w, res.n, df, alpha), wr = [];
+        wr.push({ c: ['χ² needed for significance at α = ' + tr(alpha, 6), f4(pl.crit) + ' (yours ' + f4(res.chi) + ')'] });
+        wr.push({ c: ['Total counts needed for p below α, if the same shares held', pl.sig === null ? 'Never: the counts match exactly' : res.chi > pl.crit ? 'Already there with ' + nT(res.n) + ' (from ' + nT(pl.sig) + ')' : nT(pl.sig) + ' (you have ' + nT(res.n) + ')'] });
+        wr.push({ c: ['Power now, if the true pattern were exactly what you saw', pl.sig === null ? '—' : powT(pl.power)] });
+        wr.push({ c: ['Total counts for 80% power at that pattern', pl.n80 === null ? '—' : nT(pl.n80)] });
+        if (pw) wr.push({ c: ['Your effect size w = ' + tr(wUser, 4) + ': power with ' + nT(res.n) + ' counts', powT(pw.power)] }, { c: ['Your effect size w = ' + tr(wUser, 4) + ': counts for 80% power', pw.n80 === null ? '—' : nT(pw.n80)] });
+        $('xsPow').innerHTML = tbl(null, wr);
+        setNote('xsPowKey', 'Planning figures for the plain Pearson chi-square. Power is the chance a new study of that size would reach p below α. Power worked out from your own result only restates the p-value, so for planning type the smallest effect size that would matter to you under Go advanced.'); show('xsPowWrap', true);
+      }
+      drawCurve(Mc ? Mc.chi : (head === 'yates' ? res.yates.chi : res.chi), df, E.crit(alpha, df), alpha); show('xsCurveWrap', true);
+      /* hypotheses */
+      var ck = [];
+      if (Mc) { ck.push('H₀ (starting assumption): a change in one direction is as likely as a change in the other.'); ck.push('H₁: one direction of change is more likely.'); }
+      else if (isT) { ck.push('H₀ (starting assumption): “' + (rn || 'the row variable') + '” and “' + (cn || 'the column variable') + '” are not related; every row splits across the columns the same way.'); ck.push('H₁: they are related; at least one row splits differently.'); ck.push('The same arithmetic tests whether several separate groups have the same shares (a test of homogeneity).'); }
+      else { ck.push('H₀ (starting assumption): the ' + (kn ? '“' + kn + '”' : 'counts') + ' follow the expected shares.'); ck.push('H₁: at least one share is different.'); }
+      ck.push('Decision: p ' + (sig ? 'is below' : 'is not below') + ' α = ' + tr(alpha, 6) + ', so ' + (sig ? 'H₀ is rejected.' : 'H₀ is not rejected. That does not prove it true.'));
+      ck.push(Mc ? 'This assumes the pairs are separate from each other.' : 'This assumes every count is a separate person or item, chosen at random. The numbers alone cannot show that.');
+      $('xsCheck').innerHTML = ck.map(function (s) { return '<li>' + esc(s) + '</li>'; }).join(''); show('xsCheckWrap', true);
+      /* write-up */
+      var Nt = nT(res.n), what = isT ? 'the association between ' + (rn || 'the row variable') + ' and ' + (cn || 'the column variable') : '';
+      var statT = Mc ? 'χ²(1, N = ' + Nt + ') = ' + Mc.chi.toFixed(2) + ', p ' + apaP(Mc.p) : head === 'fisher' ? 'p ' + apaP(p) + ', two-sided, N = ' + Nt : 'χ²(' + df + ', N = ' + Nt + ') = ' + stat.toFixed(2) + ', p ' + apaP(p) + (isT ? ', V = ' + apaN(res.V) : ', w = ' + apaN(res.w));
+      var apa = Mc ? 'McNemar’s test showed that the change between the two answers was ' + (sig ? '' : 'not ') + 'significant, ' + statT + '.' : isT ? (head === 'fisher' ? '' : 'A ') + testName + ' showed that ' + what + ' was ' + (sig ? '' : 'not ') + 'significant, ' + statT + '.' : 'A chi-square goodness-of-fit test showed that the observed ' + (kn || 'counts') + ' ' + (sig ? 'differed' : 'did not differ') + ' significantly from the expected shares, ' + statT + '.';
+      var chic = (head === 'fisher' ? 'Fisher’s exact test gave a two-sided p-value of ' + pT(p) + '.' : 'The chi-square statistic is ' + f4(stat) + ' (df = ' + df + ', N = ' + Nt + '). The p-value is ' + pT(p) + '.') + ' The result is ' + (sig ? '' : 'not ') + 'significant at p < ' + tr(alpha, 6) + '.';
+      var plain = Mc ? (sig ? 'More people changed in one direction than the other' : 'The changes in the two directions were about balanced') + ' (' + nT(Mc.b) + ' against ' + nT(Mc.c) + ', ' + pEq(p) + ').' : isT ? (sig ? 'There is a real link between ' : 'The data show no clear link between ') + (rn || 'the rows') + ' and ' + (cn || 'the columns') + ' (' + pEq(p) + '); the effect is ' + E.strength(res.w) + '.' : 'The ' + (kn || 'counts') + (sig ? ' do not match' : ' are consistent with') + ' what was expected (' + pEq(p) + ').';
+      var forms = { apa: apa, chicago: chic, plain: plain };
+      $('xsWrite').textContent = forms[st.cite]; [].forEach.call($('xsCiteChips').children, function (b) { b.classList.toggle('on', b.getAttribute('data-v') === st.cite); }); show('xsWriteWrap', true);
+      $('xsCopyTxt').textContent = lab + ': ' + big + ' (' + sub + ')';
+      $('xsCsvTxt').textContent = [Mc ? ['Box', 'Observed'] : [isT ? 'Box' : 'Category', 'Observed', 'Expected', 'Contribution', 'Standardized difference']].concat(csv).map(function (r) { return r.map(function (c) { return '"' + String(c).replace(/"/g, '""').replace(/−/g, '-') + '"'; }).join(','); }).join('\n'); show('xsCopyWrap', true);
+      /* steps */
+      var sp = [];
+      if (Mc) { sp.push('The two counts that changed: b = ' + nT(Mc.b) + ' and c = ' + nT(Mc.c) + '.'); sp.push('χ² = (b − c)² ÷ (b + c) = (' + nT(Mc.b) + ' − ' + nT(Mc.c) + ')² ÷ ' + nT(Mc.b + Mc.c) + ' = ' + f4(Mc.chi) + ', with 1 degree of freedom.'); sp.push('p = area of the chi-square curve right of ' + f4(Mc.chi) + ' = ' + pT(Mc.p) + '.'); }
+      else {
+        if (isT) { sp.push('Expected count of each box = row total × column total ÷ grand total. For “' + names[0] + ' · ' + cnames[0] + '”: ' + nT(res.rt[0]) + ' × ' + nT(res.ct[0]) + ' ÷ ' + nT(res.n) + ' = ' + f2(res.E[0][0]) + '.'); sp.push('Contribution of that box = (' + nT(res.O[0][0]) + ' − ' + f2(res.E[0][0]) + ')² ÷ ' + f2(res.E[0][0]) + ' = ' + f4(res.K[0][0]) + '.'); }
+        else { sp.push('Expected count = total × expected share. For “' + names[0] + '”: ' + f2(res.E[0]) + ' of ' + nT(res.n) + '.'); sp.push('Contribution of that category = (' + nT(res.O[0]) + ' − ' + f2(res.E[0]) + ')² ÷ ' + f2(res.E[0]) + ' = ' + f4(res.K[0]) + '.'); }
+        sp.push('χ² = sum of all ' + res.cells + ' contributions = ' + f4(res.chi) + '.');
+        sp.push(isT ? 'df = (rows − 1) × (columns − 1) = ' + (res.R - 1) + ' × ' + (res.C - 1) + ' = ' + res.df + '.' : 'df = categories − 1' + (params ? ' − estimated parameters = ' + res.k + ' − 1 − ' + params : ' = ' + res.k + ' − 1') + ' = ' + res.df + '.');
+        sp.push('p = area of the chi-square curve with df = ' + res.df + ' right of ' + f4(res.chi) + ' = ' + pT(res.p) + '.');
+        sp.push(isT ? 'Cramér’s V = √(χ² ÷ (N × (smaller of rows, columns − 1))) = ' + f4(res.V) + '; Cohen’s w = √(χ² ÷ N) = ' + f4(res.w) + '.' : 'Cohen’s w = √(χ² ÷ N) = ' + f4(res.w) + '.');
+      }
+      $('xsSteps').innerHTML = sp.map(function (s) { return '<li>' + esc(s) + '</li>'; }).join(''); show('xsStepsWrap', true);
+    } else if (V && V.chi === null) {
+      body = true;
+      var c0 = E.crit(alpha, V.df);
+      lab = 'Chi-square critical value'; big = f4(c0); sub = 'df = ' + V.df + ' · α = ' + tr(alpha, 6) + ' · right tail'; mlab = 'Critical value'; mval = f4(c0);
+      tip = 'A χ² above this value is significant at α = ' + tr(alpha, 6) + '. Type your χ² value to get its p-value.';
+      drawCurve(null, V.df, c0, alpha); show('xsCurveWrap', true);
+      var cw = 'The critical value of χ² with ' + V.df + (V.df === 1 ? ' degree' : ' degrees') + ' of freedom at α = ' + tr(alpha, 6) + ' is ' + f4(c0) + '.';
+      $('xsWrite').textContent = cw; show('xsCiteChips', false); show('xsWriteWrap', true);
+      $('xsCopyTxt').textContent = cw; $('xsCsvTxt').textContent = '"df","alpha","critical value"\n"' + [V.df, tr(alpha, 6), f4(c0)].join('","') + '"'; show('xsCopyWrap', true);
+      $('xsSteps').innerHTML = '<li>Critical value = the χ² with an area of ' + tr(alpha, 6) + ' to its right under the curve with df = ' + V.df + ': ' + f4(c0) + '.</li>'; show('xsStepsWrap', true);
+    } else if (V) {
+      body = true;
+      var pv = E.pRight(V.chi, V.df), cr = E.crit(alpha, V.df), sg2 = pv < alpha;
+      big = pEq(pv); sub = 'χ² = ' + f4(V.chi) + ' · df = ' + V.df + ' · critical value ' + f4(cr) + ' · ' + (sg2 ? 'significant' : 'not significant') + ' at α = ' + tr(alpha, 6); mlab = 'p-value'; mval = pEq(pv) + ' · critical ' + f2(cr);
+      tip = sg2 ? 'Your χ² is above the critical value, so a result this large would be rare by chance alone.' : 'Your χ² is not above the critical value: chance alone often produces a result this large.';
+      drawCurve(V.chi, V.df, cr, alpha); show('xsCurveWrap', true);
+      var va = 'χ²(' + V.df + ') = ' + V.chi.toFixed(2) + ', p ' + apaP(pv) + '.';
+      var vf = { apa: va, chicago: 'The chi-square statistic is ' + f4(V.chi) + ' (df = ' + V.df + '). The p-value is ' + pT(pv) + '. The result is ' + (sg2 ? '' : 'not ') + 'significant at p < ' + tr(alpha, 6) + '.', plain: 'With ' + V.df + (V.df === 1 ? ' degree' : ' degrees') + ' of freedom, a χ² of ' + f4(V.chi) + ' or more happens by chance with probability ' + pT(pv) + '.' };
+      $('xsWrite').textContent = vf[st.cite]; [].forEach.call($('xsCiteChips').children, function (b) { b.classList.toggle('on', b.getAttribute('data-v') === st.cite); }); show('xsWriteWrap', true);
+      $('xsCopyTxt').textContent = lab + ': ' + big + ' (' + sub + ')';
+      $('xsCsvTxt').textContent = '"chi-square","df","p","alpha","critical value"\n"' + [V.chi, V.df, pT(pv), tr(alpha, 6), f4(cr)].join('","') + '"'; show('xsCopyWrap', true);
+      $('xsSteps').innerHTML = ['p = area of the chi-square curve with df = ' + V.df + ' right of ' + f4(V.chi) + ' = ' + pT(pv) + '.', 'Critical value = the χ² with an area of ' + tr(alpha, 6) + ' to its right = ' + f4(cr) + '.', 'Significant when χ² is above the critical value, which is the same as p below α.'].map(function (s) { return '<li>' + s + '</li>'; }).join(''); show('xsStepsWrap', true);
+    }
+
+    var named = function (box) { return [].some.call($(box).querySelectorAll('.xs-name input'), function (i) { return i.value.trim() !== ''; }); };
+    setNote('xsGridNote', named('xsGrid') && !body ? 'Your names appear in the result once every count box is filled.' : '');
+    setNote('xsFitNote', named('xsFit') && !body ? 'Your names appear in the result once the counts are filled in.' : '');
+    var hint = out.bad || soft;
+    if (hint) setHint(hint.msg, hint.at); else setHint('');
+    $('xsBig').textContent = big; $('xsBig').parentNode.classList.toggle('cc-long', big.length > 16); $('xsLab').textContent = lab; $('xsSub').textContent = sub; $('xsBody').style.display = body ? '' : 'none'; $('xsTip').textContent = tip; $('xsTip').style.display = tip ? '' : 'none';
+    $('xsMLab').textContent = mlab; $('xsMVal').textContent = mval;
+  }
+
+  /* ---------- controls ---------- */
+  function segSet(id, key, v) { st[key] = v; [].forEach.call($(id).children, function (b) { b.classList.toggle('on', b.getAttribute('data-v') === v); }); }
+  function resetMerges() { st.merges = []; st.sig = ''; st.mergeMsg = ''; }
+  [['xsMode', 'mode'], ['xsEntry', 'entry'], ['xsPair', 'pair'], ['xsHead', 'head'], ['xsExp', 'exp'], ['xsFEntry', 'fentry'], ['xsMAx', 'axis']].forEach(function (pp) {
+    [].forEach.call($(pp[0]).children, function (b) { b.addEventListener('click', function () { segSet(pp[0], pp[1], b.getAttribute('data-v')); if (pp[1] !== 'axis' && pp[1] !== 'head') resetMerges(); if (pp[1] === 'exp') expUI(); st.mergeMsg = ''; render(); }); });
+  });
+  var card = $('xsGrid').closest('.card');
+  card.addEventListener('input', function () { st.mergeMsg = ''; render(); });
+  [['xsAddRow', 'R', 1], ['xsDelRow', 'R', -1], ['xsAddCol', 'C', 1], ['xsDelCol', 'C', -1]].forEach(function (b) { $(b[0]).addEventListener('click', function () { var v = st[b[1]] + b[2]; if (v < 2 || v > (b[1] === 'C' ? 5 : E.MAXDIM)) return; st[b[1]] = v; resetMerges(); buildGrid(); render(); }); });
+  [['xsAddCat', 1], ['xsDelCat', -1]].forEach(function (b) { $(b[0]).addEventListener('click', function () { var v = st.K + b[1]; if (v < 2 || v > E.MAXDIM) return; st.K = v; resetMerges(); buildFit(); render(); }); });
+  $('xsAlphaChips').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; $('xsAlpha').value = b.getAttribute('data-v'); render(); });
+  $('xsCiteChips').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; st.cite = b.getAttribute('data-v'); render(); });
+  $('xsMergeBtn').addEventListener('click', function () {
+    var a = parseInt($('xsMA').value, 10), b = parseInt($('xsMB').value, 10);
+    if (a === b) { st.mergeMsg = 'Pick two different groups to merge.'; render(); return; }
+    st.mergeMsg = ''; st.merges.push({ axis: st.useAxis || 'r', a: a, b: b }); cselSig = {}; $('xsMA').removeAttribute('data-value'); $('xsMB').removeAttribute('data-value'); render();
+  });
+  $('xsUndoBtn').addEventListener('click', function () { st.merges.pop(); st.mergeMsg = ''; cselSig = {}; $('xsMA').removeAttribute('data-value'); $('xsMB').removeAttribute('data-value'); render(); });
+  function loadExample(k) {
+    var x = EX[k], i, j; if (!x) return;
+    resetMerges();
+    if (x.O) {
+      segSet('xsPair', 'pair', x.pair || 'ind');
+      if (st.entry === 'grid') {
+        st.R = x.O.length; st.C = x.O[0].length; buildGrid();
+        for (i = 0; i < st.R; i++) { $('xsRN' + (i + 1)).value = x.rows[i]; for (j = 0; j < st.C; j++) $('xsC' + (i + 1) + '_' + (j + 1)).value = x.O[i][j]; }
+        for (j = 0; j < st.C; j++) $('xsCN' + (j + 1)).value = x.cols[j];
+      } else if (st.entry === 'paste') $('xsPaste').value = [', ' + x.cols.join(', ')].concat(x.O.map(function (r, i2) { return x.rows[i2] + ', ' + r.join(', '); })).join('\n');
+      else { var ls = []; x.O.forEach(function (r, i2) { r.forEach(function (v, j2) { for (var q = 0; q < v; q++) ls.push(x.rows[i2] + ', ' + x.cols[j2]); }); }); $('xsRaw').value = ls.join('\n'); }
+    } else {
+      segSet('xsExp', 'exp', x.exp);
+      if (st.fentry === 'rows') { st.K = x.obs.length; buildFit(); for (i = 0; i < st.K; i++) { $('xsFN' + (i + 1)).value = x.names[i]; $('xsFO' + (i + 1)).value = x.obs[i]; $('xsFE' + (i + 1)).value = x.e ? x.e[i] : ''; } }
+      else { expUI(); $('xsFitP').value = x.obs.map(function (v, i2) { return x.names[i2] + ', ' + v + (x.e ? ', ' + x.e[i2] : ''); }).join('\n'); }
+    }
+    render();
+  }
+  $('xsWChips').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; $('xsW').value = b.getAttribute('data-v'); render(); });
+  ['xsExT', 'xsExF'].forEach(function (id) { $(id).addEventListener('click', function (e) { var b = e.target.closest('button'); if (b) loadExample(b.getAttribute('data-v')); }); });
+  [].forEach.call(document.querySelectorAll('.p-chi [data-copy]'), function (b) {
+    b.addEventListener('click', function () {
+      var t = $(b.getAttribute('data-copy')).textContent, label = b.getAttribute('data-label') || b.textContent; b.setAttribute('data-label', label);
+      var done = function (ok) { b.textContent = ok ? 'Copied' : 'Copy failed'; setTimeout(function () { b.textContent = label; }, 1500); };
+      var old = function () { var a = document.createElement('textarea'), ok = false; a.value = t; a.style.position = 'fixed'; a.style.opacity = '0'; document.body.appendChild(a); a.select(); try { ok = document.execCommand('copy'); } catch (e) { ok = false; } a.remove(); done(ok); };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(function () { done(true); }, old); else old();
+    });
+  });
+  $('xsClear').addEventListener('click', function () {
+    [].forEach.call(card.querySelectorAll('input,textarea'), function (i) { if (!i.closest('.xs-gridw')) i.value = ''; });
+    st.R = 2; st.C = 2; st.K = 3; resetMerges(); $('xsGrid').innerHTML = ''; $('xsFit').innerHTML = ''; buildGrid(); buildFit(); render();
+  });
+  $('xsAdvBtn').addEventListener('click', function () {
+    st.adv = !st.adv; $('xsAdvBtn').classList.toggle('open', st.adv); $('xsAdvBtnLab').textContent = st.adv ? 'Go simple' : 'Go advanced'; $('xsAdvIn').style.display = st.adv ? '' : 'none';
+    if (!st.adv) { ['xsNameR', 'xsNameC', 'xsNameK', 'xsParams', 'xsW', 'xsDec'].forEach(function (id) { $(id).value = ''; }); segSet('xsHead', 'head', 'pearson'); }
+    render();
+  });
+  buildGrid(); buildFit(); render();
+};
+/* CHI:END */
+
 
 /* COMPOUND:BEGIN */
 /* =========================================================

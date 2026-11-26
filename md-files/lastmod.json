@@ -1,7 +1,7 @@
 {
  "/": {
-  "hash": "e849332a4b2dd458",
-  "date": "2026-11-24"
+  "hash": "6c4299feccb542cc",
+  "date": "2026-11-26"
  },
  "/board-foot-calculator/": {
   "hash": "41e9c86bf0956ae1",
@@ -192,8 +192,8 @@
   "date": "2026-10-31"
  },
  "/p-value-calculator/": {
-  "hash": "ad7811a41e4e8312",
-  "date": "2026-11-10"
+  "hash": "6cc5e16f981b2943",
+  "date": "2026-11-26"
  },
  "/confidence-interval-calculator/": {
   "hash": "07c5870e91b5386b",
@@ -788,8 +788,8 @@
   "date": "2026-11-20"
  },
  "/whats-new/": {
-  "hash": "94fd4b277781aebb",
-  "date": "2026-11-24"
+  "hash": "7e598a90a6f3e8b3",
+  "date": "2026-11-26"
  },
  "/contact/": {
   "hash": "a6aa9bb68b171a76",
@@ -986,5 +986,9 @@
  "/linear-regression-calculator/": {
   "hash": "f0241fae6ae52d61",
   "date": "2026-11-24"
+ },
+ "/chi-square-calculator/": {
+  "hash": "e4aebe88715f2f35",
+  "date": "2026-11-25"
  }
 }

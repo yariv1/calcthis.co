@@ -52,7 +52,7 @@
   ]
 }
 </script>
-<link rel="stylesheet" href="/assets/style.css?v=365">
+<link rel="stylesheet" href="/assets/style.css?v=366">
 <style>
 .presets-label{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
 .presets{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px}
@@ -232,6 +232,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
           <a href="/t-test-calculator/">T-Test</a>
           <a href="/correlation-coefficient-calculator/">Correlation Coefficient</a>
           <a href="/linear-regression-calculator/">Linear Regression</a>
+          <a href="/chi-square-calculator/">Chi Square</a>
           <a href="/scientific-notation-calculator/">Scientific Notation</a>
           <a href="/average-calculator/">Average</a>
           <a href="/batting-average-calculator/">Batting Average</a>
@@ -832,6 +833,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
           <li><a href="/t-test-calculator/">T-Test Calculator</a></li>
           <li><a href="/correlation-coefficient-calculator/">Correlation Coefficient Calculator</a></li>
           <li><a href="/linear-regression-calculator/">Linear Regression Calculator</a></li>
+          <li><a href="/chi-square-calculator/">Chi Square Calculator</a></li>
           <li><a href="/scientific-notation-calculator/">Scientific Notation Calculator</a></li>
           <li><a href="/weighted-average-calculator/">Weighted Average Calculator</a></li>
           <li><a href="/average-calculator/">Average Calculator</a></li>
@@ -925,7 +927,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
   </footer>
 <!--FOOTER:END-->
 
-<script src="/assets/app.js?v=365"></script>
+<script src="/assets/app.js?v=366"></script>
 <script>
 function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){var t=b;b=a%b;a=t;}return a;}
 function toInts(a,b){var sa=(''+a).split('.')[1]||'',sb=(''+b).split('.')[1]||'';var s=Math.pow(10,Math.max(sa.length,sb.length));var ai=Math.round(a*s),bi=Math.round(b*s);var g=gcd(ai,bi);return[ai/g,bi/g];}

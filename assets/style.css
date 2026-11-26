@@ -4031,3 +4031,64 @@ body .fld + .av-note,body .fld + .cb-note{margin-top:-6px}
 .p-lr #lrCoef td,.p-lr #lrCoef th,.p-lr #lrAnova td,.p-lr #lrAnova th,.p-lr #lrCurves td,.p-lr #lrCurves th,.p-lr #lrInf td,.p-lr #lrInf th,.p-lr #lrPred td,.p-lr #lrPred th,.p-lr #lrTab td,.p-lr #lrTab th{overflow-wrap:anywhere;word-break:normal;font-size:13.5px;padding-left:4px;padding-right:4px;hyphens:none}
 .p-lr #lrInf tr.cc-flag td{background:#FBF1DC}
 .p-lr .lr-w3 td:first-child,.p-lr #lrCoef td:first-child,.p-lr #lrCoef th:first-child{width:30%}
+/* CHI:CSS ---- CHI SQUARE calculator (page class p-chi). The page also carries the correlation page stylesheet class ---- */
+.p-chi #xsExW{margin-bottom:15px}
+.p-chi .xs-gridw{margin-bottom:12px}
+.p-chi .xs-grid{display:grid;gap:6px;align-items:center;margin-bottom:6px}
+.p-chi .xs-grid .inp{min-width:0}
+.p-chi .xs-grid .inp input{padding:11px 6px;text-align:center}
+.p-chi .xs-grid .inp.xs-name input{text-align:left;background:#F5EFE4;font-size:14px;font-weight:600;padding:11px 8px;text-overflow:ellipsis}
+.p-chi .xs-tight .inp input{padding:11px 2px;font-size:14px}
+.p-chi .xs-tight .inp.xs-name input{padding:11px 3px;font-size:14px}
+.p-chi .xs-h{font-size:13px;font-weight:600;color:var(--ink-soft);line-height:1.3}
+.p-chi .cc-tools button[disabled]{opacity:.4;cursor:default;text-decoration:none}
+.p-chi .xs-row{margin:0 0 10px}
+.p-chi .xs-rlab{font-size:14px;color:var(--ink-soft);margin:0 0 3px;overflow-wrap:anywhere}
+.p-chi .xs-rlab b{color:var(--ink)}
+.p-chi .xs-bar{position:relative;display:flex;width:100%;border-radius:6px;overflow:hidden;background:#F3EEE3}
+.p-chi .xs-seg{display:flex;align-items:center;justify-content:center;height:100%;min-width:0;overflow:hidden;box-shadow:inset -2px 0 0 #FFFDF8}
+.p-chi .xs-seg em{font-style:normal;font-size:12.5px;font-weight:600;white-space:nowrap;color:var(--ink);position:relative;z-index:1}
+.p-chi .xs-seg.ref,.p-chi .xs-seg.same{background:#E4D9C3}
+.p-chi .xs-seg.more.s0{background:#F6E7C9}
+.p-chi .xs-seg.more.s1{background:#EBC47E}
+.p-chi .xs-seg.more.s2{background:#8F5C13}
+.p-chi .xs-seg.fewer.s0{background:#DDE8EF}
+.p-chi .xs-seg.fewer.s1{background:#A5C3D8}
+.p-chi .xs-seg.fewer.s2{background:#2F5878}
+.p-chi .xs-seg.s2 em{color:#fff}
+.p-chi .xs-mark{position:absolute;top:0;bottom:0;width:0;border-left:2px dashed #241A11;transform:translateX(-1px);pointer-events:none}
+.p-chi .xs-rtxt{display:flex;flex-wrap:wrap;gap:0 14px;font-size:14px;color:var(--ink-soft);margin-top:3px;overflow-wrap:anywhere}
+.p-chi .xs-rtxt span{min-width:0}
+.p-chi .xs-ref{padding-bottom:8px;border-bottom:1px solid var(--line)}
+.p-chi .xs-warn{font-size:14px;line-height:1.5;color:var(--ink);background:#F2F5F0;border:1px solid #CFDACB;border-radius:10px;padding:9px 12px;margin:6px 0 4px}
+.p-chi .xs-warn.bad{background:#FBF1DC;border-color:#E5C88E}
+.p-chi #xsMergeWrap .fld{margin-bottom:8px;min-width:0}
+.p-chi #xsMergeWrap .csel{min-width:0}
+.p-chi #xsMergeWrap .csel-val{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.p-chi #xsCross,.p-chi #xsCells{width:100%;table-layout:fixed}
+.p-chi #xsCross td,.p-chi #xsCross th,.p-chi #xsCells td,.p-chi #xsCells th{font-size:13.5px;padding-left:3px;padding-right:3px;overflow-wrap:anywhere;word-break:normal;hyphens:manual}
+.p-chi #xsCross td:nth-child(n+2),.p-chi #xsCross th:nth-child(n+2),.p-chi #xsCells td:nth-child(n+2),.p-chi #xsCells th:nth-child(n+2){text-align:right}
+.p-chi #xsCross small,.p-chi #xsCells small{display:block;font-size:12.5px;font-weight:400;color:var(--muted)}
+.p-chi #xsCross td:nth-child(n+2){padding-left:1px;padding-right:1px}
+.p-chi #xsCells th:first-child,.p-chi #xsCells td:first-child{width:31%}
+.p-chi #xsCells th:last-child,.p-chi #xsCells td:last-child{width:18%}
+.p-chi #xsCells td.xs-h1{background:#FBF4E4}
+.p-chi #xsCells td.xs-h2{background:#F6E7C9}
+.p-chi #xsCells td.xs-h3{background:#F0D7A5}
+.p-chi #xsCells td.xs-h4{background:#EBC47E}
+.p-chi #xsCells td.xs-zbig{font-weight:700;color:var(--ink)}
+.p-chi #xsCells tr.xs-tot td{font-weight:700;color:var(--ink);background:none}
+.p-chi #xsTwo,.p-chi #xsMc,.p-chi #xsEff,.p-chi #xsPow{width:100%;table-layout:auto}
+.p-chi #xsTwo td:nth-child(n+2),.p-chi #xsTwo th:nth-child(n+2),.p-chi #xsMc td:nth-child(n+2),.p-chi #xsMc th:nth-child(n+2),.p-chi #xsEff td:nth-child(2),.p-chi #xsPow td:nth-child(2){text-align:right}
+.p-chi #xsTwo td:nth-child(n+2),.p-chi #xsMc td:nth-child(n+2){white-space:nowrap;font-size:13.5px;padding-left:4px;padding-right:4px}
+.p-chi #xsPow td:nth-child(2){width:42%}
+.p-chi #xsCurve svg{display:block;width:100%;height:auto}
+.p-chi #xsCurve .xs-line{fill:none;stroke:#37503F;stroke-width:2}
+.p-chi #xsCurve .xs-axis{stroke:#B9A988;stroke-width:1;fill:none}
+.p-chi #xsCurve .xs-rej{fill:#EBC47E;opacity:.6}
+.p-chi #xsCurve .xs-parea{fill:#8F5C13;opacity:.6}
+.p-chi #xsCurve .xs-crit{stroke:#8F5C13;stroke-width:1.6;stroke-dasharray:4 3;fill:none}
+.p-chi #xsCurve .xs-stat{stroke:#241A11;stroke-width:2;fill:none}
+.p-chi #xsCurve text{font-size:15px;fill:#241A11;font-family:'Inter',system-ui,sans-serif}
+.p-chi #xsCurve .xs-tstat{font-weight:700}
+.p-chi details.faq > summary{font-size:15px}
