@@ -1,3 +1,5 @@
+**NEWEST (2026-11-26): CHI SQUARE DEPLOYED v366. Read `HANDOFF.md` §000000000000002g (first section below) in full. First reply = ONE sync line, then work silently.**
+
 **NEWEST (2026-11-22, SESSION #15 part 2): RETATRUTIDE DOSAGE BUILT, NOT DEPLOYED. Read `HANDOFF.md` §000000000000002e (first section below) in full. First reply = ONE sync line, then work silently.**
 
 **NEWEST (2026-11-22, SESSION #15): T-TEST BUILT, NOT DEPLOYED (v360 live, 112 calcs once deployed). Read `HANDOFF.md` §000000000000002d (first section below) in full. First reply = ONE sync line, then work silently.**
@@ -32,6 +34,18 @@ _Rewritten 2026-11-08 at the end of session #6 PART 2 (profit margin v331, disco
 **UPDATE 2026-11-12 (later): UNIT-PAIR CONTENT FIX DEPLOYED v344 (CLAUDE.md addendum 40). Step (2) of his 'do all' is done; NEXT = (3) tip pages + sales-tax states research report; GSC queue now also includes the 18 pair pages + 4 changed state items; Bing manual submit of the 18 pair URLs pending (he must be signed in).**
 
 **NEWEST (2026-11-13, END OF SESSION #10): live v351 · 108 calcs · 238 pages. Read `HANDOFF.md` §0000000000000026 in full (first section below). First reply = ONE sync line, then the #12 AMORTIZATION calculator research report (wait for "Approve all"). GSC queue = "Start queue" on his word (quota was exceeded twice on 2026-11-13); Bing submits are done for everything live. z-score v350 + compound interest v351 deployed. Re-read GSC ~2026-11-26.**
+
+## 000000000000002g. START HERE — 2026-11-26: CHI SQUARE CALCULATOR DEPLOYED, LIVE v366 (commit 8c162dc1, Pages built, URL 200) — AUTHORITATIVE; older sections stay valid unless this contradicts them
+
+Sync line: "Synced: v366 live (chi square calculator); Bing and GSC for the newest pages are pending."
+
+- `/chi-square-calculator/` live. Code map, drops and unverified items: CLAUDE.md addendum 52. Next generator chains after it (slug `chi-square-calculator`, menu `Chi Square`, name `Chi Square Calculator`).
+- p-value page has one new in-body link to it (its gates re-run and passed).
+- Bing manual submit PENDING (signed out in Chrome on 2026-11-26): chi square, linear regression, correlation, serial dilution, retatrutide, t-test. IndexNow pinged all 248 URLs at the build (HTTP 200).
+- GSC only on his "Start queue": mb-to-gb, ml-to-oz, mm-to-inches, yards-to-meters, linear-regression-calculator, chi-square-calculator, then the tracker order.
+- ~2026-11-26 re-read GSC (checkpoint > 160 indexed); Dec 15 earliest AdSense review. Next calculator candidates: ANOVA (>1000 Medium), sample size (>1000 Hard); research report first.
+- Dev: port 8123 is reserved by Windows (8070-8169); use launch config `calcthis-static-8200` (http://localhost:8200/).
+- Do not commit `calcthis logo.png`, `listings images/`, `md-files/calcthis-outreach-list.md`.
 
 ## 000000000000002f. START HERE — 2026-11-22 SESSION #15 PART 3: SERIAL DILUTION CALCULATOR BUILT (NOT DEPLOYED), ALL GATES PASS — LIVE v362 (retatrutide commit 00b99e64)
 First reply = ONE sync line, then work silently (no narration, one final message with a QA line). `/serial-dilution-calculator/` (#17) is in the working tree: run.js QA PASS (227 oracle runs), viewed 12/12, final.js FINAL PASS (82/34/34), parity (23 features, drops signed off by his "Approve all"), audit-silent ok, preflight PASS (provisional record written with his permission, then the real run). Full detail: CLAUDE.md addendum 49. Files: engine + init in `assets/app.js` (SERIALDIL block after RETA), css `.p-sd` at the end of style.css, generator `md-files/gen-serialdilution-page.js`, QA files under `md-files/qa/{fixtures,oracles,text,parity,sidebyside}/serial-dilution-calculator.*`, research `md-files/calcthis-serialdilution-research.md`. NEXT: his preview ("open the server" = preview_start calcthis-static) and "Deploy": what's-new entry at the TOP of `md-files/gen-whatsnew-page.js`, run it, `node build.js`, commit (exclude his untracked files), push, wait for Pages, curl 200, tracker, docs. Bing + GSC (t-test, retatrutide, serial dilution) pending on a day the quotas reset. Lessons: Math.pow differs between Node and Chrome (use integer multiplication when an oracle compares 4-digit rounding ties); tables inside cards must fit the card (no scroll wrapper exemption in the harness, so a 5-column table became a 3-column one with a "take + diluent = make" cell); every parity competitor feature needs a real feature (23 volume units, C1V1 box, names, significant digits, error as volume were added for that); an empty-result page still needs notes for optional fields (audit-silent).

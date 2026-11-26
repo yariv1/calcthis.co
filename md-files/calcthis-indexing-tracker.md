@@ -219,3 +219,5 @@ BING 2026-11-22 (second batch): 89 URLs submitted manually, all appear as "Today
 - 2026-11-24 DEPLOYED v365 (f467e618): /linear-regression-calculator/ — Bing + GSC pending (add to the stats block).
 
 - GSC 2026-11-24 later "Start queue": 0 requested, /mb-to-gb/ (Crawled - currently not indexed) = Quota Exceeded (daily quota used by the 11 earlier today). NEXT: mb-to-gb, ml-to-oz, mm-to-inches, yards-to-meters, linear-regression-calculator, then other queue items.
+
+- 2026-11-26 DEPLOYED v366 (8c162dc1): /chi-square-calculator/ — IndexNow 248 URLs HTTP 200; Bing manual NOT done (signed out); GSC pending (after linear-regression-calculator).
