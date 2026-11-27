@@ -1,4 +1,6 @@
-**NEWEST (2026-11-27): ANOVA DEPLOYED v367. Read `HANDOFF.md` §000000000000002h (first section below) in full. First reply = ONE sync line, then work silently.**
+**NEWEST (2026-11-27 night): SELF-EMPLOYMENT TAX CALCULATOR DEPLOYED v368. Read `HANDOFF.md` §000000000000002i (first section below) in full. First reply = ONE sync line, then work silently.**
+
+**(older) NEWEST (2026-11-27): ANOVA DEPLOYED v367. Read `HANDOFF.md` §000000000000002h (first section below) in full. First reply = ONE sync line, then work silently.**
 
 **(older) NEWEST (2026-11-26): CHI SQUARE DEPLOYED v366. Read `HANDOFF.md` §000000000000002g (first section below) in full. First reply = ONE sync line, then work silently.**
 
@@ -36,6 +38,19 @@ _Rewritten 2026-11-08 at the end of session #6 PART 2 (profit margin v331, disco
 **UPDATE 2026-11-12 (later): UNIT-PAIR CONTENT FIX DEPLOYED v344 (CLAUDE.md addendum 40). Step (2) of his 'do all' is done; NEXT = (3) tip pages + sales-tax states research report; GSC queue now also includes the 18 pair pages + 4 changed state items; Bing manual submit of the 18 pair URLs pending (he must be signed in).**
 
 **NEWEST (2026-11-13, END OF SESSION #10): live v351 · 108 calcs · 238 pages. Read `HANDOFF.md` §0000000000000026 in full (first section below). First reply = ONE sync line, then the #12 AMORTIZATION calculator research report (wait for "Approve all"). GSC queue = "Start queue" on his word (quota was exceeded twice on 2026-11-13); Bing submits are done for everything live. z-score v350 + compound interest v351 deployed. Re-read GSC ~2026-11-26.**
+
+## 000000000000002i. START HERE — 2026-11-27: SELF-EMPLOYMENT TAX CALCULATOR DEPLOYED, LIVE v368 (commit a0fbe99b, Pages built, URLs 200) — AUTHORITATIVE; older sections stay valid unless this contradicts them
+
+Sync line: "Synced: v368 live (self-employment tax calculator); Bing is submitted, the GSC queue continues from unit price."
+
+- `/self-employment-tax-calculator/` live (112th+ calculator, Money & Finance). Code map and unverified items: CLAUDE.md addendum 54. Added on his requests after the first preview: month-by-month income entry, currency selector `seCur` with a typed exchange rate (tax in USD, quarterly and US-return boxes in USD).
+- YEARLY UPKEEP: new IRS figures in `SETAX-ENGINE` (and the paycheck engine), then `node md-files/gen-setax-page.js`. The 2027 estimated-tax figures arrive around Feb 2027; the page says 2026.
+- Next generator chains after it (slug `self-employment-tax-calculator`, menu `Self-Employment Tax`, name `Self-Employment Tax Calculator`).
+- Bing manual submit DONE 2026-11-27 23:33. IndexNow pinged 250 URLs (HTTP 200).
+- GSC only on his "Start queue": unit-price-calculator, anova-calculator, self-employment-tax-calculator, then the health block (inspect first).
+- Checkpoints: Dec 8 > 200 indexed; Dec 15 earliest AdSense review. Next calculator: only when he asks; research report first.
+- Dev: preview http://localhost:8200/ (`calcthis-static-8200`). Backslashes in bash heredocs and inline node -e get mangled: write fix scripts with the Write tool.
+- Do not commit `calcthis logo.png`, `listings images/`, `md-files/calcthis-outreach-list.md`.
 
 ## 000000000000002h. START HERE — 2026-11-27: ANOVA CALCULATOR DEPLOYED, LIVE v367 (commit 45b6566f, Pages built, URLs 200) — AUTHORITATIVE; older sections stay valid unless this contradicts them
 
