@@ -1,0 +1,64 @@
+{
+ "date": "2026-11-27",
+ "competitors": [
+  {
+   "name": "Everlance 1099 Tax Calculator",
+   "url": "https://www.everlance.com/tax-calculator",
+   "reopenedAfterBuild": true,
+   "gaps": []
+  },
+  {
+   "name": "Keeper 1099 Tax Calculator",
+   "url": "https://www.keepertax.com/1099-tax-calculator",
+   "reopenedAfterBuild": true,
+   "gaps": []
+  },
+  {
+   "name": "fcalculator self-employment tax",
+   "url": "https://fcalculator.com/self-employment-tax-calculator/",
+   "reopenedAfterBuild": true,
+   "gaps": []
+  },
+  {
+   "name": "selfemployedcalc.com",
+   "url": "https://selfemployedcalc.com/",
+   "reopenedAfterBuild": true,
+   "gaps": []
+  },
+  {
+   "name": "Jackson Hewitt SE calculator",
+   "url": "https://www.jacksonhewitt.com/tax-tools/tax-refund-calculators/self-employment-calculator",
+   "reopenedAfterBuild": true,
+   "gaps": []
+  },
+  {
+   "name": "TaxAct SE calculator",
+   "url": "https://www.taxact.com/tax-resources/tax-calculators/self-employment-calculator",
+   "reopenedAfterBuild": true,
+   "gaps": []
+  },
+  {
+   "name": "QuickBooks SE calculator",
+   "url": "https://quickbooks.intuit.com/r/free-self-employment-tax-calculator/",
+   "reopenedAfterBuild": true,
+   "gaps": []
+  }
+ ],
+ "weBeat": [
+  "visual: a money waterfall from client payments to what you keep with every step drawn to scale, and a Social Security meter that shows W-2 wages filling the $184,500 limit before self-employment earnings (no meter seen on the pages read)",
+  "functional: work backwards from the take-home pay you want to what to bill a year, month, week and hour; type a payment that just arrived to see what to set aside at the rate of that money; the job-offer box turns a salary and benefits into the billing needed (a similar comparison exists on a separate selfemployedcalc page)",
+  "correct 92.35% step: TaxAct showed $12,240 on $80,000 on 2026-11-27 where the IRS worksheet gives $11,303.64",
+  "every competitor input kept except tax year 2025, tuition, CSV, print, share link and the AI box (dropped under his answer \"Approve all\"); two items found on reopening (job offer with benefits and hours, retirement saving) were added before this record"
+ ],
+ "gapsLeft": [],
+ "unverified": [
+  "real phone",
+  "other browsers (Chrome only)",
+  "print",
+  "Copy button in a real clipboard session",
+  "state estimates use paycheck withholding formulas, not state tax returns; 13 states need a typed rate (signed off)",
+  "fcalculator charts were read as page text, not looked at",
+  "QuickBooks did not register a typed value",
+  "competitors were reopened after the build and read, not all typed into again"
+ ]
+}

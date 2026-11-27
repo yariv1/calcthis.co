@@ -4152,3 +4152,76 @@ body .fld + .av-note,body .fld + .cb-note{margin-top:-6px}
 .p-an #anBody .dtable tr.an-sig td{font-weight:600}
 .p-an #anBody .dtable tr.an-tot td{font-weight:700;color:var(--ink)}
 .p-an details.faq > summary{font-size:15px}
+
+/* SETAX:CSS ---- self-employment tax calculator (page class p-se, also p-cc) ---- */
+.p-se .av-note:empty{display:none}
+.p-se .se-ex{margin:10px 0 0;text-align:center}
+.p-se .av-note,.p-se .cb-note{margin-bottom:15px}
+.p-se .se-mlink{margin:-6px 0 15px;line-height:1}
+.p-se .se-mlink .linkbtn{display:block;margin:0;padding:0;line-height:1.35}
+.p-se #seIncome[readonly]{color:var(--ink-soft)}
+.p-se #seMonT td:first-child em{display:block;font-style:normal;font-size:13px;color:var(--muted)}
+.p-se #seBody #seMonT td,.p-se #seBody #seMonT th{font-size:13.5px;padding-left:3px;padding-right:3px}
+.p-se #seBody #seMonT td:first-child{white-space:nowrap}
+.p-se .st-ta{position:relative}
+.p-se .st-ta-list{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:40;max-height:320px;overflow-y:auto;background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:7px;scrollbar-color:var(--amber) transparent;scrollbar-width:thin}
+.p-se .st-ta-opt{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;width:100%;text-align:left;font:inherit;font-size:14.5px;font-weight:500;color:var(--ink-soft);background:none;border:0;border-radius:8px;padding:9px 11px;cursor:pointer;transition:.12s}
+.p-se .st-ta-opt b{flex:none;font-weight:700;color:var(--ink)}
+.p-se .st-ta-opt:hover,.p-se .st-ta-opt.on{background:#F5EFE4;color:var(--ink)}
+.p-se .st-ta-none{font-size:13.5px;color:var(--muted);padding:9px 11px;line-height:1.45}
+.p-se .st-ta-opt{align-items:center}
+.p-se .st-ta-opt b{font-size:12.5px;font-weight:700;color:var(--muted);letter-spacing:.03em;white-space:nowrap}
+.p-se .st-ta-opt.on{background:#F3EADA;color:var(--ink);font-weight:600}
+.p-se .st-ta-opt.kb{background:#F5EFE4;color:var(--ink)}
+.p-se #seBody > div{min-width:0}
+.p-se .se-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:3px 10px;align-items:baseline;margin:0 0 9px}
+.p-se .se-k{font-size:14px;color:var(--ink-soft);line-height:1.35}
+.p-se .se-v{font-size:14px;font-weight:600;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap;text-align:right}
+.p-se .se-track{grid-column:1/-1;position:relative;display:block;height:10px;background:#F1EADD;border-radius:5px;overflow:hidden}
+.p-se .se-track i{position:absolute;top:0;bottom:0;display:block;min-width:2px}
+.p-se i.se-in{background:#37503F}
+.p-se i.se-exp{background:#A4795A}
+.p-se i.se-w2{background:#8A8F99}
+.p-se i.se-ss{background:#B5761F}
+.p-se i.se-med{background:#D4AC6C}
+.p-se i.se-fed{background:#7A4E10}
+.p-se i.se-state{background:#5F6F96}
+.p-se i.se-keep{background:#4C7A5A}
+.p-se .se-end{border-top:1px solid var(--line);padding-top:9px}
+.p-se .se-end .se-k,.p-se .se-end .se-v{font-size:16px;font-weight:700;color:var(--ink)}
+.p-se .se-meter{position:relative;height:28px;background:#F1EADD;border-radius:8px;overflow:hidden;margin-top:6px}
+.p-se .se-meter i{position:absolute;top:0;bottom:0;display:block}
+.p-se .se-meter b{position:absolute;top:0;bottom:0;width:3px;margin-left:-3px;background:#241A11;display:block}
+.p-se i.se-m-w2{background:#8A8F99}
+.p-se i.se-m-ss{background:#B5761F}
+.p-se i.se-m-wo{background:#5C616B}
+.p-se i.se-m-over{background:repeating-linear-gradient(135deg,#37503F 0,#37503F 5px,#7C9784 5px,#7C9784 10px)}
+.p-se .se-mlab{position:relative;height:22px}
+.p-se .se-mlab span{position:absolute;top:3px;transform:translateX(-100%);font-size:14px;font-weight:600;color:var(--ink);white-space:nowrap}
+.p-se .se-leg{list-style:none;margin:4px 0 4px;padding:0}
+.p-se .se-leg li{display:flex;gap:8px;align-items:baseline;font-size:14px;line-height:1.45;color:var(--ink-soft);margin-bottom:3px}
+.p-se .se-leg i{display:inline-block;flex:0 0 12px;height:12px;border-radius:3px;position:relative;top:1px}
+.p-se #sePOut,.p-se #seJobOut{color:var(--ink);font-weight:600}
+.p-se #seBody .dtable{width:100%}
+.p-se #seBody .dtable td:nth-child(n+2),.p-se #seBody .dtable th:nth-child(n+2){text-align:right}
+.p-se #seBody .dtable td:nth-child(n+2){white-space:nowrap}
+.p-se #seQtr td:first-child em{display:block;font-style:normal;font-size:13px;color:var(--muted)}
+.p-se #seQtr tr.se-past td{color:var(--muted)}
+.p-se #seBody tr.cc-flag td{background:#FBF1DC}
+.p-se #seSteps tr.se-sum td{font-weight:700;color:var(--ink)}
+.p-se #seTab td,.p-se #seTab th{font-size:13px;padding-left:2px;padding-right:2px}
+.p-se #seBody #seTab td,.p-se #seBody #seQtr td:first-child{white-space:nowrap;overflow-wrap:normal}
+.p-se #seTab th{overflow-wrap:normal;vertical-align:bottom}
+.p-se #seW2 td,.p-se #seW2 th{font-size:14px;padding-left:3px;padding-right:3px}
+.p-se #seBody table.se-tight{table-layout:fixed}
+.p-se #seBody table.se-tight td,.p-se #seBody table.se-tight th,.p-se #seBody table.se-tight td:first-child{font-size:12px;white-space:normal;overflow-wrap:anywhere;padding-left:2px;padding-right:2px}
+.p-se .se-mini{display:block;height:5px;background:#F1EADD;border-radius:3px;margin-top:3px;min-width:38px;position:relative;overflow:hidden}
+.p-se .se-mini i{position:absolute;left:0;top:0;bottom:0;background:#B5761F;display:block}
+.p-se .se-ex-t td:nth-child(n+2),.p-se .se-ex-t th:nth-child(n+2){text-align:right;font-variant-numeric:tabular-nums}
+.p-se #seRates ~ .se-ex-t td:nth-child(2){white-space:normal}
+.p-se .sl-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}
+.p-se .sl-head .card-h2{margin:0}
+.p-se .sl-cur{width:auto;min-width:110px;flex:0 0 auto}
+.p-se .sl-cur .csel-panel{left:auto;right:0;width:max-content;min-width:100%;max-width:min(280px,86vw)}
+.p-se .sl-cur .csel-panel{width:300px;max-width:86vw;max-height:min(380px,60vh)}
+/* SETAX:CSS END */

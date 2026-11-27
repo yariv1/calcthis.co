@@ -1,0 +1,36 @@
+{
+ "slug": "self-employment-tax-calculator",
+ "pass": true,
+ "at": "2026-11-27T21:04:35.832Z",
+ "hash": "38e0ce05dfee5bd7",
+ "viewports": {
+  "mobile": {
+   "steps": 6050,
+   "fails": []
+  },
+  "desktop": {
+   "steps": 6050,
+   "fails": []
+  }
+ },
+ "oracle": {
+  "runs": 333,
+  "fails": [],
+  "compared": 16438
+ },
+ "shots": [
+  "md-files/qa-passes/shots/self-employment-tax-calculator-1-empty-mobile.png",
+  "md-files/qa-passes/shots/self-employment-tax-calculator-2-filled-mobile.png",
+  "md-files/qa-passes/shots/self-employment-tax-calculator-3-result-mobile.png",
+  "md-files/qa-passes/shots/self-employment-tax-calculator-4-advanced-mobile.png",
+  "md-files/qa-passes/shots/self-employment-tax-calculator-5-error-mobile.png",
+  "md-files/qa-passes/shots/self-employment-tax-calculator-6-after-chaos-mobile.png",
+  "md-files/qa-passes/shots/self-employment-tax-calculator-1-empty-desktop.png",
+  "md-files/qa-passes/shots/self-employment-tax-calculator-2-filled-desktop.png",
+  "md-files/qa-passes/shots/self-employment-tax-calculator-3-result-desktop.png",
+  "md-files/qa-passes/shots/self-employment-tax-calculator-4-advanced-desktop.png",
+  "md-files/qa-passes/shots/self-employment-tax-calculator-5-error-desktop.png",
+  "md-files/qa-passes/shots/self-employment-tax-calculator-6-after-chaos-desktop.png"
+ ],
+ "console": []
+}

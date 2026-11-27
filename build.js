@@ -95,6 +95,7 @@ const PAGES = [
   { file: 'unit-price-calculator/index.html',          slug: '/unit-price-calculator/' },
   { file: 'compound-interest-calculator/index.html',          slug: '/compound-interest-calculator/' },
   { file: 'amortization-calculator/index.html',          slug: '/amortization-calculator/' },
+  { file: 'self-employment-tax-calculator/index.html',          slug: '/self-employment-tax-calculator/' },
   { file: 'mg-to-ml-calculator/index.html', slug: '/mg-to-ml-calculator/' },
   { file: 'dilution-calculator/index.html', slug: '/dilution-calculator/' },
   { file: 'retatrutide-dosage-calculator/index.html', slug: '/retatrutide-dosage-calculator/' },
@@ -489,7 +490,7 @@ try { fs.readdirSync(path.join(__dirname, 'paycheck-calculator'), { withFileType
 // A STATE / COUNTRY / PLACE / COUNTY picker is ALWAYS the design-system typeahead (.st-ta: the field itself is the input, round clear
 // X, type-to-filter list) exactly like the paycheck State field. The car sales tax page shipped a .csel[data-search] dropdown with a
 // separate "Search state" box instead and the user had to point it out ("make sure this never happens again"). The only searchable
-// .csel allowed are the currency pickers (#slCur, #mkCur, #pmCur, #dcCur, #cmCur, #rtCur, #upCur, #tpCur, #icCur, #amCur). This gate fails the build if any page or app.js builds another one.
+// .csel allowed are the currency pickers (#slCur, #mkCur, #pmCur, #dcCur, #cmCur, #rtCur, #upCur, #tpCur, #icCur, #amCur, #seCur). This gate fails the build if any page or app.js builds another one.
 (function checkPickerDesign() {
   const failures = [];
   (function walk(dir) {
@@ -503,7 +504,7 @@ try { fs.readdirSync(path.join(__dirname, 'paycheck-calculator'), { withFileType
       while ((m = re.exec(h))) {
         if (!/data-search/.test(m[0])) continue;
         const id = (/id="([^"]+)"/.exec(m[0]) || [])[1];
-        if (id !== 'slCur' && id !== 'mkCur' && id !== 'pmCur' && id !== 'dcCur' && id !== 'cmCur' && id !== 'rtCur' && id !== 'upCur' && id !== 'tpCur' && id !== 'icCur' && id !== 'amCur') failures.push(path.relative(ROOT, full) + ': .csel[data-search] id="' + (id || '?') + '" — a state / place / county / country picker must be the .st-ta typeahead (calcthis-design-system.md "Typeahead field")');
+        if (id !== 'slCur' && id !== 'seCur' && id !== 'mkCur' && id !== 'pmCur' && id !== 'dcCur' && id !== 'cmCur' && id !== 'rtCur' && id !== 'upCur' && id !== 'tpCur' && id !== 'icCur' && id !== 'amCur') failures.push(path.relative(ROOT, full) + ': .csel[data-search] id="' + (id || '?') + '" — a state / place / county / country picker must be the .st-ta typeahead (calcthis-design-system.md "Typeahead field")');
       }
     });
   })(ROOT);

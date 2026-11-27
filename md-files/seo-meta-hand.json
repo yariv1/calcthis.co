@@ -234,6 +234,10 @@
     "t": "mg to mL Calculator — Convert a Dose to Milliliters",
     "d": "mg to mL calculator: enter the dose and the strength on the label, get milliliters on a to-scale syringe. Also mL to mg, mg per mL, tsp, tbsp and mcg."
   },
+  "/self-employment-tax-calculator/": {
+    "t": "Self-Employment Tax Calculator 2026: 1099 Taxes",
+    "d": "Self-employment tax calculator for 2026: 1099 and freelance income, deductions, federal and state tax, quarterly payments and the income you need."
+  },
   "/amortization-calculator/": {
     "t": "Amortization Calculator: Schedule & Extra Payments",
     "d": "Amortization calculator: payment, interest and balance of every payment, with extra payments, any frequency and a slider for where you stand. Any currency."

@@ -1,6 +1,6 @@
 {
  "/": {
-  "hash": "094da7aa1cb9603d",
+  "hash": "8935fdd87ec12141",
   "date": "2026-11-27"
  },
  "/board-foot-calculator/": {
@@ -788,7 +788,7 @@
   "date": "2026-11-20"
  },
  "/whats-new/": {
-  "hash": "a10902025aa32e58",
+  "hash": "e8a97c8b543d7f23",
   "date": "2026-11-27"
  },
  "/contact/": {
@@ -993,6 +993,10 @@
  },
  "/anova-calculator/": {
   "hash": "8acfda111c0bc155",
+  "date": "2026-11-27"
+ },
+ "/self-employment-tax-calculator/": {
+  "hash": "a7fff22d2c1640cb",
   "date": "2026-11-27"
  }
 }

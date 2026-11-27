@@ -32004,3 +32004,738 @@ CalcThis.initAnovaCalc = function () {
   buildGroups(); buildSum(); render();
 };
 /* ANOVA:END */
+
+/* SETAX:BEGIN */
+/* =========================================================
+   MONEY - SELF-EMPLOYMENT TAX CALCULATOR (/self-employment-tax-calculator/)
+   2026 federal figures only, each from a document read on 2026-11-27: Form 1040-ES (2026) (SE tax worksheet, rate
+   schedules, standard deduction, due dates, safe harbor), Rev. Proc. 2025-32 .26 (QBI thresholds), Form 8995-A
+   (phase-in), 26 U.S.C. 199A(i) ($400 minimum), Form 7206 (2026) (health insurance limit), Pub. 560 (SEP / solo
+   401(k)), IRS IRA limits page, Schedule 8812 (child tax credit), Schedule SE instructions (2026), IRS mileage rates
+   and simplified home office. State tax = the paycheck engine's official withholding formulas on the year's income
+   (an estimate, labelled so). Engine: CalcThis.seEngine; page: CalcThis.initSeTaxCalc (ids se*).
+   ========================================================= */
+/* SETAX-ENGINE:START */
+CalcThis.seEngine = (function () {
+  var YEAR = 2026, WAGE_BASE = 184500, MILE1 = 0.725, MILE2 = 0.76, HOME_RATE = 5, HOME_MAX = 300, FACTOR = 0.9235;
+  var STD = { single: 16100, mfj: 32200, mfs: 16100, hoh: 24150 };
+  // 2026 Tax Rate Schedules X, Y-1, Y-2, Z: rows [over, tax at that point, rate above it]
+  var RATES = {
+    single: [[0, 0, 0.10], [12400, 1240, 0.12], [50400, 5800, 0.22], [105700, 17966, 0.24], [201775, 41024, 0.32], [256225, 58448, 0.35], [640600, 192979.25, 0.37]],
+    mfj: [[0, 0, 0.10], [24800, 2480, 0.12], [100800, 11600, 0.22], [211400, 35932, 0.24], [403550, 82048, 0.32], [512450, 116896, 0.35], [768700, 206583.50, 0.37]],
+    mfs: [[0, 0, 0.10], [12400, 1240, 0.12], [50400, 5800, 0.22], [105700, 17966, 0.24], [201775, 41024, 0.32], [256225, 58448, 0.35], [384350, 103291.75, 0.37]],
+    hoh: [[0, 0, 0.10], [17700, 1770, 0.12], [67450, 7740, 0.22], [105700, 16155, 0.24], [201750, 39207, 0.32], [256200, 56631, 0.35], [640600, 191171, 0.37]]
+  };
+  var ADDL_THR = { single: 200000, hoh: 200000, mfj: 250000, mfs: 125000 };
+  var QBI_THR = { single: 201750, hoh: 201750, mfj: 403500, mfs: 201775 };
+  var QBI_TOP = { single: 276750, hoh: 276750, mfj: 553500, mfs: 276775 };
+  var CTC = 2200, ACTC = 1700, CTC_THR = { single: 200000, hoh: 200000, mfj: 400000, mfs: 200000 };
+  var SEP_COMP_CAP = 360000, DC_LIMIT = 72000, DEFERRAL = 24500;
+  var CATCH = { u50: 0, '50': 8000, '60': 11250, '64': 8000 };
+  var IRA = 7500, IRA50 = 8600;
+  var DUE = [[2026, 3, 15, 'April 15, 2026'], [2026, 5, 15, 'June 15, 2026'], [2026, 8, 15, 'September 15, 2026'], [2027, 0, 15, 'January 15, 2027']];
+
+  function n(v) { v = +v; return isFinite(v) ? v : 0; }
+  function pos(v) { return Math.max(0, n(v)); }
+  function tax(status, x) {
+    var rows = RATES[status] || RATES.single, r = rows[0];
+    if (!(x > 0)) return 0;
+    for (var i = 1; i < rows.length; i++) { if (x > rows[i][0]) r = rows[i]; else break; }
+    return r[1] + r[2] * (x - r[0]);
+  }
+  function bracket(status, x) {
+    var rows = RATES[status] || RATES.single, r = rows[0];
+    for (var i = 1; i < rows.length; i++) { if (x > rows[i][0]) r = rows[i]; else break; }
+    return x > 0 ? r[2] : 0;
+  }
+  // Schedule SE: profit and church income to the two parts of the tax
+  function seTax(business, church, wages) {
+    var a = business > 0 ? business * FACTOR : 0;
+    var c4 = a < 400 ? 0 : a;
+    var c5 = pos(church) * FACTOR; if (c5 < 100) c5 = 0;
+    var base = c4 + c5;
+    var ssBase = Math.min(base, Math.max(0, WAGE_BASE - pos(wages)));
+    var ss = 0.124 * ssBase, med = 0.029 * base;
+    return { net: a, businessBase: c4, churchBase: c5, base: base, ssBase: ssBase, ss: ss, med: med, se: ss + med, half: (ss + med) / 2 };
+  }
+  // Pub. 560 deduction worksheet for the self-employed (maximum, assuming the largest allowed deferral and catch-up)
+  function retMax(type, comp, age) {
+    comp = pos(comp);
+    var s7 = Math.min(0.2 * comp, 0.25 * SEP_COMP_CAP);
+    if (type !== 'solo') return Math.min(s7, DC_LIMIT);
+    var s9 = Math.min(DEFERRAL, comp), s10 = DC_LIMIT - s9, s11 = Math.max(0, comp - s9), s13 = Math.min(s7, s10, s11 / 2);
+    var s14 = comp - s13, s15 = Math.min(s9, s14), s16 = s14 - s15, s18 = Math.min(s16, CATCH[age] || 0);
+    return s13 + s15 + s18;
+  }
+  // Form 8995-A for one business with no employees and no qualified property
+  function qbiDeduction(status, qbi, tiBefore, sstb) {
+    var t = QBI_THR[status], range = QBI_TOP[status] - t;
+    var p = Math.min(1, Math.max(0, (tiBefore - t) / range));
+    var full = 0.2 * pos(qbi), comp = full;
+    if (p > 0) comp = full * (1 - p) * (sstb ? (1 - p) : 1);
+    var limit = 0.2 * pos(tiBefore);
+    var d = Math.min(comp, limit), min = false;
+    if (qbi >= 1000 && !(sstb && p >= 1) && d < 400) { d = 400; min = true; }
+    return { ded: d, full: full, component: comp, limit: limit, phase: p, minUsed: min, limited: comp > limit + 1e-9 };
+  }
+  function childCredit(status, kids, agi, incomeTax, earned, empFica, halfSe) {
+    kids = Math.max(0, Math.floor(n(kids)));
+    if (!kids) return { credit: 0, nonref: 0, refund: 0, reduced: 0 };
+    var over = Math.max(0, agi - CTC_THR[status]), reduced = 50 * Math.ceil(over / 1000);
+    var credit = Math.max(0, CTC * kids - reduced), nonref = Math.min(credit, incomeTax);
+    var cap = Math.min(credit - nonref, ACTC * kids);
+    var fif = 0.15 * Math.max(0, earned - 2500), refund = Math.min(cap, fif);
+    if (ACTC * kids >= 5100 && fif < cap) refund = Math.min(cap, Math.max(fif, empFica + halfSe));
+    return { credit: credit, nonref: nonref, refund: refund, reduced: reduced };
+  }
+  // State estimate through the paycheck engine's withholding formulas on the whole year's income (monthly x 12)
+  function stateEstimate(inp, agi, fedIncomeTax, halfSe) {
+    var code = inp.state || '', P = CalcThis.payEngine;
+    if (!code || !P) return { code: '', tax: 0, known: false, est: false, county: 0, countyName: null, nyc: 0 };
+    var nyc = code === 'NYC', c = nyc ? 'NY' : code, S = P.STATES[c], base = Math.max(0, agi);
+    var status = inp.status === 'mfj' ? 'married' : (inp.status === 'hoh' ? 'hoh' : 'single');
+    if (!S || S.method === 'pending') {
+      var rate = n(inp.stRate);
+      return { code: c, tax: rate > 0 ? base * rate / 100 : 0, known: rate > 0, est: true, typed: true, county: 0, countyName: null, nyc: 0 };
+    }
+    var r = base > 0 ? P.stateTax(c, { wages: base / 12, ppy: 12, status: status, fedTax: Math.max(0, fedIncomeTax) / 12, fica: Math.max(0, halfSe) / 12, county: inp.county || '' }) : { tax: 0 };
+    var main = Math.max(0, n(r && r.tax)) * 12, county = Math.max(0, n(r && r.county)) * 12;
+    var city = nyc && base > 0 ? Math.max(0, P.nycTax(base / 12, 12, status, 0)) * 12 : 0;
+    return { code: c, tax: main + county + city, main: main, county: county, countyName: (r && r.countyName) || null, nyc: city, known: true, est: true, none: S.method === 'none', counties: !!S.counties };
+  }
+  function compute(inp) {
+    var status = STD[inp.status] ? inp.status : 'single';
+    var income = pos(inp.income), expenses = pos(inp.expenses);
+    var mileage = pos(inp.m1) * MILE1 + pos(inp.m2) * MILE2;
+    var sqft = Math.min(pos(inp.sqft), HOME_MAX);
+    var home = Math.min(sqft * HOME_RATE, Math.max(0, income - expenses - mileage));
+    var profit = income - expenses - mileage - home, farm = n(inp.farm), business = profit + farm;
+    var church = pos(inp.church), wages = pos(inp.wages);
+    var s = seTax(business, church, wages);
+    var halfBiz = s.base > 0 ? s.half * s.businessBase / s.base : 0;
+    var comp = Math.max(0, business - halfBiz);
+    var type = inp.retType === 'solo' ? 'solo' : 'sep', age = CATCH[inp.age] !== undefined ? inp.age : 'u50';
+    var rmax = retMax(type, comp, age), ret = Math.min(pos(inp.retAmt), rmax);
+    var healthMax = Math.max(0, comp - ret), health = Math.min(pos(inp.premiums), healthMax);
+    var iraMax = Math.min(age === 'u50' ? IRA : IRA50, comp + wages), ira = Math.min(pos(inp.ira), iraMax);
+    var other = pos(inp.otherAdj);
+    var total = wages + business + church;
+    var adj = s.half + ret + health + ira + other;
+    var agi = total - adj;
+    var itemized = pos(inp.mortgage) + pos(inp.itemized), std = STD[status], ded = Math.max(std, itemized);
+    var tiBefore = Math.max(0, agi - ded);
+    var qbi = business > 0 ? Math.max(0, business - halfBiz - health - ret) : 0;
+    var q = qbiDeduction(status, qbi, tiBefore, !!inp.sstb);
+    var qbid = tiBefore > 0 ? q.ded : 0;
+    var taxable = Math.max(0, tiBefore - qbid);
+    var incomeTax = tax(status, taxable);
+    var empSS = 0.062 * Math.min(wages, WAGE_BASE), empMed = 0.0145 * wages;
+    var thr = ADDL_THR[status];
+    var addlSe = 0.009 * Math.max(0, s.base - Math.max(0, thr - wages));
+    var addlW = 0.009 * Math.max(0, wages - thr), addlHeld = 0.009 * Math.max(0, wages - 200000);
+    var earned = Math.max(0, total - s.half);
+    var kid = childCredit(status, inp.kids, agi, incomeTax, earned, empSS + empMed, s.half);
+    var incomeAfter = incomeTax - kid.nonref;
+    var fedTotal = incomeAfter + s.se + addlSe + addlW - kid.refund;
+    var withheld = pos(inp.withheld) + addlHeld;
+    var st = stateEstimate(inp, agi, incomeAfter, s.half);
+    var allTax = fedTotal + st.tax;
+    var keep = total - empSS - empMed - allTax;
+    return {
+      status: status, income: income, expenses: expenses, mileage: mileage, home: home, homeSqft: sqft, profit: profit, farm: farm, business: business, church: church, wages: wages,
+      seParts: s, ss: s.ss, med: s.med, se: s.se, half: s.half, halfBiz: halfBiz, comp: comp,
+      retType: type, age: age, retMax: rmax, ret: ret, healthMax: healthMax, health: health, iraMax: iraMax, ira: ira, other: other, adj: adj, total: total, agi: agi,
+      std: std, itemized: itemized, ded: ded, usedItemized: itemized > std, tiBefore: tiBefore, qbi: qbi, qbid: qbid, q: q, taxable: taxable, incomeTax: incomeTax, bracket: bracket(status, taxable),
+      kid: kid, incomeAfter: incomeAfter, addlSe: addlSe, addlW: addlW, addlHeld: addlHeld, fedTotal: fedTotal, withheld: withheld, estPaid: pos(inp.estPaid),
+      owed: fedTotal - withheld - pos(inp.estPaid), st: st, allTax: allTax, empSS: empSS, empMed: empMed, keep: keep
+    };
+  }
+  function copy(inp, more) { var o = {}, k; for (k in inp) o[k] = inp[k]; for (k in more) o[k] = more[k]; return o; }
+  // Tax that exists only because of the self-employment money: the return with it minus the return without it
+  function business(inp, r) {
+    r = r || compute(inp);
+    var base = compute(copy(inp, { income: 0, expenses: 0, m1: 0, m2: 0, sqft: 0, farm: 0, church: 0, retAmt: 0, premiums: 0 }));
+    var extra = r.allTax - base.allTax;
+    return { extra: extra, onIncome: r.income > 0 ? extra / r.income : null, onProfit: r.business > 0 ? extra / r.business : null, base: base };
+  }
+  function nextPayment(inp, amount) {
+    var a = pos(amount), r = compute(inp), r2 = compute(copy(inp, { income: pos(inp.income) + a }));
+    var set = r2.allTax - r.allTax;
+    return { amount: a, set: set, keep: a - set, rate: a > 0 ? set / a : 0, fed: r2.fedTotal - r.fedTotal, state: r2.st.tax - r.st.tax, average: business(inp, r).onIncome };
+  }
+  function expenseSaving(inp, step) {
+    var r = compute(inp), r2 = compute(copy(inp, { expenses: pos(inp.expenses) + step }));
+    return r.allTax - r2.allTax;
+  }
+  // 1040-ES: required annual payment = smaller of 90% of this year's tax and 100% (110% above the AGI line) of last year's
+  function quarterly(inp, r, now) {
+    var line = r.status === 'mfs' ? 75000 : 150000;
+    var has = inp.lastTax !== undefined && inp.lastTax !== null && inp.lastTax !== '';
+    var hi = has && inp.lastAgi !== undefined && inp.lastAgi !== '' && inp.lastAgi !== null && pos(inp.lastAgi) > line;
+    var prior = has ? pos(inp.lastTax) * (hi ? 1.1 : 1) : null;
+    var now90 = 0.9 * Math.max(0, r.fedTotal);
+    var required = prior === null ? now90 : Math.min(now90, prior);
+    var shortfall = r.fedTotal - r.withheld;
+    var viaEst = Math.max(0, required - r.withheld);
+    var reason = '';
+    if (has && pos(inp.lastTax) === 0) reason = 'noprior';
+    else if (shortfall < 1000) reason = 'under';
+    else if (viaEst <= 0) reason = 'covered';
+    var each = reason ? 0 : viaEst / 4, full = Math.max(0, shortfall) / 4;
+    now = now || new Date();
+    var paid = r.estPaid, nextI = -1, i, rows = [];
+    for (i = 0; i < 4; i++) {
+      var end = new Date(DUE[i][0], DUE[i][1], DUE[i][2], 23, 59, 59);
+      var past = now.getTime() > end.getTime();
+      if (!past && nextI < 0) nextI = i;
+      rows.push({ date: DUE[i][3], past: past, min: each, full: full });
+    }
+    var through = nextI < 0 ? 4 : nextI + 1;
+    return {
+      required: required, now90: now90, prior: prior, hi: hi, line: line, reason: reason, each: each, annual: each * 4, full: full, fullAnnual: full * 4, shortfall: shortfall, rows: rows, next: nextI,
+      dueNext: Math.max(0, each * through - paid), fullNext: Math.max(0, full * through - paid), paid: paid
+    };
+  }
+  // Income (client payments) that leaves the wanted take-home, other inputs fixed
+  function needed(inp, target) {
+    target = pos(target);
+    function keepAt(x) { return compute(copy(inp, { income: x })).keep; }
+    var lo = 0, hi = 1000;
+    if (keepAt(0) >= target) return { income: 0, enough: true };
+    while (keepAt(hi) < target && hi < 1e10) hi *= 2;
+    if (keepAt(hi) < target) return null;
+    for (var i = 0; i < 90 && hi - lo > 1e-6; i++) { var m = (lo + hi) / 2; if (keepAt(m) >= target - 1e-7) hi = m; else lo = m; }
+    return { income: Math.ceil(hi * 100 - 0.001) / 100, enough: false };
+  }
+  // W-2 salary that leaves the same take-home as the business (no SEP or self-employed health deduction on a salary)
+  function salaryEquivalent(inp, r) {
+    r = r || compute(inp);
+    if (!(r.business + r.church > 0)) return null;
+    function at(x) { return compute(copy(inp, { income: 0, expenses: 0, m1: 0, m2: 0, sqft: 0, farm: 0, church: 0, retAmt: 0, premiums: 0, wages: pos(inp.wages) + x })); }
+    var lo = 0, hi = 1000;
+    if (at(0).keep >= r.keep) return { salary: 0, row: at(0) };
+    while (at(hi).keep < r.keep && hi < 1e10) hi *= 2;
+    for (var i = 0; i < 90 && hi - lo > 1e-7; i++) { var m = (lo + hi) / 2; if (at(m).keep >= r.keep - 0.001) hi = m; else lo = m; }
+    var x = Math.round(hi * 100) / 100;
+    return { salary: x, row: at(x) };
+  }
+  // The billing that leaves the same take-home as a job offer (salary in place of the business), plus the benefits the job would add
+  function jobMatch(inp, salary, benefits) {
+    var job = compute(copy(inp, { income: 0, expenses: 0, m1: 0, m2: 0, sqft: 0, farm: 0, church: 0, retAmt: 0, premiums: 0, wages: pos(inp.wages) + pos(salary) }));
+    var target = job.keep + pos(benefits), need = needed(inp, target);
+    return { target: target, jobKeep: job.keep, income: need ? need.income : null, enough: need ? need.enough : false };
+  }
+  function table(inp, profits) {
+    var none = { income: 0, expenses: 0, m1: 0, m2: 0, sqft: 0, farm: 0, church: 0 };
+    var base = compute(copy(copy(inp, none), { retAmt: 0, premiums: 0 }));
+    return profits.map(function (p) {
+      var r = compute(copy(copy(inp, none), { income: p })), added = r.allTax - base.allTax;
+      return { profit: p, se: r.se, fed: r.fedTotal, state: r.st.tax, all: r.allTax, added: added, addedFed: r.fedTotal - base.fedTotal, keep: p - added, rate: p > 0 ? added / p : 0 };
+    });
+  }
+  return {
+    YEAR: YEAR, WAGE_BASE: WAGE_BASE, MILE1: MILE1, MILE2: MILE2, HOME_RATE: HOME_RATE, HOME_MAX: HOME_MAX, STD: STD, RATES: RATES, ADDL_THR: ADDL_THR, QBI_THR: QBI_THR, QBI_TOP: QBI_TOP,
+    CTC: CTC, ACTC: ACTC, CTC_THR: CTC_THR, DC_LIMIT: DC_LIMIT, DEFERRAL: DEFERRAL, CATCH: CATCH, IRA: IRA, IRA50: IRA50, DUE: DUE,
+    tax: tax, seTax: seTax, retMax: retMax, qbiDeduction: qbiDeduction, childCredit: childCredit, compute: compute, business: business, nextPayment: nextPayment,
+    expenseSaving: expenseSaving, quarterly: quarterly, needed: needed, salaryEquivalent: salaryEquivalent, jobMatch: jobMatch, table: table
+  };
+})();
+/* SETAX-ENGINE:END */
+
+CalcThis.initSeTaxCalc = function () {
+  var E = CalcThis.seEngine, PE = CalcThis.payEngine, SE = CalcThis.salaryEngine;
+  var $ = function (id) { return document.getElementById(id); };
+  if (!$('seIncome')) return;
+  var st = { mode: 'tax', per: 'year', ret: 'sep', sstb: 'no', adv: false, moOpen: false, mofill: 'zero', manual: '', fromMonths: false, cur: 'USD', dec: 2, rate: 1 };
+  var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  var NAMES = { AL: 'Alabama', AK: 'Alaska', AZ: 'Arizona', AR: 'Arkansas', CA: 'California', CO: 'Colorado', CT: 'Connecticut', DE: 'Delaware', DC: 'District of Columbia', FL: 'Florida', GA: 'Georgia', HI: 'Hawaii', ID: 'Idaho', IL: 'Illinois', IN: 'Indiana', IA: 'Iowa', KS: 'Kansas', KY: 'Kentucky', LA: 'Louisiana', ME: 'Maine', MD: 'Maryland', MA: 'Massachusetts', MI: 'Michigan', MN: 'Minnesota', MS: 'Mississippi', MO: 'Missouri', MT: 'Montana', NE: 'Nebraska', NV: 'Nevada', NH: 'New Hampshire', NJ: 'New Jersey', NM: 'New Mexico', NY: 'New York', NC: 'North Carolina', ND: 'North Dakota', OH: 'Ohio', OK: 'Oklahoma', OR: 'Oregon', PA: 'Pennsylvania', RI: 'Rhode Island', SC: 'South Carolina', SD: 'South Dakota', TN: 'Tennessee', TX: 'Texas', UT: 'Utah', VT: 'Vermont', VA: 'Virginia', WA: 'Washington', WV: 'West Virginia', WI: 'Wisconsin', WY: 'Wyoming' };
+  var ADV = ['seM1', 'seM2', 'seSqft', 'seWages', 'seWithheld', 'seFarm', 'seChurch', 'sePrem', 'seRet', 'seIra', 'seOther', 'seMort', 'seItem', 'seKids', 'sePaid', 'seLastTax', 'seLastAgi'];
+  var H = $('seHint');
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+  function setNote(id, t) { var e = $(id); if (!e) return; e.textContent = t || ''; e.style.display = t ? '' : 'none'; }
+  function show(id, on) { var e = $(id); if (e) e.style.display = on ? '' : 'none'; }
+  function setHint(m, at) {
+    H.textContent = m || ''; H.style.display = m ? 'block' : 'none';
+    if (m && at) {
+      var el = $(at), f = el ? (el.closest('.fld') || el) : null;
+      if (f) { var par = f.parentNode; if (par && par.classList && par.classList.contains('cc-two')) f = par; if (f.nextSibling !== H && f.parentNode) f.parentNode.insertBefore(H, f.nextSibling); }
+    }
+  }
+  function usd(x) { if (Math.abs(x) < 0.005) x = 0; return (x < 0 ? '−$' : '$') + Math.abs(x).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+  function mon0(x) { x = Math.round(x) || 0; return (x < 0 ? '−$' : '$') + Math.abs(x).toLocaleString('en-US'); }
+  var NF = {}, DN = null;
+  try { DN = new Intl.DisplayNames(['en'], { type: 'currency' }); } catch (e) { DN = null; }
+  function curName(c) { try { var n = DN && DN.of(c); return (n && n !== c) ? n : c; } catch (e) { return c; } }
+  function decOf(c) { try { return Math.min(2, new Intl.NumberFormat('en-US', { style: 'currency', currency: c }).resolvedOptions().maximumFractionDigits); } catch (e) { return 2; } }
+  function sym(c) { try { return new Intl.NumberFormat('en-US', { style: 'currency', currency: c, currencyDisplay: 'narrowSymbol' }).format(0).replace(/[0-9.,\s]/g, ''); } catch (e) { return c; } }
+  function isUsd() { return st.cur === 'USD'; }
+  function loc(x, d) {
+    if (d === undefined) d = st.dec;
+    if (isUsd()) return d ? usd(x) : mon0(x);
+    if (Math.abs(x) < Math.pow(10, -d) / 2) x = 0;
+    var k = st.cur + d;
+    if (!NF[k]) NF[k] = new Intl.NumberFormat('en-US', { style: 'currency', currency: st.cur, currencyDisplay: 'narrowSymbol', minimumFractionDigits: d, maximumFractionDigits: d });
+    return (x < 0 ? '−' : '') + CalcThis.fmtMoney(NF[k], st.cur, Math.abs(x));
+  }
+  function fx() { return isUsd() ? 1 : st.rate; }
+  function mon(x) { return loc(x / fx()); }
+  function monW(x) { return loc(x / fx(), 0); }
+  function inUsd(x) { return isUsd() ? '' : ' (' + usd(x) + ')'; }
+  function pctT(x) { var v = Math.round(x * 1000) / 10; return String(v === 0 ? 0 : v).replace('-', '−') + '%'; }
+  function num(x) { return x.toLocaleString('en-US', { maximumFractionDigits: 2 }); }
+
+  /* read one box: {e: empty or half typed} {msg} {v} */
+  function read(id, o) {
+    o = o || {};
+    var el = $(id), s = el ? el.value.trim() : '';
+    if (!s) return { e: true };
+    var t = s.replace(/[$,\s]/g, '').replace(/^−/, '-');
+    if (o.pc) t = t.replace(/%$/, '');
+    if (/^[-+]?\.?$/.test(t)) return { e: true, partial: true };
+    if (!/^[-+]?(\d+\.?\d*|\.\d+)$/.test(t)) return { msg: (o.name || 'This box') + ' needs a plain number, such as ' + (o.ex || '1000') + '.' };
+    var v = Number(t), max = o.max === undefined ? 1e9 : o.max;
+    if (v < 0 && !o.neg) return { msg: (o.name || 'This box') + ' cannot be negative.' };
+    if (Math.abs(v) > max) return { msg: (o.name || 'This box') + ' must be ' + (o.maxText || 'no more than 1,000,000,000') + '.' };
+    if (o.int && v % 1 !== 0) return { msg: (o.name || 'This box') + ' must be a whole number.' };
+    return { v: v };
+  }
+  var SPEC = {
+    seExpenses: { name: 'Business expenses', ex: '12000' }, seM1: { name: 'Business miles, January to June', ex: '3000', max: 1000000, maxText: 'no more than 1,000,000' }, seM2: { name: 'Business miles, July to December', ex: '3000', max: 1000000, maxText: 'no more than 1,000,000' },
+    seSqft: { name: 'Home office size', ex: '150', max: 100000, maxText: 'no more than 100,000' }, seWages: { name: 'W-2 wages', ex: '40000' }, seWithheld: { name: 'Federal tax withheld', ex: '4000' }, seFarm: { name: 'Farm profit or loss', ex: '5000', neg: true }, seChurch: { name: 'Church employee income', ex: '2000' },
+    sePrem: { name: 'Health insurance premiums', ex: '4800' }, seRet: { name: 'Retirement contribution', ex: '5000' }, seIra: { name: 'IRA contribution', ex: '3000' }, seOther: { name: 'Other deductions', ex: '1000' }, seMort: { name: 'Mortgage interest', ex: '9000' }, seItem: { name: 'Other itemized deductions', ex: '5000' },
+    seKids: { name: 'Children under 17', ex: '2', int: true, max: 20, maxText: 'a whole number up to 20' }, sePaid: { name: 'Estimated payments made', ex: '3000' }, seLastTax: { name: '2025 total tax', ex: '9000' }, seLastAgi: { name: '2025 adjusted gross income', ex: '70000', neg: true },
+    seStRate: { name: 'State tax rate', ex: '4.5', pc: true, max: 20, maxText: 'no more than 20%' }
+  };
+  var KEY = { seExpenses: 'expenses', seM1: 'm1', seM2: 'm2', seSqft: 'sqft', seWages: 'wages', seWithheld: 'withheld', seFarm: 'farm', seChurch: 'church', sePrem: 'premiums', seRet: 'retAmt', seIra: 'ira', seOther: 'otherAdj', seMort: 'mortgage', seItem: 'itemized', seKids: 'kids', sePaid: 'estPaid', seLastTax: 'lastTax', seLastAgi: 'lastAgi' };
+
+  var LOCAL = { seExpenses: 1, seWages: 1, seFarm: 1, seChurch: 1, sePrem: 1, seRet: 1, seIra: 1, seOther: 1, seMort: 1, seItem: 1 };
+  var USONLY = ['seWithheld', 'sePaid', 'seLastTax', 'seLastAgi'];
+  function stateVal() { return $('seState').value || ''; }
+  function stateCode() { var v = stateVal(); return v === 'NYC' ? 'NY' : v; }
+
+  function readAll() {
+    var inp = { status: $('seStatus').value || 'single', age: $('seAge').value || 'u50', retType: st.ret, sstb: st.sstb === 'yes', state: stateVal(), county: $('seCounty').value || '', stRate: 0 }, soft = null, bad = {};
+    Object.keys(KEY).forEach(function (id) {
+      var r = read(id, SPEC[id]);
+      if (r.msg) { bad[id] = true; if (!soft) soft = { msg: r.msg + ' It is left out for now.', at: id }; }
+      if (r.v !== undefined) inp[KEY[id]] = LOCAL[id] ? r.v * fx() : r.v;
+    });
+    var c = stateCode(), S = c ? PE.STATES[c] : null;
+    if (c && (!S || S.method === 'pending')) { var rr = read('seStRate', SPEC.seStRate); if (rr.msg) { bad.seStRate = true; if (!soft) soft = { msg: rr.msg + ' It is left out for now.', at: 'seStRate' }; } else if (rr.v !== undefined) inp.stRate = rr.v; }
+    return { inp: inp, soft: soft, bad: bad };
+  }
+
+  /* ---------- pictures ---------- */
+  function drawFlow(r) {
+    var rows = [], add = function (label, v, kind) { if (Math.abs(v) >= 0.005) rows.push([label, v, kind]); };
+    add('Client payments', r.income, 'in');
+    add('Business expenses', -(r.expenses + r.mileage + r.home), 'exp');
+    add(r.farm >= 0 ? 'Farm profit' : 'Farm loss', r.farm, r.farm >= 0 ? 'in' : 'exp');
+    add('Church employee income', r.church, 'in');
+    add('W-2 pay', r.wages, 'in');
+    add('Social Security and Medicare on W-2 pay', -(r.empSS + r.empMed), 'w2');
+    add('Social Security (self-employment)', -r.ss, 'ss');
+    add('Medicare (self-employment)', -(r.med + r.addlSe), 'med');
+    add('Extra Medicare on W-2 pay', -r.addlW, 'med');
+    add('Federal income tax', -r.incomeAfter, 'fed');
+    add('Refundable child credit', r.kid.refund, 'in');
+    add('State tax (estimate)', -r.st.tax, 'state');
+    var run = 0, lo = 0, hi = 0;
+    rows.forEach(function (q) { q[3] = run; run += q[1]; q[4] = run; lo = Math.min(lo, run); hi = Math.max(hi, run, q[3]); });
+    var span = hi - lo || 1;
+    function bar(a, b, kind) { var x = (Math.min(a, b) - lo) / span * 100, w = Math.abs(b - a) / span * 100; return '<span class="se-track"><i class="se-' + kind + '" style="left:' + x.toFixed(4) + '%;width:' + w.toFixed(4) + '%"></i></span>'; }
+    var h = rows.map(function (q) { return '<div class="se-row" data-v="' + q[1].toFixed(2) + '"><span class="se-k">' + esc(q[0]) + '</span><span class="se-v">' + (q[1] > 0 ? '+' : '') + mon(q[1]) + '</span>' + bar(q[3], q[4], q[2]) + '</div>'; }).join('');
+    h += '<div class="se-row se-end" data-v="' + r.keep.toFixed(2) + '"><span class="se-k">You keep</span><span class="se-v">' + mon(r.keep) + '</span>' + bar(0, r.keep, 'keep') + '</div>';
+    $('seFlow').innerHTML = h;
+    setNote('seFlowKey', 'Each bar starts where the one above ends. ' + (r.health > 0 || r.ret > 0 ? 'Health insurance and retirement money lower the tax but are not subtracted here. ' : '') + (r.st.known ? '' : stateCode() ? 'State tax is not included until you type a rate.' : 'State tax is not included until you pick a state.'));
+  }
+  function drawCap(r) {
+    var cap = E.WAGE_BASE, w = Math.min(r.wages, cap), under = r.seParts.ssBase, over = r.seParts.base - under, wOver = Math.max(0, r.wages - cap);
+    var dom = Math.max(cap * 1.15, r.wages + r.seParts.base);
+    var seg = function (x, v, cls) { return v > 0 ? '<i class="' + cls + '" data-v="' + v.toFixed(2) + '" style="left:' + (x / dom * 100).toFixed(4) + '%;width:' + (v / dom * 100).toFixed(4) + '%"></i>' : ''; };
+    var h = '<div class="se-meter">' + seg(0, w, 'se-m-w2') + seg(w, under, 'se-m-ss') + seg(cap, wOver, 'se-m-wo') + seg(Math.max(cap, w + under) + wOver, over, 'se-m-over') + '<b style="left:' + (cap / dom * 100).toFixed(4) + '%"></b></div>';
+    h += '<div class="se-mlab"><span style="left:' + (cap / dom * 100).toFixed(4) + '%">$184,500 limit</span></div>';
+    h += '<ul class="se-leg">' + (r.wages > 0 ? '<li><i class="se-m-w2"></i>W-2 wages under the limit ' + mon(w) + '</li>' : '') + (under > 0.005 ? '<li><i class="se-m-ss"></i>Self-employment earnings taxed 12.4% + 2.9%: ' + mon(under) + '</li>' : '') + (over > 0.005 ? '<li><i class="se-m-over"></i>Above the limit, Medicare only: ' + mon(over) + '</li>' : '') + (wOver > 0.005 ? '<li><i class="se-m-wo"></i>W-2 wages above the limit ' + mon(wOver) + '</li>' : '') + '</ul>';
+    $('seCap').innerHTML = h;
+    var room = Math.max(0, cap - r.wages - r.seParts.base);
+    setNote('seCapKey', over > 0.005 ? 'The 12.4% Social Security part stops at $184,500 of wages and self-employment earnings combined.' : 'Room left under the limit: ' + mon(room) + '. Self-employment earnings are 92.35% of profit.');
+  }
+
+  function tbl(id, head, rows, cls) {
+    $(id).innerHTML = (head ? '<thead><tr>' + head.map(function (c) { return '<th>' + c + '</th>'; }).join('') + '</tr></thead>' : '') + '<tbody>' + rows.map(function (r, i) { return '<tr' + (cls && cls[i] ? ' class="' + cls[i] + '"' : '') + '>' + r.map(function (c) { return '<td>' + c + '</td>'; }).join('') + '</tr>'; }).join('') + '</tbody>';
+  }
+
+  /* month by month: while any month has an amount the yearly box adds them up; with none, the typed total comes back */
+  function giveBack() { if (st.fromMonths) { $('seIncome').value = st.manual; st.fromMonths = false; } $('seIncome').readOnly = false; }
+  function months() {
+    var M = { vals: [], count: 0, sum: 0, bad: null, total: 0 }, i, q;
+    for (i = 1; i <= 12; i++) {
+      q = read('seMo' + i, { name: MONTHS[i - 1], ex: '7500' });
+      if (q.msg && !M.bad) M.bad = { msg: q.msg + ' It is left out for now.', at: 'seMo' + i };
+      M.vals.push(q.v === undefined ? null : q.v);
+      if (q.v !== undefined) { M.count++; M.sum += q.v; }
+    }
+    M.total = M.count ? Math.round((st.mofill === 'avg' ? M.sum / M.count * 12 : M.sum) * 100) / 100 : 0;
+    return M;
+  }
+  function syncMonths() {
+    if (!st.moOpen) return null;
+    var M = months();
+    if (M.count) {
+      if (!st.fromMonths) { st.manual = $('seIncome').value; st.fromMonths = true; }
+      $('seIncome').value = String(M.total); $('seIncome').readOnly = true;
+    } else giveBack();
+    var left = 12 - M.count;
+    setNote('seMoNote', !M.count ? 'Type any month. The months add up in the yearly box above.' : M.count + (M.count === 1 ? ' month' : ' months') + ' typed: ' + loc(M.sum) + '.' + (!left ? '' : st.mofill === 'avg' ? ' Plus ' + left + ' empty at your average of ' + loc(M.sum / M.count) + ': ' + loc(M.total) + ' for the year.' : ' Empty months count as nothing.'));
+    return M;
+  }
+
+  function render() {
+    if (!isUsd()) { var rv = read('seFx', { name: 'The exchange rate', max: 100000 }); st.rate = rv.v > 0 ? rv.v : 1; setNote('seFxNote', rv.v > 0 ? 'Tax is worked out in US dollars at 1 ' + st.cur + ' = ' + $('seFx').value.trim() + ' USD. Use the rate you will use on your return.' : 'US tax is worked out in dollars, and this page does not look rates up.'); }
+    var M = syncMonths(), A = readAll(), inp = A.inp, soft = A.soft, need = st.mode === 'need';
+    if (M && M.bad && !need && !soft) soft = M.bad;
+    var req = null, income = 0, target = 0, empty = null, found = null;
+    var farm = inp.farm || 0, church = inp.church || 0, noRate = null;
+    if (!isUsd()) {
+      var rr = read('seFx', { name: 'The exchange rate', ex: '1.25', max: 100000, maxText: 'no more than 100,000' });
+      if (rr.msg) noRate = { msg: rr.msg, at: 'seFx' };
+      else if (rr.partial) noRate = { msg: 'Finish the number: how many US dollars one ' + st.cur + ' is worth.', at: 'seFx' };
+      else if (!rr.e && !(rr.v > 0)) noRate = { msg: 'The exchange rate must be above 0.', at: 'seFx' };
+      else if (rr.e) noRate = { msg: '', at: 'seFx' };
+    }
+    if (noRate) { empty = 'Type how many US dollars one ' + st.cur + ' is worth to see your US tax.'; if (noRate.msg) req = noRate; }
+    else if (need) {
+      var rt = read('seTarget', { name: 'Take-home pay', ex: '60000' });
+      if (rt.msg) { empty = 'Fix the take-home pay to see the result.'; req = { msg: rt.msg, at: 'seTarget' }; }
+      else if (rt.partial) { empty = 'Finish typing the take-home pay.'; req = { msg: 'Finish the number: digits only, such as 60000.', at: 'seTarget' }; }
+      else if (!rt.e && rt.v <= 0) { empty = 'Type an amount above 0 to see the income to bill.'; req = { msg: 'The take-home pay must be above 0.', at: 'seTarget' }; }
+      else if (rt.e) { empty = 'Type the take-home pay you want to see the income to bill.'; }
+      else target = rt.v * (st.per === 'month' ? 12 : 1) * fx();
+    } else {
+      var ri = read('seIncome', { name: 'Client payments', ex: '80000' });
+      if (ri.msg) { empty = 'Fix what your clients paid you to see the result.'; req = { msg: ri.msg, at: 'seIncome' }; }
+      else if (ri.partial) { empty = 'Finish typing what your clients paid you.'; req = { msg: 'Finish the number: digits only, such as 80000.', at: 'seIncome' }; }
+      else if (ri.e && !farm && !church) { empty = 'Type what your clients paid you to see your self-employment tax.'; }
+      else income = ri.e ? 0 : ri.v * fx();
+    }
+    if (!empty && need) {
+      found = E.needed(inp, target);
+      if (!found) empty = 'That take-home pay cannot be reached with these entries.';
+      else income = found.income;
+    }
+    syncState(A);
+    if (empty) {
+      var dash = need ? 'Income to bill in 2026' : 'Self-employment tax for 2026';
+      $('seLab').textContent = dash; $('seBig').textContent = '—'; $('seBig').parentNode.classList.remove('cc-long'); $('seSub').textContent = empty; $('seBody').style.display = 'none';
+      $('seMLab').textContent = need ? 'To bill' : 'SE tax'; $('seMVal').textContent = '—';
+      var hh = req || soft; if (hh) setHint(hh.msg, hh.at); else setHint('');
+      notes(null, A);
+      return;
+    }
+    inp.income = income;
+    var r = E.compute(inp), biz = E.business(inp, r);
+    var lab, big, sub, tip;
+    if (need) {
+      lab = 'Income to bill in 2026'; big = mon(income);
+      sub = (isUsd() ? '' : usd(income) + ' in US dollars. ') + (found.enough ? 'Your other income already leaves ' + mon(r.keep) + ' a year. ' : 'To keep ' + mon(target) + ' a year (' + mon(target / 12) + ' a month). ') + 'Self-employment tax ' + mon(r.se) + ' · total tax ' + mon(r.allTax);
+    } else {
+      lab = 'Self-employment tax for 2026'; big = mon(r.se);
+      sub = (isUsd() ? '' : usd(r.se) + ' in US dollars · ') + 'Total tax ' + mon(r.allTax) + inUsd(r.allTax) + ' · you keep ' + mon(r.keep) + ' a year (' + mon(r.keep / 12) + ' a month)';
+    }
+    var per = r.income > 0 ? biz.onIncome : biz.onProfit;
+    if (r.se === 0 && r.business + r.church <= 0) tip = 'The business shows no profit, so there is no self-employment tax.';
+    else if (r.se === 0) tip = 'Net earnings are under $400, so there is no self-employment tax. Income tax can still apply.';
+    else if (per !== null) tip = (biz.extra > 0 ? 'Set aside ' + pctT(per) + (r.income > 0 ? ' of every client payment' : ' of the profit') + ': that is the ' + mon(biz.extra) + ' of tax this self-employment income adds.' : 'This self-employment income adds no tax overall.');
+    else tip = '';
+    if (r.st.code && !r.st.known) tip += ' State tax is not included: type your ' + NAMES[r.st.code] + ' rate.';
+    $('seLab').textContent = lab; $('seBig').textContent = big; $('seBig').parentNode.classList.toggle('cc-long', big.length > 14); $('seSub').textContent = sub; $('seBody').style.display = ''; $('seTip').textContent = tip.trim(); $('seTip').style.display = tip ? '' : 'none';
+    $('seMLab').textContent = need ? 'To bill' : 'SE tax'; $('seMVal').textContent = big;
+
+    /* income needed */
+    show('seNeedWrap', need);
+    if (need) {
+      var hr = read('seHours', { name: 'Billable hours', ex: '1200', max: 8760, maxText: 'no more than 8,760' });
+      if (hr.msg && !soft) soft = { msg: hr.msg + ' It is left out for now.', at: 'seHours' };
+      var rows = [['A year', mon(income)], ['A month', mon(income / 12)], ['A week (52 weeks)', mon(income / 52)]];
+      if (hr.v > 0) rows.push(['A billable hour', mon(income / hr.v)]);
+      rows.push(['Profit after expenses', mon(r.business)], ['Take-home pay that leaves', mon(r.keep)]);
+      tbl('seNeed', null, rows);
+      setNote('seHoursNote', hr.v > 0 ? num(hr.v) + ' hours a year means ' + mon(income / hr.v) + ' an hour.' : $('seHours').value.trim() ? 'Type more than 0 hours to see an hourly rate.' : 'Add your hours to get an hourly rate.');
+    }
+    drawFlow(r); drawCap(r);
+
+    /* month by month */
+    show('seMonWrap', !need && !!M && M.count > 0);
+    if (!need && M && M.count > 0) {
+      var rate = r.income > 0 ? biz.extra / r.income : 0, avg = M.sum / M.count, mrows = [], mcls = [], paid = 0;
+      MONTHS.forEach(function (name, i) {
+        var v = M.vals[i], est = v === null;
+        if (est && st.mofill !== 'avg') return;
+        var amt = est ? avg : v; paid += amt;
+        mrows.push([name.slice(0, 3) + (est ? ' <em>estimate</em>' : ''), loc(amt), loc(amt * rate), loc(amt - amt * rate)]); mcls.push(est ? 'se-past' : '');
+      });
+      mrows.push(['Year', loc(paid), loc(paid * rate), loc(paid - paid * rate)]); mcls.push('se-sum');
+      tbl('seMonT', ['Month', 'Paid', 'Set aside', 'Left'], mrows, mcls);
+      setNote('seMonKey', 'Set aside is ' + pctT(rate) + ' of each month, your average for the year; expenses still come out of what is left. The quarterly table splits the year evenly: the IRS method for uneven income is not included.');
+    }
+
+    /* a payment that just arrived */
+    var pr = read('seP', { name: 'The payment', ex: '2500' }), po = $('sePOut');
+    if (pr.msg) { po.textContent = pr.msg; show('sePTbl', false); }
+    else if (pr.e || pr.v <= 0) { po.textContent = 'Type a payment to see how much of it to set aside.'; show('sePTbl', false); }
+    else {
+      var np = E.nextPayment(inp, pr.v * fx());
+      po.textContent = 'Set aside ' + mon(np.set) + ' and keep ' + mon(np.keep) + '. It is taxed at ' + pctT(np.rate) + (np.average !== null ? '; on average, tax takes ' + pctT(np.average) + ' of your client payments.' : '.');
+      tbl('sePTbl', null, [['Federal taxes on this payment', mon(np.fed)], ['State tax on this payment', r.st.known ? mon(np.set - np.fed) : 'not included'], ['Set aside', mon(np.set)], ['Yours to keep', mon(np.keep)]]);
+      show('sePTbl', true);
+    }
+
+    /* quarterly */
+    var q = E.quarterly({ lastTax: inp.lastTax, lastAgi: inp.lastAgi }, r, CalcThis.seNow || new Date());
+    tbl('seQtr', ['Due', 'Avoid a penalty', 'Pay in full'], q.rows.map(function (x, i) { return [x.date.replace(/^(\w{3})\w*/, '$1') + (x.past ? ' <em>passed</em>' : i === q.next ? ' <em>next</em>' : ''), usd(x.min), usd(x.full)]; }), q.rows.map(function (x, i) { return x.past ? 'se-past' : i === q.next ? 'cc-flag' : ''; }));
+    var qn = '';
+    if (q.reason === 'noprior') qn = 'You had no 2025 tax (for a full year), so no estimated payments are required for 2026.';
+    else if (q.reason === 'under') qn = 'You would owe under $1,000 after withholding, so no estimated payments are required.';
+    else if (q.reason === 'covered') qn = 'Your withholding already covers the smallest required amount.';
+    else qn = 'Smallest yearly amount: ' + usd(q.required) + ', ' + (q.prior !== null && q.prior < q.now90 ? (q.hi ? '110%' : '100%') + ' of your 2025 tax' : '90% of your 2026 federal tax') + (r.withheld > 0 ? ', less ' + usd(r.withheld) + ' withheld' : '') + '.' + (q.prior === null ? ' Add your 2025 tax under Go advanced: it may be lower.' : '');
+    if (!q.reason && q.next >= 0) qn += ' Still due by ' + q.rows[q.next].date + ': ' + usd(q.dueNext) + (q.paid > 0 ? ' after your ' + usd(q.paid) + ' paid' : '') + ' to avoid a penalty (' + usd(q.fullNext) + ' to stay fully paid up).';
+    if (!q.reason && q.rows.some(function (x) { return x.past; })) qn += ' Paying late can still bring a penalty for the dates that passed.';
+    if (!q.reason && q.prior !== null && !$('seLastAgi').value.trim()) qn += ' If your 2025 adjusted gross income was over ' + mon0(q.line) + ', type it under Go advanced: the 2025 target then becomes 110%.';
+    qn += ' Federal tax only' + (isUsd() ? '.' : ', in US dollars: that is what you send the IRS.');
+    setNote('seQtrKey', qn);
+
+    /* line by line */
+    var L = [], cls = [], line = function (k, v, c) { L.push([k, v]); cls.push(c || ''); };
+    line('Client payments', mon(r.income));
+    if (r.expenses) line('Business expenses', mon(-r.expenses));
+    if (r.mileage) line('Mileage (' + num(inp.m1 || 0) + ' × $0.725 + ' + num(inp.m2 || 0) + ' × $0.76)', mon(-r.mileage));
+    if (r.home) line('Home office (' + num(r.homeSqft) + ' sq ft × $5)', mon(-r.home));
+    if (r.farm) line('Farm profit or loss', mon(r.farm));
+    line('Business profit', mon(r.business), 'se-sum');
+    line('Net earnings (92.35% of profit)', mon(r.seParts.businessBase));
+    if (r.seParts.churchBase) line('Church income earnings (92.35%)', mon(r.seParts.churchBase));
+    line('Social Security 12.4% on ' + mon(r.seParts.ssBase), mon(r.ss));
+    line('Medicare 2.9% on ' + mon(r.seParts.base), mon(r.med));
+    line('Self-employment tax', mon(r.se), 'se-sum');
+    if (r.wages) line('W-2 wages', mon(r.wages));
+    if (r.church) line('Church employee income', mon(r.church));
+    line('Half of self-employment tax (deduction)', mon(-r.half));
+    if (r.ret) line((r.retType === 'solo' ? 'Solo 401(k)' : 'SEP-IRA') + ' deduction', mon(-r.ret));
+    if (r.health) line('Health insurance deduction', mon(-r.health));
+    if (r.ira) line('IRA deduction', mon(-r.ira));
+    if (r.other) line('Other deductions', mon(-r.other));
+    line('Adjusted gross income', mon(r.agi), 'se-sum');
+    line(r.usedItemized ? 'Itemized deductions' : 'Standard deduction', mon(-r.ded));
+    line('Qualified business income deduction', mon(-r.qbid));
+    line('Taxable income', mon(r.taxable), 'se-sum');
+    line('Federal income tax (top bracket ' + pctT(r.bracket) + ')', mon(r.incomeTax));
+    if (r.kid.nonref) line('Child tax credit', mon(-r.kid.nonref));
+    line('Self-employment tax', mon(r.se));
+    if (r.addlSe + r.addlW > 0.004) line('Extra 0.9% Medicare tax', mon(r.addlSe + r.addlW));
+    if (r.kid.refund) line('Refundable child credit', mon(-r.kid.refund));
+    line('Federal total', mon(r.fedTotal), 'se-sum');
+    if (r.st.code) line('State tax (estimate)', r.st.known ? mon(r.st.tax) : 'not included');
+    line('All taxes', mon(r.allTax), 'se-sum');
+    if (r.withheld) line('Already withheld', mon(-r.withheld));
+    if (r.estPaid) line('Estimated payments made', mon(-r.estPaid));
+    line(r.owed >= 0 ? 'Federal tax still to pay' : 'Federal refund', mon(Math.abs(r.owed)), 'se-sum');
+    tbl('seSteps', null, L, cls);
+    var step = 1000 * fx(), save = E.expenseSaving(inp, step);
+    var room = r.retMax - r.ret, saveRet = room >= step ? r.allTax - E.compute(without(inp, 'retAmt', r.ret + step)).allTax : 0;
+    setNote('seStepKey', (r.business > 0 ? 'An extra ' + loc(1000, 0) + ' of business expense would save about ' + mon(save) + ' in tax. ' : '') + (saveRet > 0 ? 'An extra ' + loc(1000, 0) + ' in your ' + (r.retType === 'solo' ? 'solo 401(k)' : 'SEP-IRA') + ' would save about ' + mon(saveRet) + '. ' : '') + (r.qbid > 0 && r.q.minUsed ? 'The business income deduction is the $400 minimum. ' : '') + (r.q.phase > 0 ? 'Your income is above the threshold, so the business income deduction is reduced. ' : ''));
+
+    /* same take-home as a salary */
+    var eq = E.salaryEquivalent(inp, r);
+    show('seW2Wrap', !!eq && eq.salary > 0);
+    if (eq && eq.salary > 0) {
+      var w = eq.row;
+      tbl('seW2', ['', 'Self-employed', 'Salary'], [['Pay', mon(r.total), mon(w.total)], ['Social Security + Medicare', mon(r.se + r.empSS + r.empMed + r.addlSe + r.addlW), mon(w.empSS + w.empMed + w.addlW)], ['Income tax', mon(r.incomeAfter - r.kid.refund), mon(w.incomeAfter - w.kid.refund)], ['State tax', r.st.known ? mon(r.st.tax) : '—', w.st.known ? mon(w.st.tax) : '—'], ['You keep', mon(r.keep), mon(w.keep)]]);
+      setNote('seW2Key', 'Extra W-2 pay of ' + mon(eq.salary) + ' would leave the same take-home as this self-employment income. Employer benefits are not counted.');
+    }
+
+    /* a job offer */
+    var js = read('seJob', { name: 'The salary', ex: '100000' }), jb = read('seJobBen', { name: 'Job benefits', ex: '10000' }), jh = read('seJobHrs', { name: 'Billable hours', ex: '1500', max: 8760, maxText: 'no more than 8,760' }), jo = $('seJobOut');
+    show('seJobTbl', false);
+    if (js.msg) jo.textContent = js.msg;
+    else if (js.e || js.v <= 0) jo.textContent = $('seJobBen').value.trim() || $('seJobHrs').value.trim() ? 'Type the job’s salary first.' : 'Type a salary to see what you would need to bill to match it.';
+    else {
+      var jm = E.jobMatch(inp, js.v * fx(), (jb.v || 0) * fx()), jextra = (jb.msg ? ' ' + jb.msg + ' It is left out for now.' : '') + (jh.msg ? ' ' + jh.msg + ' It is left out for now.' : '');
+      if (jm.income === null) jo.textContent = 'That job cannot be matched with these entries.' + jextra;
+      else {
+        jo.textContent = (jm.enough ? 'Your other income alone already leaves as much as the job would.' : 'To match a ' + loc(js.v) + ' salary' + (jb.v > 0 ? ' with ' + loc(jb.v) + ' of benefits' : '') + ', bill ' + mon(jm.income) + ' a year' + (jh.v > 0 ? ', ' + mon(jm.income / jh.v) + ' an hour at ' + num(jh.v) + ' hours' : '') + '.') + jextra;
+        var jr = [['Take-home with the job', mon(jm.jobKeep)]];
+        if (jb.v > 0) jr.push(['Benefits to replace', loc(jb.v)]);
+        jr.push(['Billing needed a year', mon(jm.income)], ['A month', mon(jm.income / 12)]);
+        if (jh.v > 0) jr.push(['A billable hour', mon(jm.income / jh.v)]);
+        tbl('seJobTbl', null, jr); show('seJobTbl', true);
+      }
+    }
+
+    /* by profit */
+    var list = [20000, 40000, 60000, 80000, 100000, 150000, 200000], mine = Math.round(r.business);
+    if (mine > 0 && mine <= 1e9 && list.indexOf(mine) < 0) list.push(mine);
+    list.sort(function (a, b) { return a - b; });
+    var T = E.table(inp, list);
+    tbl('seTab', ['Profit', 'SE tax', 'All tax added', 'Left to you', 'Share'], T.map(function (x) { return [monW(x.profit), monW(x.se), monW(x.added), monW(x.keep), pctT(x.rate) + '<span class="se-mini"><i style="width:' + Math.max(0, Math.min(100, x.rate * 200)).toFixed(2) + '%"></i></span>']; }), T.map(function (x) { return x.profit === mine ? 'cc-flag' : ''; }));
+    setNote('seTabKey', 'The tax each profit adds on top of everything else you entered, with the same filing status' + (r.st.known && r.st.code ? ' and state (federal and state tax)' : ' (federal tax only)') + ' and no business expenses.' + (isUsd() ? '' : ' The profit steps are US dollar amounts shown in ' + st.cur + '.') + (mine > 0 ? ' Your profit is highlighted.' : ''));
+
+    /* how */
+    var how = ['Profit = client payments − business expenses − mileage − home office = ' + mon(r.business) + '.', 'Net earnings = profit × 92.35% = ' + mon(r.seParts.businessBase) + (r.business > 0 && r.seParts.businessBase === 0 ? ' (under $400 counts as zero)' : '') + '.', 'Self-employment tax = 12.4% of earnings up to the Social Security limit + 2.9% of all earnings = ' + mon(r.se) + '.', 'Adjusted gross income = income − half of that tax − retirement, insurance and other deductions = ' + mon(r.agi) + '.', 'Taxable income = adjusted gross income − ' + mon(r.ded) + ' deduction − ' + mon(r.qbid) + ' business income deduction = ' + mon(r.taxable) + '.', 'The 2026 rate schedule on that gives ' + mon(r.incomeTax) + ' of income tax.'];
+    $('seHow').innerHTML = how.map(function (s) { return '<li>' + esc(s) + '</li>'; }).join('');
+    $('seCopyTxt').textContent = ['Self-employment tax estimate for 2026', 'Client payments: ' + mon(r.income), 'Business profit: ' + mon(r.business), 'Self-employment tax: ' + mon(r.se), 'Federal income tax: ' + mon(r.incomeAfter), 'Federal total: ' + mon(r.fedTotal)].concat(r.st.known && r.st.code ? ['State tax (estimate): ' + mon(r.st.tax)] : []).concat(['All taxes: ' + mon(r.allTax), 'You keep: ' + mon(r.keep)]).concat(isUsd() ? [] : ['1 ' + st.cur + ' = ' + st.rate + ' US dollars; self-employment tax ' + usd(r.se) + ', all taxes ' + usd(r.allTax)]).join('\n');
+    if (soft) setHint(soft.msg, soft.at); else setHint('');
+    notes(r, A);
+    fit();
+  }
+  /* a table with very long numbers may break them; otherwise numbers stay whole */
+  function fit() { [].forEach.call(document.querySelectorAll('#seBody table'), function (t) { t.classList.remove('se-tight'); var w = t.parentNode.clientWidth; if (w && t.getBoundingClientRect().width > w + 0.5) t.classList.add('se-tight'); }); }
+
+  function without(inp, key, val) { var o = {}, k; for (k in inp) o[k] = inp[k]; o[key] = val || 0; return o; }
+
+  /* a short line under every box saying what the value does */
+  function notes(r, A) {
+    var v = A.inp, none = function (id, id2) { var el = $(id); setNote(id2, el && el.value.trim() && !A.bad[id] ? 'Saved. Type ' + (!isUsd() && !(Number($('seFx').value.replace(/[$,\s]/g, '')) > 0) ? 'the exchange rate' : st.mode === 'need' ? 'the take-home pay you want' : 'what your clients paid you') + ' to see what it does.' : ''); };
+    var map = { seExpenses: 'seExpNote', seM1: 'seM1Note', seM2: 'seM2Note', seSqft: 'seSqftNote', seWages: 'seWagesNote', seWithheld: 'seWithNote', seFarm: 'seFarmNote', seChurch: 'seChurchNote', sePrem: 'sePremNote', seRet: 'seRetNote', seIra: 'seIraNote', seOther: 'seOtherNote', seMort: 'seMortNote', seItem: 'seItemNote', seKids: 'seKidsNote', sePaid: 'sePaidNote', seLastTax: 'seLastTaxNote', seLastAgi: 'seLastAgiNote' };
+    var el = function (id) { return $(id).value.trim() !== '' && !A.bad[id] && v[KEY[id]] !== undefined; };
+    if (!r) {
+      Object.keys(map).forEach(function (id) { none(id, map[id]); });
+      setNote('seStatusNote', 'Standard deduction: ' + mon0(E.STD[v.status]) + '.');
+      setNote('seAgeNote', 'IRA limit: ' + mon0(v.age === 'u50' ? E.IRA : E.IRA50) + '.');
+      setNote('seRetTypeNote', st.ret === 'solo' ? 'Your own deferral plus a share of profit.' : 'Up to 20% of profit after half the self-employment tax.');
+      setNote('seSstbNote', 'Matters only above ' + mon0(E.QBI_THR[v.status]) + ' of taxable income.');
+      setNote('seIncomeNote', ''); setNote('seTargetNote', ''); setNote('seHoursNote', $('seHours').value.trim() ? 'Type the take-home pay you want to see an hourly rate.' : '');
+      return;
+    }
+    setNote('seIncomeNote', 'Profit after expenses: ' + mon(r.business) + '.');
+    setNote('seTargetNote', st.per === 'month' ? 'That is ' + loc((Number($('seTarget').value.replace(/[$,\s]/g, '')) || 0) * 12) + ' a year.' : 'That is ' + loc((Number($('seTarget').value.replace(/[$,\s]/g, '')) || 0) / 12) + ' a month.');
+    setNote('seExpNote', el('seExpenses') ? (v.expenses > 0 ? 'These expenses save ' + mon(Math.max(0, E.compute(without(v, 'expenses')).allTax - r.allTax)) + ' in tax.' + (r.business < 0 ? ' The business shows a loss.' : '') : 'No expenses are taken off.') : '');
+    setNote('seM1Note', el('seM1') ? num(v.m1) + ' miles × $0.725 = ' + mon(v.m1 * E.MILE1) + ' deducted.' : '');
+    setNote('seM2Note', el('seM2') ? num(v.m2) + ' miles × $0.76 = ' + mon(v.m2 * E.MILE2) + ' deducted.' : '');
+    setNote('seSqftNote', el('seSqft') ? mon(r.home) + ' deducted' + (v.sqft > E.HOME_MAX ? ' (the limit is 300 sq ft)' : '') + (r.home < r.homeSqft * E.HOME_RATE ? ' (cannot create a loss)' : '') + '.' : '');
+    setNote('seWagesNote', el('seWages') ? 'Social Security room left for self-employment: ' + mon(Math.max(0, E.WAGE_BASE - r.wages)) + '.' : '');
+    setNote('seWithNote', el('seWithheld') ? usd(v.withheld) + ' counts toward the federal tax.' : '');
+    setNote('seFarmNote', el('seFarm') ? 'Added to business profit: ' + mon(r.business) + '.' : '');
+    setNote('seChurchNote', el('seChurch') ? (r.seParts.churchBase > 0 ? mon(r.seParts.churchBase) + ' of it is subject to self-employment tax.' : 'Under $108.28 it has no self-employment tax.') : '');
+    setNote('sePremNote', el('sePrem') ? mon(r.health) + ' deducted' + (r.health < v.premiums ? ' (limited to what the business earns after half the tax and retirement)' : '') + '.' : '');
+    setNote('seAgeNote', 'IRA limit ' + mon0(r.age === 'u50' ? E.IRA : E.IRA50) + (r.retType === 'solo' ? (E.CATCH[r.age] ? ', 401(k) catch-up ' + mon0(E.CATCH[r.age]) : ', no 401(k) catch-up') : '') + '.');
+    setNote('seRetTypeNote', 'Most you can deduct with these numbers: ' + mon(r.retMax) + '.');
+    setNote('seRetNote', el('seRet') ? mon(r.ret) + ' deducted' + (r.ret < v.retAmt - 0.004 ? ' (the most allowed with these numbers)' : '') + '. It lowers income tax, not self-employment tax.' : '');
+    setNote('seIraNote', el('seIra') ? mon(r.ira) + ' deducted' + (r.ira < v.ira - 0.004 ? ' (the limit)' : '') + '. If you have a retirement plan, less may be deductible.' : '');
+    setNote('seOtherNote', el('seOther') ? mon(r.other) + ' comes off before adjusted gross income.' : '');
+    var itemTxt = 'Itemized total ' + mon(r.itemized) + ' against the standard ' + monW(r.std) + ': the ' + (r.usedItemized ? 'itemized' : 'standard') + ' amount is used.';
+    setNote('seMortNote', el('seMort') ? itemTxt : '');
+    setNote('seItemNote', el('seItem') ? itemTxt : '');
+    setNote('seStatusNote', 'Standard deduction: ' + mon0(r.std) + '.');
+    setNote('seKidsNote', el('seKids') ? 'Child tax credit: ' + mon(r.kid.nonref + r.kid.refund) + ' (' + mon(r.kid.refund) + ' refundable)' + (r.kid.reduced ? ', reduced by ' + monW(r.kid.reduced) + ' for income' : '') + '.' : '');
+    setNote('seSstbNote', r.q.phase > 0 ? 'Your income is above the threshold, so this changes the business income deduction: ' + mon(r.qbid) + '.' : 'No effect below ' + mon0(E.QBI_THR[r.status]) + ' of taxable income; yours is ' + monW(r.tiBefore) + '.');
+    setNote('sePaidNote', el('sePaid') ? (r.owed >= 0 ? 'Federal tax still to pay after it: ' + usd(r.owed) + '.' : 'Federal refund of ' + usd(-r.owed) + '.') : '');
+    setNote('seLastTaxNote', el('seLastTax') ? 'Used for the penalty-free amount in the quarterly table.' : '');
+    setNote('seLastAgiNote', el('seLastAgi') ? (el('seLastTax') ? (v.lastAgi > (r.status === 'mfs' ? 75000 : 150000) ? 'Above the line: 110% of last year’s tax applies.' : 'Not above the line: 100% of last year’s tax applies.') : 'Type the 2025 total tax too.') : '');
+  }
+
+  /* state-dependent fields and their notes */
+  function syncState(A) {
+    var c = stateCode(), S = c ? PE.STATES[c] : null, live = !!(S && S.method !== 'pending');
+    cOpts = live && S.counties ? S.counties.map(function (q) { return { v: q.n, label: q.n, s: q.n.toLowerCase() }; }) : [];
+    show('seCountyFld', cOpts.length > 0); show('seRateFld', !!c && !live);
+    if (cOpts.length) $('seCountyLab').textContent = c === 'MD' ? 'County or Baltimore City where you live' : 'County where you live (on January 1)';
+    var r = A.inp.stRate;
+    setNote('seStateNote', !c ? 'Pick a state to include its income tax.' : !live ? NAMES[c] + ' has no built-in formula here. Type your effective rate below.' : S.method === 'none' ? NAMES[c] + ' has no state income tax on this income.' : 'Estimate: the ' + (stateVal() === 'NYC' ? 'New York State and New York City' : NAMES[c]) + ' paycheck withholding formula applied to your yearly adjusted gross income.');
+    setNote('seCountyNote', cOpts.length ? ($('seCounty').value ? 'Local tax for ' + $('seCounty').value + ' is included.' : c === 'MD' ? 'No county picked: the highest local rate is used.' : 'County tax is left out until you pick a county.') : '');
+    setNote('seRateNote', !c || live ? '' : r > 0 ? r + '% of adjusted gross income is counted as state tax.' : 'Leave empty to leave state tax out.');
+  }
+
+  /* ---------- state and county typeahead (same behaviour as the paycheck State field) ---------- */
+  var cOpts = [];
+  function typeahead(hidId, inId, listId, opts, label, onPick, none) {
+    var el = $(hidId), input = $(inId), box = $(listId), val = '', hits = [], act = -1;
+    Object.defineProperty(el, 'value', { configurable: true, get: function () { return val; }, set: function (v) { val = v || ''; input.value = label(val); } });
+    function rank(o, q) { if (o.label.toLowerCase().indexOf(q) === 0) return 0; if ((' ' + o.s).indexOf(' ' + q) >= 0) return 1; return o.s.indexOf(q) >= 0 ? 2 : -1; }
+    function close() { box.style.display = 'none'; input.setAttribute('aria-expanded', 'false'); act = -1; }
+    function open(full) {
+      var q = full ? '' : input.value.trim().toLowerCase(), found = [];
+      opts().forEach(function (o, i) { var rk = q ? rank(o, q) : 0; if (rk >= 0) found.push({ o: o, r: rk, i: i }); });
+      found.sort(function (x, y) { return x.r - y.r || x.i - y.i; });
+      hits = found.map(function (h) { return h.o; });
+      act = q && hits.length ? 0 : -1;
+      box.innerHTML = hits.length ? hits.map(function (o, i) { return '<button type="button" class="st-ta-opt' + (!q && o.v === val ? ' on' : '') + (q && i === act ? ' kb' : '') + '" role="option" data-i="' + i + '"><span>' + o.label + '</span>' + (o.typed ? '<b>type a rate</b>' : '') + '</button>'; }).join('') : '<div class="st-ta-none">' + none + ' “' + esc(input.value) + '”.</div>';
+      box.style.display = 'block'; input.setAttribute('aria-expanded', 'true');
+      var cur = box.querySelector('.st-ta-opt.on'); box.scrollTop = cur && !q ? Math.max(0, cur.offsetTop - 60) : 0;
+    }
+    function pick(o) { if (!o) return; var changed = o.v !== val; close(); el.value = o.v; input.blur(); if (changed) onPick(); }
+    input.addEventListener('focus', function () { input.select(); open(true); });
+    input.addEventListener('input', function (e) { e.stopPropagation(); if (!input.value.trim() && val) { val = ''; onPick(); } open(!input.value.trim()); });
+    input.addEventListener('blur', function () { setTimeout(function () { close(); input.value = label(val); }, 150); });
+    input.addEventListener('keydown', function (e) {
+      var os = box.querySelectorAll('.st-ta-opt');
+      if (e.key === 'Escape') { close(); input.value = label(val); return; }
+      if (!os.length) return;
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); act = e.key === 'ArrowDown' ? Math.min(os.length - 1, act + 1) : Math.max(0, act - 1); [].forEach.call(os, function (o, i) { o.classList.toggle('kb', i === act); }); os[act].scrollIntoView({ block: 'nearest' }); }
+      else if (e.key === 'Enter') { e.preventDefault(); pick(hits[act >= 0 ? act : 0]); }
+    });
+    box.addEventListener('mousedown', function (e) { e.preventDefault(); var bt = e.target.closest('.st-ta-opt'); if (bt) pick(hits[+bt.getAttribute('data-i')]); });
+  }
+  var ST_OPTS = [{ v: '', label: 'Federal taxes only', s: 'federal taxes only no state' }];
+  Object.keys(NAMES).sort(function (x, y) { return NAMES[x] < NAMES[y] ? -1 : 1; }).forEach(function (cd) {
+    var s = PE.STATES[cd], ok = s && s.method !== 'pending';
+    ST_OPTS.push({ v: cd, label: NAMES[cd], s: (NAMES[cd] + ' ' + cd).toLowerCase(), typed: !ok });
+    if (cd === 'NY') ST_OPTS.push({ v: 'NYC', label: 'New York City', s: 'new york city nyc manhattan brooklyn queens bronx staten island' });
+  });
+  typeahead('seState', 'seStateIn', 'seStateList', function () { return ST_OPTS; }, function (v) { if (!v) return ''; for (var i = 0; i < ST_OPTS.length; i++) if (ST_OPTS[i].v === v) return ST_OPTS[i].label; return ''; }, function () { $('seCounty').value = ''; $('seStRate').value = ''; render(); }, 'No state matches');
+  typeahead('seCounty', 'seCountyIn', 'seCountyList', function () { return cOpts; }, function (v) { return v; }, function () { render(); }, 'No county matches');
+
+  /* ---------- controls ---------- */
+  function segSet(id, key, v) { st[key] = v; [].forEach.call($(id).children, function (b) { b.classList.toggle('on', b.getAttribute('data-v') === v); }); }
+  function modeUI() { show('seIncomeW', st.mode === 'tax'); show('seNeedW', st.mode === 'need'); }
+  [['seMode', 'mode'], ['sePer', 'per'], ['seRetType', 'ret'], ['seSstb', 'sstb'], ['seMoFill', 'mofill']].forEach(function (p) {
+    [].forEach.call($(p[0]).children, function (b) { b.addEventListener('click', function () { segSet(p[0], p[1], b.getAttribute('data-v')); modeUI(); render(); }); });
+  });
+  function moUI() { show('seMoIn', st.moOpen); $('seMoBtn').textContent = st.moOpen ? 'Type one yearly total instead' : 'Add it up month by month'; $('seMoBtn').setAttribute('aria-expanded', st.moOpen ? 'true' : 'false'); }
+  function clearMonths() { for (var i = 1; i <= 12; i++) $('seMo' + i).value = ''; giveBack(); st.moOpen = false; segSet('seMoFill', 'mofill', 'zero'); setNote('seMoNote', ''); moUI(); }
+  $('seMoBtn').addEventListener('click', function () {
+    st.moOpen = !st.moOpen;
+    /* closing keeps the added-up total in the box, now editable */
+    if (!st.moOpen) { st.fromMonths = false; $('seIncome').readOnly = false; }
+    moUI(); render();
+  });
+  var card = $('seIncome').closest('.card');
+  card.addEventListener('input', function () { render(); });
+  ['seP', 'seJob', 'seJobBen', 'seJobHrs'].forEach(function (id) { $(id).addEventListener('input', render); });
+  ['seStatus', 'seAge'].forEach(function (id) { $(id).addEventListener('change', render); });
+  $('seEx').addEventListener('click', function () { clearMonths(); if (st.mode === 'need') { $('seTarget').value = st.per === 'month' ? '5000' : '60000'; } else { $('seIncome').value = '92000'; $('seExpenses').value = '12000'; } render(); });
+  function pickFirst(id, v) { var o = document.querySelector('#' + id + ' .csel-opt[data-value="' + v + '"]'); if (o && $(id).value !== v) o.click(); }
+  function resetAdv() { ADV.forEach(function (id) { $(id).value = ''; }); segSet('seRetType', 'ret', 'sep'); segSet('seSstb', 'sstb', 'no'); pickFirst('seAge', 'u50'); }
+  $('seClear').addEventListener('click', function () {
+    clearMonths();
+    ['seIncome', 'seTarget', 'seHours', 'seExpenses', 'seStRate', 'seP', 'seJob', 'seJobBen', 'seJobHrs'].forEach(function (id) { $(id).value = ''; });
+    resetAdv(); $('seState').value = ''; $('seCounty').value = ''; pickFirst('seStatus', 'single'); render();
+  });
+  $('seAdvBtn').addEventListener('click', function () {
+    st.adv = !st.adv; $('seAdvBtn').classList.toggle('open', st.adv); $('seAdvBtnLab').textContent = st.adv ? 'Go simple' : 'Go advanced'; $('seAdvIn').style.display = st.adv ? '' : 'none';
+    if (!st.adv) resetAdv();
+    render();
+  });
+  /* the currency picker: the markup page's searchable list */
+  (function () {
+    var opt = function (c, pop) { var n = curName(c); return '<button type="button" class="csel-opt' + (pop ? ' csel-pop' : '') + (c === 'USD' ? ' on' : '') + '" role="option" aria-selected="' + (c === 'USD') + '" data-value="' + c + '" data-p="' + (SE.RANK.indexOf(c) + 1) + '" data-s="' + (c + ' ' + n + ' ' + sym(c)).toLowerCase() + '"><span class="n">' + n + '</span><span class="c">' + c + '</span></button>'; };
+    var all = SE.CURRENCIES.slice().sort(function (a, b) { return curName(a) < curName(b) ? -1 : 1; });
+    $('seCur').querySelector('.csel-panel').innerHTML = '<div class="csel-sbox"><input class="csel-search" type="text" placeholder="Search currency" aria-label="Search currency" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="go"></div><div class="csel-group">Popular</div>' +
+      SE.POPULAR.map(function (c) { return opt(c, true); }).join('') + '<div class="csel-group">All currencies</div>' + all.map(function (c) { return opt(c, false); }).join('') + '<div class="csel-none" style="display:none">No currency found</div>';
+    CalcThis.initCsel($('seCur'));
+    $('seCur').querySelector('.csel-val').textContent = 'USD';
+  })();
+  function curUI() {
+    show('seFxW', !isUsd());
+    $('seFxLab').textContent = '1 ' + st.cur + ' in US dollars';
+    /* amounts from the US tax return and payments to the IRS are always dollars */
+    USONLY.forEach(function (id) { var u = $(id).closest('.fld').querySelector('.unit'); if (u) u.textContent = isUsd() ? '$' : 'USD'; });
+  }
+  $('seCur').addEventListener('change', function () {
+    var c = $('seCur').value || 'USD';
+    if (c !== st.cur) $('seFx').value = '';
+    st.cur = c; st.dec = decOf(c); $('seCur').querySelector('.csel-val').textContent = c; curUI(); render();
+  });
+  window.addEventListener('resize', fit);
+  curUI(); modeUI(); render();
+};
+/* SETAX:END */

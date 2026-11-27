@@ -15,5 +15,6 @@
  "correlation-coefficient-calculator",
  "linear-regression-calculator",
  "chi-square-calculator",
- "anova-calculator"
+ "anova-calculator",
+ "self-employment-tax-calculator"
 ]

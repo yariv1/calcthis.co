@@ -1,0 +1,406 @@
+{
+ "slug": "self-employment-tax-calculator",
+ "research": "md-files/calcthis-selfemploymenttax-research.md",
+ "competitors": [
+  {
+   "name": "Everlance 1099 Tax Calculator",
+   "url": "https://www.everlance.com/tax-calculator",
+   "openedLive": true,
+   "date": "2026-11-27",
+   "inputs": [
+    "filing status single or married",
+    "state typeahead",
+    "1099 income with slider",
+    "W-2 job and income",
+    "work mileage",
+    "other business expenses",
+    "percent of income owed and total",
+    "federal, state and self-employment breakdown"
+   ]
+  },
+  {
+   "name": "Keeper 1099 Tax Calculator",
+   "url": "https://www.keepertax.com/1099-tax-calculator",
+   "openedLive": true,
+   "date": "2026-11-27",
+   "inputs": [
+    "four filing statuses",
+    "state list with 50 states and DC",
+    "W-2 income and 1099 income",
+    "student tuition paid",
+    "mortgage interest",
+    "traditional IRA contributions",
+    "quarterly tax payments",
+    "W-2 taxes withheld",
+    "federal and state bill",
+    "line by line breakdown with half SE tax, AGI, standard deduction, QBI, taxable income",
+    "amount owed or refund",
+    "tables of tax by profit"
+   ]
+  },
+  {
+   "name": "fcalculator self-employment tax",
+   "url": "https://fcalculator.com/self-employment-tax-calculator/",
+   "openedLive": true,
+   "date": "2026-11-27",
+   "inputs": [
+    "income and business expenses",
+    "SEP-IRA or solo 401(k) contribution",
+    "health insurance",
+    "filing status",
+    "children under 17",
+    "W-2 wages and withholding",
+    "state income tax rate typed",
+    "total tax, keep, self-employment and income tax",
+    "quarterly payment and dates",
+    "QBI deduction and set aside percent",
+    "step by step table",
+    "tax as profit grows chart",
+    "where it goes chart",
+    "1099 vs W-2 chart",
+    "ways to pay less: SEP and expense savings",
+    "set aside per amount earned",
+    "share, CSV, print"
+   ]
+  },
+  {
+   "name": "selfemployedcalc.com",
+   "url": "https://selfemployedcalc.com/",
+   "openedLive": true,
+   "date": "2026-11-27",
+   "inputs": [
+    "tax year 2026 or 2025",
+    "filing status",
+    "1099 income and expenses",
+    "business miles",
+    "home office square feet",
+    "state with all 50 and DC",
+    "W-2 wages and federal withholding",
+    "health insurance premiums",
+    "SEP or solo 401(k)",
+    "other above-the-line deductions",
+    "itemized deductions",
+    "specified service business",
+    "take-home year and month, effective rate",
+    "quarterly planner with last year tax, AGI, payments made and safe harbor",
+    "1099 vs W-2: hourly rate to match a job with benefits",
+    "tax forms walk-through",
+    "table by profit",
+    "copy, share link, reset",
+    "AI question box"
+   ]
+  },
+  {
+   "name": "Jackson Hewitt SE calculator",
+   "url": "https://www.jacksonhewitt.com/tax-tools/tax-refund-calculators/self-employment-calculator",
+   "openedLive": true,
+   "date": "2026-11-27",
+   "inputs": [
+    "net business income or loss",
+    "net farm income or loss",
+    "church employee income",
+    "employer paid income",
+    "SE tax estimate with column chart",
+    "report"
+   ]
+  },
+  {
+   "name": "TaxAct SE calculator",
+   "url": "https://www.taxact.com/tax-resources/tax-calculators/self-employment-calculator",
+   "openedLive": true,
+   "date": "2026-11-27",
+   "inputs": [
+    "select year 2025 or 2026",
+    "self-employment income",
+    "employer paid income",
+    "Social Security and Medicare portions and total"
+   ]
+  },
+  {
+   "name": "QuickBooks SE calculator",
+   "url": "https://quickbooks.intuit.com/r/free-self-employment-tax-calculator/",
+   "openedLive": true,
+   "date": "2026-11-27",
+   "inputs": [
+    "net self-employment income",
+    "self-employment tax with Medicare and Social Security"
+   ]
+  }
+ ],
+ "features": [
+  {
+   "covers": [
+    "Everlance 1099 Tax Calculator: filing status single or married",
+    "Everlance 1099 Tax Calculator: 1099 income with slider",
+    "Everlance 1099 Tax Calculator: W-2 job and income",
+    "Everlance 1099 Tax Calculator: work mileage",
+    "Everlance 1099 Tax Calculator: other business expenses"
+   ],
+   "status": "exceed",
+   "ids": [
+    "seStatus",
+    "seIncome",
+    "seWages",
+    "seM1",
+    "seM2",
+    "seExpenses"
+   ]
+  },
+  {
+   "covers": [
+    "Everlance 1099 Tax Calculator: state typeahead"
+   ],
+   "status": "match",
+   "ids": [
+    "seStateIn"
+   ]
+  },
+  {
+   "covers": [
+    "Everlance 1099 Tax Calculator: percent of income owed and total",
+    "Everlance 1099 Tax Calculator: federal, state and self-employment breakdown"
+   ],
+   "status": "exceed",
+   "ids": [
+    "seTip",
+    "seSteps",
+    "seFlow"
+   ]
+  },
+  {
+   "covers": [
+    "Keeper 1099 Tax Calculator: four filing statuses",
+    "Keeper 1099 Tax Calculator: W-2 income and 1099 income",
+    "Keeper 1099 Tax Calculator: mortgage interest",
+    "Keeper 1099 Tax Calculator: traditional IRA contributions",
+    "Keeper 1099 Tax Calculator: quarterly tax payments",
+    "Keeper 1099 Tax Calculator: W-2 taxes withheld"
+   ],
+   "status": "match",
+   "ids": [
+    "seStatus",
+    "seWages",
+    "seIncome",
+    "seMort",
+    "seIra",
+    "sePaid",
+    "seWithheld"
+   ]
+  },
+  {
+   "covers": [
+    "Keeper 1099 Tax Calculator: student tuition paid"
+   ],
+   "status": "dropped",
+   "signoff": {
+    "quote": "Approve all",
+    "date": "2026-11-27"
+   }
+  },
+  {
+   "covers": [
+    "Keeper 1099 Tax Calculator: state list with 50 states and DC"
+   ],
+   "status": "match",
+   "ids": [
+    "seStateIn",
+    "seStRate"
+   ]
+  },
+  {
+   "covers": [
+    "Keeper 1099 Tax Calculator: federal and state bill",
+    "Keeper 1099 Tax Calculator: line by line breakdown with half SE tax, AGI, standard deduction, QBI, taxable income",
+    "Keeper 1099 Tax Calculator: amount owed or refund",
+    "Keeper 1099 Tax Calculator: tables of tax by profit"
+   ],
+   "status": "match",
+   "ids": [
+    "seSteps",
+    "seTab"
+   ]
+  },
+  {
+   "covers": [
+    "fcalculator self-employment tax: income and business expenses",
+    "fcalculator self-employment tax: SEP-IRA or solo 401(k) contribution",
+    "fcalculator self-employment tax: health insurance",
+    "fcalculator self-employment tax: filing status",
+    "fcalculator self-employment tax: children under 17",
+    "fcalculator self-employment tax: W-2 wages and withholding",
+    "fcalculator self-employment tax: state income tax rate typed"
+   ],
+   "status": "match",
+   "ids": [
+    "seIncome",
+    "seRet",
+    "seRetType",
+    "sePrem",
+    "seStatus",
+    "seKids",
+    "seWages",
+    "seStRate"
+   ]
+  },
+  {
+   "covers": [
+    "fcalculator self-employment tax: total tax, keep, self-employment and income tax",
+    "fcalculator self-employment tax: quarterly payment and dates",
+    "fcalculator self-employment tax: QBI deduction and set aside percent",
+    "fcalculator self-employment tax: step by step table",
+    "fcalculator self-employment tax: tax as profit grows chart",
+    "fcalculator self-employment tax: where it goes chart",
+    "fcalculator self-employment tax: 1099 vs W-2 chart",
+    "fcalculator self-employment tax: ways to pay less: SEP and expense savings",
+    "fcalculator self-employment tax: set aside per amount earned"
+   ],
+   "status": "exceed",
+   "ids": [
+    "seSub",
+    "seQtr",
+    "seSteps",
+    "seHow",
+    "seTab",
+    "seFlow",
+    "seW2",
+    "seStepKey",
+    "seP"
+   ]
+  },
+  {
+   "covers": [
+    "fcalculator self-employment tax: share, CSV, print"
+   ],
+   "status": "dropped",
+   "signoff": {
+    "quote": "Approve all",
+    "date": "2026-11-27"
+   }
+  },
+  {
+   "covers": [
+    "selfemployedcalc.com: tax year 2026 or 2025",
+    "selfemployedcalc.com: AI question box"
+   ],
+   "status": "dropped",
+   "signoff": {
+    "quote": "Approve all",
+    "date": "2026-11-27"
+   }
+  },
+  {
+   "covers": [
+    "selfemployedcalc.com: filing status",
+    "selfemployedcalc.com: 1099 income and expenses",
+    "selfemployedcalc.com: business miles",
+    "selfemployedcalc.com: home office square feet",
+    "selfemployedcalc.com: W-2 wages and federal withholding",
+    "selfemployedcalc.com: health insurance premiums",
+    "selfemployedcalc.com: SEP or solo 401(k)",
+    "selfemployedcalc.com: other above-the-line deductions",
+    "selfemployedcalc.com: itemized deductions",
+    "selfemployedcalc.com: specified service business"
+   ],
+   "status": "match",
+   "ids": [
+    "seStatus",
+    "seIncome",
+    "seM1",
+    "seSqft",
+    "seWages",
+    "sePrem",
+    "seRet",
+    "seOther",
+    "seItem",
+    "seSstb"
+   ]
+  },
+  {
+   "covers": [
+    "selfemployedcalc.com: state with all 50 and DC"
+   ],
+   "status": "match",
+   "ids": [
+    "seStateIn",
+    "seStRate"
+   ]
+  },
+  {
+   "covers": [
+    "selfemployedcalc.com: take-home year and month, effective rate",
+    "selfemployedcalc.com: quarterly planner with last year tax, AGI, payments made and safe harbor",
+    "selfemployedcalc.com: 1099 vs W-2: hourly rate to match a job with benefits",
+    "selfemployedcalc.com: tax forms walk-through",
+    "selfemployedcalc.com: table by profit",
+    "selfemployedcalc.com: copy, share link, reset"
+   ],
+   "status": "exceed",
+   "ids": [
+    "seSub",
+    "seQtr",
+    "seLastTax",
+    "seLastAgi",
+    "sePaid",
+    "seJob",
+    "seJobHrs",
+    "seHow",
+    "seTab",
+    "seClear"
+   ]
+  },
+  {
+   "covers": [
+    "Jackson Hewitt SE calculator: net business income or loss",
+    "Jackson Hewitt SE calculator: net farm income or loss",
+    "Jackson Hewitt SE calculator: church employee income",
+    "Jackson Hewitt SE calculator: employer paid income",
+    "Jackson Hewitt SE calculator: SE tax estimate with column chart",
+    "Jackson Hewitt SE calculator: report"
+   ],
+   "status": "match",
+   "ids": [
+    "seIncome",
+    "seFarm",
+    "seChurch",
+    "seWages",
+    "seBig",
+    "seFlow",
+    "seSteps"
+   ]
+  },
+  {
+   "covers": [
+    "TaxAct SE calculator: select year 2025 or 2026"
+   ],
+   "status": "dropped",
+   "signoff": {
+    "quote": "Approve all",
+    "date": "2026-11-27"
+   }
+  },
+  {
+   "covers": [
+    "TaxAct SE calculator: self-employment income",
+    "TaxAct SE calculator: employer paid income",
+    "TaxAct SE calculator: Social Security and Medicare portions and total"
+   ],
+   "status": "match",
+   "ids": [
+    "seIncome",
+    "seWages",
+    "seSteps"
+   ]
+  },
+  {
+   "covers": [
+    "QuickBooks SE calculator: net self-employment income",
+    "QuickBooks SE calculator: self-employment tax with Medicare and Social Security"
+   ],
+   "status": "match",
+   "ids": [
+    "seIncome",
+    "seSteps"
+   ]
+  }
+ ]
+}

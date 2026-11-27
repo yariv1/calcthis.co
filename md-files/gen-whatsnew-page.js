@@ -5,6 +5,7 @@ const ROOT = path.join(__dirname, '..') + path.sep;
 const A = (slug, name) => { if (!fs.existsSync(ROOT + slug + '/index.html')) throw new Error('missing page ' + slug); return '<a href="/' + slug + '/">' + name + '</a>'; };
 const ENTRIES = [
   ['2026-11-27', 'November 27, 2026', [
+    'New: ' + A('self-employment-tax-calculator', 'Self-Employment Tax Calculator') + ' — 2026 self-employment, income and state tax for 1099 and freelance income, by year or month by month, in your own currency at the rate you type; a picture of where the money goes, the Social Security limit, quarterly payments, the income to bill for the take-home pay you want and what to set aside from a payment.',
     'New: ' + A('anova-calculator', 'ANOVA Calculator') + ' — one-way ANOVA, Welch and Kruskal-Wallis from your values or summary numbers, a picture of which groups differ, Tukey, Games-Howell, Bonferroni and Dunn comparisons, assumption checks, the result with each group left out, power and the p-value or critical value from F.',
   ]],
   ['2026-11-26', 'November 26, 2026', [

@@ -1,0 +1,19 @@
+{
+ "slug": "self-employment-tax-calculator",
+ "hash": "38e0ce05dfee5bd7",
+ "shots": [
+  "self-employment-tax-calculator-1-empty-mobile.png",
+  "self-employment-tax-calculator-2-filled-mobile.png",
+  "self-employment-tax-calculator-3-result-mobile.png",
+  "self-employment-tax-calculator-4-advanced-mobile.png",
+  "self-employment-tax-calculator-5-error-mobile.png",
+  "self-employment-tax-calculator-6-after-chaos-mobile.png",
+  "self-employment-tax-calculator-1-empty-desktop.png",
+  "self-employment-tax-calculator-2-filled-desktop.png",
+  "self-employment-tax-calculator-3-result-desktop.png",
+  "self-employment-tax-calculator-4-advanced-desktop.png",
+  "self-employment-tax-calculator-5-error-desktop.png",
+  "self-employment-tax-calculator-6-after-chaos-desktop.png"
+ ],
+ "at": "2026-11-27T21:10:29.982Z"
+}

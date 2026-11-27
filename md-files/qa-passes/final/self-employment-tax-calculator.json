@@ -1,0 +1,14 @@
+{
+ "slug": "self-employment-tax-calculator",
+ "pass": true,
+ "at": "2026-11-27T21:09:46.973Z",
+ "passHash": "38e0ce05dfee5bd7",
+ "scriptHash": "4f183ca5fa04052e",
+ "cats": {
+  "textVsTool": 122,
+  "extremes": 27,
+  "visual": 266
+ },
+ "runs": 70,
+ "fails": []
+}

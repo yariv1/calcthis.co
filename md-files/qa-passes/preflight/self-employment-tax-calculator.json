@@ -1,0 +1,12 @@
+{
+ "slug": "self-employment-tax-calculator",
+ "pass": true,
+ "failed": [],
+ "hash": "38e0ce05dfee5bd7",
+ "at": "2026-11-27T21:15:47.213Z",
+ "results": {
+  "silent": "ok   self-employment-tax-calculator  fields 19",
+  "duplicate": "most overlap 0.7% with /paycheck-calculator/ (limit 12%)",
+  "registration": "sitemap urls 250 | self-employment-tax-calculator cards 1 inbound 249 ld WebApplication,FAQPage,BreadcrumbList | AUDIT PASS"
+ }
+}
