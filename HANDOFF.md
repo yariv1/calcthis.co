@@ -37,12 +37,12 @@ _Rewritten 2026-11-08 at the end of session #6 PART 2 (profit margin v331, disco
 
 ## 000000000000002g. START HERE — 2026-11-26: CHI SQUARE CALCULATOR DEPLOYED, LIVE v366 (commit 8c162dc1, Pages built, URL 200) — AUTHORITATIVE; older sections stay valid unless this contradicts them
 
-Sync line: "Synced: v366 live (chi square calculator); Bing is submitted, the GSC queue continues from commission."
+Sync line: "Synced: v366 live (chi square calculator); Bing is submitted, the GSC queue continues from unit price."
 
 - `/chi-square-calculator/` live. Code map, drops and unverified items: CLAUDE.md addendum 52. Next generator chains after it (slug `chi-square-calculator`, menu `Chi Square`, name `Chi Square Calculator`).
 - p-value page has one new in-body link to it (its gates re-run and passed).
 - Bing manual submit DONE 2026-11-26 (09:38, 6 URLs: chi square, linear regression, correlation, serial dilution, retatrutide, t-test). IndexNow pinged all 248 URLs at the build (HTTP 200).
-- GSC 2026-11-26: 9 requested (mb-to-gb, ml-to-oz, mm-to-inches, yards-to-meters, linear regression, chi square, markup, profit margin, discount); next commission, realtor commission, unit price. GSC only on his "Start queue".
+- GSC 2026-11-26: 9 requested (mb-to-gb, ml-to-oz, mm-to-inches, yards-to-meters, linear regression, chi square, markup, profit margin, discount); next commission, realtor commission, unit price. GSC 2026-11-27: realtor commission requested, commission now on Google, quota hit at unit price; next unit price then the health block. Overview 11-27: 160 indexed, 90 not. GSC only on his "Start queue".
 - ~2026-11-26 re-read GSC (checkpoint > 160 indexed); Dec 15 earliest AdSense review. Next calculator candidates: ANOVA (>1000 Medium), sample size (>1000 Hard); research report first.
 - Dev: port 8123 is reserved by Windows (8070-8169); use launch config `calcthis-static-8200` (http://localhost:8200/).
 - Do not commit `calcthis logo.png`, `listings images/`, `md-files/calcthis-outreach-list.md`.
