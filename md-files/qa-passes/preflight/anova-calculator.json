@@ -1,0 +1,12 @@
+{
+ "slug": "anova-calculator",
+ "pass": true,
+ "failed": [],
+ "hash": "4e521baec6efd9cc",
+ "at": "2026-11-27T14:18:08.938Z",
+ "results": {
+  "silent": "ok   anova-calculator  fields 7",
+  "duplicate": "most overlap 0.9% with /chi-square-calculator/ (limit 12%)",
+  "registration": "sitemap urls 249 | anova-calculator cards 1 inbound 248 ld WebApplication,FAQPage,BreadcrumbList | AUDIT PASS"
+ }
+}

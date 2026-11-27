@@ -1,0 +1,81 @@
+{
+ "date": "2026-11-27",
+ "competitors": [
+  {
+   "name": "Social Science Statistics ANOVA",
+   "url": "https://www.socscistatistics.com/tests/anova/calculator/",
+   "reopenedAfterBuild": true,
+   "gaps": []
+  },
+  {
+   "name": "Stats Kingdom one-way ANOVA",
+   "url": "https://www.statskingdom.com/180Anova1way.html",
+   "reopenedAfterBuild": true,
+   "gaps": []
+  },
+  {
+   "name": "Stats Kingdom two-way ANOVA",
+   "url": "https://www.statskingdom.com/two-way-anova-calculator.html",
+   "reopenedAfterBuild": true,
+   "gaps": []
+  },
+  {
+   "name": "Omnicalculator ANOVA",
+   "url": "https://www.omnicalculator.com/statistics/anova",
+   "reopenedAfterBuild": true,
+   "gaps": []
+  },
+  {
+   "name": "Statistics by Jim ANOVA",
+   "url": "https://statisticsbyjim.com/calculators/anova-calculator/",
+   "reopenedAfterBuild": true,
+   "gaps": []
+  },
+  {
+   "name": "MiniWebtool ANOVA",
+   "url": "https://miniwebtool.com/anova-calculator/",
+   "reopenedAfterBuild": true,
+   "gaps": []
+  },
+  {
+   "name": "Pearson ANOVA calculator",
+   "url": "https://www.pearson.com/channels/calculators/anova-calculator",
+   "reopenedAfterBuild": true,
+   "gaps": []
+  },
+  {
+   "name": "GoodCalculators ANOVA",
+   "url": "https://goodcalculators.com/one-way-anova-calculator/",
+   "reopenedAfterBuild": true,
+   "gaps": []
+  },
+  {
+   "name": "statpages ANOVA from summary data",
+   "url": "https://statpages.info/anova1sm.html",
+   "reopenedAfterBuild": true,
+   "gaps": []
+  },
+  {
+   "name": "Daniel Soper ANOVA from summary data",
+   "url": "https://www.danielsoper.com/statcalc/calculator.aspx?id=43",
+   "reopenedAfterBuild": true,
+   "gaps": []
+  }
+ ],
+ "weBeat": [
+  "visual: every value as a dot with a quartile box, the average and its interval for each group on one scale, with grouping letters and a pair picker that shows the chosen difference against zero. The tools checked show bar, interval or box charts of the groups; no grouping letters were seen in the outputs read",
+  "functional: the page picks classic, Welch or Kruskal-Wallis from the data checks, says why and whether they agree, and switches to the matching pair test (Tukey, Games-Howell, Dunn); the verdict with each group left out; sample size, power and the difference needed now; no sign-in and no daily limit",
+  "every competitor feature kept except two-way and repeated / mixed / random models with their Q-Q plot, CSV / Excel upload, R code, print, PDF / JPG download, share / embed, last-run restore and the Chicago sentence (dropped under his answer \"Approve all\"); one item found on reopening (box plot and variance on MiniWebtool) was added before this record"
+ ],
+ "gapsLeft": [],
+ "unverified": [
+  "real phone",
+  "other browsers (Chrome only)",
+  "print",
+  "Copy buttons in a real clipboard session",
+  "competitors were reopened after the build and read, not typed into again (numbers were typed or run earlier on 2026-11-27)",
+  "the GraphPad post test calculator was opened but not typed into (it does not run an ANOVA, so it is not in the parity list)",
+  "more than 20 groups is not supported (Omni and GoodCalculators show no limit; not tested there)",
+  "the rule that picks the test is a rule of thumb"
+ ]
+}

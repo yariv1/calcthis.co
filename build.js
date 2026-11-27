@@ -74,6 +74,7 @@ const PAGES = [
   { file: 'correlation-coefficient-calculator/index.html',          slug: '/correlation-coefficient-calculator/' },
   { file: 'linear-regression-calculator/index.html',          slug: '/linear-regression-calculator/' },
   { file: 'chi-square-calculator/index.html',          slug: '/chi-square-calculator/' },
+  { file: 'anova-calculator/index.html',          slug: '/anova-calculator/' },
   { file: 'scientific-notation-calculator/index.html', slug: '/scientific-notation-calculator/' },
   { file: 'percentage-calculator/index.html', slug: '/percentage-calculator/' },
   { file: 'percentage-change-calculator/index.html', slug: '/percentage-change-calculator/' },

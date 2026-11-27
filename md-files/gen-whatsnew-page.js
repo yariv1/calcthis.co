@@ -4,6 +4,9 @@ const fs = require('fs'), path = require('path');
 const ROOT = path.join(__dirname, '..') + path.sep;
 const A = (slug, name) => { if (!fs.existsSync(ROOT + slug + '/index.html')) throw new Error('missing page ' + slug); return '<a href="/' + slug + '/">' + name + '</a>'; };
 const ENTRIES = [
+  ['2026-11-27', 'November 27, 2026', [
+    'New: ' + A('anova-calculator', 'ANOVA Calculator') + ' — one-way ANOVA, Welch and Kruskal-Wallis from your values or summary numbers, a picture of which groups differ, Tukey, Games-Howell, Bonferroni and Dunn comparisons, assumption checks, the result with each group left out, power and the p-value or critical value from F.',
+  ]],
   ['2026-11-26', 'November 26, 2026', [
     'New: ' + A('chi-square-calculator', 'Chi Square Calculator') + ' — test of independence and goodness of fit from a typed table, a pasted table or raw answers, with the p-value, a picture of where the difference comes from, Fisher, Yates and McNemar, effect size, power and the critical value.',
   ]],

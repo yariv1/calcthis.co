@@ -31112,3 +31112,895 @@ CalcThis.initDilutionCalc = function () {
   applyMode(); render();
 };
 /* DILUTION:END */
+
+/* ANOVA:BEGIN */
+/* =========================================================
+   ANOVA calculator (/anova-calculator/). Competitors opened live (2026-11-27): Social Science Statistics, Stats Kingdom (one-way and two-way), Omnicalculator, Statistics by Jim, MiniWebtool,
+   Pearson.com, GoodCalculators, statpages.info, Daniel Soper, GraphPad post test calculator. Notes: md-files/calcthis-anova-research.md.
+   Sources read 2026-11-27: Wikipedia "Studentized range distribution" (distribution function), NIST/SEMATECH 7.4.7.1 (Tukey) and 1.3.5.10 (Levene, median = Brown-Forsythe), PMCMRplus gamesHowellTest,
+   pingouin welch_anova source (weights, adjusted grand mean, lambda), Wikipedia "Kruskal-Wallis test" (H with ties), scikit-posthocs posthoc_dunn (tie correction) and PMCMRplus kwAllPairsDunnTest
+   (Bonferroni), Wikipedia "Noncentral F-distribution" (Poisson mixture), Wikipedia "Effect size" (eta and omega squared), CASRAI "Effect size eta squared" (Cohen's f .10 / .25 / .40),
+   Shapiro-Wilk: algorithm AS R94 as distributed in SciPy 1.11 (swilk.f), Minitab "Data considerations for One-Way ANOVA" (15 per group for 2-9 groups, 20 for 10-12).
+   ========================================================= */
+/* ANOVA-ENGINE:START */
+CalcThis.anovaEngine = (function () {
+  var P = CalcThis.pvalueEngine, MAXG = 20, MAXN = 5000, MAXV = 1e9;
+
+  /* standard normal distribution function (Hart's double precision algorithm) */
+  function Phi(x) {
+    var a = Math.abs(x), c = 0, b, e;
+    if (a <= 37) {
+      e = Math.exp(-a * a / 2);
+      if (a < 7.07106781186547) {
+        b = ((((((0.0352624965998911 * a + 0.700383064443688) * a + 6.37396220353165) * a + 33.912866078383) * a + 112.079291497871) * a + 221.213596169931) * a + 220.206867912376);
+        c = e * b;
+        b = (((((((0.0883883476183 * a + 1.75566716318264) * a + 16.064177579207) * a + 86.7807322029461) * a + 296.564248779674) * a + 637.333633378831) * a + 793.826512519948) * a + 440.413735824752);
+        c = c / b;
+      } else { b = a + 0.65; b = a + 4 / b; b = a + 3 / b; b = a + 2 / b; b = a + 1 / b; c = e / b / 2.506628274631; }
+    }
+    return x > 0 ? 1 - c : c;
+  }
+  /* standard normal quantile: bisection on the tail, then Newton steps */
+  function PhiInv(p) {
+    if (p > 0.5) return -PhiInv(1 - p);
+    var lo = -40, hi = 0, i, m;
+    for (i = 0; i < 40; i++) { m = (lo + hi) / 2; if (Phi(m) < p) lo = m; else hi = m; }
+    m = (lo + hi) / 2;
+    for (i = 0; i < 3; i++) { var d = Math.exp(-m * m / 2) / 2.5066282746310002; if (d > 0) m -= (Phi(m) - p) / d; }
+    return m;
+  }
+
+  /* Gauss-Legendre nodes */
+  function gauss(n) {
+    var x = [], w = [], i, j, z, z1, p1, p2, p3, pp;
+    for (i = 1; i <= n; i++) {
+      z = Math.cos(Math.PI * (i - 0.25) / (n + 0.5));
+      do { p1 = 1; p2 = 0; for (j = 1; j <= n; j++) { p3 = p2; p2 = p1; p1 = ((2 * j - 1) * z * p2 - (j - 1) * p3) / j; } pp = n * (z * p1 - p2) / (z * z - 1); z1 = z; z = z1 - p1 / pp; } while (Math.abs(z - z1) > 1e-15);
+      x.push(z); w.push(2 / ((1 - z * z) * pp * pp));
+    }
+    return { x: x, w: w };
+  }
+  var G12 = gauss(12), G20 = gauss(20);
+
+  /* upper tail of the range of k standard normals: P(range > w) = k * integral phi(z) [ (1 - Phi(z))^(k-1) - (Phi(z + w) - Phi(z))^(k-1) ] dz */
+  function rangeTail(w, k) {
+    if (w <= 0) return 1;
+    var lo = -Math.max(9, w / 2 + 8), hi = 9, n = Math.ceil((hi - lo) / 1.5), h = (hi - lo) / n, s = 0, i, j, m = k - 1;
+    for (i = 0; i < n; i++) {
+      var mid = lo + h * (i + 0.5);
+      for (j = 0; j < 12; j++) {
+        var z = mid + h / 2 * G12.x[j], a = Phi(-z), c = Phi(-z - w), v;
+        if (a <= 0) continue;
+        var r = c / a; v = Math.pow(a, m) * (r >= 1 ? 1 : -Math.expm1(m * Math.log1p(-r)));
+        s += G12.w[j] * h / 2 * Math.exp(-z * z / 2) * v;
+      }
+    }
+    var out = k * s / 2.5066282746310002; return out > 1 ? 1 : out;
+  }
+  var STEP = 0.05, WMAX = 45, tables = {};
+  function logTail(k, w) {
+    var t = tables[k] || (tables[k] = []);
+    if (w <= 0) return 0;
+    if (w >= WMAX) return -Infinity;
+    var i = Math.floor(w / STEP), u = w / STEP - i;
+    function at(n) { if (n < 0) n = -n; if (t[n] === undefined) t[n] = n === 0 ? 0 : Math.log(rangeTail(n * STEP, k)); return t[n]; }
+    if (i === 0) return Math.log(rangeTail(w, k));
+    var y0 = at(i - 1), y1 = at(i), y2 = at(i + 1), y3 = at(i + 2);
+    return y0 * (-u * (u - 1) * (u - 2) / 6) + y1 * ((u + 1) * (u - 1) * (u - 2) / 2) + y2 * (-(u + 1) * u * (u - 2) / 2) + y3 * ((u + 1) * u * (u - 1) / 6);
+  }
+  /* upper tail of the studentized range: P(Q > q) for k means and v degrees of freedom: average of rangeTail(q s) over s = chi_v / sqrt(v), integrated in u = ln s */
+  function qTail(q, k, v) {
+    if (!(q > 0)) return 1;
+    if (v > 1e7) return Math.exp(logTail(k, q));
+    var lc = Math.log(2) + v / 2 * Math.log(v / 2) - P.lgamma(v / 2);
+    function span(a) { /* range of u where v u - a e^(2u) is within 40 of its maximum */
+      var top = 0.5 * Math.log(v / (2 * a)), g = function (u) { return v * u - a * Math.exp(2 * u); }, mx = g(top), lo = top, hi = top, d = Math.min(1, 1 / Math.sqrt(v));
+      while (g(lo) > mx - 40) lo -= d; while (g(hi) > mx - 40) hi += d; return [lo, hi];
+    }
+    var s1 = span(v / 2), s2 = span(v / 2 + q * q / 4), lo = Math.min(s1[0], s2[0]), hi = Math.max(s1[1], s2[1]);
+    var n = 14, h = (hi - lo) / n, sum = 0, i, j;
+    for (i = 0; i < n; i++) {
+      var mid = lo + h * (i + 0.5);
+      for (j = 0; j < 20; j++) {
+        var u = mid + h / 2 * G20.x[j], s = Math.exp(u), lt = logTail(k, q * s);
+        if (lt === -Infinity) continue;
+        sum += G20.w[j] * h / 2 * Math.exp(lc + v * u - v * s * s / 2 + lt);
+      }
+    }
+    return sum > 1 ? 1 : sum;
+  }
+  var qCache = {};
+  function qCrit(alpha, k, v) {
+    var key = alpha + '|' + k + '|' + v; if (qCache[key] !== undefined) return qCache[key];
+    var lo = 0, hi = 4, la = Math.log(alpha), i;
+    while (qTail(hi, k, v) > alpha && hi < 1e7) { lo = hi; hi *= 2; }
+    var flo = Math.log(qTail(lo, k, v)) - la, fhi = Math.log(qTail(hi, k, v)) - la, m = hi, side = 0;
+    for (i = 0; i < 80 && hi - lo > 1e-9 * (1 + hi); i++) {
+      m = isFinite(fhi) && flo !== fhi ? hi - fhi * (hi - lo) / (fhi - flo) : (lo + hi) / 2;
+      if (!(m > lo && m < hi)) m = (lo + hi) / 2;
+      var fm = Math.log(qTail(m, k, v)) - la;
+      if (Math.abs(fm) < 1e-11) break;
+      if (fm > 0) { lo = m; flo = fm; if (side === 1) fhi /= 2; side = 1; } else { hi = m; fhi = fm; if (side === -1) flo /= 2; side = -1; }
+    }
+    return (qCache[key] = m);
+  }
+
+  function sum(a) { var s = 0, i; for (i = 0; i < a.length; i++) s += a[i]; return s; }
+  function quant(s, p) { var h = (s.length - 1) * p, l = Math.floor(h); return l + 1 < s.length ? s[l] + (h - l) * (s[l + 1] - s[l]) : s[l]; }
+  function sorted(a) { return a.slice().sort(function (x, y) { return x - y; }); }
+  function describe(x) {
+    var n = x.length, t = sum(x), m = t / n, ss = 0, i, s = sorted(x);
+    var c = 0; for (i = 0; i < n; i++) c += x[i] - m; m += c / n;
+    for (i = 0; i < n; i++) ss += (x[i] - m) * (x[i] - m);
+    if (s[0] === s[n - 1]) { m = s[0]; ss = 0; }
+    var v = n > 1 ? ss / (n - 1) : NaN;
+    return { n: n, sum: t, mean: m, ss: ss, v: v, sd: Math.sqrt(v), se: Math.sqrt(v / n), min: s[0], max: s[n - 1], median: quant(s, 0.5), q1: quant(s, 0.25), q3: quant(s, 0.75) };
+  }
+  /* outliers by Tukey's fences, 1.5 interquartile ranges beyond the quartiles (quartiles by linear interpolation) */
+  function outliers(x) {
+    if (x.length < 4) return { out: [], keep: x.slice() };
+    var s = sorted(x), q1 = quant(s, 0.25), q3 = quant(s, 0.75), lo = q1 - 1.5 * (q3 - q1), hi = q3 + 1.5 * (q3 - q1), o = [], k = [];
+    x.forEach(function (v) { (v < lo || v > hi ? o : k).push(v); });
+    return { out: o, keep: k, lo: lo, hi: hi };
+  }
+  function fRight(F, d1, d2) { if (F === Infinity) return 0; return P.cdf('F', { d1: d1, d2: d2 }, F).hi; }
+  function fCrit(alpha, d1, d2) { return P.inv('F', { d1: d1, d2: d2 }, alpha, 'R'); }
+  /* classic one-way ANOVA from group summaries [{n, mean, ss}], optionally with a given within mean square and df */
+  function classic(S, given) {
+    var k = S.length, N = 0, T = 0, i;
+    for (i = 0; i < k; i++) { N += S[i].n; T += S[i].n * S[i].mean; }
+    var grand = T / N, ssb = 0, ssw = 0, press = 0, pressOk = true;
+    for (i = 0; i < k; i++) { ssb += S[i].n * (S[i].mean - grand) * (S[i].mean - grand); if (!given) ssw += S[i].ss; if (S[i].n > 1) press += Math.pow(S[i].n / (S[i].n - 1), 2) * S[i].ss; else pressOk = false; }
+    var allSame = S.every(function (g) { return g.mean === S[0].mean; }); if (allSame) { ssb = 0; grand = S[0].mean; }
+    var dfb = k - 1, dfw = given ? given.df : N - k;
+    if (given) ssw = given.msw * dfw;
+    if (!(dfw > 0)) return { error: 'df' };
+    var msb = ssb / dfb, msw = ssw / dfw, sst = ssb + ssw;
+    if (!(msw > 0)) return { error: 'zero', same: ssb === 0 };
+    var F = msb / msw, out = { k: k, N: N, grand: grand, ssb: ssb, ssw: ssw, sst: sst, dfb: dfb, dfw: dfw, msb: msb, msw: msw, F: F, p: fRight(F, dfb, dfw), S: Math.sqrt(msw) };
+    out.eta2 = ssb / sst; out.omega2 = Math.max(0, (ssb - dfb * msw) / (sst + msw)); out.f = Math.sqrt(ssb / ssw);
+    out.R2 = out.eta2; out.R2adj = 1 - msw / (sst / (N - 1)); out.R2pred = pressOk && !given ? Math.max(0, 1 - press / sst) : null;
+    return out;
+  }
+  function welch(S) {
+    var k = S.length, i, W = 0, gm = 0, w = [];
+    for (i = 0; i < k; i++) { if (S[i].n < 2 || !(S[i].v > 0)) return null; w.push(S[i].n / S[i].v); W += w[i]; }
+    for (i = 0; i < k; i++) gm += w[i] * S[i].mean; gm /= W;
+    var ssw = 0, lam = 0;
+    for (i = 0; i < k; i++) { ssw += w[i] * (S[i].mean - gm) * (S[i].mean - gm); lam += Math.pow(1 - w[i] / W, 2) / (S[i].n - 1); }
+    lam = 3 * lam / (k * k - 1);
+    var d1 = k - 1, d2 = 1 / lam, F = ssw / d1 / (1 + 2 * lam * (k - 2) / 3);
+    if (S.every(function (g) { return g.mean === S[0].mean; })) F = 0;
+    return { F: F, df1: d1, df2: d2, p: fRight(F, d1, d2), grand: gm };
+  }
+  function kruskal(G) {
+    var all = [], i, j, N;
+    G.forEach(function (g, k) { g.forEach(function (v) { all.push([v, k]); }); });
+    all.sort(function (a, b) { return a[0] - b[0]; }); N = all.length;
+    var rs = G.map(function () { return 0; }), tie = 0, den = 0, mid = (N + 1) / 2;
+    for (i = 0; i < N; i = j) {
+      for (j = i + 1; j < N && all[j][0] === all[i][0]; j++);
+      var r = (i + 1 + j) / 2, t = j - i, q;
+      tie += t * t * t - t; den += t * (r - mid) * (r - mid);
+      for (q = i; q < j; q++) rs[all[q][1]] += r;
+    }
+    if (!(den > 0)) return null;
+    var mr = rs.map(function (s, k) { return s / G[k].length; }), num = 0;
+    mr.forEach(function (m, k) { num += G[k].length * (m - mid) * (m - mid); });
+    var H = (N - 1) * num / den, df = G.length - 1;
+    return { H: H, df: df, p: P.cdf('chi', { df: df }, H).hi, meanRank: mr, N: N, tieTerm: N > 1 ? tie / (12 * (N - 1)) : 0 };
+  }
+  function levene(G) {
+    var Z = G.map(function (g) { var m = quant(sorted(g), 0.5); return describe(g.map(function (v) { return Math.abs(v - m); })); });
+    var r = classic(Z); if (r.error) return null;
+    return { W: r.F, df1: r.dfb, df2: r.dfw, p: r.p };
+  }
+  /* Shapiro-Wilk W and p, algorithm AS R94 (Royston 1995), complete samples of 3 to 5000 */
+  function poly(c, x) { var s = 0, i; for (i = c.length - 1; i >= 0; i--) s = s * x + c[i]; return s; }
+  function shapiro(data) {
+    var n = data.length; if (n < 3 || n > MAXN) return null;
+    var x = sorted(data), range = x[n - 1] - x[0]; if (!(range > 0)) return null;
+    var nn2 = Math.floor(n / 2), a = [], i;
+    if (n === 3) a.push(Math.SQRT1_2);
+    else {
+      var summ2 = 0;
+      for (i = 1; i <= nn2; i++) { var q = PhiInv((i - 0.375) / (n + 0.25)); a.push(q); summ2 += q * q; }
+      summ2 *= 2;
+      var ssumm = Math.sqrt(summ2), rsn = 1 / Math.sqrt(n), a1 = poly([0, 0.221157, -0.147981, -2.07119, 4.434685, -2.706056], rsn) - a[0] / ssumm, i1, fac, a2;
+      if (n > 5) { i1 = 2; a2 = -a[1] / ssumm + poly([0, 0.042981, -0.293762, -1.752461, 5.682633, -3.582633], rsn); fac = Math.sqrt((summ2 - 2 * a[0] * a[0] - 2 * a[1] * a[1]) / (1 - 2 * a1 * a1 - 2 * a2 * a2)); a[0] = a1; a[1] = a2; }
+      else { i1 = 1; fac = Math.sqrt((summ2 - 2 * a[0] * a[0]) / (1 - 2 * a1 * a1)); a[0] = a1; }
+      for (i = i1; i < nn2; i++) a[i] = -a[i] / fac;
+    }
+    var co = [], mx = 0; for (i = 0; i < n; i++) { var j = n - 1 - i; co.push(i === j ? 0 : (i < j ? -a[i] : a[j])); }
+    var sa = sum(co) / n, sx = 0; for (i = 0; i < n; i++) sx += (x[i] - x[0]) / range; sx /= n;
+    var ssa = 0, ssx = 0, sax = 0;
+    for (i = 0; i < n; i++) { var ca = co[i] - sa, cx = (x[i] - x[0]) / range - sx; ssa += ca * ca; ssx += cx * cx; sax += ca * cx; }
+    var root = Math.sqrt(ssa * ssx), w1 = (root - sax) * (root + sax) / (ssa * ssx), W = 1 - w1, p;
+    if (n === 3) { p = 6 / Math.PI * (Math.asin(Math.sqrt(W)) - Math.PI / 3); if (p < 0) p = 0; return { W: W, p: p }; }
+    var y = Math.log(w1), lx = Math.log(n), m, s;
+    if (n <= 11) { var g = poly([-2.273, 0.459], n); if (y >= g) return { W: W, p: 1e-19 }; y = -Math.log(g - y); m = poly([0.544, -0.39978, 0.025054, -6.714e-4], n); s = Math.exp(poly([1.3822, -0.77857, 0.062767, -0.0020322], n)); }
+    else { m = poly([-1.5861, -0.31082, -0.083751, 0.0038915], lx); s = Math.exp(poly([-0.4803, -0.082676, 0.0030302], lx)); }
+    p = Phi(-(y - m) / s);
+    return { W: W, p: p };
+  }
+  /* pairwise comparisons. how: tukey | games | bonf | dunn */
+  function pairs(how, S, alpha, conf, C, K) {
+    var k = S.length, m = k * (k - 1) / 2, out = [], i, j, ca = 1 - conf;
+    for (i = 0; i < k; i++) for (j = i + 1; j < k; j++) {
+      var o = { i: i, j: j }, a = S[i], b = S[j];
+      o.diff = a.mean - b.mean;
+      if (how === 'tukey') { o.se = Math.sqrt(C.msw / 2 * (1 / a.n + 1 / b.n)); o.stat = Math.abs(o.diff) / o.se; o.df = C.dfw; o.p = qTail(o.stat, k, o.df); o.half = qCrit(ca, k, o.df) * o.se; o.need = qCrit(alpha, k, o.df) * o.se; }
+      else if (how === 'games') {
+        if (a.n < 2 || b.n < 2 || !(a.v + b.v > 0)) return null;
+        var va = a.v / a.n, vb = b.v / b.n, se = Math.sqrt(va + vb);
+        o.df = (va + vb) * (va + vb) / (va * va / (a.n - 1) + vb * vb / (b.n - 1));
+        o.se = se / Math.SQRT2; o.stat = Math.abs(o.diff) / o.se; o.p = qTail(o.stat, k, o.df); o.half = qCrit(ca, k, o.df) * o.se; o.need = qCrit(alpha, k, o.df) * o.se;
+      } else if (how === 'bonf') {
+        o.se = Math.sqrt(C.msw * (1 / a.n + 1 / b.n)); o.stat = Math.abs(o.diff) / o.se; o.df = C.dfw;
+        o.p = Math.min(1, m * 2 * P.cdf('t', { df: o.df }, o.stat).hi); o.half = P.inv('t', { df: o.df }, ca / (2 * m), 'R') * o.se; o.need = P.inv('t', { df: o.df }, alpha / (2 * m), 'R') * o.se;
+      } else {
+        var N = K.N, v = N * (N + 1) / 12 - K.tieTerm;
+        o.diff = K.meanRank[i] - K.meanRank[j]; o.se = Math.sqrt(v * (1 / a.n + 1 / b.n)); o.stat = Math.abs(o.diff) / o.se; o.df = null;
+        o.p = Math.min(1, m * 2 * Phi(-o.stat)); o.half = -PhiInv(ca / (2 * m)) * o.se; o.need = -PhiInv(alpha / (2 * m)) * o.se;
+      }
+      o.sig = o.p < alpha; out.push(o);
+    }
+    return out;
+  }
+  /* grouping letters: groups that share a letter are not significantly different. order = indices from highest to lowest */
+  function letters(k, list, order) {
+    var all = [], i, sets;
+    for (i = 0; i < k; i++) all.push(i);
+    sets = [all];
+    function subset(a, b) { return a.every(function (v) { return b.indexOf(v) >= 0; }); }
+    list.forEach(function (pr) {
+      if (!pr.sig) return;
+      var next = [];
+      sets.forEach(function (s) { if (s.indexOf(pr.i) >= 0 && s.indexOf(pr.j) >= 0) next.push(s.filter(function (v) { return v !== pr.i; }), s.filter(function (v) { return v !== pr.j; })); else next.push(s); });
+      sets = next.filter(function (s, a) { return !next.some(function (t, b) { return a !== b && subset(s, t) && (s.length < t.length || b < a); }); });
+    });
+    var rank = {}; order.forEach(function (g, r) { rank[g] = r; });
+    sets = sets.map(function (s) { return s.map(function (v) { return rank[v]; }).sort(function (a, b) { return a - b; }); });
+    sets.sort(function (a, b) { var n = Math.min(a.length, b.length), q; for (q = 0; q < n; q++) if (a[q] !== b[q]) return a[q] - b[q]; return a.length - b.length; });
+    var res = []; for (i = 0; i < k; i++) res.push('');
+    sets.forEach(function (s, n) { var ch = n < 26 ? String.fromCharCode(97 + n) : String.fromCharCode(65 + n - 26); s.forEach(function (r) { res[order[r]] += ch; }); });
+    return res;
+  }
+  /* P(noncentral F > x) as a Poisson mixture of beta tails */
+  function ncfRight(x, d1, d2, lam) {
+    if (!(lam > 0)) return fRight(x, d1, d2);
+    var h = lam / 2, k0 = Math.floor(h), w0 = Math.exp(-h + k0 * Math.log(h) - P.lgamma(k0 + 1)), z = d1 * x / (d2 + d1 * x), s = 0, w = w0, k;
+    if (h > 5000) return null;
+    for (k = k0; k < k0 + 4000; k++) { s += w * P.betaPQ(d1 / 2 + k, d2 / 2, z).q; w *= h / (k + 1); if (w < 1e-15) break; }
+    w = w0;
+    for (k = k0; k > 0; k--) { w *= k / h; if (w < 1e-15) break; s += w * P.betaPQ(d1 / 2 + k - 1, d2 / 2, z).q; }
+    return s > 1 ? 1 : s;
+  }
+  /* power of the F test for Cohen's f with k groups and N in total */
+  function power(f, k, N, alpha, dfw) {
+    var d1 = k - 1, d2 = dfw || N - k; if (!(d2 > 0)) return null;
+    var lam = f * f * N; if (lam > 1000) return 1;
+    return ncfRight(fCrit(alpha, d1, d2), d1, d2, lam);
+  }
+  function firstN(ok, cap) {
+    var lo = 1, hi = 2; if (ok(2)) return 2;
+    while (!ok(hi)) { lo = hi; hi *= 2; if (hi > cap) return null; }
+    while (hi - lo > 1) { var m = Math.floor((lo + hi) / 2); if (ok(m)) hi = m; else lo = m; }
+    return hi;
+  }
+  /* equal group sizes: smallest per group for the measured F to reach p below alpha, and for 80% power of an effect f */
+  function plan(means, msw, alpha) {
+    var k = means.length, gm = sum(means) / k, ss = 0; means.forEach(function (m) { ss += (m - gm) * (m - gm); });
+    var f = Math.sqrt(ss / k / msw), cap = 1e7;
+    var out = { f: f, sig: null, n80: null };
+    if (f > 0) {
+      out.sig = firstN(function (n) { return n * ss / (k - 1) / msw > fCrit(alpha, k - 1, k * (n - 1)); }, cap);
+      out.n80 = n80(f, k, alpha);
+    }
+    return out;
+  }
+  function n80(f, k, alpha) { if (!(f > 0) || !(alpha < 0.8)) return null; return firstN(function (n) { return power(f, k, k * n, alpha) >= 0.8; }, 1e7); }
+  function fWord(f) { return f < 0.1 ? 'below small' : f < 0.25 ? 'small' : f < 0.4 ? 'medium' : 'large'; }
+  function limitFor(k) { return k <= 9 ? 15 : 20; }
+
+  /* ---------- text readers ---------- */
+  function num(raw) {
+    var s = String(raw == null ? '' : raw).replace(/[\s ]/g, '').replace(/−/g, '-');
+    if (s === '') return { empty: true };
+    var pc = false; if (/%$/.test(s)) { pc = true; s = s.slice(0, -1); }
+    if (/^[+-]?\d{1,3}(,\d{3})+(\.\d*)?$/.test(s)) s = s.replace(/,/g, '');
+    if (/^[+-]?\.?$/.test(s) || /^[+-]?(\d+\.?\d*|\.\d+)e[+-]?$/i.test(s)) return { partial: true };
+    if (!/^[+-]?(\d+\.?\d*|\.\d+)(e[+-]?\d+)?$/i.test(s)) return { err: 'junk' };
+    var v = parseFloat(s); if (!isFinite(v) || Math.abs(v) > MAXV) return { err: 'big' };
+    return { v: v, pc: pc };
+  }
+  /* a list of values separated by spaces, commas, semicolons or new lines; a lone sign or point at the very end is still being typed */
+  function values(text) {
+    var tk = String(text || '').replace(/−/g, '-').split(/[\s,; ]+/).filter(function (t) { return t !== ''; }), out = [], i;
+    for (i = 0; i < tk.length; i++) {
+      var t = tk[i];
+      if (/^[+-]?(\d+\.?\d*|\.\d+)(e[+-]?\d+)?$/i.test(t)) { var v = parseFloat(t); if (!isFinite(v) || Math.abs(v) > MAXV) return { bad: t, big: true, values: out }; out.push(v); }
+      else if (i === tk.length - 1 && (/^[+-]?\.?$/.test(t) || /^[+-]?(\d+\.?\d*|\.\d+)e[+-]?$/i.test(t))) return { values: out, partial: t };
+      else return { bad: t, values: out };
+    }
+    return { values: out };
+  }
+  function lines(text) { return String(text || '').replace(/\r/g, '').split('\n').filter(function (l) { return l.trim() !== ''; }); }
+  function delim(ls) { return ls.some(function (l) { return l.indexOf('\t') >= 0; }) ? '\t' : ls.some(function (l) { return l.indexOf(';') >= 0; }) ? ';' : ls.some(function (l) { return l.indexOf(',') >= 0; }) ? ',' : ' '; }
+  function cells(l, d) { return d === ' ' ? l.trim().split(/\s+/) : l.split(d).map(function (c) { return c.trim(); }); }
+  function isNum(t) { var r = num(t); return !r.empty && !r.err && !r.partial; }
+  /* a pasted table with one column per group, an optional first line of names; empty cells are allowed */
+  function columns(text) {
+    var ls = lines(text); if (!ls.length) return { empty: true };
+    var d = delim(ls), rows = ls.map(function (l) { return cells(l, d); }), head = null;
+    if (rows[0].some(function (c) { return c !== '' && !isNum(c); })) head = rows.shift();
+    var k = head ? head.length : 0; rows.forEach(function (r) { while (r.length > k && r[r.length - 1] === '') r.pop(); k = Math.max(k, r.length); });
+    if (k > MAXG) return { error: 'That table has ' + k + ' columns — up to ' + MAXG + ' groups are supported.' };
+    var G = [], i, j; for (j = 0; j < k; j++) G.push([]);
+    for (i = 0; i < rows.length; i++) for (j = 0; j < rows[i].length; j++) { var c = rows[i][j]; if (c === '') continue; if (!isNum(c)) return { error: 'Line ' + (i + 1 + (head ? 1 : 0)) + ': couldn’t read “' + c.slice(0, 14) + '” as a number.' }; G[j].push(num(c).v); }
+    var names = []; for (j = 0; j < k; j++) names.push(head && head[j] ? head[j] : '');
+    return { names: names, groups: G };
+  }
+  /* two columns: a value and a group name on every line, in either order */
+  function stacked(text) {
+    var ls = lines(text); if (!ls.length) return { empty: true };
+    var d = delim(ls), rows = ls.map(function (l) { return cells(l, d).filter(function (c) { return c !== ''; }); });
+    var nOk = [0, 0]; rows.forEach(function (r) { if (r.length >= 2) { if (isNum(r[r.length - 1])) nOk[1]++; if (isNum(r[0])) nOk[0]++; } });
+    var valueLast = nOk[1] > nOk[0], names = [], idx = {}, G = [], skipped = 0, i;
+    for (i = 0; i < rows.length; i++) {
+      var r = rows[i].slice();
+      if (r.length < 2) { skipped++; continue; }
+      var v = valueLast ? r.pop() : r.shift(), g = r.join(' ').slice(0, 24);
+      if (!isNum(v)) { if (i > 0) skipped++; continue; }
+      var key = '$' + g.toLowerCase();
+      if (!(key in idx)) { if (names.length >= MAXG) return { error: 'That makes more than ' + MAXG + ' groups. Check that one column holds the group names.' }; idx[key] = names.length; names.push(g); G.push([]); }
+      G[idx[key]].push(num(v).v);
+    }
+    return { names: names, groups: G, skipped: skipped };
+  }
+  return { MAXG: MAXG, MAXN: MAXN, MAXV: MAXV, Phi: Phi, PhiInv: PhiInv, rangeTail: rangeTail, qTail: qTail, qCrit: qCrit, describe: describe, outliers: outliers, fRight: fRight, fCrit: fCrit, classic: classic, welch: welch, kruskal: kruskal, levene: levene, shapiro: shapiro, pairs: pairs, letters: letters, ncfRight: ncfRight, power: power, plan: plan, n80: n80, fWord: fWord, limitFor: limitFor, num: num, values: values, columns: columns, stacked: stacked };
+})();
+/* ANOVA-ENGINE:END */
+
+/* =========================================================
+   CalcThis.initAnovaCalc() - ids an*. Engine CalcThis.anovaEngine.
+   ========================================================= */
+CalcThis.initAnovaCalc = function () {
+  var E = CalcThis.anovaEngine, P = CalcThis.pvalueEngine;
+  var $ = function (id) { return document.getElementById(id); };
+  if (!$('anGroups')) return;
+  var st = { mode: 'raw', entry: 'boxes', spread: 'sd', method: 'auto', out: 'keep', efft: 'f', cite: 'apa', adv: false, K: 3, S: 3, pick: null };
+  var EX = {
+    methods: { names: ['Method A', 'Method B', 'Method C'], g: [[23, 25, 28, 30, 27], [31, 33, 35, 29, 34], [22, 24, 21, 26, 23]] },
+    feed: { names: ['No feed', 'Feed 1', 'Feed 2', 'Feed 3'], g: [[20, 22, 19, 24, 21, 21], [25, 27, 23, 28, 26, 26], [24, 23, 27, 25, 22, 24], [30, 29, 33, 31, 28, 31]] },
+    spread: { names: ['Line 1', 'Line 2', 'Line 3'], g: [[50, 51, 49, 50, 52, 48, 51, 50], [55, 68, 41, 72, 38, 66, 49, 59], [47, 46, 48, 47, 49, 45, 48, 46]] },
+    skew: { names: ['Shop A', 'Shop B', 'Shop C'], g: [[2, 3, 3, 4, 4, 5, 21], [6, 7, 7, 8, 9, 9, 40], [3, 3, 4, 5, 5, 6, 7]] }
+  };
+  var DEC = null;
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+  function clean(s) { return String(s == null ? '' : s).replace(/[<>&"]/g, '').trim().slice(0, 24); }
+  function cut(s, n) { s = String(s); return s.length > n ? s.slice(0, n - 1) + '…' : s; }
+  function setNote(id, t) { var e = $(id); if (!e) return; e.textContent = t || ''; e.style.display = t ? '' : 'none'; }
+  function show(id, on) { var e = $(id); if (e) e.style.display = on ? '' : 'none'; }
+  var H = $('anHint');
+  /* the hint travels under the field it talks about; take it out before a list of fields is rebuilt */
+  function park(box) { if ($(box).contains(H)) { H.style.display = 'none'; H.textContent = ''; $('anAdvIn').parentNode.insertBefore(H, $('anAdvIn')); } }
+  function setHint(m, at) {
+    var h = H; m = m ? m.charAt(0).toUpperCase() + m.slice(1) : m; h.textContent = m || ''; h.style.display = m ? 'block' : 'none';
+    if (m && at) {
+      var el = $(at), f = el;
+      if (el && el.closest('.an-g')) f = el.closest('.an-g'); else if (el && el.closest('.an-sumw')) f = el.closest('.an-sumw'); else if (el) f = el.closest('.fld') || el;
+      var par = f && f.parentNode; if (par && par.classList && par.classList.contains('cc-two')) f = par;
+      var nx = f && f.nextElementSibling; if (nx && nx.classList && nx.classList.contains('chips')) f = nx;
+      if (f && f.nextSibling !== h && f.parentNode) f.parentNode.insertBefore(h, f.nextSibling);
+    }
+  }
+  function sg(s) { return String(s).replace(/-/g, '−'); }
+  function tr(x, d) { var s = x.toFixed(d); if (s.indexOf('.') >= 0) s = s.replace(/0+$/, '').replace(/\.$/, ''); return s === '-0' ? '0' : s; }
+  function big(x) { return Math.abs(x) >= 1e9; }
+  function f4(x) { if (!isFinite(x)) return '∞'; if (big(x)) return sg(x.toExponential(3)); if (DEC !== null) return sg(x.toFixed(DEC)); if (x !== 0 && Math.abs(x) < 0.001) return sg(String(Number(x.toPrecision(4)))); return sg(tr(x, 4)); }
+  function fs(x) { if (!isFinite(x)) return '∞'; if (big(x)) return sg(x.toExponential(3)); if (DEC !== null) return sg(x.toFixed(DEC)); return sg(x !== 0 && Math.abs(x) < 0.001 ? String(Number(x.toPrecision(4))) : x.toFixed(4)); }
+  function f2(x) { if (!isFinite(x)) return '∞'; if (big(x)) return sg(x.toExponential(2)); if (DEC !== null) return sg(x.toFixed(DEC)); if (x !== 0 && Math.abs(x) < 0.01) return sg(String(Number(x.toPrecision(2)))); return sg(tr(x, 2)); }
+  function fdf(x) { return x % 1 === 0 ? String(x) : tr(x, 2); }
+  function pT(p) { if (p < 1e-12 && DEC === null) return 'less than 10⁻¹²'; return P.fp(p, DEC); }
+  function pEq(p) { var t = pT(p); return /^less/.test(t) ? 'p ' + t.replace('less than', '<') : 'p = ' + t; }
+  function apaP(p) { if (p < 0.001) return 'p < .001'; return 'p = ' + p.toFixed(3).replace(/^0/, ''); }
+  function apaN(x) { return x.toFixed(2).replace(/^0\./, '.'); }
+  function nT(x) { return x.toLocaleString('en-US'); }
+  function pctT(x) { return tr(x * 100, 1) + '%'; }
+  function powT(v) { return v === null ? '—' : v > 0.999 ? 'over 99.9%' : pctT(v); }
+  /* short labels that stay different from each other: long names keep their start and end */
+  function short(names, n) {
+    var out = names.map(function (s) { if (s.length <= n) return s; var h = Math.max(2, Math.floor((n - 1) / 3)); return s.slice(0, h).trim() + '…' + s.slice(-(n - 1 - h)).trim(); });
+    return out.map(function (s, i) { return out.indexOf(s) !== out.lastIndexOf(s) ? (i + 1) + '. ' + cut(names[i], Math.max(4, n - 3)) : s; });
+  }
+  function list(a) { return a.length < 3 ? a.join(' and ') : a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1]; }
+
+  /* ---------- the input boxes ---------- */
+  function inp(id, ph, label, mode, cls) { return '<div class="inp' + (cls ? ' ' + cls : '') + '"><input id="' + id + '" type="text" inputmode="' + mode + '" autocomplete="off" placeholder="' + ph + '" aria-label="' + label + '"></div>'; }
+  function keepVals(box) { var keep = {}; [].forEach.call($(box).querySelectorAll('input,textarea'), function (i) { keep[i.id] = i.value; }); return keep; }
+  function restore(keep) { Object.keys(keep).forEach(function (id) { if ($(id)) $(id).value = keep[id]; }); }
+  function buildGroups() {
+    park('anGroups'); var keep = keepVals('anGroups'), h = '', i;
+    for (i = 1; i <= st.K; i++) h += '<div class="an-g">' + inp('anGN' + i, 'Group ' + i + ' name (optional)', 'Name of group ' + i, 'text', 'an-name') + '<textarea class="cc-ta an-ta" id="anGV' + i + '" aria-label="Values of group ' + i + '" placeholder="Values of group ' + i + ', e.g. 23, 25, 28, 30" spellcheck="false"></textarea><p class="av-note" id="anGI' + i + '"></p></div>';
+    $('anGroups').innerHTML = h; restore(keep);
+    $('anAddG').disabled = st.K >= E.MAXG; $('anDelG').disabled = st.K <= 2;
+  }
+  function buildSum() {
+    park('anSum'); var keep = keepVals('anSum'), h = '<span class="an-h">Group</span><span class="an-h">Number of values</span><span class="an-h">Average</span><span class="an-h" id="anSpHead">SD</span>', i;
+    for (i = 1; i <= st.S; i++) h += inp('anSN' + i, 'Group ' + i, 'Name of summary group ' + i, 'text', 'an-name') + inp('anSC' + i, 'n', 'Number of values in group ' + i, 'numeric') + inp('anSM' + i, 'mean', 'Average of group ' + i, 'text') + inp('anSS' + i, st.spread === 'sd' ? 'SD' : 'SEM', 'Spread of group ' + i, 'decimal');
+    $('anSum').innerHTML = h; restore(keep); spreadUI();
+    $('anAddS').disabled = st.S >= E.MAXG; $('anDelS').disabled = st.S <= 2;
+  }
+  function spreadUI() { var h = $('anSpHead'); if (h) h.textContent = st.spread === 'sd' ? 'SD' : 'SEM'; [].forEach.call($('anSum').querySelectorAll('[id^="anSS"]'), function (i) { i.placeholder = st.spread === 'sd' ? 'SD' : 'SEM'; }); }
+
+  /* ---------- reading ---------- */
+  function readRaw(out) {
+    var names = [], G = [], ats = [], i;
+    if (st.entry === 'boxes') {
+      var partialAt = null;
+      for (i = 1; i <= st.K; i++) {
+        var v = E.values($('anGV' + i).value), nm = clean($('anGN' + i).value) || 'Group ' + i;
+        if (v.bad !== undefined) { if (!out.bad) out.bad = { msg: (v.big ? '“' + v.bad.slice(0, 14) + '” in ' + nm + ' is too large — keep values under 1,000,000,000.' : 'Couldn’t read “' + v.bad.slice(0, 14) + '” in ' + nm + ' — type numbers separated by commas or spaces.') + ' Fix it to see the result.', at: 'anGV' + i }; }
+        var cnt = v.values.length;
+        setNote('anGI' + i, v.bad !== undefined ? '' : cnt ? nT(cnt) + (cnt === 1 ? ' value' : ' values') + ', average ' + f2(E.describe(v.values).mean) + '.' + (cnt < 2 ? ' A group needs at least 2.' : '') : ($('anGN' + i).value.trim() ? 'Type this group’s values to use its name.' : ''));
+        if (cnt > E.MAXN) { if (!out.bad) out.bad = { msg: nm + ' has ' + nT(cnt) + ' values — up to ' + nT(E.MAXN) + ' per group are supported.', at: 'anGV' + i }; }
+        if (cnt || v.partial) { names.push(nm); G.push(v.values); ats.push('anGV' + i); }
+      }
+    } else {
+      var id = st.entry === 'cols' ? 'anCols' : 'anStack', t = st.entry === 'cols' ? E.columns($(id).value) : E.stacked($(id).value), note = st.entry === 'cols' ? 'anColsNote' : 'anStackNote';
+      setNote(note, '');
+      if (t.empty) return null;
+      if (t.error) { out.bad = { msg: t.error, at: id }; return null; }
+      t.groups.forEach(function (g, k) { if (g.length) { names.push(clean(t.names[k]) || 'Group ' + (k + 1)); G.push(g); ats.push(id); } });
+      var over = G.filter(function (g) { return g.length > E.MAXN; }); if (over.length) { out.bad = { msg: 'A group has more than ' + nT(E.MAXN) + ' values, which is more than this page supports.', at: id }; return null; }
+      if (G.length) setNote(note, 'Read ' + G.length + (G.length === 1 ? ' group' : ' groups') + ': ' + names.map(function (n, k) { return n + ' (' + G[k].length + ')'; }).join(', ') + '.' + (t.skipped ? ' ' + t.skipped + (t.skipped === 1 ? ' line was' : ' lines were') + ' skipped (each line needs a value and a group).' : ''));
+    }
+    if (out.bad) return null;
+    if (!G.length) return null;
+    var short = -1; G.forEach(function (g, k) { if (g.length < 2 && short < 0) short = k; });
+    if (G.length < 2) { out.bad = { msg: 'ANOVA compares groups: add values for a second group to see the result.', at: st.entry === 'boxes' ? (ats[0] === 'anGV1' ? 'anGV2' : 'anGV1') : ats[0] }; return null; }
+    if (short >= 0) { out.bad = { msg: '“' + names[short] + '” needs at least 2 values to see the result.', at: ats[short] }; return null; }
+    var removed = [];
+    if (st.out === 'drop') {
+      G = G.map(function (g, k) { var o = E.outliers(g); if (o.out.length) removed.push(names[k] + ': ' + o.out.slice(0, 8).map(f4).join(', ') + (o.out.length > 8 ? ' and ' + (o.out.length - 8) + ' more' : '')); return o.keep; });
+    }
+    out.removed = removed;
+    return { names: names, G: G, S: G.map(E.describe), at: ats[0] };
+  }
+  function readSum(out, given) {
+    var names = [], S = [], ats = [], i, miss = null, any = false;
+    var rows = [];
+    for (i = 1; i <= st.S; i++) rows.push({ i: i, n: $('anSC' + i).value, m: $('anSM' + i).value, s: $('anSS' + i).value, nm: $('anSN' + i).value });
+    var blank = function (r) { return !r.n.trim() && !r.m.trim() && (given || !r.s.trim()); };
+    while (rows.length > 2 && blank(rows[rows.length - 1])) rows.pop();
+    rows.forEach(function (r) {
+      var nm = clean(r.nm) || 'Group ' + r.i, n = E.num(r.n), m = E.num(r.m), s = E.num(r.s);
+      function bad(msg, id) { if (!out.bad) out.bad = { msg: msg + ' Fix it to see the result.', at: id }; any = true; }
+      if (n.empty) { if (!miss) miss = 'anSC' + r.i; } else if (n.partial || n.err || n.pc || n.v % 1 !== 0 || n.v < 2 || n.v > 1e6) bad('The number of values in ' + nm + ' must be a whole number from 2 to 1,000,000.', 'anSC' + r.i); else any = true;
+      if (m.empty) { if (!miss) miss = 'anSM' + r.i; } else if (m.partial || m.err || m.pc) bad(m.err === 'big' ? 'The average of ' + nm + ' is too large.' : 'The average of ' + nm + ' must be a number.', 'anSM' + r.i); else any = true;
+      if (!given) { if (s.empty) { if (!miss) miss = 'anSS' + r.i; } else if (s.partial || s.err || s.pc || s.v < 0) bad(s.err === 'big' ? 'The spread of ' + nm + ' is too large.' : 'The ' + (st.spread === 'sd' ? 'standard deviation' : 'standard error') + ' of ' + nm + ' must be 0 or more.', 'anSS' + r.i); else any = true; }
+      if (!n.empty && !m.empty && (given || !s.empty) && !n.err && !m.err && !n.partial && !m.partial) {
+        var sd = given ? NaN : (st.spread === 'sd' ? s.v : s.v * Math.sqrt(n.v));
+        names.push(nm); ats.push('anSC' + r.i); S.push({ n: n.v, mean: m.v, sd: sd, v: sd * sd, se: sd / Math.sqrt(n.v), ss: given ? 0 : sd * sd * (n.v - 1), sum: n.v * m.v, min: null, max: null });
+      }
+    });
+    if (out.bad) return null;
+    if (miss) { if (any) out.bad = { msg: 'Fill every box of each group (number of values, average' + (given ? '' : ', spread') + ') to see the result.', at: miss }; return null; }
+    return { names: names, G: null, S: S, at: ats[0] };
+  }
+
+  /* ---------- the tests ---------- */
+  var MNAME = { classic: 'One-way ANOVA', welch: 'Welch ANOVA', kw: 'Kruskal-Wallis test' };
+  var PNAME = { tukey: 'Tukey', games: 'Games-Howell', bonf: 'Bonferroni', dunn: 'Dunn' };
+  function analyse(D, given) {
+    var A = { C: E.classic(D.S, given), W: given ? null : E.welch(D.S), K: D.G ? E.kruskal(D.G) : null, L: null, SW: null, swN: null };
+    if (A.C.error) return A;
+    if (D.G) {
+      A.L = E.levene(D.G);
+      var res = []; D.G.forEach(function (g, k) { g.forEach(function (v) { res.push(v - D.S[k].mean); }); });
+      A.nres = res.length; A.SW = res.length <= E.MAXN ? E.shapiro(res) : null;
+      A.swN = D.G.map(function (g) { return E.shapiro(g); });
+    }
+    A.minN = Math.min.apply(null, D.S.map(function (s) { return s.n; }));
+    return A;
+  }
+  function recommend(D, A, alpha) {
+    if (!D.G) return { m: 'classic', why: 'With summary numbers the raw values are not known, so normality and spread cannot be tested. The classic ANOVA is shown' + (A.W ? '; Welch’s test is listed next to it, and is the safer choice if the spreads differ a lot.' : '.') };
+    var lim = E.limitFor(D.G.length), spreadBad = A.L && A.L.p < 0.05, k = D.G.length, worst = null;
+    /* with unequal spreads the pooled leftovers look non-normal for that reason alone, so each group is judged by itself (0.05 shared across the groups) */
+    if (spreadBad) A.swN.forEach(function (w, i) { if (w && (worst === null || w.p < A.swN[worst].p)) worst = i; });
+    var doubt = spreadBad ? worst !== null && A.swN[worst].p < 0.05 / k : !!(A.SW && A.SW.p < 0.05), normBad = doubt && A.minN < lim;
+    var swTxt = spreadBad && worst !== null ? 'Shapiro-Wilk for “' + D.names[worst] + '” ' + pEq(A.swN[worst].p) : A.SW ? 'Shapiro-Wilk ' + pEq(A.SW.p) : '';
+    if (normBad && A.K) return { m: 'kw', why: (spreadBad ? 'One group on its own does not look normal' : 'The values around their group averages do not look normal') + ' (' + swTxt + ') and the smallest group has ' + A.minN + ' values, under the guide of ' + lim + ' per group, so the rank-based Kruskal-Wallis test is recommended.' };
+    if (spreadBad && A.W) return { m: 'welch', why: 'The groups are spread out differently (Levene ' + pEq(A.L.p) + '), so Welch’s test, which does not assume equal spread, is recommended.' };
+    var why = (A.L ? (spreadBad ? 'Spread differs (Levene ' + pEq(A.L.p) + ') but Welch’s test cannot run on a group with no spread; ' : 'No clear sign of unequal spread (Levene ' + pEq(A.L.p) + '); ') : 'Spread could not be tested; ');
+    why += !swTxt ? (A.nres > E.MAXN ? 'normality is not tested above ' + nT(E.MAXN) + ' values' : 'normality could not be tested') : !doubt ? 'no clear departure from normality (' + swTxt + ')' : normBad ? 'the rank test cannot run here' : 'normality is doubtful (' + swTxt + ') but every group has at least ' + lim + ' values, where ANOVA copes well';
+    return { m: 'classic', why: why + '. The classic one-way ANOVA is recommended.' };
+  }
+  function result(m, A) {
+    if (m === 'welch') return A.W && { stat: A.W.F, sym: 'F', d1: A.W.df1, d2: A.W.df2, p: A.W.p };
+    if (m === 'kw') return A.K && { stat: A.K.H, sym: 'H', d1: A.K.df, d2: null, p: A.K.p };
+    return { stat: A.C.F, sym: 'F', d1: A.C.dfb, d2: A.C.dfw, p: A.C.p };
+  }
+  function dfTxt(r) { return r.d2 === null ? 'df ' + r.d1 : 'df ' + r.d1 + ' and ' + fdf(r.d2); }
+
+  /* ---------- drawing ---------- */
+  function tbl(head, rows) {
+    var h = '';
+    if (head) h += '<thead><tr>' + head.map(function (c) { return '<th>' + c + '</th>'; }).join('') + '</tr></thead>';
+    h += '<tbody>' + rows.map(function (r) { return '<tr' + (r.cls ? ' class="' + r.cls + '"' : '') + (r.attr || '') + '>' + r.c.map(function (c) { return '<td>' + c + '</td>'; }).join('') + '</tr>'; }).join('') + '</tbody>';
+    return h;
+  }
+  function ciOf(m, s, A, conf) {
+    var df = m === 'classic' || s.v !== s.v ? A.C.dfw : s.n - 1, se = m === 'classic' || s.v !== s.v ? Math.sqrt(A.C.msw / s.n) : Math.sqrt(s.v / s.n);
+    var h = P.inv('t', { df: df }, (1 - conf) / 2, 'R') * se; return [s.mean - h, s.mean + h];
+  }
+  function drawGroups(D, A, m, ci, letters, order, pick) {
+    var lo = Infinity, hi = -Infinity;
+    D.S.forEach(function (s, k) { lo = Math.min(lo, ci[k][0], s.min === null ? Infinity : s.min); hi = Math.max(hi, ci[k][1], s.max === null ? -Infinity : s.max); });
+    if (!(hi > lo)) { lo -= 1; hi += 1; }
+    var pad = (hi - lo) * 0.04; lo -= pad; hi += pad;
+    var W = 360, L = 8, R = 8, RH = 52, top = 4, H = top + D.S.length * RH + 24, X = function (v) { return L + (v - lo) / (hi - lo) * (W - L - R); }, sampled = false;
+    var g = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Every group on one scale with its average and interval">';
+    order.forEach(function (k, r) {
+      var y = top + r * RH, cy = y + 34, s = D.S[k], on = pick && (pick.i === k || pick.j === k);
+      g += '<g class="an-gr' + (on ? ' on' : '') + '" data-g="' + k + '"><rect x="0" y="' + y + '" width="' + W + '" height="' + (RH - 3) + '" rx="6" class="an-bg"/>';
+      if (letters) g += '<text x="' + (W - 8) + '" y="' + (y + 16) + '" text-anchor="end" class="an-let">' + letters[k] + '</text>';
+      g += '<text x="' + L + '" y="' + (y + 16) + '" class="an-nm">' + esc(short(D.names, letters ? Math.max(8, 19 - letters[k].length) : 20)[k]) + ' <tspan class="an-mv">' + (m === 'kw' ? 'median ' + f2(s.median) : 'avg ' + f2(s.mean)) + '</tspan></text>';
+      if (D.G) {
+        g += '<rect x="' + X(s.q1).toFixed(2) + '" y="' + (cy - 9) + '" width="' + Math.max(0, X(s.q3) - X(s.q1)).toFixed(2) + '" height="18" rx="2" class="an-box"/><path d="M' + X(s.median).toFixed(2) + ' ' + (cy - 9) + 'v18" class="an-med"/>';
+        var vals = D.G[k], step = 1, i; if (vals.length > 150) { vals = vals.slice().sort(function (a, b) { return a - b; }); step = (vals.length - 1) / 149; sampled = true; }
+        var cnt = Math.min(vals.length, 150);
+        for (i = 0; i < cnt; i++) { var v = vals[Math.round(i * step)]; g += '<circle cx="' + X(v).toFixed(2) + '" cy="' + (cy + ((i * 7) % 5 - 2) * 2.4).toFixed(1) + '" r="3" class="an-dot"/>'; }
+      }
+      if (m !== 'kw') {
+        g += '<path d="M' + X(ci[k][0]).toFixed(2) + ' ' + cy + 'H' + X(ci[k][1]).toFixed(2) + '" class="an-ci"/><path d="M' + X(ci[k][0]).toFixed(2) + ' ' + (cy - 5) + 'v10M' + X(ci[k][1]).toFixed(2) + ' ' + (cy - 5) + 'v10" class="an-cie"/>';
+        g += '<path d="M' + X(s.mean).toFixed(2) + ' ' + (cy - 11) + 'v22" class="an-mean"/>';
+      } else g += '<path d="M' + X(s.median).toFixed(2) + ' ' + (cy - 11) + 'v22" class="an-mean"/>';
+      g += '</g>';
+    });
+    var ay = top + D.S.length * RH + 2;
+    g += '<path d="M' + L + ' ' + ay + 'H' + (W - R) + '" class="an-axis"/><text x="' + L + '" y="' + (ay + 17) + '" class="an-tax">' + f2(lo) + '</text><text x="' + (W / 2) + '" y="' + (ay + 17) + '" text-anchor="middle" class="an-tax">' + f2((lo + hi) / 2) + '</text><text x="' + (W - R) + '" y="' + (ay + 17) + '" text-anchor="end" class="an-tax">' + f2(hi) + '</text></svg>';
+    $('anVis').innerHTML = g; $('anVis').setAttribute('data-lo', lo); $('anVis').setAttribute('data-hi', hi);
+    return sampled;
+  }
+  function drawDiff(pr, how, names, conf) {
+    var lo = Math.min(0, pr.diff - pr.half), hi = Math.max(0, pr.diff + pr.half), pad = (hi - lo) * 0.08 || 1; lo -= pad; hi += pad;
+    var W = 360, X = function (v) { return 8 + (v - lo) / (hi - lo) * 344; }, zx = X(0);
+    var anch = function (v) { return v < 70 ? 'start' : v > W - 70 ? 'end' : 'middle'; };
+    var g = '<svg viewBox="0 0 ' + W + ' 70" role="img" aria-label="Difference between the two picked groups with its interval">';
+    g += '<path d="M' + zx.toFixed(2) + ' 6V46" class="an-zero"/><path d="M8 46H352" class="an-axis"/>';
+    g += '<path d="M' + X(pr.diff - pr.half).toFixed(2) + ' 26H' + X(pr.diff + pr.half).toFixed(2) + '" class="an-dci' + (pr.sig ? ' sig' : '') + '"/><circle cx="' + X(pr.diff).toFixed(2) + '" cy="26" r="6" class="an-dpt' + (pr.sig ? ' sig' : '') + '"/>';
+    g += '<text x="' + zx.toFixed(2) + '" y="64" text-anchor="' + anch(zx) + '" class="an-tax">0 = no difference</text></svg>';
+    $('anDiff').innerHTML = g; $('anDiff').setAttribute('data-lo', lo); $('anDiff').setAttribute('data-hi', hi);
+    var what = how === 'dunn' ? 'difference in average rank' : 'difference';
+    var crosses = pr.diff - pr.half <= 0 && pr.diff + pr.half >= 0;
+    setNote('anDiffKey', names[pr.i] + ' minus ' + names[pr.j] + ': ' + what + ' ' + f2(pr.diff) + ', ' + tr(conf * 100, 4) + '% interval ' + f2(pr.diff - pr.half) + ' to ' + f2(pr.diff + pr.half) + ' (' + (crosses ? 'includes 0' : 'does not include 0') + '). Adjusted ' + pEq(pr.p) + ': ' + (pr.sig ? 'significantly different.' : 'not shown to be different.'));
+  }
+  function drawCurve(r, alpha, crit) {
+    var kw = r.d2 === null, dens = function (v) { return kw ? P.dens('chi', { df: r.d1 }, v) : P.dens('F', { d1: r.d1, d2: r.d2 }, v); };
+    var W = 360, H = 168, L = 10, R = 10, base = 128, top = 14, none = r.stat === null, stat = none ? 0 : r.stat;
+    var xmax = kw ? Math.max(crit * 1.6, r.d1 + 4 * Math.sqrt(2 * r.d1), 8) : Math.max(Math.min(crit * 1.8, crit + 12), 4), far = stat > xmax * 1.9;
+    if (!far) xmax = Math.max(xmax, stat * 1.15);
+    var X = function (v) { return L + v / xmax * (W - L - R); }, n_ = 160, ys = [], i;
+    for (i = 0; i <= n_; i++) { var x = xmax * i / n_; ys.push([x, dens(i ? x : xmax / n_ * 0.25)]); }
+    var peak = kw ? Math.max(r.d1 - 2, 0) : r.d1 > 2 ? (r.d1 - 2) / r.d1 * r.d2 / (r.d2 + 2) : 0, ref = dens(peak > 0 ? peak : r.d1 === 2 ? xmax / n_ * 0.25 : xmax * 0.03);
+    var mx = 0; ys.forEach(function (p) { mx = Math.max(mx, Math.min(p[1], ref)); });
+    var Y = function (v) { return base - Math.min(v / mx, 1.04) * (base - top); };
+    var path = ys.map(function (p, k) { return (k ? 'L' : 'M') + X(p[0]).toFixed(1) + ' ' + Y(p[1]).toFixed(1); }).join('');
+    var area = function (from, cl) { if (from >= xmax) return ''; var s = 'M' + X(from).toFixed(1) + ' ' + base; if (from > 0) s += 'L' + X(from).toFixed(1) + ' ' + Y(dens(from)).toFixed(1); ys.forEach(function (p) { if (p[0] > from) s += 'L' + X(p[0]).toFixed(1) + ' ' + Y(p[1]).toFixed(1); }); return '<path d="' + s + 'L' + X(xmax).toFixed(1) + ' ' + base + 'Z" class="' + cl + '"/>'; };
+    var sx = far ? W - R : X(stat), cx = X(Math.min(crit, xmax)), name = kw ? 'H' : 'F', g = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Distribution curve with the critical value and your statistic">';
+    g += area(crit, 'an-rej') + (!none && stat < xmax ? area(stat, 'an-parea') : '');
+    g += '<path d="' + path + '" class="an-line"/><path d="M' + L + ' ' + base + 'H' + (W - R) + '" class="an-axis"/>';
+    g += '<path d="M' + cx.toFixed(1) + ' ' + base + 'V' + (top + 34) + '" class="an-crit"/>' + (none ? '' : '<path d="M' + sx.toFixed(1) + ' ' + base + 'V' + (top + 4) + '" class="an-stat"/>');
+    var anch = function (v) { return v < 80 ? 'start' : v > W - 80 ? 'end' : 'middle'; };
+    if (!none) g += '<text x="' + sx.toFixed(1) + '" y="' + top + '" text-anchor="' + anch(sx) + '" class="an-tstat">your ' + name + ' ' + f2(stat) + (far ? ' →' : '') + '</text>';
+    g += '<text x="' + cx.toFixed(1) + '" y="' + (base + 17) + '" text-anchor="' + anch(cx) + '" class="an-tcrit">critical ' + f2(crit) + '</text>';
+    g += '<text x="' + L + '" y="' + (base + 34) + '" class="an-tax">0</text><text x="' + (W - R) + '" y="' + (base + 34) + '" text-anchor="end" class="an-tax">' + f2(xmax) + '</text>';
+    $('anCurve').innerHTML = g + '</svg>';
+    $('anCurveH').textContent = kw ? 'The chi-square curve' : 'The F curve';
+    setNote('anCurveKey', 'The curve shows the ' + name + ' values chance alone produces' + (kw ? ' (chi-square, df = ' + r.d1 + ')' : ' with ' + dfTxt(r)) + '. The shaded tail right of the critical value holds ' + tr(alpha * 100, 4) + '% of them.' + (none ? '' : ' The darker area right of your statistic is the p-value.') + (far ? ' Your statistic is far off the right edge of the picture.' : ''));
+  }
+
+  var SECTIONS = ['anVisWrap', 'anTestsWrap', 'anPairsWrap', 'anTableWrap', 'anGroupsWrap', 'anLooWrap', 'anPowWrap', 'anEffWrap', 'anCheckWrap', 'anCurveWrap', 'anHypWrap', 'anWriteWrap', 'anCopyWrap', 'anStepsWrap'];
+
+  function render() {
+    var out = { bad: null }, soft = null, alpha = 0.05, conf = null, effF = null;
+    var raw = st.mode === 'raw', isF = st.mode === 'f';
+    show('anRawW', raw); show('anSumW', st.mode === 'sum'); show('anFW', isF);
+    show('anBoxesW', st.entry === 'boxes'); show('anColsW', st.entry === 'cols'); show('anStackW', st.entry === 'stack');
+    show('anExW', !isF); show('anExSkewW', raw); show('anMethodW', !isF); show('anPostW', !isF); show('anOutW', raw); show('anGivenW', st.mode === 'sum'); show('anConfW', !isF); show('anEffW', !isF);
+    setNote('anModeNote', raw ? 'Type or paste every measurement, group by group.' : st.mode === 'sum' ? 'Only have each group’s size, average and spread? Type them here.' : 'Type the degrees of freedom and your F for the p-value, or leave F empty for the critical value.');
+    var ra = E.num($('anAlpha').value);
+    if (!ra.empty) { var av = ra.v; if (ra.pc) av = av / 100; if (ra.err || ra.partial || !(av >= 1e-6 && av < 1)) soft = { msg: 'The significance level α should be between 0.000001 and 1, like 0.05 or 5%. It is ignored for now (0.05 is used).', at: 'anAlpha' }; else alpha = av; }
+    var rd = E.num($('anDec').value); DEC = null;
+    if (!rd.empty) { if (rd.err || rd.partial || rd.pc || rd.v % 1 !== 0 || rd.v < 0 || rd.v > 10) soft = soft || { msg: 'Decimal places should be a whole number from 0 to 10. It is ignored for now.', at: 'anDec' }; else DEC = rd.v; }
+    setNote('anDecNote', DEC === null ? '' : 'Results are shown with ' + DEC + (DEC === 1 ? ' decimal place.' : ' decimal places.'));
+    var rc = E.num($('anConf').value);
+    if (!rc.empty && !isF) { var cv = rc.v; if (!rc.pc && cv > 1) cv = cv / 100; else if (rc.pc) cv = cv / 100; if (rc.err || rc.partial || !(cv >= 0.5 && cv <= 0.9999)) soft = soft || { msg: 'The confidence level should be from 50% to 99.99%, like 95. It is ignored for now.', at: 'anConf' }; else conf = cv; }
+    var cl = conf === null ? 1 - alpha : conf;
+    setNote('anConfNote', isF ? '' : 'Intervals are ' + tr(cl * 100, 4) + '% intervals' + (conf === null ? ' (1 − α, used while this box is empty or invalid).' : '.'));
+    var re = E.num($('anEff').value);
+    if (!re.empty && !isF) { var ev = re.v; if (re.err || re.partial || re.pc || !(ev > 0) || (st.efft === 'eta' ? ev >= 1 : ev > 100)) soft = soft || { msg: 'The expected effect size should be above 0' + (st.efft === 'eta' ? ' and below 1' : '') + '. It is ignored for now.', at: 'anEff' }; else effF = st.efft === 'f' ? ev : st.efft === 'f2' ? Math.sqrt(ev) : Math.sqrt(ev / (1 - ev)); }
+
+    /* within mean square typed directly */
+    var given = null;
+    if (st.mode === 'sum') {
+      var mw = E.num($('anMsw').value), dw = E.num($('anDfw').value);
+      if (!mw.empty) {
+        if (mw.err || mw.partial || mw.pc || !(mw.v > 0)) soft = soft || { msg: 'The within mean square should be a number above 0. It is ignored for now.', at: 'anMsw' };
+        else {
+          var tn = 0, have = 0, i2; for (i2 = 1; i2 <= st.S; i2++) { var q = E.num($('anSC' + i2).value); if (!q.empty && !q.err && !q.partial) { tn += q.v; have++; } }
+          var dfv = tn - have;
+          if (!dw.empty) { if (dw.err || dw.partial || dw.pc || !(dw.v >= 1 && dw.v <= 1e7)) soft = soft || { msg: 'The within degrees of freedom should be 1 or more. It is ignored for now (total values − groups is used).', at: 'anDfw' }; else dfv = dw.v; }
+          given = { msw: mw.v, df: dfv };
+        }
+      }
+      setNote('anGivenNote', given ? 'The within mean square ' + f4(given.msw) + ' is used instead of the spread boxes' + (given.df > 0 ? ', with ' + fdf(given.df) + ' degrees of freedom.' : '.') : (!dw.empty && mw.empty ? 'Type the within mean square too; the degrees of freedom are only used with it.' : ''));
+    } else setNote('anGivenNote', '');
+
+    var D = null, V = null;
+    if (raw) D = readRaw(out);
+    else if (st.mode === 'sum') D = readSum(out, given);
+    else {
+      var r1 = E.num($('anDf1').value), r2 = E.num($('anDf2').value), rf = E.num($('anFv').value);
+      if (!r1.empty && (r1.err || r1.partial || r1.pc || r1.v % 1 !== 0 || r1.v < 1 || r1.v > 100000)) out.bad = { msg: 'The between-groups degrees of freedom must be a whole number from 1 to 100,000.', at: 'anDf1' };
+      if (!out.bad && !r2.empty && (r2.err || r2.partial || r2.pc || r2.v < 1 || r2.v > 1e7)) out.bad = { msg: 'The within-groups degrees of freedom must be from 1 to 10,000,000.', at: 'anDf2' };
+      var fBad = !rf.empty && (rf.err || rf.partial || rf.pc || rf.v < 0);
+      if (fBad) soft = soft || { msg: (rf.err === 'big' ? 'The F value is too large (keep it under 1,000,000,000).' : 'The F value must be a number of 0 or more, like 4.5.') + ' It is ignored for now.', at: 'anFv' };
+      if (!out.bad) { if (!r1.empty && !r2.empty) V = { d1: r1.v, d2: r2.v, F: rf.empty || fBad ? null : rf.v }; else if (!r1.empty || !r2.empty || (!rf.empty && !fBad)) out.bad = { msg: 'Type both degrees of freedom to see the result.', at: r1.empty ? 'anDf1' : 'anDf2' }; }
+    }
+
+    var A = null;
+    if (D) {
+      A = analyse(D, given);
+      if (A.C.error) { out.bad = A.C.error === 'df' ? { msg: 'There are not enough values to measure the spread within groups.', at: D.at } : { msg: A.C.same ? 'Every value is the same, so there is nothing to compare.' : 'Each group repeats one value, so there is no spread inside the groups to compare against. ANOVA needs some variation within at least one group.', at: D.at }; D = null; }
+      else if (!isFinite(A.C.F) || !isFinite(A.C.sst)) { out.bad = { msg: 'These numbers are too extreme to compute reliably.', at: D.at }; D = null; }
+    }
+
+    var body = false, bigT = '—', lab = isF ? 'p-value from F' : 'One-way ANOVA', sub = $('anSub').getAttribute(isF ? 'data-emptyf' : 'data-empty'), tip = '', why = '', mlab = 'ANOVA', mval = '—';
+    SECTIONS.forEach(function (id) { show(id, false); }); show('anCiteChips', true);
+
+    if (D) {
+      body = true;
+      var rec = recommend(D, A, alpha), m = st.method === 'auto' ? rec.m : st.method, k = D.S.length;
+      if (!result(m, A)) { soft = soft || { msg: m === 'kw' ? (D.G ? 'Every value ties, so the rank test cannot run. The classic ANOVA is shown for now.' : 'Kruskal-Wallis needs the raw values. The classic ANOVA is shown for now.') : (given ? 'Welch’s test needs each group’s own spread. The classic ANOVA is shown for now.' : 'Welch’s test needs some spread in every group. The classic ANOVA is shown for now.'), at: 'anMethod' }; m = 'classic'; }
+      var R = result(m, A), sig = R.p < alpha;
+      /* post hoc */
+      var how = $('anPost').value; if (how === 'auto') how = m === 'welch' ? 'games' : m === 'kw' ? 'dunn' : 'tukey';
+      var pairs = null, postMsg = '';
+      if (how !== 'none') {
+        if (how === 'dunn' && !A.K) { postMsg = 'Dunn’s test needs the raw values; Tukey comparisons are shown for now.'; how = 'tukey'; }
+        if (how === 'games' && given) { postMsg = 'Games-Howell needs each group’s own spread; Tukey comparisons are shown for now.'; how = 'tukey'; }
+        pairs = E.pairs(how, D.S, alpha, cl, A.C, A.K);
+        if (!pairs) { postMsg = 'Games-Howell needs some spread in the groups; Tukey comparisons are shown for now.'; how = 'tukey'; pairs = E.pairs(how, D.S, alpha, cl, A.C, A.K); }
+      }
+      if (postMsg && $('anPost').value !== 'auto') soft = soft || { msg: postMsg, at: 'anPost' };
+      var key = function (s) { return how === 'dunn' ? A.K.meanRank[s] : D.S[s].mean; };
+      var order = D.S.map(function (s, i) { return i; }).sort(function (a, b) { return key(b) - key(a) || a - b; });
+      var letters = pairs ? E.letters(k, pairs, order) : null;
+      var pick = null;
+      if (pairs) {
+        if (st.pick) pairs.forEach(function (p) { if (p.i === st.pick[0] && p.j === st.pick[1]) pick = p; });
+        if (!pick) { pick = pairs[0]; pairs.forEach(function (p) { if (p.p < pick.p) pick = p; }); }
+      }
+      var ci = D.S.map(function (s) { return ciOf(m, s, A, cl); });
+
+      lab = MNAME[m] + (m === rec.m ? (st.method === 'auto' && D.G ? ' (recommended here)' : '') : ' (your choice)');
+      bigT = R.sym + ' = ' + fs(R.stat);
+      sub = dfTxt(R) + ' · ' + pEq(R.p) + ' · ' + nT(A.C.N) + ' values in ' + k + ' groups · ' + (sig ? 'significant' : 'not significant') + ' at α = ' + tr(alpha, 6);
+      mlab = m === 'classic' ? 'ANOVA' : m === 'welch' ? 'Welch' : 'Kruskal-Wallis'; mval = R.sym + ' ' + f2(R.stat) + ' · ' + pEq(R.p);
+
+      /* plain words */
+      var sigPairs = pairs ? pairs.filter(function (p) { return p.sig; }) : [];
+      tip = sig ? 'The groups are not all alike: differences this large would be rare by chance. ' : 'No clear difference between the groups: gaps this size happen often by chance. ';
+      if (pairs) {
+        if (sigPairs.length) {
+          var shown = sigPairs.slice().sort(function (a, b) { return a.p - b.p; }).slice(0, 3).map(function (p) { var hiI = p.diff > 0 ? p.i : p.j, loI = p.diff > 0 ? p.j : p.i; return '“' + D.names[hiI] + '” is above “' + D.names[loI] + '” by ' + f2(Math.abs(p.diff)) + (how === 'dunn' ? ' ranks' : ''); });
+          tip += 'Different pairs (' + PNAME[how] + '): ' + shown.join('; ') + (sigPairs.length > 3 ? '; and ' + (sigPairs.length - 3) + ' more.' : '.');
+          if (!sig) tip += ' The overall test is not significant, so treat these pair results with caution.';
+        } else tip += sig ? 'No single pair stands out on its own with ' + PNAME[how] + ' comparisons.' : 'No pair differs with ' + PNAME[how] + ' comparisons.';
+      }
+      /* recommendation and agreement */
+      var three = [['classic', result('classic', A)], ['welch', result('welch', A)], ['kw', result('kw', A)]].filter(function (x) { return x[1]; });
+      var verdicts = three.map(function (x) { return x[1].p < alpha; });
+      var agree = three.length < 2 ? '' : verdicts.every(function (v) { return v === verdicts[0]; }) ? (three.length === 3 ? 'All three tests agree: ' : 'Both tests agree: ') + (verdicts[0] ? 'significant.' : 'not significant.') : 'The tests disagree: ' + three.map(function (x) { return MNAME[x[0]] + ' ' + (x[1].p < alpha ? 'significant' : 'not significant'); }).join(', ') + '. Report the recommended one and say that the choice matters.';
+      why = rec.why + (m !== rec.m ? ' You chose ' + MNAME[m] + ' instead.' : '') + (agree ? ' ' + agree : '');
+      $('anTests').innerHTML = tbl(['Test', 'Statistic', 'p'], three.map(function (x) { var q = x[1]; return { cls: x[0] === m ? 'an-on' : '', c: [MNAME[x[0]] + (x[0] === rec.m && D.G ? '<small>recommended</small>' : x[0] === m ? '<small>shown above</small>' : ''), q.sym + ' ' + fs(q.stat) + '<small>' + dfTxt(q) + '</small>', pT(q.p) + '<small>' + (q.p < alpha ? 'significant' : 'not significant') + '</small>'] }; }));
+      setNote('anTestsKey', D.G ? 'Classic assumes similar spread and roughly normal values; Welch drops the equal-spread assumption; Kruskal-Wallis uses ranks and asks whether some group tends to give larger values. The recommendation is a rule of thumb: change it under Go advanced if you planned a test beforehand.' : given ? 'Only the classic test can run from a within mean square.' : 'Kruskal-Wallis needs the raw values.'); show('anTestsWrap', true);
+
+      /* picture and pairs */
+      var sampled = drawGroups(D, A, m, ci, letters, order, pick);
+      setNote('anVisKey', (D.G ? 'Each dot is one value' + (sampled ? ' (150 spread evenly are drawn for large groups)' : '') + '; the outlined box covers the middle half of the values, with a thin line at the median. ' : '') + (m === 'kw' ? 'The tall tick is the median.' : 'The tall tick is the average; the bar is its ' + tr(cl * 100, 4) + '% interval' + (m === 'classic' ? ' using the pooled spread.' : ' using the group’s own spread.')) + (letters ? ' Groups sharing a letter are not shown to differ; groups with no letter in common differ at α = ' + tr(alpha, 6) + ' (' + PNAME[how] + '). The two shaded rows are the pair picked below.' : ''));
+      $('anVisH').textContent = letters ? 'Which groups differ' : 'Your groups on one scale'; show('anVisWrap', true);
+      if (pairs) {
+        drawDiff(pick, how, D.names, cl);
+        var sn = short(D.names, k > 3 ? 9 : 11), s7 = short(D.names, 7);
+        $('anPairs').innerHTML = tbl(['Pair', how === 'dunn' ? 'Rank<br>diff.' : 'Diff.', tr(cl * 100, 2) + '% interval', 'p'], pairs.map(function (p) { return { cls: (p === pick ? 'an-on' : '') + (p.sig ? ' an-sig' : ''), attr: ' data-i="' + p.i + '" data-j="' + p.j + '"', c: ['<button type="button" class="an-pk">' + esc(sn[p.i]) + ' vs ' + esc(sn[p.j]) + '</button>', f2(p.diff), f2(p.diff - p.half) + ' to ' + f2(p.diff + p.half), (p.p >= 1e-4 || DEC !== null ? pT(p.p) : '&lt; 0.0001') + (p.sig ? ' *' : '')] }; }));
+        var ssym = how === 'tukey' || how === 'games' ? 'q' : how === 'bonf' ? 't' : 'z';
+        $('anFull').innerHTML = tbl(['Pair', 'SE', ssym, how === 'dunn' ? 'p' : 'df', 'Needed'], pairs.map(function (p) { return { c: ['<span>' + esc(s7[p.i]) + '</span><span>vs ' + esc(s7[p.j]) + '</span>', f2(p.se), f2(p.stat), how === 'dunn' ? pT(p.p) : fdf(p.df), f2(p.need)] }; }));
+        if (k <= 5) { var mrows = []; order.slice(0, -1).forEach(function (a, ia) { mrows.push({ c: [esc(s7[a])].concat(order.slice(1).map(function (b, ib) { if (ib < ia) return ''; var v = key(a) - key(b), pr = pairs.filter(function (p) { return (p.i === a && p.j === b) || (p.i === b && p.j === a); })[0]; return (pr.sig ? '<b>' + f2(v) + ' *</b>' : f2(v)); })) }); }); $('anMatrix').innerHTML = tbl([''].concat(order.slice(1).map(function (b) { return esc(s7[b]); })), mrows); } show('anMatrixW', k <= 5);
+        $('anPairsH').textContent = PNAME[how] + ' comparisons, pair by pair';
+        setNote('anPairsKey', '* significant at α = ' + tr(alpha, 6) + ' after adjusting for ' + pairs.length + (pairs.length === 1 ? ' comparison' : ' comparisons') + '. Pick a pair to see it in the picture. In the details, SE is the standard error and Needed is the difference a pair must exceed. ' + (how === 'tukey' ? 'Tukey (Tukey-Kramer for unequal sizes) uses the pooled spread and the studentized range.' : how === 'games' ? 'Games-Howell uses each pair’s own spread, so it fits unequal variances.' : how === 'bonf' ? 'Bonferroni runs a t-test with the pooled spread on each pair and multiplies p by the number of pairs.' : 'Dunn compares average ranks and multiplies p by the number of pairs (Bonferroni).'));
+        show('anPairsWrap', true);
+      }
+      /* ANOVA table */
+      var C = A.C;
+      $('anTable').innerHTML = tbl(['Source', 'SS', 'df', 'MS', 'F'], [{ c: ['Between', f4(C.ssb), C.dfb, f4(C.msb), fs(C.F)] }, { c: ['Within', f4(C.ssw), fdf(C.dfw), f4(C.msw), ''] }, { cls: 'an-tot', c: ['Total', f4(C.sst), fdf(C.dfb + C.dfw), '', ''] }]);
+      setNote('anTableKey', 'SS = sum of squares, MS = mean square; Between and Within are the variation between and inside the groups. For this F, ' + pEq(C.p) + '; critical F at α = ' + tr(alpha, 6) + ' is ' + f4(E.fCrit(alpha, C.dfb, C.dfw)) + '.' + (m !== 'classic' ? ' This is the classic table; the result above uses ' + MNAME[m] + '.' : '')); show('anTableWrap', true);
+      /* groups */
+      var s12 = short(D.names, 12), s14 = short(D.names, 14);
+      $('anSumT').innerHTML = tbl(['Group', 'n', 'Average', 'SD', tr(cl * 100, 2) + '% interval'], D.S.map(function (s, i) { return { c: [esc(s12[i]), nT(s.n), f2(s.mean), s.sd === s.sd ? f2(s.sd) : '—', f2(ci[i][0]) + ' to ' + f2(ci[i][1])] }; }));
+      $('anSumF').innerHTML = tbl(['Group', 'Total', 'Std. error', 'Vari&shy;ance', 'SS'], D.S.map(function (s, i) { return { c: [esc(s12[i]), f2(s.sum), s.sd === s.sd ? f4(s.se) : '—', s.sd === s.sd ? f2(s.v) : '—', s.sd === s.sd ? f2(s.ss) : '—'] }; }));
+      $('anSumR').innerHTML = D.G ? tbl(['Group', 'Min', 'Q1', 'Median', 'Q3', 'Max'], D.S.map(function (s, i) { return { c: [esc(s12[i]), f2(s.min), f2(s.q1), f2(s.median), f2(s.q3), f2(s.max)] }; })) : '';
+      setNote('anSumKey', 'Average of all ' + nT(C.N) + ' values (grand mean): ' + f4(C.grand) + '.' + (st.out === 'drop' && raw ? (out.removed.length ? ' Left out as outliers: ' + out.removed.join('; ') + '.' : ' No value was far enough out to be left out.') : '')); show('anGroupsWrap', true);
+      /* leave one group out */
+      if (k >= 3) {
+        var l14 = short(D.names, 14), loo = D.names.map(function (nm, i) {
+          var S2 = D.S.filter(function (x, j) { return j !== i; }), D2 = { S: S2, G: D.G ? D.G.filter(function (x, j) { return j !== i; }) : null };
+          var C2 = E.classic(S2, given ? { msw: given.msw, df: given.df - (D.S[i].n - 1) } : null);
+          var r2 = m === 'kw' ? (function () { var q = E.kruskal(D2.G); return q && { stat: q.H, p: q.p }; })() : m === 'welch' ? (function () { var q = E.welch(S2); return q && { stat: q.F, p: q.p }; })() : C2.error ? null : { stat: C2.F, p: C2.p };
+          if (!r2) return { c: [esc(l14[i]), '—', '—', 'cannot run'] };
+          var flip = (r2.p < alpha) !== sig;
+          return { cls: flip ? 'an-flip' : '', c: [esc(l14[i]), f2(r2.stat), pT(r2.p), (r2.p < alpha ? 'significant' : 'not significant') + (flip ? '<small>verdict changes</small>' : '')] };
+        });
+        $('anLoo').innerHTML = tbl(['Left out', R.sym, 'p', 'Verdict'], loo);
+        var flips = loo.filter(function (r) { return r.cls === 'an-flip'; }).map(function (r) { return r.c[0]; });
+        $('anLooKey').innerHTML = (flips.length ? 'Without ' + list(flips) + ' the verdict changes, so the result depends on ' + (flips.length === 1 ? 'that group.' : 'those groups.') : 'The verdict stays the same whichever single group is left out.') + ' This is a way to explore the result; it does not replace the pair comparisons.'; $('anLooKey').style.display = ''; show('anLooWrap', true);
+      }
+      /* what would it take (classic) */
+      var means = D.S.map(function (s) { return s.mean; }), pl = E.plan(means, C.msw, alpha), wr = [];
+      var tk = how === 'tukey' && pairs ? pairs : E.pairs('tukey', D.S, alpha, cl, C, A.K), needs = tk.map(function (p) { return p.need; }), nl = Math.min.apply(null, needs), nh = Math.max.apply(null, needs);
+      wr.push({ c: ['Difference two group averages need now (Tukey)', nh - nl < 1e-9 * (1 + nh) ? f2(nl) : f2(nl) + ' to ' + f2(nh) + ' by pair'] });
+      var post = E.power(C.f, k, C.N, alpha, C.dfw);
+      wr.push({ c: ['Values per group for p below α, if these averages and spread held', pl.sig === null ? (pl.f > 0 ? 'More than 10,000,000' : 'Never: the averages are equal') : nT(pl.sig)] });
+      wr.push({ c: ['Power now, if the true effect were exactly what you measured', C.f > 0 ? powT(post) : '—'] });
+      wr.push({ c: ['Values per group for 80% power at these averages', pl.n80 === null ? '—' : nT(pl.n80)] });
+      if (effF !== null) {
+        var ap = E.power(effF, k, C.N, alpha, C.dfw), an = E.n80(effF, k, alpha);
+        wr.push({ c: ['Your expected effect f = ' + f4(effF) + ': power with ' + nT(C.N) + ' values', powT(ap)] });
+        wr.push({ c: ['Your expected effect: values per group for 80% power', an === null ? '—' : nT(an)] });
+      }
+      $('anPow').innerHTML = tbl(null, wr);
+      setNote('anPowKey', 'Planning figures for the classic ANOVA with groups of equal size. Power is the chance a new study would reach p below α. Effects measured in a small study tend to be larger than the true ones, so for planning type the smallest effect that matters to you under Go advanced.'); show('anPowWrap', true);
+      setNote('anEffNote', effF !== null ? 'For f = ' + f4(effF) + ' the power with your ' + nT(C.N) + ' values is ' + powT(E.power(effF, k, C.N, alpha, C.dfw)) + '.' : '');
+      /* effect size */
+      var er = [{ c: ['Eta squared (η²)', f4(C.eta2) + ' (' + pctT(C.eta2) + ' of the variation is between groups)'] }, { c: ['Omega squared (ω²)', f4(C.omega2)] }, { c: ['Cohen’s f', f4(C.f) + ' (' + E.fWord(C.f) + ')'] }, { c: ['Pooled standard deviation (S)', f4(C.S)] }, { c: ['R-squared', pctT(C.R2)] }, { c: ['Adjusted R-squared', pctT(C.R2adj)] }];
+      if (C.R2pred !== null) er.push({ c: ['Predicted R-squared', pctT(C.R2pred)] });
+      $('anEffT').innerHTML = tbl(null, er);
+      setNote('anEffKey', (m === 'kw' ? 'These measures use the averages, not the ranks. ' : '') + 'p says whether a difference is more than chance; these say how big it is. Cohen’s guide for f: 0.10 small, 0.25 medium, 0.40 large. Omega squared corrects part of eta squared’s optimism (the formula is exact for equal group sizes).'); show('anEffWrap', true);
+      /* assumption checks */
+      if (D.G) {
+        var ck = [];
+        var wp = function (W, p) { return 'W ' + f4(W) + '<small>' + pEq(p) + '</small>'; };
+        if (A.SW) ck.push({ c: ['Normality, all groups together', wp(A.SW.W, A.SW.p), A.SW.p < 0.05 ? 'doubtful' : 'fine'] });
+        if (A.L) ck.push({ c: ['Equal spread (Levene)', wp(A.L.W, A.L.p), A.L.p < 0.05 ? 'differs' : 'fine'] });
+        var c14 = short(D.names, 14); D.names.forEach(function (nm, i) { var w = A.swN[i]; ck.push({ c: ['Normality: ' + esc(c14[i]), w ? wp(w.W, w.p) : '—', !w ? (D.S[i].n < 3 ? 'needs 3 values' : D.S[i].n > E.MAXN ? 'too large' : 'no spread') : w.p < 0.05 ? 'doubtful' : 'fine'] }); });
+        $('anChk').innerHTML = tbl(['Check', 'Result', 'Reading'], ck);
+        var ol = []; D.G.forEach(function (g, i) { var o = E.outliers(g); if (o.out.length) ol.push(D.names[i] + ' (' + o.out.slice(0, 6).map(f4).join(', ') + (o.out.length > 6 ? '…' : '') + ')'); });
+        setNote('anChkKey', 'Normality uses Shapiro-Wilk (first on all values around their group averages), equal spread uses Levene’s test around the medians. “Fine” means no clear problem at the 0.05 level. ' + (ol.length ? 'Possible outliers (more than 1.5 quartile ranges beyond the quartiles): ' + ol.join('; ') + '.' : 'No outliers by the 1.5 quartile-range rule.') + ' Independence of the values cannot be tested from the numbers.'); show('anCheckWrap', true);
+      }
+      /* curve */
+      var crit = m === 'kw' ? P.inv('chi', { df: R.d1 }, alpha, 'R') : E.fCrit(alpha, R.d1, R.d2);
+      drawCurve({ stat: R.stat, d1: R.d1, d2: R.d2 }, alpha, crit); show('anCurveWrap', true);
+      /* hypotheses */
+      var hy = m === 'kw' ? ['H₀ (starting assumption): no group tends to give larger values than another.', 'H₁: at least one group tends to give larger or smaller values.'] : ['H₀ (starting assumption): all ' + k + ' groups have the same true average.', 'H₁: at least one group’s true average is different.'];
+      hy.push('Decision: p ' + (sig ? 'is below' : 'is not below') + ' α = ' + tr(alpha, 6) + ', so ' + (sig ? 'H₀ is rejected.' : 'H₀ is not rejected. That does not prove the groups are equal.'));
+      hy.push('This assumes every value comes from a separate person or item. Repeated measurements of the same subjects need a repeated-measures test.');
+      $('anHyp').innerHTML = hy.map(function (s) { return '<li>' + esc(s) + '</li>'; }).join(''); show('anHypWrap', true);
+      /* write-up */
+      var statT = m === 'kw' ? 'H(' + R.d1 + ') = ' + R.stat.toFixed(2) + ', ' + apaP(R.p) : 'F(' + R.d1 + ', ' + fdf(R.d2) + ') = ' + R.stat.toFixed(2) + ', ' + apaP(R.p) + (m === 'classic' ? ', η² = ' + apaN(C.eta2) : '');
+      var test = m === 'classic' ? 'A one-way ANOVA' : m === 'welch' ? 'Welch’s ANOVA' : 'A Kruskal-Wallis test';
+      var apa = test + ' showed ' + (sig ? 'a statistically significant' : 'no statistically significant') + ' difference ' + (m === 'kw' ? '' : 'between the means ') + (m === 'kw' ? 'between the ' : 'of the ') + k + ' groups, ' + statT + '.';
+      if (pairs) apa += sigPairs.length ? ' ' + PNAME[how] + ' comparisons showed differences between ' + list(sigPairs.slice(0, 6).map(function (p) { return D.names[p.i] + ' and ' + D.names[p.j] + ' (' + apaP(p.p) + ')'; })) + (sigPairs.length > 6 ? ' among others' : '') + '.' : ' ' + PNAME[how] + ' comparisons showed no pair that differed.';
+      var plain = (sig ? 'The groups really do differ' : 'The data show no clear difference between the groups') + ' (' + pEq(R.p) + ').' + (sigPairs.length ? ' Different pairs: ' + list(sigPairs.slice(0, 6).map(function (p) { return D.names[p.i] + ' and ' + D.names[p.j]; })) + (sigPairs.length > 6 ? ' among others' : '') + '.' : '');
+      $('anWrite').textContent = { apa: apa, plain: plain }[st.cite]; [].forEach.call($('anCiteChips').children, function (b) { b.classList.toggle('on', b.getAttribute('data-v') === st.cite); }); show('anWriteWrap', true);
+      /* copy */
+      $('anCopyTxt').textContent = lab + ': ' + bigT + ' (' + sub + ')';
+      var csv = [['Source', 'Sum of squares', 'df', 'Mean square', 'F', 'p'], ['Between groups', C.ssb, C.dfb, C.msb, C.F, C.p], ['Within groups', C.ssw, C.dfw, C.msw, '', ''], ['Total', C.sst, C.dfb + C.dfw, '', '', ''], [], ['Group', 'n', 'Average', 'SD']].concat(D.S.map(function (s, i) { return [D.names[i], s.n, s.mean, s.sd === s.sd ? s.sd : '']; }));
+      if (pairs) csv = csv.concat([[], ['Pair (' + PNAME[how] + ')', 'Difference', 'Lower', 'Upper', 'p']], pairs.map(function (p) { return [D.names[p.i] + ' vs ' + D.names[p.j], p.diff, p.diff - p.half, p.diff + p.half, p.p]; }));
+      $('anCsvTxt').textContent = csv.map(function (r) { return r.map(function (c) { if (typeof c === 'number') c = String(Number(c.toPrecision(10))); return '"' + String(c === undefined ? '' : c).replace(/"/g, '""') + '"'; }).join(','); }).join('\n'); show('anCopyWrap', true);
+      /* steps */
+      var sp = [];
+      if (m === 'kw') {
+        sp.push('Rank all ' + nT(A.K.N) + ' values together from smallest (1) to largest; ties share the average rank.');
+        sp.push('Average rank per group: ' + D.names.map(function (n, i) { return n + ' ' + f2(A.K.meanRank[i]); }).join(', ') + '. Average of all ranks: ' + f2((A.K.N + 1) / 2) + '.');
+        sp.push('H = (N − 1) × Σ n × (group average rank − overall)² ÷ Σ (rank − overall)² = ' + fs(R.stat) + '.');
+        sp.push('p = area of the chi-square curve with df = ' + R.d1 + ' right of H = ' + pT(R.p) + '.');
+      } else if (m === 'welch') {
+        sp.push('Weight of each group = n ÷ variance: ' + D.names.map(function (n, i) { return n + ' ' + f4(D.S[i].n / D.S[i].v); }).join(', ') + '.');
+        sp.push('Weighted average of the group averages = ' + f4(A.W.grand) + '.');
+        sp.push('F = weighted spread of the averages ÷ (k − 1), divided by a small-sample correction = ' + fs(R.stat) + ', with df ' + R.d1 + ' and ' + fdf(R.d2) + '.');
+        sp.push('p = area of the F curve right of ' + fs(R.stat) + ' = ' + pT(R.p) + '.');
+      } else {
+        sp.push('Grand mean (all values together) = ' + f4(C.grand) + '.');
+        sp.push('Between groups: Σ n × (group average − grand mean)² = ' + D.S.slice(0, 4).map(function (s) { return s.n + ' × (' + f2(s.mean) + ' − ' + f2(C.grand) + ')²'; }).join(' + ') + (k > 4 ? ' + …' : '') + ' = ' + f4(C.ssb) + '.');
+        sp.push(given ? 'Within groups: mean square ' + f4(C.msw) + ' × df ' + fdf(C.dfw) + ' = ' + f4(C.ssw) + '.' : 'Within groups: Σ (value − its group average)² = ' + f4(C.ssw) + '.');
+        sp.push('Mean squares: ' + f4(C.ssb) + ' ÷ ' + C.dfb + ' = ' + f4(C.msb) + ' and ' + f4(C.ssw) + ' ÷ ' + fdf(C.dfw) + ' = ' + f4(C.msw) + '.');
+        sp.push('F = ' + f4(C.msb) + ' ÷ ' + f4(C.msw) + ' = ' + fs(C.F) + '.');
+        sp.push('p = area of the F curve with df ' + C.dfb + ' and ' + fdf(C.dfw) + ' right of F = ' + pT(C.p) + '.');
+      }
+      $('anSteps').innerHTML = sp.map(function (s) { return '<li>' + esc(s) + '</li>'; }).join(''); show('anStepsWrap', true);
+    } else if (V) {
+      body = true;
+      var cr = E.fCrit(alpha, V.d1, V.d2), pv = V.F === null ? null : E.fRight(V.F, V.d1, V.d2), sg2 = pv !== null && pv < alpha;
+      var dft = 'df ' + V.d1 + ' and ' + fdf(V.d2);
+      if (V.F === null) { lab = 'F critical value'; bigT = fs(cr); sub = dft + ' · α = ' + tr(alpha, 6) + ' · right tail'; mlab = 'Critical F'; mval = fs(cr); tip = 'An F above this value is significant at α = ' + tr(alpha, 6) + '. Type your F value to get its p-value.'; }
+      else { lab = 'p-value from F'; bigT = pEq(pv); sub = 'F = ' + f4(V.F) + ' · ' + dft + ' · critical F ' + fs(cr) + ' · ' + (sg2 ? 'significant' : 'not significant') + ' at α = ' + tr(alpha, 6); mlab = 'p-value'; mval = pEq(pv) + ' · critical ' + f2(cr); tip = sg2 ? 'Your F is above the critical value, so a result this large would be rare by chance alone.' : 'Your F is not above the critical value: chance alone often produces a result this large.'; }
+      drawCurve({ stat: V.F, d1: V.d1, d2: V.d2 }, alpha, cr); show('anCurveWrap', true);
+      var va = V.F === null ? 'The critical value of F with ' + V.d1 + ' and ' + fdf(V.d2) + ' degrees of freedom at α = ' + tr(alpha, 6) + ' is ' + fs(cr) + '.' : 'F(' + V.d1 + ', ' + fdf(V.d2) + ') = ' + V.F.toFixed(2) + ', ' + apaP(pv) + '.';
+      var vp = V.F === null ? va : 'With ' + V.d1 + ' and ' + fdf(V.d2) + ' degrees of freedom, an F of ' + f4(V.F) + ' or more happens by chance with probability ' + pT(pv) + '.';
+      $('anWrite').textContent = { apa: va, plain: vp }[st.cite]; show('anCiteChips', V.F !== null); [].forEach.call($('anCiteChips').children, function (b) { b.classList.toggle('on', b.getAttribute('data-v') === st.cite); }); show('anWriteWrap', true);
+      $('anCopyTxt').textContent = lab + ': ' + bigT + ' (' + sub + ')';
+      $('anCsvTxt').textContent = '"df between","df within","F","p","alpha","critical F"\n"' + [V.d1, V.d2, V.F === null ? '' : V.F, pv === null ? '' : Number(pv.toPrecision(10)), tr(alpha, 6), Number(cr.toPrecision(10))].join('","') + '"'; show('anCopyWrap', true);
+      $('anSteps').innerHTML = (V.F === null ? ['Critical F = the F with an area of ' + tr(alpha, 6) + ' to its right under the curve with ' + dft + ': ' + fs(cr) + '.'] : ['p = area of the F curve with ' + dft + ' right of ' + f4(V.F) + ' = ' + pT(pv) + '.', 'Critical F = the F with an area of ' + tr(alpha, 6) + ' to its right = ' + fs(cr) + '.', 'Significant when F is above the critical value, which is the same as p below α.']).map(function (s) { return '<li>' + s + '</li>'; }).join(''); show('anStepsWrap', true);
+    } else setNote('anEffNote', '');
+    if (!D && effF !== null) setNote('anEffNote', 'Type the groups first to see the power for this effect size.');
+    setNote('anAlphaNote', 'A p-value below ' + tr(alpha, 6) + ' counts as significant' + (ra.empty || (soft && soft.at === 'anAlpha') ? ' (the usual level, used while this box is empty or invalid).' : ' (your level).') + (V ? ' Critical F: ' + f4(E.fCrit(alpha, V.d1, V.d2)) + '.' : D ? ' Critical F (classic): ' + f4(E.fCrit(alpha, A.C.dfb, A.C.dfw)) + '.' : ''));
+    setNote('anMethodNote', st.method === 'auto' ? 'The page picks the test from your data and says why.' : 'The headline uses ' + MNAME[st.method] + ', whatever the checks say.');
+    var ph = $('anPost').value; setNote('anPostNote', ph === 'auto' ? 'Follows the test: Tukey, Games-Howell for Welch, Dunn for Kruskal-Wallis.' : ph === 'none' ? 'Pair comparisons and letters are hidden.' : PNAME[ph] + ' comparisons are used whichever test is shown.');
+    setNote('anOutNote', st.out === 'drop' && raw ? (D && out.removed.length ? 'Left out: ' + out.removed.join('; ') + '.' : D ? 'No value is far enough out to be left out.' : 'Applied once the values are in.') : 'All values are used.');
+
+    var hint = out.bad || soft;
+    if (hint) setHint(hint.msg, hint.at); else setHint('');
+    $('anBig').textContent = bigT; $('anBig').parentNode.classList.toggle('cc-long', bigT.length > 16); $('anLab').textContent = lab; $('anSub').textContent = sub; $('anBody').style.display = body ? '' : 'none';
+    $('anTip').textContent = tip; $('anTip').style.display = tip ? '' : 'none'; setNote('anWhy', why);
+    $('anMLab').textContent = mlab; $('anMVal').textContent = mval;
+    fit();
+  }
+  /* a table with very long numbers may break them; otherwise numbers stay whole */
+  function fit() { [].forEach.call(document.querySelectorAll('#anBody table'), function (t) { t.classList.remove('an-tight'); var w = t.parentNode.clientWidth; if (w && t.getBoundingClientRect().width > w + 0.5) t.classList.add('an-tight'); }); }
+
+  /* ---------- controls ---------- */
+  function segSet(id, key, v) { st[key] = v; [].forEach.call($(id).children, function (b) { b.classList.toggle('on', b.getAttribute('data-v') === v); }); }
+  [['anMode', 'mode'], ['anEntry', 'entry'], ['anSpread', 'spread'], ['anMethod', 'method'], ['anOut', 'out'], ['anEffType', 'efft']].forEach(function (pp) {
+    [].forEach.call($(pp[0]).children, function (b) { b.addEventListener('click', function () { segSet(pp[0], pp[1], b.getAttribute('data-v')); if (pp[1] === 'mode' || pp[1] === 'entry') st.pick = null; if (pp[1] === 'spread') spreadUI(); render(); }); });
+  });
+  var card = $('anGroups').closest('.card');
+  card.addEventListener('input', function () { render(); });
+  $('anPost').addEventListener('change', function () { render(); });
+  [['anAddG', 'K', 1, buildGroups], ['anDelG', 'K', -1, buildGroups], ['anAddS', 'S', 1, buildSum], ['anDelS', 'S', -1, buildSum]].forEach(function (b) { $(b[0]).addEventListener('click', function () { var v = st[b[1]] + b[2]; if (v < 2 || v > E.MAXG) return; st[b[1]] = v; st.pick = null; b[3](); render(); }); });
+  $('anAlphaChips').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; $('anAlpha').value = b.getAttribute('data-v'); render(); });
+  $('anEffChips').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; segSet('anEffType', 'efft', 'f'); $('anEff').value = b.getAttribute('data-v'); render(); });
+  $('anCiteChips').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; st.cite = b.getAttribute('data-v'); render(); });
+  $('anPairs').addEventListener('click', function (e) { var r = e.target.closest('tr[data-i]'); if (!r) return; st.pick = [parseInt(r.getAttribute('data-i'), 10), parseInt(r.getAttribute('data-j'), 10)]; render(); });
+  $('anExChips').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return; var x = EX[b.getAttribute('data-v')], i; if (!x) return;
+    st.pick = null;
+    if (st.mode === 'sum') {
+      st.S = x.g.length; park('anSum'); $('anSum').innerHTML = ''; buildSum(); $('anMsw').value = ''; $('anDfw').value = '';
+      x.g.forEach(function (g, k) { var d = E.describe(g); $('anSN' + (k + 1)).value = x.names[k]; $('anSC' + (k + 1)).value = d.n; $('anSM' + (k + 1)).value = tr(d.mean, 4); $('anSS' + (k + 1)).value = tr(st.spread === 'sd' ? d.sd : d.se, 4); });
+    } else if (st.entry === 'boxes') {
+      st.K = x.g.length; park('anGroups'); $('anGroups').innerHTML = ''; buildGroups();
+      for (i = 0; i < st.K; i++) { $('anGN' + (i + 1)).value = x.names[i]; $('anGV' + (i + 1)).value = x.g[i].join(', '); }
+    } else if (st.entry === 'cols') {
+      var len = Math.max.apply(null, x.g.map(function (g) { return g.length; })), ls = [x.names.join(', ')];
+      for (i = 0; i < len; i++) ls.push(x.g.map(function (g) { return g[i] === undefined ? '' : g[i]; }).join(', '));
+      $('anCols').value = ls.join('\n');
+    } else { var s = []; x.g.forEach(function (g, k) { g.forEach(function (v) { s.push(v + ', ' + x.names[k]); }); }); $('anStack').value = s.join('\n'); }
+    render();
+  });
+  [].forEach.call(document.querySelectorAll('.p-an [data-copy]'), function (b) {
+    b.addEventListener('click', function () {
+      var t = $(b.getAttribute('data-copy')).textContent, label = b.getAttribute('data-label') || b.textContent; b.setAttribute('data-label', label);
+      var done = function (ok) { b.textContent = ok ? 'Copied' : 'Copy failed'; setTimeout(function () { b.textContent = label; }, 1500); };
+      var old = function () { var a = document.createElement('textarea'), ok = false; a.value = t; a.style.position = 'fixed'; a.style.opacity = '0'; document.body.appendChild(a); a.select(); try { ok = document.execCommand('copy'); } catch (e) { ok = false; } a.remove(); done(ok); };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(function () { done(true); }, old); else old();
+    });
+  });
+  function resetPost() { var o = document.querySelector('#anPost .csel-opt[data-value="auto"]'); if (o && $('anPost').value !== 'auto') o.click(); }
+  $('anClear').addEventListener('click', function () {
+    [].forEach.call(card.querySelectorAll('input,textarea'), function (i) { i.value = ''; });
+    st.K = 3; st.S = 3; st.pick = null; park('anGroups'); park('anSum'); $('anGroups').innerHTML = ''; $('anSum').innerHTML = ''; buildGroups(); buildSum(); render();
+  });
+  $('anAdvBtn').addEventListener('click', function () {
+    st.adv = !st.adv; $('anAdvBtn').classList.toggle('open', st.adv); $('anAdvBtnLab').textContent = st.adv ? 'Go simple' : 'Go advanced'; $('anAdvIn').style.display = st.adv ? '' : 'none';
+    if (!st.adv) { ['anConf', 'anEff', 'anMsw', 'anDfw', 'anDec'].forEach(function (id) { $(id).value = ''; }); segSet('anMethod', 'method', 'auto'); segSet('anOut', 'out', 'keep'); segSet('anEffType', 'efft', 'f'); resetPost(); }
+    render();
+  });
+  [].forEach.call(document.querySelectorAll('#anBody details'), function (d) { d.addEventListener('toggle', fit); });
+  window.addEventListener('resize', fit);
+  buildGroups(); buildSum(); render();
+};
+/* ANOVA:END */

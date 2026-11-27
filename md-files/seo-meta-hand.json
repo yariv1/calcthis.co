@@ -112,6 +112,10 @@
     "t": "Fraction Calculator — Add, Subtract, Multiply & Divide",
     "d": "Free fraction calculator: add, subtract, multiply and divide fractions, mixed numbers and decimals, simplify and convert, with a live bar diagram and steps."
   },
+  "/anova-calculator/": {
+    "t": "ANOVA Calculator: One-Way ANOVA with Tukey Test",
+    "d": "ANOVA calculator for one-way ANOVA: F, p-value, ANOVA table, Tukey and Games-Howell pairs, Welch, Kruskal-Wallis, checks and a picture of your groups."
+  },
   "/chi-square-calculator/": {
     "t": "Chi Square Calculator: Independence and Goodness of Fit",
     "d": "Chi square calculator for two-way tables and goodness of fit: χ², p-value, expected counts, Fisher, Yates, McNemar, effect size and a picture."

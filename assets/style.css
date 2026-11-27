@@ -4092,3 +4092,63 @@ body .fld + .av-note,body .fld + .cb-note{margin-top:-6px}
 .p-chi #xsCurve text{font-size:15px;fill:#241A11;font-family:'Inter',system-ui,sans-serif}
 .p-chi #xsCurve .xs-tstat{font-weight:700}
 .p-chi details.faq > summary{font-size:15px}
+/* ANOVA:CSS ---- ANOVA calculator (page class p-an). The page also carries the correlation page stylesheet class ---- */
+.p-an #anExW{margin-bottom:15px}
+.p-an .an-g{margin-bottom:13px}
+.p-an .an-g .inp{margin-bottom:5px}
+.p-an .inp.an-name input{background:#F5EFE4;font-size:14px;font-weight:600;padding:11px 10px;text-overflow:ellipsis}
+.p-an .an-ta{min-height:64px}
+.p-an .an-g .av-note{margin:3px 0 0}
+.p-an .an-g .av-note:empty{display:none}
+.p-an .an-sumw{margin-bottom:12px}
+.p-an .an-sum{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,.95fr) minmax(0,1fr) minmax(0,1fr);gap:6px;align-items:end;margin-bottom:6px}
+.p-an .an-sum .inp{min-width:0}
+.p-an .an-sum .inp input{padding:11px 4px;text-align:center}
+.p-an .an-sum .inp.an-name input{text-align:left;padding:11px 7px}
+.p-an .an-h{font-size:13px;font-weight:600;color:var(--ink-soft);line-height:1.3}
+.p-an .cc-tools button[disabled]{opacity:.4;cursor:default;text-decoration:none}
+.p-an #anWhy{color:var(--ink-soft);font-weight:500}
+.p-an .cc-vis{max-width:100%}
+.p-an #anVis svg,.p-an #anDiff svg,.p-an #anCurve svg{display:block;width:100%;max-width:560px;height:auto;margin:0 auto}
+.p-an svg text{font-family:'Inter',system-ui,sans-serif;fill:#241A11}
+.p-an #anVis .an-bg{fill:#F8F3E9}
+.p-an #anVis .an-gr.on .an-bg{fill:#FBEBC6}
+.p-an #anVis .an-nm{font-size:16px;font-weight:700}
+.p-an #anVis .an-mv{font-size:15.5px;font-weight:400;fill:#5E5043}
+.p-an #anVis .an-let{font-size:17px;font-weight:700;fill:#8F5C13}
+.p-an #anVis .an-box{fill:none;stroke:#37503F;stroke-width:1;opacity:.45}
+.p-an #anVis .an-med{stroke:#37503F;stroke-width:1.2;opacity:.55;fill:none}
+.p-an #anVis .an-dot{fill:#37503F;opacity:.55}
+.p-an #anVis .an-ci{stroke:#B5761F;stroke-width:5;opacity:.55;fill:none}
+.p-an #anVis .an-cie{stroke:#8F5C13;stroke-width:1.6;fill:none}
+.p-an #anVis .an-mean{stroke:#241A11;stroke-width:2.6;fill:none}
+.p-an .an-axis{stroke:#B9A988;stroke-width:1;fill:none}
+.p-an #anVis .an-tax,.p-an #anDiff .an-tax{font-size:15.5px;fill:#5E5043}
+.p-an #anDiff .an-zero{stroke:#241A11;stroke-width:1.5;stroke-dasharray:4 3;fill:none}
+.p-an #anDiff .an-dci{stroke:#A99C8A;stroke-width:6;stroke-linecap:round;fill:none}
+.p-an #anDiff .an-dci.sig{stroke:#D9A24A}
+.p-an #anDiff .an-dpt{fill:#5E5043}
+.p-an #anDiff .an-dpt.sig{fill:#8F5C13}
+.p-an #anCurve .an-line{fill:none;stroke:#37503F;stroke-width:2}
+.p-an #anCurve .an-rej{fill:#EBC47E;opacity:.6}
+.p-an #anCurve .an-parea{fill:#8F5C13;opacity:.6}
+.p-an #anCurve .an-crit{stroke:#8F5C13;stroke-width:1.6;stroke-dasharray:4 3;fill:none}
+.p-an #anCurve .an-stat{stroke:#241A11;stroke-width:2;fill:none}
+.p-an #anCurve text{font-size:15.5px}
+.p-an #anCurve .an-tstat{font-weight:700}
+.p-an #anBody .dtable{width:100%;table-layout:auto}
+.p-an #anBody .dtable td,.p-an #anBody .dtable th{font-size:13.5px;padding-left:3px;padding-right:3px;overflow-wrap:normal;word-break:normal;hyphens:manual}
+.p-an #anBody .dtable td:first-child,.p-an #anBody .dtable th:first-child{overflow-wrap:break-word}
+.p-an #anBody .dtable.an-tight td,.p-an #anBody .dtable.an-tight th{overflow-wrap:anywhere;font-size:12.5px;padding-left:2px;padding-right:2px}
+.p-an #anBody .dtable td:nth-child(n+2),.p-an #anBody .dtable th:nth-child(n+2){text-align:right}
+.p-an #anBody .dtable small{display:block;font-size:12.5px;font-weight:400;color:var(--muted)}
+.p-an #anPow td:nth-child(2),.p-an #anEffT td:nth-child(2){width:42%}
+.p-an #anFull td span{display:block;white-space:nowrap}
+.p-an #anBody #anFull td,.p-an #anBody #anFull th{font-size:13px;padding-left:2px;padding-right:2px}
+.p-an #anPairs td:nth-child(4),.p-an #anPairs td:nth-child(2){white-space:nowrap}
+.p-an #anPairs tr[data-i]{cursor:pointer}
+.p-an .an-pk{font:inherit;font-weight:600;color:var(--ink);background:none;border:0;padding:0;text-align:left;text-decoration:underline;text-underline-offset:3px;cursor:pointer;overflow-wrap:anywhere}
+.p-an #anBody .dtable tr.an-on td,.p-an #anBody .dtable tr.an-flip td{background:#FBF1DC}
+.p-an #anBody .dtable tr.an-sig td{font-weight:600}
+.p-an #anBody .dtable tr.an-tot td{font-weight:700;color:var(--ink)}
+.p-an details.faq > summary{font-size:15px}

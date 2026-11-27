@@ -1,7 +1,7 @@
 {
  "/": {
-  "hash": "6c4299feccb542cc",
-  "date": "2026-11-26"
+  "hash": "094da7aa1cb9603d",
+  "date": "2026-11-27"
  },
  "/board-foot-calculator/": {
   "hash": "41e9c86bf0956ae1",
@@ -788,8 +788,8 @@
   "date": "2026-11-20"
  },
  "/whats-new/": {
-  "hash": "7e598a90a6f3e8b3",
-  "date": "2026-11-26"
+  "hash": "a10902025aa32e58",
+  "date": "2026-11-27"
  },
  "/contact/": {
   "hash": "a6aa9bb68b171a76",
@@ -990,5 +990,9 @@
  "/chi-square-calculator/": {
   "hash": "e4aebe88715f2f35",
   "date": "2026-11-25"
+ },
+ "/anova-calculator/": {
+  "hash": "8acfda111c0bc155",
+  "date": "2026-11-27"
  }
 }

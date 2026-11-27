@@ -1,0 +1,611 @@
+{
+ "slug": "anova-calculator",
+ "research": "md-files/calcthis-anova-research.md",
+ "competitors": [
+  {
+   "name": "Social Science Statistics ANOVA",
+   "url": "https://www.socscistatistics.com/tests/anova/calculator/",
+   "openedLive": true,
+   "date": "2026-11-27",
+   "inputs": [
+    "up to 10 groups, one box per group",
+    "group N, sum, mean, SS and grand mean",
+    "ANOVA table, F, p, df",
+    "verdict at a level",
+    "eta squared",
+    "APA and plain sentences with Copy",
+    "Chicago sentence",
+    "Tukey follow-up test"
+   ]
+  },
+  {
+   "name": "Stats Kingdom one-way ANOVA",
+   "url": "https://www.statskingdom.com/180Anova1way.html",
+   "openedLive": true,
+   "date": "2026-11-27",
+   "inputs": [
+    "data grid with group names and spreadsheet paste",
+    "CSV or Excel file upload",
+    "add and remove groups",
+    "example data",
+    "last run restore",
+    "significance level",
+    "rounding",
+    "outliers included or excluded",
+    "expected effect size (f, f2, eta2) for a priori power",
+    "APA sentence",
+    "effect sizes eta2 and f",
+    "a priori and post hoc power",
+    "Shapiro-Wilk and Levene checks",
+    "per group n, mean, CI, SD, outliers, normality",
+    "ANOVA table",
+    "hypotheses and acceptance region",
+    "Tukey table with SE, q, CI, critical difference, p and difference matrix",
+    "F curve",
+    "R code",
+    "print results",
+    "copy"
+   ]
+  },
+  {
+   "name": "Stats Kingdom two-way ANOVA",
+   "url": "https://www.statskingdom.com/two-way-anova-calculator.html",
+   "openedLive": true,
+   "date": "2026-11-27",
+   "inputs": [
+    "two-way, mixed, random and repeated models with Q-Q plot"
+   ]
+  },
+  {
+   "name": "Omnicalculator ANOVA",
+   "url": "https://www.omnicalculator.com/statistics/anova",
+   "openedLive": true,
+   "date": "2026-11-27",
+   "inputs": [
+    "groups appear as you type",
+    "F and p",
+    "details of ANOVA section",
+    "share result and embed",
+    "no visible group limit",
+    "explanatory article"
+   ]
+  },
+  {
+   "name": "Statistics by Jim ANOVA",
+   "url": "https://statisticsbyjim.com/calculators/anova-calculator/",
+   "openedLive": true,
+   "date": "2026-11-27",
+   "inputs": [
+    "stacked or unstacked input with variable names",
+    "classic or Welch",
+    "significance level 0.10, 0.05, 0.01",
+    "post hoc yes or no",
+    "method and factor table, ANOVA table",
+    "S, R-squared, adjusted and predicted",
+    "group means with SD and CI and plot",
+    "Tukey or Games-Howell with SE, CI, T, adjusted p and interval plot",
+    "load sample",
+    "print"
+   ]
+  },
+  {
+   "name": "MiniWebtool ANOVA",
+   "url": "https://miniwebtool.com/anova-calculator/",
+   "openedLive": true,
+   "date": "2026-11-27",
+   "inputs": [
+    "one group per line or per column with names",
+    "alpha 0.01 0.05 0.10",
+    "decimal places 0 to 9",
+    "example datasets",
+    "ANOVA table, F, p",
+    "eta squared and omega squared with size bands",
+    "group mean, variance, SD, min, max, CI",
+    "box plot and bar chart",
+    "Tukey-Kramer table",
+    "Levene and Shapiro-Wilk",
+    "Welch and Kruskal-Wallis",
+    "APA sentence with Copy, hypotheses, decision",
+    "PDF and JPG download",
+    "share and embed"
+   ]
+  },
+  {
+   "name": "Pearson ANOVA calculator",
+   "url": "https://www.pearson.com/channels/calculators/anova-calculator",
+   "openedLive": true,
+   "date": "2026-11-27",
+   "inputs": [
+    "one-way with 3 to 6 labelled groups",
+    "two-way analysis",
+    "Tukey from group means, sizes, within mean square and df",
+    "F critical value and p from F",
+    "alpha 0.10 0.05 0.01",
+    "mean bar chart with error bars",
+    "F curve with rejection region",
+    "step-by-step solution",
+    "quick examples, reset, copy result"
+   ]
+  },
+  {
+   "name": "GoodCalculators ANOVA",
+   "url": "https://goodcalculators.com/one-way-anova-calculator/",
+   "openedLive": true,
+   "date": "2026-11-27",
+   "inputs": [
+    "add and delete groups",
+    "F, p, ANOVA table",
+    "N, mean, SD, standard error",
+    "formulas"
+   ]
+  },
+  {
+   "name": "statpages ANOVA from summary data",
+   "url": "https://statpages.info/anova1sm.html",
+   "openedLive": true,
+   "date": "2026-11-27",
+   "inputs": [
+    "summary entry with names, n, mean, SD or SEM",
+    "confidence level",
+    "ANOVA table",
+    "Tukey with confidence intervals and p"
+   ]
+  },
+  {
+   "name": "Daniel Soper ANOVA from summary data",
+   "url": "https://www.danielsoper.com/statcalc/calculator.aspx?id=43",
+   "openedLive": true,
+   "date": "2026-11-27",
+   "inputs": [
+    "summary entry n, mean, SD for up to 10 groups",
+    "ANOVA table, F and p"
+   ]
+  }
+ ],
+ "features": [
+  {
+   "covers": [
+    "Social Science Statistics ANOVA: up to 10 groups, one box per group"
+   ],
+   "status": "exceed",
+   "ids": [
+    "anGroups",
+    "anAddG"
+   ]
+  },
+  {
+   "covers": [
+    "Social Science Statistics ANOVA: group N, sum, mean, SS and grand mean"
+   ],
+   "status": "match",
+   "ids": [
+    "anSumT",
+    "anSumF",
+    "anSumKey"
+   ]
+  },
+  {
+   "covers": [
+    "Social Science Statistics ANOVA: ANOVA table, F, p, df",
+    "Social Science Statistics ANOVA: verdict at a level"
+   ],
+   "status": "match",
+   "ids": [
+    "anTable",
+    "anSub",
+    "anAlpha"
+   ]
+  },
+  {
+   "covers": [
+    "Social Science Statistics ANOVA: eta squared"
+   ],
+   "status": "exceed",
+   "ids": [
+    "anEffT"
+   ]
+  },
+  {
+   "covers": [
+    "Social Science Statistics ANOVA: APA and plain sentences with Copy"
+   ],
+   "status": "match",
+   "ids": [
+    "anWrite",
+    "anCiteChips"
+   ]
+  },
+  {
+   "covers": [
+    "Social Science Statistics ANOVA: Chicago sentence"
+   ],
+   "status": "dropped",
+   "signoff": {
+    "quote": "Approve all",
+    "date": "2026-11-27"
+   }
+  },
+  {
+   "covers": [
+    "Social Science Statistics ANOVA: Tukey follow-up test"
+   ],
+   "status": "exceed",
+   "ids": [
+    "anPairs",
+    "anVis"
+   ]
+  },
+  {
+   "covers": [
+    "Stats Kingdom one-way ANOVA: data grid with group names and spreadsheet paste"
+   ],
+   "status": "match",
+   "ids": [
+    "anCols",
+    "anGroups"
+   ]
+  },
+  {
+   "covers": [
+    "Stats Kingdom one-way ANOVA: CSV or Excel file upload",
+    "Stats Kingdom one-way ANOVA: last run restore",
+    "Stats Kingdom one-way ANOVA: R code",
+    "Stats Kingdom one-way ANOVA: print results"
+   ],
+   "status": "dropped",
+   "signoff": {
+    "quote": "Approve all",
+    "date": "2026-11-27"
+   }
+  },
+  {
+   "covers": [
+    "Stats Kingdom one-way ANOVA: add and remove groups",
+    "Stats Kingdom one-way ANOVA: example data",
+    "Stats Kingdom one-way ANOVA: significance level",
+    "Stats Kingdom one-way ANOVA: rounding"
+   ],
+   "status": "match",
+   "ids": [
+    "anAddG",
+    "anDelG",
+    "anExChips",
+    "anAlpha",
+    "anDec"
+   ]
+  },
+  {
+   "covers": [
+    "Stats Kingdom one-way ANOVA: outliers included or excluded",
+    "Stats Kingdom one-way ANOVA: expected effect size (f, f2, eta2) for a priori power"
+   ],
+   "status": "match",
+   "ids": [
+    "anOut",
+    "anEffType",
+    "anEff",
+    "anPow"
+   ]
+  },
+  {
+   "covers": [
+    "Stats Kingdom one-way ANOVA: APA sentence",
+    "Stats Kingdom one-way ANOVA: effect sizes eta2 and f",
+    "Stats Kingdom one-way ANOVA: a priori and post hoc power"
+   ],
+   "status": "match",
+   "ids": [
+    "anWrite",
+    "anEffT",
+    "anPow"
+   ]
+  },
+  {
+   "covers": [
+    "Stats Kingdom one-way ANOVA: Shapiro-Wilk and Levene checks",
+    "Stats Kingdom one-way ANOVA: per group n, mean, CI, SD, outliers, normality"
+   ],
+   "status": "match",
+   "ids": [
+    "anChk",
+    "anSumT",
+    "anChkKey"
+   ]
+  },
+  {
+   "covers": [
+    "Stats Kingdom one-way ANOVA: ANOVA table",
+    "Stats Kingdom one-way ANOVA: hypotheses and acceptance region",
+    "Stats Kingdom one-way ANOVA: F curve",
+    "Stats Kingdom one-way ANOVA: copy"
+   ],
+   "status": "match",
+   "ids": [
+    "anTable",
+    "anHyp",
+    "anCurve",
+    "anCopyTxt"
+   ]
+  },
+  {
+   "covers": [
+    "Stats Kingdom one-way ANOVA: Tukey table with SE, q, CI, critical difference, p and difference matrix"
+   ],
+   "status": "match",
+   "ids": [
+    "anPairs",
+    "anFull",
+    "anMatrix"
+   ]
+  },
+  {
+   "covers": [
+    "Stats Kingdom two-way ANOVA: two-way, mixed, random and repeated models with Q-Q plot"
+   ],
+   "status": "dropped",
+   "signoff": {
+    "quote": "Approve all",
+    "date": "2026-11-27"
+   }
+  },
+  {
+   "covers": [
+    "Omnicalculator ANOVA: groups appear as you type",
+    "Omnicalculator ANOVA: no visible group limit"
+   ],
+   "status": "match",
+   "ids": [
+    "anAddG",
+    "anCols",
+    "anStack"
+   ]
+  },
+  {
+   "covers": [
+    "Omnicalculator ANOVA: F and p",
+    "Omnicalculator ANOVA: details of ANOVA section",
+    "Omnicalculator ANOVA: explanatory article"
+   ],
+   "status": "exceed",
+   "ids": [
+    "anBig",
+    "anTable",
+    "anFaq"
+   ]
+  },
+  {
+   "covers": [
+    "Omnicalculator ANOVA: share result and embed"
+   ],
+   "status": "dropped",
+   "signoff": {
+    "quote": "Approve all",
+    "date": "2026-11-27"
+   }
+  },
+  {
+   "covers": [
+    "Statistics by Jim ANOVA: stacked or unstacked input with variable names",
+    "Statistics by Jim ANOVA: classic or Welch"
+   ],
+   "status": "match",
+   "ids": [
+    "anStack",
+    "anCols",
+    "anMethod"
+   ]
+  },
+  {
+   "covers": [
+    "Statistics by Jim ANOVA: significance level 0.10, 0.05, 0.01",
+    "Statistics by Jim ANOVA: post hoc yes or no",
+    "Statistics by Jim ANOVA: load sample"
+   ],
+   "status": "exceed",
+   "ids": [
+    "anAlphaChips",
+    "anPost",
+    "anExChips"
+   ]
+  },
+  {
+   "covers": [
+    "Statistics by Jim ANOVA: method and factor table, ANOVA table",
+    "Statistics by Jim ANOVA: S, R-squared, adjusted and predicted",
+    "Statistics by Jim ANOVA: group means with SD and CI and plot"
+   ],
+   "status": "match",
+   "ids": [
+    "anTable",
+    "anEffT",
+    "anSumT",
+    "anVis"
+   ]
+  },
+  {
+   "covers": [
+    "Statistics by Jim ANOVA: Tukey or Games-Howell with SE, CI, T, adjusted p and interval plot"
+   ],
+   "status": "match",
+   "ids": [
+    "anPairs",
+    "anFull",
+    "anDiff"
+   ]
+  },
+  {
+   "covers": [
+    "Statistics by Jim ANOVA: print"
+   ],
+   "status": "dropped",
+   "signoff": {
+    "quote": "Approve all",
+    "date": "2026-11-27"
+   }
+  },
+  {
+   "covers": [
+    "MiniWebtool ANOVA: one group per line or per column with names",
+    "MiniWebtool ANOVA: alpha 0.01 0.05 0.10",
+    "MiniWebtool ANOVA: decimal places 0 to 9",
+    "MiniWebtool ANOVA: example datasets"
+   ],
+   "status": "match",
+   "ids": [
+    "anGroups",
+    "anCols",
+    "anAlpha",
+    "anDec",
+    "anExChips"
+   ]
+  },
+  {
+   "covers": [
+    "MiniWebtool ANOVA: ANOVA table, F, p",
+    "MiniWebtool ANOVA: eta squared and omega squared with size bands",
+    "MiniWebtool ANOVA: group mean, variance, SD, min, max, CI"
+   ],
+   "status": "match",
+   "ids": [
+    "anTable",
+    "anEffT",
+    "anSumT",
+    "anSumF",
+    "anSumR"
+   ]
+  },
+  {
+   "covers": [
+    "MiniWebtool ANOVA: box plot and bar chart",
+    "MiniWebtool ANOVA: Tukey-Kramer table",
+    "MiniWebtool ANOVA: Levene and Shapiro-Wilk",
+    "MiniWebtool ANOVA: Welch and Kruskal-Wallis"
+   ],
+   "status": "exceed",
+   "ids": [
+    "anVis",
+    "anPairs",
+    "anChk",
+    "anTests"
+   ]
+  },
+  {
+   "covers": [
+    "MiniWebtool ANOVA: APA sentence with Copy, hypotheses, decision"
+   ],
+   "status": "match",
+   "ids": [
+    "anWrite",
+    "anHyp"
+   ]
+  },
+  {
+   "covers": [
+    "MiniWebtool ANOVA: PDF and JPG download",
+    "MiniWebtool ANOVA: share and embed"
+   ],
+   "status": "dropped",
+   "signoff": {
+    "quote": "Approve all",
+    "date": "2026-11-27"
+   }
+  },
+  {
+   "covers": [
+    "Pearson ANOVA calculator: one-way with 3 to 6 labelled groups",
+    "Pearson ANOVA calculator: alpha 0.10 0.05 0.01"
+   ],
+   "status": "exceed",
+   "ids": [
+    "anGroups",
+    "anAddG",
+    "anAlpha"
+   ]
+  },
+  {
+   "covers": [
+    "Pearson ANOVA calculator: two-way analysis"
+   ],
+   "status": "dropped",
+   "signoff": {
+    "quote": "Approve all",
+    "date": "2026-11-27"
+   }
+  },
+  {
+   "covers": [
+    "Pearson ANOVA calculator: Tukey from group means, sizes, within mean square and df",
+    "Pearson ANOVA calculator: F critical value and p from F"
+   ],
+   "status": "match",
+   "ids": [
+    "anMsw",
+    "anDfw",
+    "anFv",
+    "anDf1",
+    "anDf2"
+   ]
+  },
+  {
+   "covers": [
+    "Pearson ANOVA calculator: mean bar chart with error bars",
+    "Pearson ANOVA calculator: F curve with rejection region",
+    "Pearson ANOVA calculator: step-by-step solution",
+    "Pearson ANOVA calculator: quick examples, reset, copy result"
+   ],
+   "status": "match",
+   "ids": [
+    "anVis",
+    "anCurve",
+    "anSteps",
+    "anExChips",
+    "anClear",
+    "anCopyTxt"
+   ]
+  },
+  {
+   "covers": [
+    "GoodCalculators ANOVA: add and delete groups",
+    "GoodCalculators ANOVA: F, p, ANOVA table",
+    "GoodCalculators ANOVA: N, mean, SD, standard error",
+    "GoodCalculators ANOVA: formulas"
+   ],
+   "status": "match",
+   "ids": [
+    "anAddG",
+    "anDelG",
+    "anTable",
+    "anSumF",
+    "anFormulas"
+   ]
+  },
+  {
+   "covers": [
+    "statpages ANOVA from summary data: summary entry with names, n, mean, SD or SEM",
+    "statpages ANOVA from summary data: confidence level",
+    "statpages ANOVA from summary data: ANOVA table",
+    "statpages ANOVA from summary data: Tukey with confidence intervals and p"
+   ],
+   "status": "match",
+   "ids": [
+    "anSum",
+    "anSpread",
+    "anConf",
+    "anTable",
+    "anPairs"
+   ]
+  },
+  {
+   "covers": [
+    "Daniel Soper ANOVA from summary data: summary entry n, mean, SD for up to 10 groups",
+    "Daniel Soper ANOVA from summary data: ANOVA table, F and p"
+   ],
+   "status": "exceed",
+   "ids": [
+    "anSum",
+    "anAddS",
+    "anTable"
+   ]
+  }
+ ]
+}

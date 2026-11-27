@@ -1,0 +1,1031 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ANOVA Calculator: One-Way ANOVA with Tukey Test</title>
+<meta name="description" content="ANOVA calculator for one-way ANOVA: F, p-value, ANOVA table, Tukey and Games-Howell pairs, Welch, Kruskal-Wallis, checks and a picture of your groups.">
+<link rel="canonical" href="https://calcthis.co/anova-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="ANOVA Calculator: One-Way ANOVA with Tukey Test">
+<meta property="og:description" content="ANOVA calculator for one-way ANOVA: F, p-value, ANOVA table, Tukey and Games-Howell pairs, Welch, Kruskal-Wallis, checks and a picture of your groups.">
+<meta property="og:url" content="https://calcthis.co/anova-calculator/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/datepicker.min.css">
+<link rel="stylesheet" href="/assets/style.css?v=367">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7WYH4X731J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7WYH4X731J');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6832331505671007" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "ANOVA Calculator",
+  "url": "https://calcthis.co/anova-calculator/",
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "Free ANOVA calculator: one-way ANOVA from raw values or summary numbers for up to 20 groups, with ANOVA table, F, p-value, F critical value, Welch ANOVA, Kruskal-Wallis test, Tukey, Games-Howell, Bonferroni and Dunn comparisons, grouping letters, Levene and Shapiro-Wilk checks, effect sizes, power, leave-one-group-out and a ready-to-copy sentence."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is ANOVA?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "ANOVA (analysis of variance) tests whether the averages of several groups differ by more than chance would produce. It compares the spread between the group averages with the spread of the values inside the groups. Their ratio is the F statistic."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "When should I use ANOVA instead of a t-test?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Use ANOVA when you compare three or more groups. Running a t-test on every pair raises the chance of a false alarm. With two groups the classic ANOVA and the equal-variance t-test give the same p-value."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I read the F value and p-value?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A larger F means the group averages are further apart compared with the noise inside the groups. A p-value below your significance level, usually 0.05, says at least one average differs. In the example F = 19.3214 and p = 0.000177."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which groups are different?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "ANOVA alone does not say. A post hoc test compares each pair while keeping the overall false alarm rate in check. In the example Tukey gives p = 0.005779 for A and B, 0.09897 for A and C and 0.0001361 for B and C, so B stands apart from the other two."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What do the letters on the picture mean?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Groups that share a letter are not shown to differ. Groups with no letter in common are significantly different. In the example Method B has the letter a, and Methods A and C share the letter b."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are the assumptions of one-way ANOVA?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Each value comes from a separate subject, the values in every group are roughly normal, and the groups have similar spread. The page checks the last two with Shapiro-Wilk and Levene. Independence has to come from how you collected the data."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What if the spreads are unequal?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Use Welch’s ANOVA, which does not assume equal variances, followed by Games-Howell comparisons. The page recommends it when Levene’s test finds a difference in spread."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What if my data are not normal?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "With small groups that clearly depart from normality, the Kruskal-Wallis test works on ranks. In larger groups, at least 15 values each for up to 9 groups, ANOVA copes well with moderate departures."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I run ANOVA with only means and standard deviations?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Choose Summary and type each group’s size, average and standard deviation or standard error. The classic and Welch tests and the pair comparisons work; the normality, spread and rank tests need the raw values."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is eta squared?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The share of all the variation that lies between the groups: between-groups sum of squares divided by the total. In the example it is 0.763. Cohen’s f turns it into √(η² ÷ (1 − η²)), here 1.7945."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How many values do I need per group?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It depends on the effect you want to detect. With three groups and α = 0.05, 80% power needs about 323 values per group for a small effect (f = 0.1), 53 for a medium one (0.25) and 22 for a large one (0.4)."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "I only have F and the degrees of freedom. Can I get the p-value?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Choose F value and type the two degrees of freedom and F. For F = 4.5 with 2 and 12 degrees of freedom p = 0.03482. Leave F empty to get the critical value, 3.8853 at 0.05."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does this calculator do two-way ANOVA?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. This page handles one factor: groups that differ in one way. Designs with two factors, or the same subjects measured repeatedly, need a different analysis."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "CalcThis",
+      "item": "https://calcthis.co/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "ANOVA Calculator",
+      "item": "https://calcthis.co/anova-calculator/"
+    }
+  ]
+}
+</script>
+<meta property="og:site_name" content="CalcThis">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://calcthis.co/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="CalcThis — free, purpose-built calculators">
+<meta name="twitter:title" content="ANOVA Calculator: One-Way ANOVA with Tukey Test">
+<meta name="twitter:description" content="ANOVA calculator for one-way ANOVA: F, p-value, ANOVA table, Tukey and Games-Howell pairs, Welch, Kruskal-Wallis, checks and a picture of your groups.">
+<meta name="twitter:image" content="https://calcthis.co/assets/og-default.png">
+</head>
+<body class="p-bmr p-cc p-an">
+<div class="wrap">
+
+<!--HEADER:START-->
+  <header>
+    <a class="hdr-back" href="/blog/" aria-label="Back to blog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu">
+      <svg class="ic-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg class="ic-close" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <a class="brand" href="/">
+      <img src="/assets/favicon.svg" width="24" height="24" alt="CalcThis">
+      <span>Calc<b>This</b></span>
+    </a>
+    <nav class="menu" id="siteMenu" hidden>
+      <div class="menu-search"><div class="menu-sx"><input id="menuSearch" type="search" placeholder="Search calculators or states…" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Search calculators" enterkeyhint="search"></div><div class="menu-results" id="menuResults" hidden></div></div>
+      <div class="menu-cols">
+        <div class="menu-col">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <span class="menu-col-head">Construction &amp; Gardening</span>
+          <a href="/board-foot-calculator/">Board Foot</a>
+          <a href="/gravel-calculator/">Gravel</a>
+          <a href="/sand-calculator/">Sand</a>
+          <a href="/topsoil-calculator/">Topsoil</a>
+          <a href="/mulch-calculator/">Mulch</a>
+          <a href="/concrete-calculator/">Concrete</a>
+          <a href="/flooring-calculator/">Flooring</a>
+          <a href="/tile-calculator/">Tile</a>
+          <a href="/paint-calculator/">Paint</a>
+          <a href="/wallpaper-calculator/">Wallpaper</a>
+          <a href="/square-footage-calculator/">Square Footage</a>
+          <a href="/tape-measure-fraction-calculator/">Tape Measure Fraction</a>
+          <a href="/stair-calculator/">Stair</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">Health &amp; Fitness</span>
+          <a href="/pace-calculator/">Pace</a>
+          <a href="/race-time-predictor/">Race Time Predictor</a>
+          <a href="/vo2-max-calculator/">VO2 Max</a>
+          <a href="/heart-rate-zone-calculator/">Heart Rate Zone</a>
+          <a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate</a>
+          <a href="/bmi-calculator/">BMI</a>
+          <a href="/body-fat-calculator/">Body Fat</a>
+          <a href="/ideal-weight-calculator/">Ideal Weight</a>
+          <a href="/lean-body-mass-calculator/">Lean Body Mass</a>
+          <a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio</a>
+          <a href="/gmi-calculator/">GMI</a>
+          <a href="/a1c-calculator/">A1C</a>
+          <a href="/calorie-calculator/">Calorie</a>
+          <a href="/calorie-deficit-calculator/">Calorie Deficit</a>
+          <a href="/bmr-calculator/">BMR</a>
+          <a href="/tdee-calculator/">TDEE / Calories</a>
+          <a href="/one-rep-max-calculator/">One Rep Max</a>
+          <a href="/sleep-calculator/">Sleep</a>
+          <a href="/water-intake-calculator/">Water Intake</a>
+          <a href="/macro-calculator/">Macro</a>
+          <a href="/protein-intake-calculator/">Protein Intake</a>
+          <a href="/steps-to-miles-calculator/">Steps to Miles</a>
+          <a href="/dog-age-calculator/">Dog Age</a>
+          <a href="/cat-age-calculator/">Cat Age</a>
+          <a href="/calories-burned-calculator/">Calories Burned</a>
+          <a href="/calories-burned-walking-calculator/">Calories Burned Walking</a>
+          <a href="/calories-burned-running-calculator/">Calories Burned Running</a>
+          <a href="/keto-calculator/">Keto</a>
+          <a href="/net-carb-calculator/">Net Carb</a>
+          <a href="/intermittent-fasting-calculator/">Intermittent Fasting</a>
+          <a href="/bsa-calculator/">BSA</a>
+          <a href="/dog-food-calculator/">Dog Food</a>
+          <a href="/ffmi-calculator/">FFMI</a>
+          <a href="/bulking-calculator/">Bulking</a>
+          <a href="/weight-loss-calculator/">Weight Loss</a>
+          <a href="/weight-loss-percentage-calculator/">Weight Loss %</a>
+          <a href="/max-heart-rate-calculator/">Max Heart Rate</a>
+          <a href="/caffeine-calculator/">Caffeine</a>
+          <a href="/caffeine-half-life-calculator/">Caffeine Half Life</a>
+          <a href="/fiber-calculator/">Fiber</a>
+          <a href="/creatine-calculator/">Creatine</a>
+          <a href="/vitamin-d-calculator/">Vitamin D</a>
+          <a href="/body-recomposition-calculator/">Body Recomposition</a>
+        </div>
+        <div class="menu-col">
+          <span class="menu-col-head">School &amp; Grades</span>
+          <a href="/final-grade-calculator/">Final Grade</a>
+          <a href="/gpa-calculator/">GPA</a>
+          <a href="/grade-calculator/">Grade</a>
+          <a href="/semester-grade-calculator/">Semester Grade</a>
+          <a href="/test-score-calculator/">Test Score</a>
+          <a href="/grade-curve-calculator/">Grade Curve</a>
+          <span class="menu-col-head">Math &amp; Numbers</span>
+          <a href="/fraction-calculator/">Fraction</a>
+          <a href="/standard-deviation-calculator/">Standard Deviation</a>
+          <a href="/p-value-calculator/">P-Value</a>
+          <a href="/confidence-interval-calculator/">Confidence Interval</a>
+          <a href="/z-score-calculator/">Z Score</a>
+          <a href="/t-test-calculator/">T-Test</a>
+          <a href="/correlation-coefficient-calculator/">Correlation Coefficient</a>
+          <a href="/linear-regression-calculator/">Linear Regression</a>
+          <a href="/chi-square-calculator/">Chi Square</a>
+          <a href="/anova-calculator/" class="current">ANOVA</a>
+          <a href="/scientific-notation-calculator/">Scientific Notation</a>
+          <a href="/average-calculator/">Average</a>
+          <a href="/batting-average-calculator/">Batting Average</a>
+          <a href="/stock-average-calculator/">Stock Average</a>
+          <a href="/dice-average-calculator/">Dice Average</a>
+          <a href="/time-average-calculator/">Time Average</a>
+          <a href="/weighted-average-calculator/">Weighted Average</a>
+          <a href="/ratio-calculator/">Ratio</a>
+          <a href="/percentage-calculator/">Percentage</a>
+          <a href="/percentage-change-calculator/">Percentage Change</a>
+          <a href="/age-calculator/">Age</a>
+          <a href="/date-calculator/">Date</a>
+          <a href="/time-calculator/">Time</a>
+          <a href="/hours-calculator/">Hours</a>
+          <a href="/seconds-to-hours-calculator/">Seconds to Hours</a>
+          <a href="/minutes-to-hours-calculator/">Minutes to Hours</a>
+          <a href="/seconds-to-minutes-calculator/">Seconds to Minutes</a>
+          <a href="/triangle-calculator/">Triangle</a>
+          <a href="/random-number-generator/">Random Number</a>
+          <span class="menu-col-head">Cooking &amp; Kitchen</span>
+          <a href="/recipe-converter/">Recipe Converter</a>
+          <a href="/turkey-cooking-time-calculator/">Turkey Cooking Time</a>
+          <a href="/turkey-thawing-time-calculator/">Turkey Thawing Time</a>
+          <a href="/turkey-size-calculator/">Turkey Size</a>
+          <span class="menu-col-head">Medication &amp; Lab</span>
+          <a href="/mg-to-ml-calculator/">mg to mL</a>
+          <a href="/dilution-calculator/">Dilution</a>
+          <a href="/retatrutide-dosage-calculator/">Retatrutide Dosage</a>
+          <a href="/serial-dilution-calculator/">Serial Dilution</a>
+          <a href="/peptide-reconstitution-calculator/">Peptide Reconstitution</a>
+          <!--UNITNAV:START-->
+          <span class="menu-col-head">Unit Converters</span>
+          <a href="/unit-converter/">Unit Converter</a>
+          <a href="/length-converter/">Length Converter</a>
+          <a href="/weight-converter/">Weight Converter</a>
+          <a href="/volume-converter/">Volume Converter</a>
+          <a href="/temperature-converter/">Temperature Converter</a>
+          <a href="/area-converter/">Area Converter</a>
+          <a href="/speed-converter/">Speed Converter</a>
+          <a href="/data-storage-converter/">Data Storage Converter</a>
+          <a href="/cooking-converter/">Cooking Converter</a>
+          <a href="/px-to-rem-converter/">PX to REM Converter</a>
+          <!--UNITNAV:END-->
+          <span class="menu-col-head">Money &amp; Finance</span>
+          <a href="/mortgage-calculator/">Mortgage</a>
+          <a href="/loan-calculator/">Loan</a>
+          <a href="/auto-loan-calculator/">Auto Loan</a>
+          <a href="/car-sales-tax-calculator/">Car Sales Tax</a>
+          <a href="/overtime-calculator/">Overtime</a>
+          <a href="/salary-calculator/">Salary</a>
+          <a href="/markup-calculator/">Markup</a>
+          <a href="/profit-margin-calculator/">Profit Margin</a>
+          <a href="/discount-calculator/">Discount</a>
+          <a href="/commission-calculator/">Commission</a>
+          <a href="/realtor-commission-calculator/">Realtor Commission</a>
+          <a href="/unit-price-calculator/">Unit Price</a>
+          <a href="/compound-interest-calculator/">Compound Interest</a>
+          <a href="/amortization-calculator/">Amortization</a>
+          <!--STAXNAV:START-->
+          <a href="/sales-tax-calculator/">Sales Tax</a>
+          <a href="/sales-tax-calculator/california/">California Sales Tax</a>
+          <a href="/sales-tax-calculator/chicago/">Chicago Sales Tax</a>
+          <a href="/sales-tax-calculator/florida/">Florida Sales Tax</a>
+          <a href="/sales-tax-calculator/las-vegas/">Las Vegas Sales Tax</a>
+          <a href="/sales-tax-calculator/los-angeles/">Los Angeles Sales Tax</a>
+          <a href="/sales-tax-calculator/michigan/">Michigan Sales Tax</a>
+          <a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax</a>
+          <a href="/sales-tax-calculator/missouri/">Missouri Sales Tax</a>
+          <a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax</a>
+          <a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax</a>
+          <a href="/sales-tax-calculator/north-carolina/">North Carolina Sales Tax</a>
+          <a href="/sales-tax-calculator/ohio/">Ohio Sales Tax</a>
+          <a href="/sales-tax-calculator/texas/">Texas Sales Tax</a>
+          <a href="/sales-tax-calculator/virginia/">Virginia Sales Tax</a>
+          <!--STAXNAV:END-->
+          <a href="/tip-calculator/">Tip</a>
+          <a href="/how-much-to-tip/">How Much to Tip</a>
+        </div>
+        <!--PAYNAV:START-->
+        <div class="menu-col">
+          <span class="menu-col-head">Paycheck Calculators</span>
+          <a href="/paycheck-calculator/">Paycheck Calculator (all states)</a>
+          <a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a>
+          <a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a>
+          <a href="/paycheck-calculator/arkansas/">Arkansas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/california/">California Paycheck Calculator</a>
+          <a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a>
+          <a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a>
+          <a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/hawaii/">Hawaii Paycheck Calculator</a>
+          <a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a>
+          <a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a>
+          <a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a>
+          <a href="/paycheck-calculator/louisiana/">Louisiana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a>
+          <a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a>
+          <a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a>
+          <a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a>
+          <a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nebraska/">Nebraska Paycheck Calculator</a>
+          <a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a>
+          <a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a>
+          <a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a>
+          <a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a>
+          <a href="/paycheck-calculator/oklahoma/">Oklahoma Paycheck Calculator</a>
+          <a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a>
+          <a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a>
+          <a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a>
+          <a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a>
+          <a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a>
+          <a href="/paycheck-calculator/utah/">Utah Paycheck Calculator</a>
+          <a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a>
+          <a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wisconsin/">Wisconsin Paycheck Calculator</a>
+          <a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a>
+        </div>
+        <!--PAYNAV:END-->
+      </div>
+    </nav>
+  </header>
+  <!--HEADER:END-->
+
+  <section class="hero">
+    <div class="eyebrow">One-way ANOVA · Welch · Kruskal-Wallis · post hoc tests</div>
+    <h1>ANOVA Calculator</h1>
+    <p>Type or paste the <strong>values of each group</strong> and get <strong>F, the p-value</strong>, the ANOVA table and a picture of <strong>which groups differ</strong>. For the example of three teaching methods with five scores each the result is <strong>F = 19.3214 with 2 and 12 degrees of freedom, p = 0.000177</strong>.</p>
+  </section>
+
+  <div class="grid">
+
+    <!-- INPUT -->
+    <div class="card">
+      <div class="card-pad">
+        <h2 class="card-h2">Your groups</h2>
+        <div class="fld"><span class="lab">What do you have?</span><div class="seg cc-seg" id="anMode" role="group" aria-label="What do you have?"><button type="button" data-v="raw" class="on">Raw values</button><button type="button" data-v="sum">Summary</button><button type="button" data-v="f">F value</button></div></div>
+        <p class="av-note" id="anModeNote"></p>
+        <div id="anRawW">
+          <div class="fld"><span class="lab">How will you enter the values?</span><div class="seg cc-seg" id="anEntry" role="group" aria-label="How will you enter the values?"><button type="button" data-v="boxes" class="on">Boxes</button><button type="button" data-v="cols">Columns</button><button type="button" data-v="stack">Stacked</button></div></div>
+          <div id="anBoxesW">
+            <div id="anGroups"></div>
+            <div class="cc-tools"><button class="linkbtn" id="anAddG" type="button">+ Add group</button><button class="linkbtn" id="anDelG" type="button">− Remove last group</button></div>
+          </div>
+          <div id="anColsW" style="display:none">
+            <div class="fld"><label class="lab" for="anCols">Paste a table: one column per group</label><textarea class="cc-ta" id="anCols" placeholder="e.g.
+A, B, C
+23, 31, 22
+25, 33, 24
+28, 35, 21" aria-label="Paste a table: one column per group" rows="7" spellcheck="false"></textarea></div>
+            <p class="av-note" id="anColsNote"></p>
+          </div>
+          <div id="anStackW" style="display:none">
+            <div class="fld"><label class="lab" for="anStack">One line per value: value, group</label><textarea class="cc-ta" id="anStack" placeholder="e.g.
+23, A
+31, B
+22, C
+25, A" aria-label="One line per value: value, group" rows="7" spellcheck="false"></textarea></div>
+            <p class="av-note" id="anStackNote"></p>
+          </div>
+        </div>
+        <div id="anSumW" style="display:none">
+          <div class="fld"><span class="lab">The spread you have is the</span><div class="seg cc-seg" id="anSpread" role="group" aria-label="The spread you have is the"><button type="button" data-v="sd" class="on">Standard deviation</button><button type="button" data-v="sem">Standard error</button></div></div>
+          <div class="an-sumw">
+            <div class="an-sum" id="anSum"></div>
+            <div class="cc-tools"><button class="linkbtn" id="anAddS" type="button">+ Add group</button><button class="linkbtn" id="anDelS" type="button">− Remove last group</button></div>
+          </div>
+        </div>
+        <div id="anFW" style="display:none">
+          <div class="cc-two"><label class="fld" for="anDf1"><span class="lab">df between groups</span><div class="inp"><input id="anDf1" type="text" inputmode="numeric" autocomplete="off" placeholder="e.g. 2"></div></label><label class="fld" for="anDf2"><span class="lab">df within groups</span><div class="inp"><input id="anDf2" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 12"></div></label></div>
+          <label class="fld" for="anFv"><span class="lab">F value <span class="unit">optional</span></span><div class="inp"><input id="anFv" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 4.5"></div></label>
+        </div>
+        <div id="anExW">
+          <p class="zs-sech" style="margin-top:6px">Try an example</p>
+          <div class="chips" id="anExChips" role="group" aria-label="Example data"><button type="button" data-v="methods">Three methods</button><button type="button" data-v="feed">Four feeds</button><button type="button" data-v="spread">Uneven spread</button><button type="button" data-v="skew" id="anExSkewW">Skewed, small</button></div>
+        </div>
+        <label class="fld" for="anAlpha"><span class="lab">Significance level α <span class="unit">optional</span></span><div class="inp"><input id="anAlpha" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 0.05"></div></label>
+        <div class="chips" id="anAlphaChips" role="group" aria-label="Common significance levels"><button type="button" data-v="0.1">0.10</button><button type="button" data-v="0.05">0.05</button><button type="button" data-v="0.01">0.01</button><button type="button" data-v="0.001">0.001</button></div>
+        <p class="av-note" id="anAlphaNote"></p>
+        <div class="res-hint" id="anHint" style="display:none;text-align:left;margin:4px 0 8px"></div>
+        <div id="anAdvIn" style="display:none">
+          <div class="proj-sep"></div>
+          <div id="anMethodW">
+            <div class="fld"><span class="lab">Which test gives the headline?</span><div class="seg cc-seg" id="anMethod" role="group" aria-label="Which test gives the headline?"><button type="button" data-v="auto" class="on">Auto</button><button type="button" data-v="classic">Classic</button><button type="button" data-v="welch">Welch</button><button type="button" data-v="kw">Kruskal</button></div></div>
+            <p class="av-note" id="anMethodNote"></p>
+          </div>
+          <div id="anPostW">
+            <div class="fld"><span class="lab">Pair comparisons (post hoc)</span><div class="csel" id="anPost" data-value="auto"><button type="button" class="csel-btn" aria-haspopup="listbox" aria-expanded="false" aria-label="Pair comparisons (post hoc)"><span class="csel-val">Match the test</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="csel-panel" role="listbox"><button type="button" class="csel-opt" role="option" data-value="auto">Match the test</button><button type="button" class="csel-opt" role="option" data-value="tukey">Tukey</button><button type="button" class="csel-opt" role="option" data-value="games">Games-Howell</button><button type="button" class="csel-opt" role="option" data-value="bonf">Bonferroni</button><button type="button" class="csel-opt" role="option" data-value="dunn">Dunn</button><button type="button" class="csel-opt" role="option" data-value="none">None</button></div></div></div>
+            <p class="av-note" id="anPostNote"></p>
+          </div>
+          <div id="anOutW">
+            <div class="fld"><span class="lab">Outliers</span><div class="seg cc-seg" id="anOut" role="group" aria-label="Outliers"><button type="button" data-v="keep" class="on">Keep them</button><button type="button" data-v="drop">Leave them out</button></div></div>
+            <p class="av-note" id="anOutNote"></p>
+          </div>
+          <div id="anGivenW" style="display:none">
+            <p class="zs-sech">Only have the within mean square? <span>· optional</span></p>
+            <div class="cc-two"><label class="fld" for="anMsw"><span class="lab">Within mean square</span><div class="inp"><input id="anMsw" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 5.6"></div></label><label class="fld" for="anDfw"><span class="lab">Within df</span><div class="inp"><input id="anDfw" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 12"></div></label></div>
+            <p class="av-note" id="anGivenNote"></p>
+          </div>
+          <div id="anConfW">
+            <label class="fld" for="anConf"><span class="lab">Confidence level for intervals <span class="unit">optional, %</span></span><div class="inp"><input id="anConf" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 95"></div></label>
+            <p class="av-note" id="anConfNote"></p>
+          </div>
+          <div id="anEffW">
+            <div class="fld"><span class="lab">Expected effect size is given as</span><div class="seg cc-seg" id="anEffType" role="group" aria-label="Expected effect size is given as"><button type="button" data-v="f" class="on">Cohen’s f</button><button type="button" data-v="f2">f²</button><button type="button" data-v="eta">η²</button></div></div>
+            <label class="fld" for="anEff"><span class="lab">Expected effect size to plan for <span class="unit">optional</span></span><div class="inp"><input id="anEff" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 0.25"></div></label>
+            <div class="chips" id="anEffChips" role="group" aria-label="Common effect sizes"><button type="button" data-v="0.1">Small 0.10</button><button type="button" data-v="0.25">Medium 0.25</button><button type="button" data-v="0.4">Large 0.40</button></div>
+            <p class="av-note" id="anEffNote"></p>
+          </div>
+          <label class="fld" for="anDec"><span class="lab">Decimal places <span class="unit">optional</span></span><div class="inp"><input id="anDec" type="text" inputmode="numeric" autocomplete="off" placeholder="e.g. 3"></div></label>
+          <p class="av-note" id="anDecNote"></p>
+        </div>
+        <div class="add-row split" style="margin-top:16px">
+          <button class="linkbtn" id="anClear" type="button">Clear fields</button>
+          <button class="advbtn" id="anAdvBtn" type="button">
+            <span id="anAdvBtnLab">Go advanced</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div class="card">
+      <div class="card-pad">
+        <div class="bf-res">
+          <div class="res-lab" id="anLab">One-way ANOVA</div>
+          <div class="res-big"><span id="anBig">—</span></div>
+          <div class="res-sub" id="anSub" data-empty="Type the values of at least two groups to see F, the p-value, which groups differ and a picture of your data." data-emptyf="Type both degrees of freedom to see the critical F, and your F to see its p-value.">Type the values of at least two groups to see F, the p-value, which groups differ and a picture of your data.</div>
+        </div>
+        <div id="anBody" style="display:none">
+          <p class="res-tip adv-tip" id="anTip"></p>
+          <p class="av-note" id="anWhy"></p>
+          <div id="anVisWrap" style="display:none">
+            <p class="bm-h" id="anVisH">Which groups differ</p>
+            <div class="cc-vis" id="anVis"></div>
+            <p class="cb-note" id="anVisKey"></p>
+          </div>
+          <div id="anPairsWrap" style="display:none">
+            <p class="bm-h" id="anPairsH">Pair by pair</p>
+            <div class="cc-vis" id="anDiff"></div>
+            <p class="cb-note" id="anDiffKey"></p>
+            <div class="cc-tbl"><table class="dtable" id="anPairs"></table></div>
+            <p class="cb-note" id="anPairsKey"></p>
+            <details class="faq"><summary>Standard errors and test statistics</summary>
+            <div class="cc-tbl"><table class="dtable" id="anFull"></table></div>
+            </details>
+            <details class="faq" id="anMatrixW"><summary>Difference matrix</summary>
+            <div class="cc-tbl"><table class="dtable" id="anMatrix"></table></div>
+            </details>
+          </div>
+          <div id="anTestsWrap" style="display:none">
+            <p class="bm-h">The tests side by side</p>
+            <div class="cc-tbl"><table class="dtable" id="anTests"></table></div>
+            <p class="cb-note" id="anTestsKey"></p>
+          </div>
+          <div id="anTableWrap" style="display:none">
+            <p class="bm-h">ANOVA table</p>
+            <div class="cc-tbl"><table class="dtable" id="anTable"></table></div>
+            <p class="cb-note" id="anTableKey"></p>
+          </div>
+          <div id="anGroupsWrap" style="display:none">
+            <p class="bm-h">Group by group</p>
+            <div class="cc-tbl"><table class="dtable" id="anSumT"></table></div>
+            <p class="cb-note" id="anSumKey"></p>
+            <details class="faq"><summary>Totals, variances, quartiles and ranges</summary>
+            <div class="cc-tbl"><table class="dtable" id="anSumF"></table></div>
+            <div class="cc-tbl"><table class="dtable" id="anSumR"></table></div>
+            </details>
+          </div>
+          <div id="anLooWrap" style="display:none">
+            <p class="bm-h">Which group drives it?</p>
+            <div class="cc-tbl"><table class="dtable" id="anLoo"></table></div>
+            <p class="cb-note" id="anLooKey"></p>
+          </div>
+          <div id="anPowWrap" style="display:none">
+            <p class="bm-h">What would it take?</p>
+            <div class="cc-tbl"><table class="dtable" id="anPow"></table></div>
+            <p class="cb-note" id="anPowKey"></p>
+          </div>
+          <div id="anEffWrap" style="display:none">
+            <p class="bm-h">How big is the effect?</p>
+            <div class="cc-tbl"><table class="dtable" id="anEffT"></table></div>
+            <p class="cb-note" id="anEffKey"></p>
+          </div>
+          <div id="anCheckWrap" style="display:none">
+            <p class="bm-h">Assumption checks</p>
+            <div class="cc-tbl"><table class="dtable" id="anChk"></table></div>
+            <p class="cb-note" id="anChkKey"></p>
+          </div>
+          <div id="anCurveWrap" style="display:none">
+            <p class="bm-h" id="anCurveH">The F curve</p>
+            <div class="cc-vis" id="anCurve"></div>
+            <p class="cb-note" id="anCurveKey"></p>
+          </div>
+          <div id="anHypWrap" style="display:none">
+            <p class="bm-h">What is being tested</p>
+            <ul class="cc-steps" id="anHyp"></ul>
+          </div>
+          <div id="anWriteWrap" style="display:none">
+            <p class="bm-h">Write it up <button class="linkbtn" type="button" data-copy="anWrite" style="margin-left:8px">Copy sentence</button></p>
+            <div class="chips" id="anCiteChips" role="group" aria-label="Sentence style"><button type="button" data-v="apa" class="on">APA</button><button type="button" data-v="plain">Plain English</button></div>
+            <p class="cc-write" id="anWrite"></p>
+          </div>
+          <div id="anCopyWrap" style="display:none">
+            <div class="cc-tools"><button class="linkbtn" type="button" data-copy="anCopyTxt">Copy result</button><button class="linkbtn" type="button" data-copy="anCsvTxt">Copy tables as CSV</button></div>
+            <div id="anCopyTxt" style="display:none"></div>
+            <div id="anCsvTxt" style="display:none"></div>
+          </div>
+          <div id="anStepsWrap" style="display:none">
+            <p class="bm-h">How it is worked out</p>
+            <ol class="cc-steps" id="anSteps"></ol>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- mobile sticky bar -->
+  <div class="mbar" id="mbar">
+    <span class="mbar-lab" id="anMLab">ANOVA</span>
+    <div class="mbar-vals"><b id="anMVal">—</b></div>
+  </div>
+
+  <div class="related-calcs">
+    <p class="related-calcs-h">More calculators that may interest you</p>
+    <div class="pills">
+      <a class="pill" href="/t-test-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg>
+        T-Test Calculator
+      </a>
+      <a class="pill" href="/p-value-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 24c4 0 6-16 13-16s9 16 13 16"/><path d="M3 24h26"/></svg>
+        P-Value Calculator
+      </a>
+      <a class="pill" href="/chi-square-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16v16H4zM4 12h16M12 4v16"/></svg>
+        Chi Square Calculator
+      </a>
+      <a class="pill" href="/standard-deviation-calculator/">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h18M6 7v10M18 7v10"/></svg>
+        Standard Deviation Calculator
+      </a>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="grid2">
+      <div>
+        <h2>How to use the ANOVA calculator</h2>
+        <p>Put each group’s values in its own box, separated by commas, spaces or new lines, or paste a table from a spreadsheet: one column per group, or two columns holding the value and the group name. The result updates as you type. With only sizes, averages and standard deviations, choose <strong>Summary</strong>.</p>
+        <p>The page picks the test from your data and says why. Under <strong>Go advanced</strong> you can choose the test and the pair comparisons yourself, leave outliers out, set the confidence level, plan for an expected effect and set the decimal places.</p>
+
+        <h2 id="anFormulas">The one-way ANOVA formula</h2>
+        <div class="formula">
+          F = MS between ÷ MS within
+          <small>MS between = Σ n × (group mean − grand mean)² ÷ (k − 1) · MS within = Σ (value − its group mean)² ÷ (N − k) · k = number of groups · N = number of values</small>
+        </div>
+
+        <h2 id="anExample">Worked example: three teaching methods</h2>
+        <table class="dtable an-ex">
+          <thead><tr><th>Group</th><th>Scores</th><th>Average</th><th>SD</th></tr></thead>
+          <tbody><tr><td>Method A</td><td>23, 25, 28, 30, 27</td><td>26.6</td><td>2.7</td></tr><tr><td>Method B</td><td>31, 33, 35, 29, 34</td><td>32.4</td><td>2.41</td></tr><tr><td>Method C</td><td>22, 24, 21, 26, 23</td><td>23.2</td><td>1.92</td></tr></tbody>
+        </table>
+        <table class="dtable an-ex">
+          <thead><tr><th>Source</th><th>Sum of squares</th><th>df</th><th>Mean square</th><th>F</th></tr></thead>
+          <tbody><tr><td>Between groups</td><td>216.4</td><td>2</td><td>108.2</td><td>19.3214</td></tr><tr><td>Within groups</td><td>67.2</td><td>12</td><td>5.6</td><td></td></tr><tr><td>Total</td><td>283.6</td><td>14</td><td></td><td></td></tr></tbody>
+        </table>
+        <p>The grand mean is 27.4. F = 19.3214 is above the critical value 3.8853, and the p-value is 0.000177: at least one method gives a different average. Eta squared is 0.763, omega squared 0.7095 and Cohen’s f 1.7945.</p>
+
+        <h2 id="anPairsEx">Which methods differ: Tukey</h2>
+        <table class="dtable an-ex">
+          <thead><tr><th>Pair</th><th>Difference</th><th>95% interval</th><th>p</th></tr></thead>
+          <tbody><tr><td>A vs B</td><td>-5.8</td><td>-9.79 to -1.81</td><td>0.005779</td></tr><tr><td>A vs C</td><td>3.4</td><td>-0.59 to 7.39</td><td>0.09897</td></tr><tr><td>B vs C</td><td>9.2</td><td>5.21 to 13.19</td><td>0.0001361</td></tr></tbody>
+        </table>
+        <p>With three groups and 12 degrees of freedom the studentized range value is 3.7729, so two of these averages must differ by at least 3.99 to count. A and C differ by 3.4, less than that.</p>
+
+        <h2 id="anCritical">F critical values at 0.05</h2>
+        <p>An F above the value is significant at 0.05. Columns are the between-groups degrees of freedom, rows the within-groups ones. For other values choose “F value” and leave F empty.</p>
+        <table class="dtable an-ex">
+          <thead><tr><th>df</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th></tr></thead>
+          <tbody><tr><td>5</td><td>6.61</td><td>5.79</td><td>5.41</td><td>5.19</td><td>5.05</td><td>4.95</td></tr><tr><td>8</td><td>5.32</td><td>4.46</td><td>4.07</td><td>3.84</td><td>3.69</td><td>3.58</td></tr><tr><td>10</td><td>4.96</td><td>4.10</td><td>3.71</td><td>3.48</td><td>3.33</td><td>3.22</td></tr><tr><td>12</td><td>4.75</td><td>3.89</td><td>3.49</td><td>3.26</td><td>3.11</td><td>3.00</td></tr><tr><td>15</td><td>4.54</td><td>3.68</td><td>3.29</td><td>3.06</td><td>2.90</td><td>2.79</td></tr><tr><td>20</td><td>4.35</td><td>3.49</td><td>3.10</td><td>2.87</td><td>2.71</td><td>2.60</td></tr><tr><td>30</td><td>4.17</td><td>3.32</td><td>2.92</td><td>2.69</td><td>2.53</td><td>2.42</td></tr><tr><td>40</td><td>4.08</td><td>3.23</td><td>2.84</td><td>2.61</td><td>2.45</td><td>2.34</td></tr><tr><td>60</td><td>4.00</td><td>3.15</td><td>2.76</td><td>2.53</td><td>2.37</td><td>2.25</td></tr><tr><td>120</td><td>3.92</td><td>3.07</td><td>2.68</td><td>2.45</td><td>2.29</td><td>2.18</td></tr></tbody>
+        </table>
+      </div>
+
+      <div>
+        <h2 id="anWhich">Classic, Welch or Kruskal-Wallis?</h2>
+        <p>The classic ANOVA assumes similar spread in every group and roughly normal values. Welch’s version drops the equal-spread assumption. Kruskal-Wallis replaces the values with their ranks. For the teaching example the three give F = 19.3214 (p = 0.000177), F = 20.5348 with 2 and 7.83 degrees of freedom (p = 0.0007669) and H = 10.4637 (p = 0.005344). Levene’s test gives p = 0.7954 and Shapiro-Wilk p = 0.7391, so the classic test is recommended.</p>
+
+        <h2 id="anPost2">Post hoc tests</h2>
+        <p><strong>Tukey</strong> compares every pair with the pooled spread and suits the classic ANOVA. <strong>Games-Howell</strong> uses each pair’s own spread and goes with Welch. <strong>Dunn</strong> compares average ranks after Kruskal-Wallis. <strong>Bonferroni</strong> multiplies each t-test p-value by the number of pairs and is the most cautious and simplest of them.</p>
+
+        <h2 id="anLetters">Reading the picture</h2>
+        <p>Each group sits on the same scale: every value as a dot, a box around the middle half of the values with a line at the median, the average as a tick and its interval as a bar. Letters summarise the comparisons: two groups with a letter in common are not shown to differ. Pick a pair in the table to see its difference and interval against zero. The page also reruns the test without each group in turn, so you can see whether one group carries the result.</p>
+
+        <h2 id="anPower">Effect size and sample size</h2>
+        <p>Cohen’s f measures how far apart the group averages are compared with the spread inside them. In the teaching example it is very large, so 3 values per group would already give 80% power at those averages. Effects seen in small studies tend to shrink, so plan with the smallest effect that matters.</p>
+        <table class="dtable an-ex">
+          <thead><tr><th>Groups</th><th>f = 0.10</th><th>f = 0.25</th><th>f = 0.40</th></tr></thead>
+          <tbody><tr><td>2</td><td>394</td><td>64</td><td>26</td></tr><tr><td>3</td><td>323</td><td>53</td><td>22</td></tr><tr><td>4</td><td>274</td><td>45</td><td>19</td></tr><tr><td>5</td><td>240</td><td>40</td><td>16</td></tr><tr><td>6</td><td>215</td><td>36</td><td>15</td></tr></tbody>
+        </table>
+        <p>Values per group needed for 80% power at α = 0.05.</p>
+
+        <h2>Related tools</h2>
+        <p>For two groups use the <a href="/t-test-calculator/">t-test calculator</a>; to turn another statistic into a probability the <a href="/p-value-calculator/">p-value calculator</a>; for counts in categories the <a href="/chi-square-calculator/">chi square calculator</a>; and for the spread of one list the <a href="/standard-deviation-calculator/">standard deviation calculator</a>.</p>
+        <h2>Sources</h2>
+        <ul>
+          <li>The Tukey intervals and the studentized range follow the NIST/SEMATECH e-Handbook, section 7.4.7.1, and the distribution function in the Wikipedia article “Studentized range distribution”, computed here by numerical integration (read 2026-11-27). The handbook’s example value, q = 4.65 for 5 means and 10 degrees of freedom, is reproduced.</li>
+          <li>Welch’s ANOVA (weights n ÷ variance, adjusted grand mean and small-sample correction) follows the pingouin welch_anova reference code; Games-Howell follows the PMCMRplus documentation of gamesHowellTest (read 2026-11-27).</li>
+          <li>The Kruskal-Wallis H with the tie correction follows the Wikipedia article “Kruskal–Wallis test”; Dunn’s comparisons follow the scikit-posthocs code and the PMCMRplus documentation, with the Bonferroni adjustment Dunn proposed (read 2026-11-27).</li>
+          <li>Levene’s test around the group medians follows the NIST/SEMATECH e-Handbook, section 1.3.5.10. The Shapiro-Wilk test is algorithm AS R94 (Royston 1995) as distributed with SciPy 1.11 (read 2026-11-27).</li>
+          <li>The guide of at least 15 values per group for 2 to 9 groups and 20 for 10 to 12 before relying on ANOVA with data that do not look normal is from Minitab’s “Data considerations for One-Way ANOVA”; this page uses 20 above 12 groups too (read 2026-11-27). Choosing the test from checks on the same data is a rule of thumb, not a law.</li>
+          <li>Eta squared and omega squared follow the Wikipedia article “Effect size”; Cohen’s f of 0.10, 0.25 and 0.40 for small, medium and large is from the CASRAI guide “Effect size: eta squared”. Power uses the noncentral F distribution with noncentrality f² × N, as in the Wikipedia article “Noncentral F-distribution” (read 2026-11-27).</li>
+          <li>The feature set was compared with the ANOVA tools of Social Science Statistics, Stats Kingdom, Omnicalculator, Statistics by Jim, MiniWebtool, Pearson.com, GoodCalculators, StatPages and Daniel Soper, all opened on 2026-11-27.</li>
+        </ul>
+        <p><small>For information only. Check the assumptions of the method and your own data before drawing conclusions.</small></p>
+      </div>
+    </div>
+
+    <h2 id="anFaq" style="margin-top:36px">Common questions</h2>
+    <details class="faq"><summary>What is ANOVA?</summary><p>ANOVA (analysis of variance) tests whether the averages of several groups differ by more than chance would produce. It compares the spread between the group averages with the spread of the values inside the groups. Their ratio is the F statistic.</p></details>
+    <details class="faq"><summary>When should I use ANOVA instead of a t-test?</summary><p>Use ANOVA when you compare three or more groups. Running a t-test on every pair raises the chance of a false alarm. With two groups the classic ANOVA and the equal-variance t-test give the same p-value.</p></details>
+    <details class="faq"><summary>How do I read the F value and p-value?</summary><p>A larger F means the group averages are further apart compared with the noise inside the groups. A p-value below your significance level, usually 0.05, says at least one average differs. In the example F = 19.3214 and p = 0.000177.</p></details>
+    <details class="faq"><summary>Which groups are different?</summary><p>ANOVA alone does not say. A post hoc test compares each pair while keeping the overall false alarm rate in check. In the example Tukey gives p = 0.005779 for A and B, 0.09897 for A and C and 0.0001361 for B and C, so B stands apart from the other two.</p></details>
+    <details class="faq"><summary>What do the letters on the picture mean?</summary><p>Groups that share a letter are not shown to differ. Groups with no letter in common are significantly different. In the example Method B has the letter a, and Methods A and C share the letter b.</p></details>
+    <details class="faq"><summary>What are the assumptions of one-way ANOVA?</summary><p>Each value comes from a separate subject, the values in every group are roughly normal, and the groups have similar spread. The page checks the last two with Shapiro-Wilk and Levene. Independence has to come from how you collected the data.</p></details>
+    <details class="faq"><summary>What if the spreads are unequal?</summary><p>Use Welch’s ANOVA, which does not assume equal variances, followed by Games-Howell comparisons. The page recommends it when Levene’s test finds a difference in spread.</p></details>
+    <details class="faq"><summary>What if my data are not normal?</summary><p>With small groups that clearly depart from normality, the Kruskal-Wallis test works on ranks. In larger groups, at least 15 values each for up to 9 groups, ANOVA copes well with moderate departures.</p></details>
+    <details class="faq"><summary>Can I run ANOVA with only means and standard deviations?</summary><p>Yes. Choose Summary and type each group’s size, average and standard deviation or standard error. The classic and Welch tests and the pair comparisons work; the normality, spread and rank tests need the raw values.</p></details>
+    <details class="faq"><summary>What is eta squared?</summary><p>The share of all the variation that lies between the groups: between-groups sum of squares divided by the total. In the example it is 0.763. Cohen’s f turns it into √(η² ÷ (1 − η²)), here 1.7945.</p></details>
+    <details class="faq"><summary>How many values do I need per group?</summary><p>It depends on the effect you want to detect. With three groups and α = 0.05, 80% power needs about 323 values per group for a small effect (f = 0.1), 53 for a medium one (0.25) and 22 for a large one (0.4).</p></details>
+    <details class="faq"><summary>I only have F and the degrees of freedom. Can I get the p-value?</summary><p>Yes. Choose F value and type the two degrees of freedom and F. For F = 4.5 with 2 and 12 degrees of freedom p = 0.03482. Leave F empty to get the critical value, 3.8853 at 0.05.</p></details>
+    <details class="faq"><summary>Does this calculator do two-way ANOVA?</summary><p>No. This page handles one factor: groups that differ in one way. Designs with two factors, or the same subjects measured repeatedly, need a different analysis.</p></details>
+  </section>
+
+<!--FOOTER:START-->
+  <footer class="site-footer">
+    <div class="footer-cols">
+      <div class="footer-stack">
+<div class="footer-col" style="order:1">
+        <button class="footer-col-btn" aria-expanded="true" type="button">
+          <span class="fttl"><span class="ft1">Construction &amp;</span> <span class="ft2">Gardening</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/board-foot-calculator/">Board Foot Calculator</a></li>
+          <li><a href="/gravel-calculator/">Gravel Calculator</a></li>
+          <li><a href="/sand-calculator/">Sand Calculator</a></li>
+          <li><a href="/topsoil-calculator/">Topsoil Calculator</a></li>
+          <li><a href="/mulch-calculator/">Mulch Calculator</a></li>
+          <li><a href="/concrete-calculator/">Concrete Calculator</a></li>
+          <li><a href="/flooring-calculator/">Flooring Calculator</a></li>
+          <li><a href="/tile-calculator/">Tile Calculator</a></li>
+          <li><a href="/paint-calculator/">Paint Calculator</a></li>
+          <li><a href="/wallpaper-calculator/">Wallpaper Calculator</a></li>
+          <li><a href="/square-footage-calculator/">Square Footage Calculator</a></li>
+          <li><a href="/tape-measure-fraction-calculator/">Tape Measure Fraction Calculator</a></li>
+          <li><a href="/stair-calculator/">Stair Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:5">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Cooking &amp;</span> <span class="ft2">Kitchen</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/recipe-converter/">Recipe Converter</a></li>
+          <li><a href="/turkey-cooking-time-calculator/">Turkey Cooking Time Calculator</a></li>
+          <li><a href="/turkey-thawing-time-calculator/">Turkey Thawing Time Calculator</a></li>
+          <li><a href="/turkey-size-calculator/">Turkey Size Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:5">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Medication &amp;</span> <span class="ft2">Lab</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/mg-to-ml-calculator/">mg to mL Calculator</a></li>
+          <li><a href="/dilution-calculator/">Dilution Calculator</a></li>
+          <li><a href="/retatrutide-dosage-calculator/">Retatrutide Dosage Calculator</a></li>
+          <li><a href="/serial-dilution-calculator/">Serial Dilution Calculator</a></li>
+          <li><a href="/peptide-reconstitution-calculator/">Peptide Reconstitution Calculator</a></li>
+        </ul>
+      </div>
+
+<div class="footer-col" style="order:6">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Money &amp;</span> <span class="ft2">Finance</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/mortgage-calculator/">Mortgage Calculator</a></li>
+          <li><a href="/loan-calculator/">Loan Calculator</a></li>
+          <li><a href="/auto-loan-calculator/">Auto Loan Calculator</a></li>
+          <li><a href="/car-sales-tax-calculator/">Car Sales Tax Calculator</a></li>
+          <li><a href="/overtime-calculator/">Overtime Calculator</a></li>
+          <li><a href="/salary-calculator/">Salary Calculator</a></li>
+          <li><a href="/markup-calculator/">Markup Calculator</a></li>
+          <li><a href="/profit-margin-calculator/">Profit Margin Calculator</a></li>
+          <li><a href="/discount-calculator/">Discount Calculator</a></li>
+          <li><a href="/commission-calculator/">Commission Calculator</a></li>
+          <li><a href="/realtor-commission-calculator/">Realtor Commission Calculator</a></li>
+          <li><a href="/unit-price-calculator/">Unit Price Calculator</a></li>
+          <li><a href="/compound-interest-calculator/">Compound Interest Calculator</a></li>
+          <li><a href="/amortization-calculator/">Amortization Calculator</a></li>
+          <!--STAXFOOT:START-->
+          <li><a href="/sales-tax-calculator/">Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/california/">California Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/chicago/">Chicago Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/florida/">Florida Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/las-vegas/">Las Vegas Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/los-angeles/">Los Angeles Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/michigan/">Michigan Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/minnesota/">Minnesota Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/missouri/">Missouri Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-jersey/">New Jersey Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/new-york-city/">New York City Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/north-carolina/">North Carolina Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/ohio/">Ohio Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/texas/">Texas Sales Tax Calculator</a></li>
+          <li><a href="/sales-tax-calculator/virginia/">Virginia Sales Tax Calculator</a></li>
+          <!--STAXFOOT:END-->
+          <li><a href="/tip-calculator/">Tip Calculator</a></li>
+          <li><a href="/how-much-to-tip/">How Much to Tip</a></li>
+        </ul>
+      </div>
+      </div>
+
+      <div class="footer-right">
+<div class="footer-col footer-col--two" style="order:2">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Health &amp;</span> <span class="ft2">Lifestyle</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/pace-calculator/">Pace Calculator</a></li>
+          <li><a href="/race-time-predictor/">Race Time Predictor</a></li>
+          <li><a href="/vo2-max-calculator/">VO2 Max Calculator</a></li>
+          <li><a href="/heart-rate-zone-calculator/">Heart Rate Zone Calculator</a></li>
+          <li><a href="/zone-2-heart-rate-calculator/">Zone 2 Heart Rate Calculator</a></li>
+          <li><a href="/bmi-calculator/">BMI Calculator</a></li>
+          <li><a href="/body-fat-calculator/">Body Fat Calculator</a></li>
+          <li><a href="/ideal-weight-calculator/">Ideal Weight Calculator</a></li>
+          <li><a href="/lean-body-mass-calculator/">Lean Body Mass Calculator</a></li>
+          <li><a href="/waist-to-hip-ratio-calculator/">Waist-to-Hip Ratio Calculator</a></li>
+          <li><a href="/gmi-calculator/">GMI Calculator</a></li>
+          <li><a href="/a1c-calculator/">A1C Calculator</a></li>
+          <li><a href="/calorie-calculator/">Calorie Calculator</a></li>
+          <li><a href="/calorie-deficit-calculator/">Calorie Deficit Calculator</a></li>
+          <li><a href="/bmr-calculator/">BMR Calculator</a></li>
+          <li><a href="/tdee-calculator/">TDEE Calculator</a></li>
+          <li><a href="/one-rep-max-calculator/">One Rep Max Calculator</a></li>
+          <li><a href="/sleep-calculator/">Sleep Calculator</a></li>
+          <li><a href="/water-intake-calculator/">Water Intake Calculator</a></li>
+          <li><a href="/macro-calculator/">Macro Calculator</a></li>
+          <li><a href="/protein-intake-calculator/">Protein Intake Calculator</a></li>
+          <li><a href="/steps-to-miles-calculator/">Steps to Miles Calculator</a></li>
+          <li><a href="/dog-age-calculator/">Dog Age Calculator</a></li>
+          <li><a href="/cat-age-calculator/">Cat Age Calculator</a></li>
+          <li><a href="/calories-burned-calculator/">Calories Burned Calculator</a></li>
+          <li><a href="/calories-burned-walking-calculator/">Calories Burned Walking Calculator</a></li>
+          <li><a href="/calories-burned-running-calculator/">Calories Burned Running Calculator</a></li>
+          <li><a href="/keto-calculator/">Keto Calculator</a></li>
+          <li><a href="/net-carb-calculator/">Net Carb Calculator</a></li>
+          <li><a href="/intermittent-fasting-calculator/">Intermittent Fasting Calculator</a></li>
+          <li><a href="/bsa-calculator/">BSA Calculator</a></li>
+          <li><a href="/dog-food-calculator/">Dog Food Calculator</a></li>
+          <li><a href="/ffmi-calculator/">FFMI Calculator</a></li>
+          <li><a href="/bulking-calculator/">Bulking Calculator</a></li>
+          <li><a href="/weight-loss-calculator/">Weight Loss Calculator</a></li>
+          <li><a href="/weight-loss-percentage-calculator/">Weight Loss Percentage Calculator</a></li>
+          <li><a href="/max-heart-rate-calculator/">Max Heart Rate Calculator</a></li>
+          <li><a href="/caffeine-calculator/">Caffeine Calculator</a></li>
+          <li><a href="/caffeine-half-life-calculator/">Caffeine Half Life Calculator</a></li>
+          <li><a href="/fiber-calculator/">Fiber Calculator</a></li>
+          <li><a href="/creatine-calculator/">Creatine Calculator</a></li>
+          <li><a href="/vitamin-d-calculator/">Vitamin D Calculator</a></li>
+          <li><a href="/body-recomposition-calculator/">Body Recomposition Calculator</a></li>
+        </ul>
+      </div>
+
+        <div class="footer-sub">
+<div class="footer-subcol">
+<div class="footer-col" style="order:3">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">School &amp;</span> <span class="ft2">Grades</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/final-grade-calculator/">Final Grade Calculator</a></li>
+          <li><a href="/gpa-calculator/">GPA Calculator</a></li>
+          <li><a href="/grade-calculator/">Grade Calculator</a></li>
+          <li><a href="/semester-grade-calculator/">Semester Grade Calculator</a></li>
+          <li><a href="/test-score-calculator/">Test Score Calculator</a></li>
+          <li><a href="/grade-curve-calculator/">Grade Curve Calculator</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:START-->
+<div class="footer-col" style="order:7">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Unit</span> <span class="ft2">Converters</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/unit-converter/">Unit Converter</a></li>
+          <li><a href="/length-converter/">Length Converter</a></li>
+          <li><a href="/weight-converter/">Weight Converter</a></li>
+          <li><a href="/volume-converter/">Volume Converter</a></li>
+          <li><a href="/temperature-converter/">Temperature Converter</a></li>
+          <li><a href="/area-converter/">Area Converter</a></li>
+          <li><a href="/speed-converter/">Speed Converter</a></li>
+          <li><a href="/data-storage-converter/">Data Storage Converter</a></li>
+          <li><a href="/cooking-converter/">Cooking Measurement Converter</a></li>
+          <li><a href="/px-to-rem-converter/">PX to REM Converter</a></li>
+        </ul>
+      </div>
+<!--UNITFOOT:END-->
+</div>
+
+<div class="footer-col" style="order:4">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Math &amp;</span> <span class="ft2">Numbers</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/fraction-calculator/">Fraction Calculator</a></li>
+          <li><a href="/standard-deviation-calculator/">Standard Deviation Calculator</a></li>
+          <li><a href="/p-value-calculator/">P-Value Calculator</a></li>
+          <li><a href="/confidence-interval-calculator/">Confidence Interval Calculator</a></li>
+          <li><a href="/z-score-calculator/">Z-Score Calculator</a></li>
+          <li><a href="/t-test-calculator/">T-Test Calculator</a></li>
+          <li><a href="/correlation-coefficient-calculator/">Correlation Coefficient Calculator</a></li>
+          <li><a href="/linear-regression-calculator/">Linear Regression Calculator</a></li>
+          <li><a href="/chi-square-calculator/">Chi Square Calculator</a></li>
+          <li><a href="/anova-calculator/">ANOVA Calculator</a></li>
+          <li><a href="/scientific-notation-calculator/">Scientific Notation Calculator</a></li>
+          <li><a href="/weighted-average-calculator/">Weighted Average Calculator</a></li>
+          <li><a href="/average-calculator/">Average Calculator</a></li>
+          <li><a href="/batting-average-calculator/">Batting Average Calculator</a></li>
+          <li><a href="/stock-average-calculator/">Stock Average Calculator</a></li>
+          <li><a href="/dice-average-calculator/">Dice Average Calculator</a></li>
+          <li><a href="/time-average-calculator/">Time Average Calculator</a></li>
+          <li><a href="/ratio-calculator/">Ratio Calculator</a></li>
+          <li><a href="/percentage-calculator/">Percentage Calculator</a></li>
+          <li><a href="/percentage-change-calculator/">Percentage Change Calculator</a></li>
+          <li><a href="/age-calculator/">Age Calculator</a></li>
+          <li><a href="/date-calculator/">Date Calculator</a></li>
+          <li><a href="/time-calculator/">Time Calculator</a></li>
+          <li><a href="/hours-calculator/">Hours Calculator</a></li>
+          <li><a href="/seconds-to-hours-calculator/">Seconds to Hours Calculator</a></li>
+          <li><a href="/minutes-to-hours-calculator/">Minutes to Hours Calculator</a></li>
+          <li><a href="/seconds-to-minutes-calculator/">Seconds to Minutes Calculator</a></li>
+          <li><a href="/triangle-calculator/">Triangle Calculator</a></li>
+          <li><a href="/random-number-generator/">Random Number Generator</a></li>
+        </ul>
+      </div>
+        </div>
+      </div>
+
+      <!--PAYFOOT:START-->
+      <div class="footer-col footer-col--wide">
+        <button class="footer-col-btn" aria-expanded="false" type="button">
+          <span class="fttl"><span class="ft1">Paycheck</span> <span class="ft2">Calculators</span></span>
+          <svg class="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="footer-links">
+          <li><a href="/paycheck-calculator/">Paycheck Calculator (all states)</a></li>
+          <li><a href="/paycheck-calculator/alabama/">Alabama Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/alaska/">Alaska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arizona/">Arizona Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/arkansas/">Arkansas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/california/">California Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/colorado/">Colorado Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/florida/">Florida Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/georgia/">Georgia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/hawaii/">Hawaii Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/illinois/">Illinois Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/indiana/">Indiana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/iowa/">Iowa Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/kentucky/">Kentucky Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/louisiana/">Louisiana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/maryland/">Maryland Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/massachusetts/">Massachusetts Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/michigan/">Michigan Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/minnesota/">Minnesota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/missouri/">Missouri Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/montana/">Montana Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nebraska/">Nebraska Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/nevada/">Nevada Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-hampshire/">New Hampshire Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-jersey/">New Jersey Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york/">New York Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/new-york-city/">New York City Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/north-carolina/">North Carolina Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/ohio/">Ohio Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/oklahoma/">Oklahoma Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/oregon/">Oregon Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/pennsylvania/">Pennsylvania Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/south-dakota/">South Dakota Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/tennessee/">Tennessee Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/texas/">Texas Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/utah/">Utah Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/virginia/">Virginia Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/washington/">Washington Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wisconsin/">Wisconsin Paycheck Calculator</a></li>
+          <li><a href="/paycheck-calculator/wyoming/">Wyoming Paycheck Calculator</a></li>
+        </ul>
+      </div>
+      <!--PAYFOOT:END-->
+
+    </div>
+    <nav class="footer-legal-nav" aria-label="Legal">
+      <a href="/blog/">Blog</a>
+      <span aria-hidden="true">·</span>
+      <a href="/about/">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="/whats-new/">What's new</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms-of-use/">Terms of use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/privacy-policy/">Privacy policy</a>
+    </nav>
+    <p class="footer-copy">© 2026 CalcThis. All rights reserved. Page last updated: <time datetime="2026-11-27">November 27, 2026</time>. Results are estimates — confirm details with your supplier or a qualified professional before making decisions.</p>
+  </footer>
+<!--FOOTER:END-->
+
+</div>
+
+<script src="/assets/app.js?v=367"></script>
+<script>CalcThis.initAnovaCalc();</script>
+<script src="/feedback.js" defer></script>
+</body>
+</html>

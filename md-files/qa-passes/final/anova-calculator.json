@@ -1,0 +1,14 @@
+{
+ "slug": "anova-calculator",
+ "pass": true,
+ "at": "2026-11-27T14:15:25.629Z",
+ "passHash": "4e521baec6efd9cc",
+ "scriptHash": "1338f43c9faa639d",
+ "cats": {
+  "textVsTool": 128,
+  "extremes": 35,
+  "visual": 570
+ },
+ "runs": 107,
+ "fails": []
+}

@@ -1,0 +1,19 @@
+{
+ "slug": "anova-calculator",
+ "hash": "4e521baec6efd9cc",
+ "shots": [
+  "anova-calculator-1-empty-mobile.png",
+  "anova-calculator-2-filled-mobile.png",
+  "anova-calculator-3-result-mobile.png",
+  "anova-calculator-4-advanced-mobile.png",
+  "anova-calculator-5-error-mobile.png",
+  "anova-calculator-6-after-chaos-mobile.png",
+  "anova-calculator-1-empty-desktop.png",
+  "anova-calculator-2-filled-desktop.png",
+  "anova-calculator-3-result-desktop.png",
+  "anova-calculator-4-advanced-desktop.png",
+  "anova-calculator-5-error-desktop.png",
+  "anova-calculator-6-after-chaos-desktop.png"
+ ],
+ "at": "2026-11-27T14:16:09.602Z"
+}

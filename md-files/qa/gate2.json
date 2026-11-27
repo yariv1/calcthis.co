@@ -14,5 +14,6 @@
  "serial-dilution-calculator",
  "correlation-coefficient-calculator",
  "linear-regression-calculator",
- "chi-square-calculator"
+ "chi-square-calculator",
+ "anova-calculator"
 ]
