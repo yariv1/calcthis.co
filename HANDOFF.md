@@ -1,4 +1,6 @@
-**NEWEST (2026-11-26): CHI SQUARE DEPLOYED v366. Read `HANDOFF.md` §000000000000002g (first section below) in full. First reply = ONE sync line, then work silently.**
+**NEWEST (2026-11-27): ANOVA DEPLOYED v367. Read `HANDOFF.md` §000000000000002h (first section below) in full. First reply = ONE sync line, then work silently.**
+
+**(older) NEWEST (2026-11-26): CHI SQUARE DEPLOYED v366. Read `HANDOFF.md` §000000000000002g (first section below) in full. First reply = ONE sync line, then work silently.**
 
 **NEWEST (2026-11-22, SESSION #15 part 2): RETATRUTIDE DOSAGE BUILT, NOT DEPLOYED. Read `HANDOFF.md` §000000000000002e (first section below) in full. First reply = ONE sync line, then work silently.**
 
@@ -34,6 +36,18 @@ _Rewritten 2026-11-08 at the end of session #6 PART 2 (profit margin v331, disco
 **UPDATE 2026-11-12 (later): UNIT-PAIR CONTENT FIX DEPLOYED v344 (CLAUDE.md addendum 40). Step (2) of his 'do all' is done; NEXT = (3) tip pages + sales-tax states research report; GSC queue now also includes the 18 pair pages + 4 changed state items; Bing manual submit of the 18 pair URLs pending (he must be signed in).**
 
 **NEWEST (2026-11-13, END OF SESSION #10): live v351 · 108 calcs · 238 pages. Read `HANDOFF.md` §0000000000000026 in full (first section below). First reply = ONE sync line, then the #12 AMORTIZATION calculator research report (wait for "Approve all"). GSC queue = "Start queue" on his word (quota was exceeded twice on 2026-11-13); Bing submits are done for everything live. z-score v350 + compound interest v351 deployed. Re-read GSC ~2026-11-26.**
+
+## 000000000000002h. START HERE — 2026-11-27: ANOVA CALCULATOR DEPLOYED, LIVE v367 (commit 45b6566f, Pages built, URLs 200) — AUTHORITATIVE; older sections stay valid unless this contradicts them
+
+Sync line: "Synced: v367 live (ANOVA calculator); Bing is submitted, the GSC queue continues from unit price."
+
+- `/anova-calculator/` live. Code map, changes against the plan and unverified items: CLAUDE.md addendum 53. Next generator chains after it (slug `anova-calculator`, menu `ANOVA`, name `ANOVA Calculator`).
+- No in-body link from the t-test page yet (adding one re-runs that page's gates).
+- Bing manual submit DONE 2026-11-27 16:29 (anova-calculator, whats-new). IndexNow pinged 249 URLs (HTTP 200).
+- GSC only on his "Start queue": unit-price-calculator, anova-calculator, then the health block (inspect first). Overview 11-27: 160 indexed, 90 not.
+- Checkpoints: Dec 8 > 200 indexed; Dec 15 earliest AdSense review. Next calculator candidate: sample size (>1000 Hard); research report first.
+- Dev: preview http://localhost:8200/ (`calcthis-static-8200`). Backslashes in bash heredocs get halved: write fix scripts with the Write tool.
+- Do not commit `calcthis logo.png`, `listings images/`, `md-files/calcthis-outreach-list.md`.
 
 ## 000000000000002g. START HERE — 2026-11-26: CHI SQUARE CALCULATOR DEPLOYED, LIVE v366 (commit 8c162dc1, Pages built, URL 200) — AUTHORITATIVE; older sections stay valid unless this contradicts them
 

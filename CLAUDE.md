@@ -222,7 +222,9 @@ must be built from the article's actual units, every time, not pasted from a tem
 
 ## ⛔ SESSION HANDOFF — START HERE (rewritten 2026-11-08, end of session #6 PART 2: markup/profit margin/discount deployed, GLOBAL FIELD SYMBOLS v332-v336; full detail in `HANDOFF.md` §0000000000000020 = the FIRST section of the file — read it in full before replying)
 
-**NEWEST (2026-11-26: CHI SQUARE `/chi-square-calculator/` DEPLOYED v366, (commit 8c162dc1, Pages built, URL 200); Bing submitted and GSC requested 2026-11-26; GSC queue continues from unit price, 2026-11-27). Read `HANDOFF.md` §000000000000002g first; first reply = its ONE sync line, then work silently.**
+**NEWEST (2026-11-27: ANOVA `/anova-calculator/` DEPLOYED v367 (commit 45b6566f, Pages built, URL 200); Bing submitted 2026-11-27, GSC pending (queue: unit price, ANOVA, health block). Read `HANDOFF.md` §000000000000002h first; first reply = its ONE sync line, then work silently.)**
+
+**(older) NEWEST (2026-11-26: CHI SQUARE `/chi-square-calculator/` DEPLOYED v366, (commit 8c162dc1, Pages built, URL 200); Bing submitted and GSC requested 2026-11-26; GSC queue continues from unit price, 2026-11-27). Read `HANDOFF.md` §000000000000002g first; first reply = its ONE sync line, then work silently.**
 
 **(older) NEWEST (2026-11-22): SERIAL DILUTION `/serial-dilution-calculator/` (#17) DEPLOYED v363 commit 8bdbdab5 (Pages built, URL 200; Bing + GSC pending). Read `HANDOFF.md` §000000000000002f first; first reply = its ONE sync line, then work silently. NEXT: his preview + "Deploy" (what's-new entry first, Bing, GSC; Bing + GSC for t-test and retatrutide still pending).**
 
@@ -294,8 +296,8 @@ must be built from the article's actual units, every time, not pasted from a tem
 
 ## Project state
 
-- **Asset version:** v366 (live; chi square calculator 2026-11-26, 248 pages)
-- **Total pages:** 248 stamped at v366
+- **Asset version:** v367 (live; ANOVA calculator 2026-11-27, 249 pages)
+- **Total pages:** 249 stamped at v367
 - **Model:** Sonnet 5
 
 ### New this session — global `.csel` custom-dropdown component
@@ -399,8 +401,8 @@ Total live calculators: **89** (v322, + max heart rate, v321, + weight loss perc
 
 ---
 
-## Last session addendum 53 (2026-11-27, BUILT, NOT DEPLOYED): ANOVA `/anova-calculator/` (#21)
-Research `md-files/calcthis-anova-research.md` ("Approve all"). Engine `ANOVA-ENGINE` (`CalcThis.anovaEngine`: studentized range by numerical integration, classic, Welch, Kruskal-Wallis, Levene, Shapiro-Wilk AS R94, Tukey / Games-Howell / Bonferroni / Dunn, grouping letters, noncentral F power), init `CalcThis.initAnovaCalc` (ids `an*`, block `ANOVA:BEGIN/END` at the end of app.js), css `ANOVA:CSS` (page class `p-an`, body also `p-cc`), generator `md-files/gen-anova-page.js` (chains after chi square). Gates PASS: run.js (205 oracle runs), viewed 12/12, final, parity, audit-silent ok, preflight (dup 0.9%). Preview: http://localhost:8200/anova-calculator/ . Not verified: real phone, other browsers, print, Copy in a real clipboard session. No in-body link from the t-test page yet. NEXT: his preview, then "Deploy" (what's-new entry first, Bing, GSC).
+## Last session addendum 53 (2026-11-27, DEPLOYED v367 45b6566f, Pages built, URL 200; Bing submitted 2026-11-27, GSC pending): ANOVA `/anova-calculator/` (#21)
+Research `md-files/calcthis-anova-research.md` ("Approve all"). Engine `ANOVA-ENGINE` (`CalcThis.anovaEngine`: studentized range by numerical integration, classic, Welch, Kruskal-Wallis, Levene, Shapiro-Wilk AS R94, Tukey / Games-Howell / Bonferroni / Dunn, grouping letters, noncentral F power), init `CalcThis.initAnovaCalc` (ids `an*`, block `ANOVA:BEGIN/END` at the end of app.js), css `ANOVA:CSS` (page class `p-an`, body also `p-cc`), generator `md-files/gen-anova-page.js` (chains after chi square). Gates PASS: run.js (205 oracle runs), viewed 12/12, final, parity, audit-silent ok, preflight (dup 0.9%). Preview: http://localhost:8200/anova-calculator/ . Not verified: real phone, other browsers, print, Copy in a real clipboard session. No in-body link from the t-test page yet. NEXT: GSC on "Start queue"; ask him for the next calculator (sample size candidate).
 
 ## Last session addendum 52 (2026-11-26, DEPLOYED v366 8c162dc1, Pages built, URL 200; Bing submitted 2026-11-26, GSC pending): CHI SQUARE `/chi-square-calculator/` (#20)
 Research `md-files/calcthis-chisquare-research.md` (his answer "Approve all"). Engine `CHI-ENGINE` (`CalcThis.chiEngine`: table, fit, fisher, binom, mcnemar, noncentral power + plan, paste / raw readers), init `CalcThis.initChiCalc` (ids `xs*`, block `CHI:BEGIN/END` after REG), css `CHI:CSS` (page class `p-chi`, body also `p-cc`), generator `md-files/gen-chisquare-page.js` (chains after linear regression). Modes Two-way table (typed grid up to 5 columns, paste or raw answers up to 20 x 20) | Goodness of fit | chi-square value or critical value. Visual "Where the difference comes from"; merge small groups with undo; "What would it take?". One in-body link added on the p-value page (its gates re-run). Gates PASS for both pages: run.js (306 oracle runs for chi), viewed, final (220/62/698), parity, audit-silent ok, preflight (dup 0.8%). Drops: Monte Carlo, R code, Excel/CSV upload, PDF/JPG, Share/Embed, Print, last-run restore, tables above 20 x 20. Not verified: real phone, other browsers, print, Copy in a real clipboard session. NEXT: GSC queue from unit price (Bing done, chi square + linear regression requested 2026-11-26); ask him for the next calculator (ANOVA, sample size candidates).
